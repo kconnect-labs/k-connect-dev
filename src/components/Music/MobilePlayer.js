@@ -209,7 +209,7 @@ const MobilePlayer = () => {
   return (
     <React.Fragment>
       <PlayerContainer elevation={0} covercolor={dominantColor}>
-        {/* Simple non-interactive progress bar */}
+        
         <ProgressBar 
           variant="determinate" 
           value={progressValue} 
@@ -230,7 +230,7 @@ const MobilePlayer = () => {
             padding: '2px 0' // Уменьшаем отступы
           }}
         >
-          {/* Track info and controls */}
+          
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -360,13 +360,13 @@ const MobilePlayer = () => {
         </Box>
       </PlayerContainer>
       
-      {/* Full screen player */}
+      
       <FullScreenPlayer 
         open={fullScreenOpen}
         onClose={closeFullScreen}
       />
       
-      {/* Share notification */}
+      
       <Snackbar
         open={shareSnackbar.open}
         autoHideDuration={4000}

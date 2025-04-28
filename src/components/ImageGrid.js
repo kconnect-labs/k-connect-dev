@@ -94,7 +94,7 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
             loading="lazy"
           />
           
-          {/* Show counter for additional images */}
+          
           {index === normalizedImages.length - 1 && hasMoreImages && (
             <Box sx={{
               position: 'absolute',

@@ -341,7 +341,7 @@ const BugReportPage = () => {
             </Grid>
           </BugHeader>
 
-          {/* New bug form */}
+          
           <Paper sx={{ padding: 3, marginBottom: 4 }}>
             <Typography variant="h6" component="h2" gutterBottom>
               Сообщить о проблеме
@@ -438,7 +438,7 @@ const BugReportPage = () => {
             </form>
           </Paper>
 
-          {/* Bug list */}
+          
           <Typography variant="h6" component="h2" gutterBottom>
             Список проблем
           </Typography>
@@ -623,7 +623,7 @@ const BugReportPage = () => {
           Комментарии ({selectedBug.comments?.length || 0})
         </Typography>
         
-        {/* Comments list */}
+        
         {selectedBug.comments?.length > 0 ? (
           selectedBug.comments.map(comment => (
             <CommentCard key={comment.id}>
@@ -655,7 +655,7 @@ const BugReportPage = () => {
           </Typography>
         )}
         
-        {/* New comment form */}
+        
         <Paper sx={{ padding: 2, mt: 2 }}>
           <TextField
             fullWidth

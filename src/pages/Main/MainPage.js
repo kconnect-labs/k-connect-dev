@@ -320,7 +320,7 @@ const OnlineUsers = () => {
         Сейчас онлайн ({onlineUsers.length})
       </Typography>
       
-      {/* Online Users List - Horizontally Scrollable */}
+      
       <Box sx={{ 
         display: 'flex', 
         flexWrap: 'nowrap', 
@@ -894,7 +894,7 @@ const CreatePost = ({ onPostCreated }) => {
         </Alert>
       )}
       
-      {/* Add Snackbar component */}
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -910,7 +910,7 @@ const CreatePost = ({ onPostCreated }) => {
         </Alert>
       </Snackbar>
       
-      {/* Add Rate Limit Dialog */}
+      
       <Dialog
         open={rateLimitDialog.open}
         onClose={() => setRateLimitDialog(prev => ({ ...prev, open: false }))}
@@ -1031,7 +1031,7 @@ const CreatePost = ({ onPostCreated }) => {
             />
           </Box>
           
-          {/* Media preview */}
+          
           {mediaPreview.length > 0 && (
             <Box sx={{ position: 'relative', mb: 2 }}>
               {mediaType === 'images' && mediaPreview.length > 1 ? (
@@ -1076,7 +1076,7 @@ const CreatePost = ({ onPostCreated }) => {
             </Box>
           )}
           
-          {/* Display selected music tracks */}
+          
           {selectedTracks.length > 0 && (
             <Box sx={{ mt: 2, mb: 2 }}>
               {selectedTracks.map(track => (
@@ -1283,7 +1283,7 @@ const CreatePost = ({ onPostCreated }) => {
             </Button>
           </PostActions>
           
-          {/* Music selection dialog */}
+          
           <MusicSelectDialog
             open={musicSelectOpen}
             onClose={() => setMusicSelectOpen(false)}
@@ -1668,13 +1668,13 @@ const MainPage = React.memo(() => {
     }}>
       <ContentContainer>
         <LeftColumn>
-          {/* Online Users Component */}
+          
           <OnlineUsers />
           
-          {/* Create Post Box */}
+          
           <CreatePost onPostCreated={handlePostCreated} />
           
-          {/* Feed Type Selection */}
+          
           <Paper sx={{ 
             p: 1, 
             display: 'flex', 
@@ -1704,7 +1704,7 @@ const MainPage = React.memo(() => {
             </Button>
           </Paper>
           
-          {/* Posts Feed */}
+          
           <Box sx={{ mt: 0 }}>
             {loading && posts.length === 0 ? (
               // Show skeleton loaders when initially loading
@@ -1727,7 +1727,7 @@ const MainPage = React.memo(() => {
                   )
                 ))}
                 
-                {/* Infinite scroll loader indicator */}
+                
                 {hasMore && (
                   <Box 
                     ref={loaderRef}
@@ -1744,7 +1744,7 @@ const MainPage = React.memo(() => {
                   </Box>
                 )}
                 
-                {/* End of posts message */}
+                
                 {!hasMore && (
                   <Box sx={{ 
                     textAlign: 'center', 
@@ -1772,7 +1772,7 @@ const MainPage = React.memo(() => {
         </LeftColumn>
         
         <RightColumn>
-          {/* User Recommendations - hidden on mobile devices */}
+          
           <Box 
             component={Paper} 
             sx={{ 
@@ -1821,11 +1821,11 @@ const MainPage = React.memo(() => {
                   backgroundColor="#292929"
                   foregroundColor="#333333"
                 >
-                  {/* Profile 1 */}
+                  
                   <rect x="0" y="0" rx="8" ry="8" width="100%" height="50" />
-                  {/* Profile 2 */}
+                  
                   <rect x="0" y="60" rx="8" ry="8" width="100%" height="50" />
-                  {/* Profile 3 */}
+                  
                   <rect x="0" y="120" rx="8" ry="8" width="100%" height="50" />
                 </ContentLoader>
               </Box>
@@ -1869,7 +1869,7 @@ const MainPage = React.memo(() => {
             )}
           </Box>
 
-          {/* Trending Badges */}
+          
           <Box 
             component={Paper} 
             sx={{ 
@@ -1918,11 +1918,11 @@ const MainPage = React.memo(() => {
                   backgroundColor="#292929"
                   foregroundColor="#333333"
                 >
-                  {/* Badge 1 */}
+                  
                   <rect x="0" y="0" rx="8" ry="8" width="100%" height="50" />
-                  {/* Badge 2 */}
+                  
                   <rect x="0" y="60" rx="8" ry="8" width="100%" height="50" />
-                  {/* Badge 3 */}
+                  
                   <rect x="0" y="120" rx="8" ry="8" width="100%" height="50" />
                 </ContentLoader>
               </Box>
@@ -2027,7 +2027,7 @@ const MainPage = React.memo(() => {
         </RightColumn>
       </ContentContainer>
       
-      {/* Lightbox for displaying images */}
+      
       <LightBox 
         isOpen={lightboxOpen}
         onClose={handleCloseLightbox}

@@ -521,7 +521,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
         )}
 
         <List component="nav" sx={{ p: 1, mt: 1 }}>
-          {/* Профиль */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -542,7 +542,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Лента */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -563,7 +563,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Музыка */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -584,7 +584,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Подписки */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -605,7 +605,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Каналы */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -626,7 +626,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Поиск */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -647,7 +647,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Магазин бейджиков */}
+          
           <NavItem
             button
             component={RouterLink}
@@ -668,7 +668,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             />
           </NavItem>
           
-          {/* Админка и Модерация - отдельный раздел с выпадающим меню */}
+          
           {(isAdmin || isModeratorUser) && (
             <>
               <NavItem
@@ -694,7 +694,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
               
               <Collapse in={expandedAdminMod} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
-                  {/* Админ Панель */}
+                  
                   {isAdmin && (
                     <NestedItem
                       button
@@ -717,7 +717,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
                     </NestedItem>
                   )}
                   
-                  {/* Модерировать */}
+                  
                   {isModeratorUser && (
                     <NestedItem
                       button
@@ -744,7 +744,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             </>
           )}
           
-          {/* Мини-игры - только для не-каналов */}
+          
           {!isChannel && (
             <NavItem
               button
@@ -767,7 +767,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             </NavItem>
           )}
           
-          {/* Планы подписок - только для не-каналов */}
+          
           {!isChannel && (
             <NavItem
               button
@@ -790,7 +790,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
             </NavItem>
           )}
 
-          {/* Раздел "Еще" с выпадающим списком */}
+          
           <MoreButton 
             button 
             onClick={toggleExpandMore}
@@ -817,7 +817,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
 
           <Collapse in={expandedMore} timeout="auto" unmountOnExit>
             <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
-              {/* Лидерборд - только для не-каналов */}
+              
               {!isChannel && (
                 <NestedItem
                   button
@@ -840,7 +840,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
                 </NestedItem>
               )}
               
-              {/* Баг-репорты - только для не-каналов */}
+              
               {!isChannel && (
                 <NestedItem
                   button
@@ -863,7 +863,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
                 </NestedItem>
               )}
               
-              {/* Правила */}
+              
               <NestedItem
                 button
                 component={RouterLink}
@@ -884,7 +884,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
                 />
               </NestedItem>
               
-              {/* API Документация */}
+              
               <NestedItem
                 button
                 component={RouterLink}
@@ -905,7 +905,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
                 />
               </NestedItem>
               
-              {/* О платформе */}
+              
               <NestedItem
                 button
                 component={RouterLink}
@@ -930,7 +930,7 @@ const Sidebar = ({ mobile, closeDrawer }) => {
         </List>
       </Box>
 
-      {/* Футер сайдбара с информацией */}
+      
       <SidebarFooter themecolor={primaryColor}>
         <Typography 
           variant="subtitle2" 

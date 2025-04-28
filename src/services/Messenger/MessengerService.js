@@ -649,7 +649,7 @@ class MessengerService {
                 }
               }
             })
-            .catch(() => {/* Ignore errors */});
+            .catch(() => );
         }
       }
       return this.normalizeMessage(message);

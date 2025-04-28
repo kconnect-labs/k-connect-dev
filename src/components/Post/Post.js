@@ -1584,7 +1584,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         }}
       >
         <CardContent sx={{ p: { xs: 1.5, sm: 3 } }}>
-          {/* Header with avatar and name */}
+          
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
             <Avatar 
               src={post.user ? getOptimizedImageUrl(post.user?.avatar_url || `/static/uploads/avatar/${post.user?.id}/${post.user?.photo}`) : '/static/uploads/avatar/system/avatar.png'} 
@@ -1618,7 +1618,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
               >
                 {post.user?.name}
                 
-                {/* Channel Tag for channel posts - placed right after the name */}
+                
                 {(post.user?.account_type === 'channel' || post.user?.is_channel === true) && (
                   <ChannelTag 
                     label="Канал"
@@ -1666,7 +1666,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
               </Typography>
             </Box>
             
-            {/* Remove duplicate channel tag from here */}
+            
             
           </Box>
 
@@ -1681,7 +1681,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                 overflowWrap: 'break-word',
               }}
             >
-              {/* Process plain text content first, then pass to ReactMarkdown */}
+              
               {processedContent && (
                 <ReactMarkdown 
                   components={linkRenderers}
@@ -1722,7 +1722,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             )}
           </Box>
           
-          {/* Post media - Video */}
+          
           {videoUrl && (
             <Box sx={{ mb: 2 }}>
               <VideoPlayer 
@@ -1732,7 +1732,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Post media - Images */}
+          
           {images.length > 0 && (
             <Box sx={{ px: { xs: 1.5, sm: 2 }, mb: 2 }}>
               <ImageGrid 
@@ -1742,7 +1742,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Post media - Music */}
+          
           {musicTracks.length > 0 && (
             <Box sx={{ mt: 0, mb: 0 }}>
               {musicTracks.map((track, index) => (
@@ -1826,12 +1826,12 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Post actions */}
+          
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, px: 1, justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {/* Like/Comment Actions Pill */}
+              
               <ActionsPill>
-                {/* Like Button */}
+                
                 <ActionItem 
                   onClick={handleLike}
                   islike={true}
@@ -1924,7 +1924,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                   </Box>
                 </ActionItem>
                 
-                {/* Comment Button */}
+                
                 <ActionItem
                   onClick={handleCommentClick}
                   islike={false}
@@ -1964,7 +1964,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                 </ActionItem>
               </ActionsPill>
               
-              {/* Share Button as separate pill with animation */}
+              
               <SharePill 
                 onClick={handleShare}
                 component={motion.div}
@@ -1980,7 +1980,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
               </SharePill>
             </Box>
             
-            {/* Views Counter and Menu as a pill */}
+            
             <ViewMenuPill>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <VisibilityIcon sx={{ fontSize: 16, mr: 0.5, color: 'text.secondary' }} />
@@ -2016,7 +2016,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                {/* Show Delete option only for owner */}
+                
                 {isCurrentUserPost && (
                   <MenuItem onClick={handleDelete} sx={{ color: '#f44336' }}>
                     <ListItemIcon>
@@ -2026,7 +2026,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                   </MenuItem>
                 )}
                 
-                {/* Show Edit option only for owner */}
+                
                 {isCurrentUserPost && (
                   <MenuItem onClick={handleEdit} sx={{ color: '#2196f3' }}>
                     <ListItemIcon>
@@ -2036,7 +2036,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                   </MenuItem>
                 )}
                 
-                {/* Show Report option for non-owner */}
+                
                 {!isCurrentUserPost && (
                   <MenuItem onClick={handleReportClick} sx={{ color: '#ff9800' }}>
                     <ListItemIcon>
@@ -2059,7 +2059,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
       
-      {/* Модальное окно для репоста */}
+      
       <Dialog
         open={repostModalOpen}
         onClose={handleCloseRepostModal}
@@ -2156,7 +2156,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             {renderRepostInputWithMentions()}
           </Box>
           
-          {/* Предпросмотр оригинального поста */}
+          
           <Box 
             sx={{ 
               p: 2.5, 
@@ -2289,7 +2289,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         </DialogActions>
       </Dialog>
       
-      {/* Lightbox for displaying images */}
+      
       {lightboxOpen && (
         <LightBox
           isOpen={lightboxOpen}
@@ -2309,7 +2309,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         />
       )}
       
-      {/* Delete Confirmation Dialog */}
+      
       <Dialog
         open={deleteDialog.open}
         onClose={() => !deleteDialog.deleting && !deleteDialog.deleted && setDeleteDialog({ ...deleteDialog, open: false })}
@@ -2403,7 +2403,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         </Box>
       </Dialog>
       
-      {/* Report Dialog */}
+      
       <Dialog
         open={reportDialog.open}
         onClose={() => !reportDialog.submitting && !reportDialog.submitted && setReportDialog({...reportDialog, open: false})}
@@ -2535,7 +2535,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                 />
               )}
               
-              {/* Preview of reported post */}
+              
               <Box 
                 sx={{ 
                   p: 2, 
@@ -2595,7 +2595,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         )}
       </Dialog>
       
-      {/* Snackbar for rate limit notification */}
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={5000}
@@ -2611,7 +2611,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         </Alert>
       </Snackbar>
       
-      {/* Edit post dialog */}
+      
       <Dialog
         open={editDialog.open}
         onClose={() => !editDialog.submitting && handleCloseEditDialog()}
@@ -2674,7 +2674,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Alert>
           )}
           
-          {/* Post content text field */}
+          
           <TextField
             fullWidth
             multiline
@@ -2712,7 +2712,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             }}
           />
           
-          {/* Current post media display */}
+          
           {(post.images?.length > 0 || post.image) && !editDialog.deleteImages && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
@@ -2772,7 +2772,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Current video display */}
+          
           {post.video && !editDialog.deleteVideo && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
@@ -2815,7 +2815,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Current music display */}
+          
           {post.music && post.music.length > 0 && !editDialog.deleteMusic && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
@@ -2862,7 +2862,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* New images upload */}
+          
           <Box sx={{ mt: 2 }}>
             <Button
               variant="outlined"
@@ -2922,7 +2922,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Button>
           </Box>
           
-          {/* Image previews */}
+          
           {editDialog.previews.length > 0 && (
             <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
               {editDialog.previews.map((preview, idx) => (
@@ -2952,7 +2952,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
             </Box>
           )}
           
-          {/* Video preview */}
+          
           {editDialog.newVideo && (
             <Box sx={{ 
               mt: 2,
@@ -3004,7 +3004,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         </DialogActions>
       </Dialog>
       
-      {/* Контекстное меню */}
+      
       <ContextMenu
         items={getContextMenuItems()}
         x={contextMenuState.x}

@@ -1650,7 +1650,7 @@ const ModeratorPage = () => {
                         </IconButton>
                       )}
                       
-                      {/* Новые кнопки для предупреждений и банов */}
+                      
                       <Tooltip title="Предупреждения">
                         <IconButton 
                           color="warning" 
@@ -1698,7 +1698,7 @@ const ModeratorPage = () => {
           </Table>
         </TableContainer>
         
-        {/* Диалог выдачи предупреждения */}
+        
         <StyledDialog open={warningDialogOpen} onClose={() => setWarningDialogOpen(false)} maxWidth="sm" fullWidth>
           <DialogTitle>
             Выдать предупреждение пользователю {warningUser?.name} (@{warningUser?.username})
@@ -1742,7 +1742,7 @@ const ModeratorPage = () => {
           </DialogActions>
         </StyledDialog>
         
-        {/* Диалог бана пользователя */}
+        
         <StyledDialog open={banDialogOpen} onClose={() => setBanDialogOpen(false)} maxWidth="sm" fullWidth>
           <DialogTitle>
             Заблокировать пользователя {banUser?.name} (@{banUser?.username})
@@ -1798,7 +1798,7 @@ const ModeratorPage = () => {
           </DialogActions>
         </StyledDialog>
         
-        {/* Диалог истории предупреждений */}
+        
         <StyledDialog open={userWarningsDialogOpen} onClose={() => setUserWarningsDialogOpen(false)} maxWidth="md" fullWidth>
           <DialogTitle>
             Предупреждения пользователя {selectedUserHistory?.name} (@{selectedUserHistory?.username})
@@ -1878,7 +1878,7 @@ const ModeratorPage = () => {
           </DialogActions>
         </StyledDialog>
         
-        {/* Диалог истории банов */}
+        
         <StyledDialog open={userBansDialogOpen} onClose={() => setUserBansDialogOpen(false)} maxWidth="md" fullWidth>
           <DialogTitle>
             Блокировки пользователя {selectedUserHistory?.name} (@{selectedUserHistory?.username})
@@ -2465,7 +2465,7 @@ const ModeratorPage = () => {
     try {
       return (
         <>
-          {/* Поиск */}
+          
           <Box sx={{ mb: 3, mt: 2, display: 'flex', alignItems: 'center' }}>
             <TextField
               placeholder="Поиск бейджиков..."
@@ -2491,7 +2491,7 @@ const ModeratorPage = () => {
             />
           </Box>
           
-          {/* Сетка бейджиков */}
+          
           <Grid container spacing={3}>
             {badges.map((badge, index) => {
               // Безопасная проверка полей бейджика
@@ -2629,14 +2629,14 @@ const ModeratorPage = () => {
             })}
           </Grid>
           
-          {/* Индикатор загрузки дополнительных данных */}
+          
           {loadingMore && (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
               <CircularProgress size={30} />
             </Box>
           )}
           
-          {/* Дополнительный элемент для отслеживания прокрутки (Infinite Scroll) */}
+          
           {hasMore.badges && badges.length > 0 && (
             <div ref={lastBadgeElementRef} style={{ height: '20px' }}></div>
           )}
@@ -2684,7 +2684,7 @@ const ModeratorPage = () => {
       
     return (
       <Grid container spacing={3}>
-        {/* Карточка с информацией о профиле */}
+        
         <Grid item xs={12} md={4}>
           <Card 
             elevation={3} 
@@ -2786,7 +2786,7 @@ const ModeratorPage = () => {
           </Card>
         </Grid>
         
-        {/* Карточка с правами модератора */}
+        
         <Grid item xs={12} md={8}>
           <Card 
             elevation={3}
@@ -2898,7 +2898,7 @@ const ModeratorPage = () => {
           </Card>
         </Grid>
         
-        {/* Последняя активность */}
+        
         <Grid item xs={12}>
           <Card 
             elevation={3}
@@ -3250,7 +3250,7 @@ const ModeratorPage = () => {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-      {/* Header */}
+      
       <Paper sx={{ p: 2, mb: 3, display: 'flex', alignItems: 'center' }}>
         <SecurityIcon sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
         <Box>
@@ -3265,7 +3265,7 @@ const ModeratorPage = () => {
         </Box>
       </Paper>
       
-      {/* Main content */}
+      
       <Paper sx={{ p: 2 }}>
         <Tabs 
           value={tabValue} 
@@ -3283,7 +3283,7 @@ const ModeratorPage = () => {
           <Tab icon={<EmojiEventsIcon />} label="Бейджики" disabled={!permissions.edit_badges && !permissions.delete_badges} />
         </Tabs>
         
-        {/* Tab content */}
+        
         <Box sx={{ mt: 2 }}>
           {tabValue === 0 && renderProfile()}
           {tabValue === 1 && renderPosts()}
@@ -3295,7 +3295,7 @@ const ModeratorPage = () => {
         </Box>
       </Paper>
       
-      {/* Dialog: Delete post */}
+      
       <StyledDialog open={deletePostDialogOpen} onClose={() => setDeletePostDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -3398,7 +3398,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Delete track */}
+      
       <StyledDialog open={deleteTrackDialogOpen} onClose={() => setDeleteTrackDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -3494,7 +3494,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Delete comment */}
+      
       <StyledDialog open={deleteCommentDialogOpen} onClose={() => setDeleteCommentDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -3597,7 +3597,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Delete avatar */}
+      
       <StyledDialog open={deleteAvatarDialogOpen} onClose={() => setDeleteAvatarDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -3695,7 +3695,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Edit user */}
+      
       <StyledDialog open={editUserDialogOpen} onClose={() => setEditUserDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -3884,7 +3884,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Bug report status */}
+      
       <StyledDialog open={bugReportStatusDialogOpen} onClose={() => setBugReportStatusDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -4009,7 +4009,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Edit badge */}
+      
       <StyledDialog open={editBadgeDialogOpen} onClose={() => setEditBadgeDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -4336,7 +4336,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Dialog: Delete badge */}
+      
       <StyledDialog open={deleteBadgeDialogOpen} onClose={() => setDeleteBadgeDialogOpen(false)} fullWidth maxWidth="sm">
         <Box 
           sx={{
@@ -4441,7 +4441,7 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Snackbar for notifications */}
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}

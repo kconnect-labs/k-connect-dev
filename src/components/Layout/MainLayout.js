@@ -189,7 +189,7 @@ const MainLayout = ({ children }) => {
         </ContentContainer>
       </ContentWrapper>
       
-      {/* Показываем соответствующий плеер только на странице музыки */}
+      
       {hasBottomPlayer && <MobilePlayer />}
       {hasDesktopPlayer && <DesktopPlayer />}
     </MainContainer>

@@ -1507,7 +1507,7 @@ const MusicPage = React.memo(() => {
         pb: 10 
       }}
     >
-      {/* SEO компонент для страницы музыки */}
+      
       {currentTrack ? (
         <SEO
           title={`${currentTrack.title} - ${currentTrack.artist || 'Неизвестный исполнитель'}`}
@@ -1535,7 +1535,7 @@ const MusicPage = React.memo(() => {
         />
       )}
       
-      {/* Поисковая строка - фиксированная, сверху */}
+      
       {isMobile ? (
         <MobileSearchContainer>
           <Box sx={{ 
@@ -1711,10 +1711,10 @@ const MusicPage = React.memo(() => {
         </SearchContainer>
       )}
       
-      {/* Основное содержимое - разные режимы просмотра */}
+      
       {!searchQuery ? (
         <>
-          {/* Режим категорий - стартовый экран */}
+          
           {viewMode === 'categories' && (
             <Fade in={true} timeout={500}>
               <Box sx={{ pt: 2 }}>
@@ -1760,7 +1760,7 @@ const MusicPage = React.memo(() => {
                               </Box>
                             </Box>
                             
-                            {/* Последние треки */}
+                            
                             {likedTracks && likedTracks.length > 0 && (
                               <Box sx={{ mt: 1 }}>
                                 {likedTracks.slice(0, 3).map((track, index) => (
@@ -1825,7 +1825,7 @@ const MusicPage = React.memo(() => {
                               </Box>
                             </Box>
                             
-                            {/* Последние треки */}
+                            
                             {tracks && tracks.length > 0 && (
                               <Box sx={{ mt: 1 }}>
                                 {tracks.slice(0, 3).map((track, index) => (
@@ -1860,7 +1860,7 @@ const MusicPage = React.memo(() => {
                   </Grid>
                 </HeaderPaper>
                 
-                {/* Чарты - Новая секция */}
+                
                 <HeaderPaper elevation={0}>
                   <Box sx={{ 
                     display: 'flex', 
@@ -1879,7 +1879,7 @@ const MusicPage = React.memo(() => {
                     </Box>
                   ) : (
                     <Grid container spacing={2}>
-                      {/* Популярные треки */}
+                      
                       <Grid item xs={12} md={6}>
                         <Zoom in={true} style={{ transitionDelay: '150ms' }}>
                           <Paper
@@ -1990,7 +1990,7 @@ const MusicPage = React.memo(() => {
                         </Zoom>
                       </Grid>
                       
-                      {/* Новые релизы */}
+                      
                       <Grid item xs={12} md={6}>
                         <Zoom in={true} style={{ transitionDelay: '300ms' }}>
                           <Paper
@@ -2104,7 +2104,7 @@ const MusicPage = React.memo(() => {
                   )}
                 </HeaderPaper>
                 
-                {/* Плейлисты */}
+                
                 <HeaderPaper elevation={0}>
                   <Box sx={{ 
                     display: 'flex', 
@@ -2201,13 +2201,13 @@ const MusicPage = React.memo(() => {
                   )}
                 </HeaderPaper>
                 
-                {/* Недавно проигранные */}
-                {/* ... другие секции ... */}
+                
+                
               </Box>
             </Fade>
           )}
         
-          {/* Режим списка треков */}
+          
           {viewMode === 'tracks' && (
             <Fade in={true} timeout={500}>
               <Box sx={{ pt: 2 }}>
@@ -2293,7 +2293,7 @@ const MusicPage = React.memo(() => {
                   </Box>
                 </HeaderPaper>
                 
-                {/* Список треков */}
+                
                 <Box sx={{ mb: 4 }}>
                   {effectiveLoading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
@@ -2500,7 +2500,7 @@ const MusicPage = React.memo(() => {
                         )}
                       </List>
                       
-                      {/* Индикатор загрузки для бесконечного скролла */}
+                      
                       {!searchQuery && hasMoreTracks && (
                         <Box 
                           ref={loaderRef} 
@@ -2698,7 +2698,7 @@ const MusicPage = React.memo(() => {
         </Fade>
       )}
       
-      {/* Мобильная навигация */}
+      
       {isMobile && (
         <Slide direction="up" in={isMobileNavVisible} mountOnEnter unmountOnExit>
           <MobileNavigation 
@@ -2759,21 +2759,21 @@ const MusicPage = React.memo(() => {
         </Slide>
       )}
       
-      {/* Кнопка загрузки треков */}
-      {/* Полноэкранный плеер */}
+      
+      
       <FullScreenPlayer 
         open={fullScreenPlayerOpen} 
         onClose={handleCloseFullScreenPlayer} 
       />
 
-      {/* Диалог загрузки музыки */}
+      
       <MusicUploadDialog 
         open={uploadDialogOpen} 
         onClose={handleCloseUploadDialog} 
         onSuccess={() => {}} 
       />
       
-      {/* Context Menu для треков */}
+      
       <Menu
         open={contextMenu !== null}
         onClose={handleCloseContextMenu}
@@ -2925,7 +2925,7 @@ const MusicPage = React.memo(() => {
         )}
       </Menu>
       
-      {/* Snackbar для уведомлений */}
+      
       <Snackbar 
         open={snackbar.open} 
         autoHideDuration={4000} 
@@ -2955,7 +2955,7 @@ const MusicPage = React.memo(() => {
         </Alert>
       </Snackbar>
       
-      {/* Кнопка возврата наверх */}
+      
       <Zoom in={showBackToTop}>
         <Fab
           size="small"
@@ -2976,7 +2976,7 @@ const MusicPage = React.memo(() => {
         </Fab>
       </Zoom>
 
-      {/* Add no results message */}
+      
       {searchQuery.trim() && !searchLoading && displayedTracks.length === 0 && (
         <Box sx={{ 
           display: 'flex', 

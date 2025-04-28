@@ -67,7 +67,7 @@ const OptimizedList = ({
         sx={{ mb: 2 }}
       />
       
-      {/* Показываем индикатор загрузки при обновлении списка */}
+      
       {isPending && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
           <CircularProgress size={24} color="primary" />

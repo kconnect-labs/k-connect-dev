@@ -383,7 +383,7 @@ const AboutPage = () => {
 
   return (
     <Box sx={{ overflow: 'hidden' }}>
-      {/* Hero Section with Scroll Indicator */}
+      
       <Box 
         sx={{
           position: 'relative',
@@ -458,7 +458,7 @@ const AboutPage = () => {
           </MotionBox>
         </Container>
         
-        {/* Scroll Indicator */}
+        
         <MotionBox
           sx={{
             position: 'absolute',
@@ -499,7 +499,7 @@ const AboutPage = () => {
         </MotionBox>
       </Box>
 
-      {/* Features Section */}
+      
       <Box ref={featuresRef} sx={{ py: 12, bgcolor: theme.palette.background.paper }}>
         <Container maxWidth="lg">
           <MotionBox 
@@ -608,7 +608,7 @@ const AboutPage = () => {
             ))}
           </MotionGrid>
           
-          {/* Section Navigation Indicator */}
+          
           <MotionBox
             sx={{
               display: 'flex',
@@ -640,7 +640,7 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-      {/* Team Section - Add ref here */}
+      
       <Box ref={teamRef} sx={{ py: 12 }}>
         <Container maxWidth="lg">
           <MotionBox 
@@ -751,7 +751,7 @@ const AboutPage = () => {
         </Container>
       </Box>
       
-      {/* Moderators Section */}
+      
       <Box sx={{ py: 12 }}>
         <Container maxWidth="lg">
           <MotionBox 
@@ -841,7 +841,7 @@ const AboutPage = () => {
         </Container>
       </Box>
       
-      {/* Call to Action */}
+      
       <Box 
         sx={{ 
           py: 10, 
@@ -944,7 +944,7 @@ const AboutPage = () => {
         </Container>
       </Box>
       
-      {/* Footer */}
+      
       <Box sx={{ py: 6, bgcolor: theme.palette.background.paper }}>
         <Container maxWidth="lg">
           <Grid container spacing={4}>

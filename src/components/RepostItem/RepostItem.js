@@ -276,7 +276,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
       >
         <CardOverlay />
         <CardContent sx={{ position: 'relative', zIndex: 1 }}>
-          {/* Информация о пользователе, сделавшем репост */}
+          
           <UserInfo>
             <Avatar 
               src={repost.user.avatar_url}
@@ -301,7 +301,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
               </Box>
             </Box>
             
-            {/* Меню для действий с репостом */}
+            
             {user && user.id === repost.user.id && (
               <>
                 <IconButton 
@@ -326,7 +326,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
             )}
           </UserInfo>
 
-          {/* Текст репоста, если есть (хз работает или нет) */}
+          
           {repost.repost_text && (
             <MarkdownContent sx={{ mb: 2 }}>
               <Typography variant="body1" sx={{ 
@@ -339,7 +339,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
             </MarkdownContent>
           )}
           
-          {/* Оригинальный пост */}
+          
           <OriginalPostCard>
             <UserInfo>
               <Avatar 
@@ -363,7 +363,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
               </Box>
             </UserInfo>
             
-            {/* Содержимое оригинального поста */}
+            
             <MarkdownContent>
               <Typography variant="body1" sx={{ 
                 fontSize: '0.9rem', 
@@ -374,7 +374,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
               </Typography>
             </MarkdownContent>
             
-            {/* Music tracks if present */}
+            
             {postMusicTracks.length > 0 && (
               <Box sx={{ mt: 1, mb: 1 }}>
                 {postMusicTracks.slice(0, 2).map((track, index) => (
@@ -490,7 +490,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
               </Box>
             )}
             
-            {/* Статистика оригинального поста */}
+            
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 1.5, opacity: 0.9 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
                 <FavoriteIcon sx={{ fontSize: 16, mr: 0.5, color: '#e57373' }} />

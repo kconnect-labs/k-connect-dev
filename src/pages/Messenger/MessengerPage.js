@@ -990,7 +990,7 @@ const MessengerPage = () => {
         isOwn={isOwn}
         className={messageClass}
       >
-        {/* Removed avatar for non-own messages to save space */}
+        
         <MessageBubble isOwn={isOwn}>
           {messageContent && (
             <Box sx={{ display: 'flex', alignItems: 'flex-end', flexWrap: 'wrap' }}>
@@ -1069,7 +1069,7 @@ const MessengerPage = () => {
               );
             }
           })}
-          {/* Show time for attachment-only messages */}
+          
           {!messageContent && hasAttachment && (
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 0.5 }}>
               <MessageTime isOwn={isOwn}>{formattedTime}</MessageTime>
@@ -2215,7 +2215,7 @@ const MessengerPage = () => {
                         />
                       </Box>
                     )}
-                    {/* Debug info for messages */}
+                    
                     <Box sx={{ p: 2, display: 'none' }}>
                       <Typography variant="caption">
                         Debug: {messages?.length || 0} messages, activeChat: {activeChat ? JSON.stringify(activeChat.id) : 'null'}
@@ -2249,7 +2249,7 @@ const MessengerPage = () => {
                         </Typography>
                       </Box>
                     )}
-                    {/* Reference for scrolling to bottom */}
+                    
                     <div ref={messagesEndRef} style={{ height: 1, width: '100%' }} />
                   </>
                 )}
@@ -2359,7 +2359,7 @@ const MessengerPage = () => {
             </Box>
           )}
         </ConversationContainer>
-        {/* New Chat Dialog for Desktop */}
+        
         <Dialog
           open={isNewChatDialogOpen}
           onClose={handleCloseNewChatDialog}
@@ -2368,7 +2368,7 @@ const MessengerPage = () => {
           TransitionComponent={Transition}
         >
         </Dialog>
-        {/* New Chat Drawer for Mobile */}
+        
         <Drawer
           anchor="right"
           open={mobileDrawerOpen}

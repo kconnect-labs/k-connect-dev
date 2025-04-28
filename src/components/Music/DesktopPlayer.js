@@ -333,7 +333,7 @@ const DesktopPlayer = () => {
         onMouseEnter={() => setIsPlayerHovered(true)}
         onMouseLeave={() => setIsPlayerHovered(false)}
       >
-        {/* Левая секция - обложка и информация о треке */}
+        
         <Box 
           sx={{ 
             display: 'flex', 
@@ -460,7 +460,7 @@ const DesktopPlayer = () => {
               )}
             </IconButton>
             
-            {/* Add Share Button */}
+            
             <IconButton 
               size="small" 
               onClick={handleShare}
@@ -478,7 +478,7 @@ const DesktopPlayer = () => {
           </Box>
         </Box>
         
-        {/* Центральная секция - прогресс-бар и кнопки управления */}
+        
         <Box 
           sx={{ 
             display: 'flex', 
@@ -490,7 +490,7 @@ const DesktopPlayer = () => {
             zIndex: 1
           }}
         >
-          {/* Кнопки управления */}
+          
           <Box sx={{ 
             display: 'flex', 
             alignItems: 'center',
@@ -574,7 +574,7 @@ const DesktopPlayer = () => {
             </IconButton>
           </Box>
           
-          {/* Прогресс-бар с временем */}
+          
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="caption" sx={{ mr: 1, minWidth: 32, textAlign: 'right', color: 'rgba(255,255,255,0.8)', fontSize: '0.65rem' }}>
               {formatDuration(currentTime)}
@@ -600,7 +600,7 @@ const DesktopPlayer = () => {
           </Box>
         </Box>
         
-        {/* Правая секция - дополнительные кнопки и громкость */}
+        
         <Box sx={{ 
           display: 'flex', 
           alignItems: 'center',
@@ -650,7 +650,7 @@ const DesktopPlayer = () => {
         </Box>
       </PlayerContainer>
 
-      {/* Snackbar for share notifications */}
+      
       <Snackbar 
         open={shareSnackbar.open} 
         autoHideDuration={4000} 

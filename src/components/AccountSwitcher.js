@@ -158,7 +158,7 @@ const AccountSwitcher = () => {
           </Box>
         ) : (
           <>
-            {/* Текущий аккаунт */}
+            
             {accounts.current_account && (
               <Box sx={{ p: 1.5 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -184,7 +184,7 @@ const AccountSwitcher = () => {
             
             <Divider sx={{ my: 0.5 }} />
             
-            {/* Основной аккаунт (если текущий - канал) */}
+            
             {accounts.main_account && (
               <Box sx={{ p: 1.5 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -208,7 +208,7 @@ const AccountSwitcher = () => {
               </Box>
             )}
             
-            {/* Каналы */}
+            
             {accounts.channels && accounts.channels.length > 0 && (
               <Box sx={{ p: 1.5 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -237,7 +237,7 @@ const AccountSwitcher = () => {
             
             <Divider sx={{ my: 0.5 }} />
             
-            {/* Создать канал */}
+            
             <Box sx={{ p: 1.5 }}>
               <MenuItem 
                 onClick={handleCreateChannel}

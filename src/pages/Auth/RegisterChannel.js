@@ -194,7 +194,7 @@ const RegisterChannel = () => {
           </Box>
         </Box>
       )}
-      {/* Channel form */}
+      
       <Box 
         sx={{ 
           flex: isMobile ? 1 : '0 0 55%',

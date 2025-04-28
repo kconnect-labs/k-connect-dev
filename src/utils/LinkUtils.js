@@ -345,7 +345,7 @@ export const linkRenderers = {
             {content}
           </Typography>
           
-          {/* Показываем превью для каждого обнаруженного URL */}
+          
           {urls.length > 0 && !DISABLE_LINK_PREVIEWS && urls.map((url, index) => (
             <LinkPreview key={`preview-${index}`} url={url} />
           ))}
@@ -407,7 +407,7 @@ export const linkRenderers = {
         >
           {children}
         </a>
-        {/* Add preview for markdown links too if needed */}
+        
         {!DISABLE_LINK_PREVIEWS && <LinkPreview url={enhancedHref} />}
       </>
     );
@@ -424,7 +424,7 @@ export const TextWithLinks = ({ text }) => {
         {content}
       </Typography>
       
-      {/* Показываем превью для каждого обнаруженного URL */}
+      
       {urls.length > 0 && urls.map((url, index) => (
         <LinkPreview key={`preview-${index}`} url={url} />
       ))}

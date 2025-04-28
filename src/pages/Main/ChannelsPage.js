@@ -660,7 +660,7 @@ const ChannelsPage = () => {
         </Typography>
       </PageHeader>
       
-      {/* Секция поиска */}
+      
       <SearchSection>
         <form onSubmit={handleSearch}>
           <StyledTextField
@@ -686,7 +686,7 @@ const ChannelsPage = () => {
         </form>
       </SearchSection>
       
-      {/* Секция с популярными каналами */}
+      
       {!searchQuery && popularChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
           <SectionHeader>
@@ -705,7 +705,7 @@ const ChannelsPage = () => {
         </Box>
       )}
       
-      {/* Рекомендуемые каналы с качественным описанием */}
+      
       {!searchQuery && featuredChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
           <SectionHeader>
@@ -724,7 +724,7 @@ const ChannelsPage = () => {
         </Box>
       )}
       
-      {/* Main section with tabs */}
+      
       <Box sx={{ mb: 3 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
           <StyledTabs
@@ -741,7 +741,7 @@ const ChannelsPage = () => {
           </StyledTabs>
         </Box>
         
-        {/* Filters */}
+        
         <Box 
           sx={{ 
             display: 'flex', 
@@ -779,7 +779,7 @@ const ChannelsPage = () => {
           </Box>
         </Box>
         
-        {/* Main channels grid */}
+        
         <Grid container spacing={2}>
           {loading ? (
             // Loading placeholders
@@ -807,7 +807,7 @@ const ChannelsPage = () => {
           )}
         </Grid>
         
-        {/* Load More Button */}
+        
         {!loading && channels.length > 0 && hasMore && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
             <LoadMoreButton
@@ -823,7 +823,7 @@ const ChannelsPage = () => {
         )}
       </Box>
       
-      {/* Bottom spacer to prevent content from being hidden by bottom navigation */}
+      
       <Box sx={{ height: '60px', width: '100%' }} />
     </PageContainer>
   );

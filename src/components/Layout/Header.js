@@ -550,8 +550,8 @@ const Header = ({ toggleSidebar }) => {
 
       <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
 
-      {/* Channel Section */}
-      {/* Channel Section */}
+      
+      
       {accounts.channels.length < 3 && (
         <MenuItem onClick={handleCreateChannel}>
           <ListItemIcon>
@@ -562,7 +562,7 @@ const Header = ({ toggleSidebar }) => {
       )}
 
 
-      {/* Main account (if current is a channel) */}
+      
       {accounts.main_account && accounts.current_account?.account_type === 'channel' && (
         <>
           <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
@@ -593,7 +593,7 @@ const Header = ({ toggleSidebar }) => {
         </>
       )}
 
-      {/* Channels list */}
+      
       {accounts.channels && accounts.channels.length > 0 && (
         <>
           <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
@@ -653,7 +653,7 @@ const Header = ({ toggleSidebar }) => {
       }}
     >
       <StyledToolbar>
-        {/* When search is active on mobile, show full-width search */}
+        
         {isMobile && showSearch ? (
           <SearchInputWrapper fullWidth>
             <ClickAwayListener onClickAway={handleClickAway}>
@@ -813,7 +813,7 @@ const Header = ({ toggleSidebar }) => {
           </SearchInputWrapper>
         ) : (
           <>
-            {/* Logo section */}
+            
             <LogoSection>
               <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
                 <LogoSVG 
@@ -834,11 +834,11 @@ const Header = ({ toggleSidebar }) => {
               </Link>
             </LogoSection>
 
-            {/* Player section */}
+            
             {currentTrack && (
               <PlayerSection>
                 <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                  {/* Трек инфо */}
+                  
                   <Box 
                     component={Link} 
                     to="/music" 
@@ -866,7 +866,7 @@ const Header = ({ toggleSidebar }) => {
                     </Box>
                   </Box>
                   
-                  {/* Плеер контролы */}
+                  
                   <PlayerControls>
                     <IconButton size="small" onClick={prevTrack}>
                       <SkipPreviousIcon fontSize="small" />
@@ -913,7 +913,7 @@ const Header = ({ toggleSidebar }) => {
               </PlayerSection>
             )}
 
-            {/* Action section */}
+            
             <ActionsSection>
               {user && !isMobile && (
                 <Tooltip title="Ваши баллы">

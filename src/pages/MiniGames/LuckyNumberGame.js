@@ -503,7 +503,7 @@ const LuckyNumberGame = () => {
       {gameActive && (
         <GameTable>
           <Box sx={{ color: theme.palette.common.white, textAlign: 'center' }}>
-            {/* Секция множителя и ставки */}
+            
             <Box sx={{ 
               mb: 4, 
               display: 'flex', 
@@ -526,7 +526,7 @@ const LuckyNumberGame = () => {
               />
             </Box>
             
-            {/* Секция результата, если он есть */}
+            
             {result !== null && (
               <Box sx={{ mb: 4 }}>
                 <ResultNumber>
@@ -556,7 +556,7 @@ const LuckyNumberGame = () => {
               </Box>
             )}
             
-            {/* Секция выбора числа */}
+            
             {result === null && (
               <>
                 <Typography variant="h6" sx={{ 
@@ -572,7 +572,7 @@ const LuckyNumberGame = () => {
                 
                 {renderNumberButtons()}
                 
-                {/* Секция выбора множителя */}
+                
                 <Typography variant="h6" sx={{ 
                   mb: 3, 
                   fontWeight: 'bold', 
@@ -586,7 +586,7 @@ const LuckyNumberGame = () => {
                 
                 {renderMultiplierOptions()}
                 
-                {/* Секция кнопки игры */}
+                
                 <Box sx={{ textAlign: 'center', mt: 4 }}>
                   {countdown > 0 ? (
                     <Box sx={{ mb: 4, textAlign: 'center' }}>

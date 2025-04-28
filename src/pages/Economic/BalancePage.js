@@ -1413,7 +1413,7 @@ const BalancePage = () => {
             {userPoints}
           </BalanceAmount>
           
-          {/* Новый единый блок с кнопками управления балансом */}
+          
           <ActionButtonsContainer>
             <ActionButtonItem onClick={() => navigate('/badge-shop')}>
               <ActionCircleIcon>
@@ -1483,7 +1483,7 @@ const BalancePage = () => {
         </Tooltip>
       </InfoSection>
 
-      {/* Вкладки для переключения между историей транзакций и активами */}
+      
       <Box sx={{ mb: 2 }}>
         <Tabs 
           value={tabValue} 
@@ -1521,7 +1521,7 @@ const BalancePage = () => {
         </Tabs>
       </Box>
 
-      {/* Панель истории транзакций */}
+      
       <TabPanel value={tabValue} index={0}>
         <HistoryCard>
           <CardContent sx={{ p: 1.25 }}>
@@ -1584,7 +1584,7 @@ const BalancePage = () => {
         </HistoryCard>
       </TabPanel>
 
-      {/* Transaction Details Dialog */}
+      
       <TransactionDetailDialog
         open={detailDialogOpen}
         onClose={handleCloseTransactionDetails}
@@ -1653,7 +1653,7 @@ const BalancePage = () => {
                     </DetailValue>
                   </DetailRow>
                   
-                  {/* Show special information for clicker withdrawals */}
+                  
                   {(selectedTransaction.sender_id === selectedTransaction.recipient_id && 
                    selectedTransaction.message === "Вывод баллов из кликера") ? (
                     <>
@@ -1772,10 +1772,10 @@ const BalancePage = () => {
         )}
       </TransactionDetailDialog>
 
-      {/* Панель активов */}
+      
       <TabPanel value={tabValue} index={1}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {/* Секция с созданными бейджиками */}
+          
           {createdBadges.length > 0 ? (
             <HistoryCard>
               <CardContent sx={{ p: 3 }}>
@@ -1906,7 +1906,7 @@ const BalancePage = () => {
             </Box>
           )}
 
-          {/* Секция с купленными юзернеймами */}
+          
           {usernamePurchases.length > 0 && (
             <HistoryCard>
               <CardContent sx={{ p: 3 }}>
@@ -1983,7 +1983,7 @@ const BalancePage = () => {
             </HistoryCard>
           )}
           
-          {/* Если пока нет ни бейджиков, ни юзернеймов */}
+          
           {createdBadges.length === 0 && usernamePurchases.length === 0 && (
             <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
               <AccountBalanceWalletIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
@@ -2015,7 +2015,7 @@ const BalancePage = () => {
         </Box>
       </TabPanel>
 
-      {/* Add a new tab panel for subscription */}
+      
       <TabPanel value={tabValue} index={2}>
         {subscription && subscription.active ? (
           <Card elevation={3} sx={{ 
@@ -2109,7 +2109,7 @@ const BalancePage = () => {
         )}
       </TabPanel>
 
-      {/* Диалог для перевода баллов */}
+      
       <StyledDialog 
         open={transferDialogOpen} 
         onClose={() => setTransferDialogOpen(false)}
@@ -2161,7 +2161,7 @@ const BalancePage = () => {
             />
           </InputContainer>
           
-          {/* Предложения похожих пользователей */}
+          
           {userSearch.suggestions.length > 0 && !userSearch.exists && (
             <SuggestionsContainer>
               <Box sx={{ p: 2, pb: 1 }}>
@@ -2190,7 +2190,7 @@ const BalancePage = () => {
             </SuggestionsContainer>
           )}
           
-          {/* Показываем блок с подтверждением валидации для безопасности */}
+          
           {userSearch.exists && transferData.recipient_id && (
             <Box sx={{ 
               p: 2, 
@@ -2256,7 +2256,7 @@ const BalancePage = () => {
         </Box>
       </StyledDialog>
 
-      {/* Add the key redemption dialog */}
+      
       <StyledDialog
         open={openKeyDialog}
         onClose={() => {
@@ -2481,7 +2481,7 @@ const BalancePage = () => {
         </DialogActions>
       </StyledDialog>
 
-      {/* Диалог успешного перевода */}
+      
       <StyledDialog
         open={transferSuccess}
         onClose={() => setTransferSuccess(false)}
@@ -2570,7 +2570,7 @@ const BalancePage = () => {
         </DialogActions>
       </StyledDialog>
 
-      {/* Snackbar для уведомлений */}
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}

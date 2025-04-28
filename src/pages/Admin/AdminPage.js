@@ -1496,7 +1496,7 @@ const AdminPage = () => {
         </Tabs>
       </Box>
         
-      {/* Users Tab */}
+      
         {tabValue === 0 && (
           <>
           <ContentPaper>
@@ -1530,7 +1530,7 @@ const AdminPage = () => {
           </>
         )}
         
-      {/* Posts Tab */}
+      
         {tabValue === 1 && (
         <ContentPaper>
             {loading ? (
@@ -1583,7 +1583,7 @@ const AdminPage = () => {
         </ContentPaper>
         )}
         
-      {/* Tracks Tab */}
+      
         {tabValue === 2 && (
         <ContentPaper>
             {loading ? (
@@ -1623,13 +1623,13 @@ const AdminPage = () => {
       </ContentPaper>
       )}
       
-      {/* Moderators Tab */}
+      
       {tabValue === 3 && renderModeratorsTable()}
       
-      {/* Bug Reports Tab */}
+      
       {tabValue === 4 && renderBugReportsTable()}
       
-      {/* Accounts Tab - placeholder for the disabled tab */}
+      
       {tabValue === 5 && (
         <ContentPaper>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
@@ -1641,10 +1641,10 @@ const AdminPage = () => {
         </ContentPaper>
       )}
     
-      {/* Keys Tab */}
+      
       {tabValue === 6 && renderKeysTab()}
       
-      {/* Verify User Dialog */}
+      
       <Dialog open={verifyDialogOpen} onClose={() => setVerifyDialogOpen(false)}>
         <DialogTitle>Верификация пользователя</DialogTitle>
         <DialogContent>
@@ -1706,7 +1706,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Give Badge Dialog */}
+      
       <Dialog open={badgeDialogOpen} onClose={() => setBadgeDialogOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>Выдать значок достижения</DialogTitle>
         <DialogContent>
@@ -1764,7 +1764,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Ban User Dialog */}
+      
       <Dialog open={banDialogOpen} onClose={() => setBanDialogOpen(false)}>
         <DialogTitle>
           {selectedUser?.is_banned ? 'Разблокировать пользователя' : 'Заблокировать пользователя'}
@@ -1808,7 +1808,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Delete Post Dialog */}
+      
       <Dialog open={deletePostDialogOpen} onClose={() => setDeletePostDialogOpen(false)}>
         <DialogTitle>Удалить пост</DialogTitle>
         <DialogContent>
@@ -1831,7 +1831,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* View User Dialog */}
+      
       <Dialog open={viewUserDialogOpen} onClose={() => setViewUserDialogOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -1967,7 +1967,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Delete Track Dialog */}
+      
       <Dialog open={deleteTrackDialogOpen} onClose={() => setDeleteTrackDialogOpen(false)}>
         <DialogTitle>Удалить трек</DialogTitle>
         <DialogContent>
@@ -1992,7 +1992,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Moderator Dialog */}
+      
       <Dialog open={moderatorDialogOpen} onClose={() => setModeratorDialogOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>
           {isModerator(selectedUser?.id) 
@@ -2207,7 +2207,7 @@ const AdminPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Snackbar for notifications */}
+      
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
@@ -2223,7 +2223,7 @@ const AdminPage = () => {
         </Alert>
       </Snackbar>
     
-    {/* Key Generation Dialog */}
+    
     {keyGenerationDialog}
     </Container>
   );

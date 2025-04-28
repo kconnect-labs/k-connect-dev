@@ -503,7 +503,7 @@ const NotificationItem = ({ notification, onNotificationClick, onDelete }) => {
               {getActionText()}
             </Typography>
             
-            {/* Enhanced context information with richer data */}
+            
             {getContentPreview() && (
               <Box sx={{ 
                 mt: 1, 
@@ -720,7 +720,7 @@ const NotificationList = () => {
 
   return (
     <>
-      {/* Notification Bell Icon with Badge */}
+      
       <IconButton
         color="inherit"
         onClick={handleOpenDrawer}
@@ -748,7 +748,7 @@ const NotificationList = () => {
         </Badge>
       </IconButton>
       
-      {/* Notification Drawer */}
+      
       <SwipeableDrawer
         anchor="right"
         open={drawerOpen}

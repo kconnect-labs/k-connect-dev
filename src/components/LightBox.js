@@ -410,7 +410,7 @@ const LightBox = ({
           }
         }}
       >
-        {/* Close button */}
+        
         <IconButton
           onClick={onClose}
           sx={{
@@ -431,7 +431,7 @@ const LightBox = ({
           <CloseIcon />
         </IconButton>
 
-        {/* Image */}
+        
         <Box
           component="div"
           ref={containerRef}
@@ -508,7 +508,7 @@ const LightBox = ({
           )}
         </Box>
         
-        {/* Navigation buttons - showing on both mobile and desktop */}
+        
         {hasPrev && (
           <IconButton 
             onClick={onPrev}
@@ -555,7 +555,7 @@ const LightBox = ({
           </IconButton>
         )}
         
-        {/* Zoom controls for desktop only */}
+        
         {!isMobile && (
           <Box
             sx={{
@@ -609,7 +609,7 @@ const LightBox = ({
           </Box>
         )}
         
-        {/* Download button */}
+        
         <IconButton
           onClick={handleDownload}
           sx={{

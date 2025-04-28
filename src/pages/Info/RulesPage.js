@@ -290,7 +290,7 @@ const RulesPage = () => {
 
   return (
     <PageContainer maxWidth="lg">
-      {/* Баннер с ссылками на юридические документы */}
+      
       <Paper
         elevation={0}
         sx={{
@@ -447,7 +447,7 @@ const RulesPage = () => {
 
         <Divider sx={{ mb: 4 }} />
 
-        {/* Section I: Основные принципы */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -503,7 +503,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section II: Запрещённый контент */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -635,7 +635,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section III: Дополнительные ограничения */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -718,7 +718,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section IV: Действия администрации */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -786,7 +786,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section V: Ваши обязательства */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -822,7 +822,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section VI: Правила для бейджиков */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -951,7 +951,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Section VII: Правила ведения групп/каналов */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
@@ -1090,7 +1090,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
 
-        {/* Additional Info: Изменения в правилах + Контакты */}
+        
         <motion.div variants={itemVariants}>
           <RuleSection>
             <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>

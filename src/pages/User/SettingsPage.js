@@ -1086,7 +1086,7 @@ const UsernameShopTab = () => {
         </Typography>
       </Box>
       
-      {/* Info Paper - Username Purchase Rules */}
+      
       <Paper 
         elevation={3}
             sx={{ 
@@ -1537,7 +1537,7 @@ const UsernameShopTab = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Add the purchase dialog */}
+      
       <Dialog 
         open={openPurchaseDialog} 
         onClose={() => !purchaseAnimation && setOpenPurchaseDialog(false)}
@@ -1680,7 +1680,7 @@ const UsernameShopTab = () => {
         )}
       </Dialog>
       
-      {/* Add local snackbar for notifications */}
+      
       <Snackbar 
         open={snackbar.open} 
         autoHideDuration={6000} 
@@ -3501,14 +3501,14 @@ const SettingsPage = () => {
           {!isChannel && <StyledTab icon={<LockIcon />} label="Вход по паролю" />}
         </StyledTabs>
         
-        {/* Раздел профиля */}
+        
         {getTabContent(activeTab) === 0 && (
           <Box component={motion.div} 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Account Status Card */}
+            
             <SettingsCard>
               <SettingsCardContent>
                 <SectionTitle variant="h5">
@@ -3615,7 +3615,7 @@ const SettingsPage = () => {
                 
                 <Grid container spacing={3}>
                   <Grid item xs={12} md={6}>
-                    {/* Аватар */}
+                    
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
                       <ProfileImageContainer>
                         <Avatar
@@ -3650,7 +3650,7 @@ const SettingsPage = () => {
                   </Grid>
                   
                   <Grid item xs={12} md={6}>
-                    {/* Баннер */}
+                    
                     <BannerContainer>
                       <Box 
                         component="img"
@@ -3731,7 +3731,7 @@ const SettingsPage = () => {
                   </Grid>
                 </Grid>
                 
-                {/* Добавляем компонент настройки статуса */}
+                
                 <StatusSettings 
                   profileData={profileData} 
                   subscription={profileData?.subscription} 
@@ -3834,7 +3834,7 @@ const SettingsPage = () => {
                   </Button>
                 </Box>
                 
-                {/* Диалог добавления социальной сети */}
+                
                 <Dialog 
                   open={socialDialogOpen} 
                   onClose={() => setSocialDialogOpen(false)}
@@ -3908,19 +3908,19 @@ const SettingsPage = () => {
           </Box>
         )}
         
-        {/* Раздел оформления */}
+        
         {getTabContent(activeTab) === 1 && (
           <Box component={motion.div} 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Add the ThemeSelector component at the top */}
+            
             <ThemeSelector onThemeSelect={applyTheme} />
             
             <Divider sx={{ my: 3 }} />
             
-            {/* Existing appearance tab content */}
+            
             <Typography variant="h6" sx={{ mb: 2 }}>
               Настройка цветов интерфейса
             </Typography>
@@ -4022,13 +4022,13 @@ const SettingsPage = () => {
                   Дополнительные настройки
                 </SectionTitle>
                 
-                {/* Удален переключатель режима Telegram */}
+                
               </SettingsCardContent>
             </SettingsCard>
           </Box>
         )}
         
-        {/* Раздел уведомлений */}
+        
         {getTabContent(activeTab) === 2 && !isChannel && (
           <Box component={motion.div} 
             initial={{ opacity: 0, y: 10 }}
@@ -4042,7 +4042,7 @@ const SettingsPage = () => {
 
             
             
-            {/* New Push Notifications Card */}
+            
             <SettingsCard sx={{ mt: 3 }}>
               <SettingsCardContent>
                 <SectionTitle variant="h5">
@@ -4066,14 +4066,14 @@ const SettingsPage = () => {
                       </Alert>
                     )}
                     
-                    {/* Add warning about service worker being disabled */}
+                    
                     {window.setupCaching && typeof window.setupCaching === 'function' && (
                       <Alert severity="warning" sx={{ mb: 2 }}>
                         Система защиты от кэширования может помешать работе push-уведомлений. Если у вас возникли проблемы с получением уведомлений, обратитесь к администратору.
                       </Alert>
                     )}
                     
-                    {/* Push Notifications */}
+                    
                     <Box sx={{ 
                       display: 'flex', 
                       justifyContent: 'space-between',
@@ -4118,7 +4118,7 @@ const SettingsPage = () => {
                       </Button>
                     </Box>
                     
-                    {/* Telegram Notifications */}
+                    
                     <Box sx={{ 
                       display: 'flex', 
                       justifyContent: 'space-between',
@@ -4172,7 +4172,7 @@ const SettingsPage = () => {
               </SettingsCardContent>
             </SettingsCard>
             
-            {/* Связанные аккаунты Card */}
+            
             <SettingsCard sx={{ mt: 3 }}>
               <SettingsCardContent>
                 <SectionTitle variant="h5">
@@ -4184,7 +4184,7 @@ const SettingsPage = () => {
                   Подключите внешние аккаунты для расширенных возможностей
                 </Typography>
                 
-                {/* Element Account */}
+                
                 <Box sx={{ 
                   p: 2, 
                   mb: 2,
@@ -4282,7 +4282,7 @@ const SettingsPage = () => {
                   )}
                 </Box>
                 
-                {/* Telegram Account - можно добавить в будущем */}
+                
                 <Box sx={{ 
                   p: 2,
                   borderRadius: 2,
@@ -4355,7 +4355,7 @@ const SettingsPage = () => {
           </Box>
         )}
         
-        {/* Раздел бейджей */}
+        
         {getTabContent(activeTab) === 3 && (
           <Box component={motion.div} 
             initial={{ opacity: 0, y: 10 }}
@@ -4628,7 +4628,7 @@ const SettingsPage = () => {
           </Box>
         )}
         
-        {/* Раздел юзернеймов */}
+        
         {getTabContent(activeTab) === 4 && !isChannel && (
           <Box component={motion.div} 
             initial={{ opacity: 0, y: 10 }}
@@ -4652,7 +4652,7 @@ const SettingsPage = () => {
           </Box>
         )}
         
-        {/* Раздел входа по паролю */}
+        
         {getTabContent(activeTab) === 5 && !isChannel && (
           <Box component={motion.div} 
             initial={{ opacity: 0 }}
@@ -4663,7 +4663,7 @@ const SettingsPage = () => {
           </Box>
         )}
         
-        {/* Уведомления */}
+        
         <Snackbar 
           open={snackbar.open} 
           autoHideDuration={6000} 
@@ -4680,7 +4680,7 @@ const SettingsPage = () => {
           </Alert>
         </Snackbar>
         
-        {/* Диалог для ввода Telegram ID */}
+        
         <Dialog
           open={telegramDialogOpen}
           onClose={() => setTelegramDialogOpen(false)}
@@ -4769,7 +4769,7 @@ const SettingsPage = () => {
           </DialogActions>
         </Dialog>
         
-        {/* Warnings dialog */}
+        
         <Dialog
           open={warningsDialogOpen}
           onClose={() => setWarningsDialogOpen(false)}
@@ -4799,7 +4799,7 @@ const SettingsPage = () => {
               </Box>
             ) : userWarnings.length > 0 ? (
               <Box>
-                {/* Desktop view - Table */}
+                
                 <Box sx={{ display: { xs: 'none', md: 'block' } }}>
                   <TableContainer component={Paper} sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
                     <Table>
@@ -4833,7 +4833,7 @@ const SettingsPage = () => {
                   </TableContainer>
                 </Box>
                 
-                {/* Mobile view - Card-based layout */}
+                
                 <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
                   {userWarnings.map((warning) => (
                     <Paper 
@@ -4895,7 +4895,7 @@ const SettingsPage = () => {
           </DialogActions>
         </Dialog>
         
-        {/* Add SettingsBottomNavigation for mobile */}
+        
         <SettingsBottomNavigation 
           activeTab={activeTab} 
           onTabChange={handleTabChange}
@@ -4959,7 +4959,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
                 }
               }}
             >
-              {/* Theme preview */}
+              
               <Box sx={{ height: 120, bgcolor: themeOption.bg, position: 'relative', p: 1 }}>
                 <Box 
                   sx={{ 
@@ -5000,7 +5000,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
                 </Box>
               </Box>
               
-              {/* Theme name */}
+              
               <Box 
                 sx={{ 
                   p: 1.5, 

@@ -43,7 +43,7 @@ const CupImage = ({ lifted, winner }) => {
       justifyContent: 'center',
       alignItems: 'center',
     }}>
-      {/* Cup */}
+      
       <Box sx={{ 
         width: '80%',
         height: '80%',
@@ -56,7 +56,7 @@ const CupImage = ({ lifted, winner }) => {
         zIndex: 2
       }} />
       
-      {/* Ball (only shown for winning cup when revealed) */}
+      
       {winner && (
         <Box sx={{ 
           position: 'absolute',
@@ -229,7 +229,7 @@ const CupsGamePage = () => {
     >
       <SEO title="Три чаши | Мини-игры | К-Коннект" description="Игра Три чаши - угадайте, под какой чашей находится шарик!" />
       
-      {/* Верхняя панель с навигацией и балансом */}
+      
       <Box sx={{ 
         display: 'flex', 
         flexDirection: { xs: 'column', sm: 'row' },
@@ -268,7 +268,7 @@ const CupsGamePage = () => {
         </Box>
       </Box>
       
-      {/* Заголовок игры */}
+      
       <Paper 
         elevation={2}
         sx={{ 
@@ -328,7 +328,7 @@ const CupsGamePage = () => {
         </Box>
       </Paper>
       
-      {/* Основной блок игры */}
+      
       <Paper sx={{ 
         p: { xs: 2, sm: 3 }, 
         borderRadius: 3, 
@@ -337,7 +337,7 @@ const CupsGamePage = () => {
           ? 'linear-gradient(to bottom, #424242, #303030)'
           : 'linear-gradient(to bottom, #ffffff, #f5f5f5)'
       }}>
-        {/* Блок ставки */}
+        
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" gutterBottom sx={{ 
             display: 'flex',
@@ -428,7 +428,7 @@ const CupsGamePage = () => {
         
         <Divider sx={{ my: 3 }} />
         
-        {/* Блок с чашами */}
+        
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" gutterBottom sx={{ 
             display: 'flex',
@@ -497,7 +497,7 @@ const CupsGamePage = () => {
                       }
                     }}
                   >
-                    {/* Selection indicator */}
+                    
                     {selectedCup === cup && !isPlaying && (
                       <Box 
                         sx={{ 
@@ -515,7 +515,7 @@ const CupsGamePage = () => {
                       />
                     )}
                     
-                    {/* Cup image */}
+                    
                     <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
                       <CupImage 
                         lifted={revealResult} 
@@ -543,7 +543,7 @@ const CupsGamePage = () => {
           </Box>
         </Box>
         
-        {/* Кнопки действий */}
+        
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 4 }}>
           {!isPlaying ? (
             <Button
@@ -590,7 +590,7 @@ const CupsGamePage = () => {
         </Box>
       </Paper>
       
-      {/* Результат игры */}
+      
       {gameResult && (
         <Fade in={true} timeout={800}>
           <Paper
@@ -642,7 +642,7 @@ const CupsGamePage = () => {
         </Fade>
       )}
       
-      {/* Диалог с правилами */}
+      
       <Dialog
         open={showRules}
         onClose={() => setShowRules(false)}
@@ -688,7 +688,7 @@ const CupsGamePage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Индикатор загрузки */}
+      
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -696,7 +696,7 @@ const CupsGamePage = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       
-      {/* Уведомление об ошибке */}
+      
       <Snackbar 
         open={!!error} 
         autoHideDuration={5000} 

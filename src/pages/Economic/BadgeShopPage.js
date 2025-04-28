@@ -1071,7 +1071,7 @@ const BadgeShopPage = () => {
         </Box>
       </Box>
 
-      {/* Mobile section indicator */}
+      
       {isMobile && (
         <Box sx={{ 
           mb: 2, 
@@ -1403,7 +1403,7 @@ const BadgeShopPage = () => {
         )}
       </BadgeDialog>
 
-      {/* Диалог создания бейджика */}
+      
       <Dialog 
         open={openCreateDialog} 
         onClose={() => setOpenCreateDialog(false)} 
@@ -1466,7 +1466,7 @@ const BadgeShopPage = () => {
           bgcolor: 'background.paper'
         }}>
           <Box sx={{ pt: 1 }}>
-            {/* Информация о лимитах создания бейджей */}
+            
             <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
                 Лимиты создания бейджиков:
@@ -1482,7 +1482,7 @@ const BadgeShopPage = () => {
               </Typography>
             </Box>
             
-            {/* Информация о размерах SVG */}
+            
             <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
                 Требования к изображению:
@@ -1696,7 +1696,7 @@ const BadgeShopPage = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Диалог покупки бейджика - стилизован как процесс оформления заказа */}
+      
       <StyledDialog 
         open={openPurchaseDialog} 
         onClose={() => {
@@ -1868,7 +1868,7 @@ const BadgeShopPage = () => {
                             '100%': { opacity: 1 }
                           }
                         }}>
-                          {/* Анимированные элементы конфетти - оптимизировано для производительности */}
+                          
                           {[...Array(15)].map((_, i) => (
                             <Box
                               key={i}
@@ -1918,7 +1918,7 @@ const BadgeShopPage = () => {
                           Бейджик "{selectedBadge.name}" успешно добавлен в ваши достижения.
                         </Typography>
                         
-                        {/* Анимированное отображение нового баланса */}
+                        
                         <Box sx={{ 
                           mt: 3,
                           p: 2,
@@ -2012,7 +2012,7 @@ const BadgeShopPage = () => {
         </DialogActions>
       </StyledDialog>
       
-      {/* Badge Shop Bottom Navigation for mobile */}
+      
       <BadgeShopBottomNavigation 
         tabValue={tabValue}
         onTabChange={(e, newValue) => setTabValue(newValue)}

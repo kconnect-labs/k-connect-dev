@@ -174,7 +174,7 @@ const RegisterProfile = ({ setUser }) => {
         position: 'relative',
       }}
     >
-      {/* Desktop left panel with decorative elements (hidden on mobile) */}
+      
       {!isMobile && (
         <Box 
           sx={{ 
@@ -226,7 +226,7 @@ const RegisterProfile = ({ setUser }) => {
             </Typography>
           </motion.div>
           
-          {/* Decorative elements */}
+          
           <Box sx={{ 
             position: 'absolute', 
             bottom: 40, 
@@ -255,7 +255,7 @@ const RegisterProfile = ({ setUser }) => {
         </Box>
       )}
       
-      {/* Profile form */}
+      
       <Box 
         sx={{ 
           flex: isMobile ? 1 : '0 0 55%',
@@ -279,7 +279,7 @@ const RegisterProfile = ({ setUser }) => {
             padding: isMobile ? '16px' : '40px'
           }}
         >
-          {/* Mobile logo */}
+          
           {isMobile && (
             <Box sx={{ 
               position: 'absolute',

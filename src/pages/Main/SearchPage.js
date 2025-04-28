@@ -441,7 +441,7 @@ const SearchPage = () => {
         </Box>
       ) : (
         <>
-          {/* Все результаты */}
+          
           <TabPanel value={searchType} index={0}>
             {users.length === 0 && posts.length === 0 ? (
               <NoResultsContainer>
@@ -454,7 +454,7 @@ const SearchPage = () => {
               </NoResultsContainer>
             ) : (
               <>
-                {/* Пользователи */}
+                
                 {users.length > 0 && (
                   <Box sx={{ mb: 4 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -580,7 +580,7 @@ const SearchPage = () => {
                   </Box>
                 )}
                 
-                {/* Посты */}
+                
                 {posts.length > 0 && (
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -717,7 +717,7 @@ const SearchPage = () => {
             )}
           </TabPanel>
           
-          {/* Пользователи */}
+          
           <TabPanel value={searchType} index={1}>
             {users.length === 0 ? (
               <NoResultsContainer>
@@ -859,7 +859,7 @@ const SearchPage = () => {
             )}
           </TabPanel>
           
-          {/* Посты */}
+          
           <TabPanel value={searchType} index={2}>
             {posts.length === 0 ? (
               <NoResultsContainer>
@@ -992,7 +992,7 @@ const SearchPage = () => {
         </>
       )}
       
-      {/* Lightbox for displaying images */}
+      
       <LightBox 
         isOpen={lightboxOpen}
         onClose={handleCloseLightbox}

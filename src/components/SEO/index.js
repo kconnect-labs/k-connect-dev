@@ -28,18 +28,18 @@ const SEO = ({
 
   return (
     <Helmet>
-      {/* Стандартные мета-теги */}
+      
       <title>{title}</title>
       <meta name="description" content={description} />
       
-      {/* Мета-теги для роботов и поисковых систем */}
+      
       <meta name="robots" content="index, follow" />
       <meta name="googlebot" content="index, follow" />
       <meta name="google" content="notranslate" />
       <meta name="google-site-verification" content={meta.googleVerification || ''} />
       <meta name="yandex-verification" content={meta.yandexVerification || ''} />
       
-      {/* Open Graph мета-теги для социальных сетей и мессенджеров */}
+      
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={imageUrl} />
@@ -48,17 +48,17 @@ const SEO = ({
       <meta property="og:site_name" content="К-Коннект" />
       <meta property="og:locale" content="ru_RU" />
       
-      {/* Twitter Card мета-теги */}
+      
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={imageUrl} />
       
-      {/* Дополнительные мета-теги */}
+      
       {meta.author && <meta name="author" content={meta.author} />}
       {meta.canonical && <link rel="canonical" href={meta.canonical} />}
       
-      {/* Если тип профиль - добавим соответствующие теги */}
+      
       {type === 'profile' && meta.firstName && (
         <meta property="profile:first_name" content={meta.firstName} />
       )}
@@ -69,7 +69,7 @@ const SEO = ({
         <meta property="profile:username" content={meta.username} />
       )}
       
-      {/* Если тип статья - добавим соответствующие теги */}
+      
       {type === 'article' && meta.publishedTime && (
         <meta property="article:published_time" content={meta.publishedTime} />
       )}
@@ -86,7 +86,7 @@ const SEO = ({
         <meta property="article:tag" content={meta.tags} />
       )}
       
-      {/* Если тип музыка - добавим соответствующие теги */}
+      
       {type === 'music' && meta.song && (
         <meta property="music:song" content={meta.song} />
       )}
@@ -97,7 +97,7 @@ const SEO = ({
         <meta property="music:album" content={meta.album} />
       )}
       
-      {/* Добавляем прочие метатеги, которые могут быть переданы в meta */}
+      
       {meta.keywords && <meta name="keywords" content={meta.keywords} />}
       {meta.viewport && <meta name="viewport" content={meta.viewport} />}
     </Helmet>

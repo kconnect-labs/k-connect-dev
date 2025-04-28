@@ -297,23 +297,23 @@ const AppRoutes = () => {
     <MainLayout>
       <PageTransition>
         <Routes location={background || location}>
-          {/* Public routes - moved to the top for better clarity */}
+          
           <Route path="/rules" element={<RulesPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
           <Route path="/about" element={<AboutPage />} />
           
-          {/* Authentication-related routes */}
+          
           <Route path="/register/profile" element={<RegisterProfile setUser={setUser} />} />
           <Route path="/register/channel" element={<RegisterChannel />} />
           <Route path="/confirm-email/:token" element={<EmailConfirmation />} />
           
-          {/* Protected routes */}
+          
           <Route path="/" element={isAuthenticated ? <MainPage /> : <Navigate to="/login" replace />} />
           <Route path="/feed" element={<Navigate to="/" replace />} />
           <Route path="/main" element={<Navigate to="/" replace />} />
           
-          {/* ... остальные защищенные маршруты ... */}
+          
           <Route path="/post/:postId" element={isAuthenticated ? <PostDetailPage /> : <Navigate to="/login" replace />} />
           <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />} />
           <Route path="/profile/:username" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />} />
@@ -328,14 +328,13 @@ const AppRoutes = () => {
           <Route path="/leaderboard" element={<RequireAuth><LeaderboardPage /></RequireAuth>} />
 
 
-          {/* <Route path="/messenger" element={<MessengerPage />} />
-          <Route path="/messenger/:chatId" element={<MessengerPage />} /> */}
+          
           <Route path="/share-preview-test" element={isAuthenticated ? <SharePreviewTest /> : <Navigate to="/login" replace />} />
           <Route path="/more" element={isAuthenticated ? <MorePage /> : <Navigate to="/login" replace />} />
           <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/login" replace />} />
           <Route path="/moderator" element={isAuthenticated ? <ModeratorPage /> : <Navigate to="/login" replace />} />
           <Route path="/badge-shop" element={isAuthenticated ? <BadgeShopPage /> : <Navigate to="/login" replace />} />
-          {/* <Route path="/clicker" element={<ClickerPage />} /> */}
+          
           <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
           <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
           <Route path="/minigames/lucky-number" element={isAuthenticated ? <LuckyNumberGame /> : <Navigate to="/login" replace />} />
@@ -346,7 +345,7 @@ const AppRoutes = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
         
-        {/* Show the post detail as an overlay when we have a background location */}
+        
         {background && (
           <Routes>
             <Route 

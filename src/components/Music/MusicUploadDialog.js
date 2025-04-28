@@ -288,7 +288,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
       
       <DialogContent>
         <Grid container spacing={3}>
-          {/* Левая колонка с загрузкой файлов */}
+          
           <Grid item xs={12} md={4}>
             <Box sx={{ mb: 3 }}>
               <Typography variant="subtitle2" gutterBottom>
@@ -409,7 +409,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             </Box>
           </Grid>
 
-          {/* Правая колонка с формой */}
+          
           <Grid item xs={12} md={8}>
             {error && (
               <Alert severity="error" sx={{ mb: 2 }}>

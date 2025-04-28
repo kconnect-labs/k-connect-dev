@@ -686,7 +686,7 @@ const ClickerPage = () => {
             </Grid>
           </Grid>
           
-          {/* Auto-click status */}
+          
           {getUpgrade('auto_click').level > 0 && (
             <Paper 
               sx={{ 
@@ -728,7 +728,7 @@ const ClickerPage = () => {
             </Paper>
           )}
           
-          {/* Mobile optimization toggle */}
+          
           {isMobile && (
             <Paper 
               sx={{ 
@@ -777,7 +777,7 @@ const ClickerPage = () => {
             borderRadius: 4,
             boxShadow: '0 0 10px rgba(0,0,0,0.1)'
           }}>
-            {/* Calculate actual click value with multiplier */}
+            
             +{(() => {
               const multiplierUpgrade = upgrades.find(u => u.type === 'multiplier');
               const multiplier = multiplierUpgrade && multiplierUpgrade.level > 0 ? multiplierUpgrade.power : 1.0;
@@ -785,7 +785,7 @@ const ClickerPage = () => {
             })()} за клик
           </Typography>
           
-          {/* Click effect animation */}
+          
           {clickEffects.map(effect => (
             <Box
               key={effect.id}
@@ -908,7 +908,7 @@ const ClickerPage = () => {
       </Typography>
       
       <Grid container spacing={2}>
-        {/* Click Power Upgrade */}
+        
         <Grid item xs={12}>
           <UpgradeCard 
             elevation={2} 
@@ -976,7 +976,7 @@ const ClickerPage = () => {
                 sx={{ mt: 2, height: 6, borderRadius: 3 }}
               />
               
-              {/* Add explicit upgrade button */}
+              
               <Button
                 fullWidth
                 variant="contained"
@@ -992,7 +992,7 @@ const ClickerPage = () => {
           </UpgradeCard>
         </Grid>
         
-        {/* Auto Click Upgrade */}
+        
         <Grid item xs={12}>
           <UpgradeCard 
             elevation={2} 
@@ -1060,7 +1060,7 @@ const ClickerPage = () => {
                 sx={{ mt: 2, height: 6, borderRadius: 3 }}
               />
               
-              {/* Add explicit upgrade button */}
+              
               <Button
                 fullWidth
                 variant="contained"
@@ -1076,7 +1076,7 @@ const ClickerPage = () => {
           </UpgradeCard>
         </Grid>
         
-        {/* Multiplier Upgrade */}
+        
         <Grid item xs={12}>
           <UpgradeCard 
             elevation={2} 
@@ -1144,7 +1144,7 @@ const ClickerPage = () => {
                 sx={{ mt: 2, height: 6, borderRadius: 3 }}
               />
               
-              {/* Add explicit upgrade button */}
+              
               <Button
                 fullWidth
                 variant="contained"
@@ -1340,7 +1340,7 @@ const ClickerPage = () => {
         </Paper>
       ) : (
         <>
-          {/* Top 3 Podium - Special design for the winners */}
+          
           <Box sx={{ 
             display: 'flex', 
             flexDirection: { xs: 'column', sm: 'row' },
@@ -1349,7 +1349,7 @@ const ClickerPage = () => {
             mb: 3,
             gap: { xs: 1, sm: 2, md: 3 }
           }}>
-            {/* Second Place */}
+            
             {leaderboardData.length > 1 && (
               <Box sx={{ 
                 width: { xs: '100%', sm: '32%' },
@@ -1520,7 +1520,7 @@ const ClickerPage = () => {
               </Box>
             )}
             
-            {/* First Place - Champion */}
+            
             {leaderboardData.length > 0 && (
               <Box sx={{ 
                 width: { xs: '100%', sm: '32%' },
@@ -1692,7 +1692,7 @@ const ClickerPage = () => {
               </Box>
             )}
             
-            {/* Third Place */}
+            
             {leaderboardData.length > 2 && (
               <Box sx={{ 
                 width: { xs: '100%', sm: '32%' },
@@ -1864,7 +1864,7 @@ const ClickerPage = () => {
             )}
           </Box>
           
-          {/* Rest of Leaderboard */}
+          
           {leaderboardData.length > 3 && (
             <Box sx={{ 
               mt: 4, 
@@ -1998,7 +1998,7 @@ const ClickerPage = () => {
             </Box>
           )}
           
-          {/* Back Button */}
+          
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
             <Button
               variant="outlined"
@@ -2080,7 +2080,7 @@ const ClickerPage = () => {
       
       {renderActiveSection()}
       
-      {/* Withdraw Dialog */}
+      
       <Dialog
         open={withdrawDialogOpen}
         onClose={() => setWithdrawDialogOpen(false)}
@@ -2130,7 +2130,7 @@ const ClickerPage = () => {
         </DialogActions>
       </Dialog>
       
-      {/* Mobile Bottom Navigation */}
+      
       {isMobile && (
         <ClickerBottomNavigation 
           activeSection={activeSection}

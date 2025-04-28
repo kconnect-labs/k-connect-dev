@@ -124,7 +124,7 @@ const ProfileMiniGame = ({ gameData, colors, confettiOnClick = false }) => {
         cursor: 'crosshair'
       }}
     >
-      {/* Показываем счет если включено */}
+      
       {config.displayScore && (
         <Box
           sx={{ 
@@ -153,7 +153,7 @@ const ProfileMiniGame = ({ gameData, colors, confettiOnClick = false }) => {
         </Box>
       )}
       
-      {/* Цели для клика */}
+      
       {targets.map(target => (
         <Box
           key={target.id}
@@ -191,7 +191,7 @@ const ProfileMiniGame = ({ gameData, colors, confettiOnClick = false }) => {
         </Box>
       ))}
       
-      {/* Конфетти при успешном клике */}
+      
       {showConfetti && dimensions.width > 0 && (
         <Confetti
           width={dimensions.width}

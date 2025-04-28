@@ -354,7 +354,7 @@ const PostsList = ({ posts, loading, userAvatar, userName, userId, isCurrentUser
         </motion.div>
       ))}
       
-      {/* Диалог подтверждения удаления поста */}
+      
       <Dialog
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}

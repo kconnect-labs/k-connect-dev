@@ -630,7 +630,7 @@ const Comment = ({
         </Box>
       </Box>
 
-      {/* Lightbox for displaying the comment image */}
+      
       {lightboxOpen && comment.image && !currentLightboxImage && (
         <LightBox
           isOpen={lightboxOpen}
@@ -639,7 +639,7 @@ const Comment = ({
         />
       )}
       
-      {/* Lightbox for displaying reply images */}
+      
       {lightboxOpen && currentLightboxImage && (
         <LightBox
           isOpen={lightboxOpen}
@@ -651,7 +651,7 @@ const Comment = ({
         />
       )}
 
-      {/* Replies section - keep original reply quote block */}
+      
       {comment.replies && comment.replies.length > 0 && (
         <Box sx={{ 
           mt: 0.5, // Reduced margin
@@ -689,7 +689,7 @@ const Comment = ({
                     }
                   }}
                 >
-                  {/* Show parent reply if exists */}
+                  
                   {reply.parent_reply_id ? (
                     <Box 
                       sx={{ 
@@ -948,7 +948,7 @@ const Comment = ({
                         {reply.content}
                       </Typography>
                       
-                      {/* Display reply image if exists */}
+                      
                       {reply.image ? (
                         <Box sx={{ mt: 1, mb: { xs: 1, sm: 1.5 } }}>
                           <Box
@@ -1108,7 +1108,7 @@ const Comment = ({
         </Box>
       )}
 
-      {/* Reply form */}
+      
       {isReplyFormOpen && activeCommentId === comment.id && (
         <Box sx={{ 
           mt: 1, 
@@ -1117,7 +1117,7 @@ const Comment = ({
           pr: { xs: 0.5, sm: 0 },
           position: 'relative'
         }}>
-          {/* Quote block */}
+          
           <Box 
             sx={{ 
               bgcolor: 'rgba(255, 255, 255, 0.03)',
@@ -1246,7 +1246,7 @@ const Comment = ({
             }}
           />
           
-          {/* Reply image preview */}
+          
           {replyImagePreview && (
             <Box sx={{ mt: 1, position: 'relative' }}>
               <img 
@@ -2027,8 +2027,8 @@ const PostDetailPage = ({ isOverlay = false }) => {
   
   // Render the content of the post detail page
   const renderContent = () => (
-    <Container maxWidth="md" sx={{ pt: 2, pb: 10, px: { xs: 0, sm: 0 } }}> {/* Remove horizontal padding */}
-      {/* SEO компонент для предпросмотра */}
+    <Container maxWidth="md" sx={{ pt: 2, pb: 10, px: { xs: 0, sm: 0 } }}> 
+      
       {post && (
         <SEO
           title={`${post.user?.name || 'Пользователь'} - ${post.content.substring(0, 60)}${post.content.length > 60 ? '...' : ''}`}
@@ -2078,7 +2078,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         />
       )}
 
-      {/* Comment form */}
+      
       <Box sx={{ px: { xs: 2, sm: 0 }, mb: { xs: 1, sm: 2 }, mt: { xs: 2, sm: 3 } }}>
         {user ? (
           <Box>
@@ -2204,7 +2204,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         )}
       </Box>
 
-      {/* Comments section - Updated with modern design */}
+      
       <Box sx={{ px: { xs: 2, sm: 0 }, mb: 4 }}>
         <Typography 
           variant="h6" 
@@ -2651,7 +2651,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
             backgroundColor: '#0a0a0a', // Match dialog background
             backgroundImage: 'none', // Remove any background images
           }}
-        > {/* Remove padding */}
+        > 
           {renderContent()}
         </Box>
       </Dialog>

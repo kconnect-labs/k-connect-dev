@@ -212,7 +212,7 @@ const MorePage = () => {
         </ProfileAvatar>
       </ProfileBanner>
 
-      {/* Информация о профиле */}
+      
       <Box sx={{ mb: 4, px: 2 }}>
         <ProfileName variant="h5">
           {user?.name || 'Пользователь'}
@@ -251,7 +251,7 @@ const MorePage = () => {
           @{user?.username || 'username'}
         </Typography>
         
-        {/* Кнопка редактирования профиля */}
+        
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button
             variant="contained"
@@ -271,7 +271,7 @@ const MorePage = () => {
         </Box>
       </Box>
 
-      {/* Меню */}
+      
       <Paper 
         elevation={2} 
         sx={{ 
@@ -281,7 +281,7 @@ const MorePage = () => {
         }}
       >
         <List sx={{ p: 1 }}>
-          {/* Баланс и Магазин в одном блоке */}
+          
           <Box 
             sx={{ 
               display: 'flex', 
@@ -354,7 +354,7 @@ const MorePage = () => {
             <ListItemText primary="Подписки" />
           </MenuListItem>
 
-          {/* Мини-игры кнопка - только для не-каналов */}
+          
           {!isChannel && (
             <MenuListItem 
               button 
@@ -384,7 +384,7 @@ const MorePage = () => {
             </MenuListItem>
           )}
           
-          {/* Планы подписок - только для не-каналов */}
+          
           {!isChannel && (
             <MenuListItem button component={Link} to="/sub-planes">
               <MenuItemIcon>
@@ -394,7 +394,7 @@ const MorePage = () => {
             </MenuListItem>
           )}
           
-          {/* Лидерборд - только для не-каналов */}
+          
           {!isChannel && (
             <MenuListItem button component={Link} to="/leaderboard">
               <MenuItemIcon>
@@ -404,7 +404,7 @@ const MorePage = () => {
             </MenuListItem>
           )}
           
-          {/* Баг-репорты - только для не-каналов */}
+          
           {!isChannel && (
             <MenuListItem button component={Link} to="/bugs">
               <MenuItemIcon>
@@ -414,7 +414,7 @@ const MorePage = () => {
             </MenuListItem>
           )}
           
-          {/* О платформе */}
+          
           <MenuListItem button component={Link} to="/about">
             <MenuItemIcon>
               <Icon icon="solar:info-circle-bold" width="24" height="24" />
@@ -422,7 +422,7 @@ const MorePage = () => {
             <ListItemText primary="О платформе" />
           </MenuListItem>
           
-          {/* Правила */}
+          
           <MenuListItem button component={Link} to="/rules">
             <MenuItemIcon>
               <Icon icon="solar:document-text-bold" width="24" height="24" />
@@ -430,7 +430,7 @@ const MorePage = () => {
             <ListItemText primary="Правила" />
           </MenuListItem>
           
-          {/* API Документация */}
+          
           <MenuListItem button component={Link} to="/api-docs">
             <MenuItemIcon>
               <Icon icon="solar:code-bold" width="24" height="24" />
@@ -438,10 +438,10 @@ const MorePage = () => {
             <ListItemText primary="API Документация" />
           </MenuListItem>
           
-          {/* Управление - Модератор и Админ */}
+          
           {(isAdmin || isModeratorUser) && (
             <>
-              {/* Moderator Panel button - only visible if user is a moderator */}
+              
               {isModeratorUser && (
                 <MenuListItem 
                   button 
@@ -469,7 +469,7 @@ const MorePage = () => {
                 </MenuListItem>
               )}
 
-              {/* Админ-панель только для админов */}
+              
               {isAdmin && (
                 <MenuListItem button component={Link} to="/admin">
                   <MenuItemIcon>
@@ -483,7 +483,7 @@ const MorePage = () => {
         </List>
       </Paper>
 
-      {/* Кнопка выхода */}
+      
       <Paper 
         elevation={2} 
         sx={{ 
@@ -507,7 +507,7 @@ const MorePage = () => {
         </List>
       </Paper>
 
-      {/* Подвал */}
+      
       <FooterSection>
         <Typography variant="caption" display="block" gutterBottom sx={{ fontWeight: 500, color: alpha(theme.palette.primary.main, 0.85) }}>
           К-Коннект v2.3 React

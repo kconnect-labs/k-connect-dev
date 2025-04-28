@@ -793,7 +793,7 @@ const CreatePost = ({ onPostCreated }) => {
         />
       </Box>
       
-      {/* Preview box - support both old and new methods */}
+      
       {mediaPreview ? (
         <Box sx={{ position: 'relative', mt: 1 }}>
           <img
@@ -876,7 +876,7 @@ const CreatePost = ({ onPostCreated }) => {
         </Box>
       ) : null}
       
-      {/* Display selected music tracks */}
+      
       {selectedTracks.length > 0 && (
         <Box sx={{ mt: 2, mb: 1 }}>
           {selectedTracks.map(track => (
@@ -987,7 +987,7 @@ const CreatePost = ({ onPostCreated }) => {
             </Button>
           </label>
           
-          {/* Music selection button */}
+          
           <Button
             onClick={() => setMusicSelectOpen(true)}
             startIcon={<MusicNoteIcon sx={{ fontSize: 18 }} />}
@@ -1025,7 +1025,7 @@ const CreatePost = ({ onPostCreated }) => {
         </PublishButton>
       </PostActions>
       
-      {/* Music selection dialog */}
+      
       <MusicSelectDialog
         open={musicSelectOpen}
         onClose={() => setMusicSelectOpen(false)}
@@ -2220,7 +2220,7 @@ const ProfilePage = () => {
               )
             ))}
             
-            {/* Load more posts button with smooth transition */}
+            
             <Box sx={{ textAlign: 'center', mt: 0.5, mb: 0.5 }}>
               {hasMorePosts ? (
                 <Button 
@@ -2313,9 +2313,9 @@ const ProfilePage = () => {
           flexWrap: { xs: 'nowrap', md: 'nowrap' }
         }}
       >
-        {/* Left column - Profile info */}
+        
         <Grid item xs={12} md={5}>
-          {/* User card */}
+          
           <Paper sx={{ 
             p: 0, 
             borderRadius: '16px', 
@@ -2369,7 +2369,7 @@ const ProfilePage = () => {
               }
             })
           }}>
-            {/* Banner */}
+            
             {user?.banner_url ? (
               <Box sx={{ 
                 width: '100%',
@@ -2394,8 +2394,8 @@ const ProfilePage = () => {
                     : 'linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.4) 100%)'
                 }
               }}>
-                {/* Add ProfileDecorations for user */}
-                {/* <ProfileDecorations username={username} /> */}
+                
+                
               </Box>
             ) : (
               <Box sx={{ 
@@ -2427,20 +2427,20 @@ const ProfilePage = () => {
                     : 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.9) 100%)'
                 }
               }}>
-                {/* Add ProfileDecorations for user even without banner */}
-                {/* <ProfileDecorations username={username} /> */}
+                
+                
               </Box>
             )}
             
-            {/* Content container */}
+            
             <Box sx={{ px: 3, pb: 3, pt: 0, mt: -7 }}>
-              {/* Top section with avatar and actions */}
+              
               <Box sx={{ 
                 display: 'flex', 
                 justifyContent: 'space-between',
                 alignItems: 'flex-start'
               }}>
-                {/* Avatar with online indicator */}
+                
                 <Box sx={{ position: 'relative' }}>
                   <Tooltip title="Открыть аватар" arrow placement="top">
                     <Avatar 
@@ -2492,7 +2492,7 @@ const ProfilePage = () => {
                     />
                   </Tooltip>
                   
-                  {/* Online status indicator on avatar */}
+                  
                   {isOnline && user?.subscription?.type !== 'channel' && (
                     <Box
                       sx={{
@@ -2524,14 +2524,14 @@ const ProfilePage = () => {
                     />
                   )}
                   
-                  {/* Отображение статуса пользователя, если он есть */}
+                  
                   <UserStatus statusText={user?.status_text} statusColor={user?.status_color} />
                 </Box>
                 
 
               </Box>
               
-              {/* User info */}
+              
               <Box sx={{ mt: 2, whiteSpace: 'nowrap' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -2798,7 +2798,7 @@ const ProfilePage = () => {
                   </Box>
                 )}
                 
-                {/* Bio */}
+                
                 {user?.about && (
                   <Typography 
                     variant="body2" 
@@ -2822,14 +2822,14 @@ const ProfilePage = () => {
                 )}
                 
                 
-                {/* Stats cards */}
+                
                 <Box sx={{ 
                   display: 'grid', 
                   gridTemplateColumns: user?.subscription?.type === 'channel' ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', 
                   gap: 1, // Уменьшено с 1.5 до 1
                   mt: 1 // Уменьшено с 2.5 до 1
                 }}>
-                  {/* Posts count */}
+                  
                   <Paper sx={{ 
                     p: 1.5, 
                     borderRadius: 2, 
@@ -2859,7 +2859,7 @@ const ProfilePage = () => {
                     </Typography>
                   </Paper>
                   
-                  {/* Followers */}
+                  
                   <Paper 
                     component={Link}
                     to={`/profile/${user?.username}/followers`}
@@ -2899,7 +2899,7 @@ const ProfilePage = () => {
                     </Typography>
                   </Paper>
                   
-                  {/* Following */}
+                  
                   {(!user?.subscription || user.subscription.type !== 'channel') && (
                     <Paper 
                       component={Link}
@@ -2942,11 +2942,11 @@ const ProfilePage = () => {
                   )}
                 </Box>
                 
-                {/* Followers and following section with avatars - hide completely for channels */}
+                
                 {(!user?.subscription || user.subscription.type !== 'channel') && (
-                  <Grid container spacing={1} sx={{ mt: 1 }}> {/* Уменьшено spacing с 2 до 1 и mt с 2 до 1 */}
+                  <Grid container spacing={1} sx={{ mt: 1 }}> 
                     
-                    {/* Подписчики - only show for non-channel subscriptions */}
+                    
                     {(!user?.subscription || user.subscription.type !== 'channel') ? (
                       <Grid item xs={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -2954,7 +2954,7 @@ const ProfilePage = () => {
                             Подписчики
                           </Typography>
                           
-                          {/* Аватары подписчиков */}
+                          
                           {loadingFollowers ? (
                             <CircularProgress size={20} />
                           ) : followers.length > 0 ? (
@@ -3027,14 +3027,14 @@ const ProfilePage = () => {
                       </Grid>
                     )}
                     
-                    {/* Подписки */}
+                    
                     <Grid item xs={6}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                           Подписки
                         </Typography>
                         
-                        {/* For channel show only count, otherwise show avatars */}
+                        
                         {user?.subscription && user.subscription.type === 'channel' ? (
                           <Typography variant="body2">
                             {followingCount || 0}
@@ -3102,7 +3102,7 @@ const ProfilePage = () => {
                   </Grid>
                 )}
                 
-                {/* Social links */}
+                
                 {socials && socials.length > 0 && (
                   <Box sx={{ 
                     display: 'flex', 
@@ -3167,7 +3167,7 @@ const ProfilePage = () => {
                   </Box>
                 )}
                 
-                {/* Follow button for non-current users placed below social links */}
+                
                 {!isCurrentUser && (!currentUser?.account_type || currentUser.account_type !== 'channel') && (
                   <Box sx={{ 
                     display: 'flex', 
@@ -3217,15 +3217,15 @@ const ProfilePage = () => {
                   </Box>
                 )}
                 
-                {/* Remove mobile follow button section */}
+                
               </Box>
             </Box>
           </Paper>
         </Grid>
         
-        {/* Right column - Content */}
+        
         <Grid item xs={12} md={7} sx={{ pt: 0, ml: { xs: 0, md: '5px' }, mb: '100px' }}>
-        {/* Tabs for profile content */}
+        
           <Paper sx={{ 
             borderRadius: '16px', 
             background: theme => theme.palette.mode === 'dark' 
@@ -3262,7 +3262,7 @@ const ProfilePage = () => {
             </Tabs>
           </Paper>
           
-          {/* Tab Panels */}
+          
           <TabPanel value={tabValue} index={0} sx={{ p: 0, mt: 1 }}>
             {isCurrentUser && (
               <CreatePost onPostCreated={handlePostCreated} />
@@ -3384,7 +3384,7 @@ const ProfilePage = () => {
                           Юзернеймы
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                          {/* Показываем все юзернеймы вместо только первых 3 */}
+                          
                           {user.purchased_usernames.map((username, idx) => (
                             <Chip 
                               key={idx}
@@ -3418,7 +3418,7 @@ const ProfilePage = () => {
           </Box>
         )}
       
-      {/* Лайтбокс для просмотра изображений */}
+      
       {lightboxIsOpen && (
         <div 
           style={{

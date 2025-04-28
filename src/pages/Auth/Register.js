@@ -202,7 +202,7 @@ const Register = ({ setUser }) => {
           </Box>
         </Box>
       )}
-      {/* Registration form */}
+      
       <Box 
         sx={{ 
           flex: isMobile ? 1 : '0 0 55%',
