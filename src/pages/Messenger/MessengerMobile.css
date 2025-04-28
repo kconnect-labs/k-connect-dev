@@ -1,18 +1,18 @@
-/* MessengerMobile.css - стили для мобильной версии мессенджера */
 
-/* Отключение масштабирования при фокусе на элементах ввода */
+
+
 input[type="text"],
 textarea {
-  font-size: 16px !important; /* Предотвращает автоматическое увеличение на iOS */
-  max-height: 50vh; /* Ограничиваем высоту текстового поля */
-  touch-action: manipulation; /* Отключаем двойное нажатие для увеличения */
+  font-size: 16px !important; 
+  max-height: 50vh; 
+  touch-action: manipulation; 
 }
 
-/* Основные контейнеры и элементы мессенджера */
+
 .messenger-container {
-  overscroll-behavior: contain; /* Предотвращает scroll bounce эффект на iOS */
-  touch-action: pan-y; /* Разрешаем только вертикальную прокрутку пальцем */
-  -webkit-overflow-scrolling: touch; /* Плавная прокрутка для iOS */
+  overscroll-behavior: contain; 
+  touch-action: pan-y; 
+  -webkit-overflow-scrolling: touch; 
 }
 
 .message-list {
@@ -21,14 +21,14 @@ textarea {
   padding-bottom: 16px;
 }
 
-/* Стили для сообщений */
+
 .message-container {
   margin-bottom: 4px;
   animation: fade-in 0.2s ease-out;
 }
 
 .message-bubble {
-  max-width: 80%; /* Шире на мобильных устройствах */
+  max-width: 80%; 
   word-break: break-word;
   hyphens: auto;
   transition: opacity 0.2s ease;
@@ -47,7 +47,7 @@ textarea {
   margin-left: auto;
 }
 
-/* Группировка сообщений */
+
 .first-in-group {
   margin-top: 8px;
 }
@@ -56,7 +56,7 @@ textarea {
   margin-bottom: 8px;
 }
 
-/* Статусы сообщений */
+
 .message-sending {
   opacity: 0.7;
 }
@@ -65,13 +65,13 @@ textarea {
   border: 1px solid #ff5252 !important;
 }
 
-/* Анимации */
+
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Панель ввода сообщений */
+
 .message-input-container {
   position: sticky;
   bottom: 0;
@@ -81,7 +81,7 @@ textarea {
   z-index: 10;
 }
 
-/* Исправление для iOS - предотвращает проблемы с виртуальной клавиатурой */
+
 .message-input {
   -webkit-appearance: none;
   border-radius: 20px;
@@ -91,7 +91,7 @@ textarea {
   outline: none;
 }
 
-/* Вложения и медиа */
+
 .attachment-preview {
   border-radius: 8px;
   max-width: 200px;
@@ -120,21 +120,21 @@ textarea {
   z-index: 2;
 }
 
-/* Улучшенная поддержка для touch-устройств */
+
 .touch-scrollable {
   -webkit-overflow-scrolling: touch;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
-/* Фикс для предотвращения выпадения из макета на маленьких экранах */
+
 @media (max-width: 350px) {
   .message-bubble {
     max-width: 90%;
   }
 }
 
-/* Стили для аватаров */
+
 .user-avatar {
   border-radius: 50%;
   object-fit: cover;
@@ -147,12 +147,12 @@ textarea {
   opacity: 0;
 }
 
-/* Активное состояние чата */
+
 .chat-active {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Оповещения о непрочитанных сообщениях */
+
 .unread-badge {
   background-color: #0084ff;
   color: white;
@@ -165,7 +165,7 @@ textarea {
   font-size: 12px;
 }
 
-/* Индикация времени и статуса сообщения */
+
 .message-time {
   font-size: 11px;
   opacity: 0.7;
@@ -176,7 +176,7 @@ textarea {
   justify-content: flex-end;
 }
 
-/* Плавная анимация перехода между состояниями */
+
 .fade-transition {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }

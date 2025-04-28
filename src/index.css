@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https:
 
 :root {
   --primary: #D0BCFF;
@@ -50,7 +50,7 @@ input, textarea, select {
   font-family: 'Inter', sans-serif;
 }
 
-/* Классы для управления выделением текста */
+
 .selectable {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -65,7 +65,7 @@ input, textarea, select {
   user-select: none;
 }
 
-/* Scrollbar */
+
 ::-webkit-scrollbar {
   width: 1px;
   height: 1px;
