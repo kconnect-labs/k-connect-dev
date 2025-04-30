@@ -796,7 +796,7 @@ const AboutPage = () => {
             {[
               { name: "Арбуз", avatar: "/static/moderators/arb.jpg" },
               { name: "ʙʟxꜱꜱxᴅ ₁₈₆", avatar: "/static/moderators/bxx.jpg" },
-              { name: "revexed", avatar: "/static/moderators/rev.jpg" },
+              // { name: "revexed", avatar: "/static/moderators/rev.jpg" },
               { name: "Liquides", avatar: "/static/moderators/lix.jpg" }
             ].map((moderator, index) => (
               <MotionGrid item xs={6} sm={4} md={3} key={index} variants={itemVariants}>

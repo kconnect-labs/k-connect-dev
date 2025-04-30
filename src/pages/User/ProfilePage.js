@@ -704,9 +704,11 @@ const CreatePost = ({ onPostCreated }) => {
       sx={{
         p: 2,
         mb: 0,
-        borderRadius: '10px',
+        borderRadius: '24px',
         backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
-        position: 'relative'
+        position: 'relative',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+
       }}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
@@ -2319,12 +2321,26 @@ const ProfilePage = () => {
           <Paper sx={{ 
             p: 0, 
             borderRadius: '16px', 
-            background: theme => theme.palette.mode === 'dark'
-              ? 'linear-gradient(135deg, #232526 0%, #121212 100%)'
-              : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
-            boxShadow: theme => theme.palette.mode === 'dark'
-              ? '0 10px 30px rgba(0, 0, 0, 0.25)'
-              : '0 10px 30px rgba(0, 0, 0, 0.1)',
+            background: theme => {
+              // Check if we're using AMOLED theme
+              const currentTheme = localStorage.getItem('theme');
+              if (currentTheme === 'amoled') {
+                return 'linear-gradient(135deg, #000000 0%, #000000 100%)';
+              }
+              return theme.palette.mode === 'dark'
+                ? 'linear-gradient(135deg, #232526 0%, #121212 100%)'
+                : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)';
+            },
+            boxShadow: theme => {
+              // Check if we're using AMOLED theme
+              const currentTheme = localStorage.getItem('theme');
+              if (currentTheme === 'amoled') {
+                return '0 10px 30px rgba(0, 0, 0, 0.5)';
+              }
+              return theme.palette.mode === 'dark'
+                ? '0 10px 30px rgba(0, 0, 0, 0.25)'
+                : '0 10px 30px rgba(0, 0, 0, 0.1)';
+            },
             mb: { xs: 1, md: 0 },
             overflow: 'hidden',
             position: { xs: 'relative', md: 'sticky' },
@@ -3228,12 +3244,13 @@ const ProfilePage = () => {
         
           <Paper sx={{ 
             borderRadius: '16px', 
-            background: theme => theme.palette.mode === 'dark' 
-              ? 'linear-gradient(135deg, #232526 0%, #121212 100%)' 
-              : theme.palette.background.paper,
+            backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
+            backgroundImage: 'unset',
             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
             overflow: 'hidden',
-            mb: 1
+            mb: '5px',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+
           }}>
             <Tabs 
               value={tabValue} 

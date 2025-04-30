@@ -231,12 +231,12 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(1.5),
+  gap: '5px',
   [theme.breakpoints.up('md')]: {
     width: '68%',
   },
   [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1), // Уменьшенный отступ для мобильных
+    gap: '5px', // Уменьшенный отступ для мобильных
   },
 }));
 
@@ -244,7 +244,7 @@ const RightColumn = styled(Box)(({ theme }) => ({
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(1.5),
+  gap: theme.spacing(2),
   [theme.breakpoints.up('md')]: {
     width: '32%',
   },
@@ -1679,7 +1679,12 @@ const MainPage = React.memo(() => {
             p: 1, 
             display: 'flex', 
             justifyContent: 'space-between',
-            mb: 0
+            mb: 0,
+            borderRadius: '24px',
+            backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
+            backgroundImage: 'unset',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+
           }}>
             <Button 
               variant={feedType === 'all' ? 'contained' : 'text'} 
