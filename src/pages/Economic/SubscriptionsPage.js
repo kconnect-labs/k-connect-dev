@@ -267,6 +267,11 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
     const isFollowing = user.is_following;
     const isCurrentUser = currentUser && user.id === currentUser.id;
     
+    let avatarUrl = user.photo;
+    if (avatarUrl && !avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
+      avatarUrl = `/static/uploads/avatar/${user.id}/${avatarUrl}`;
+    }
+    
     return (
       <motion.div
         key={user.id}
@@ -277,8 +282,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         <ProfileCard>
           <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
             <Avatar
-              src={user.avatar_url}
-              alt={user.username}
+              src={avatarUrl || '/static/uploads/avatar/system/avatar.png'}
+              alt={user.name || user.username}
               sx={{ 
                 width: 50, 
                 height: 50,
@@ -295,26 +300,28 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
                   to={`/profile/${user.username}`}
                   sx={{ 
                     color: 'text.primary',
-                    textDecoration: 'none',
+                    textDecoration: 'none', 
                     '&:hover': {
                       color: 'primary.main'
                     }
                   }}
                 >
-                  {user.username}
+                  {user.name || user.username}
                 </Typography>
                 {user.is_verified && (
                   <CheckCircleIcon 
                     sx={{ 
-                      ml: 0.5, 
+                      ml: 0.5,
                       fontSize: 16, 
                       color: 'primary.main' 
                     }} 
                   />
                 )}
               </Box>
-              <Typography variant="body2" color="text.secondary">
-                {user.bio || 'Нет описания'}
+              <Typography variant="body2" color="text.secondary" noWrap>
+                {user.about ? 
+                  (user.about.length > 15 ? user.about.substring(0, 15) + '...' : user.about) 
+                  : 'Нет описания'}
               </Typography>
             </Box>
           </Box>
@@ -359,8 +366,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
     return Array(3).fill(0).map((_, index) => (
       <ProfileCard key={index}>
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Skeleton variant="circular" width={50} height={50} sx={{ mr: 2 }} />
-          <Box sx={{ flex: 1 }}>
+        <Skeleton variant="circular" width={50} height={50} sx={{ mr: 2 }} />
+        <Box sx={{ flex: 1 }}>
             <Skeleton variant="text" width={120} />
             <Skeleton variant="text" width={200} />
           </Box>
@@ -374,7 +381,7 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Box sx={{ mb: 4, display: 'flex', alignItems: 'center' }}>
         <IconButton 
-          onClick={() => navigate(-1)} 
+          onClick={() => navigate(-1)}
           sx={{ mr: 2 }}
           color="primary"
         >
@@ -388,9 +395,9 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs 
           value={value} 
-          onChange={handleChange}
+          onChange={handleChange} 
           variant={isMobile ? "fullWidth" : "standard"}
-          sx={{
+          sx={{ 
             '& .MuiTab-root': {
               color: 'text.secondary',
               '&.Mui-selected': {
@@ -403,30 +410,30 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
           <Tab label={`Подписки (${following.length})`} />
         </Tabs>
       </Box>
-      
-      <Box role="tabpanel" hidden={value !== 0}>
-        {value === 0 && (
-          <>
-            {isLoadingFollowers && followers.length === 0 ? (
-              renderSkeletonCards()
+        
+        <Box role="tabpanel" hidden={value !== 0}>
+          {value === 0 && (
+            <>
+              {isLoadingFollowers && followers.length === 0 ? (
+                renderSkeletonCards()
             ) : (
               followers.map(user => renderProfileCard(user))
-            )}
-          </>
-        )}
-      </Box>
-      
-      <Box role="tabpanel" hidden={value !== 1}>
-        {value === 1 && (
-          <>
-            {isLoadingFollowing && following.length === 0 ? (
-              renderSkeletonCards()
+              )}
+            </>
+          )}
+        </Box>
+        
+        <Box role="tabpanel" hidden={value !== 1}>
+          {value === 1 && (
+            <>
+              {isLoadingFollowing && following.length === 0 ? (
+                renderSkeletonCards()
             ) : (
               following.map(user => renderProfileCard(user))
-            )}
-          </>
-        )}
-      </Box>
+              )}
+            </>
+          )}
+        </Box>
       
       {((value === 0 && hasMoreFollowers) || (value === 1 && hasMoreFollowing)) && (
         <LoadingContainer ref={loaderRef}>

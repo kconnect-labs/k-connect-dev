@@ -1,14 +1,14 @@
 input[type="text"],
 textarea {
-  font-size: 16px !important;
-  max-height: 50vh;
-  touch-action: manipulation;
+  font-size: 16px !important; 
+  max-height: 50vh; 
+  touch-action: manipulation; 
 }
 
 .messenger-container {
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; 
+  touch-action: pan-y; 
+  -webkit-overflow-scrolling: touch; 
 }
 
 .message-list {
@@ -23,7 +23,7 @@ textarea {
 }
 
 .message-bubble {
-  max-width: 80%;
+  max-width: 80%; 
   word-break: break-word;
   hyphens: auto;
   transition: opacity 0.2s ease;

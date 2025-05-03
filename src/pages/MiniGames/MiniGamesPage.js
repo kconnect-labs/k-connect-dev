@@ -28,7 +28,7 @@ import NumbersIcon from '@mui/icons-material/Numbers';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import SEO from '../../components/SEO';
 
-// Компоненты стилизации
+
 const PageHeader = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   marginBottom: theme.spacing(4),
@@ -135,7 +135,7 @@ const InfoButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-// Заглушки для изображений игр до загрузки с сервера
+
 const DEFAULT_GAME_IMAGES = {
   cups: '/static/img/minigames/cups.png',
   dice: '/static/img/minigames/dice.png',
@@ -191,7 +191,7 @@ const MiniGamesPage = () => {
   const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // Запрос баланса пользователя
+  
   useEffect(() => {
     const fetchBalance = async () => {
       try {
@@ -211,12 +211,12 @@ const MiniGamesPage = () => {
     fetchBalance();
   }, []);
 
-  // Форматирование чисел
+  
   const formatNumber = (num) => {
     return parseInt(num).toLocaleString();
   };
 
-  // Список доступных мини-игр
+  
   const games = [
     {
       id: 'cups',
@@ -270,7 +270,7 @@ const MiniGamesPage = () => {
     if (path) navigate(path);
   };
 
-  // Проверяем работоспособность API перед переходом
+  
   const checkAPIandNavigate = async (game) => {
     if (!game.available || !game.path) return;
     
@@ -290,7 +290,7 @@ const MiniGamesPage = () => {
       mt: { xs: 1, sm: 2 }, 
       mb: { xs: 10, sm: 10 },
       px: { xs: 1, sm: 2 },
-      pb: { xs: '80px', sm: 0 } // Added padding for mobile bottom navigation
+      pb: { xs: '80px', sm: 0 } 
     }}>
       <SEO 
         title="Мини-игры | K-Connect"
@@ -299,7 +299,7 @@ const MiniGamesPage = () => {
       
       <PageHeader>
         <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', position: 'relative', zIndex: 1 }}>
-          Мини-игры
+              Мини-игры
         </Typography>
         <Typography variant="subtitle1" color="text.secondary" sx={{ position: 'relative', zIndex: 1 }}>
           Играйте и зарабатывайте баллы в наших увлекательных мини-играх!
@@ -345,9 +345,9 @@ const MiniGamesPage = () => {
                 width: '100%', 
                 ...generateBackgroundStyles(game.id, game.color),
                 position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
               }}>
                 {(game.id === 'cups' || game.id === 'dice' || game.id === 'lucky-number' || game.id === 'clicker') && (
                   <Box 
@@ -376,12 +376,12 @@ const MiniGamesPage = () => {
                     color: game.color,
                     display: 'flex'
                   }}>
-                    {game.icon}
-                  </Box>
+                  {game.icon}
+                </Box>
                   <Box>
                     <Typography variant="h6" gutterBottom sx={{ mb: 0 }}>
-                      {game.name}
-                    </Typography>
+                  {game.name}
+                </Typography>
                     {!game.available && (
                       <Chip 
                         label={game.seasonEnded ? "Сезон закончился" : "Скоро"} 
@@ -416,7 +416,7 @@ const MiniGamesPage = () => {
                       onClick={() => handleGameClick(game.path)}
                     >
                       Инфо
-                    </Button>
+                </Button>
                   )}
                 </Box>
               </CardContent>
