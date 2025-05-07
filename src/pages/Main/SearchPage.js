@@ -17,7 +17,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ThemeSettingsContext } from '../../App';
 import { AuthContext } from '../../context/AuthContext';
 import { searchService, profileService } from '../../services';
-import LightBox from '../../components/LightBox';
+import SimpleImageViewer from '../../components/SimpleImageViewer';
 
 
 const StyledSearchBox = styled(Box)(({ theme }) => ({
@@ -88,6 +88,9 @@ const SearchPage = () => {
   const [currentImage, setCurrentImage] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState([]);
+  
+  
+  const [searchTimeout, setSearchTimeout] = useState(null);
   
   
   const updateSearchParams = (query, type) => {
@@ -352,14 +355,19 @@ const SearchPage = () => {
   };
   
   
-  
+  // Search with debounce when user types
   useEffect(() => {
-    const debounceTime = 300; 
+    const debounceTime = 1000; // Increase to 1 second (1000ms) from 300ms
     
     const cleanQuery = searchQuery.trim();
     
     if (cleanQuery) {
+      // Clear previous timeout if there was one
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
       
+      // Set new timeout - only performs search after user stops typing for 1 second
       const handler = setTimeout(() => {
         if (cleanQuery.length >= 2) { 
           updateSearchParams(cleanQuery, searchType);
@@ -367,8 +375,10 @@ const SearchPage = () => {
         }
       }, debounceTime);
 
+      setSearchTimeout(handler);
+
       return () => {
-        clearTimeout(handler);
+        if (handler) clearTimeout(handler);
       };
     }
   }, [searchQuery, searchType]);
@@ -993,14 +1003,11 @@ const SearchPage = () => {
       )}
       
       
-      <LightBox 
+      <SimpleImageViewer 
         isOpen={lightboxOpen}
         onClose={handleCloseLightbox}
-        imageSrc={currentImage}
-        onNext={lightboxImages.length > 1 ? handleNextImage : undefined}
-        onPrev={lightboxImages.length > 1 ? handlePrevImage : undefined}
-        totalImages={lightboxImages.length}
-        currentIndex={currentImageIndex}
+        images={lightboxImages}
+        initialIndex={currentImageIndex}
       />
     </Container>
   );

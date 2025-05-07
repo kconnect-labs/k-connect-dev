@@ -20,6 +20,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
+import GavelIcon from '@mui/icons-material/Gavel';
 
 
 const ProfileBanner = styled(Box)(({ theme }) => ({
@@ -412,6 +413,33 @@ const MorePage = () => {
             <ListItemText primary="Каналы" />
           </MenuListItem>
           
+          {/* Добавляем кнопку для перехода на аукцион юзернеймов */}
+          <MenuListItem 
+            button 
+            component={Link} 
+            to="/username-auction"
+            sx={{
+              backgroundColor: theme.palette.mode === 'dark' 
+                ? alpha(theme.palette.primary.main, 0.1)
+                : alpha(theme.palette.primary.main, 0.05),
+              mb: 2,
+              borderRadius: '16px'
+            }}
+          >
+            <MenuItemIcon>
+              <GavelIcon />
+            </MenuItemIcon>
+            <ListItemText 
+              primary="Аукцион юзернеймов"
+              secondary="Продавайте и покупайте ники"
+              primaryTypographyProps={{ 
+                sx: { 
+                  fontWeight: 600
+                }
+              }}
+            />
+          </MenuListItem>
+          
           {!isChannel && (
             <MenuListItem button component={Link} to="/bugs">
               <MenuItemIcon>
@@ -437,13 +465,13 @@ const MorePage = () => {
             <ListItemText primary="Правила" />
           </MenuListItem>
           
-{/*           
+          
           <MenuListItem button component={Link} to="/api-docs">
             <MenuItemIcon>
               <Icon icon="solar:code-bold" width="24" height="24" />
             </MenuItemIcon>
             <ListItemText primary="API Документация" />
-          </MenuListItem> */}
+          </MenuListItem>
           
           
           {(isAdmin || isModeratorUser) && (

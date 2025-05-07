@@ -68,6 +68,8 @@ import { downloadPdfReceipt } from '../../utils/pdfGenerator';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
+import CasinoIcon from '@mui/icons-material/Casino';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 
 
 const BalanceHeader = styled(Box)(({ theme }) => ({
@@ -824,9 +826,11 @@ const BalancePage = () => {
   const [transferSuccess, setTransferSuccess] = useState(false);
   const [receiptData, setReceiptData] = useState(null);
   const [subscription, setSubscription] = useState(null);
+  const [isTransferring, setIsTransferring] = useState(false);
   
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [gameTransactions, setGameTransactions] = useState([]);
 
   
   const allTransactions = React.useMemo(() => {
@@ -896,9 +900,44 @@ const BalancePage = () => {
       icon: <AccountCircleIcon sx={{ color: 'error.main' }} />
     }));
 
+    // Добавляем игровые транзакции
+    const games = gameTransactions.map(transaction => {
+      let icon = null;
+      let title = transaction.description || 'Транзакция';
+      let type = transaction.transaction_type || 'unknown';
+      
+      // Определяем иконку и заголовок в зависимости от типа транзакции
+      if (type.includes('blackjack') || type.includes('minigame')) {
+        // Для Blackjack и других мини-игр
+        if (type === 'blackjack_win' || type === 'blackjack_win_21') {
+          icon = <CasinoIcon sx={{ color: 'success.main' }} />;
+          title = 'Выигрыш в игре "21"';
+        } else if (type === 'blackjack_tie') {
+          icon = <CasinoIcon sx={{ color: 'info.main' }} />;
+          title = 'Ничья в игре "21"';
+        } else if (type === 'blackjack_lose' || type === 'blackjack_lose_bust') {
+          icon = <CasinoIcon sx={{ color: 'error.main' }} />;
+          title = 'Проигрыш в игре "21"';
+        } else if (type === 'minigame_bet') {
+          icon = <SportsEsportsIcon sx={{ color: 'error.main' }} />;
+          title = 'Ставка в мини-игре';
+        } else {
+          icon = <SportsEsportsIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />;
+        }
+      }
+      
+      return {
+        ...transaction, 
+        type: 'game',
+        date: new Date(transaction.date),
+        title: title,
+        description: transaction.transaction_type.replace(/_/g, ' '),
+        icon: icon
+      };
+    });
     
-    return [...purchases, ...royalties, ...transfers, ...usernames].sort((a, b) => b.date - a.date);
-  }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, user?.id]);
+    return [...purchases, ...royalties, ...transfers, ...usernames, ...games].sort((a, b) => b.date - a.date);
+  }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, gameTransactions, user?.id]);
 
   useEffect(() => {
     if (user) {
@@ -911,6 +950,7 @@ const BalancePage = () => {
       fetchTransferHistory();
       fetchUsernamePurchases();
       fetchSubscriptionStatus();
+      fetchGameTransactions();
     }
   }, [user]);
 
@@ -1119,7 +1159,12 @@ const BalancePage = () => {
       return;
     }
 
+    // Если уже идет процесс перевода, не разрешаем второй запрос
+    if (isTransferring) return;
+
     setTransferErrors({});
+    setIsTransferring(true);
+    
     try {
       
       const response = await axios.post('/api/user/transfer-points', {
@@ -1179,6 +1224,8 @@ const BalancePage = () => {
         message: error.response?.data?.error || 'Ошибка при переводе баллов',
         severity: 'error'
       });
+    } finally {
+      setIsTransferring(false);
     }
   };
 
@@ -1374,6 +1421,17 @@ const BalancePage = () => {
   
   const getTransactionId = (transaction) => {
     return `TR-${transaction.id || new Date(transaction.date).getTime().toString().slice(-8)}`;
+  };
+
+  const fetchGameTransactions = async () => {
+    try {
+      const response = await axios.get('/api/user/transactions-history');
+      if (response.data && response.data.transactions) {
+        setGameTransactions(response.data.transactions);
+      }
+    } catch (error) {
+      console.error('Ошибка при получении истории игровых транзакций:', error);
+    }
   };
 
   if (loading) {
@@ -1608,6 +1666,8 @@ const BalancePage = () => {
                     <ShoppingCartIcon sx={{ mr: 1, color: 'error.main' }} />
                   ) : selectedTransaction.type === 'username' ? (
                     <AccountCircleIcon sx={{ mr: 1, color: 'info.main' }} />
+                  ) : selectedTransaction.type === 'game' ? (
+                    <CasinoIcon sx={{ mr: 1, color: selectedTransaction.amount > 0 ? 'success.main' : 'error.main' }} />
                   ) : (
                     <DiamondIcon sx={{ mr: 1, color: 'success.main' }} />
                   )}
@@ -1619,6 +1679,7 @@ const BalancePage = () => {
                       (selectedTransaction.is_sender ? 'Исходящий перевод' : 'Входящий перевод')) :
                       selectedTransaction.type === 'purchase' ? 'Покупка бейджика' :
                       selectedTransaction.type === 'royalty' ? 'Роялти от бейджика' :
+                      selectedTransaction.type === 'game' ? 'Транзакция в мини-игре' :
                       'Покупка юзернейма'
                     }
                   </Typography>
@@ -1726,6 +1787,23 @@ const BalancePage = () => {
                   <DetailLabel>Юзернейм</DetailLabel>
                   <DetailValue>@{selectedTransaction.username}</DetailValue>
                 </DetailRow>
+              )}
+              
+              {selectedTransaction.type === 'game' && (
+                <>
+                  <DetailRow>
+                    <DetailLabel>Тип операции</DetailLabel>
+                    <DetailValue>
+                      {selectedTransaction.description}
+                    </DetailValue>
+                  </DetailRow>
+                  <DetailRow>
+                    <DetailLabel>Описание</DetailLabel>
+                    <DetailValue>
+                      {selectedTransaction.title}
+                    </DetailValue>
+                  </DetailRow>
+                </>
               )}
               
               <DetailRow>
@@ -1996,11 +2074,11 @@ const BalancePage = () => {
               <Button 
                 variant="contained" 
                 color="primary"
-                onClick={() => navigate('/username-shop')}
+                onClick={() => navigate('/username-auction')}
                 startIcon={<AccountCircleIcon />}
                 sx={{ mr: 2, mb: { xs: 2, sm: 0 } }}
               >
-                Магазин юзернеймов
+                Аукцион юзернеймов
               </Button>
               <Button 
                 variant="outlined" 
@@ -2243,15 +2321,18 @@ const BalancePage = () => {
           justifyContent: 'space-between',
           borderTop: '1px solid rgba(255,255,255,0.07)'
         }}>
-          <CancelButton onClick={() => setTransferDialogOpen(false)}>
+          <CancelButton 
+            onClick={() => setTransferDialogOpen(false)}
+            disabled={isTransferring}
+          >
             Отмена
           </CancelButton>
           <GradientButton 
             onClick={handleTransferPoints} 
-            disabled={!userSearch.exists || !transferData.recipient_id || userSearch.loading || !transferData.amount}
-            startIcon={<SendIcon />}
+            disabled={!userSearch.exists || !transferData.recipient_id || userSearch.loading || !transferData.amount || isTransferring}
+            startIcon={isTransferring ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
           >
-            {userSearch.exists && transferData.recipient_id ? 'Перевести безопасно' : 'Перевести'}
+            {isTransferring ? 'Выполнение перевода...' : (userSearch.exists && transferData.recipient_id ? 'Перевести безопасно' : 'Перевести')}
           </GradientButton>
         </Box>
       </StyledDialog>

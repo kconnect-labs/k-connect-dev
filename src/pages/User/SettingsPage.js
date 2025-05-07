@@ -2281,75 +2281,103 @@ const SettingsPage = () => {
       let hasErrors = false;
       let responses = [];
       
-      
+      // Update name if changed
       if (name !== user.name) {
         try {
           console.log('Updating name...');
-          const response = await ProfileService.updateName(name);
-          console.log('Name update response:', response);
-          responses.push({ type: 'name', success: response.success, message: response.message });
-          if (!response.success) hasErrors = true;
-        } catch (error) {
-          console.error('Error updating name:', error);
-          responses.push({ type: 'name', success: false, message: error.response?.data?.error || 'Ошибка обновления имени' });
-          hasErrors = true;
-        }
-      }
-      
-      
-      if (username !== user.username) {
-        try {
-          console.log('Updating username...');
-          const response = await ProfileService.updateUsername(username);
-          console.log('Username update response:', response);
-          responses.push({ type: 'username', success: response.success, message: response.message });
-          if (!response.success) hasErrors = true;
-        } catch (error) {
-          console.error('Error updating username:', error);
-          responses.push({ type: 'username', success: false, message: error.response?.data?.error || 'Ошибка обновления username' });
-          hasErrors = true;
-        }
-      }
-      
-      
-      if (about !== user.about) {
-        try {
-          console.log('Updating about...');
-          const response = await ProfileService.updateAbout(about);
-          console.log('About update response:', response);
-          responses.push({ type: 'about', success: response.success, message: response.message });
-          if (!response.success) hasErrors = true;
-        } catch (error) {
-          console.error('Error updating about:', error);
-          responses.push({ type: 'about', success: false, message: error.response?.data?.error || 'Ошибка обновления описания' });
-          hasErrors = true;
-        }
-      }
-      
-      
-      if (bannerFile) {
-        try {
-          console.log('Uploading banner...');
           const formData = new FormData();
-          formData.append('banner', bannerFile);
+          formData.append('name', name);
           
-          const response = await axios.post('/api/profile/upload-banner', formData, {
+          const response = await axios.post('/api/profile/update-name', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
           
-          console.log('Banner upload response:', response);
-          responses.push({ type: 'banner', success: response.data.success, message: response.data.message });
+          console.log('Name update response:', response.data);
+          responses.push({ 
+            type: 'name', 
+            success: response.data.success || false, 
+            message: response.data.message || response.data.error || 'Неизвестная ошибка'
+          });
+          
           if (!response.data.success) hasErrors = true;
         } catch (error) {
-          console.error('Error uploading banner:', error);
-          responses.push({ type: 'banner', success: false, message: error.response?.data?.error || 'Ошибка загрузки баннера' });
+          console.error('Error updating name:', error);
+          responses.push({ 
+            type: 'name', 
+            success: false, 
+            message: error.response?.data?.error || error.response?.data?.message || 'Ошибка обновления имени'
+          });
           hasErrors = true;
         }
       }
       
+      // Update username if changed
+      if (username !== user.username) {
+        try {
+          console.log('Updating username...');
+          const formData = new FormData();
+          formData.append('username', username);
+          
+          const response = await axios.post('/api/profile/update-username', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          
+          console.log('Username update response:', response.data);
+          responses.push({ 
+            type: 'username', 
+            success: response.data.success || false, 
+            message: response.data.message || response.data.error || 'Неизвестная ошибка'
+          });
+          
+          if (!response.data.success) hasErrors = true;
+        } catch (error) {
+          console.error('Error updating username:', error);
+          responses.push({ 
+            type: 'username', 
+            success: false, 
+            message: error.response?.data?.error || error.response?.data?.message || 'Ошибка обновления username'
+          });
+          hasErrors = true;
+        }
+      }
       
+      // Update about if changed
+      if (about !== (user.about || '')) {
+        try {
+          console.log('Updating about...');
+          const formData = new FormData();
+          formData.append('about', about);
+          
+          const response = await axios.post('/api/profile/update-about', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          
+          console.log('About update response:', response.data);
+          responses.push({ 
+            type: 'about', 
+            success: response.data.success || false, 
+            message: response.data.message || response.data.error || 'Неизвестная ошибка'
+          });
+          
+          if (!response.data.success) hasErrors = true;
+        } catch (error) {
+          console.error('Error updating about:', error);
+          responses.push({ 
+            type: 'about', 
+            success: false, 
+            message: error.response?.data?.error || error.response?.data?.message || 'Ошибка обновления описания'
+          });
+          hasErrors = true;
+        }
+      }
+      
+      // Upload avatar if a new one is selected
       if (avatarFile) {
         try {
           console.log('Uploading avatar...');
@@ -2362,17 +2390,58 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('Avatar upload response:', response);
-          responses.push({ type: 'avatar', success: response.data.success, message: response.data.message });
+          console.log('Avatar upload response:', response.data);
+          responses.push({ 
+            type: 'avatar', 
+            success: response.data.success || false, 
+            message: response.data.message || response.data.error || 'Неизвестная ошибка'
+          });
+          
           if (!response.data.success) hasErrors = true;
         } catch (error) {
           console.error('Error uploading avatar:', error);
-          responses.push({ type: 'avatar', success: false, message: error.response?.data?.error || 'Ошибка загрузки аватара' });
+          responses.push({ 
+            type: 'avatar', 
+            success: false, 
+            message: error.response?.data?.error || error.response?.data?.message || 'Ошибка загрузки аватара'
+          });
           hasErrors = true;
         }
       }
       
+      // Update banner if a new one is selected
+      if (bannerFile) {
+        try {
+          console.log('Uploading banner...');
+          const formData = new FormData();
+          formData.append('banner', bannerFile);
+          
+          const response = await axios.post('/api/profile/upload-banner', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          
+          console.log('Banner upload response:', response.data);
+          responses.push({ 
+            type: 'banner', 
+            success: response.data.success || false, 
+            message: response.data.message || response.data.error || 'Неизвестная ошибка'
+          });
+          
+          if (!response.data.success) hasErrors = true;
+        } catch (error) {
+          console.error('Error uploading banner:', error);
+          responses.push({ 
+            type: 'banner', 
+            success: false, 
+            message: error.response?.data?.error || error.response?.data?.message || 'Ошибка загрузки баннера'
+          });
+          hasErrors = true;
+        }
+      }
       
+      // Update local user data if we have the updateUserData function
       if (updateUserData) {
         updateUserData({
           ...user,
@@ -2382,17 +2451,14 @@ const SettingsPage = () => {
         });
       }
       
-      
+      // Show success or error messages
       if (hasErrors) {
-        
         let errorMessage = '';
         const failedResponses = responses.filter(r => !r.success);
         
         if (failedResponses.length === 1) {
-          
           errorMessage = failedResponses[0].message;
         } else {
-          
           errorMessage = 'Не удалось сохранить следующие данные:\n';
           failedResponses.forEach(resp => {
             errorMessage += `• ${resp.type}: ${resp.message}\n`;
@@ -2402,17 +2468,16 @@ const SettingsPage = () => {
         console.error('Save errors:', failedResponses);
         showNotification('error', errorMessage);
       } else {
-        
         console.log('All operations successful');
         showNotification('success', 'Профиль успешно сохранен');
         
+        // Navigate to the profile page with the updated username
         navigate(`/profile/${username}`);
       }
-      
-      setSaving(false);
     } catch (error) {
       console.error('Error saving profile:', error);
-      showNotification('error', 'Произошла ошибка при сохранении профиля');
+      showNotification('error', 'Произошла ошибка при сохранении профиля: ' + (error.message || 'Неизвестная ошибка'));
+    } finally {
       setSaving(false);
     }
   };
@@ -2423,7 +2488,7 @@ const SettingsPage = () => {
     setSuccess(false);
     
     try {
-      
+      // Prepare settings object to save
       const settingsToSave = {
         background_color: settings.background_color,
         container_color: settings.container_color,
@@ -2435,27 +2500,30 @@ const SettingsPage = () => {
         header_color: settings.header_color || settings.container_color,
         bottom_nav_color: settings.bottom_nav_color || settings.container_color,
         content_color: settings.content_color || settings.container_color,
-        
       };
       
+      // Make direct axios call instead of using ProfileService
+      const response = await axios.post('/api/profile/settings', settingsToSave, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
-      const response = await ProfileService.updateSettings(settingsToSave);
-      
-      if (response && response.success) {
+      if (response.data && response.data.success) {
         setSuccess(true);
         showNotification('success', 'Настройки успешно сохранены');
         
-        
+        // Update theme settings
         themeSettings.updateThemeSettings({
-          backgroundColor: response.settings.background_color,
-          paperColor: response.settings.container_color,
-          headerColor: response.settings.header_color || response.settings.container_color,
-          bottomNavColor: response.settings.bottom_nav_color || response.settings.container_color,
-          contentColor: response.settings.content_color || response.settings.container_color,
-          primaryColor: response.settings.avatar_border_color
+          backgroundColor: response.data.settings.background_color,
+          paperColor: response.data.settings.container_color,
+          headerColor: response.data.settings.header_color || response.data.settings.container_color,
+          bottomNavColor: response.data.settings.bottom_nav_color || response.data.settings.container_color,
+          contentColor: response.data.settings.content_color || response.data.settings.container_color,
+          primaryColor: response.data.settings.avatar_border_color
         });
       } else {
-        throw new Error(response?.error || 'Не удалось сохранить настройки');
+        throw new Error(response.data?.error || 'Не удалось сохранить настройки');
       }
     } catch (error) {
       console.error('Ошибка при сохранении настроек:', error);
@@ -2464,7 +2532,7 @@ const SettingsPage = () => {
     } finally {
       setSaving(false);
       
-      
+      // Reset success state after 3 seconds
       setTimeout(() => {
         setSuccess(false);
       }, 3000);

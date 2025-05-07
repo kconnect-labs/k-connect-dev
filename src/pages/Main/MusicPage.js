@@ -98,7 +98,9 @@ const MusicPageContainer = styled(Container)(({ theme }) => ({
   }
 }));
 
-const CategoryCard = styled(Card)(({ theme, active }) => ({
+const CategoryCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'active'
+})(({ theme, active }) => ({
   cursor: 'pointer',
   height: '100%',
   background: active ? 
@@ -182,7 +184,9 @@ const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
   }
 }));
 
-const TrackItem = styled(ListItem)(({ theme, active }) => ({
+const TrackItem = styled(ListItem, {
+  shouldForwardProp: (prop) => prop !== 'active'
+})(({ theme, active }) => ({
   padding: theme.spacing(0.5, 1),
   borderRadius: 8,
   cursor: 'pointer',

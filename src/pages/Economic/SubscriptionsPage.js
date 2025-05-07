@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Box, 
@@ -54,8 +54,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
   const [value, setValue] = useState(tabIndex);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [isLoadingFollowers, setIsLoadingFollowers] = useState(true);
-  const [isLoadingFollowing, setIsLoadingFollowing] = useState(true);
+  const [isLoadingFollowers, setIsLoadingFollowers] = useState(false);
+  const [isLoadingFollowing, setIsLoadingFollowing] = useState(false);
   const [pageFollowers, setPageFollowers] = useState(1);
   const [pageFollowing, setPageFollowing] = useState(1);
   const [hasMoreFollowers, setHasMoreFollowers] = useState(true);
@@ -63,56 +63,270 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
   const [profileUser, setProfileUser] = useState(null);
   const [loadingFollow, setLoadingFollow] = useState({});
   
+  // Track API request state to prevent duplicate requests
+  const [requestState, setRequestState] = useState({
+    followersInProgress: false,
+    followingInProgress: false,
+    profileInProgress: false,
+  });
+  
+  // Cache for API responses
+  const responseCache = useRef({
+    followers: {}, // username_page -> data
+    following: {}, // username_page -> data
+    profile: {},   // username -> data
+  });
+  
   const loaderRef = useRef(null);
   
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const targetUsername = username || currentUser?.username;
-        if (!targetUsername) {
-          setProfileUser(currentUser);
-          return;
-        }
-        
-        if (currentUser && targetUsername === currentUser.username) {
-          setProfileUser(currentUser);
-        } else {
-          const response = await axios.get(`/api/users/${targetUsername}`);
-          setProfileUser(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
+  // Fetch user profile data with cache
+  const fetchUserData = useCallback(async () => {
+    try {
+      const targetUsername = username || currentUser?.username;
+      if (!targetUsername) {
+        setProfileUser(currentUser);
+        return;
       }
-    };
-    
-    fetchUserData();
+      
+      if (currentUser && targetUsername === currentUser.username) {
+        setProfileUser(currentUser);
+        return;
+      }
+      
+      // Check cache and in-progress requests
+      if (responseCache.current.profile[targetUsername]) {
+        setProfileUser(responseCache.current.profile[targetUsername]);
+        return;
+      }
+      
+      if (requestState.profileInProgress) {
+        return;
+      }
+      
+      // Update request state to prevent duplicate calls
+      setRequestState(prev => ({ ...prev, profileInProgress: true }));
+      
+      const response = await axios.get(`/api/users/${targetUsername}`);
+      
+      // Cache result
+      responseCache.current.profile[targetUsername] = response.data;
+      setProfileUser(response.data);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    } finally {
+      setRequestState(prev => ({ ...prev, profileInProgress: false }));
+    }
   }, [username, currentUser]);
   
-  useEffect(() => {
-    if (value === 0) {
-      fetchFollowers();
+  // Fetch followers with cache and request tracking
+  const fetchFollowers = useCallback(async () => {
+    try {
+      const targetUsername = username || currentUser?.username;
+      
+      if (!targetUsername) {
+        return;
+      }
+      
+      // Don't fetch if already in progress
+      if (requestState.followersInProgress) {
+        return;
+      }
+      
+      // Check cache first
+      const cacheKey = `${targetUsername}_1`;
+      if (responseCache.current.followers[cacheKey]) {
+        const cachedData = responseCache.current.followers[cacheKey];
+        setFollowers(cachedData.followers || []);
+        setHasMoreFollowers(cachedData.has_next || false);
+        setPageFollowers(2);
+        return;
+      }
+      
+      setIsLoadingFollowers(true);
+      setRequestState(prev => ({ ...prev, followersInProgress: true }));
+      
+      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
+        params: { page: 1, per_page: 20 }
+      });
+      
+      // Cache response
+      responseCache.current.followers[cacheKey] = response.data;
+      
+      setFollowers(response.data.followers || []);
+      setHasMoreFollowers(response.data.has_next || false);
+      setPageFollowers(2);
+    } catch (error) {
+      console.error('Error fetching followers:', error);
+    } finally {
+      setIsLoadingFollowers(false);
+      setRequestState(prev => ({ ...prev, followersInProgress: false }));
     }
-  }, [value, username]);
+  }, [username, currentUser]);
   
+  // Fetch following with cache and request tracking
+  const fetchFollowing = useCallback(async () => {
+    try {
+      const targetUsername = username || currentUser?.username;
+      
+      if (!targetUsername) {
+        return;
+      }
+      
+      // Don't fetch if already in progress
+      if (requestState.followingInProgress) {
+        return;
+      }
+      
+      // Check cache first
+      const cacheKey = `${targetUsername}_1`;
+      if (responseCache.current.following[cacheKey]) {
+        const cachedData = responseCache.current.following[cacheKey];
+        setFollowing(cachedData.following || []);
+        setHasMoreFollowing(cachedData.has_next || false);
+        setPageFollowing(2);
+        return;
+      }
+      
+      setIsLoadingFollowing(true);
+      setRequestState(prev => ({ ...prev, followingInProgress: true }));
+      
+      const response = await axios.get(`/api/users/${targetUsername}/following`, {
+        params: { page: 1, per_page: 20 }
+      });
+      
+      // Cache response
+      responseCache.current.following[cacheKey] = response.data;
+      
+      setFollowing(response.data.following || []);
+      setHasMoreFollowing(response.data.has_next || false);
+      setPageFollowing(2);
+    } catch (error) {
+      console.error('Error fetching following:', error);
+    } finally {
+      setIsLoadingFollowing(false);
+      setRequestState(prev => ({ ...prev, followingInProgress: false }));
+    }
+  }, [username, currentUser]);
+  
+  // Load more followers with request tracking
+  const loadMoreFollowers = useCallback(async () => {
+    try {
+      const targetUsername = username || currentUser?.username;
+      
+      // Don't load more if already loading
+      if (isLoadingFollowers || requestState.followersInProgress) {
+        return;
+      }
+      
+      // Check cache first
+      const cacheKey = `${targetUsername}_${pageFollowers}`;
+      if (responseCache.current.followers[cacheKey]) {
+        const cachedData = responseCache.current.followers[cacheKey];
+        setFollowers(prev => [...prev, ...(cachedData.followers || [])]);
+        setHasMoreFollowers(cachedData.has_next || false);
+        setPageFollowers(prev => prev + 1);
+        return;
+      }
+      
+      setIsLoadingFollowers(true);
+      setRequestState(prev => ({ ...prev, followersInProgress: true }));
+      
+      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
+        params: { page: pageFollowers, per_page: 20 }
+      });
+      
+      // Cache response
+      responseCache.current.followers[cacheKey] = response.data;
+      
+      setFollowers(prev => [...prev, ...(response.data.followers || [])]);
+      setHasMoreFollowers(response.data.has_next || false);
+      setPageFollowers(prev => prev + 1);
+    } catch (error) {
+      console.error('Error loading more followers:', error);
+    } finally {
+      setIsLoadingFollowers(false);
+      setRequestState(prev => ({ ...prev, followersInProgress: false }));
+    }
+  }, [username, currentUser, pageFollowers, isLoadingFollowers, requestState.followersInProgress]);
+  
+  // Load more following with request tracking
+  const loadMoreFollowing = useCallback(async () => {
+    try {
+      const targetUsername = username || currentUser?.username;
+      
+      // Don't load more if already loading
+      if (isLoadingFollowing || requestState.followingInProgress) {
+        return;
+      }
+      
+      // Check cache first
+      const cacheKey = `${targetUsername}_${pageFollowing}`;
+      if (responseCache.current.following[cacheKey]) {
+        const cachedData = responseCache.current.following[cacheKey];
+        setFollowing(prev => [...prev, ...(cachedData.following || [])]);
+        setHasMoreFollowing(cachedData.has_next || false);
+        setPageFollowing(prev => prev + 1);
+        return;
+      }
+      
+      setIsLoadingFollowing(true);
+      setRequestState(prev => ({ ...prev, followingInProgress: true }));
+      
+      const response = await axios.get(`/api/users/${targetUsername}/following`, {
+        params: { page: pageFollowing, per_page: 20 }
+      });
+      
+      // Cache response
+      responseCache.current.following[cacheKey] = response.data;
+      
+      setFollowing(prev => [...prev, ...(response.data.following || [])]);
+      setHasMoreFollowing(response.data.has_next || false);
+      setPageFollowing(prev => prev + 1);
+    } catch (error) {
+      console.error('Error loading more following:', error);
+    } finally {
+      setIsLoadingFollowing(false);
+      setRequestState(prev => ({ ...prev, followingInProgress: false }));
+    }
+  }, [username, currentUser, pageFollowing, isLoadingFollowing, requestState.followingInProgress]);
+  
+  // Only fetch profile once when component mounts or username changes
   useEffect(() => {
-    if (value === 1) {
+    fetchUserData();
+  }, [username, currentUser, fetchUserData]);
+  
+  // Fetch appropriate tab data when tab changes
+  useEffect(() => {
+    if (value === 0 && followers.length === 0 && !requestState.followersInProgress) {
+      fetchFollowers();
+    } else if (value === 1 && following.length === 0 && !requestState.followingInProgress) {
       fetchFollowing();
     }
-  }, [value, username]);
+  }, [value, username, followers.length, following.length, fetchFollowers, fetchFollowing, requestState]);
   
+  // Intersection observer for infinite scroll with debounce
   useEffect(() => {
+    let timeoutId = null;
+    
     const observer = new IntersectionObserver(
       entries => {
         const first = entries[0];
         if (first.isIntersecting) {
-          if (value === 0 && hasMoreFollowers && !isLoadingFollowers) {
-            loadMoreFollowers();
-          } else if (value === 1 && hasMoreFollowing && !isLoadingFollowing) {
-            loadMoreFollowing();
+          // Debounce loading more content
+          if (timeoutId) {
+            clearTimeout(timeoutId);
           }
+          
+          timeoutId = setTimeout(() => {
+            if (value === 0 && hasMoreFollowers && !isLoadingFollowers && !requestState.followersInProgress) {
+              loadMoreFollowers();
+            } else if (value === 1 && hasMoreFollowing && !isLoadingFollowing && !requestState.followingInProgress) {
+              loadMoreFollowing();
+            }
+          }, 300); // Debounce time of 300ms
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.5 }
     );
     
     const currentLoader = loaderRef.current;
@@ -124,97 +338,21 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       if (currentLoader) {
         observer.unobserve(currentLoader);
       }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
     };
-  }, [value, hasMoreFollowers, hasMoreFollowing, isLoadingFollowers, isLoadingFollowing]);
-  
-  const fetchFollowers = async () => {
-    try {
-      setIsLoadingFollowers(true);
-      const targetUsername = username || currentUser?.username;
-      
-      if (!targetUsername) {
-        setIsLoadingFollowers(false);
-        return;
-      }
-      
-      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
-        params: { page: 1, per_page: 20 }
-      });
-      
-      setFollowers(response.data.followers || []);
-      setHasMoreFollowers(response.data.has_next || false);
-      setPageFollowers(2);
-    } catch (error) {
-      console.error('Error fetching followers:', error);
-    } finally {
-      setIsLoadingFollowers(false);
-    }
-  };
-  
-  const fetchFollowing = async () => {
-    try {
-      setIsLoadingFollowing(true);
-      const targetUsername = username || currentUser?.username;
-      
-      if (!targetUsername) {
-        setIsLoadingFollowing(false);
-        return;
-      }
-      
-      const response = await axios.get(`/api/users/${targetUsername}/following`, {
-        params: { page: 1, per_page: 20 }
-      });
-      
-      setFollowing(response.data.following || []);
-      setHasMoreFollowing(response.data.has_next || false);
-      setPageFollowing(2);
-    } catch (error) {
-      console.error('Error fetching following:', error);
-    } finally {
-      setIsLoadingFollowing(false);
-    }
-  };
-  
-  const loadMoreFollowers = async () => {
-    try {
-      setIsLoadingFollowers(true);
-      const targetUsername = username || currentUser?.username;
-      
-      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
-        params: { page: pageFollowers, per_page: 20 }
-      });
-      
-      setFollowers(prev => [...prev, ...(response.data.followers || [])]);
-      setHasMoreFollowers(response.data.has_next || false);
-      setPageFollowers(prev => prev + 1);
-    } catch (error) {
-      console.error('Error loading more followers:', error);
-    } finally {
-      setIsLoadingFollowers(false);
-    }
-  };
-  
-  const loadMoreFollowing = async () => {
-    try {
-      setIsLoadingFollowing(true);
-      const targetUsername = username || currentUser?.username;
-      
-      const response = await axios.get(`/api/users/${targetUsername}/following`, {
-        params: { page: pageFollowing, per_page: 20 }
-      });
-      
-      setFollowing(prev => [...prev, ...(response.data.following || [])]);
-      setHasMoreFollowing(response.data.has_next || false);
-      setPageFollowing(prev => prev + 1);
-    } catch (error) {
-      console.error('Error loading more following:', error);
-    } finally {
-      setIsLoadingFollowing(false);
-    }
-  };
+  }, [value, hasMoreFollowers, hasMoreFollowing, isLoadingFollowers, isLoadingFollowing, 
+      loadMoreFollowers, loadMoreFollowing, requestState]);
   
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+  
+  // Clear cache after successful follow/unfollow actions
+  const clearUserCache = () => {
+    responseCache.current.followers = {};
+    responseCache.current.following = {};
   };
   
   const handleFollow = async (userId) => {
@@ -232,6 +370,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setFollowing(prev => prev.map(user => 
           user.id === userId ? { ...user, is_following: true } : user
         ));
+        
+        clearUserCache(); // Clear cache after successful action
       }
     } catch (error) {
       console.error('Error following user:', error);
@@ -255,6 +395,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setFollowing(prev => prev.map(user => 
           user.id === userId ? { ...user, is_following: false } : user
         ));
+        
+        clearUserCache(); // Clear cache after successful action
       }
     } catch (error) {
       console.error('Error unfollowing user:', error);

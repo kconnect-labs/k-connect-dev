@@ -44,7 +44,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
 import ReactMarkdown from 'react-markdown';
 import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
-import LightBox from '../LightBox';
+import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
 import { optimizeImage } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, processTextWithLinks } from '../../utils/LinkUtils';
@@ -89,7 +89,7 @@ const PostCard = styled(Card)(({ theme }) => ({
   background: '#1A1A1A',
   [theme.breakpoints.down('sm')]: {
     boxShadow: 'none',
-    marginBottom: 2,
+    marginBottom: 8,
     width: '100%'
   }
 }));
@@ -737,26 +737,29 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
   const videoUrl = hasVideo() ? formatVideoUrl(post.video) : null;
   
   const handleOpenImage = async (index) => {
-    
-    setClickTimer(setTimeout(async () => {
+    // Если передан onOpenLightbox как проп, используем его вместо внутреннего лайтбокса
+    if (onOpenLightbox && typeof onOpenLightbox === 'function') {
       const allImages = processImages();
       if (allImages.length > 0) {
-        try {
-          const currentImageUrl = allImages[index];
-          const optimizedImage = await optimizeImage(currentImageUrl, {
-            quality: 0.9, 
-            maxWidth: 1920 
-          });
-          
-          setCurrentImageIndex(index);
-          setLightboxOpen(true);
-        } catch (error) {
-          console.error('Error optimizing image for lightbox:', error);
-          setCurrentImageIndex(index);
-          setLightboxOpen(true);
-        }
+        onOpenLightbox(allImages[index], allImages, index);
       }
-    }, 300)); 
+      return;
+    }
+    
+    // Если нет внешнего обработчика, открываем собственный лайтбокс
+    const allImages = processImages();
+    if (allImages.length > 0) {
+      // Не используем setTimeout, открываем напрямую
+      try {
+        const currentImageUrl = allImages[index];
+        setCurrentImageIndex(index);
+        setLightboxOpen(true);
+      } catch (error) {
+        console.error('Error opening lightbox:', error);
+        setCurrentImageIndex(index);
+        setLightboxOpen(true);
+      }
+    }
   };
   
   const handleCloseLightbox = () => {
@@ -1600,7 +1603,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
         onContextMenu={handlePostContextMenu}
         sx={{
           overflow: 'visible',
-          mb: 0.5,
+          mb: 1,
           borderRadius: 2,
           bgcolor: 'background.paper',
           border: post.type === 'stena' ? `1px solid ${theme.palette.primary.main}40` : '1px solid',
@@ -2337,22 +2340,12 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
       </Dialog>
       
       
-      {lightboxOpen && (
-        <LightBox
+      {lightboxOpen && !onOpenLightbox && (
+        <SimpleImageViewer
           isOpen={lightboxOpen}
           onClose={handleCloseLightbox}
-          imageSrc={images[currentImageIndex]}
-          caption={post?.content}
-          title={post?.user?.name}
-          liked={liked}
-          likesCount={likesCount}
-          onLike={handleLike}
-          onComment={handleCommentClick}
-          onShare={handleRepostClick}
-          onNext={images.length > 1 ? handleNextImage : undefined}
-          onPrev={images.length > 1 ? handlePrevImage : undefined}
-          totalImages={images.length}
-          currentIndex={currentImageIndex}
+          images={images}
+          initialIndex={currentImageIndex}
         />
       )}
       

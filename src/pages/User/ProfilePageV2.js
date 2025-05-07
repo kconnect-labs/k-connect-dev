@@ -57,7 +57,6 @@ import RepostItem from '../../components/RepostItem';
 import PostSkeleton from '../../components/Post/PostSkeleton';
 import ContentLoader from '../../components/UI/ContentLoader';
 import TabContentLoader from '../../components/UI/TabContentLoader';
-import { UsernameCard } from '../../UIKIT';
 
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -96,12 +95,6 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import ChatIcon from '@mui/icons-material/Chat';
-import BlockIcon from '@mui/icons-material/Block';
-import WarningIcon from '@mui/icons-material/Warning';
-import { 
-  NavButton,
-  ContextMenu
-} from '../../UIKIT';
 
 
 const ProfileHeader = styled(Box)(({ theme }) => ({
@@ -1369,17 +1362,6 @@ const ProfilePage = () => {
   
   const [fallbackAvatarUrl, setFallbackAvatarUrl] = useState('');
   
-  // Добавляем новые state переменные для работы с карточкой юзернейма
-  const [selectedUsername, setSelectedUsername] = useState(null);
-  const [usernameCardAnchor, setUsernameCardAnchor] = useState(null);
-  const [usernameCardOpen, setUsernameCardOpen] = useState(false);
-  
-  // Добавляем state для информации о бане
-  const [userBanInfo, setUserBanInfo] = useState(null);
-  
-  // Добавляем state для проверки, является ли текущий пользователь модератором
-  const [isCurrentUserModerator, setIsCurrentUserModerator] = useState(false);
-  
   
   const openLightbox = (imageUrl) => {
     console.log("Opening lightbox for image:", imageUrl);
@@ -1739,18 +1721,6 @@ const ProfilePage = () => {
             console.error('Error fetching owned usernames:', error);
             setOwnedUsernames([]);
           }
-          
-          // Получаем информацию о бане пользователя
-          if (response.data.user.ban || response.data.ban) {
-            setUserBanInfo(response.data.user.ban || response.data.ban);
-          } else {
-            setUserBanInfo(null);
-          }
-          
-          // Проверяем, является ли текущий пользователь модератором
-          if (response.data.current_user_is_moderator !== undefined) {
-            setIsCurrentUserModerator(response.data.current_user_is_moderator);
-          }
         } else {
           console.error('User data not found in response', response.data);
           setUser(null); 
@@ -2065,17 +2035,6 @@ const ProfilePage = () => {
       });
     }
   }, [user]);
-
-  // Функции для работы с карточкой юзернейма
-  const handleUsernameClick = (event, username) => {
-    event.preventDefault();
-    setSelectedUsername(username);
-    setUsernameCardOpen(true);
-  };
-  
-  const handleCloseUsernameCard = () => {
-    setUsernameCardOpen(false);
-  };
 
   if (loading) {
     return (
@@ -2548,6 +2507,20 @@ const ProfilePage = () => {
         paddingLeft: '0',
         paddingRight: '0',
         minHeight: 'calc(100vh - 64px)',
+        position: 'relative',
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+          opacity: 0.035,
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z\' fill=\'%23ffffff\' fill-opacity=\'0.3\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")',
+          backgroundSize: '15%',
+          pointerEvents: 'none'
+        }
       }}
     >
       <Grid 
@@ -2563,41 +2536,40 @@ const ProfilePage = () => {
           
           <Paper sx={{ 
             p: 0, 
-            borderRadius: '16px', 
+            borderRadius: '24px', 
             background: theme => {
-              
               const currentTheme = localStorage.getItem('theme');
               if (currentTheme === 'amoled') {
                 return 'linear-gradient(135deg, #000000 0%, #000000 100%)';
               }
               return theme.palette.mode === 'dark'
-                ? 'linear-gradient(135deg, #232526 0%, #121212 100%)'
-                : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)';
+                ? 'linear-gradient(145deg, rgba(38, 38, 38, 0.9) 0%, rgba(18, 18, 18, 0.95) 100%)'
+                : 'linear-gradient(145deg, rgba(248, 248, 248, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%)';
             },
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             boxShadow: theme => {
-              
               const currentTheme = localStorage.getItem('theme');
               if (currentTheme === 'amoled') {
-                return '0 10px 30px rgba(0, 0, 0, 0.5)';
+                return '0 15px 35px rgba(0, 0, 0, 0.5)';
               }
               return theme.palette.mode === 'dark'
-                ? '0 10px 30px rgba(0, 0, 0, 0.25)'
-                : '0 10px 30px rgba(0, 0, 0, 0.1)';
+                ? '0 15px 35px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset'
+                : '0 15px 35px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03) inset';
             },
             mb: { xs: 1, md: 0 },
             overflow: 'hidden',
             position: { xs: 'relative', md: 'sticky' },
             top: { md: '80px' },
             zIndex: 1,
-            transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
             '&:hover': {
-              boxShadow: theme => theme.palette.mode === 'dark'
-                ? '0 14px 35px rgba(0, 0, 0, 0.35)'
-                : '0 14px 35px rgba(0, 0, 0, 0.15)',
-              transform: 'translateY(-2px)'
+              // Убираю эффекты свечения и приподнятия
             },
             
+            // Сохраняем стилизацию для подписок
             ...(user?.subscription && {
+              boxShadow: '0 8px 25px rgba(0, 0, 0, 0.12)',
               border: (user.status_color && user.status_text && user.subscription) 
                 ? `4px solid ${user.status_color}` 
                 : user?.subscription 
@@ -2605,15 +2577,6 @@ const ProfilePage = () => {
                   : theme => theme.palette.mode === 'dark'
                     ? '4px solid #121212'
                     : '4px solid #ffffff',
-              boxShadow: (user.status_color && user.status_text && user.subscription)
-                ? `0 0 15px ${user.status_color}33`  
-                : user.subscription.type === 'premium' 
-                  ? '0 0 15px rgba(186, 104, 200, 0.2)' 
-                  : user.subscription.type === 'pick-me'
-                    ? '0 0 15px rgba(208, 188, 255, 0.2)'
-                    : user.subscription.type === 'ultimate' 
-                      ? '0 0 15px rgba(124, 77, 255, 0.2)' 
-                      : '0 0 15px rgba(66, 165, 245, 0.2)',
               '&:hover': {
                 boxShadow: (user.status_color && user.status_text && user.subscription)
                   ? `0 0 20px ${user.status_color}4D`  
@@ -2623,8 +2586,8 @@ const ProfilePage = () => {
                       ? '0 0 20px rgba(208, 188, 255, 0.3)'
                       : user.subscription.type === 'ultimate' 
                         ? '0 0 20px rgba(124, 77, 255, 0.3)' 
-                        : '0 0 20px rgba(66, 165, 245, 0.3)',
-                transform: 'translateY(-2px)'
+                        : '0 0 20px rgba(66, 165, 245, 0.3)'
+              // Убираю transform: 'translateY(-5px)'
               }
             })
           }}>
@@ -2710,35 +2673,35 @@ const ProfilePage = () => {
                         if (imageUrl) openLightbox(imageUrl);
                       }}
                       sx={{ 
-                        width: { xs: 110, sm: 130 }, 
-                        height: { xs: 110, sm: 130 }, 
+                        width: { xs: 110, sm: 140 }, 
+                        height: { xs: 110, sm: 140 }, 
                         border: (user?.status_color && user?.status_text && user?.subscription) 
                           ? `4px solid ${user.status_color}` 
                           : user?.subscription 
                             ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}` 
                             : theme => theme.palette.mode === 'dark'
-                              ? '4px solid #121212'
-                              : '4px solid #ffffff',
+                              ? '4px solid rgba(255, 255, 255, 0.1)'
+                              : '4px solid rgba(255, 255, 255, 0.8)',
                         boxShadow: (user?.status_color && user?.status_text && user?.subscription) 
-                          ? `0 0 15px ${user.status_color}80` 
+                          ? `0 0 15px ${user.status_color}80, 0 0 0 2px rgba(0,0,0,0.05)` 
                           : user?.subscription 
-                            ? (user.subscription.type === 'premium' ? '0 0 15px rgba(186, 104, 200, 0.5)' : user.subscription.type === 'pick-me' ? '0 0 15px rgba(208, 188, 255, 0.5)' : user.subscription.type === 'ultimate' ? '0 0 15px rgba(124, 77, 255, 0.5)' : '0 0 15px rgba(66, 165, 245, 0.5)') 
-                            : '0 8px 20px rgba(0, 0, 0, 0.25)',
+                            ? (user.subscription.type === 'premium' ? '0 0 15px rgba(186, 104, 200, 0.5), 0 0 0 2px rgba(0,0,0,0.05)' : user.subscription.type === 'pick-me' ? '0 0 15px rgba(208, 188, 255, 0.5), 0 0 0 2px rgba(0,0,0,0.05)' : user.subscription.type === 'ultimate' ? '0 0 15px rgba(124, 77, 255, 0.5), 0 0 0 2px rgba(0,0,0,0.05)' : '0 0 15px rgba(66, 165, 245, 0.5), 0 0 0 2px rgba(0,0,0,0.05)') 
+                            : '0 8px 20px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(0,0,0,0.05)',
                         bgcolor: 'primary.dark',
-                        transition: 'all 0.3s ease',
+                        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                         cursor: 'pointer',
                         '&:hover': {
-                          transform: 'scale(1.03)',
+                          transform: 'scale(1.03) rotate(1deg)',
                           boxShadow: (user?.status_color && user?.status_text && user?.subscription) 
-                            ? `0 0 20px ${user.status_color}B3` 
+                            ? `0 0 20px ${user.status_color}B3, 0 0 0 2px rgba(0,0,0,0.1)` 
                             : user?.subscription 
-                              ? (user.subscription.type === 'premium' ? '0 0 20px rgba(186, 104, 200, 0.7)' : user.subscription.type === 'pick-me' ? '0 0 20px rgba(208, 188, 255, 0.7)' : user.subscription.type === 'ultimate' ? '0 0 20px rgba(124, 77, 255, 0.7)' : '0 0 20px rgba(66, 165, 245, 0.7)') 
-                              : '0 10px 25px rgba(0, 0, 0, 0.35)',
+                              ? (user.subscription.type === 'premium' ? '0 0 20px rgba(186, 104, 200, 0.7), 0 0 0 2px rgba(0,0,0,0.1)' : user.subscription.type === 'pick-me' ? '0 0 20px rgba(208, 188, 255, 0.7), 0 0 0 2px rgba(0,0,0,0.1)' : user.subscription.type === 'ultimate' ? '0 0 20px rgba(124, 77, 255, 0.7), 0 0 0 2px rgba(0,0,0,0.1)' : '0 0 20px rgba(66, 165, 245, 0.7), 0 0 0 2px rgba(0,0,0,0.1)') 
+                              : '0 10px 25px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(0,0,0,0.1)',
                           border: (user?.status_color && user?.status_text && user?.subscription) 
                             ? `4px solid ${user.status_color}CC` 
                             : user?.subscription 
                               ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200, 0.8)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255, 0.8)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255, 0.8)' : 'rgba(66, 165, 245, 0.8)'}`
-                              : '4px solid rgba(208, 188, 255, 0.4)'
+                              : '4px solid rgba(208, 188, 255, 0.6)'
                         }
                       }}
                       onError={(e) => {
@@ -2756,24 +2719,24 @@ const ProfilePage = () => {
                     <Box
                       sx={{
                         position: 'absolute',
-                        width: 20,
-                        height: 20,
+                        width: 16,
+                        height: 16,
                         borderRadius: '50%',
                         bgcolor: '#4caf50',
                         border: theme => theme.palette.mode === 'dark'
-                          ? '2px solid #121212'
-                          : '2px solid #ffffff',
-                        bottom: 5,
-                        right: 15,
-                        boxShadow: '0 0 8px rgba(76, 175, 80, 0.9)',
+                          ? '2px solid rgba(18, 18, 18, 0.8)'
+                          : '2px solid rgba(255, 255, 255, 0.9)',
+                        bottom: 8,
+                        right: 12,
+                        boxShadow: '0 0 10px rgba(76, 175, 80, 0.8), 0 0 0 1px rgba(76, 175, 80, 0.2)',
                         zIndex: 2,
                         animation: 'pulse 2s infinite',
                         '@keyframes pulse': {
                           '0%': {
                             boxShadow: '0 0 0 0 rgba(76, 175, 80, 0.7)'
                           },
-                          '70%': {
-                            boxShadow: '0 0 0 6px rgba(76, 175, 80, 0)'
+                          '50%': {
+                            boxShadow: '0 0 0 8px rgba(76, 175, 80, 0)'
                           },
                           '100%': {
                             boxShadow: '0 0 0 0 rgba(76, 175, 80, 0)'
@@ -2799,10 +2762,14 @@ const ProfilePage = () => {
                       sx={{ 
                         fontWeight: 700,
                         background: theme => theme.palette.mode === 'dark' 
-                          ? 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.8) 100%)'
-                          : 'linear-gradient(90deg, #000 0%, rgba(0,0,0,0.8) 100%)',
+                          ? 'linear-gradient(90deg, #fff 30%, rgba(255,255,255,0.7) 100%)'
+                          : 'linear-gradient(90deg, #000 30%, rgba(0,0,0,0.8) 100%)',
                         WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
+                        WebkitTextFillColor: 'transparent',
+                        letterSpacing: '0.01em',
+                        textShadow: theme => theme.palette.mode === 'dark' 
+                          ? '0 0 30px rgba(255,255,255,0.1)' 
+                          : '0 0 30px rgba(0,0,0,0.05)'
                       }}>
                       {user?.name || 'Пользователь'}
                     </Typography>
@@ -2850,81 +2817,7 @@ const ProfilePage = () => {
                     @{user?.username || 'username'}
                   </Typography>
                   
-
-                  {userBanInfo ? (
-                    <Tooltip 
-                      title={
-                        <Box sx={{ p: 0.5 }}>
-                          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>Аккаунт заблокирован</Typography>
-                          <Typography variant="body2" sx={{ mb: 0.5 }}>Причина: {userBanInfo.reason}</Typography>
-                          <Typography variant="body2" sx={{ mb: 0.5 }}>До: {userBanInfo.end_date}</Typography>
-                          {userBanInfo.remaining_days > 0 && (
-                            <Typography variant="body2">
-                              Осталось дней: {userBanInfo.remaining_days}
-                            </Typography>
-                          )}
-                        </Box>
-                      } 
-                      arrow 
-                      placement="top"
-                    >
-                      <Typography 
-                        variant="caption" 
-                        sx={{
-                          display: 'flex', 
-                          alignItems: 'center',
-                          color: '#fff',
-                          fontWeight: 500,
-                          background: 'rgba(211, 47, 47, 0.2)',
-                          px: 1,
-                          py: 0.3,
-                          borderRadius: 4,
-                          border: '1px solid rgba(211, 47, 47, 0.4)',
-                          '&:hover': {
-                            background: 'rgba(211, 47, 47, 0.3)',
-                          },
-                          animation: 'pulse-red 2s infinite',
-                          '@keyframes pulse-red': {
-                            '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
-                            '70%': { boxShadow: '0 0 0 6px rgba(211, 47, 47, 0)' },
-                            '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' }
-                          }
-                        }}
-                      >
-                        <BlockIcon sx={{ fontSize: 14, mr: 0.5, opacity: 0.9 }} />
-                        <Box component="span">В бане</Box>
-                      </Typography>
-                    </Tooltip>
-                  ) : isOnline && user?.subscription?.type !== 'channel' ? (
-                    <Typography 
-                      variant="caption" 
-                      sx={{
-                        display: 'flex', 
-                        alignItems: 'center',
-                        color: 'success.light',
-                        fontWeight: 500,
-                        background: theme => theme.palette.mode === 'dark' 
-                          ? 'rgba(46, 125, 50, 0.1)' 
-                          : 'rgba(46, 125, 50, 0.15)',
-                        px: 1,
-                        py: 0.3,
-                        borderRadius: 4,
-                        border: '1px solid rgba(46, 125, 50, 0.2)'
-                      }}
-                    >
-                      <Box 
-                        sx={{ 
-                          width: '8px', 
-                          height: '8px', 
-                          bgcolor: 'success.main', 
-                          borderRadius: '50%',
-                          mr: 0.5,
-                          boxShadow: '0 0 4px rgba(76, 175, 80, 0.6)'
-                        }} 
-                      />
-                      онлайн
-                    </Typography>
-                  ) : !isOnline && user?.subscription?.type !== 'channel' ? (
+                  {!isOnline && user?.subscription?.type !== 'channel' && lastActive ? (
                     <Typography 
                       variant="caption" 
                       sx={{
@@ -2940,10 +2833,11 @@ const ProfilePage = () => {
                       }}
                     >
                       <AccessTimeIcon sx={{ fontSize: 12, mr: 0.5, opacity: 0.7 }} />
-                      {lastActive ? `${lastActive}` : "не в сети"}
+                      {lastActive}
                     </Typography>
                   ) : null}
-                                    {user?.subscription && (
+                  
+                  {user?.subscription && (
                     user.subscription.type === 'channel' ? (
                       <Chip
                         icon={<ChatIcon fontSize="small" />}
@@ -3071,7 +2965,7 @@ const ProfilePage = () => {
                       <Typography variant="caption" sx={{ color: theme => theme.palette.text.secondary, mr: 0.5 }}>
                         А также:
                       </Typography>
-                      {ownedUsernames.slice(0, 3).map((usernameItem, idx) => (
+                      {ownedUsernames.slice(0, 3).map((username, idx) => (
                         <React.Fragment key={idx}>
                           <Typography 
                             variant="caption" 
@@ -3080,15 +2974,10 @@ const ProfilePage = () => {
                               color: (user.status_color && user.status_text && user.subscription) ? 
                                 user.status_color : 
                                 theme => theme.palette.mode === 'dark' ? '#d0bcff' : '#7c4dff',
-                              fontWeight: 500,
-                              cursor: 'pointer',
-                              '&:hover': {
-                                textDecoration: 'underline'
-                              }
+                              fontWeight: 500
                             }}
-                            onClick={(e) => handleUsernameClick(e, usernameItem)}
                           >
-                            @{usernameItem}
+                            @{username}
                           </Typography>
                           {idx < Math.min(ownedUsernames.length, 3) - 1 && (
                             <Typography variant="caption" component="span" sx={{ mx: 0.5, color: theme => theme.palette.text.disabled }}>
@@ -3106,74 +2995,47 @@ const ProfilePage = () => {
                   </Box>
                 )}
                 
-                {userBanInfo && (isCurrentUserModerator || (currentUser && currentUser.id === 3)) && (
-                  <Box sx={{ 
-                    mt: 2,
-                    p: 1.5,
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(211, 47, 47, 0.1)',
-                    border: '1px solid rgba(211, 47, 47, 0.3)',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 1.5
-                  }}>
-                    <WarningIcon color="error" sx={{ fontSize: 22, mt: 0.5 }} />
-                    <Box>
-                      <Typography variant="subtitle2" color="error" sx={{ fontWeight: 'bold' }}>
-                        Аккаунт заблокирован
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                        Причина: {userBanInfo.reason}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
-                        До {userBanInfo.end_date} 
-                        {userBanInfo.remaining_days > 0 && ` (осталось ${userBanInfo.remaining_days} дн.)`}
-                      </Typography>
-                      
-                      {currentUser && currentUser.id === 3 && (
-                        <Box sx={{ mt: 1, pt: 1, borderTop: '1px dashed rgba(211, 47, 47, 0.3)' }}>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic' }}>
-                            {userBanInfo.is_auto_ban ? 'Автоматический бан системой' : (
-                              userBanInfo.admin ? `Бан выдал: ${userBanInfo.admin.name} (@${userBanInfo.admin.username})` : 'Бан выдан администрацией'
-                            )}
-                          </Typography>
-                          {userBanInfo.start_date && (
-                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic' }}>
-                              Начало бана: {userBanInfo.start_date}
-                            </Typography>
-                          )}
-                          {userBanInfo.details && (
-                            <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontStyle: 'italic' }}>
-                              Детали: {userBanInfo.details}
-                            </Typography>
-                          )}
-                        </Box>
-                      )}
-                    </Box>
-                  </Box>
-                )}
                 
-                {/* Блок с информацией о пользователе */}
                 {user?.about && (
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      mt: 1,
-                      lineHeight: 1.5,
+                      mt: 2,
+                      lineHeight: 1.6,
                       color: theme => theme.palette.text.primary,
-                      p: 1.5,
-                      borderRadius: 2,
-                      background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+                      p: 2,
+                      borderRadius: 3,
+                      background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
                       backdropFilter: 'blur(10px)',
-                      border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
+                      border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.04)',
                       overflowWrap: 'break-word',
                       wordBreak: 'break-word',
-                      whiteSpace: 'normal'
+                      whiteSpace: 'normal',
+                      boxShadow: theme => theme.palette.mode === 'dark' 
+                        ? 'inset 0 1px 1px rgba(255, 255, 255, 0.05)'
+                        : 'inset 0 1px 1px rgba(255, 255, 255, 0.6)',
+                      transition: 'all 0.3s ease',
+                      opacity: 1,
+                      transform: 'translateY(0)',
+                      animation: 'fadeIn 0.5s ease-in-out',
+                      '@keyframes fadeIn': {
+                        '0%': {
+                          opacity: 0,
+                          transform: 'translateY(10px)'
+                        },
+                        '100%': {
+                          opacity: 1,
+                          transform: 'translateY(0)'
+                        }
+                      },
+                      '&:hover': {
+                        background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+                      }
                     }}
                   >
                     {user.about}
                   </Typography>
-
                 )}
                 
                 
@@ -3181,21 +3043,47 @@ const ProfilePage = () => {
                 <Box sx={{ 
                   display: 'grid', 
                   gridTemplateColumns: user?.subscription?.type === 'channel' ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', 
-                  gap: 1, 
-                  mt: 1 
+                  gap: 1.5, 
+                  mt: 2,
+                  opacity: 1,
+                  transform: 'translateY(0)',
+                  animation: 'fadeIn 0.5s ease-in-out 0.2s both',
+                  '@keyframes fadeIn': {
+                    '0%': {
+                      opacity: 0,
+                      transform: 'translateY(10px)'
+                    },
+                    '100%': {
+                      opacity: 1,
+                      transform: 'translateY(0)'
+                    }
+                  }
                 }}>
-                  
+                  {/* First stat item - posts count */}
                   <Paper sx={{ 
                     p: 1.5, 
-                    borderRadius: 2, 
+                    borderRadius: 3, 
                     textAlign: 'center',
-                    background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
-                    backdropFilter: 'blur(5px)',
-                    border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
-                    transition: 'all 0.2s ease',
+                    background: theme => theme.palette.mode === 'dark' 
+                      ? 'linear-gradient(145deg, rgba(40, 40, 40, 0.6) 0%, rgba(30, 30, 30, 0.8) 100%)' 
+                      : 'linear-gradient(145deg, rgba(255, 255, 255, 0.6) 0%, rgba(245, 245, 245, 0.8) 100%)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    border: theme => theme.palette.mode === 'dark' 
+                      ? '1px solid rgba(255,255,255,0.08)' 
+                      : '1px solid rgba(0,0,0,0.05)',
+                    boxShadow: theme => theme.palette.mode === 'dark' 
+                      ? '0 2px 8px rgba(0, 0, 0, 0.15)' 
+                      : '0 2px 8px rgba(0, 0, 0, 0.05)',
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                     '&:hover': {
-                      background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
-                      transform: 'translateY(-2px)'
+                      background: theme => theme.palette.mode === 'dark' 
+                        ? 'linear-gradient(145deg, rgba(45, 45, 45, 0.7) 0%, rgba(35, 35, 35, 0.9) 100%)' 
+                        : 'linear-gradient(145deg, rgba(255, 255, 255, 0.8) 0%, rgba(250, 250, 250, 0.9) 100%)',
+                      transform: 'translateY(-3px) scale(1.02)',
+                      boxShadow: theme => theme.palette.mode === 'dark' 
+                        ? '0 5px 15px rgba(0, 0, 0, 0.25)' 
+                        : '0 5px 15px rgba(0, 0, 0, 0.1)'
                     }
                   }}>
                     <Typography 
@@ -3204,7 +3092,10 @@ const ProfilePage = () => {
                         fontWeight: 700,
                         color: (user.status_color && user.status_text && user.subscription) ? 
                           user.status_color : 
-                          'primary.main'
+                          'primary.main',
+                        textShadow: (user.status_color && user.status_text && user.subscription) ? 
+                          `0 0 15px ${user.status_color}40` : 
+                          '0 0 15px rgba(208, 188, 255, 0.2)'
                       }}
                     >
                       {postsCount || 0}
@@ -3527,43 +3418,57 @@ const ProfilePage = () => {
                   <Box sx={{ 
                     display: 'flex', 
                     gap: 1, 
-                    mt: 2,
-                    justifyContent: 'center'
+                    mt: 2.5,
+                    justifyContent: 'center',
+                    animation: 'fadeInButton 0.5s ease-out 0.3s both',
+                    '@keyframes fadeInButton': {
+                      from: { opacity: 0, transform: 'translateY(10px)' },
+                      to: { opacity: 1, transform: 'translateY(0)' }
+                    }
                   }}>
                     <Button 
-                      variant="contained" 
+                      variant={following ? "outlined" : "contained"}
                       color="primary"
                       startIcon={following ? <PersonRemoveIcon /> : <PersonAddIcon />}
                       onClick={handleFollow}
                       fullWidth
                       sx={{ 
-                        borderRadius: 6,
-                        py: 0.7,
+                        borderRadius: 8,
+                        py: 1.2,
                         fontWeight: 'bold',
+                        fontSize: '0.95rem',
                         textTransform: 'none',
-                        boxShadow: (user.status_color && user.status_text && user.subscription) ?
-                          `0 2px 8px ${user.status_color}40` : 
-                          '0 2px 8px rgba(208, 188, 255, 0.25)',
-                        backgroundColor: following ? 
-                          'rgba(255, 255, 255, 0.1)' : 
+                        boxShadow: following ? 'none' : ((user.status_color && user.status_text && user.subscription) ?
+                          `0 3px 10px ${user.status_color}40` : 
+                          '0 3px 10px rgba(208, 188, 255, 0.3)'),
+                        background: following ? 
+                          'transparent' : 
                           (user.status_color && user.status_text && user.subscription) ?
-                            user.status_color :
-                            'primary.main',
+                            `linear-gradient(135deg, ${user.status_color} 0%, ${user.status_color}D9 100%)` :
+                            'linear-gradient(135deg, #7c4dff 0%, #9e7dff 100%)',
+                        borderColor: following ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
                         color: following ? 'text.primary' : '#fff',
-                        transition: 'all 0.2s ease',
+                        transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                         '&:hover': {
                           backgroundColor: following ? 
-                            'rgba(255, 255, 255, 0.15)' : 
+                            'rgba(255, 255, 255, 0.05)' : 
                             (user.status_color && user.status_text && user.subscription) ?
-                              `${user.status_color}E6` : 
-                              'primary.dark',
-                          transform: 'translateY(-2px)',
-                          boxShadow: (user.status_color && user.status_text && user.subscription) ?
-                            `0 4px 12px ${user.status_color}66` : 
-                            '0 4px 12px rgba(208, 188, 255, 0.4)'
+                              `linear-gradient(135deg, ${user.status_color}E6 0%, ${user.status_color}CC 100%)` : 
+                              'linear-gradient(135deg, #8e5fff 0%, #ac8fff 100%)',
+                          transform: 'translateY(-3px) scale(1.02)',
+                          boxShadow: following ? 
+                            'none' : 
+                            ((user.status_color && user.status_text && user.subscription) ?
+                              `0 6px 15px ${user.status_color}66` : 
+                              '0 6px 15px rgba(208, 188, 255, 0.4)')
                         },
                         '&:active': {
-                          transform: 'translateY(0)'
+                          transform: 'translateY(-1px)',
+                          boxShadow: following ? 
+                            'none' : 
+                            ((user.status_color && user.status_text && user.subscription) ?
+                              `0 2px 8px ${user.status_color}66` : 
+                              '0 2px 8px rgba(208, 188, 255, 0.4)')
                         }
                       }}
                     >
@@ -3582,14 +3487,27 @@ const ProfilePage = () => {
         <Grid item xs={12} md={7} sx={{ pt: 0, ml: { xs: 0, md: '5px' }, mb: '100px' }}>
         
           <Paper sx={{ 
-            borderRadius: '16px', 
-            backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
+            borderRadius: '16px', // Возвращаю прежнее значение (было 28px)
+            backgroundColor: theme => theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             backgroundImage: 'unset',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+            boxShadow: theme => theme.palette.mode === 'dark' 
+              ? '0 5px 20px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05) inset' 
+              : '0 5px 20px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.02) inset',
             overflow: 'hidden',
-            mb: '5px',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-
+            mb: 2,
+            border: '1px solid',
+            borderColor: theme => theme.palette.mode === 'dark' 
+              ? 'rgba(255, 255, 255, 0.08)' 
+              : 'rgba(0, 0, 0, 0.05)',
+            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            '&:hover': {
+              boxShadow: theme => theme.palette.mode === 'dark' 
+                ? '0 8px 25px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.08) inset' 
+                : '0 8px 25px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03) inset',
+              transform: 'translateY(-2px)'
+            }
           }}>
             <Tabs 
               value={tabValue} 
@@ -3598,17 +3516,25 @@ const ProfilePage = () => {
               sx={{
                 '& .MuiTabs-indicator': {
                   backgroundColor: 'primary.main',
-                  height: 3
+                  height: 3,
+                  borderRadius: '3px 3px 0 0',
+                  boxShadow: '0 0 8px rgba(208, 188, 255, 0.6)'
                 },
                 '& .MuiTab-root': {
                   color: 'rgba(255,255,255,0.6)',
-                  fontSize: '0.9rem',
+                  fontSize: '0.95rem',
                   fontWeight: 500,
-                  py: 1.5,
+                  py: 1.8,
                   textTransform: 'none',
+                  transition: 'all 0.3s ease',
+                  letterSpacing: '0.01em',
                   '&.Mui-selected': {
                     color: 'primary.main',
                     fontWeight: 700
+                  },
+                  '&:hover': {
+                    color: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.8)',
+                    backgroundColor: 'rgba(208, 188, 255, 0.08)'
                   }
                 }
               }}
@@ -3643,11 +3569,22 @@ const ProfilePage = () => {
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
             <Paper sx={{ 
               p: 3, 
-              borderRadius: '16px',
+              borderRadius: '24px',
               background: theme => theme.palette.mode === 'dark' 
-                ? 'linear-gradient(135deg, #232526 0%, #121212 100%)' 
-                : theme.palette.background.paper,
-              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)'
+                ? 'linear-gradient(145deg, rgba(38, 38, 38, 0.9) 0%, rgba(18, 18, 18, 0.95) 100%)' 
+                : 'linear-gradient(145deg, rgba(248, 248, 248, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              boxShadow: theme => theme.palette.mode === 'dark'
+                ? '0 5px 15px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05) inset'
+                : '0 5px 15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03) inset',
+              transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+              '&:hover': {
+                boxShadow: theme => theme.palette.mode === 'dark'
+                  ? '0 8px 25px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.07) inset'
+                  : '0 8px 25px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05) inset',
+                transform: 'translateY(-2px)'
+              }
             }}>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                 Информация о профиле
@@ -3758,18 +3695,20 @@ const ProfilePage = () => {
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                           
-                          {user.purchased_usernames.map((usernameObj, idx) => (
+                          {user.purchased_usernames.map((username, idx) => (
                             <Chip 
                               key={idx}
-                              label={usernameObj.username}
+                              label={username.username}
                               size="small"
-                              variant={usernameObj.is_active ? "filled" : "outlined"}
-                              color={usernameObj.is_active ? "primary" : "default"}
-                              onClick={(e) => handleUsernameClick(e, usernameObj.username)}
                               sx={{ 
-                                '& .MuiChip-label': {
-                                  px: 1
-                                }
+                                bgcolor: username.is_active ? 'primary.dark' : 'background.paper',
+                                border: '1px solid',
+                                borderColor: username.is_active ? 'primary.main' : 'divider',
+                                '&:hover': {
+                                  bgcolor: username.is_active ? 'primary.main' : 'rgba(208, 188, 255, 0.1)',
+                                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+                                },
+                                transition: 'all 0.2s'
                               }}
                             />
                           ))}
@@ -3903,17 +3842,6 @@ const ProfilePage = () => {
           </Box>
         )}
       </Menu>
-      
-      {/* Карточка с информацией об юзернейме */}
-      <AnimatePresence>
-        {selectedUsername && (
-          <UsernameCard 
-            username={selectedUsername}
-            onClose={handleCloseUsernameCard}
-            open={usernameCardOpen}
-          />
-        )}
-      </AnimatePresence>
     </Container>
   );
 };

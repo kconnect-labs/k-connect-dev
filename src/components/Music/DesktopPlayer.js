@@ -73,7 +73,9 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
 }));
 
 
-const MarqueeText = styled(Typography)(({ isactive }) => ({
+const MarqueeText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isactive'
+})(({ isactive }) => ({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -203,56 +205,99 @@ const DesktopPlayer = memo(() => {
   const currentSeekValueRef = useRef(0);
   
   const formattedCurrentTime = useMemo(() => {
-    
-    const globalTimeElement = document.getElementById('global-player-current-time');
-    if (globalTimeElement && globalTimeElement.textContent) {
-      return globalTimeElement.textContent;
+    try {
+
+      const globalTimeElement = document.getElementById('global-player-current-time');
+      if (globalTimeElement && globalTimeElement.textContent) {
+        return globalTimeElement.textContent;
+      }
+      
+
+      if (typeof getCurrentTimeRaw === 'function') {
+        const time = getCurrentTimeRaw();
+        return formatDuration(typeof time === 'number' ? time : 0);
+      }
+      
+
+      return '0:00';
+    } catch (error) {
+      console.error("Error getting current time:", error);
+      return '0:00';
     }
-    
-    return formatDuration(typeof getCurrentTimeRaw === 'function' ? getCurrentTimeRaw() : 0);
   }, [getCurrentTimeRaw]);
   
   const formattedDuration = useMemo(() => {
-    
-    const globalDurationElement = document.getElementById('global-player-duration');
-    if (globalDurationElement && globalDurationElement.textContent) {
-      return globalDurationElement.textContent;
+    try {
+
+      const globalDurationElement = document.getElementById('global-player-duration');
+      if (globalDurationElement && globalDurationElement.textContent) {
+        return globalDurationElement.textContent;
+      }
+      
+
+      if (typeof getDurationRaw === 'function') {
+        const duration = getDurationRaw();
+        return formatDuration(typeof duration === 'number' ? duration : 0);
+      }
+      
+
+      return '0:00';
+    } catch (error) {
+      console.error("Error getting duration:", error);
+      return '0:00';
     }
-    
-    return formatDuration(typeof getDurationRaw === 'function' ? getDurationRaw() : 0);
   }, [getDurationRaw]);
 
   
   useEffect(() => {
+
+    let isMounted = true;
     
+
     const updateDisplays = () => {
-      
-      const currentTimeEl = document.getElementById('desktop-current-time');
-      const durationEl = document.getElementById('desktop-duration');
-      
-      
-      if (currentTimeEl && window.audioTiming) {
-        currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
+      try {
+
+        if (!isMounted) return;
+        
+        const currentTimeEl = document.getElementById('desktop-current-time');
+        const durationEl = document.getElementById('desktop-duration');
+        
+
+        if (currentTimeEl && window.audioTiming && window.audioTiming.formattedCurrentTime) {
+          currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
+        }
+        
+        if (durationEl && window.audioTiming && window.audioTiming.formattedDuration) {
+          durationEl.textContent = window.audioTiming.formattedDuration;
+        }
+        
+
+        if (!isSeeking && window.audioTiming && typeof window.audioTiming.progress === 'number') {
+          setSeekValue(window.audioTiming.progress);
+          currentSeekValueRef.current = window.audioTiming.progress;
+        }
+        
+
+        if (isMounted) {
+          requestAnimationFrame(updateDisplays);
+        }
+      } catch (error) {
+        console.error("Error updating player displays:", error);
+
+        if (isMounted) {
+          requestAnimationFrame(updateDisplays);
+        }
       }
-      
-      if (durationEl && window.audioTiming) {
-        durationEl.textContent = window.audioTiming.formattedDuration;
-      }
-      
-      
-      if (!isSeeking && window.audioTiming) {
-        setSeekValue(window.audioTiming.progress);
-      }
-      
-      
-      requestAnimationFrame(updateDisplays);
     };
     
-    
+
     const animationId = requestAnimationFrame(updateDisplays);
     
-    
-    return () => cancelAnimationFrame(animationId);
+
+    return () => {
+      isMounted = false;
+      cancelAnimationFrame(animationId);
+    };
   }, [isSeeking]);
 
   
@@ -315,21 +360,68 @@ const DesktopPlayer = memo(() => {
   }, []);
   
   const handleSeekEnd = useCallback((_, newValue) => {
-    const durationValue = typeof getDurationRaw === 'function' ? getDurationRaw() : duration;
-    seekTo((newValue * durationValue) / 100);
-    setIsSeeking(false);
-  }, [seekTo, getDurationRaw, duration]);
+    try {
+      let durationValue = 0;
+      
+
+      if (typeof getDurationRaw === 'function') {
+        const rawDuration = getDurationRaw();
+        if (typeof rawDuration === 'number' && rawDuration > 0) {
+          durationValue = rawDuration;
+        } else if (typeof duration === 'number' && duration > 0) {
+          durationValue = duration;
+        }
+      } else if (typeof duration === 'number' && duration > 0) {
+        durationValue = duration;
+      } else if (audioRef && audioRef.current && audioRef.current.duration) {
+
+        durationValue = audioRef.current.duration;
+      }
+      
+
+      if (durationValue > 0) {
+        seekTo((newValue * durationValue) / 100);
+      }
+      
+      setIsSeeking(false);
+    } catch (error) {
+      console.error("Error in handleSeekEnd:", error);
+      setIsSeeking(false);
+    }
+  }, [seekTo, getDurationRaw, duration, audioRef]);
 
   const handleClickProgress = useCallback((event) => {
-    if (progressRef.current) {
-      const durationValue = typeof getDurationRaw === 'function' ? getDurationRaw() : duration;
-      const rect = progressRef.current.getBoundingClientRect();
-      const position = ((event.clientX - rect.left) / rect.width) * 100;
-      const clampedPosition = Math.min(Math.max(position, 0), 100);
-      setSeekValue(clampedPosition);
-      seekTo((clampedPosition * durationValue) / 100);
+    try {
+      if (progressRef.current) {
+
+        let durationValue = 0;
+        
+        if (typeof getDurationRaw === 'function') {
+          const rawDuration = getDurationRaw();
+          if (typeof rawDuration === 'number' && rawDuration > 0) {
+            durationValue = rawDuration;
+          } else if (typeof duration === 'number' && duration > 0) {
+            durationValue = duration;
+          }
+        } else if (typeof duration === 'number' && duration > 0) {
+          durationValue = duration;
+        } else if (audioRef && audioRef.current && audioRef.current.duration) {
+          durationValue = audioRef.current.duration;
+        }
+        
+
+        if (durationValue > 0) {
+          const rect = progressRef.current.getBoundingClientRect();
+          const position = ((event.clientX - rect.left) / rect.width) * 100;
+          const clampedPosition = Math.min(Math.max(position, 0), 100);
+          setSeekValue(clampedPosition);
+          seekTo((clampedPosition * durationValue) / 100);
+        }
+      }
+    } catch (error) {
+      console.error("Error in handleClickProgress:", error);
     }
-  }, [progressRef, seekTo, getDurationRaw, duration]);
+  }, [progressRef, seekTo, getDurationRaw, duration, audioRef]);
 
   const toggleLikeTrack = useCallback((e) => {
     

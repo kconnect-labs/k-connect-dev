@@ -155,58 +155,100 @@ const MobilePlayer = memo(() => {
   
   
   const formattedCurrentTime = useMemo(() => {
-    
-    const globalTimeElement = document.getElementById('global-player-current-time');
-    if (globalTimeElement && globalTimeElement.textContent) {
-      return globalTimeElement.textContent;
+    try {
+
+      const globalTimeElement = document.getElementById('global-player-current-time');
+      if (globalTimeElement && globalTimeElement.textContent) {
+        return globalTimeElement.textContent;
+      }
+      
+
+      if (typeof getCurrentTimeRaw === 'function') {
+        const time = getCurrentTimeRaw();
+        return formatDuration(typeof time === 'number' ? time : 0);
+      }
+      
+
+      return '0:00';
+    } catch (error) {
+      console.error("Error getting current time:", error);
+      return '0:00';
     }
-    
-    return formatDuration(typeof getCurrentTimeRaw === 'function' ? getCurrentTimeRaw() : 0);
   }, [getCurrentTimeRaw]);
   
   const formattedDuration = useMemo(() => {
-    
-    const globalDurationElement = document.getElementById('global-player-duration');
-    if (globalDurationElement && globalDurationElement.textContent) {
-      return globalDurationElement.textContent;
+    try {
+
+      const globalDurationElement = document.getElementById('global-player-duration');
+      if (globalDurationElement && globalDurationElement.textContent) {
+        return globalDurationElement.textContent;
+      }
+      
+
+      if (typeof getDurationRaw === 'function') {
+        const duration = getDurationRaw();
+        return formatDuration(typeof duration === 'number' ? duration : 0);
+      }
+      
+
+      return '0:00';
+    } catch (error) {
+      console.error("Error getting duration:", error);
+      return '0:00';
     }
-    
-    return formatDuration(typeof getDurationRaw === 'function' ? getDurationRaw() : 0);
   }, [getDurationRaw]);
   
   
   useEffect(() => {
+
+    let isMounted = true;
     
     const updateDisplays = () => {
-      
-      const currentTimeEl = document.getElementById('mobile-current-time');
-      const durationEl = document.getElementById('mobile-duration');
-      const progressBar = document.getElementById('mobile-player-progress');
-      
-      
-      if (currentTimeEl && window.audioTiming) {
-        currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
+      try {
+
+        if (!isMounted) return;
+        
+        const currentTimeEl = document.getElementById('mobile-current-time');
+        const durationEl = document.getElementById('mobile-duration');
+        const progressBar = document.getElementById('mobile-player-progress');
+        
+
+        if (currentTimeEl && window.audioTiming && window.audioTiming.formattedCurrentTime) {
+          currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
+        }
+        
+
+        if (durationEl && window.audioTiming && window.audioTiming.formattedDuration) {
+          durationEl.textContent = window.audioTiming.formattedDuration;
+        }
+        
+
+        if (progressBar && window.audioTiming && typeof window.audioTiming.progress === 'number') {
+          progressBar.style.width = `${window.audioTiming.progress}%`;
+          progressRef.current = window.audioTiming.progress;
+        }
+        
+
+        if (isMounted) {
+          requestAnimationFrame(updateDisplays);
+        }
+      } catch (error) {
+        console.error("Error updating mobile player displays:", error);
+
+        if (isMounted) {
+          requestAnimationFrame(updateDisplays);
+        }
       }
-      
-      if (durationEl && window.audioTiming) {
-        durationEl.textContent = window.audioTiming.formattedDuration;
-      }
-      
-      
-      if (progressBar && window.audioTiming) {
-        progressBar.style.width = `${window.audioTiming.progress}%`;
-        progressRef.current = window.audioTiming.progress;
-      }
-      
-      
-      requestAnimationFrame(updateDisplays);
     };
     
-    
+
     const animationId = requestAnimationFrame(updateDisplays);
     
-    
-    return () => cancelAnimationFrame(animationId);
+
+    return () => {
+      isMounted = false;
+      cancelAnimationFrame(animationId);
+    };
   }, []);
 
   
