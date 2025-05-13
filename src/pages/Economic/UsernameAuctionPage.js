@@ -53,7 +53,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import format from 'date-fns/format';
 import { ru } from 'date-fns/locale';
 
-// Styled components
+
 const PageHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -198,6 +198,7 @@ const UsernameAuctionPage = () => {
   const [loading, setLoading] = useState(true);
   const [auctions, setAuctions] = useState([]);
   const [filteredAuctions, setFilteredAuctions] = useState([]);
+  const [completedAuctions, setCompletedAuctions] = useState([]);
   const [userAuctions, setUserAuctions] = useState([]);
   const [userBids, setUserBids] = useState([]);
   const [usernames, setUsernames] = useState([]);
@@ -231,45 +232,53 @@ const UsernameAuctionPage = () => {
   const broadcastChannel = useRef(null);
   const lastFetchTime = useRef(null);
   const updateInterval = useRef(null);
-  const SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
-  const MIN_UPDATE_INTERVAL = 15000; // Minimum 15 seconds between updates across tabs
+  const SESSION_TIMEOUT = 60 * 60 * 1000;
+  const MIN_UPDATE_INTERVAL = 15000;
 
-  // Initialize broadcast channel for cross-tab communication
+
   useEffect(() => {
-    // Check if BroadcastChannel is supported
+
     if (typeof BroadcastChannel !== 'undefined') {
       broadcastChannel.current = new BroadcastChannel('username_auction_channel');
       
-      // Set up listener for messages from other tabs
+
       broadcastChannel.current.onmessage = (event) => {
         const { type, data, timestamp } = event.data;
         
-        // Check if the data is newer than our last update
+
         if (!lastFetchTime.current || timestamp > lastFetchTime.current) {
           lastFetchTime.current = timestamp;
           
-          // Update relevant state based on message type
+
           if (type === 'auctions') {
-            setAuctions(data.auctions || []);
-            setFilteredAuctions(data.auctions || []);
+            const activeAuctions = (data.auctions || []).filter(
+              auction => auction.status !== 'completed'
+            );
+            const completed = (data.auctions || []).filter(
+              auction => auction.status === 'completed'
+            );
+            
+            setAuctions(activeAuctions);
+            setFilteredAuctions(activeAuctions);
+            setCompletedAuctions(completed);
           } else if (type === 'user_auctions') {
             setUserAuctions(data.active_auctions || []);
           } else if (type === 'transaction_complete') {
-            // Обработка завершенных транзакций от других вкладок
+
             console.log(`Получено уведомление о транзакции: ${data.type} для аукциона ${data.auctionId}`);
             
-            // Обновляем данные в зависимости от типа транзакции
+
             if (data.type === 'buy_now' || data.type === 'accept_bid' || data.type === 'place_bid') {
-              // Загружаем свежие данные с сервера
-              fetchAuctions(true); // silent = true
-              fetchUserAuctions(true); // silent = true
+
+              fetchAuctions(true);
+              fetchUserAuctions(true);
               
-              // Если у нас открыт диалог детализации для затронутого аукциона, обновляем его
+
               if (detailAuction && detailAuction.id === data.auctionId) {
                 handleOpenAuctionDetail(detailAuction);
               }
               
-              // Показываем уведомление, если транзакция была не от текущей вкладки
+
               if (data.source !== 'current_tab') {
                 setSnackbar({
                   open: true,
@@ -290,7 +299,7 @@ const UsernameAuctionPage = () => {
     };
   }, []);
 
-  // Session expiration check
+
   useEffect(() => {
     const checkSessionExpiration = () => {
       const currentTime = Date.now();
@@ -300,14 +309,14 @@ const UsernameAuctionPage = () => {
         setSessionExpired(true);
         setSessionActive(false);
         
-        // Show notification to reload
+
         setSnackbar({
           open: true,
           message: 'Сессия устарела. Пожалуйста, обновите страницу для получения актуальных данных.',
           severity: 'warning'
         });
         
-        // Clear any active intervals
+
         if (updateInterval.current) {
           clearInterval(updateInterval.current);
           updateInterval.current = null;
@@ -315,30 +324,30 @@ const UsernameAuctionPage = () => {
       }
     };
     
-    // Check every minute
+
     const expirationInterval = setInterval(checkSessionExpiration, 60000);
     
     return () => clearInterval(expirationInterval);
   }, [sessionExpired]);
 
-  // Fetch active auctions
+
   useEffect(() => {
     if (user && sessionActive) {
       fetchAuctions();
       fetchUserAuctions();
       fetchUsernames();
       
-      // Set up the auto-refresh interval
+
       updateInterval.current = setInterval(() => {
         if (sessionActive && document.visibilityState === 'visible') {
-          // Only fetch if we are the active tab (or no fetch has happened recently)
+
           const currentTime = Date.now();
           if (!lastFetchTime.current || (currentTime - lastFetchTime.current) > MIN_UPDATE_INTERVAL) {
             fetchAuctions(true);
             fetchUserAuctions(true);
           }
         }
-      }, 30000); // Refresh every 30 seconds
+      }, 30000);
       
       return () => {
         if (updateInterval.current) {
@@ -348,7 +357,7 @@ const UsernameAuctionPage = () => {
     }
   }, [user, sessionActive]);
 
-  // Filter auctions when search query changes
+
   useEffect(() => {
     if (searchTimeout) {
       clearTimeout(searchTimeout);
@@ -377,7 +386,7 @@ const UsernameAuctionPage = () => {
   const broadcastUpdate = (type, data) => {
     if (broadcastChannel.current) {
       try {
-        // Добавляем информацию об источнике сообщения для отличия транзакций из текущей вкладки
+
         const message = {
           type,
           data: { ...data, source: 'current_tab' },
@@ -399,14 +408,19 @@ const UsernameAuctionPage = () => {
       if (!silent) setLoading(true);
       const response = await axios.get('/api/username/auctions');
       
-      // Record the fetch time
+
       lastFetchTime.current = Date.now();
       
       const auctionsData = response.data.auctions || [];
-      setAuctions(auctionsData);
-      setFilteredAuctions(auctionsData);
+
+      const activeAuctions = auctionsData.filter(auction => auction.status !== 'completed');
+      const completedAuctionsData = auctionsData.filter(auction => auction.status === 'completed');
       
-      // Broadcast update to other tabs
+      setAuctions(activeAuctions);
+      setFilteredAuctions(activeAuctions);
+      setCompletedAuctions(completedAuctionsData);
+      
+
       broadcastUpdate('auctions', response.data);
     } catch (error) {
       console.error('Error fetching auctions:', error);
@@ -428,13 +442,35 @@ const UsernameAuctionPage = () => {
     try {
       const response = await axios.get('/api/username/my-auctions');
       
-      // Record the fetch time
+
       lastFetchTime.current = Date.now();
       
+
       setUserAuctions(response.data.active_auctions || []);
       setUserBids(response.data.my_bids || []);
       
-      // Broadcast update to other tabs
+
+      const completedAuctionsData = [
+        ...(response.data.completed_auctions || []),
+        ...(response.data.completed_bids || [])
+      ];
+      
+
+      setCompletedAuctions(prev => {
+
+        const existingMap = new Map(prev.map(auction => [auction.id, auction]));
+        
+
+        completedAuctionsData.forEach(auction => {
+          if (!existingMap.has(auction.id)) {
+            existingMap.set(auction.id, auction);
+          }
+        });
+        
+        return Array.from(existingMap.values());
+      });
+      
+
       broadcastUpdate('user_auctions', response.data);
     } catch (error) {
       console.error('Error fetching user auctions:', error);
@@ -454,12 +490,12 @@ const UsernameAuctionPage = () => {
     try {
       const response = await axios.get('/api/username/purchased');
       
-      // Record the fetch time
+
       lastFetchTime.current = Date.now();
       
       setUsernames(response.data.usernames || []);
       
-      // Broadcast update to other tabs
+
       broadcastUpdate('usernames', response.data);
     } catch (error) {
       console.error('Error fetching usernames:', error);
@@ -510,11 +546,11 @@ const UsernameAuctionPage = () => {
           severity: 'success'
         });
         
-        // Refresh auctions
+
         fetchAuctions();
         fetchUserAuctions();
         
-        // Close the dialog and reset form
+
         setCreateDialogOpen(false);
         setNewAuctionData({
           username: '',
@@ -549,6 +585,17 @@ const UsernameAuctionPage = () => {
         severity: 'warning'
       });
       setLoadingButtons(prev => ({ ...prev, bid: false }));
+      return;
+    }
+    
+    if (selectedAuction.status === 'completed') {
+      setSnackbar({
+        open: true,
+        message: 'Аукцион уже завершен, ставки больше не принимаются',
+        severity: 'warning'
+      });
+      setLoadingButtons(prev => ({ ...prev, bid: false }));
+      setBidDialogOpen(false);
       return;
     }
 
@@ -670,7 +717,7 @@ const UsernameAuctionPage = () => {
     setDetailLoading(true);
     
     try {
-      // Получаем детальную информацию об аукционе
+
       const response = await axios.get(`/api/username/auctions/${auction.id}`);
       if (response.data.success) {
         setDetailAuction(response.data.auction);
@@ -689,7 +736,7 @@ const UsernameAuctionPage = () => {
 
   const handleCloseAuctionDetail = () => {
     setDetailDialogOpen(false);
-    setTimeout(() => setDetailAuction(null), 300); // Очищаем данные после закрытия анимации
+    setTimeout(() => setDetailAuction(null), 300);
   };
 
   const formatDate = (dateString) => {
@@ -913,6 +960,11 @@ const UsernameAuctionPage = () => {
             iconPosition="start" 
             label="Мои ставки" 
           />
+          <Tab 
+            icon={<HistoryIcon />} 
+            iconPosition="start" 
+            label="Завершенные" 
+          />
         </Tabs>
       </Box>
 
@@ -1025,23 +1077,36 @@ const UsernameAuctionPage = () => {
                           <Typography variant="h6" color="primary" fontWeight="bold" sx={{ mb: 1 }}>
                             {auction.current_price || auction.highest_bid || auction.min_price} баллов
                           </Typography>
-                          <Button 
-                            variant="contained" 
-                            color="primary"
-                            fullWidth
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedAuction(auction);
-                              setBidDialogOpen(true);
-                            }}
-                            disabled={auction.seller_id === user?.id || auction.seller?.id === user?.id || loadingButtons.buy === auction.id}
-                            sx={{ 
-                              borderRadius: 2
-                            }}
-                            startIcon={loadingButtons.buy === auction.id ? <CircularProgress size={20} /> : null}
-                          >
-                            {loadingButtons.buy === auction.id ? 'Обработка...' : 'Сделать ставку'}
-                          </Button>
+                          {auction.status === 'completed' ? (
+                            <Button 
+                              variant="outlined"
+                              disabled={true}
+                              fullWidth
+                              sx={{ 
+                                borderRadius: 2
+                              }}
+                            >
+                              Аукцион завершен
+                            </Button>
+                          ) : (
+                            <Button 
+                              variant="contained" 
+                              color="primary"
+                              fullWidth
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedAuction(auction);
+                                setBidDialogOpen(true);
+                              }}
+                              disabled={auction.seller_id === user?.id || auction.seller?.id === user?.id || loadingButtons.buy === auction.id}
+                              sx={{ 
+                                borderRadius: 2
+                              }}
+                              startIcon={loadingButtons.buy === auction.id ? <CircularProgress size={20} /> : null}
+                            >
+                              {loadingButtons.buy === auction.id ? 'Обработка...' : 'Сделать ставку'}
+                            </Button>
+                          )}
                         </Grid>
                       </Grid>
                     </CardContent>
@@ -1080,7 +1145,11 @@ const UsernameAuctionPage = () => {
             {userAuctions.map((auction) => (
               <Grid item xs={12} key={auction.id}>
                 <Fade in={true} timeout={300}>
-                  <AuctionCard elevation={2}>
+                  <AuctionCard 
+                    elevation={2}
+                    onClick={() => handleOpenAuctionDetail(auction)}
+                    sx={{ cursor: 'pointer' }}
+                  >
                     <CardContent sx={{ p: 3 }}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={8}>
@@ -1135,7 +1204,10 @@ const UsernameAuctionPage = () => {
                                     borderRadius: 2,
                                     mb: 1
                                   }}
-                                  onClick={() => handleAcceptBid(auction)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleAcceptBid(auction);
+                                  }}
                                   disabled={loadingButtons.accept === auction.id}
                                   startIcon={loadingButtons.accept === auction.id ? <CircularProgress size={20} color="inherit" /> : null}
                                 >
@@ -1148,7 +1220,10 @@ const UsernameAuctionPage = () => {
                                 sx={{ 
                                   borderRadius: 2
                                 }}
-                                onClick={() => handleCancelAuction(auction.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCancelAuction(auction.id);
+                                }}
                                 disabled={loadingButtons.cancel === auction.id}
                                 startIcon={loadingButtons.cancel === auction.id ? <CircularProgress size={20} color="error" /> : null}
                               >
@@ -1193,7 +1268,20 @@ const UsernameAuctionPage = () => {
             {userBids.map((bid) => (
               <Grid item xs={12} key={bid.id}>
                 <Fade in={true} timeout={300}>
-                  <AuctionCard elevation={2}>
+                  <AuctionCard 
+                    elevation={2}
+                    onClick={() => {
+                      const auctionObj = {
+                        id: bid.id,
+                        username: bid.username,
+                        min_price: 0,
+                        highest_bid: bid.highest_bid,
+                        status: bid.status
+                      };
+                      handleOpenAuctionDetail(auctionObj);
+                    }}
+                    sx={{ cursor: 'pointer' }}
+                  >
                     <CardContent sx={{ p: 3 }}>
                       <Grid container spacing={2}>
                         <Grid item xs={12} sm={8}>
@@ -1203,8 +1291,8 @@ const UsernameAuctionPage = () => {
                               @{bid.username}
                             </Typography>
                             <StatusChip 
-                              label="active"
-                              status="active"
+                              label={bid.status || "active"}
+                              status={bid.status || "active"}
                               size="small"
                               sx={{ ml: 2 }}
                             />
@@ -1234,27 +1322,131 @@ const UsernameAuctionPage = () => {
                           <Typography variant="h6" color="primary" fontWeight="bold" sx={{ mb: 1 }}>
                             Текущая: {bid.highest_bid} баллов
                           </Typography>
-                          <Button 
-                            variant="contained" 
-                            color="primary"
-                            fullWidth
-                            onClick={() => {
-                              const auctionObj = {
-                                id: bid.id,
-                                username: bid.username,
-                                min_price: 0,
-                                highest_bid: bid.highest_bid
-                              };
-                              setSelectedAuction(auctionObj);
-                              setBidDialogOpen(true);
-                            }}
-                            disabled={loadingButtons.bid}
-                            sx={{ 
-                              borderRadius: 2
-                            }}
-                          >
-                            Повысить ставку
-                          </Button>
+                          {bid.status === 'completed' ? (
+                            <Button 
+                              variant="outlined"
+                              disabled={true}
+                              fullWidth
+                              sx={{ 
+                                borderRadius: 2
+                              }}
+                            >
+                              Аукцион завершен
+                            </Button>
+                          ) : (
+                            <Button 
+                              variant="contained" 
+                              color="primary"
+                              fullWidth
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const auctionObj = {
+                                  id: bid.id,
+                                  username: bid.username,
+                                  min_price: 0,
+                                  highest_bid: bid.highest_bid,
+                                  status: bid.status
+                                };
+                                setSelectedAuction(auctionObj);
+                                setBidDialogOpen(true);
+                              }}
+                              disabled={loadingButtons.bid}
+                              sx={{ 
+                                borderRadius: 2
+                              }}
+                            >
+                              Повысить ставку
+                            </Button>
+                          )}
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </AuctionCard>
+                </Fade>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </TabPanel>
+
+      {/* Tab for completed auctions */}
+      <TabPanel value={tabValue} index={3}>
+        {completedAuctions.length === 0 ? (
+          <EmptyStateBox>
+            <Typography variant="h6" gutterBottom>
+              Нет завершенных аукционов
+            </Typography>
+            <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
+              Завершенные аукционы будут отображаться здесь.
+            </Typography>
+            <Button 
+              variant="contained" 
+              color="primary"
+              onClick={() => setTabValue(0)}
+              sx={{ 
+                borderRadius: 2,
+                px: 2
+              }}
+            >
+              К активным аукционам
+            </Button>
+          </EmptyStateBox>
+        ) : (
+          <Grid container spacing={2}>
+            {completedAuctions.map((auction) => (
+              <Grid item xs={12} key={auction.id}>
+                <Fade in={true} timeout={300}>
+                  <AuctionCard 
+                    elevation={2}
+                    onClick={() => handleOpenAuctionDetail(auction)}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <CardContent sx={{ p: 3 }}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={8}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                            <TagIcon sx={{ mr: 1, color: 'primary.main' }} />
+                            <Typography variant="h5" component="h2" fontWeight="bold">
+                              @{auction.username}
+                            </Typography>
+                            <StatusChip 
+                              label="completed"
+                              status="completed"
+                              size="small"
+                              sx={{ ml: 2 }}
+                            />
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                            <PersonIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+                            <Typography variant="body2" color="text.secondary">
+                              Продавец: {auction.seller ? auction.seller.username : 'Unknown'}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                            <ScheduleIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+                            <Typography variant="body2" color="text.secondary">
+                              Завершен: {formatDate(auction.completed_at || auction.end_time)}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <LocalOfferIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+                            <Typography variant="body2" color="text.secondary">
+                              Ставок: {auction.bids_count || (auction.bids ? auction.bids.length : 0)}
+                            </Typography>
+                          </Box>
+                          {auction.winner_id && (
+                            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                              <PersonIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'success.main' }} />
+                              <Typography variant="body2" color="success.main" fontWeight="medium">
+                                Победитель: {auction.winner ? auction.winner.username : 'Unknown'}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Grid>
+                        <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'center' }}>
+                          <Typography variant="h6" color="primary" fontWeight="bold">
+                            {auction.final_price || auction.current_price || auction.highest_bid || auction.min_price} баллов
+                          </Typography>
                         </Grid>
                       </Grid>
                     </CardContent>
@@ -1380,29 +1572,43 @@ const UsernameAuctionPage = () => {
                 <Typography variant="h6" component="h2">
                   @{selectedAuction.username}
                 </Typography>
+                {selectedAuction.status && (
+                  <StatusChip 
+                    label={selectedAuction.status}
+                    status={selectedAuction.status}
+                    size="small"
+                    sx={{ ml: 2 }}
+                  />
+                )}
               </Box>
               
               <Typography variant="body2" gutterBottom sx={{ mb: 2 }}>
                 Текущая ставка: <b>{selectedAuction.current_price || selectedAuction.highest_bid || selectedAuction.min_price} баллов</b>
               </Typography>
               
-              <TextField
-                fullWidth
-                label="Ваша ставка (баллы)"
-                type="number"
-                value={bidAmount}
-                onChange={(e) => setBidAmount(e.target.value)}
-                error={!!errors.bidAmount}
-                helperText={errors.bidAmount || `Минимальная ставка: ${(parseInt(selectedAuction.current_price || selectedAuction.highest_bid || selectedAuction.min_price) + 1)} баллов`}
-                margin="normal"
-                variant="outlined"
-                disabled={loadingButtons.bid}
-                InputProps={{ 
-                  inputProps: { 
-                    min: parseInt(selectedAuction.current_price || selectedAuction.highest_bid || selectedAuction.min_price) + 1 
-                  } 
-                }}
-              />
+              {selectedAuction.status === 'completed' ? (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  Этот аукцион уже завершен, ставки больше не принимаются.
+                </Alert>
+              ) : (
+                <TextField
+                  fullWidth
+                  label="Ваша ставка (баллы)"
+                  type="number"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(e.target.value)}
+                  error={!!errors.bidAmount}
+                  helperText={errors.bidAmount || `Минимальная ставка: ${(parseInt(selectedAuction.current_price || selectedAuction.highest_bid || selectedAuction.min_price) + 1)} баллов`}
+                  margin="normal"
+                  variant="outlined"
+                  disabled={loadingButtons.bid || selectedAuction.status === 'completed'}
+                  InputProps={{ 
+                    inputProps: { 
+                      min: parseInt(selectedAuction.current_price || selectedAuction.highest_bid || selectedAuction.min_price) + 1 
+                    } 
+                  }}
+                />
+              )}
             </Box>
           )}
         </DialogContent>
@@ -1413,18 +1619,20 @@ const UsernameAuctionPage = () => {
           >
             Отмена
           </Button>
-          <Button 
-            variant="contained" 
-            onClick={handlePlaceBid}
-            disabled={!bidAmount || isNaN(bidAmount) || 
-                     parseInt(bidAmount) <= parseInt(selectedAuction?.current_price || 
-                     selectedAuction?.highest_bid || 
-                     selectedAuction?.min_price) || 
-                     loadingButtons.bid}
-            startIcon={loadingButtons.bid ? <CircularProgress size={20} /> : null}
-          >
-            {loadingButtons.bid ? 'Обработка...' : 'Сделать ставку'}
-          </Button>
+          {selectedAuction && selectedAuction.status !== 'completed' && (
+            <Button 
+              variant="contained" 
+              onClick={handlePlaceBid}
+              disabled={!bidAmount || isNaN(bidAmount) || 
+                      parseInt(bidAmount) <= parseInt(selectedAuction?.current_price || 
+                      selectedAuction?.highest_bid || 
+                      selectedAuction?.min_price) || 
+                      loadingButtons.bid}
+              startIcon={loadingButtons.bid ? <CircularProgress size={20} /> : null}
+            >
+              {loadingButtons.bid ? 'Обработка...' : 'Сделать ставку'}
+            </Button>
+          )}
         </DialogActions>
       </StyledDialog>
       
@@ -1493,7 +1701,7 @@ const UsernameAuctionPage = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <MonetizationOnIcon sx={{ mr: 1.5, color: 'primary.main', fontSize: '1.2rem' }} />
                           <Typography variant="body1">
-                            Текущая цена: <strong>{detailAuction.current_price || detailAuction.min_price} баллов</strong>
+                            {detailAuction.status === 'completed' ? 'Финальная цена:' : 'Текущая цена:'} <strong>{detailAuction.status === 'completed' ? (detailAuction.final_price || detailAuction.current_price || detailAuction.highest_bid || detailAuction.min_price) : (detailAuction.current_price || detailAuction.min_price)} баллов</strong>
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -1502,37 +1710,68 @@ const UsernameAuctionPage = () => {
                             Создан: <strong>{formatDate(detailAuction.created_at)}</strong>
                           </Typography>
                         </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <ScheduleIcon sx={{ mr: 1.5, color: 'warning.main', fontSize: '1.2rem' }} />
-                          <Typography variant="body1">
-                            Завершается: <strong>{formatDate(detailAuction.end_time)}</strong>
-                          </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <ScheduleIcon sx={{ mr: 1.5, color: 'info.main', fontSize: '1.2rem' }} />
-                          <Typography variant="body1">
-                            Осталось: <strong>{detailAuction.remaining_time || formatTimeRemaining(detailAuction.end_time)}</strong>
-                          </Typography>
-                        </Box>
+                        {detailAuction.status === 'completed' ? (
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <ScheduleIcon sx={{ mr: 1.5, color: 'success.main', fontSize: '1.2rem' }} />
+                            <Typography variant="body1">
+                              Завершен: <strong>{formatDate(detailAuction.completed_at || detailAuction.end_time)}</strong>
+                            </Typography>
+                          </Box>
+                        ) : (
+                          <>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <ScheduleIcon sx={{ mr: 1.5, color: 'warning.main', fontSize: '1.2rem' }} />
+                              <Typography variant="body1">
+                                Завершается: <strong>{formatDate(detailAuction.end_time)}</strong>
+                              </Typography>
+                            </Box>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <ScheduleIcon sx={{ mr: 1.5, color: 'info.main', fontSize: '1.2rem' }} />
+                              <Typography variant="body1">
+                                Осталось: <strong>{detailAuction.remaining_time || formatTimeRemaining(detailAuction.end_time)}</strong>
+                              </Typography>
+                            </Box>
+                          </>
+                        )}
+                        {detailAuction.status === 'completed' && detailAuction.winner_id && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+                            <PersonIcon sx={{ mr: 1.5, color: 'success.main', fontSize: '1.2rem' }} />
+                            <Typography variant="body1" color="success.main">
+                              Победитель: <strong>{detailAuction.winner ? detailAuction.winner.username : 'Unknown'}</strong>
+                            </Typography>
+                          </Box>
+                        )}
                       </Box>
                     </Paper>
                     
-                    {detailAuction.seller_id !== user?.id && (
+                    {detailAuction.status === 'completed' ? (
                       <Button
-                        variant="contained"
-                        color="primary"
+                        variant="outlined"
                         fullWidth
                         size="large"
-                        onClick={() => {
-                          setDetailDialogOpen(false);
-                          setSelectedAuction(detailAuction);
-                          setBidDialogOpen(true);
-                        }}
-                        disabled={detailAuction.seller_id === user?.id || loadingButtons.bid}
+                        disabled={true}
                         sx={{ mt: 1, borderRadius: 2, py: 1.25 }}
                       >
-                        Сделать ставку
+                        Аукцион завершен
                       </Button>
+                    ) : (
+                      detailAuction.seller_id !== user?.id && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          fullWidth
+                          size="large"
+                          onClick={() => {
+                            setDetailDialogOpen(false);
+                            setSelectedAuction(detailAuction);
+                            setBidDialogOpen(true);
+                          }}
+                          disabled={detailAuction.seller_id === user?.id || loadingButtons.bid}
+                          sx={{ mt: 1, borderRadius: 2, py: 1.25 }}
+                        >
+                          Сделать ставку
+                        </Button>
+                      )
                     )}
                   </Grid>
                   
@@ -1547,11 +1786,13 @@ const UsernameAuctionPage = () => {
                         <Box sx={{ py: 4, textAlign: 'center' }}>
                           <InfoOutlinedIcon sx={{ fontSize: '3rem', color: 'text.secondary', mb: 1, opacity: 0.5 }} />
                           <Typography variant="body1" color="text.secondary">
-                            Пока нет ставок
+                            {detailAuction.status === 'completed' ? 'Аукцион завершен без ставок' : 'Пока нет ставок'}
                           </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                            Будьте первым, кто сделает ставку!
-                          </Typography>
+                          {detailAuction.status !== 'completed' && (
+                            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                              Будьте первым, кто сделает ставку!
+                            </Typography>
+                          )}
                         </Box>
                       ) : (
                         <List sx={{ maxHeight: '400px', overflowY: 'auto', pr: 1 }}>
@@ -1560,17 +1801,18 @@ const UsernameAuctionPage = () => {
                             .map((bid, index) => {
                               const isHighestBid = index === 0;
                               const isMyBid = bid.bidder.id === user?.id;
+                              const isWinner = detailAuction.status === 'completed' && detailAuction.winner_id === bid.bidder.id;
                               
                               return (
                                 <BidHistoryItem 
                                   key={`${bid.bidder.id}-${bid.time}`}
-                                  isWinning={isHighestBid}
+                                  isWinning={isHighestBid || isWinner}
                                 >
                                   <ListItemAvatar>
                                     <Avatar 
                                       alt={bid.bidder.username}
                                       src={bid.bidder.avatar_url || (bid.bidder.photo && `/static/uploads/avatar/${bid.bidder.id}/${bid.bidder.photo}`)} 
-                                      sx={isHighestBid ? {
+                                      sx={(isHighestBid || isWinner) ? {
                                         bgcolor: 'success.main',
                                         color: 'white'
                                       } : {}}
@@ -1579,17 +1821,17 @@ const UsernameAuctionPage = () => {
                                         e.target.src = `/static/uploads/avatar/system/avatar.png`;
                                       }}
                                     >
-                                      {isHighestBid && <ArrowUpwardIcon />}
-                                      {!isHighestBid && bid.bidder.username.charAt(0)}
+                                      {(isHighestBid || isWinner) && <ArrowUpwardIcon />}
+                                      {!(isHighestBid || isWinner) && bid.bidder.username.charAt(0)}
                                     </Avatar>
                                   </ListItemAvatar>
                                   <ListItemText
                                     primary={
                                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                                        <Typography variant="body1" fontWeight={isHighestBid ? 'bold' : 'normal'}>
+                                        <Typography variant="body1" fontWeight={(isHighestBid || isWinner) ? 'bold' : 'normal'}>
                                           {bid.bidder.username} {isMyBid && '(Вы)'}
                                         </Typography>
-                                        <Typography variant="body1" fontWeight="bold" color={isHighestBid ? 'success.main' : 'inherit'}>
+                                        <Typography variant="body1" fontWeight="bold" color={(isHighestBid || isWinner) ? 'success.main' : 'inherit'}>
                                           {bid.amount} баллов
                                         </Typography>
                                       </Box>
@@ -1597,7 +1839,17 @@ const UsernameAuctionPage = () => {
                                     secondary={
                                       <Typography variant="body2" color="text.secondary">
                                         {formatDate(bid.time)}
-                                        {isHighestBid && (
+                                        {detailAuction.status === 'completed' && isWinner && (
+                                          <Typography 
+                                            component="span" 
+                                            variant="body2" 
+                                            color="success.main"
+                                            sx={{ display: 'block', fontWeight: 'bold' }}
+                                          >
+                                            Победная ставка
+                                          </Typography>
+                                        )}
+                                        {detailAuction.status !== 'completed' && isHighestBid && (
                                           <Typography 
                                             component="span" 
                                             variant="body2" 

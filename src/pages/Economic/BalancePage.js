@@ -857,16 +857,13 @@ const BalancePage = () => {
     }));
 
     const transfers = transferHistory.map(transfer => {
-      
-      
+
       const senderId = parseInt(transfer.sender_id, 10);
       const userId = parseInt(user.id, 10);
       const is_sender = senderId === userId;
       
-      
       const isClickerWithdrawal = transfer.sender_id === transfer.recipient_id && 
-                                 transfer.message === "Вывод баллов из кликера";
-      
+                               transfer.message === "Вывод баллов из кликера";
       
       let title = isClickerWithdrawal ? 'Вывод из кликера' : 
                  (is_sender ? 'Перевод' : 'Пополнение');
@@ -889,7 +886,6 @@ const BalancePage = () => {
       };
     });
 
-    
     const usernames = usernamePurchases.map(purchase => ({
       ...purchase,
       type: 'username',
@@ -900,43 +896,60 @@ const BalancePage = () => {
       icon: <AccountCircleIcon sx={{ color: 'error.main' }} />
     }));
 
-    // Добавляем игровые транзакции
-    const games = gameTransactions.map(transaction => {
-      let icon = null;
-      let title = transaction.description || 'Транзакция';
-      let type = transaction.transaction_type || 'unknown';
-      
-      // Определяем иконку и заголовок в зависимости от типа транзакции
-      if (type.includes('blackjack') || type.includes('minigame')) {
-        // Для Blackjack и других мини-игр
-        if (type === 'blackjack_win' || type === 'blackjack_win_21') {
-          icon = <CasinoIcon sx={{ color: 'success.main' }} />;
-          title = 'Выигрыш в игре "21"';
-        } else if (type === 'blackjack_tie') {
-          icon = <CasinoIcon sx={{ color: 'info.main' }} />;
-          title = 'Ничья в игре "21"';
-        } else if (type === 'blackjack_lose' || type === 'blackjack_lose_bust') {
-          icon = <CasinoIcon sx={{ color: 'error.main' }} />;
-          title = 'Проигрыш в игре "21"';
-        } else if (type === 'minigame_bet') {
-          icon = <SportsEsportsIcon sx={{ color: 'error.main' }} />;
-          title = 'Ставка в мини-игре';
-        } else {
-          icon = <SportsEsportsIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />;
-        }
-      }
-      
-      return {
-        ...transaction, 
-        type: 'game',
-        date: new Date(transaction.date),
-        title: title,
-        description: transaction.transaction_type.replace(/_/g, ' '),
-        icon: icon
-      };
-    });
+
+    const weeklyActivities = gameTransactions
+      .filter(transaction => transaction.transaction_type === 'weekly_activity')
+      .map(transaction => {
+        return {
+          ...transaction,
+          type: 'weekly_activity',
+          date: new Date(transaction.date || transaction.created_at),
+          title: 'Еженедельные баллы',
+          description: transaction.description || 'Начисление за активность',
+          icon: <TrendingUpIcon sx={{ color: 'success.main' }} />
+        };
+      });
     
-    return [...purchases, ...royalties, ...transfers, ...usernames, ...games].sort((a, b) => b.date - a.date);
+
+    const otherGameTransactions = gameTransactions
+      .filter(transaction => transaction.transaction_type !== 'weekly_activity')
+      .map(transaction => {
+        let icon = null;
+        let title = transaction.description || 'Транзакция';
+        let type = transaction.transaction_type || 'unknown';
+        
+
+        if (type.includes('blackjack') || type.includes('minigame')) {
+
+          if (type === 'blackjack_win' || type === 'blackjack_win_21') {
+            icon = <CasinoIcon sx={{ color: 'success.main' }} />;
+            title = 'Выигрыш в игре "21"';
+          } else if (type === 'blackjack_tie') {
+            icon = <CasinoIcon sx={{ color: 'info.main' }} />;
+            title = 'Ничья в игре "21"';
+          } else if (type === 'blackjack_lose' || type === 'blackjack_lose_bust') {
+            icon = <CasinoIcon sx={{ color: 'error.main' }} />;
+            title = 'Проигрыш в игре "21"';
+          } else if (type === 'minigame_bet') {
+            icon = <SportsEsportsIcon sx={{ color: 'error.main' }} />;
+            title = 'Ставка в мини-игре';
+          } else {
+            icon = <SportsEsportsIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />;
+          }
+        }
+        
+        return {
+          ...transaction, 
+          type: 'game',
+          date: new Date(transaction.date),
+          title: title,
+          description: transaction.transaction_type.replace(/_/g, ' '),
+          icon: icon
+        };
+      });
+    
+    return [...purchases, ...royalties, ...transfers, ...usernames, ...weeklyActivities, ...otherGameTransactions]
+      .sort((a, b) => b.date - a.date);
   }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, gameTransactions, user?.id]);
 
   useEffect(() => {
@@ -1159,7 +1172,7 @@ const BalancePage = () => {
       return;
     }
 
-    // Если уже идет процесс перевода, не разрешаем второй запрос
+
     if (isTransferring) return;
 
     setTransferErrors({});
@@ -1334,7 +1347,13 @@ const BalancePage = () => {
       const data = await response.json();
       
       if (!response.ok) {
-        setKeyError(data.error || 'Ошибка при активации ключа');
+
+        if (data.error && data.error.includes('Невозможно активировать подписку') && 
+            data.error.includes('так как у вас уже есть подписка более высокого уровня')) {
+          setKeyError(data.error);
+        } else {
+          setKeyError(data.error || 'Ошибка при активации ключа');
+        }
         setIsSubmittingKey(false);
         return;
       }
@@ -1519,7 +1538,7 @@ const BalancePage = () => {
 
           <Typography variant="body2" color="text.secondary">
             Это прогноз баллов, которые вы получите в конце недели за вашу активность. 
-            Баллы начисляются каждое воскресенье в 23:50.
+            Баллы начисляются каждое воскресенье в 23:50 по UTC+03:00, статистика обновляется в Понедельник 02:50.
           </Typography>
         </CardContent>
       </WeeklyPredictionCard>
@@ -1666,6 +1685,8 @@ const BalancePage = () => {
                     <ShoppingCartIcon sx={{ mr: 1, color: 'error.main' }} />
                   ) : selectedTransaction.type === 'username' ? (
                     <AccountCircleIcon sx={{ mr: 1, color: 'info.main' }} />
+                  ) : selectedTransaction.type === 'weekly_activity' ? (
+                    <TrendingUpIcon sx={{ mr: 1, color: 'success.main' }} />
                   ) : selectedTransaction.type === 'game' ? (
                     <CasinoIcon sx={{ mr: 1, color: selectedTransaction.amount > 0 ? 'success.main' : 'error.main' }} />
                   ) : (
@@ -1679,8 +1700,10 @@ const BalancePage = () => {
                       (selectedTransaction.is_sender ? 'Исходящий перевод' : 'Входящий перевод')) :
                       selectedTransaction.type === 'purchase' ? 'Покупка бейджика' :
                       selectedTransaction.type === 'royalty' ? 'Роялти от бейджика' :
+                      selectedTransaction.type === 'weekly_activity' ? 'Еженедельное начисление' :
+                      selectedTransaction.type === 'username' ? 'Покупка юзернейма' :
                       selectedTransaction.type === 'game' ? 'Транзакция в мини-игре' :
-                      'Покупка юзернейма'
+                      'Транзакция'
                     }
                   </Typography>
                 </Box>
@@ -1789,6 +1812,30 @@ const BalancePage = () => {
                 </DetailRow>
               )}
               
+              {selectedTransaction.type === 'weekly_activity' && (
+                <>
+                  <DetailRow>
+                    <DetailLabel>Тип операции</DetailLabel>
+                    <DetailValue>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <TrendingUpIcon sx={{ fontSize: '1rem', mr: 0.5, color: 'success.main' }} />
+                        <span>Еженедельное начисление</span>
+                      </Box>
+                    </DetailValue>
+                  </DetailRow>
+                  
+                  <DetailRow>
+                    <DetailLabel>Описание</DetailLabel>
+                    <DetailValue>{selectedTransaction.description}</DetailValue>
+                  </DetailRow>
+                  
+                  <DetailRow>
+                    <DetailLabel>Дата начисления</DetailLabel>
+                    <DetailValue>{formatDate(selectedTransaction.date)}</DetailValue>
+                  </DetailRow>
+                </>
+              )}
+              
               {selectedTransaction.type === 'game' && (
                 <>
                   <DetailRow>
@@ -1815,16 +1862,26 @@ const BalancePage = () => {
                   {formatCurrency(selectedTransaction.amount)}
                 </DetailValue>
               </DetailRow>
+              
               {selectedTransaction.type === 'transfer' && (
-                  <Button
-                    startIcon={<PictureAsPdfIcon />}
-                    variant="outlined"
-                    onClick={() => generateReceiptForTransaction(selectedTransaction)}
-                    sx={{ borderRadius: 2 }}
-                  >
-                    Скачать чек
-                  </Button>
-                )}
+                <Button
+                  startIcon={<PictureAsPdfIcon />}
+                  variant="outlined"
+                  onClick={() => generateReceiptForTransaction(selectedTransaction)}
+                  sx={{ borderRadius: 2 }}
+                >
+                  Скачать чек
+                </Button>
+              )}
+              
+              {selectedTransaction.type === 'weekly_activity' && (
+                <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
+                  <Typography variant="body2" color="success.main">
+                    Баллы начислены за вашу активность на платформе за прошедшую неделю.
+                  </Typography>
+                </Box>
+              )}
+              
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 {selectedTransaction.sender_id === selectedTransaction.recipient_id && 
                  selectedTransaction.message === "Вывод баллов из кликера" && (

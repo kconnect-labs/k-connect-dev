@@ -1,21 +1,21 @@
 import axios from 'axios';
 import { SessionContext } from '../App';
 
-// Создаем контекст для использования в функциях вне компонентов React
+
 let sessionContext = {
   checkSessionStatus: () => true,
   lastFetchTime: null,
 };
 
-// Функция для установки контекста сессии
+
 export const setSessionContext = (context) => {
   sessionContext = context;
 };
 
-// Проверка на возможность отправки запроса
+
 const shouldMakeRequest = () => {
-  // Always return true to allow the API request to be made
-  // The server-side login_required decorator will handle unauthorized requests
+
+
   return true;
 };
 
@@ -37,7 +37,7 @@ const ProfileService = {
 
     getSettings: async () => {
     if (!shouldMakeRequest()) {
-      // Вернем кешированные настройки или дефолтные, если сессия истекла
+
       return { 
         success: true, 
         settings: JSON.parse(localStorage.getItem('theme_settings') || '{}')
@@ -45,8 +45,8 @@ const ProfileService = {
     }
     
     try {
-      const response = await axios.get('/api/settings');
-      // Кешируем настройки для использования при истекшей сессии
+      const response = await axios.get('/api/profile/settings');
+
       if (response.data.success && response.data.settings) {
         localStorage.setItem('theme_settings', JSON.stringify(response.data.settings));
       }

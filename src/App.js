@@ -60,13 +60,14 @@ const ElementAuth = lazy(() => import('./pages/Auth/ElementAuth'));
 
 const MainLayout = lazy(() => import('./components/Layout/MainLayout'));
 const ProfilePage = lazy(() => import('./pages/User/ProfilePage'));
-const ProfilePageV2 = lazy(() => import('./pages/User/ProfilePageV2'));
 const MainPage = lazy(() => import('./pages/Main/MainPage'));
 const PostDetailPage = lazy(() => import('./pages/Main/PostDetailPage'));
 const SettingsPage = lazy(() => import('./pages/User/SettingsPage'));
 const NotificationsPage = lazy(() => import('./pages/Info/NotificationsPage'));
 const SearchPage = lazy(() => import('./pages/Main/SearchPage'));
 const MusicPage = lazy(() => import('./pages/Main/MusicPage'));
+const ArtistPage = lazy(() => import('./pages/Main/ArtistPage'));
+// const MessengerPage = lazy(() => import('./pages/Messenger/MessengerPage'));
 const SubscriptionsPage = lazy(() => import('./pages/Economic/SubscriptionsPage'));
 const BugReportPage = lazy(() => import('./pages/BugPages/BugReportPage'));
 const LeaderboardPage = lazy(() => import('./pages/Main/LeaderboardPage'));
@@ -184,6 +185,12 @@ const LoadingIndicator = () => {
 const isAboutSubdomain = () => {
   const hostname = window.location.hostname;
   return hostname === 'about.k-connect.ru';
+};
+
+// Функция для проверки поддомена share
+const isShareSubdomain = () => {
+  const hostname = window.location.hostname;
+  return hostname === 'share.k-connect.ru';
 };
 
 
@@ -331,10 +338,9 @@ const AppRoutes = () => {
           <Route path="/main" element={<Navigate to="/" replace />} />
           
           
-          <Route path="/post/:postId" element={isAuthenticated ? <PostDetailPage /> : <Navigate to="/login" replace />} />
-          <Route path="/profile" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />} />
-          <Route path="/profile/:username" element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />} />
-          <Route path="/p2/:username" element={isAuthenticated ? <ProfilePageV2 /> : <Navigate to="/login" replace />} />
+          <Route path="/post/:postId" element={<PostDetailPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:username" element={<ProfilePage />} />
           <Route path="/profile/:username/followers" element={isAuthenticated ? <SubscriptionsPage tabIndex={0} /> : <Navigate to="/login" replace />} />
           <Route path="/profile/:username/following" element={isAuthenticated ? <SubscriptionsPage tabIndex={1} /> : <Navigate to="/login" replace />} />
           <Route path="/subscriptions" element={isAuthenticated ? <SubscriptionsPage /> : <Navigate to="/login" replace />} />
@@ -342,6 +348,7 @@ const AppRoutes = () => {
           <Route path="/notifications" element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />} />
           <Route path="/search" element={isAuthenticated ? <SearchPage /> : <Navigate to="/login" replace />} />
           <Route path="/music" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
+          <Route path="/artist/:artistParam" element={isAuthenticated ? <ArtistPage /> : <Navigate to="/login" replace />} />
           <Route path="/bugs" element={<BugReportPage />} />
           <Route path="/leaderboard" element={<RequireAuth><LeaderboardPage /></RequireAuth>} />
 
@@ -372,9 +379,7 @@ const AppRoutes = () => {
           <Routes>
             <Route 
               path="/post/:postId" 
-              element={
-                isAuthenticated ? <PostDetailPage isOverlay={true} /> : <Navigate to="/login" replace />
-              } 
+              element={<PostDetailPage isOverlay={true} />} 
             />
           </Routes>
         )}
@@ -658,7 +663,16 @@ function App() {
   
   
   const onAboutSubdomain = useMemo(() => isAboutSubdomain(), []);
+  const onShareSubdomain = useMemo(() => isShareSubdomain(), []);
   
+  // Перенаправление для поддомена share (только для реальных пользователей, не ботов)
+  useEffect(() => {
+    if (onShareSubdomain) {
+      // Боты получат статический HTML из share.html,
+      // а настоящие пользователи будут перенаправлены через JS в share.html
+      console.log('Share subdomain detected, user will be redirected via share.html');
+    }
+  }, [onShareSubdomain]);
   
   useEffect(() => {
     preloadMusicImages();
@@ -1029,6 +1043,11 @@ function App() {
         </Box>
       </ThemeProvider>
     );
+  }
+  
+  
+  if (onShareSubdomain) {
+    return null;
   }
   
   

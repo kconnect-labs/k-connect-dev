@@ -268,7 +268,7 @@ const OnlineUsers = () => {
     const fetchOnlineUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/users/online?limit=50');
+        const response = await axios.get('/api/users/online?limit=1200');
         
         if (Array.isArray(response.data)) {
           setOnlineUsers(response.data);
@@ -1244,7 +1244,7 @@ const CreatePost = ({ onPostCreated }) => {
                 size="small"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {mediaFiles.length ? `Файлы (${mediaFiles.length})` : 'Фото/видео'}
+                {mediaFiles.length ? `Файлы (${mediaFiles.length})` : 'Медиа'}
               </Button>
               
               <Button
@@ -1564,33 +1564,33 @@ const MainPage = React.memo(() => {
 
   
   const loadMorePosts = async () => {
-    
     if (loading || !hasMore || feedTypeChanged.current || loadingMoreRef.current) return;
     
     try {
       loadingMoreRef.current = true;
       setLoading(true);
       
+      const currentPage = page;
+      
       const params = {
-        page: page,
+        page: currentPage,
         per_page: 10, 
         sort: feedType,
         include_all: feedType === 'all'
       };
       
-      
       const currentRequestId = requestId + 1;
       setRequestId(currentRequestId);
       
-      const response = await axios.get('/api/posts/feed', { params });
+      setPage(currentPage + 1);
       
+      const response = await axios.get('/api/posts/feed', { params });
       
       if (requestId !== currentRequestId - 1) return;
       
       if (response.data && Array.isArray(response.data.posts)) {
         setPosts(prev => [...prev, ...response.data.posts]);
         setHasMore(response.data.has_next === true);
-        setPage(page + 1);
       } else {
         setHasMore(false);
       }

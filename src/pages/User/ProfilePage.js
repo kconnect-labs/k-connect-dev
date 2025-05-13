@@ -102,6 +102,7 @@ import {
   NavButton,
   ContextMenu
 } from '../../UIKIT';
+import { Icon } from '@iconify/react';
 
 
 const ProfileHeader = styled(Box)(({ theme }) => ({
@@ -383,7 +384,7 @@ const MarkdownContent = styled(Box)(({ theme }) => ({
 const PublishButton = styled(Button)(({ theme }) => ({
   borderRadius: '18px',
   textTransform: 'none',
-  fontSize: '0.8rem',
+  fontSize: '0.6rem',
   fontWeight: 600,
   boxShadow: '0 2px 8px rgba(124, 77, 255, 0.25)',
   padding: theme.spacing(0.4, 1.5),
@@ -426,22 +427,46 @@ const VerificationBadge = ({ status, size }) => {
         return { color: '#ff9800', title: 'Модератор' };
       case 5:
         return { color: '#4caf50', title: 'Поддержка' };
+      case 6:
+        return { color: '#1e88e5', title: 'Канал (Верифицированный)', isChannelVerified: true };
+      case 7:
+        return { color: '#7c4dff', title: 'Канал (Премиум)', isChannelPremium: true };
       default:
         return { color: '#D0BCFF', title: 'Верифицирован' };
     }
   };
   
-  const { color, title } = getColorAndTitle(status);
+  const { color, title, isChannelVerified, isChannelPremium } = getColorAndTitle(status);
   
   return (
     <Tooltip title={title} placement="top">
-      <CheckCircleIcon 
-        sx={{ 
-          fontSize: size === 'small' ? 23 : 20,
-          ml: 0.5,
-          color
-        }} 
-      />
+      {isChannelVerified ? (
+        <Icon 
+          icon="material-symbols:verified-rounded" 
+          style={{ 
+            fontSize: size === 'small' ? '26px' : '22px',
+            color: '#1e88e5',
+            marginLeft: '4px'
+          }} 
+        />
+      ) : isChannelPremium ? (
+        <Icon 
+          icon="material-symbols:verified-user-rounded" 
+          style={{ 
+            fontSize: size === 'small' ? '26px' : '22px',
+            color: '#7c4dff',
+            marginLeft: '4px'
+          }} 
+        />
+      ) : (
+        <CheckCircleIcon 
+          sx={{ 
+            fontSize: size === 'small' ? 23 : 20,
+            ml: 0.5,
+            color
+          }} 
+        />
+      )}
     </Tooltip>
   );
 };
@@ -998,7 +1023,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                   }}
                   size="small"
                 >
-                  {mediaFiles.length > 0 ? `Файлы (${mediaFiles.length})` : 'Фото/видео'}
+                  {mediaFiles.length > 0 ? `Файлы (${mediaFiles.length})` : 'Медиа'}
                 </Button>
               </label>
               
@@ -1335,8 +1360,10 @@ const ProfilePage = () => {
   const [postsCount, setPostsCount] = useState(0);
   const [followers, setFollowers] = useState([]);
   const [followingList, setFollowingList] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [loadingFollowers, setLoadingFollowers] = useState(true);
   const [loadingFollowing, setLoadingFollowing] = useState(true);
+  const [loadingFriends, setLoadingFriends] = useState(true);
   const [socials, setSocials] = useState([]);
   const [page, setPage] = useState(1);
   const [photoPage, setPhotoPage] = useState(1);
@@ -1369,15 +1396,15 @@ const ProfilePage = () => {
   
   const [fallbackAvatarUrl, setFallbackAvatarUrl] = useState('');
   
-  // Добавляем новые state переменные для работы с карточкой юзернейма
+
   const [selectedUsername, setSelectedUsername] = useState(null);
   const [usernameCardAnchor, setUsernameCardAnchor] = useState(null);
   const [usernameCardOpen, setUsernameCardOpen] = useState(false);
   
-  // Добавляем state для информации о бане
+
   const [userBanInfo, setUserBanInfo] = useState(null);
   
-  // Добавляем state для проверки, является ли текущий пользователь модератором
+
   const [isCurrentUserModerator, setIsCurrentUserModerator] = useState(false);
   
   
@@ -1740,14 +1767,14 @@ const ProfilePage = () => {
             setOwnedUsernames([]);
           }
           
-          // Получаем информацию о бане пользователя
+
           if (response.data.user.ban || response.data.ban) {
             setUserBanInfo(response.data.user.ban || response.data.ban);
           } else {
             setUserBanInfo(null);
           }
           
-          // Проверяем, является ли текущий пользователь модератором
+
           if (response.data.current_user_is_moderator !== undefined) {
             setIsCurrentUserModerator(response.data.current_user_is_moderator);
           }
@@ -1866,6 +1893,7 @@ const ProfilePage = () => {
     if (user && user.id) {
       setLoadingFollowers(true);
       setLoadingFollowing(true);
+      setLoadingFriends(true);
       
       console.log(`Загрузка подписчиков для пользователя ${user.id}`);
       
@@ -1917,6 +1945,32 @@ const ProfilePage = () => {
         })
         .finally(() => {
           setLoadingFollowing(false);
+        });
+        
+      console.log(`Загрузка друзей для пользователя ${user.id}`);
+      
+      axios.get(`/api/profile/${user.id}/friends`)
+        .then(response => {
+          console.log('Ответ API друзей:', response.data);
+          if (response.data && response.data.friends) {
+            
+            const friendsData = Array.isArray(response.data.friends) 
+              ? response.data.friends.filter(f => f && typeof f === 'object') 
+              : [];
+            console.log(`Получено ${friendsData.length} друзей`);
+            setFriends(friendsData);
+          } else {
+            
+            console.warn('Нет данных о друзьях в ответе API');
+            setFriends([]);
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка загрузки друзей:', error);
+          setFriends([]); 
+        })
+        .finally(() => {
+          setLoadingFriends(false);
         });
     }
   }, [user]);
@@ -2066,7 +2120,7 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-  // Функции для работы с карточкой юзернейма
+
   const handleUsernameClick = (event, username) => {
     event.preventDefault();
     setSelectedUsername(username);
@@ -3247,10 +3301,12 @@ const ProfilePage = () => {
                           'primary.main'
                       }}
                     >
-                      {followersCount || 0}
+                      {user?.subscription?.type === 'channel' ? 
+                        (followersCount || 0) : 
+                        (user?.friends_count || 0)}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      подписчиков
+                      {user?.subscription?.type === 'channel' ? 'подписчиков' : 'друзей'}
                     </Typography>
                   </Paper>
                   
@@ -3306,21 +3362,21 @@ const ProfilePage = () => {
                       <Grid item xs={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                            Подписчики
+                            Друзья
                           </Typography>
                           
                           
-                          {loadingFollowers ? (
+                          {loadingFriends ? (
                             <CircularProgress size={20} />
-                          ) : followers.length > 0 ? (
+                          ) : friends && friends.length > 0 ? (
                             <Box sx={{ display: 'flex', gap: 1 }}>
-                              {followers.slice(0, 3).map(follower => (
-                                <Tooltip key={follower.id} title={follower.name} arrow>
+                              {friends.slice(0, 3).map(friend => (
+                                <Tooltip key={friend.id} title={friend.name} arrow>
                                   <Avatar 
-                                    src={follower.photo} 
-                                    alt={follower.name}
+                                    src={friend.avatar_url} 
+                                    alt={friend.name}
                                     component={Link}
-                                    to={`/profile/${follower.username}`}
+                                    to={`/profile/${friend.username}`}
                                     sx={{ 
                                       width: 32, 
                                       height: 32, 
@@ -3330,19 +3386,19 @@ const ProfilePage = () => {
                                       flexShrink: 0 
                                     }}
                                     onError={(e) => {
-                                      console.error(`Failed to load follower avatar for ${follower.username}`);
-                                      if (follower.id) {
-                                        e.target.src = `/static/uploads/avatar/${follower.id}/${follower.photo || 'avatar.png'}`;
+                                      console.error(`Failed to load friend avatar for ${friend.username}`);
+                                      if (friend.id) {
+                                        e.target.src = `/static/uploads/avatar/${friend.id}/${friend.photo || 'avatar.png'}`;
                                       }
                                     }}
                                   />
                                 </Tooltip>
                               ))}
-                              {followersCount > 3 && (
-                                <Tooltip title="Показать всех" arrow>
+                              {user?.friends_count > 3 && (
+                                <Tooltip title="Показать всех друзей" arrow>
                                   <Avatar 
                                     component={Link}
-                                    to={`/profile/${user?.username}/followers`}
+                                    to={`/profile/${user?.username}/friends`}
                                     sx={{ 
                                       width: 32, 
                                       height: 32, 
@@ -3356,14 +3412,14 @@ const ProfilePage = () => {
                                       flexShrink: 0 
                                     }}
                                   >
-                                    +{followersCount - 3}
+                                    +{user?.friends_count - 3}
                                   </Avatar>
                                 </Tooltip>
                               )}
                             </Box>
                           ) : (
                             <Typography variant="caption" color="text.secondary">
-                              Нет подписчиков
+                              Нет друзей
                             </Typography>
                           )}
                         </Box>
@@ -3402,7 +3458,7 @@ const ProfilePage = () => {
                               {followingList.slice(0, 3).map(following => (
                                 <Tooltip key={following.id} title={following.name} arrow>
                                   <Avatar 
-                                    src={following.photo} 
+                                    src={following.avatar_url} 
                                     alt={following.name}
                                     component={Link}
                                     to={`/profile/${following.username}`}
@@ -3448,7 +3504,7 @@ const ProfilePage = () => {
                             </Box>
                           ) : (
                             <Typography variant="caption" color="text.secondary">
-                              Нет подписок
+                              {user?.subscription && user.subscription.type === 'channel' ? 'Нет подписчиков' : 'Нет друзей'}
                             </Typography>
                           )
                         )}

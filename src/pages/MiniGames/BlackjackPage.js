@@ -7,7 +7,7 @@ import axios from 'axios';
 import PlayingCard from './components/PlayingCard';
 import SEO from '../../components/SEO';
 
-// Стилизованные компоненты
+
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   marginBottom: theme.spacing(2),
@@ -35,7 +35,7 @@ const BlackjackPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   
-  // Состояния игры
+
   const [balance, setBalance] = useState(0);
   const [betAmount, setBetAmount] = useState(10);
   const [gameState, setGameState] = useState(null);
@@ -44,11 +44,11 @@ const BlackjackPage = () => {
   const [showRules, setShowRules] = useState(false);
   const [error, setError] = useState(null);
   
-  // Для анимации
+
   const [showAnimation, setShowAnimation] = useState(false);
   const [animationType, setAnimationType] = useState('');
   
-  // Получение баланса пользователя
+
   const fetchBalance = useCallback(async () => {
     try {
       setLoading(true);
@@ -64,7 +64,7 @@ const BlackjackPage = () => {
     }
   }, []);
   
-  // Запуск новой игры
+
   const startNewGame = async () => {
     if (betAmount < 10 || betAmount > 2000) {
       setError('Ставка должна быть от 10 до 2000');
@@ -88,7 +88,7 @@ const BlackjackPage = () => {
         setGameStarted(true);
         setBalance(response.data.balance);
         
-        // Проверяем, есть ли блэкджек сразу
+
         if (response.data.game_over) {
           showResult(response.data.result, response.data.message);
         }
@@ -103,7 +103,7 @@ const BlackjackPage = () => {
     }
   };
   
-  // Взять еще карту
+
   const hitCard = async () => {
     if (!gameState || gameState.game_over) return;
     
@@ -136,7 +136,7 @@ const BlackjackPage = () => {
     }
   };
   
-  // Остановиться
+
   const stand = async () => {
     if (!gameState || gameState.game_over) return;
     
@@ -167,7 +167,7 @@ const BlackjackPage = () => {
     }
   };
   
-  // Показать результат игры с анимацией
+
   const showResult = (result, message) => {
     if (result === 'win') {
       setAnimationType('win');
@@ -185,18 +185,18 @@ const BlackjackPage = () => {
     setError(message);
   };
   
-  // Новая игра после завершения предыдущей
+
   const playAgain = () => {
     setGameState(null);
     setGameStarted(false);
   };
   
-  // Загрузка баланса при монтировании
+
   useEffect(() => {
     fetchBalance();
   }, [fetchBalance]);
   
-  // Функция для отображения карты
+
   const renderCard = (card, hidden = false) => {
     if (!card) return <PlayingCard hidden={true} />;
     
@@ -208,7 +208,7 @@ const BlackjackPage = () => {
     return <PlayingCard rank={rank} suit={suit} />;
   };
   
-  // Правила игры
+
   const renderRules = () => (
     <Dialog open={showRules} onClose={() => setShowRules(false)} maxWidth="md">
       <DialogTitle>Правила игры "21"</DialogTitle>
@@ -250,7 +250,7 @@ const BlackjackPage = () => {
     </Dialog>
   );
   
-  // Анимация результата
+
   const renderAnimation = () => {
     if (!showAnimation) return null;
     

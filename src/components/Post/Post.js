@@ -47,7 +47,7 @@ import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
 import { optimizeImage } from '../../utils/imageUtils';
-import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, processTextWithLinks } from '../../utils/LinkUtils';
+import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -536,9 +536,16 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
       if (post.content) {
         let content = post.content;
         USERNAME_MENTION_REGEX.lastIndex = 0;
+        HASHTAG_REGEX.lastIndex = 0;
         
+
         content = content.replace(USERNAME_MENTION_REGEX, (match, username) => {
           return `[${match}](/profile/${username})`;
+        });
+        
+
+        content = content.replace(HASHTAG_REGEX, (match, hashtag) => {
+          return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
         });
         
         setProcessedContent(content);
@@ -737,7 +744,7 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
   const videoUrl = hasVideo() ? formatVideoUrl(post.video) : null;
   
   const handleOpenImage = async (index) => {
-    // Если передан onOpenLightbox как проп, используем его вместо внутреннего лайтбокса
+
     if (onOpenLightbox && typeof onOpenLightbox === 'function') {
       const allImages = processImages();
       if (allImages.length > 0) {
@@ -746,10 +753,10 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
       return;
     }
     
-    // Если нет внешнего обработчика, открываем собственный лайтбокс
+
     const allImages = processImages();
     if (allImages.length > 0) {
-      // Не используем setTimeout, открываем напрямую
+
       try {
         const currentImageUrl = allImages[index];
         setCurrentImageIndex(index);
@@ -1680,19 +1687,39 @@ const Post = ({ post, onDelete, onOpenLightbox }) => {
                   )}
                   
                   {post.user?.verification && post.user?.verification.status > 0 && (
-                    <CheckCircleIcon 
-                      sx={{ 
-                        color: post.user.verification.status === 1 ? '#9e9e9e' : 
-                               post.user.verification.status === 2 ? '#d67270' : 
-                               post.user.verification.status === 3 ? '#b39ddb' :
-                               post.user.verification.status === 4 ? '#ff9800' : 
-                               post.user.verification.status === 5 ? '#4caf50' :
-                               'primary.main',
-                        ml: 0.5,
-                        width: 20,
-                        height: 20
-                      }} 
-                    />
+                    post.user.verification.status === 6 ? (
+                      <Icon 
+                        icon="material-symbols:verified-rounded" 
+                        style={{ 
+                          fontSize: '24px',
+                          color: '#1e88e5',
+                          marginLeft: '4px' 
+                        }} 
+                      />
+                    ) : post.user.verification.status === 7 ? (
+                      <Icon 
+                        icon="material-symbols:verified-user-rounded" 
+                        style={{ 
+                          fontSize: '24px',
+                          color: '#7c4dff',
+                          marginLeft: '4px' 
+                        }} 
+                      />
+                    ) : (
+                      <CheckCircleIcon 
+                        sx={{ 
+                          color: post.user.verification.status === 1 ? '#9e9e9e' : 
+                                 post.user.verification.status === 2 ? '#d67270' : 
+                                 post.user.verification.status === 3 ? '#b39ddb' :
+                                 post.user.verification.status === 4 ? '#ff9800' : 
+                                 post.user.verification.status === 5 ? '#4caf50' :
+                                 'primary.main',
+                          ml: 0.5,
+                          width: 20,
+                          height: 20
+                        }} 
+                      />
+                    )
                   )}
                   {post.user?.achievement && (
                     <Box 

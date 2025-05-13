@@ -14,10 +14,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AuthContext } from '../../context/AuthContext';
 
-// Регистрация необходимых компонентов для Chart.js
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, Filler);
 
-// Стилизованные компоненты в стиле Apple
+
 const StyledContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(4),
   marginBottom: theme.spacing(8),
@@ -165,21 +165,21 @@ const EconomicsPage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [timeRange, setTimeRange] = useState(30);
 
-  // Palette colors for charts (Apple-inspired colors)
+
   const chartColors = {
-    moneySupply: 'rgba(88, 86, 214, 1)',     // iOS Blue
-    inflationRate: 'rgba(255, 59, 48, 1)',   // iOS Red
-    velocity: 'rgba(0, 122, 255, 1)',        // iOS System Blue
-    auctionPrice: 'rgba(255, 204, 0, 1)',    // iOS Yellow
-    transactionVolume: 'rgba(175, 82, 222, 1)', // iOS Purple
-    kconnectIndex: 'rgba(255, 149, 0, 1)',   // iOS Orange
-    economicActivity: 'rgba(52, 199, 89, 1)', // iOS Green
-    auctionPriceIndex: 'rgba(255, 85, 85, 1)', // Light Red
-    badgePrice: 'rgba(88, 86, 214, 0.7)',    // iOS Blue lighter
-    moneyPerUser: 'rgba(90, 200, 250, 1)',   // iOS Light Blue
+    moneySupply: 'rgba(88, 86, 214, 1)',
+    inflationRate: 'rgba(255, 59, 48, 1)',
+    velocity: 'rgba(0, 122, 255, 1)',
+    auctionPrice: 'rgba(255, 204, 0, 1)',
+    transactionVolume: 'rgba(175, 82, 222, 1)',
+    kconnectIndex: 'rgba(255, 149, 0, 1)',
+    economicActivity: 'rgba(52, 199, 89, 1)',
+    auctionPriceIndex: 'rgba(255, 85, 85, 1)',
+    badgePrice: 'rgba(88, 86, 214, 0.7)',
+    moneyPerUser: 'rgba(90, 200, 250, 1)',
   };
 
-  // Create axios without cache-busting
+
   const axiosInstance = axios.create();
   axiosInstance.defaults.transformRequest = [
     (data, headers) => {
@@ -192,8 +192,8 @@ const EconomicsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        // Use axiosInstance instead of axios to avoid cache-busting parameters
-        // Wrap each call in a try-catch to handle individual endpoint failures
+
+
         let overviewRes, historicalRes, indicesRes;
         
         try {
@@ -226,13 +226,13 @@ const EconomicsPage = () => {
           throw new Error('Failed to load market indices data');
         }
         
-        // Extract data from responses
+
         const overviewData = overviewRes.data.data;
         const latestData = overviewData.latest_data;
         const latestIndices = overviewData.latest_indices;
         const trends = overviewData.trends;
 
-        // Format the data to match expected structure in the component
+
         setOverview({
           economy: {
             total_money_supply: latestData.total_money_supply || 0,
@@ -258,16 +258,16 @@ const EconomicsPage = () => {
           trends: trends || {}
         });
         
-        // Set historical data
+
         setHistoricalData(historicalRes.data.data.historical_data || []);
         
-        // Set market indices
+
         setMarketIndices(indicesRes.data.data.market_indices || []);
       } catch (err) {
         console.error('Error fetching economics data:', err);
         setError(err.message || 'Не удалось загрузить экономические данные. Возможно, сервис временно недоступен.');
         
-        // Set fallback values to prevent UI crashes
+
         setOverview({ 
           economy: {
             total_money_supply: 0,
@@ -296,17 +296,17 @@ const EconomicsPage = () => {
     fetchData();
   }, [timeRange]);
 
-  // Обработчик изменения вкладки
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  // Обработчик изменения временного диапазона
+
   const handleTimeRangeChange = (days) => {
     setTimeRange(days);
   };
 
-  // Форматирование даты для графиков
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('ru', { 
@@ -315,7 +315,7 @@ const EconomicsPage = () => {
     }).format(date);
   };
 
-  // Создание общих опций для графиков в стиле Apple
+
   const createChartOptions = (title = '', yAxisLabel = '') => {
     return {
       responsive: true,
@@ -411,7 +411,7 @@ const EconomicsPage = () => {
     };
   };
 
-  // Конфигурация для графика денежной массы
+
   const moneySupplyChartData = {
     labels: historicalData.map(item => formatDate(item.date)),
     datasets: [
@@ -426,7 +426,7 @@ const EconomicsPage = () => {
     ]
   };
 
-  // Конфигурация для графика инфляции
+
   const inflationChartData = {
     labels: historicalData.map(item => formatDate(item.date)),
     datasets: [
@@ -441,7 +441,7 @@ const EconomicsPage = () => {
     ]
   };
 
-  // Конфигурация для графика скорости обращения денег
+
   const velocityChartData = {
     labels: historicalData.map(item => formatDate(item.date)),
     datasets: [
@@ -456,7 +456,7 @@ const EconomicsPage = () => {
     ]
   };
 
-  // Конфигурация для графика рыночных индексов
+
   const marketIndicesChartData = {
     labels: marketIndices.map(item => formatDate(item.date)),
     datasets: [
@@ -490,7 +490,7 @@ const EconomicsPage = () => {
     ]
   };
 
-  // Опции для графика с двумя осями Y
+
   const dualAxisChartOptions = {
     ...createChartOptions(),
     scales: {
@@ -544,7 +544,7 @@ const EconomicsPage = () => {
     },
   };
 
-  // Если данные загружаются, показываем индикатор загрузки
+
   if (loading) {
     return (
       <Box sx={{ 
@@ -570,7 +570,7 @@ const EconomicsPage = () => {
     );
   }
 
-  // Если произошла ошибка, показываем сообщение об ошибке
+
   if (error) {
     return (
       <Box sx={{ 

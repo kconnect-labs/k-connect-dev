@@ -24,7 +24,7 @@ const UpdatesPage = () => {
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Загружаем все обновления
+
     const allUpdates = UpdateService.getAllUpdates();
     setUpdates(allUpdates);
     setLoading(false);

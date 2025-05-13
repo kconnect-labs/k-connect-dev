@@ -94,19 +94,19 @@ const OwnerBox = styled(Paper)(({ theme }) => ({
   }
 }));
 
-// Функция для ограничения длины текста
+
 const truncateText = (text, maxLength = 15) => {
   if (!text) return '';
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 };
 
-// Кэш для хранения данных истории юзернеймов
+
 const usernameHistoryCache = {};
 
-// Кэш для хранения данных пользователей
+
 const userDataCache = {};
 
-// Проверяем кэш в sessionStorage при загрузке компонента
+
 const loadCacheFromSessionStorage = () => {
   try {
     const historyCache = sessionStorage.getItem('usernameHistoryCache');
@@ -123,7 +123,7 @@ const loadCacheFromSessionStorage = () => {
   }
 };
 
-// Сохраняем кэш в sessionStorage
+
 const saveCacheToSessionStorage = () => {
   try {
     sessionStorage.setItem('usernameHistoryCache', JSON.stringify(usernameHistoryCache));
@@ -133,14 +133,14 @@ const saveCacheToSessionStorage = () => {
   }
 };
 
-// Инициализируем кэш при загрузке
+
 loadCacheFromSessionStorage();
 
 const UsernameCard = ({ username, onClose, open }) => {
   const [loading, setLoading] = useState(true);
   const [history, setHistory] = useState(null);
   const [error, setError] = useState(null);
-  const [userData, setUserData] = useState({}); // Данные всех пользователей
+  const [userData, setUserData] = useState({});
   
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -153,14 +153,14 @@ const UsernameCard = ({ username, onClose, open }) => {
         setLoading(true);
         setError(null);
         
-        // Проверяем кэш истории юзернейма
+
         const cacheKey = username.toLowerCase();
         const currentTime = Date.now();
-        const cacheExpiration = 5 * 60 * 1000; // 5 минут
+        const cacheExpiration = 5 * 60 * 1000;
         
         let historyData;
         
-        // Если данные есть в кэше и они не устарели
+
         if (
           usernameHistoryCache[cacheKey] && 
           currentTime - usernameHistoryCache[cacheKey].timestamp < cacheExpiration
@@ -169,11 +169,11 @@ const UsernameCard = ({ username, onClose, open }) => {
           historyData = usernameHistoryCache[cacheKey].data;
           setHistory(historyData);
           
-          // Загружаем данные пользователей из кэша
+
           const cachedUsers = {};
           if (historyData.users) {
             Object.keys(historyData.users).forEach(userId => {
-              // Добавляем данные пользователя из истории в общий кэш пользователей
+
               userDataCache[userId] = historyData.users[userId];
               cachedUsers[userId] = historyData.users[userId];
             });
@@ -184,7 +184,7 @@ const UsernameCard = ({ username, onClose, open }) => {
           return;
         }
         
-        // Если данных нет в кэше или они устарели, делаем запрос
+
         const response = await axios.get(`/api/username/history/${username}`);
         
         if (response.data && response.data.success) {
@@ -192,13 +192,13 @@ const UsernameCard = ({ username, onClose, open }) => {
           historyData = response.data;
           setHistory(historyData);
           
-          // Кэшируем полученные данные
+
           usernameHistoryCache[cacheKey] = {
             data: historyData,
             timestamp: currentTime
           };
           
-          // Кэшируем данные пользователей
+
           if (historyData.users) {
             Object.keys(historyData.users).forEach(userId => {
               userDataCache[userId] = historyData.users[userId];
@@ -206,7 +206,7 @@ const UsernameCard = ({ username, onClose, open }) => {
             setUserData(historyData.users);
           }
           
-          // Сохраняем обновленный кэш
+
           saveCacheToSessionStorage();
         } else {
           throw new Error(response.data?.message || 'Не удалось получить данные об юзернейме');
@@ -222,7 +222,7 @@ const UsernameCard = ({ username, onClose, open }) => {
     fetchUsernameHistory();
   }, [username, open]);
   
-  // Функция для отображения информации о пользователе
+
   const renderUserInfo = (userId, isFirst = false, size = 'small') => {
     const user = userData[userId];
     const isSmall = size === 'small';

@@ -39,8 +39,8 @@ const Image = styled('img')(({ isSingle }) => ({
   maxWidth: '100%',
   maxHeight: isSingle ? '300px' : '100%',
   width: 'auto',
-  height: 'auto',
-  objectFit: 'contain',
+  height: isSingle ? '100%' : 'auto',
+  objectFit: isSingle ? 'contain' : 'contain',
   position: 'relative',
   zIndex: 2,
   display: 'block',
@@ -84,8 +84,9 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, hideOverlay = f
       case 1:
         return {
           gridTemplateColumns: '1fr',
-          gridTemplateRows: '300px',
-          maxHeight: '300px'
+          gridTemplateRows: 'auto',
+          maxHeight: '300px',
+          height: 'auto'
         };
       case 2:
         return {
@@ -351,6 +352,9 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, hideOverlay = f
               sx={{
                 gridArea: getCellGridArea(index, limitedImages.length),
                 aspectRatio: isSingle ? 'auto' : '1/1',
+                height: isSingle ? 'auto' : '100%',
+                minHeight: isSingle ? 'auto' : '100%',
+                maxHeight: isSingle ? '300px' : '100%',
               }}
             >
               <BackgroundImage 
