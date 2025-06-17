@@ -1,0 +1,295 @@
+Warning: The tag <rect> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter. Error Component Stack
+    at rect (<anonymous>)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at be (MainPage.B49_8j1t.js:1:9640)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:1:127413
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:101:4048
+    at MainPage.B49_8j1t.js:1:47848
+    at ae (vendor-router.DzBM480j.js:1:16746)
+    at pe (vendor-router.DzBM480j.js:1:18941)
+    at Na (index.Dd7q1keU.js:9:18484)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at da (MainLayout.DZWZf8v-.js:1:55290)
+    at Ha (index.Dd7q1keU.js:9:20508)
+    at ae (vendor-router.DzBM480j.js:1:16746)
+    at pe (vendor-router.DzBM480j.js:1:18941)
+    at Suspense (<anonymous>)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at dr (index.Dd7q1keU.js:2:62921)
+    at tr (index.Dd7q1keU.js:2:54052)
+    at Gt (index.Dd7q1keU.js:2:34472)
+    at qa (index.Dd7q1keU.js:9:26434)
+    at Ra (vendor-mui.D7ZDFdVg.js:1:89026)
+    at Oa (vendor-mui.D7ZDFdVg.js:1:88810)
+    at wa (vendor-mui.D7ZDFdVg.js:1:88421)
+    at Pa (vendor-mui.D7ZDFdVg.js:1:89362)
+    at Wi (vendor-mui.D7ZDFdVg.js:1:108424)
+    at Me (index.Dd7q1keU.js:2:8494)
+    at t (vendor.DFMa9I0a.js:1:43263)
+    at Ka (index.Dd7q1keU.js:9:28463)
+    at he (vendor-router.DzBM480j.js:1:18107)
+    at Ne (vendor-router.DzBM480j.js:1:25103)
+    at vi (index.Dd7q1keU.js:32:3587)
+overrideMethod @ hook.js:608
+c @ vendor-react.zBaBsQ4L.js:1
+i @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+Am @ vendor-react.zBaBsQ4L.js:1
+yg @ vendor-react.zBaBsQ4L.js:1
+vg @ vendor-react.zBaBsQ4L.js:1
+mg @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+Xy @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+k @ vendor-react.zBaBsQ4L.js:1
+P @ vendor-react.zBaBsQ4L.js:1
+vendor-react.zBaBsQ4L.js:1 Warning: React does not recognize the `notificationType` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `notificationtype` instead. If you accidentally passed it from a parent component, remove it from the DOM element. Error Component Stack
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at yi (index.Dd7q1keU.js:32:2430)
+    at header (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:1:127413
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:24711
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at ft (MainLayout.DZWZf8v-.js:1:18630)
+    at MainLayout.DZWZf8v-.js:1:55155
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at da (MainLayout.DZWZf8v-.js:1:55290)
+    at Ha (index.Dd7q1keU.js:9:20508)
+    at ae (vendor-router.DzBM480j.js:1:16746)
+    at pe (vendor-router.DzBM480j.js:1:18941)
+    at Suspense (<anonymous>)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at dr (index.Dd7q1keU.js:2:62921)
+    at tr (index.Dd7q1keU.js:2:54052)
+    at Gt (index.Dd7q1keU.js:2:34472)
+    at qa (index.Dd7q1keU.js:9:26434)
+    at Ra (vendor-mui.D7ZDFdVg.js:1:89026)
+    at Oa (vendor-mui.D7ZDFdVg.js:1:88810)
+    at wa (vendor-mui.D7ZDFdVg.js:1:88421)
+    at Pa (vendor-mui.D7ZDFdVg.js:1:89362)
+    at Wi (vendor-mui.D7ZDFdVg.js:1:108424)
+    at Me (index.Dd7q1keU.js:2:8494)
+    at t (vendor.DFMa9I0a.js:1:43263)
+    at Ka (index.Dd7q1keU.js:9:28463)
+    at he (vendor-router.DzBM480j.js:1:18107)
+    at Ne (vendor-router.DzBM480j.js:1:25103)
+    at vi (index.Dd7q1keU.js:32:3587)
+overrideMethod @ hook.js:608
+c @ vendor-react.zBaBsQ4L.js:1
+i @ vendor-react.zBaBsQ4L.js:1
+yn @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+ou @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+Am @ vendor-react.zBaBsQ4L.js:1
+yg @ vendor-react.zBaBsQ4L.js:1
+vg @ vendor-react.zBaBsQ4L.js:1
+hg @ vendor-react.zBaBsQ4L.js:1
+pg @ vendor-react.zBaBsQ4L.js:1
+Xy @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+k @ vendor-react.zBaBsQ4L.js:1
+P @ vendor-react.zBaBsQ4L.js:1
+vendor-react.zBaBsQ4L.js:1 Warning: React does not recognize the `hasStory` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `hasstory` instead. If you accidentally passed it from a parent component, remove it from the DOM element. Error Component Stack
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:76559
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:1:127413
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:109221
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at Je (MainPage.B49_8j1t.js:1:22765)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:101:4048
+    at MainPage.B49_8j1t.js:1:47848
+    at ae (vendor-router.DzBM480j.js:1:16746)
+    at pe (vendor-router.DzBM480j.js:1:18941)
+    at Na (index.Dd7q1keU.js:9:18484)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at da (MainLayout.DZWZf8v-.js:1:55290)
+    at Ha (index.Dd7q1keU.js:9:20508)
+    at ae (vendor-router.DzBM480j.js:1:16746)
+    at pe (vendor-router.DzBM480j.js:1:18941)
+    at Suspense (<anonymous>)
+    at div (<anonymous>)
+    at vendor-mui.D7ZDFdVg.js:1:20649
+    at vendor-mui.D7ZDFdVg.js:74:94587
+    at dr (index.Dd7q1keU.js:2:62921)
+    at tr (index.Dd7q1keU.js:2:54052)
+    at Gt (index.Dd7q1keU.js:2:34472)
+    at qa (index.Dd7q1keU.js:9:26434)
+    at Ra (vendor-mui.D7ZDFdVg.js:1:89026)
+    at Oa (vendor-mui.D7ZDFdVg.js:1:88810)
+    at wa (vendor-mui.D7ZDFdVg.js:1:88421)
+    at Pa (vendor-mui.D7ZDFdVg.js:1:89362)
+    at Wi (vendor-mui.D7ZDFdVg.js:1:108424)
+    at Me (index.Dd7q1keU.js:2:8494)
+    at t (vendor.DFMa9I0a.js:1:43263)
+    at Ka (index.Dd7q1keU.js:9:28463)
+    at he (vendor-router.DzBM480j.js:1:18107)
+    at Ne (vendor-router.DzBM480j.js:1:25103)
+    at vi (index.Dd7q1keU.js:32:3587)
+overrideMethod @ hook.js:608
+c @ vendor-react.zBaBsQ4L.js:1
+i @ vendor-react.zBaBsQ4L.js:1
+yn @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+ou @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+Am @ vendor-react.zBaBsQ4L.js:1
+yg @ vendor-react.zBaBsQ4L.js:1
+vg @ vendor-react.zBaBsQ4L.js:1
+hg @ vendor-react.zBaBsQ4L.js:1
+pg @ vendor-react.zBaBsQ4L.js:1
+Xy @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+k @ vendor-react.zBaBsQ4L.js:1
+P @ vendor-react.zBaBsQ4L.js:1
+vendor-react.zBaBsQ4L.js:1 Warning: Received `true` for a non-boolean attribute `jsx`.
+
+If you want to write it to the DOM, pass a string instead: jsx="true" or jsx={value.toString()}. Error Component Stack
+    at style (<anonymous>)
+    at div (<anonymous>)
+    at bi (index.Dd7q1keU.js:32:9018)
+    at vi (index.Dd7q1keU.js:32:3587)
+overrideMethod @ hook.js:608
+c @ vendor-react.zBaBsQ4L.js:1
+i @ vendor-react.zBaBsQ4L.js:1
+yn @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+ou @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+Am @ vendor-react.zBaBsQ4L.js:1
+yg @ vendor-react.zBaBsQ4L.js:1
+vg @ vendor-react.zBaBsQ4L.js:1
+hg @ vendor-react.zBaBsQ4L.js:1
+pg @ vendor-react.zBaBsQ4L.js:1
+Xy @ vendor-react.zBaBsQ4L.js:1
+(анонимная) @ vendor-react.zBaBsQ4L.js:1
+k @ vendor-react.zBaBsQ4L.js:1
+P @ vendor-react.zBaBsQ4L.js:1
+vendor-mui.D7ZDFdVg.js:1 Warning: Failed prop type: Invalid prop `children` supplied to `ForwardRef`. Expected an element that can hold a ref. Did you accidentally use a plain function component for an element instead? For more information see https://mui.com/r/caveat-with-refs-guide
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:204:35930
+    at e (https://k-connect.ru/assets/index.CJV-YwIW.js:1:114)
+    at a
+    at https://k-connect.ru/assets/vendor-router.DzBM480j.js:1:27105
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:20269
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:127413
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:109221
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at Post (https://k-connect.ru/assets/Post.Dd5HtMqx.js:1:604362)
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at div
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:1:20649
+    at https://k-connect.ru/assets/vendor-mui.D7ZDFdVg.js:74:94587
+    at https://k-connect.ru/assets/vend

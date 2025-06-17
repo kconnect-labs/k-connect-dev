@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Обновление приложения</title>
     <style>
-      /* Основные стили для страницы */
       body {
         margin: 0;
         padding: 0;
@@ -32,7 +31,6 @@
         font-size: 1.2rem;
       }
       
-      /* Анимация спиннера */
       .spinner {
         margin: 2rem auto;
         width: 60px;
@@ -48,20 +46,6 @@
         100% { transform: rotate(360deg); }
       }
     </style>
-    <script>
-      // Service Worker Registration for Push Notifications
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-              console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch(error => {
-              console.error('Service Worker registration failed:', error);
-            });
-        });
-      }
-    </script>
   </head>
   <body>
     <div class="container">
