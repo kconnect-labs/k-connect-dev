@@ -3,30 +3,26 @@ import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 import path from 'path';
 import { resolve } from 'path';
+import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
+import viteCompression from 'vite-plugin-compression';
+import { createHtmlPlugin } from 'vite-plugin-html';
 
 
 export default defineConfig({
+  root: resolve(__dirname),
+  publicDir: resolve(__dirname, 'public'),
   plugins: [
     react({
+      include: "**/*.{jsx,js,tsx,ts}",
       babel: {
         plugins: [
-          ['babel-plugin-transform-remove-console', { exclude: ['error', 'warn'] }]
-        ],
-        
-        presets: [
-          ['@babel/preset-react', {
-            runtime: 'automatic',
-            development: process.env.NODE_ENV === 'development',
-            
-            importSource: 'react'
-          }]
-        ]
-      },
-      include: "**/*.{jsx,js,tsx,ts}",
-      
-      fastRefresh: true,
+          process.env.NODE_ENV === 'production' && 'transform-remove-console'
+        ].filter(Boolean)
+      }
     }),
     svgr({ 
+      exportAsDefault: false,
       svgrOptions: {
         exportType: 'named',
         ref: true,
@@ -35,27 +31,40 @@ export default defineConfig({
       },
       include: "**/*.svg"
     }),
+    wasm(),
+    topLevelAwait(),
+    viteCompression(),
+    createHtmlPlugin({
+      minify: true,
+      template: 'index.html',
+      inject: {
+        data: {
+          title: 'К-Коннект'
+        }
+      }
+    })
   ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
       'react': path.resolve(__dirname, './node_modules/react'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-      'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom')
+      'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom'),
+      '@root': path.resolve(__dirname)
     },
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
     dedupe: ['react', 'react-dom', 'react-router-dom'] 
   },
   esbuild: {
-    loader: 'jsx',
-    include: /src\/.*\.jsx?$/,
+    loader: "jsx",
+    include: /\.[jt]sx?$/,
     exclude: [],
     
     jsx: 'automatic',
     jsxInject: "import React from 'react'",
   },
   build: {
-    outDir: 'build',
+    outDir: resolve(__dirname, 'dist'),
     sourcemap: 'hidden',
     chunkSizeWarningLimit: 2000,
     minify: 'terser',
@@ -100,8 +109,6 @@ export default defineConfig({
     
     cssMinify: true,
   },
-  
-  publicDir: 'public',
   
   server: {
     host: '0.0.0.0',
@@ -154,8 +161,9 @@ export default defineConfig({
     force: true, 
     
     esbuildOptions: {
-      
-      target: 'es2020',
+      loader: {
+        '.js': 'jsx'
+      }
     }
   }
 });

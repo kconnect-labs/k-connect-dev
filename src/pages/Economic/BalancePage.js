@@ -40,7 +40,8 @@ import {
   TableContainer,
   TableBody,
   Table,
-  CardMedia
+  CardMedia,
+  bottomNavigationActionClasses
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
@@ -1585,6 +1586,16 @@ const BalancePage = () => {
     >
       <InfoBlock
         styleVariant="dark"
+        sx={{
+          '&::before': {
+            bottom: 0,
+            transform: 'rotate(-12deg)',
+          },
+          '&::after': {
+            bottom: 0,
+            transform: 'rotate(12deg)',
+          }
+        }}
         title={
           <Box sx={{ textAlign: 'center' }}>
             <PointsIcon>
