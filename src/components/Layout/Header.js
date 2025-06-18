@@ -608,20 +608,27 @@ const Header = ({ toggleSidebar }) => {
             boxShadow: 'none',
           },
           '& .MuiMenuItem-root': {
-            padding: '10px 16px',
+            padding: '8px 14px',
             borderRadius: '8px',
-            margin: '2px 8px',
+            margin: '1px 6px',
+            minHeight: '36px',
             transition: 'all 0.2s',
             '&:hover': {
               backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
             }
           },
+          '& .MuiDivider-root': {
+            margin: '4px 0',
+          },
+          '& .MuiTypography-caption': {
+            padding: '4px 12px',
+          }
         }
       }}
     >
       {user && (
         <>
-          <Box sx={{ px: 3, py: 3, textAlign: 'center', position: 'relative' }}>
+          <Box sx={{ px: 2, py: 2, textAlign: 'center', position: 'relative' }}>
             {isMobile && (
               <IconButton
                 onClick={handleMenuClose}
@@ -937,7 +944,7 @@ const Header = ({ toggleSidebar }) => {
             style={{ width: 24, height: 24, borderRadius: '50%' }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoM3YyaC0zeiIvPjxwYXRoIGZpbGw9IiMwMDM5YTYiIGQ9Ik0wIDFoM3YxaC0zeiIvPjxwYXRoIGZpbGw9IiNkNTJiMWUiIGQ9Ik0wIDBoM3YxaC0zeiIvPjwvc3ZnPg==';
+              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_Russia_%28CMYK%29.png/120px-Flag_of_Russia_%28CMYK%29.png';
             }}
           />
         </ListItemIcon>
@@ -958,12 +965,33 @@ const Header = ({ toggleSidebar }) => {
             style={{ width: 24, height: 24, borderRadius: '50%' }}
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCAzMCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDAyNDdkIi8+PGcgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYiPjxwYXRoIGQ9Ik0wLDBMNjAsMzBNNjAsMEwwLDMwIi8+PC9nPjxwYXRoIHN0cm9rZT0iI2NmMTQyYiIgc3Ryb2tlLXdpZHRoPSI0IiBkPSJNMCwwTDYwLDMwTTYwLDBMMCwzMCIvPjxwYXRoIGQ9Ik0zMCwwdjMwTTAsMTVoNjAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjxwYXRoIGQ9Ik0zMCwwdjMwTTAsMTVoNjAiIHN0cm9rZT0iI2NmMTQyYiIgc3Ryb2tlLXdpZHRoPSI2Ii8+PC9zdmc+';
+              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Great_Britain_%281707%E2%80%931800%29.svg/2560px-Flag_of_Great_Britain_%281707%E2%80%931800%29.svg.png';
             }}
           />
         </ListItemIcon>
         <ListItemText primary="English" />
         {language === 'EN' && (
+          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+        )}
+      </MenuItem>
+
+      <MenuItem 
+        onClick={() => handleLanguageChange('JP')}
+        selected={language === 'JP'}
+      >
+        <ListItemIcon>
+          <img 
+            src="/static/flags/jp.svg" 
+            alt="Japanese" 
+            style={{ width: 24, height: 24, borderRadius: '50%' }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/1200px-Flag_of_Japan.svg.png';
+            }}
+          />
+        </ListItemIcon>
+        <ListItemText primary="日本語" />
+        {language === 'JP' && (
           <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
         )}
       </MenuItem>

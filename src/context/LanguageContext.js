@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import EN from '@/Language/EN.json';
 import RU from '@/Language/RU.json';
+import JP from '@/Language/JP.json';
 
 const LanguageContext = createContext();
 
@@ -13,11 +14,17 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [currentLanguage, setCurrentLanguage] = useState('EN');
+  // Initialize language from localStorage or default to 'EN'
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    const savedLanguage = localStorage.getItem('k-connect-language');
+    return savedLanguage || 'RU';
+  });
   
   const translations = {
+    RU,
+
     EN,
-    RU
+    JP
   };
 
   const t = useCallback((key, params = {}) => {
@@ -45,9 +52,20 @@ export const LanguageProvider = ({ children }) => {
   const changeLanguage = useCallback((lang) => {
     if (translations[lang]) {
       setCurrentLanguage(lang);
+      // Save language preference to localStorage
+      localStorage.setItem('k-connect-language', lang);
+      // Also save to sessionStorage for redundancy
+      sessionStorage.setItem('k-connect-language', lang);
+      // Set language attribute on html tag
+      document.documentElement.setAttribute('lang', lang.toLowerCase());
     } else {
       console.warn(`Language ${lang} not supported`);
     }
+  }, []);
+
+  // Set initial language attribute
+  React.useEffect(() => {
+    document.documentElement.setAttribute('lang', currentLanguage.toLowerCase());
   }, []);
 
   return (

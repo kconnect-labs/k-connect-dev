@@ -595,6 +595,9 @@
       "report": "Report"
     },
     "edit_dialog": {
+      "title": "Edit post",
+      "time_limit": "Editing is only available for 3 hours after posting",
+      "post_text": "Post text",
       "current_images": "Current images",
       "image_alt": "Image {number}",
       "post_image_alt": "Post image",
@@ -631,13 +634,17 @@
       "title": "Report post",
       "description": "Choose a reason for reporting, and our moderators will review this post. Thank you for helping maintain order!",
       "success_title": "Report submitted",
-      "success_message": "Thank you for your vigilance! Moderators will review your report."
+      "success_message": "Thank you for your vigilance! Moderators will review your report.",
+      "post_by_user": "Post by user {username}",
+      "submitting": "Submitting...",
+      "submit": "Submit Report",
+      "cancel": "Cancel"
     },
     "repost_dialog": {
-      "title": "Share post",
-      "original_post_notice": "The repost will reference the original post, not this repost",
-      "comment_placeholder": "Add a comment to the repost (optional)",
-      "mention_helper": "You can mention users with @username",
+      "title": "Share Post",
+      "comment_placeholder": "Add a comment to your repost...",
+      "mention_helper": "Use @ to mention users",
+      "original_post_notice": "You are reposting the original post",
       "repost_button": "Repost"
     },
     "media_error": {
@@ -659,6 +666,83 @@
     },
     "channel": {
       "label": "Channel"
+    },
+    "media": {
+      "post_image_alt": "Post image"
+    },
+    "dialog": {
+      "cancel": "Cancel"
+    },
+    "report": {
+      "reasons": {
+        "spam": "Spam",
+        "insult": "Insult",
+        "inappropriate_content": "Inappropriate content",
+        "violation": "Violation",
+        "misinformation": "Misinformation",
+        "harmful_content": "Harmful content",
+        "other": "Other"
+      },
+      "placeholder": "Specify the reason for your report"
+    },
+    "time": {
+      "just_now": "Just now",
+      "recently": "Recently",
+      "minute": "minute",
+      "minutes": "minutes",
+      "minutes_many": "minutes",
+      "hour": "hour",
+      "hours": "hours",
+      "hours_many": "hours",
+      "day": "day",
+      "days": "days",
+      "days_many": "days",
+      "ago": "ago"
+    }
+  },
+  "main_page": {
+    "loading": "Loading...",
+    "online_count": "{count} online",
+    "follow": {
+      "follow": "Follow",
+      "unfollow": "Unfollow"
+    },
+    "media": {
+      "video_size_error": "Video size exceeds 150MB limit",
+      "image_size_error": "Image size exceeds 50MB limit",
+      "unsupported_format": "Only images and videos are supported",
+      "mixed_content_error": "Cannot attach both photos and videos"
+    },
+    "post": {
+      "create": {
+        "placeholder": "What's new?",
+        "media": "Media",
+        "media_count": "Files ({count})",
+        "music": "Music",
+        "music_count": "Music ({count})",
+        "publish": "Publish",
+        "drag_files": "Drag files here",
+        "error": {
+          "title": "Please wait",
+          "understand": "Got it",
+          "file_size": "File size error"
+        }
+      }
+    },
+    "feed": {
+      "tabs": {
+        "all": "All",
+        "following": "Following",
+        "recommended": "Recommended"
+      },
+      "empty": "No posts to display. Follow users to see their posts in your feed.",
+      "end": "You've seen all posts"
+    },
+    "recommendations": {
+      "empty": {
+        "title": "No active channels",
+        "description": "Create your first channel or follow existing channels"
+      }
     }
   }
 }

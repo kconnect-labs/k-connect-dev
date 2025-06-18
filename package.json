@@ -71,6 +71,7 @@
     "build": "vite build",
     "build:prod": "vite build --mode production",
     "build:analyze": "vite build --mode analyze",
+    "build:stats": "echo '🚀 Начало сборки...' && time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite dist && npm cache clean --force",
     "optimize": "vite optimize && vite build"
@@ -107,6 +108,8 @@
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-svgr": "^4.3.0",
     "vite-plugin-top-level-await": "^1.5.0",
-    "vite-plugin-wasm": "^3.4.1"
+    "vite-plugin-wasm": "^3.4.1",
+    "vite-plugin-imagemin": "^0.6.1",
+    "vite-plugin-pwa": "^1.0.0"
   }
 }

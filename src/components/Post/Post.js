@@ -382,13 +382,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const [mediaError, setMediaError] = useState({ type: null, url: null }); 
   
   const reportReasons = [
-    "Спам",
-    "Оскорбления",
-    "Неприемлемый контент",
-    "Нарушение правил",
-    "Дезинформация",
-    "Вредоносный контент",
-    "Другое"
+    t('post.report.reasons.spam'),
+    t('post.report.reasons.insult'),
+    t('post.report.reasons.inappropriate_content'),
+    t('post.report.reasons.violation'),
+    t('post.report.reasons.misinformation'),
+    t('post.report.reasons.harmful_content'),
+    t('post.report.reasons.other')
   ];
   
   useEffect(() => {
@@ -2306,7 +2306,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             backgroundRepeat: 'no-repeat'
           }
         }}>
-          Поделиться постом
+            {t('post.repost_dialog.title')}
         </DialogTitle>
         <DialogContent sx={{ pt: 3, px: 3 }}>
           {post.type === 'repost' && (
@@ -2450,7 +2450,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               <Box 
                 component="img" 
                 src={post.image} 
-                alt="Изображение поста"
+                alt={t('post.media.post_image_alt')}
                 sx={{
                   width: '100%',
                   height: '120px',
@@ -2478,7 +2478,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               }
             }}
           >
-            Отмена
+            {t('post.dialog.cancel')}
           </Button>
           <Button 
             onClick={handleCreateRepost} 
@@ -2500,7 +2500,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             }}
             endIcon={repostLoading ? <CircularProgress size={16} color="inherit" /> : null}
           >
-            Репостнуть
+            {t('post.repost_dialog.repost_button')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -2549,10 +2549,10 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
                 <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-                  Пост удален
+                  {t('post.delete_dialog.success_title')}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Пост был успешно удален
+                  {t('post.delete_dialog.success_message')}
                 </Typography>
               </Box>
             </>
@@ -2568,10 +2568,10 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   alignItems: 'center'
                 }}
               >
-                <DeleteIcon sx={{ mr: 1 }} /> Удаление поста
+                <DeleteIcon sx={{ mr: 1 }} /> {t('post.delete_dialog.title')}
               </Typography>
               <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.
+                {t('post.delete_dialog.confirmation')}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                 <Button 
@@ -2587,7 +2587,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     }
                   }}
                 >
-                  Отмена
+                  {t('post.delete_dialog.cancel')}
                 </Button>
                 <Button 
                   onClick={confirmDelete}
@@ -2601,7 +2601,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   }}
                   endIcon={deleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
                 >
-                  {deleteDialog.deleting ? 'Удаление...' : 'Удалить'}
+                  {deleteDialog.deleting ? t('post.delete_dialog.deleting') : t('post.delete_dialog.delete')}
                 </Button>
               </Box>
             </>
@@ -2657,24 +2657,24 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             backgroundRepeat: 'no-repeat'
           }
         }}>
-          Пожаловаться на пост
+          {t('post.report_dialog.title')}
         </DialogTitle>
         
         {reportDialog.submitted ? (
           <Box sx={{ p: 3, textAlign: 'center' }}>
             <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
             <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-              Жалоба отправлена
+              {t('post.report_dialog.success_title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-              Спасибо за вашу бдительность! Модераторы рассмотрят вашу жалобу.
+              {t('post.report_dialog.success_message')}
             </Typography>
           </Box>
         ) : (
           <>
             <DialogContent sx={{ pt: 3, px: 3 }}>
               <Typography variant="body2" sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                Выберите причину жалобы, и наши модераторы рассмотрят этот пост. Спасибо за помощь в поддержании порядка!
+                {t('post.report_dialog.description')}
               </Typography>
               
               {reportDialog.error && (
@@ -2715,12 +2715,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 ))}
               </Box>
               
-              {reportDialog.reason === "Другое" && (
+              {reportDialog.reason === t('post.report.reasons.other') && (
                 <TextField
                   fullWidth
                   multiline
                   rows={3}
-                  placeholder="Укажите причину жалобы"
+                  placeholder={t('post.report.placeholder')}
                   variant="outlined"
                   value={reportDialog.customReason || ''}
                   onChange={(e) => setReportDialog({...reportDialog, customReason: e.target.value})}
@@ -2751,7 +2751,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 }}
               >
                 <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255, 255, 255, 0.5)', mb: 1 }}>
-                  Пост пользователя {post?.user?.name}
+                  {t('post.report_dialog.post_by_user', { username: post?.user?.name })}
                 </Typography>
                 <Typography 
                   variant="body2" 
@@ -2779,7 +2779,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   }
                 }}
               >
-                Отмена
+                {t('post.report_dialog.cancel')}
               </Button>
               <Button 
                 onClick={handleReportSubmit}
@@ -2794,7 +2794,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   }
                 }}
               >
-                {reportDialog.submitting ? 'Отправка...' : 'Отправить жалобу'}
+                {reportDialog.submitting ? t('post.report_dialog.submitting') : t('post.report_dialog.submit')}
               </Button>
             </DialogActions>
           </>
@@ -2867,11 +2867,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             backgroundRepeat: 'no-repeat'
           }
         }}>
-          Редактировать пост
+          {t('post.edit_dialog.title')}
         </DialogTitle>
         <DialogContent sx={{ pt: 3, px: 3 }}>
           <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}>
-            Редактирование доступно только в течение 3 часов после публикации
+            {t('post.edit_dialog.time_limit')}
           </Typography>
           
           {editDialog.error && (
@@ -2886,7 +2886,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             multiline
             minRows={3}
             maxRows={8}
-            label="Текст поста"
+            label={t('post.edit_dialog.post_text')}
             value={editDialog.content}
             onChange={handleEditContentChange}
             margin="normal"
