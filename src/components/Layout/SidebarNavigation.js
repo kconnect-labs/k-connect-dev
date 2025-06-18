@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { NavButton, MoreButton } from '../../UIKIT';
 import { SidebarContext } from '../../context/SidebarContext';
+import { useLanguage } from '../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 
 
@@ -42,6 +43,7 @@ const SidebarNavigation = memo(({
   user
 }) => {
   const location = useLocation();
+  const { t } = useLanguage();
   const { expandedMore, expandedAdminMod, expandedShops, toggleExpandMore, toggleExpandAdminMod, toggleExpandShops } = useContext(SidebarContext);
   
   
@@ -79,7 +81,7 @@ const SidebarNavigation = memo(({
   const mainMenu = useMemo(() => (
     <>
       <NavButton
-        text="Мой профиль"
+        text={t('sidebar.navigation.my_profile')}
         icon={icons.person}
         path={`/profile/${user?.username || user?.id}`}
         active={isActive(`/profile/${user?.username || user?.id}`)}
@@ -87,7 +89,7 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Лента"
+        text={t('sidebar.navigation.feed')}
         icon={icons.home}
         path="/"
         active={isActive('/')}
@@ -95,7 +97,7 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Мессенджер"
+        text={t('sidebar.navigation.messenger')}
         icon={<Icon icon={chatIcon} width="20" height="20" />}
         path="/messenger"
         active={isActive('/messenger')}
@@ -103,7 +105,7 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Музыка"
+        text={t('sidebar.navigation.music')}
         icon={icons.music}
         path="/music"
         active={isActive('/music')}
@@ -111,7 +113,7 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Подписки"
+        text={t('sidebar.navigation.subscriptions')}
         icon={icons.people}
         path="/subscriptions"
         active={isActive('/subscriptions')}
@@ -119,7 +121,7 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Каналы"
+        text={t('sidebar.navigation.channels')}
         icon={icons.channels}
         path="/channels"
         active={isActive('/channels')}
@@ -127,20 +129,20 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
-        text="Поиск"
+        text={t('sidebar.navigation.search')}
         icon={icons.search}
         path="/search"
         active={isActive('/search')}
         themeColor={primaryColor}
       />
     </>
-  ), [icons, isActive, primaryColor, user]);
+  ), [icons, isActive, primaryColor, user, t]);
   
   const adminModMenu = useMemo(() => (
     (isAdmin || isModeratorUser) && (
       <>
         <NavButton
-          text="Управление"
+          text={t('sidebar.navigation.management')}
           icon={icons.admin}
           active={expandedAdminMod}
           isSpecial={true}
@@ -153,7 +155,7 @@ const SidebarNavigation = memo(({
             
             {isAdmin && (
               <NavButton
-                text="Админ Панель"
+                text={t('sidebar.navigation.admin_panel')}
                 icon={icons.admin}
                 path="/admin"
                 active={isActive('/admin')}
@@ -164,7 +166,7 @@ const SidebarNavigation = memo(({
             
             {isModeratorUser && (
               <NavButton
-                text="Модерировать"
+                text={t('sidebar.navigation.moderate')}
                 icon={icons.moderator}
                 path="/moderator"
                 active={isActive('/moderator')}
@@ -176,12 +178,12 @@ const SidebarNavigation = memo(({
         </Collapse>
       </>
     )
-  ), [icons, isActive, isAdmin, isModeratorUser, expandedAdminMod, toggleExpandAdminMod]);
+  ), [icons, isActive, isAdmin, isModeratorUser, expandedAdminMod, toggleExpandAdminMod, t]);
 
   const shopsMenu = useMemo(() => (
     <>
       <NavButton
-        text="Магазины"
+        text={t('sidebar.navigation.shops.title')}
         icon={icons.shop}
         active={expandedShops}
         onClick={toggleExpandShops}
@@ -192,7 +194,7 @@ const SidebarNavigation = memo(({
       <Collapse in={expandedShops} timeout="auto" unmountOnExit>
         <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
           <NavButton
-            text="Магазин бейджиков"
+            text={t('sidebar.navigation.shops.badge_shop')}
             icon={icons.shop}
             path="/badge-shop"
             active={isActive('/badge-shop')}
@@ -201,7 +203,7 @@ const SidebarNavigation = memo(({
           />
           
           <NavButton
-            text="Аукцион юзернеймов"
+            text={t('sidebar.navigation.shops.username_auction')}
             icon={icons.auction}
             path="/username-auction"
             active={isActive('/username-auction')}
@@ -211,13 +213,13 @@ const SidebarNavigation = memo(({
         </List>
       </Collapse>
     </>
-  ), [icons, isActive, primaryColor, expandedShops, toggleExpandShops]);
+  ), [icons, isActive, primaryColor, expandedShops, toggleExpandShops, t]);
   
   const extraMenu = useMemo(() => (
     !isChannel && (
       <>
         <NavButton
-          text="Мини-игры"
+          text={t('sidebar.navigation.minigames')}
           icon={icons.games}
           path="/minigames"
           active={isActive('/minigames')}
@@ -225,7 +227,7 @@ const SidebarNavigation = memo(({
         />
         
         <NavButton
-          text="Планы подписок"
+          text={t('sidebar.navigation.subscription_plans')}
           icon={icons.subscription}
           path="/sub-planes"
           active={isActive('/sub-planes')}
@@ -233,12 +235,12 @@ const SidebarNavigation = memo(({
         />
       </>
     )
-  ), [icons, isActive, isChannel, primaryColor]);
+  ), [icons, isActive, isChannel, primaryColor, t]);
   
   const moreSection = useMemo(() => (
     <>
       <MoreButton 
-        text="Еще"
+        text={t('sidebar.navigation.more.title')}
         icon={icons.more}
         active={expandedMore}
         themeColor={primaryColor}
@@ -253,7 +255,7 @@ const SidebarNavigation = memo(({
           {!isChannel && (
             <>
               <NavButton
-                text="Лидерборд"
+                text={t('sidebar.navigation.more.leaderboard')}
                 icon={icons.leaderboard}
                 path="/leaderboard"
                 active={isActive('/leaderboard')}
@@ -262,7 +264,7 @@ const SidebarNavigation = memo(({
               />
               
               <NavButton
-                text="Баг-репорты"
+                text={t('sidebar.navigation.more.bug_reports')}
                 icon={icons.bug}
                 path="/bugs"
                 active={isActive('/bugs')}
@@ -273,7 +275,7 @@ const SidebarNavigation = memo(({
           )}
           
           <NavButton
-            text="Правила"
+            text={t('sidebar.navigation.more.rules')}
             icon={icons.rules}
             path="/rules"
             active={isActive('/rules')}
@@ -282,7 +284,7 @@ const SidebarNavigation = memo(({
           />
           
           <NavButton
-            text="API Документация"
+            text={t('sidebar.navigation.more.api_docs')}
             icon={icons.api}
             path="/api-docs"
             active={isActive('/api-docs')}
@@ -291,7 +293,7 @@ const SidebarNavigation = memo(({
           />
           
           <NavButton
-            text="О платформе"
+            text={t('sidebar.navigation.more.about')}
             icon={icons.rules}
             path="/about"
             active={isActive('/about')}
@@ -303,7 +305,7 @@ const SidebarNavigation = memo(({
         </List>
       </Collapse>
     </>
-  ), [icons, isActive, isChannel, primaryColor, expandedMore, toggleExpandMore]);
+  ), [icons, isActive, isChannel, primaryColor, expandedMore, toggleExpandMore, t]);
   
   return (
     <List component="nav" sx={{ p: 1, mt: 1 }}>

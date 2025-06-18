@@ -67,7 +67,7 @@
     "yet-another-react-lightbox": "^3.23.1"
   },
   "scripts": {
-    "start": "vite --host 0.0.0.0 --port 3005",
+    "start": "vite --host 0.0.0.0 --port 3005 --config vite.config.js --force",
     "build": "vite build",
     "build:prod": "vite build --mode production",
     "build:analyze": "vite build --mode analyze",

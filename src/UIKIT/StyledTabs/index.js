@@ -95,7 +95,7 @@ const StyledTabs = ({
           const IconComponent = tab.icon;
           return (
             <Tab
-              key={index}
+              key={`${tab.value}-${tab.label}`}
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {IconComponent && <IconComponent sx={{ mr: 1 }} />}

@@ -10,8 +10,9 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 
 
 export default defineConfig({
-  root: resolve(__dirname),
-  publicDir: resolve(__dirname, 'public'),
+  root: process.cwd(),
+  base: './',
+  publicDir: false,
   plugins: [
     react({
       include: "**/*.{jsx,js,tsx,ts}",
@@ -36,21 +37,17 @@ export default defineConfig({
     viteCompression(),
     createHtmlPlugin({
       minify: true,
-      template: 'index.html',
-      inject: {
-        data: {
-          title: 'К-Коннект'
-        }
-      }
+      entry: resolve(__dirname, 'src/index.js'),
+      template: resolve(__dirname, 'index.html')
     })
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': resolve(__dirname, 'src'),
       'react': path.resolve(__dirname, './node_modules/react'),
       'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
       'react-router-dom': path.resolve(__dirname, './node_modules/react-router-dom'),
-      '@root': path.resolve(__dirname)
+      '@root': resolve(__dirname)
     },
     extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
     dedupe: ['react', 'react-dom', 'react-router-dom'] 
@@ -64,7 +61,7 @@ export default defineConfig({
     jsxInject: "import React from 'react'",
   },
   build: {
-    outDir: resolve(__dirname, 'dist'),
+    outDir: 'dist',
     sourcemap: 'hidden',
     chunkSizeWarningLimit: 2000,
     minify: 'terser',
@@ -112,7 +109,7 @@ export default defineConfig({
   
   server: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 3005,
     
     hmr: true,
     
@@ -135,9 +132,15 @@ export default defineConfig({
             
             proxyReq.setHeader('X-Forwarded-Proto', 'https');
             proxyReq.setHeader('X-Forwarded-Host', 'k-connect.ru');
+            proxyReq.setHeader('Origin', 'https://k-connect.ru');
           });
           proxy.on('proxyRes', (proxyRes, req, _res) => {
             console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+            
+            proxyRes.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:3005';
+            proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
+            proxyRes.headers['Access-Control-Allow-Methods'] = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+            proxyRes.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
             
             const cookies = proxyRes.headers['set-cookie'];
             if (cookies) {

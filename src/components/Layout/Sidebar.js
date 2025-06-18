@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
 import { SidebarProvider } from '../../context/SidebarContext';
+import { LanguageProvider } from '../../context/LanguageContext';
 import axios from 'axios';
 import SidebarNavigation from './SidebarNavigation';
 import UserProfileBlock from './UserProfileBlock';
@@ -164,7 +165,9 @@ const Sidebar = memo(() => {
                 </Box>
       </SidebarProvider>
       
+      <LanguageProvider>
       <SidebarFooter primaryColor={themeValues.primaryColor} />
+      </LanguageProvider>
     </SidebarContainer>
   );
 }, areEqual);

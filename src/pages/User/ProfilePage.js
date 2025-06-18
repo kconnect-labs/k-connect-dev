@@ -61,6 +61,7 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 import { Stories } from '../../UIKIT/Stories';
+import { useLanguage } from '../../context/LanguageContext';
 
 
 const PostInput = styled(TextField)(({ theme }) => ({
@@ -133,6 +134,7 @@ const PublishButton = styled(Button)(({ theme }) => ({
 
 
 const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) => {
+  const { t } = useLanguage();
   const { user } = useContext(AuthContext);
   const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const [content, setContent] = useState('');
@@ -615,7 +617,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
               }}
             />
             <PostInput
-              placeholder="Что у вас нового?"
+              placeholder={postType === 'wall' ? t('profile.create_post.wall_placeholder') : t('profile.create_post.placeholder')}
               multiline
               maxRows={6}
               value={content}
@@ -835,7 +837,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                   }}
                   size="small"
                 >
-                  {mediaFiles.length > 0 ? `Файлы (${mediaFiles.length})` : 'Медиа'}
+                  {mediaFiles.length > 0 ? t('profile.create_post.files_count', { count: mediaFiles.length }) : t('profile.create_post.media')}
                 </Button>
               </label>
               
@@ -862,7 +864,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                 }}
                 size="small"
               >
-                {selectedTracks.length > 0 ? `Музыка (${selectedTracks.length})` : 'Музыка'}
+                {selectedTracks.length > 0 ? t('profile.create_post.music_count', { count: selectedTracks.length }) : t('profile.create_post.music')}
               </Button>
             </Box>
             
@@ -873,7 +875,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
               endIcon={isSubmitting ? <CircularProgress size={14} color="inherit" /> : null}
               size="small"
             >
-              Опубликовать
+              {t('profile.create_post.publish')}
             </PublishButton>
           </PostActions>
           
@@ -939,6 +941,7 @@ const TabPanel = ({ children, value, index, ...other }) => {
 
 
 const UserStatus = ({ statusText, statusColor }) => {
+  const { t } = useLanguage();
   if (!statusText) return null;
   
   
@@ -1201,6 +1204,7 @@ const getLighterColor = (hexColor, factor = 0.3) => {
 
 
 const SubscriptionBadge = ({ duration, subscriptionDate, subscriptionType }) => {
+  const { t } = useLanguage();
   
   if (!duration || duration < 1 || subscriptionType !== 'ultimate') return null;
   
@@ -1229,7 +1233,7 @@ const SubscriptionBadge = ({ duration, subscriptionDate, subscriptionType }) => 
     });
   };
   
-  const tooltipText = `Подписчик Ultima с ${formatDate(subscriptionDate)}`;
+  const tooltipText = `${t('profile.subscription.subscriber')} • ${duration} ${t('profile.subscription.days_left')}`;
   
   return (
     <Tooltip title={tooltipText} arrow placement="top">
@@ -1253,6 +1257,7 @@ const SubscriptionBadge = ({ duration, subscriptionDate, subscriptionType }) => 
 };
 
 const ProfilePage = () => {
+  const { t } = useLanguage();
   const { username } = useParams();
   const { user: currentUser, isAuthenticated } = useContext(AuthContext);
   const [user, setUser] = useState(null);
@@ -1321,7 +1326,7 @@ const ProfilePage = () => {
     setSnackbar({
       open: true,
       severity,
-      message
+      message: message || t('profile.errors.load_failed')
     });
   };
   
@@ -2080,14 +2085,14 @@ const ProfilePage = () => {
                         }}
                       >
                         <BlockIcon sx={{ fontSize: 14, mr: 0.5, opacity: 0.9 }} />
-                        <Box component="span">В бане</Box>
+                        <Box component="span">{t('profile.ban.banned')}</Box>
                       </Typography>
                     </Tooltip>
                   ) : null}
 
                   {user?.scam === 1 && (
                     <Tooltip 
-                      title="Этот аккаунт был отмечен как мошеннический. Будьте осторожны!" 
+                      title={t('profile.ban.scam')} 
                       arrow 
                       placement="top"
                     >
@@ -2116,7 +2121,7 @@ const ProfilePage = () => {
                         }}
                       >
                         <WarningIcon sx={{ fontSize: 14, mr: 0.5, opacity: 0.9 }} />
-                        <Box component="span">SCAM</Box>
+                        <Box component="span">{t('profile.ban.scam')}</Box>
                       </Typography>
                     </Tooltip>
                   )}
@@ -2125,7 +2130,7 @@ const ProfilePage = () => {
                     user.subscription.type === 'channel' ? (
                       <Chip
                         icon={<ChatIcon fontSize="small" />}
-                        label="Канал"
+                        label={t('profile.subscription.channel')}
                         size="small"
                         sx={{
                           bgcolor: (user.status_color) 
@@ -2171,10 +2176,10 @@ const ProfilePage = () => {
                         }}
                       />
                     ) : (
-                      <Tooltip title={`Подписка ${user.subscription.type === 'pick-me' ? 'Пикми' : user.subscription.type} активна до ${new Date(user.subscription.expires_at).toLocaleDateString()}`}>
+                      <Tooltip title={t('profile.subscription.active', { type: user.subscription.type === 'pick-me' ? t('profile.subscription.pick_me') : user.subscription.type.charAt(0).toUpperCase() + user.subscription.type.slice(1) })}>
                         <Chip
                           icon={<DiamondIcon fontSize="small" />}
-                          label={user.subscription.type === 'pick-me' ? 'Пикми' : 
+                          label={user.subscription.type === 'pick-me' ? t('profile.subscription.pick_me') : 
                                 user.subscription.type.charAt(0).toUpperCase() + user.subscription.type.slice(1)}
                           size="small"
                           sx={{
@@ -2249,10 +2254,10 @@ const ProfilePage = () => {
                       }}
                     >
                       <Typography variant="caption" sx={{ color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary, mr: 0.5 }}>
-                        А также:
+                        {t('profile.also_follows', { count: ownedUsernames.length })}
                       </Typography>
                       {ownedUsernames.slice(0, 3).map((usernameItem, idx) => (
-                        <React.Fragment key={idx}>
+                        <React.Fragment key={usernameItem}>
                           <Typography 
                             variant="caption" 
                             component="span" 
@@ -2279,7 +2284,7 @@ const ProfilePage = () => {
                       ))}
                       {ownedUsernames.length > 3 && (
                         <Typography variant="caption" component="span" sx={{ ml: 0.5, color: theme => theme.palette.text.disabled }}>
-                          и ещё {ownedUsernames.length - 3}
+                          {t('profile.and_more', { count: ownedUsernames.length - 3 })}
                         </Typography>
                       )}
                     </Box>
@@ -2302,31 +2307,29 @@ const ProfilePage = () => {
                     <WarningIcon sx={{ fontSize: 22, mt: 0.5, color: 'white' }} />
                     <Box>
                       <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: 'white' }}>
-                        Аккаунт заблокирован
+                        {t('profile.ban.banned')}
                       </Typography>
                       <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255,255,255,0.9)' }}>
-                        Причина: {userBanInfo.reason}
+                        {t('profile.ban.reason', { reason: userBanInfo.reason })}
                       </Typography>
                       <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255,255,255,0.9)' }}>
-                        До {userBanInfo.end_date} 
-                        {userBanInfo.remaining_days > 0 && ` (осталось ${userBanInfo.remaining_days} дн.)`}
+                        {t('profile.ban.ends', { endDate: userBanInfo.end_date })}
+                        {userBanInfo.remaining_days > 0 && ` (${t('profile.ban.days_left', { days: userBanInfo.remaining_days })})`}
                       </Typography>
                       
                       {currentUser && currentUser.id === 3 && (
                         <Box sx={{ mt: 1, pt: 1, borderTop: '1px dashed rgba(255, 255, 255, 0.4)' }}>
                           <Typography variant="caption" sx={{ display: 'block', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
-                            {userBanInfo.is_auto_ban ? 'Автоматический бан системой' : (
-                              userBanInfo.admin ? `Бан выдал: ${userBanInfo.admin.name} (@${userBanInfo.admin.username})` : 'Бан выдан администрацией'
-                            )}
+                            {t('profile.ban.auto_ban', { admin: userBanInfo.admin ? `${userBanInfo.admin.name} (@${userBanInfo.admin.username})` : t('profile.ban.admin') })}
                           </Typography>
                           {userBanInfo.start_date && (
                             <Typography variant="caption" sx={{ display: 'block', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
-                              Начало бана: {userBanInfo.start_date}
+                              {t('profile.ban.start', { startDate: userBanInfo.start_date })}
                             </Typography>
                           )}
                           {userBanInfo.details && (
                             <Typography variant="caption" sx={{ display: 'block', fontStyle: 'italic', color: 'rgba(255,255,255,0.9)' }}>
-                              Детали: {userBanInfo.details}
+                              {t('profile.ban.details', { details: userBanInfo.details })}
                             </Typography>
                           )}
                         </Box>
@@ -2394,7 +2397,7 @@ const ProfilePage = () => {
                     <Typography variant="caption" sx={{ 
                       color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                     }}>
-                      публикаций
+                      {t('profile.stats.posts')}
                     </Typography>
                   </Paper>
                   
@@ -2436,7 +2439,7 @@ const ProfilePage = () => {
                     <Typography variant="caption" sx={{ 
                       color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                     }}>
-                      подписчиков
+                      {t('profile.stats.followers')}
                     </Typography>
                   </Paper>
                   
@@ -2479,7 +2482,7 @@ const ProfilePage = () => {
                       <Typography variant="caption" sx={{ 
                         color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                       }}>
-                        подписок
+                        {t('profile.stats.following')}
                       </Typography>
                     </Paper>
                   )}
@@ -2494,7 +2497,7 @@ const ProfilePage = () => {
                       <Grid item xs={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                            Подписчики
+                            {t('profile.followers')}
                           </Typography>
                           
                           
@@ -2527,7 +2530,7 @@ const ProfilePage = () => {
                                 </Tooltip>
                               ))}
                               {user?.friends_count > 3 && (
-                                <Tooltip title="Показать всех подписчиков" arrow>
+                                <Tooltip title={t('profile.show_all_followers')}>
                                   <Avatar 
                                     component={Link}
                                     to={`/profile/${user?.username}/followers`}
@@ -2551,7 +2554,7 @@ const ProfilePage = () => {
                             </Box>
                           ) : (
                             <Typography variant="caption" color="text.secondary">
-                              Нет подписчиков
+                              {t('profile.no_followers')}
                             </Typography>
                           )}
                         </Box>
@@ -2561,7 +2564,7 @@ const ProfilePage = () => {
                       <Grid item xs={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                            Подписчики
+                            {t('profile.followers')}
                           </Typography>
                           <Typography variant="body2">
                             {followersCount || 0}
@@ -2574,7 +2577,7 @@ const ProfilePage = () => {
                     <Grid item xs={6}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                         <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                          Подписки
+                          {t('profile.subscriptions')}
                         </Typography>
                         
                         
@@ -2612,7 +2615,7 @@ const ProfilePage = () => {
                                 </Tooltip>
                               ))}
                               {followingCount > 3 && (
-                                <Tooltip title="Показать всех" arrow>
+                                <Tooltip title={t('profile.show_all_following')}>
                                   <Avatar 
                                     component={Link}
                                     to={`/profile/${user?.username}/following`}
@@ -2636,7 +2639,7 @@ const ProfilePage = () => {
                             </Box>
                           ) : (
                             <Typography variant="caption" color="text.secondary">
-                              {user?.subscription && user.subscription.type === 'channel' ? 'Нет подписчиков' : 'Нет друзей'}
+                              {t('profile.no_following')}
                             </Typography>
                           )
                         )}
@@ -2755,7 +2758,7 @@ const ProfilePage = () => {
                         }
                       }}
                     >
-                      {following ? 'Отписаться' : 'Подписаться'}
+                      {following ? t('profile.actions.unfollow') : t('profile.actions.follow')}
                     </Button>
                   </Box>
                 )}
@@ -2803,9 +2806,9 @@ const ProfilePage = () => {
                 }
               }}
             >
-              <Tab label="Посты" />
-              <Tab label="Стена" />
-              <Tab label="Профиль" />
+              <Tab label={t('profile.tabs.posts')} />
+              <Tab label={t('profile.tabs.wall')} />
+              <Tab label={t('profile.tabs.about')} />
             </Tabs>
           </Paper>
           
@@ -2876,7 +2879,7 @@ const ProfilePage = () => {
                             •
                           </Typography>
                           <Typography sx={{ color: 'text.secondary' }}>
-                            {user.connect_info[0].days} дней
+                            {user.connect_info[0].days} {t('profile.days')}
                           </Typography>
                           <Typography sx={{ mx: 1, color: 'text.secondary' }}>
                             •
@@ -2928,7 +2931,7 @@ const ProfilePage = () => {
                       <LocationOnIcon color="primary" sx={{ mt: 0.5 }} />
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Местоположение
+                          {t('profile.location')}
                         </Typography>
                         <Typography variant="body2">
                           {user.location}
@@ -2944,7 +2947,7 @@ const ProfilePage = () => {
                       <LinkIcon color="primary" sx={{ mt: 0.5 }} />
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Веб-сайт
+                          {t('profile.website')}
                         </Typography>
                         <Typography variant="body2">
                           <Link href={user.website} target="_blank" rel="noopener noreferrer" sx={{ color: 'primary.main' }}>
@@ -2962,7 +2965,7 @@ const ProfilePage = () => {
                       <CakeIcon color="primary" sx={{ mt: 0.5 }} />
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Дата рождения
+                          {t('profile.birthday')}
                         </Typography>
                         <Typography variant="body2">
                           {formatDate(user.birthday)}
@@ -2977,14 +2980,14 @@ const ProfilePage = () => {
                     <TodayIcon color="primary" sx={{ mt: 0.5 }} />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Дата регистрации
+                        {t('profile.registration_date')}
                       </Typography>
                       <Typography variant="body2">
                         {user?.registration_date ? new Date(user.registration_date).toLocaleDateString('ru-RU', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric'
-                        }) : 'Недоступно'}
+                        }) : t('profile.not_available')}
                       </Typography>
                     </Box>
                   </Box>
@@ -2996,7 +2999,7 @@ const ProfilePage = () => {
                       <AlternateEmailIcon color="primary" sx={{ mt: 0.5 }} />
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Юзернеймы
+                          {t('profile.usernames')}
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                           
@@ -3034,7 +3037,7 @@ const ProfilePage = () => {
                       <EmojiEventsIcon color="primary" sx={{ mt: 0.5 }} />
                       <Box>
                         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                          Медали
+                          {t('profile.medals.title')}
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
                           {medals.map((medal) => (
@@ -3046,10 +3049,10 @@ const ProfilePage = () => {
                                     <Typography variant="caption">{medal.description}</Typography>
                                   )}
                                   <Typography variant="caption" display="block" sx={{ mt: 0.5, opacity: 0.8 }}>
-                                    Выдана: {new Date(medal.awarded_at).toLocaleDateString()}
+                                    {t('profile.awarded_on', { date: new Date(medal.awarded_at).toLocaleDateString() })}
                                   </Typography>
                                   <Typography variant="caption" display="block" sx={{ opacity: 0.8 }}>
-                                    Кем: @{medal.awarded_by}
+                                    {t('profile.awarded_by', { by: `@${medal.awarded_by}` })}
                                   </Typography>
                                 </Box>
                               }
@@ -3143,7 +3146,7 @@ const ProfilePage = () => {
           severity={snackbar.severity}
           variant="filled"
         >
-          {snackbar.message}
+          {snackbar.message || t('profile.errors.load_failed')}
         </Alert>
       </Snackbar>
       <AnimatePresence>

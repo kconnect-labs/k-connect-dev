@@ -151,7 +151,7 @@ export const LinkPreview = ({ url }) => {
             backgroundColor: 'rgba(0, 0, 0, 0.02)'
           }}>
             <Typography 
-              variant="subtitle2" 
+              variant="body2" 
               sx={{ 
                 margin: 0,
                 fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',

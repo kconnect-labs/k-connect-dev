@@ -42,6 +42,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
+import { useLanguage } from '../../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
@@ -154,10 +155,9 @@ const MarkdownContent = styled(Box, {
 
 const BlurredMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
-    background: 'linear-gradient(135deg, rgb(49 49 49 / 50%) 0%, rgb(62 62 62 / 60%) 100%)',
+    background: 'linear-gradient(135deg, rgb(19 19 19 / 51%) 0%, rgb(25 24 24 / 39%) 100%)',
     backdropFilter: 'blur(10px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    boxShadow: '0 4px 20px rgba(97, 76, 147, 0.3)',
     borderRadius: '12px',
     '& .MuiMenuItem-root': {
       '&:hover': {
@@ -215,162 +215,6 @@ const ActionsContainer = styled(Box)({
   marginTop: '16px',
   padding: '0 8px',
 });
-
-const SharePill = styled(motion.div)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '6px 14px',
-  backgroundColor: 'rgba(40, 40, 50, 0.4)',
-  borderRadius: '20px',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  cursor: 'pointer',
-  marginLeft: theme.spacing(1),
-  transition: 'all 0.25s ease',
-  position: 'relative',
-  overflow: 'hidden',
-  '&:hover': {
-    backgroundColor: 'rgba(50, 50, 60, 0.5)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-    '&:after': {
-      opacity: 1,
-      transform: 'translateX(100%)'
-    }
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-    opacity: 0,
-    transition: 'all 0.5s ease',
-    zIndex: 1
-  }
-}));
-
-const CommentPill = styled(motion.div)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '6px 14px',
-  backgroundColor: 'rgba(40, 40, 50, 0.4)',
-  borderRadius: '20px',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  cursor: 'pointer',
-  marginLeft: theme.spacing(1),
-  transition: 'all 0.25s ease',
-  position: 'relative',
-  overflow: 'hidden',
-  '&:hover': {
-    backgroundColor: 'rgba(50, 50, 60, 0.5)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-    '&:after': {
-      opacity: 1,
-      transform: 'translateX(100%)'
-    }
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-    opacity: 0,
-    transition: 'all 0.5s ease',
-    zIndex: 1
-  }
-}));
-
-const LikePill = styled(motion.div)(({ theme, active }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '6px 14px',
-  backgroundColor: active ? 'rgba(140, 82, 255, 0.08)' : 'rgba(40, 40, 50, 0.4)',
-  borderRadius: '20px',
-  border: active ? '1px solid rgba(140, 82, 255, 0.2)' : '1px solid rgba(255, 255, 255, 0.1)',
-  cursor: 'pointer',
-  marginRight: theme.spacing(1),
-  transition: 'all 0.25s ease',
-  position: 'relative',
-  overflow: 'hidden',
-  '&:hover': {
-    backgroundColor: active ? 'rgba(140, 82, 255, 0.12)' : 'rgba(50, 50, 60, 0.5)',
-    transform: 'translateY(-2px)',
-    boxShadow: active ? '0 4px 12px rgba(140, 82, 255, 0.2)' : '0 4px 12px rgba(0, 0, 0, 0.2)',
-    '&:after': {
-      opacity: 1,
-      transform: 'translateX(100%)'
-    }
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-    opacity: 0,
-    transition: 'all 0.5s ease',
-    zIndex: 1
-  }
-}));
-
-const ActionsPill = styled(motion.div)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  borderRadius: '20px',
-  overflow: 'hidden',
-  backgroundColor: 'rgba(40, 40, 50, 0.4)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  marginRight: theme.spacing(1),
-  position: 'relative',
-  transition: 'all 0.25s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(50, 50, 60, 0.5)',
-    transform: 'translateY(-2px)',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
-    '&:after': {
-      opacity: 1,
-      transform: 'translateX(100%)'
-    }
-  },
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '-100%',
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-    opacity: 0,
-    transition: 'all 0.5s ease',
-    zIndex: 1
-  }
-}));
-
-const ActionItem = styled(Box)(({ theme, active, islike }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '6px 14px',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-  backgroundColor: active && islike ? 'rgba(140, 82, 255, 0.08)' : 'transparent',
-  position: 'relative',
-  zIndex: 2,
-  '&:hover': {
-    backgroundColor: active && islike ? 'rgba(140, 82, 255, 0.12)' : 'rgba(255, 255, 255, 0.04)',
-  },
-  borderRight: islike ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
-}));
 
 const ChannelTag = styled(Chip)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.08)',
@@ -475,37 +319,43 @@ const InteractionContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusColor }) => {
-  if (!post || typeof post !== 'object') {
-    console.error('Post component received invalid post data:', post);
-    return null;
-  }
-  
-  console.log(`Post ${post.id} user account type:`, post.user?.account_type, 'Is channel:', post.user?.is_channel);
-  
+  const { t } = useLanguage();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const { user: currentUser } = useContext(AuthContext);
+  const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
+  const { setPostDetail } = usePostDetail();
+  const { show: showContextMenu } = useContextMenu();
+  
   const [liked, setLiked] = useState(post?.user_liked || post?.is_liked || false);
   const [likesCount, setLikesCount] = useState(post?.likes_count || 0);
   const [viewsCount, setViewsCount] = useState(post?.views_count || 0);
   const [clickTimer, setClickTimer] = useState(null); 
-  const { user: currentUser } = useContext(AuthContext);
-  const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const isCurrentUserPost = currentUser && post?.user && currentUser.id === post.user.id;
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const menuOpen = Boolean(menuAnchorEl);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("Ссылка скопирована в буфер обмена");
-  const [lastLikedUsers, setLastLikedUsers] = useState([]);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [reposted, setReposted] = useState(post?.is_reposted || false);
+  const [repostModalOpen, setRepostModalOpen] = useState(false);
+  const [repostContent, setRepostContent] = useState('');
+  const [repostLoading, setRepostLoading] = useState(false);
+  const [isPinned, setIsPinned] = useState(isPinnedPost || false);
+  const [editDialog, setEditDialog] = useState({
+    open: false,
+    content: post?.content || '',
+    loading: false,
+    previews: [],
+    deleteImages: false,
+    deleteVideo: false,
+    deleteMusic: false
+  });
   
   const [musicTracks, setMusicTracks] = useState([]);
   
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpandButton, setNeedsExpandButton] = useState(false);
   const contentRef = useRef(null);
-  
-  const [repostModalOpen, setRepostModalOpen] = useState(false);
-  const [repostText, setRepostText] = useState('');
-  const [isReposting, setIsReposting] = useState(false);
   
   const [processedContent, setProcessedContent] = useState('');
   
@@ -514,9 +364,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     message: '',
     severity: 'error'
   });
-  
-  const theme = useTheme();
-  const primaryColor = theme.palette.primary.main;
   
   const [deleteDialog, setDeleteDialog] = useState({
     open: false,
@@ -532,18 +379,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     error: null
   });
   
-  const [editDialog, setEditDialog] = useState({
-    open: false,
-    content: post?.content || '',
-    submitting: false,
-    deleteImages: false,
-    deleteVideo: false,
-    deleteMusic: false,
-    newImages: [],
-    newVideo: null,
-    previews: [],
-    error: null
-  });
+  const [mediaError, setMediaError] = useState({ type: null, url: null }); 
   
   const reportReasons = [
     "Спам",
@@ -554,10 +390,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     "Вредоносный контент",
     "Другое"
   ];
-  
-  const [mediaError, setMediaError] = useState({ type: null, url: null }); 
-  
-  const [isPinned, setIsPinned] = useState(isPinnedPost);
   
   useEffect(() => {
     if (post) {
@@ -1068,7 +900,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       return;
     }
     
-    setRepostText('');
+    setRepostContent('');
     setRepostModalOpen(true);
   };
   
@@ -1084,7 +916,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   
   const renderRepostInputWithMentions = () => {
-    if (!repostText) return null;
+    if (!repostContent) return null;
     
     const parts = [];
     let lastIndex = 0;
@@ -1092,9 +924,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     USERNAME_MENTION_REGEX.lastIndex = 0;
     
     let match;
-    while ((match = USERNAME_MENTION_REGEX.exec(repostText)) !== null) {
+    while ((match = USERNAME_MENTION_REGEX.exec(repostContent)) !== null) {
       if (match.index > lastIndex) {
-        parts.push(<span key={`text-${lastIndex}`}>{repostText.substring(lastIndex, match.index)}</span>);
+        parts.push(<span key={`text-${lastIndex}`}>{repostContent.substring(lastIndex, match.index)}</span>);
       }
       
       parts.push(
@@ -1115,8 +947,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       lastIndex = match.index + match[0].length;
     }
     
-    if (lastIndex < repostText.length) {
-      parts.push(<span key={`text-end`}>{repostText.substring(lastIndex)}</span>);
+    if (lastIndex < repostContent.length) {
+      parts.push(<span key={`text-end`}>{repostContent.substring(lastIndex)}</span>);
     }
     
     return (
@@ -1143,13 +975,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   const handleCreateRepost = async () => {
     
-    if (isReposting) return;
+    if (repostLoading) return;
     
     try {
-      setIsReposting(true);
+      setRepostLoading(true);
       
       const response = await axios.post(`/api/posts/${post.id}/repost`, {
-        text: repostText
+        text: repostContent
       });
       
       
@@ -1184,7 +1016,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       );
       setSnackbarOpen(true);
     } finally {
-      setIsReposting(false);
+      setRepostLoading(false);
     }}
 
   
@@ -1195,7 +1027,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     
     
     
-    openPostDetail(post.id, e);
+    setPostDetail(post.id, e);
   };
   
   
@@ -1262,7 +1094,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     console.log("Opening post comments from context menu, ID:", post.id);
     
     
-    openPostDetail(post.id);
+    setPostDetail(post.id);
   };
 
   
@@ -1394,23 +1226,20 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   const handleReportSubmit = async () => {
     if (!reportDialog.reason) {
-      setReportDialog({...reportDialog, error: "Пожалуйста, выберите причину жалобы"});
+      setReportDialog({...reportDialog, error: t('post.report_dialog.select_reason')});
       return;
     }
     
     setReportDialog({...reportDialog, submitting: true, error: null});
     
     try {
-      
-      
-      const reportMessage = `🚨 *ЖАЛОБА НА ПОСТ*\n\n` +
-        `📝 *ID поста*: ${post.id}\n` +
-        `👤 *Автор*: ${post.user?.name} (@${post.user?.username})\n` +
-        `🚩 *Причина*: ${reportDialog.reason}\n` +
-        `👮 *Отправитель*: ${currentUser?.name} (@${currentUser?.username})\n` +
-        `⏰ *Время*: ${new Date().toLocaleString()}` +
-        (post.content ? `\n\n📄 *Текст поста*:\n${post.content?.substring(0, 300)}${post.content?.length > 300 ? '...' : ''}` : `\n\n📄 *Пост содержит медиа-контент без текста*`);
-      
+      const reportMessage = `🚨 *${t('post.report_dialog.title')}*\n\n` +
+        `📝 *${t('post.report_dialog.post_id')}*: ${post.id}\n` +
+        `👤 *${t('post.report_dialog.author')}*: ${post.user?.name} (@${post.user?.username})\n` +
+        `🚩 *${t('post.report_dialog.reason')}*: ${reportDialog.reason}\n` +
+        `👮 *${t('post.report_dialog.reporter')}*: ${currentUser?.name} (@${currentUser?.username})\n` +
+        `⏰ *${t('post.report_dialog.time')}*: ${new Date().toLocaleString()}` +
+        (post.content ? `\n\n📄 *${t('post.report_dialog.post_text')}*:\n${post.content?.substring(0, 300)}${post.content?.length > 300 ? '...' : ''}` : `\n\n📄 *${t('post.report_dialog.post_media')}*`);
       
       const response = await axios.post('/api/report/send-to-telegram', {
         message: reportMessage,
@@ -1427,14 +1256,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           setReportDialog({open: false, reason: '', submitting: false, submitted: false, error: null});
         }, 2000);
       } else {
-        throw new Error(response.data?.error || "Ошибка при отправке жалобы");
+        throw new Error(response.data?.error || t('post.report_dialog.error'));
       }
     } catch (error) {
       console.error("Error submitting report:", error);
       setReportDialog({
         ...reportDialog, 
         submitting: false, 
-        error: error.response?.data?.error || "Не удалось отправить жалобу. Попробуйте позже."
+        error: error.response?.data?.error || t('post.report_dialog.error')
       });
     }
   };
@@ -1469,46 +1298,40 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const getContextMenuItems = () => {
     const items = [];
     
-    
     items.push({
       id: 'share',
-      label: 'Копировать ссылку',
+      label: t('post.context_menu.copy_link'),
       icon: <ShareIcon fontSize="small" />,
       onClick: handleCopyLink 
     });
     
-    
     items.push({
       id: 'comment',
-      label: 'Комментировать',
+      label: t('post.context_menu.comment'),
       icon: <ChatBubbleOutlineIcon fontSize="small" />,
       onClick: handleOpenPostFromMenu 
     });
     
-    
     if (isCurrentUserPost) {
-      
       if (isPostEditable()) {
         items.push({
           id: 'edit',
-          label: 'Редактировать',
+          label: t('post.context_menu.edit'),
           icon: <EditIcon fontSize="small" />,
           onClick: () => handleEdit()
         });
       }
       
-      
       items.push({
         id: 'delete',
-        label: 'Удалить',
+        label: t('post.context_menu.delete'),
         icon: <DeleteIcon fontSize="small" />,
         onClick: () => handleDelete()
       });
     } else {
-      
       items.push({
         id: 'report',
-        label: 'Пожаловаться',
+        label: t('post.context_menu.report'),
         icon: <FlagIcon fontSize="small" />,
         onClick: () => handleReportClick()
       });
@@ -1676,7 +1499,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           const animationData = await response.json();
           setSpiderAnimation(animationData);
         } catch (error) {
-          console.error('Ошибка загрузки анимации:', error);
+          console.error(t('post.media_error.animation_load_error'), error);
         }
       };
       
@@ -1695,12 +1518,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           </LottieWrapper>
         )}
         <Typography variant="h6" gutterBottom>
-          {type === 'image' ? 'Не удалось загрузить изображение' : 'Не удалось загрузить видео'}
+          {type === 'image' ? t('post.media_error.image_load_error') : t('post.media_error.video_load_error')}
         </Typography>
         <Typography variant="body2">
           {type === 'image' 
-            ? 'Файл был удален или недоступен.' 
-            : 'Видео не найдено или формат не поддерживается вашим браузером.'}
+            ? t('post.media_error.image_deleted')
+            : t('post.media_error.video_format')}
         </Typography>
       </MediaErrorContainer>
     );
@@ -1718,8 +1541,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         setIsPinned(false);
         window.dispatchEvent(new CustomEvent('show-error', {
           detail: {
-            message: 'Пост откреплен из профиля',
-            shortMessage: 'Откреплено',
+            message: t('post.pin.unpinned'),
+            shortMessage: t('post.pin.unpinned_short'),
             notificationType: 'info',
             animationType: 'pill'
           }
@@ -1736,8 +1559,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         setIsPinned(true);
         window.dispatchEvent(new CustomEvent('show-error', {
           detail: {
-            message: 'Пост закреплен в профиле',
-            shortMessage: 'Закреплено',
+            message: t('post.pin.pinned'),
+            shortMessage: t('post.pin.pinned_short'),
             notificationType: 'success',
             animationType: 'pill'
           }
@@ -1747,11 +1570,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         }));
       }
     } catch (error) {
-      console.error('Ошибка при закреплении/откреплении поста:', error);
+      console.error(t('post.pin.pin_error'), error);
       window.dispatchEvent(new CustomEvent('show-error', {
         detail: {
-          message: 'Не удалось изменить состояние закрепления поста',
-          shortMessage: 'Ошибка',
+          message: t('post.pin.error'),
+          shortMessage: t('post.pin.error_short'),
           notificationType: 'error'
         }
       }));
@@ -1851,7 +1674,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   
                   {isPinned && (
                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
-                      <Tooltip title="Закрепленный пост">
+                      <Tooltip title={t('post.pin.tooltip')}>
                         <PushPinIcon sx={{ 
                           fontSize: 16, 
                           color: statusColor || 'primary.main'
@@ -1862,7 +1685,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   
                   {(post.user?.account_type === 'channel' || post.user?.is_channel === true) && (
                     <ChannelTag 
-                      label="Канал"
+                      label={t('post.channel.label')}
                       size="small"
                       sx={{ ml: 1, height: 20 }}
                     />
@@ -2309,6 +2132,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           
           <ActionsContainer>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Tooltip title={liked ? t('post.unlike') : t('post.like')}>
               <ActionButton onClick={handleLike} active={liked}>
                 <Box className="icon">
                   {liked ? (
@@ -2318,10 +2142,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   )}
                 </Box>
                 {likesCount > 0 && (
-                  <span className="count">{likesCount}</span>
+                    <span className="count">{t('post.likes_count', { count: likesCount })}</span>
                 )}
               </ActionButton>
+              </Tooltip>
 
+              <Tooltip title={t('post.comment')}>
               <ActionButton onClick={handleCommentClick}>
                 <Box className="icon">
                   {post?.total_comments_count > 0 || post?.comments_count > 0 ? (
@@ -2331,38 +2157,47 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   )}
                 </Box>
                 {(post?.total_comments_count > 0 || post?.comments_count > 0) && (
-                  <span className="count">
-                    {post?.total_comments_count || post?.comments_count}
+                    <span className="count">
+                      {t('post.comments_count', { count: post?.total_comments_count || post?.comments_count })}
                   </span>
                 )}
               </ActionButton>
+              </Tooltip>
 
+              <Tooltip title={reposted ? t('post.reposted') : t('post.repost')}>
               <ActionButton onClick={handleRepostClick} active={reposted}>
                 <Box className="icon">
                   <RepeatIcon />
                 </Box>
               </ActionButton>
+              </Tooltip>
 
+              <Tooltip title={t('post.share')}>
               <ActionButton onClick={handleShare}>
                 <Box className="icon">
                   <ShareRoundedIcon />
                 </Box>
               </ActionButton>
+              </Tooltip>
             </Box>
 
             <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Tooltip title={t('post.views')}>
               <ActionButton>
                 <Box className="icon">
                   <VisibilityIcon />
                 </Box>
-                <span className="count">{viewsCount}</span>
+                  <span className="count">{t('post.views_count', { count: viewsCount })}</span>
               </ActionButton>
+              </Tooltip>
 
+              <Tooltip title={t('post.menu_title')}>
               <ActionButton onClick={handleMenuOpen} data-no-navigate>
                 <Box className="icon">
                   <Icon icon="solar:menu-dots-bold" />
                 </Box>
               </ActionButton>
+              </Tooltip>
             </Box>
           </ActionsContainer>
         </Box>
@@ -2375,6 +2210,52 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         message={snackbarMessage}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
+
+      <BlurredMenu
+        anchorEl={menuAnchorEl}
+        open={menuOpen}
+        onClose={handleMenuClose}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {isCurrentUserPost && (
+          <>
+            <MenuItem onClick={handleEdit}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('post.menu_actions.edit')}</ListItemText>
+            </MenuItem>
+            <MenuItem onClick={handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>{t('post.menu_actions.delete')}</ListItemText>
+            </MenuItem>
+          </>
+        )}
+        {isCurrentUserPost && (
+          <MenuItem onClick={handlePinPost}>
+            <ListItemIcon>
+              {isPinned ? <PushPinIcon fontSize="small" /> : <PushPinOutlinedIcon fontSize="small" />}
+            </ListItemIcon>
+            <ListItemText>{isPinned ? t('post.menu_actions.unpin') : t('post.menu_actions.pin')}</ListItemText>
+          </MenuItem>
+        )}
+        <MenuItem onClick={handleCopyLink}>
+          <ListItemIcon>
+            <LinkIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t('post.menu_actions.copy_link')}</ListItemText>
+        </MenuItem>
+        {!isCurrentUserPost && (
+          <MenuItem onClick={handleReportClick}>
+            <ListItemIcon>
+              <FlagIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>{t('post.menu_actions.report')}</ListItemText>
+          </MenuItem>
+        )}
+      </BlurredMenu>
       
       
       <Dialog
@@ -2442,7 +2323,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             }}>
               <RepeatIcon sx={{ mr: 1, fontSize: '18px', color: '#7B68EE', mt: '2px' }} />
               <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
-                Репост будет ссылаться на оригинальный пост, а не на этот репост.
+                {t('post.repost_dialog.original_post_notice')}
               </Typography>
             </Box>
           )}
@@ -2452,11 +2333,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               multiline
               rows={3}
               fullWidth
-              placeholder="Добавьте комментарий к репосту (необязательно)"
-              value={repostText}
-              onChange={(e) => setRepostText(e.target.value)}
+              placeholder={t('post.repost_dialog.comment_placeholder')}
+              value={repostContent}
+              onChange={(e) => setRepostContent(e.target.value)}
               variant="outlined"
-              helperText="Вы можете упомянуть пользователей с помощью @username"
+              helperText={t('post.repost_dialog.mention_helper')}
               sx={{
                 mb: 2.5,
                 '& .MuiOutlinedInput-root': {
@@ -2602,7 +2483,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           <Button 
             onClick={handleCreateRepost} 
             variant="contained" 
-            disabled={isReposting}
+            disabled={repostLoading}
             sx={{ 
               borderRadius: '10px',
               bgcolor: '#7B68EE',
@@ -2617,7 +2498,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 color: 'rgba(255, 255, 255, 0.5)'
               }
             }}
-            endIcon={isReposting ? <CircularProgress size={16} color="inherit" /> : null}
+            endIcon={repostLoading ? <CircularProgress size={16} color="inherit" /> : null}
           >
             Репостнуть
           </Button>
@@ -3041,7 +2922,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {(post.images?.length > 0 || post.image) && !editDialog.deleteImages && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
-                Текущие изображения
+                {t('post.edit_dialog.current_images')}
               </Typography>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {post.images ? post.images.map((img, idx) => (
@@ -3049,7 +2930,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     key={`current-img-${idx}`}
                     component="img"
                     src={img}
-                    alt={`Изображение ${idx + 1}`}
+                    alt={t('post.edit_dialog.image_alt', { number: idx + 1 })}
                     sx={{ 
                       width: 80, 
                       height: 80, 
@@ -3061,7 +2942,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   <Box 
                     component="img"
                     src={post.image}
-                    alt="Изображение поста"
+                    alt={t('post.edit_dialog.post_image_alt')}
                     sx={{ 
                       width: 80, 
                       height: 80, 
@@ -3085,7 +2966,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     }}
                   />
                 }
-                label="Удалить существующие изображения"
+                label={t('post.edit_dialog.delete_current_images')}
                 sx={{ 
                   mt: 1,
                   color: 'rgba(255, 255, 255, 0.8)',
@@ -3101,7 +2982,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {post.video && !editDialog.deleteVideo && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
-                Текущее видео
+                {t('post.edit_dialog.current_video')}
               </Typography>
               <Box 
                 component="video"
@@ -3127,7 +3008,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     }}
                   />
                 }
-                label="Удалить существующее видео"
+                label={t('post.edit_dialog.delete_current_video')}
                 sx={{ 
                   mt: 1, 
                   display: 'block',
@@ -3144,7 +3025,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {post.music && post.music.length > 0 && !editDialog.deleteMusic && (
             <Box sx={{ mt: 2, mb: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
-                Текущие аудиотреки
+                {t('post.edit_dialog.current_audio')}
               </Typography>
               <List dense>
                 {post.music.map((track, idx) => (
@@ -3175,7 +3056,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     }}
                   />
                 }
-                label="Удалить музыку"
+                label={t('post.edit_dialog.delete_music')}
                 sx={{ 
                   mt: 0.5,
                   color: 'rgba(255, 255, 255, 0.8)',
@@ -3208,7 +3089,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 }
               }}
             >
-              Добавить изображения
+              {t('post.edit_dialog.add_images')}
               <input
                 type="file"
                 multiple
@@ -3236,7 +3117,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 }
               }}
             >
-              {post.video && !editDialog.deleteVideo ? 'Удалите текущее видео' : 'Добавить видео'}
+              {post.video && !editDialog.deleteVideo ? t('post.edit_dialog.delete_current_video') : t('post.edit_dialog.add_video')}
               <input
                 type="file"
                 accept="video/*"
@@ -3287,7 +3168,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               border: '1px solid rgba(255, 255, 255, 0.1)'
             }}>
               <Typography variant="caption" color="rgba(255, 255, 255, 0.7)">
-                Новое видео выбрано: {editDialog.newVideo.name}
+                {t('post.edit_dialog.new_video_selected', { name: editDialog.newVideo.name })}
               </Typography>
             </Box>
           )}
@@ -3308,7 +3189,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               }
             }}
           >
-            Отмена
+            {t('post.edit_dialog.cancel')}
           </Button>
           <Button 
             onClick={handleSubmitEdit} 
@@ -3324,7 +3205,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               }
             }}
           >
-            {editDialog.submitting ? 'Сохранение...' : 'Сохранить изменения'}
+            {editDialog.submitting ? t('post.edit_dialog.saving') : t('post.edit_dialog.save')}
           </Button>
         </DialogActions>
       </Dialog>

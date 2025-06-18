@@ -20,6 +20,8 @@ import JoinGroupChat from './pages/Messenger/JoinGroupChat';
 import { MessengerProvider } from './contexts/MessengerContext';
 import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
+import { LanguageProvider } from './context/LanguageContext';
+import { DefaultPropsProvider } from './context/DefaultPropsContext';
 
 export const SessionContext = React.createContext({
   sessionActive: true,
@@ -1396,80 +1398,84 @@ function App() {
       <AuthProvider>
         <ThemeSettingsContext.Provider value={themeContextValue}>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {themeSettings.mode === 'contrast' && (
-              <style dangerouslySetInnerHTML={{
-                __html: `
-                  .MuiListItemText-primary, 
-                  .MuiListItemText-secondary,
-                  .MuiTypography-root,
-                  .MuiInputBase-input,
-                  .MuiInputLabel-root,
-                  .MuiFormHelperText-root,
-                  .MuiMenuItem-root,
-                  .MuiButton-root,
-                  .MuiLink-root:not(a),
-                  .MuiChip-label,
-                  .MuiTab-root,
-                  .MuiTableCell-root,
-                  [class*="css-"],
-                  /* Additional text selectors */
-                  span:not(.MuiIcon-root):not(.material-icons),
-                  p,
-                  h1, h2, h3, h4, h5, h6,
-                  label,
-                  div:not(.MuiAvatar-root):not(.MuiSwitch-thumb):not(.MuiSwitch-track):not([role="progressbar"]) {
-                    color: #FFFFFF !important;
-                  }
-                  
-                  .MuiChip-root.status-online *,
-                  .MuiChip-root[color="success"] *,
-                  .MuiChip-root[color="error"] *,
-                  .MuiChip-root[color="warning"] *,
-                  .MuiChip-root[color="info"] *,
-                  a.MuiLink-root,
-                  .MuiButton-containedPrimary,
-                  .Mui-selected,
-                  .MuiSwitch-thumb,
-                  .MuiSwitch-track,
-                  .MuiIcon-root,
-                  .material-icons,
-                  svg,
-                  .MuiAvatar-root *,
-                  img,
-                  [role="progressbar"] * {
-                    color: inherit !important;
-                  }
-                `
-              }}/>
-            )}
-            <SessionProvider>
-              <MusicProvider>
-                <PostDetailProvider>
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      minHeight: '100vh',
-                      bgcolor: 'background.default'
-                    }}>
-                      <Suspense fallback={<LoadingIndicator />}>
-                        <DefaultSEO />
-                        <Routes>
-                          <Route path="/rules" element={<PublicPages />} />
-                          <Route path="/privacy-policy" element={<PublicPages />} />
-                          <Route path="/terms-of-service" element={<PublicPages />} />
-                          <Route path="/about" element={<PublicPages />} />
-                          <Route path="/cookies" element={<PublicPages />} />
-                          <Route path="*" element={<AppRoutes />} />
-                        </Routes>
-                        <MusicPlayerCore />
-                      </Suspense>
-                    </Box>
-                  </ErrorBoundary>
-                </PostDetailProvider>
-              </MusicProvider>
-            </SessionProvider>
+            <DefaultPropsProvider>
+              <CssBaseline />
+              {themeSettings.mode === 'contrast' && (
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                    .MuiListItemText-primary, 
+                    .MuiListItemText-secondary,
+                    .MuiTypography-root,
+                    .MuiInputBase-input,
+                    .MuiInputLabel-root,
+                    .MuiFormHelperText-root,
+                    .MuiMenuItem-root,
+                    .MuiButton-root,
+                    .MuiLink-root:not(a),
+                    .MuiChip-label,
+                    .MuiTab-root,
+                    .MuiTableCell-root,
+                    [class*="css-"],
+                    /* Additional text selectors */
+                    span:not(.MuiIcon-root):not(.material-icons),
+                    p,
+                    h1, h2, h3, h4, h5, h6,
+                    label,
+                    div:not(.MuiAvatar-root):not(.MuiSwitch-thumb):not(.MuiSwitch-track):not([role="progressbar"]) {
+                      color: #FFFFFF !important;
+                    }
+                    
+                    .MuiChip-root.status-online *,
+                    .MuiChip-root[color="success"] *,
+                    .MuiChip-root[color="error"] *,
+                    .MuiChip-root[color="warning"] *,
+                    .MuiChip-root[color="info"] *,
+                    a.MuiLink-root,
+                    .MuiButton-containedPrimary,
+                    .Mui-selected,
+                    .MuiSwitch-thumb,
+                    .MuiSwitch-track,
+                    .MuiIcon-root,
+                    .material-icons,
+                    svg,
+                    .MuiAvatar-root *,
+                    img,
+                    [role="progressbar"] * {
+                      color: inherit !important;
+                    }
+                  `
+                }}/>
+              )}
+              <SessionProvider>
+                <LanguageProvider>
+                  <MusicProvider>
+                    <PostDetailProvider>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          minHeight: '100vh',
+                          bgcolor: 'background.default'
+                        }}>
+                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                          <Suspense fallback={<LoadingIndicator />}>
+                            <DefaultSEO />
+                            <Routes>
+                              <Route path="/rules" element={<PublicPages />} />
+                              <Route path="/privacy-policy" element={<PublicPages />} />
+                              <Route path="/terms-of-service" element={<PublicPages />} />
+                              <Route path="/about" element={<PublicPages />} />
+                              <Route path="/cookies" element={<PublicPages />} />
+                              <Route path="*" element={<AppRoutes />} />
+                            </Routes>
+                            <MusicPlayerCore />
+                          </Suspense>
+                      </ErrorBoundary>
+                      </Box>
+                    </PostDetailProvider>
+                  </MusicProvider>
+                </LanguageProvider>
+              </SessionProvider>
+            </DefaultPropsProvider>
             {/* <CookieBanner /> */}
           </ThemeProvider>
         </ThemeSettingsContext.Provider>

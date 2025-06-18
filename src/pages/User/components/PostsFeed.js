@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef, useCallback, useContext } from 'rea
 import { Box, CircularProgress, Typography } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../../../context/AuthContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import FeedIcon from '@mui/icons-material/Feed';
 
 import Post from '../../../components/Post/Post';
 import PostSkeleton from '../../../components/Post/PostSkeleton';
 
 const PostsFeed = ({ userId, statusColor }) => {
+  const { t } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [pinnedPost, setPinnedPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -97,9 +99,9 @@ const PostsFeed = ({ userId, statusColor }) => {
       console.error('Ошибка при загрузке постов:', error);
       if (isMounted.current) {
         if (error.response && error.response.status === 401) {
-          setError('Для просмотра постов необходима авторизация');
+          setError(t('profile.feed.posts.auth_required'));
         } else {
-          setError('Произошла ошибка при загрузке постов');
+          setError(t('profile.feed.posts.loading_error'));
         }
       }
     } finally {
@@ -109,7 +111,7 @@ const PostsFeed = ({ userId, statusColor }) => {
         loadingRef.current = false;
       }
     }
-  }, [userId, isProfilePage, fetchPinnedPost]);
+  }, [userId, isProfilePage, fetchPinnedPost, t]);
 
   // Add effect to handle pin state changes
   useEffect(() => {
@@ -242,13 +244,13 @@ const PostsFeed = ({ userId, statusColor }) => {
       }}>
         <FeedIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
         <Typography variant="h6" color="text.primary" gutterBottom>
-          {error === 'Для просмотра постов необходима авторизация' 
-            ? 'Для просмотра постов необходима авторизация'
-            : 'Произошла ошибка'}
+          {error === t('profile.feed.posts.auth_required')
+            ? t('profile.feed.posts.auth_required')
+            : t('profile.feed.posts.error_title')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400 }}>
-          {error === 'Для просмотра постов необходима авторизация'
-            ? 'Войдите в аккаунт, чтобы просматривать посты пользователей'
+          {error === t('profile.feed.posts.auth_required')
+            ? t('profile.feed.posts.auth_required_description')
             : error}
         </Typography>
       </Box>
@@ -270,12 +272,12 @@ const PostsFeed = ({ userId, statusColor }) => {
       }}>
         <FeedIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
         <Typography variant="h6" color="text.primary" gutterBottom>
-          {isAuthenticated ? 'Здесь пока пусто' : 'Для просмотра постов необходима авторизация'}
+          {isAuthenticated ? t('profile.feed.posts.empty') : t('profile.feed.posts.auth_required')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 400 }}>
           {isAuthenticated 
-            ? 'Пользователь еще не создал ни одного поста'
-            : 'Войдите в аккаунт, чтобы просматривать посты пользователей'}
+            ? t('profile.feed.posts.empty_description')
+            : t('profile.feed.posts.auth_required_description')}
         </Typography>
       </Box>
     );
@@ -331,7 +333,7 @@ const PostsFeed = ({ userId, statusColor }) => {
       {!hasMore && posts.length > 5 && (
         <Box sx={{ textAlign: 'center', py: 2, mt: 2 }}>
           <Typography variant="body2" color="text.secondary">
-            Все посты загружены
+            {t('profile.feed.posts.all_loaded')}
           </Typography>
         </Box>
       )}

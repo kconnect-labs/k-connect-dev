@@ -55,9 +55,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import TranslateIcon from '@mui/icons-material/Translate';
 import { AuthContext } from '../../context/AuthContext';
 import { useMusic } from '../../context/MusicContext';
 import { ThemeSettingsContext } from '../../App';
+import { useLanguage } from '../../context/LanguageContext';
 import { ReactComponent as LogoSVG } from '../../assets/Logo.svg';
 import { ReactComponent as BallsSVG } from '../../assets/balls.svg';
 import NotificationList from '../Notifications/NotificationList';
@@ -281,6 +283,7 @@ const SearchResultTab = styled(Tab)(({ theme }) => ({
 const Header = ({ toggleSidebar }) => {
   const { user, logout, setUser } = useContext(AuthContext);
   const { themeSettings } = useContext(ThemeSettingsContext);
+  const { t, language, changeLanguage } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -338,6 +341,9 @@ const Header = ({ toggleSidebar }) => {
   const [showNewNotification, setShowNewNotification] = useState(false);
   const [newNotification, setNewNotification] = useState(null);
   const lastNotificationId = useRef(null);
+
+  const [languageMenuAnchorEl, setLanguageMenuAnchorEl] = useState(null);
+  const isLanguageMenuOpen = Boolean(languageMenuAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -553,6 +559,20 @@ const Header = ({ toggleSidebar }) => {
     };
   }, [searchQuery]);
 
+  const handleLanguageMenuOpen = (event) => {
+    setLanguageMenuAnchorEl(event.currentTarget);
+    handleMenuClose(); // Close the profile menu
+  };
+
+  const handleLanguageMenuClose = () => {
+    setLanguageMenuAnchorEl(null);
+  };
+
+  const handleLanguageChange = (newLang) => {
+    changeLanguage(newLang);
+    handleLanguageMenuClose();
+  };
+
   const profileMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -638,7 +658,7 @@ const Header = ({ toggleSidebar }) => {
             {user.account_type === 'channel' && (
               <Chip 
                 size="small"
-                label="Канал"
+                label={t('header.profile_menu.channel_label')}
                 color="primary"
                 sx={{ mt: 1, fontWeight: 500, px: 1 }}
               />
@@ -664,7 +684,7 @@ const Header = ({ toggleSidebar }) => {
                     }
                   }}
                 >
-                  Кошелек
+                  {t('header.profile_menu.wallet')}
                 </Button>
                 <Button
                   component={Link}
@@ -681,7 +701,7 @@ const Header = ({ toggleSidebar }) => {
                     }
                   }}
                 >
-                  Магазин
+                  {t('header.profile_menu.shop')}
                 </Button>
               </Box>
               <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
@@ -694,14 +714,14 @@ const Header = ({ toggleSidebar }) => {
         <ListItemIcon>
           <AccountCircleIcon fontSize="small" color="primary" />
         </ListItemIcon>
-        <ListItemText>Мой профиль</ListItemText>
+        <ListItemText>{t('header.profile_menu.my_profile')}</ListItemText>
       </MenuItem>
 
       <MenuItem onClick={() => handleNavigate('/settings')}>
         <ListItemIcon>
           <SettingsIcon fontSize="small" color="primary" />
         </ListItemIcon>
-        <ListItemText>Настройки</ListItemText>
+        <ListItemText>{t('header.profile_menu.settings')}</ListItemText>
       </MenuItem>
 
       {isMobile && (
@@ -710,28 +730,28 @@ const Header = ({ toggleSidebar }) => {
             <ListItemIcon>
               <Icon icon="solar:magnifer-bold" width="20" height="20" />
             </ListItemIcon>
-            <ListItemText>Поиск</ListItemText>
+            <ListItemText>{t('header.profile_menu.search')}</ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/subscriptions')}>
             <ListItemIcon>
               <Icon icon="solar:users-group-rounded-bold" width="20" height="20" />
             </ListItemIcon>
-            <ListItemText>Подписки</ListItemText>
+            <ListItemText>{t('header.profile_menu.subscriptions')}</ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/channels')}>
             <ListItemIcon>
               <Icon icon="solar:play-stream-bold" width="20" height="20" />
             </ListItemIcon>
-            <ListItemText>Каналы</ListItemText>
+            <ListItemText>{t('header.profile_menu.channels')}</ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/leaderboard')}>
             <ListItemIcon>
               <Icon icon="solar:chart-bold" width="20" height="20" />
             </ListItemIcon>
-            <ListItemText>Рейтинг</ListItemText>
+            <ListItemText>{t('header.profile_menu.rating')}</ListItemText>
           </MenuItem>
         </>
       )}
@@ -743,7 +763,7 @@ const Header = ({ toggleSidebar }) => {
           <ListItemIcon>
             <AddIcon fontSize="small" color="primary" />
           </ListItemIcon>
-          <ListItemText>Создать канал</ListItemText>
+          <ListItemText>{t('header.profile_menu.create_channel')}</ListItemText>
         </MenuItem>
       )}
 
@@ -760,7 +780,7 @@ const Header = ({ toggleSidebar }) => {
               fontWeight: 500
             }}
           >
-            Основной аккаунт
+            {t('header.profile_menu.main_account')}
           </Typography>
           <MenuItem 
             key={accounts.main_account.id}
@@ -790,7 +810,7 @@ const Header = ({ toggleSidebar }) => {
               fontWeight: 500
             }}
           >
-            Мои каналы
+            {t('header.profile_menu.my_channels')}
           </Typography>
           {accounts.channels.map(channel => (
             <MenuItem 
@@ -811,6 +831,13 @@ const Header = ({ toggleSidebar }) => {
 
       <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
 
+      <MenuItem onClick={handleLanguageMenuOpen}>
+        <ListItemIcon>
+          <TranslateIcon fontSize="small" color="primary" />
+        </ListItemIcon>
+        <ListItemText>{t('header.profile_menu.language')}</ListItemText>
+      </MenuItem>
+
       <MenuItem 
         onClick={handleLogout}
         sx={{ 
@@ -823,7 +850,122 @@ const Header = ({ toggleSidebar }) => {
         <ListItemIcon>
           <ExitToAppIcon fontSize="small" style={{ color: 'inherit' }} />
         </ListItemIcon>
-        <ListItemText>Выйти</ListItemText>
+        <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
+      </MenuItem>
+    </Menu>
+  );
+
+  const languageMenu = (
+    <Menu
+      anchorEl={languageMenuAnchorEl}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isLanguageMenuOpen}
+      onClose={handleLanguageMenuClose}
+      PaperProps={{ 
+        elevation: 3,
+        sx: { 
+          minWidth: 200,
+          mt: 0.5,
+          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+          borderRadius: '14px',
+          overflow: 'visible',
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backdropFilter: 'blur(10px)',
+          border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          [theme.breakpoints.down('sm')]: {
+            minWidth: '100vw',
+            maxWidth: '100vw',
+            width: '100vw',
+            margin: 0,
+            borderRadius: 0,
+            position: 'fixed',
+            top: '0 !important',
+            left: '0 !important',
+            right: '0 !important',
+            bottom: '0 !important',
+            height: '100vh',
+            maxHeight: '100vh',
+            border: 'none',
+            boxShadow: 'none',
+          },
+          '& .MuiMenuItem-root': {
+            padding: '10px 16px',
+            borderRadius: '8px',
+            margin: '2px 8px',
+            transition: 'all 0.2s',
+            '&:hover': {
+              backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            }
+          },
+        }
+      }}
+    >
+      <Box sx={{ px: 3, py: 2, textAlign: 'center' }}>
+        {isMobile && (
+          <IconButton
+            onClick={handleLanguageMenuClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: 'text.secondary',
+              '&:hover': {
+                backgroundColor: alpha(theme.palette.primary.main, 0.08),
+              }
+            }}
+          >
+            <ClearIcon />
+          </IconButton>
+        )}
+        <TranslateIcon sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
+        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          {t('header.profile_menu.select_language')}
+        </Typography>
+      </Box>
+      
+      <Divider sx={{ opacity: 0.1, mx: 2, mb: 1 }} />
+      
+      <MenuItem 
+        onClick={() => handleLanguageChange('RU')}
+        selected={language === 'RU'}
+      >
+        <ListItemIcon>
+          <img 
+            src="/static/flags/ru.svg" 
+            alt="Russian" 
+            style={{ width: 24, height: 24, borderRadius: '50%' }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzIDIiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoM3YyaC0zeiIvPjxwYXRoIGZpbGw9IiMwMDM5YTYiIGQ9Ik0wIDFoM3YxaC0zeiIvPjxwYXRoIGZpbGw9IiNkNTJiMWUiIGQ9Ik0wIDBoM3YxaC0zeiIvPjwvc3ZnPg==';
+            }}
+          />
+        </ListItemIcon>
+        <ListItemText primary="Русский" />
+        {language === 'RU' && (
+          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+        )}
+      </MenuItem>
+      
+      <MenuItem 
+        onClick={() => handleLanguageChange('EN')}
+        selected={language === 'EN'}
+      >
+        <ListItemIcon>
+          <img 
+            src="/static/flags/en.svg" 
+            alt="English" 
+            style={{ width: 24, height: 24, borderRadius: '50%' }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MCAzMCI+PHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjMDAyNDdkIi8+PGcgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjYiPjxwYXRoIGQ9Ik0wLDBMNjAsMzBNNjAsMEwwLDMwIi8+PC9nPjxwYXRoIHN0cm9rZT0iI2NmMTQyYiIgc3Ryb2tlLXdpZHRoPSI0IiBkPSJNMCwwTDYwLDMwTTYwLDBMMCwzMCIvPjxwYXRoIGQ9Ik0zMCwwdjMwTTAsMTVoNjAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjxwYXRoIGQ9Ik0zMCwwdjMwTTAsMTVoNjAiIHN0cm9rZT0iI2NmMTQyYiIgc3Ryb2tlLXdpZHRoPSI2Ii8+PC9zdmc+';
+            }}
+          />
+        </ListItemIcon>
+        <ListItemText primary="English" />
+        {language === 'EN' && (
+          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+        )}
       </MenuItem>
     </Menu>
   );
@@ -854,11 +996,15 @@ const Header = ({ toggleSidebar }) => {
             />
             {!isMobile && (
               <LogoText>
-                <Box component="span" sx={{ color: 'primary.main' }}>К</Box>
+                <Box component="span" sx={{ color: 'primary.main' }}>
+                  {t('header.logo.text').charAt(0)}
+                </Box>
                 <Box component="span" sx={{ 
                   color: theme.palette.mode === 'dark' ? 'white' : 'black', 
                   opacity: 0.9 
-                }}>-КОННЕКТ</Box>
+                }}>
+                  {t('header.logo.text').slice(1)}
+                </Box>
               </LogoText>
             )}
           </Link>
@@ -870,7 +1016,7 @@ const Header = ({ toggleSidebar }) => {
               <ClickAwayListener onClickAway={handleClickAway}>
                 <Box sx={{ width: '100%', position: 'relative' }}>
                   <StyledSearchInput
-                    placeholder="Поиск..."
+                    placeholder={t('header.search.placeholder')}
                     value={searchQuery}
                     onChange={handleSearchChange}
                     onFocus={handleSearchFocus}
@@ -905,8 +1051,8 @@ const Header = ({ toggleSidebar }) => {
                         onChange={handleSearchTabChange}
                         variant="fullWidth"
                       >
-                        <SearchResultTab label="Все" />
-                        <SearchResultTab label="Каналы" />
+                        <SearchResultTab label={t('header.search.tabs.all')} />
+                        <SearchResultTab label={t('header.search.tabs.channels')} />
                       </SearchResultTabs>
                       
                       <Box sx={{ 
@@ -921,7 +1067,6 @@ const Header = ({ toggleSidebar }) => {
                             <CircularProgress size={24} />
                           </Box>
                         ) : searchTab === 0 ? (
-                          
                           <>
                             {searchResults.users.length > 0 ? (
                               <List sx={{ p: 0 }}>
@@ -955,13 +1100,12 @@ const Header = ({ toggleSidebar }) => {
                             ) : (
                               <Box sx={{ p: 2, textAlign: 'center' }}>
                                 <Typography variant="body2" color="text.secondary">
-                                  Пользователи не найдены
+                                  {t('header.search.no_results.users')}
                                 </Typography>
                               </Box>
                             )}
                           </>
                         ) : (
-                          
                           <>
                             {searchResults.channels.length > 0 ? (
                               <List sx={{ p: 0 }}>
@@ -999,7 +1143,7 @@ const Header = ({ toggleSidebar }) => {
                             ) : (
                               <Box sx={{ p: 2, textAlign: 'center' }}>
                                 <Typography variant="body2" color="text.secondary">
-                                  Каналы не найдены
+                                  {t('header.search.no_results.channels')}
                                 </Typography>
                               </Box>
                             )}
@@ -1018,7 +1162,7 @@ const Header = ({ toggleSidebar }) => {
                                 '&:hover': { backgroundColor: alpha('#D0BCFF', 0.1) }
                               }}
                             >
-                              Показать все
+                              {t('header.search.view_all')}
                             </Button>
                           </Box>
                         ) : null}
@@ -1115,14 +1259,14 @@ const Header = ({ toggleSidebar }) => {
 
         <ActionsSection>
           {user && !isMobile && (
-            <Tooltip title="Кошелек">
+            <Tooltip title={t('header.tooltips.wallet')}>
               <Chip
                 icon={
                   <PointsIcon>
                     <BallsSVG />
                   </PointsIcon>
                 }
-                label="Кошелек"
+                label={t('header.profile_menu.wallet')}
                 onClick={() => navigate('/balance')}
                 clickable
                 sx={{
@@ -1202,7 +1346,7 @@ const Header = ({ toggleSidebar }) => {
         <DynamicIslandNotification
           open={true}
           message={newNotification.message}
-          shortMessage={newNotification.sender_user?.name || 'Новое уведомление'}
+          shortMessage={newNotification.sender_user?.name || t('header.notifications.new')}
           notificationType="notification"
           animationType="pill"
           autoHideDuration={5000}
@@ -1212,6 +1356,7 @@ const Header = ({ toggleSidebar }) => {
       )}
       
       {profileMenu}
+      {languageMenu}
     </StyledAppBar>
   );
 };

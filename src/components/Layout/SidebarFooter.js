@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
 import { Box, Typography, styled, useTheme } from '@mui/material';
+import { useLanguage } from '../../context/LanguageContext';
 
 
 const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
@@ -40,6 +41,7 @@ const areEqual = (prevProps, nextProps) => {
 
 const SidebarFooter = ({ primaryColor }) => {
   const theme = useTheme();
+  const { t } = useLanguage();
   
   return (
     <FooterContainer themecolor={primaryColor}>
@@ -57,13 +59,13 @@ const SidebarFooter = ({ primaryColor }) => {
           }
         }}
       >
-        К-Коннект v2.8
+        {t('sidebar.footer.version')}
       </Typography>
       <FooterTypography variant="caption" display="block">
-        Правообладателям
+        {t('sidebar.footer.copyright')}
       </FooterTypography>
       <FooterTypography variant="caption" display="block" sx={{ pt: 0.2 }}>
-        verif@k-connect.ru
+        {t('sidebar.footer.email')}
       </FooterTypography>
     </FooterContainer>
   );

@@ -7,6 +7,7 @@ import {
   styled
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 
 const UserProfileWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -89,13 +90,14 @@ const areEqual = (prevProps, nextProps) => {
 };
 
 const UserProfileBlock = ({ user }) => {
+  const { t } = useLanguage();
   if (!user) return null;
   
   return (
     <UserProfileWrapper>
       <StyledAvatar 
         src={user?.photo ? (user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`) : undefined}
-        alt={user?.name || 'User'}
+        alt={user?.name || t('sidebar.profile.default_name')}
         onError={(e) => {
           console.error(`Failed to load avatar for ${user?.username}`);
           e.target.onerror = null; 
@@ -104,12 +106,11 @@ const UserProfileBlock = ({ user }) => {
       />
       <UserInfoContainer>
         <UserName variant="h6">
-          {user?.name || 'Пользователь'}
+          {user?.name || t('sidebar.profile.default_name')}
         </UserName>
         <UserNameTag variant="body2">
-          @{user?.username || 'username'}
+          @{user?.username || t('sidebar.profile.default_username')}
         </UserNameTag>
-
       </UserInfoContainer>
     </UserProfileWrapper>
   );
