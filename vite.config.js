@@ -11,6 +11,8 @@ import terser from '@rollup/plugin-terser';
 import { VitePWA } from 'vite-plugin-pwa';
 import imagemin from 'vite-plugin-imagemin';
 
+// [INFO] Проект переведён на rolldown-vite вместо vite. Конфиг совместим с rolldown-vite.
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const isProduction = mode === 'production';
@@ -46,22 +48,6 @@ export default defineConfig(({ mode }) => {
       }),
       wasm(),
       topLevelAwait(),
-      isProduction && viteCompression({
-        algorithm: 'brotli',
-        ext: '.br',
-        filter: /\.(js|css|html)$/,
-        threshold: 1024,
-        deleteOriginFile: false,
-        compressionOptions: {
-          level: 11,
-        },
-        success: (file) => {
-          console.log(`✅ Brotli compressed: ${file}`);
-        },
-        error: (err) => {
-          console.warn(`⚠️ Brotli compression failed: ${err.message}`);
-        },
-      }),
       isProduction && viteCompression({
         algorithm: 'gzip',
         ext: '.gz',
@@ -145,8 +131,6 @@ export default defineConfig(({ mode }) => {
 
     esbuild: {
       loader: 'jsx',
-      include: /src\/.*\.jsx?$/,
-      exclude: [],
       jsx: 'automatic',
       jsxInject: "import React from 'react'",
     },
@@ -239,6 +223,34 @@ export default defineConfig(({ mode }) => {
         '@emotion/styled',
         'lodash',
         'axios',
+        './src/pages/Info/PrivacyPolicyPage.js',
+        './src/pages/Info/RulesPage.js',
+        './src/pages/Info/SimpleApiDocsPage.js',
+        './src/pages/Info/TermsOfServicePage.js',
+        './src/pages/Main/ArtistPage.js',
+        './src/pages/Main/ChannelsPage.js',
+        './src/pages/Main/EmptyChannelsPlaceholder.js',
+        './src/pages/Main/LeaderboardPage.js',
+        './src/pages/Main/MainPage.js',
+        './src/pages/Main/MorePage.js',
+        './src/pages/Main/MusicPage.js',
+        './src/pages/Main/PostDetailPage.js',
+        './src/pages/Main/SearchPage.js',
+        './src/pages/Main/UpdatesPage.js',
+        './src/pages/Messenger/JoinGroupChat.js',
+        './src/pages/Messenger/MessengerPage.js',
+        './src/pages/MiniGames/BlackjackPage.js',
+        './src/pages/MiniGames/ClickerPage.js',
+        './src/pages/MiniGames/CupsGamePage.js',
+        './src/pages/MiniGames/LuckyNumberGame.js',
+        './src/pages/MiniGames/MiniGamesPage.js',
+        './src/pages/MiniGames/RouletteGame.js',
+        './src/pages/MiniGames/components/PlayingCard.js',
+        './src/pages/User/ProfilePage.js',
+        './src/pages/User/SettingsPage.js',
+        './src/pages/User/components/PostsFeed.js',
+        './src/pages/User/components/WallFeed.js',
+        './src/utils/LinkUtils.js',
       ],
       exclude: ['@vite/client', '@vite/env'],
     },

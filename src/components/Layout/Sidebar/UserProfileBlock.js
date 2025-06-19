@@ -7,7 +7,7 @@ import {
   styled
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const UserProfileWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',

@@ -1,4 +1,39 @@
 {
+  "comment": {
+    "form": {
+      "placeholder": "コメントを書く..."
+    },
+    "reply_form": {
+      "placeholder": "返信を書く..."
+    },
+    "section": {
+      "title": "コメント",
+      "empty": "まだコメントはありません。最初のコメントを書きましょう！"
+    },
+    "menu": {
+      "reply": "返信",
+      "delete": "削除"
+    },
+    "media": {
+      "error": "メディアの読み込みエラー",
+      "duplicate_path": "ファイルパスエラー（重複）",
+      "url_unavailable": "URLが利用できません"
+    },
+    "dialog": {
+      "delete": {
+        "title": "コメントの削除",
+        "message": "このコメントを削除してもよろしいですか？この操作は取り消せません。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      },
+      "delete_reply": {
+        "title": "返信の削除",
+        "message": "この返信を削除してもよろしいですか？この操作は取り消せません。",
+        "cancel": "キャンセル",
+        "confirm": "削除"
+      }
+    }
+  },
   "header": {
     "search": {
       "placeholder": "検索...",
@@ -41,7 +76,7 @@
       "wallet": "ウォレット"
     },
     "logo": {
-      "text": "K-CONNECT"
+      "text": "き-接続"
     }
   },
   "main_page": {
@@ -94,6 +129,11 @@
       "history": "履歴",
       "assets": "資産",
       "subscription": "サブスクリプション"
+    },
+    "subscription_types": {
+      "basic": "ベーシック",
+      "premium": "プレミアム",
+      "ultimate": "アルティメット"
     },
     "current_balance": {
       "title": "残高",
@@ -211,13 +251,13 @@
         "features": {
           "title": "サブスクリプション特典",
           "basic": {
-            "monthly_points": "毎月1,000ポイントの付与",
+            "monthly_points": "毎月10,000ポイントの付与",
             "no_ads": "広告非表示",
             "badge_limit": "バッジ作成上限5個",
             "username_limit": "ユーザーネーム購入上限5個"
           },
           "premium": {
-            "monthly_points": "毎月5,000ポイントの付与",
+            "monthly_points": "毎月35.000ポイントの付与",
             "features": "プラットフォームの拡張機能",
             "support": "優先サポート",
             "badge_limit": "バッジ作成上限8個",
@@ -441,7 +481,7 @@
       "expired": "期限切れ",
       "channel": "チャンネル",
       "pick_me": "ピックミー",
-      "active": "サブスクリプション{{type}}は{{date}}まで有効"
+      "active": "サブスクリプション{type}は{date}まで有効"
     },
     "medals": {
       "title": "メダル",
@@ -455,7 +495,7 @@
     },
     "ban": {
       "banned": "BAN中",
-      "scam": "このアカウントは詐欺として報告されています。ご注意ください！",
+      "scam": "SCAM",
       "reason": "理由: {{reason}}",
       "ends": "{{endDate}}まで",
       "days_left": "残り{{days}}日",
@@ -500,7 +540,7 @@
     "like": "いいね",
     "unlike": "いいね解除",
     "likes_count": "{count}",
-    "comment": "コメント",
+    "comment_item": "コメント",
     "comments_count": "{count}",
     "repost": "リポスト",
     "reposted": "リポスト済み",
@@ -606,7 +646,48 @@
         "other": "その他"
       },
       "placeholder": "報告理由を入力してください"
-    }
+    },
+    "comments": "コメント",
+    "writeComment": "コメントを書く...",
+    "reply": "返信",
+    "delete": "削除",
+    "commentDeleted": "コメントが削除されました",
+    "replyDeleted": "返信が削除されました",
+    "noComments": "まだコメントはありません。最初のコメントをどうぞ！",
+    "loginToComment": "ログイン",
+    "added": "コメントが追加されました",
+    "deleted": "コメントが正常に削除されました",
+    "replyAdded": "返信が追加されました",
+    "replyDeletedSuccess": "返信が正常に削除されました",
+    "cancel": "キャンセル",
+    "confirmDelete": "コメントの削除",
+    "confirmDeleteReply": "返信の削除",
+    "sureDelete": "このコメントを削除してもよろしいですか？この操作は元に戻せません。",
+    "sureDeleteReply": "この返信を削除してもよろしいですか？この操作は元に戻せません。",
+    "deleteInProgress": "削除中...",
+    "firstComment": "まだコメントはありません。最初のコメントをどうぞ！",
+    "post": "投稿",
+    "back": "戻る",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "errorAddComment": "コメントの追加中にエラーが発生しました",
+    "errorAddReply": "返信の追加中にエラーが発生しました",
+    "errorDeleteComment": "コメントの削除中にエラーが発生しました",
+    "errorDeleteReply": "返信の削除中にエラーが発生しました",
+    "replyFor": "返信先",
+    "errorImage": "メディアの読み込みエラー",
+    "errorReplyImage": "メディアの読み込みエラー",
+    "errorBadge": "画像エラー",
+    "errorReplyBadge": "画像エラー",
+    "errorLike": "いいねエラー",
+    "errorLikeReply": "返信のいいねエラー",
+    "errorDelete": "削除エラー",
+    "errorDeleteReply": "返信の削除エラー",
+    "errorRefresh": "更新エラー",
+    "errorRefreshReply": "返信の更新エラー",
+    "errorView": "表示エラー",
+    "errorTooFrequent": "コメントの制限を超えました。 ",
+    "wait": "しばらくしてから再度お試しください。"
   },
   "sidebar": {
     "profile": {
@@ -642,7 +723,53 @@
     },
     "footer": {
       "version": "K-Connect v2.8",
-      "copyright": "著作権",
+      "copyright": "著作権者向け",
+      "email": "verif@k-connect.ru"
+    }
+  },
+  "more_page": {
+    "points": "ポイント",
+    "shop": "ショップ",
+    "settings": "設定",
+    "banner_alt": "バナー",
+    "default_user": "ユーザー",
+    "default_username": "username",
+    "errors": {
+      "banner_load_error": "バナーの読み込みに失敗しました",
+      "avatar_load_error": "アバターの読み込みに失敗しました"
+    },
+    "sections": {
+      "social": {
+        "title": "ソーシャル",
+        "search": "検索",
+        "subscriptions": "サブスクリプション",
+        "channels": "チャンネル",
+        "rating": "ランキング"
+      },
+      "entertainment": {
+        "title": "エンターテイメント",
+        "minigames": "ミニゲーム",
+        "username_auction": "ユーザーネームオークション",
+        "subscription_plans": "サブスクリプションプラン",
+        "new_badge": "新着"
+      },
+      "administration": {
+        "title": "管理",
+        "moderation": "モデレーション",
+        "admin_panel": "管理パネル"
+      },
+      "platform": {
+        "title": "プラットフォーム",
+        "bug_reports": "バグレポート",
+        "about": "プラットフォームについて",
+        "rules": "ルール",
+        "messenger": "メッセンジャー",
+        "api_docs": "API ドキュメント",
+        "logout": "ログアウト"
+      }
+    },
+    "footer": {
+      "version": "K-Connect v2.8",
       "email": "verif@k-connect.ru"
     }
   }

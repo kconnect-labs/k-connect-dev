@@ -1,4 +1,39 @@
 {
+  "comment": {
+    "form": {
+      "placeholder": "Написать комментарий..."
+    },
+    "reply_form": {
+      "placeholder": "Написать ответ..."
+    },
+    "section": {
+      "title": "Комментарии",
+      "empty": "Комментариев пока нет. Будьте первым!"
+    },
+    "menu": {
+      "reply": "Ответить",
+      "delete": "Удалить"
+    },
+    "media": {
+      "error": "Ошибка загрузки медиа",
+      "duplicate_path": "Ошибка в пути к файлу (дублирование)",
+      "url_unavailable": "URL недоступен"
+    },
+    "dialog": {
+      "delete": {
+        "title": "Удаление комментария",
+        "message": "Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.",
+        "cancel": "Отмена",
+        "confirm": "Удалить"
+      },
+      "delete_reply": {
+        "title": "Удаление ответа",
+        "message": "Вы уверены, что хотите удалить этот ответ? Это действие нельзя отменить.",
+        "cancel": "Отмена",
+        "confirm": "Удалить"
+      }
+    }
+  },
   "balance": {
     "tabs": {
       "history": "История",
@@ -121,13 +156,13 @@
         "features": {
           "title": "Возможности подписки",
           "basic": {
-            "monthly_points": "Ежемесячное пополнение на 1.000 баллов",
+            "monthly_points": "Ежемесячное пополнение на 10.000 баллов",
             "no_ads": "Отсутствие рекламы",
             "badge_limit": "Создание до 5 бейджиков",
             "username_limit": "Покупка до 5 Юзернеймов"
           },
           "premium": {
-            "monthly_points": "Ежемесячное пополнение на 5.000 баллов",
+            "monthly_points": "Ежемесячное пополнение на 35.000 баллов",
             "features": "Расширенные функции платформы",
             "support": "Приоритетная поддержка",
             "badge_limit": "Создание до 8 бейджиков",
@@ -149,7 +184,7 @@
       "types": {
         "basic": "Базовая",
         "premium": "Премиум",
-        "ultimate": "Ультимейт"
+        "ultimate": "Ultimate"
       },
       "duration": {
         "unlimited": "Бессрочно"
@@ -565,7 +600,7 @@
       "expired": "Подписка истекла",
       "channel": "Канал",
       "pick_me": "Пикми",
-      "active": "Подписка {{type}} активна до {{date}}"
+      "active": "Подписка {type} активна до {date}"
     },
     "medals": {
       "title": "Медали",
@@ -579,7 +614,7 @@
     },
     "ban": {
       "banned": "В бане",
-      "scam": "Этот аккаунт был отмечен как мошеннический. Будьте осторожны!",
+      "scam": "SCAM",
       "reason": "Причина: {{reason}}",
       "ends": "До {{endDate}}",
       "days_left": "осталось {{days}} дн.",
@@ -639,8 +674,8 @@
     },
     "like": "Нравится",
     "unlike": "Не нравится",
-    "likes_count": "{count",
-    "comment": "Комментировать",
+    "likes_count": "{count}",
+    "comment_item": "Комментировать",
     "comments_count": "{count}",
     "repost": "Репост",
     "reposted": "Репостнуто",
@@ -746,7 +781,48 @@
         "other": "Другое"
       },
       "placeholder": "Укажите причину жалобы"
-    }
+    },
+    "comments": "Комментарии",
+    "writeComment": "Написать комментарий...",
+    "reply": "Ответить",
+    "delete": "Удалить",
+    "commentDeleted": "Комментарий удален",
+    "replyDeleted": "Ответ удален",
+    "noComments": "Комментариев пока нет. Будьте первым!",
+    "loginToComment": "Войдите",
+    "added": "Комментарий добавлен",
+    "deleted": "Комментарий был успешно удален",
+    "replyAdded": "Ответ добавлен",
+    "replyDeletedSuccess": "Ответ был успешно удален",
+    "cancel": "Отмена",
+    "confirmDelete": "Удаление комментария",
+    "confirmDeleteReply": "Удаление ответа",
+    "sureDelete": "Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.",
+    "sureDeleteReply": "Вы уверены, что хотите удалить этот ответ? Это действие нельзя отменить.",
+    "deleteInProgress": "Удаление...",
+    "firstComment": "Комментариев пока нет. Будьте первым!",
+    "post": "Пост",
+    "back": "Назад",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "errorAddComment": "Ошибка при добавлении комментария",
+    "errorAddReply": "Ошибка при добавлении ответа",
+    "errorDeleteComment": "Ошибка при удалении комментария",
+    "errorDeleteReply": "Ошибка при удалении ответа",
+    "replyFor": "Ответ для",
+    "errorImage": "Ошибка загрузки медиа",
+    "errorReplyImage": "Ошибка загрузки медиа",
+    "errorBadge": "Ошибка картинки",
+    "errorReplyBadge": "Ошибка картинки",
+    "errorLike": "Ошибка лайка",
+    "errorLikeReply": "Ошибка лайка ответа",
+    "errorDelete": "Ошибка удаления",
+    "errorDeleteReply": "Ошибка удаления ответа",
+    "errorRefresh": "Ошибка обновления",
+    "errorRefreshReply": "Ошибка обновления ответа",
+    "errorView": "Ошибка просмотра",
+    "errorTooFrequent": "Превышен лимит комментариев. ",
+    "wait": "Пожалуйста, повторите попытку позже."
   },
   "main_page": {
     "loading": "Загрузка...",
@@ -791,6 +867,52 @@
         "title": "Нет активных каналов",
         "description": "Создайте первый канал или подпишитесь на существующие каналы"
       }
+    }
+  },
+  "more_page": {
+    "points": "баллов",
+    "shop": "Магазин",
+    "settings": "Настройки",
+    "banner_alt": "Баннер",
+    "default_user": "Пользователь",
+    "default_username": "username",
+    "errors": {
+      "banner_load_error": "Ошибка загрузки баннера",
+      "avatar_load_error": "Ошибка загрузки аватара"
+    },
+    "sections": {
+      "social": {
+        "title": "Социальное",
+        "search": "Поиск",
+        "subscriptions": "Подписки",
+        "channels": "Каналы",
+        "rating": "Рейтинг"
+      },
+      "entertainment": {
+        "title": "Развлечения",
+        "minigames": "Мини-игры",
+        "username_auction": "Аукцион юзернеймов",
+        "subscription_plans": "Планы подписок",
+        "new_badge": "Новое"
+      },
+      "administration": {
+        "title": "Администрирование",
+        "moderation": "Модерация",
+        "admin_panel": "Админ-панель"
+      },
+      "platform": {
+        "title": "Платформа",
+        "bug_reports": "Баг-репорты",
+        "about": "О платформе",
+        "rules": "Правила",
+        "messenger": "Мессенджер",
+        "api_docs": "API Документация",
+        "logout": "Выйти"
+      }
+    },
+    "footer": {
+      "version": "К-Коннект v2.8",
+      "email": "verif@k-connect.ru"
     }
   }
 }

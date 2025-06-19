@@ -32,7 +32,8 @@ import {
   CircularProgress,
   Button,
   GlobalStyles,
-  Zoom
+  Zoom,
+  Collapse
 } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -56,16 +57,21 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import TranslateIcon from '@mui/icons-material/Translate';
-import { AuthContext } from '../../context/AuthContext';
-import { useMusic } from '../../context/MusicContext';
-import { ThemeSettingsContext } from '../../App';
-import { useLanguage } from '../../context/LanguageContext';
-import { ReactComponent as LogoSVG } from '../../assets/Logo.svg';
-import { ReactComponent as BallsSVG } from '../../assets/balls.svg';
-import NotificationList from '../Notifications/NotificationList';
+import { AuthContext } from '../../../context/AuthContext';
+import { useMusic } from '../../../context/MusicContext';
+import { ThemeSettingsContext } from '../../../App';
+import { useLanguage } from '../../../context/LanguageContext';
+import { ReactComponent as LogoSVG } from '../../../assets/Logo.svg';
+import NotificationList from '../../Notifications/NotificationList';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
-import DynamicIslandNotification from '../DynamicIslandNotification';
+import DynamicIslandNotification from '../../DynamicIslandNotification';
+import HeaderLogo from './HeaderLogo';
+import HeaderSearch from './HeaderSearch';
+import HeaderPlayer from './HeaderPlayer';
+import HeaderActions from './HeaderActions';
+import HeaderProfileMenu from './HeaderProfileMenu';
+import ReactDOM from 'react-dom';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundImage: 'none',
@@ -303,6 +309,8 @@ const Header = ({ toggleSidebar }) => {
   const [searchLoading, setSearchLoading] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const searchInputRef = useRef(null);
+  
+  const [showMobilePlayer, setShowMobilePlayer] = useState(false);
   
   const themeValues = useMemo(() => {
     const headerTextColor = themeSettings.textColor || theme.palette.text.primary;
@@ -1014,362 +1022,178 @@ const Header = ({ toggleSidebar }) => {
         }
       }} />
       <StyledToolbar>
-        <LogoSection>
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
-            <LogoSVG 
-              style={{ 
-                height: 32, 
-                width: 'auto'
-              }} 
-            />
-            {!isMobile && (
-              <LogoText>
-                <Box component="span" sx={{ color: 'primary.main' }}>
-                  {t('header.logo.text').charAt(0)}
-                </Box>
-                <Box component="span" sx={{ 
-                  color: theme.palette.mode === 'dark' ? 'white' : 'black', 
-                  opacity: 0.9 
-                }}>
-                  {t('header.logo.text').slice(1)}
-                </Box>
-              </LogoText>
-            )}
-          </Link>
-        </LogoSection>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
-          {showSearch ? (
-            <SearchInputWrapper>
-              <ClickAwayListener onClickAway={handleClickAway}>
-                <Box sx={{ width: '100%', position: 'relative' }}>
-                  <StyledSearchInput
-                    placeholder={t('header.search.placeholder')}
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    onFocus={handleSearchFocus}
-                    inputRef={searchInputRef}
-                    variant="outlined"
-                    fullWidth
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
-                        </InputAdornment>
-                      ),
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton 
-                            size="small" 
-                            edge="end"
-                            onClick={toggleSearch}
-                            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                          >
-                            <ClearIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  
-                  {showSearchResults && (
-                    <SearchResultsContainer>
-                      <SearchResultTabs
-                        value={searchTab}
-                        onChange={handleSearchTabChange}
-                        variant="fullWidth"
-                      >
-                        <SearchResultTab label={t('header.search.tabs.all')} />
-                        <SearchResultTab label={t('header.search.tabs.channels')} />
-                      </SearchResultTabs>
-                      
-                      <Box sx={{ 
-                        p: 1,
-                        [theme.breakpoints.down('sm')]: {
-                          height: 'calc(100% - 40px)',
-                          overflowY: 'auto'
-                        }
-                      }}>
-                        {searchLoading ? (
-                          <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-                            <CircularProgress size={24} />
-                          </Box>
-                        ) : searchTab === 0 ? (
-                          <>
-                            {searchResults.users.length > 0 ? (
-                              <List sx={{ p: 0 }}>
-                                {searchResults.users.map(user => (
-                                  <ListItem 
-                                    key={user.id} 
-                                    button 
-                                    onClick={() => handleSearchItemClick(`/profile/${user.username}`)}
-                                    sx={{ borderRadius: 1 }}
-                                  >
-                                    <ListItemAvatar>
-                                      <Avatar 
-                                        src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'} 
-                                        alt={user.name || user.username}
-                                      />
-                                    </ListItemAvatar>
-                                    <ListItemText 
-                                      primary={
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                          {user.name}
-                                          {user.verification_status === 'verified' && (
-                                            <VerifiedIcon sx={{ fontSize: 14, ml: 0.5, color: '#D0BCFF' }} />
-                                          )}
-                                        </Box>
-                                      } 
-                                      secondary={`@${user.username}`} 
-                                    />
-                                  </ListItem>
-                                ))}
-                              </List>
-                            ) : (
-                              <Box sx={{ p: 2, textAlign: 'center' }}>
-                                <Typography variant="body2" color="text.secondary">
-                                  {t('header.search.no_results.users')}
-                                </Typography>
-                              </Box>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            {searchResults.channels.length > 0 ? (
-                              <List sx={{ p: 0 }}>
-                                {searchResults.channels.map(channel => (
-                                  <ListItem 
-                                    key={channel.id} 
-                                    button 
-                                    onClick={() => handleSearchItemClick(`/profile/${channel.username}`)}
-                                    sx={{ borderRadius: 1 }}
-                                  >
-                                    <ListItemAvatar>
-                                      <Avatar 
-                                        src={channel.photo} 
-                                        alt={channel.name}
-                                        onError={(e) => {
-                                          e.target.onerror = null;
-                                          e.target.src = '/static/uploads/avatar/system/avatar.png';
-                                        }}
-                                      />
-                                    </ListItemAvatar>
-                                    <ListItemText 
-                                      primary={
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                          {channel.name}
-                                          {channel.is_verified && (
-                                            <VerifiedIcon sx={{ fontSize: 14, ml: 0.5, color: '#D0BCFF' }} />
-                                          )}
-                                        </Box>
-                                      } 
-                                      secondary={`@${channel.username}`} 
-                                    />
-                                  </ListItem>
-                                ))}
-                              </List>
-                            ) : (
-                              <Box sx={{ p: 2, textAlign: 'center' }}>
-                                <Typography variant="body2" color="text.secondary">
-                                  {t('header.search.no_results.channels')}
-                                </Typography>
-                              </Box>
-                            )}
-                          </>
-                        )}
-                        
-                        {(searchTab === 0 && searchResults.users.length > 0) || 
-                         (searchTab === 1 && searchResults.channels.length > 0) ? (
-                          <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
-                            <Button 
-                              size="small" 
-                              onClick={handleViewAll}
-                              sx={{ 
-                                textTransform: 'none',
-                                color: '#D0BCFF',
-                                '&:hover': { backgroundColor: alpha('#D0BCFF', 0.1) }
-                              }}
-                            >
-                              {t('header.search.view_all')}
-                            </Button>
-                          </Box>
-                        ) : null}
-                      </Box>
-                    </SearchResultsContainer>
-                  )}
-                </Box>
-              </ClickAwayListener>
-            </SearchInputWrapper>
-          ) : (
-            <PlayerSection>
-              {currentTrack && (
-                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
-                  {/* Compact Track Info */}
-                  <Box 
-                    component={Link} 
-                    to="/music" 
-                    sx={{ 
-                      display: 'flex', 
-                      alignItems: 'center',
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      flex: '1',
-                      minWidth: 0, 
-                    }}
-                  >
-                    <Avatar 
-                      variant="rounded" 
-                      src={currentTrack.cover_path || '/static/uploads/system/album_placeholder.jpg'} 
-                      alt={currentTrack.title}
-                      sx={{ width: 32, height: 32, mr: 1, borderRadius: '4px' }}
-                    />
-                    <Box sx={{ minWidth: 0 }}> {/* Container for proper text truncation */}
-                      <Typography variant="body2" fontWeight="medium" noWrap>
-                        {truncateTitle(currentTrack.title, 20)}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" noWrap>
-                        {truncateTitle(currentTrack.artist, 20)}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  
-                  {/* Simplified Controls */}
-                  <PlayerControls>
-                    <IconButton size="small" onClick={prevTrack} sx={{ p: 0.5 }}>
-                      <SkipPreviousIcon sx={{ fontSize: '1.1rem' }} />
-                    </IconButton>
-                    
-                    <IconButton 
-                      onClick={togglePlay}
-                      size="small"
-                      sx={{ 
-                        color: 'primary.main',
-                        bgcolor: alpha(theme.palette.primary.main, 0.05),
-                        '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.15) },
-                        p: 0.7,
-                        mx: 0.5,
-                      }}
-                    >
-                      {isPlaying ? <PauseIcon sx={{ fontSize: '1.1rem' }} /> : <PlayArrowIcon sx={{ fontSize: '1.1rem' }} />}
-                    </IconButton>
-                    
-                    <IconButton size="small" onClick={nextTrack} sx={{ p: 0.5 }}>
-                      <SkipNextIcon sx={{ fontSize: '1.1rem' }} />
-                    </IconButton>
-                    
-                    <VolumeControl>
-                      <IconButton 
-                        size="small" 
-                        onClick={toggleMute}
-                        sx={{ p: 0.5, ml: 0.5 }}
-                      >
-                        {isMuted || volume === 0 ? 
-                          <VolumeOffIcon sx={{ fontSize: '1.1rem' }} /> : 
-                          <VolumeUpIcon sx={{ fontSize: '1.1rem' }} />
-                        }
-                      </IconButton>
-                      <VolumeSlider 
-                        className="volume-slider"
-                        type="range" 
-                        min={0} 
-                        max={1} 
-                        step={0.01} 
-                        value={isMuted ? 0 : volume}
-                        onChange={(e) => setVolume(parseFloat(e.target.value))}
-                      />
-                    </VolumeControl>
-                  </PlayerControls>
-                </Box>
-              )}
-            </PlayerSection>
-          )}
-        </Box>
-
-        <ActionsSection>
-          {user && !isMobile && (
-            <Tooltip title={t('header.tooltips.wallet')}>
-              <Chip
-                icon={
-                  <PointsIcon>
-                    <BallsSVG />
-                  </PointsIcon>
-                }
-                label={t('header.profile_menu.wallet')}
-                onClick={() => navigate('/balance')}
-                clickable
+        {isMobile && currentTrack && (
+              <IconButton
+                color={showMobilePlayer ? 'primary' : 'inherit'}
+            onClick={() => setShowMobilePlayer(v => !v)}
                 sx={{
-                  borderRadius: 20,
-                  fontWeight: 'bold',
-                  background: `linear-gradient(45deg, #d0bcff 30%, ${alpha('#d0bcff', 0.8)} 90%)`,
-                  color: '#1a1a1a',
-                  border: 'none',
-                  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-                  height: 32,
-                  '& .MuiChip-icon': {
-                    color: 'inherit',
-                  },
-                  [theme.breakpoints.down('md')]: {
-                    display: 'none',
-                  },
+                  mr: 1,
+                  opacity: 0.6,
+                  transition: 'all 0.2s',
+                  '&:hover': { opacity: 1 },
+                  bgcolor: showMobilePlayer ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
                 }}
+              >
+                <Icon icon="solar:music-note-2-bold" width="24" height="24" sx={{ color: theme.palette.primary.main }} />
+              </IconButton>
+        )}
+        {isMobile ? (
+          <Collapse in={showMobilePlayer} timeout={300} unmountOnExit sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%' }}>
+                  <HeaderPlayer
+                    currentTrack={currentTrack}
+                    isPlaying={isPlaying}
+                    isMuted={isMuted}
+                    volume={volume}
+                    togglePlay={togglePlay}
+                    nextTrack={nextTrack}
+                    prevTrack={prevTrack}
+                    toggleMute={toggleMute}
+                    setVolume={setVolume}
+                    theme={theme}
+                    truncateTitle={truncateTitle}
+                isMobile={true}
+                  />
+                </Box>
+              </Collapse>
+        ) : null}
+        {isMobile && showMobilePlayer ? null : (
+          <>
+            {isMobile ? (
+              !currentTrack && <HeaderLogo isMobile={isMobile} t={t} />
+        ) : (
+          <HeaderLogo isMobile={isMobile} t={t} />
+        )}
+        {showSearch ? (
+          isMobile ? (
+            <Box sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, width: '100vw', height: 56, bgcolor: theme.palette.background.paper, display: 'flex', alignItems: 'center', px: 1, boxShadow: 3 }}>
+              <HeaderSearch
+                showSearch={showSearch}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                searchResults={searchResults}
+                searchTab={searchTab}
+                setSearchTab={setSearchTab}
+                searchLoading={searchLoading}
+                showSearchResults={showSearchResults}
+                setShowSearchResults={setShowSearchResults}
+                searchInputRef={searchInputRef}
+                t={t}
+                theme={theme}
+                handleSearchChange={handleSearchChange}
+                handleSearchFocus={handleSearchFocus}
+                handleClickAway={handleClickAway}
+                handleSearchTabChange={handleSearchTabChange}
+                handleViewAll={handleViewAll}
+                handleSearchItemClick={handleSearchItemClick}
+                toggleSearch={toggleSearch}
+                isMobile={true}
               />
-            </Tooltip>
-          )}
-          
-          <IconButton 
-            color="inherit" 
-            onClick={toggleSearch}
-            sx={{ 
-              bgcolor: showSearch 
-                ? alpha(theme.palette.primary.main, 0.1) 
-                : 'transparent',
-              color: showSearch
-                ? 'primary.main' 
-                : 'inherit',
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                bgcolor: alpha(theme.palette.primary.main, 0.08),
-                transform: 'scale(1.05)'
-              }
-            }}
-          >
-            <SearchIcon />
-          </IconButton>
-          
-          {user && <NotificationList onNewNotification={handleNewNotification} />}
-          
-          <IconButton
-            edge="end"
-            aria-label="account"
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-            sx={{ 
-              ml: 0.5,
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                transform: 'scale(1.05)'
-              }
-            }}
-          >
-            {user ? (
-              <Avatar 
-                src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'} 
-                alt={user.name || user.username} 
-                sx={{ 
-                  width: 30, 
-                  height: 30,
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.3)}`,
-                }}
-              />
-            ) : (
-              <AccountCircleIcon />
+            </Box>
+          ) : (
+            ReactDOM.createPortal(
+              <Box sx={{
+                position: 'fixed',
+                top: '10%',
+                left: 0,
+                right: 0,
+                mx: 'auto',
+                maxWidth: 520,
+                zIndex: 2000,
+                p: 2,
+                borderRadius: 1,
+                boxShadow: 8,
+                bgcolor: theme.palette.background.paper,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}>
+                <HeaderSearch
+                  showSearch={showSearch}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  searchResults={searchResults}
+                  searchTab={searchTab}
+                  setSearchTab={setSearchTab}
+                  searchLoading={searchLoading}
+                  showSearchResults={showSearchResults}
+                  setShowSearchResults={setShowSearchResults}
+                  searchInputRef={searchInputRef}
+                  t={t}
+                  theme={theme}
+                  handleSearchChange={handleSearchChange}
+                  handleSearchFocus={handleSearchFocus}
+                  handleClickAway={handleClickAway}
+                  handleSearchTabChange={handleSearchTabChange}
+                  handleViewAll={handleViewAll}
+                  handleSearchItemClick={handleSearchItemClick}
+                  toggleSearch={toggleSearch}
+                  isMobile={false}
+                />
+              </Box>,
+              document.body
+            )
+          )
+        ) : (
+          <>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1, alignItems: 'center' }}>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <HeaderSearch
+                  showSearch={showSearch}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  searchResults={searchResults}
+                  searchTab={searchTab}
+                  setSearchTab={setSearchTab}
+                  searchLoading={searchLoading}
+                  showSearchResults={showSearchResults}
+                  setShowSearchResults={setShowSearchResults}
+                  searchInputRef={searchInputRef}
+                  t={t}
+                  theme={theme}
+                  handleSearchChange={handleSearchChange}
+                  handleSearchFocus={handleSearchFocus}
+                  handleClickAway={handleClickAway}
+                  handleSearchTabChange={handleSearchTabChange}
+                  handleViewAll={handleViewAll}
+                  handleSearchItemClick={handleSearchItemClick}
+                  toggleSearch={toggleSearch}
+                />
+                {!showSearch && !isMobile && (
+                  <HeaderPlayer
+                    currentTrack={currentTrack}
+                    isPlaying={isPlaying}
+                    isMuted={isMuted}
+                    volume={volume}
+                    togglePlay={togglePlay}
+                    nextTrack={nextTrack}
+                    prevTrack={prevTrack}
+                    toggleMute={toggleMute}
+                    setVolume={setVolume}
+                    theme={theme}
+                    truncateTitle={truncateTitle}
+                  />
+                )}
+              </Box>
+            </Box>
+            <HeaderActions
+              user={user}
+              isMobile={isMobile}
+              t={t}
+              theme={theme}
+              navigate={navigate}
+              toggleSearch={toggleSearch}
+              showSearch={showSearch}
+              handleProfileMenuOpen={handleProfileMenuOpen}
+              NotificationList={NotificationList}
+              handleNewNotification={handleNewNotification}
+            />
+              </>
             )}
-          </IconButton>
-        </ActionsSection>
+          </>
+        )}
       </StyledToolbar>
       
-      {/* Dynamic Island Notification */}
       {showNewNotification && newNotification && (
         <DynamicIslandNotification
           open={true}
@@ -1383,7 +1207,26 @@ const Header = ({ toggleSidebar }) => {
         />
       )}
       
-      {profileMenu}
+      <HeaderProfileMenu
+        user={user}
+        isMobile={isMobile}
+        t={t}
+        theme={theme}
+        anchorEl={anchorEl}
+        isMenuOpen={isMenuOpen}
+        handleMenuClose={handleMenuClose}
+        handleNavigate={handleNavigate}
+        handleLogout={handleLogout}
+        handleCreateChannel={handleCreateChannel}
+        accounts={accounts}
+        handleSwitchAccount={handleSwitchAccount}
+        handleLanguageMenuOpen={handleLanguageMenuOpen}
+        languageMenuAnchorEl={languageMenuAnchorEl}
+        isLanguageMenuOpen={isLanguageMenuOpen}
+        handleLanguageMenuClose={handleLanguageMenuClose}
+        handleLanguageChange={handleLanguageChange}
+        language={language}
+      />
       {languageMenu}
     </StyledAppBar>
   );

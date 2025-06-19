@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, memo } from 'react';
 import { Box, styled, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import Header from './Header/Header';
+import Sidebar from './Sidebar/Sidebar';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';

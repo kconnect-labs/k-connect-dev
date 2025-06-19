@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Box, Typography, styled, useTheme } from '@mui/material';
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 
 
 const FooterContainer = styled(Box)(({ theme, themecolor }) => ({

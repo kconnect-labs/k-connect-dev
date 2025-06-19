@@ -39,8 +39,14 @@ export const LanguageProvider = ({ children }) => {
       value = value[k];
     }
     
-    // Если значение - строка и есть параметры, выполняем интерполяцию
-    if (typeof value === 'string' && Object.keys(params).length > 0) {
+    // Проверяем, что значение - строка
+    if (typeof value !== 'string') {
+      console.warn(`Translation key ${key} refers to an object instead of a string`);
+      return key;
+    }
+    
+    // Если есть параметры, выполняем интерполяцию
+    if (Object.keys(params).length > 0) {
       return value.replace(/\{(\w+)\}/g, (match, key) => {
         return params[key] !== undefined ? params[key] : match;
       });

@@ -4,9 +4,9 @@ import { Icon } from '@iconify/react';
 import { useLocation } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { NavButton, MoreButton } from '../../UIKIT';
-import { SidebarContext } from '../../context/SidebarContext';
-import { useLanguage } from '../../context/LanguageContext';
+import { NavButton, MoreButton } from '../../../UIKIT';
+import { SidebarContext } from '../../../context/SidebarContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 
 

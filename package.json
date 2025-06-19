@@ -67,14 +67,14 @@
     "yet-another-react-lightbox": "^3.23.1"
   },
   "scripts": {
-    "start": "vite --host 0.0.0.0 --port 3005 --config vite.config.js --force",
-    "build": "vite build",
-    "build:prod": "vite build --mode production",
-    "build:analyze": "vite build --mode analyze",
-    "build:stats": "echo '🚀 Начало сборки...' && time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
+    "start": "NODE_OPTIONS='--max-old-space-size=8192' vite --host 0.0.0.0 --port 3005 --config vite.config.js --force",
+    "build": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
+    "build:prod": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode production",
+    "build:analyze": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode analyze",
+    "build:stats": "echo '🚀 Начало сборки...' && NODE_OPTIONS='--max-old-space-size=8192' time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite dist && npm cache clean --force",
-    "optimize": "vite optimize && vite build"
+    "optimize": "NODE_OPTIONS='--max-old-space-size=8192' vite optimize && NODE_OPTIONS='--max-old-space-size=8192' vite build"
   },
   "browserslist": {
     "production": [
@@ -103,13 +103,13 @@
     "rollup-plugin-visualizer": "^5.12.0",
     "sass-embedded": "^1.87.0",
     "terser": "^5.39.0",
-    "vite": "^6.2.3",
+    "vite": "npm:rolldown-vite@latest",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-html": "^3.2.2",
+    "vite-plugin-imagemin": "^0.4.0",
+    "vite-plugin-pwa": "^1.0.0",
     "vite-plugin-svgr": "^4.3.0",
     "vite-plugin-top-level-await": "^1.5.0",
-    "vite-plugin-wasm": "^3.4.1",
-    "vite-plugin-imagemin": "^0.6.1",
-    "vite-plugin-pwa": "^1.0.0"
+    "vite-plugin-wasm": "^3.4.1"
   }
 }

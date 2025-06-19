@@ -71,6 +71,7 @@ import { requireAuth } from '../../utils/authUtils';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { usePostDetail } from '../../context/PostDetailContext';
 import { VerificationBadge } from '../../UIKIT';
+import { useLanguage } from '../../context/LanguageContext';
 
 
 const MarkdownContent = styled(Box)(({ theme }) => ({
@@ -197,9 +198,13 @@ const Comment = ({
   setReplyImage,
   setLightboxOpen
 }) => {
+  const { t } = useLanguage();
   const { user, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [imageError, setImageError] = useState(false);
+  const [imageFallback, setImageFallback] = useState(null);
+  const menuOpen = Boolean(menuAnchorEl);
   const [commentImageError, setCommentImageError] = useState(false);
   const [replyImageErrors, setReplyImageErrors] = useState({});
   const [replyImageFallbacks, setReplyImageFallbacks] = useState({});
@@ -574,7 +579,7 @@ const Comment = ({
               >
                 <ReplyIcon sx={{ fontSize: 12, transform: 'scaleX(-1)' }} />
                 <Typography variant="caption" sx={{ ml: 0.5, fontSize: '0.65rem' }}>
-                  Ответить
+                  {t('comment.menu.reply')}
                 </Typography>
               </Box>
               
@@ -608,12 +613,17 @@ const Comment = ({
                 onClose={() => setMenuAnchorEl(null)}
                 PaperProps={{
                   sx: {
-                    backgroundColor: '#1a1a1a',
+                    background: 'linear-gradient(135deg, rgb(19 19 19 / 51%) 0%, rgb(25 24 24 / 39%) 100%)',
+                    backdropFilter: 'blur(10px)',
                     minWidth: 120,
-                    boxShadow: '0 3px 8px rgba(0, 0, 0, 0.3)',
                     borderRadius: '12px',
                     overflow: 'hidden',
                     border: '1px solid rgba(255, 255, 255, 0.05)'
+                  }
+                }}
+                MenuListProps={{
+                  sx: {
+                    padding: 0
                   }
                 }}
               >
@@ -625,7 +635,6 @@ const Comment = ({
                       onDeleteReply(menuAnchorEl.commentId, menuAnchorEl.replyId);
                     }}
                     sx={{ 
-                      py: 1,
                       fontSize: '0.8rem',
                       '&:hover': {
                         backgroundColor: 'rgba(244, 67, 54, 0.08)'
@@ -636,7 +645,7 @@ const Comment = ({
                       <DeleteIcon sx={{ color: '#f44336', fontSize: '0.9rem' }} />
                     </ListItemIcon>
                     <ListItemText 
-                      primary="Удалить ответ" 
+                      primary={t('comment.menu.delete')} 
                       primaryTypographyProps={{ 
                         sx: { 
                           color: '#f44336',
@@ -664,7 +673,7 @@ const Comment = ({
                       <DeleteIcon sx={{ color: '#f44336', fontSize: '0.9rem' }} />
                     </ListItemIcon>
                     <ListItemText 
-                      primary="Удалить" 
+                      primary={t('comment.menu.delete')} 
                       primaryTypographyProps={{ 
                         sx: { 
                           color: '#f44336',
@@ -981,7 +990,7 @@ const Comment = ({
                         ml: 1
                       }}>
                         <Box 
-                          onClick={() => onLikeReply(comment.id, reply.id)}
+                          onClick={() => onLikeReply(reply.id)}
                           sx={{ 
                             display: 'flex', 
                             alignItems: 'center',
@@ -1037,7 +1046,7 @@ const Comment = ({
                         >
                           <ReplyIcon sx={{ fontSize: 12, transform: 'scaleX(-1)' }} />
                           <Typography variant="caption" sx={{ ml: 0.5, fontSize: '0.65rem' }}>
-                            Ответить
+                            {t('comment.menu.reply')}
                           </Typography>
                         </Box>
                         
@@ -1318,6 +1327,8 @@ const PostDetailPage = ({ isOverlay = false }) => {
   
   const viewCounted = useRef(false);
   
+  const { t } = useLanguage();
+  
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -1573,7 +1584,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       setSnackbar({
         open: true,
-        message: 'Комментарий добавлен',
+        message: t('post.added'),
         severity: 'success'
       });
       
@@ -1585,7 +1596,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       if (error.response && error.response.status === 429) {
         const rateLimit = error.response.data.rate_limit;
-        let errorMessage = "Превышен лимит комментариев. ";
+        let errorMessage = t('post.errorTooFrequent');
         
         if (rateLimit && rateLimit.reset) {
           
@@ -1604,7 +1615,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
           
           setWaitUntil(now.getTime() + (diffSeconds * 1000));
         } else {
-          errorMessage += "Пожалуйста, повторите попытку позже.";
+          errorMessage += t('post.wait');
           
           setWaitUntil(Date.now() + 30000);
         }
@@ -1623,10 +1634,10 @@ const PostDetailPage = ({ isOverlay = false }) => {
           severity: 'error'
         });
       } else {
-        setCommentError('Ошибка при добавлении комментария');
+        setCommentError(t('post.errorAddComment'));
         setSnackbar({
           open: true,
-          message: 'Ошибка при добавлении комментария',
+          message: t('post.errorAddComment'),
           severity: 'error'
         });
       }
@@ -1733,7 +1744,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       setSnackbar({
         open: true,
-        message: 'Ответ добавлен',
+        message: t('post.replyAdded'),
         severity: 'success'
       });
       
@@ -1745,7 +1756,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       if (error.response && error.response.status === 429) {
         const rateLimit = error.response.data.rate_limit;
-        let errorMessage = "Превышен лимит комментариев. ";
+        let errorMessage = t('post.errorTooFrequent');
         
         if (rateLimit && rateLimit.reset) {
           
@@ -1764,7 +1775,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
           
           setWaitUntil(now.getTime() + (diffSeconds * 1000));
         } else {
-          errorMessage += "Пожалуйста, повторите попытку позже.";
+          errorMessage += t('post.wait');
           
           setWaitUntil(Date.now() + 30000);
         }
@@ -1783,10 +1794,10 @@ const PostDetailPage = ({ isOverlay = false }) => {
           severity: 'error'
         });
       } else {
-        setCommentError('Ошибка при добавлении ответа');
+        setCommentError(t('post.errorAddReply'));
         setSnackbar({
           open: true,
-          message: 'Ошибка при добавлении ответа',
+          message: t('post.errorAddReply'),
           severity: 'error'
         });
       }
@@ -1829,50 +1840,54 @@ const PostDetailPage = ({ isOverlay = false }) => {
     }
   };
 
-  const handleLikeReply = async (commentId, replyId) => {
-    
+  const handleLikeReply = async (replyId) => {
     if (!requireAuth(user, isAuthenticated, navigate)) {
       return;
     }
     
     try {
+      // Оптимистичное обновление UI
+      setComments(prev => prev.map(comment => {
+        // Находим комментарий, содержащий этот ответ
+        if (!comment.replies || !comment.replies.some(reply => reply.id === replyId)) {
+          return comment;
+        }
+        
+        return {
+          ...comment,
+          replies: comment.replies.map(reply =>
+            reply.id === replyId
+              ? { 
+                  ...reply, 
+                  user_liked: !reply.user_liked, 
+                  likes_count: reply.user_liked ? Math.max(0, reply.likes_count - 1) : reply.likes_count + 1 
+                }
+              : reply
+          )
+        };
+      }));
       
-      setComments(prev => prev.map(comment =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: comment.replies.map(reply =>
-                reply.id === replyId
-                  ? { 
-                      ...reply, 
-                      user_liked: !reply.user_liked, 
-                      likes_count: reply.user_liked ? Math.max(0, reply.likes_count - 1) : reply.likes_count + 1 
-                    }
-                  : reply
-              )
-            }
-          : comment
-      ));
-      
-      
+      // Отправляем запрос на сервер
       const response = await axios.post(`/api/replies/${replyId}/like`);
       
-      
-      setComments(prev => prev.map(comment =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: comment.replies.map(reply =>
-                reply.id === replyId
-                  ? { ...reply, user_liked: response.data.liked, likes_count: response.data.likes_count }
-                  : reply
-              )
-            }
-          : comment
-      ));
+      // Обновляем UI с реальными данными с сервера
+      setComments(prev => prev.map(comment => {
+        if (!comment.replies || !comment.replies.some(reply => reply.id === replyId)) {
+          return comment;
+        }
+        
+        return {
+          ...comment,
+          replies: comment.replies.map(reply =>
+            reply.id === replyId
+              ? { ...reply, user_liked: response.data.liked, likes_count: response.data.likes_count }
+              : reply
+          )
+        };
+      }));
     } catch (error) {
       console.error('Error liking reply:', error);
-      
+      // В случае ошибки возвращаем предыдущее состояние
       setComments(prev => [...prev]);
     }
   };
@@ -1927,7 +1942,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       setSnackbar({
         open: true,
-        message: 'Ошибка при удалении комментария',
+        message: t('post.errorDeleteComment'),
         severity: 'error'
       });
     }
@@ -2001,7 +2016,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       setSnackbar({
         open: true,
-        message: 'Ошибка при удалении ответа',
+        message: t('post.errorDeleteReply'),
         severity: 'error'
       });
       
@@ -2088,7 +2103,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
           >
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h5" sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>Пост</Typography>
+          <Typography variant="h5" sx={{ fontSize: { xs: '1.2rem', sm: '1.5rem' } }}>{t('post.post')}</Typography>
         </Box>
       )}
 
@@ -2126,7 +2141,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
             <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
-            Комментарии ({post?.total_comments_count || (comments ? comments.length : 0)})
+            {t('post.comments')} ({post?.total_comments_count || (comments ? comments.length : 0)})
           </Box>
         </Typography>
 
@@ -2145,7 +2160,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
               ref={commentInputRef}
               fullWidth
               size="small"
-              placeholder="Написать комментарий..."
+              placeholder={t('post.writeComment')}
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               disabled={isSubmittingComment || Date.now() < waitUntil}
@@ -2272,7 +2287,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
                   }
                 }}
               >
-                Войдите
+                {t('post.loginToComment')}
               </MuiLink>
               , чтобы оставить комментарий
             </Typography>
@@ -2294,7 +2309,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
                 key={comment.id} 
                 comment={comment} 
                 onLike={handleLikeComment}
-                onLikeReply={(replyId) => handleLikeReply(comment.id, replyId)}
+                onLikeReply={(replyId) => handleLikeReply(replyId)}
                 onReply={(replyOrComment, commentId) => {
                   setActiveComment(commentId ? { id: commentId } : replyOrComment);
                   setReplyFormOpen(true);
@@ -2337,7 +2352,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
           }}>
             <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 28, sm: 32 }, color: 'text.secondary', mb: { xs: 1, sm: 1.5 }, opacity: 0.5 }} />
             <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
-              Комментариев пока нет. Будьте первым!
+              {t('post.noComments')}
             </Typography>
           </Box>
         )}
@@ -2394,10 +2409,10 @@ const PostDetailPage = ({ isOverlay = false }) => {
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
                 <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-                  Комментарий удален
+                  {t('post.commentDeleted')}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Комментарий был успешно удален
+                  {t('post.commentDeleted')}
                 </Typography>
               </Box>
             </>
@@ -2413,10 +2428,10 @@ const PostDetailPage = ({ isOverlay = false }) => {
                   alignItems: 'center'
                 }}
               >
-                <DeleteIcon sx={{ mr: 1 }} /> Удаление комментария
+                <DeleteIcon sx={{ mr: 1 }} /> {t('post.confirmDelete')}
               </Typography>
               <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                Вы уверены, что хотите удалить этот комментарий? Это действие нельзя отменить.
+                {t('post.sureDelete')}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                 <Button 
@@ -2432,7 +2447,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
                     }
                   }}
                 >
-                  Отмена
+                  {t('post.cancel')}
                 </Button>
                 <Button 
                   onClick={confirmDeleteComment}
@@ -2446,7 +2461,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
                   }}
                   endIcon={commentDeleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
                 >
-                  {commentDeleteDialog.deleting ? 'Удаление...' : 'Удалить'}
+                  {commentDeleteDialog.deleting ? t('post.deleteInProgress') : t('post.confirmDelete')}
                 </Button>
               </Box>
             </>
@@ -2487,59 +2502,58 @@ const PostDetailPage = ({ isOverlay = false }) => {
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
                 <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-                  Ответ удален
+                  {t('post.replyDeleted')}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Ответ был успешно удален
+                  {t('post.replyDeleted')}
                 </Typography>
               </Box>
             </>
           ) : (
             <>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mb: 2, 
-                  color: '#f44336',
-                  fontWeight: 'medium',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <DeleteIcon sx={{ mr: 1 }} /> Удаление ответа
-              </Typography>
-              <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                Вы уверены, что хотите удалить этот ответ? Это действие нельзя отменить.
-              </Typography>
+                              <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    mb: 2, 
+                    color: '#f44336',
+                    fontWeight: 'medium',
+                    display: 'flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  <DeleteIcon sx={{ mr: 1 }} /> {t('comment.dialog.delete_reply.title')}
+                </Typography>
+                <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
+                  {t('comment.dialog.delete_reply.message')}
+                </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button 
-                  onClick={() => setReplyDeleteDialog(prev => ({ ...prev, open: false }))}
-                  disabled={replyDeleteDialog.deleting}
-                  sx={{ 
-                    borderRadius: '10px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    px: 2,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.08)',
-                      color: 'rgba(255, 255, 255, 0.9)'
-                    }
-                  }}
-                >
-                  Отмена
-                </Button>
-                <Button 
-                  onClick={confirmDeleteReply}
-                  disabled={replyDeleteDialog.deleting}
-                  variant="contained" 
-                  color="error"
-                  sx={{ 
-                    borderRadius: '10px',
-                    boxShadow: 'none',
-                    px: 2
-                  }}
-                  endIcon={replyDeleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
-                >
-                  {replyDeleteDialog.deleting ? 'Удаление...' : 'Удалить'}
+                                  <Button 
+                    onClick={() => setReplyDeleteDialog(prev => ({ ...prev, open: false }))}
+                    disabled={replyDeleteDialog.deleting}
+                    sx={{ 
+                      borderRadius: '10px',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      px: 2,
+                      '&:hover': {
+                        bgcolor: 'rgba(255, 255, 255, 0.08)',
+                        color: 'rgba(255, 255, 255, 0.9)'
+                      }
+                    }}
+                  >
+                    {t('comment.dialog.delete_reply.cancel')}
+                  </Button>
+                  <Button 
+                    onClick={confirmDeleteReply}
+                    disabled={replyDeleteDialog.deleting}
+                    variant="contained" 
+                    color="error"
+                    sx={{ 
+                      borderRadius: '10px',
+                      boxShadow: 'none',
+                      px: 2
+                    }}
+                  >
+                    {t('comment.dialog.delete_reply.confirm')}
                 </Button>
               </Box>
             </>
@@ -2614,7 +2628,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
               {fullScreen ? <ArrowBackIcon /> : <CloseIcon />}
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Пост
+              {t('post.post')}
             </Typography>
           </Toolbar>
         </AppBar>

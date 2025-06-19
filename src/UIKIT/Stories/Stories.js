@@ -10,6 +10,7 @@ import StoryViewer from './StoryViewer';
 import * as StoryViewerComponents from './StoryViewer';
 import { AuthContext } from '../../context/AuthContext';
 import { useStoriesFeed, useStoryActions, viewStory } from './storiesApi';
+import { createPortal } from 'react-dom';
 
 // Деструктурируем нужные компоненты из импорта
 const { 
@@ -373,8 +374,8 @@ const Stories = ({ userIdentifier = null }) => {
           ))}
         </StoriesContainer>
 
-        {/* Preview Modal */}
-        {previewFile && previewUrl && (
+        {/* Preview Modal через портал */}
+        {previewFile && previewUrl && createPortal(
           <Box 
             sx={{
               position: 'fixed',
@@ -382,7 +383,7 @@ const Stories = ({ userIdentifier = null }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              zIndex: 2000,
+              zIndex: 100000000,
               background: 'rgba(0,0,0,0.9)',
               display: 'flex',
               alignItems: 'center',
@@ -586,12 +587,13 @@ const Stories = ({ userIdentifier = null }) => {
                 </Button>
               </Box>
             </Box>
-          </Box>
+          </Box>,
+          document.body
         )}
       </StoriesCard>
 
-      {/* Story Viewer */}
-      {currentUserIndex !== null && flattenedStories[currentUserIndex] && (
+      {/* Story Viewer через портал */}
+      {currentUserIndex !== null && flattenedStories[currentUserIndex] && createPortal(
         <StoryViewer
           userStories={{
             user: flattenedStories[currentUserIndex].user,
@@ -607,7 +609,8 @@ const Stories = ({ userIdentifier = null }) => {
           isMobile={isMobile}
           onStoryViewed={updateViewedStories}
           onNextUser={handleNextUser}
-        />
+        />,
+        document.body,
       )}
     </>
   );
