@@ -2264,9 +2264,8 @@ const ProfilePage = () => {
                     <Box 
                       sx={{ 
                         color: theme => theme.palette.text.secondary,
-                        backgroundColor: (user.status_color && user.status_text && user.subscription) ? 
-                          `${user.status_color}1A` : 
-                          theme => theme.palette.mode === 'dark' ? 'rgba(208, 188, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                        background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+                        backdropFilter: 'blur(5px)',
                         px: 1.2,
                         py: 0.4,
                         borderRadius: 4,

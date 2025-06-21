@@ -6,7 +6,7 @@ import ProfileService from './services/ProfileService';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import AppBottomNavigation from './components/BottomNavigation';
 import { MusicProvider } from './context/MusicContext';
-import { Box, CircularProgress, Typography, Button, Alert } from '@mui/material';
+import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -1024,6 +1024,8 @@ function App() {
   };
 
   
+  const [colorOverride, setColorOverride] = useState(null);
+
   const theme = useMemo(() => {
     const themeObj = createTheme({
       palette: {
@@ -1182,8 +1184,11 @@ function App() {
         },
       },
     });
+    if (colorOverride) {
+      return applyColorOverrideToTheme(themeObj, colorOverride);
+    }
     return themeObj;
-  }, [themeSettings]);
+  }, [themeSettings, colorOverride]);
 
   
   const [profileBackground, setProfileBackgroundState] = useState(null);
@@ -1263,7 +1268,9 @@ function App() {
     profileBackground,
     globalProfileBackgroundEnabled,
     setGlobalProfileBackgroundEnabled,
-  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled]);
+    colorOverride,
+    setColorOverride,
+  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled, colorOverride]);
 
   
   const location = useLocation();
@@ -1444,6 +1451,36 @@ function App() {
       return () => window.removeEventListener('load', applyThemeToDocument);
     }
   }, []);
+
+  function applyColorOverrideToTheme(theme, colorOverride) {
+    function replaceColors(obj) {
+      if (typeof obj === 'string') {
+        if (
+          obj.toLowerCase() === '#d0bcff' ||
+          obj.replace(/\s/g, '').toLowerCase() === 'rgb(208,188,255)'
+        ) {
+          return colorOverride;
+        }
+        return obj;
+      }
+      if (Array.isArray(obj)) {
+        return obj.map(replaceColors);
+      }
+      if (typeof obj === 'object' && obj !== null) {
+        const newObj = {};
+        for (const key in obj) {
+          newObj[key] = replaceColors(obj[key]);
+        }
+        return newObj;
+      }
+      return obj;
+    }
+    // Клонируем тему и заменяем цвета в palette и components
+    const patchedTheme = { ...theme };
+    if (patchedTheme.palette) patchedTheme.palette = replaceColors(patchedTheme.palette);
+    if (patchedTheme.components) patchedTheme.components = replaceColors(patchedTheme.components);
+    return patchedTheme;
+  }
 
   return (
     <HelmetProvider>

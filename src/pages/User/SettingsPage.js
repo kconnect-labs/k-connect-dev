@@ -51,7 +51,9 @@ import {
   Chip,
   DialogContentText,
   AlertTitle,
-  Snackbar
+  Snackbar,
+  ToggleButton,
+  ToggleButtonGroup
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -5417,6 +5419,10 @@ const SettingsPage = () => {
                         </Box>
                       </Box>
                     )}
+                    {/* Accent Color Picker */}
+                    <Box sx={{ mt: 2 }}>
+                      <AccentColorBlock />
+                    </Box>
                   </Box>
                 )}
               </SettingsCardContent>
@@ -6483,5 +6489,103 @@ const handleOpenSessionManager = () => {
 const handleCloseSessionManager = () => {
   setSessionManagerOpen(false);
 };
+
+function AccentColorBlock() {
+  const { colorOverride, setColorOverride, updateThemeSettings } = useContext(ThemeSettingsContext);
+  const [pendingAccentColor, setPendingAccentColor] = useState(() => localStorage.getItem('accentColorOverride') || '#d0bcff');
+  const [pendingTextColorMode, setPendingTextColorMode] = useState(() => localStorage.getItem('accentTextColorMode') || 'light');
+  const [appliedAccentColor, setAppliedAccentColor] = useState(() => localStorage.getItem('accentColorOverride') || '#d0bcff');
+  const [appliedTextColorMode, setAppliedTextColorMode] = useState(() => localStorage.getItem('accentTextColorMode') || 'light');
+  const [isApplying, setIsApplying] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('accentColorOverride');
+    if (saved) {
+      setColorOverride(saved);
+      updateThemeSettings({ primaryColor: saved });
+    }
+    const savedTextMode = localStorage.getItem('accentTextColorMode');
+    if (savedTextMode) {
+      updateThemeSettings({ textColor: savedTextMode === 'dark' ? '#121212' : '#fff' });
+    }
+  }, [setColorOverride, updateThemeSettings]);
+
+  const isChanged = pendingAccentColor !== appliedAccentColor || pendingTextColorMode !== appliedTextColorMode;
+
+  const handleApply = () => {
+    setIsApplying(true);
+    setTimeout(() => {
+      setColorOverride(pendingAccentColor);
+      updateThemeSettings({ primaryColor: pendingAccentColor });
+      localStorage.setItem('accentColorOverride', pendingAccentColor);
+      setAppliedAccentColor(pendingAccentColor);
+
+      localStorage.setItem('accentTextColorMode', pendingTextColorMode);
+      updateThemeSettings({ textColor: pendingTextColorMode === 'dark' ? '#121212' : '#fff' });
+      setAppliedTextColorMode(pendingTextColorMode);
+      setIsApplying(false);
+      window.location.reload();
+    }, 300);
+  };
+
+  const handleReset = () => {
+    setPendingAccentColor('#d0bcff');
+    setPendingTextColorMode('light');
+    setColorOverride(null);
+    updateThemeSettings({ primaryColor: '#d0bcff', textColor: '#fff' });
+    localStorage.removeItem('accentColorOverride');
+    localStorage.removeItem('accentTextColorMode');
+    setAppliedAccentColor('#d0bcff');
+    setAppliedTextColorMode('light');
+    window.location.reload();
+  };
+
+  return (
+    <Box sx={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, maxWidth: 340, mx: 'auto', mt: 0, mb: 2,
+      p: 0,
+      background: 'none',
+      borderRadius: 0
+    }}>
+      <Typography variant="h6" gutterBottom sx={{ mb: 1, fontWeight: 600 }}>Персонализация акцента</Typography>
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+        <Typography variant="body2" gutterBottom>Цвет акцента</Typography>
+        <input
+          type="color"
+          value={pendingAccentColor}
+          onChange={e => setPendingAccentColor(e.target.value)}
+          style={{ width: 48, height: 48, border: 'none', background: 'none', cursor: 'pointer', borderRadius: 8 }}
+        />
+      </Box>
+      <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+        <Typography variant="body2" gutterBottom>Цвет текста в сайдбаре</Typography>
+        <ToggleButtonGroup
+          value={pendingTextColorMode}
+          exclusive
+          onChange={(_, val) => val && setPendingTextColorMode(val)}
+          size="small"
+          sx={{ mt: 1 }}
+        >
+          <ToggleButton value="light">Светлый текст</ToggleButton>
+          <ToggleButton value="dark">Тёмный текст</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', width: '100%', mt: 2 }}>
+        <Button
+          size="medium"
+          variant="contained"
+          onClick={handleApply}
+          disabled={!isChanged || isApplying}
+          sx={{ minWidth: 100 }}
+        >
+          Применить
+        </Button>
+        <Button size="medium" variant="outlined" onClick={handleReset} sx={{ minWidth: 100 }}>
+          Сбросить
+        </Button>
+      </Box>
+    </Box>
+  );
+}
 
 export default SettingsPage;

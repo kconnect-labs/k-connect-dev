@@ -138,7 +138,7 @@ const AppBottomNavigation = ({ user }) => {
         display: { xs: 'block', md: 'none' },
         zIndex: 1000,
         borderTop: `1px solid ${borderColor}`,
-        background: 'rgba(255, 255, 255, 0.03)',
+        background: 'rgba(0, 0, 0, 0.5)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)'

@@ -3,7 +3,8 @@ import {
   Box,
   Paper,
   Typography,
-  Skeleton
+  Skeleton,
+  useTheme
 } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import axios from 'axios';
@@ -33,6 +34,7 @@ export const LinkPreview = ({ url }) => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchPreview = async () => {
@@ -84,8 +86,8 @@ export const LinkPreview = ({ url }) => {
         mb: 1,
         overflow: 'hidden',
         borderRadius: '8px',
-        backgroundColor: 'rgba(140, 82, 255, 0.03)',
-        border: '1px solid rgba(140, 82, 255, 0.1)',
+        backgroundColor: theme.palette.mode === 'dark' ? theme.palette.primary.main + '08' : theme.palette.primary.main + '08',
+        border: `1px solid ${theme.palette.primary.main}1A`,
         display: 'flex',
         flexDirection: { xs: 'row' },
         cursor: 'pointer',
@@ -93,7 +95,7 @@ export const LinkPreview = ({ url }) => {
         position: 'relative',
         height: '90px',
         '&:hover': {
-          backgroundColor: 'rgba(140, 82, 255, 0.06)',
+          backgroundColor: theme.palette.primary.main + '18',
           transform: 'translateY(-2px)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
         },
@@ -104,7 +106,7 @@ export const LinkPreview = ({ url }) => {
           top: 0,
           height: '100%',
           width: '3px',
-          backgroundColor: '#9E77ED',
+          backgroundColor: theme.palette.primary.main,
           borderRadius: '2px',
         }
       }}
@@ -158,27 +160,13 @@ export const LinkPreview = ({ url }) => {
                 fontWeight: 500,
                 fontSize: '0.85rem',
                 lineHeight: 1.57,
-                color: '#f0f0f0',
+                color: theme.palette.text.primary,
                 display: 'flex',
                 alignItems: 'center',
                 mb: 0.5,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
-                '&.MuiTypography-root': {
-                  margin: 0,
-                  fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-                  fontWeight: 500,
-                  fontSize: '0.85rem',
-                  lineHeight: 1.57,
-                  color: '#f0f0f0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  mb: 0.5,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }
               }}
             >
               {(preview?.title || getDomainName(url)).length > 35 
@@ -191,7 +179,7 @@ export const LinkPreview = ({ url }) => {
                 sx={{
                   margin: 0,
                   fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: theme.palette.text.secondary,
                   fontSize: '0.75rem',
                   lineHeight: 1.4,
                   overflow: 'hidden',
@@ -208,36 +196,25 @@ export const LinkPreview = ({ url }) => {
             <Box sx={{ 
               display: 'flex', 
               alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+              backgroundColor: theme.palette.primary.main + '10',
               py: 0.25,
               px: 0.75,
               borderRadius: '4px',
               width: 'fit-content'
             }}>
-              <LinkIcon fontSize="small" sx={{ color: '#9E77ED', mr: 0.5, fontSize: '0.75rem' }} />
+              <LinkIcon fontSize="small" sx={{ color: theme.palette.primary.main, mr: 0.5, fontSize: '0.75rem' }} />
               <Typography 
                 variant="caption" 
                 sx={{ 
                   margin: 0,
                   fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: theme.palette.text.secondary,
                   fontWeight: 500,
                   fontSize: '0.7rem',
                   lineHeight: 1.57,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                  '&.MuiTypography-root': {
-                    margin: 0,
-                    fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    fontWeight: 500,
-                    fontSize: '0.7rem',
-                    lineHeight: 1.57,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }
                 }} 
                 noWrap
               >
@@ -252,9 +229,8 @@ export const LinkPreview = ({ url }) => {
 };
 
 
-export const processTextWithLinks = (text) => {
+export const processTextWithLinks = (text, theme) => {
   if (!text) return null;
-  
   const parts = [];
   const urls = new Set();
   let lastIndex = 0;
@@ -320,7 +296,7 @@ export const processTextWithLinks = (text) => {
           rel="noopener noreferrer"
           onClick={(e) => e.stopPropagation()}
           style={{ 
-            color: '#9E77ED', 
+            color: theme ? theme.palette.primary.main : '#9E77ED',
             textDecoration: 'none', 
             fontWeight: 'medium',
             wordBreak: 'break-word'
@@ -340,7 +316,7 @@ export const processTextWithLinks = (text) => {
             window.location.href = `/profile/${item.username}`;
           }}
           style={{ 
-            color: '#9E77ED', 
+            color: theme ? theme.palette.primary.main : '#9E77ED',
             textDecoration: 'none',
             fontWeight: 'medium'
           }}
@@ -359,7 +335,7 @@ export const processTextWithLinks = (text) => {
             window.location.href = `https://k-connect.ru/search?q=${encodeURIComponent(item.hashtag)}&type=posts`;
           }}
           style={{ 
-            color: '#9E77ED', 
+            color: theme ? theme.palette.primary.main : '#9E77ED',
             textDecoration: 'none',
             fontWeight: 'medium'
           }}
@@ -386,8 +362,9 @@ export const processTextWithLinks = (text) => {
 
 export const linkRenderers = {
   p: ({ children }) => {
+    const theme = useTheme();
     if (typeof children === 'string') {
-      const { parts, urls } = processTextWithLinks(children);
+      const { parts, urls } = processTextWithLinks(children, theme);
       return (
         <>
           <Typography component="p" variant="body1" sx={{ mb: 1 }}>
@@ -413,7 +390,7 @@ export const linkRenderers = {
   },
   
   a: ({ node, children, href }) => {
-    
+    const theme = useTheme();
     if (href.startsWith('/profile/')) {
       const username = href.substring('/profile/'.length);
       return (
@@ -426,7 +403,7 @@ export const linkRenderers = {
             window.location.href = href;
           }}
           style={{ 
-            color: '#7B68EE', 
+            color: theme ? theme.palette.primary.main : '#7B68EE',
             fontWeight: 'bold',
             textDecoration: 'none',
             background: 'rgba(123, 104, 238, 0.08)',
@@ -452,7 +429,7 @@ export const linkRenderers = {
             window.location.href = href;
           }}
           style={{ 
-            color: '#7B68EE', 
+            color: theme ? theme.palette.primary.main : '#7B68EE',
             fontWeight: 'bold',
             textDecoration: 'none',
             background: 'rgba(123, 104, 238, 0.08)',
@@ -479,7 +456,7 @@ export const linkRenderers = {
             window.open(enhancedHref, '_blank');
           }}
           style={{ 
-            color: '#9E77ED', 
+            color: theme ? theme.palette.primary.main : '#9E77ED',
             fontWeight: 'bold',
             textDecoration: 'underline', 
             wordBreak: 'break-all'
@@ -496,7 +473,8 @@ export const linkRenderers = {
 
 // Компонент для отображения текста с ссылками - для использования везде, где не используется ReactMarkdown
 export const TextWithLinks = ({ text }) => {
-  const { parts, urls } = processTextWithLinks(text);
+  const theme = useTheme();
+  const { parts, urls } = processTextWithLinks(text, theme);
   
   return (
     <>
