@@ -14,7 +14,11 @@ import {
   useMediaQuery,
   Container,
   Paper,
-  Fade
+  Fade,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -35,6 +39,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [banInfo, setBanInfo] = useState(null);
   const [redirectPath, setRedirectPath] = useState('/');
+  const [showBanModal, setShowBanModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated, error: contextError, checkAuth } = useContext(AuthContext);
@@ -120,8 +125,9 @@ const Login = () => {
   useEffect(() => {
     if (contextError) {
       if (contextError.ban_info) {
-        
+        // Показываем модалку с информацией о бане
         setBanInfo(contextError.ban_info);
+        setShowBanModal(true);
         
         localStorage.setItem('login_error', JSON.stringify(contextError));
       } else {
@@ -308,11 +314,12 @@ const Login = () => {
       
       if (result && !result.success) {
         if (result.ban_info) {
-          
+          // Показываем модалку с информацией о бане
           setBanInfo(result.ban_info);
+          setShowBanModal(true);
           localStorage.setItem('login_error', JSON.stringify(result));
         } else if (result.error) {
-          
+          // Обычная ошибка
           let errorMsg;
           if (result.error.includes('не верифицирован')) {
             errorMsg = 'Ваша почта не подтверждена. Пожалуйста, проверьте вашу электронную почту и перейдите по ссылке в письме для подтверждения аккаунта.';
@@ -394,108 +401,6 @@ const Login = () => {
     }
   };
 
-  
-  if (banInfo) {
-    return (
-      <Container 
-        maxWidth={false} 
-        disableGutters
-        sx={{ 
-          display: 'flex', 
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          width: '100%'
-        }}
-      >
-        <Fade in={true} timeout={800}>
-          <Paper 
-            elevation={6}
-            sx={{ 
-              p: isMobile ? 3 : 4, 
-              width: '90%',
-              maxWidth: '480px',
-              borderRadius: 4,
-              background: 'rgba(30, 30, 40, 0.9)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-            }}
-          >
-            <Box sx={{ textAlign: 'center', mb: 4 }}>
-              <img 
-                src="/static/icons/clear-logonew.svg" 
-                alt="К-Коннект Лого" 
-                style={{ width: isMobile ? 80 : 100, marginBottom: 16 }}
-              />
-              <Typography variant="h4" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
-                Аккаунт заблокирован
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Вход в аккаунт временно ограничен
-              </Typography>
-            </Box>
-            
-            <Paper 
-              elevation={0}
-              sx={{ 
-                p: 3, 
-                mb: 3, 
-                width: '100%', 
-                backgroundColor: 'rgba(211, 47, 47, 0.1)', 
-                border: '1px solid rgba(211, 47, 47, 0.3)',
-                borderRadius: 3
-              }}
-            >
-              <Typography variant="h6" sx={{ color: '#d32f2f', mb: 1 }}>
-                Ваш аккаунт временно заблокирован
-              </Typography>
-              
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                Причина: {banInfo.reason}
-              </Typography>
-              
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                Бан истечет: {banInfo.formatted_end_date}
-              </Typography>
-              
-              <Typography variant="body1" sx={{ mb: 1 }}>
-                Осталось дней: {banInfo.remaining_days}
-              </Typography>
-              
-              {banInfo.is_auto_ban && (
-                <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
-                  Блокировка выдана автоматически за получение 3 предупреждений от модераторов.
-                </Typography>
-              )}
-            </Paper>
-            
-            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <Button
-                component={RouterLink}
-                to="/"
-                variant="outlined"
-                sx={{ 
-                  mt: 2,
-                  py: 1.5,
-                  borderRadius: 2,
-                  borderColor: '#D0BCFF',
-                  color: '#D0BCFF',
-                  '&:hover': {
-                    borderColor: '#B69DF8',
-                    backgroundColor: 'rgba(208, 188, 255, 0.04)'
-                  }
-                }}
-              >
-                Вернуться на главную
-              </Button>
-            </Box>
-          </Paper>
-        </Fade>
-      </Container>
-    );
-  }
-
   return (
     <Container 
       disableGutters
@@ -508,7 +413,90 @@ const Login = () => {
         position: 'relative',
       }}
     >
-      
+      {/* Модалка с информацией о блокировке */}
+      <Dialog
+        open={showBanModal}
+        onClose={() => setShowBanModal(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            background: 'rgba(30, 30, 40, 0.95)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          textAlign: 'center', 
+          color: '#D0BCFF',
+          fontWeight: 700,
+          fontSize: '1.5rem',
+          pb: 1
+        }}>
+          Аккаунт заблокирован
+        </DialogTitle>
+        <DialogContent sx={{ pt: 2 }}>
+          {banInfo && (
+            <Box sx={{ textAlign: 'center' }}>
+              <Box sx={{ 
+                p: 3, 
+                mb: 3, 
+                backgroundColor: 'rgba(211, 47, 47, 0.1)', 
+                border: '1px solid rgba(211, 47, 47, 0.3)',
+                borderRadius: 3
+              }}>
+                <Typography variant="h6" sx={{ color: '#d32f2f', mb: 2 }}>
+                  Ваш аккаунт временно заблокирован
+                </Typography>
+                
+                <Typography variant="body1" sx={{ mb: 2 }}>
+                  Причина: {banInfo.reason}
+                </Typography>
+                
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Бан истечет: {banInfo.formatted_end_date}
+                </Typography>
+                
+                <Typography variant="body1" sx={{ mb: 1 }}>
+                  Осталось дней: {banInfo.remaining_days}
+                </Typography>
+                
+                {banInfo.is_auto_ban && (
+                  <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
+                    Блокировка выдана автоматически за получение 3 предупреждений от модераторов.
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ 
+          justifyContent: 'center', 
+          pb: 3,
+          px: 3
+        }}>
+          <Button
+            onClick={() => setShowBanModal(false)}
+            variant="outlined"
+            sx={{ 
+              py: 1.5,
+              px: 4,
+              borderRadius: 2,
+              borderColor: '#D0BCFF',
+              color: '#D0BCFF',
+              '&:hover': {
+                borderColor: '#B69DF8',
+                backgroundColor: 'rgba(208, 188, 255, 0.04)'
+              }
+            }}
+          >
+            Понятно
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {!isMobile && (
         <Box 
           sx={{ 
@@ -632,26 +620,37 @@ const Login = () => {
           {isMobile && (
             <Box sx={{ 
               position: 'absolute',
-              top: '32px',
+              top: '24px',
               left: 0,
               width: '100%',
-              textAlign: 'center'
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 0
             }}>
-              <img 
-                src="/static/icons/clear-logonew.svg" 
-                alt="К-Коннект Лого" 
-                style={{ width: 90, marginBottom: 16 }} 
-              />
-              <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
-                <span style={{ color: '#D0BCFF' }}>К</span>-КОННЕКТ
-              </Typography>
+              <Box sx={{ 
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1.5
+              }}>
+                <img 
+                  src="/static/icons/clear-logonew.svg" 
+                  alt="К-Коннект Лого" 
+                  style={{ width: 30, height: 30 }} 
+                />
+                <Typography variant="h6" component="h1" sx={{ fontWeight: 700 }}>
+                  <span style={{ color: '#D0BCFF' }}>К</span>-КОННЕКТ
+                </Typography>
+              </Box>
               <Button
                 component={RouterLink}
                 to="/about"
                 variant="text"
                 sx={{ 
-                  mt: 1,
                   color: '#D0BCFF',
+                  fontSize: '0.75rem',
+                  padding: '0px 8px',
                   '&:hover': {
                     backgroundColor: 'rgba(208, 188, 255, 0.04)'
                   }
@@ -672,7 +671,7 @@ const Login = () => {
               background: isMobile ? 'transparent' : 'rgba(30, 30, 40, 0.85)',
               backdropFilter: 'blur(10px)',
               border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
-              mt: isMobile ? '120px' : 0
+              mt: isMobile ? '70px' : 0
             }}
           >
             <Typography variant="h5" component="h2" sx={{ mb: 1, fontWeight: 600 }}>

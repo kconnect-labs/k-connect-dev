@@ -1,6 +1,6 @@
 {
   "name": "k-connect",
-  "version": "2.8",
+  "version": "2.8.9 last",
   "private": true,
   "dependencies": {
     "@applemusic-like-lyrics/core": "^0.1.3",
