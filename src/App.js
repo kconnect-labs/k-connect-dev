@@ -1196,7 +1196,9 @@ function App() {
       document.body.style.backgroundSize = 'cover';
       document.body.style.backgroundPosition = 'center';
       document.body.style.backgroundRepeat = 'no-repeat';
-      document.body.style.backgroundAttachment = 'scroll';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.height = '100vh';
+      document.body.style.overflow = 'auto';
       document.body.classList.add('profile-background-active');
     } else {
       document.body.style.backgroundImage = '';
@@ -1204,6 +1206,8 @@ function App() {
       document.body.style.backgroundPosition = '';
       document.body.style.backgroundRepeat = '';
       document.body.style.backgroundAttachment = '';
+      document.body.style.height = '';
+      document.body.style.overflow = '';
       document.body.classList.remove('profile-background-active');
     }
   }, [profileBackground]);

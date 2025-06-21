@@ -539,6 +539,17 @@
     "user": {
       "default": "Пользователь"
     },
+    "types": {
+      "like": "лайк",
+      "likes": "лайков",
+      "comment": "комментарий",
+      "comments": "комментариев",
+      "follow": "подписка",
+      "follows": "подписок",
+      "transfer": "перевод",
+      "transfers": "переводов",
+      "notifications": "уведомлений"
+    },
     "points": {
       "label": "{count} баллов"
     },

@@ -13,12 +13,13 @@ import LanguageSwitcher from '../LanguageSwitcher';
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  minHeight: '100vh',
+  height: '100vh',
   backgroundColor: theme.palette.background.default,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundAttachment: 'fixed',
-  color: theme.palette.text.primary
+  color: theme.palette.text.primary,
+  overflow: 'auto'
 }));
 
 
@@ -133,9 +134,10 @@ const MainLayout = ({ children }) => {
       <Box sx={{ 
         backgroundColor: themeSettings?.backgroundColor || theme.palette.background.default,
         color: themeSettings?.textColor || theme.palette.text.primary,
-        minHeight: '100vh',
+        height: '100vh',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        overflow: 'auto'
       }}>
         {children}
       </Box>

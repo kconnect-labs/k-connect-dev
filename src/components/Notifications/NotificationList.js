@@ -16,7 +16,9 @@ import {
   Tooltip,
   styled,
   Zoom,
-  Chip
+  Chip,
+  Collapse,
+  ListItemButton
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -36,6 +38,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import GavelIcon from '@mui/icons-material/Gavel';
 import MessageIcon from '@mui/icons-material/Message';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Icon } from '@iconify/react';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
 import axios from 'axios';
@@ -175,6 +179,42 @@ const PointsIcon = styled('img')({
   height: 24,
   marginRight: 4,
 });
+
+const GroupedNotificationItem = styled(ListItemButton)(({ theme, unread }) => ({
+  transition: 'all 0.2s ease',
+  borderRadius: 8,
+  margin: theme.spacing(0.5, 0),
+  backgroundColor: unread ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+  position: 'relative',
+  overflow: 'hidden',
+  '&:hover': {
+    backgroundColor: unread ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.action.hover, 0.5),
+  },
+  '& .group-count': {
+    position: 'absolute',
+    right: 14,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    borderRadius: '50%',
+    width: 15,
+    height: 15,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '0.6rem',
+    fontWeight: 'bold',
+    zIndex: 2,
+  },
+  '& .expand-icon': {
+    position: 'absolute',
+    right: 28,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    transition: 'transform 0.2s ease',
+  }
+}));
 
 const getNotificationIcon = (type) => {
   switch (type) {
@@ -488,48 +528,78 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
+const getNotificationMessage = (notification, t) => {
+  if (!notification.message) return '';
+
+  const pointsMatch = notification.message.match(/(\d+)\s+балл[а-я]*/);
+  const points = pointsMatch ? pointsMatch[1] : null;
+  const badgeMatch = notification.message.match(/бейджик «([^»]+)»/);
+  const badgeName = badgeMatch ? badgeMatch[1] : null;
+  const priceMatch = notification.message.match(/за (\d+) балл/);
+  const price = priceMatch ? priceMatch[1] : null;
+  const royaltyMatch = notification.message.match(/\+(\d+) балл/);
+  const royalty = royaltyMatch ? royaltyMatch[1] : null;
+
+  switch (notification.type) {
+    case 'post_like':
+      return t('notifications.messages.post_like');
+    case 'post_comment':
+      return t('notifications.messages.post_comment');
+    case 'comment_like':
+      return t('notifications.messages.comment_like');
+    case 'post_repost':
+      return t('notifications.messages.post_repost');
+    case 'points_transfer':
+      return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
+    case 'badge_purchase':
+      return badgeName && price && royalty 
+        ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
+        : notification.message;
+    case 'wall_post':
+      return t('notifications.messages.wall_post');
+    case 'comment_reply':
+      return t('notifications.messages.comment_reply', { username: notification.sender_user?.name || t('notifications.user.default') });
+    default:
+      return notification.message;
+  }
+};
+
+const groupNotificationsByUser = (notifications) => {
+  const groups = {};
+  
+  notifications.forEach(notification => {
+    const userId = notification.sender_user?.id;
+    if (!userId) {
+      // Если нет пользователя, добавляем как отдельное уведомление
+      if (!groups['no-user']) {
+        groups['no-user'] = [];
+      }
+      groups['no-user'].push(notification);
+      return;
+    }
+    
+    if (!groups[userId]) {
+      groups[userId] = [];
+    }
+    groups[userId].push(notification);
+  });
+  
+  // Преобразуем группы в массив
+  return Object.entries(groups).map(([userId, notifications]) => ({
+    userId,
+    user: userId === 'no-user' ? null : notifications[0]?.sender_user,
+    notifications: notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+    unreadCount: notifications.filter(n => !n.is_read).length,
+    latestNotification: notifications[0]
+  }));
+};
+
 const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   const theme = useTheme();
   const { t } = useLanguage();
   const senderName = notification.sender_user?.name || t('notifications.user.default');
   const avatar = getAvatarUrl(notification.sender_user);
   const notificationColor = getNotificationColor(notification.type);
-
-  const getNotificationMessage = (notification) => {
-    if (!notification.message) return '';
-
-    const pointsMatch = notification.message.match(/(\d+)\s+балл[а-я]*/);
-    const points = pointsMatch ? pointsMatch[1] : null;
-    const badgeMatch = notification.message.match(/бейджик «([^»]+)»/);
-    const badgeName = badgeMatch ? badgeMatch[1] : null;
-    const priceMatch = notification.message.match(/за (\d+) балл/);
-    const price = priceMatch ? priceMatch[1] : null;
-    const royaltyMatch = notification.message.match(/\+(\d+) балл/);
-    const royalty = royaltyMatch ? royaltyMatch[1] : null;
-
-    switch (notification.type) {
-      case 'post_like':
-        return t('notifications.messages.post_like');
-      case 'post_comment':
-        return t('notifications.messages.post_comment');
-      case 'comment_like':
-        return t('notifications.messages.comment_like');
-      case 'post_repost':
-        return t('notifications.messages.post_repost');
-      case 'points_transfer':
-        return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
-      case 'badge_purchase':
-        return badgeName && price && royalty 
-          ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
-          : notification.message;
-      case 'wall_post':
-        return t('notifications.messages.wall_post');
-      case 'comment_reply':
-        return t('notifications.messages.comment_reply', { username: senderName });
-      default:
-        return notification.message;
-    }
-  };
 
   const renderNotificationContent = useCallback(() => {
     if (!notification.message) return null;
@@ -541,7 +611,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
     const usernameMatch = notification.message.match(/юзернейм "([^"]+)"/);
     const username = usernameMatch ? usernameMatch[1] : null;
 
-    let message = getNotificationMessage(notification);
+    let message = getNotificationMessage(notification, t);
     let showMessage = true;
 
     if (notification.type === 'points_transfer') {
@@ -552,7 +622,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
       }
     } else if (notification.message.includes('с сообщением:')) {
       const parts = notification.message.split('с сообщением:');
-      message = `${getNotificationMessage(notification)} ${t('notifications.messages.with_message')} ${parts[1]?.trim() || ''}`;
+      message = `${getNotificationMessage(notification, t)} ${t('notifications.messages.with_message')} ${parts[1]?.trim() || ''}`;
     }
 
     return (
@@ -662,6 +732,186 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   );
 });
 
+const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAsRead, isExpanded, onToggleExpanded, onUpdateUnreadCount }) => {
+  const theme = useTheme();
+  const { t } = useLanguage();
+  
+  const userName = group.user?.name || t('notifications.user.default');
+  const avatar = getAvatarUrl(group.user);
+  const notificationColor = getNotificationColor(group.latestNotification.type);
+  
+  const handleToggle = (e) => {
+    e.stopPropagation();
+    onToggleExpanded(group.userId);
+    
+    // Если группа раскрывается и есть непрочитанные уведомления, отмечаем их как прочитанные
+    // но не обновляем состояние списка, чтобы группа не перемещалась
+    if (!isExpanded && group.unreadCount > 0) {
+      const unreadNotifications = group.notifications.filter(n => !n.is_read);
+      if (unreadNotifications.length > 0) {
+        // Отправляем запросы на сервер без обновления локального состояния
+        unreadNotifications.forEach(notification => {
+          axios.post(`/api/notifications/${notification.id}/read`).catch(error => {
+            console.error('Error marking notification as read:', error);
+          });
+        });
+        
+        // Обновляем только счетчик непрочитанных уведомлений
+        onUpdateUnreadCount(prev => Math.max(0, prev - unreadNotifications.length));
+      }
+    }
+  };
+  
+  const handleGroupClick = () => {
+    // При клике на группу переходим к самому новому уведомлению
+    if (group.latestNotification && onClick) {
+      onClick(group.latestNotification);
+    }
+  };
+  
+  const getGroupSummary = () => {
+    const types = [...new Set(group.notifications.map(n => n.type))];
+    const count = group.notifications.length;
+    
+    if (count === 1) {
+      return getNotificationMessage(group.latestNotification, t);
+    }
+    
+    // Создаем краткое описание группы
+    const typeCounts = {};
+    group.notifications.forEach(n => {
+      typeCounts[n.type] = (typeCounts[n.type] || 0) + 1;
+    });
+    
+    const typeNames = Object.entries(typeCounts).map(([type, count]) => {
+      switch (type) {
+        case 'post_like':
+          return `${count} ${count === 1 ? t('notifications.types.like') : t('notifications.types.likes')}`;
+        case 'comment':
+          return `${count} ${count === 1 ? t('notifications.types.comment') : t('notifications.types.comments')}`;
+        case 'follow':
+          return `${count} ${count === 1 ? t('notifications.types.follow') : t('notifications.types.follows')}`;
+        case 'points_transfer':
+          return `${count} ${count === 1 ? t('notifications.types.transfer') : t('notifications.types.transfers')}`;
+        default:
+          return `${count} ${t('notifications.types.notifications')}`;
+      }
+    });
+    
+    return typeNames.join(', ');
+  };
+  
+  return (
+    <Box>
+      <GroupedNotificationItem
+        unread={group.unreadCount > 0 ? 1 : 0}
+        onClick={handleGroupClick}
+        sx={{ 
+          borderLeft: `2px solid ${group.unreadCount > 0 ? theme.palette[notificationColor].main : 'transparent'}`,
+          mb: 1,
+          borderRadius: 1,
+          '&:hover': {
+            backgroundColor: alpha(theme.palette[notificationColor].main, 0.08),
+          }
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar 
+            src={avatar} 
+            alt={userName}
+            sx={{ 
+              width: 40, 
+              height: 40,
+              border: group.unreadCount > 0 ? `2px solid ${theme.palette[notificationColor].main}` : 'none',
+            }}
+            onError={(e) => {
+              if (e.currentTarget && e.currentTarget.setAttribute) {
+                e.currentTarget.setAttribute('src', '/static/uploads/avatar/system/avatar.png');
+              }
+            }}
+          />
+        </ListItemAvatar>
+        
+        <ListItemText
+          primary={
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography 
+                variant="body2" 
+                fontWeight={group.unreadCount > 0 ? 600 : 400}
+                sx={{ 
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: 'calc(100% - 120px)'
+                }}
+              >
+                {userName}
+              </Typography>
+              <Typography 
+                variant="caption" 
+                color="text.secondary"
+                sx={{ 
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  fontSize: '0.65rem'
+                }}
+              >
+                {formatRelativeTime(group.latestNotification.created_at)}
+              </Typography>
+            </Box>
+          }
+          secondary={
+            <Box sx={{ mt: 1 }}>
+              <Typography variant="body2" color="text.primary">
+                {getGroupSummary()}
+              </Typography>
+            </Box>
+          }
+        />
+        
+        {/* Счетчик уведомлений в группе */}
+        {group.notifications.length > 1 && (
+          <Box className="group-count">
+            {group.notifications.length}
+          </Box>
+        )}
+        
+        {/* Иконка раскрытия */}
+        {group.notifications.length > 1 && (
+          <IconButton
+            size="small"
+            onClick={handleToggle}
+            className="expand-icon"
+            sx={{ 
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'primary.main'
+              }
+            }}
+          >
+            {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+        )}
+      </GroupedNotificationItem>
+      
+      {/* Раскрытый список уведомлений */}
+      {group.notifications.length > 1 && (
+        <Collapse in={isExpanded}>
+          <List sx={{ width: '100%', p: 0 }}>
+            {group.notifications.map((notification) => (
+              <NotificationItemComponent
+                key={notification.id} 
+                notification={notification}
+                onClick={onClick}
+              />
+            ))}
+          </List>
+        </Collapse>
+      )}
+    </Box>
+  );
+});
+
 const NotificationList = ({ onNewNotification }) => {
   const { t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
@@ -669,6 +919,7 @@ const NotificationList = ({ onNewNotification }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [error, setError] = useState(null);
+  const [expandedGroups, setExpandedGroups] = useState(new Set());
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -749,6 +1000,33 @@ const NotificationList = ({ onNewNotification }) => {
     }
   }, []);
 
+  const markGroupAsRead = useCallback(async (group) => {
+    try {
+      const unreadNotifications = group.notifications.filter(n => !n.is_read);
+      if (unreadNotifications.length === 0) return;
+      
+      // Отмечаем все уведомления в группе как прочитанные
+      await Promise.all(
+        unreadNotifications.map(notification =>
+          axios.post(`/api/notifications/${notification.id}/read`)
+        )
+      );
+      
+      // Обновляем состояние
+      setNotifications(prev => 
+        prev.map(n => 
+          group.notifications.some(groupN => groupN.id === n.id) 
+            ? { ...n, is_read: true }
+            : n
+        )
+      );
+      
+      setUnreadCount(prev => Math.max(0, prev - unreadNotifications.length));
+    } catch (error) {
+      console.error('Error marking group as read:', error);
+    }
+  }, []);
+
   const handleNotificationClick = useCallback(async (notification) => {
     if (!notification || !notification.id) return;
     
@@ -778,6 +1056,8 @@ const NotificationList = ({ onNewNotification }) => {
   }, [fetchNotifications]);
 
   const handleMenuClose = useCallback(() => {
+    // Очищаем состояние раскрытых групп
+    setExpandedGroups(new Set());
     setAnchorEl(null);
   }, []);
 
@@ -793,11 +1073,26 @@ const NotificationList = ({ onNewNotification }) => {
     }
   }, []);
 
-  const sortedNotifications = useMemo(() => {
-    return [...notifications].sort((a, b) => {
-      if (!a.is_read && b.is_read) return -1;
-      if (a.is_read && !b.is_read) return 1;
-      return new Date(b.created_at) - new Date(a.created_at);
+  const handleToggleExpanded = useCallback((userId) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(userId)) {
+        newSet.delete(userId);
+      } else {
+        newSet.add(userId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  // Группируем уведомления
+  const groupedNotifications = useMemo(() => {
+    return groupNotificationsByUser(notifications).sort((a, b) => {
+      // Сначала непрочитанные группы
+      if (a.unreadCount > 0 && b.unreadCount === 0) return -1;
+      if (a.unreadCount === 0 && b.unreadCount > 0) return 1;
+      // Затем по времени последнего уведомления
+      return new Date(b.latestNotification.created_at) - new Date(a.latestNotification.created_at);
     });
   }, [notifications]);
 
@@ -898,13 +1193,17 @@ const NotificationList = ({ onNewNotification }) => {
                 {t('notifications.error.load_failed')}
               </Typography>
             </EmptyNotifications>
-          ) : sortedNotifications.length > 0 ? (
+          ) : groupedNotifications.length > 0 ? (
             <List sx={{ width: '100%', p: 0 }}>
-              {sortedNotifications.map((notification) => (
-                <NotificationItemComponent
-                  key={notification.id} 
-                  notification={notification}
+              {groupedNotifications.map((group) => (
+                <GroupedNotificationComponent
+                  key={group.userId} 
+                  group={group}
                   onClick={handleNotificationClick}
+                  onMarkGroupAsRead={markGroupAsRead}
+                  isExpanded={expandedGroups.has(group.userId)}
+                  onToggleExpanded={handleToggleExpanded}
+                  onUpdateUnreadCount={setUnreadCount}
                 />
               ))}
             </List>
