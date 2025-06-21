@@ -2528,17 +2528,17 @@ const ProfilePage = () => {
                           </Typography>
                           
                           
-                          {loadingFriends ? (
+                          {loadingFollowers ? (
                             <CircularProgress size={20} />
-                          ) : friends && friends.length > 0 ? (
+                          ) : followers && followers.length > 0 ? (
                             <Box sx={{ display: 'flex', gap: 1 }}>
-                              {friends.slice(0, 3).map(friend => (
-                                <Tooltip key={friend.id} title={friend.name} arrow>
+                              {followers.slice(0, 3).map(follower => (
+                                <Tooltip key={follower.id} title={follower.name} arrow>
                                   <Avatar 
-                                    src={friend.avatar_url} 
-                                    alt={friend.name}
+                                    src={follower.avatar_url} 
+                                    alt={follower.name}
                                     component={Link}
-                                    to={`/profile/${friend.username}`}
+                                    to={`/profile/${follower.username}`}
                                     sx={{ 
                                       width: 32, 
                                       height: 32, 
@@ -2548,15 +2548,15 @@ const ProfilePage = () => {
                                       flexShrink: 0 
                                     }}
                                     onError={(e) => {
-                                      console.error(`Failed to load friend avatar for ${friend.username}`);
-                                      if (friend.id) {
-                                        e.target.src = `/static/uploads/avatar/${friend.id}/${friend.photo || 'avatar.png'}`;
+                                      console.error(`Failed to load follower avatar for ${follower.username}`);
+                                      if (follower.id) {
+                                        e.target.src = `/static/uploads/avatar/${follower.id}/${follower.photo || 'avatar.png'}`;
                                       }
                                     }}
                                   />
                                 </Tooltip>
                               ))}
-                              {user?.friends_count > 3 && (
+                              {followersCount > 3 && (
                                 <Tooltip title={t('profile.show_all_followers')}>
                                   <Avatar 
                                     component={Link}
@@ -2574,7 +2574,7 @@ const ProfilePage = () => {
                                       flexShrink: 0 
                                     }}
                                   >
-                                    +{user?.friends_count - 3}
+                                    +{followersCount - 3}
                                   </Avatar>
                                 </Tooltip>
                               )}
