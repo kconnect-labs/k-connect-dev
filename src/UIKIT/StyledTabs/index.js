@@ -4,7 +4,8 @@ import { styled } from '@mui/material/styles';
 
 const StyledTabsContainer = styled(Paper)(({ theme, fullWidth = false }) => ({
   borderRadius: '16px',
-  backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
+  background: 'rgba(26,26,26, 0.03)',
+  backdropFilter: 'blur(20px)',
   backgroundImage: 'unset',
   boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
   overflow: 'hidden',
@@ -69,7 +70,8 @@ const StyledTabs = ({
         sx={{ 
           '& .MuiTab-root': {
             color: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-            backgroundColor: '#1c1c1c',
+            background: 'rgba(26,26,26, 0.03)',
+            backdropFilter: 'blur(20px)',
             fontWeight: 'bold',
             fontSize: '1rem',
             textTransform: 'none',
@@ -78,7 +80,7 @@ const StyledTabs = ({
             transition: 'color 0.2s',
             '&.Mui-selected': {
               color: theme => theme.palette.primary.main,
-              backgroundColor: '#1c1c1c',
+              backgroundColor: 'rgba(26,26,26, 0.1)',
             }
           },
           '& .MuiTabs-indicator': {

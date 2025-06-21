@@ -79,7 +79,8 @@ const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: theme.palette.background.paper,
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
   border: theme.palette.mode === 'dark' 
     ? '1px solid rgba(255, 255, 255, 0.1)' 
     : '1px solid rgba(0, 0, 0, 0.1)'
@@ -834,7 +835,8 @@ const CreatePost = ({ onPostCreated }) => {
       sx={{ 
         p: 2, 
         borderRadius: 1,
-        backgroundColor: (theme) => theme.palette.background.paper,
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(20px)',
         position: 'relative',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)'
@@ -1771,8 +1773,8 @@ const MainPage = React.memo(() => {
             justifyContent: 'space-between',
             mb: 0,
             borderRadius: '12px',
-            backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
-            backgroundImage: 'unset',
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <Button 
@@ -1874,11 +1876,10 @@ const MainPage = React.memo(() => {
               p: 0, 
               borderRadius: '12px', 
               mb: -0.625,
-              background: theme => theme.palette.mode === 'dark' 
-                ? 'linear-gradient(145deg, #222222, #1c1c1c)'
-                : theme.palette.background.paper,
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-              border: theme => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
+              border: '1px solid rgba(255, 255, 255, 0.05)',
               overflow: 'hidden',
               display: { xs: 'none', sm: 'block' } 
             }}

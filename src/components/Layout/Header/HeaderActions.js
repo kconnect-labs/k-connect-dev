@@ -23,7 +23,7 @@ const HeaderActions = ({
           sx={{
             bgcolor: 'transparent',
             color: 'inherit',
-            opacity: 0.6,
+            opacity: 0.7,
             transition: 'all 0.2s ease',
             '&:hover': {
               bgcolor: alpha(theme.palette.primary.main, 0.08),
@@ -47,7 +47,7 @@ const HeaderActions = ({
         color: showSearch
           ? 'primary.main' 
           : 'inherit',
-        opacity: 0.6,
+        opacity: 0.7,
         transition: 'all 0.2s ease',
         '&:hover': {
           bgcolor: alpha(theme.palette.primary.main, 0.08),
@@ -71,7 +71,7 @@ const HeaderActions = ({
       color="inherit"
       sx={{ 
         ml: 0.5,
-        opacity: 0.6,
+        opacity: 1,
         transition: 'all 0.2s ease',
         '&:hover': {
           transform: 'scale(1.05)',

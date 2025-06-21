@@ -64,8 +64,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
   overflow: 'hidden',
   boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
   position: 'relative',
-  backgroundColor: theme.palette.mode === 'dark' ? alpha('#000', 0.8) : '#fff',
-  backdropFilter: 'blur(10px)',
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
   '&:hover': {
     transform: 'translateY(-6px)',
     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
@@ -131,7 +131,8 @@ const BadgeCardContent = styled(CardContent)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  background: theme.palette.background.paper,
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(40px)',
   borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   '&:last-child': {
     paddingBottom: theme.spacing(1.5),

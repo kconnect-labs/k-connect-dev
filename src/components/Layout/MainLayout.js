@@ -146,33 +146,14 @@ const MainLayout = ({ children }) => {
     <MainContainer 
       sx={{
         backgroundColor: themeSettings?.backgroundColor || theme.palette.background.default,
-        backgroundImage: themeSettings?.backgroundImage 
-          ? `url(${themeSettings.backgroundImage})` 
-          : 'none',
+        backgroundImage: profileBackground
+          ? `url(${profileBackground})`
+          : (themeSettings?.backgroundImage 
+            ? `url(${themeSettings.backgroundImage})` 
+            : 'none'),
         color: themeSettings?.textColor || theme.palette.text.primary
       }}
     >
-      {profileBackground && (
-        <div
-          className="profile-bg-image"
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundImage: `url(${profileBackground})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'scroll',
-            pointerEvents: 'none',
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            top: 0, left: 0, width: '100%', height: '100%',
-            background: 'rgba(0,0,0,0.45)'
-          }} />
-        </div>
-      )}
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       

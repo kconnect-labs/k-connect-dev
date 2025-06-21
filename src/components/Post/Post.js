@@ -87,6 +87,8 @@ import { ContextMenu, useContextMenu } from '../../UIKIT';
 import RepostImageGrid from './RepostImageGrid';  
 import MusicTrack from './MusicTrack';
 import { VerificationBadge } from '../../UIKIT';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
@@ -135,13 +137,16 @@ const MarkdownContent = styled(Box, {
     backgroundColor: theme.palette.action.hover,
     padding: theme.spacing(0, 0.6),
     borderRadius: 3,
+    fontSize: '0.85rem',
   },
   '& pre': {
-    backgroundColor: theme.palette.grey[900],
-    color: theme.palette.common.white,
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(50px)',
+    WebkitBackdropFilter: 'blur(50px)',
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadius,
     overflowX: 'auto',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     '& code': {
       backgroundColor: 'transparent',
       padding: 0,
@@ -1230,13 +1235,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     setReportDialog({...reportDialog, submitting: true, error: null});
     
     try {
-      const reportMessage = `🚨 *${t('post.report_dialog.title')}*\n\n` +
-        `📝 *${t('post.report_dialog.post_id')}*: ${post.id}\n` +
-        `👤 *${t('post.report_dialog.author')}*: ${post.user?.name} (@${post.user?.username})\n` +
-        `🚩 *${t('post.report_dialog.reason')}*: ${reportDialog.reason}\n` +
-        `👮 *${t('post.report_dialog.reporter')}*: ${currentUser?.name} (@${currentUser?.username})\n` +
-        `⏰ *${t('post.report_dialog.time')}*: ${new Date().toLocaleString()}` +
-        (post.content ? `\n\n📄 *${t('post.report_dialog.post_text')}*:\n${post.content?.substring(0, 300)}${post.content?.length > 300 ? '...' : ''}` : `\n\n📄 *${t('post.report_dialog.post_media')}*`);
+      
+      const reportMessage = `🚨 *ЖАЛОБА НА ПОСТ*\n\n` +
+        `📝 *ID поста*: ${post.id}\n` +
+        `👤 *Автор*: ${post.user?.name} (@${post.user?.username})\n` +
+        `🚩 *Причина*: ${reportDialog.reason}\n` +
+        `👮 *Отправитель*: ${currentUser?.name} (@${currentUser?.username})\n` +
+        `⏰ *Время*: ${new Date().toLocaleString()}` +
+        (post.content ? `\n\n📄 *Текст поста*:\n${post.content?.substring(0, 300)}${post.content?.length > 300 ? '...' : ''}` : `\n\n📄 *Пост содержит медиа-контент без текста*`);
+      
       
       const response = await axios.post('/api/report/send-to-telegram', {
         message: reportMessage,
@@ -1574,6 +1581,30 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     }
   };
 
+  const markdownComponents = {
+    ...linkRenderers,
+    code({node, inline, className, children, ...props}) {
+      const match = /language-(\w+)/.exec(className || '');
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={vscDarkPlus}
+          language={match[1]}
+          PreTag="div"
+          customStyle={{
+            backgroundColor: 'transparent'
+          }}
+          {...props}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    }
+  };
+
   return (
     <>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -1750,7 +1781,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               
               {processedContent && (
                 <ReactMarkdown 
-                  components={linkRenderers}
+                  components={markdownComponents}
                   skipHtml={false}
                   transformLinkUri={null} 
                   remarkPlugins={[]}

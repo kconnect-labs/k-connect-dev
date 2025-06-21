@@ -1,13 +1,16 @@
 import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, rgbToHex, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getGradientEffects, gradientBorder } from '../styles/gradientEffects';
+import { rgba } from 'framer-motion';
 
 const InfoBlockContainer = styled(Box)(({ theme, styleVariant = 'default' }) => ({
   width: '100%',
   margin: '0 auto',
   marginBottom: theme.spacing(1),
   ...gradientBorder(theme, styleVariant),
+  background: 'rgba(26,26,26, 0.03)',
+  backdropFilter: 'blur(20px)',
   color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
   textAlign: 'left',
   padding: 14,

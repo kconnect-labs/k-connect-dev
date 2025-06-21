@@ -548,7 +548,7 @@
     },
     "subscription": {
       "subscriber": "Subscriber",
-      "days_left": "days left",
+      "days_left": "months",
       "expired": "Subscription expired",
       "channel": "Channel",
       "pick_me": "Pick Me",
