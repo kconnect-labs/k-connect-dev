@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import { useLanguage } from '@/context/LanguageContext';
 import {
   Box,
   Typography,
@@ -212,6 +213,7 @@ const DecorationItem = styled('img')({
 });
 
 const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
+  const { t } = useLanguage();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [transferData, setTransferData] = useState({ username: '', amount: '', message: '', recipient_id: null });
@@ -245,31 +247,25 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
   const searchUser = (query) => {
     setUserSearch(prev => ({...prev, loading: true}));
     
-    
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
     
-    
     debounceTimerRef.current = setTimeout(() => {
-      
       const url = `/api/search/recipients?query=${encodeURIComponent(query)}`;
       
       axios.get(url)
         .then(response => {
           if (response.data && response.data.users && response.data.users.length > 0) {
-            
             const exactMatch = response.data.users.find(u => 
               u.username.toLowerCase() === query.toLowerCase()
             );
-            
             
             if (exactMatch) {
               setTransferData(prev => ({...prev, recipient_id: exactMatch.id}));
             } else {
               setTransferData(prev => ({...prev, recipient_id: null}));
             }
-            
             
             setUserSearch(prev => ({
               ...prev,
@@ -288,7 +284,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
           }
         })
         .catch(error => {
-          console.error('Ошибка при поиске пользователя:', error);
+          console.error('Error searching for user:', error);
           setUserSearch(prev => ({
             ...prev,
             loading: false,
@@ -346,16 +342,16 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
 
   const handleTransferPoints = async () => {
     const errors = {};
-    if (!transferData.username) errors.username = 'Введите имя пользователя';
-    if (!transferData.recipient_id) errors.username = 'Пользователь не найден';
+    if (!transferData.username) errors.username = t('balance.transfer.errors.enter_username');
+    if (!transferData.recipient_id) errors.username = t('balance.transfer.errors.user_not_found');
     if (!transferData.amount) {
-      errors.amount = 'Введите сумму перевода';
+      errors.amount = t('balance.transfer.errors.enter_amount');
     } else if (isNaN(transferData.amount) || parseInt(transferData.amount) <= 0) {
-      errors.amount = 'Сумма должна быть положительным числом';
+      errors.amount = t('balance.transfer.errors.positive_amount');
     } else {
       const { total } = calculateCommission(transferData.amount);
       if (total > userPoints) {
-        errors.amount = `Недостаточно баллов для перевода`;
+        errors.amount = t('balance.transfer.errors.insufficient_points');
       }
     }
 
@@ -481,33 +477,33 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               <SendIcon />
             </DialogAvatar>
             <Typography variant="h5" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-              Перевод баллов
+              {t('balance.transfer_menu.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: '80%' }}>
-              Мгновенный перевод баллов другому пользователю платформы
+              {t('balance.transfer_menu.subtitle')}
             </Typography>
           </DialogHeader>
           
           <DialogContent sx={{ p: 3, bgcolor: 'rgba(10, 10, 10, 0.8)' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
               <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                Доступно для перевода
+                {t('balance.transfer_menu.available')}
               </Typography>
               <Typography variant="h6" fontWeight="bold" sx={{ color: '#AAAAAA' }}>
-                {userPoints} баллов
+                {userPoints} {t('balance.transfer_menu.points_suffix')}
               </Typography>
             </Box>
 
             <InputContainer>
               <StyledTextField
-                label="Получатель"
+                label={t('balance.transfer_menu.recipient.label')}
                 fullWidth
                 variant="outlined"
                 value={transferData.username}
                 onChange={handleUsernameChange}
                 error={!!transferErrors.username}
                 helperText={transferErrors.username}
-                placeholder="Введите имя пользователя"
+                placeholder={t('balance.transfer_menu.recipient.placeholder')}
                 InputProps={{
                   endAdornment: (
                     <React.Fragment>
@@ -535,7 +531,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               <SuggestionsContainer>
                 <Box sx={{ p: 2, pb: 1 }}>
                   <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
-                    Похожие пользователи
+                    {t('balance.transfer_menu.recipient.similar_users')}
                   </Typography>
                 </Box>
                 {userSearch.suggestions.map((user) => (
@@ -548,7 +544,6 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                       const [path, ...styles] = user.decoration.item_path.split(';');
                       const styleObj = styles.reduce((acc, style) => {
                         const [key, value] = style.split(':').map(s => s.trim());
-                        // Уменьшаем размеры в два раза для height
                         if (key === 'height') {
                           const size = parseInt(value);
                           return { ...acc, [key]: `${size / 2}px` };
@@ -559,7 +554,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                       return (
                         <DecorationItem 
                           src={path}
-                          alt="decoration"
+                          alt={t('balance.transfer_menu.recipient.decoration_alt')}
                           style={styleObj}
                         />
                       );
@@ -609,14 +604,14 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               }}>
                 <CheckCircleIcon sx={{ color: '#4CAF50', mr: 1 }} />
                 <Typography variant="body2">
-                  Получатель подтвержден: <strong>{transferData.username}</strong>
+                  {t('balance.transfer_menu.recipient.confirmed')} <strong>{transferData.username}</strong>
                 </Typography>
               </Box>
             )}
             
             <InputContainer>
               <StyledTextField
-                label="Сумма перевода"
+                label={t('balance.transfer_menu.amount.label')}
                 fullWidth
                 variant="outlined"
                 type="number"
@@ -631,44 +626,44 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                 error={!!transferErrors.amount}
                 helperText={transferErrors.amount}
                 InputProps={{
-                  endAdornment: <InputAdornment position="end">баллов</InputAdornment>
+                  endAdornment: <InputAdornment position="end">{t('balance.transfer_menu.points_suffix')}</InputAdornment>
                 }}
               />
               {transferData.amount && !transferErrors.amount && (
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(0,0,0,0.2)', borderRadius: 1 }}>
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Детали перевода:
+                    {t('balance.transfer_menu.amount.details')}
                   </Typography>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Сумма перевода:
+                      {t('balance.transfer_menu.amount.transfer_amount')}
                     </Typography>
                     <Typography variant="body2" color="text.primary">
-                      {transferData.amount} баллов
+                      {transferData.amount} {t('balance.transfer_menu.points_suffix')}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Комиссия (10%):
+                      {t('balance.transfer_menu.amount.commission')}
                     </Typography>
                     <Typography variant="body2" color="error">
-                      -{calculateCommission(transferData.amount).commission} баллов
+                      -{calculateCommission(transferData.amount).commission} {t('balance.transfer_menu.points_suffix')}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography variant="body2" color="text.secondary">
-                      Получатель получит:
+                      {t('balance.transfer_menu.amount.recipient_gets')}
                     </Typography>
                     <Typography variant="body2" color="success.main">
-                      {calculateCommission(transferData.amount).recipientAmount} баллов
+                      {calculateCommission(transferData.amount).recipientAmount} {t('balance.transfer_menu.points_suffix')}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="body2" color="text.secondary">
-                      Ваш баланс после перевода:
+                      {t('balance.transfer_menu.amount.your_balance')}
                     </Typography>
                     <Typography variant="body2" color="text.primary">
-                      {userPoints - calculateCommission(transferData.amount).total} баллов
+                      {userPoints - calculateCommission(transferData.amount).total} {t('balance.transfer_menu.points_suffix')}
                     </Typography>
                   </Box>
                 </Box>
@@ -677,12 +672,12 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
             
             <InputContainer>
               <StyledTextField
-                label="Сообщение (необязательно)"
+                label={t('balance.transfer_menu.message.label')}
                 fullWidth
                 variant="outlined"
                 value={transferData.message}
                 onChange={(e) => setTransferData(prev => ({ ...prev, message: e.target.value }))}
-                placeholder="Введите сообщение для получателя"
+                placeholder={t('balance.transfer_menu.message.placeholder')}
                 multiline
                 rows={2}
               />
@@ -709,14 +704,14 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               onClick={onClose}
               disabled={isTransferring}
             >
-              Отмена
+              {t('balance.transfer_menu.buttons.cancel')}
             </CancelButton>
             <GradientButton 
               onClick={handleTransferPoints} 
               disabled={!userSearch.exists || !transferData.recipient_id || userSearch.loading || !transferData.amount || isTransferring}
               startIcon={isTransferring ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
             >
-              {isTransferring ? 'Выполнение перевода...' : 'Перевести безопасно'}
+              {isTransferring ? t('balance.transfer_menu.buttons.processing') : t('balance.transfer_menu.buttons.transfer')}
             </GradientButton>
           </ButtonContainer>
         </>
@@ -727,10 +722,10 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               <CheckCircleIcon sx={{ fontSize: 32 }} />
             </DialogAvatar>
             <Typography variant="h5" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>
-              Перевод выполнен
+              {t('balance.transfer_menu.success.title')}
             </Typography>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', maxWidth: '80%' }}>
-              Баллы успешно переведены пользователю {transferReceipt?.recipient}
+              {t('balance.transfer_menu.success.subtitle', { recipient: transferReceipt?.recipient })}
             </Typography>
           </DialogHeader>
           
@@ -743,21 +738,21 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               border: '1px solid rgba(60, 60, 60, 0.4)',
             }}>
               <Typography variant="subtitle1" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2 }}>
-                Детали транзакции
+                {t('balance.transfer_menu.success.details.title')}
               </Typography>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                  Сумма перевода
+                  {t('balance.transfer_menu.success.details.amount')}
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                  {transferReceipt?.amount} баллов
+                  {transferReceipt?.amount} {t('balance.transfer_menu.points_suffix')}
                 </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                 <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                  Получатель
+                  {t('balance.transfer_menu.success.details.recipient')}
                 </Typography>
                 <Typography variant="body1">
                   {transferReceipt?.recipient}
@@ -766,13 +761,13 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               
               <Box sx={{ mt: 4, mb: 1 }}>
                 <Typography variant="subtitle2" sx={{ color: '#4CAF50', mb: 2 }}>
-                  Баланс после операции
+                  {t('balance.transfer_menu.success.details.balance.title')}
                 </Typography>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <Box>
                     <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
-                      До перевода
+                      {t('balance.transfer_menu.success.details.balance.before')}
                     </Typography>
                     <Typography variant="h6">
                       {transferReceipt?.previousBalance}
@@ -783,7 +778,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                   
                   <Box sx={{ textAlign: 'right' }}>
                     <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
-                      После перевода
+                      {t('balance.transfer_menu.success.details.balance.after')}
                     </Typography>
                     <Typography variant="h6" sx={{ color: '#AAAAAA' }}>
                       {transferReceipt?.newBalance}
@@ -809,11 +804,10 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                     }
                   }}
                 >
-                  Скачать квитанцию
+                  {t('balance.transfer_menu.success.receipt.download')}
                 </Button>
               </Box>
             )}
-            
           </DialogContent>
           
           <ButtonContainer>
@@ -824,7 +818,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
               }}
               fullWidth
             >
-              Закрыть
+              {t('balance.transfer_menu.buttons.close')}
             </GradientButton>
           </ButtonContainer>
         </>

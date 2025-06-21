@@ -1,31 +1,31 @@
 import React from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, rgbToHex, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { getGradientEffects, gradientBorder } from '../styles/gradientEffects';
+import { rgba } from 'framer-motion';
 
 const InfoBlockContainer = styled(Box)(({ theme, styleVariant = 'default' }) => ({
   width: '100%',
   margin: '0 auto',
   marginBottom: theme.spacing(1),
   ...gradientBorder(theme, styleVariant),
+  background: 'rgba(26,26,26, 0.03)',
+  backdropFilter: 'blur(20px)',
   color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
   textAlign: 'left',
   padding: 14,
   ...getGradientEffects(theme, styleVariant),
 }));
 
-const InfoBlockTitle = styled(Typography)(({ theme, styleVariant = 'default' }) => ({
+const StyledTitle = styled('div')(({ theme, styleVariant = 'default' }) => ({
   fontWeight: 700,
   margin: 0,
   color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
-  '&.MuiTypography-root': {
-    margin: 0,
-    marginBottom: 0
-  },
+  marginBottom: 0,
   ...theme.components?.InfoBlock?.styleOverrides?.title,
 }));
 
-const InfoBlockDescription = styled(Typography)(({ theme, styleVariant = 'default' }) => ({
+const StyledDescription = styled('div')(({ theme, styleVariant = 'default' }) => ({
   color: styleVariant === 'dark' ? 'rgba(255,255,255,0.7)' : theme.palette.text.secondary,
   ...theme.components?.InfoBlock?.styleOverrides?.description,
 }));
@@ -56,22 +56,18 @@ const InfoBlock = ({
   return (
     <InfoBlockContainer styleVariant={styleVariant} sx={sx} {...props}>
       {title && (
-        <InfoBlockTitle 
-          variant="h5" 
-          styleVariant={styleVariant}
-          sx={titleSx}
-        >
-          {title}
-        </InfoBlockTitle>
+        <StyledTitle styleVariant={styleVariant} style={titleSx}>
+          <Typography variant="h5" sx={{ margin: 0 }}>
+            {title}
+          </Typography>
+        </StyledTitle>
       )}
       {description && (
-        <InfoBlockDescription 
-          variant="body2" 
-          styleVariant={styleVariant}
-          sx={descriptionSx}
-        >
-          {description}
-        </InfoBlockDescription>
+        <StyledDescription styleVariant={styleVariant} style={descriptionSx}>
+          <Typography variant="body2">
+            {description}
+          </Typography>
+        </StyledDescription>
       )}
       {children}
     </InfoBlockContainer>

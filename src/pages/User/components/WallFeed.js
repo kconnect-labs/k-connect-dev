@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import axios from 'axios';
-
+import { useLanguage } from '../../../context/LanguageContext';
 
 import Post from '../../../components/Post/Post';
 import PostSkeleton from '../../../components/Post/PostSkeleton';
 
 const WallFeed = ({ userId }) => {
+  const { t } = useLanguage();
   const [wallPosts, setWallPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -163,7 +164,7 @@ const WallFeed = ({ userId }) => {
   if (error) {
     return (
       <Box sx={{ textAlign: 'center', py: 3, bgcolor: 'background.paper', borderRadius: 2, mt: 2 }}>
-        <Typography color="error">{error}</Typography>
+        <Typography color="error">{t('profile.feed.wall.loading_error')}</Typography>
       </Box>
     );
   }
@@ -172,7 +173,7 @@ const WallFeed = ({ userId }) => {
     return (
       <Box sx={{ textAlign: 'center', py: 6, bgcolor: 'background.paper', borderRadius: 2, mt: 2 }}>
         <Typography variant="h6" color="text.secondary">
-          На стене пока нет записей
+          {t('profile.feed.wall.empty')}
         </Typography>
       </Box>
     );
@@ -215,7 +216,7 @@ const WallFeed = ({ userId }) => {
       {!hasMore && wallPosts.length > 5 && (
         <Box sx={{ textAlign: 'center', py: 2, mt: 2 }}>
           <Typography variant="body2" color="text.secondary">
-            Все записи стены загружены
+            {t('profile.feed.wall.all_loaded')}
           </Typography>
         </Box>
       )}

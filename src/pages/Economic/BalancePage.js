@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useRef, useMemo } from 'react';
 import {
   Container,
   Typography,
@@ -40,7 +40,8 @@ import {
   TableContainer,
   TableBody,
   Table,
-  CardMedia
+  CardMedia,
+  bottomNavigationActionClasses
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
@@ -82,6 +83,7 @@ import StyledTabs from '../../UIKIT/StyledTabs';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InfoBlock from '../../UIKIT/InfoBlock';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
+import { useLanguage } from '@/context/LanguageContext';
 
 
 
@@ -591,7 +593,7 @@ const generateReceiptForTransaction = async (transaction) => {
       
       downloadPdfReceipt(pdfDataUrl, transactionId, response.data.file_path);
     } else {
-      throw new Error('Не удалось сгенерировать чек на сервере');
+      throw new Error(t('balance.errors.receipt_generation'));
     }
   } catch (error) {
     console.error('Ошибка при создании чека для транзакции:', error);
@@ -756,6 +758,7 @@ const ExpandIcon = styled(ExpandMoreIcon)(({ theme, expanded }) => ({
 }));
 
 const BalancePage = () => {
+  const { t } = useLanguage();
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -800,6 +803,7 @@ const BalancePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
   const [isPointsInfoExpanded, setIsPointsInfoExpanded] = useState(false);
+  const { language } = useLanguage();
 
   
   const allTransactions = React.useMemo(() => {
@@ -808,7 +812,7 @@ const BalancePage = () => {
       type: 'purchase',
       date: new Date(purchase.purchase_date),
       amount: -purchase.price_paid,
-      title: `Покупка бейджика`,
+      title: t('balance.transactions.badge_purchase'),
       description: `"${purchase.badge.name}"`,
       icon: <ShoppingCartIcon sx={{ color: 'error.main' }} />
     }));
@@ -818,7 +822,7 @@ const BalancePage = () => {
       type: 'royalty',
       date: new Date(royalty.purchase_date),
       amount: royalty.royalty_amount,
-      title: `Роялти от покупки`,
+      title: t('balance.transactions.royalty_from_purchase'),
       description: `${royalty.buyer.name}`,
       buyer_name: royalty.buyer.name,
       badge_name: royalty.badge_name,
@@ -826,17 +830,16 @@ const BalancePage = () => {
     }));
 
     const transfers = transferHistory.map(transfer => {
-
       const senderId = parseInt(transfer.sender_id, 10);
       const userId = parseInt(user.id, 10);
       const is_sender = senderId === userId;
       
       const isClickerWithdrawal = transfer.sender_id === transfer.recipient_id && 
-                               transfer.message === "Вывод баллов из кликера";
+                               transfer.message === t('balance.transactions.clicker_withdrawal_message');
       
-      let title = isClickerWithdrawal ? 'Вывод из кликера' : 
-                 (is_sender ? 'Перевод' : 'Пополнение');
-      let description = isClickerWithdrawal ? 'Баллы из кликера' : 
+      let title = isClickerWithdrawal ? t('balance.transactions.clicker_withdrawal') : 
+                 (is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'));
+      let description = isClickerWithdrawal ? t('balance.transactions.clicker_points') : 
                        (is_sender ? transfer.recipient_username : transfer.sender_username);
       
       return {
@@ -860,11 +863,10 @@ const BalancePage = () => {
       type: 'username',
       date: new Date(purchase.purchase_date),
       amount: -purchase.price_paid,
-      title: `Покупка юзернейма`,
+      title: t('balance.transactions.username_purchase'),
       description: `@${purchase.username}`,
       icon: <AccountCircleIcon sx={{ color: 'error.main' }} />
     }));
-
 
     const weeklyActivities = gameTransactions
       .filter(transaction => transaction.transaction_type === 'weekly_activity')
@@ -873,8 +875,8 @@ const BalancePage = () => {
           ...transaction,
           type: 'weekly_activity',
           date: new Date(transaction.date || transaction.created_at),
-          title: 'Еженедельные баллы',
-          description: transaction.description || 'Начисление за активность',
+          title: t('balance.transactions.weekly_points'),
+          description: transaction.description || t('balance.transactions.activity_reward'),
           icon: <TrendingUpIcon sx={{ color: 'success.main' }} />
         };
       });
@@ -884,7 +886,7 @@ const BalancePage = () => {
       .filter(transaction => transaction.transaction_type !== 'weekly_activity')
       .map(transaction => {
         let icon = null;
-        let title = transaction.description || 'Транзакция';
+        let title = transaction.description || t('balance.transactions.transaction');
         let type = transaction.transaction_type || 'unknown';
         
 
@@ -892,16 +894,16 @@ const BalancePage = () => {
 
           if (type === 'blackjack_win' || type === 'blackjack_win_21') {
             icon = <CasinoIcon sx={{ color: 'success.main' }} />;
-            title = 'Выигрыш в игре "21"';
+            title = t('balance.transactions.blackjack_win');
           } else if (type === 'blackjack_tie') {
             icon = <CasinoIcon sx={{ color: 'info.main' }} />;
-            title = 'Ничья в игре "21"';
+            title = t('balance.transactions.blackjack_tie');
           } else if (type === 'blackjack_lose' || type === 'blackjack_lose_bust') {
             icon = <CasinoIcon sx={{ color: 'error.main' }} />;
-            title = 'Проигрыш в игре "21"';
+            title = t('balance.transactions.blackjack_lose');
           } else if (type === 'minigame_bet') {
             icon = <SportsEsportsIcon sx={{ color: 'error.main' }} />;
-            title = 'Ставка в мини-игре';
+            title = t('balance.transactions.minigame_bet');
           } else {
             icon = <SportsEsportsIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />;
           }
@@ -919,7 +921,7 @@ const BalancePage = () => {
     
     return [...purchases, ...royalties, ...transfers, ...usernames, ...weeklyActivities, ...otherGameTransactions]
       .sort((a, b) => b.date - a.date);
-  }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, gameTransactions, user?.id]);
+  }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, gameTransactions, user?.id, t]);
 
   useEffect(() => {
     if (user) {
@@ -948,7 +950,7 @@ const BalancePage = () => {
       setUserPoints(response.data.points);
     } catch (error) {
       console.error('Ошибка при загрузке баллов:', error);
-      setError('Не удалось загрузить баланс баллов');
+      setError(t('balance.errors.points_loading'));
     }
   };
 
@@ -1139,14 +1141,14 @@ const BalancePage = () => {
   
   const handleTransferPoints = async () => {
     const errors = {};
-    if (!transferData.username) errors.username = 'Введите имя пользователя';
-    if (!transferData.recipient_id) errors.username = 'Пользователь не найден';
+    if (!transferData.username) errors.username = t('balance.transfer.errors.enter_username');
+    if (!transferData.recipient_id) errors.username = t('balance.transfer.errors.user_not_found');
     if (!transferData.amount) {
-      errors.amount = 'Введите сумму перевода';
+      errors.amount = t('balance.transfer.errors.enter_amount');
     } else if (isNaN(transferData.amount) || parseInt(transferData.amount) <= 0) {
-      errors.amount = 'Сумма должна быть положительным числом';
+      errors.amount = t('balance.transfer.errors.positive_amount');
     } else if (parseInt(transferData.amount) > userPoints) {
-      errors.amount = 'Недостаточно баллов для перевода';
+      errors.amount = t('balance.transfer.errors.insufficient_points');
     }
 
     if (Object.keys(errors).length > 0) {
@@ -1263,13 +1265,13 @@ const BalancePage = () => {
     sunday.setHours(23, 50, 0, 0);
     
     return {
-      start: monday.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }),
-      end: sunday.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' })
+      start: monday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'long' }),
+      end: sunday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'long' })
     };
   };
 
   
-  const weekRange = getCurrentWeekRange();
+  const weekRange = useMemo(() => getCurrentWeekRange(), [language]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -1585,6 +1587,16 @@ const BalancePage = () => {
     >
       <InfoBlock
         styleVariant="dark"
+        sx={{
+          '&::before': {
+            bottom: 0,
+            transform: 'rotate(-12deg)',
+          },
+          '&::after': {
+            bottom: 0,
+            transform: 'rotate(12deg)',
+          }
+        }}
         title={
           <Box sx={{ textAlign: 'center' }}>
             <PointsIcon>
@@ -1597,7 +1609,7 @@ const BalancePage = () => {
                 marginBottom: 1
               }}
             >
-              Текущий баланс
+              {t('balance.current_balance.title')}
             </Typography>
             <BalanceAmount>
               {userPoints}
@@ -1606,25 +1618,25 @@ const BalancePage = () => {
         }
         description={
           <ActionButtonsContainer>
-            <ActionButtonItem onClick={() => navigate('/badge-shop')}>
+            <ActionButtonItem key="action-pay" onClick={() => navigate('/badge-shop')}>
               <ActionCircleIcon>
                 <PaymentIcon />
               </ActionCircleIcon>
-              <ActionButtonText>Оплатить</ActionButtonText>
+              <ActionButtonText>{t('balance.actions.pay')}</ActionButtonText>
             </ActionButtonItem>
             
-            <ActionButtonItem onClick={() => setOpenKeyDialog(true)}>
+            <ActionButtonItem key="action-topup" onClick={() => setOpenKeyDialog(true)}>
               <ActionCircleIcon>
                 <AddIcon />
               </ActionCircleIcon>
-              <ActionButtonText>Пополнить</ActionButtonText>
+              <ActionButtonText>{t('balance.actions.topup')}</ActionButtonText>
             </ActionButtonItem>
 
-            <ActionButtonItem onClick={() => setNewTransferMenuOpen(true)}>
+            <ActionButtonItem key="action-transfer" onClick={() => setNewTransferMenuOpen(true)}>
               <ActionCircleIcon>
                 <SendIcon />
               </ActionCircleIcon>
-              <ActionButtonText>Перевести</ActionButtonText>
+              <ActionButtonText>{t('balance.actions.transfer')}</ActionButtonText>
             </ActionButtonItem>
           </ActionButtonsContainer>
         }
@@ -1637,17 +1649,16 @@ const BalancePage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CalendarTodayIcon sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }} />
               <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                {weekRange.start} — {weekRange.end}
+                {`${weekRange.start} — ${weekRange.end}`}
               </Typography>
             </Box>
 
             <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}>
-              +{weeklyEstimate} баллов
+              {`+${weeklyEstimate} ${t('balance.current_balance.points_suffix')}`}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-              Это прогноз баллов, которые вы получите в конце недели за вашу активность. 
-              Обновляется раз в час.
+              {t('balance.weekly_forecast.description')}
             </Typography>
           </>
         }
@@ -1670,7 +1681,7 @@ const BalancePage = () => {
             <Box sx={{ display: 'flex', alignItems: 'center'}}>
               <InfoIcon sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }} />
               <Typography variant="h6" sx={{ color: 'white' }}>
-                Как начисляются баллы?
+                {t('balance.weekly_forecast.how_to_earn.title')}
               </Typography>
               <ExpandIcon 
                 expanded={isPointsInfoExpanded} 
@@ -1678,7 +1689,7 @@ const BalancePage = () => {
               />
             </Box>
             <Box onClick={(e) => e.stopPropagation()}>
-              <Tooltip title="Подробнее о начислении баллов">
+              <Tooltip title={t('balance.weekly_forecast.how_to_earn.tooltip')}>
                 <IconButton 
                   size="small"
                   component={Link}
@@ -1700,7 +1711,7 @@ const BalancePage = () => {
         description={
           <ExpandableContent expanded={isPointsInfoExpanded}>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
-              Баллы начисляются за активность на платформе:
+              {t('balance.weekly_forecast.how_to_earn.description')}
             </Typography>
             <Box component="ul" sx={{ 
               color: 'rgba(255,255,255,0.7)', 
@@ -1708,14 +1719,17 @@ const BalancePage = () => {
               pl: 2,
               '& li': { mb: 1 }
             }}>
-              <li>Создание постов и историй</li>
-              <li>Получение лайков и комментариев</li>
-              <li>Ответы на комментарии</li>
-              <li>Репосты и просмотры</li>
-              <li>Реакции на истории</li>
+              <Typography variant="subtitle2" gutterBottom>
+                {t('balance.points.earning_methods.title')}
+              </Typography>
+              <li key="points-posts">{t('balance.points.earning_methods.posts')}</li>
+              <li key="points-likes">{t('balance.points.earning_methods.likes')}</li>
+              <li key="points-replies">{t('balance.points.earning_methods.replies')}</li>
+              <li key="points-reposts">{t('balance.points.earning_methods.reposts')}</li>
+              <li key="points-reactions">{t('balance.points.earning_methods.reactions')}</li>
             </Box>
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
-              Подробную информацию о системе начисления баллов можно найти в разделе рейтинга.
+              {t('balance.weekly_forecast.how_to_earn.details')}
             </Typography>
           </ExpandableContent>
         }
@@ -1729,22 +1743,23 @@ const BalancePage = () => {
         fullWidth={true}
         tabs={[
           {
-            label: "История",
+            label: t('balance.tabs.history'),
             value: 0,
             icon: ReceiptLongIcon,
             iconPosition: "start"
           },
           {
-            label: "Активы",
+            label: t('balance.tabs.assets'),
             value: 1,
             icon: DiamondIcon,
             iconPosition: "start"
           },
           {
-            label: "Подписка",
+            label: t('balance.tabs.subscription'),
             value: 2,
             icon: FlashOnIcon,
-            iconPosition: "start"
+            iconPosition: "start",
+            key: "subscription-tab"
           }
         ]}
       />
@@ -1777,7 +1792,7 @@ const BalancePage = () => {
           ) : allTransactions.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 3 }}>
               <Typography variant="body2" color="text.secondary">
-                У вас пока нет истории транзакций
+                {t('balance.transactions.no_history')}
               </Typography>
             </Box>
           ) : (
@@ -1828,7 +1843,7 @@ const BalancePage = () => {
                     onClick={handleNextPage}
                     endIcon={<ArrowForwardIcon />}
                   >
-                    Следующая страница
+                    {t('balance.transactions.load_more')}
                   </Button>
                 </Box>
               )}
@@ -1852,7 +1867,7 @@ const BalancePage = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   {selectedTransaction.type === 'transfer' && 
                    selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                   selectedTransaction.message === "Вывод баллов из кликера" ? (
+                   selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ? (
                     <TouchAppIcon sx={{ mr: 1, color: 'success.main' }} />
                   ) : selectedTransaction.type === 'transfer' && selectedTransaction.is_sender ? (
                     <CallMadeIcon sx={{ mr: 1, color: 'error.main' }} />
@@ -1872,15 +1887,15 @@ const BalancePage = () => {
                   <Typography variant="subtitle1" fontWeight={600} color="text.primary">
                     {selectedTransaction.type === 'transfer' ? 
                       (selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                      selectedTransaction.message === "Вывод баллов из кликера" ?
-                      'Вывод из кликера' :
-                      (selectedTransaction.is_sender ? 'Исходящий перевод' : 'Входящий перевод')) :
-                      selectedTransaction.type === 'purchase' ? 'Покупка бейджика' :
-                      selectedTransaction.type === 'royalty' ? 'Роялти от бейджика' :
-                      selectedTransaction.type === 'weekly_activity' ? 'Еженедельное начисление' :
-                      selectedTransaction.type === 'username' ? 'Покупка юзернейма' :
-                      selectedTransaction.type === 'game' ? 'Транзакция в мини-игре' :
-                      'Транзакция'
+                      selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ?
+                      t('balance.transactions.clicker_withdrawal') :
+                      (selectedTransaction.is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'))) :
+                      selectedTransaction.type === 'purchase' ? t('balance.transactions.badge_purchase') :
+                      selectedTransaction.type === 'royalty' ? t('balance.transactions.royalty_from_purchase') :
+                      selectedTransaction.type === 'weekly_activity' ? t('balance.transactions.weekly_points') :
+                      selectedTransaction.type === 'username' ? t('balance.transactions.username_purchase') :
+                      selectedTransaction.type === 'game' ? t('balance.transactions.game_transaction') :
+                      t('balance.transactions.transaction')
                     }
                   </Typography>
                 </Box>
@@ -1897,48 +1912,47 @@ const BalancePage = () => {
             </TransactionDetailHeader>
             
             <TransactionDetailContent>
-              <DetailRow>
+              <DetailRow key="transaction-id">
                 <DetailLabel>ID транзакции</DetailLabel>
                 <DetailValue>{getTransactionId(selectedTransaction)}</DetailValue>
               </DetailRow>
               
               {selectedTransaction.type === 'transfer' && (
                 <>
-                  <DetailRow>
+                  <DetailRow key="transfer-type">
                     <DetailLabel>Тип</DetailLabel>
                     <DetailValue>
                       {selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                       selectedTransaction.message === "Вывод баллов из кликера" ?
-                       'Вывод из кликера' :
-                       (selectedTransaction.is_sender ? 'Исходящий перевод' : 'Входящий перевод')}
+                       selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ?
+                       t('balance.transactions.clicker_withdrawal') :
+                       (selectedTransaction.is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'))}
                     </DetailValue>
                   </DetailRow>
                   
-                  
                   {(selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                   selectedTransaction.message === "Вывод баллов из кликера") ? (
+                   selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message')) ? (
                     <>
-                      <DetailRow>
+                      <DetailRow key="transfer-source">
                         <DetailLabel>Источник</DetailLabel>
                         <DetailValue>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <TouchAppIcon sx={{ fontSize: '1rem', mr: 0.5, color: 'success.main' }} />
-                            <span>Кликер</span>
+                            <span>{t('balance.transactions.clicker_points')}</span>
                           </Box>
                         </DetailValue>
                       </DetailRow>
-                      <DetailRow>
+                      <DetailRow key="transfer-operation-type">
                         <DetailLabel>Тип операции</DetailLabel>
-                        <DetailValue>Вывод заработанных баллов</DetailValue>
+                        <DetailValue>{t('balance.transactions.withdrawal')}</DetailValue>
                       </DetailRow>
                     </>
                   ) : (
                     <>
-                      <DetailRow>
+                      <DetailRow key="transfer-sender">
                         <DetailLabel>Отправитель</DetailLabel>
                         <DetailValue>{selectedTransaction.sender_username}</DetailValue>
                       </DetailRow>
-                      <DetailRow>
+                      <DetailRow key="transfer-recipient">
                         <DetailLabel>Получатель</DetailLabel>
                         <DetailValue>{selectedTransaction.recipient_username}</DetailValue>
                       </DetailRow>
@@ -1946,7 +1960,7 @@ const BalancePage = () => {
                   )}
                   
                   {selectedTransaction.message && (
-                    <DetailRow>
+                    <DetailRow key="transfer-message">
                       <DetailLabel>Сообщение</DetailLabel>
                       <DetailValue>{selectedTransaction.message}</DetailValue>
                     </DetailRow>
@@ -1956,12 +1970,12 @@ const BalancePage = () => {
               
               {selectedTransaction.type === 'purchase' && (
                 <>
-                  <DetailRow>
+                  <DetailRow key="purchase-badge-name">
                     <DetailLabel>Название бейджика</DetailLabel>
                     <DetailValue>{selectedTransaction.badge.name}</DetailValue>
                   </DetailRow>
                   {selectedTransaction.badge.description && (
-                    <DetailRow>
+                    <DetailRow key="purchase-badge-description">
                       <DetailLabel>Описание</DetailLabel>
                       <DetailValue>{selectedTransaction.badge.description}</DetailValue>
                     </DetailRow>
@@ -1971,11 +1985,11 @@ const BalancePage = () => {
               
               {selectedTransaction.type === 'royalty' && (
                 <>
-                  <DetailRow>
+                  <DetailRow key="royalty-badge-name">
                     <DetailLabel>Название бейджика</DetailLabel>
                     <DetailValue>{selectedTransaction.badge_name}</DetailValue>
                   </DetailRow>
-                  <DetailRow>
+                  <DetailRow key="royalty-buyer">
                     <DetailLabel>Покупатель</DetailLabel>
                     <DetailValue>{selectedTransaction.buyer_name}</DetailValue>
                   </DetailRow>
@@ -1983,31 +1997,31 @@ const BalancePage = () => {
               )}
               
               {selectedTransaction.type === 'username' && (
-                <DetailRow>
-                  <DetailLabel>Юзернейм</DetailLabel>
-                  <DetailValue>@{selectedTransaction.username}</DetailValue>
+                <DetailRow key="username-value">
+                  <DetailLabel>{t('balance.transaction_details.username.label')}</DetailLabel>
+                  <DetailValue>{t('balance.transaction_details.username.prefix')}{selectedTransaction.username}</DetailValue>
                 </DetailRow>
               )}
               
               {selectedTransaction.type === 'weekly_activity' && (
                 <>
-                  <DetailRow>
-                    <DetailLabel>Тип операции</DetailLabel>
+                  <DetailRow key="weekly-activity-type">
+                    <DetailLabel>{t('balance.transaction_details.operation.type')}</DetailLabel>
                     <DetailValue>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <TrendingUpIcon sx={{ fontSize: '1rem', mr: 0.5, color: 'success.main' }} />
-                        <span>Еженедельное начисление</span>
+                        <span>{t('balance.transactions.weekly_points')}</span>
                       </Box>
                     </DetailValue>
                   </DetailRow>
                   
-                  <DetailRow>
-                    <DetailLabel>Описание</DetailLabel>
+                  <DetailRow key="weekly-activity-description">
+                    <DetailLabel>{t('balance.transaction_details.operation.description')}</DetailLabel>
                     <DetailValue>{selectedTransaction.description}</DetailValue>
                   </DetailRow>
                   
-                  <DetailRow>
-                    <DetailLabel>Дата начисления</DetailLabel>
+                  <DetailRow key="weekly-activity-date">
+                    <DetailLabel>{t('balance.transaction_details.operation.date')}</DetailLabel>
                     <DetailValue>{formatDate(selectedTransaction.date)}</DetailValue>
                   </DetailRow>
                 </>
@@ -2015,14 +2029,14 @@ const BalancePage = () => {
               
               {selectedTransaction.type === 'game' && (
                 <>
-                  <DetailRow>
-                    <DetailLabel>Тип операции</DetailLabel>
+                  <DetailRow key="game-operation-type">
+                    <DetailLabel>{t('balance.transaction_details.operation.type')}</DetailLabel>
                     <DetailValue>
                       {selectedTransaction.description}
                     </DetailValue>
                   </DetailRow>
-                  <DetailRow>
-                    <DetailLabel>Описание</DetailLabel>
+                  <DetailRow key="game-description">
+                    <DetailLabel>{t('balance.transaction_details.operation.description')}</DetailLabel>
                     <DetailValue>
                       {selectedTransaction.title}
                     </DetailValue>
@@ -2030,8 +2044,8 @@ const BalancePage = () => {
                 </>
               )}
               
-              <DetailRow>
-                <DetailLabel>Сумма</DetailLabel>
+              <DetailRow key="transaction-amount">
+                <DetailLabel>{t('balance.transaction_details.operation.amount')}</DetailLabel>
                 <DetailValue sx={{ 
                   color: selectedTransaction.amount > 0 ? 'success.main' : 'error.main',
                   fontWeight: 700
@@ -2047,21 +2061,21 @@ const BalancePage = () => {
                   onClick={() => generateReceiptForTransaction(selectedTransaction)}
                   sx={{ borderRadius: 2 }}
                 >
-                  Скачать чек
+                  {t('balance.transaction_details.receipt.download')}
                 </Button>
               )}
               
               {selectedTransaction.type === 'weekly_activity' && (
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
                   <Typography variant="body2" color="success.main">
-                    Баллы начислены за вашу активность на платформе за прошедшую неделю.
+                    {t('balance.transaction_details.weekly_activity.description')}
                   </Typography>
                 </Box>
               )}
               
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 {selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                 selectedTransaction.message === "Вывод баллов из кликера" && (
+                 selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') && (
                   <Button
                     startIcon={<TouchAppIcon />}
                     variant="outlined"
@@ -2069,14 +2083,14 @@ const BalancePage = () => {
                     onClick={() => generateReceiptForTransaction(selectedTransaction)}
                     sx={{ ml: 2, borderRadius: 2 }}
                   >
-                    Чек выплаты
+                    {t('balance.transaction_details.receipt.payment')}
                   </Button>
                 )}
                 <Button 
                   onClick={handleCloseTransactionDetails}
                   sx={{ ml: 2, borderRadius: 2 }}
                 >
-                  Закрыть
+                  {t('balance.transaction_details.receipt.close')}
                 </Button>
               </Box>
             </TransactionDetailContent>
@@ -2138,7 +2152,7 @@ const BalancePage = () => {
                         <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
                           <Chip 
                             size="small" 
-                            label={`${badge.price} баллов`} 
+                            label={t('balance.assets.badges.points_cost', { amount: badge.price })} 
                             sx={{ mr: 1, fontSize: '0.7rem' }}
                           />
                           <Badge 
@@ -2162,13 +2176,13 @@ const BalancePage = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography variant="body2" color="text.secondary" paragraph>
-                      {badge.description || 'Без описания'}
+                      {badge.description || t('balance.assets.badges.no_description')}
                     </Typography>
                     
                     {badge.purchases.length > 0 ? (
                       <>
                         <Typography variant="subtitle2" gutterBottom>
-                          Покупки ({badge.purchases.length})
+                          {t('balance.assets.badges.purchases.title', { count: badge.purchases.length })}
                         </Typography>
                         <List dense sx={{ bgcolor: alpha(theme.palette.background.paper, 0.3), borderRadius: 2, mb: 1 }}>
                           {badge.purchases.map((purchase) => (
@@ -2185,7 +2199,7 @@ const BalancePage = () => {
                                 secondary={
                                   <Box component="span" sx={{ display: 'flex', flexDirection: 'column', mt: 0.5 }}>
                                     <Typography variant="caption" color="text.secondary">
-                                      Приобретен: {formatDate(purchase.date)}
+                                      {t('balance.assets.badges.purchases.date', { date: formatDate(purchase.purchase_date) })}
                                     </Typography>
                                   </Box>
                                 }
@@ -2202,7 +2216,7 @@ const BalancePage = () => {
                       </>
                     ) : (
                       <Typography variant="body2" color="text.secondary">
-                        Пока нет покупок этого бейджика
+                        {t('balance.assets.badges.purchases.none')}
                       </Typography>
                     )}
                   </AccordionDetails>
@@ -2219,7 +2233,7 @@ const BalancePage = () => {
                     fontWeight: 500
                   }}
                 >
-                  @ Юзернеймы
+                  {t('balance.assets.usernames.section_title')}
                 </Typography>
               )}
 
@@ -2256,7 +2270,7 @@ const BalancePage = () => {
                         {purchase.is_active && (
                           <Chip
                             size="small"
-                            label="Активный"
+                            label={t('balance.assets.usernames.active')}
                             color="success"
                             sx={{ ml: 1, height: 20, '& .MuiChip-label': { px: 1, py: 0.2 } }}
                           />
@@ -2266,11 +2280,9 @@ const BalancePage = () => {
                     secondary={
                       <Box component="span" sx={{ display: 'flex', flexDirection: 'column', mt: 0.5 }}>
                         <Typography variant="caption" color="text.secondary">
-                          Приобретен: {formatDate(purchase.purchase_date)}
+                          {t('balance.assets.usernames.purchased_on')}: {formatDate(purchase.purchase_date)}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Длина: {purchase.length} символов
-                        </Typography>
+
                       </Box>
                     }
                   />
@@ -2291,10 +2303,10 @@ const BalancePage = () => {
             <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
               <AccountBalanceWalletIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
               <Typography variant="h6" gutterBottom>
-                У вас пока нет активов
+                {t('balance.assets.empty.title')}
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Создавайте бейджики или приобретайте уникальные юзернеймы, чтобы они отображались здесь
+                {t('balance.assets.empty.description')}
               </Typography>
               <Button 
                 variant="contained" 
@@ -2303,7 +2315,7 @@ const BalancePage = () => {
                 startIcon={<AccountCircleIcon />}
                 sx={{ mr: 2, mb: { xs: 2, sm: 0 } }}
               >
-                Аукцион юзернеймов
+                {t('balance.assets.empty.username_auction')}
               </Button>
               <Button 
                 variant="outlined" 
@@ -2311,7 +2323,7 @@ const BalancePage = () => {
                 onClick={() => navigate('/badge-shop')}
                 startIcon={<ShoppingCartIcon />}
               >
-                Магазин бейджиков
+                {t('balance.assets.empty.badge_shop')}
               </Button>
             </Box>
           )}
@@ -2336,14 +2348,17 @@ const BalancePage = () => {
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
                   <Typography variant="h6" fontWeight="bold">
-                    Активная подписка
+                    {t('balance.subscription.active.title')}
                   </Typography>
                 </Box>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                   <Typography variant="body1">
-                    Тип: <Chip 
-                      label={subscription.type.charAt(0).toUpperCase() + subscription.type.slice(1)} 
+                    {t('balance.subscription.active.type')}: <Chip 
+                      label={subscription.type === 'basic' ? t('balance.subscription.types.basic') : 
+                            subscription.type === 'premium' ? t('balance.subscription.types.premium') : 
+                            subscription.type === 'ultimate' ? t('balance.subscription.types.ultimate') : 
+                            subscription.type}
                       color={subscription.type === 'premium' ? 'secondary' : subscription.type === 'ultimate' ? 'primary' : 'default'}
                       size="small"
                       sx={{ fontWeight: 'bold', ml: 1 }}
@@ -2351,42 +2366,42 @@ const BalancePage = () => {
                   </Typography>
                   
                   <Typography variant="body2">
-                    Истекает: {new Date(subscription.expires_at).toLocaleDateString()} 
+                    {t('balance.subscription.active.expires')}: {new Date(subscription.expires_at).toLocaleDateString()} 
                     <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                      (осталось {Math.ceil((new Date(subscription.expires_at) - new Date()) / (1000 * 60 * 60 * 24))} дней)
+                      {t('balance.subscription.active.days_left', { days: Math.ceil((new Date(subscription.expires_at) - new Date()) / (1000 * 60 * 60 * 24)) })}
                     </Typography>
                   </Typography>
                   
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body2" fontWeight="medium">
-                      Возможности подписки:
+                      {t('balance.subscription.active.features.title')}:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
                       {subscription.type === 'basic' && (
-                        <>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Ежемесячное пополнение  на 1.000 баллов" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Отсутствие рекламы" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Создание до 5 бейджиков" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Покупка до 5 Юзернеймов" /></ListItem>
-                        </>
+                        <Box key="basic-features">
+                          <ListItem key="basic-monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.monthly_points')} /></ListItem>
+                          <ListItem key="basic-no-ads" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.no_ads')} /></ListItem>
+                          <ListItem key="basic-badge-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.badge_limit')} /></ListItem>
+                          <ListItem key="basic-username-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.username_limit')} /></ListItem>
+                        </Box>
                       )}
                       {subscription.type === 'premium' && (
-                        <>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Ежемесячное пополнение  на 5.000 баллов" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Расширенные функции платформы" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Приоритетная поддержка" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Создание до 8 бейджиков" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Покупка до 8 Юзернеймов" /></ListItem>
-                        </>
+                        <Box key="premium-features">
+                          <ListItem key="premium-monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.monthly_points')} /></ListItem>
+                          <ListItem key="premium-features" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.features')} /></ListItem>
+                          <ListItem key="premium-support" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.support')} /></ListItem>
+                          <ListItem key="premium-badge-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.badge_limit')} /></ListItem>
+                          <ListItem key="premium-username-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.username_limit')} /></ListItem>
+                        </Box>
                       )}
                       {subscription.type === 'ultimate' && (
-                        <>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Все преимущества Premium" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Ежемесячное пополнение  на 10.000 баллов" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Создание Анимированных бейджиков" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Безлимитное создание бейджиков" /></ListItem>
-                          <ListItem sx={{ py: 0 }}><ListItemText primary="Покупка неограниченного количества Юзернеймов" /></ListItem>
-                        </>
+                        <Box key="ultimate-features">
+                          <ListItem key="premium-benefits" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.premium_benefits')} /></ListItem>
+                                                      <ListItem key="monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.monthly_points')} /></ListItem>
+                            <ListItem key="animated-badges" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.animated_badges')} /></ListItem>
+                              <ListItem key="unlimited-badges" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.unlimited_badges')} /></ListItem>
+                            <ListItem key="unlimited-usernames" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.unlimited_usernames')} /></ListItem>
+                        </Box>
                       )}
                     </List>
                   </Box>
@@ -2456,21 +2471,21 @@ const BalancePage = () => {
             onChange={(e, newValue) => setActiveTopupTab(newValue)}
             sx={{ mb: 3 }}
           >
-            <Tab label="У меня есть ключ" />
-            <Tab label="Донат" />
+            <Tab label={t('balance.topup.tabs.key')} />
+            <Tab label={t('balance.topup.tabs.donate')} />
           </Tabs>
           
           {activeTopupTab === 0 && !keySuccess ? (
             <ContentBox>
               <Typography variant="body1" gutterBottom>
-                Введите ключ активации для пополнения баланса:
+                {t('balance.topup.key.enter')}
               </Typography>
               
               <KeyTextField
                 fullWidth
-                label="Ключ активации"
+                label={t('balance.topup.key.label')}
                 variant="outlined"
-                placeholder="XXXX-XXXX-XXXX-XXXX"
+                placeholder={t('balance.topup.key.placeholder')}
                 value={keyValue}
                 onChange={handleKeyChange}
                 error={!!keyError}
@@ -2492,19 +2507,19 @@ const BalancePage = () => {
               />
               
               <Typography variant="caption" color="text.secondary">
-                Ключ активации можно получить в результате покупки на нашем сайте или от администратора.
+                {t('balance.topup.key.hint')}
               </Typography>
             </ContentBox>
           ) : activeTopupTab === 1 ? (
             <ContentBox>
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                Пополнение с помощью доната
+                {t('balance.topup.donate.title')}
               </Typography>
               <Typography variant="body2" paragraph>
-                Вы можете пополнить баланс рублями через Boosty.
+                {t('balance.topup.donate.description')}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                1 рубль = 5 баллов
+                {t('balance.topup.donate.rate')}
               </Typography>
               <Button
                 variant="contained"
@@ -2513,7 +2528,7 @@ const BalancePage = () => {
                 fullWidth
                 onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
               >
-                Перейти к пополнению
+                {t('balance.topup.donate.button')}
               </Button>
             </ContentBox>
           ) : (
@@ -2540,7 +2555,7 @@ const BalancePage = () => {
               }}>
                 <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
                 <Typography variant="h6" gutterBottom align="center">
-                  Ключ успешно активирован!
+                  {t('balance.topup.key.success.title')}
                 </Typography>
                 <Typography variant="body1" align="center">
                   {keySuccess.message}
@@ -2563,11 +2578,11 @@ const BalancePage = () => {
                     }
                   }}>
                     <Typography variant="subtitle2" color="text.secondary" gutterBottom align="center">
-                      Новый баланс:
+                      {t('balance.topup.key.success.new_balance')}
                     </Typography>
                     <Typography variant="h6" color="primary" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <AccountBalanceWalletIcon sx={{ mr: 1 }} />
-                      {keySuccess.newBalance} баллов
+                      {keySuccess.newBalance} {t('balance.topup.key.success.points')}
                     </Typography>
                   </Box>
                 ) : (
@@ -2587,23 +2602,20 @@ const BalancePage = () => {
                     }
                   }}>
                     <Typography variant="subtitle2" color="text.secondary" gutterBottom align="center">
-                      Активирована подписка:
+                      {t('balance.topup.key.success.subscription_activated')}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
                       <Chip
-                        label={keySuccess.subscriptionType === 'basic' ? 'Базовая' : 
-                              keySuccess.subscriptionType === 'premium' ? 'Премиум' : 
-                              keySuccess.subscriptionType === 'ultimate' ? 'Ультимейт' : 
-                              keySuccess.subscriptionType}
+                        label={t(`balance.subscription.types.${keySuccess.subscriptionType}`)}
                         color="secondary"
                         sx={{ fontSize: '1rem', py: 2, px: 1 }}
                       />
                     </Box>
                     <Typography variant="body2" color="text.secondary" align="center">
-                      Срок действия до: {keySuccess.expiresAt ? new Date(keySuccess.expiresAt).toLocaleDateString() : 'Бессрочно'}
+                      {t('balance.topup.key.success.expires_at', { date: keySuccess.expiresAt ? new Date(keySuccess.expiresAt).toLocaleDateString() : t('balance.subscription.duration.unlimited') })}
                     </Typography>
                     <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
-                      Длительность: {keySuccess.duration_days} дней
+                      {t('balance.topup.key.success.duration', { days: keySuccess.duration_days })}
                     </Typography>
                   </Box>
                 )}
@@ -2620,14 +2632,14 @@ const BalancePage = () => {
                 variant="outlined"
                 disabled={isSubmittingKey}
               >
-                Отмена
+                {t('balance.common.cancel')}
               </CancelButton>
               <ActionButton
                 onClick={handleRedeemKey}
                 disabled={!keyValue || isSubmittingKey || keyValue.length < 19} 
                 startIcon={isSubmittingKey ? <CircularProgress size={16} color="inherit" /> : null}
               >
-                {isSubmittingKey ? 'Активация...' : 'Активировать ключ'}
+                {isSubmittingKey ? t('balance.topup.key.process') : t('balance.topup.key.activate')}
               </ActionButton>
             </>
           ) : (
@@ -2639,7 +2651,7 @@ const BalancePage = () => {
               }}
               sx={{ mx: 'auto' }}
             >
-              Готово
+              {t('balance.common.done')}
             </ActionButton>
           )}
         </DialogActions>
@@ -2657,7 +2669,7 @@ const BalancePage = () => {
           <DialogHeaderContent>
             <CheckCircleIcon color="success" sx={{ mr: 1.5, fontSize: 24 }} />
             <Typography variant="h6" fontWeight="bold" color="success.main">
-              Перевод выполнен успешно
+              {t('balance.transactions.success.title')}
             </Typography>
           </DialogHeaderContent>
           <IconButton
@@ -2683,23 +2695,15 @@ const BalancePage = () => {
             </SuccessIconWrapper>
             
             <Typography variant="h5" gutterBottom>
-              Средства успешно переведены
+              {t('balance.transactions.success.title')}
             </Typography>
             
             <Typography variant="body1" color="text.secondary" paragraph>
-              Вы перевели <strong>{transferData.amount} баллов</strong> пользователю <strong>{transferData.username}</strong>
+              {t('balance.transactions.success.amount_sent', { amount: transferData.amount, username: transferData.username })}
             </Typography>
             
-            {transferData.message && (
-              <Typography variant="body2" paragraph sx={{ fontStyle: 'italic', mt: 1 }}>
-                "{transferData.message}"
-              </Typography>
-            )}
-            
-            <Divider sx={{ my: 2, width: '100%' }} />
-            
             <Typography variant="subtitle2" sx={{ mb: 2 }}>
-              Вы можете скачать справку о переводе в формате PDF
+              {t('balance.transactions.success.receipt_info')}
             </Typography>
             
             <ReceiptIconButton
@@ -2708,11 +2712,10 @@ const BalancePage = () => {
                   try {
                     downloadPdfReceipt(receiptData.dataUrl, `TR-${Date.now().toString().slice(-8)}`, receiptData.filePath);
                   } catch (error) {
-                    console.error('Ошибка при открытии PDF:', error);
-                    
+                    console.error(t('balance.transactions.success.receipt_error'), error);
                     setSnackbar({
                       open: true,
-                      message: 'Не удалось открыть PDF. Попробуйте позже.',
+                      message: t('balance.transactions.success.receipt_error'),
                       severity: 'error'
                     });
                   }
@@ -2722,14 +2725,14 @@ const BalancePage = () => {
               endIcon={<DownloadIcon />}
               disabled={!receiptData}
             >
-              Открыть справку
+              {t('balance.transactions.success.open_receipt')}
             </ReceiptIconButton>
           </Box>
         </DialogContent>
         
         <DialogActions>
           <ActionButton onClick={() => setTransferSuccess(false)} sx={{ mx: 'auto' }}>
-            Закрыть
+            {t('balance.common.close')}
           </ActionButton>
         </DialogActions>
       </StyledDialog>

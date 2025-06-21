@@ -49,10 +49,8 @@ const UpdateInfo = ({
     <Paper sx={{ 
       p: 0, 
       borderRadius: '12px',
-      background: theme => theme.palette.mode === 'dark' 
-        ? 'linear-gradient(145deg, #222222, #1c1c1c)'
-        : theme.palette.background.paper,
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+      background: 'rgba(255, 255, 255, 0.03)',
+      backdropFilter: 'blur(20px)',
       border: theme => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
       overflow: 'hidden',
       transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',

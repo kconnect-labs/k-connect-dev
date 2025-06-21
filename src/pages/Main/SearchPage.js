@@ -28,7 +28,6 @@ const StyledSearchBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   marginBottom: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   backgroundColor: theme.palette.background.paper,
 }));
 
@@ -66,20 +65,21 @@ const UserCard = styled(motion.div)(({ theme, decoration }) => {
   const isHexColor = decoration?.background?.startsWith('#');
   const isLightBackground = isHexColor && isLightColor(decoration?.background);
 
+  const hasCustomBackground = !!decoration?.background;
+
   return {
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(2),
     borderRadius: theme.spacing(2),
     marginBottom: theme.spacing(1.5),
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[2],
+    backdropFilter: hasCustomBackground ? 'none' : 'blur(20px)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     position: 'relative',
     overflow: 'hidden',
-    background: decoration?.background ? (
+    background: hasCustomBackground ? (
       isImage ? `url(${decoration.background})` : decoration.background
-    ) : theme.palette.background.paper,
+    ) : 'rgba(255, 255, 255, 0.03)',
     backgroundSize: isImage ? 'cover' : 'auto',
     backgroundPosition: isImage ? 'center' : 'auto',
     color: isLightBackground ? 'rgba(0, 0, 0, 0.87)' : theme.palette.text.primary,
@@ -1067,7 +1067,7 @@ const SearchPage = () => {
                       transition: 'transform 0.2s',
                       '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                        boxShadow: '0  12px rgba(0, 0, 0, 0.15)',
                       }
                     }}
                   >

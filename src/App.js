@@ -20,6 +20,10 @@ import JoinGroupChat from './pages/Messenger/JoinGroupChat';
 import { MessengerProvider } from './contexts/MessengerContext';
 import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
+import { LanguageProvider } from './context/LanguageContext';
+import { DefaultPropsProvider } from './context/DefaultPropsContext';
+import AppLoadingScreen from './components/AppLoadingScreen';
+import axios from 'axios';
 
 export const SessionContext = React.createContext({
   sessionActive: true,
@@ -697,6 +701,7 @@ const SessionProvider = ({ children }) => {
 
 function App() {
   const [isPending, startTransition] = useTransition();
+  const [isAppLoading, setIsAppLoading] = useState(true);
   const [themeSettings, setThemeSettings] = useState(() => {
     
     const getStoredValue = (key, defaultValue) => {
@@ -850,7 +855,8 @@ function App() {
     preloadMusicImages();
   }, []);
 
-  
+  // Убираем автоматический таймер - экран загрузки будет скрываться только после реальной загрузки всех ресурсов
+
   const getContrastTextColor = (hexColor) => {
     if (themeSettings.mode === 'dark' || themeSettings.mode === 'contrast') {
       return '#FFFFFF';
@@ -1202,6 +1208,48 @@ function App() {
     }
   }, [profileBackground]);
 
+  const [globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled] = useState(false);
+
+  useEffect(() => {
+    // Проверка и применение фона при старте и при изменении переключателя
+    const applyProfileBackground = (enabled) => {
+      if (enabled) {
+        let myBg = localStorage.getItem('myProfileBackgroundUrl');
+        if (!myBg) {
+          const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
+          if (match) myBg = decodeURIComponent(match[1]);
+        }
+        if (myBg) setProfileBackground(myBg);
+        else clearProfileBackground();
+      } else {
+        clearProfileBackground();
+      }
+    };
+
+    // При старте — запрос к API и применение
+    axios.get('/api/user/settings/global-profile-bg').then(res => {
+      if (res.data && res.data.success) {
+        setGlobalProfileBackgroundEnabled(res.data.enabled);
+        applyProfileBackground(res.data.enabled);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    // Следить за изменением переключателя и применять фон
+    if (globalProfileBackgroundEnabled) {
+      let myBg = localStorage.getItem('myProfileBackgroundUrl');
+      if (!myBg) {
+        const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
+        if (match) myBg = decodeURIComponent(match[1]);
+      }
+      if (myBg) setProfileBackground(myBg);
+      else clearProfileBackground();
+    } else {
+      clearProfileBackground();
+    }
+  }, [globalProfileBackgroundEnabled]);
+
   const themeContextValue = useMemo(() => ({
     themeSettings,
     updateThemeSettings,
@@ -1209,7 +1257,9 @@ function App() {
     setProfileBackground,
     clearProfileBackground,
     profileBackground,
-  }), [themeSettings, profileBackground]);
+    globalProfileBackgroundEnabled,
+    setGlobalProfileBackgroundEnabled,
+  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled]);
 
   
   const location = useLocation();
@@ -1396,84 +1446,93 @@ function App() {
       <AuthProvider>
         <ThemeSettingsContext.Provider value={themeContextValue}>
           <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {themeSettings.mode === 'contrast' && (
-              <style dangerouslySetInnerHTML={{
-                __html: `
-                  .MuiListItemText-primary, 
-                  .MuiListItemText-secondary,
-                  .MuiTypography-root,
-                  .MuiInputBase-input,
-                  .MuiInputLabel-root,
-                  .MuiFormHelperText-root,
-                  .MuiMenuItem-root,
-                  .MuiButton-root,
-                  .MuiLink-root:not(a),
-                  .MuiChip-label,
-                  .MuiTab-root,
-                  .MuiTableCell-root,
-                  [class*="css-"],
-                  /* Additional text selectors */
-                  span:not(.MuiIcon-root):not(.material-icons),
-                  p,
-                  h1, h2, h3, h4, h5, h6,
-                  label,
-                  div:not(.MuiAvatar-root):not(.MuiSwitch-thumb):not(.MuiSwitch-track):not([role="progressbar"]) {
-                    color: #FFFFFF !important;
-                  }
-                  
-                  .MuiChip-root.status-online *,
-                  .MuiChip-root[color="success"] *,
-                  .MuiChip-root[color="error"] *,
-                  .MuiChip-root[color="warning"] *,
-                  .MuiChip-root[color="info"] *,
-                  a.MuiLink-root,
-                  .MuiButton-containedPrimary,
-                  .Mui-selected,
-                  .MuiSwitch-thumb,
-                  .MuiSwitch-track,
-                  .MuiIcon-root,
-                  .material-icons,
-                  svg,
-                  .MuiAvatar-root *,
-                  img,
-                  [role="progressbar"] * {
-                    color: inherit !important;
-                  }
-                `
-              }}/>
-            )}
-            <SessionProvider>
-              <MusicProvider>
-                <PostDetailProvider>
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <Box sx={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      minHeight: '100vh',
-                      bgcolor: 'background.default'
-                    }}>
-                      <Suspense fallback={<LoadingIndicator />}>
-                        <DefaultSEO />
-                        <Routes>
-                          <Route path="/rules" element={<PublicPages />} />
-                          <Route path="/privacy-policy" element={<PublicPages />} />
-                          <Route path="/terms-of-service" element={<PublicPages />} />
-                          <Route path="/about" element={<PublicPages />} />
-                          <Route path="/cookies" element={<PublicPages />} />
-                          <Route path="*" element={<AppRoutes />} />
-                        </Routes>
-                        <MusicPlayerCore />
-                      </Suspense>
-                    </Box>
-                  </ErrorBoundary>
-                </PostDetailProvider>
-              </MusicProvider>
-            </SessionProvider>
+            <DefaultPropsProvider>
+              <CssBaseline />
+              {themeSettings.mode === 'contrast' && (
+                <style dangerouslySetInnerHTML={{
+                  __html: `
+                    .MuiListItemText-primary, 
+                    .MuiListItemText-secondary,
+                    .MuiTypography-root,
+                    .MuiInputBase-input,
+                    .MuiInputLabel-root,
+                    .MuiFormHelperText-root,
+                    .MuiMenuItem-root,
+                    .MuiButton-root,
+                    .MuiLink-root:not(a),
+                    .MuiChip-label,
+                    .MuiTab-root,
+                    .MuiTableCell-root,
+                    [class*="css-"],
+                    /* Additional text selectors */
+                    span:not(.MuiIcon-root):not(.material-icons),
+                    p,
+                    h1, h2, h3, h4, h5, h6,
+                    label,
+                    div:not(.MuiAvatar-root):not(.MuiSwitch-thumb):not(.MuiSwitch-track):not([role="progressbar"]) {
+                      color: #FFFFFF !important;
+                    }
+                    
+                    .MuiChip-root.status-online *,
+                    .MuiChip-root[color="success"] *,
+                    .MuiChip-root[color="error"] *,
+                    .MuiChip-root[color="warning"] *,
+                    .MuiChip-root[color="info"] *,
+                    a.MuiLink-root,
+                    .MuiButton-containedPrimary,
+                    .Mui-selected,
+                    .MuiSwitch-thumb,
+                    .MuiSwitch-track,
+                    .MuiIcon-root,
+                    .material-icons,
+                    svg,
+                    .MuiAvatar-root *,
+                    img,
+                    [role="progressbar"] * {
+                      color: inherit !important;
+                    }
+                  `
+                }}/>
+              )}
+              <SessionProvider>
+                <LanguageProvider>
+                  <MusicProvider>
+                    <PostDetailProvider>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          minHeight: '100vh',
+                          bgcolor: 'background.default'
+                        }}>
+                        <ErrorBoundary FallbackComponent={ErrorFallback}>
+                          <Suspense fallback={<LoadingIndicator />}>
+                            <DefaultSEO />
+                            <Routes>
+                              <Route path="/rules" element={<PublicPages />} />
+                              <Route path="/privacy-policy" element={<PublicPages />} />
+                              <Route path="/terms-of-service" element={<PublicPages />} />
+                              <Route path="/about" element={<PublicPages />} />
+                              <Route path="/cookies" element={<PublicPages />} />
+                              <Route path="*" element={<AppRoutes />} />
+                            </Routes>
+                            <MusicPlayerCore />
+                          </Suspense>
+                      </ErrorBoundary>
+                      </Box>
+                    </PostDetailProvider>
+                  </MusicProvider>
+                </LanguageProvider>
+              </SessionProvider>
+            </DefaultPropsProvider>
             {/* <CookieBanner /> */}
           </ThemeProvider>
         </ThemeSettingsContext.Provider>
       </AuthProvider>
+      {isAppLoading && (
+        <AppLoadingScreen 
+          onLoadingComplete={() => setIsAppLoading(false)} 
+        />
+      )}
     </HelmetProvider>
   );
 }

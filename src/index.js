@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import './utils/ensure-global-functions';
+import './utils/createSvgIcon';
 
 import indexedDbCache from './utils/indexedDbCache';
 

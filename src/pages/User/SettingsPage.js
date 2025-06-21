@@ -964,44 +964,59 @@ const UsernameShopTab = () => {
   };
   
   const handleUsernameChange = (e) => {
-    const value = e.target.value.trim();
+    const value = e.target.value; // .trim() удален, чтобы разрешить пробелы для проверки, но они будут удалены позже
     setUsername(value);
-    
-    
+
     if (!value) {
       setUsernameData(null);
       setError('');
       return;
     }
-    
-    
+
+    // --- Новая логика валидации ---
+    const isCyrillic = /[а-яА-ЯёЁ]/.test(value);
+    const isLatin = /[a-zA-Z]/.test(value);
+    let validationError = '';
+
     if (value.length < 3) {
-      setError('Юзернейм должен содержать не менее 3 символов');
+      validationError = 'Юзернейм должен содержать не менее 3 символов';
+    } else if (value.length > 16) {
+      validationError = 'Юзернейм не должен превышать 16 символов';
+    } else if (isCyrillic && isLatin) {
+      validationError = 'Юзернейм не может содержать одновременно кириллицу и латиницу';
+    } else if (isCyrillic) {
+      // Правила для кириллицы
+      if (!/^[а-яА-ЯёЁ0-9]+$/.test(value)) {
+        validationError = 'Кириллический юзернейм может содержать только буквы и цифры';
+      }
+    } else if (isLatin) {
+      // Правила для латиницы
+      if (!/^[a-zA-Z]/.test(value)) {
+        validationError = 'Латинский юзернейм должен начинаться с буквы';
+      } else if (!/^[a-zA-Z0-9._-]+$/.test(value)) {
+        validationError = 'Латинский юзернейм содержит недопустимые символы';
+      } else if (/[._-]{2,}/.test(value)) {
+        validationError = 'Спецсимволы не могут идти подряд';
+      } else if ((value.match(/[._-]/g) || []).length > 1) {
+        validationError = 'Может быть использован только один спецсимвол (. или _ или -)';
+      }
+    } else if (!isCyrillic && !isLatin) {
+        validationError = 'Юзернейм должен содержать хотя бы одну букву';
+    }
+    
+    if (validationError) {
+      setError(validationError);
       setUsernameData(null);
       return;
     }
-    
-    if (value.length > 16) {
-      setError('Юзернейм не должен превышать 16 символов');
-      setUsernameData(null);
-      return;
-    }
-    
-    
-    if (!/[a-zA-Z]/.test(value)) {
-      setError('Юзернейм должен содержать хотя бы одну букву');
-      setUsernameData(null);
-      return;
-    }
-    
-    
+    // --- Конец новой логики ---
+
     setError('');
-    
-    
+
     const delayDebounceFn = setTimeout(() => {
-      calculateUsernamePrice(value);
+      calculateUsernamePrice(value.trim()); // Отправляем на сервер уже очищенное значение
     }, 500);
-    
+
     return () => clearTimeout(delayDebounceFn);
   };
   
@@ -1459,7 +1474,7 @@ const UsernameShopTab = () => {
         </Box>
         
         <Typography variant="body2" sx={{ mb: 2, color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>
-          Юзернейм должен содержать хотя бы одну букву и не может состоять только из цифр или специальных символов. 
+          Юзернейм должен начинаться с латинской буквы и может содержать только один спецсимвол (. или _ или -). 
           Длина от 3 до 16 символов. Более короткие юзернеймы стоят дороже.
         </Typography>
         
@@ -1497,7 +1512,7 @@ const UsernameShopTab = () => {
               marginLeft: '4px'
             }
           }}
-          helperText="Должен содержать хотя бы одну букву. От 3 до 16 символов. Допустимы только латинские буквы, цифры, точки, подчеркивания и дефисы."
+          helperText="Юзернейм должен: 1) начинаться с латинской буквы, 2) содержать только один спецсимвол (. или _ или -), 3) быть длиной от 3 до 16 символов. Спецсимволы не могут повторяться подряд."
           error={!!error}
           InputProps={{
             endAdornment: username && (
@@ -2190,7 +2205,7 @@ const SettingsPage = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { user, updateUserData } = useContext(AuthContext);
-  const { themeSettings, updateThemeSettings } = useContext(ThemeSettingsContext);
+  const { themeSettings, updateThemeSettings, setProfileBackground, clearProfileBackground, globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
   const { enqueueSnackbar } = useSnackbar();
   
   const [userDecorations, setUserDecorations] = useState([]);
@@ -4587,6 +4602,22 @@ const SettingsPage = () => {
     });
   };
   
+  const handleGlobalProfileBackgroundToggle = async (event) => {
+    const enabled = event.target.checked;
+    // Сохраняем настройку на сервере
+    await axios.post('/api/user/settings/global-profile-bg', { enabled });
+    setGlobalProfileBackgroundEnabled(enabled);
+    if (enabled && profileData?.user?.profile_background_url) {
+      setProfileBackground(profileData.user.profile_background_url);
+      localStorage.setItem('myProfileBackgroundUrl', profileData.user.profile_background_url);
+      document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(profileData.user.profile_background_url)}; path=/; max-age=${60*60*24*365}`;
+    } else {
+      clearProfileBackground();
+      localStorage.removeItem('myProfileBackgroundUrl');
+      document.cookie = 'myProfileBackgroundUrl=; path=/; max-age=0';
+    }
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -5368,6 +5399,24 @@ const SettingsPage = () => {
                         </Typography>
                       </Box>
                     </Box>
+                    {/* Экспериментальная функция: глобальные обои профиля */}
+                    {profileData.user?.profile_background_url && (
+                      <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <IOSSwitch
+                          checked={globalProfileBackgroundEnabled}
+                          onChange={handleGlobalProfileBackgroundToggle}
+                          inputProps={{ 'aria-label': 'Экспериментальная функция: Глобальные обои профиля' }}
+                        />
+                        <Box>
+                          <Typography variant="body2" fontWeight={500}>
+                            Экспериментальная функция: Глобальные обои профиля
+                          </Typography>
+                          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                            При включении ваша фоновая картинка будет использоваться по всему сайту (кроме чужих профилей с их обоями)
+                          </Typography>
+                        </Box>
+                      </Box>
+                    )}
                   </Box>
                 )}
               </SettingsCardContent>

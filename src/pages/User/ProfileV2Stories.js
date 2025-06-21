@@ -60,6 +60,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
+import { Stories } from '../../UIKIT/Stories';
 import { useLanguage } from '../../context/LanguageContext';
 
 
@@ -1283,7 +1284,7 @@ const ProfilePage = () => {
   const [currentImage, setCurrentImage] = useState('');
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const navigate = useNavigate();
-  const { themeSettings, setProfileBackground, clearProfileBackground, globalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
+  const { themeSettings, setProfileBackground, clearProfileBackground } = useContext(ThemeSettingsContext);
   const [totalLikes, setTotalLikes] = useState(0);
   
   const [isOnline, setIsOnline] = useState(false);
@@ -1692,32 +1693,31 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    const restoreMyBackground = () => {
-      if (globalProfileBackgroundEnabled) {
-        let myBg = localStorage.getItem('myProfileBackgroundUrl');
-        if (!myBg) {
-          const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-          if (match) myBg = decodeURIComponent(match[1]);
-        }
-        if (myBg) {
-          setProfileBackground(myBg);
+    if (user && user.profile_background_url) {
+      setProfileBackground(user.profile_background_url);
+      localStorage.setItem('myProfileBackgroundUrl', user.profile_background_url);
+      document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(user.profile_background_url)}; path=/; max-age=${60*60*24*365}`;
+      return () => {
+        if (localStorage.getItem('globalProfileBackgroundEnabled') === 'true') {
+          const myBg = localStorage.getItem('myProfileBackgroundUrl') || (document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/) && decodeURIComponent(document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/)[1]));
+          if (myBg) setProfileBackground(myBg);
+          else clearProfileBackground();
         } else {
           clearProfileBackground();
         }
+      };
+    } else {
+      localStorage.removeItem('myProfileBackgroundUrl');
+      document.cookie = 'myProfileBackgroundUrl=; path=/; max-age=0';
+      if (localStorage.getItem('globalProfileBackgroundEnabled') === 'true') {
+        const myBg = localStorage.getItem('myProfileBackgroundUrl') || (document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/) && decodeURIComponent(document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/)[1]));
+        if (myBg) setProfileBackground(myBg);
+        else clearProfileBackground();
       } else {
         clearProfileBackground();
       }
-    };
-
-    if (user?.profile_background_url) {
-      setProfileBackground(user.profile_background_url);
-      return () => {
-        restoreMyBackground();
-      };
-    } else {
-      restoreMyBackground();
     }
-  }, [user, globalProfileBackgroundEnabled, setProfileBackground, clearProfileBackground]);
+  }, [user && user.profile_background_url]);
 
   if (loading) {
     return (
@@ -1794,14 +1794,10 @@ const ProfilePage = () => {
           zIndex: 2
         }}>
           
-          <Paper sx={{
-            p: 0,
-            borderRadius: '16px',
-            background: user?.profile_id === 2 && user?.banner_url
-              ? `url(${user.banner_url}), rgba(255, 255, 255, 0.03)`
-              : 'rgba(255, 255, 255, 0.03)',
-            backgroundSize: user?.profile_id === 2 && user?.banner_url ? 'cover' : undefined,
-            backgroundPosition: user?.profile_id === 2 && user?.banner_url ? 'center' : undefined,
+          <Paper sx={{ 
+            p: 0, 
+            borderRadius: '16px', 
+            background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
@@ -1811,8 +1807,10 @@ const ProfilePage = () => {
             position: 'relative',
             zIndex: 2
           }}>
+            
             {/* Banner section */}
             {user?.profile_id !== 2 ? (
+              
               user?.banner_url ? (
                 <Box sx={{ 
                   width: '100%',
@@ -1840,9 +1838,11 @@ const ProfilePage = () => {
                   width: '100%',
                   height: { xs: 100, sm: 120 },
                   position: 'relative',
+
                 }}></Box>
               )
             ) : (
+              
               null
             )}
             
@@ -2795,6 +2795,12 @@ const ProfilePage = () => {
 
             </Box>
           </Paper>
+          {user && user.account_type !== 'channel' && (
+            <Box sx={{ position: 'relative', zIndex: 99999999 }}>
+              <Stories userIdentifier={user.id} />
+            </Box>
+          )}
+
         </Grid>
         
         

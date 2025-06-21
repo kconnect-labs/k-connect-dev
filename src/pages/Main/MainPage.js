@@ -35,6 +35,7 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import PostService from '../../services/PostService';
 import axios from '../../services/axiosConfig';
 import ImageIcon from '@mui/icons-material/Image';
@@ -73,97 +74,19 @@ import SimpleImageViewer from '../../components/SimpleImageViewer';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 
 
-const PostCard = styled(Card)(({ theme }) => ({
-  marginBottom: 10,
-  borderRadius: '10px',
-  overflow: 'hidden',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: '#1A1A1A',
-  cursor: 'pointer'
-}));
-
 
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: theme.palette.background.paper,
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
   border: theme.palette.mode === 'dark' 
     ? '1px solid rgba(255, 255, 255, 0.1)' 
     : '1px solid rgba(0, 0, 0, 0.1)'
 }));
 
-const RecommendationCard = styled(Card)(({ theme }) => ({
-  marginBottom: theme.spacing(1.5),
-  borderRadius: '12px',
-  background: '#1d1d1d',
-  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
-  border: '1px solid rgba(255, 255, 255, 0.03)'
-}));
 
-const FollowButton = styled(Button)(({ theme, following }) => ({
-  borderRadius: '10px',
-  textTransform: 'none',
-  fontWeight: 'medium',
-  minWidth: '80px',
-  padding: theme.spacing(0.5, 1.5),
-  fontSize: '0.75rem',
-  backgroundColor: following ? 'transparent' : theme.palette.primary.main,
-  borderColor: following ? theme.palette.divider : theme.palette.primary.main,
-  color: following ? theme.palette.text.primary : theme.palette.primary.contrastText,
-  '&:hover': {
-    backgroundColor: following ? 'rgba(255, 255, 255, 0.05)' : theme.palette.primary.dark,
-  }
-}));
-
-const SidebarContainer = styled(Box)(({ theme }) => ({
-  position: 'sticky',
-  top: 80,
-  width: '100%',
-  [theme.breakpoints.down('md')]: {
-    position: 'static',
-    marginTop: theme.spacing(2)
-  }
-}));
-
-const MarkdownContent = styled(Box)(({ theme }) => ({
-  '& p': {
-    margin: theme.spacing(1, 0),
-    lineHeight: 1.6,
-  },
-  '& h1, & h2, & h3, & h4, & h5, & h6': {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    fontWeight: 600,
-  },
-  '& a': {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  '& ul, & ol': {
-    marginLeft: theme.spacing(2),
-  },
-  '& code': {
-    fontFamily: 'monospace',
-    backgroundColor: theme.palette.action.hover,
-    padding: theme.spacing(0.3, 0.6),
-    borderRadius: 3,
-  },
-  '& pre': {
-    backgroundColor: theme.palette.grey[900],
-    color: theme.palette.common.white,
-    padding: theme.spacing(1.5),
-    borderRadius: theme.shape.borderRadius,
-    overflowX: 'auto',
-    '& code': {
-      backgroundColor: 'transparent',
-      padding: 0,
-    },
-  },
-}));
 
 
 
@@ -186,25 +109,6 @@ const PostActions = styled(Box)(({ theme }) => ({
   paddingTop: theme.spacing(1),
 }));
 
-const MediaPreviewContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  marginTop: theme.spacing(2),
-  borderRadius: '10px',
-  overflow: 'hidden',
-  backgroundColor: 'rgba(0, 0, 0, 0.2)',
-}));
-
-const RemoveMediaButton = styled(IconButton)(({ theme }) => ({
-  position: 'absolute',
-  top: 8,
-  right: 8,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  color: theme.palette.common.white,
-  padding: theme.spacing(0.5),
-  '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-}));
 
 const ContentContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -249,6 +153,7 @@ const RightColumn = styled(Box)(({ theme }) => ({
 
 
 const OnlineUsers = () => {
+  const { t } = useLanguage();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -291,7 +196,7 @@ const OnlineUsers = () => {
     return (
       <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
         <CircularProgress size={18} sx={{ mr: 1 }} />
-        <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>Загрузка...</Typography>
+        <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>{t('main_page.loading')}</Typography>
       </OnlineUsersCard>
     );
   }
@@ -344,7 +249,7 @@ const OnlineUsers = () => {
               color: '#4caf50'
             }}
           >
-            {onlineUsers.length} онлайн
+            {t('main_page.online_count', { count: onlineUsers.length })}
           </Typography>
         </Box>
         {onlineUsers.map(user => (
@@ -392,6 +297,7 @@ const OnlineUsers = () => {
 
 
 const UserRecommendation = ({ user }) => {
+  const { t } = useLanguage();
   const [following, setFollowing] = useState(user.is_following || false);
   const { user: currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -545,7 +451,7 @@ const UserRecommendation = ({ user }) => {
                 })
               }}
             >
-              {following ? 'Отписаться' : 'Подписаться'}
+              {following ? t('main_page.follow.unfollow') : t('main_page.follow.follow')}
             </Button>
           )}
         </Box>
@@ -557,6 +463,7 @@ const UserRecommendation = ({ user }) => {
 
 const CreatePost = ({ onPostCreated }) => {
   const { user } = useContext(AuthContext);
+  const { t } = useLanguage();
   const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const [content, setContent] = useState('');
   const [mediaFiles, setMediaFiles] = useState([]);
@@ -654,13 +561,13 @@ const CreatePost = ({ onPostCreated }) => {
       const isImage = file.type.startsWith('image/');
 
       if (isVideo && file.size > MAX_VIDEO_SIZE) {
-        setSizeErrorMessage(`Размер видео превышает лимит в 150МБ`);
+        setSizeErrorMessage(t('main_page.media.video_size_error'));
         setShowSizeError(true);
         hasInvalidSize = true;
       }
 
       if (isImage && file.size > MAX_PHOTO_SIZE) {
-        setSizeErrorMessage(`Размер изображения превышает лимит в 50МБ`);
+        setSizeErrorMessage(t('main_page.media.image_size_error'));
         setShowSizeError(true);
         hasInvalidSize = true;
       }
@@ -679,7 +586,7 @@ const CreatePost = ({ onPostCreated }) => {
     if (imageFiles.length === 0 && videoFiles.length === 0) {
       setMediaNotification({
         open: true,
-        message: 'Поддерживаются только изображения и видео'
+        message: t('main_page.media.unsupported_format')
       });
       return;
     }
@@ -688,7 +595,7 @@ const CreatePost = ({ onPostCreated }) => {
     if (mediaType === 'video' && imageFiles.length > 0) {
       setMediaNotification({
         open: true,
-        message: 'Нельзя прикрепить фото и видео одновременно'
+        message: t('main_page.media.mixed_content_error')
       });
       return;
     }
@@ -697,7 +604,7 @@ const CreatePost = ({ onPostCreated }) => {
     if (mediaType === 'image' && videoFiles.length > 0) {
       setMediaNotification({
         open: true,
-        message: 'Нельзя прикрепить фото и видео одновременно'
+        message: t('main_page.media.mixed_content_error')
       });
       return;
     }
@@ -928,7 +835,8 @@ const CreatePost = ({ onPostCreated }) => {
       sx={{ 
         p: 2, 
         borderRadius: 1,
-        backgroundColor: (theme) => theme.palette.background.paper,
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(20px)',
         position: 'relative',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)'
@@ -990,7 +898,7 @@ const CreatePost = ({ onPostCreated }) => {
               alignItems: 'center'
             }}
           >
-            <TimerIcon sx={{ mr: 1 }} /> Пожалуйста, подождите
+            <TimerIcon sx={{ mr: 1 }} /> {t('main_page.post.create.error.title')}
           </Typography>
           <Typography id="rate-limit-dialog-description" sx={{ mb: 3, color: 'text.secondary' }}>
             {rateLimitDialog.message}
@@ -1006,7 +914,7 @@ const CreatePost = ({ onPostCreated }) => {
                 padding: '6px 16px'
               }}
             >
-              Понятно
+              {t('main_page.post.create.error.understand')}
             </Button>
           </Box>
         </Box>
@@ -1030,7 +938,7 @@ const CreatePost = ({ onPostCreated }) => {
       <DynamicIslandNotification
         open={showSizeError}
         message={sizeErrorMessage}
-        shortMessage="Ошибка размера файла"
+        shortMessage={t('main_page.post.create.error.file_size')}
         notificationType="error"
         animationType="pill"
         autoHideDuration={5000}
@@ -1085,7 +993,7 @@ const CreatePost = ({ onPostCreated }) => {
             >
               <ImageOutlinedIcon sx={{ fontSize: 40, color: '#D0BCFF', mb: 1, filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.6))' }} />
               <Typography variant="body1" color="primary" sx={{ fontWeight: 'medium', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>
-                Перетащите файлы сюда
+                {t('main_page.post.create.drag_files')}
               </Typography>
             </Box>
           )}
@@ -1097,7 +1005,7 @@ const CreatePost = ({ onPostCreated }) => {
               sx={{ mr: 1.5, width: 42, height: 42, border: '2px solid #D0BCFF' }}
             />
             <PostInput 
-              placeholder="Что у вас нового?"
+              placeholder={t('main_page.post.create.placeholder')}
               multiline
               maxRows={6}
               value={content}
@@ -1374,7 +1282,7 @@ const CreatePost = ({ onPostCreated }) => {
                 size="small"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {mediaFiles.length ? `Файлы (${mediaFiles.length})` : 'Медиа'}
+                {mediaFiles.length ? t('main_page.post.create.media_count', { count: mediaFiles.length }) : t('main_page.post.create.media')}
               </Button>
               
               <Button
@@ -1397,7 +1305,7 @@ const CreatePost = ({ onPostCreated }) => {
                 }}
                 size="small"
               >
-                {selectedTracks.length ? `Музыка (${selectedTracks.length})` : 'Музыка'}
+                {selectedTracks.length ? t('main_page.post.create.music_count', { count: selectedTracks.length }) : t('main_page.post.create.music')}
               </Button>
             </Box>
             
@@ -1413,7 +1321,7 @@ const CreatePost = ({ onPostCreated }) => {
                 padding: '6px 16px'
               }}
             >
-              Опубликовать
+              {t('main_page.post.create.publish')}
             </Button>
           </PostActions>
           
@@ -1433,6 +1341,7 @@ const CreatePost = ({ onPostCreated }) => {
 
 const MainPage = React.memo(() => {
   const { user } = useContext(AuthContext);
+  const { t } = useLanguage();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [recommendations, setRecommendations] = useState([]);
@@ -1864,8 +1773,8 @@ const MainPage = React.memo(() => {
             justifyContent: 'space-between',
             mb: 0,
             borderRadius: '12px',
-            backgroundColor: theme => theme.palette.mode === 'dark' ? '#1E1E1E' : theme.palette.background.paper,
-            backgroundImage: 'unset',
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
             <Button 
@@ -1873,21 +1782,21 @@ const MainPage = React.memo(() => {
               onClick={() => setFeedType('all')}
               sx={{ flex: 1, mx: 0.5 }}
             >
-              Все
+              {t('main_page.feed.tabs.all')}
             </Button>
             <Button 
               variant={feedType === 'following' ? 'contained' : 'text'} 
               onClick={() => setFeedType('following')}
               sx={{ flex: 1, mx: 0.5 }}
             >
-              Подписки
+              {t('main_page.feed.tabs.following')}
             </Button>
             <Button 
               variant={feedType === 'recommended' ? 'contained' : 'text'} 
               onClick={() => setFeedType('recommended')}
               sx={{ flex: 1, mx: 0.5 }}
             >
-              Рекомендации
+              {t('main_page.feed.tabs.recommended')}
             </Button>
           </Paper>
           
@@ -1940,7 +1849,7 @@ const MainPage = React.memo(() => {
                     opacity: 0.7
                   }}>
                     <Typography variant="body2" color="text.secondary">
-                      Вы просмотрели все посты
+                      {t('main_page.feed.end')}
                     </Typography>
                   </Box>
                 )}
@@ -1952,7 +1861,7 @@ const MainPage = React.memo(() => {
                 mt: 2
               }}>
                 <Typography color="text.secondary">
-                  Нет постов для отображения. Подпишитесь на пользователей, чтобы видеть их публикации в ленте.
+                  {t('main_page.feed.empty')}
                 </Typography>
               </Box>
             )}
@@ -1967,11 +1876,10 @@ const MainPage = React.memo(() => {
               p: 0, 
               borderRadius: '12px', 
               mb: -0.625,
-              background: theme => theme.palette.mode === 'dark' 
-                ? 'linear-gradient(145deg, #222222, #1c1c1c)'
-                : theme.palette.background.paper,
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-              border: theme => `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
+              border: '1px solid rgba(255, 255, 255, 0.05)',
               overflow: 'hidden',
               display: { xs: 'none', sm: 'block' } 
             }}
@@ -2015,10 +1923,10 @@ const MainPage = React.memo(() => {
                   <PersonAddIcon sx={{ color: '#D0BCFF', fontSize: 26 }} />
                 </Avatar>
                 <Typography variant="body2" sx={{ fontWeight: 500, color: theme => theme.palette.text.secondary }}>
-                  Нет активных каналов
+                  {t('main_page.recommendations.empty.title')}
                 </Typography>
                 <Typography variant="caption" sx={{ display: 'block', mt: 1, maxWidth: '80%', mx: 'auto', color: theme => theme.palette.text.disabled }}>
-                  Создайте первый канал или подпишитесь на существующие каналы
+                  {t('main_page.recommendations.empty.description')}
                 </Typography>
               </Box>
             ) : (

@@ -40,6 +40,7 @@ import { Icon } from '@iconify/react';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
 import axios from 'axios';
 import { formatDateTimeShort } from '../../utils/dateUtils';
+import { useLanguage } from '../../context/LanguageContext';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
@@ -254,83 +255,77 @@ const getNotificationColor = (type) => {
 };
 
 const formatRelativeTime = (dateString) => {
-  if (!dateString) return 'Только что';
+  const { t } = useLanguage();
+  if (!dateString) return t('notifications.time.just_now');
   
   try {
-    
     const date = new Date(dateString);
-    
     
     if (isNaN(date.getTime())) {
       console.error('Invalid date string:', dateString);
-      return 'Недавно';
+      return t('notifications.time.recently');
     }
     
-    
     const now = new Date();
-    
-    
     const diffMs = now - date;
     const seconds = Math.floor(diffMs / 1000);
     
-    
     if (seconds < 60) {
-      return 'Только что';
+      return t('notifications.time.just_now');
     }
-    
     
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) {
-      return `${minutes} ${getMinutesString(minutes)} назад`;
+      return `${minutes} ${getMinutesString(minutes)} ${t('notifications.time.ago')}`;
     }
-    
     
     const hours = Math.floor(minutes / 60);
     if (hours < 24) {
-      return `${hours} ${getHoursString(hours)} назад`;
+      return `${hours} ${getHoursString(hours)} ${t('notifications.time.ago')}`;
     }
-    
     
     const days = Math.floor(hours / 24);
     if (days < 7) {
-      return `${days} ${getDaysString(days)} назад`;
+      return `${days} ${getDaysString(days)} ${t('notifications.time.ago')}`;
     }
-    
     
     return formatDateTimeShort(dateString);
   } catch (error) {
     console.error('Error formatting relative time:', error);
-    return 'Недавно';
+    return t('notifications.time.recently');
   }
 };
 
 const getMinutesString = (minutes) => {
+  const { t } = useLanguage();
   if (minutes % 10 === 1 && minutes % 100 !== 11) {
-    return 'минуту';
+    return t('notifications.time.minute');
   } else if ([2, 3, 4].includes(minutes % 10) && ![12, 13, 14].includes(minutes % 100)) {
-    return 'минуты';
+    return t('notifications.time.minutes');
   } else {
-    return 'минут';
+    return t('notifications.time.minutes_many');
   }
 };
 
 const getHoursString = (hours) => {
+  const { t } = useLanguage();
   if (hours % 10 === 1 && hours % 100 !== 11) {
-    return 'час';
+    return t('notifications.time.hour');
   } else if ([2, 3, 4].includes(hours % 10) && ![12, 13, 14].includes(hours % 100)) {
-    return 'часа';
+    return t('notifications.time.hours');
   } else {
-    return 'часов';
+    return t('notifications.time.hours_many');
   }
 };
 
 const getDaysString = (days) => {
+  const { t } = useLanguage();
   if (days % 10 === 1 && days % 100 !== 11) {
-    return 'день';
+    return t('notifications.time.day');
   } else if ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100)) {
-    return 'дня';
+    return t('notifications.time.days');
   } else {
-    return 'дней';
+    return t('notifications.time.days_many');
   }
 };
 
@@ -413,13 +408,13 @@ const getAvatarUrl = (user) => {
 };
 
 const getContextText = (notification) => {
+  const { t } = useLanguage();
   if (!notification || !notification.link) return '';
   
   const linkInfo = parseNotificationLink(notification.link);
   
   switch (linkInfo.type) {
     case 'post':
-      
       if (notification.post_data) {
         if (notification.post_data.preview) {
           return notification.post_data.preview;
@@ -429,10 +424,9 @@ const getContextText = (notification) => {
           return truncateText(notification.post_content, 150);
         }
       }
-      return "публикацию";
+      return t('notifications.context.default_post');
       
     case 'comment':
-      
       if (notification.comment_data) {
         if (notification.comment_data.preview) {
           return notification.comment_data.preview;
@@ -442,10 +436,9 @@ const getContextText = (notification) => {
           return truncateText(notification.comment_content, 150);
         }
       }
-      return "комментарий";
+      return t('notifications.context.default_comment');
       
     case 'reply':
-      
       if (notification.reply_data) {
         if (notification.reply_data.preview) {
           return notification.reply_data.preview;
@@ -455,10 +448,10 @@ const getContextText = (notification) => {
           return truncateText(notification.reply_content, 150);
         }
       }
-      return "ответ на комментарий";
+      return t('notifications.context.default_reply');
       
     case 'profile':
-      return `профиль`;
+      return t('notifications.context.default_profile');
       
     default:
       return '';
@@ -466,19 +459,20 @@ const getContextText = (notification) => {
 };
 
 const getContextTitle = (notification) => {
+  const { t } = useLanguage();
   if (!notification || !notification.link) return '';
   
   const linkInfo = parseNotificationLink(notification.link);
   
   switch (linkInfo.type) {
     case 'post':
-      return "Публикация:";
+      return t('notifications.context.post');
     case 'comment':
-      return "Комментарий:";
+      return t('notifications.context.comment');
     case 'reply':
-      return "Ответ:";
+      return t('notifications.context.reply');
     case 'profile':
-      return "Профиль";
+      return t('notifications.context.profile');
     default:
       return '';
   }
@@ -496,9 +490,46 @@ const formatNumber = (num) => {
 
 const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   const theme = useTheme();
-  const senderName = notification.sender_user?.name || 'Пользователь';
+  const { t } = useLanguage();
+  const senderName = notification.sender_user?.name || t('notifications.user.default');
   const avatar = getAvatarUrl(notification.sender_user);
   const notificationColor = getNotificationColor(notification.type);
+
+  const getNotificationMessage = (notification) => {
+    if (!notification.message) return '';
+
+    const pointsMatch = notification.message.match(/(\d+)\s+балл[а-я]*/);
+    const points = pointsMatch ? pointsMatch[1] : null;
+    const badgeMatch = notification.message.match(/бейджик «([^»]+)»/);
+    const badgeName = badgeMatch ? badgeMatch[1] : null;
+    const priceMatch = notification.message.match(/за (\d+) балл/);
+    const price = priceMatch ? priceMatch[1] : null;
+    const royaltyMatch = notification.message.match(/\+(\d+) балл/);
+    const royalty = royaltyMatch ? royaltyMatch[1] : null;
+
+    switch (notification.type) {
+      case 'post_like':
+        return t('notifications.messages.post_like');
+      case 'post_comment':
+        return t('notifications.messages.post_comment');
+      case 'comment_like':
+        return t('notifications.messages.comment_like');
+      case 'post_repost':
+        return t('notifications.messages.post_repost');
+      case 'points_transfer':
+        return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
+      case 'badge_purchase':
+        return badgeName && price && royalty 
+          ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
+          : notification.message;
+      case 'wall_post':
+        return t('notifications.messages.wall_post');
+      case 'comment_reply':
+        return t('notifications.messages.comment_reply', { username: senderName });
+      default:
+        return notification.message;
+    }
+  };
 
   const renderNotificationContent = useCallback(() => {
     if (!notification.message) return null;
@@ -510,18 +541,18 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
     const usernameMatch = notification.message.match(/юзернейм "([^"]+)"/);
     const username = usernameMatch ? usernameMatch[1] : null;
 
-    let message = notification.message;
+    let message = getNotificationMessage(notification);
     let showMessage = true;
 
     if (notification.type === 'points_transfer') {
-      showMessage = message.includes('с сообщением:');
+      showMessage = notification.message.includes('с сообщением:');
       if (showMessage) {
-        const parts = message.split('с сообщением:');
+        const parts = notification.message.split('с сообщением:');
         message = parts[1]?.trim() || '';
       }
-    } else if (message.includes('с сообщением:')) {
-      const parts = message.split('с сообщением:');
-      message = parts[1]?.trim() || message;
+    } else if (notification.message.includes('с сообщением:')) {
+      const parts = notification.message.split('с сообщением:');
+      message = `${getNotificationMessage(notification)} ${t('notifications.messages.with_message')} ${parts[1]?.trim() || ''}`;
     }
 
     return (
@@ -537,7 +568,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
               <StyledChip
                 size="small"
                 avatar={<PointsIcon src="/static/icons/KBalls.svg" alt="points" />}
-                label={`${formatNumber(parseInt(points))} баллов`}
+                label={t('notifications.points.label', { count: formatNumber(parseInt(points)) })}
                 variant="outlined"
               />
             )}
@@ -561,7 +592,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
         )}
       </Box>
     );
-  }, [notification]);
+  }, [notification, t]);
 
   return (
     <StyledNotificationItem 
@@ -632,6 +663,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
 });
 
 const NotificationList = ({ onNewNotification }) => {
+  const { t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -771,7 +803,7 @@ const NotificationList = ({ onNewNotification }) => {
 
   return (
     <>
-      <Tooltip title="Уведомления" arrow TransitionComponent={Zoom}>
+      <Tooltip title={t('notifications.tooltips.notifications')} arrow TransitionComponent={Zoom}>
         <IconButton 
           onClick={handleMenuOpen}
           sx={{ 
@@ -807,7 +839,7 @@ const NotificationList = ({ onNewNotification }) => {
       >
         <NotificationHeader>
           <Typography variant="subtitle1" fontWeight="bold">
-            Уведомления
+            {t('notifications.title')}
             {unreadCount > 0 && (
               <Badge 
                 badgeContent={unreadCount} 
@@ -818,7 +850,7 @@ const NotificationList = ({ onNewNotification }) => {
           </Typography>
           <Box>
             {notifications.length > 0 && (
-              <Tooltip title="Очистить все уведомления">
+              <Tooltip title={t('notifications.tooltips.clear_all')}>
                 <IconButton 
                   size="small" 
                   onClick={clearAllNotifications}
@@ -833,13 +865,13 @@ const NotificationList = ({ onNewNotification }) => {
               </Tooltip>
             )}
             {unreadCount > 0 && (
-              <Tooltip title="Отметить все как прочитанные" arrow>
+              <Tooltip title={t('notifications.tooltips.mark_all_read')} arrow>
                 <IconButton size="small" onClick={markAllAsRead} sx={{ mr: 1 }}>
                   <DoneAllIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title="Закрыть" arrow>
+            <Tooltip title={t('notifications.tooltips.close')} arrow>
               <IconButton size="small" onClick={handleMenuClose}>
                 <CloseIcon fontSize="small" />
               </IconButton>
@@ -863,7 +895,7 @@ const NotificationList = ({ onNewNotification }) => {
           ) : error ? (
             <EmptyNotifications>
               <Typography variant="body2" color="error">
-                {error}
+                {t('notifications.error.load_failed')}
               </Typography>
             </EmptyNotifications>
           ) : sortedNotifications.length > 0 ? (
@@ -879,9 +911,9 @@ const NotificationList = ({ onNewNotification }) => {
           ) : (
             <EmptyNotifications>
               <NotificationsIcon sx={{ fontSize: 40, opacity: 0.5, mb: 2 }} />
-              <Typography variant="body1">Нет новых уведомлений</Typography>
+              <Typography variant="body1">{t('notifications.empty.no_notifications')}</Typography>
               <Typography variant="body2" color="text.secondary">
-                Здесь будут отображаться ваши уведомления
+                {t('notifications.empty.description')}
               </Typography>
             </EmptyNotifications>
           )}

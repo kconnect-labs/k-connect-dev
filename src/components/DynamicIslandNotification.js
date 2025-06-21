@@ -19,6 +19,7 @@ import MessageIcon from '@mui/icons-material/Message';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Icon } from '@iconify/react';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
+import { useLanguage } from '../context/LanguageContext';
 
 // Keyframes animations for different notification types
 const pillExpand = keyframes`
@@ -187,6 +188,45 @@ const getNotificationIcon = (type) => {
   }
 };
 
+const getNotificationMessage = (notification, t) => {
+  // If t is not available (language context not ready), return the raw message
+  if (!t || !notification || !notification.message) return notification?.message || '';
+
+  const pointsMatch = notification.message.match(/(\d+)\s+балл[а-я]*/);
+  const points = pointsMatch ? pointsMatch[1] : null;
+  const badgeMatch = notification.message.match(/бейджик «([^»]+)»/);
+  const badgeName = badgeMatch ? badgeMatch[1] : null;
+  const priceMatch = notification.message.match(/за (\d+) балл/);
+  const price = priceMatch ? priceMatch[1] : null;
+  const royaltyMatch = notification.message.match(/\+(\d+) балл/);
+  const royalty = royaltyMatch ? royaltyMatch[1] : null;
+
+  switch (notification.type) {
+    case 'post_like':
+      return t('notifications.messages.post_like');
+    case 'post_comment':
+      return t('notifications.messages.post_comment');
+    case 'comment_like':
+      return t('notifications.messages.comment_like');
+    case 'post_repost':
+      return t('notifications.messages.post_repost');
+    case 'points_transfer':
+      return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
+    case 'badge_purchase':
+      return badgeName && price && royalty 
+        ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
+        : notification.message;
+    case 'wall_post':
+      return t('notifications.messages.wall_post');
+    case 'comment_reply':
+      return t('notifications.messages.comment_reply', { 
+        username: notification.sender_user?.name || t('notifications.user.default')
+      });
+    default:
+      return notification.message;
+  }
+};
+
 /**
  * Dynamic Island style notification component
  */
@@ -202,6 +242,15 @@ const DynamicIslandNotification = ({
   notificationData = null
 }) => {
   const [isVisible, setIsVisible] = useState(false);
+  let t;
+  try {
+    // Try to use the language context, but don't fail if it's not available
+    const langContext = useLanguage();
+    t = langContext?.t;
+  } catch (e) {
+    // Language context not available, use a fallback
+    t = null;
+  }
   
   // Handle visibility with animation timing
   useEffect(() => {
@@ -243,6 +292,13 @@ const DynamicIslandNotification = ({
     }
   };
   
+  const getDisplayMessage = () => {
+    if (notificationData) {
+      return getNotificationMessage(notificationData, t);
+    }
+    return message;
+  };
+  
   // Bail out if not open
   if (!open && !isVisible) return null;
   
@@ -264,7 +320,7 @@ const DynamicIslandNotification = ({
                 textOverflow: 'ellipsis'
               }}
             >
-              {shortMessage || message}
+              {shortMessage || getDisplayMessage()}
             </Typography>
             {shortMessage && message && shortMessage !== message && (
               <Typography 
@@ -276,7 +332,7 @@ const DynamicIslandNotification = ({
                   textOverflow: 'ellipsis'
                 }}
               >
-                {message}
+                {getDisplayMessage()}
               </Typography>
             )}
           </MessageContainer>

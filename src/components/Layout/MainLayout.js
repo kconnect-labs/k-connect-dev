@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext, memo } from 'react';
 import { Box, styled, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
-import Header from './Header';
-import Sidebar from './Sidebar';
+import Header from './Header/Header';
+import Sidebar from './Sidebar/Sidebar';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
 import { MobilePlayer, DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -145,33 +146,14 @@ const MainLayout = ({ children }) => {
     <MainContainer 
       sx={{
         backgroundColor: themeSettings?.backgroundColor || theme.palette.background.default,
-        backgroundImage: themeSettings?.backgroundImage 
-          ? `url(${themeSettings.backgroundImage})` 
-          : 'none',
+        backgroundImage: profileBackground
+          ? `url(${profileBackground})`
+          : (themeSettings?.backgroundImage 
+            ? `url(${themeSettings.backgroundImage})` 
+            : 'none'),
         color: themeSettings?.textColor || theme.palette.text.primary
       }}
     >
-      {profileBackground && (
-        <div
-          className="profile-bg-image"
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, width: '100vw', height: '100vh',
-            backgroundImage: `url(${profileBackground})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
-            backgroundAttachment: 'scroll',
-            pointerEvents: 'none',
-          }}
-        >
-          <div style={{
-            position: 'absolute',
-            top: 0, left: 0, width: '100%', height: '100%',
-            background: 'rgba(0,0,0,0.45)'
-          }} />
-        </div>
-      )}
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       

@@ -19,6 +19,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 import GavelIcon from '@mui/icons-material/Gavel';
@@ -282,6 +283,7 @@ const MorePage = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useLanguage();
   const [userPoints, setUserPoints] = useState(0);
   const isAdmin = user?.id === 3; 
   const isChannel = user?.account_type === 'channel';
@@ -357,7 +359,7 @@ const MorePage = () => {
           <Box
             component="img"
             src={user.banner_url || `/static/uploads/banner/${user.id}/${user.banner}`}
-            alt="Баннер"
+            alt={t('more_page.banner_alt')}
             sx={{
               position: 'absolute',
               top: 0,
@@ -368,7 +370,7 @@ const MorePage = () => {
               zIndex: 0,
             }}
             onError={(e) => {
-              console.error("Ошибка загрузки баннера");
+              console.error(t('more_page.errors.banner_load_error'));
               e.target.style.display = 'none';
             }}
           />
@@ -397,7 +399,7 @@ const MorePage = () => {
             src={user?.avatar_url || (user?.photo && `/static/uploads/avatar/${user.id}/${user.photo}`)}
             alt={user?.name}
             onError={(e) => {
-              console.error("Ошибка загрузки аватара");
+              console.error(t('more_page.errors.avatar_load_error'));
               e.target.src = `/static/uploads/avatar/system/avatar.png`;
             }}
           >
@@ -409,7 +411,7 @@ const MorePage = () => {
       {/* Profile Info */}
       <Box sx={{ mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProfileName variant="h5">
-          {user?.name || 'Пользователь'}
+          {user?.name || t('more_page.default_user')}
           {user?.verification && user.verification.status > 0 && (
             <VerificationBadge 
               status={user.verification.status} 
@@ -418,10 +420,10 @@ const MorePage = () => {
           )}
         </ProfileName>
         <Typography variant="body2" color="textSecondary" align="center">
-          @{user?.username || 'username'}
+          @{user?.username || t('more_page.default_username')}
         </Typography>
         
-        {/* Primary Actions - Telegram/SwiftUI style */}
+        {/* Primary Actions */}
         <Box sx={{ 
           display: 'flex', 
           width: '100%', 
@@ -440,7 +442,7 @@ const MorePage = () => {
             sx={{ px: 1 }}
           >
             <span className="number">{formatNumber(userPoints)}</span>
-            <span className="unit">баллов</span>
+            <span className="unit">{t('more_page.points')}</span>
           </BalanceButton>
           
           <ActionButton
@@ -449,7 +451,7 @@ const MorePage = () => {
             startIcon={<Icon icon="solar:shop-bold" width="18" height="18" />}
             sx={{ px: 1 }}
           >
-            Магазин
+            {t('more_page.shop')}
           </ActionButton>
           
           <ActionButton
@@ -458,48 +460,48 @@ const MorePage = () => {
             startIcon={<SettingsIcon sx={{ fontSize: '1rem' }} />}
             sx={{ px: 1 }}
           >
-            Настройки
+            {t('more_page.settings')}
           </ActionButton>
         </Box>
       </Box>
 
       {/* Social & Content */}
       <MenuSection>
-        <SectionTitle>Социальное</SectionTitle>
+        <SectionTitle>{t('more_page.sections.social.title')}</SectionTitle>
         <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
           <MenuListItem button component={Link} to="/search">
             <MenuItemIcon>
               <Icon icon="solar:magnifer-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Поиск" />
+            <ListItemText primary={t('more_page.sections.social.search')} />
           </MenuListItem>
 
           <MenuListItem button component={Link} to="/subscriptions">
             <MenuItemIcon>
               <Icon icon="solar:users-group-rounded-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Подписки" />
+            <ListItemText primary={t('more_page.sections.social.subscriptions')} />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/channels">
             <MenuItemIcon>
               <Icon icon="solar:play-stream-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Каналы" />
+            <ListItemText primary={t('more_page.sections.social.channels')} />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/leaderboard">
             <MenuItemIcon>
               <Icon icon="solar:chart-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Рейтинг" />
+            <ListItemText primary={t('more_page.sections.social.rating')} />
           </MenuListItem>
         </List>
       </MenuSection>
 
       {/* Entertainment & Features */}
       <MenuSection>
-        <SectionTitle>Развлечения</SectionTitle>
+        <SectionTitle>{t('more_page.sections.entertainment.title')}</SectionTitle>
         <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
           {!isChannel && (
             <HighlightedMenuItem 
@@ -512,7 +514,7 @@ const MorePage = () => {
                 <Icon icon="solar:gamepad-bold" width="20" height="20" />
               </MenuItemIcon>
               <ListItemText 
-                primary="Мини-игры" 
+                primary={t('more_page.sections.entertainment.minigames')}
               />
             </HighlightedMenuItem>
           )}
@@ -526,11 +528,11 @@ const MorePage = () => {
               <GavelIcon sx={{ fontSize: '1.1rem' }} />
             </MenuItemIcon>
             <ListItemText 
-              primary="Аукцион юзернеймов"
+              primary={t('more_page.sections.entertainment.username_auction')}
               sx={{ flexShrink: 1, minWidth: 0 }}
             />
             <Chip 
-              label="Новое" 
+              label={t('more_page.sections.entertainment.new_badge')}
               size="small" 
               color="primary" 
               sx={{ 
@@ -549,7 +551,7 @@ const MorePage = () => {
               <MenuItemIcon>
                 <Icon icon="solar:star-bold" width="20" height="20" />
               </MenuItemIcon>
-              <ListItemText primary="Планы подписок" />
+              <ListItemText primary={t('more_page.sections.entertainment.subscription_plans')} />
             </MenuListItem>
           )}
         </List>
@@ -558,7 +560,7 @@ const MorePage = () => {
       {/* Admin Section */}
       {(isAdmin || isModeratorUser) && (
         <MenuSection>
-          <SectionTitle>Администрирование</SectionTitle>
+          <SectionTitle>{t('more_page.sections.administration.title')}</SectionTitle>
           <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
             {isModeratorUser && (
               <HighlightedMenuItem 
@@ -570,7 +572,7 @@ const MorePage = () => {
                 <MenuItemIcon sx={{ color: theme.palette.error.main }}>
                   <Icon icon="solar:shield-star-bold" width="20" height="20" />
                 </MenuItemIcon>
-                <ListItemText primary="Модерация" />
+                <ListItemText primary={t('more_page.sections.administration.moderation')} />
               </HighlightedMenuItem>
             )}
 
@@ -579,7 +581,7 @@ const MorePage = () => {
                 <MenuItemIcon>
                   <Icon icon="solar:shield-user-bold" width="20" height="20" />
                 </MenuItemIcon>
-                <ListItemText primary="Админ-панель" />
+                <ListItemText primary={t('more_page.sections.administration.admin_panel')} />
               </MenuListItem>
             )}
           </List>
@@ -588,14 +590,14 @@ const MorePage = () => {
 
       {/* Platform Section */}
       <MenuSection>
-        <SectionTitle>Платформа</SectionTitle>
+        <SectionTitle>{t('more_page.sections.platform.title')}</SectionTitle>
         <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
           {!isChannel && (
             <MenuListItem button component={Link} to="/bugs">
               <MenuItemIcon>
                 <Icon icon="solar:bug-bold" width="20" height="20" />
               </MenuItemIcon>
-              <ListItemText primary="Баг-репорты" />
+              <ListItemText primary={t('more_page.sections.platform.bug_reports')} />
             </MenuListItem>
           )}
           
@@ -603,28 +605,30 @@ const MorePage = () => {
             <MenuItemIcon>
               <Icon icon="solar:info-circle-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="О платформе" />
+            <ListItemText primary={t('more_page.sections.platform.about')} />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/rules">
             <MenuItemIcon>
               <Icon icon="solar:document-text-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Правила" />
+            <ListItemText primary={t('more_page.sections.platform.rules')} />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/messenger">
             <MenuItemIcon>
               <Icon icon="solar:code-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Мессенджер" />
+            <ListItemText primary={t('more_page.sections.platform.messenger')} />
           </MenuListItem>
+          
           <MenuListItem button component={Link} to="/api-docs">
             <MenuItemIcon>
               <Icon icon="solar:code-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="API Документация" />
+            <ListItemText primary={t('more_page.sections.platform.api_docs')} />
           </MenuListItem>
+          
           <Divider sx={{ my: 1, mx: 2 }} />
           
           <MenuListItem button onClick={handleLogout}>
@@ -632,7 +636,7 @@ const MorePage = () => {
               <Icon icon="solar:logout-3-bold" width="20" height="20" />
             </MenuItemIcon>
             <ListItemText 
-              primary="Выйти" 
+              primary={t('more_page.sections.platform.logout')}
               primaryTypographyProps={{ sx: { color: theme.palette.error.main } }}
             />
           </MenuListItem>
@@ -642,11 +646,10 @@ const MorePage = () => {
       {/* Footer */}
       <FooterSection>
         <Typography variant="caption" display="block" color="primary" sx={{ fontWeight: 500, mb: 0.5 }}>
-          К-Коннект v2.8
-          
+          {t('more_page.footer.version')}
         </Typography>
         <Typography variant="caption" display="block" color="textSecondary">
-          verif@k-connect.ru
+          {t('more_page.footer.email')}
         </Typography>
       </FooterSection>
     </Container>
