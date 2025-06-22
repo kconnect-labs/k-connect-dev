@@ -23,11 +23,16 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: 24,
+    borderRadius: window.innerWidth <= 768 ? 0 : '8px',
     boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    maxWidth: 500,
-    width: '90%',
+    maxWidth: window.innerWidth <= 768 ? '100vw' : 500,
+    width: window.innerWidth <= 768 ? '100%' : '90%',
     overflow: 'hidden',
+    '@media (max-width: 768px)': {
+      margin: 0,
+      maxHeight: '100vh',
+      borderRadius: 0,
+    }
   },
 }));
 
@@ -44,7 +49,7 @@ const PackContainer = styled(Box)(({ theme }) => ({
   height: 200,
   margin: '0 auto 24px',
   background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%)',
-  borderRadius: 20,
+  borderRadius: 12,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -66,7 +71,7 @@ const ItemContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: 120,
   height: 120,
-  borderRadius: 16,
+  borderRadius: 12,
   background: 'rgba(208, 188, 255, 0.1)',
   display: 'flex',
   alignItems: 'center',
@@ -222,6 +227,7 @@ const PackOpeningModal = ({ pack, onClose }) => {
       onClose={handleClose}
       maxWidth="sm"
       fullWidth
+      fullScreen={window.innerWidth <= 768}
       disableEscapeKeyDown={opening}
     >
       <DialogContent sx={{ p: 0 }}>
@@ -423,7 +429,7 @@ const PackOpeningModal = ({ pack, onClose }) => {
                       background: 'linear-gradient(135deg, #d0bcff 0%, #9c64f2 100%)',
                       color: '#1a1a1a',
                       fontWeight: 600,
-                      borderRadius: 2,
+                      borderRadius: 1,
                       px: 4,
                       py: 1.5,
                       fontSize: '1.1rem',

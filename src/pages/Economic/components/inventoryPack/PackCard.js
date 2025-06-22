@@ -26,6 +26,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
   transition: 'all 0.3s ease',
   cursor: 'pointer',
   overflow: 'visible',
+  height: '480px',
+  display: 'flex',
+  flexDirection: 'column',
+  '@media (max-width: 768px)': {
+    height: '420px',
+  }
 }));
 
 const PackImage = styled(Box)(({ theme }) => ({
@@ -211,8 +217,15 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const mainItem = displayItems[0];
   const sideItems = displayItems.slice(1, 3);
 
+  // Функция для сокращения длинных описаний
+  const truncateDescription = (text, maxLength = 50) => {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
   return (
-    <StyledCard onClick={handleCardClick}>
+    <StyledCard onClick={handleCardClick} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <PackImage>
         <ItemContainer>
           {sideItems[0] && (
@@ -275,7 +288,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
         </ItemContainer>
       </PackImage>
 
-      <CardContent sx={{ p: 2 }}>
+      <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography 
           variant="h6" 
           component="h3" 
@@ -294,13 +307,17 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
             color: 'text.secondary', 
             mb: 2,
             textAlign: 'center',
-            fontSize: '0.85rem'
+            fontSize: '0.85rem',
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          {pack.description}
+          {truncateDescription(pack.description)}
         </Typography>
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap' }}>
           <PriceChip 
             icon={<DiamondIcon />}
             label={`${pack.price} баллов`}
@@ -321,7 +338,6 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
             />
           )}
         </Box>
-
 
         <Button
           variant="outlined"

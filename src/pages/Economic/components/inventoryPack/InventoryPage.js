@@ -16,7 +16,8 @@ import {
   TextField,
   Alert,
   Avatar,
-  InputAdornment
+  InputAdornment,
+  Snackbar
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -146,6 +147,11 @@ const InventoryPage = () => {
     suggestions: []
   });
   const [selectedRecipientId, setSelectedRecipientId] = useState(null);
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success' // 'success', 'error', 'warning', 'info'
+  });
   const debounceTimerRef = useRef(null);
   const { user } = useAuth();
 
@@ -206,10 +212,10 @@ const InventoryPage = () => {
       if (data.success) {
         fetchInventory(); // Обновляем инвентарь
       } else {
-        alert(data.message || 'Ошибка надевания предмета');
+        showNotification(data.message || 'Ошибка надевания предмета');
       }
     } catch (err) {
-      alert('Ошибка сети');
+      showNotification('Ошибка сети', 'error');
       console.error('Error equipping item:', err);
     }
   };
@@ -228,10 +234,10 @@ const InventoryPage = () => {
       if (data.success) {
         fetchInventory(); // Обновляем инвентарь
       } else {
-        alert(data.message || 'Ошибка снятия предмета');
+        showNotification(data.message || 'Ошибка снятия предмета');
       }
     } catch (err) {
-      alert('Ошибка сети');
+      showNotification('Ошибка сети', 'error');
       console.error('Error unequipping item:', err);
     }
   };
@@ -376,7 +382,7 @@ const InventoryPage = () => {
         setUserPoints(data.remaining_points);
         handleCloseTransferModal();
         fetchInventory(); // Обновляем инвентарь
-        alert(data.message);
+        showNotification(data.message);
       } else {
         setTransferError(data.message || 'Ошибка передачи предмета');
       }
@@ -447,6 +453,18 @@ const InventoryPage = () => {
       label: `Не надетые (${inventory.filter(item => !item.is_equipped).length})`
     }
   ];
+
+  const showNotification = (message, severity = 'success') => {
+    setNotification({
+      open: true,
+      message,
+      severity
+    });
+  };
+
+  const handleCloseNotification = () => {
+    setNotification(prev => ({ ...prev, open: false }));
+  };
 
   if (!user) {
     return (
@@ -893,6 +911,43 @@ const InventoryPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Уведомления */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            background: notification.severity === 'error' 
+              ? 'rgba(244, 67, 54, 0.9)' 
+              : notification.severity === 'warning'
+              ? 'rgba(255, 152, 0, 0.9)'
+              : notification.severity === 'info'
+              ? 'rgba(33, 150, 243, 0.9)'
+              : 'rgba(76, 175, 80, 0.9)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: 2,
+            fontWeight: 500,
+          }
+        }}
+      >
+        <Alert 
+          onClose={handleCloseNotification} 
+          severity={notification.severity}
+          sx={{ 
+            width: '100%',
+            background: 'transparent',
+            color: 'white',
+            '& .MuiAlert-icon': {
+              color: 'white'
+            }
+          }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </StyledContainer>
   );
 };
