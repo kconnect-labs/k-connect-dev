@@ -1516,30 +1516,26 @@ const InventoryTab = ({ userId }) => {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                 <strong>Получен:</strong> {new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU')}
               </Typography>
+              {selectedItem.gifter_username && (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <strong>Подарен:</strong> @{selectedItem.gifter_username}
+                </Typography>
+              )}
+              {selectedItem.total_count && (
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
+                </Typography>
+              )}
               {selectedItem.is_equipped && (
                 <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
                   ✓ Надет
                 </Typography>
               )}
             </Box>
-
-            <Button
-              variant="outlined"
-              onClick={handleCloseModal}
-              fullWidth
-              sx={{
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-                color: 'text.primary',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-              }}
-            >
-              Закрыть
-            </Button>
           </Box>
         </Box>
       )}
+
     </>
   );
 };

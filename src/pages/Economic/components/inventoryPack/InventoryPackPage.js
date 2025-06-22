@@ -191,6 +191,9 @@ const InventoryPackPage = () => {
     }
   };
 
+  const isSoldOut = selectedPackDetails?.pack.is_limited && 
+                    (selectedPackDetails.pack.max_quantity - selectedPackDetails.pack.sold_quantity <= 0);
+
   if (loading) {
     return (
       <StyledContainer>
@@ -474,7 +477,7 @@ const InventoryPackPage = () => {
                 
                 <Button
                   variant="outlined"
-                  disabled={!user || userPoints < selectedPackDetails.pack.price}
+                  disabled={!user || userPoints < selectedPackDetails.pack.price || isSoldOut}
                   onClick={() => {
                     handleClosePackDetails();
                     handleBuyPack(selectedPackDetails.pack);
@@ -496,7 +499,8 @@ const InventoryPackPage = () => {
                     }
                   }}
                 >
-                  {!user ? 'Войти' : userPoints < selectedPackDetails.pack.price ? 'Недостаточно баллов' : 'Купить'}
+                  {isSoldOut ? 'Закончился' : 
+                   userPoints < selectedPackDetails.pack.price ? 'Недостаточно баллов' : 'Купить'}
                 </Button>
               </Box>
             </>

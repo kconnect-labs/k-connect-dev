@@ -224,6 +224,8 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
     return text.substring(0, maxLength).trim() + '...';
   };
 
+  const isSoldOut = pack.is_limited && (pack.max_quantity - pack.sold_quantity <= 0);
+
   return (
     <StyledCard onClick={handleCardClick} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <PackImage>
@@ -342,7 +344,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
         <Button
           variant="outlined"
           fullWidth
-          disabled={disabled || loading}
+          disabled={disabled || loading || isSoldOut}
           onClick={handleBuyClick}
           sx={{
             borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -364,8 +366,10 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
         >
           {loading ? (
             <CircularProgress size={16} />
+          ) : isSoldOut ? (
+            'Закончился'
           ) : disabled ? (
-            userPoints < pack.price ? 'Недостаточно баллов' : 'Купить'
+            'Недостаточно баллов'
           ) : (
             'Купить'
           )}
