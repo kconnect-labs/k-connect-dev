@@ -34,6 +34,8 @@ import shopIcon from '@iconify-icons/solar/shop-bold';
 import apiIcon from '@iconify-icons/solar/code-bold';
 import starIcon from '@iconify-icons/solar/star-bold';
 import subscriptionIcon from '@iconify-icons/solar/crown-bold';
+import packIcon from '@iconify-icons/solar/box-bold';
+import inventoryIcon from '@iconify-icons/solar/bag-bold';
 
 const SidebarNavigation = memo(({ 
   isAdmin, 
@@ -74,7 +76,9 @@ const SidebarNavigation = memo(({
     bug: <Icon icon={bugIcon} width="20" height="20" />,
     rules: <Icon icon={rulesIcon} width="20" height="20" />,
     api: <Icon icon={apiIcon} width="20" height="20" />,
-    auction: <GavelIcon sx={{ fontSize: 20 }} />
+    auction: <GavelIcon sx={{ fontSize: 20 }} />,
+    pack: <Icon icon={packIcon} width="20" height="20" />,
+    inventory: <Icon icon={inventoryIcon} width="20" height="20" />
   }), []);
   
   
@@ -207,6 +211,24 @@ const SidebarNavigation = memo(({
             icon={icons.auction}
             path="/username-auction"
             active={isActive('/username-auction')}
+            themeColor={primaryColor}
+            nested={true}
+          />
+          
+          <NavButton
+            text="Паки и Сундуки"
+            icon={icons.pack}
+            path="/economic/packs"
+            active={isActive('/economic/packs')}
+            themeColor={primaryColor}
+            nested={true}
+          />
+          
+          <NavButton
+            text="Мой Инвентарь"
+            icon={icons.inventory}
+            path="/economic/inventory"
+            active={isActive('/economic/inventory')}
             themeColor={primaryColor}
             nested={true}
           />

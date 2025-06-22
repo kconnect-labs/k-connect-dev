@@ -48,7 +48,7 @@ import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
 import { optimizeImage } from '../../utils/imageUtils';
-import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks } from '../../utils/LinkUtils';
+import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
 import Lottie from 'lottie-react'; 
 
@@ -414,13 +414,19 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         let content = post.content;
         USERNAME_MENTION_REGEX.lastIndex = 0;
         HASHTAG_REGEX.lastIndex = 0;
+        URL_REGEX.lastIndex = 0;
         
+        // Обработка обычных ссылок
+        content = content.replace(URL_REGEX, (match) => {
+          return `[${match}](${match.startsWith('http') ? match : `https://${match}`})`;
+        });
 
+        // Обработка упоминаний пользователей
         content = content.replace(USERNAME_MENTION_REGEX, (match, username) => {
           return `[${match}](/profile/${username})`;
         });
         
-
+        // Обработка хештегов
         content = content.replace(HASHTAG_REGEX, (match, hashtag) => {
           return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
         });
@@ -1929,27 +1935,41 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 }}
               >
                 {post.original_post.content && (
-                  <Typography variant="body2" sx={{ mb: 1, color: 'text.primary', fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>
-                    {truncateText(post.original_post.content, 500)}
-                    {post.original_post.content.length > 500 && (
-                      <Box 
-                        component="span" 
-                        sx={{ 
-                          color: 'primary.main', 
-                          cursor: 'pointer',
-                          display: 'inline-block',
-                          fontSize: '0.85rem',
-                          ml: 0.5
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openPostDetail(post.original_post.id);
-                        }}
-                      >
-                        Читать далее
-                      </Box>
-                    )}
-                  </Typography>
+                  <Box sx={{ mb: 1 }}>
+                    <Typography variant="body2" sx={{ color: 'text.primary', fontSize: '0.9rem', whiteSpace: 'pre-wrap' }}>
+                      {truncateText(post.original_post.content, 500)}
+                      {post.original_post.content.length > 500 && (
+                        <Box 
+                          component="span" 
+                          sx={{ 
+                            color: 'primary.main', 
+                            cursor: 'pointer',
+                            display: 'inline-block',
+                            fontSize: '0.85rem',
+                            ml: 0.5
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openPostDetail(post.original_post.id);
+                          }}
+                        >
+                          Читать далее
+                        </Box>
+                      )}
+                    </Typography>
+                    
+                    {/* Отображение ссылок для репоста */}
+                    {(() => {
+                      const { urls } = processTextWithLinks(truncateText(post.original_post.content, 500), theme);
+                      return urls.length > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                          {urls.map((url, index) => (
+                            <LinkPreview key={`repost-link-${index}`} url={url} />
+                          ))}
+                        </Box>
+                      );
+                    })()}
+                  </Box>
                 )}
                 
                 {/* Replacing the single image with our new RepostImageGrid component */}

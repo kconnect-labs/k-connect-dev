@@ -30,64 +30,39 @@ import { VerificationBadge } from '../../UIKIT';
 
 const ProfileBanner = styled(Box)(({ theme }) => ({
   position: 'relative',
-  height: 140,
+  height: 120,
   width: '100vw',
   left: '50%',
   right: '50%',
   marginLeft: '-50vw',
   marginRight: '-50vw',
-  marginBottom: theme.spacing(4),
-  backgroundColor: theme.palette.primary.dark,
-  backgroundImage: 'linear-gradient(135deg, #6f57bd 0%, #8c54ff 100%)',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  marginBottom: theme.spacing(3),
+  backgroundColor: theme.palette.background.paper,
+  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'flex-end',
   padding: 0,
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: 'url(/static/img/pattern.png)',
-    backgroundSize: '200px',
-    backgroundRepeat: 'repeat',
-    opacity: 0.08,
-    zIndex: 1
-  }
 }));
-
-const BannerCurve = styled(Box)({
-  position: 'absolute',
-  bottom: -2,
-  left: 0,
-  right: 0,
-  height: '40px',
-  borderRadius: '50% 50% 0 0',
-  zIndex: 3,
-});
 
 const ProfileAvatarWrapper = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  bottom: '-25px',
+  bottom: '-20px',
   left: '50%',
   transform: 'translateX(-50%)',
   zIndex: 10,
-  padding: '3px',
+  padding: '2px',
   borderRadius: '50%',
   backgroundColor: theme.palette.background.paper,
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+  border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
 }));
 
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({
-  width: 125,
-  height: 125,
-  border: '3px solid',
+  width: 80,
+  height: 80,
+  border: '2px solid',
   borderColor: theme.palette.background.paper,
-  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
   backgroundColor: theme.palette.primary.main,
 }));
 
@@ -102,42 +77,38 @@ const ProfileName = styled(Typography)(({ theme }) => ({
 
 
 const MenuSection = styled(Paper)(({ theme }) => ({
-  borderRadius: theme.spacing(3),
+  borderRadius: theme.spacing(1.5),
   overflow: 'hidden', 
-  marginBottom: theme.spacing(1.5),
+  marginBottom: theme.spacing(1),
   boxShadow: 'none',
-  border: `1px solid ${alpha(theme.palette.divider, 0.07)}`,
-  backgroundColor: theme.palette.mode === 'dark' 
-    ? alpha(theme.palette.background.paper, 0.6) 
-    : 'rgba(250, 250, 252, 0.8)',
+  border: `1px solid ${alpha(theme.palette.divider, 0.05)}`,
+  backgroundColor: 'transparent',
   boxSizing: 'border-box',
   width: '100%',
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
-  fontSize: '0.7rem',
+  fontSize: '0.65rem',
   fontWeight: 600,
-  color: alpha(theme.palette.text.secondary, 0.7),
-  padding: theme.spacing(1.5, 2, 0.7),
+  color: alpha(theme.palette.text.secondary, 0.6),
+  padding: theme.spacing(1, 1.5, 0.5),
   textTransform: 'none',
-  letterSpacing: '0.2px',
+  letterSpacing: '0.1px',
 }));
 
 
 const MenuListItem = styled(ListItem)(({ theme }) => ({
-  padding: theme.spacing(1, 1.5),
-  borderRadius: theme.spacing(2.5),
+  padding: theme.spacing(0.8, 1.2),
+  borderRadius: theme.spacing(1),
   transition: 'all 0.15s ease',
   maxWidth: 'calc(100% - 8px)',
   margin: theme.spacing(0, 0.5),
-  marginBottom: 2,
+  marginBottom: 1,
   width: 'auto',
   boxSizing: 'border-box',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? alpha(theme.palette.primary.main, 0.08)
-      : alpha(theme.palette.primary.main, 0.05),
-    transform: 'translateX(2px)',
+    backgroundColor: alpha(theme.palette.primary.main, 0.04),
+    transform: 'translateX(1px)',
   },
   '& .MuiListItemText-root': {
     margin: 0,
@@ -149,68 +120,59 @@ const MenuListItem = styled(ListItem)(({ theme }) => ({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    fontSize: '0.9rem',
+    fontSize: '0.85rem',
     fontWeight: 500,
   },
   '& .MuiTypography-secondary': {
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    fontSize: '0.7rem',
-    color: alpha(theme.palette.text.secondary, 0.8),
+    fontSize: '0.65rem',
+    color: alpha(theme.palette.text.secondary, 0.7),
   }
 }));
 
 const HighlightedMenuItem = styled(MenuListItem)(({ theme, color = 'primary' }) => ({
-  backgroundColor: alpha(theme.palette[color].main, 0.06),
+  backgroundColor: alpha(theme.palette[color].main, 0.03),
   margin: theme.spacing(0, 0.5),
-  marginBottom: 2,
+  marginBottom: 1,
   maxWidth: 'calc(100% - 8px)',
   '&:hover': {
-    backgroundColor: alpha(theme.palette[color].main, 0.1),
-    transform: 'translateX(2px)',
+    backgroundColor: alpha(theme.palette[color].main, 0.06),
+    transform: 'translateX(1px)',
   },
 }));
 
 const MenuItemIcon = styled(ListItemIcon)(({ theme }) => ({
-  minWidth: '36px',
-  color: theme.palette.text.primary,
-  opacity: 0.85,
+  minWidth: '32px',
+  color: theme.palette.text.secondary,
+  opacity: 0.8,
   '& .MuiSvgIcon-root': {
-    fontSize: '1.2rem',
+    fontSize: '1.1rem',
   },
 }));
 
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  borderRadius: theme.spacing(2.5),
-  padding: theme.spacing(0.8, 1.5),
+  borderRadius: theme.spacing(1.5),
+  padding: theme.spacing(0.6, 1.2),
   flex: 1,
   minWidth: 0,
-  marginBottom: 2,
-  fontSize: '0.75rem',
+  marginBottom: 1,
+  fontSize: '0.7rem',
   fontWeight: 500,
-  color: theme.palette.mode === 'dark' ? alpha(theme.palette.common.white, 0.9) : theme.palette.text.primary,
-  backgroundColor: theme.palette.mode === 'dark' 
-    ? alpha(theme.palette.background.paper, 0.2) 
-    : alpha(theme.palette.background.paper, 0.7),
-  border: `1px solid ${alpha(theme.palette.divider, 0.08)}`,
+  color: theme.palette.text.primary,
+  backgroundColor: 'transparent',
+  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   textTransform: 'none',
-  boxShadow: theme.palette.mode === 'dark' 
-    ? 'none' 
-    : '0 1px 2px rgba(0, 0, 0, 0.03)',
-  backdropFilter: 'blur(8px)',
   '&:hover': {
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? alpha(theme.palette.background.paper, 0.25) 
-      : alpha(theme.palette.background.paper, 0.85),
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
-    border: `1px solid ${alpha(theme.palette.divider, 0.12)}`,
+    backgroundColor: alpha(theme.palette.primary.main, 0.05),
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
   },
   '& .MuiButton-startIcon': {
-    marginRight: 6,
+    marginRight: 4,
     opacity: 0.8,
-    minWidth: 18,
+    minWidth: 16,
   },
   '& .MuiButton-endIcon': {
     marginLeft: 0,
@@ -226,7 +188,7 @@ const BalanceButton = styled(ActionButton)(({ theme }) => ({
     color: theme.palette.primary.main,
   },
   '& .unit': {
-    marginLeft: 3,
+    marginLeft: 2,
     fontWeight: 500
   }
 }));
@@ -355,45 +317,6 @@ const MorePage = () => {
     }}>
       {/* Profile Banner */}
       <ProfileBanner>
-        {user?.banner ? (
-          <Box
-            component="img"
-            src={user.banner_url || `/static/uploads/banner/${user.id}/${user.banner}`}
-            alt={t('more_page.banner_alt')}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: 0,
-            }}
-            onError={(e) => {
-              console.error(t('more_page.errors.banner_load_error'));
-              e.target.style.display = 'none';
-            }}
-          />
-        ) : (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundImage: `linear-gradient(135deg, 
-                ${alpha(theme.palette.primary.dark, 0.9)} 0%, 
-                ${alpha(theme.palette.primary.main, 0.8)} 50%,
-                ${alpha(theme.palette.primary.light, 0.7)} 100%)`,
-              backgroundSize: 'cover',
-              zIndex: 0,
-            }}
-          />
-        )}
-        <BannerCurve sx={{ 
-          backgroundColor: theme.palette.mode === 'dark' ? '#121212' : '#ffffff'
-        }}/>
         <ProfileAvatarWrapper>
           <ProfileAvatar
             src={user?.avatar_url || (user?.photo && `/static/uploads/avatar/${user.id}/${user.photo}`)}
@@ -409,7 +332,7 @@ const MorePage = () => {
       </ProfileBanner>
 
       {/* Profile Info */}
-      <Box sx={{ mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={{ mb: 1.5, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <ProfileName variant="h5">
           {user?.name || t('more_page.default_user')}
           {user?.verification && user.verification.status > 0 && (
@@ -427,8 +350,8 @@ const MorePage = () => {
         <Box sx={{ 
           display: 'flex', 
           width: '100%', 
-          gap: 1.2,
-          mt: 1.5,
+          gap: 1,
+          mt: 1,
           mb: 0.5,
           px: { xs: 1, sm: 1.5 },
           maxWidth: '100%',
@@ -518,6 +441,20 @@ const MorePage = () => {
               />
             </HighlightedMenuItem>
           )}
+          
+          <MenuListItem button component={Link} to="/economic/packs">
+            <MenuItemIcon>
+              <Icon icon="solar:box-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText primary="Паки и Сундуки" />
+          </MenuListItem>
+          
+          <MenuListItem button component={Link} to="/economic/inventory">
+            <MenuItemIcon>
+              <Icon icon="solar:bag-4-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText primary="Мой Инвентарь" />
+          </MenuListItem>
           
           <HighlightedMenuItem
             button 

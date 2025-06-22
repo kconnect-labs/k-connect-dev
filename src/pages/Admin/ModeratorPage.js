@@ -179,7 +179,6 @@ const ModeratorPage = () => {
   const [deleteBadgeDialogOpen, setDeleteBadgeDialogOpen] = useState(false);
   const [deleteArtistDialogOpen, setDeleteArtistDialogOpen] = useState(false);
   const [editArtistDialogOpen, setEditArtistDialogOpen] = useState(false);
-  const [createArtistDialogOpen, setCreateArtistDialogOpen] = useState(false);
   const [manageArtistTracksDialogOpen, setManageArtistTracksDialogOpen] = useState(false);
   const [artistTracks, setArtistTracks] = useState([]);
   const [searchableTracksList, setSearchableTracksList] = useState([]);
@@ -3967,7 +3966,7 @@ const ModeratorPage = () => {
     setEditArtistAvatar(null);
     setEditArtistAvatarPreview('');
     setEditArtistVerified(false);
-    setCreateArtistDialogOpen(true);
+    setEditArtistDialogOpen(true);
   };
 
   const renderArtists = () => {
@@ -5801,10 +5800,10 @@ const ModeratorPage = () => {
           />
           <Box sx={{ position: 'relative', zIndex: 1 }}>
             <Typography variant="h5" fontWeight="bold" color="primary.light">
-              Редактирование артиста
+              {selectedArtist ? 'Редактирование артиста' : 'Создание нового артиста'}
             </Typography>
             <Typography variant="caption" color="rgba(255,255,255,0.6)">
-              Измените данные артиста и сохраните изменения
+              {selectedArtist ? 'Измените данные артиста и сохраните изменения' : 'Заполните данные нового артиста'}
             </Typography>
           </Box>
         </Box>
@@ -6064,7 +6063,7 @@ const ModeratorPage = () => {
               }
             }}
           >
-            Сохранить
+            {selectedArtist ? 'Сохранить' : 'Создать'}
           </Button>
         </DialogActions>
       </StyledDialog>
