@@ -51,7 +51,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import WarningIcon from '@mui/icons-material/Warning';
 import BlockIcon from '@mui/icons-material/Block';
 import { Icon } from '@iconify/react';
-import { PostsFeed, WallFeed } from './components';
+import { PostsFeed, WallFeed, EquippedItem } from './components';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -1550,6 +1550,7 @@ const ProfilePage = () => {
   const { user: currentUser, isAuthenticated } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [ownedUsernames, setOwnedUsernames] = useState([]);
+  const [equippedItems, setEquippedItems] = useState([]);
   const [photos, setPhotos] = useState([]);  
   const [videos, setVideos] = useState([]);  
   const [tabValue, setTabValue] = useState(0);
@@ -2008,6 +2009,30 @@ const ProfilePage = () => {
     }
   }, [user, globalProfileBackgroundEnabled, setProfileBackground, clearProfileBackground]);
 
+  useEffect(() => {
+    const fetchEquippedItems = async () => {
+      if (user?.id) {
+        try {
+          const response = await axios.get(`/api/inventory/user/${user.id}`);
+          if (response.data.success) {
+            const inventoryByPacks = response.data.inventory || {};
+            let foundItems = [];
+            for (const packItems of Object.values(inventoryByPacks)) {
+              const equipped = packItems.filter(item => item.is_equipped);
+              if (equipped.length > 0) {
+                foundItems.push(...equipped);
+              }
+            }
+            setEquippedItems(foundItems.slice(0, 3));
+          }
+        } catch (error) {
+          console.error('Error fetching equipped items:', error);
+        }
+      }
+    };
+    fetchEquippedItems();
+  }, [user]);
+
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
@@ -2193,6 +2218,9 @@ const ProfilePage = () => {
                       }}
                     />
                   </Tooltip>
+                  {equippedItems.map((item, index) => (
+                    <EquippedItem key={item.id} item={item} index={index} />
+                  ))}
                   
                   
                   {isOnline && user?.subscription?.type !== 'channel' && (
