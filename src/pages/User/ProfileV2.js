@@ -51,7 +51,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import WarningIcon from '@mui/icons-material/Warning';
 import BlockIcon from '@mui/icons-material/Block';
 import { Icon } from '@iconify/react';
-import { PostsFeed, WallFeed, EquippedItem } from './components';
+import { PostsFeed, WallFeed } from './components';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -1255,298 +1255,12 @@ const SubscriptionBadge = ({ duration, subscriptionDate, subscriptionType }) => 
   );
 };
 
-const InventoryTab = ({ userId }) => {
-  const [inventory, setInventory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`/api/inventory/user/${userId}`);
-        if (response.data.success) {
-          // Преобразуем структуру данных из API
-          const allItems = [];
-          const inventoryByPacks = response.data.inventory || {};
-          
-          // Собираем все предметы из всех паков в один массив
-          Object.values(inventoryByPacks).forEach(items => {
-            allItems.push(...items);
-          });
-          
-          setInventory(allItems);
-        }
-      } catch (error) {
-        console.error('Error fetching inventory:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchInventory();
-    }
-  }, [userId]);
-
-  const getRarityColor = (rarity) => {
-    switch (rarity) {
-      case 'legendary':
-        return '#f39c12';
-      case 'epic':
-        return '#9b59b6';
-      case 'rare':
-        return '#3498db';
-      default:
-        return '#95a5a6';
-    }
-  };
-
-  const getRarityLabel = (rarity) => {
-    switch (rarity) {
-      case 'legendary':
-        return 'Легендарный';
-      case 'epic':
-        return 'Эпический';
-      case 'rare':
-        return 'Редкий';
-      case 'common':
-        return 'Обычный';
-      default:
-        return rarity;
-    }
-  };
-
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedItem(null);
-  };
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  return (
-    <>
-      <Box sx={{ p: 2 }}>
-        {inventory.length === 0 ? (
-          <Box textAlign="center" py={4}>
-            <Typography variant="body1" color="text.secondary">
-              Инвентарь пуст
-            </Typography>
-          </Box>
-        ) : (
-          <Grid container spacing={1}>
-            {inventory.map((item) => (
-              <Grid item xs={4} key={item.id}>
-                <Box
-                  onClick={() => handleItemClick(item)}
-                  sx={{
-                    p: 1,
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: 1.5,
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                    },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: '100%',
-                      aspectRatio: '1',
-                      borderRadius: 1,
-                      background: 'rgba(208, 188, 255, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mb: 0.5,
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <img
-                      src={item.image_url}
-                      alt={item.item_name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  </Box>
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
-                      fontWeight: 500, 
-                      display: 'block',
-                      textAlign: 'center',
-                      mb: 0.5,
-                      fontSize: '0.7rem',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {item.item_name}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      gap: 0.5,
-                    }}
-                  >
-                    <Chip
-                      label={getRarityLabel(item.rarity || 'common')}
-                      size="small"
-                      sx={{
-                        backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
-                        color: getRarityColor(item.rarity || 'common'),
-                        fontWeight: 'bold',
-                        fontSize: '0.6rem',
-                        height: 16,
-                        '& .MuiChip-label': {
-                          padding: '0 4px',
-                        },
-                      }}
-                    />
-                  </Box>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Box>
-
-      {/* Модалка с подробностями предмета */}
-      {modalOpen && selectedItem && (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-          }}
-          onClick={handleCloseModal}
-        >
-          <Box
-            onClick={(e) => e.stopPropagation()}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 2,
-              p: 3,
-              maxWidth: 400,
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto',
-            }}
-          >
-            <Box sx={{ textAlign: 'center', mb: 2 }}>
-              <Box
-                sx={{
-                  width: 120,
-                  height: 120,
-                  margin: '0 auto',
-                  borderRadius: 2,
-                  background: 'rgba(208, 188, 255, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mb: 2,
-                  overflow: 'hidden',
-                }}
-              >
-                <img
-                  src={selectedItem.image_url}
-                  alt={selectedItem.item_name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                  }}
-                />
-              </Box>
-              
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                {selectedItem.item_name}
-              </Typography>
-              
-              <Chip
-                label={getRarityLabel(selectedItem.rarity || 'common')}
-                size="small"
-                sx={{
-                  backgroundColor: `${getRarityColor(selectedItem.rarity || 'common')}20`,
-                  color: getRarityColor(selectedItem.rarity || 'common'),
-                  fontWeight: 'bold',
-                  mb: 2,
-                }}
-              />
-            </Box>
-
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>ID предмета:</strong> {selectedItem.id}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>Пак:</strong> {selectedItem.pack_name || 'Неизвестно'}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>Получен:</strong> {new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU')}
-              </Typography>
-              {selectedItem.gifter_username && (
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  <strong>Подарен:</strong> @{selectedItem.gifter_username}
-                </Typography>
-              )}
-              {selectedItem.total_count && (
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
-                </Typography>
-              )}
-              {selectedItem.is_equipped && (
-                <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
-                  ✓ Надет
-                </Typography>
-              )}
-            </Box>
-          </Box>
-        </Box>
-      )}
-
-    </>
-  );
-};
-
 const ProfilePage = () => {
   const { t } = useLanguage();
   const { username } = useParams();
   const { user: currentUser, isAuthenticated } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   const [ownedUsernames, setOwnedUsernames] = useState([]);
-  const [equippedItems, setEquippedItems] = useState([]);
   const [photos, setPhotos] = useState([]);  
   const [videos, setVideos] = useState([]);  
   const [tabValue, setTabValue] = useState(0);
@@ -2005,30 +1719,6 @@ const ProfilePage = () => {
     }
   }, [user, globalProfileBackgroundEnabled, setProfileBackground, clearProfileBackground]);
 
-  useEffect(() => {
-    const fetchEquippedItems = async () => {
-      if (user?.id) {
-        try {
-          const response = await axios.get(`/api/inventory/user/${user.id}`);
-          if (response.data.success) {
-            const inventoryByPacks = response.data.inventory || {};
-            let foundItems = [];
-            for (const packItems of Object.values(inventoryByPacks)) {
-              const equipped = packItems.filter(item => item.is_equipped);
-              if (equipped.length > 0) {
-                foundItems.push(...equipped);
-              }
-            }
-            setEquippedItems(foundItems.slice(0, 3));
-          }
-        } catch (error) {
-          console.error('Error fetching equipped items:', error);
-        }
-      }
-    };
-    fetchEquippedItems();
-  }, [user]);
-
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
@@ -2214,9 +1904,6 @@ const ProfilePage = () => {
                       }}
                     />
                   </Tooltip>
-                  {equippedItems.map((item, index) => (
-                    <EquippedItem key={item.id} item={item} index={index} />
-                  ))}
                   
                   
                   {isOnline && user?.subscription?.type !== 'channel' && (
@@ -3141,7 +2828,6 @@ const ProfilePage = () => {
             >
               <Tab label={t('profile.tabs.posts')} />
               <Tab label={t('profile.tabs.wall')} />
-              <Tab label="Инвентарь" />
               <Tab label={t('profile.tabs.about')} />
             </Tabs>
           </Paper>
@@ -3168,10 +2854,6 @@ const ProfilePage = () => {
           </TabPanel>
           
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
-            <InventoryTab userId={user?.id} />
-          </TabPanel>
-          
-          <TabPanel value={tabValue} index={3} sx={{ p: 0, mt: 1 }}>
             <Paper sx={{ 
               p: 3, 
               borderRadius: '12px',

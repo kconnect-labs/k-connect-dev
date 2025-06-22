@@ -91,6 +91,8 @@ const SharePreviewTest = lazy(() => import('./components/SharePreviewTest'));
 const BadgeShopPage = lazy(() => import('./pages/Economic/BadgeShopPage'));
 const BalancePage = lazy(() => import('./pages/Economic/BalancePage'));
 const UsernameAuctionPage = lazy(() => import('./pages/Economic/UsernameAuctionPage'));
+const InventoryPackPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPackPage'));
+const InventoryPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
 const TestNotifications = lazy(() => import('./components/TestNotifications'));
@@ -478,6 +480,8 @@ const AppRoutes = () => {
           <Route path="/moderator" element={isAuthenticated ? <ModeratorPage /> : <Navigate to="/login" replace />} />
           <Route path="/badge-shop" element={isAuthenticated ? <BadgeShopPage /> : <Navigate to="/login" replace />} />
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
+          <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
+          <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
           <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
           <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
           <Route path="/minigames/lucky-number" element={isAuthenticated ? <LuckyNumberGame /> : <Navigate to="/login" replace />} />

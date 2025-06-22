@@ -26,11 +26,8 @@ const HeaderLogo = ({ isMobile, t }) => {
         <LogoSVG style={{ height: 32, width: 'auto' }} />
         {!isMobile && (
           <LogoText>
-            <Box component="span" sx={{ color: 'primary.main' }}>
-              {t('header.logo.text').charAt(0)}
-            </Box>
             <Box component="span" sx={{ color: theme.palette.mode === 'dark' ? 'white' : 'black', opacity: 0.9 }}>
-              {t('header.logo.text').slice(1)}
+              {t('header.logo.text')}
             </Box>
           </LogoText>
         )}
