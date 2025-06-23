@@ -19,7 +19,7 @@ import {
   InputAdornment,
   Snackbar
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, keyframes } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { 
   Diamond as DiamondIcon,
@@ -34,6 +34,16 @@ import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
 import StyledTabs from '../../../../UIKIT/StyledTabs';
+import ItemInfoModal from './ItemInfoModal';
+import {
+  GlowEffect,
+  AnimatedSparkle,
+  AnimatedStar,
+  EFFECTS_CONFIG,
+  extractDominantColor,
+  getFallbackColor,
+  useUpgradeEffects
+} from './upgradeEffectsConfig';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -51,6 +61,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
   cursor: 'pointer',
+  overflow: 'hidden',
   '&:hover': {
     transform: 'translateY(-4px)',
     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
@@ -136,23 +147,13 @@ const InventoryPage = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [userPoints, setUserPoints] = useState(0);
-  const [transferModalOpen, setTransferModalOpen] = useState(false);
-  const [selectedItemForTransfer, setSelectedItemForTransfer] = useState(null);
-  const [recipientUsername, setRecipientUsername] = useState('');
-  const [transferLoading, setTransferLoading] = useState(false);
-  const [transferError, setTransferError] = useState('');
-  const [userSearch, setUserSearch] = useState({
-    loading: false,
-    exists: false,
-    suggestions: []
-  });
-  const [selectedRecipientId, setSelectedRecipientId] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [itemInfoModalOpen, setItemInfoModalOpen] = useState(false);
   const [notification, setNotification] = useState({
     open: false,
     message: '',
     severity: 'success' // 'success', 'error', 'warning', 'info'
   });
-  const debounceTimerRef = useRef(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -161,14 +162,6 @@ const InventoryPage = () => {
       fetchUserPoints();
     }
   }, [user]);
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-    };
-  }, []);
 
   const fetchInventory = async () => {
     try {
@@ -210,13 +203,13 @@ const InventoryPage = () => {
       const data = await response.json();
       
       if (data.success) {
-        fetchInventory(); // Обновляем инвентарь
+        showNotification(data.message);
+        fetchInventory();
       } else {
-        showNotification(data.message || 'Ошибка надевания предмета');
+        showNotification(data.message, 'error');
       }
-    } catch (err) {
-      showNotification('Ошибка сети', 'error');
-      console.error('Error equipping item:', err);
+    } catch (error) {
+      showNotification('Ошибка при надевании предмета', 'error');
     }
   };
 
@@ -232,166 +225,34 @@ const InventoryPage = () => {
       const data = await response.json();
       
       if (data.success) {
-        fetchInventory(); // Обновляем инвентарь
-      } else {
-        showNotification(data.message || 'Ошибка снятия предмета');
-      }
-    } catch (err) {
-      showNotification('Ошибка сети', 'error');
-      console.error('Error unequipping item:', err);
-    }
-  };
-
-  const handleTransferItem = (item) => {
-    setSelectedItemForTransfer(item);
-    setRecipientUsername('');
-    setTransferError('');
-    setTransferModalOpen(true);
-  };
-
-  const handleCloseTransferModal = () => {
-    setTransferModalOpen(false);
-    setSelectedItemForTransfer(null);
-    setRecipientUsername('');
-    setTransferError('');
-    setUserSearch({
-      loading: false,
-      exists: false,
-      suggestions: []
-    });
-    setSelectedRecipientId(null);
-  };
-
-  const searchUser = (query) => {
-    setUserSearch(prev => ({...prev, loading: true}));
-    
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-    
-    debounceTimerRef.current = setTimeout(() => {
-      const url = `/api/search/recipients?query=${encodeURIComponent(query)}`;
-      
-      axios.get(url)
-        .then(response => {
-          if (response.data && response.data.users && response.data.users.length > 0) {
-            const exactMatch = response.data.users.find(u => 
-              u.username.toLowerCase() === query.toLowerCase()
-            );
-            
-            if (exactMatch) {
-              setSelectedRecipientId(exactMatch.id);
-            } else {
-              setSelectedRecipientId(null);
-            }
-            
-            setUserSearch(prev => ({
-              ...prev,
-              loading: false,
-              exists: !!exactMatch,
-              suggestions: response.data.users.slice(0, 3),
-            }));
-          } else {
-            setUserSearch(prev => ({
-              ...prev,
-              loading: false,
-              exists: false,
-              suggestions: [],
-            }));
-            setSelectedRecipientId(null);
-          }
-        })
-        .catch(error => {
-          console.error('Error searching for user:', error);
-          setUserSearch(prev => ({
-            ...prev,
-            loading: false,
-            exists: false,
-            suggestions: [],
-          }));
-          setSelectedRecipientId(null);
-        });
-    }, 300); 
-  };
-
-  const handleUsernameChange = (e) => {
-    const username = e.target.value;
-    setRecipientUsername(username);
-    
-    if (username.trim()) {
-      searchUser(username.trim());
-    } else {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-        debounceTimerRef.current = null;
-      }
-      setUserSearch(prev => ({
-        ...prev,
-        loading: false,
-        exists: false,
-        suggestions: [],
-      }));
-      setSelectedRecipientId(null);
-    }
-  };
-
-  const selectSuggestion = (username, userId) => {
-    setRecipientUsername(username);
-    setSelectedRecipientId(userId);
-    setUserSearch(prev => ({
-      ...prev,
-      loading: false,
-      exists: true,
-      suggestions: []
-    }));
-  };
-
-  const handleConfirmTransfer = async () => {
-    if (!recipientUsername.trim()) {
-      setTransferError('Введите имя пользователя');
-      return;
-    }
-
-    if (!selectedRecipientId) {
-      setTransferError('Пользователь не найден');
-      return;
-    }
-
-    if (userPoints < 5000) {
-      setTransferError('Недостаточно баллов для передачи (требуется 5000)');
-      return;
-    }
-
-    setTransferLoading(true);
-    setTransferError('');
-
-    try {
-      const response = await fetch(`/api/inventory/transfer/${selectedItemForTransfer.id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          recipient_username: recipientUsername.trim()
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setUserPoints(data.remaining_points);
-        handleCloseTransferModal();
-        fetchInventory(); // Обновляем инвентарь
         showNotification(data.message);
+        fetchInventory();
       } else {
-        setTransferError(data.message || 'Ошибка передачи предмета');
+        showNotification(data.message, 'error');
       }
-    } catch (err) {
-      setTransferError('Ошибка сети');
-      console.error('Error transferring item:', err);
-    } finally {
-      setTransferLoading(false);
+    } catch (error) {
+      showNotification('Ошибка при снятии предмета', 'error');
     }
+  };
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setItemInfoModalOpen(true);
+  };
+
+  const handleCloseItemInfoModal = () => {
+    setItemInfoModalOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handleItemUpdate = () => {
+    fetchInventory();
+    fetchUserPoints();
+  };
+
+  const handleTransferSuccess = () => {
+    fetchInventory();
+    fetchUserPoints();
   };
 
   const getRarityIcon = (rarity) => {
@@ -568,18 +429,19 @@ const InventoryPage = () => {
           )}
         </Box>
       ) : (
-        <Grid container spacing={2} sx={{ 
+        <Grid container spacing={0.5} sx={{ 
           display: 'flex',
           flexWrap: 'wrap',
+          px: 0.3, // 2.5px с каждой стороны
           '& .MuiGrid-item': {
-            flex: '0 0 calc(25% - 12px)',
-            maxWidth: 'calc(25% - 12px)',
-            minWidth: 'calc(25% - 12px)',
-            margin: '6px !important',
+            flex: '0 0 calc(25% - 5px)',
+            maxWidth: 'calc(25% - 5px)',
+            minWidth: 'calc(25% - 5px)',
+            margin: '2.5px !important', // 5px между карточками
             '@media (max-width: 768px)': {
-              flex: '0 0 calc(50% - 12px)',
-              maxWidth: 'calc(50% - 12px)',
-              minWidth: 'calc(50% - 12px)',
+              flex: '0 0 calc(50% - 5px)',
+              maxWidth: 'calc(50% - 5px)',
+              minWidth: 'calc(50% - 5px)',
             }
           }
         }}>
@@ -590,56 +452,43 @@ const InventoryPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <StyledCard>
-                  <CardContent sx={{ textAlign: 'center', p: 2 }}>
-                    <ItemImage>
+                <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
+                  <UpgradeEffects item={item}>
+                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                      <ItemImage sx={{ 
+                        width: 80, 
+                        height: 80, 
+                        mb: 2,
+                        transition: 'all 0.3s ease'
+                      }}>
                       <img 
                         src={item.image_url}
                         alt={item.item_name}
                         onError={(e) => {
-                          console.error(`Failed to load image: ${item.image_url}`);
                           e.target.style.display = 'none';
-                        }}
-                        onLoad={() => {
-                          console.log(`Successfully loaded image: ${item.image_url}`);
                         }}
                       />
                     </ItemImage>
 
                     <Typography 
-                      variant="h6" 
+                        variant="body2" 
                       sx={{ 
                         fontWeight: 600, 
                         mb: 1,
-                        fontSize: '1rem'
+                          color: 'text.primary',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
                       }}
                     >
                       {item.item_name}
                     </Typography>
 
-                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
                       <RarityChip
-                        rarity={item.rarity || 'common'}
-                        label={getRarityLabel(item.rarity || 'common')}
-                        icon={getRarityIcon(item.rarity || 'common')}
+                          rarity={item.rarity} 
+                          label={getRarityLabel(item.rarity)}
                         size="small"
-                      />
-                    </Box>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 2 }}>
-                      <Chip
-                        icon={item.is_equipped ? <CheckCircleIcon /> : <UnequippedIcon />}
-                        label={item.is_equipped ? 'Надет' : 'Не надет'}
-                        size="small"
-                        sx={{
-                          background: item.is_equipped 
-                            ? 'rgba(76, 175, 80, 0.2)' 
-                            : 'rgba(208, 188, 255, 0.1)',
-                          color: item.is_equipped ? '#4caf50' : 'primary.main',
-                          border: item.is_equipped 
-                            ? '1px solid rgba(76, 175, 80, 0.3)' 
-                            : '1px solid rgba(208, 188, 255, 0.3)',
-                        }}
                       />
                     </Box>
 
@@ -647,58 +496,26 @@ const InventoryPage = () => {
                       variant="caption" 
                       sx={{ 
                         color: 'text.secondary',
-                        display: 'block',
-                        mb: 2
-                      }}
-                    >
-                      Получен: {new Date(item.obtained_at).toLocaleDateString()}
-                    </Typography>
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        {item.pack_name}
+                      </Typography>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        onClick={() => item.is_equipped 
-                          ? handleUnequipItem(item.id) 
-                          : handleEquipItem(item.id)
-                        }
+                      <Typography 
+                        variant="caption" 
                         sx={{
-                          borderColor: 'rgba(255, 255, 255, 0.2)',
-                          color: 'text.primary',
-                          fontWeight: 500,
-                          '&:hover': {
-                            borderColor: 'rgba(255, 255, 255, 0.4)',
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                          },
-                        }}
-                      >
-                        {item.is_equipped ? 'Снять' : 'Надеть'}
-                      </Button>
-                      
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<SendIcon />}
-                        onClick={() => handleTransferItem(item)}
-                        disabled={userPoints < 5000}
-                        sx={{
-                          borderColor: 'rgba(255, 255, 255, 0.2)',
-                          color: 'text.primary',
-                          fontSize: '0.8rem',
-                          '&:hover': {
-                            borderColor: 'rgba(255, 255, 255, 0.4)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                          },
-                          '&:disabled': {
-                            borderColor: 'rgba(255, 255, 255, 0.1)',
                             color: 'text.secondary',
-                          },
+                          fontSize: '0.7rem',
+                          opacity: 0.7,
+                          mt: 'auto',
+                          pt: 1
                         }}
                       >
-                        Передать
-                      </Button>
-                    </Box>
+                        Нажмите для подробностей
+                      </Typography>
                   </CardContent>
+                  </UpgradeEffects>
                 </StyledCard>
               </motion.div>
             </Grid>
@@ -706,211 +523,15 @@ const InventoryPage = () => {
         </Grid>
       )}
 
-      {/* Модалка передачи предмета */}
-      <Dialog
-        open={transferModalOpen}
-        onClose={handleCloseTransferModal}
-        maxWidth="sm"
-        fullWidth
-        fullScreen={window.innerWidth <= 768}
-        PaperProps={{
-          sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: window.innerWidth <= 768 ? 0 : 1,
-            '@media (max-width: 768px)': {
-              margin: 0,
-              maxWidth: '100vw',
-              maxHeight: '100vh',
-              borderRadius: 0,
-            }
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          color: 'text.primary',
-          pb: 1
-        }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Передать предмет
-          </Typography>
-          <IconButton
-            onClick={handleCloseTransferModal}
-            sx={{ color: 'text.secondary' }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        
-        <DialogContent sx={{ pt: 0 }}>
-          {selectedItemForTransfer && (
-            <>
-              <Box sx={{ mb: 3, textAlign: 'center' }}>
-                <ItemImage sx={{ width: 100, height: 100, mb: 2 }}>
-                  <img 
-                    src={selectedItemForTransfer.image_url}
-                    alt={selectedItemForTransfer.item_name}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                </ItemImage>
-                
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                  {selectedItemForTransfer.item_name}
-                </Typography>
-                
-                <RarityChip
-                  rarity={selectedItemForTransfer.rarity || 'common'}
-                  label={getRarityLabel(selectedItemForTransfer.rarity || 'common')}
-                  icon={getRarityIcon(selectedItemForTransfer.rarity || 'common')}
-                  size="small"
-                />
-              </Box>
-
-              <Alert severity="info" sx={{ mb: 3 }}>
-                Стоимость передачи: 5000 баллов
-              </Alert>
-
-              {transferError && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {transferError}
-                </Alert>
-              )}
-
-              <TextField
-                fullWidth
-                label="Имя пользователя получателя"
-                value={recipientUsername}
-                onChange={handleUsernameChange}
-                placeholder="Введите username получателя"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {userSearch.loading ? (
-                        <CircularProgress size={20} />
-                      ) : (
-                        <SearchIcon sx={{ color: 'text.secondary' }} />
-                      )}
-                    </InputAdornment>
-                  )
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.2)',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'rgba(255, 255, 255, 0.3)',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'primary.main',
-                    },
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: 'text.secondary',
-                  },
-                  '& .MuiInputBase-input': {
-                    color: 'text.primary',
-                  },
-                }}
-              />
-
-              {userSearch.suggestions.length > 0 && !userSearch.exists && (
-                <SuggestionsContainer>
-                  <Box sx={{ p: 2, pb: 1 }}>
-                    <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
-                      Похожие пользователи:
-                    </Typography>
-                  </Box>
-                  {userSearch.suggestions.map((user) => (
-                    <SuggestionItem
-                      key={user.id}
-                      onClick={() => selectSuggestion(user.username, user.id)}
-                    >
-                      <UserAvatar 
-                        src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
-                        alt={user.username}
-                      >
-                        {user.username.charAt(0).toUpperCase()}
-                      </UserAvatar>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                          {user.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          @{user.username}
-                        </Typography>
-                      </Box>
-                    </SuggestionItem>
-                  ))}
-                </SuggestionsContainer>
-              )}
-
-              {userSearch.exists && selectedRecipientId && (
-                <Box sx={{ 
-                  p: 2, 
-                  mb: 3, 
-                  bgcolor: 'rgba(40, 40, 40, 0.4)', 
-                  backdropFilter: 'blur(5px)',
-                  borderRadius: 2,
-                  border: '1px solid rgba(60, 60, 60, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
-                  <CheckCircleIcon sx={{ color: '#4CAF50', mr: 1 }} />
-                  <Typography variant="body2">
-                    Получатель подтвержден: <strong>{recipientUsername}</strong>
-                  </Typography>
-                </Box>
-              )}
-            </>
-          )}
-        </DialogContent>
-        
-        <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button
-            onClick={handleCloseTransferModal}
-            sx={{
-              color: 'text.secondary',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
-            }}
-          >
-            Отмена
-          </Button>
-          <Button
-            onClick={handleConfirmTransfer}
-            disabled={transferLoading || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000}
-            variant="contained"
-            startIcon={transferLoading ? <CircularProgress size={16} /> : <SendIcon />}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              color: 'text.primary',
-              fontWeight: 500,
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              '&:hover': {
-                background: 'rgba(255, 255, 255, 0.15)',
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-              },
-              '&:disabled': {
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'text.secondary',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-              },
-            }}
-          >
-            {transferLoading ? 'Передача...' : 'Передать'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Модальное окно информации о предмете */}
+      <ItemInfoModal
+        open={itemInfoModalOpen}
+        onClose={handleCloseItemInfoModal}
+        item={selectedItem}
+        userPoints={userPoints}
+        onItemUpdate={handleItemUpdate}
+        onTransferSuccess={handleTransferSuccess}
+      />
 
       {/* Уведомления */}
       <Snackbar
@@ -949,6 +570,39 @@ const InventoryPage = () => {
         </Alert>
       </Snackbar>
     </StyledContainer>
+  );
+};
+
+const UpgradeEffects = ({ item, children }) => {
+  const { dominantColor, isUpgraded } = useUpgradeEffects(item);
+
+  if (!isUpgraded) {
+    return children;
+  }
+
+  return (
+    <Box sx={{ position: 'relative' }}>
+      {children}
+      <GlowEffect color={dominantColor} />
+      {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
+        <AnimatedSparkle
+          key={idx}
+          color={dominantColor}
+          delay={sparkle.delay}
+          size={sparkle.size}
+          sx={sparkle.position}
+        />
+      ))}
+      {EFFECTS_CONFIG.stars.map((star, idx) => (
+        <AnimatedStar
+          key={idx}
+          color={dominantColor}
+          delay={star.delay}
+          size={star.size}
+          sx={star.position}
+        />
+      ))}
+    </Box>
   );
 };
 
