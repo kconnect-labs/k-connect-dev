@@ -73,7 +73,7 @@ const PostDetailPage = lazy(() => import('./pages/Main/PostDetailPage'));
 const SettingsPage = lazy(() => import('./pages/User/SettingsPage'));
 const NotificationsPage = lazy(() => import('./pages/Info/NotificationsPage'));
 const SearchPage = lazy(() => import('./pages/Main/SearchPage'));
-const MusicPage = lazy(() => import('./pages/Main/MusicPage'));
+const MusicPage = lazy(() => import('./pages/MusicPage/MusicPage.js'));
 const ArtistPage = lazy(() => import('./pages/Main/ArtistPage'));
 const MessengerPage = lazy(() => import('./pages/Messenger/MessengerPage'));
 const SubscriptionsPage = lazy(() => import('./pages/Economic/SubscriptionsPage'));
@@ -102,6 +102,8 @@ const LuckyNumberGame = lazy(() => import('./pages/MiniGames/LuckyNumberGame'));
 const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
 const BlackjackPage = lazy(() => import('./pages/MiniGames/BlackjackPage'));
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
+const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
+const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
 
 
 export const ThemeSettingsContext = React.createContext({
