@@ -467,6 +467,9 @@ const AppRoutes = () => {
           <Route path="/notifications" element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />} />
           <Route path="/search" element={isAuthenticated ? <SearchPage /> : <Navigate to="/login" replace />} />
           <Route path="/music" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
+          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPageWithBack /> : <Navigate to="/login" replace />} />
+          <Route path="/music/all" element={isAuthenticated ? <AllTracksPage /> : <Navigate to="/login" replace />} />
+          <Route path="/music/playlists" element={isAuthenticated ? <PlaylistsPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/:section" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/track/:trackId" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
           <Route path="/artist/:artistParam" element={isAuthenticated ? <ArtistPage /> : <Navigate to="/login" replace />} />
@@ -702,6 +705,11 @@ const SessionProvider = ({ children }) => {
   );
 };
 
+
+function LikedTracksPageWithBack(props) {
+  const navigate = useNavigate();
+  return <LikedTracksPage {...props} onBack={() => navigate('/music')} />;
+}
 
 function App() {
   const [isPending, startTransition] = useTransition();

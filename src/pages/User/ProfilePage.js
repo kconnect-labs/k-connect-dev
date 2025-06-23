@@ -19,7 +19,8 @@ import {
   ImageList,
   ImageListItem,
   Chip,
-  SvgIcon
+  SvgIcon,
+  MenuItem
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,7 +62,35 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 import { useLanguage } from '../../context/LanguageContext';
+import {
+  GlowEffect,
+  AnimatedSparkle,
+  AnimatedStar,
+  EFFECTS_CONFIG,
+  extractDominantColor,
+  getFallbackColor,
+  useUpgradeEffects
+} from '../Economic/components/inventoryPack/upgradeEffectsConfig';
 
+// Стилизованный компонент для выпадающих списков
+const StyledSelect = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    height: '31px !important',
+  },
+  '& .MuiMenu-paper': {
+    background: 'rgba(255, 255, 255, 0.03) !important',
+    backdropFilter: 'blur(10px) !important',
+    border: '1px solid rgba(255, 255, 255, 0.1) !important',
+    '& .MuiMenuItem-root': {
+      height: '20px !important',
+      fontSize: '0.75rem !important',
+      padding: '2px 8px !important',
+      '&:hover': {
+        background: 'rgba(255, 255, 255, 0.1) !important',
+      },
+    },
+  },
+}));
 
 const PostInput = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
@@ -1255,11 +1284,48 @@ const SubscriptionBadge = ({ duration, subscriptionDate, subscriptionType }) => 
   );
 };
 
+const UpgradeEffects = ({ item, children }) => {
+  const { dominantColor, isUpgraded } = useUpgradeEffects(item);
+
+  if (!isUpgraded) {
+    return children;
+  }
+
+  return (
+    <Box sx={{ position: 'relative' }}>
+      {children}
+      <GlowEffect color={dominantColor} />
+      {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
+        <AnimatedSparkle
+          key={idx}
+          color={dominantColor}
+          delay={sparkle.delay}
+          size={sparkle.size}
+          sx={sparkle.position}
+        />
+      ))}
+      {EFFECTS_CONFIG.stars.map((star, idx) => (
+        <AnimatedStar
+          key={idx}
+          color={dominantColor}
+          delay={star.delay}
+          size={star.size}
+          sx={star.position}
+        />
+      ))}
+    </Box>
+  );
+};
+
 const InventoryTab = ({ userId }) => {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [sortBy, setSortBy] = useState('name'); // name, rarity, pack, upgrade
+  const [filterPack, setFilterPack] = useState('all');
+  const [filterRarity, setFilterRarity] = useState('all');
+  const [showUpgradedOnly, setShowUpgradedOnly] = useState(false);
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -1328,6 +1394,50 @@ const InventoryTab = ({ userId }) => {
     setSelectedItem(null);
   };
 
+  // Функции сортировки и фильтрации
+  const getFilteredAndSortedInventory = () => {
+    let filtered = [...inventory];
+
+    // Фильтрация по паку
+    if (filterPack !== 'all') {
+      filtered = filtered.filter(item => item.pack_name === filterPack);
+    }
+
+    // Фильтрация по редкости
+    if (filterRarity !== 'all') {
+      filtered = filtered.filter(item => item.rarity === filterRarity);
+    }
+
+    // Фильтрация по улучшению
+    if (showUpgradedOnly) {
+      filtered = filtered.filter(item => item.upgrade_level === 1);
+    }
+
+    // Сортировка
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'name':
+          return a.item_name.localeCompare(b.item_name);
+        case 'rarity':
+          const rarityOrder = { legendary: 4, epic: 3, rare: 2, common: 1 };
+          return (rarityOrder[b.rarity] || 0) - (rarityOrder[a.rarity] || 0);
+        case 'pack':
+          return a.pack_name.localeCompare(b.pack_name);
+        case 'upgrade':
+          return (b.upgrade_level || 0) - (a.upgrade_level || 0);
+        default:
+          return 0;
+      }
+    });
+
+    return filtered;
+  };
+
+  const getUniquePacks = () => {
+    const packs = [...new Set(inventory.map(item => item.pack_name))];
+    return packs.sort();
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
@@ -1339,94 +1449,200 @@ const InventoryTab = ({ userId }) => {
   return (
     <>
       <Box sx={{ p: 2 }}>
-        {inventory.length === 0 ? (
+        {/* Панель сортировки и фильтрации */}
+        <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+          {/* Сортировка */}
+          <StyledSelect
+            select
+            size="small"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            sx={{
+              minWidth: 120,
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              },
+              '& .MuiSelect-select': {
+                padding: '2px 8px',
+                fontSize: '0.75rem',
+              },
+            }}
+          >
+            <MenuItem value="name">По названию</MenuItem>
+            <MenuItem value="rarity">По редкости</MenuItem>
+            <MenuItem value="pack">По паку</MenuItem>
+            <MenuItem value="upgrade">По улучшению</MenuItem>
+          </StyledSelect>
+
+          {/* Фильтр по паку */}
+          <StyledSelect
+            select
+            size="small"
+            value={filterPack}
+            onChange={(e) => setFilterPack(e.target.value)}
+            sx={{
+              minWidth: 120,
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              },
+              '& .MuiSelect-select': {
+                padding: '2px 8px',
+                fontSize: '0.75rem',
+              },
+            }}
+          >
+            <MenuItem value="all">Все паки</MenuItem>
+            {getUniquePacks().map((pack) => (
+              <MenuItem key={pack} value={pack}>{pack}</MenuItem>
+            ))}
+          </StyledSelect>
+
+          {/* Фильтр по редкости */}
+          <StyledSelect
+            select
+            size="small"
+            value={filterRarity}
+            onChange={(e) => setFilterRarity(e.target.value)}
+            sx={{
+              minWidth: 120,
+              '& .MuiOutlinedInput-root': {
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                },
+              },
+              '& .MuiSelect-select': {
+                padding: '2px 8px',
+                fontSize: '0.75rem',
+              },
+            }}
+          >
+            <MenuItem value="all">Вся редкость</MenuItem>
+            <MenuItem value="common">Обычные</MenuItem>
+            <MenuItem value="rare">Редкие</MenuItem>
+            <MenuItem value="epic">Эпические</MenuItem>
+            <MenuItem value="legendary">Легендарные</MenuItem>
+          </StyledSelect>
+
+          {/* Переключатель улучшенных */}
+          <Button
+            variant={showUpgradedOnly ? "contained" : "outlined"}
+            size="small"
+            onClick={() => setShowUpgradedOnly(!showUpgradedOnly)}
+            sx={{
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: showUpgradedOnly ? 'white' : 'text.primary',
+              background: showUpgradedOnly ? 'rgba(76, 175, 80, 0.3)' : 'transparent',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                background: showUpgradedOnly ? 'rgba(76, 175, 80, 0.4)' : 'rgba(255, 255, 255, 0.05)',
+              },
+            }}
+          >
+            Только улучшенные
+          </Button>
+        </Box>
+
+        {getFilteredAndSortedInventory().length === 0 ? (
           <Box textAlign="center" py={4}>
             <Typography variant="body1" color="text.secondary">
-              Инвентарь пуст
+              {inventory.length === 0 ? 'Инвентарь пуст' : 'Предметы не найдены'}
             </Typography>
           </Box>
         ) : (
           <Grid container spacing={1}>
-            {inventory.map((item) => (
+            {getFilteredAndSortedInventory().map((item) => (
               <Grid item xs={4} key={item.id}>
-                <Box
-                  onClick={() => handleItemClick(item)}
-                  sx={{
-                    p: 1,
-                    background: 'rgba(255, 255, 255, 0.03)',
-                    backdropFilter: 'blur(10px)',
-                    borderRadius: 1.5,
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                    },
-                  }}
-                >
+                <UpgradeEffects item={item}>
                   <Box
+                    onClick={() => handleItemClick(item)}
                     sx={{
-                      width: '100%',
-                      aspectRatio: '1',
-                      borderRadius: 1,
-                      background: 'rgba(208, 188, 255, 0.1)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mb: 0.5,
+                      p: 1,
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(10px)',
+                      borderRadius: 1.5,
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
                       overflow: 'hidden',
+                      '&:hover': {
+                        transform: 'translateY(-2px)',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                      },
                     }}
                   >
-                    <img
-                      src={item.image_url}
-                      alt={item.item_name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  </Box>
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
-                      fontWeight: 500, 
-                      display: 'block',
-                      textAlign: 'center',
-                      mb: 0.5,
-                      fontSize: '0.7rem',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {item.item_name}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      gap: 0.5,
-                    }}
-                  >
-                    <Chip
-                      label={getRarityLabel(item.rarity || 'common')}
-                      size="small"
+                    <Box
                       sx={{
-                        backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
-                        color: getRarityColor(item.rarity || 'common'),
-                        fontWeight: 'bold',
-                        fontSize: '0.6rem',
-                        height: 16,
-                        '& .MuiChip-label': {
-                          padding: '0 4px',
-                        },
+                        width: '100%',
+                        aspectRatio: '1',
+                        borderRadius: 1,
+                        background: 'rgba(208, 188, 255, 0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 0.5,
+                        overflow: 'hidden',
                       }}
-                    />
+                    >
+                      <img
+                        src={item.image_url}
+                        alt={item.item_name}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </Box>
+                    <Typography 
+                      variant="caption" 
+                      sx={{ 
+                        fontWeight: 500, 
+                        display: 'block',
+                        textAlign: 'center',
+                        mb: 0.5,
+                        fontSize: '0.7rem',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {item.item_name}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        gap: 0.5,
+                      }}
+                    >
+                      <Chip
+                        label={getRarityLabel(item.rarity || 'common')}
+                        size="small"
+                        sx={{
+                          backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
+                          color: getRarityColor(item.rarity || 'common'),
+                          fontWeight: 'bold',
+                          fontSize: '0.6rem',
+                          height: 16,
+                          '& .MuiChip-label': {
+                            padding: '0 4px',
+                          },
+                        }}
+                      />
+                    </Box>
                   </Box>
-                </Box>
+                </UpgradeEffects>
               </Grid>
             ))}
           </Grid>
@@ -1450,89 +1666,91 @@ const InventoryTab = ({ userId }) => {
           }}
           onClick={handleCloseModal}
         >
-          <Box
-            onClick={(e) => e.stopPropagation()}
-            sx={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 2,
-              p: 3,
-              maxWidth: 400,
-              width: '90%',
-              maxHeight: '80vh',
-              overflow: 'auto',
-            }}
-          >
-            <Box sx={{ textAlign: 'center', mb: 2 }}>
-              <Box
-                sx={{
-                  width: 120,
-                  height: 120,
-                  margin: '0 auto',
-                  borderRadius: 2,
-                  background: 'rgba(208, 188, 255, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mb: 2,
-                  overflow: 'hidden',
-                }}
-              >
-                <img
-                  src={selectedItem.image_url}
-                  alt={selectedItem.item_name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
+          <UpgradeEffects item={selectedItem}>
+            <Box
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                p: 3,
+                width: 400,
+                height: 400,
+                overflow: 'auto',
+                position: 'relative',
+              }}
+            >
+              <Box sx={{ textAlign: 'center', mb: 2 }}>
+                <Box
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    margin: '0 auto',
+                    borderRadius: 2,
+                    background: 'rgba(208, 188, 255, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mb: 2,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    src={selectedItem.image_url}
+                    alt={selectedItem.item_name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </Box>
+                
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  {selectedItem.item_name}
+                </Typography>
+                
+                <Chip
+                  label={getRarityLabel(selectedItem.rarity || 'common')}
+                  size="small"
+                  sx={{
+                    backgroundColor: `${getRarityColor(selectedItem.rarity || 'common')}20`,
+                    color: getRarityColor(selectedItem.rarity || 'common'),
+                    fontWeight: 'bold',
+                    mb: 2,
                   }}
                 />
               </Box>
-              
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                {selectedItem.item_name}
-              </Typography>
-              
-              <Chip
-                label={getRarityLabel(selectedItem.rarity || 'common')}
-                size="small"
-                sx={{
-                  backgroundColor: `${getRarityColor(selectedItem.rarity || 'common')}20`,
-                  color: getRarityColor(selectedItem.rarity || 'common'),
-                  fontWeight: 'bold',
-                  mb: 2,
-                }}
-              />
-            </Box>
 
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>ID предмета:</strong> {selectedItem.id}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>Пак:</strong> {selectedItem.pack_name || 'Неизвестно'}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                <strong>Получен:</strong> {new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU')}
-              </Typography>
-              {selectedItem.gifter_username && (
+              <Box sx={{ mb: 2 }}>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  <strong>Подарен:</strong> @{selectedItem.gifter_username}
+                  <strong>ID предмета:</strong> {selectedItem.id}
                 </Typography>
-              )}
-              {selectedItem.total_count && (
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
+                  <strong>Пак:</strong> {selectedItem.pack_name || 'Неизвестно'}
                 </Typography>
-              )}
-              {selectedItem.is_equipped && (
-                <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
-                  ✓ Надет
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  <strong>Получен:</strong> {new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU')}
                 </Typography>
-              )}
+                {selectedItem.gifter_username && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    <strong>Подарен:</strong> @{selectedItem.gifter_username}
+                  </Typography>
+                )}
+                {selectedItem.total_count && (
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
+                  </Typography>
+                )}
+                {selectedItem.is_equipped && (
+                  <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
+                    ✓ Надет
+                  </Typography>
+                )}
+              </Box>
             </Box>
-          </Box>
+          </UpgradeEffects>
         </Box>
       )}
 
@@ -3168,7 +3386,9 @@ const ProfilePage = () => {
           </TabPanel>
           
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
-            <InventoryTab userId={user?.id} />
+            <UpgradeEffects item={user}>
+              <InventoryTab userId={user?.id} />
+            </UpgradeEffects>
           </TabPanel>
           
           <TabPanel value={tabValue} index={3} sx={{ p: 0, mt: 1 }}>
