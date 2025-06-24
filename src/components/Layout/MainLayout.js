@@ -23,10 +23,10 @@ const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 
-const ContentWrapper = styled(Box)(({ theme }) => ({
+const ContentWrapper = styled(Box)(({ theme, isMusicPage, isMobile }) => ({
   display: 'flex',
   flexGrow: 1,
-  paddingTop: 40, 
+  paddingTop: isMusicPage && isMobile ? 0 : 40, 
 }));
 
 
@@ -124,10 +124,10 @@ const MainLayout = ({ children }) => {
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
   
-  const isBanned = user && user.ban === 0;
+  const isBanned = user && user.ban === 1;
   const isOnBanPage = location.pathname === '/ban';
   
-  const shouldShowFullLayout = !isBanned || !isOnBanPage;
+  const shouldShowFullLayout = !isBanned && !isOnBanPage;
 
   if (isAuthPage) {
     return (
@@ -159,7 +159,7 @@ const MainLayout = ({ children }) => {
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       
-      <ContentWrapper>
+      <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile}>
         <Overlay 
           className={sidebarOpen ? 'active' : ''} 
           onClick={closeSidebar}

@@ -29,7 +29,7 @@ const getColorFromImage = extractDominantColor;
 
 const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   position: 'fixed',
-  bottom:65, 
+  bottom:85, 
   left: 0,
   right: 0,
   zIndex: theme.zIndex.appBar - 1,
