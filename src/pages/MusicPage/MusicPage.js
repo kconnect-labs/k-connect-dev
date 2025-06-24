@@ -16,12 +16,14 @@ import {
   Star,
   Search,
   PlayArrowRounded,
-  PauseRounded
+  PauseRounded,
+  MusicNote
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useMusic } from '../../context/MusicContext';
 import MyVibeWidget from './components/MyVibeWidget';
 import ChartsBlock from './components/ChartsBlock';
+import ArtistsBlock from './components/ArtistsBlock';
 import apiClient from '../../services/axiosConfig';
 
 // Стили для блоков
@@ -165,8 +167,37 @@ const MusicPage = () => {
           </Box>
         </BlockContainer>
 
+        {/* Плейлисты */}
+        <BlockContainer onClick={() => navigate('/music/playlists')}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              width: 48,
+              height: 48,
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: '#fff'
+            }}>
+              <MusicNote sx={{ fontSize: 24 }} />
+            </Box>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#fff' }}>
+                Плейлисты
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                Создавайте и управляйте плейлистами
+              </Typography>
+            </Box>
+          </Box>
+        </BlockContainer>
+
         {/* Charts Block */}
         <ChartsBlock />
+
+        {/* Artists Block */}
+        <ArtistsBlock />
       </Box>
 
       <Snackbar

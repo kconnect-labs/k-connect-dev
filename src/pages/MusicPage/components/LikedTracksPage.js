@@ -27,6 +27,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import MusicUploadDialog from '../../../components/Music/MusicUploadDialog';
+import UploadIcon from '@mui/icons-material/Upload';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { MoreHoriz } from '@mui/icons-material';
 
 const PageContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
@@ -99,6 +104,9 @@ const LikedTracksPage = ({ onBack }) => {
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState(null);
 
   useEffect(() => {
     fetchLikedTracks();
@@ -133,7 +141,6 @@ const LikedTracksPage = ({ onBack }) => {
     try {
       const response = await apiClient.post(`/api/music/${trackId}/like`);
       if (response.data.success) {
-        // Обновляем состояние трека
         setTracks(prevTracks => 
           prevTracks.map(track => 
             track.id === trackId 
@@ -153,6 +160,20 @@ const LikedTracksPage = ({ onBack }) => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
+  // Upload dialog handlers
+  const handleOpenUploadDialog = () => setUploadDialogOpen(true);
+  const handleCloseUploadDialog = () => setUploadDialogOpen(false);
+
+  // Menu handlers
+  const handleOpenMenu = (event, track) => {
+    setMenuAnchorEl(event.currentTarget);
+    setSelectedTrack(track);
+  };
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
+    setSelectedTrack(null);
+  };
+
   if (loading) {
     return (
       <PageContainer maxWidth="xl" disableGutters sx={{ pb: 10 }}>
@@ -165,33 +186,54 @@ const LikedTracksPage = ({ onBack }) => {
 
   return (
     <PageContainer maxWidth="xl" disableGutters sx={{ pb: 10 }}>
-      <HeaderCard>
-        <CardContent>
-          <Box display="flex" alignItems="center" mb={2}>
-            <IconButton 
-              onClick={onBack} 
-              sx={{ 
-                mr: 2, 
-                color: 'text.primary',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+      <HeaderCard sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <CardContent sx={{ display: 'flex', alignItems: 'center', width: '100%', p: 2, pb: '16px !important' }}>
+          <IconButton 
+            onClick={onBack} 
+            sx={{ 
+              mr: 2, 
+              color: 'text.primary',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h4" fontWeight={700} sx={{ mb: 0.5 }}>
+              Мои любимые
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {tracks.length} треков в вашей коллекции
+            </Typography>
+          </Box>
+          <Tooltip title="Загрузить трек">
+            <IconButton
+              onClick={handleOpenUploadDialog}
+              sx={{
+                ml: 2,
+                color: 'primary.main',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: 2,
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+                transition: 'background 0.2s',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(255,255,255,0.08)',
                 }
               }}
+              size="large"
             >
-              <ArrowBackIcon />
+              <UploadIcon fontSize="medium" />
             </IconButton>
-            <Box>
-              <Typography variant="h4" fontWeight={700} sx={{ mb: 0.5 }}>
-                Мои любимые
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {tracks.length} треков в вашей коллекции
-              </Typography>
-            </Box>
-          </Box>
+          </Tooltip>
         </CardContent>
       </HeaderCard>
+
+      <MusicUploadDialog open={uploadDialogOpen} onClose={handleCloseUploadDialog} onSuccess={fetchLikedTracks} />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3, borderRadius: 12 }}>
@@ -232,6 +274,10 @@ const LikedTracksPage = ({ onBack }) => {
                 <TrackListItem 
                   isActive={isCurrentTrack}
                   onClick={() => handlePlayTrack(track)}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    handleOpenMenu(e, track);
+                  }}
                 >
                   <ListItemAvatar>
                     <TrackAvatar
@@ -306,7 +352,6 @@ const LikedTracksPage = ({ onBack }) => {
                       >
                         {track.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                       </ActionButton>
-                      
                       <ActionButton
                         onClick={(e) => {
                           e.stopPropagation();
@@ -317,6 +362,14 @@ const LikedTracksPage = ({ onBack }) => {
                         }}
                       >
                         {isTrackPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+                      </ActionButton>
+                      <ActionButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenMenu(e, track);
+                        }}
+                      >
+                        <MoreHoriz />
                       </ActionButton>
                     </Box>
                   </ListItemSecondaryAction>
@@ -333,6 +386,34 @@ const LikedTracksPage = ({ onBack }) => {
           })}
         </List>
       )}
+
+      {/* Меню для трека */}
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        onClose={handleCloseMenu}
+        PaperProps={{
+          sx: {
+            backgroundColor: 'rgba(30, 30, 30, 0.95)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: 2,
+            boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
+          }
+        }}
+      >
+        {selectedTrack && (
+          <MenuItem onClick={() => { handlePlayTrack(selectedTrack); handleCloseMenu(); }}>
+            <PlayArrowIcon fontSize="small" sx={{ mr: 1 }} /> Воспроизвести
+          </MenuItem>
+        )}
+        {selectedTrack && (
+          <MenuItem onClick={() => { navigator.clipboard.writeText(window.location.origin + '/music/' + selectedTrack.id); handleCloseMenu(); }}>
+            <FavoriteBorderIcon fontSize="small" sx={{ mr: 1 }} /> Копировать ссылку
+          </MenuItem>
+        )}
+        {/* Добавьте другие пункты меню по необходимости */}
+      </Menu>
     </PageContainer>
   );
 };
