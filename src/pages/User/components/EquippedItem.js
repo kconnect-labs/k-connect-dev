@@ -5,11 +5,11 @@ import { keyframes } from '@mui/system';
 
 const particleAnimation = (color) => keyframes`
   0% {
-    transform: scale(1) translate(0, 0);
-    opacity: 0.8;
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 0.9;
   }
   100% {
-    transform: scale(${Math.random() * 0.5 + 0.5}) translate(${(Math.random() - 0.5) * 120}px, ${(Math.random() - 0.5) * 120}px);
+    transform: scale(${Math.random() * 0.8 + 0.8}) translate(${(Math.random() - 0.5) * 150}px, ${(Math.random() - 0.5) * 150}px) rotate(${Math.random() * 360}deg);
     opacity: 0;
   }
 `;
@@ -66,17 +66,18 @@ const ParticlesContainer = styled(Box)({
   zIndex: 1,
 });
 
-const Particle = styled(Box)(({ color, delay, duration }) => ({
+const StarParticle = styled(Box)(({ color, delay, duration }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
-  width: `${Math.random() * 5 + 2}px`,
-  height: `${Math.random() * 5 + 2}px`,
-  borderRadius: '50%',
-  backgroundColor: color,
+  width: `${Math.random() * 8 + 4}px`,
+  height: `${Math.random() * 8 + 4}px`,
+  background: `radial-gradient(circle at center, ${color} 0%, ${color} 50%, transparent 100%)`,
+  clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
   animation: `${particleAnimation(color)} ${duration}s ease-out infinite`,
   animationDelay: `${delay}s`,
   opacity: 0,
+  transform: 'translate(-50%, -50%)',
 }));
 
 const getAverageColor = (imgElement, callback) => {
@@ -86,7 +87,7 @@ const getAverageColor = (imgElement, callback) => {
   const height = imgElement.height;
 
   if (width === 0 || height === 0) {
-    callback('rgba(208, 188, 255, 0.7)');
+    callback('rgba(208, 188, 255, 0.8)');
     return;
   }
 
@@ -100,7 +101,7 @@ const getAverageColor = (imgElement, callback) => {
     data = context.getImageData(0, 0, width, height).data;
   } catch (e) {
     console.error('Could not get image data for color extraction:', e);
-    callback('rgba(208, 188, 255, 0.7)'); // fallback color
+    callback('rgba(208, 188, 255, 0.8)'); // fallback color
     return;
   }
 
@@ -117,7 +118,7 @@ const getAverageColor = (imgElement, callback) => {
   }
   
   if (count === 0) {
-      callback('rgba(208, 188, 255, 0.7)'); // fallback if all transparent
+      callback('rgba(208, 188, 255, 0.8)'); // fallback if all transparent
       return;
   }
 
@@ -125,11 +126,11 @@ const getAverageColor = (imgElement, callback) => {
   g = Math.floor(g / count);
   b = Math.floor(b / count);
 
-  callback(`rgba(${r}, ${g}, ${b}, 0.8)`);
+  callback(`rgba(${r}, ${g}, ${b}, 0.9)`);
 };
 
 const EquippedItem = ({ item, index = 0 }) => {
-  const [particleColor, setParticleColor] = useState('rgba(208, 188, 255, 0.7)');
+  const [particleColor, setParticleColor] = useState('rgba(208, 188, 255, 0.8)');
   const imgRef = useRef(null);
 
   useEffect(() => {
@@ -143,7 +144,7 @@ const EquippedItem = ({ item, index = 0 }) => {
         });
       };
       img.onerror = () => {
-        setParticleColor('rgba(208, 188, 255, 0.7)');
+        setParticleColor('rgba(208, 188, 255, 0.8)');
       }
     }
   }, [item?.image_url]);
@@ -152,18 +153,20 @@ const EquippedItem = ({ item, index = 0 }) => {
     return null;
   }
 
-  const particles = Array.from({ length: 25 }).map((_, i) => (
-    <Particle
+  const isUpgraded = item.upgrade_level === 1;
+
+  const particles = isUpgraded ? Array.from({ length: 20 }).map((_, i) => (
+    <StarParticle
       key={i}
       color={particleColor}
-      delay={Math.random() * 3}
-      duration={Math.random() * 2 + 2}
+      delay={Math.random() * 4}
+      duration={Math.random() * 3 + 3}
     />
-  ));
+  )) : [];
 
   return (
     <EquippedItemContainer index={index}>
-      <ParticlesContainer>{particles}</ParticlesContainer>
+      {isUpgraded && <ParticlesContainer>{particles}</ParticlesContainer>}
       <ItemImage ref={imgRef} src={item.image_url} alt={item.item_name} />
     </EquippedItemContainer>
   );

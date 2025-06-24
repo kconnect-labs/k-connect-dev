@@ -79,7 +79,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
-    height: 400,
+    height: '66%',
     maxWidth: 'none',
     maxHeight: 'none',
     '@media (max-width: 768px)': {
@@ -170,6 +170,7 @@ const ItemInfoModal = ({
   const [transferLoading, setTransferLoading] = useState(false);
   const [transferError, setTransferError] = useState('');
   const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState(false);
   const [userSearch, setUserSearch] = useState({
     loading: false,
     exists: false,
@@ -256,6 +257,7 @@ const ItemInfoModal = ({
   };
 
   const handleUpgradeItem = async () => {
+    setUpgradeConfirmOpen(false);
     try {
       setUpgradeLoading(true);
       const response = await fetch(`/api/inventory/upgrade/${item.id}`, {
@@ -264,9 +266,7 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
       });
-      
       const data = await response.json();
-      
       if (data.success) {
         showNotification(data.message, 'success');
         onItemUpdate();
@@ -450,6 +450,9 @@ const ItemInfoModal = ({
                   label={getRarityLabel(item.rarity)}
                   icon={getRarityIcon(item.rarity)}
                 />
+                {item.upgrade_level === 1 && (
+                  <Chip label="Улучшено" color="success" size="small" sx={{ ml: 1, fontWeight: 600 }} />
+                )}
               </Box>
 
               <Box sx={{ mb: 3 }}>
@@ -505,8 +508,8 @@ const ItemInfoModal = ({
                 {item.upgradeable && item.upgrade_level === 0 && (
                   <Button
                     variant="outlined"
-                    onClick={handleUpgradeItem}
-                    disabled={upgradeLoading || userPoints < Math.floor(item.pack_price / 2)}
+                    onClick={() => setUpgradeConfirmOpen(true)}
+                    disabled={upgradeLoading || userPoints < Math.floor(item.pack_price ? item.pack_price / 2 : 0)}
                     startIcon={upgradeLoading ? <CircularProgress size={16} /> : <UpgradeIcon />}
                     fullWidth
                     sx={{
@@ -519,7 +522,7 @@ const ItemInfoModal = ({
                       },
                     }}
                   >
-                    {upgradeLoading ? 'Улучшение...' : `Улучшить (${Math.floor(item.pack_price / 2)} очков)`}
+                    {upgradeLoading ? 'Улучшение...' : `Улучшить (${Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков)`}
                   </Button>
                 )}
 
@@ -733,6 +736,18 @@ const ItemInfoModal = ({
             </Button>
           </DialogActions>
         </UpgradeEffects>
+      </Dialog>
+
+      {/* Модалка подтверждения улучшения */}
+      <Dialog open={upgradeConfirmOpen} onClose={() => setUpgradeConfirmOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1 }}>Вы уверены?</DialogTitle>
+        <DialogContent sx={{ pb: 0 }}>
+          <Typography variant="body2">Потратить {Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков на улучшение этого предмета?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setUpgradeConfirmOpen(false)} color="secondary" size="small">Нет</Button>
+          <Button onClick={handleUpgradeItem} color="primary" size="small" disabled={upgradeLoading}>{upgradeLoading ? <CircularProgress size={16} /> : 'Да'}</Button>
+        </DialogActions>
       </Dialog>
 
       {/* Уведомления */}
