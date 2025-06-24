@@ -104,6 +104,7 @@ const BlackjackPage = lazy(() => import('./pages/MiniGames/BlackjackPage'));
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
+const PlaylistsPage = lazy(() => import('./pages/MusicPage/PlaylistsPage'));
 
 export const ThemeSettingsContext = React.createContext({
   themeSettings: {
