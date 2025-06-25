@@ -77,8 +77,9 @@ const SidebarNavigation = memo(({
     rules: <Icon icon={rulesIcon} width="20" height="20" />,
     api: <Icon icon={apiIcon} width="20" height="20" />,
     auction: <GavelIcon sx={{ fontSize: 20 }} />,
-    pack: <Icon icon={packIcon} width="20" height="20" />,
-    inventory: <Icon icon={inventoryIcon} width="20" height="20" />
+    marketplace: <Icon icon="solar:shop-2-bold" width="20" height="20" />,
+    pack: <Icon icon="solar:box-bold" width="20" height="20" />,
+    inventory: <Icon icon="solar:bag-4-bold" width="20" height="20" />
   }), []);
   
   
@@ -198,7 +199,7 @@ const SidebarNavigation = memo(({
       <Collapse in={expandedShops} timeout="auto" unmountOnExit>
         <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
           <NavButton
-            text={t('sidebar.navigation.shops.badge_shop')}
+            text="Магазин бейджиков"
             icon={icons.shop}
             path="/badge-shop"
             active={isActive('/badge-shop')}
@@ -207,7 +208,16 @@ const SidebarNavigation = memo(({
           />
           
           <NavButton
-            text={t('sidebar.navigation.shops.username_auction')}
+            text="Маркетплейс"
+            icon={icons.marketplace}
+            path="/marketplace"
+            active={isActive('/economic/marketplace')}
+            themeColor={primaryColor}
+            nested={true}
+          />
+          
+          <NavButton
+            text="Аукцион юзернеймов"
             icon={icons.auction}
             path="/username-auction"
             active={isActive('/username-auction')}
@@ -216,7 +226,7 @@ const SidebarNavigation = memo(({
           />
           
           <NavButton
-            text="Паки и Сундуки"
+            text="Пачки"
             icon={icons.pack}
             path="/economic/packs"
             active={isActive('/economic/packs')}

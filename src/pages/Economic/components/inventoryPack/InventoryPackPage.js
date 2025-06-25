@@ -228,8 +228,8 @@ const InventoryPackPage = () => {
   return (
     <StyledContainer>
       <InfoBlock
-        title="Паки и Сундуки"
-        description="Откройте паки и сундуки, чтобы получить уникальные предметы для вашей коллекции"
+        title="Пачки"
+        description="Откройте Пачки, чтобы получить уникальные предметы для вашей коллекции"
         styleVariant="dark"
         sx={{ 
           textAlign: 'center',

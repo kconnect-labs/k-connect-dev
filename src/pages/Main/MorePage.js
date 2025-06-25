@@ -446,7 +446,7 @@ const MorePage = () => {
             <MenuItemIcon>
               <Icon icon="solar:box-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Паки и Сундуки" />
+            <ListItemText primary="Пачки" />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/economic/inventory">
@@ -454,6 +454,13 @@ const MorePage = () => {
               <Icon icon="solar:bag-4-bold" width="20" height="20" />
             </MenuItemIcon>
             <ListItemText primary="Мой Инвентарь" />
+          </MenuListItem>
+          
+          <MenuListItem button component={Link} to="marketplace">
+            <MenuItemIcon>
+              <Icon icon="solar:shop-2-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText primary="Маркетплейс" />
           </MenuListItem>
           
           <HighlightedMenuItem

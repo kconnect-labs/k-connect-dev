@@ -1322,6 +1322,7 @@ const InventoryTab = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const navigate = useNavigate();
   const [sortBy, setSortBy] = useState('name'); // name, rarity, pack, upgrade
   const [filterPack, setFilterPack] = useState('all');
   const [filterRarity, setFilterRarity] = useState('all');
@@ -1332,20 +1333,16 @@ const InventoryTab = ({ userId }) => {
       try {
         setLoading(true);
         const response = await axios.get(`/api/inventory/user/${userId}`);
-        if (response.data.success) {
-          // Преобразуем структуру данных из API
-          const allItems = [];
-          const inventoryByPacks = response.data.inventory || {};
-          
-          // Собираем все предметы из всех паков в один массив
-          Object.values(inventoryByPacks).forEach(items => {
-            allItems.push(...items);
-          });
-          
-          setInventory(allItems);
+        console.log('Inventory response:', response.data); // Debug log
+        if (response.data.success && Array.isArray(response.data.items)) {
+          setInventory(response.data.items);
+        } else {
+          console.error('Invalid inventory data format:', response.data);
+          setInventory([]);
         }
       } catch (error) {
         console.error('Error fetching inventory:', error);
+        setInventory([]);
       } finally {
         setLoading(false);
       }
@@ -1499,7 +1496,7 @@ const InventoryTab = ({ userId }) => {
               },
             }}
           >
-            <MenuItem value="all">Все паки</MenuItem>
+            <MenuItem value="all">Все Пачки</MenuItem>
             {getUniquePacks().map((pack) => (
               <MenuItem key={pack} value={pack}>{pack}</MenuItem>
             ))}
@@ -1552,7 +1549,11 @@ const InventoryTab = ({ userId }) => {
           </Button>
         </Box>
 
-        {getFilteredAndSortedInventory().length === 0 ? (
+        {loading ? (
+          <Box textAlign="center" py={4}>
+            <CircularProgress size={24} />
+          </Box>
+        ) : getFilteredAndSortedInventory().length === 0 ? (
           <Box textAlign="center" py={4}>
             <Typography variant="body1" color="text.secondary">
               {inventory.length === 0 ? 'Инвентарь пуст' : 'Предметы не найдены'}
@@ -1591,6 +1592,7 @@ const InventoryTab = ({ userId }) => {
                         justifyContent: 'center',
                         mb: 0.5,
                         overflow: 'hidden',
+                        position: 'relative',
                       }}
                     >
                       <img
@@ -1605,6 +1607,42 @@ const InventoryTab = ({ userId }) => {
                           e.target.style.display = 'none';
                         }}
                       />
+                      {item.marketplace && (
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: 4,
+                            right: 4,
+                            padding: '2px 6px',
+                            borderRadius: '8px',
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            backdropFilter: 'blur(5px)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '2px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                          }}
+                        >
+                          <img
+                            src="/static/icons/KBalls.svg"
+                            alt="KBalls"
+                            style={{
+                              width: '12px',
+                              height: '12px',
+                            }}
+                          />
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              color: '#fff',
+                              fontWeight: 'bold',
+                              fontSize: '0.65rem',
+                            }}
+                          >
+                            {item.marketplace.price}
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
                     <Typography 
                       variant="caption" 
@@ -1676,7 +1714,7 @@ const InventoryTab = ({ userId }) => {
                 borderRadius: 2,
                 p: 3,
                 width: 400,
-                height: 400,
+                height: 550,
                 overflow: 'auto',
                 position: 'relative',
               }}
@@ -1684,8 +1722,8 @@ const InventoryTab = ({ userId }) => {
               <Box sx={{ textAlign: 'center', mb: 2 }}>
                 <Box
                   sx={{
-                    width: 120,
-                    height: 120,
+                    width: 200,
+                    height: 200,
                     margin: '0 auto',
                     borderRadius: 2,
                     background: 'rgba(208, 188, 255, 0.1)',
@@ -1738,7 +1776,7 @@ const InventoryTab = ({ userId }) => {
                     <strong>Подарен:</strong> @{selectedItem.gifter_username}
                   </Typography>
                 )}
-                {selectedItem.total_count && (
+                {typeof selectedItem.item_number !== 'undefined' && selectedItem.total_count && (
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
                   </Typography>
@@ -1747,6 +1785,32 @@ const InventoryTab = ({ userId }) => {
                   <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
                     ✓ Надет
                   </Typography>
+                )}
+                {selectedItem.marketplace && (
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2" color="warning.main" sx={{ fontWeight: 600, mb: 1 }}>
+                      Выставлен на продажу за {selectedItem.marketplace.price} KBalls
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => {
+                        handleCloseModal();
+                        navigate('/marketplace', {
+                          state: { openItemId: selectedItem.marketplace.id }
+                        });
+                      }}
+                      sx={{
+                        mt: 1,
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        '&:hover': {
+                          background: 'rgba(255, 255, 255, 0.2)',
+                        }
+                      }}
+                    >
+                      Перейти в маркет
+                    </Button>
+                  </Box>
                 )}
               </Box>
             </Box>
@@ -2229,15 +2293,10 @@ const ProfilePage = () => {
         try {
           const response = await axios.get(`/api/inventory/user/${user.id}`);
           if (response.data.success) {
-            const inventoryByPacks = response.data.inventory || {};
-            let foundItems = [];
-            for (const packItems of Object.values(inventoryByPacks)) {
-              const equipped = packItems.filter(item => item.is_equipped);
-              if (equipped.length > 0) {
-                foundItems.push(...equipped);
-              }
-            }
-            setEquippedItems(foundItems.slice(0, 3));
+            // Новый формат: response.data.items - массив
+            const items = response.data.items || [];
+            const equipped = items.filter(item => item.is_equipped);
+            setEquippedItems(equipped.slice(0, 3));
           }
         } catch (error) {
           console.error('Error fetching equipped items:', error);

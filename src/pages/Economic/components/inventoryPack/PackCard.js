@@ -14,7 +14,8 @@ import { motion } from 'framer-motion';
 import { 
   Diamond as DiamondIcon,
   Star as StarIcon,
-  Lock as LockIcon
+  Lock as LockIcon,
+  Percent as PercentIcon
 } from '@mui/icons-material';
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -134,6 +135,22 @@ const RarityChip = styled(Chip)(({ rarity, theme }) => {
   };
 });
 
+const DiscountChip = styled(Chip)(({ theme }) => ({
+  position: 'absolute',
+  top: 12,
+  left: 12,
+  background: '#e74c3c',
+  color: '#fff',
+  fontWeight: 700,
+  fontSize: '0.85rem',
+  zIndex: 2,
+  boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+  '& .MuiChip-icon': {
+    color: '#fff',
+    marginRight: 4,
+  },
+}));
+
 const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const [packContents, setPackContents] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -227,7 +244,12 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const isSoldOut = pack.is_limited && (pack.max_quantity - pack.sold_quantity <= 0);
 
   return (
-    <StyledCard onClick={handleCardClick} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <StyledCard onClick={handleCardClick} sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Все по 1000 */}
+      {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+        <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
+        <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
+      </Box> */}
       <PackImage>
         <ItemContainer>
           {sideItems[0] && (
