@@ -141,6 +141,31 @@ const UserAvatar = styled(Avatar)(() => ({
   backgroundColor: '#444444'
 }));
 
+const PriceBadge = styled(Box)({
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  padding: '6px 12px',
+  borderRadius: '20px',
+  fontSize: '0.875rem',
+  fontWeight: 'bold',
+  color: '#fff',
+  background: 'rgba(0, 0, 0, 0.7)',
+  backdropFilter: 'blur(5px)',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 4,
+  zIndex: 2,
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+});
+
+const KBallsIcon = styled('img')({
+  width: '16px',
+  height: '16px',
+  marginRight: '4px',
+});
+
 const InventoryPage = () => {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -424,7 +449,7 @@ const InventoryPage = () => {
                 },
               }}
             >
-              Купить паки
+              Купить Пачки
             </Button>
           )}
         </Box>
@@ -454,48 +479,54 @@ const InventoryPage = () => {
               >
                 <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
                   <UpgradeEffects item={item}>
-                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                      {item?.marketplace?.status === 'active' && (
+                        <PriceBadge>
+                          <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                          {item.marketplace.price}
+                        </PriceBadge>
+                      )}
                       <ItemImage sx={{ 
                         width: 80, 
                         height: 80, 
                         mb: 2,
                         transition: 'all 0.3s ease'
                       }}>
-                      <img 
-                        src={item.image_url}
-                        alt={item.item_name}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </ItemImage>
+                        <img 
+                          src={item.image_url}
+                          alt={item.item_name}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      </ItemImage>
 
-                    <Typography 
+                      <Typography 
                         variant="body2" 
-                      sx={{ 
-                        fontWeight: 600, 
-                        mb: 1,
+                        sx={{ 
+                          fontWeight: 600, 
+                          mb: 1,
                           color: 'text.primary',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap'
-                      }}
-                    >
-                      {item.item_name}
-                    </Typography>
+                        }}
+                      >
+                        {item.item_name}
+                      </Typography>
 
                       <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
-                      <RarityChip
+                        <RarityChip
                           rarity={item.rarity} 
                           label={getRarityLabel(item.rarity)}
-                        size="small"
-                      />
-                    </Box>
+                          size="small"
+                        />
+                      </Box>
 
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        color: 'text.secondary',
+                      <Typography 
+                        variant="caption" 
+                        sx={{
+                          color: 'text.secondary',
                           fontSize: '0.75rem'
                         }}
                       >
@@ -505,7 +536,7 @@ const InventoryPage = () => {
                       <Typography 
                         variant="caption" 
                         sx={{
-                            color: 'text.secondary',
+                          color: 'text.secondary',
                           fontSize: '0.7rem',
                           opacity: 0.7,
                           mt: 'auto',
@@ -514,7 +545,7 @@ const InventoryPage = () => {
                       >
                         Нажмите для подробностей
                       </Typography>
-                  </CardContent>
+                    </CardContent>
                   </UpgradeEffects>
                 </StyledCard>
               </motion.div>

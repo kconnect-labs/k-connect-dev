@@ -480,9 +480,9 @@
       "admin_panel": "Админ Панель",
       "moderate": "Модерировать",
       "shops": {
-        "title": "Магазины",
-        "badge_shop": "Магазин бейджиков",
-        "username_auction": "Аукцион юзернеймов"
+        "title": "Экономика",
+        "badge_shop": "Бейджики",
+        "username_auction": "Юзернеймы"
       },
       "minigames": "Мини-игры",
       "subscription_plans": "Планы подписок",

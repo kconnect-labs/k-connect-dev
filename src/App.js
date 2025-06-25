@@ -93,6 +93,7 @@ const BalancePage = lazy(() => import('./pages/Economic/BalancePage'));
 const UsernameAuctionPage = lazy(() => import('./pages/Economic/UsernameAuctionPage'));
 const InventoryPackPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPackPage'));
 const InventoryPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPage'));
+const MarketplacePage = lazy(() => import('./pages/Economic/components/marketplace/MarketplacePage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
 const TestNotifications = lazy(() => import('./components/TestNotifications'));
@@ -502,6 +503,7 @@ const AppRoutes = () => {
           <Route path="/test-notifications" element={<TestNotifications />} />
           <Route path="/cookies" element={<PublicPages />} />
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
+          <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (

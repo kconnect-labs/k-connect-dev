@@ -138,7 +138,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import PublicIcon from '@mui/icons-material/Public';
-import TelegramIcon from '@mui/icons-material/Telegram';
+import TelegramIcon from '@mui/icons-material/Telegram'; 
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import CheckIcon from '@mui/icons-material/Check';
 import BrushIcon from '@mui/icons-material/Brush';
