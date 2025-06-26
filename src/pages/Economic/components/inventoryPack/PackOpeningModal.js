@@ -68,24 +68,39 @@ const PackContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ItemContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  width: 120,
-  height: 120,
-  borderRadius: 12,
-  background: 'rgba(208, 188, 255, 0.1)',
+  width: 250,
+  height: 250,
+  borderRadius: 16,
+  background: 'rgba(255, 255, 255, 0.1)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  border: '3px solid rgba(208, 188, 255, 0.3)',
+  border: '2px solid rgba(255, 255, 255, 0.2)',
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
   overflow: 'hidden',
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
+  },
 }));
 
 const ItemImage = styled('img')({
-  width: '100%',
-  height: '100%',
+  width: '75%',
+  height: '75%',
   objectFit: 'contain',
   borderRadius: 'inherit',
+  position: 'relative',
+  zIndex: 2,
 });
 
 const RarityChip = styled(Chip)(({ rarity, theme }) => {
@@ -371,7 +386,13 @@ const PackOpeningModal = ({ pack, onClose }) => {
                   }}
                 >
                   <PackContainer>
-                    <ItemContainer>
+                    <ItemContainer sx={{
+                      ...(obtainedItem?.background_url && {
+                        '&::before': {
+                          backgroundImage: `url(${obtainedItem.background_url})`,
+                        }
+                      })
+                    }}>
                       <ItemImage 
                         src={`/inventory/${obtainedItem?.id}`}
                         alt={obtainedItem?.name}

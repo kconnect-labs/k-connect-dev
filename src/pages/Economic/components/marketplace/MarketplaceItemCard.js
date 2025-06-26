@@ -1,5 +1,5 @@
     import React from 'react';
-    import { Box, Card, CardContent, Typography, CardActionArea } from '@mui/material';
+    import { Box, Card, CardContent, Typography, CardActionArea, unstable_useEnhancedEffect } from '@mui/material';
     import { styled } from '@mui/material/styles';
     import { formatDistance } from 'date-fns';
     import Chip from '@mui/material/Chip';
@@ -24,7 +24,6 @@
     const PriceBadge = styled(Box)({
     position: 'absolute',
     top: 8,
-    left: 8,
     padding: '4px 8px',
     borderRadius: 12,
     fontSize: '0.875rem',
@@ -56,16 +55,50 @@
     return (
         <StyledCard>
         <CardActionArea onClick={onClick}>
-            <Box sx={{ position: 'relative' }}>
-            <ItemImage
+            <Box sx={{
+              position: 'relative',
+              width: 170,
+              height: 170,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              borderRadius: 1,
+              background: 'rgba(255,255,255,0.04)',
+              margin: 'auto',
+              marginTop: '12px',
+              ...(item.background_url && {
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundImage: `url(${item.background_url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  borderRadius: 'inherit',
+                  zIndex: 1,
+                }
+              })
+            }}>
+              <ItemImage
                 src={item.image_url}
                 alt={item.item_name}
                 loading="lazy"
-            />
-            <PriceBadge>
+                style={{ position: 'relative', zIndex: 2, width: '70%', height: '70%', display: 'block', margin: 'auto' }}
+              />
+              <PriceBadge sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                zIndex: 3
+              }}>
                 <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
                 {price}
-            </PriceBadge>
+              </PriceBadge>
             </Box>
             <CardContent>
             <Typography variant="h6" gutterBottom>

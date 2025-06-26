@@ -95,8 +95,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
-  width: 200,
-  height: 200,
+  width: 250,
+  height: 250,
   borderRadius: 16,
   background: 'rgba(255, 255, 255, 0.1)',
   display: 'flex',
@@ -106,11 +106,27 @@ const ItemImage = styled(Box)(({ theme }) => ({
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
   margin: '0 auto 24px',
   overflow: 'hidden',
+  position: 'relative',
   '& img': {
-    width: '100%',
-    height: '100%',
+    width: '75%',
+    height: '75%',
     objectFit: 'contain',
     borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
   },
 }));
 
@@ -540,7 +556,13 @@ const ItemInfoModal = ({
             <Box sx={{ mb: 3, textAlign: 'center' }}>
               <Box position="relative">
                 <UpgradeEffects item={item}>
-                  <ItemImage>
+                  <ItemImage sx={{
+                    ...(item?.background_url && {
+                      '&::before': {
+                        backgroundImage: `url(${item.background_url})`,
+                      }
+                    })
+                  }}>
                     <img src={item?.image_url} alt={item?.item_name} />
                   </ItemImage>
                 </UpgradeEffects>
@@ -750,7 +772,16 @@ const ItemInfoModal = ({
           {item && (
             <>
               <Box sx={{ mb: 3, textAlign: 'center' }}>
-                <ItemImage sx={{ width: 100, height: 100, mb: 2 }}>
+                <ItemImage sx={{ 
+                  width: 125,
+                  height: 125,
+                  mb: 2,
+                  ...(item?.background_url && {
+                    '&::before': {
+                      backgroundImage: `url(${item.background_url})`,
+                    }
+                  })
+                }}>
                   <img 
                     src={item.image_url}
                     alt={item.item_name}

@@ -15,9 +15,9 @@ import inventoryImageService from '../../../../services/InventoryImageService';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  padding: theme.spacing(3),
+  padding: theme.spacing(2),
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }));
 
