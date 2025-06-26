@@ -2,6 +2,7 @@
     import { Box, Card, CardContent, Typography, CardActionArea } from '@mui/material';
     import { styled } from '@mui/material/styles';
     import { formatDistance } from 'date-fns';
+    import Chip from '@mui/material/Chip';
 
     const StyledCard = styled(Card)(({ theme }) => ({
     background: 'rgba(255, 255, 255, 0.03)',
@@ -41,6 +42,13 @@
     marginRight: '2px',
     });
 
+    const rarityColors = {
+    common: { bg: '#95a5a6', color: '#fff', label: 'Обычный' },
+    rare: { bg: '#3498db', color: '#fff', label: 'Редкий' },
+    epic: { bg: '#9b59b6', color: '#fff', label: 'Эпический' },
+    legendary: { bg: '#f39c12', color: '#fff', label: 'Легендарный' },
+    };
+
     const MarketplaceItemCard = ({ listing, onClick }) => {
     const { item, price, listed_at, seller_name } = listing;
     const timeAgo = formatDistance(new Date(listed_at), new Date(), { addSuffix: true });
@@ -63,6 +71,21 @@
             <Typography variant="h6" gutterBottom>
                 {item.item_name}
             </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                {item.rarity && (
+                <Chip
+                    label={rarityColors[item.rarity]?.label || 'Обычный'}
+                    sx={{
+                    background: rarityColors[item.rarity]?.bg || rarityColors.common.bg,
+                    color: rarityColors[item.rarity]?.color || rarityColors.common.color,
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    px: 1.5,
+                    }}
+                    size="small"
+                />
+                )}
+            </Box>
             <Typography variant="body2" color="text.secondary">
                 Продавец: {seller_name}
             </Typography>

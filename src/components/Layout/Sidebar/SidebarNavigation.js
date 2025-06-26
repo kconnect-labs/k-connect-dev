@@ -134,10 +134,26 @@ const SidebarNavigation = memo(({
       />
       
       <NavButton
+        text="Гранты каналам"
+        icon={<Icon icon="solar:star-bold" width="20" height="20" />}
+        path="/grant"
+        active={isActive('/grant')}
+        themeColor={primaryColor}
+      />
+      
+      <NavButton
         text={t('sidebar.navigation.search')}
         icon={icons.search}
         path="/search"
         active={isActive('/search')}
+        themeColor={primaryColor}
+      />
+
+      <NavButton
+        text="Инвентарь"
+        icon={icons.inventory}
+        path="/economic/inventory"
+        active={isActive('/economic/inventory')}
         themeColor={primaryColor}
       />
     </>
@@ -230,15 +246,6 @@ const SidebarNavigation = memo(({
             icon={icons.pack}
             path="/economic/packs"
             active={isActive('/economic/packs')}
-            themeColor={primaryColor}
-            nested={true}
-          />
-          
-          <NavButton
-            text="Мой Инвентарь"
-            icon={icons.inventory}
-            path="/economic/inventory"
-            active={isActive('/economic/inventory')}
             themeColor={primaryColor}
             nested={true}
           />

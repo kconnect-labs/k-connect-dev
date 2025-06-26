@@ -456,12 +456,39 @@ const MorePage = () => {
             <ListItemText primary="Мой Инвентарь" />
           </MenuListItem>
           
-          <MenuListItem button component={Link} to="marketplace">
+          <MenuListItem button component={Link} to="/marketplace">
             <MenuItemIcon>
               <Icon icon="solar:shop-2-bold" width="20" height="20" />
             </MenuItemIcon>
             <ListItemText primary="Маркетплейс" />
           </MenuListItem>
+          
+          <HighlightedMenuItem
+            button 
+            component={Link} 
+            to="/grant"
+            color="secondary"
+          >
+            <MenuItemIcon sx={{ color: theme.palette.secondary.main }}>
+              <Icon icon="solar:star-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText 
+              primary="Гранты каналам"
+            />
+            <Chip 
+              label="NEW"
+              size="small" 
+              color="secondary" 
+              sx={{ 
+                height: 18, 
+                fontSize: '0.6rem',
+                fontWeight: 'bold',
+                flexShrink: 0,
+                ml: 0.5,
+                maxWidth: 45
+              }} 
+            />
+          </HighlightedMenuItem>
           
           <HighlightedMenuItem
             button 

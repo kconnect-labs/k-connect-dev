@@ -48,6 +48,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import StarIcon from '@mui/icons-material/Star';
 import ChatIcon from '@mui/icons-material/Chat';
+import BoxIcon from '@mui/icons-material/Inventory';
+import StoreIcon from '@mui/icons-material/Store';
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
@@ -520,6 +522,48 @@ const AboutPage = () => {
       title: "Мессенджер",
       description: "Современный мессенджер с поддержкой медиа, стикеров и групповых чатов",
       icon: <ChatIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Пачки",
+      description: "Коллекционные пачки с уникальными предметами разных редкостей для пополнения вашего инвентаря",
+      icon: <BoxIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Инвентарь",
+      description: "Коллекция предметов, полученных из паков. Передавайте, дарите друзьям или продавайте на маркетплейсе!",
+      icon: <BoxIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Маркетплейс",
+      description: "Покупайте и продавайте предметы из паков на маркетплейсе",
+      icon: <StoreIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Айтемы",
+      description: "Уникальные предметы разных редкостей, которые можно получить из паков и использовать для кастомизации",
+      icon: <AutoAwesomeIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Гранты",
+      description: "Система поддержки талантливых создателей контента с ежемесячными бонусами и уникальными возможностями",
+      icon: <StarIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Большая кастомизация профиля",
+      description: "Расширенные возможности настройки внешнего вида и функциональности вашего профиля",
+      icon: <ColorLensIcon fontSize="large" />,
+      highlight: true
+    },
+    {
+      title: "Дополнительные вещи для профилей",
+      description: "Новые элементы и функции для персонализации и улучшения вашего профиля",
+      icon: <AutoAwesomeIcon fontSize="large" />,
       highlight: true
     }
   ];
