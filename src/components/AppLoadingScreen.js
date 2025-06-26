@@ -460,7 +460,7 @@ const AppLoadingScreen = ({ onLoadingComplete }) => {
           }}
         />
         <Subtitle variant="h6">
-          К-Коннект v2.8
+          К-Коннект v2.9 NEW
         </Subtitle>
       </LogoContainer>
 

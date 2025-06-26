@@ -17,7 +17,8 @@ import { styled } from '@mui/material/styles';
 import {
   Close as CloseIcon,
   Diamond as DiamondIcon,
-  Star as StarIcon
+  Star as StarIcon,
+  ContentCopy as ContentCopyIcon
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { AuthContext } from '../../../../context/AuthContext';
@@ -110,6 +111,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const { user: currentUser } = useContext(AuthContext);
+  const [copyStatus, setCopyStatus] = useState('');
   
   if (!listing) return null;
   
@@ -182,6 +184,14 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyLink = () => {
+    const url = `http://k-connect.ru/item/${item.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyStatus('Скопировано!');
+      setTimeout(() => setCopyStatus(''), 1500);
+    });
   };
 
   return (
@@ -258,6 +268,18 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               <strong>Продавец:</strong> {seller_name}
             </Typography>
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+            <Button
+              size="small"
+              variant="text"
+              startIcon={<ContentCopyIcon fontSize="small" />}
+              onClick={handleCopyLink}
+              sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
+            >
+              {copyStatus || 'Скопировать'}
+            </Button>
           </Box>
         </Box>
       </DialogContent>

@@ -10,6 +10,8 @@ import { FilterList, Sort } from '@mui/icons-material';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
 import { AuthContext } from '../../../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import inventoryImageService from '../../../../services/InventoryImageService';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -45,6 +47,10 @@ const MarketplacePage = () => {
     sortOrder: 'desc'
   });
   const [filterTimeout, setFilterTimeout] = useState(null);
+  const [error, setError] = useState(null);
+  const [showListingModal, setShowListingModal] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [showFilters, setShowFilters] = useState(false);
 
   // Открываем модальное окно если пришли из профиля с ID предмета
   useEffect(() => {
@@ -77,13 +83,19 @@ const MarketplacePage = () => {
     queryParams.append('sort_order', currentFilters.sortOrder);
 
     try {
-      const response = await fetch(`/api/marketplace/listings${queryParams.toString() ? `?${queryParams.toString()}` : ''}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setListings(data.listings);
+      const response = await axios.get(`/api/marketplace/listings?${queryParams.toString()}`);
+      if (response.data.success) {
+        setListings(response.data.listings);
+        
+        // Предзагружаем изображения для всех листингов
+        if (response.data.listings && response.data.listings.length > 0) {
+          const imageItems = response.data.listings.map(listing => ({
+            item_id: listing.item.id
+          }));
+          await inventoryImageService.checkImagesBatch(imageItems);
+        }
       } else {
-        enqueueSnackbar(data.message || 'Failed to load marketplace items', { variant: 'error' });
+        enqueueSnackbar(response.data.message || 'Failed to load marketplace items', { variant: 'error' });
       }
     } catch (err) {
       console.error('Error fetching marketplace listings:', err);
@@ -94,19 +106,26 @@ const MarketplacePage = () => {
   }, [enqueueSnackbar]);
 
   // Fetch available packs for filter
-  useEffect(() => {
-    fetch('/api/inventory/packs')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setPacks(data.packs);
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching packs:', err);
-        enqueueSnackbar('Failed to load packs', { variant: 'error' });
-      });
-  }, [enqueueSnackbar]);
+  const fetchPacks = async () => {
+    try {
+      const response = await axios.get('/api/inventory/packs');
+      if (response.data.success) {
+        setPacks(response.data.packs);
+      }
+    } catch (error) {
+      console.error('Error fetching packs:', error);
+    }
+  };
+
+  // Добавляем функцию для получения баллов пользователя
+  const fetchUserPoints = async () => {
+    try {
+      const response = await axios.get('/api/user/points');
+      setUserPoints(response.data.points);
+    } catch (error) {
+      console.error('Error fetching user points:', error);
+    }
+  };
 
   // Fetch marketplace listings with filters and debouncing
   useEffect(() => {
@@ -209,6 +228,12 @@ const MarketplacePage = () => {
     setSelectedItem(null);
     fetchListings(filters);
   };
+
+  useEffect(() => {
+    fetchPacks();
+    fetchUserPoints();
+    fetchListings(filters);
+  }, []);
 
   return (
     <StyledContainer>

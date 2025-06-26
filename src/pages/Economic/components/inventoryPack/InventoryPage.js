@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { 
   Box, 
   Grid, 
@@ -17,10 +17,13 @@ import {
   Alert,
   Avatar,
   InputAdornment,
-  Snackbar
+  Snackbar,
+  Tabs,
+  Tab,
+  Badge
 } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Diamond as DiamondIcon,
   Star as StarIcon,
@@ -28,7 +31,12 @@ import {
   RadioButtonUnchecked as UnequippedIcon,
   Send as SendIcon,
   Close as CloseIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Upgrade as UpgradeIcon,
+  ShoppingCart as ShoppingCartIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  CompareArrows as CompareArrowsIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
@@ -44,6 +52,7 @@ import {
   getFallbackColor,
   useUpgradeEffects
 } from './upgradeEffectsConfig';
+import inventoryImageService from '../../../../services/InventoryImageService';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -166,20 +175,28 @@ const KBallsIcon = styled('img')({
   marginRight: '4px',
 });
 
-const InventoryPage = () => {
-  const [inventory, setInventory] = useState([]);
+const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState(0);
-  const [userPoints, setUserPoints] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [itemInfoModalOpen, setItemInfoModalOpen] = useState(false);
+  const [showItemInfo, setShowItemInfo] = useState(false);
+  const [externalItem, setExternalItem] = useState(null);
+  const [externalLoading, setExternalLoading] = useState(false);
+  const [externalError, setExternalError] = useState('');
+  const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+  const [recipientUsername, setRecipientUsername] = useState('');
+  const [transferring, setTransferring] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const [showEquipped, setShowEquipped] = useState(true);
+  const { user } = useAuth();
   const [notification, setNotification] = useState({
     open: false,
     message: '',
     severity: 'success' // 'success', 'error', 'warning', 'info'
   });
-  const { user } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -188,20 +205,51 @@ const InventoryPage = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (itemIdToOpen) {
+      // Сначала ищем в инвентаре
+      const found = items.find(i => String(i.id) === String(itemIdToOpen));
+      if (found) {
+        setSelectedItem(found);
+        setShowItemInfo(true);
+        setExternalItem(null);
+        setExternalError('');
+      } else {
+        // Если нет — грузим отдельно
+        setExternalLoading(true);
+        setExternalError('');
+        setShowItemInfo(true);
+        setSelectedItem(null);
+        fetch(`/api/inventory/item/${itemIdToOpen}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.item) {
+              setExternalItem(data.item);
+            } else {
+              setExternalError('Не удалось получить предмет');
+            }
+          })
+          .catch(() => setExternalError('Ошибка при получении предмета'))
+          .finally(() => setExternalLoading(false));
+      }
+    }
+  }, [itemIdToOpen, items]);
+
   const fetchInventory = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/inventory/my-inventory');
-      const data = await response.json();
-      
-      if (data.success) {
-        setInventory(data.items);
-      } else {
-        setError('Ошибка загрузки инвентаря');
+      const response = await axios.get('/api/inventory/my-inventory');
+      if (response.data.success) {
+        setItems(response.data.items);
+        
+        // Предзагружаем изображения для всех предметов
+        if (response.data.items && response.data.items.length > 0) {
+          await inventoryImageService.preloadInventoryImages(response.data.items);
+        }
       }
-    } catch (err) {
-      setError('Ошибка сети');
-      console.error('Error fetching inventory:', err);
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      setError('Ошибка при загрузке инвентаря');
     } finally {
       setLoading(false);
     }
@@ -262,11 +310,11 @@ const InventoryPage = () => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    setItemInfoModalOpen(true);
+    setShowItemInfo(true);
   };
 
   const handleCloseItemInfoModal = () => {
-    setItemInfoModalOpen(false);
+    setShowItemInfo(false);
     setSelectedItem(null);
   };
 
@@ -320,23 +368,23 @@ const InventoryPage = () => {
   };
 
   const filteredItems = activeTab === 0 
-    ? inventory 
+    ? items 
     : activeTab === 1 
-    ? inventory.filter(item => item.is_equipped)
-    : inventory.filter(item => !item.is_equipped);
+    ? items.filter(item => item.is_equipped)
+    : items.filter(item => !item.is_equipped);
 
   const tabs = [
     {
       value: 0,
-      label: `Все (${inventory.length})`
+      label: `Все (${items.length})`
     },
     {
       value: 1,
-      label: `Надетые (${inventory.filter(item => item.is_equipped).length})`
+      label: `Надетые (${items.filter(item => item.is_equipped).length})`
     },
     {
       value: 2,
-      label: `Не надетые (${inventory.filter(item => !item.is_equipped).length})`
+      label: `Не надетые (${items.filter(item => !item.is_equipped).length})`
     }
   ];
 
@@ -351,6 +399,77 @@ const InventoryPage = () => {
   const handleCloseNotification = () => {
     setNotification(prev => ({ ...prev, open: false }));
   };
+
+  const handleUpgradeItem = async (item) => {
+    if (!item.upgradeable || item.upgrade_level >= 1) {
+      return;
+    }
+
+    try {
+      setUpgrading(true);
+      const response = await axios.post(`/api/inventory/upgrade/${item.id}`);
+      
+      if (response.data.success) {
+        setUserPoints(response.data.remaining_points);
+        // Обновляем предмет в списке
+        setItems(prevItems => 
+          prevItems.map(i => 
+            i.id === item.id 
+              ? { ...i, upgrade_level: response.data.upgrade_level }
+              : i
+          )
+        );
+        alert(`Предмет "${item.item_name}" успешно улучшен!`);
+      } else {
+        alert(response.data.message || 'Ошибка улучшения предмета');
+      }
+    } catch (error) {
+      console.error('Error upgrading item:', error);
+      alert('Ошибка при улучшении предмета');
+    } finally {
+      setUpgrading(false);
+    }
+  };
+
+  const handleTransferItem = async () => {
+    if (!selectedItem || !recipientUsername.trim()) {
+      return;
+    }
+
+    try {
+      setTransferring(true);
+      const response = await axios.post(`/api/inventory/transfer/${selectedItem.id}`, {
+        recipient_username: recipientUsername.trim()
+      });
+      
+      if (response.data.success) {
+        setUserPoints(response.data.remaining_points);
+        // Удаляем предмет из списка
+        setItems(prevItems => prevItems.filter(i => i.id !== selectedItem.id));
+        setTransferDialogOpen(false);
+        setRecipientUsername('');
+        setSelectedItem(null);
+        alert(`Предмет "${selectedItem.item_name}" успешно передан!`);
+      } else {
+        alert(response.data.message || 'Ошибка передачи предмета');
+      }
+    } catch (error) {
+      console.error('Error transferring item:', error);
+      alert('Ошибка при передаче предмета');
+    } finally {
+      setTransferring(false);
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    openItemModalById: (id) => {
+      const item = items.find(i => String(i.id) === String(id));
+      if (item) {
+        setSelectedItem(item);
+        setShowItemInfo(true);
+      }
+    }
+  }));
 
   if (!user) {
     return (
@@ -556,9 +675,12 @@ const InventoryPage = () => {
 
       {/* Модальное окно информации о предмете */}
       <ItemInfoModal
-        open={itemInfoModalOpen}
-        onClose={handleCloseItemInfoModal}
-        item={selectedItem}
+        open={showItemInfo}
+        onClose={() => setShowItemInfo(false)}
+        item={selectedItem || externalItem}
+        loading={externalLoading}
+        error={externalError}
+        readOnly={!!externalItem}
         userPoints={userPoints}
         onItemUpdate={handleItemUpdate}
         onTransferSuccess={handleTransferSuccess}
@@ -602,7 +724,7 @@ const InventoryPage = () => {
       </Snackbar>
     </StyledContainer>
   );
-};
+});
 
 const UpgradeEffects = ({ item, children }) => {
   const { dominantColor, isUpgraded } = useUpgradeEffects(item);
@@ -637,4 +759,4 @@ const UpgradeEffects = ({ item, children }) => {
   );
 };
 
-export default InventoryPage; 
+export default InventoryTab; 

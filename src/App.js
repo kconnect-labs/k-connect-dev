@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTransition, useRef, useCallback } from 'react';
-import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ProfileService from './services/ProfileService'; 
@@ -506,6 +506,7 @@ const AppRoutes = () => {
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
           <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="/grant" element={isAuthenticated ? <GrantsPage /> : <Navigate to="/login" replace />} />
+          <Route path="/item/:itemId" element={<ItemRedirectPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (
@@ -1654,3 +1655,28 @@ const saveThemeSettings = (key, value) => {
     console.error(`Error saving theme setting ${key}:`, error);
   }
 };
+
+// Компонент для редиректа с /item/:itemId
+function ItemRedirectPage() {
+  const { itemId } = useParams();
+  const navigate = useNavigate();
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!itemId) return;
+    axios.get(`/api/inventory/item/${itemId}`)
+      .then(res => {
+        if (res.data && res.data.success && res.data.item && res.data.item.user && res.data.item.user.username) {
+          navigate(`/profile/${res.data.item.user.username}?item=${itemId}`, { replace: true });
+        } else {
+          setError('Владелец предмета не найден');
+        }
+      })
+      .catch(() => setError('Ошибка при получении информации о предмете'));
+  }, [itemId, navigate]);
+
+  if (error) {
+    return <div style={{textAlign:'center',marginTop:40}}><h2>Ошибка</h2><p>{error}</p></div>;
+  }
+  return <div style={{textAlign:'center',marginTop:40}}><h2>Загрузка...</h2></div>;
+}

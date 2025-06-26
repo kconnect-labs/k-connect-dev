@@ -496,7 +496,7 @@
       }
     },
     "footer": {
-      "version": "К-Коннект v2.8",
+      "version": "К-Коннект v2.9",
       "copyright": "Правообладателям",
       "email": "verif@k-connect.ru"
     }
@@ -923,7 +923,7 @@
       }
     },
     "footer": {
-      "version": "К-Коннект v2.8",
+      "version": "К-Коннект v2.9",
       "email": "verif@k-connect.ru"
     }
   }

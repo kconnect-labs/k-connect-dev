@@ -27,7 +27,8 @@ import {
   Diamond as DiamondIcon,
   Star as StarIcon,
   Store as StoreIcon,
-  RemoveShoppingCart as RemoveFromMarketIcon
+  RemoveShoppingCart as RemoveFromMarketIcon,
+  ContentCopy as ContentCopyIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import {
@@ -213,6 +214,7 @@ const ItemInfoModal = ({
   const [marketplaceModalOpen, setMarketplaceModalOpen] = useState(false);
   const [price, setPrice] = useState('');
   const [marketplaceLoading, setMarketplaceLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
 
   useEffect(() => {
     if (!open) {
@@ -493,6 +495,14 @@ const ItemInfoModal = ({
     }
   };
 
+  const handleCopyLink = () => {
+    const url = `http://k-connect.ru/item/${item.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyStatus('Скопировано!');
+      setTimeout(() => setCopyStatus(''), 1500);
+    });
+  };
+
   if (!item) return null;
 
   return (
@@ -569,6 +579,18 @@ const ItemInfoModal = ({
                     Экземпляр: {item.item_number} из {item.total_count}
                   </Typography>
                 )}
+              </Box>
+
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+                <Button
+                  size="small"
+                  variant="text"
+                  startIcon={<ContentCopyIcon fontSize="small" />}
+                  onClick={handleCopyLink}
+                  sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
+                >
+                  {copyStatus || 'Скопировать'}
+                </Button>
               </Box>
             </Box>
           </DialogContent>

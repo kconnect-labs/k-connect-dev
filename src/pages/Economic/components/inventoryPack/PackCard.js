@@ -17,6 +17,7 @@ import {
   Lock as LockIcon,
   Percent as PercentIcon
 } from '@mui/icons-material';
+import OptimizedImage from '../../../../components/OptimizedImage';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
@@ -151,9 +152,26 @@ const DiscountChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
+const ItemPreview = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'rgba(0, 0, 0, 0.5)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '16px 16px 0 0',
+  zIndex: 3,
+}));
+
 const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const [packContents, setPackContents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showItems, setShowItems] = useState(false);
+  const [items, setItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(false);
 
   useEffect(() => {
     fetchPackContents();
@@ -185,6 +203,12 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   };
 
   const handleCardClick = () => {
+    if (onPackClick) {
+      onPackClick(pack, packContents);
+    }
+  };
+
+  const handleViewDetails = () => {
     if (onPackClick) {
       onPackClick(pack, packContents);
     }
@@ -244,160 +268,156 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const isSoldOut = pack.is_limited && (pack.max_quantity - pack.sold_quantity <= 0);
 
   return (
-    <StyledCard onClick={handleCardClick} sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      {/* Все по 1000 */}
-      {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-        <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
-        <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
-      </Box> */}
-      <PackImage>
-        <ItemContainer>
-          {sideItems[0] && (
-            <SideItem>
-              <Tooltip title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}>
-                <ItemImage 
-                  src={`/inventory/pack/${pack.id}/${sideItems[0].item_name}`}
-                  alt={sideItems[0].item_name}
-                  onError={(e) => {
-                    console.error(`Failed to load image: /inventory/pack/${pack.id}/${sideItems[0].item_name}`);
-                    e.target.style.display = 'none';
-                  }}
-                  onLoad={() => {
-                    console.log(`Successfully loaded image: /inventory/pack/${pack.id}/${sideItems[0].item_name}`);
-                  }}
-                />
-              </Tooltip>
-            </SideItem>
-          )}
-          
-          <MainItem>
-            {mainItem ? (
-              <Tooltip title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}>
-                <ItemImage 
-                  src={`/inventory/pack/${pack.id}/${mainItem.item_name}`}
-                  alt={mainItem.item_name}
-                  onError={(e) => {
-                    console.error(`Failed to load image: /inventory/pack/${pack.id}/${mainItem.item_name}`);
-                    e.target.style.display = 'none';
-                  }}
-                  onLoad={() => {
-                    console.log(`Successfully loaded image: /inventory/pack/${pack.id}/${mainItem.item_name}`);
-                  }}
-                />
-              </Tooltip>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                ???
-              </Typography>
-            )}
-          </MainItem>
-          
-          {sideItems[1] && (
-            <SideItem>
-              <Tooltip title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}>
-                <ItemImage 
-                  src={`/inventory/pack/${pack.id}/${sideItems[1].item_name}`}
-                  alt={sideItems[1].item_name}
-                  onError={(e) => {
-                    console.error(`Failed to load image: /inventory/pack/${pack.id}/${sideItems[1].item_name}`);
-                    e.target.style.display = 'none';
-                  }}
-                  onLoad={() => {
-                    console.log(`Successfully loaded image: /inventory/pack/${pack.id}/${sideItems[1].item_name}`);
-                  }}
-                />
-              </Tooltip>
-            </SideItem>
-          )}
-        </ItemContainer>
-      </PackImage>
-
-      <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography 
-          variant="h6" 
-          component="h3" 
-          sx={{ 
-            fontWeight: 600, 
-            mb: 1,
-            textAlign: 'center'
-          }}
-        >
-          {pack.display_name}
-        </Typography>
-
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: 'text.secondary', 
-            mb: 2,
-            textAlign: 'center',
-            fontSize: '0.85rem',
-            flex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          {truncateDescription(pack.description)}
-        </Typography>
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap' }}>
-          <PriceChip 
-            icon={<DiamondIcon />}
-            label={`${pack.price} баллов`}
-          />
-          {pack.is_limited && (
-            <Chip 
-              icon={<LockIcon />}
-              label={`Осталось: ${pack.max_quantity - pack.sold_quantity}`}
-              sx={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'text.secondary',
-                fontSize: '0.75rem',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                '& .MuiChip-label': {
-                  padding: '2px 6px',
-                },
-              }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ y: -5 }}
+    >
+      <StyledCard onClick={handleViewDetails} sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+        {/* Все по 1000 */}
+        {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
+          <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
+        </Box> */}
+        <PackImage>
+          {pack.image_path ? (
+            <OptimizedImage
+              src={pack.image_path}
+              alt={pack.display_name}
+              width="100%"
+              height="100%"
+              fallbackText="Пак"
             />
-          )}
-        </Box>
-
-        <Button
-          variant="outlined"
-          fullWidth
-          disabled={disabled || loading || isSoldOut}
-          onClick={handleBuyClick}
-          sx={{
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            color: 'text.primary',
-            fontWeight: 500,
-            borderRadius: 1,
-            py: 1,
-            fontSize: '0.85rem',
-            textTransform: 'none',
-            '&:hover': {
-              borderColor: 'rgba(255, 255, 255, 0.4)',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            },
-            '&:disabled': {
-              borderColor: 'rgba(255, 255, 255, 0.1)',
-              color: 'text.secondary',
-            },
-          }}
-        >
-          {loading ? (
-            <CircularProgress size={16} />
-          ) : isSoldOut ? (
-            'Закончился'
-          ) : disabled ? (
-            'Недостаточно баллов'
           ) : (
-            'Купить'
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              alignItems: 'center', 
+              gap: 1 
+            }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                📦
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+                {pack.display_name}
+              </Typography>
+            </Box>
           )}
-        </Button>
-      </CardContent>
-    </StyledCard>
+          
+          {/* Показываем предметы при наведении */}
+          {showItems && packContents.length > 0 && (
+            <ItemPreview>
+              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
+                {packContents.slice(0, 6).map((item, index) => (
+                  <Box key={index} sx={{ width: 30, height: 30 }}>
+                    <OptimizedImage
+                      src={`/inventory/pack/${pack.id}/${item.item_name}`}
+                      alt={item.item_name}
+                      width="100%"
+                      height="100%"
+                      fallbackText=""
+                      showSkeleton={false}
+                    />
+                  </Box>
+                ))}
+                {packContents.length > 6 && (
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    +{packContents.length - 6}
+                  </Typography>
+                )}
+              </Box>
+            </ItemPreview>
+          )}
+        </PackImage>
+
+        <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Typography 
+            variant="h6" 
+            component="h3" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 1,
+              textAlign: 'center'
+            }}
+          >
+            {pack.display_name}
+          </Typography>
+
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: 'text.secondary', 
+              mb: 2,
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              flex: 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {truncateDescription(pack.description)}
+          </Typography>
+
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap' }}>
+            <PriceChip 
+              icon={<DiamondIcon />}
+              label={`${pack.price} баллов`}
+            />
+            {pack.is_limited && (
+              <Chip 
+                icon={<LockIcon />}
+                label={`Осталось: ${pack.max_quantity - pack.sold_quantity}`}
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  color: 'text.secondary',
+                  fontSize: '0.75rem',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  '& .MuiChip-label': {
+                    padding: '2px 6px',
+                  },
+                }}
+              />
+            )}
+          </Box>
+
+          <Button
+            variant="outlined"
+            fullWidth
+            disabled={disabled || loading || isSoldOut}
+            onClick={handleBuyClick}
+            sx={{
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: 'text.primary',
+              fontWeight: 500,
+              borderRadius: 1,
+              py: 1,
+              fontSize: '0.85rem',
+              textTransform: 'none',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              },
+              '&:disabled': {
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+                color: 'text.secondary',
+              },
+            }}
+          >
+            {loading ? (
+              <CircularProgress size={16} />
+            ) : isSoldOut ? (
+              'Закончился'
+            ) : disabled ? (
+              'Недостаточно баллов'
+            ) : (
+              'Купить'
+            )}
+          </Button>
+        </CardContent>
+      </StyledCard>
+    </motion.div>
   );
 };
 

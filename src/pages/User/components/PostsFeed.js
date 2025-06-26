@@ -17,12 +17,19 @@ const PostsFeed = ({ userId, statusColor }) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
+  const checkedPinnedPostsRef = useRef(new Set());
   const observer = useRef();
   
   const isMounted = useRef(true);
   const loadingRef = useRef(false);
   const { isAuthenticated } = useContext(AuthContext);
   const isProfilePage = window.location.pathname.includes('/profile/');
+
+  // username вычисляем один раз
+  const username = React.useMemo(() => {
+    const match = window.location.pathname.match(/\/profile\/([^/?#]+)/);
+    return match ? match[1] : null;
+  }, [window.location.pathname]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -33,39 +40,42 @@ const PostsFeed = ({ userId, statusColor }) => {
 
   const fetchPinnedPost = useCallback(async (username) => {
     if (!isProfilePage || !username) return null;
-    
+    if (checkedPinnedPostsRef.current.has(username)) {
+      return pinnedPost;
+    }
     try {
       const response = await axios.get(`/api/profile/pinned_post/${username}`);
       if (isMounted.current && response.data && response.data.id) {
         setPinnedPost(response.data);
+        checkedPinnedPostsRef.current.add(username);
         return response.data;
       }
       setPinnedPost(null);
+      checkedPinnedPostsRef.current.add(username);
       return null;
     } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setPinnedPost(null);
+        checkedPinnedPostsRef.current.add(username);
+        return null;
+      }
       console.error('Ошибка при загрузке закрепленного поста:', error);
       setPinnedPost(null);
+      checkedPinnedPostsRef.current.add(username);
       return null;
     }
   }, [isProfilePage]);
 
-  const fetchPosts = useCallback(async (pageNumber = 1, username = null) => {
+  // fetchPosts больше не вызывает fetchPinnedPost
+  const fetchPosts = useCallback(async (pageNumber = 1) => {
     if (loadingRef.current) return;
-    
     try {
       loadingRef.current = true;
-      
       if (pageNumber === 1) {
         setLoading(true);
       } else {
         setIsLoadingMore(true);
       }
-
-      // Если это страница профиля и первая загрузка, получаем закрепленный пост
-      if (isProfilePage && pageNumber === 1 && username) {
-        await fetchPinnedPost(username);
-      }
-
       const response = await axios.get(`/api/profile/${userId}/posts`, {
         params: { 
           page: pageNumber, 
@@ -73,12 +83,9 @@ const PostsFeed = ({ userId, statusColor }) => {
         },
         forceRefresh: true
       });
-
       if (!isMounted.current) return;
-
       if (response.data.posts && Array.isArray(response.data.posts)) {
         const newPosts = response.data.posts;
-        
         if (pageNumber === 1) {
           setPosts(newPosts);
         } else {
@@ -87,7 +94,6 @@ const PostsFeed = ({ userId, statusColor }) => {
             return [...prevArray, ...newPosts];
           });
         }
-
         setHasMore(response.data.has_next);
       } else {
         if (pageNumber === 1) {
@@ -111,38 +117,14 @@ const PostsFeed = ({ userId, statusColor }) => {
         loadingRef.current = false;
       }
     }
-  }, [userId, isProfilePage, fetchPinnedPost, t]);
+  }, [userId, t]);
 
-  // Add effect to handle pin state changes
+  // useEffect для pinnedPost (только один раз на username)
   useEffect(() => {
-    const handlePinStateChanged = async (event) => {
-      const { postId, isPinned } = event.detail;
-      
-      if (isPinned) {
-        // Находим пост для закрепления
-        const postToPin = posts.find(p => p.id === postId);
-        if (postToPin) {
-          // Устанавливаем как закрепленный, но оставляем в основной ленте
-          setPinnedPost(postToPin);
-        }
-      } else {
-        // При откреплении просто убираем из закрепленных
-        if (pinnedPost && pinnedPost.id === postId) {
-          setPinnedPost(null);
-        }
-      }
-
-      // Обновляем данные с сервера для синхронизации
-      await fetchPinnedPost();
-      await fetchPosts(1);
-    };
-
-    window.addEventListener('post-pinned-state-changed', handlePinStateChanged);
-    
-    return () => {
-      window.removeEventListener('post-pinned-state-changed', handlePinStateChanged);
-    };
-  }, [fetchPinnedPost, fetchPosts, posts, pinnedPost]);
+    if (username) {
+      fetchPinnedPost(username);
+    }
+  }, [username, fetchPinnedPost]);
 
   useEffect(() => {
     if (userId) {
@@ -150,12 +132,9 @@ const PostsFeed = ({ userId, statusColor }) => {
       setPosts([]);
       setPinnedPost(null);
       setHasMore(true);
-      
-      // Получаем username из URL для запроса закрепленного поста
-      const username = window.location.pathname.split('/profile/')[1];
-      fetchPosts(1, username);
+      checkedPinnedPostsRef.current = new Set();
+      fetchPosts(1);
     }
-    
     return () => {
       if (observer.current) {
         observer.current.disconnect();

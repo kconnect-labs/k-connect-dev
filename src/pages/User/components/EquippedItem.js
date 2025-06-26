@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { keyframes } from '@mui/system';
+import OptimizedImage from '../../../components/OptimizedImage';
 
 const particleAnimation = (color) => keyframes`
   0% {
@@ -48,11 +49,10 @@ const EquippedItemContainer = styled(Box)(({ index }) => {
     };
 });
 
-const ItemImage = styled('img')({
+const ItemImage = styled(OptimizedImage)({
   width: '100%',
   height: '100%',
   objectFit: 'contain',
-  filter: 'drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.5))',
   position: 'relative',
   zIndex: 1,
 });
@@ -167,7 +167,21 @@ const EquippedItem = ({ item, index = 0 }) => {
   return (
     <EquippedItemContainer index={index}>
       {isUpgraded && <ParticlesContainer>{particles}</ParticlesContainer>}
-      <ItemImage ref={imgRef} src={item.image_url} alt={item.item_name} />
+      <ItemImage 
+        src={item.image_url} 
+        alt={item.item_name}
+        width="100%"
+        height="100%"
+        fallbackText=""
+        showSkeleton={false}
+        onLoad={(e) => {
+          if (e && e.target && e.target.complete) {
+            getAverageColor(e.target, (color) => {
+              setParticleColor(color);
+            });
+          }
+        }}
+      />
     </EquippedItemContainer>
   );
 };

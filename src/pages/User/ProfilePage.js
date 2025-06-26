@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useImperativeHandle, forwardRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 import PostService from '../../services/PostService';
@@ -62,6 +62,8 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 import { useLanguage } from '../../context/LanguageContext';
+import OptimizedImage from '../../components/OptimizedImage';
+import inventoryImageService from '../../services/InventoryImageService';
 import {
   GlowEffect,
   AnimatedSparkle,
@@ -71,6 +73,7 @@ import {
   getFallbackColor,
   useUpgradeEffects
 } from '../Economic/components/inventoryPack/upgradeEffectsConfig';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // Стилизованный компонент для выпадающих списков
 const StyledSelect = styled(TextField)(({ theme }) => ({
@@ -1317,41 +1320,91 @@ const UpgradeEffects = ({ item, children }) => {
   );
 };
 
-const InventoryTab = ({ userId }) => {
+const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   const [inventory, setInventory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [readOnlyItem, setReadOnlyItem] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [modalError, setModalError] = useState('');
   const navigate = useNavigate();
-  const [sortBy, setSortBy] = useState('name'); // name, rarity, pack, upgrade
+  const [sortBy, setSortBy] = useState('name');
   const [filterPack, setFilterPack] = useState('all');
   const [filterRarity, setFilterRarity] = useState('all');
   const [showUpgradedOnly, setShowUpgradedOnly] = useState(false);
+  const [showItemInfo, setShowItemInfo] = useState(false);
+  const [externalItem, setExternalItem] = useState(null);
+  const [externalLoading, setExternalLoading] = useState(false);
+  const [externalError, setExternalError] = useState('');
+  const [copyStatus, setCopyStatus] = useState('');
+
+  useImperativeHandle(ref, () => ({
+    openItemModalById: (id) => {
+      const item = inventory.find(i => String(i.id) === String(id));
+      if (item) {
+        setSelectedItem(item);
+        setModalOpen(true);
+      }
+    }
+  }));
 
   useEffect(() => {
     const fetchInventory = async () => {
       try {
         setLoading(true);
         const response = await axios.get(`/api/inventory/user/${userId}`);
-        console.log('Inventory response:', response.data); // Debug log
         if (response.data.success && Array.isArray(response.data.items)) {
           setInventory(response.data.items);
+          if (response.data.items && response.data.items.length > 0) {
+            await inventoryImageService.preloadInventoryImages(response.data.items);
+          }
         } else {
-          console.error('Invalid inventory data format:', response.data);
           setInventory([]);
         }
       } catch (error) {
-        console.error('Error fetching inventory:', error);
         setInventory([]);
       } finally {
         setLoading(false);
       }
     };
-
     if (userId) {
       fetchInventory();
     }
   }, [userId]);
+
+  useEffect(() => {
+    if (itemIdToOpen) {
+      setModalOpen(true);
+      setModalLoading(true);
+      setModalError('');
+      setReadOnlyItem(false);
+      // Проверяем, есть ли предмет в инвентаре
+      axios.get(`/api/inventory/user/${userId}`)
+        .then(res => {
+          const found = res.data.items?.find(i => String(i.id) === String(itemIdToOpen));
+          if (found) {
+            setSelectedItem(found);
+            setReadOnlyItem(false);
+            setModalLoading(false);
+          } else {
+            // Если нет — грузим отдельно
+            axios.get(`/api/inventory/item/${itemIdToOpen}`)
+              .then(r => {
+                if (r.data.success && r.data.item) {
+                  setSelectedItem(r.data.item);
+                  setReadOnlyItem(true);
+                } else {
+                  setModalError('Не удалось получить предмет');
+                }
+              })
+              .catch(() => setModalError('Ошибка при получении предмета'))
+              .finally(() => setModalLoading(false));
+          }
+        })
+        .catch(() => setModalError('Ошибка при получении инвентаря'));
+    }
+  }, [itemIdToOpen, userId]);
 
   const getRarityColor = (rarity) => {
     switch (rarity) {
@@ -1383,12 +1436,16 @@ const InventoryTab = ({ userId }) => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
+    setReadOnlyItem(false);
     setModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedItem(null);
+    setReadOnlyItem(false);
+    setModalLoading(false);
+    setModalError('');
   };
 
   // Функции сортировки и фильтрации
@@ -1433,6 +1490,15 @@ const InventoryTab = ({ userId }) => {
   const getUniquePacks = () => {
     const packs = [...new Set(inventory.map(item => item.pack_name))];
     return packs.sort();
+  };
+
+  const handleCopyLink = () => {
+    if (!selectedItem) return;
+    const url = `${window.location.origin}/item/${selectedItem.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyStatus('Скопировано!');
+      setTimeout(() => setCopyStatus(''), 1500);
+    });
   };
 
   if (loading) {
@@ -1595,17 +1661,13 @@ const InventoryTab = ({ userId }) => {
                         position: 'relative',
                       }}
                     >
-                      <img
+                      <OptimizedImage
                         src={item.image_url}
                         alt={item.item_name}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
+                        width="100%"
+                        height="100%"
+                        fallbackText="Предмет недоступен"
+                        showSkeleton={true}
                       />
                       {item.marketplace && (
                         <Box
@@ -1719,6 +1781,158 @@ const InventoryTab = ({ userId }) => {
                 position: 'relative',
               }}
             >
+              {modalLoading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                  <CircularProgress />
+                </Box>
+              ) : modalError ? (
+                <Typography color="error" textAlign="center">{modalError}</Typography>
+              ) : (
+                <>
+                  <Box sx={{ textAlign: 'center', mb: 2 }}>
+                    <Box
+                      sx={{
+                        width: 200,
+                        height: 200,
+                        margin: '0 auto',
+                        borderRadius: 2,
+                        background: 'rgba(208, 188, 255, 0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 2,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <OptimizedImage
+                        src={selectedItem.image_url}
+                        alt={selectedItem.item_name}
+                        width="100%"
+                        height="100%"
+                        fallbackText="Предмет недоступен"
+                        showSkeleton={true}
+                      />
+                    </Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                      {selectedItem.item_name}
+                    </Typography>
+                    <Chip
+                      label={getRarityLabel(selectedItem.rarity || 'common')}
+                      size="small"
+                      sx={{
+                        backgroundColor: `${getRarityColor(selectedItem.rarity || 'common')}20`,
+                        color: getRarityColor(selectedItem.rarity || 'common'),
+                        fontWeight: 'bold',
+                        mb: 2,
+                      }}
+                    />
+                  </Box>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <strong>ID предмета:</strong> {selectedItem.id}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <strong>Пак:</strong> {selectedItem.pack_name || 'Неизвестно'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <strong>Получен:</strong> {selectedItem.obtained_at ? new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU') : '-'}
+                    </Typography>
+                    {selectedItem.gifter_username && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        <strong>Подарен:</strong> @{selectedItem.gifter_username}
+                      </Typography>
+                    )}
+                    {typeof selectedItem.item_number !== 'undefined' && selectedItem.total_count && (
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                        <strong>Экземпляр:</strong> {selectedItem.item_number} из {selectedItem.total_count}
+                      </Typography>
+                    )}
+                    {selectedItem.is_equipped && (
+                      <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
+                        ✓ Надет
+                      </Typography>
+                    )}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+                      <Button
+                        size="small"
+                        variant="text"
+                        startIcon={<ContentCopyIcon fontSize="small" />}
+                        onClick={handleCopyLink}
+                        sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
+                      >
+                        {copyStatus || 'Скопировать'}
+                      </Button>
+                    </Box>
+                    {selectedItem.marketplace && (
+                      <Box sx={{ mt: 2 }}>
+                        <Typography variant="body2" color="warning.main" sx={{ fontWeight: 600, mb: 1 }}>
+                          Выставлен на продажу за {selectedItem.marketplace.price} KBalls
+                        </Typography>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={() => {
+                            handleCloseModal();
+                            navigate('/marketplace', {
+                              state: { openItemId: selectedItem.marketplace.id }
+                            });
+                          }}
+                          sx={{
+                            mt: 1,
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            '&:hover': {
+                              background: 'rgba(255, 255, 255, 0.2)',
+                            }
+                          }}
+                        >
+                          Перейти в маркет
+                        </Button>
+                      </Box>
+                    )}
+                  </Box>
+                  {readOnlyItem && (
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 2 }}>
+                      Только просмотр (не ваш предмет)
+                    </Typography>
+                  )}
+                </>
+              )}
+            </Box>
+          </UpgradeEffects>
+        </Box>
+      )}
+
+      {showItemInfo && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+          onClick={handleCloseModal}
+        >
+          <UpgradeEffects item={selectedItem || externalItem}>
+            <Box
+              onClick={(e) => e.stopPropagation()}
+              sx={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 2,
+                p: 3,
+                width: 400,
+                height: 550,
+                overflow: 'auto',
+                position: 'relative',
+              }}
+            >
               <Box sx={{ textAlign: 'center', mb: 2 }}>
                 <Box
                   sx={{
@@ -1734,14 +1948,13 @@ const InventoryTab = ({ userId }) => {
                     overflow: 'hidden',
                   }}
                 >
-                  <img
+                  <OptimizedImage
                     src={selectedItem.image_url}
                     alt={selectedItem.item_name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
+                    width="100%"
+                    height="100%"
+                    fallbackText="Предмет недоступен"
+                    showSkeleton={true}
                   />
                 </Box>
                 
@@ -1769,7 +1982,7 @@ const InventoryTab = ({ userId }) => {
                   <strong>Пак:</strong> {selectedItem.pack_name || 'Неизвестно'}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  <strong>Получен:</strong> {new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU')}
+                  <strong>Получен:</strong> {selectedItem.obtained_at ? new Date(selectedItem.obtained_at).toLocaleDateString('ru-RU') : '-'}
                 </Typography>
                 {selectedItem.gifter_username && (
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -1820,7 +2033,7 @@ const InventoryTab = ({ userId }) => {
 
     </>
   );
-};
+});
 
 const ProfilePage = () => {
   const { t } = useLanguage();
@@ -2305,6 +2518,15 @@ const ProfilePage = () => {
     };
     fetchEquippedItems();
   }, [user]);
+
+  const [searchParams] = useSearchParams();
+  const itemIdToOpen = searchParams.get('item');
+
+  useEffect(() => {
+    if (itemIdToOpen) {
+      setTabValue(2);
+    }
+  }, [itemIdToOpen]);
 
   if (loading) {
     return (
@@ -3446,7 +3668,7 @@ const ProfilePage = () => {
           
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
             <UpgradeEffects item={user}>
-              <InventoryTab userId={user?.id} />
+              <InventoryTab userId={user?.id} itemIdToOpen={itemIdToOpen} />
             </UpgradeEffects>
           </TabPanel>
           

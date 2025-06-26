@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import './utils/ensure-global-functions';
 import './utils/createSvgIcon';
+import './utils/consoleFilter';
 
 import indexedDbCache from './utils/indexedDbCache';
 
