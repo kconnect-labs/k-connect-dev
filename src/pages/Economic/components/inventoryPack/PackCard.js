@@ -66,8 +66,8 @@ const ItemContainer = styled(Box)(({ theme }) => ({
 }));
 
 const MainItem = styled(Box)(({ theme }) => ({
-  width: 80,
-  height: 80,
+  width: 100,
+  height: 100,
   borderRadius: 12,
   background: 'rgba(208, 188, 255, 0.1)',
   display: 'flex',
@@ -76,15 +76,37 @@ const MainItem = styled(Box)(({ theme }) => ({
   border: '2px solid rgba(208, 188, 255, 0.3)',
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
   transition: 'all 0.3s ease',
+  position: 'relative',
   '&:hover': {
     transform: 'scale(1.1)',
     border: '2px solid rgba(208, 188, 255, 0.5)',
   },
+  '& img': {
+    width: '75%',
+    height: '75%',
+    objectFit: 'contain',
+    borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
+  },
 }));
 
 const SideItem = styled(Box)(({ theme }) => ({
-  width: 50,
-  height: 50,
+  width: 62.5,
+  height: 62.5,
   borderRadius: 8,
   background: 'rgba(208, 188, 255, 0.08)',
   display: 'flex',
@@ -93,9 +115,31 @@ const SideItem = styled(Box)(({ theme }) => ({
   border: '1px solid rgba(208, 188, 255, 0.2)',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
   transition: 'all 0.3s ease',
+  position: 'relative',
   '&:hover': {
     transform: 'scale(1.05)',
     border: '1px solid rgba(208, 188, 255, 0.4)',
+  },
+  '& img': {
+    width: '75%',
+    height: '75%',
+    objectFit: 'contain',
+    borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
   },
 }));
 
@@ -290,19 +334,42 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
               fallbackText="Пак"
             />
           ) : (
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              gap: 1 
-            }}>
-              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
-                📦
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                {pack.display_name}
-              </Typography>
-            </Box>
+            <ItemContainer>
+              {sideItems[0] && (
+                <SideItem>
+                  <Tooltip title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}>
+                    <ItemImage 
+                      src={`/inventory/pack/${pack.id}/${sideItems[0].item_name}`}
+                      alt={sideItems[0].item_name}
+                    />
+                  </Tooltip>
+                </SideItem>
+              )}
+              <MainItem>
+                {mainItem ? (
+                  <Tooltip title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}>
+                    <ItemImage 
+                      src={`/inventory/pack/${pack.id}/${mainItem.item_name}`}
+                      alt={mainItem.item_name}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    ???
+                  </Typography>
+                )}
+              </MainItem>
+              {sideItems[1] && (
+                <SideItem>
+                  <Tooltip title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}>
+                    <ItemImage 
+                      src={`/inventory/pack/${pack.id}/${sideItems[1].item_name}`}
+                      alt={sideItems[1].item_name}
+                    />
+                  </Tooltip>
+                </SideItem>
+              )}
+            </ItemContainer>
           )}
           
           {/* Показываем предметы при наведении */}
@@ -310,14 +377,41 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
             <ItemPreview>
               <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
                 {packContents.slice(0, 6).map((item, index) => (
-                  <Box key={index} sx={{ width: 30, height: 30 }}>
+                  <Box key={index} sx={{ 
+                    width: 37.5,
+                    height: 37.5,
+                    position: 'relative',
+                    borderRadius: 4,
+                    overflow: 'hidden',
+                    ...(item.background_url && {
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: `url(${item.background_url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        borderRadius: 'inherit',
+                        zIndex: 1,
+                      }
+                    })
+                  }}>
                     <OptimizedImage
                       src={`/inventory/pack/${pack.id}/${item.item_name}`}
                       alt={item.item_name}
-                      width="100%"
-                      height="100%"
+                      width="75%"
+                      height="75%"
                       fallbackText=""
                       showSkeleton={false}
+                      style={{
+                        position: 'relative',
+                        zIndex: 2,
+                        objectFit: 'contain'
+                      }}
                     />
                   </Box>
                 ))}

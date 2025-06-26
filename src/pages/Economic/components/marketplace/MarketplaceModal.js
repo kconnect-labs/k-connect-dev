@@ -226,60 +226,88 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
       <DialogContent sx={{ pt: 0 }}>
         <Box sx={{ mb: 3, textAlign: 'center' }}>
           <Box position="relative">
-            <ItemImage>
-              <img src={item?.image_url} alt={item?.item_name} />
-            </ItemImage>
-            <MarketPriceChip>
-              <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
-              {price}
-            </MarketPriceChip>
-          </Box>
-          
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
-            {item.item_name}
-          </Typography>
+            <Box sx={{
+              width: 250,
+              height: 250,
+              borderRadius: 3,
+              background: 'rgba(255, 255, 255, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              position: 'relative',
+              mb: 2,
+              margin: 'auto',
+              ...(item.background_url && {
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundImage: `url(${item.background_url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  borderRadius: 'inherit',
+                  zIndex: 1,
+                }
+              })
+            }}>
+              <img src={item.image_url} alt={item.item_name} style={{ width: '75%', height: '75%', objectFit: 'contain', borderRadius: 'inherit', position: 'relative', zIndex: 2, display: 'block', margin: 'auto' }} />
+              <MarketPriceChip>
+                <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                {price}
+              </MarketPriceChip>
+            </Box>
+            
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
+              {item.item_name}
+            </Typography>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
-            <RarityChip 
-              rarity={item.rarity} 
-              label={getRarityLabel(item.rarity)}
-              icon={getRarityIcon(item.rarity)}
-            />
-          </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
+              <RarityChip 
+                rarity={item.rarity} 
+                label={getRarityLabel(item.rarity)}
+                icon={getRarityIcon(item.rarity)}
+              />
+            </Box>
 
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-              <strong>ID предмета:</strong> {item.id}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-              <strong>Пак:</strong> {item.pack_name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-              <strong>Получен:</strong> {new Date(item.obtained_at).toLocaleDateString('ru-RU')}
-            </Typography>
-            {item.gifter_username && (
+            <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-                <strong>Подарен:</strong> @{item.gifter_username}
+                <strong>ID предмета:</strong> {item.id}
               </Typography>
-            )}
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-              <strong>Экземпляр:</strong> {item.item_number} из {item.total_count}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              <strong>Продавец:</strong> {seller_name}
-            </Typography>
-          </Box>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                <strong>Пак:</strong> {item.pack_name}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                <strong>Получен:</strong> {new Date(item.obtained_at).toLocaleDateString('ru-RU')}
+              </Typography>
+              {item.gifter_username && (
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                  <strong>Подарен:</strong> @{item.gifter_username}
+                </Typography>
+              )}
+              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                <strong>Экземпляр:</strong> {item.item_number} из {item.total_count}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <strong>Продавец:</strong> {seller_name}
+              </Typography>
+            </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
-            <Button
-              size="small"
-              variant="text"
-              startIcon={<ContentCopyIcon fontSize="small" />}
-              onClick={handleCopyLink}
-              sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
-            >
-              {copyStatus || 'Скопировать'}
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+              <Button
+                size="small"
+                variant="text"
+                startIcon={<ContentCopyIcon fontSize="small" />}
+                onClick={handleCopyLink}
+                sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
+              >
+                {copyStatus || 'Скопировать'}
+              </Button>
+            </Box>
           </Box>
         </Box>
       </DialogContent>

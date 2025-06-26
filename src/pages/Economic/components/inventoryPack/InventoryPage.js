@@ -79,8 +79,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
-  width: 80,
-  height: 80,
+  width: 100,
+  height: 100,
   borderRadius: 12,
   background: 'rgba(255, 255, 255, 0.1)',
   display: 'flex',
@@ -90,11 +90,27 @@ const ItemImage = styled(Box)(({ theme }) => ({
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
   margin: '0 auto 16px',
   overflow: 'hidden',
+  position: 'relative',
   '& img': {
-    width: '100%',
-    height: '100%',
+    width: '75%',
+    height: '75%',
     objectFit: 'contain',
     borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
   },
 }));
 
@@ -606,10 +622,15 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                         </PriceBadge>
                       )}
                       <ItemImage sx={{ 
-                        width: 80, 
-                        height: 80, 
+                        width: 100, 
+                        height: 100, 
                         mb: 2,
-                        transition: 'all 0.3s ease'
+                        transition: 'all 0.3s ease',
+                        ...(item.background_url && {
+                          '&::before': {
+                            backgroundImage: `url(${item.background_url})`,
+                          }
+                        })
                       }}>
                         <img 
                           src={item.image_url}

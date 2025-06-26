@@ -1659,15 +1659,36 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                         mb: 0.5,
                         overflow: 'hidden',
                         position: 'relative',
+                        ...(item.background_url && {
+                          '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: `url(${item.background_url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            borderRadius: 'inherit',
+                            zIndex: 1,
+                          }
+                        })
                       }}
                     >
                       <OptimizedImage
                         src={item.image_url}
                         alt={item.item_name}
-                        width="100%"
-                        height="100%"
+                        width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
+                        height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
                         fallbackText="Предмет недоступен"
                         showSkeleton={true}
+                        style={{
+                          position: 'relative',
+                          zIndex: 2,
+                          objectFit: 'contain'
+                        }}
                       />
                       {item.marketplace && (
                         <Box
@@ -1792,8 +1813,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                   <Box sx={{ textAlign: 'center', mb: 2 }}>
                     <Box
                       sx={{
-                        width: 200,
-                        height: 200,
+                        width: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
+                        height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                         margin: '0 auto',
                         borderRadius: 2,
                         background: 'rgba(208, 188, 255, 0.1)',
@@ -1802,15 +1823,37 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                         justifyContent: 'center',
                         mb: 2,
                         overflow: 'hidden',
+                        position: 'relative', // Добавили для позиционирования фона
+                        ...(selectedItem.background_url && {
+                          '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: `url(${selectedItem.background_url})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            borderRadius: 'inherit',
+                            zIndex: 1,
+                          }
+                        })
                       }}
                     >
                       <OptimizedImage
                         src={selectedItem.image_url}
                         alt={selectedItem.item_name}
-                        width="100%"
-                        height="100%"
+                        width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
+                        height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
                         fallbackText="Предмет недоступен"
                         showSkeleton={true}
+                        style={{
+                          position: 'relative',
+                          zIndex: 2,
+                          objectFit: 'contain'
+                        }}
                       />
                     </Box>
                     <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
@@ -1936,8 +1979,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
               <Box sx={{ textAlign: 'center', mb: 2 }}>
                 <Box
                   sx={{
-                    width: 200,
-                    height: 200,
+                    width: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
+                    height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                     margin: '0 auto',
                     borderRadius: 2,
                     background: 'rgba(208, 188, 255, 0.1)',
@@ -1946,15 +1989,37 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                     justifyContent: 'center',
                     mb: 2,
                     overflow: 'hidden',
+                    position: 'relative', // Добавили для позиционирования фона
+                    ...(selectedItem.background_url && {
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: `url(${selectedItem.background_url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        borderRadius: 'inherit',
+                        zIndex: 1,
+                      }
+                    })
                   }}
                 >
                   <OptimizedImage
                     src={selectedItem.image_url}
                     alt={selectedItem.item_name}
-                    width="100%"
-                    height="100%"
+                    width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
+                    height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
                     fallbackText="Предмет недоступен"
                     showSkeleton={true}
+                    style={{
+                      position: 'relative',
+                      zIndex: 2,
+                      objectFit: 'contain'
+                    }}
                   />
                 </Box>
                 
