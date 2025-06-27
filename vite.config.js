@@ -71,6 +71,9 @@ export default defineConfig(({ mode }) => {
             title: 'K-Connect',
             description: 'K-Connect Social Network',
           },
+          tags: [
+            // Удалён тег script для push.js, теперь push через кастомный sw
+          ],
         },
       }),
       imagemin({
@@ -102,18 +105,92 @@ export default defineConfig(({ mode }) => {
           name: 'K-Connect',
           short_name: 'K-Connect',
           theme_color: '#ffffff',
+          background_color: '#ffffff',
+          display: 'standalone',
+          start_url: '/',
+          scope: '/',
           icons: [
+            // Светлая тема (по умолчанию)
             {
-              src: '/android-chrome-192x192.png',
+              src: '/icon-192.png',
               sizes: '192x192',
               type: 'image/png',
+              purpose: 'any maskable'
             },
             {
-              src: '/android-chrome-512x512.png',
+              src: '/icon-512.png',
               sizes: '512x512',
               type: 'image/png',
+              purpose: 'any maskable'
             },
+            // Тёмная тема
+            {
+              src: '/icon192d.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any maskable',
+              media: '(prefers-color-scheme: dark)'
+            },
+            {
+              src: '/icon-512d.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any maskable',
+              media: '(prefers-color-scheme: dark)'
+            },
+            // iOS иконки
+            {
+              src: '/icon-180.png',
+              sizes: '180x180',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/icon-180d.png',
+              sizes: '180x180',
+              type: 'image/png',
+              purpose: 'any',
+              media: '(prefers-color-scheme: dark)'
+            },
+            // Android иконки
+            {
+              src: '/icon-167.png',
+              sizes: '167x167',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/icon-167d.png',
+              sizes: '167x167',
+              type: 'image/png',
+              purpose: 'any',
+              media: '(prefers-color-scheme: dark)'
+            },
+            {
+              src: '/icon-152.png',
+              sizes: '152x152',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/icon-152d.png',
+              sizes: '152x152',
+              type: 'image/png',
+              purpose: 'any',
+              media: '(prefers-color-scheme: dark)'
+            }
           ],
+          // Динамические цвета для тем
+          theme_color_light: '#ffffff',
+          theme_color_dark: '#1a1a1a',
+          background_color_light: '#ffffff',
+          background_color_dark: '#1a1a1a'
+        },
+        strategies: 'injectManifest',
+        injectRegister: false,
+        injectManifest: {
+          swSrc: 'public/custom-sw.js',
+          swDest: 'custom-sw.js',
         },
       }),
     ].filter(Boolean),
@@ -223,13 +300,9 @@ export default defineConfig(({ mode }) => {
         '@emotion/styled',
         'lodash',
         'axios',
-        './src/pages/Info/PrivacyPolicyPage.js',
         './src/pages/Info/RulesPage.js',
-        './src/pages/Info/SimpleApiDocsPage.js',
-        './src/pages/Info/TermsOfServicePage.js',
         './src/pages/Main/ArtistPage.js',
         './src/pages/Main/ChannelsPage.js',
-        './src/pages/Main/EmptyChannelsPlaceholder.js',
         './src/pages/Main/LeaderboardPage.js',
         './src/pages/Main/MainPage.js',
         './src/pages/Main/MorePage.js',
@@ -239,13 +312,6 @@ export default defineConfig(({ mode }) => {
         './src/pages/Main/UpdatesPage.js',
         './src/pages/Messenger/JoinGroupChat.js',
         './src/pages/Messenger/MessengerPage.js',
-        './src/pages/MiniGames/BlackjackPage.js',
-        './src/pages/MiniGames/ClickerPage.js',
-        './src/pages/MiniGames/CupsGamePage.js',
-        './src/pages/MiniGames/LuckyNumberGame.js',
-        './src/pages/MiniGames/MiniGamesPage.js',
-        './src/pages/MiniGames/RouletteGame.js',
-        './src/pages/MiniGames/components/PlayingCard.js',
         './src/pages/User/ProfilePage.js',
         './src/pages/User/SettingsPage.js',
         './src/pages/User/components/PostsFeed.js',

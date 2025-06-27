@@ -447,15 +447,19 @@ const PackOpeningModal = ({ pack, onClose }) => {
                     onClick={onClose}
                     startIcon={<CelebrationIcon />}
                     sx={{
-                      background: 'linear-gradient(135deg, #d0bcff 0%, #9c64f2 100%)',
+                      background: '#fff',
                       color: '#1a1a1a',
                       fontWeight: 600,
                       borderRadius: 1,
                       px: 4,
                       py: 1.5,
                       fontSize: '1.1rem',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                      transition: 'all 0.2s',
                       '&:hover': {
-                        background: 'linear-gradient(135deg, #cabcfc 0%, #8a5ce8 100%)',
+                        background: '#f5f5f5',
+                        color: '#111',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.13)',
                       },
                     }}
                   >

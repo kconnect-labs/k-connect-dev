@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Alert } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Alert, DialogActions } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Close as CloseIcon, Diamond as DiamondIcon, Star as StarIcon, Lock as LockIcon } from '@mui/icons-material';
@@ -51,6 +51,8 @@ const InventoryPackPage = () => {
   const [purchases, setPurchases] = useState([]);
   const [showPurchases, setShowPurchases] = useState(false);
   const { user } = useAuth();
+  const [confirmPack, setConfirmPack] = useState(null);
+  const [openedPack, setOpenedPack] = useState(null);
 
   useEffect(() => {
     fetchPacks();
@@ -107,20 +109,8 @@ const InventoryPackPage = () => {
     }
   };
 
-  const handleBuyPack = async (pack) => {
-    if (!user) {
-      alert('Необходимо авторизоваться');
-      return;
-    }
-
-    if (userPoints < pack.price) {
-      alert('Недостаточно баллов');
-      return;
-    }
-
-    // Открываем модалку подтверждения
-    setSelectedPack(pack);
-    setShowPackDetails(true);
+  const handleBuyPack = (pack) => {
+    setConfirmPack(pack);
   };
 
   const handlePackOpened = () => {
@@ -305,10 +295,10 @@ const InventoryPackPage = () => {
       </Box>
 
       <AnimatePresence>
-        {openingPack && selectedPack && (
+        {openedPack && (
           <PackOpeningModal
-            pack={selectedPack}
-            onClose={handlePackOpened}
+            pack={openedPack}
+            onClose={() => setOpenedPack(null)}
           />
         )}
       </AnimatePresence>
@@ -513,6 +503,43 @@ const InventoryPackPage = () => {
             </>
           )}
         </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!confirmPack} onClose={() => setConfirmPack(null)}
+        PaperProps={{
+          sx: {
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '8px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          }
+        }}
+      >
+        <DialogTitle>Подтверждение покупки</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Купить пак <b>{confirmPack?.display_name}</b> за <b>{confirmPack?.price}</b> баллов?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmPack(null)}>Отмена</Button>
+          <Button
+            variant="contained"
+            onClick={async () => {
+              const res = await fetch(`/api/inventory/packs/${confirmPack.id}/buy`, { method: 'POST', credentials: 'include' });
+              const data = await res.json();
+              if (data.success) {
+                setOpenedPack({ ...confirmPack, purchase_id: data.purchase_id });
+              } else {
+                alert(data.message || 'Ошибка покупки');
+              }
+              setConfirmPack(null);
+            }}
+          >
+            Купить
+          </Button>
+        </DialogActions>
       </Dialog>
     </StyledContainer>
   );
