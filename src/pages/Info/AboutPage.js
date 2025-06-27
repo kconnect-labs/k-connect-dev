@@ -50,6 +50,8 @@ import StarIcon from '@mui/icons-material/Star';
 import ChatIcon from '@mui/icons-material/Chat';
 import BoxIcon from '@mui/icons-material/Inventory';
 import StoreIcon from '@mui/icons-material/Store';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
@@ -76,10 +78,11 @@ const FeatureCard = ({ icon, title, description, delay }) => {
           bgcolor: alpha(theme.palette.background.paper, 0.5),
           backdropFilter: 'blur(10px)',
           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
           transition: 'all 0.3s ease',
           '&:hover': {
             transform: 'translateY(-5px)',
-            boxShadow: `0 10px 20px ${alpha(theme.palette.primary.main, 0.2)}`,
+            boxShadow: '0 4px 16px 0 rgba(0,0,0,0.13)',
             borderColor: alpha(theme.palette.primary.main, 0.3),
           }
         }}
@@ -322,97 +325,319 @@ const TeamSection = ({ title, members }) => {
       >
         {members.map((member, index) => (
           <MotionGrid item xs={12} sm={6} md={4} key={index} variants={itemVariants}>
-            <Card 
-              sx={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                transition: 'all 0.3s ease',
-                '&:hover': {
-                  transform: 'translateY(-8px)',
-                  boxShadow: '0 12px 20px rgba(0, 0, 0, 0.15)',
-                }
-              }}
-              elevation={4}
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 * index }}
+              viewport={{ once: true }}
+              style={{ height: '100%' }}
             >
-              <Box 
+              <Card 
                 sx={{ 
-                  p: 4, 
-                  display: 'flex',
+                  height: '100%', 
+                  display: 'flex', 
                   flexDirection: 'column',
-                  alignItems: 'center',
-                  background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.15), rgba(242, 140, 154, 0.15))'
+                  borderRadius: '20px',
+                  overflow: 'hidden',
+                  background: `rgba(255,255,255,0.13)`,
+                  backdropFilter: 'blur(16px)',
+                  boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+                  border: `1.5px solid ${alpha(theme.palette.primary.main, 0.10)}`,
+                  transition: 'all 0.35s cubic-bezier(.4,2,.3,1)',
+                  '&:hover': {
+                    transform: 'translateY(-8px) scale(1.025)',
+                    boxShadow: '0 8px 24px 0 rgba(0,0,0,0.13)',
+                    borderColor: alpha(theme.palette.primary.main, 0.22),
+                  }
                 }}
+                elevation={0}
               >
-                <Avatar 
-                  src={member.avatar} 
-                  alt={member.name}
+                <Box 
                   sx={{ 
-                    width: 120, 
-                    height: 120, 
-                    mb: 2,
-                    border: '4px solid',
-                    borderColor: theme.palette.primary.main
-                  }} 
-                />
-                
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
-                  {member.name}
-                </Typography>
-                
-                <Typography 
-                  variant="subtitle1" 
-                  sx={{ 
-                    color: theme.palette.primary.main, 
-                    mb: 1 
+                    p: 4, 
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    background: 'none',
                   }}
                 >
-                  {member.role}
-                </Typography>
-
-                {member.telegram && (
-                  <Button
-                    component="a"
-                    href={member.telegram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={<TelegramIcon />}
-                    size="small"
-                    sx={{ 
-                      mt: 1,
-                      color: theme.palette.primary.main,
-                      '&:hover': {
-                        bgcolor: alpha(theme.palette.primary.main, 0.1)
-                      }
+                  <Box
+                    sx={{
+                      mb: 2,
+                      borderRadius: '50%',
+                      boxShadow: '0 2px 12px 0 rgba(80,40,180,0.10)',
+                      transition: 'box-shadow 0.3s',
                     }}
                   >
-                    Telegram
-                  </Button>
-                )}
-              </Box>
-              
-              <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                <Typography variant="body1">
-                  {member.description}
-                </Typography>
-                {member.username && (
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      mt: 2,
-                      color: theme.palette.text.secondary
-                    }}
-                  >
-                    {member.username}
+                    <Avatar 
+                      src={member.avatar} 
+                      alt={member.name}
+                      sx={{ 
+                        width: 110, 
+                        height: 110, 
+                        border: `3px solid ${alpha(theme.palette.primary.main, 0.7)}`,
+                        boxShadow: `0 2px 16px ${alpha(theme.palette.primary.main, 0.18)}`,
+                        background: '#fff',
+                      }} 
+                    />
+                  </Box>
+                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 0.5 }}>
+                    {member.name}
                   </Typography>
-                )}
-              </CardContent>
-            </Card>
+                  <Box sx={{ mb: 1 }}>
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'inline-block',
+                        px: 1.5,
+                        py: 0.5,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: theme.palette.primary.main,
+                        bgcolor: alpha(theme.palette.primary.main, 0.10),
+                        borderRadius: '8px',
+                        letterSpacing: 0.2,
+                        boxShadow: '0 1px 4px 0 rgba(120,80,255,0.06)',
+                      }}
+                    >
+                      {member.role}
+                    </Box>
+                  </Box>
+                  {member.telegram && (
+                    <Button
+                      component="a"
+                      href={member.telegram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      startIcon={<TelegramIcon />}
+                      size="small"
+                      variant="outlined"
+                      sx={{ 
+                        mt: 1,
+                        color: theme.palette.primary.main,
+                        borderColor: alpha(theme.palette.primary.main, 0.25),
+                        fontWeight: 500,
+                        borderRadius: '8px',
+                        px: 2,
+                        textTransform: 'none',
+                        background: 'rgba(255,255,255,0.10)',
+                        transition: 'all 0.2s',
+                        '&:hover': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.08),
+                          borderColor: theme.palette.primary.main,
+                          color: theme.palette.primary.main,
+                        }
+                      }}
+                    >
+                      Telegram
+                    </Button>
+                  )}
+                </Box>
+                <CardContent sx={{ flexGrow: 1, p: 3, textAlign: 'center' }}>
+                  <Typography variant="body1" sx={{ color: theme.palette.text.primary, fontSize: 16, fontWeight: 400 }}>
+                    {member.description}
+                  </Typography>
+                  {member.username && (
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        mt: 2,
+                        color: theme.palette.text.secondary
+                      }}
+                    >
+                      {member.username}
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
           </MotionGrid>
         ))}
       </MotionGrid>
+    </Box>
+  );
+};
+
+// Слайдер для презентации сайта
+const previewImages = [
+  {
+    src: 'https://k-connect.ru/static/preview/Feed.png',
+    alt: 'Лента',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/Profile.png',
+    alt: 'Профиль',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/Messenger.png',
+    alt: 'Мессенджер',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/BadgeShop.png',
+    alt: 'Магазин бейджей',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/Items.png',
+    alt: 'Айтемы',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/Friends.png',
+    alt: 'Друзья',
+  },
+  {
+    src: 'https://k-connect.ru/static/preview/Balance.png',
+    alt: 'Баланс',
+  },
+];
+
+const HeroSlider = () => {
+  const [index, setIndex] = React.useState(0);
+  const timeoutRef = React.useRef(null);
+  const theme = useTheme();
+
+  const nextSlide = React.useCallback(() => {
+    setIndex((prev) => (prev + 1) % previewImages.length);
+  }, []);
+  const prevSlide = React.useCallback(() => {
+    setIndex((prev) => (prev - 1 + previewImages.length) % previewImages.length);
+  }, []);
+
+  React.useEffect(() => {
+    timeoutRef.current = setTimeout(nextSlide, 3500);
+    return () => clearTimeout(timeoutRef.current);
+  }, [index, nextSlide]);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        width: { xs: '100%', sm: 500, md: 700 },
+        height: { xs: 220, sm: 320, md: 400 },
+        mx: 'auto',
+        my: 4,
+        borderRadius: '12px',
+        overflow: 'visible',
+        boxShadow: '0 8px 40px 0 rgba(80,40,180,0.18)',
+        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)}, ${alpha(theme.palette.background.paper, 0.7)})`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <motion.img
+        key={previewImages[index].src}
+        src={previewImages[index].src}
+        alt={previewImages[index].alt}
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 1.02 }}
+        transition={{ duration: 0.6 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          borderRadius: '12px',
+          boxShadow: '0 4px 32px rgba(80,40,180,0.10)',
+        }}
+      />
+      <IconButton
+        onClick={prevSlide}
+        sx={{
+          position: 'absolute',
+          left: { xs: -18, sm: -38, md: -48 },
+          top: '50%',
+          transform: 'translateY(-50%)',
+          bgcolor: alpha(theme.palette.background.paper, 0.85),
+          boxShadow: '0 0 16px 4px rgba(120,80,255,0.18)',
+          border: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+          width: 56,
+          height: 56,
+          zIndex: 2,
+          transition: 'all 0.2s',
+          '&:hover': {
+            bgcolor: alpha(theme.palette.primary.main, 0.18),
+            boxShadow: '0 0 32px 8px rgba(120,80,255,0.28)',
+            borderColor: theme.palette.primary.main,
+            transform: 'translateY(-50%) scale(1.08)',
+          },
+        }}
+        size="large"
+      >
+        <ChevronLeftIcon fontSize="large" />
+      </IconButton>
+      <IconButton
+        onClick={nextSlide}
+        sx={{
+          position: 'absolute',
+          right: { xs: -18, sm: -38, md: -48 },
+          top: '50%',
+          transform: 'translateY(-50%)',
+          bgcolor: alpha(theme.palette.background.paper, 0.85),
+          boxShadow: '0 0 16px 4px rgba(120,80,255,0.18)',
+          border: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
+          width: 56,
+          height: 56,
+          zIndex: 2,
+          transition: 'all 0.2s',
+          '&:hover': {
+            bgcolor: alpha(theme.palette.primary.main, 0.18),
+            boxShadow: '0 0 32px 8px rgba(120,80,255,0.28)',
+            borderColor: theme.palette.primary.main,
+            transform: 'translateY(-50%) scale(1.08)',
+          },
+        }}
+        size="large"
+      >
+        <ChevronRightIcon fontSize="large" />
+      </IconButton>
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 16,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: 1,
+        }}
+      >
+        {previewImages.map((img, i) => (
+          <Box
+            key={img.src}
+            sx={{
+              width: 12,
+              height: 12,
+              borderRadius: '50%',
+              bgcolor: i === index ? theme.palette.primary.main : alpha(theme.palette.primary.main, 0.25),
+              transition: 'all 0.3s',
+              cursor: 'pointer',
+              border: i === index ? `2px solid ${theme.palette.background.paper}` : 'none',
+            }}
+            onClick={() => setIndex(i)}
+          />
+        ))}
+      </Box>
+      <motion.div
+        key={previewImages[index].alt}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          position: 'absolute',
+          bottom: -38,
+          left: 'calc(50% + 120px)',
+          transform: 'translateX(-50%)',
+          background: alpha(theme.palette.background.paper, 0.85),
+          color: theme.palette.primary.main,
+          borderRadius: 12,
+          padding: '6px 18px',
+          fontWeight: 600,
+          fontSize: 18,
+          boxShadow: '0 2px 12px rgba(120,80,255,0.10)',
+          letterSpacing: 0.2,
+        }}
+      >
+        {previewImages[index].alt}
+      </motion.div>
     </Box>
   );
 };
@@ -645,7 +870,8 @@ const AboutPage = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.9)}, ${alpha(theme.palette.background.default, 0.95)})`,
+          background: `linear-gradient(120deg, #a18cd1 0%, #fbc2eb 100%)`,
+          animation: 'gradientBG 12s ease-in-out infinite',
           color: '#fff',
           textAlign: 'center',
           p: 3,
@@ -656,11 +882,18 @@ const AboutPage = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'radial-gradient(circle at center, rgba(208, 188, 255, 0.1) 0%, transparent 70%)',
+            background: 'radial-gradient(circle at 60% 40%, rgba(208, 188, 255, 0.18) 0%, transparent 70%)',
             pointerEvents: 'none',
           }
         }}
       >
+        <style>{`
+          @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
         <Container maxWidth="md">
           <MotionTypography
             variant="h1"
@@ -691,8 +924,11 @@ const AboutPage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            Социальная платформа нового поколения
+            Социальная платформа нового поколения 🚀
           </MotionTypography>
+          
+          {/* Слайдер с превью */}
+          <HeroSlider />
           
           <MotionBox
             initial={{ opacity: 0, scale: 0.8 }}
@@ -700,21 +936,28 @@ const AboutPage = () => {
             transition={{ duration: 0.5, delay: 0.8 }}
           >
             <Button 
-              variant="contained" 
+              variant="outlined"
               size="large"
-              sx={{ 
-                fontSize: '1.1rem', 
-                py: 1.5, 
+              sx={{
+                fontSize: '1.08rem',
+                py: 1.2,
                 px: 4,
-                borderRadius: '50px',
-                backgroundColor: theme.palette.primary.main,
-                boxShadow: '0 6px 20px rgba(0,0,0,0.3)',
-                '&:hover': { 
-                  transform: 'translateY(-3px)',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.4)',
-                  backgroundColor: theme.palette.primary.dark,
+                borderRadius: '32px',
+                background: 'rgba(255,255,255,0.08)',
+                color: '#fff',
+                border: '1.5px solid rgba(255,255,255,0.35)',
+                fontWeight: 500,
+                letterSpacing: 0.2,
+                boxShadow: 'none',
+                textTransform: 'none',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.18)',
+                  borderColor: '#fff',
+                  color: '#fff',
+                  boxShadow: '0 2px 12px 0 rgba(120,80,255,0.10)',
+                  transform: 'translateY(-2px) scale(1.03)',
                 },
-                transition: 'all 0.3s'
               }}
               onClick={() => scrollToNextSection(featuresRef)}
             >
@@ -727,13 +970,13 @@ const AboutPage = () => {
           sx={{
             position: 'absolute',
             bottom: 40,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            right: { xs: 16, sm: 40 },
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             cursor: 'pointer',
             opacity: 0.8,
+            zIndex: 10,
             '&:hover': {
               opacity: 1,
             }
@@ -747,7 +990,6 @@ const AboutPage = () => {
           <Typography variant="body2" sx={{ mb: 1 }}>
             {isMobile ? 'Свайп вниз' : 'Прокрути вниз'}
           </Typography>
-          
           {isMobile ? (
             <MotionBox
               animate={{ y: [0, 10, 0] }}
