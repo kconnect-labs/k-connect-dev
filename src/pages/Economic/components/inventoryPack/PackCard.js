@@ -28,11 +28,17 @@ const StyledCard = styled(Card)(({ theme }) => ({
   transition: 'all 0.3s ease',
   cursor: 'pointer',
   overflow: 'visible',
-  height: '480px',
+  height: 480,
+  minHeight: 480,
+  maxHeight: 480,
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'flex-start',
+  alignItems: 'stretch',
   '@media (max-width: 768px)': {
-    height: '420px',
+    height: 420,
+    minHeight: 420,
+    maxHeight: 420,
   }
 }));
 
@@ -425,14 +431,22 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
           )}
         </PackImage>
 
-        <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch' }}>
           <Typography 
             variant="h6" 
             component="h3" 
             sx={{ 
               fontWeight: 600, 
               mb: 1,
-              textAlign: 'center'
+              textAlign: 'center',
+              minHeight: 32,
+              maxHeight: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
           >
             {pack.display_name}
@@ -445,16 +459,21 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
               mb: 2,
               textAlign: 'center',
               fontSize: '0.85rem',
-              flex: 1,
+              flex: '0 0 40px',
+              minHeight: 40,
+              maxHeight: 40,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }}
           >
             {truncateDescription(pack.description)}
           </Typography>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap', minHeight: 36, maxHeight: 36 }}>
             <PriceChip 
               icon={<DiamondIcon />}
               label={`${pack.price} баллов`}
@@ -475,6 +494,8 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
               />
             )}
           </Box>
+
+          <Box sx={{ flex: 1 }} /> {/* Spacer to push button down */}
 
           <Button
             variant="outlined"
@@ -497,6 +518,9 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
                 borderColor: 'rgba(255, 255, 255, 0.1)',
                 color: 'text.secondary',
               },
+              minHeight: 40,
+              maxHeight: 40,
+              mt: 'auto',
             }}
           >
             {loading ? (

@@ -9,9 +9,6 @@ const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
   padding: theme.spacing(2, 1.5, 1.5),
   textAlign: 'center',
   position: 'relative',
-  background: theme.palette.mode === 'dark' 
-    ? `linear-gradient(180deg, transparent, ${theme.palette.background.paper}80)`
-    : `linear-gradient(180deg, transparent, ${theme.palette.grey[50]})`,
   borderRadius: theme.spacing(1, 1, 0, 0),
   '&::before': {
     content: '""',
@@ -20,7 +17,6 @@ const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
     left: '10%',
     right: '10%',
     height: '2px',
-    background: `linear-gradient(90deg, transparent, ${themecolor || theme.palette.primary.main}40, transparent)`,
     borderRadius: '1px',
   },
   '&::after': {
@@ -30,9 +26,6 @@ const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: theme.palette.mode === 'dark'
-      ? `linear-gradient(180deg, transparent 0%, ${theme.palette.background.paper}20 100%)`
-      : `linear-gradient(180deg, transparent 0%, ${theme.palette.grey[100]}20 100%)`,
     borderRadius: theme.spacing(1, 1, 0, 0),
     pointerEvents: 'none',
   },

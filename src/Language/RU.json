@@ -435,7 +435,7 @@
       "my_profile": "Мой профиль",
       "settings": "Настройки",
       "search": "Поиск",
-      "subscriptions": "Подписки",
+      "subscriptions": "Друзья",
       "channels": "Каналы",
       "rating": "Рейтинг",
       "create_channel": "Создать канал",
@@ -473,7 +473,7 @@
       "feed": "Лента",
       "messenger": "Мессенджер",
       "music": "Музыка",
-      "subscriptions": "Подписки",
+      "subscriptions": "Друзья",
       "channels": "Каналы",
       "search": "Поиск",
       "management": "Управление",
@@ -496,7 +496,7 @@
       }
     },
     "footer": {
-      "version": "К-Коннект v2.9",
+      "version": "К-Коннект",
       "copyright": "Правообладателям",
       "email": "verif@k-connect.ru"
     }

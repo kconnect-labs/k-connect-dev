@@ -3307,7 +3307,7 @@ const ProfilePage = () => {
                   
                   <Paper 
                     component={Link}
-                    to={`/profile/${user?.username}/followers`}
+                    to={`/friends/${user?.username}`}
                     sx={{ 
                       p: 1.5, 
                       borderRadius: 2, 
@@ -3350,7 +3350,7 @@ const ProfilePage = () => {
                   {(!user?.subscription || user.subscription.type !== 'channel') && (
                     <Paper 
                       component={Link}
-                      to={`/profile/${user?.username}/following`}
+                      to={`/friends/${user?.username}`}
                       sx={{ 
                         p: 1.5, 
                         borderRadius: 2, 
@@ -3436,7 +3436,7 @@ const ProfilePage = () => {
                                 <Tooltip title={t('profile.show_all_followers')}>
                                   <Avatar 
                                     component={Link}
-                                    to={`/profile/${user?.username}/followers`}
+                                    to={`/friends/${user?.username}`}
                                     sx={{ 
                                       width: 32, 
                                       height: 32, 
@@ -3521,7 +3521,7 @@ const ProfilePage = () => {
                                 <Tooltip title={t('profile.show_all_following')}>
                                   <Avatar 
                                     component={Link}
-                                    to={`/profile/${user?.username}/following`}
+                                    to={`/friends/${user?.username}`}
                                     sx={{ 
                                       width: 32, 
                                       height: 32, 
@@ -3752,81 +3752,79 @@ const ProfilePage = () => {
               <Grid container spacing={3}>
                 {/* Основная информация */}
                 <Grid item xs={12}>
-                  <Box sx={{ mb: 2 }}>
-                    {/* Коннект */}
-                    {user?.connect_info && user.connect_info.length > 0 && (
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        mb: 2,
-                        p: 2,
-                        borderRadius: 2,
-                        bgcolor: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
-                        border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)'
-                      }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Typography 
-                            component={Link} 
-                            to={`/profile/${user.username}`}
-                            sx={{ 
-                              color: 'text.primary',
-                              textDecoration: 'none',
-                              '&:hover': {
-                                textDecoration: 'underline'
-                              }
-                            }}
-                          >
-                            @{user.username}
-                          </Typography>
-                          <Typography sx={{ mx: 1, color: 'text.secondary' }}>
-                            •
-                          </Typography>
-                          <Typography sx={{ color: 'text.secondary' }}>
-                            {user.connect_info[0].days} {t('profile.days')}
-                          </Typography>
-                          <Typography sx={{ mx: 1, color: 'text.secondary' }}>
-                            •
-                          </Typography>
-                          <Typography 
-                            component={Link} 
-                            to={`/profile/${user.connect_info[0].username}`}
-                            sx={{ 
-                              color: 'text.primary',
-                              textDecoration: 'none',
-                              '&:hover': {
-                                textDecoration: 'underline'
-                              }
-                            }}
-                          >
-                            @{user.connect_info[0].username}
-                          </Typography>
-                        </Box>
+                  {/* Коннект */}
+                  {user?.connect_info && user.connect_info.length > 0 && (
+                    <Box sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      mb: 2,
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+                      border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)'
+                    }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography 
+                          component={Link} 
+                          to={`/profile/${user.username}`}
+                          sx={{ 
+                            color: 'text.primary',
+                            textDecoration: 'none',
+                            '&:hover': {
+                              textDecoration: 'underline'
+                            }
+                          }}
+                        >
+                          @{user.username}
+                        </Typography>
+                        <Typography sx={{ mx: 1, color: 'text.secondary' }}>
+                          •
+                        </Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>
+                          {user.connect_info[0].days} {t('profile.days')}
+                        </Typography>
+                        <Typography sx={{ mx: 1, color: 'text.secondary' }}>
+                          •
+                        </Typography>
+                        <Typography 
+                          component={Link} 
+                          to={`/profile/${user.connect_info[0].username}`}
+                          sx={{ 
+                            color: 'text.primary',
+                            textDecoration: 'none',
+                            '&:hover': {
+                              textDecoration: 'underline'
+                            }
+                          }}
+                        >
+                          @{user.connect_info[0].username}
+                        </Typography>
                       </Box>
-                    )}
+                    </Box>
+                  )}
 
-                    {/* Остальная информация */}
-                    {user?.about && (
-                      <Typography 
-                        variant="body2" 
-                        sx={{ 
-                          mt: 1,
-                          lineHeight: 1.5,
-                          color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary,
-                          p: 1.5,
-                          borderRadius: 2,
-                          background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
-                          backdropFilter: 'blur(10px)',
-                          border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
-                          overflowWrap: 'break-word',
-                          wordBreak: 'break-word',
-                          whiteSpace: 'normal'
-                        }}
-                      >
-                        {user.about}
-                      </Typography>
-                    )}
-                  </Box>
+                  {/* Остальная информация */}
+                  {user?.about && (
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        mt: 1,
+                        lineHeight: 1.5,
+                        color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary,
+                        p: 1.5,
+                        borderRadius: 2,
+                        background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
+                        backdropFilter: 'blur(10px)',
+                        border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
+                        overflowWrap: 'break-word',
+                        wordBreak: 'break-word',
+                        whiteSpace: 'normal'
+                      }}
+                    >
+                      {user.about}
+                    </Typography>
+                  )}
                 </Grid>
                 
                 {user?.location && (

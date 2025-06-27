@@ -126,8 +126,16 @@ const SidebarNavigation = memo(({
           <NavButton
             text={t('sidebar.navigation.subscriptions')}
             icon={icons.people}
-            path="/subscriptions"
-            active={isActive('/subscriptions')}
+            path={user && user.username ? `/friends/${user.username}` : '/friends'}
+            active={isActive(user && user.username ? `/friends/${user.username}` : '/friends')}
+            themeColor={primaryColor}
+            nested={true}
+          />
+          <NavButton
+            text="Гранты"
+            icon={icons.subscription}
+            path="/grant"
+            active={isActive('/grant')}
             themeColor={primaryColor}
             nested={true}
           />
@@ -152,7 +160,7 @@ const SidebarNavigation = memo(({
         </NestedList>
       </Collapse>
     </>
-  ), [icons, isActive, primaryColor, expandedSocial, toggleExpandSocial, t, isChannel]);
+  ), [icons, isActive, primaryColor, expandedSocial, toggleExpandSocial, t, isChannel, user]);
   
   const adminModMenu = useMemo(() => (
     (isAdmin || isModeratorUser) && (
@@ -218,8 +226,8 @@ const SidebarNavigation = memo(({
           <NavButton
             text="Маркетплейс"
             icon={icons.marketplace}
-            path="/economic/marketplace"
-            active={isActive('/economic/marketplace')}
+            path="/marketplace"
+            active={isActive('/marketplace')}
             themeColor={primaryColor}
             nested={true}
           />

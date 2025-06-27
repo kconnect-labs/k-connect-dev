@@ -107,6 +107,7 @@ const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
 const PlaylistsPage = lazy(() => import('./pages/MusicPage/PlaylistsPage'));
+const FriendsPage = lazy(() => import('./pages/User/FriendsPage'));
 
 
 export const ThemeSettingsContext = React.createContext({
@@ -507,6 +508,8 @@ const AppRoutes = () => {
           <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="/grant" element={isAuthenticated ? <GrantsPage /> : <Navigate to="/login" replace />} />
           <Route path="/item/:itemId" element={<ItemRedirectPage />} />
+          <Route path="/friends/:username" element={<FriendsPage />} />
+          <Route path="/friends" element={<FriendsRedirect />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (
@@ -1679,4 +1682,15 @@ function ItemRedirectPage() {
     return <div style={{textAlign:'center',marginTop:40}}><h2>Ошибка</h2><p>{error}</p></div>;
   }
   return <div style={{textAlign:'center',marginTop:40}}><h2>Загрузка...</h2></div>;
+}
+
+function FriendsRedirect() {
+  const { user } = useContext(AuthContext);
+  if (user && user.username) {
+    window.location.replace(`/friends/${user.username}`);
+    return null;
+  }
+  // If not logged in, redirect to login or show error
+  window.location.replace('/login');
+  return null;
 }

@@ -4,18 +4,34 @@ import { styled } from '@mui/material/styles';
 import { getGradientEffects, gradientBorder } from '../styles/gradientEffects';
 import { rgba } from 'framer-motion';
 
-const InfoBlockContainer = styled(Box)(({ theme, styleVariant = 'default' }) => ({
-  width: '100%',
-  margin: '0 auto',
-  marginBottom: theme.spacing(1),
-  ...gradientBorder(theme, styleVariant),
-  background: 'rgba(26,26,26, 0.03)',
-  backdropFilter: 'blur(20px)',
-  color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
-  textAlign: 'left',
-  padding: 14,
-  ...getGradientEffects(theme, styleVariant),
-}));
+const InfoBlockContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'customStyle',
+})(({ theme, styleVariant = 'default', customStyle = false }) => (
+  customStyle
+    ? {
+        width: '100%',
+        margin: '0 auto',
+        marginBottom: theme.spacing(1),
+        background: 'rgba(255,255,255,0.03)',
+        backdropFilter: 'blur(20px)',
+        color: theme.palette.text.primary,
+        textAlign: 'left',
+        padding: 14,
+        borderRadius: 16,
+      }
+    : {
+        width: '100%',
+        margin: '0 auto',
+        marginBottom: theme.spacing(1),
+        ...gradientBorder(theme, styleVariant),
+        background: 'rgba(26,26,26, 0.03)',
+        backdropFilter: 'blur(20px)',
+        color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
+        textAlign: 'left',
+        padding: 14,
+        ...getGradientEffects(theme, styleVariant),
+      }
+));
 
 const StyledTitle = styled('div')(({ theme, styleVariant = 'default' }) => ({
   fontWeight: 700,
@@ -40,6 +56,7 @@ const StyledDescription = styled('div')(({ theme, styleVariant = 'default' }) =>
  * @param {Object} props.sx - Additional styles for the container
  * @param {Object} props.titleSx - Additional styles for the title
  * @param {Object} props.descriptionSx - Additional styles for the description
+ * @param {boolean} props.customStyle - Whether to use custom style
  */
 const InfoBlock = ({
   title,
@@ -49,12 +66,13 @@ const InfoBlock = ({
   sx,
   titleSx,
   descriptionSx,
+  customStyle = false,
   ...props
 }) => {
   const theme = useTheme();
 
   return (
-    <InfoBlockContainer styleVariant={styleVariant} sx={sx} {...props}>
+    <InfoBlockContainer styleVariant={styleVariant} sx={sx} customStyle={customStyle} {...props}>
       {title && (
         <StyledTitle styleVariant={styleVariant} style={titleSx}>
           <Typography variant="h5" sx={{ margin: 0 }}>

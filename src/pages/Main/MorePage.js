@@ -399,7 +399,7 @@ const MorePage = () => {
             <ListItemText primary={t('more_page.sections.social.search')} />
           </MenuListItem>
 
-          <MenuListItem button component={Link} to="/subscriptions">
+          <MenuListItem button component={Link} to={user && user.username ? `/friends/${user.username}` : '/friends'}>
             <MenuItemIcon>
               <Icon icon="solar:users-group-rounded-bold" width="20" height="20" />
             </MenuItemIcon>
