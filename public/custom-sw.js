@@ -1,36 +1,124 @@
-// PUSH NOTIFICATIONS ONLY - This service worker handles only push notifications
-// This service worker does NOT cache any assets or interfere with caching
-// Version: push-only-2.0.0 (обновлено 10.04.2024 для исправления VAPID ключей)
+// PUSH NOTIFICATIONS + BASIC CACHING - This service worker handles push notifications and basic caching
+// Version: push-cache-2.1.0 (обновлено для работы без vite-plugin-pwa)
 
-const PUSH_SW_VERSION = 'push-only-2.0.0';
-const PUSH_SW_NAME = 'k-connect-push-notifications-only';
+const PUSH_SW_VERSION = 'push-cache-2.1.0';
+const PUSH_SW_NAME = 'k-connect-push-notifications';
+const CACHE_NAME = 'k-connect-cache-v1';
+
+// Assets to cache
+const CACHE_ASSETS = [
+  '/',
+  '/manifest.json',
+  '/favicon.ico',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/fonts.css'
+];
 
 // Clearly log what this service worker is for
-console.log(`[${PUSH_SW_NAME}] Version ${PUSH_SW_VERSION} loading - VAPID keys updated`);
+console.log(`[${PUSH_SW_NAME}] Version ${PUSH_SW_VERSION} loading`);
 
-// Skip installation steps
+// Install event - cache basic assets
 self.addEventListener('install', event => {
-  console.log(`[${PUSH_SW_NAME}] Installing version ${PUSH_SW_VERSION} - VAPID keys updated`);
-  self.skipWaiting();
-});
-
-// Only claim clients when specifically needed for push notifications
-self.addEventListener('activate', event => {
-  console.log(`[${PUSH_SW_NAME}] Activating version ${PUSH_SW_VERSION} - VAPID keys updated`);
-  // Claim clients to force immediate control
-  event.waitUntil(self.clients.claim());
+  console.log(`[${PUSH_SW_NAME}] Installing version ${PUSH_SW_VERSION}`);
   
-  // Force resubscribe on next page load by unsubscribing now
   event.waitUntil(
-    self.registration.pushManager.getSubscription()
-      .then(subscription => {
-        if (subscription) {
-          console.log(`[${PUSH_SW_NAME}] Unsubscribing from push to force key update`);
-          return subscription.unsubscribe();
-        }
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log(`[${PUSH_SW_NAME}] Caching basic assets`);
+        return cache.addAll(CACHE_ASSETS);
+      })
+      .then(() => {
+        console.log(`[${PUSH_SW_NAME}] Basic assets cached successfully`);
+        return self.skipWaiting();
       })
       .catch(error => {
-        console.error(`[${PUSH_SW_NAME}] Error unsubscribing:`, error);
+        console.error(`[${PUSH_SW_NAME}] Cache installation failed:`, error);
+        return self.skipWaiting();
+      })
+  );
+});
+
+// Activate event - clean up old caches and claim clients
+self.addEventListener('activate', event => {
+  console.log(`[${PUSH_SW_NAME}] Activating version ${PUSH_SW_VERSION}`);
+  
+  event.waitUntil(
+    // Clean up old caches
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log(`[${PUSH_SW_NAME}] Deleting old cache:`, cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+    .then(() => {
+      // Claim clients to force immediate control
+      return self.clients.claim();
+    })
+    .then(() => {
+      // Force resubscribe on next page load by unsubscribing now
+      return self.registration.pushManager.getSubscription()
+        .then(subscription => {
+          if (subscription) {
+            console.log(`[${PUSH_SW_NAME}] Unsubscribing from push to force key update`);
+            return subscription.unsubscribe();
+          }
+        })
+        .catch(error => {
+          console.error(`[${PUSH_SW_NAME}] Error unsubscribing:`, error);
+        });
+    })
+  );
+});
+
+// Fetch event - serve cached assets when offline
+self.addEventListener('fetch', event => {
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Skip non-GET requests and external requests
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
+  // For navigation requests, try network first, then cache
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          return caches.match('/');
+        })
+    );
+    return;
+  }
+
+  // For other requests, try cache first, then network
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      })
+      .catch(() => {
+        // Return a fallback response for critical assets
+        if (event.request.url.includes('/manifest.json')) {
+          return new Response(JSON.stringify({
+            name: 'К-Коннект',
+            short_name: 'К-Коннект',
+            start_url: '/',
+            display: 'standalone'
+          }), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
       })
   );
 });

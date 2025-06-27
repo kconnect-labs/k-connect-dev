@@ -8,7 +8,6 @@ import topLevelAwait from 'vite-plugin-top-level-await';
 import viteCompression from 'vite-plugin-compression';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import terser from '@rollup/plugin-terser';
-import { VitePWA } from 'vite-plugin-pwa';
 import imagemin from 'vite-plugin-imagemin';
 
 // [INFO] Проект переведён на rolldown-vite вместо vite. Конфиг совместим с rolldown-vite.
@@ -96,101 +95,6 @@ export default defineConfig(({ mode }) => {
             { name: 'removeViewBox' },
             { name: 'removeEmptyAttrs', active: false },
           ],
-        },
-      }),
-      VitePWA({
-        registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-        manifest: {
-          name: 'K-Connect',
-          short_name: 'K-Connect',
-          theme_color: '#ffffff',
-          background_color: '#ffffff',
-          display: 'standalone',
-          start_url: '/',
-          scope: '/',
-          icons: [
-            // Светлая тема (по умолчанию)
-            {
-              src: '/icon-192.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any maskable'
-            },
-            {
-              src: '/icon-512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any maskable'
-            },
-            // Тёмная тема
-            {
-              src: '/icon192d.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any maskable',
-              media: '(prefers-color-scheme: dark)'
-            },
-            {
-              src: '/icon-512d.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any maskable',
-              media: '(prefers-color-scheme: dark)'
-            },
-            // iOS иконки
-            {
-              src: '/icon-180.png',
-              sizes: '180x180',
-              type: 'image/png',
-              purpose: 'any'
-            },
-            {
-              src: '/icon-180d.png',
-              sizes: '180x180',
-              type: 'image/png',
-              purpose: 'any',
-              media: '(prefers-color-scheme: dark)'
-            },
-            // Android иконки
-            {
-              src: '/icon-167.png',
-              sizes: '167x167',
-              type: 'image/png',
-              purpose: 'any'
-            },
-            {
-              src: '/icon-167d.png',
-              sizes: '167x167',
-              type: 'image/png',
-              purpose: 'any',
-              media: '(prefers-color-scheme: dark)'
-            },
-            {
-              src: '/icon-152.png',
-              sizes: '152x152',
-              type: 'image/png',
-              purpose: 'any'
-            },
-            {
-              src: '/icon-152d.png',
-              sizes: '152x152',
-              type: 'image/png',
-              purpose: 'any',
-              media: '(prefers-color-scheme: dark)'
-            }
-          ],
-          // Динамические цвета для тем
-          theme_color_light: '#ffffff',
-          theme_color_dark: '#1a1a1a',
-          background_color_light: '#ffffff',
-          background_color_dark: '#1a1a1a'
-        },
-        strategies: 'injectManifest',
-        injectRegister: false,
-        injectManifest: {
-          swSrc: 'public/custom-sw.js',
-          swDest: 'custom-sw.js',
         },
       }),
     ].filter(Boolean),

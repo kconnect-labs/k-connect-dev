@@ -5220,27 +5220,6 @@ const SettingsPage = () => {
             <Divider sx={{ my: 3 }} />
             
             
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Настройка цветов интерфейса
-            </Typography>
-            
-            <SettingsCard>
-              <SettingsCardContent>
-                <SectionTitle variant="h5">
-                  <PaletteIcon />
-                  Цветовая схема
-                </SectionTitle>
-                
-                <Box sx={{ textAlign: 'center', my: 4 }}>
-                  <Typography variant="h4" color="primary" fontWeight="600" gutterBottom>
-                    Скоро
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                    Новые возможности кастомизации внешнего вида появятся в ближайшем обновлении
-                  </Typography>
-                </Box>
-              </SettingsCardContent>
-            </SettingsCard>
 
       {/* Декорации профиля */}
       <Box sx={{ mt: 3 }}>

@@ -187,7 +187,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   };
 
   const handleCopyLink = () => {
-    const url = `http://k-connect.ru/item/${item.id}`;
+    const url = `https://k-connect.ru/item/${item.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
       setTimeout(() => setCopyStatus(''), 1500);

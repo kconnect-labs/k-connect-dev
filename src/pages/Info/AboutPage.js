@@ -622,6 +622,11 @@ const AboutPage = () => {
       //   avatar: "/static/moderators/morozik.jpeg"
       // },
       {
+        name: "rev/x",
+        role: "Модератор",
+        avatar: "/static/moderators/rev.jpg"
+      },
+      {
         name: "Ронин",
         role: "Модератор",
         avatar: "/static/moderators/ronin.jpeg"

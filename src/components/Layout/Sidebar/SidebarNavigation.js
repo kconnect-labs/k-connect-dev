@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useCallback, useContext } from 'react';
-import { List, Collapse, styled } from '@mui/material';
+import { List, Collapse, styled, Box } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useLocation } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -9,39 +9,25 @@ import { SidebarContext } from '../../../context/SidebarContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 
-// Стили для веток
-const BranchedList = styled(List)(({ theme }) => ({
-  position: 'relative',
+// Clean, minimal nested list styling
+const NestedList = styled(List)(({ theme }) => ({
   marginLeft: theme.spacing(2),
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: '1px',
-    background: theme.palette.divider,
-    zIndex: 0,
-    opacity: 0.4,
+
+}));
+
+// Minimal navigation container
+const NavigationContainer = styled(List)(({ theme }) => ({
+  padding: theme.spacing(1),
+  '& .MuiListItem-root': {
+    marginBottom: theme.spacing(0.25),
+    borderRadius: theme.spacing(1),
+    transition: 'all 0.15s ease',
   },
 }));
 
-const BranchedListItem = styled('div')(({ theme }) => ({
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: -theme.spacing(2),
-    top: '50%',
-    width: theme.spacing(2),
-    height: '1px',
-    background: theme.palette.divider,
-    zIndex: 1,
-    opacity: 0.4,
-    transform: 'translateY(-50%)',
-  },
+// Subtle section spacer
+const SectionSpacer = styled(Box)(({ theme }) => ({
+  height: theme.spacing(1),
 }));
 
 const SidebarNavigation = memo(({ 
@@ -55,7 +41,6 @@ const SidebarNavigation = memo(({
   const { t } = useLanguage();
   const { expandedMore, expandedAdminMod, expandedShops, expandedSocial, toggleExpandMore, toggleExpandAdminMod, toggleExpandShops, toggleExpandSocial } = useContext(SidebarContext);
   
-  
   const isActive = useCallback((path) => {
     if (path === '/' && location.pathname === '/') {
       return true;
@@ -63,15 +48,18 @@ const SidebarNavigation = memo(({
     return location.pathname === path;
   }, [location.pathname]);
   
-  
   const icons = useMemo(() => ({
+    home: <Icon icon="material-symbols:home-outline" width="22" height="22" />,
+    messenger: <Icon icon="tabler:mail" width="22" height="22" />,
+    music: <Icon icon="tabler:music" width="22" height="22" />,
+    shop: <Icon icon="tabler:coins" width="22" height="22" />,
+    inventory: <Icon icon="tabler:backpack" width="22" height="22" />,
+    auction: <Icon icon="tabler:at" width="22" height="22" />,
+    badge: <Icon icon="tabler:award" width="22" height="22" />,
     person: <Icon icon="solar:user-outline" width="20" height="20" />,
-    home: <Icon icon="solar:home-outline" width="20" height="20" />,
-    music: <Icon icon="solar:music-notes-outline" width="20" height="20" />,
     people: <Icon icon="solar:users-group-two-rounded-outline" width="20" height="20" />,
     channels: <Icon icon="solar:users-group-rounded-outline" width="20" height="20" />,
     search: <Icon icon="solar:magnifer-outline" width="20" height="20" />,
-    shop: <Icon icon="solar:shop-outline" width="20" height="20" />,
     admin: <Icon icon="solar:shield-user-outline" width="20" height="20" />,
     moderator: <Icon icon="solar:shield-star-outline" width="20" height="20" />,
     games: <Icon icon="solar:gamepad-outline" width="20" height="20" />,
@@ -83,12 +71,9 @@ const SidebarNavigation = memo(({
     bug: <Icon icon="solar:bug-outline" width="20" height="20" />,
     rules: <Icon icon="solar:document-text-outline" width="20" height="20" />,
     api: <Icon icon="solar:code-outline" width="20" height="20" />,
-    auction: <GavelIcon sx={{ fontSize: 20 }} />,
     marketplace: <Icon icon="solar:shop-2-outline" width="20" height="20" />,
-    pack: <Icon icon="solar:box-outline" width="20" height="20" />,
-    inventory: <Icon icon="solar:bag-outline" width="20" height="20" />
+    pack: <Icon icon="solar:box-outline" width="20" height="20" />
   }), []);
-  
   
   const mainMenu = useMemo(() => (
     <>
@@ -102,7 +87,7 @@ const SidebarNavigation = memo(({
       
       <NavButton
         text={t('sidebar.navigation.messenger')}
-        icon={<Icon icon="solar:chat-round-outline" width="20" height="20" />}
+        icon={icons.messenger}
         path="/messenger"
         active={isActive('/messenger')}
         themeColor={primaryColor}
@@ -137,7 +122,7 @@ const SidebarNavigation = memo(({
         themeColor={primaryColor}
       />
       <Collapse in={expandedSocial} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
+        <NestedList component="div" disablePadding>
           <NavButton
             text={t('sidebar.navigation.subscriptions')}
             icon={icons.people}
@@ -164,7 +149,7 @@ const SidebarNavigation = memo(({
               nested={true}
             />
           )}
-        </List>
+        </NestedList>
       </Collapse>
     </>
   ), [icons, isActive, primaryColor, expandedSocial, toggleExpandSocial, t, isChannel]);
@@ -182,8 +167,7 @@ const SidebarNavigation = memo(({
         />
         
         <Collapse in={expandedAdminMod} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
-            
+          <NestedList component="div" disablePadding>
             {isAdmin && (
               <NavButton
                 text={t('sidebar.navigation.admin_panel')}
@@ -205,7 +189,7 @@ const SidebarNavigation = memo(({
                 nested={true}
               />
             )}
-          </List>
+          </NestedList>
         </Collapse>
       </>
     )
@@ -222,10 +206,10 @@ const SidebarNavigation = memo(({
         themeColor={primaryColor}
       />
       <Collapse in={expandedShops} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
+        <NestedList component="div" disablePadding>
           <NavButton
             text="Бейджи"
-            icon={icons.shop}
+            icon={icons.badge}
             path="/badge-shop"
             active={isActive('/badge-shop')}
             themeColor={primaryColor}
@@ -234,7 +218,7 @@ const SidebarNavigation = memo(({
           <NavButton
             text="Маркетплейс"
             icon={icons.marketplace}
-            path="/marketplace"
+            path="/economic/marketplace"
             active={isActive('/economic/marketplace')}
             themeColor={primaryColor}
             nested={true}
@@ -255,7 +239,7 @@ const SidebarNavigation = memo(({
             themeColor={primaryColor}
             nested={true}
           />
-        </List>
+        </NestedList>
       </Collapse>
     </>
   ), [icons, isActive, primaryColor, expandedShops, toggleExpandShops, t]);
@@ -295,8 +279,7 @@ const SidebarNavigation = memo(({
       />
 
       <Collapse in={expandedMore} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding sx={{ pl: 1.5, pt: 0.5 }}>
-          
+        <NestedList component="div" disablePadding>
           {!isChannel && (
             <NavButton
               text={t('sidebar.navigation.more.bug_reports')}
@@ -336,20 +319,33 @@ const SidebarNavigation = memo(({
             target="_blank"
             rel="noopener noreferrer"
           />
-        </List>
+        </NestedList>
       </Collapse>
     </>
   ), [icons, isActive, isChannel, primaryColor, expandedMore, toggleExpandMore, t]);
   
   return (
-    <List component="nav" sx={{ p: 1 }}>
+    <NavigationContainer component="nav">
       {mainMenu}
+      <SectionSpacer />
       {socialMenu}
-      {adminModMenu}
+      {adminModMenu && (
+        <>
+          <SectionSpacer />
+          {adminModMenu}
+        </>
+      )}
+      <SectionSpacer />
       {shopsMenu}
-      {extraMenu}
+      {extraMenu && (
+        <>
+          <SectionSpacer />
+          {extraMenu}
+        </>
+      )}
+      <SectionSpacer />
       {moreSection}
-    </List>
+    </NavigationContainer>
   );
 });
 
