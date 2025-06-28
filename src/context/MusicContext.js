@@ -1,6 +1,27 @@
 import React, { createContext, useState, useEffect, useRef, useContext, useCallback } from 'react';
 import axios from 'axios';
 
+// Функция для получения полного URL аудиофайла
+const getAudioUrl = (filePath) => {
+  if (!filePath) return '';
+  
+  // Если путь уже полный URL, возвращаем как есть
+  if (filePath.startsWith('http')) {
+    return filePath;
+  }
+  
+  // Проверяем, работаем ли мы на localhost
+  const isLocalhost = window.location.hostname === 'localhost' || 
+                     window.location.hostname === '127.0.0.1' ||
+                     window.location.hostname.includes('localhost');
+  
+  // Если на localhost, добавляем полный URL
+  if (isLocalhost) {
+    return `https://k-connect.ru${filePath}`;
+  }
+  
+  return filePath;
+};
 
 export const MusicContext = createContext({
   tracks: [],
@@ -628,7 +649,7 @@ export const MusicProvider = ({ children }) => {
       audioRef.current.addEventListener('error', handleError);
       
       
-      audioRef.current.src = track.file_path;
+      audioRef.current.src = getAudioUrl(track.file_path);
       audioRef.current.load(); 
       
       
@@ -656,7 +677,7 @@ export const MusicProvider = ({ children }) => {
       if (!audio.src) {
         
         if (currentTrack) {
-          audio.src = currentTrack.file_path;
+          audio.src = getAudioUrl(currentTrack.file_path);
           audio.load();
         } else {
           console.log('No track to play');

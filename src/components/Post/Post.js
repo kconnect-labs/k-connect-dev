@@ -2173,8 +2173,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 <MusicTrack key={`track-${index}`} onClick={(e) => handleTrackPlay(track, e)}>
                   <Box 
                     sx={{ 
-                      width: 40, 
-                      height: 40, 
+                      width: 48, 
+                      height: 48, 
                       borderRadius: '8px', 
                       overflow: 'hidden', 
                       position: 'relative',

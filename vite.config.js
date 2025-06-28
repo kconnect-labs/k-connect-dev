@@ -7,7 +7,7 @@ import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import viteCompression from 'vite-plugin-compression';
 import { createHtmlPlugin } from 'vite-plugin-html';
-import imagemin from 'vite-plugin-imagemin';
+import imagePresets, { widthPreset } from 'vite-plugin-image-presets';
 // import terser from '@rollup/plugin-terser'; // Not used directly
 
 // [INFO] Проект переведён на rolldown-vite вместо vite. Конфиг совместим с rolldown-vite.
@@ -78,17 +78,11 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
-      imagemin({
-        gifsicle: { optimizationLevel: 7, interlaced: false },
-        optipng: { optimizationLevel: 7 },
-        mozjpeg: { quality: 80 },
-        pngquant: { quality: [0.8, 0.9], speed: 4 },
-        svgo: {
-          plugins: [
-            { name: 'removeViewBox' },
-            { name: 'removeEmptyAttrs', active: false },
-          ],
-        },
+      imagePresets({
+        cover: widthPreset({
+          widths: [400, 800, 1200],
+          formats: ['webp', 'jpeg', 'png'],
+        })
       }),
     ].filter(Boolean),
 

@@ -69,7 +69,7 @@ import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
 import { useContext } from 'react';
 import { ThemeSettingsContext } from '../../App';
-import FullScreenPlayer from '../../components/Music/FullScreenPlayer/index.js';
+import FullScreenPlayer from '../../components/Music';
 import MobilePlayer from '../../components/Music/MobilePlayer';
 import MusicUploadDialog from '../../components/Music/MusicUploadDialog';
 import { getCoverWithFallback } from '../../utils/imageUtils';
