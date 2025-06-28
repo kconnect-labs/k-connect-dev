@@ -50,7 +50,7 @@ import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
 import SEO from '../../components/SEO';
 import { useSnackbar } from 'notistack';
-import FullScreenPlayer from '../../components/Music/FullScreenPlayer/index.js';
+import FullScreenPlayer from '../../components/Music';
 import MobilePlayer from '../../components/Music/MobilePlayer';
 import DesktopPlayer from '../../components/Music/DesktopPlayer';
 

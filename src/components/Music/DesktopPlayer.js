@@ -31,7 +31,7 @@ import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
 import { ThemeSettingsContext } from '../../App';
 import { useContext } from 'react';
-import FullScreenPlayer from './FullScreenPlayer/index.js';
+import FullScreenPlayer from './index.js';
 import { extractDominantColor } from '../../utils/imageUtils';
 
 
