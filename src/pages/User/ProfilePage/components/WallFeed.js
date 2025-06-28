@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import axios from 'axios';
-import { useLanguage } from '../../../context/LanguageContext';
+import { useLanguage } from '../../../../context/LanguageContext';
 
-import Post from '../../../components/Post/Post';
-import PostSkeleton from '../../../components/Post/PostSkeleton';
+import Post from '../../../../components/Post/Post';
+import PostSkeleton from '../../../../components/Post/PostSkeleton';
 
 const WallFeed = ({ userId }) => {
   const { t } = useLanguage();

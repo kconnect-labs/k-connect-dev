@@ -22,7 +22,6 @@ import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
-import AppLoadingScreen from './components/AppLoadingScreen';
 import axios from 'axios';
 
 export const SessionContext = React.createContext({
@@ -526,34 +525,7 @@ const AppRoutes = () => {
   );
 };
 const MemoizedAppRoutes = React.memo(AppRoutes);
-const preloadMusicImages = () => { 
-  if (process.env.NODE_ENV === 'development') {
-    return;
-  }
 
-  const basePaths = [
-    '/static/uploads/system',
-    '/uploads/system'
-  ];
-  
-  const imageFiles = [
-    'like_playlist.jpg',
-    'all_tracks.jpg',
-    'random_tracks.jpg',
-    'album_placeholder.jpg',
-    'playlist_placeholder.jpg'
-  ];  
-  basePaths.forEach(basePath => {
-    imageFiles.forEach(file => {
-      const path = `${basePath}/${file}`;
-      const img = new Image();
-      img.src = path;
-      img.onerror = () => {
-        console.warn(`Image not found: ${path}. Using gradient placeholder.`);
-      };
-    });
-  });
-};
 const DefaultSEO = () => {
   
   const currentUrl = typeof window !== 'undefined' 
@@ -642,11 +614,12 @@ const SessionProvider = ({ children }) => {
   const broadcastUpdate = (type, data) => {
     if (broadcastChannel.current) {
       try {
-        broadcastChannel.current.postMessage({
+        const message = {
           type,
           data,
           timestamp: Date.now()
-        });
+        };
+        broadcastChannel.current.postMessage(message);
       } catch (error) {
         console.error('Error broadcasting update:', error);
       }
@@ -868,12 +841,6 @@ function App() {
       console.log('Share subdomain detected, user will be redirected via share.html');
     }
   }, [onShareSubdomain]);
-  
-  useEffect(() => {
-    preloadMusicImages();
-  }, []);
-
-  // Убираем автоматический таймер - экран загрузки будет скрываться только после реальной загрузки всех ресурсов
 
   const getContrastTextColor = (hexColor) => {
     if (themeSettings.mode === 'dark' || themeSettings.mode === 'contrast') {
@@ -970,27 +937,6 @@ function App() {
       backgroundTextColor: backgroundTextColor
     });
     
-    
-    document.documentElement.style.setProperty('--background-color', backgroundColor);
-    document.documentElement.style.setProperty('--container-color', containerColor);
-    document.documentElement.style.setProperty('--header-color', headerColor);
-    document.documentElement.style.setProperty('--bottom-nav-color', bottomNavColor);
-    document.documentElement.style.setProperty('--content-color', contentColor);
-    document.documentElement.style.setProperty('--welcome-bubble-color', welcomeBubbleColor);
-    document.documentElement.style.setProperty('--avatar-border-color', primaryColor);
-    
-    
-    document.documentElement.style.setProperty('--background-text-color', backgroundTextColor);
-    document.documentElement.style.setProperty('--container-text-color', containerTextColor);
-    document.documentElement.style.setProperty('--header-text-color', headerTextColor);
-    document.documentElement.style.setProperty('--content-text-color', contentTextColor);
-    document.documentElement.style.setProperty('--bottom-nav-text-color', bottomNavTextColor);
-    
-    
-    document.documentElement.style.setProperty('--primary', primaryColor);
-    document.documentElement.style.setProperty('--primary-light', primaryColor);
-    document.documentElement.style.setProperty('--primary-dark', primaryColor);
-    
     console.log('Theme settings applied:', {
       backgroundColor, 
       containerColor, 
@@ -1042,8 +988,6 @@ function App() {
   };
 
   
-  const [colorOverride, setColorOverride] = useState(null);
-
   const theme = useMemo(() => {
     const themeObj = createTheme({
       palette: {
@@ -1202,11 +1146,8 @@ function App() {
         },
       },
     });
-    if (colorOverride) {
-      return applyColorOverrideToTheme(themeObj, colorOverride);
-    }
     return themeObj;
-  }, [themeSettings, colorOverride]);
+  }, [themeSettings]);
 
   
   const [profileBackground, setProfileBackgroundState] = useState(null);
@@ -1286,9 +1227,7 @@ function App() {
     profileBackground,
     globalProfileBackgroundEnabled,
     setGlobalProfileBackgroundEnabled,
-    colorOverride,
-    setColorOverride,
-  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled, colorOverride]);
+  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled]);
 
   
   const location = useLocation();
@@ -1403,103 +1342,6 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    const applyThemeToDocument = () => {
-      const mode = sessionStorage.getItem('themeMode') || localStorage.getItem('themeMode') || getCookie('themeMode') || 'dark';
-      document.documentElement.setAttribute('data-theme', mode);
-      document.documentElement.classList.add(`theme-${mode}`);
-      
-      
-      document.querySelector('html').setAttribute('data-theme', mode);
-      
-      
-      let metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (!metaTheme) {
-        metaTheme = document.createElement('meta');
-        metaTheme.setAttribute('name', 'theme-color');
-        document.head.appendChild(metaTheme);
-      }
-      
-      
-      if (mode === 'light') {
-        metaTheme.setAttribute('content', '#ffffff');
-      } else if (mode === 'contrast') {
-        metaTheme.setAttribute('content', '#080808');
-      } else {
-        metaTheme.setAttribute('content', '#131313');
-      }
-      
-      const themeVars = {
-        backgroundColor: sessionStorage.getItem('backgroundColor') || localStorage.getItem('backgroundColor') || getCookie('backgroundColor'),
-        paperColor: sessionStorage.getItem('paperColor') || localStorage.getItem('paperColor') || getCookie('paperColor'),
-        headerColor: sessionStorage.getItem('headerColor') || localStorage.getItem('headerColor') || getCookie('headerColor'),
-        bottomNavColor: sessionStorage.getItem('bottomNavColor') || localStorage.getItem('bottomNavColor') || getCookie('bottomNavColor'),
-        contentColor: sessionStorage.getItem('contentColor') || localStorage.getItem('contentColor') || getCookie('contentColor'),
-        primaryColor: sessionStorage.getItem('primaryColor') || localStorage.getItem('primaryColor') || getCookie('primaryColor'),
-        textColor: sessionStorage.getItem('textColor') || localStorage.getItem('textColor') || getCookie('textColor')
-      };
-      
-      Object.entries(themeVars).forEach(([key, value]) => {
-        if (value) {
-          const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-          document.documentElement.style.setProperty(`--${cssKey}`, value);
-        }
-      });
-      
-      
-      try {
-        const themeData = JSON.parse(localStorage.getItem('themeData') || sessionStorage.getItem('themeData') || '{}');
-        Object.entries(themeData).forEach(([key, value]) => {
-          if (value && key !== 'mode' && key !== 'theme' && key !== 'themeMode') {
-            const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            document.documentElement.style.setProperty(`--${cssKey}`, value);
-          }
-        });
-      } catch (e) {
-        console.warn('Error applying theme data from JSON backup:', e);
-      }
-    };
-    
-    applyThemeToDocument();
-    
-    if (document.readyState === 'complete') {
-      applyThemeToDocument();
-    } else {
-      window.addEventListener('load', applyThemeToDocument);
-      return () => window.removeEventListener('load', applyThemeToDocument);
-    }
-  }, []);
-
-  function applyColorOverrideToTheme(theme, colorOverride) {
-    function replaceColors(obj) {
-      if (typeof obj === 'string') {
-        if (
-          obj.toLowerCase() === '#d0bcff' ||
-          obj.replace(/\s/g, '').toLowerCase() === 'rgb(208,188,255)'
-        ) {
-          return colorOverride;
-        }
-        return obj;
-      }
-      if (Array.isArray(obj)) {
-        return obj.map(replaceColors);
-      }
-      if (typeof obj === 'object' && obj !== null) {
-        const newObj = {};
-        for (const key in obj) {
-          newObj[key] = replaceColors(obj[key]);
-        }
-        return newObj;
-      }
-      return obj;
-    }
-    // Клонируем тему и заменяем цвета в palette и components
-    const patchedTheme = { ...theme };
-    if (patchedTheme.palette) patchedTheme.palette = replaceColors(patchedTheme.palette);
-    if (patchedTheme.components) patchedTheme.components = replaceColors(patchedTheme.components);
-    return patchedTheme;
-  }
-
   return (
     <HelmetProvider>
       <AuthProvider>
@@ -1587,11 +1429,6 @@ function App() {
           </ThemeProvider>
         </ThemeSettingsContext.Provider>
       </AuthProvider>
-      {isAppLoading && (
-        <AppLoadingScreen 
-          onLoadingComplete={() => setIsAppLoading(false)} 
-        />
-      )}
     </HelmetProvider>
   );
 }
@@ -1638,13 +1475,6 @@ const saveThemeSettings = (key, value) => {
     sessionStorage.setItem(key, value);
     
     setCookie(key, value, 365);
-    
-    if (key === 'themeMode' || key === 'theme') {
-      document.documentElement.setAttribute('data-theme', value);
-    } else {
-      const cssVarKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-      document.documentElement.style.setProperty(`--${cssVarKey}`, value);
-    }
     
     try {
       const currentThemeData = JSON.parse(localStorage.getItem('themeData') || '{}');
