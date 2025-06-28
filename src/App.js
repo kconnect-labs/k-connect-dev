@@ -1180,13 +1180,23 @@ function App() {
       }
     };
 
-    // При старте — запрос к API и применение
-    axios.get('/api/user/settings/global-profile-bg').then(res => {
-      if (res.data && res.data.success) {
-        setGlobalProfileBackgroundEnabled(res.data.enabled);
-        applyProfileBackground(res.data.enabled);
-      }
-    });
+    // При старте — запрос к API и применение (только для авторизованных пользователей)
+    // Проверяем наличие токена в localStorage/cookies
+    const hasAuthToken = localStorage.getItem('authToken') || 
+                        document.cookie.includes('authToken') ||
+                        localStorage.getItem('user_id') ||
+                        document.cookie.includes('user_id');
+    
+    if (hasAuthToken) {
+      axios.get('/api/user/settings/global-profile-bg').then(res => {
+        if (res.data && res.data.success) {
+          setGlobalProfileBackgroundEnabled(res.data.enabled);
+          applyProfileBackground(res.data.enabled);
+        }
+      }).catch(error => {
+        console.log('Не удалось загрузить настройки фона профиля:', error);
+      });
+    }
   }, []);
 
   useEffect(() => {
