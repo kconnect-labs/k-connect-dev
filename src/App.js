@@ -525,34 +525,7 @@ const AppRoutes = () => {
   );
 };
 const MemoizedAppRoutes = React.memo(AppRoutes);
-const preloadMusicImages = () => { 
-  if (process.env.NODE_ENV === 'development') {
-    return;
-  }
 
-  const basePaths = [
-    '/static/uploads/system',
-    '/uploads/system'
-  ];
-  
-  const imageFiles = [
-    'like_playlist.jpg',
-    'all_tracks.jpg',
-    'random_tracks.jpg',
-    'album_placeholder.jpg',
-    'playlist_placeholder.jpg'
-  ];  
-  basePaths.forEach(basePath => {
-    imageFiles.forEach(file => {
-      const path = `${basePath}/${file}`;
-      const img = new Image();
-      img.src = path;
-      img.onerror = () => {
-        console.warn(`Image not found: ${path}. Using gradient placeholder.`);
-      };
-    });
-  });
-};
 const DefaultSEO = () => {
   
   const currentUrl = typeof window !== 'undefined' 
@@ -641,11 +614,12 @@ const SessionProvider = ({ children }) => {
   const broadcastUpdate = (type, data) => {
     if (broadcastChannel.current) {
       try {
-        broadcastChannel.current.postMessage({
+        const message = {
           type,
           data,
           timestamp: Date.now()
-        });
+        };
+        broadcastChannel.current.postMessage(message);
       } catch (error) {
         console.error('Error broadcasting update:', error);
       }
@@ -867,12 +841,6 @@ function App() {
       console.log('Share subdomain detected, user will be redirected via share.html');
     }
   }, [onShareSubdomain]);
-  
-  useEffect(() => {
-    preloadMusicImages();
-  }, []);
-
-  // Убираем автоматический таймер - экран загрузки будет скрываться только после реальной загрузки всех ресурсов
 
   const getContrastTextColor = (hexColor) => {
     if (themeSettings.mode === 'dark' || themeSettings.mode === 'contrast') {
