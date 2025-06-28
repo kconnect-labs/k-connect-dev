@@ -2192,32 +2192,38 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 {/* Аватарки последних лайкнувших */}
                 {lastLikedUsers.length > 0 && (
                   <Box sx={{ display: 'flex', alignItems: 'center', ml: 0.5 }}>
-                    {lastLikedUsers.slice(0, 3).map((user, index) => (
-                      <Tooltip key={user.id} title={user.name} arrow>
-                        <Avatar 
-                          src={user.avatar_url} 
-                          alt={user.name}
-                          component={Link}
-                          to={`/profile/${user.username}`}
-                          sx={{ 
-                            width: 24, 
-                            height: 24, 
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            ml: index > 0 ? -0.5 : 0,
-                            zIndex: 3 - index,
-                            '&:hover': {
-                              transform: 'scale(1.1)',
-                              zIndex: 10
-                            }
-                          }}
-                          onError={(e) => {
-                            if (user.id) {
+                    {lastLikedUsers.slice(0, 3).map((user, index) => {
+                      // Формируем правильный URL для аватара
+                      const avatarUrl = user.avatar_url || 
+                        (user.avatar ? `/static/uploads${user.avatar}` : null) ||
+                        `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
+                      
+                      return (
+                        <Tooltip key={user.id} title={user.name} arrow>
+                          <Avatar 
+                            src={avatarUrl}
+                            alt={user.name}
+                            component={Link}
+                            to={`/profile/${user.username}`}
+                            sx={{ 
+                              width: 24, 
+                              height: 24, 
+                              border: '1px solid rgba(255, 255, 255, 0.2)',
+                              ml: index > 0 ? -0.5 : 0,
+                              zIndex: 3 - index,
+                              '&:hover': {
+                                transform: 'scale(1.1)',
+                                zIndex: 10
+                              }
+                            }}
+                            onError={(e) => {
+                              console.error(`Failed to load avatar for ${user.username}:`, user);
                               e.target.src = `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
-                            }
-                          }}
-                        />
-                      </Tooltip>
-                    ))}
+                            }}
+                          />
+                        </Tooltip>
+                      );
+                    })}
                   </Box>
                 )}
               </Box>

@@ -22,7 +22,6 @@ import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
-import AppLoadingScreen from './components/AppLoadingScreen';
 import axios from 'axios';
 
 export const SessionContext = React.createContext({
@@ -1587,11 +1586,6 @@ function App() {
           </ThemeProvider>
         </ThemeSettingsContext.Provider>
       </AuthProvider>
-      {isAppLoading && (
-        <AppLoadingScreen 
-          onLoadingComplete={() => setIsAppLoading(false)} 
-        />
-      )}
     </HelmetProvider>
   );
 }
