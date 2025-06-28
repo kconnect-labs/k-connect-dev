@@ -87,7 +87,6 @@ import { VerificationBadge } from '../../UIKIT';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import Popover from '@mui/material/Popover';
 
 const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
@@ -1681,12 +1680,33 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     </Box>
   );
 
-  const [likeAnchorEl, setLikeAnchorEl] = useState(null);
-  const handleLikeMouseEnter = (e) => {
-    if (lastLikedUsers.length > 0) setLikeAnchorEl(e.currentTarget);
-  };
-  const handleLikeMouseLeave = () => setLikeAnchorEl(null);
-  const openLikePopover = Boolean(likeAnchorEl);
+  // Добавляем эффект для hover-появления аватарок
+  useEffect(() => {
+    const likeBox = document.querySelectorAll('.like-avatars');
+    const parentBox = document.querySelectorAll('[data-like-parent]');
+    parentBox.forEach((el, idx) => {
+      el.onmouseenter = () => {
+        if (likeBox[idx]) {
+          likeBox[idx].style.opacity = 1;
+          likeBox[idx].style.pointerEvents = 'auto';
+          likeBox[idx].style.transform = 'translateY(-50%) translateX(8px)';
+        }
+      };
+      el.onmouseleave = () => {
+        if (likeBox[idx]) {
+          likeBox[idx].style.opacity = 0;
+          likeBox[idx].style.pointerEvents = 'none';
+          likeBox[idx].style.transform = 'translateY(-50%)';
+        }
+      };
+    });
+    return () => {
+      parentBox.forEach((el, idx) => {
+        el.onmouseenter = null;
+        el.onmouseleave = null;
+      });
+    };
+  }, [lastLikedUsers, isMobile]);
 
   return (
     <>
@@ -2238,89 +2258,99 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             justifyContent: 'space-between',
             alignItems: 'center',
             mt: 2,
-            gap: 1 // меньше gap
+            gap: 1.7 // уменьшено с 2
           }}>
-            {/* Левая группа */}
+            {/* Левая группа: лайк, коммент, репост, поделиться */}
             <Box sx={{
               display: 'flex',
-              gap: 1.2,
+              gap: 1.7, // уменьшено с 2
               background: 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(40px)',
               border: '1px solid #333',
-              borderRadius: '12px',
-              px: 1.5, // меньше
-              py: 0.5, // меньше
+              borderRadius: '10px', // было 12px
+              px: 2.5, // было 3
+              py: 0.85, // было 1
               alignItems: 'center',
-              minWidth: 140 // меньше
+              minWidth: 185 // было 220
             }}>
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', position: 'relative' }}
-                onClick={handleLike}
-                onMouseEnter={handleLikeMouseEnter}
-                onMouseLeave={handleLikeMouseLeave}
-              >
-                {liked ? <FavoriteIcon sx={{ color: theme.palette.primary.main, fontSize: 20 }} /> : <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 20 }} />}
-                <Typography sx={{ color: liked ? theme.palette.primary.main : '#fff', fontSize: '0.95rem', ml: 0.3 }}>{likesCount > 0 ? likesCount : ''}</Typography>
-                {/* Popover с аватарками */}
-                <Popover
-                  open={openLikePopover}
-                  anchorEl={likeAnchorEl}
-                  onClose={handleLikeMouseLeave}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                  transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                  PaperProps={{
-                    sx: {
-                      p: 1,
-                      borderRadius: 2,
-                      boxShadow: 3,
-                      bgcolor: 'background.paper',
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
+                {liked ? <FavoriteIcon sx={{ color: theme.palette.primary.main, fontSize: 21 }} /> : <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 21 }} />}
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
+                {/* Аватарки последних лайкнувших — появляются при наведении */}
+                {!isMobile && lastLikedUsers.length > 0 && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: '110%',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 0.5
-                    }
-                  }}
-                  disableRestoreFocus
-                >
-                  {lastLikedUsers.slice(0, 3).map((user, idx) => (
-                    <Avatar
-                      key={user.id}
-                      src={user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`}
-                      alt={user.name}
-                      component={Link}
-                      to={`/profile/${user.username}`}
-                      sx={{ width: 28, height: 28, border: '1px solid #eee', ml: idx > 0 ? -0.7 : 0, zIndex: 3 - idx, boxShadow: 1, transition: 'transform 0.15s', '&:hover': { transform: 'scale(1.1)', zIndex: 10 } }}
-                    />
-                  ))}
-                </Popover>
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      transition: 'opacity 0.25s cubic-bezier(.4,2,.6,1), transform 0.25s cubic-bezier(.4,2,.6,1)',
+                      zIndex: 20,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                    }}
+                    className="like-avatars"
+                  >
+                    {lastLikedUsers.slice(0, 3).map((user, index) => {
+                      const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
+                      return (
+                        <Avatar
+                          key={user.id}
+                          src={avatarUrl}
+                          alt={user.name}
+                          sx={{
+                            width: 22,
+                            height: 22,
+                            border: '1.5px solid #fff',
+                            ml: index > 0 ? -0.7 : 0,
+                            zIndex: 3 - index,
+                            background: '#eee',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
+                            transition: 'transform 0.18s',
+                            '&:hover': {
+                              transform: 'scale(1.13)',
+                              zIndex: 10
+                            }
+                          }}
+                          onError={e => { e.target.src = `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`; }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleCommentClick}>
-                {post?.total_comments_count > 0 || post?.comments_count > 0 ? <ChatBubbleIcon sx={{ color: '#fff', fontSize: 20 }} /> : <ChatBubbleOutlineIcon sx={{ color: '#fff', fontSize: 20 }} />}
-                <Typography sx={{ color: '#fff', fontSize: '0.95rem', ml: 0.3 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
+                {post?.total_comments_count > 0 || post?.comments_count > 0 ? <ChatBubbleIcon sx={{ color: '#fff', fontSize: 21 }} /> : <ChatBubbleOutlineIcon sx={{ color: '#fff', fontSize: 21 }} />}
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleRepostClick}>
-                <RepeatIcon sx={{ color: '#fff', fontSize: 20 }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
+                <RepeatIcon sx={{ color: '#fff', fontSize: 21 }} />
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleShare}>
-                <ShareRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
+                <ShareRoundedIcon sx={{ color: '#fff', fontSize: 21 }} />
               </Box>
             </Box>
-            {/* Правая группа */}
+
+            {/* Правая группа: просмотры и меню */}
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
               background: 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(40px)',
               border: '1px solid #333',
-              borderRadius: '12px',
-              px: 1.2,
-              py: 0.5,
-              minWidth: 60,
+              borderRadius: '10px', // было 12px
+              px: 1.7, // было 2
+              py: 0.85, // было 1
+              minWidth: 68, // было 80
               justifyContent: 'center',
-              gap: 0.5
+              gap: 0.85 // было 1
             }}>
-              <VisibilityIcon sx={{ color: '#fff', fontSize: 20, mr: 0.5 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.95rem', mr: 1 }}>{viewsCount}</Typography>
-              <MoreVertIcon sx={{ color: '#fff', fontSize: 20, cursor: 'pointer' }} onClick={handleMenuOpen} data-no-navigate />
+              <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography>
+              <MoreVertIcon sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }} onClick={handleMenuOpen} data-no-navigate />
             </Box>
           </Box>
         </Box>
