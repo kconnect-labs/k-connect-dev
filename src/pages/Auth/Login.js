@@ -200,55 +200,7 @@ const Login = () => {
     };
   }, [navigate, redirectPath]);
 
-  
-  const handleElementLogin = () => {
-    
-    const elementAuthHandler = (event) => {
-      try {
-        
-        const elemPattern = /^https?:\/\/(.*\.)?elemsocial\.com(\/.*)?$/;
-        if (!elemPattern.test(event.origin)) {
-          console.warn("Получено сообщение с неизвестного источника:", event.origin);
-          return;
-        }
 
-        
-        if (event.data && typeof event.data === 'string') {
-          console.log("Получено сообщение от Element:", event.data);
-          
-          
-          window.removeEventListener('message', elementAuthHandler);
-          
-          let token = null;
-          
-          
-          if (event.data.includes('/auth_elem/')) {
-            token = event.data.split('/auth_elem/')[1];
-          } else if (event.data.includes('/auth/element/')) {
-            token = event.data.split('/auth/element/')[1];
-          } else if (event.data.includes('.')) {
-            
-            token = event.data;
-          }
-          
-          if (token) {
-            console.log("Извлечён токен авторизации Element:", token);
-            
-            window.location.href = `/auth_elem/direct/${token}`;
-          }
-        }
-      } catch (err) {
-        console.error("Ошибка при обработке сообщения от Element:", err);
-      }
-    };
-
-    
-    window.addEventListener('message', elementAuthHandler);
-    
-    
-    window.location.href = "https://elemsocial.com/connect_app/0195a00f-826a-7a34-85f1-45065c8c727d";
-  };
-  
   
   const handleTelegramLogin = () => {
     
@@ -703,7 +655,7 @@ const Login = () => {
                 onChange={handleChange}
                 error={!!error}
                 disabled={loading}
-                sx={{ mb: 2 }}
+                sx={{ mb: 2}}
               />
               <TextField
                 fullWidth
@@ -776,34 +728,7 @@ const Login = () => {
             </Divider>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              
-              <Button
-                fullWidth
-                variant="outlined"
-                size="large"
-                startIcon={
-                  <svg width="24" height="24" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.2194 5.27527C7.49181 5.62505 4.98695 6.93564 3.17176 8.96273C1.35657 10.9898 0.354917 13.5951 0.353516 16.2929C0.353608 19.2413 1.54789 22.0688 3.67364 24.1536C5.79939 26.2384 8.68251 27.4096 11.6888 27.4097C14.6951 27.4096 17.5782 26.2384 19.7039 24.1536C21.8297 22.0688 23.024 19.2413 23.024 16.2929C23.0242 15.9984 23.0124 15.704 22.9887 15.4105C21.6194 16.2335 20.045 16.6699 18.4391 16.6714C16.1259 16.6713 13.9075 15.7701 12.2719 14.166C10.6362 12.5619 9.71732 10.3862 9.71728 8.11768C9.71938 7.14916 9.88917 6.18803 10.2194 5.27527Z" fill="#D0BCFF"/>
-                    <path d="M18.4401 15.9104C22.8285 15.9104 26.386 12.4214 26.386 8.11756C26.386 3.81372 22.8285 0.324768 18.4401 0.324768C14.0517 0.324768 10.4941 3.81372 10.4941 8.11756C10.4941 12.4214 14.0517 15.9104 18.4401 15.9104Z" fill="#D0BCFF"/>
-                  </svg>
-                }
-                onClick={handleElementLogin}
-                sx={{ 
-                  py: 1.25,
-                  borderRadius: 2,
-                  textTransform: 'none',
-                  borderColor: '#D0BCFF',
-                  color: '#D0BCFF',
-                  '&:hover': {
-                    borderColor: '#B69DF8',
-                    backgroundColor: 'rgba(208, 188, 255, 0.04)'
-                  }
-                }}
-              >
-                Войти через Element
-              </Button>
-              
-              
+
               <Button
                 fullWidth
                 variant="outlined"

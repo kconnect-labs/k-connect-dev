@@ -64,7 +64,6 @@ const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/Auth/ResetPassword'));
 const RegisterProfile = lazy(() => import('./pages/Auth/RegisterProfile'));
 const EmailConfirmation = lazy(() => import('./pages/Auth/EmailConfirmation'));
-const ElementAuth = lazy(() => import('./pages/Auth/ElementAuth'));
 const MainLayout = lazy(() => import('./components/Layout/MainLayout'));
 const ProfilePage = lazy(() => import('./pages/User/ProfilePage'));
 const MainPage = lazy(() => import('./pages/Main/MainPage'));
@@ -397,7 +396,6 @@ const AppRoutes = () => {
   const isLoginPage = currentPath === '/login';
   const isRegisterPage = currentPath === '/register';
   const isPasswordRecoveryPage = currentPath === '/forgot-password' || currentPath === '/reset-password';
-  const isElementAuthPage = currentPath.startsWith('/auth_elem') || currentPath === '/element-auth';
   
   
   
@@ -425,18 +423,6 @@ const AppRoutes = () => {
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Suspense>
-      </Box>
-    );
-  }
-  if (isElementAuthPage) {
-    return (
-      <Box sx={{ minHeight: '100vh', background: theme.palette.background.default, display: 'flex', flexDirection: 'column' }}>
-        <Routes location={location}>
-          <Route path="/element-auth" element={<ElementAuth />} />
-          <Route path="/auth_elem/:token" element={<ElementAuth />} />
-          <Route path="/auth_elem/direct/:token" element={<ElementAuth />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
       </Box>
     );
   }
