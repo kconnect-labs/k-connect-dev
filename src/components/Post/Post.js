@@ -52,14 +52,12 @@ import { optimizeImage } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
 import Lottie from 'lottie-react'; 
+import { MessageCircle, Repeat2, Link2, Heart } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import RepeatIcon from '@mui/icons-material/Repeat';
 import ShareIcon from '@mui/icons-material/Share';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import ImageGrid from './ImageGrid';
@@ -1309,14 +1307,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     items.push({
       id: 'share',
       label: t('post.context_menu.copy_link'),
-      icon: <ShareIcon fontSize="small" />,
+      icon: <Link2 size={16} />,
       onClick: handleCopyLink 
     });
     
     items.push({
       id: 'comment',
       label: t('post.context_menu.comment'),
-      icon: <ChatBubbleOutlineIcon fontSize="small" />,
+      icon: <MessageCircle size={16} />,
       onClick: handleOpenPostFromMenu 
     });
     
@@ -1759,7 +1757,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 transform: `rotate(${heart.rotation}deg)`
               }}
             >
-              <FavoriteIcon style={{ fontSize: heart.size }} />
+              <Heart size={heart.size} />
             </HeartAnimation>
           ))}
         </AnimatePresence>
@@ -1950,7 +1948,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             >
               {/* Заголовок с информацией о репосте */}
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                <RepeatIcon sx={{ fontSize: 16, mr: 0.5, color: theme.palette.primary.main }} />
+                <Repeat2 size={16} color={theme.palette.primary.main} style={{ marginRight: '4px' }} />
                 <Typography 
                   variant="caption" 
                   color="text.secondary"
@@ -2112,14 +2110,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <FavoriteBorderIcon sx={{ fontSize: 12, mr: 0.5, color: 'text.secondary' }} />
+                      <Heart size={12} color="text.secondary" style={{ marginRight: '4px' }} />
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                         {post.original_post.likes_count || 0}
                       </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <ChatBubbleOutlineIcon sx={{ fontSize: 12, mr: 0.5, color: 'text.secondary' }} />
+                      <MessageCircle size={12} color="text.secondary" style={{ marginRight: '4px' }} />
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                         {post.original_post.comments_count || 0}
                       </Typography>
@@ -2274,7 +2272,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               minWidth: 185 // было 220
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
-                {liked ? <FavoriteIcon sx={{ color: theme.palette.primary.main, fontSize: 21 }} /> : <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 21 }} />}
+                {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
                 <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
                 {/* Аватарки последних лайкнувших — появляются при наведении */}
                 {!isMobile && lastLikedUsers.length > 0 && (
@@ -2323,14 +2321,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 )}
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
-                {post?.total_comments_count > 0 || post?.comments_count > 0 ? <ChatBubbleIcon sx={{ color: '#fff', fontSize: 21 }} /> : <ChatBubbleOutlineIcon sx={{ color: '#fff', fontSize: 21 }} />}
+                <MessageCircle size={21} color="#fff" />
                 <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
-                <RepeatIcon sx={{ color: '#fff', fontSize: 21 }} />
+                <Repeat2 size={21} color="#fff" />
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
-                <ShareRoundedIcon sx={{ color: '#fff', fontSize: 21 }} />
+                <Link2 size={21} color="#fff" />
               </Box>
             </Box>
 
@@ -2396,7 +2394,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         )}
         <MenuItem onClick={handleCopyLink}>
           <ListItemIcon>
-            <LinkIcon fontSize="small" />
+            <Link2 size={16} />
           </ListItemIcon>
           <ListItemText>{t('post.menu_actions.copy_link')}</ListItemText>
         </MenuItem>
@@ -2474,7 +2472,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               display: 'flex',
               alignItems: 'flex-start'
             }}>
-              <RepeatIcon sx={{ mr: 1, fontSize: '18px', color: '#7B68EE', mt: '2px' }} />
+              <Repeat2 size={18} color="#7B68EE" style={{ marginRight: '8px', marginTop: '2px' }} />
               <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
                 {t('post.repost_dialog.original_post_notice')}
               </Typography>
