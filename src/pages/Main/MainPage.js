@@ -72,6 +72,7 @@ import UpdateInfo from '../../components/Updates/UpdateInfo';
 import UpdateService from '../../services/UpdateService';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
+import WarningIcon from '@mui/icons-material/Warning';
 
 
 
@@ -474,6 +475,7 @@ const CreatePost = ({ onPostCreated }) => {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [mediaNotification, setMediaNotification] = useState({ open: false, message: '' });
+  const [isNsfw, setIsNsfw] = useState(false);
   
   
   const [musicSelectOpen, setMusicSelectOpen] = useState(false);
@@ -668,6 +670,7 @@ const CreatePost = ({ onPostCreated }) => {
     setMediaPreview([]);
     setMediaType('');
     setSelectedTracks([]);
+    setIsNsfw(false);
     setError('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -697,6 +700,7 @@ const CreatePost = ({ onPostCreated }) => {
       
       const formData = new FormData();
       formData.append('content', content.trim());
+      formData.append('is_nsfw', isNsfw.toString());
       
       console.log("Added content to FormData:", content.trim());
       
@@ -1266,11 +1270,11 @@ const CreatePost = ({ onPostCreated }) => {
                 startIcon={<ImageOutlinedIcon />}
                 sx={{
                   color: mediaFiles.length > 0 ? 'primary.main' : 'text.secondary',
-                  borderRadius: '24px',
+                  borderRadius: '8px',
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   fontWeight: 500,
-                  padding: '6px 12px',
+                  padding: '4px 8px',
                   border: mediaFiles.length > 0 
                     ? '1px solid rgba(208, 188, 255, 0.5)' 
                     : '1px solid rgba(255, 255, 255, 0.12)',
@@ -1290,11 +1294,11 @@ const CreatePost = ({ onPostCreated }) => {
                 startIcon={<MusicNoteIcon />}
                 sx={{
                   color: selectedTracks.length > 0 ? 'primary.main' : 'text.secondary',
-                  borderRadius: '24px',
+                  borderRadius: '8px',
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   fontWeight: 500,
-                  padding: '6px 12px',
+                  padding: '4px 8px',
                   border: selectedTracks.length > 0 
                     ? '1px solid rgba(208, 188, 255, 0.5)' 
                     : '1px solid rgba(255, 255, 255, 0.12)',
@@ -1307,6 +1311,39 @@ const CreatePost = ({ onPostCreated }) => {
               >
                 {selectedTracks.length ? t('main_page.post.create.music_count', { count: selectedTracks.length }) : t('main_page.post.create.music')}
               </Button>
+              
+              {/* NSFW кнопка - показывается только при наличии медиа */}
+              {(mediaFiles.length > 0 || selectedTracks.length > 0) && (
+                <Tooltip title="Деликатный контент" placement="top">
+                  <IconButton
+                    onClick={() => setIsNsfw(!isNsfw)}
+                    sx={{
+                      color: isNsfw ? '#ff6b6b' : 'text.secondary',
+                      borderRadius: '50%',
+                      width: 36,
+                      height: 36,
+                      minWidth: 36,
+                      minHeight: 36,
+                      padding: 0,
+                      border: isNsfw 
+                        ? '1px solid rgba(255, 107, 107, 0.5)' 
+                        : '1px solid rgba(255, 255, 255, 0.12)',
+                      backgroundColor: isNsfw ? 'rgba(255, 107, 107, 0.1)' : 'transparent',
+                      '&:hover': {
+                        backgroundColor: isNsfw 
+                          ? 'rgba(255, 107, 107, 0.2)' 
+                          : 'rgba(255, 107, 107, 0.08)',
+                        borderColor: 'rgba(255, 107, 107, 0.4)'
+                      },
+                      transition: 'all 0.2s ease',
+                      flexShrink: 0
+                    }}
+                    size="small"
+                  >
+                    <WarningIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
             
             <Button 
@@ -1347,7 +1384,6 @@ const MainPage = React.memo(() => {
   const [recommendations, setRecommendations] = useState([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(true);
   const [trendingBadges, setTrendingBadges] = useState([]);
-  const [loadingTrendingBadges, setLoadingTrendingBadges] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [feedType, setFeedType] = useState('all'); 
@@ -1551,28 +1587,6 @@ const MainPage = React.memo(() => {
     
   }, []);
 
-  
-  useEffect(() => {
-    const fetchTrendingBadges = async () => {
-      try {
-        setLoadingTrendingBadges(true);
-        
-        const response = await axios.get('/api/badges/trending');
-        if (response.data && Array.isArray(response.data.badges)) {
-          setTrendingBadges(response.data.badges);
-        } else {
-          setTrendingBadges([]);
-        }
-      } catch (error) {
-        console.error('Error fetching trending badges:', error);
-        setTrendingBadges([]);
-      } finally {
-        setLoadingTrendingBadges(false);
-      }
-    };
-
-    fetchTrendingBadges();
-  }, []);
 
   
   const getFallbackRecommendations = () => {

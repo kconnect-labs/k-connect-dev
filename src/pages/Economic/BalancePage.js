@@ -19,7 +19,6 @@ import {
   Tooltip,
   useTheme,
   alpha,
-  Alert,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -28,7 +27,6 @@ import {
   Tabs,
   Tab,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions as MuiDialogActions,
   TextField,
@@ -36,12 +34,7 @@ import {
   InputAdornment,
   useMediaQuery,
   TableRow,
-  TableCell,
-  TableContainer,
-  TableBody,
-  Table,
-  CardMedia,
-  bottomNavigationActionClasses
+  TableCell
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
@@ -64,8 +57,6 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as BallsSVG } from '../../assets/balls.svg';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TagIcon from '@mui/icons-material/Tag';
@@ -82,7 +73,6 @@ import { TransferMenu } from '../../UIKIT';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InfoBlock from '../../UIKIT/InfoBlock';
-import CardMembershipIcon from '@mui/icons-material/CardMembership';
 import { useLanguage } from '@/context/LanguageContext';
 
 
@@ -135,16 +125,6 @@ const PointsIcon = styled(Box)(({ theme }) => ({
     height: '100%',
     filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
   }
-}));
-
-
-const BadgeCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  marginBottom: theme.spacing(2),
-  borderRadius: 16,
-  background: alpha(theme.palette.background.paper, 0.4),
-  position: 'relative',
-  overflow: 'hidden',
 }));
 
 const CreatedBadgeImage = styled('img')({
@@ -217,79 +197,6 @@ const TabPanel = ({ children, value, index, ...other }) => (
   </div>
 );
 
-
-const ActionCardsContainer = styled(Box)(({ theme }) => ({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(3, 1fr)',
-  gap: theme.spacing(2),
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(3),
-  [theme.breakpoints.down('sm')]: {
-    gridTemplateColumns: 'repeat(1, 1fr)',
-  },
-}));
-
-const ActionCard = styled(Box)(({ theme, colorStart, colorEnd }) => ({
-  position: 'relative',
-  borderRadius: 16,
-  overflow: 'hidden',
-  padding: theme.spacing(2.5),
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-  background: `linear-gradient(135deg, ${colorStart} 0%, ${colorEnd} 100%)`,
-  boxShadow: `0 8px 20px -12px ${alpha(colorEnd, 0.6)}`,
-  transition: 'all 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: `0 15px 30px -8px ${alpha(colorEnd, 0.7)}`,
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: `radial-gradient(circle at 100% 0%, ${alpha('#ffffff', 0.2)} 0%, transparent 25%)`,
-    pointerEvents: 'none',
-  },
-}));
-
-const ActionIcon = styled(Box)(({ theme }) => ({
-  width: 60,
-  height: 60,
-  borderRadius: '50%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: alpha('#ffffff', 0.15),
-  backdropFilter: 'blur(5px)',
-  marginBottom: theme.spacing(1.5),
-  transition: 'all 0.3s ease',
-  boxShadow: `0 4px 15px -5px ${alpha('#000000', 0.2)}`,
-  '& svg': {
-    fontSize: 32,
-    color: '#ffffff',
-  },
-}));
-
-const ActionTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  color: '#ffffff',
-  fontSize: '1.1rem',
-  textAlign: 'center',
-  marginBottom: theme.spacing(0.5),
-}));
-
-const ActionSubtitle = styled(Typography)(({ theme }) => ({
-  fontSize: '0.8rem',
-  color: alpha('#ffffff', 0.8),
-  textAlign: 'center',
-}));
 
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -1419,7 +1326,15 @@ const BalancePage = () => {
   
   const formatCurrency = (amount) => {
     const absAmount = Math.abs(amount);
-    return `${amount < 0 ? '-' : '+'}${absAmount}`;
+    return `${amount < 0 ? '-' : '+'}${formatNumberWithSpaces(absAmount)}`;
+  };
+
+  
+  const formatNumberWithSpaces = (number) => {
+    if (number === null || number === undefined) return '0';
+    
+    // Преобразуем в строку и разделяем по группам по 3 цифры
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   };
 
   
@@ -1612,7 +1527,7 @@ const BalancePage = () => {
               {t('balance.current_balance.title')}
             </Typography>
             <BalanceAmount>
-              {userPoints}
+              {formatNumberWithSpaces(userPoints)}
             </BalanceAmount>
           </Box>
         }
@@ -1654,7 +1569,7 @@ const BalancePage = () => {
             </Box>
 
             <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}>
-              {`+${weeklyEstimate} ${t('balance.current_balance.points_suffix')}`}
+              {`+${formatNumberWithSpaces(weeklyEstimate)} ${t('balance.current_balance.points_suffix')}`}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
@@ -1824,7 +1739,7 @@ const BalancePage = () => {
                       </TransactionInfo>
                       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                         <TransactionAmount type={transaction.amount > 0 ? 'positive' : 'negative'}>
-                          {transaction.amount > 0 ? '+' : ''}{transaction.amount}
+                          {transaction.amount > 0 ? '+' : ''}{formatNumberWithSpaces(transaction.amount)}
                         </TransactionAmount>
                         <Typography variant="caption" sx={{ mt: 0.5, fontWeight: 500, opacity: 0.7 }}>
                           {transaction.description && transaction.description.length > 18

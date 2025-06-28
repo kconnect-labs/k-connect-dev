@@ -11,7 +11,8 @@ import {
   IconButton, 
   ImageList,
   ImageListItem,
-  Typography
+  Typography,
+  Tooltip
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../../../context/AuthContext';
@@ -23,6 +24,7 @@ import DynamicIslandNotification from '../../../../components/DynamicIslandNotif
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import CloseIcon from '@mui/icons-material/Close';
+import WarningIcon from '@mui/icons-material/Warning';
 
 // Стилизованные компоненты
 const PostInput = styled(TextField)(({ theme }) => ({
@@ -115,6 +117,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
   });
   const [showSizeError, setShowSizeError] = useState(false);
   const [sizeErrorMessage, setSizeErrorMessage] = useState('');
+  const [isNsfw, setIsNsfw] = useState(false);
 
   // Константы
   const MAX_VIDEO_SIZE = 150 * 1024 * 1024; // 150MB in bytes
@@ -332,6 +335,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
     setMediaPreview([]);
     setMediaType('');
     setSelectedTracks([]);
+    setIsNsfw(false);
     setError('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -393,6 +397,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       
       const formData = new FormData();
       formData.append('content', content.trim());
+      formData.append('is_nsfw', isNsfw.toString());
       
       console.log("Added content to FormData:", content.trim());
       
@@ -817,6 +822,41 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
               >
                 {selectedTracks.length > 0 ? t('profile.create_post.music_count', { count: selectedTracks.length }) : t('profile.create_post.music')}
               </Button>
+              
+              {/* NSFW кнопка - показывается только при наличии медиа */}
+              {(mediaFiles.length > 0 || selectedTracks.length > 0) && (
+                <Tooltip title="Деликатный контент" placement="top">
+                  <IconButton
+                    onClick={() => setIsNsfw(!isNsfw)}
+                    sx={{
+                      color: isNsfw ? '#ff6b6b' : 'text.secondary',
+                      borderRadius: '50%',
+                      width: 32,
+                      height: 32,
+                      minWidth: 32,
+                      minHeight: 32,
+                      padding: 0,
+                      border: isNsfw 
+                        ? '1px solid rgba(255, 107, 107, 0.5)' 
+                        : theme => theme.palette.mode === 'dark'
+                          ? '1px solid rgba(255, 255, 255, 0.12)'
+                          : '1px solid rgba(0, 0, 0, 0.12)',
+                      backgroundColor: isNsfw ? 'rgba(255, 107, 107, 0.1)' : 'transparent',
+                      '&:hover': {
+                        backgroundColor: isNsfw 
+                          ? 'rgba(255, 107, 107, 0.2)' 
+                          : 'rgba(255, 107, 107, 0.08)',
+                        borderColor: 'rgba(255, 107, 107, 0.4)'
+                      },
+                      transition: 'all 0.2s ease',
+                      flexShrink: 0
+                    }}
+                    size="small"
+                  >
+                    <WarningIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
             
             <PublishButton 

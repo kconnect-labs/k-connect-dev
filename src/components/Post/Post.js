@@ -35,7 +35,8 @@ import {
   Tooltip,
   Collapse,
   Zoom,
-  useTheme
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -85,6 +86,8 @@ import MusicTrack from './MusicTrack';
 import { VerificationBadge } from '../../UIKIT';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import Popover from '@mui/material/Popover';
 
 const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
@@ -382,6 +385,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   });
   const [mediaError, setMediaError] = useState({ type: null, url: null }); 
   
+  const [showSensitive, setShowSensitive] = useState(false);
   
   const reportReasons = [
     t('post.report.reasons.spam'),
@@ -392,6 +396,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     t('post.report.reasons.harmful_content'),
     t('post.report.reasons.other')
   ];
+  
+  const isMobile = useMediaQuery('(max-width:600px)');
   
   useEffect(() => {
     if (post) {
@@ -1608,6 +1614,80 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     }
   };
 
+  // NSFW Overlay (монотонный стиль)
+  const NSFWOverlay = (
+    <Box
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 2,
+        borderRadius: '12px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: isMobile ? 2 : 4,
+        textAlign: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', mb: isMobile ? 1 : 2 }}>
+        <ShieldOutlinedIcon sx={{ fontSize: isMobile ? 48 : 72, color: '#bdbdbd' }} />
+        <Typography
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -54%)',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: isMobile ? 8 : 14,
+            letterSpacing: 0.5,
+            userSelect: 'none',
+            pointerEvents: 'none',
+            textShadow: '0 1px 2px rgba(0,0,0,0.18)'
+          }}
+        >
+          18+
+        </Typography>
+      </Box>
+      <Typography variant="h6" sx={{ fontWeight: 500, mb: isMobile ? 1 : 2, color: '#fff', fontSize: isMobile ? '1rem' : '1.25rem' }}>
+        Деликатный контент
+      </Typography>
+      <Button
+        variant="contained"
+        disableElevation
+        sx={{
+          borderRadius: '8px',
+          fontWeight: 500,
+          mb: isMobile ? 1 : 2,
+          background: '#5c5b5e',
+          color: '#fff',
+          boxShadow: 'none',
+          fontSize: isMobile ? '0.75rem' : '0.85rem',
+          px: isMobile ? 0.5 : 1,
+          py: isMobile ? 0.25 : 0.5,
+        }}
+        onClick={() => setShowSensitive(true)}
+      >
+        Посмотреть
+      </Button>
+      <Typography variant="caption" sx={{ color: '#bdbdbd', opacity: 0.7, mt: isMobile ? 1 : 2, fontSize: isMobile ? '0.75rem' : '0.9rem', wordBreak: 'break-word', maxWidth: '100%' }}>
+        Тут может быть шокирующий контент
+      </Typography>
+    </Box>
+  );
+
+  const [likeAnchorEl, setLikeAnchorEl] = useState(null);
+  const handleLikeMouseEnter = (e) => {
+    if (lastLikedUsers.length > 0) setLikeAnchorEl(e.currentTarget);
+  };
+  const handleLikeMouseLeave = () => setLikeAnchorEl(null);
+  const openLikePopover = Boolean(likeAnchorEl);
+
   return (
     <>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -2038,23 +2118,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           )}
           
           {videoUrl && mediaError.type !== 'video' ? (
-            <Box sx={{ 
-              mb: 2,
-              position: 'relative',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              transition: 'transform 0.2s ease',
-              '&:hover': {
-                transform: 'scale(1.01)',
-              }
-            }}
-            data-no-navigate
-            >
-              <VideoPlayer 
-                videoUrl={videoUrl} 
-                poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined}
-                onError={() => handleVideoError(videoUrl)}
-              />
+            <Box sx={{ mb: 2, position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
+              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
+                  <VideoPlayer videoUrl={videoUrl} poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined} onError={() => handleVideoError(videoUrl)} />
+                </Box>
+                {post.is_nsfw && !showSensitive && NSFWOverlay}
+              </Box>
             </Box>
           ) : mediaError.type === 'video' && (
             <Box sx={{ mb: 2 }}>
@@ -2064,21 +2134,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           
           
           {images.length > 0 && mediaError.type !== 'image' ? (
-            <Box sx={{ 
-              mb: 2, 
-              width: '100%', 
-              position: 'relative',
-              '&:hover::after': {
-                opacity: 0.7,
-              }
-            }}
-            data-no-navigate
-            >
-              <ImageGrid 
-                images={images}
-                onImageClick={handleOpenImage}
-                onImageError={handleImageError}
-              />
+            <Box sx={{ mb: 2, width: '100%', position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
+              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
+                  <ImageGrid images={images} onImageClick={handleOpenImage} onImageError={handleImageError} />
+                </Box>
+                {post.is_nsfw && !showSensitive && NSFWOverlay}
+              </Box>
             </Box>
           ) : mediaError.type === 'image' && (
             <Box sx={{ mb: 2 }}>
@@ -2171,116 +2233,96 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           )}
           
           
-          <ActionsContainer>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Tooltip title={liked ? t('post.unlike') : t('post.like')}>
-                <ActionButton onClick={handleLike} active={liked}>
-                  <Box className="icon">
-                    {liked ? (
-                      <FavoriteIcon />
-                    ) : (
-                      <FavoriteBorderIcon />
-                    )}
-                  </Box>
-                  {likesCount > 0 && (
-                      <span className="count">{t('post.likes_count', { count: likesCount })}</span>
-                  )}
-                </ActionButton>
-                </Tooltip>
-
-                {/* Аватарки последних лайкнувших */}
-                {lastLikedUsers.length > 0 && (
-                  <Box sx={{ display: 'flex', alignItems: 'center', ml: 0.5 }}>
-                    {lastLikedUsers.slice(0, 3).map((user, index) => {
-                      // Формируем правильный URL для аватара
-                      const avatarUrl = user.avatar_url || 
-                        (user.avatar ? `/static/uploads${user.avatar}` : null) ||
-                        `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
-                      
-                      return (
-                        <Tooltip key={user.id} title={user.name} arrow>
-                          <Avatar 
-                            src={avatarUrl}
-                            alt={user.name}
-                            component={Link}
-                            to={`/profile/${user.username}`}
-                            sx={{ 
-                              width: 24, 
-                              height: 24, 
-                              border: '1px solid rgba(255, 255, 255, 0.2)',
-                              ml: index > 0 ? -0.5 : 0,
-                              zIndex: 3 - index,
-                              '&:hover': {
-                                transform: 'scale(1.1)',
-                                zIndex: 10
-                              }
-                            }}
-                            onError={(e) => {
-                              console.error(`Failed to load avatar for ${user.username}:`, user);
-                              e.target.src = `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
-                            }}
-                          />
-                        </Tooltip>
-                      );
-                    })}
-                  </Box>
-                )}
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 2,
+            gap: 1 // меньше gap
+          }}>
+            {/* Левая группа */}
+            <Box sx={{
+              display: 'flex',
+              gap: 1.2,
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '12px',
+              px: 1.5, // меньше
+              py: 0.5, // меньше
+              alignItems: 'center',
+              minWidth: 140 // меньше
+            }}>
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer', position: 'relative' }}
+                onClick={handleLike}
+                onMouseEnter={handleLikeMouseEnter}
+                onMouseLeave={handleLikeMouseLeave}
+              >
+                {liked ? <FavoriteIcon sx={{ color: theme.palette.primary.main, fontSize: 20 }} /> : <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 20 }} />}
+                <Typography sx={{ color: liked ? theme.palette.primary.main : '#fff', fontSize: '0.95rem', ml: 0.3 }}>{likesCount > 0 ? likesCount : ''}</Typography>
+                {/* Popover с аватарками */}
+                <Popover
+                  open={openLikePopover}
+                  anchorEl={likeAnchorEl}
+                  onClose={handleLikeMouseLeave}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                  PaperProps={{
+                    sx: {
+                      p: 1,
+                      borderRadius: 2,
+                      boxShadow: 3,
+                      bgcolor: 'background.paper',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5
+                    }
+                  }}
+                  disableRestoreFocus
+                >
+                  {lastLikedUsers.slice(0, 3).map((user, idx) => (
+                    <Avatar
+                      key={user.id}
+                      src={user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`}
+                      alt={user.name}
+                      component={Link}
+                      to={`/profile/${user.username}`}
+                      sx={{ width: 28, height: 28, border: '1px solid #eee', ml: idx > 0 ? -0.7 : 0, zIndex: 3 - idx, boxShadow: 1, transition: 'transform 0.15s', '&:hover': { transform: 'scale(1.1)', zIndex: 10 } }}
+                    />
+                  ))}
+                </Popover>
               </Box>
-
-              <Tooltip title={t('post.comment_item')}>
-              <ActionButton onClick={handleCommentClick}>
-                <Box className="icon">
-                  {post?.total_comments_count > 0 || post?.comments_count > 0 ? (
-                    <ChatBubbleIcon />
-                  ) : (
-                    <ChatBubbleOutlineIcon />
-                  )}
-                </Box>
-                {(post?.total_comments_count > 0 || post?.comments_count > 0) && (
-                    <span className="count">
-                      {t('post.comments_count', { count: post?.total_comments_count || post?.comments_count })}
-                  </span>
-                )}
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={reposted ? t('post.reposted') : t('post.repost')}>
-              <ActionButton onClick={handleRepostClick} active={reposted}>
-                <Box className="icon">
-                  <RepeatIcon />
-                </Box>
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={t('post.share')}>
-              <ActionButton onClick={handleShare}>
-                <Box className="icon">
-                  <ShareRoundedIcon />
-                </Box>
-              </ActionButton>
-              </Tooltip>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleCommentClick}>
+                {post?.total_comments_count > 0 || post?.comments_count > 0 ? <ChatBubbleIcon sx={{ color: '#fff', fontSize: 20 }} /> : <ChatBubbleOutlineIcon sx={{ color: '#fff', fontSize: 20 }} />}
+                <Typography sx={{ color: '#fff', fontSize: '0.95rem', ml: 0.3 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleRepostClick}>
+                <RepeatIcon sx={{ color: '#fff', fontSize: 20 }} />
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }} onClick={handleShare}>
+                <ShareRoundedIcon sx={{ color: '#fff', fontSize: 20 }} />
+              </Box>
             </Box>
-
-            <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title={t('post.views')}>
-              <ActionButton>
-                <Box className="icon">
-                  <VisibilityIcon />
-                </Box>
-                  <span className="count">{t('post.views_count', { count: viewsCount })}</span>
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={t('post.menu_title')}>
-              <ActionButton onClick={handleMenuOpen} data-no-navigate>
-                <Box className="icon">
-                  <Icon icon="solar:menu-dots-bold" />
-                </Box>
-              </ActionButton>
-              </Tooltip>
+            {/* Правая группа */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '12px',
+              px: 1.2,
+              py: 0.5,
+              minWidth: 60,
+              justifyContent: 'center',
+              gap: 0.5
+            }}>
+              <VisibilityIcon sx={{ color: '#fff', fontSize: 20, mr: 0.5 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.95rem', mr: 1 }}>{viewsCount}</Typography>
+              <MoreVertIcon sx={{ color: '#fff', fontSize: 20, cursor: 'pointer' }} onClick={handleMenuOpen} data-no-navigate />
             </Box>
-          </ActionsContainer>
+          </Box>
         </Box>
       </PostCard>
 
