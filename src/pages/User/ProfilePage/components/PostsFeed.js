@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import axios from 'axios';
-import { AuthContext } from '../../../context/AuthContext';
-import { useLanguage } from '../../../context/LanguageContext';
+import { AuthContext } from '../../../../context/AuthContext';
+import { useLanguage } from '../../../../context/LanguageContext';
 import FeedIcon from '@mui/icons-material/Feed';
 
-import Post from '../../../components/Post/Post';
-import PostSkeleton from '../../../components/Post/PostSkeleton';
+import Post from '../../../../components/Post/Post';
+import PostSkeleton from '../../../../components/Post/PostSkeleton';
 
 const PostsFeed = ({ userId, statusColor }) => {
   const { t } = useLanguage();

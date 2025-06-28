@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { keyframes } from '@mui/system';
-import OptimizedImage from '../../../components/OptimizedImage';
+import OptimizedImage from '../../../../components/OptimizedImage';
 
 const particleAnimation = (color) => keyframes`
   0% {

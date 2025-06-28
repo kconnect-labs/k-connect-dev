@@ -341,9 +341,9 @@
       }
     },
     "subscription_types": {
-      "basic": "Базовая",
-      "premium": "Премиум",
-      "ultimate": "Ультимейт"
+      "basic": "Basic",
+      "premium": "Premium",
+      "ultimate": "Ultimate"
     },
     "common": {
       "loading": "Загрузка...",

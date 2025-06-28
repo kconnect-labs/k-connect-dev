@@ -51,7 +51,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import WarningIcon from '@mui/icons-material/Warning';
 import BlockIcon from '@mui/icons-material/Block';
 import { Icon } from '@iconify/react';
-import { PostsFeed, WallFeed } from './components';
+import { PostsFeed, WallFeed } from './ProfilePage/components';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
