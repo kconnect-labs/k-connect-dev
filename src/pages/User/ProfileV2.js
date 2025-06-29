@@ -383,14 +383,12 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
   };
 
   const handleTrackPlay = (track, event) => {
-    if (event) {
-      event.stopPropagation();
-    }
+    event.stopPropagation();
     
     if (currentTrack && currentTrack.id === track.id) {
       togglePlay(); 
     } else {
-      playTrack(track); 
+      playTrack(track, 'profile'); // Передаем секцию 'profile' для треков из профиля
     }
   };
 

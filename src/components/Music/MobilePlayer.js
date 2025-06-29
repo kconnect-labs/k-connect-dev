@@ -10,13 +10,7 @@ import {
   Snackbar,
   Alert
 } from '@mui/material';
-import {
-  IoPlayCircle,
-  IoPauseCircle,
-  IoHeart,
-  IoHeartOutline,
-  IoChevronUp
-} from 'react-icons/io5';
+import { PlayIcon, PauseIcon, ForwardIcon } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
 import { ThemeSettingsContext } from '../../App';
@@ -77,24 +71,6 @@ const ProgressBar = styled(LinearProgress)(({ theme, covercolor }) => ({
     backgroundColor: covercolor ? `rgba(${covercolor}, 1)` : theme.palette.primary.main,
   },
 }));
-
-
-const ControlButton = memo(({ icon, onClick, ariaLabel, disabled = false }) => (
-  <IconButton
-    onClick={onClick}
-    size="small"
-    aria-label={ariaLabel}
-    disabled={disabled}
-    sx={{
-      color: 'white',
-      '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }
-    }}
-  >
-    {icon}
-  </IconButton>
-));
 
 
 const TrackInfo = memo(({ title, artist, onClick }) => (
@@ -397,30 +373,6 @@ const MobilePlayer = memo(() => {
         sx={{ display: fullScreenOpen ? 'none' : 'flex' }}
         className={fullScreenOpen ? 'hidden' : ''}
       >
-        
-        {/* Custom progress bar instead of Material UI component */}
-        <div style={{ 
-          height: 2,
-          width: '100%',
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
-          marginTop: '-4px', 
-          marginBottom: '6px',
-          position: 'relative'
-        }}>
-          <div 
-            id="mobile-player-progress"
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              height: '100%',
-              width: `${progressRef.current}%`,
-              backgroundColor: dominantColor ? `rgba(${dominantColor}, 1)` : theme.palette.primary.main,
-              transition: 'none'
-            }}
-          />
-        </div>
-
         <Box 
           onClick={openFullScreen}
           sx={{ 
@@ -428,62 +380,49 @@ const MobilePlayer = memo(() => {
             alignItems: 'center',
             cursor: 'pointer',
             position: 'relative',
-            padding: '2px 0'
-          }}
-        >
-          {/* Добавляем скрытые элементы для времени */}
-          <div style={{ display: 'none' }}>
-            <span id="mobile-current-time">0:00</span>
-            <span id="mobile-duration">0:00</span>
-          </div>
-          
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+            padding: '2px 0',
             width: '100%',
             WebkitTapHighlightColor: 'transparent'
-          }}>
-            <Box 
-              component="img"
-              src={getCoverWithFallback(currentTrack?.cover_path || '', "album")}
-              alt={currentTrack?.title || ''}
-              sx={{ 
-                width: 40, 
-                height: 40, 
-                borderRadius: 1,
-                objectFit: 'cover',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                marginRight: 1.5,
-              }}
-            />
-            
-            <TrackInfo 
-              title={currentTrack?.title}
-              artist={currentTrack?.artist}
-              onClick={openFullScreen}
-            />
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-              <ControlButton
-                icon={isPlaying ? <IoPauseCircle size={30} /> : <IoPlayCircle size={30} />}
-                onClick={handlePlayClick}
-                ariaLabel={isPlaying ? "Pause" : "Play"}
-              />
-              
-              <ControlButton
-                icon={currentTrack?.is_liked ? <IoHeart size={20} color={dominantColor ? `rgba(${dominantColor}, 1)` : "#ff2d55"} /> : <IoHeartOutline size={20} />}
-                onClick={toggleLikeTrack}
-                ariaLabel="Toggle like"
-              />
-              
-              <ControlButton
-                icon={<IoChevronUp size={20} />}
-                onClick={openFullScreen}
-                ariaLabel="Open fullscreen player"
-              />
-            </Box>
+          }}
+        >
+          <Box 
+            component="img"
+            src={getCoverWithFallback(currentTrack?.cover_path || '', "album")}
+            alt={currentTrack?.title || ''}
+            sx={{ 
+              width: 40, 
+              height: 40, 
+              borderRadius: 1,
+              objectFit: 'cover',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              marginRight: 1.5,
+            }}
+          />
+          <Typography 
+            variant="subtitle1" 
+            noWrap 
+            sx={{ fontWeight: 600, color: 'white', flexGrow: 1, fontSize: 16 }}
+          >
+            {currentTrack?.title || 'Unknown Title'}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
+            <IconButton
+              onClick={handlePlayClick}
+              size="large"
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+              sx={{ color: 'white', mx: 0.5 }}
+            >
+              {isPlaying ? <PauseIcon size={28} /> : <PlayIcon size={28} />}
+            </IconButton>
+            <IconButton
+              onClick={handleNextClick}
+              size="large"
+              aria-label="Next"
+              sx={{ color: 'white', mx: 0.5 }}
+            >
+              <ForwardIcon size={24} />
+            </IconButton>
           </Box>
-          
         </Box>
       </PlayerContainer>
       

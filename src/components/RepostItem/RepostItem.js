@@ -199,7 +199,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
     if (currentTrack && currentTrack.id === track.id) {
       togglePlay(); 
     } else {
-      playTrack(track); 
+      playTrack(track, 'repost');
     }
   };
   

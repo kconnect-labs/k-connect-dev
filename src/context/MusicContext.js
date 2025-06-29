@@ -29,6 +29,7 @@ export const MusicContext = createContext({
   likedTracks: [],
   newTracks: [],
   randomTracks: [],
+  myVibeTracks: [],
   currentTrack: null,
   isPlaying: false,
   volume: 0.5,
@@ -43,6 +44,7 @@ export const MusicContext = createContext({
   isTrackLoading: false,
   setCurrentTrack: () => {},
   setCurrentSection: () => {},
+  resetCurrentSection: () => {},
   setRandomTracks: () => {},
   playTrack: () => {},
   togglePlay: () => {},
@@ -73,6 +75,7 @@ export const MusicProvider = ({ children }) => {
   const [likedTracks, setLikedTracks] = useState([]);
   const [newTracks, setNewTracks] = useState([]);
   const [randomTracks, setRandomTracks] = useState([]);
+  const [myVibeTracks, setMyVibeTracks] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5); 
@@ -88,7 +91,8 @@ export const MusicProvider = ({ children }) => {
     popular: 1,
     liked: 1,
     new: 1,
-    random: 1
+    random: 1,
+    'my-vibe': 1
   });
   const [enableCrossfade, setEnableCrossfade] = useState(true); 
   const [currentSection, setCurrentSection] = useState('all'); 
@@ -232,6 +236,48 @@ export const MusicProvider = ({ children }) => {
           }
           
           return; 
+        } else if (currentSection === 'my-vibe') {
+          url = '/api/music/my-vibe';
+          console.log('Загружаем "Мой вайб" с сервера');
+          
+          try {
+            const response = await axios.get(url, {
+              params: { ...params, _t: Date.now() }, 
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+              },
+              withCredentials: true
+            });
+            
+            if (!isMounted) {
+              isLoadingRef.current = false;
+              return;
+            }
+            
+            if (response.data && response.data.tracks) {
+              const receivedTracks = response.data.tracks;
+              console.log(`Получено ${receivedTracks.length} треков для "Мой вайб"`);
+              
+              // Для "Мой вайб" используем специальный список
+              setMyVibeTracks(receivedTracks);
+              setHasMoreTracks(false); // "Мой вайб" обычно не имеет пагинации
+              setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
+            } else {
+              console.log('Треки для "Мой вайб" не найдены');
+              setMyVibeTracks([]);
+              setHasMoreTracks(false);
+              setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
+            }
+          } catch (error) {
+            console.error('Ошибка при загрузке "Мой вайб":', error);
+          } finally {
+            isLoadingRef.current = false;
+            setIsLoading(false);
+          }
+          
+          return;
         } else if (currentSection === 'popular') {
           params.sort = 'popular';
         } else if (currentSection === 'new') {
@@ -413,6 +459,9 @@ export const MusicProvider = ({ children }) => {
                       
                       setCurrentTrack(nextTrackToPlay);
                       
+                      // Сохраняем текущую секцию вместо автоматического определения
+                      setCurrentSectionHandler(currentSection);
+                      
                       
                       crossfadeTimeoutRef.current = null;
                     }
@@ -464,6 +513,10 @@ export const MusicProvider = ({ children }) => {
           getNextTrack().then(nextTrackToPlay => {
             if (nextTrackToPlay) {
               setCurrentTrack(nextTrackToPlay);
+              
+              // Сохраняем текущую секцию вместо автоматического определения
+              setCurrentSectionHandler(currentSection);
+              
               localStorage.setItem('currentTrack', JSON.stringify(nextTrackToPlay));
             }
           }).catch(error => {
@@ -510,7 +563,10 @@ export const MusicProvider = ({ children }) => {
     likedTracks,
     popularTracks,
     newTracks,
-    randomTracks
+    randomTracks,
+    myVibeTracks,
+    searchResults,
+    playlistTracks
   ]);
 
   
@@ -530,7 +586,7 @@ export const MusicProvider = ({ children }) => {
   };
 
   
-  const playTrack = (track, section = currentSection) => {
+  const playTrack = (track, section = null) => {
     
     if (isTrackLoading) {
       console.log('Track is already loading, ignoring duplicate request');
@@ -552,7 +608,16 @@ export const MusicProvider = ({ children }) => {
         setIsTrackLoading(false);
         return;
       }
+
+      // Автоматически определяем секцию, если она не указана
+      let trackSection = section || determineSectionFromTrack(track);
       
+      // Нормализуем секцию 'all-tracks' в 'all'
+      if (trackSection === 'all-tracks') {
+        trackSection = 'all';
+      }
+      
+      console.log(`[playTrack] Автоматически определена секция для трека ${track.title}: ${trackSection}`);
 
       if (!track.lyricsData) {
         fetchLyricsForTrack(track.id)
@@ -568,7 +633,7 @@ export const MusicProvider = ({ children }) => {
           .catch(err => console.error('Error fetching lyrics for track:', err));
       }
       
-      console.log(`Начинаем воспроизведение трека: ${track.title} - ${track.artist}`);
+      console.log(`[playTrack] Начинаем воспроизведение трека: ${track.title} - ${track.artist} в секции: ${trackSection}`);
       
       
       audioRef.current.pause();
@@ -580,14 +645,15 @@ export const MusicProvider = ({ children }) => {
       
       
       setCurrentTrack(track);
-      setCurrentSection(section);
+      setCurrentSectionHandler(trackSection);
       setCurrentTime(0);
       setDuration(0);
       
       
       try {
         localStorage.setItem('currentTrack', JSON.stringify(track));
-        localStorage.setItem('currentSection', section);
+        localStorage.setItem('currentSection', trackSection);
+        console.log(`[playTrack] Сохранен трек и секция в localStorage: ${trackSection}`);
       } catch (error) {
         console.error('Ошибка при сохранении трека в localStorage:', error);
       }
@@ -728,6 +794,7 @@ export const MusicProvider = ({ children }) => {
     try {
       const nextTrackItem = await getNextTrack();
       if (nextTrackItem) {
+        // Передаем текущую секцию, чтобы сохранить контекст
         playTrack(nextTrackItem, currentSection);
       } else {
         console.log('No next track available');
@@ -754,6 +821,7 @@ export const MusicProvider = ({ children }) => {
       if (currentTime < 3) {
         const prevTrackItem = await getPreviousTrack();
         if (prevTrackItem) {
+          // Передаем текущую секцию, чтобы сохранить контекст
           playTrack(prevTrackItem, currentSection);
         } else {
           
@@ -776,30 +844,31 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
       
-      if (currentSection && currentSection.startsWith('playlist_')) {
-        const playlistId = currentSection;
-        const tracksInPlaylist = playlistTracks[playlistId] || [];
-        
-        if (tracksInPlaylist.length === 0) {
-          console.log('Playlist is empty, returning null');
+      // Для секций artist и playlist_ делаем запрос к бэкенду
+      if (currentSection === 'artist' || currentSection.startsWith('playlist_')) {
+        try {
+          const response = await axios.get('/api/music/next', {
+            params: {
+              current_id: currentTrack.id,
+              context: currentSection
+            },
+            withCredentials: true
+          });
+          
+          if (response.data.success && response.data.track) {
+            console.log(`Получен следующий трек из бэкенда для секции ${currentSection}:`, response.data.track.title);
+            return response.data.track;
+          } else {
+            console.log('Бэкенд не вернул следующий трек');
+            return null;
+          }
+        } catch (error) {
+          console.error('Ошибка при запросе следующего трека к бэкенду:', error);
           return null;
-        }
-        
-        const currentIndex = tracksInPlaylist.findIndex(track => track.id === currentTrack.id);
-        
-        if (currentIndex === -1) {
-          console.log('Current track not found in playlist, returning first track');
-          return tracksInPlaylist[0];
-        }
-        
-        if (currentIndex < tracksInPlaylist.length - 1) {
-          return tracksInPlaylist[currentIndex + 1];
-        } else {
-          console.log('Last track in playlist, returning first track (loop)');
-          return tracksInPlaylist[0];
         }
       }
       
+      // Для остальных секций используем локальные списки
       let trackList;
       switch (currentSection) {
         case 'popular':
@@ -817,6 +886,9 @@ export const MusicProvider = ({ children }) => {
         case 'search':
           trackList = searchResults;
           break;
+        case 'my-vibe':
+          trackList = myVibeTracks;
+          break;
         default:
           trackList = tracks;
       }
@@ -825,17 +897,15 @@ export const MusicProvider = ({ children }) => {
         return null;
       }
       
-      
+      // Находим текущую позицию в списке
       const currentIndex = trackList.findIndex(track => track.id === currentTrack.id);
       
       if (currentIndex === -1) {
-        
+        // Если текущий трек не найден в списке, возвращаем первый
         return trackList[0];
       }
       
-      
-      
-      
+      // Проверяем, нужно ли загрузить больше треков
       const isNearingEnd = currentIndex >= trackList.length - 3;
       const isNearing15Increment = (currentIndex + 1) % 15 >= 12 || (currentIndex + 1) % 15 === 0;
       
@@ -846,19 +916,16 @@ export const MusicProvider = ({ children }) => {
         loadMoreTracks(currentSection);
       }
       
-      
+      // Возвращаем следующий трек
       if (currentIndex < trackList.length - 1) {
         return trackList[currentIndex + 1];
       } else {
-        
-        
+        // Если это последний трек, пытаемся загрузить больше
         if (hasMoreByType[currentSection]) {
           console.log("Reached last track, attempting to load more before looping");
           const loaded = await loadMoreTracks(currentSection);
           
-          
           if (loaded) {
-            
             let updatedTrackList;
             switch (currentSection) {
               case 'popular':
@@ -876,10 +943,12 @@ export const MusicProvider = ({ children }) => {
               case 'search':
                 updatedTrackList = searchResults;
                 break;
+              case 'my-vibe':
+                updatedTrackList = myVibeTracks;
+                break;
               default:
                 updatedTrackList = tracks;
             }
-            
             
             if (updatedTrackList.length > trackList.length) {
               console.log("New tracks loaded, returning the first new track");
@@ -888,7 +957,7 @@ export const MusicProvider = ({ children }) => {
           }
         }
         
-        
+        // Зацикливаемся на первый трек
         return trackList[0];
       }
     } catch (error) {
@@ -902,30 +971,31 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
       
-      if (currentSection && currentSection.startsWith('playlist_')) {
-        const playlistId = currentSection;
-        const tracksInPlaylist = playlistTracks[playlistId] || [];
-        
-        if (tracksInPlaylist.length === 0) {
-          console.log('Playlist is empty, returning null');
+      // Для секций artist и playlist_ делаем запрос к бэкенду
+      if (currentSection === 'artist' || currentSection.startsWith('playlist_')) {
+        try {
+          const response = await axios.get('/api/music/previous', {
+            params: {
+              current_id: currentTrack.id,
+              context: currentSection
+            },
+            withCredentials: true
+          });
+          
+          if (response.data.success && response.data.track) {
+            console.log(`Получен предыдущий трек из бэкенда для секции ${currentSection}:`, response.data.track.title);
+            return response.data.track;
+          } else {
+            console.log('Бэкенд не вернул предыдущий трек');
+            return null;
+          }
+        } catch (error) {
+          console.error('Ошибка при запросе предыдущего трека к бэкенду:', error);
           return null;
-        }
-        
-        const currentIndex = tracksInPlaylist.findIndex(track => track.id === currentTrack.id);
-        
-        if (currentIndex === -1) {
-          console.log('Current track not found in playlist, returning last track');
-          return tracksInPlaylist[tracksInPlaylist.length - 1];
-        }
-        
-        if (currentIndex > 0) {
-          return tracksInPlaylist[currentIndex - 1];
-        } else {
-          console.log('First track in playlist, returning last track (loop)');
-          return tracksInPlaylist[tracksInPlaylist.length - 1];
         }
       }
       
+      // Для остальных секций используем локальные списки
       let trackList;
       switch (currentSection) {
         case 'popular':
@@ -943,6 +1013,9 @@ export const MusicProvider = ({ children }) => {
         case 'search':
           trackList = searchResults;
           break;
+        case 'my-vibe':
+          trackList = myVibeTracks;
+          break;
         default:
           trackList = tracks;
       }
@@ -951,34 +1024,69 @@ export const MusicProvider = ({ children }) => {
         return null;
       }
       
-      
+      // Находим текущую позицию в списке
       const currentIndex = trackList.findIndex(track => track.id === currentTrack.id);
       
       if (currentIndex === -1) {
-        
+        // Если текущий трек не найден в списке, возвращаем последний
         return trackList[trackList.length - 1];
       }
       
-      
-      
-      
+      // Проверяем, нужно ли загрузить больше треков
       const isNearingStart = currentIndex <= 2;
-      const isNearing15Increment = currentIndex % 15 <= 2 || currentIndex % 15 === 14;
+      const isNearing15Increment = (currentIndex + 1) % 15 <= 3 || (currentIndex + 1) % 15 === 0;
       
       if ((isNearingStart || isNearing15Increment) && hasMoreByType[currentSection]) {
-        console.log(`Trigger pagination backward: ${isNearingStart ? 'nearing start of list' : 'approaching track at multiple of 15'}`);
+        console.log(`Trigger pagination: ${isNearingStart ? 'nearing start of list' : 'approaching track at multiple of 15'}`);
         console.log(`Current index: ${currentIndex}, Total tracks in list: ${trackList.length}`);
         
         loadMoreTracks(currentSection);
       }
       
-      
+      // Возвращаем предыдущий трек
       if (currentIndex > 0) {
         return trackList[currentIndex - 1];
+      } else {
+        // Если это первый трек, пытаемся загрузить больше
+        if (hasMoreByType[currentSection]) {
+          console.log("Reached first track, attempting to load more before looping");
+          const loaded = await loadMoreTracks(currentSection);
+          
+          if (loaded) {
+            let updatedTrackList;
+            switch (currentSection) {
+              case 'popular':
+                updatedTrackList = popularTracks;
+                break;
+              case 'liked':
+                updatedTrackList = likedTracks;
+                break;
+              case 'new':
+                updatedTrackList = newTracks;
+                break;
+              case 'random':
+                updatedTrackList = randomTracks;
+                break;
+              case 'search':
+                updatedTrackList = searchResults;
+                break;
+              case 'my-vibe':
+                updatedTrackList = myVibeTracks;
+                break;
+              default:
+                updatedTrackList = tracks;
+            }
+            
+            if (updatedTrackList.length > trackList.length) {
+              console.log("New tracks loaded, returning the last new track");
+              return updatedTrackList[updatedTrackList.length - 1]; 
+            }
+          }
+        }
+        
+        // Зацикливаемся на последний трек
+        return trackList[trackList.length - 1];
       }
-      
-      
-      return trackList[trackList.length - 1];
     } catch (error) {
       console.error('Error getting previous track:', error);
       return null;
@@ -1002,6 +1110,7 @@ export const MusicProvider = ({ children }) => {
       try {
         const nextTrackItem = await getNextTrack();
         if (nextTrackItem) {
+          // Передаем текущую секцию, чтобы сохранить контекст
           playTrack(nextTrackItem, currentSection);
         } else {
           console.log('No next track available after current track ended');
@@ -1107,6 +1216,7 @@ export const MusicProvider = ({ children }) => {
         setPopularTracks(updateTrackInList(popularTracks));
         setNewTracks(updateTrackInList(newTracks));
         setRandomTracks(updateTrackInList(randomTracks));
+        setMyVibeTracks(updateTrackInList(myVibeTracks));
         
         
         if (newIsLiked) {
@@ -1158,6 +1268,7 @@ export const MusicProvider = ({ children }) => {
           setPopularTracks(updateTrackInList(popularTracks));
           setNewTracks(updateTrackInList(newTracks));
           setRandomTracks(updateTrackInList(randomTracks));
+          setMyVibeTracks(updateTrackInList(myVibeTracks));
           
           
           if (!isLiked) {
@@ -1208,6 +1319,7 @@ export const MusicProvider = ({ children }) => {
           setPopularTracks(updateTrackInList(popularTracks));
           setNewTracks(updateTrackInList(newTracks));
           setRandomTracks(updateTrackInList(randomTracks));
+          setMyVibeTracks(updateTrackInList(myVibeTracks));
           
           
           if (currentTrack && currentTrack.id === trackId) {
@@ -1331,6 +1443,12 @@ export const MusicProvider = ({ children }) => {
         
         const newTracksList = [response.data.track, ...newTracks].slice(0, 10);
         setNewTracks(newTracksList);
+        
+        // Обновляем "Мой вайб" если он содержит треки
+        if (myVibeTracks.length > 0) {
+          const updatedMyVibeTracks = [response.data.track, ...myVibeTracks].slice(0, 30);
+          setMyVibeTracks(updatedMyVibeTracks);
+        }
         
         return response.data.track;
       }
@@ -1482,6 +1600,29 @@ export const MusicProvider = ({ children }) => {
           hasTracks: !!(response.data && response.data.tracks),
           tracksCount: response.data && response.data.tracks ? response.data.tracks.length : 0
         });
+      } else if (type === 'my-vibe') {
+        endpoint = '/api/music/my-vibe';
+        params = { page: nextPage, per_page: 50 };
+        
+        console.log(`[loadMoreTracks] Запрос для "Мой вайб": ${endpoint}`, params);
+        
+        const config = {
+          params,
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          },
+          withCredentials: true
+        };
+        
+        response = await axios.get(endpoint, config);
+        console.log(`[loadMoreTracks] Получен ответ для "Мой вайб":`, {
+          status: response.status,
+          hasData: !!response.data,
+          hasTracks: !!(response.data && response.data.tracks),
+          tracksCount: response.data && response.data.tracks ? response.data.tracks.length : 0
+        });
       } else if (type === 'popular') {
         params.sort = 'popular';
       } else if (type === 'new') {
@@ -1569,6 +1710,15 @@ export const MusicProvider = ({ children }) => {
         } else {
           console.log(`[loadMoreTracks] Добавляем ${newTracks.length} понравившихся треков к существующим ${likedTracks.length}`);
           setLikedTracks(prevTracks => [...prevTracks, ...newTracks]);
+        }
+      } else if (type === 'my-vibe') {
+        
+        if (response && response.data && response.data.tracks) {
+          console.log(`[loadMoreTracks] Добавляем ${response.data.tracks.length} треков "Мой вайб" к существующим ${myVibeTracks.length}`);
+          setMyVibeTracks(prevTracks => [...prevTracks, ...response.data.tracks]);
+        } else {
+          console.log(`[loadMoreTracks] Добавляем ${newTracks.length} треков "Мой вайб" к существующим ${myVibeTracks.length}`);
+          setMyVibeTracks(prevTracks => [...prevTracks, ...newTracks]);
         }
       } else if (type === 'popular') {
         setPopularTracks(prevTracks => [...prevTracks, ...newTracks]);
@@ -1665,6 +1815,24 @@ export const MusicProvider = ({ children }) => {
           console.log(`Предзагружено ${response.data.tracks?.length || 0} понравившихся треков для страницы ${nextPage}`);
         } catch (error) {
           console.error('Ошибка при предзагрузке понравившихся треков:', error);
+        }
+        return;
+      }
+      
+      if (type === 'my-vibe') {
+        let endpoint = '/api/music/my-vibe';
+        let params = { page: nextPage, per_page: 50 };
+        
+        try {
+          const response = await axios.get(endpoint, { 
+            params,
+            headers: {
+              'Cache-Control': 'max-age=300'  
+            }
+          });
+          console.log(`Предзагружено ${response.data.tracks?.length || 0} треков "Мой вайб" для страницы ${nextPage}`);
+        } catch (error) {
+          console.error('Ошибка при предзагрузке "Мой вайб":', error);
         }
         return;
       }
@@ -1831,6 +1999,64 @@ export const MusicProvider = ({ children }) => {
             reject(error);
             return;
           }
+        } else if (type === 'my-vibe') {
+          url = '/api/music/my-vibe';
+          
+          
+          try {
+            const config = {
+              params,
+              headers: {
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+              },
+              withCredentials: true
+            };
+            
+            console.log('[resetPagination] Запрашиваем "Мой вайб"', config);
+            const response = await axios.get(url, config);
+            
+            if (response.data && response.data.tracks) {
+              const receivedTracks = response.data.tracks;
+              console.log(`[resetPagination] Получено ${receivedTracks.length} треков для "Мой вайб"`);
+              
+              
+              const hasMore = receivedTracks.length >= params.per_page;
+              console.log(`[resetPagination] Устанавливаем hasMoreByType[my-vibe] = ${hasMore}`);
+              
+              setMyVibeTracks(receivedTracks);
+              setHasMoreByType(prev => ({ ...prev, 'my-vibe': hasMore }));
+              
+              if (currentSection === 'my-vibe') {
+                setHasMoreTracks(hasMore);
+              }
+              
+              resolve(true);
+              return;
+            } else {
+              console.log('[resetPagination] В ответе нет треков для "Мой вайб"');
+              setMyVibeTracks([]);
+              setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
+              
+              if (currentSection === 'my-vibe') {
+                setHasMoreTracks(false);
+              }
+              
+              resolve(false);
+              return;
+            }
+          } catch (error) {
+            console.error('[resetPagination] Ошибка при загрузке "Мой вайб":', error);
+            setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
+            
+            if (currentSection === 'my-vibe') {
+              setHasMoreTracks(false);
+            }
+            
+            reject(error);
+            return;
+          }
         } else if (type === 'popular') {
           params.sort = 'popular';
         } else if (type === 'new') {
@@ -1859,6 +2085,10 @@ export const MusicProvider = ({ children }) => {
             setLikedTracks(receivedTracks);
             setHasMoreTracks(receivedTracks.length >= 50);
             setHasMoreByType(prev => ({ ...prev, liked: receivedTracks.length >= 50 }));
+          } else if (type === 'my-vibe') {
+            setMyVibeTracks(receivedTracks);
+            setHasMoreTracks(receivedTracks.length >= 50);
+            setHasMoreByType(prev => ({ ...prev, 'my-vibe': receivedTracks.length >= 50 }));
           } else if (type === 'popular') {
             setPopularTracks(receivedTracks);
             setHasMoreTracks(receivedTracks.length >= 50);
@@ -1890,20 +2120,35 @@ export const MusicProvider = ({ children }) => {
         const savedTrack = localStorage.getItem('currentTrack');
         const savedSection = localStorage.getItem('currentSection') || 'all';
         
+        // Проверяем, что сохраненная секция валидна
+        const validSections = ['all', 'popular', 'liked', 'new', 'random', 'my-vibe'];
+        const isValidSection = validSections.includes(savedSection) || savedSection.startsWith('playlist_');
+        
         if (savedTrack) {
           const parsedTrack = JSON.parse(savedTrack);
           setCurrentTrack(parsedTrack);
           
-          setCurrentSection(savedSection);
+          // Устанавливаем секцию только если она валидна
+          if (isValidSection) {
+            setCurrentSectionHandler(savedSection);
+          } else {
+            console.log('[useEffect] Невалидная секция в localStorage, сбрасываем на "all"');
+            setCurrentSectionHandler('all');
+          }
           
           audioRef.current.src = parsedTrack.file_path;
           audioRef.current.volume = volume;
           setIsPlaying(false);
           
           console.log('Восстановлен последний трек из localStorage:', parsedTrack.title);
+        } else {
+          // Если нет сохраненного трека, сбрасываем секцию на "all"
+          setCurrentSectionHandler('all');
         }
       } catch (error) {
         console.error('Ошибка при восстановлении трека:', error);
+        // При ошибке сбрасываем секцию на "all"
+        setCurrentSectionHandler('all');
       }
       
       initialMount.current = false;
@@ -1995,6 +2240,88 @@ export const MusicProvider = ({ children }) => {
     }));
   }, []);
 
+  // Функция для автоматического определения секции по треку
+  const determineSectionFromTrack = (track) => {
+    // Сначала проверяем, есть ли явно указанная секция в URL или контексте
+    const currentPath = window.location.pathname;
+    
+    // Проверяем URL для определения текущей страницы
+    if (currentPath.includes('/music/liked') || currentPath.includes('/liked')) {
+      return 'liked';
+    }
+    if (currentPath.includes('/music/popular') || currentPath.includes('/popular')) {
+      return 'popular';
+    }
+    if (currentPath.includes('/music/new') || currentPath.includes('/new')) {
+      return 'new';
+    }
+    if (currentPath.includes('/music/random') || currentPath.includes('/random')) {
+      return 'random';
+    }
+    if (currentPath.includes('/music/my-vibe') || currentPath.includes('/my-vibe')) {
+      return 'my-vibe';
+    }
+    if (currentPath.includes('/music/all') || currentPath.includes('/all-tracks')) {
+      return 'all';
+    }
+    
+    // Если URL не помогает, проверяем треки в списках
+    if (likedTracks.find(t => t.id === track.id)) {
+      return 'liked';
+    }
+    if (popularTracks.find(t => t.id === track.id)) {
+      return 'popular';
+    }
+    if (newTracks.find(t => t.id === track.id)) {
+      return 'new';
+    }
+    if (randomTracks.find(t => t.id === track.id)) {
+      return 'random';
+    }
+    if (myVibeTracks.find(t => t.id === track.id)) {
+      return 'my-vibe';
+    }
+    if (searchResults.find(t => t.id === track.id)) {
+      return 'search';
+    }
+    // Проверяем плейлисты
+    for (const [playlistId, tracks] of Object.entries(playlistTracks)) {
+      if (tracks.find(t => t.id === track.id)) {
+        return `playlist_${playlistId}`;
+      }
+    }
+    // По умолчанию возвращаем "all"
+    return 'all';
+  };
+
+  // Функции для управления секцией
+  const setCurrentSectionHandler = (section) => {
+    console.log(`[setCurrentSection] Устанавливаем секцию: ${section}`);
+    setCurrentSection(section);
+    
+    // Сохраняем секцию в localStorage только если это не временная секция
+    if (section && !section.startsWith('playlist_') && section !== 'search') {
+      try {
+        localStorage.setItem('currentSection', section);
+        console.log(`[setCurrentSection] Сохранена секция в localStorage: ${section}`);
+      } catch (error) {
+        console.error('Ошибка при сохранении секции в localStorage:', error);
+      }
+    }
+  };
+
+  const resetCurrentSection = () => {
+    console.log('[resetCurrentSection] Сбрасываем текущую секцию');
+    setCurrentSection('all');
+    
+    try {
+      localStorage.removeItem('currentSection');
+      console.log('[resetCurrentSection] Удалена секция из localStorage');
+    } catch (error) {
+      console.error('Ошибка при удалении секции из localStorage:', error);
+    }
+  };
+
   
   const musicContextValue = {
     tracks,
@@ -2002,6 +2329,7 @@ export const MusicProvider = ({ children }) => {
     likedTracks,
     newTracks,
     randomTracks,
+    myVibeTracks,
     currentTrack,
     isPlaying,
     volume,
@@ -2015,7 +2343,8 @@ export const MusicProvider = ({ children }) => {
     currentSection,
     isTrackLoading,
     setCurrentTrack,
-    setCurrentSection,
+    setCurrentSection: setCurrentSectionHandler,
+    resetCurrentSection,
     setRandomTracks,
     playTrack,
     togglePlay,

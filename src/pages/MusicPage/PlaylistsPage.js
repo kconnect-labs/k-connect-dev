@@ -50,7 +50,7 @@ const PlaylistCard = styled(Card)(({ theme }) => ({
 
 const PlaylistsPage = () => {
   const navigate = useNavigate();
-  const { playTrack } = useMusic();
+  const { playTrack, currentTrack } = useMusic();
   
   // Состояние
   const [playlists, setPlaylists] = useState([]);
@@ -191,7 +191,7 @@ const PlaylistsPage = () => {
 
   const handlePlayPlaylist = (playlist) => {
     if (playlist.preview_tracks && playlist.preview_tracks.length > 0) {
-      playTrack(playlist.preview_tracks[0], 'playlist');
+      playTrack(playlist.preview_tracks[0], `playlist_${playlist.id}`);
     }
   };
 
@@ -551,7 +551,7 @@ const PlaylistsPage = () => {
         onAddTracks={handleAddTracks}
         onRemoveTrack={handleRemoveTrack}
         isLoading={false}
-        nowPlaying={null}
+        nowPlaying={currentTrack}
       />
 
       <PlaylistViewModal
@@ -559,7 +559,14 @@ const PlaylistsPage = () => {
         onClose={() => setPlaylistViewModalOpen(false)}
         playlist={viewingPlaylist}
         onEdit={handleEditPlaylist}
-        onPlayTrack={playTrack}
+        onPlayTrack={(track) => {
+          if (viewingPlaylist) {
+            playTrack(track, `playlist_${viewingPlaylist.id}`);
+          } else {
+            playTrack(track);
+          }
+        }}
+        nowPlaying={currentTrack}
       />
     </Box>
   );

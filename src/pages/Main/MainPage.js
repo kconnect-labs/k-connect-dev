@@ -686,7 +686,7 @@ const CreatePost = ({ onPostCreated }) => {
     if (currentTrack && currentTrack.id === track.id) {
       togglePlay(); 
     } else {
-      playTrack(track); 
+      playTrack(track, 'main');
     }
   };
   
@@ -1587,33 +1587,6 @@ const MainPage = React.memo(() => {
     
   }, []);
 
-
-  
-  const getFallbackRecommendations = () => {
-    return [
-      {
-        id: 'local1',
-        name: 'Анна Смирнова',
-        username: 'anna_smirnova',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'UX/UI дизайнер, люблю путешествия и фотографию'
-      },
-      {
-        id: 'local2',
-        name: 'Иван Петров',
-        username: 'ivan_petrov',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'Разработчик, любитель музыки и хороших книг'
-      },
-      {
-        id: 'local3',
-        name: 'Маргарита К.',
-        username: 'rita_k',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'Фотограф, путешественник, искатель приключений'
-      }
-    ];
-  };
 
   
   const loadMorePosts = async () => {

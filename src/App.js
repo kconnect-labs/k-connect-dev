@@ -680,354 +680,145 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
   const [themeSettings, setThemeSettings] = useState(() => {
+    const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
+    const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
     
-    const getStoredValue = (key, defaultValue) => {
-      
-      const sessionValue = sessionStorage.getItem(key);
-      if (sessionValue) return sessionValue;
-      
-      
-      const localValue = localStorage.getItem(key);
-      if (localValue) return localValue;
-      
-      
-      const cookieValue = getCookie(key);
-      if (cookieValue) return cookieValue;
-      
-      
-      try {
-        const themeData = JSON.parse(localStorage.getItem('themeData') || '{}');
-        if (themeData[key]) return themeData[key];
-      } catch (e) {
-        console.warn('Error parsing theme data JSON:', e);
+    // Упрощенные настройки для 3 тем
+    const getThemeColors = (mode) => {
+      switch (mode) {
+        case 'light':
+          return {
+            backgroundColor: '#ffffff',
+            textColor: '#000000'
+          };
+        case 'contrast':
+          return {
+            backgroundColor: '#000000',
+            textColor: '#FFFFFF'
+          };
+        default: // default theme
+          return {
+            backgroundColor: '#131313', //НЕ ЗАБУДЬ ВЕРНУТЬ 131313
+            textColor: '#FFFFFF'
+          };
       }
-      
-      return defaultValue;
     };
     
-    
-    const sessionTheme = sessionStorage.getItem('themeMode');
-    const localTheme = localStorage.getItem('theme') || localStorage.getItem('themeMode');
-    const cookieTheme = getCookie('themeMode') || getCookie('theme');
-    
-    
-    const savedThemeMode = sessionTheme || localTheme || cookieTheme || 'dark';
-    
-    
-    if (savedThemeMode) {
-      localStorage.setItem('theme', savedThemeMode);
-      localStorage.setItem('themeMode', savedThemeMode);
-      sessionStorage.setItem('theme', savedThemeMode);
-      sessionStorage.setItem('themeMode', savedThemeMode);
-      setCookie('theme', savedThemeMode);
-      setCookie('themeMode', savedThemeMode);
-    }
+    const colors = getThemeColors(savedThemeMode);
     
     return {
       mode: savedThemeMode,
-      backgroundColor: getStoredValue('backgroundColor', 
-                      (savedThemeMode === 'light' ? '#f5f5f5' : savedThemeMode === 'contrast' ? '#080808' : '#131313')),
-      paperColor: getStoredValue('paperColor', 
-                 (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      headerColor: getStoredValue('headerColor', 
-                  (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#121212')),
-      bottomNavColor: getStoredValue('bottomNavColor', 
-                     (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      contentColor: getStoredValue('contentColor', 
-                   (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      primaryColor: getStoredValue('primaryColor', 
-                   (savedThemeMode === 'light' ? '#8c52ff' : savedThemeMode === 'contrast' ? '#7B46E3' : '#D0BCFF')),
-      textColor: getStoredValue('textColor', 
-                (savedThemeMode === 'light' ? '#121212' : '#FFFFFF')),
+      backgroundColor: colors.backgroundColor,
+      textColor: colors.textColor,
+      primaryColor: savedPrimaryColor
     };
   });
   
-  
-  const recoverThemeSettings = useCallback(() => {
-    console.log('Running theme recovery check...');
-    
-    
-    const currentMode = themeSettings.mode;
-    
-    
-    const sessionTheme = sessionStorage.getItem('themeMode');
-    const localTheme = localStorage.getItem('themeMode');
-    const cookieTheme = getCookie('themeMode');
-    
-    
-    if (!sessionTheme || !localTheme || !cookieTheme) {
-      console.log('Theme storage inconsistency detected, restoring...');
-      
-      
-      saveThemeSettings('theme', currentMode);
-      saveThemeSettings('themeMode', currentMode);
-      
-      
-      Object.entries(themeSettings).forEach(([key, value]) => {
-        if (key !== 'mode' && value) {
-          saveThemeSettings(key, value);
-        }
-      });
-      
-      
-      try {
-        const themeData = {};
-        Object.entries(themeSettings).forEach(([key, value]) => {
-          if (value) {
-            themeData[key] = value;
-            if (key === 'mode') {
-              themeData['theme'] = value;
-              themeData['themeMode'] = value;
-            }
-          }
-        });
-        localStorage.setItem('themeData', JSON.stringify(themeData));
-        sessionStorage.setItem('themeData', JSON.stringify(themeData));
-      } catch (e) {
-        console.error('Error creating theme data backup:', e);
-      }
-    }
-  }, [themeSettings]);
-  
-  
-  useEffect(() => {
-    
-    recoverThemeSettings();
-    
-    
-    const recoveryInterval = setInterval(recoverThemeSettings, 30000);
-    
-    
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        recoverThemeSettings();
-      }
-    };
-    
-    const handleFocus = () => {
-      recoverThemeSettings();
-    };
-    
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      clearInterval(recoveryInterval);
-      window.removeEventListener('focus', handleFocus);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [recoverThemeSettings]);
   
   const onAboutSubdomain = useMemo(() => isAboutSubdomain(), []);
   const onShareSubdomain = useMemo(() => isShareSubdomain(), []);
   
   useEffect(() => {
     if (onShareSubdomain) {
-
       console.log('Share subdomain detected, user will be redirected via share.html');
     }
   }, [onShareSubdomain]);
 
-  const getContrastTextColor = (hexColor) => {
-    if (themeSettings.mode === 'dark' || themeSettings.mode === 'contrast') {
-      return '#FFFFFF';
-    }
-    
-    if (!hexColor || typeof hexColor !== 'string') {
-      return '#000000'; 
-    }
-    
-    const color = hexColor.charAt(0) === '#' ? hexColor.substring(1) : hexColor;
-    
-    if (!/^[0-9A-Fa-f]{6}$/.test(color)) {
-      console.warn('Invalid hex color provided to getContrastTextColor:', hexColor);
-      return '#000000';
-    }
-    
-    const r = parseInt(color.substr(0, 2), 16);
-    const g = parseInt(color.substr(2, 2), 16);
-    const b = parseInt(color.substr(4, 2), 16);
-    
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    return luminance > 0.6 ? '#000000' : '#FFFFFF';
-  };
-
-  
-  const loadThemeSettings = async (forceDefault = false) => {
-    try {
-      if (forceDefault) {
-        
-        const defaultSettings = {
-          background_color: '#131313',
-          container_color: '#1A1A1A',
-          header_color: '#1A1A1A',
-          bottom_nav_color: '#1A1A1A',
-          content_color: '#1A1A1A',
-          welcome_bubble_color: '#131313',
-          avatar_border_color: '#D0BCFF'
-        };
-        applyThemeSettings(defaultSettings);
-        return;
-      }
-
-      const response = await ProfileService.getSettings();
-      if (response && response.success && response.settings) {
-        applyThemeSettings(response.settings);
-      }
-    } catch (error) {
-      console.error('Error loading theme settings:', error);
-      
-      applyThemeSettings({
-        background_color: '#131313',
-        container_color: '#1A1A1A',
-        header_color: '#1A1A1A',
-        bottom_nav_color: '#1A1A1A',
-        content_color: '#1A1A1A',
-        welcome_bubble_color: '#131313',
-        avatar_border_color: '#D0BCFF'
-      });
-    }
-  };
-
-  
-  const applyThemeSettings = (settings) => {
-    
-    const backgroundColor = settings.background_color || '#131313';
-    const containerColor = settings.container_color || '#1A1A1A';
-    const headerColor = settings.header_color || settings.container_color || '#1A1A1A';
-    const bottomNavColor = settings.bottom_nav_color || settings.container_color || '#1A1A1A';
-    const contentColor = settings.content_color || settings.container_color || '#1A1A1A';
-    const welcomeBubbleColor = settings.welcome_bubble_color || '#131313';
-    const primaryColor = settings.avatar_border_color || '#D0BCFF';
-
-    
-    const backgroundTextColor = getContrastTextColor(backgroundColor);
-    const containerTextColor = getContrastTextColor(containerColor);
-    const headerTextColor = getContrastTextColor(headerColor);
-    const contentTextColor = getContrastTextColor(contentColor);
-    const bottomNavTextColor = getContrastTextColor(bottomNavColor);
-
-    
-    updateThemeSettings({
-      backgroundColor: backgroundColor,
-      paperColor: containerColor,
-      headerColor: headerColor,
-      bottomNavColor: bottomNavColor,
-      contentColor: contentColor,
-      primaryColor: primaryColor,
-      textColor: containerTextColor,
-      headerTextColor: headerTextColor,
-      contentTextColor: contentTextColor,
-      bottomNavTextColor: bottomNavTextColor,
-      backgroundTextColor: backgroundTextColor
-    });
-    
-    console.log('Theme settings applied:', {
-      backgroundColor, 
-      containerColor, 
-      headerColor, 
-      bottomNavColor, 
-      contentColor,
-      backgroundTextColor, 
-      containerTextColor,
-      headerTextColor,
-      contentTextColor,
-      bottomNavTextColor
-    });
-  };
-  
-  
-  const authContextValue = useContext(AuthContext) || {};
-  
-  
-  useEffect(() => {
-    if (authContextValue.isAuthenticated) {
-      
-      loadThemeSettings();
-    } else if (!authContextValue.loading) {
-      
-      loadThemeSettings(true);
-    }
-  }, [authContextValue.isAuthenticated, authContextValue.loading]);
-  
-  
   const updateThemeSettings = (newSettings) => {
     setThemeSettings(prev => {
+      // Проверяем, действительно ли изменились настройки
+      const hasChanges = Object.keys(newSettings).some(key => 
+        prev[key] !== newSettings[key]
+      );
+      
+      if (!hasChanges) {
+        return prev; // Возвращаем предыдущее состояние без изменений
+      }
+      
       const updated = { ...prev, ...newSettings };
       
-      
+      // Сохраняем только основные настройки
       if (newSettings.mode) {
-        saveThemeSettings('theme', newSettings.mode);
-        saveThemeSettings('themeMode', newSettings.mode);
+        localStorage.setItem('theme', newSettings.mode);
+        localStorage.setItem('themeMode', newSettings.mode);
       }
-      if (newSettings.backgroundColor) saveThemeSettings('backgroundColor', newSettings.backgroundColor);
-      if (newSettings.paperColor) saveThemeSettings('paperColor', newSettings.paperColor);
-      if (newSettings.headerColor) saveThemeSettings('headerColor', newSettings.headerColor);
-      if (newSettings.bottomNavColor) saveThemeSettings('bottomNavColor', newSettings.bottomNavColor);
-      if (newSettings.contentColor) saveThemeSettings('contentColor', newSettings.contentColor);
-      if (newSettings.primaryColor) saveThemeSettings('primaryColor', newSettings.primaryColor);
-      if (newSettings.textColor) saveThemeSettings('textColor', newSettings.textColor);
+      if (newSettings.backgroundColor) {
+        localStorage.setItem('backgroundColor', newSettings.backgroundColor);
+      }
+      if (newSettings.textColor) {
+        localStorage.setItem('textColor', newSettings.textColor);
+      }
+      if (newSettings.primaryColor) {
+        localStorage.setItem('primaryColor', newSettings.primaryColor);
+      }
       
       return updated;
     });
   };
-
+  
+  
+  const { isAuthenticated } = useContext(AuthContext) || {};
+  const prevAuthState = useRef({ isAuthenticated: null, loading: null });
+  
+  useEffect(() => {
+    const currentAuthState = {
+      isAuthenticated: isAuthenticated,
+      loading: false
+    };
+    
+    // Проверяем, действительно ли изменилось состояние
+    if (
+      prevAuthState.current.isAuthenticated !== currentAuthState.isAuthenticated ||
+      prevAuthState.current.loading !== currentAuthState.loading
+    ) {
+      if (currentAuthState.isAuthenticated) {
+        // Только если тема не 'default', устанавливаем её
+        if (themeSettings.mode !== 'default') {
+          updateThemeSettings({ mode: themeSettings.mode });
+        }
+      } else if (!currentAuthState.loading) {
+        // Только если тема не 'default', устанавливаем 'default'
+        if (themeSettings.mode !== 'default') {
+          updateThemeSettings({ mode: 'default' });
+        }
+      }
+      
+      // Обновляем предыдущее состояние
+      prevAuthState.current = currentAuthState;
+    }
+  }, [isAuthenticated, themeSettings.mode]);
+  
   
   const theme = useMemo(() => {
     const themeObj = createTheme({
       palette: {
-        mode: themeSettings.mode === 'dark' ? 'dark' : 'light',
+        mode: themeSettings.mode === 'light' ? 'light' : 'dark',
         primary: {
           main: themeSettings.primaryColor || '#D0BCFF',
-          light: themeSettings.primaryColor || '#E9DDFF',
-          dark: themeSettings.primaryColor || '#B69DF8',
         },
         secondary: {
-          main: themeSettings.secondaryColor || '#f28c9a',
+          main: '#f28c9a',
         },
         background: {
           default: themeSettings.backgroundColor || '#131313',
-          paper: themeSettings.paperColor || '#1A1A1A',
+          paper: themeSettings.backgroundColor || '#131313',
         },
         text: {
-          primary: themeSettings.textColor || 
-                  (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-          secondary: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-        },
-        header: {
-          main: themeSettings.headerColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.headerTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-        },
-        bottomNav: {
-          main: themeSettings.bottomNavColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.bottomNavTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-        },
-        content: {
-          main: themeSettings.contentColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.contentTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
+          primary: themeSettings.textColor || '#FFFFFF',
+          secondary: themeSettings.mode === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
         },
       },
       typography: {
         fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-        h1: { fontSize: '2.5rem', fontWeight: 700 },
-        h2: { fontSize: '2rem', fontWeight: 700 },
-        h3: { fontSize: '1.8rem', fontWeight: 600 },
-        h4: { fontSize: '1.5rem', fontWeight: 600 },
-        h5: { fontSize: '1.2rem', fontWeight: 500 },
-        h6: { fontSize: '1rem', fontWeight: 500 },
       },
       shape: {
-        borderRadius: 12, 
+        borderRadius: 12,
       },
       components: {
         MuiButton: {
           styleOverrides: {
             root: {
-              borderRadius: '12px', 
+              borderRadius: '12px',
               textTransform: 'none',
               fontWeight: 500,
             },
@@ -1036,97 +827,27 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              lineHeight: 1,
               backgroundColor: themeSettings.backgroundColor || '#131313',
-              color: themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : (themeSettings.textColor || (themeSettings.mode === 'light' ? '#121212' : '#FFFFFF')),
-              '& *': themeSettings.mode === 'contrast' 
-                ? { color: 'inherit' }
-                : {},
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
         MuiCard: {
           styleOverrides: {
             root: {
-              borderRadius: '15px', 
+              borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: themeSettings.contentColor || themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.contentTextColor || getContrastTextColor(themeSettings.contentColor || '#1A1A1A'),
+              backgroundColor: themeSettings.backgroundColor || '#131313',
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
         MuiPaper: {
           styleOverrides: {
             root: {
-              borderRadius: '12px', 
-              backgroundColor: themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.contentTextColor || getContrastTextColor(themeSettings.paperColor || '#1A1A1A'),
-            },
-          },
-        },
-        MuiAppBar: {
-          styleOverrides: {
-            root: {
-              backgroundColor: themeSettings.headerColor || themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.headerTextColor || getContrastTextColor(themeSettings.headerColor || '#1A1A1A'),
-            },
-          },
-        },
-        MuiBottomNavigation: {
-          styleOverrides: {
-            root: {
-              backgroundColor: themeSettings.bottomNavColor || themeSettings.paperColor || '#1A1A1A',
-            },
-          },
-        },
-        MuiBottomNavigationAction: {
-          styleOverrides: {
-            root: {
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.bottomNavTextColor || getContrastTextColor(themeSettings.bottomNavColor || '#1A1A1A'),
-              '&.Mui-selected': {
-                color: themeSettings.primaryColor || '#D0BCFF',
-              },
-            },
-            label: {
-              color: 'inherit',
-              '&.Mui-selected': {
-                color: 'inherit',
-              },
-            },
-            iconOnly: {
-              color: 'inherit',
-            },
-          },
-        },
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '10px', 
-                '& fieldset': {
-                  borderColor: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                },
-                '&:hover fieldset': {
-                  borderColor: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: themeSettings.primaryColor || '#D0BCFF', 
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-                '&.Mui-focused': {
-                  color: themeSettings.primaryColor || '#D0BCFF', 
-                },
-              },
+              borderRadius: '12px',
+              backgroundColor: themeSettings.backgroundColor || '#131313',
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
@@ -1217,7 +938,6 @@ function App() {
   const themeContextValue = useMemo(() => ({
     themeSettings,
     updateThemeSettings,
-    loadThemeSettings,
     setProfileBackground,
     clearProfileBackground,
     profileBackground,
@@ -1262,19 +982,24 @@ function App() {
   }
 
   
+  const isInitialized = useRef(false);
+  
   useEffect(() => {
-    
     localStorage.setItem('themeMode', themeSettings.mode);
   }, [themeSettings.mode]);
 
   
   useEffect(() => {
+    if (isInitialized.current) return; // Предотвращаем повторное выполнение
+    
     const savedThemeMode = localStorage.getItem('themeMode');
     
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
       console.log('Theme mode mismatch, restoring from localStorage');
       updateThemeSettings({ mode: savedThemeMode });
     }
+    
+    isInitialized.current = true;
   }, []);
 
   useEffect(() => {
@@ -1283,60 +1008,67 @@ function App() {
           event.key === 'theme' ||
           event.key === 'themeMode' ||
           event.key === 'backgroundColor' ||
-          event.key === 'paperColor' ||
-          event.key === 'headerColor' ||
-          event.key === 'bottomNavColor' ||
-          event.key === 'contentColor' ||
-          event.key === 'primaryColor' ||
-          event.key === 'textColor'
+          event.key === 'textColor' ||
+          event.key === 'primaryColor'
         )) {
         console.log(`Storage change detected for ${event.key}:`, event.newValue);
+        
+        // Проверяем, действительно ли изменилось значение
+        const currentValue = event.key === 'theme' || event.key === 'themeMode' 
+          ? themeSettings.mode 
+          : themeSettings[event.key];
+        
+        if (currentValue === event.newValue) {
+          return; // Значение не изменилось, пропускаем обновление
+        }
         
         const settingUpdate = {};
         
         if (event.key === 'theme' || event.key === 'themeMode') {
           settingUpdate.mode = event.newValue;
         } else {
-          const stateKey = event.key.charAt(0).toLowerCase() + event.key.slice(1);
-          settingUpdate[stateKey] = event.newValue;
+          settingUpdate[event.key] = event.newValue;
         }
         
-        setThemeSettings(prev => ({
-          ...prev,
-          ...settingUpdate
-        }));
+        updateThemeSettings(settingUpdate);
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     
-    const handlePageFocus = () => {
-      const sessionTheme = sessionStorage.getItem('themeMode');
-      
-      if (!sessionTheme && localStorage.getItem('themeMode')) {
-        const modeFromLocal = localStorage.getItem('themeMode');
-        sessionStorage.setItem('themeMode', modeFromLocal);
-        sessionStorage.setItem('theme', modeFromLocal);
-        
-        ['backgroundColor', 'paperColor', 'headerColor', 'bottomNavColor', 
-         'contentColor', 'primaryColor', 'textColor'].forEach(key => {
-          const value = localStorage.getItem(key);
-          if (value) {
-            sessionStorage.setItem(key, value);
-          }
-        });
-        
-        updateThemeSettings({ mode: modeFromLocal });
-      }
-    };
-    
-    window.addEventListener('focus', handlePageFocus);
-    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handlePageFocus);
     };
+  }, [themeSettings]);
+
+  // --- ДОБАВЛЯЕМ useEffect для загрузки темы пользователя ---
+  useEffect(() => {
+    const loadUserSettings = async () => {
+      try {
+        const response = await fetch('/api/profile/settings');
+        const data = await response.json();
+        if (data && data.success && data.settings) {
+          // Применяем настройки темы
+          setThemeSettings(prev => ({
+            ...prev,
+            primaryColor: data.settings.primary_color || '#D0BCFF',
+            mode: data.settings.theme || 'dark',
+          }));
+          localStorage.setItem('primaryColor', data.settings.primary_color || '#D0BCFF');
+          localStorage.setItem('theme', data.settings.theme || 'dark');
+          console.log('Настройки пользователя загружены:', data.settings);
+        }
+      } catch (e) {
+        console.error('Ошибка загрузки настроек:', e);
+        // fallback: дефолт
+        setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
+      }
+    };
+
+    // Загружаем настройки при инициализации приложения
+    loadUserSettings();
   }, []);
+  // --- КОНЕЦ ДОБАВЛЕНИЯ ---
 
   return (
     <HelmetProvider>
@@ -1462,27 +1194,6 @@ const getCookie = (name) => {
     console.error(`Ошибка при получении cookie ${name}:`, error);
   }
   return null;
-};
-
-const saveThemeSettings = (key, value) => {
-  try {
-    localStorage.setItem(key, value);
-    
-    sessionStorage.setItem(key, value);
-    
-    setCookie(key, value, 365);
-    
-    try {
-      const currentThemeData = JSON.parse(localStorage.getItem('themeData') || '{}');
-      currentThemeData[key] = value;
-      localStorage.setItem('themeData', JSON.stringify(currentThemeData));
-      sessionStorage.setItem('themeData', JSON.stringify(currentThemeData));
-    } catch (e) {
-      console.error('Error saving theme data JSON:', e);
-    }
-  } catch (error) {
-    console.error(`Error saving theme setting ${key}:`, error);
-  }
 };
 
 // Компонент для редиректа с /item/:itemId

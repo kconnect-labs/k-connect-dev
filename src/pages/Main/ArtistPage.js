@@ -384,7 +384,7 @@ const ArtistPage = () => {
   };
 
   const handlePlayTrack = (track) => {
-    playTrack(track);
+    playTrack(track, 'artist');
     if (isMobile) {
 
       handleOpenFullScreenPlayer();

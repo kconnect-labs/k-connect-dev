@@ -1297,8 +1297,15 @@ const MusicPage = React.memo(() => {
       likedTracks, tracks, setLocalLoading]);
 
   const handleTrackClick = useCallback((track) => {
-    playTrack(track);
-  }, [playTrack]);
+    // Определяем секцию на основе текущей вкладки
+    let section = 'all';
+    if (tabValue === 0) {
+      section = 'liked';
+    } else if (searchQuery.trim()) {
+      section = 'search';
+    }
+    playTrack(track, section);
+  }, [playTrack, tabValue, searchQuery]);
 
   const handleOpenFullScreenPlayer = useCallback(() => {
     setFullScreenPlayerOpen(true);
@@ -1726,7 +1733,7 @@ const MusicPage = React.memo(() => {
           if (data.success && data.track) {
             console.log('Playing track from URL parameter:', data.track);
             
-            playTrack(data.track);
+            playTrack(data.track, 'url'); // Передаем секцию 'url' для треков из URL
             
             setFullScreenPlayerOpen(true);
           }

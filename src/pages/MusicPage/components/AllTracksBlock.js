@@ -236,7 +236,7 @@ const AllTracksBlock = () => {
   }, [loadingMore, hasMore, page, loadTracks]);
 
   const handlePlayTrack = useCallback((track) => {
-    playTrack(track, 'all-tracks');
+    playTrack(track, 'all');
   }, [playTrack]);
 
   const handleLikeTrack = useCallback((trackId, event) => {

@@ -128,7 +128,7 @@ const NewTracksBlock = () => {
     if (isPlaying && currentTrack?.id === track.id) {
       togglePlay();
     } else {
-      playTrack(track);
+      playTrack(track, 'new');
     }
   }, [isPlaying, currentTrack, playTrack, togglePlay]);
 

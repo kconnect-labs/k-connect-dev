@@ -133,7 +133,7 @@ const LikedTracksPage = ({ onBack }) => {
     if (isPlaying && currentTrack?.id === track.id) {
       togglePlay();
     } else {
-      playTrack(track);
+      playTrack(track, 'liked');
     }
   }, [isPlaying, currentTrack, playTrack, togglePlay]);
 

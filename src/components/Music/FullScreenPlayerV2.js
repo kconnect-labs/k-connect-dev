@@ -343,7 +343,6 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
-  const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [uploadingLyrics, setUploadingLyrics] = useState(false);
   const [lyricsError, setLyricsError] = useState(null);
@@ -369,7 +368,8 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     isShuffled,
     toggleShuffle,
     repeatMode,
-    toggleRepeat
+    toggleRepeat,
+    likeTrack
   } = useMusic();
 
   // Синхронизация времени и громкости с контекстом
@@ -470,8 +470,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     if (!currentTrack?.id) return;
     
     try {
-      const response = await axios.post(`/api/music/${currentTrack.id}/like`);
-      setIsLiked(response.data.liked);
+      await likeTrack(currentTrack.id);
     } catch (error) {
       console.error('Error toggling like:', error);
     }
@@ -754,13 +753,13 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
               onClick={handleToggleLike}
               className="secondary"
               sx={{
-                color: isLiked ? '#ff2d55' : 'rgba(255,255,255,0.8)',
+                color: currentTrack?.is_liked ? '#ff2d55' : 'rgba(255,255,255,0.8)',
                 '&:hover': { 
-                  color: isLiked ? '#ff2d55' : 'white'
+                  color: currentTrack?.is_liked ? '#ff2d55' : 'white'
                 }
               }}
             >
-              {isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              {currentTrack?.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
             </ControlButton>
             
             <ControlButton

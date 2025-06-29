@@ -136,11 +136,20 @@ const ChartsBlock = () => {
     }
   }, []);
 
-  const handlePlayTrack = useCallback((track) => {
+  const handlePlayTrack = useCallback((track, chartType = null) => {
     if (isPlaying && currentTrack?.id === track.id) {
       togglePlay();
     } else {
-      playTrack(track);
+      // Определяем секцию на основе типа чарта
+      let section = 'all';
+      if (chartType === 'most_played' || chartType === 'trending') {
+        section = 'popular';
+      } else if (chartType === 'new_releases') {
+        section = 'new';
+      } else if (chartType === 'most_liked') {
+        section = 'liked';
+      }
+      playTrack(track, section);
     }
   }, [isPlaying, currentTrack, playTrack, togglePlay]);
 
@@ -198,7 +207,7 @@ const ChartsBlock = () => {
                 <React.Fragment key={track.id}>
                   <ChartTrackItem 
                     isActive={isCurrentTrack}
-                    onClick={() => handlePlayTrack(track)}
+                    onClick={() => handlePlayTrack(track, chartType)}
                   >
                     <ListItemAvatar>
                       <TrackAvatar
@@ -277,7 +286,7 @@ const ChartsBlock = () => {
                         <ActionButton
                           onClick={(e) => {
                             e.stopPropagation();
-                            handlePlayTrack(track);
+                            handlePlayTrack(track, chartType);
                           }}
                           sx={{ 
                             color: isCurrentTrack ? 'primary.main' : 'text.secondary',

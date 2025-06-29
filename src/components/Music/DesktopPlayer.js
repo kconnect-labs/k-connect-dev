@@ -11,22 +11,15 @@ import {
   Alert
 } from '@mui/material';
 import {
-  IoPlayCircle,
-  IoPauseCircle,
-  IoPlaySkipForward,
-  IoPlaySkipBack,
-  IoHeart,
-  IoHeartOutline,
-  IoVolumeHigh,
-  IoVolumeMedium,
-  IoVolumeMute,
-  IoList,
-  IoRepeat,
-  IoRepeatOutline,
-  IoShuffle,
-  IoChevronDown,
-  IoShareSocial
-} from 'react-icons/io5';
+  PlayIcon,
+  PauseIcon,
+  ForwardIcon,
+  BackwardIcon,
+  ShuffleIcon,
+  RepeatIcon,
+  VolumeUpIcon,
+  VolumeDownIcon
+} from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
 import { ThemeSettingsContext } from '../../App';
@@ -38,10 +31,10 @@ import { extractDominantColor } from '../../utils/imageUtils';
 const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   position: 'fixed',
   bottom: 20,
-  left: '60%',
+  left: '55%',
   transform: 'translateX(-50%)',
   width: '85%',
-  maxWidth: 1100,
+  maxWidth: 1000,
   minWidth: 580,
   zIndex: theme.zIndex.appBar - 1,
   backgroundColor: covercolor ? `rgba(${covercolor}, 0.22)` : 'rgba(10, 10, 10, 0.3)',
@@ -518,14 +511,14 @@ const DesktopPlayer = memo(() => {
   }, []);
   
   const getVolumeIcon = useMemo(() => {
-    if (isMuted || volume === 0) return <IoVolumeMute size={20} />;
-    if (volume < 0.5) return <IoVolumeMedium size={20} />;
-    return <IoVolumeHigh size={20} />;
+    if (isMuted || volume === 0) return <VolumeDownIcon size={20} />;
+    if (volume < 0.5) return <VolumeDownIcon size={20} />;
+    return <VolumeUpIcon size={20} />;
   }, [isMuted, volume]);
   
   const getRepeatIcon = useMemo(() => {
-    if (repeatMode === 'one') return <IoRepeat size={20} />;
-    return <IoRepeatOutline size={20} />;
+    if (repeatMode === 'one') return <RepeatIcon size={20} />;
+    return <RepeatIcon size={20} />;
   }, [repeatMode]);
   
   return (
@@ -602,20 +595,20 @@ const DesktopPlayer = memo(() => {
           {/* Кнопки */}
           <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0.8 }}>
             <ControlButton
-              icon={<IoShuffle size={20} />}
+              icon={<ShuffleIcon size={20} />}
               onClick={handleShuffleClick}
               ariaLabel="Toggle shuffle"
               active={shuffleMode}
             />
             
             <ControlButton
-              icon={<IoPlaySkipBack size={20} />}
+              icon={<BackwardIcon size={20} />}
               onClick={prevTrack}
               ariaLabel="Previous track"
             />
             
             <ControlButton
-              icon={isPlaying ? <IoPauseCircle size={24} /> : <IoPlayCircle size={24} />}
+              icon={isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
               onClick={togglePlay}
               ariaLabel={isPlaying ? "Pause" : "Play"}
               active={true}
@@ -623,13 +616,13 @@ const DesktopPlayer = memo(() => {
             />
             
             <ControlButton
-              icon={<IoPlaySkipForward size={20} />}
+              icon={<ForwardIcon size={20} />}
               onClick={nextTrack}
               ariaLabel="Next track"
             />
             
             <ControlButton
-              icon={repeatMode === 'one' ? <IoRepeat size={20} /> : <IoRepeatOutline size={20} />}
+              icon={<RepeatIcon size={20} />}
               onClick={handleRepeatClick}
               ariaLabel="Toggle repeat mode"
               active={repeatMode !== 'off'}
@@ -676,23 +669,7 @@ const DesktopPlayer = memo(() => {
         {/* Дополнительные кнопки */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '25%' }}>
           <ControlButton
-            icon={currentTrack?.is_liked ? <IoHeart size={20} /> : <IoHeartOutline size={20} />}
-            onClick={toggleLikeTrack}
-            ariaLabel="Toggle like"
-            active={currentTrack?.is_liked}
-            activeColor="error.main"
-          />
-          
-          <ControlButton
-            icon={<IoShareSocial size={20} />}
-            onClick={handleShare}
-            ariaLabel="Share track"
-          />
-          
-          <ControlButton
-            icon={isMuted ? <IoVolumeMute size={20} /> : 
-                 volume < 0.5 ? <IoVolumeMedium size={20} /> : 
-                 <IoVolumeHigh size={20} />}
+            icon={volume < 0.5 ? <VolumeDownIcon size={20} /> : <VolumeUpIcon size={20} />}
             onClick={toggleMute}
             ariaLabel="Toggle mute"
           />
@@ -703,12 +680,6 @@ const DesktopPlayer = memo(() => {
             onChange={handleVolumeChange}
             aria-labelledby="volume-slider"
             sx={{ mx: 1 }}
-          />
-          
-          <ControlButton
-            icon={<IoChevronDown size={20} />}
-            onClick={openFullScreen}
-            ariaLabel="Open fullscreen player"
           />
         </Box>
       </PlayerContainer>
