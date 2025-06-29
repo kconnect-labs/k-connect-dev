@@ -73,6 +73,7 @@ import UpdateService from '../../services/UpdateService';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 import WarningIcon from '@mui/icons-material/Warning';
+import TelegramIcon from '@mui/icons-material/Telegram';
 
 
 
@@ -1376,6 +1377,87 @@ const CreatePost = ({ onPostCreated }) => {
 };
 
 
+const TelegramPromo = () => {
+  const { t } = useLanguage();
+  
+  const handleSubscribe = () => {
+    window.open('https://t.me/kcon_news', '_blank');
+  };
+  
+  return (
+    <Box 
+      component={Paper} 
+      sx={{ 
+        p: 2.5, 
+        borderRadius: '12px', 
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(20px)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        overflow: 'hidden',
+        display: { xs: 'none', sm: 'block' },
+        position: 'relative',
+        marginBottom:'-6px',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          background: 'primary.main',
+        }
+      }}
+    >
+      <Box sx={{ mb: 2 }}>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            fontWeight: 600, 
+            color: 'primary.main',
+            fontSize: '0.95rem',
+            mb: 0.5
+          }}
+        >
+          Подпишись на телеграм канал автора
+        </Typography>
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: 'text.secondary',
+            fontSize: '0.8rem'
+          }}
+        >
+          t.me/kcon_news
+        </Typography>
+      </Box>
+      
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={handleSubscribe}
+        startIcon={<TelegramIcon />}
+        sx={{
+          borderRadius: '8px',
+          textTransform: 'none',
+          fontWeight: 600,
+          fontSize: '0.9rem',
+          py: 0.8,
+          boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
+          '&:hover': {
+            boxShadow: '0 6px 16px rgba(208, 188, 255, 0.4)',
+            transform: 'translateY(-1px)'
+          },
+          transition: 'all 0.2s ease'
+        }}
+      >
+        Подписаться
+      </Button>
+    </Box>
+  );
+};
+
+
 const MainPage = React.memo(() => {
   const { user } = useContext(AuthContext);
   const { t } = useLanguage();
@@ -1856,6 +1938,7 @@ const MainPage = React.memo(() => {
         </LeftColumn>
         
         <RightColumn>
+          <TelegramPromo />
           
           <Box 
             component={Paper} 
