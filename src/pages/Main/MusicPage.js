@@ -444,11 +444,10 @@ const MusicCategoryGrid = styled(Grid)(({ theme }) => ({
 
 const MusicPage = React.memo(() => {
   const [tabValue, setTabValue] = useState(0);
-  const [fullScreenPlayerOpen, setFullScreenPlayerOpen] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [mainTab, setMainTab] = useState(1); 
+  const [mainTab, setMainTab] = useState(1);
   const [playlists, setPlaylists] = useState([]);
   const [isPlaylistsLoading, setIsPlaylistsLoading] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -536,7 +535,10 @@ const MusicPage = React.memo(() => {
     playTrack,
     likeTrack,
     setRandomTracks,
-    setTracks
+    setTracks,
+    openFullScreenPlayer,
+    closeFullScreenPlayer,
+    isFullScreenPlayerOpen
   } = musicContext;
 
   
@@ -1308,15 +1310,12 @@ const MusicPage = React.memo(() => {
   }, [playTrack, tabValue, searchQuery]);
 
   const handleOpenFullScreenPlayer = useCallback(() => {
-    setFullScreenPlayerOpen(true);
-  }, []);
+    openFullScreenPlayer();
+  }, [openFullScreenPlayer]);
 
   const handleCloseFullScreenPlayer = useCallback(() => {
-    setFullScreenPlayerOpen(false);
-    
-    document.body.style.overflow = '';
-    document.body.style.touchAction = '';
-  }, []);
+    closeFullScreenPlayer();
+  }, [closeFullScreenPlayer]);
 
   const handleOpenUploadDialog = useCallback(() => {
     setUploadDialogOpen(true);
@@ -1735,7 +1734,7 @@ const MusicPage = React.memo(() => {
             
             playTrack(data.track, 'url'); // Передаем секцию 'url' для треков из URL
             
-            setFullScreenPlayerOpen(true);
+            openFullScreenPlayer();
           }
         } catch (error) {
           console.error('Error playing track from URL:', error);
@@ -3658,7 +3657,7 @@ const MusicPage = React.memo(() => {
       
       
       <FullScreenPlayer 
-        open={fullScreenPlayerOpen} 
+        open={isFullScreenPlayerOpen} 
         onClose={handleCloseFullScreenPlayer} 
       />
 

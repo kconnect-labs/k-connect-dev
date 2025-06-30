@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef, memo } from 'react';
+import ReactDOM from 'react-dom';
 import { 
   Dialog, 
   DialogContent, 
@@ -42,7 +43,6 @@ import {
   VolumeMute as VolumeMuteIcon,
   VolumeOff as VolumeOffIcon,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useMusic } from '../../context/MusicContext';
 import { extractDominantColor } from '../../utils/imageUtils';
 import { useNavigate } from 'react-router-dom';
@@ -63,7 +63,7 @@ import {
 
 const defaultCover = '/static/uploads/system/album_placeholder.jpg';
 
-// Функция для получения полного URL
+// Функция для получения полного URL - вынесена из компонента для оптимизации
 const getFullUrl = (path) => {
   const isLocalhost = window.location.hostname === 'localhost' || 
                      window.location.hostname === '127.0.0.1' ||
@@ -76,8 +76,37 @@ const getFullUrl = (path) => {
   return path;
 };
 
-// Стилизованные компоненты
-const PlayerContainer = styled(Box)(({ theme, dominantColor, coverPath }) => ({
+// Оптимизированная функция getCoverPath - мемоизирована
+const getCoverPath = (track) => {
+  if (!track?.cover_path) return getFullUrl(defaultCover);
+  
+  let coverPath = track.cover_path;
+  
+  if (coverPath.startsWith('http')) {
+    return coverPath;
+  }
+  
+  if (!coverPath.startsWith('/static/')) {
+    if (coverPath.startsWith('static/')) {
+      coverPath = `/${coverPath}`;
+    } else {
+      coverPath = `/static/music/${coverPath}`;
+    }
+  }
+  
+  return getFullUrl(coverPath);
+};
+
+// Оптимизированная функция форматирования времени
+const formatTime = (seconds) => {
+  if (!seconds || seconds < 0) return '0:00';
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+};
+
+// Стилизованные компоненты - оптимизированы для производительности
+const PlayerContainer = memo(styled(Box)(({ theme, dominantColor, coverPath }) => ({
   position: 'relative',
   width: '100%',
   height: '100vh',
@@ -101,18 +130,18 @@ const PlayerContainer = styled(Box)(({ theme, dominantColor, coverPath }) => ({
     filter: 'blur(40px)',
     zIndex: -1
   }
-}));
+})));
 
-const HeaderSection = styled(Box)(({ theme }) => ({
+const HeaderSection = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(3, 4),
   position: 'relative',
   zIndex: 2
-}));
+})));
 
-const CloseButton = styled(IconButton)(({ theme }) => ({
+const CloseButton = memo(styled(IconButton)(({ theme }) => ({
   color: 'rgba(255,255,255,0.8)',
   backgroundColor: 'rgba(255,255,255,0.1)',
   backdropFilter: 'blur(10px)',
@@ -122,17 +151,17 @@ const CloseButton = styled(IconButton)(({ theme }) => ({
     transform: 'scale(1.05)'
   },
   transition: 'all 0.2s ease'
-}));
+})));
 
-const AlbumArtContainer = styled(Box)(({ theme }) => ({
+const AlbumArtContainer = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,
   position: 'relative'
-}));
+})));
 
-const AlbumArt = styled(motion.img)(({ theme }) => ({
+const AlbumArt = memo(styled.img(({ theme }) => ({
   width: 'min(70vw, 400px)',
   height: 'min(70vw, 400px)',
   borderRadius: '20px',
@@ -140,21 +169,32 @@ const AlbumArt = styled(motion.img)(({ theme }) => ({
   objectFit: 'cover',
   border: '1px solid rgba(255,255,255,0.1)',
   transition: 'all 0.3s ease',
+  opacity: 0,
+  transform: 'scale(0.4)',
+  animation: 'albumArtFadeIn 0.6s ease forwards',
   '&:hover': {
     transform: 'scale(1.02)',
     boxShadow: '0 25px 50px rgba(0,0,0,0.4)'
+  },
+  '@keyframes albumArtFadeIn': {
+    '0%': {
+      opacity: 0,
+      transform: 'scale(0.4)'
+    },
+    '100%': {
+      opacity: 1,
+      transform: 'scale(0.9)'
+    }
   }
-}));
+})));
 
-
-
-const TrackInfo = styled(Box)(({ theme }) => ({
+const TrackInfo = memo(styled(Box)(({ theme }) => ({
   textAlign: 'center',
   maxWidth: '600px',
   marginBottom: theme.spacing(2)
-}));
+})));
 
-const TrackTitle = styled(Typography)(({ theme }) => ({
+const TrackTitle = memo(styled(Typography)(({ theme }) => ({
   fontSize: '2rem',
   fontWeight: 700,
   color: 'white',
@@ -163,9 +203,9 @@ const TrackTitle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     fontSize: '1.5rem'
   }
-}));
+})));
 
-const TrackArtist = styled(Typography)(({ theme }) => ({
+const TrackArtist = memo(styled(Typography)(({ theme }) => ({
   fontSize: '1.2rem',
   color: 'rgba(255,255,255,0.8)',
   marginBottom: theme.spacing(1),
@@ -178,17 +218,17 @@ const TrackArtist = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     fontSize: '1rem'
   }
-}));
+})));
 
-const ProgressContainer = styled(Box)(({ theme }) => ({
+const ProgressContainer = memo(styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: '500px',
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1)
-}));
+})));
 
-const TimeDisplay = styled(Box)(({ theme }) => ({
+const TimeDisplay = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   color: 'rgba(255,255,255,0.5)',
@@ -196,17 +236,17 @@ const TimeDisplay = styled(Box)(({ theme }) => ({
   fontFamily: 'var(--FF_TITLE, inherit)',
   margin: '5px',
   userSelect: 'none'
-}));
+})));
 
-const MainControls = styled(Box)(({ theme }) => ({
+const MainControls = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(2),
   marginBottom: theme.spacing(2)
-}));
+})));
 
-// Apple Music style control button (без фона, бордеров, теней)
-const ControlButton = styled(IconButton)(({ theme, active, play }) => ({
+// Apple Music style control button (без фона, бордеров, теней) - оптимизирован
+const ControlButton = memo(styled(IconButton)(({ theme, active, play }) => ({
   background: 'none',
   border: 'none',
   boxShadow: 'none',
@@ -223,23 +263,95 @@ const ControlButton = styled(IconButton)(({ theme, active, play }) => ({
   },
   minWidth: 0,
   minHeight: 0
-}));
+})));
 
-const SecondaryControls = styled(Box)(({ theme }) => ({
+const SecondaryControls = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
   marginTop: theme.spacing(2)
-}));
+})));
 
-const VolumeControl = styled(Box)(({ theme }) => ({
+const VolumeControl = memo(styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
   minWidth: '120px'
-}));
+})));
 
-const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
+// Мемоизированный хедер
+const PlayerHeader = memo(({ onClose, onOpenLyricsEditor, showLyricsEditor, theme }) => (
+  <HeaderSection>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <CloseButton onClick={onClose}>
+        <KeyboardArrowDownIcon />
+      </CloseButton>
+      <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>
+        Сейчас играет
+      </Typography>
+    </Box>
+    
+    <Box sx={{ display: 'flex', gap: 1 }}>
+      <IconButton
+        onClick={onOpenLyricsEditor}
+        sx={{
+          color: showLyricsEditor ? theme.palette.primary.main : 'rgba(255,255,255,0.8)',
+          backgroundColor: 'rgba(255,255,255,0.1)',
+          backdropFilter: 'blur(10px)',
+          '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+    </Box>
+  </HeaderSection>
+));
+
+// Мемоизированная информация о треке
+const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => (
+  <TrackInfo>
+    <TrackTitle variant="h3">
+      {currentTrack.title}
+    </TrackTitle>
+    <TrackArtist 
+      variant="h5" 
+      onClick={() => onArtistClick(currentTrack.artist)}
+    >
+      {currentTrack.artist}
+    </TrackArtist>
+    {currentTrack.album && (
+      <Typography 
+        variant="body1" 
+        sx={{ 
+          color: 'rgba(255,255,255,0.6)',
+          fontSize: '0.9rem'
+        }}
+      >
+        {currentTrack.album}
+      </Typography>
+    )}
+  </TrackInfo>
+));
+
+// Мемоизированная обертка диалога
+const PlayerDialog = memo(({ open, onClose, children }) => (
+  <Dialog
+    open={open}
+    onClose={onClose}
+    fullScreen
+    PaperProps={{
+      sx: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        overflow: 'hidden'
+      }
+    }}
+  >
+    {children}
+  </Dialog>
+));
+
+const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
   const [dominantColor, setDominantColor] = useState(null);
   const [showLyrics, setShowLyrics] = useState(false);
   const [showLyricsEditor, setShowLyricsEditor] = useState(false);
@@ -294,68 +406,90 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     likeTrack
   } = useMusic();
 
-  // Синхронизация времени и громкости с контекстом
-  useEffect(() => {
-    setCurrentTime(contextCurrentTime || 0);
-    setDuration(contextDuration || 0);
-    setVolume(contextVolume || 1);
-  }, [contextCurrentTime, contextDuration, contextVolume]);
+  // Мемоизированные значения для оптимизации
+  const coverPath = useMemo(() => getCoverPath(currentTrack), [currentTrack?.cover_path]);
+  
+  const trackId = useMemo(() => currentTrack?.id, [currentTrack?.id]);
+  
+  const formattedCurrentTime = useMemo(() => formatTime(currentTime), [currentTime]);
+  const formattedDuration = useMemo(() => formatTime(duration), [duration]);
+  
+  const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
 
-  // Более частое обновление времени для синхронизации текстов
-  useEffect(() => {
-    if (!open || !lyricsData?.has_synced_lyrics) return;
-
-    let animationId;
-    const updateTimeForLyrics = () => {
-      // Используем прямое время из аудио элемента для точной синхронизации
-      if (audioRef?.current && !audioRef.current.paused) {
-        const actualCurrentTime = audioRef.current.currentTime;
-        setCurrentTime(actualCurrentTime);
-      } else if (contextCurrentTime !== undefined) {
-        // Fallback to context time if audio ref is not available
-        setCurrentTime(contextCurrentTime);
-      }
-      animationId = requestAnimationFrame(updateTimeForLyrics);
-    };
-
-    animationId = requestAnimationFrame(updateTimeForLyrics);
-
-    return () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-    };
-  }, [open, lyricsData?.has_synced_lyrics, audioRef, contextCurrentTime]);
-
-  // Дополнительный эффект для немедленного обновления при изменении времени через слайдер
+  // Синхронизация времени и громкости с контекстом - оптимизировано
   useEffect(() => {
     if (contextCurrentTime !== undefined) {
       setCurrentTime(contextCurrentTime);
     }
   }, [contextCurrentTime]);
 
-  // Извлечение доминирующего цвета из обложки
   useEffect(() => {
-    if (currentTrack?.cover_path) {
+    if (contextDuration !== undefined) {
+      setDuration(contextDuration);
+    }
+  }, [contextDuration]);
+
+  useEffect(() => {
+    if (contextVolume !== undefined) {
+      setVolume(contextVolume);
+    }
+  }, [contextVolume]);
+
+  // Оптимизированное обновление времени для синхронизации текстов - уменьшенная частота обновлений
+  useEffect(() => {
+    if (!open || !lyricsData?.has_synced_lyrics) return;
+
+    let rafId;
+    let lastTime = 0;
+    
+    const updateTimeForLyrics = () => {
+      if (audioRef?.current && !audioRef.current.paused) {
+        const actualCurrentTime = audioRef.current.currentTime;
+        // Обновляем только если изменение больше 0.1 секунды для оптимизации
+        if (Math.abs(actualCurrentTime - lastTime) > 0.1) {
+        setCurrentTime(actualCurrentTime);
+          lastTime = actualCurrentTime;
+      }
+      }
+      rafId = requestAnimationFrame(updateTimeForLyrics);
+    };
+
+    rafId = requestAnimationFrame(updateTimeForLyrics);
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  }, [open, lyricsData?.has_synced_lyrics, audioRef]);
+
+  // Извлечение доминирующего цвета из обложки - мемоизировано
+  useEffect(() => {
+    if (currentTrack?.cover_path && coverPath) {
       extractDominantColor(
-        currentTrack.cover_path || defaultCover,
+        coverPath,
         (color) => {
           setDominantColor(color);
         }
       );
     }
-  }, [currentTrack]);
+  }, [coverPath]);
 
-  // Загрузка текстов песен
+  // Загрузка текстов песен - оптимизировано
   useEffect(() => {
-    if (currentTrack?.id && open) {
+    if (!trackId || !open) {
+      setLyricsData(null);
+      setLoadingLyrics(false);
+      return;
+    }
+    
       setLoadingLyrics(true);
       
       if (currentTrack.lyricsData) {
         setLyricsData(currentTrack.lyricsData);
         setLoadingLyrics(false);
       } else {
-        fetch(`/api/music/${currentTrack.id}/lyrics`)
+      fetch(`/api/music/${trackId}/lyrics`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Lyrics not found');
@@ -376,27 +510,20 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
             setLoadingLyrics(false);
           });
       }
-    } else {
-      setLyricsData(null);
-      setLoadingLyrics(false);
-    }
-  }, [currentTrack, open]);
+  }, [trackId, open, currentTrack]);
 
-  // Управление скроллом страницы
+  // Управление скроллом страницы - оптимизировано
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-
     return () => {
       document.body.style.overflow = 'unset';
     };
+    }
   }, [open]);
 
   // Обработчики
-  const handleTimeChange = (event, newValue) => {
+  const handleTimeChange = useCallback((event, newValue) => {
     if (audioRef?.current) {
       audioRef.current.currentTime = newValue;
       setCurrentTime(newValue);
@@ -407,15 +534,15 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
         window.audioTiming.currentTime = newValue;
       }
     }
-  };
+  }, [audioRef, setContextVolume]);
 
-  const handleVolumeChange = (event, newValue) => {
+  const handleVolumeChange = useCallback((event, newValue) => {
     setVolume(newValue);
     setContextVolume(newValue);
     setIsMuted(newValue === 0);
-  };
+  }, [setContextVolume]);
 
-  const handleToggleMute = () => {
+  const handleToggleMute = useCallback(() => {
     if (isMuted) {
       setVolume(1);
       setContextVolume(1);
@@ -425,26 +552,25 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       setContextVolume(0);
       setIsMuted(true);
     }
-  };
+  }, [isMuted, setContextVolume]);
 
-  const handleToggleLike = async () => {
-    if (!currentTrack?.id) return;
+  const handleToggleLike = useCallback(async () => {
+    if (!trackId) return;
     
     try {
-      await likeTrack(currentTrack.id);
+      await likeTrack(trackId);
     } catch (error) {
       console.error('Error toggling like:', error);
     }
-  };
+  }, [trackId, likeTrack]);
 
-  const handleCopyLink = async () => {
-    if (!currentTrack?.id) return;
+  const handleCopyLink = useCallback(async () => {
+    if (!trackId) return;
     
-    const url = `https://k-connect.ru/music/track/${currentTrack.id}`;
+    const url = `https://k-connect.ru/music/track/${trackId}`;
     
     try {
       await navigator.clipboard.writeText(url);
-      // Можно добавить уведомление об успешном копировании
       console.log('Ссылка скопирована в буфер обмена');
     } catch (error) {
       console.error('Ошибка при копировании ссылки:', error);
@@ -456,9 +582,9 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       document.execCommand('copy');
       document.body.removeChild(textArea);
     }
-  };
+  }, [trackId]);
 
-  const goToArtist = async (artistName) => {
+  const goToArtist = useCallback(async (artistName) => {
     if (!artistName || artistName.trim() === '') return;
     
     try {
@@ -481,16 +607,16 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     } catch (error) {
       console.error('Error searching artist:', error);
     }
-  };
+  }, [navigate, onClose]);
 
-  const handleUploadLyrics = async () => {
-    if (!currentTrack?.id) return;
+  const handleUploadLyrics = useCallback(async () => {
+    if (!trackId) return;
     
     setUploadingLyrics(true);
     setLyricsError(null);
     
     try {
-      const response = await fetch(`/api/music/${currentTrack.id}/lyrics/upload`, {
+      const response = await fetch(`/api/music/${trackId}/lyrics/upload`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -505,7 +631,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       
       if (response.ok) {
         // Перезагружаем тексты после успешной загрузки
-        const lyricsResponse = await fetch(`/api/music/${currentTrack.id}/lyrics`);
+        const lyricsResponse = await fetch(`/api/music/${trackId}/lyrics`);
         if (lyricsResponse.ok) {
           const newLyricsData = await lyricsResponse.json();
           setLyricsData(newLyricsData);
@@ -523,36 +649,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     } finally {
       setUploadingLyrics(false);
     }
-  };
-
-  const formatTime = (seconds) => {
-    if (!seconds) return '0:00';
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const getCoverPath = (track) => {
-    if (!track?.cover_path) return getFullUrl(defaultCover);
-    
-    let coverPath = track.cover_path;
-    
-    // Если путь уже полный URL, возвращаем как есть
-    if (coverPath.startsWith('http')) {
-      return coverPath;
-    }
-    
-    // Добавляем /static/ если нужно
-    if (!coverPath.startsWith('/static/')) {
-      if (coverPath.startsWith('static/')) {
-        coverPath = `/${coverPath}`;
-      } else {
-        coverPath = `/static/music/${coverPath}`;
-      }
-    }
-    
-    return getFullUrl(coverPath);
-  };
+  }, [trackId, currentTrack]);
 
   const handleOpenLyricsEditor = useCallback(() => {
     setShowLyricsEditor(true);
@@ -572,12 +669,12 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     setShowLyrics(false);
   }, []);
 
-  const handleLyricsChange = (e) => {
+  const handleLyricsChange = useCallback((e) => {
     setLyricsText(e.target.value);
-  };
+  }, []);
 
-  const handleSaveLyrics = async () => {
-    if (!currentTrack?.id) {
+  const handleSaveLyrics = useCallback(async () => {
+    if (!trackId) {
       setLyricsError('Трек не выбран');
       return;
     }
@@ -591,7 +688,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     setLyricsError('');
     
     try {
-      const response = await fetch(`/api/music/${currentTrack.id}/lyrics/upload`, {
+      const response = await fetch(`/api/music/${trackId}/lyrics/upload`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -612,7 +709,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
         });
         
         // Reload lyrics data
-        const lyricsResponse = await fetch(`/api/music/${currentTrack.id}/lyrics`);
+        const lyricsResponse = await fetch(`/api/music/${trackId}/lyrics`);
         if (lyricsResponse.ok) {
           const newLyricsData = await lyricsResponse.json();
           setLyricsData(newLyricsData);
@@ -640,18 +737,41 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [trackId, lyricsText, currentTrack]);
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = useCallback((event) => {
     setMenuAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleCloseMenu = () => {
+  const handleCloseMenu = useCallback(() => {
     setMenuAnchorEl(null);
-  };
+  }, []);
 
-  const handleDownloadLyricsForSync = () => {
-    if (!currentTrack?.id || !lyricsText.trim()) {
+  const handleSnackbarClose = useCallback((event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  }, []);
+
+  // Мемоизированные цветовые значения для оптимизации
+  const activeColor = useMemo(() => {
+    if (dominantColor) {
+      return `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`;
+    }
+    return '#9a7ace';
+  }, [dominantColor]);
+  
+  const buttonBackgroundColor = useMemo(() => {
+    if (dominantColor) {
+      return `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.15)`;
+    }
+    return 'rgba(255, 45, 85, 0.15)';
+  }, [dominantColor]);
+
+  // Оптимизированные дополнительные обработчики
+  const handleDownloadLyricsForSync = useCallback(() => {
+    if (!trackId || !lyricsText.trim()) {
       setLyricsError('Нет доступного текста для скачивания');
       return;
     }
@@ -693,16 +813,16 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       console.error("Error generating download template:", error);
       setLyricsError('Ошибка при создании шаблона для синхронизации');
     }
-  };
+  }, [trackId, lyricsText, currentTrack, handleCloseMenu]);
 
-  const handleOpenFileSelector = () => {
+  const handleOpenFileSelector = useCallback(() => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
     handleCloseMenu();
-  };
+  }, [handleCloseMenu]);
 
-  const handleFileSelected = (event) => {
+  const handleFileSelected = useCallback((event) => {
     const file = event.target.files[0];
     if (!file) return;
     
@@ -711,10 +831,10 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     }
     
     uploadSyncFile(file);
-  };
+  }, []);
 
-  const uploadSyncFile = async (file) => {
-    if (!file || !currentTrack?.id) {
+  const uploadSyncFile = useCallback(async (file) => {
+    if (!file || !trackId) {
       setLyricsError('Нет файла для загрузки или трек не выбран');
       return;
     }
@@ -726,7 +846,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       const formData = new FormData();
       formData.append('file', file);
       
-      const response = await fetch(`/api/music/${currentTrack.id}/lyrics/upload`, {
+      const response = await fetch(`/api/music/${trackId}/lyrics/upload`, {
         method: 'POST',
         body: formData
       });
@@ -745,7 +865,7 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
       });
       
       // Reload lyrics data
-      const lyricsResponse = await fetch(`/api/music/${currentTrack.id}/lyrics`);
+      const lyricsResponse = await fetch(`/api/music/${trackId}/lyrics`);
       if (lyricsResponse.ok) {
         const newLyricsData = await lyricsResponse.json();
         setLyricsData(newLyricsData);
@@ -769,74 +889,41 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
     } finally {
       setUploading(false);
     }
-  };
+  }, [trackId, currentTrack]);
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbar((prev) => ({ ...prev, open: false }));
-  };
+  const handleToggleLyricsDisplay = useCallback(() => {
+    setLyricsDisplayMode(prev => !prev);
+  }, []);
 
-  const getActiveColor = () => {
-    if (dominantColor) {
-      return `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`;
+  // Мемоизированные строки для оптимизации с стабильными ключами
+  const filteredLines = useMemo(() => {
+    if (lyricsData?.has_synced_lyrics && Array.isArray(lyricsData.synced_lyrics)) {
+      return lyricsData.synced_lyrics
+        .filter(line => line && line.text !== undefined)
+        .map((line, index) => ({
+          ...line,
+          key: `${index}-${line.text.slice(0, 10)}` // Стабильный ключ
+        }));
     }
-    return '#9a7ace';
-  };
-  
-  const getButtonBackgroundColor = () => {
-    if (dominantColor) {
-      return `rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.15)`;
+    if (lyricsData?.lyrics) {
+      return lyricsData.lyrics
+        .split('\n')
+        .filter(line => line.trim())
+        .map((line, index) => ({
+          text: line,
+          key: `static-${index}-${line.slice(0, 10)}` // Стабильный ключ
+        }));
     }
-    return 'rgba(255, 45, 85, 0.15)';
-  };
-
-  const handleToggleLyricsDisplay = () => {
-    setLyricsDisplayMode(!lyricsDisplayMode);
-  };
+    return [];
+  }, [lyricsData]);
 
   if (!open || !currentTrack) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullScreen
-      PaperProps={{
-        sx: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
-          overflow: 'hidden'
-        }
-      }}
-    >
-      <PlayerContainer dominantColor={dominantColor} coverPath={getCoverPath(currentTrack)}>
+    <PlayerDialog open={open} onClose={onClose}>
+      <PlayerContainer dominantColor={dominantColor} coverPath={coverPath}>
         {/* Header */}
-        <HeaderSection>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <CloseButton onClick={onClose}>
-              <KeyboardArrowDownIcon />
-            </CloseButton>
-            <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}>
-              Сейчас играет
-            </Typography>
-          </Box>
-          
-          <Box sx={{ display: 'flex', gap: 1 }}>
-            <IconButton
-              onClick={handleOpenLyricsEditor}
-              sx={{
-                color: showLyricsEditor ? theme.palette.primary.main : 'rgba(255,255,255,0.8)',
-                backgroundColor: 'rgba(255,255,255,0.1)',
-                backdropFilter: 'blur(10px)',
-                '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' }
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-          </Box>
-        </HeaderSection>
+        <PlayerHeader onClose={onClose} onOpenLyricsEditor={handleOpenLyricsEditor} showLyricsEditor={showLyricsEditor} theme={theme} />
 
         {/* Main Content */}
         <Box sx={{ 
@@ -848,297 +935,68 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
           padding: theme.spacing(0, 4)
         }}>
           {/* Album Art or Lyrics Display */}
-          <AlbumArtContainer sx={{maxHeight:'390px', width: '100%'}}>
-            <AnimatePresence mode="wait">
-              {lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
-                <Box
-                  key="lyrics-display"
-                  sx={{ 
-                    width: '100%', 
-                    height: '100%',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    overflow: 'hidden',
-                    position: 'relative'
-                  }}
-                >
-                  <LyricsModernView
+          <AlbumArtLyricsContainer 
+            lyricsDisplayMode={lyricsDisplayMode} 
                     lyricsData={lyricsData}
-                    loading={loadingLyrics}
+            loadingLyrics={loadingLyrics} 
                     currentTime={currentTime}
                     dominantColor={dominantColor}
                     theme={theme}
-                    isMainDisplay={true}
-                  />
-                </Box>
-              ) : (
-                <AlbumArt
-                  key="album-cover"
-                  src={getCoverPath(currentTrack)}
-                  alt={currentTrack.title}
-                  initial={{ scale: 0.4, opacity: 0 }}
-                  animate={{ scale: 0.9, opacity: 1 }}
-                  whileHover={{ scale: 1.02 }}
-                />
-              )}
-            </AnimatePresence>
-          </AlbumArtContainer>
+            coverPath={coverPath} 
+            currentTrack={currentTrack}
+            filteredLines={filteredLines}
+          />
 
           {/* Track Info */}
-          <TrackInfo>
-            <TrackTitle variant="h3">
-              {currentTrack.title}
-            </TrackTitle>
-            <TrackArtist 
-              variant="h5" 
-              onClick={() => goToArtist(currentTrack.artist)}
-            >
-              {currentTrack.artist}
-            </TrackArtist>
-            {currentTrack.album && (
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: 'rgba(255,255,255,0.6)',
-                  fontSize: '0.9rem'
-                }}
-              >
-                {currentTrack.album}
-              </Typography>
-            )}
-          </TrackInfo>
+          <PlayerTrackInfo currentTrack={currentTrack} onArtistClick={goToArtist} />
 
           {/* Progress Bar */}
-          <ProgressContainer>
-            <Slider
-              value={currentTime}
-              max={duration}
-              onChange={handleTimeChange}
-              sx={{
-                color: 'white',
-                '& .MuiSlider-track': {
-                  backgroundColor: 'white',
-                  height: 6,
-                  borderRadius: '2.5px'
-                },
-                '& .MuiSlider-rail': {
-                  backgroundColor: 'rgba(255,255,255,0.5)',
-                  height: 6,
-                  borderRadius: '2.5px'
-                },
-                '& .MuiSlider-thumb': {
-                  backgroundColor: 'white',
-                  width: 16,
-                  height: 16,
-                  '&:hover': {
-                    boxShadow: '0 0 0 8px rgba(255,255,255,0.2)'
-                  }
-                },
-                '&:hover': {
-                  '& .MuiSlider-track': {
-                    height: 10,
-                    borderRadius: '10px'
-                  },
-                  '& .MuiSlider-rail': {
-                    height: 10,
-                    borderRadius: '10px'
-                  }
-                },
-              }}
-            />
-            <TimeDisplay>
-              <span>{formatTime(currentTime)}</span>
-              <span>{formatTime(duration)}</span>
-            </TimeDisplay>
-          </ProgressContainer>
+          <ProgressSlider 
+            currentTime={currentTime} 
+            duration={duration} 
+            onTimeChange={handleTimeChange} 
+            formattedCurrentTime={formattedCurrentTime} 
+            formattedDuration={formattedDuration}
+          />
 
           {/* Main Controls */}
-          <MainControls>
-            <ControlButton onClick={toggleShuffle} active={isShuffled ? 1 : 0}>
-              <ShuffleIcon size={28} color={isShuffled ? '#fff' : '#d3d3d3'} />
-            </ControlButton>
-            
-            <ControlButton onClick={prevTrack}>
-              <BackwardIcon size={32} color="#d3d3d3" />
-            </ControlButton>
-            
-            <ControlButton 
-              onClick={togglePlay}
-              play={1}
-              sx={{ mx: 2 }}
-            >
-              {isPlaying
-                ? <PauseIcon size={48} color="#fff" />
-                : <PlayIcon size={48} color="#fff" />}
-            </ControlButton>
-            
-            <ControlButton onClick={nextTrack}>
-              <ForwardIcon size={32} color="#d3d3d3" />
-            </ControlButton>
-            
-            <ControlButton onClick={toggleRepeat} active={repeatMode !== 'off' ? 1 : 0}>
-              <RepeatIcon size={28} color={repeatMode !== 'off' ? '#fff' : '#d3d3d3'} />
-            </ControlButton>
-          </MainControls>
+          <MainPlayControls 
+            isShuffled={isShuffled} 
+            toggleShuffle={toggleShuffle} 
+            prevTrack={prevTrack} 
+            isPlaying={isPlaying} 
+            togglePlay={togglePlay} 
+            nextTrack={nextTrack} 
+            repeatMode={repeatMode} 
+            toggleRepeat={toggleRepeat}
+          />
 
           {/* Secondary Controls */}
-          <SecondaryControls>
-            <ControlButton
-              onClick={handleToggleLike}
-              className="secondary"
-              sx={{
-                color: currentTrack?.is_liked ? '#ff2d55' : 'rgba(255,255,255,0.8)',
-                '&:hover': { 
-                  color: currentTrack?.is_liked ? '#ff2d55' : 'white'
-                }
-              }}
-            >
-              {currentTrack?.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-            </ControlButton>
-            
-            {(lyricsData?.has_synced_lyrics || lyricsData?.lyrics) && (
-              <ControlButton
-                onClick={handleToggleLyricsDisplay}
-                className="secondary"
-                sx={{
-                  color: lyricsDisplayMode ? '#9a7ace' : 'rgba(255,255,255,0.8)',
-                  '&:hover': { color: lyricsDisplayMode ? '#9a7ace' : 'white' }
-                }}
-              >
-                <LyricsIcon />
-              </ControlButton>
-            )}
-            
-            <ControlButton
-              onClick={handleCopyLink}
-              className="secondary"
-              sx={{
-                color: 'rgba(255,255,255,0.8)',
-                '&:hover': { color: 'white' }
-              }}
-            >
-              <ShareIcon size={24} color="rgba(255,255,255,0.8)" />
-            </ControlButton>
-          </SecondaryControls>
+          <SecondaryPlayControls 
+            currentTrack={currentTrack} 
+            onToggleLike={handleToggleLike} 
+            lyricsData={lyricsData} 
+            lyricsDisplayMode={lyricsDisplayMode} 
+            onToggleLyricsDisplay={handleToggleLyricsDisplay} 
+            onCopyLink={handleCopyLink}
+          />
 
           {/* Desktop Volume Control */}
           {!isMobile && (
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              mt: 2,
-              maxWidth: '500px',
-              width: '100%'
-            }}>
-              <ControlButton
-                onClick={handleToggleMute}
-                sx={{
-                  color: 'rgba(255,255,255,0.8)',
-                  '&:hover': { color: 'white' },
-                  mr: 1,
-                  transition: 'color 0.2s ease'
-                }}
-              >
-                <Box sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  transition: 'transform 0.15s ease',
-                  '&:hover': { transform: 'scale(1.1)' }
-                }}>
-                  {isMuted || volume === 0 ? (
-                    <VolumeOffIcon sx={{ fontSize: 20 }} />
-                  ) : volume < 0.3 ? (
-                    <VolumeMuteIcon sx={{ fontSize: 20 }} />
-                  ) : volume < 0.7 ? (
-                    <VolumeDownIcon sx={{ fontSize: 20 }} />
-                  ) : (
-                    <VolumeUpIcon sx={{ fontSize: 20 }} />
-                  )}
-                </Box>
-              </ControlButton>
-              
-              <Slider
-                value={isMuted ? 0 : volume}
-                min={0}
-                max={1}
-                step={0.01}
-                onChange={handleVolumeChange}
-                sx={{
-                  color: 'white',
-                  flex: 1,
-                  mx: 2,
-                  '& .MuiSlider-track': {
-                    backgroundColor: 'white',
-                    height: 4,
-                    borderRadius: '2px',
-                    transition: 'height 0.2s ease'
-                  },
-                  '& .MuiSlider-rail': {
-                    backgroundColor: 'rgba(255,255,255,0.25)',
-                    height: 4,
-                    borderRadius: '2px',
-                    transition: 'height 0.2s ease'
-                  },
-                  '& .MuiSlider-thumb': {
-                    backgroundColor: 'white',
-                    width: 14,
-                    height: 14,
-                    border: 'none',
-                    '&:hover': {
-                      boxShadow: '0 0 0 8px rgba(255,255,255,0.12)'
-                    },
-                    '&.Mui-focusVisible': {
-                      boxShadow: '0 0 0 8px rgba(255,255,255,0.12)'
-                    },
-                    '&:before': {
-                      display: 'none'
-                    }
-                  },
-                  '&:hover': {
-                    '& .MuiSlider-track': {
-                      height: 6,
-                      borderRadius: '3px'
-                    },
-                    '& .MuiSlider-rail': {
-                      height: 6,
-                      borderRadius: '3px'
-                    },
-                    '& .MuiSlider-thumb': {
-                      width: 16,
-                      height: 16
-                    }
-                  }
-                }}
-              />
-              
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  color: 'rgba(255,255,255,0.6)', 
-                  fontSize: '0.75rem',
-                  minWidth: '32px',
-                  textAlign: 'right',
-                  fontFamily: 'var(--FF_TITLE, inherit)',
-                  ml: 1
-                }}
-              >
-                {Math.round((isMuted ? 0 : volume) * 100)}
-              </Typography>
-            </Box>
+            <VolumeControls 
+              isMuted={isMuted} 
+              volume={volume} 
+              volumePercentage={volumePercentage} 
+              onToggleMute={handleToggleMute} 
+              onVolumeChange={handleVolumeChange}
+            />
           )}
         </Box>
 
         {/* Lyrics Panel - Only for Editor */}
-        <AnimatePresence>
           {showLyricsEditor && (
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              style={{
+          <Box
+            sx={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
@@ -1153,7 +1011,17 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
                 overflow: 'auto',
                 display: 'flex',
                 alignItems: 'flex-start',
-                justifyContent: 'center'
+              justifyContent: 'center',
+              transform: 'translateY(0)',
+              animation: 'slideUpModal 0.3s ease-out forwards',
+              '@keyframes slideUpModal': {
+                '0%': {
+                  transform: 'translateY(100%)',
+                },
+                '100%': {
+                  transform: 'translateY(0)',
+                }
+              }
               }}
             >
               <IconButton
@@ -1181,8 +1049,8 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
                   menuAnchorEl={menuAnchorEl}
                   fileInputRef={fileInputRef}
                   dominantColor={dominantColor}
-                  getActiveColor={getActiveColor}
-                  getButtonBackgroundColor={getButtonBackgroundColor}
+                getActiveColor={activeColor}
+                getButtonBackgroundColor={buttonBackgroundColor}
                   handleLyricsChange={handleLyricsChange}
                   handleSaveLyrics={handleSaveLyrics}
                   handleOpenMenu={handleOpenMenu}
@@ -1194,19 +1062,13 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
                   onOpenTimestampEditor={handleOpenTimestampEditor}
                 />
               </Box>
-            </motion.div>
+          </Box>
           )}
-        </AnimatePresence>
 
         {/* Playlist Panel */}
-        <AnimatePresence>
           {showPlaylist && (
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              style={{
+          <Box
+            sx={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
@@ -1216,7 +1078,17 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
                 backdropFilter: 'blur(20px)',
                 borderTop: '1px solid rgba(255,255,255,0.1)',
                 padding: theme.spacing(3),
-                overflow: 'auto'
+              overflow: 'auto',
+              transform: 'translateY(0)',
+              animation: 'slideUpModal 0.3s ease-out forwards',
+              '@keyframes slideUpModal': {
+                '0%': {
+                  transform: 'translateY(100%)',
+                },
+                '100%': {
+                  transform: 'translateY(0)',
+                }
+              }
               }}
             >
               <Box sx={{ 
@@ -1312,9 +1184,8 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
                   </Box>
                 )}
               </Box>
-            </motion.div>
+          </Box>
           )}
-        </AnimatePresence>
       </PlayerContainer>
       
       <Snackbar
@@ -1326,12 +1197,12 @@ const FullScreenPlayerV2 = ({ open, onClose, ...props }) => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Dialog>
+    </PlayerDialog>
   );
-};
+});
 
-// Lyrics Editor Content Component
-const LyricsEditorContent = ({
+// Lyrics Editor Content Component - оптимизирован с memo
+const LyricsEditorContent = memo(({
   lyricsData,
   currentTrack,
   lyricsText,
@@ -1411,7 +1282,7 @@ const LyricsEditorContent = ({
             borderColor: 'rgba(255,255,255,0.3)',
           },
           '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: `${getActiveColor()} !important`,
+            borderColor: `${getActiveColor} !important`,
             borderWidth: '1px',
           },
           '& .MuiInputBase-input::placeholder': {
@@ -1433,12 +1304,12 @@ const LyricsEditorContent = ({
           onClick={handleOpenMenu}
           startIcon={<ScheduleIcon />}
           sx={{
-            borderColor: getButtonBackgroundColor(),
-            color: getActiveColor(),
+            borderColor: getButtonBackgroundColor,
+            color: getActiveColor,
             backgroundColor: 'transparent',
             '&:hover': {
-              backgroundColor: getButtonBackgroundColor(),
-              borderColor: getActiveColor()
+              backgroundColor: getButtonBackgroundColor,
+              borderColor: getActiveColor
             }
           }}
         >
@@ -1465,10 +1336,10 @@ const LyricsEditorContent = ({
             disabled={isSaving || uploading}
             startIcon={isSaving ? <CircularProgress size={16} color="inherit" /> : <SaveIcon />}
             sx={{ 
-              backgroundColor: getActiveColor(),
+              backgroundColor: getActiveColor,
               boxShadow: dominantColor ? `0 4px 12px rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.3)` : undefined,
               '&:hover': {
-                backgroundColor: getActiveColor(),
+                backgroundColor: getActiveColor,
                 filter: 'brightness(1.1)'
               }
             }}
@@ -1535,52 +1406,254 @@ const LyricsEditorContent = ({
       />
     </Box>
   );
-};
+});
 
-// Clean, simple lyrics display component
-const LyricsModernView = ({ lyricsData, loading, currentTime, dominantColor, theme, isMainDisplay = false }) => {
+// Оптимизированный компонент для отдельной строки текста с анимациями
+const LyricsLine = memo(({ 
+  text, 
+  isActive, 
+  isPrevious, 
+  isNext, 
+  lineKey, // Добавляем ключ для анимации
+  isMainDisplay 
+}) => {
+  const baseStyles = {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
+    lineHeight: isActive ? 1.2 : 1.3,
+    letterSpacing: isActive ? '-0.02em' : '-0.01em',
+    textShadow: 'none',
+    width: '100%',
+    margin: '0 auto',
+    wordBreak: 'break-word',
+    textAlign: 'left',
+    whiteSpace: 'pre-wrap',
+    overflowWrap: 'break-word',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    transform: 'translateY(-50%)',
+    zIndex: isActive ? 10 : 5,
+    // Плавные переходы для смены строк
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    willChange: 'opacity, transform, filter',
+  };
+
+  if (isActive) {
+    return (
+      <Box
+        key={`active-${lineKey}`}
+        sx={{
+          ...baseStyles,
+          top: '60%',
+          opacity: 1,
+          filter: 'none',
+          transform: 'translateY(-50%) scale(1)',
+          // Анимация появления активной строки
+          animation: 'fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+          '@keyframes fadeInScale': {
+            '0%': {
+              opacity: 0.7,
+              transform: 'translateY(-50%) scale(0.95)',
+            },
+            '100%': {
+              opacity: 1,
+              transform: 'translateY(-50%) scale(1)',
+            }
+          }
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            color: 'white',
+            fontSize: isMainDisplay ? { xs: '2rem', sm: '2.4rem', md: '2.8rem' } : { xs: '1.6rem', sm: '1.8rem' },
+            fontWeight: 600,
+            ...baseStyles,
+            maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' } : { xs: '98%', sm: '95%' },
+            minHeight: isMainDisplay ? '3.5em' : '2.5em',
+            position: 'static',
+            transition: 'all 0.4s ease',
+          }}
+        >
+          {text}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (isPrevious) {
+    return (
+      <Box
+        key={`prev-${lineKey}`}
+        sx={{
+          ...baseStyles,
+          top: '25%',
+          opacity: 0.4,
+          filter: 'blur(2.2px)',
+          transform: 'translateY(-50%) scale(0.9)',
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            color: 'rgba(255,255,255,0.5)',
+            fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
+            fontWeight: 400,
+            ...baseStyles,
+            maxWidth: isMainDisplay ? { xs: '92%', sm: '87%', md: '82%', lg: '75%' } : { xs: '96%', sm: '92%' },
+            position: 'static',
+            transition: 'all 0.4s ease',
+          }}
+        >
+          {text}
+        </Typography>
+      </Box>
+    );
+  }
+
+  if (isNext) {
+    return (
+      <Box
+        key={`next-${lineKey}`}
+        sx={{
+          ...baseStyles,
+          top: '75%',
+          opacity: 0.3,
+          filter: 'blur(2.5px)',
+          transform: 'translateY(-50%) scale(0.85)',
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            color: 'rgba(255,255,255,0.3)',
+            fontSize: isMainDisplay ? { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' } : { xs: '1rem', sm: '1.2rem' },
+            fontWeight: 400,
+            ...baseStyles,
+            maxWidth: isMainDisplay ? { xs: '90%', sm: '85%', md: '80%', lg: '70%' } : { xs: '94%', sm: '90%' },
+            position: 'static',
+            transition: 'all 0.4s ease',
+          }}
+        >
+          {text}
+        </Typography>
+      </Box>
+    );
+  }
+
+  return null;
+});
+
+// Оптимизированный компонент прогресс-бара
+const LyricsProgressDots = memo(({ total, current }) => (
+  <Box sx={{
+    position: 'absolute',
+    bottom: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
+    gap: '6px',
+    alignItems: 'center',
+    zIndex: 10
+  }}>
+    {Array.from({ length: Math.min(total, 15) }, (_, i) => (
+      <Box
+        key={i}
+        sx={{
+          width: i === current ? '16px' : '4px',
+          height: '4px',
+          borderRadius: '2px',
+          backgroundColor: i === current ? 'white' : 'rgba(255,255,255,0.3)',
+          transition: 'all 0.3s ease'
+        }}
+      />
+    ))}
+  </Box>
+));
+
+// Оптимизированный компонент для статических текстов
+const StaticLyricsLine = memo(({ text, index, isMainDisplay }) => (
+  <Typography
+    variant="h5"
+    sx={{
+      color: 'white',
+      fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
+      fontWeight: 500,
+      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
+      lineHeight: 1.4,
+      letterSpacing: '-0.01em',
+      mb: 0,
+      textShadow: 'none',
+      width: '100%',
+      maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '75%' } : { xs: '98%', sm: '95%' },
+      margin: '0 auto',
+      wordBreak: 'break-word',
+      hyphens: 'auto',
+      textAlign: 'left',
+      whiteSpace: 'pre-wrap',
+      overflowWrap: 'break-word',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingBottom: '0.5rem',
+      opacity: 0,
+      animation: `fadeInUp 0.25s ease forwards`,
+      animationDelay: `${index * 0.02}s`,
+      '@keyframes fadeInUp': {
+        '0%': {
+          opacity: 0,
+          transform: 'translateY(20px)'
+        },
+        '100%': {
+          opacity: 1,
+          transform: 'translateY(0)'
+        }
+      }
+    }}
+  >
+    {text}
+  </Typography>
+));
+
+// Ультра-оптимизированный компонент для отображения текстов - БЕЗ framer-motion
+const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor, theme, filteredLines, isMainDisplay = false }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [lastUpdateTime, setLastUpdateTime] = useState(0);
-  
-  // Update current line based on time for synced lyrics with improved seeking support
-  useEffect(() => {
-    if (!lyricsData?.has_synced_lyrics || !lyricsData.synced_lyrics || !Array.isArray(lyricsData.synced_lyrics)) {
-      return;
-    }
 
-    const lines = lyricsData.synced_lyrics.filter(line => line && typeof line.startTimeMs === 'number');
-    if (lines.length === 0) return;
+  // УЛЬТРА-оптимизированное обновление строк - только при реальных изменениях
+  const updateCurrentLine = useCallback((time) => {
+    if (!lyricsData?.has_synced_lyrics || !filteredLines || filteredLines.length === 0) return;
 
-    // Проверяем, произошла ли перемотка (скачок времени больше чем на 2 секунды)
-    const timeDifference = Math.abs(currentTime - lastUpdateTime);
-    const isSeekJump = timeDifference > 2;
+    const currentTimeMs = time * 1000;
     
-    setLastUpdateTime(currentTime);
-
-    // Конвертируем текущее время в миллисекунды
-    const currentTimeMs = currentTime * 1000;
-    
-    // Находим правильную строку для текущего времени
+    // Бинарный поиск для оптимизации
+    let left = 0;
+    let right = filteredLines.length - 1;
     let newLineIndex = -1;
     
-    // Ищем активную строку - последнюю строку, время которой <= текущему времени
-    for (let i = lines.length - 1; i >= 0; i--) {
-      if (lines[i].startTimeMs <= currentTimeMs) {
-        newLineIndex = i;
-        break;
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (filteredLines[mid].startTimeMs <= currentTimeMs) {
+        newLineIndex = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
       }
     }
     
-    // Если не нашли подходящую строку и время больше 0, берем первую строку
-    if (newLineIndex === -1 && currentTimeMs > 0 && lines.length > 0) {
-      newLineIndex = 0;
-    }
-    
-    // Убеждаемся, что индекс в допустимых пределах и обновляем только при изменении
-    if (newLineIndex >= 0 && newLineIndex < lines.length && newLineIndex !== currentLineIndex) {
+    if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
       setCurrentLineIndex(newLineIndex);
     }
-  }, [currentTime, lyricsData, currentLineIndex, lastUpdateTime]);
+  }, [lyricsData, filteredLines, currentLineIndex]);
+
+  // Увеличенный дебаунс для меньшего количества обновлений
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      updateCurrentLine(currentTime);
+    }, 200); // Увеличен дебаунс до 200мс
+
+    return () => clearTimeout(timeoutId);
+  }, [currentTime, updateCurrentLine]);
 
   if (loading) {
     return (
@@ -1602,7 +1675,7 @@ const LyricsModernView = ({ lyricsData, loading, currentTime, dominantColor, the
     );
   }
   
-  if (!lyricsData) {
+  if (!lyricsData || !filteredLines || filteredLines.length === 0) {
     if (isMainDisplay) return null;
     return (
       <Box sx={{ 
@@ -1622,19 +1695,9 @@ const LyricsModernView = ({ lyricsData, loading, currentTime, dominantColor, the
     );
   }
 
-  if (lyricsData.has_synced_lyrics && Array.isArray(lyricsData.synced_lyrics)) {
-    const lines = lyricsData.synced_lyrics.filter(line => line && line.text !== undefined);
-    
-    if (lines.length === 0) return null;
-
+  // Синхронизированные тексты - БЕЗ AnimatePresence и motion.div
+  if (lyricsData.has_synced_lyrics && filteredLines.length > 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        style={{ width: '100%', height: '100%' }}
-      >
         <Box sx={{
           width: '100%',
           height: '100%',
@@ -1644,240 +1707,452 @@ const LyricsModernView = ({ lyricsData, loading, currentTime, dominantColor, the
           alignItems: 'center',
           position: 'relative',
           overflow: 'hidden',
-          width: '100%',
-        }}>
-          {/* Previous line above */}
-          {currentLineIndex > 0 && lines[currentLineIndex - 1] && (
-            <Box
-              key={`prev-${currentLineIndex}`}
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                textAlign: 'center',
-                top: '20%',
-                transform: 'translateY(-50%)',
-                zIndex: 5,
-                opacity: 0.4,
-                transition: 'opacity 0.3s ease'
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  color: 'rgba(255,255,255,0.5)',
-                  fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
-                  fontWeight: 400,
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                  lineHeight: 1.3,
-                  letterSpacing: '-0.01em',
-                  textShadow: 'none',
-                  width: '100%',
-                  maxWidth: isMainDisplay ? { xs: '92%', sm: '87%', md: '82%', lg: '75%' } : { xs: '96%', sm: '92%' },
-                  margin: '0 auto',
-                  wordBreak: 'break-word',
-                  textAlign: 'left',
-                  filter: 'blur(2.2px)',
-                  whiteSpace: 'pre-wrap',
-                  overflowWrap: 'break-word',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                {lines[currentLineIndex - 1].text}
-              </Typography>
-            </Box>
-          )}
+      }}>
+        {/* Предыдущая строка */}
+        {currentLineIndex > 0 && filteredLines[currentLineIndex - 1] && (
+          <LyricsLine
+            text={filteredLines[currentLineIndex - 1].text}
+            isPrevious={true}
+            isMainDisplay={isMainDisplay}
+            lineKey={filteredLines[currentLineIndex - 1].key}
+          />
+        )}
 
-          {/* Current line in center */}
-          <AnimatePresence mode="wait">
-            {currentLineIndex >= 0 && currentLineIndex < lines.length && lines[currentLineIndex] && (
-              <motion.div
-                key={currentLineIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  textAlign: 'center',
-                  top: '45%',
-                  transform: 'translateY(-50%)',
-                  zIndex: 10
-                }}
-              >
-                <Typography
-                  variant="h3"
-                  sx={{
-                    color: 'white',
-                    fontSize: isMainDisplay ? { xs: '2rem', sm: '2.4rem', md: '2.8rem' } : { xs: '1.6rem', sm: '1.8rem' },
-                    fontWeight: 600,
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                    lineHeight: 1.2,
-                    letterSpacing: '-0.02em',
-                    textShadow: 'none',
-                    width: '100%',
-                    maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' } : { xs: '98%', sm: '95%' },
-                    margin: '0 auto',
-                    wordBreak: 'break-word',
-                    hyphens: 'auto',
-                    textAlign: 'left',
-                    whiteSpace: 'pre-wrap',
-                    overflowWrap: 'break-word',
-                    minHeight: isMainDisplay ? '3.5em' : '2.5em',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  {lines[currentLineIndex].text}
-                </Typography>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* Текущая строка */}
+        {currentLineIndex >= 0 && currentLineIndex < filteredLines.length && filteredLines[currentLineIndex] && (
+          <LyricsLine
+            text={filteredLines[currentLineIndex].text}
+            isActive={true}
+            isMainDisplay={isMainDisplay}
+            lineKey={filteredLines[currentLineIndex].key}
+          />
+        )}
 
-          {/* Next line below */}
-          {currentLineIndex < lines.length - 1 && lines[currentLineIndex + 1] && (
-            <Box
-              key={`next-${currentLineIndex}`}
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                textAlign: 'center',
-                top: '75%',
-                transform: 'translateY(-50%)',
-                zIndex: 5,
-                opacity: 0.3,
-                transition: 'opacity 0.3s ease'
-              }}
-            >
-              <Typography
-                variant="h6"
-                sx={{
-                  color: 'rgba(255,255,255,0.3)',
-                  fontSize: isMainDisplay ? { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' } : { xs: '1rem', sm: '1.2rem' },
-                  fontWeight: 400,
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                  lineHeight: 1.3,
-                  letterSpacing: '-0.01em',
-                  textShadow: 'none',
-                  width: '100%',
-                  maxWidth: isMainDisplay ? { xs: '90%', sm: '85%', md: '80%', lg: '70%' } : { xs: '94%', sm: '90%' },
-                  margin: '0 auto',
-                  wordBreak: 'break-word',
-                  textAlign: 'left',
-                  filter: 'blur(2.5px)',
-                  whiteSpace: 'pre-wrap',
-                  overflowWrap: 'break-word',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                {lines[currentLineIndex + 1].text}
-              </Typography>
-            </Box>
-          )}
+        {/* Следующая строка */}
+        {currentLineIndex < filteredLines.length - 1 && filteredLines[currentLineIndex + 1] && (
+          <LyricsLine
+            text={filteredLines[currentLineIndex + 1].text}
+            isNext={true}
+            isMainDisplay={isMainDisplay}
+            lineKey={filteredLines[currentLineIndex + 1].key}
+          />
+        )}
 
-          {/* Progress dots */}
-          <Box sx={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '6px',
-            alignItems: 'center',
-            zIndex: 10
-          }}>
-            {Array.from({ length: Math.min(lines.length, 15) }, (_, i) => (
-              <Box
-                key={i}
-                sx={{
-                  width: i === currentLineIndex ? '16px' : '4px',
-                  height: '4px',
-                  borderRadius: '2px',
-                  backgroundColor: i === currentLineIndex ? 'white' : 'rgba(255,255,255,0.3)',
-                  transition: 'all 0.3s ease'
-                }}
-              />
-            ))}
-          </Box>
-        </Box>
-      </motion.div>
+        {/* Прогресс-бар */}
+        <LyricsProgressDots 
+          total={filteredLines.length} 
+          current={currentLineIndex} 
+        />
+      </Box>
     );
   }
 
-  // Static lyrics
-  if (lyricsData.lyrics) {
-    const lines = lyricsData.lyrics.split('\n').filter(line => line.trim());
-    
+  // Статические тексты - упрощенная анимация через CSS
+  if (lyricsData.lyrics && filteredLines.length > 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        style={{ width: '100%', height: '100%' }}
-      >
-        <Box sx={{
+      <Box sx={{
           width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          width: '100%',
-          textAlign: 'left',
-          overflow: 'auto',
-          padding: isMainDisplay ? '20px 0' : '10px 0',
-          '&::-webkit-scrollbar': { display: 'none' },
-          scrollbarWidth: 'none'
-        }}>
-          {lines.map((line, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.02, duration: 0.25 }}
-              style={{ width: '100%' }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  color: 'white',
-                  fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
-                  fontWeight: 500,
-                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                  lineHeight: 1.4,
-                  letterSpacing: '-0.01em',
-                  mb: 0,
-                  textShadow: 'none',
-                  width: '100%',
-                  maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '75%' } : { xs: '98%', sm: '95%' },
-                  margin: '0 auto',
-                  wordBreak: 'break-word',
-                  hyphens: 'auto',
-                  textAlign: 'left',
-                  whiteSpace: 'pre-wrap',
-                  overflowWrap: 'break-word',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingBottom: '0.5rem'
-                }}
-              >
-                {line}
-              </Typography>
-            </motion.div>
-          ))}
-        </Box>
-      </motion.div>
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        textAlign: 'left',
+        overflow: 'auto',
+        padding: isMainDisplay ? '20px 0' : '10px 0',
+        '&::-webkit-scrollbar': { display: 'none' },
+        scrollbarWidth: 'none'
+      }}>
+        {filteredLines.map((line, index) => (
+          <StaticLyricsLine
+            key={line.key}
+            text={line.text}
+            index={index}
+            isMainDisplay={isMainDisplay}
+          />
+        ))}
+      </Box>
     );
   }
   
   return null;
-};
+}, (prevProps, nextProps) => {
+  // Кастомное сравнение для компонента текстов
+  return (
+    prevProps.loading === nextProps.loading &&
+    prevProps.isMainDisplay === nextProps.isMainDisplay &&
+    prevProps.lyricsData === nextProps.lyricsData &&
+    prevProps.filteredLines === nextProps.filteredLines &&
+    // Сравниваем время только с точностью до 500мс для текстов
+    Math.floor(prevProps.currentTime * 2) === Math.floor(nextProps.currentTime * 2) &&
+    prevProps.dominantColor === nextProps.dominantColor &&
+    prevProps.theme === nextProps.theme
+  );
+});
 
-export default FullScreenPlayerV2; 
+// Мемоизированный контейнер для обложки/текстов с глубоким сравнением
+const AlbumArtLyricsContainer = memo(({ 
+  lyricsDisplayMode, 
+  lyricsData, 
+  loadingLyrics, 
+  currentTime, 
+  dominantColor, 
+  theme, 
+  coverPath, 
+  currentTrack,
+  filteredLines 
+}) => (
+  <AlbumArtContainer sx={{maxHeight:'390px', width: '100%'}}>
+    {lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
+      <Box
+        key="lyrics-display"
+              sx={{
+                width: '100%',
+          height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+          justifyContent: 'center', 
+          overflow: 'hidden',
+          position: 'relative'
+        }}
+      >
+        <LyricsModernView
+          lyricsData={lyricsData}
+          loading={loadingLyrics}
+          currentTime={currentTime}
+          dominantColor={dominantColor}
+          theme={theme}
+          filteredLines={filteredLines}
+          isMainDisplay={true}
+        />
+            </Box>
+    ) : (
+      <AlbumArt
+        key="album-cover"
+        src={coverPath}
+        alt={currentTrack.title}
+      />
+    )}
+  </AlbumArtContainer>
+), (prevProps, nextProps) => {
+  // Кастомное сравнение для предотвращения ререндеров
+  return (
+    prevProps.lyricsDisplayMode === nextProps.lyricsDisplayMode &&
+    prevProps.loadingLyrics === nextProps.loadingLyrics &&
+    prevProps.coverPath === nextProps.coverPath &&
+    prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
+    // Сравниваем время только с точностью до секунды
+    Math.floor(prevProps.currentTime) === Math.floor(nextProps.currentTime) &&
+    prevProps.lyricsData === nextProps.lyricsData &&
+    prevProps.filteredLines === nextProps.filteredLines
+  );
+});
+
+// Мемоизированный компонент прогресс-бара с оптимизацией
+const ProgressSlider = memo(({ 
+  currentTime, 
+  duration, 
+  onTimeChange, 
+  formattedCurrentTime, 
+  formattedDuration 
+}) => (
+  <ProgressContainer>
+    <Slider
+      value={currentTime}
+      max={duration}
+      onChange={onTimeChange}
+                  sx={{
+                    color: 'white',
+        '& .MuiSlider-track': {
+          backgroundColor: 'white',
+          height: 6,
+          borderRadius: '2.5px'
+        },
+        '& .MuiSlider-rail': {
+          backgroundColor: 'rgba(255,255,255,0.5)',
+          height: 6,
+          borderRadius: '2.5px'
+        },
+        '& .MuiSlider-thumb': {
+          backgroundColor: 'white',
+          width: 16,
+          height: 16,
+          '&:hover': {
+            boxShadow: '0 0 0 8px rgba(255,255,255,0.2)'
+          }
+        },
+        '&:hover': {
+          '& .MuiSlider-track': {
+            height: 10,
+            borderRadius: '10px'
+          },
+          '& .MuiSlider-rail': {
+            height: 10,
+            borderRadius: '10px'
+          }
+        },
+      }}
+    />
+    <TimeDisplay>
+      <span>{formattedCurrentTime}</span>
+      <span>{formattedDuration}</span>
+    </TimeDisplay>
+  </ProgressContainer>
+), (prevProps, nextProps) => {
+  // Обновляем только если время изменилось значительно или функции поменялись
+  return (
+    Math.floor(prevProps.currentTime) === Math.floor(nextProps.currentTime) &&
+    prevProps.duration === nextProps.duration &&
+    prevProps.onTimeChange === nextProps.onTimeChange &&
+    prevProps.formattedCurrentTime === nextProps.formattedCurrentTime &&
+    prevProps.formattedDuration === nextProps.formattedDuration
+  );
+});
+
+// Мемоизированные основные контролы с глубоким сравнением
+const MainPlayControls = memo(({ 
+  isShuffled, 
+  toggleShuffle, 
+  prevTrack, 
+  isPlaying, 
+  togglePlay, 
+  nextTrack, 
+  repeatMode, 
+  toggleRepeat 
+}) => (
+  <MainControls>
+    <ControlButton onClick={toggleShuffle} active={isShuffled ? 1 : 0}>
+      <ShuffleIcon size={28} color={isShuffled ? '#fff' : '#d3d3d3'} />
+    </ControlButton>
+    
+    <ControlButton onClick={prevTrack}>
+      <BackwardIcon size={32} color="#d3d3d3" />
+    </ControlButton>
+    
+    <ControlButton 
+      onClick={togglePlay}
+      play={1}
+      sx={{ mx: 2 }}
+    >
+      {isPlaying
+        ? <PauseIcon size={48} color="#fff" />
+        : <PlayIcon size={48} color="#fff" />}
+    </ControlButton>
+    
+    <ControlButton onClick={nextTrack}>
+      <ForwardIcon size={32} color="#d3d3d3" />
+    </ControlButton>
+    
+    <ControlButton onClick={toggleRepeat} active={repeatMode !== 'off' ? 1 : 0}>
+      <RepeatIcon size={28} color={repeatMode !== 'off' ? '#fff' : '#d3d3d3'} />
+    </ControlButton>
+  </MainControls>
+), (prevProps, nextProps) => {
+  // Сравниваем только значимые изменения
+  return (
+    prevProps.isShuffled === nextProps.isShuffled &&
+    prevProps.isPlaying === nextProps.isPlaying &&
+    prevProps.repeatMode === nextProps.repeatMode &&
+    prevProps.toggleShuffle === nextProps.toggleShuffle &&
+    prevProps.togglePlay === nextProps.togglePlay &&
+    prevProps.prevTrack === nextProps.prevTrack &&
+    prevProps.nextTrack === nextProps.nextTrack &&
+    prevProps.toggleRepeat === nextProps.toggleRepeat
+  );
+});
+
+// Мемоизированные вторичные контролы с глубоким сравнением
+const SecondaryPlayControls = memo(({ 
+  currentTrack, 
+  onToggleLike, 
+  lyricsData, 
+  lyricsDisplayMode, 
+  onToggleLyricsDisplay, 
+  onCopyLink 
+}) => (
+  <SecondaryControls>
+    <ControlButton
+      onClick={onToggleLike}
+      className="secondary"
+              sx={{
+        color: currentTrack?.is_liked ? '#ff2d55' : 'rgba(255,255,255,0.8)',
+        '&:hover': { 
+          color: currentTrack?.is_liked ? '#ff2d55' : 'white'
+        }
+      }}
+    >
+      {currentTrack?.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+    </ControlButton>
+    
+    {(lyricsData?.has_synced_lyrics || lyricsData?.lyrics) && (
+      <ControlButton
+        onClick={onToggleLyricsDisplay}
+        className="secondary"
+                sx={{
+          color: lyricsDisplayMode ? '#9a7ace' : 'rgba(255,255,255,0.8)',
+          '&:hover': { color: lyricsDisplayMode ? '#9a7ace' : 'white' }
+        }}
+      >
+        <LyricsIcon />
+      </ControlButton>
+    )}
+    
+    <ControlButton
+      onClick={onCopyLink}
+      className="secondary"
+      sx={{
+        color: 'rgba(255,255,255,0.8)',
+        '&:hover': { color: 'white' }
+      }}
+    >
+      <ShareIcon size={24} color="rgba(255,255,255,0.8)" />
+    </ControlButton>
+  </SecondaryControls>
+), (prevProps, nextProps) => {
+  // Сравниваем только важные изменения
+  return (
+    prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
+    prevProps.currentTrack?.is_liked === nextProps.currentTrack?.is_liked &&
+    prevProps.lyricsDisplayMode === nextProps.lyricsDisplayMode &&
+    prevProps.lyricsData === nextProps.lyricsData &&
+    prevProps.onToggleLike === nextProps.onToggleLike &&
+    prevProps.onToggleLyricsDisplay === nextProps.onToggleLyricsDisplay &&
+    prevProps.onCopyLink === nextProps.onCopyLink
+  );
+});
+
+// Мемоизированный контрол громкости с оптимизацией
+const VolumeControls = memo(({ 
+  isMuted, 
+  volume, 
+  volumePercentage, 
+  onToggleMute, 
+  onVolumeChange 
+}) => (
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+    justifyContent: 'center',
+    mt: 2,
+    maxWidth: '500px',
+    width: '100%'
+          }}>
+    <ControlButton
+      onClick={onToggleMute}
+                sx={{
+        color: 'rgba(255,255,255,0.8)',
+        '&:hover': { color: 'white' },
+        mr: 1,
+        transition: 'color 0.2s ease'
+      }}
+      >
+        <Box sx={{
+          display: 'flex',
+          alignItems: 'center',
+        transition: 'transform 0.15s ease',
+        '&:hover': { transform: 'scale(1.1)' }
+      }}>
+        {isMuted || volume === 0 ? (
+          <VolumeOffIcon sx={{ fontSize: 20 }} />
+        ) : volume < 0.3 ? (
+          <VolumeMuteIcon sx={{ fontSize: 20 }} />
+        ) : volume < 0.7 ? (
+          <VolumeDownIcon sx={{ fontSize: 20 }} />
+        ) : (
+          <VolumeUpIcon sx={{ fontSize: 20 }} />
+        )}
+      </Box>
+    </ControlButton>
+    
+    <Slider
+      value={isMuted ? 0 : volume}
+      min={0}
+      max={1}
+      step={0.01}
+      onChange={onVolumeChange}
+                sx={{
+                  color: 'white',
+        flex: 1,
+        mx: 2,
+        '& .MuiSlider-track': {
+          backgroundColor: 'white',
+          height: 4,
+          borderRadius: '2px',
+          transition: 'height 0.2s ease'
+        },
+        '& .MuiSlider-rail': {
+          backgroundColor: 'rgba(255,255,255,0.25)',
+          height: 4,
+          borderRadius: '2px',
+          transition: 'height 0.2s ease'
+        },
+        '& .MuiSlider-thumb': {
+          backgroundColor: 'white',
+          width: 14,
+          height: 14,
+          border: 'none',
+          '&:hover': {
+            boxShadow: '0 0 0 8px rgba(255,255,255,0.12)'
+          },
+          '&.Mui-focusVisible': {
+            boxShadow: '0 0 0 8px rgba(255,255,255,0.12)'
+          },
+          '&:before': {
+            display: 'none'
+          }
+        },
+        '&:hover': {
+          '& .MuiSlider-track': {
+            height: 6,
+            borderRadius: '3px'
+          },
+          '& .MuiSlider-rail': {
+            height: 6,
+            borderRadius: '3px'
+          },
+          '& .MuiSlider-thumb': {
+            width: 16,
+            height: 16
+          }
+        }
+      }}
+    />
+    
+    <Typography 
+      variant="caption" 
+      sx={{ 
+        color: 'rgba(255,255,255,0.6)', 
+        fontSize: '0.75rem',
+        minWidth: '32px',
+        textAlign: 'right',
+        fontFamily: 'var(--FF_TITLE, inherit)',
+        ml: 1
+      }}
+    >
+      {volumePercentage}
+              </Typography>
+        </Box>
+), (prevProps, nextProps) => {
+  // Сравниваем только округленные значения громкости
+  return (
+    prevProps.isMuted === nextProps.isMuted &&
+    Math.round(prevProps.volume * 100) === Math.round(nextProps.volume * 100) &&
+    prevProps.volumePercentage === nextProps.volumePercentage &&
+    prevProps.onToggleMute === nextProps.onToggleMute &&
+    prevProps.onVolumeChange === nextProps.onVolumeChange
+  );
+});
+
+// Компонент портала для полноэкранного плеера
+const FullScreenPlayerPortal = memo(({ open, onClose, ...props }) => {
+  const portalContainer = document.getElementById('fullscreen-player-portal');
+  
+  if (!open || !portalContainer) return null;
+  
+  return ReactDOM.createPortal(
+    <FullScreenPlayerCore open={open} onClose={onClose} {...props} />,
+    portalContainer
+  );
+});
+
+export default FullScreenPlayerPortal;

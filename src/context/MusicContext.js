@@ -42,6 +42,7 @@ export const MusicContext = createContext({
   hasMoreByType: {},
   currentSection: 'all',
   isTrackLoading: false,
+  isFullScreenPlayerOpen: false,
   setCurrentTrack: () => {},
   setCurrentSection: () => {},
   resetCurrentSection: () => {},
@@ -65,6 +66,8 @@ export const MusicContext = createContext({
   getDurationRaw: () => 0,
   playlistTracks: {},
   setPlaylistTracks: () => {},
+  openFullScreenPlayer: () => {},
+  closeFullScreenPlayer: () => {},
 });
 
 
@@ -99,6 +102,7 @@ export const MusicProvider = ({ children }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isTrackLoading, setIsTrackLoading] = useState(false); 
+  const [isFullScreenPlayerOpen, setIsFullScreenPlayerOpen] = useState(false);
   
   
   const audioRef = useRef(new Audio());
@@ -2322,6 +2326,29 @@ export const MusicProvider = ({ children }) => {
     }
   };
 
+  // Функции для управления полноэкранным плеером
+  const openFullScreenPlayer = useCallback(() => {
+    console.log('[FullScreen] Открытие полноэкранного плеера');
+    setIsFullScreenPlayerOpen(true);
+    
+    // Скрываем основное приложение
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.style.display = 'none';
+    }
+  }, []);
+
+  const closeFullScreenPlayer = useCallback(() => {
+    console.log('[FullScreen] Закрытие полноэкранного плеера');
+    setIsFullScreenPlayerOpen(false);
+    
+    // Показываем основное приложение
+    const rootElement = document.getElementById('root');
+    if (rootElement) {
+      rootElement.style.display = 'block';
+    }
+  }, []);
+  
   
   const musicContextValue = {
     tracks,
@@ -2342,6 +2369,7 @@ export const MusicProvider = ({ children }) => {
     hasMoreByType,
     currentSection,
     isTrackLoading,
+    isFullScreenPlayerOpen,
     setCurrentTrack,
     setCurrentSection: setCurrentSectionHandler,
     resetCurrentSection,
@@ -2366,6 +2394,8 @@ export const MusicProvider = ({ children }) => {
     getDurationRaw,
     playlistTracks,
     setPlaylistTracks,
+    openFullScreenPlayer,
+    closeFullScreenPlayer,
   };
 
   return (

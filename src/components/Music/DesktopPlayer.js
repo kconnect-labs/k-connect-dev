@@ -152,10 +152,240 @@ const ControlButton = memo(({ icon, onClick, ariaLabel, color = 'white', active 
   >
     {icon}
   </IconButton>
-));
+), (prevProps, nextProps) => {
+  // Кастомное сравнение для кнопок
+  return (
+    prevProps.active === nextProps.active &&
+    prevProps.color === nextProps.color &&
+    prevProps.activeColor === nextProps.activeColor &&
+    prevProps.onClick === nextProps.onClick &&
+    prevProps.ariaLabel === nextProps.ariaLabel &&
+    React.isValidElement(prevProps.icon) && React.isValidElement(nextProps.icon) &&
+    prevProps.icon.type === nextProps.icon.type
+  );
+});
 
 
 const getColorFromImage = extractDominantColor;
+
+// Мемоизированная информация о треке
+const TrackInfoSection = memo(({ currentTrack, titleOverflowing, artistOverflowing, isPlayerHovered, onFullScreenOpen, titleRef, artistRef }) => (
+  <Box
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      width: '25%',
+      cursor: 'pointer',
+    }}
+    onClick={onFullScreenOpen}
+  >
+    <Box
+      component="img"
+      src={currentTrack?.cover_path || '/static/uploads/system/album_placeholder.jpg'}
+      alt={currentTrack?.title || ''}
+      sx={{
+        width: 52,
+        height: 52,
+        borderRadius: 1.5,
+        objectFit: 'cover',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        marginRight: 1.5,
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)',
+        },
+      }}
+    />
+    
+    <Box sx={{ overflow: 'hidden', maxWidth: '70%' }}>
+      <MarqueeText
+        variant="body1"
+        ref={titleRef}
+        fontWeight="medium"
+        isactive={titleOverflowing && isPlayerHovered ? 'true' : 'false'}
+        data-text={currentTrack?.title || 'Unknown Title'}
+        sx={{ 
+          fontSize: '0.95rem',
+          color: 'white'
+        }}
+      >
+        {currentTrack?.title || 'Unknown Title'}
+      </MarqueeText>
+      
+      <MarqueeText
+        variant="body2"
+        ref={artistRef}
+        isactive={artistOverflowing && isPlayerHovered ? 'true' : 'false'}
+        data-text={currentTrack?.artist || 'Unknown Artist'}
+        sx={{ 
+          fontSize: '0.8rem',
+          opacity: 0.7,
+          color: 'white'
+        }}
+      >
+        {currentTrack?.artist || 'Unknown Artist'}
+      </MarqueeText>
+    </Box>
+  </Box>
+), (prevProps, nextProps) => {
+  // Простое сравнение для секции трека
+  return (
+    prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
+    prevProps.currentTrack?.title === nextProps.currentTrack?.title &&
+    prevProps.currentTrack?.artist === nextProps.currentTrack?.artist &&
+    prevProps.currentTrack?.cover_path === nextProps.currentTrack?.cover_path &&
+    prevProps.titleOverflowing === nextProps.titleOverflowing &&
+    prevProps.artistOverflowing === nextProps.artistOverflowing &&
+    prevProps.isPlayerHovered === nextProps.isPlayerHovered &&
+    prevProps.onFullScreenOpen === nextProps.onFullScreenOpen
+  );
+});
+
+// Мемоизированная секция контролов и прогресса
+const ControlsSection = memo(({ 
+  shuffleMode, 
+  handleShuffleClick, 
+  prevTrack, 
+  isPlaying, 
+  togglePlay, 
+  nextTrack, 
+  repeatMode, 
+  handleRepeatClick,
+  dominantColor,
+  formattedCurrentTime,
+  formattedDuration,
+  seekValue,
+  handleSeekChange,
+  handleSeekStart,
+  handleSeekEnd,
+  handleClickProgress,
+  progressRef
+}) => (
+  <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, mx: 2 }}>
+    {/* Кнопки */}
+    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0.8 }}>
+      <ControlButton
+        icon={<ShuffleIcon size={20} />}
+        onClick={handleShuffleClick}
+        ariaLabel="Toggle shuffle"
+        active={shuffleMode}
+      />
+      
+      <ControlButton
+        icon={<BackwardIcon size={20} />}
+        onClick={prevTrack}
+        ariaLabel="Previous track"
+      />
+      
+      <ControlButton
+        icon={isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
+        onClick={togglePlay}
+        ariaLabel={isPlaying ? "Pause" : "Play"}
+        active={true}
+        activeColor={dominantColor ? `rgba(${dominantColor}, 1)` : null}
+      />
+      
+      <ControlButton
+        icon={<ForwardIcon size={20} />}
+        onClick={nextTrack}
+        ariaLabel="Next track"
+      />
+      
+      <ControlButton
+        icon={<RepeatIcon size={20} />}
+        onClick={handleRepeatClick}
+        ariaLabel="Toggle repeat mode"
+        active={repeatMode !== 'off'}
+      />
+    </Box>
+    
+    {/* Прогресс */}
+    <Box sx={{ display: 'flex', alignItems: 'center', px: 1 }}>
+      <Typography 
+        id="desktop-current-time"
+        variant="caption" 
+        sx={{ color: 'rgba(255, 255, 255, 0.7)', mr: 1, minWidth: 35, textAlign: 'center' }}
+      >
+        {formattedCurrentTime}
+      </Typography>
+      
+      <Box
+        ref={progressRef}
+        onClick={handleClickProgress}
+        sx={{ flexGrow: 1 }}
+      >
+        <TrackSlider
+          covercolor={dominantColor}
+          value={seekValue}
+          onChange={handleSeekChange}
+          onMouseDown={handleSeekStart}
+          onChangeCommitted={handleSeekEnd}
+          onTouchStart={handleSeekStart}
+          aria-labelledby="track-progress-slider"
+          step={0.01}
+        />
+      </Box>
+      
+      <Typography 
+        id="desktop-duration"
+        variant="caption" 
+        sx={{ color: 'rgba(255, 255, 255, 0.7)', ml: 1, minWidth: 35, textAlign: 'center' }}
+      >
+        {formattedDuration}
+      </Typography>
+    </Box>
+  </Box>
+), (prevProps, nextProps) => {
+  // Сравнение для контролов - обновляем только при значимых изменениях
+  return (
+    prevProps.shuffleMode === nextProps.shuffleMode &&
+    prevProps.isPlaying === nextProps.isPlaying &&
+    prevProps.repeatMode === nextProps.repeatMode &&
+    prevProps.dominantColor === nextProps.dominantColor &&
+    prevProps.formattedCurrentTime === nextProps.formattedCurrentTime &&
+    prevProps.formattedDuration === nextProps.formattedDuration &&
+    Math.floor(prevProps.seekValue) === Math.floor(nextProps.seekValue) && // Округляем для уменьшения обновлений
+    prevProps.handleShuffleClick === nextProps.handleShuffleClick &&
+    prevProps.handleRepeatClick === nextProps.handleRepeatClick &&
+    prevProps.togglePlay === nextProps.togglePlay &&
+    prevProps.prevTrack === nextProps.prevTrack &&
+    prevProps.nextTrack === nextProps.nextTrack
+  );
+});
+
+// Мемоизированная секция громкости
+const VolumeSection = memo(({ 
+  volume, 
+  isMuted, 
+  toggleMute, 
+  handleVolumeChange, 
+  dominantColor 
+}) => (
+  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '25%' }}>
+    <ControlButton
+      icon={volume < 0.5 ? <VolumeDownIcon size={20} /> : <VolumeUpIcon size={20} />}
+      onClick={toggleMute}
+      ariaLabel="Toggle mute"
+    />
+    
+    <VolumeSlider
+      covercolor={dominantColor}
+      value={isMuted ? 0 : volume * 100}
+      onChange={handleVolumeChange}
+      aria-labelledby="volume-slider"
+      sx={{ mx: 1 }}
+    />
+  </Box>
+), (prevProps, nextProps) => {
+  // Сравнение для громкости - округляем до процентов
+  return (
+    prevProps.isMuted === nextProps.isMuted &&
+    Math.round(prevProps.volume * 100) === Math.round(nextProps.volume * 100) &&
+    prevProps.dominantColor === nextProps.dominantColor &&
+    prevProps.toggleMute === nextProps.toggleMute &&
+    prevProps.handleVolumeChange === nextProps.handleVolumeChange
+  );
+});
 
 const DesktopPlayer = memo(() => {
   const theme = useTheme();
@@ -176,12 +406,14 @@ const DesktopPlayer = memo(() => {
     toggleMute,
     getCurrentTimeRaw,
     getDurationRaw,
-    audioRef
+    audioRef,
+    openFullScreenPlayer,
+    closeFullScreenPlayer,
+    isFullScreenPlayerOpen
   } = useMusic();
 
   const [seekValue, setSeekValue] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [fullScreenOpen, setFullScreenOpen] = useState(false);
   const [repeatMode, setRepeatMode] = useState('off'); 
   const [shuffleMode, setShuffleMode] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
@@ -503,12 +735,12 @@ const DesktopPlayer = memo(() => {
   }, []);
   
   const openFullScreen = useCallback(() => {
-    setFullScreenOpen(true);
-  }, []);
+    openFullScreenPlayer();
+  }, [openFullScreenPlayer]);
   
   const closeFullScreen = useCallback(() => {
-    setFullScreenOpen(false);
-  }, []);
+    closeFullScreenPlayer();
+  }, [closeFullScreenPlayer]);
   
   const getVolumeIcon = useMemo(() => {
     if (isMuted || volume === 0) return <VolumeDownIcon size={20} />;
@@ -528,166 +760,55 @@ const DesktopPlayer = memo(() => {
         covercolor={dominantColor}
         onMouseEnter={() => setIsPlayerHovered(true)}
         onMouseLeave={() => setIsPlayerHovered(false)}
-        sx={{ display: fullScreenOpen ? 'none' : 'flex' }}
-        className={fullScreenOpen ? 'hidden' : ''}
+        sx={{ display: isFullScreenPlayerOpen ? 'none' : 'flex' }}
+        className={isFullScreenPlayerOpen ? 'hidden' : ''}
       >
         {/* Трек-информация */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            width: '25%',
-            cursor: 'pointer',
-          }}
-          onClick={openFullScreen}
-        >
-          <Box
-            component="img"
-            src={currentTrack?.cover_path || '/static/uploads/system/album_placeholder.jpg'}
-            alt={currentTrack?.title || ''}
-            sx={{
-              width: 52,
-              height: 52,
-              borderRadius: 1.5,
-              objectFit: 'cover',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              marginRight: 1.5,
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)',
-              },
-            }}
-          />
-          
-          <Box sx={{ overflow: 'hidden', maxWidth: '70%' }}>
-            <MarqueeText
-              variant="body1"
-              ref={titleRef}
-              fontWeight="medium"
-              isactive={titleOverflowing && isPlayerHovered ? 'true' : 'false'}
-              data-text={currentTrack?.title || 'Unknown Title'}
-              sx={{ 
-                fontSize: '0.95rem',
-                color: 'white'
-              }}
-            >
-              {currentTrack?.title || 'Unknown Title'}
-            </MarqueeText>
-            
-            <MarqueeText
-              variant="body2"
-              ref={artistRef}
-              isactive={artistOverflowing && isPlayerHovered ? 'true' : 'false'}
-              data-text={currentTrack?.artist || 'Unknown Artist'}
-              sx={{ 
-                fontSize: '0.8rem',
-                opacity: 0.7,
-                color: 'white'
-              }}
-            >
-              {currentTrack?.artist || 'Unknown Artist'}
-            </MarqueeText>
-          </Box>
-        </Box>
+        <TrackInfoSection
+          currentTrack={currentTrack}
+          titleOverflowing={titleOverflowing}
+          artistOverflowing={artistOverflowing}
+          isPlayerHovered={isPlayerHovered}
+          onFullScreenOpen={openFullScreen}
+          titleRef={titleRef}
+          artistRef={artistRef}
+        />
         
         {/* Кнопки управления и прогресс */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, mx: 2 }}>
-          {/* Кнопки */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0.8 }}>
-            <ControlButton
-              icon={<ShuffleIcon size={20} />}
-              onClick={handleShuffleClick}
-              ariaLabel="Toggle shuffle"
-              active={shuffleMode}
-            />
-            
-            <ControlButton
-              icon={<BackwardIcon size={20} />}
-              onClick={prevTrack}
-              ariaLabel="Previous track"
-            />
-            
-            <ControlButton
-              icon={isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
-              onClick={togglePlay}
-              ariaLabel={isPlaying ? "Pause" : "Play"}
-              active={true}
-              activeColor={dominantColor ? `rgba(${dominantColor}, 1)` : null}
-            />
-            
-            <ControlButton
-              icon={<ForwardIcon size={20} />}
-              onClick={nextTrack}
-              ariaLabel="Next track"
-            />
-            
-            <ControlButton
-              icon={<RepeatIcon size={20} />}
-              onClick={handleRepeatClick}
-              ariaLabel="Toggle repeat mode"
-              active={repeatMode !== 'off'}
-            />
-          </Box>
-          
-          {/* Прогресс */}
-          <Box sx={{ display: 'flex', alignItems: 'center', px: 1 }}>
-            <Typography 
-              id="desktop-current-time"
-              variant="caption" 
-              sx={{ color: 'rgba(255, 255, 255, 0.7)', mr: 1, minWidth: 35, textAlign: 'center' }}
-            >
-              {formattedCurrentTime}
-            </Typography>
-            
-            <Box
-              ref={progressRef}
-              onClick={handleClickProgress}
-              sx={{ flexGrow: 1 }}
-            >
-              <TrackSlider
-                covercolor={dominantColor}
-                value={seekValue}
-                onChange={handleSeekChange}
-                onMouseDown={handleSeekStart}
-                onChangeCommitted={handleSeekEnd}
-                onTouchStart={handleSeekStart}
-                aria-labelledby="track-progress-slider"
-                step={0.01}
-              />
-            </Box>
-            
-            <Typography 
-              id="desktop-duration"
-              variant="caption" 
-              sx={{ color: 'rgba(255, 255, 255, 0.7)', ml: 1, minWidth: 35, textAlign: 'center' }}
-            >
-              {formattedDuration}
-            </Typography>
-          </Box>
-        </Box>
+        <ControlsSection
+          shuffleMode={shuffleMode}
+          handleShuffleClick={handleShuffleClick}
+          prevTrack={prevTrack}
+          isPlaying={isPlaying}
+          togglePlay={togglePlay}
+          nextTrack={nextTrack}
+          repeatMode={repeatMode}
+          handleRepeatClick={handleRepeatClick}
+          dominantColor={dominantColor}
+          formattedCurrentTime={formattedCurrentTime}
+          formattedDuration={formattedDuration}
+          seekValue={seekValue}
+          handleSeekChange={handleSeekChange}
+          handleSeekStart={handleSeekStart}
+          handleSeekEnd={handleSeekEnd}
+          handleClickProgress={handleClickProgress}
+          progressRef={progressRef}
+        />
         
         {/* Дополнительные кнопки */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '25%' }}>
-          <ControlButton
-            icon={volume < 0.5 ? <VolumeDownIcon size={20} /> : <VolumeUpIcon size={20} />}
-            onClick={toggleMute}
-            ariaLabel="Toggle mute"
-          />
-          
-          <VolumeSlider
-            covercolor={dominantColor}
-            value={isMuted ? 0 : volume * 100}
-            onChange={handleVolumeChange}
-            aria-labelledby="volume-slider"
-            sx={{ mx: 1 }}
-          />
-        </Box>
+        <VolumeSection
+          volume={volume}
+          isMuted={isMuted}
+          toggleMute={toggleMute}
+          handleVolumeChange={handleVolumeChange}
+          dominantColor={dominantColor}
+        />
       </PlayerContainer>
       
-      <FullScreenPlayer open={fullScreenOpen} onClose={closeFullScreen} />
+      <FullScreenPlayer open={isFullScreenPlayerOpen} onClose={closeFullScreen} />
       
       <Snackbar
-        open={shareSnackbar.open && !fullScreenOpen}
+        open={shareSnackbar.open && !isFullScreenPlayerOpen}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}

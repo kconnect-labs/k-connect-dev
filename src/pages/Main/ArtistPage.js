@@ -278,10 +278,18 @@ const ArtistPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreTracks, setHasMoreTracks] = useState(true);
   const [loadingMoreTracks, setLoadingMoreTracks] = useState(false);
-  const [fullScreenPlayerOpen, setFullScreenPlayerOpen] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
-  const { playTrack, currentTrack, isPlaying, togglePlay, likeTrack } = useMusic();
+  const { 
+    currentTrack, 
+    isPlaying, 
+    playTrack, 
+    likeTrack,
+    setCurrentSection,
+    openFullScreenPlayer,
+    closeFullScreenPlayer,
+    isFullScreenPlayerOpen
+  } = useMusic();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const tracksContainerRef = useRef(null);
@@ -369,18 +377,18 @@ const ArtistPage = () => {
   };
 
   const handleOpenFullScreenPlayer = useCallback(() => {
-    setFullScreenPlayerOpen(true);
-  }, []);
+    openFullScreenPlayer();
+  }, [openFullScreenPlayer]);
 
   const handleCloseFullScreenPlayer = useCallback(() => {
-    setFullScreenPlayerOpen(false);
+    closeFullScreenPlayer();
     
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
-  }, []);
+  }, [closeFullScreenPlayer]);
 
   const handleTrackClick = (track) => {
-    handlePlayTrack(track);
+    handlePlayTrack(track, 'artist');
   };
 
   const handlePlayTrack = (track) => {
@@ -1014,7 +1022,7 @@ const ArtistPage = () => {
       
       {/* Full Screen Player */}
       <FullScreenPlayer 
-        open={fullScreenPlayerOpen} 
+        open={isFullScreenPlayerOpen} 
         onClose={handleCloseFullScreenPlayer} 
       />
     </ArtistContainer>

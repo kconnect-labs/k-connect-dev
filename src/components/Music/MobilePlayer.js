@@ -118,12 +118,14 @@ const MobilePlayer = memo(() => {
     seekTo,
     getCurrentTimeRaw,
     getDurationRaw,
-    audioRef
+    audioRef,
+    openFullScreenPlayer,
+    closeFullScreenPlayer,
+    isFullScreenPlayerOpen
   } = useMusic();
 
   
   const progressRef = useRef(0);
-  const [fullScreenOpen, setFullScreenOpen] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
   
   const [shareSnackbar, setShareSnackbar] = useState({
@@ -345,12 +347,12 @@ const MobilePlayer = memo(() => {
   }, []);
 
   const openFullScreen = useCallback(() => {
-    setFullScreenOpen(true);
-  }, []);
+    openFullScreenPlayer();
+  }, [openFullScreenPlayer]);
 
   const closeFullScreen = useCallback(() => {
-    setFullScreenOpen(false);
-  }, []);
+    closeFullScreenPlayer();
+  }, [closeFullScreenPlayer]);
   
   const handleControlClick = useCallback((e, callback) => {
     e.stopPropagation();
@@ -370,8 +372,8 @@ const MobilePlayer = memo(() => {
       <PlayerContainer 
         elevation={0} 
         covercolor={dominantColor} 
-        sx={{ display: fullScreenOpen ? 'none' : 'flex' }}
-        className={fullScreenOpen ? 'hidden' : ''}
+        sx={{ display: isFullScreenPlayerOpen ? 'none' : 'flex' }}
+        className={isFullScreenPlayerOpen ? 'hidden' : ''}
       >
         <Box 
           onClick={openFullScreen}
@@ -427,12 +429,12 @@ const MobilePlayer = memo(() => {
       </PlayerContainer>
       
       <FullScreenPlayer
-        open={fullScreenOpen}
+        open={isFullScreenPlayerOpen}
         onClose={closeFullScreen}
       />
       
       <Snackbar 
-        open={shareSnackbar.open && !fullScreenOpen}
+        open={shareSnackbar.open && !isFullScreenPlayerOpen}
         autoHideDuration={3000} 
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
