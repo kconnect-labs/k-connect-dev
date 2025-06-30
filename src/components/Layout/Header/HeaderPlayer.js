@@ -9,21 +9,30 @@ const VolumeControl = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   position: 'relative',
   '&:hover .volume-slider': {
-    width: '60px',
     opacity: 1,
-    marginLeft: theme.spacing(0.5),
+    visibility: 'visible',
+    transitionDelay: '0s',
+  },
+  '& .volume-slider': {
+    transitionDelay: '0.2s',
   }
 }));
 
 const VolumeSlider = styled('input')(({ theme }) => ({
-  width: 0,
+  position: 'absolute',
+  left: '100%',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  width: '60px',
   height: 3,
+  marginLeft: theme.spacing(0.5),
   borderRadius: 1.5,
   backgroundColor: alpha(theme.palette.primary.main, 0.2),
   appearance: 'none',
   outline: 'none',
   transition: 'all 0.2s ease',
   opacity: 0,
+  visibility: 'hidden',
   cursor: 'pointer',
   '&::-webkit-slider-thumb': {
     appearance: 'none',
