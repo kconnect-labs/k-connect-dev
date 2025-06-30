@@ -76,6 +76,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import ConnectionModal from '../../components/Connections/ConnectionModal';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { styled as styledMui } from '@mui/material/styles';
+import ProfileKonnectModal from './settings/ProfileKonnectModal';
 
 
 const IOSSwitch = styled((props) => (
@@ -2193,6 +2194,7 @@ const SettingsPage = () => {
   const [deleteChannelDialogOpen, setDeleteChannelDialogOpen] = useState(false);
   
   const [connectionModalOpen, setConnectionModalOpen] = useState(false);
+  const [konnectModalOpen, setKonnectModalOpen] = useState(false);
   
  
   
@@ -4903,6 +4905,16 @@ const SettingsPage = () => {
                     <Box sx={{ mt: 2 }}>
                       <AccentColorBlock />
                     </Box>
+                    {/* Экспериментальная функция: глобальные обои профиля */}
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      sx={{ mt: 1, borderRadius: 2, fontWeight: 500 }}
+                      onClick={() => setKonnectModalOpen(true)}
+                    >
+                      Экспорт / Импорт профиля (.konnect)
+                    </Button>
+                    <ProfileKonnectModal open={konnectModalOpen} onClose={() => setKonnectModalOpen(false)} />
                   </Box>
                 )}
               </SettingsCardContent>
@@ -5241,7 +5253,6 @@ const SettingsPage = () => {
                       </>
                     )}
                     
-                    {/* Purchased Badges Section */}
                     {purchasedBadges.length > 0 && (
                       <>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 3 }}>

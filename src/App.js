@@ -458,7 +458,7 @@ const AppRoutes = () => {
           <Route path="/notifications" element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />} />
           <Route path="/search" element={isAuthenticated ? <SearchPage /> : <Navigate to="/login" replace />} />
           <Route path="/music" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPage /> : <Navigate to="/login" replace />} />
+          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPage onBack={() => window.history.back()} /> : <Navigate to="/login" replace />} />
           <Route path="/music/all" element={isAuthenticated ? <AllTracksPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/playlists" element={isAuthenticated ? <PlaylistsPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/:section" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />

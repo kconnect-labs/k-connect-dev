@@ -141,13 +141,18 @@ const LikedTracksPage = ({ onBack }) => {
     try {
       const response = await apiClient.post(`/api/music/${trackId}/like`);
       if (response.data.success) {
-        setTracks(prevTracks => 
-          prevTracks.map(track => 
-            track.id === trackId 
-              ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
-              : track
-          )
-        );
+        setTracks(prevTracks => {
+          const track = prevTracks.find(t => t.id === trackId);
+          if (track && track.is_liked) {
+            return prevTracks.filter(t => t.id !== trackId);
+          } else {
+            return prevTracks.map(track => 
+              track.id === trackId 
+                ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
+                : track
+            );
+          }
+        });
       }
     } catch (err) {
       console.error('Error toggling like:', err);

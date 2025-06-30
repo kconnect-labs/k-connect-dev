@@ -309,6 +309,22 @@ export const ReloadIcon = ({ size = 24, color = "currentColor", className, ...pr
     );
 };
 
+export const ShareIcon = ({ size = 24, color = "currentColor", className, ...props }) => {
+    return (
+        <svg 
+            className={className}
+            width={size} 
+            height={size} 
+            viewBox="0 0 512 512" 
+            xmlns="http://www.w3.org/2000/svg"
+            fill={color}
+            {...props}
+        >
+            <path d="m503.691 189.836-176.004-151.985c-15.406-13.305-39.687-2.504-39.687 18.164v80.053c-160.629 1.839-288 34.032-288 186.258 0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631-45.344-145.013 21.507-183.511 176.59-185.742v87.915c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z" />
+        </svg>
+    );
+};
+
 // Экспорт всех иконок для удобства
 export default {
     PlayIcon,
@@ -328,5 +344,6 @@ export default {
     ReplyIcon,
     SearchIcon,
     BlockIcon,
-    ReloadIcon
+    ReloadIcon,
+    ShareIcon
 };
