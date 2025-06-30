@@ -1873,6 +1873,7 @@ export const MusicProvider = ({ children }) => {
     }
     
     try {
+      console.log('[SEARCH] Начинаем поиск для:', query);
       setIsSearching(true);
       
       const response = await axios.get('/api/music/search', {
@@ -1882,46 +1883,97 @@ export const MusicProvider = ({ children }) => {
           'Cache-Control': 'no-cache',
           'Pragma': 'no-cache',
           'Expires': '0'
-        }
+        },
+        withCredentials: true // Важно для аутентификации!
+      });
+      
+      console.log('[SEARCH] Полный ответ сервера:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+        dataType: typeof response.data,
+        isArray: Array.isArray(response.data),
+        length: Array.isArray(response.data) ? response.data.length : 'N/A'
       });
       
       const tracks = response.data;
-      console.log("Search results:", tracks);
       
+      // Детальная проверка данных
+      if (!Array.isArray(tracks)) {
+        console.warn('[SEARCH] Ответ сервера не является массивом:', tracks);
+        setSearchResults([]);
+        return [];
+      }
       
-      const processedTracks = Array.isArray(tracks) ? tracks.map(track => {
+      if (tracks.length === 0) {
+        console.log('[SEARCH] Сервер вернул пустой массив для запроса:', query);
+        setSearchResults([]);
+        return [];
+      }
+      
+      console.log('[SEARCH] Получено треков:', tracks.length);
+      
+      // Обработка результатов поиска
+      const processedTracks = tracks.map((track, index) => {
+        console.log(`[SEARCH] Обрабатываем трек ${index + 1}:`, {
+          id: track.id,
+          title: track.title,
+          artist: track.artist,
+          file_path: track.file_path,
+          cover_path: track.cover_path
+        });
+        
         return {
           ...track,
-          
+          // Проверяем статус лайка
           is_liked: typeof track.is_liked === 'boolean' ? track.is_liked : 
                     Boolean(likedTracks.find(lt => lt.id === track.id)),
-          
+          // Добавляем дефолтные пути если отсутствуют
           file_path: track.file_path || "/static/uploads/system/audio_placeholder.mp3",
           cover_path: track.cover_path || "/static/uploads/system/album_placeholder.jpg"
         };
-      }) : [];
+      });
       
+      console.log('[SEARCH] Обработанные треки:', processedTracks);
       setSearchResults(processedTracks);
       return processedTracks;
     } catch (error) {
-      console.error('Error searching tracks:', error);
+      console.error('[SEARCH] Подробная ошибка при поиске треков:', {
+        message: error.message,
+        response: error.response ? {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data
+        } : 'Нет ответа',
+        request: error.request ? 'Запрос был отправлен' : 'Запрос не был отправлен',
+        config: error.config ? {
+          url: error.config.url,
+          method: error.config.method,
+          params: error.config.params
+        } : 'Нет конфига'
+      });
       
-      
+      // Подробная обработка ошибок
       if (error.response) {
-        
+        // Сервер ответил с ошибкой
         if (error.response.status === 401) {
-          console.error('Authentication required for music search');
+          console.error('[SEARCH] Требуется аутентификация для поиска');
+        } else if (error.response.status === 403) {
+          console.error('[SEARCH] Доступ запрещен');
+        } else if (error.response.status === 404) {
+          console.error('[SEARCH] Эндпоинт поиска не найден');
         } else {
-          console.error(`Server error: ${error.response.status} - ${error.response.data?.error || 'Unknown error'}`);
+          console.error(`[SEARCH] Ошибка сервера: ${error.response.status} - ${error.response.data?.error || 'Неизвестная ошибка'}`);
         }
       } else if (error.request) {
-        
-        console.error('No response received from server during search');
+        // Запрос был отправлен, но ответа не получено
+        console.error('[SEARCH] Нет ответа от сервера при поиске');
       } else {
-        
-        console.error('Error setting up search request:', error.message);
+        // Ошибка при настройке запроса
+        console.error('[SEARCH] Ошибка при настройке запроса:', error.message);
       }
       
+      setSearchResults([]);
       return [];
     } finally {
       setIsSearching(false);
@@ -2331,10 +2383,39 @@ export const MusicProvider = ({ children }) => {
     console.log('[FullScreen] Открытие полноэкранного плеера');
     setIsFullScreenPlayerOpen(true);
     
-    // Скрываем основное приложение
+    // Проверяем, работаем ли мы на iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent) && !/android/i.test(navigator.userAgent);
+    
+    // Более безопасный способ скрытия для мобильных устройств
     const rootElement = document.getElementById('root');
     if (rootElement) {
-      rootElement.style.display = 'none';
+      if (isIOS || isSafari) {
+        // Для iOS/Safari используем transform
+        rootElement.style.transform = 'translateX(-100vw)';
+        rootElement.style.position = 'fixed';
+        rootElement.style.visibility = 'hidden';
+        rootElement.style.opacity = '0';
+      } else {
+        // Для других браузеров используем обычные стили
+        rootElement.style.visibility = 'hidden';
+        rootElement.style.position = 'fixed';
+        rootElement.style.top = '-9999px';
+        rootElement.style.left = '-9999px';
+        rootElement.style.zIndex = '-1';
+        rootElement.style.opacity = '0';
+        rootElement.style.pointerEvents = 'none';
+      }
+    }
+    
+    // Предотвращаем скролл на мобильных устройствах
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.style.overflow = 'hidden';
+      if (isIOS) {
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.height = '100vh';
+      }
     }
   }, []);
 
@@ -2342,10 +2423,38 @@ export const MusicProvider = ({ children }) => {
     console.log('[FullScreen] Закрытие полноэкранного плеера');
     setIsFullScreenPlayerOpen(false);
     
-    // Показываем основное приложение
+    // Проверяем, работаем ли мы на iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent) && !/android/i.test(navigator.userAgent);
+    
+    // Восстанавливаем основное приложение
     const rootElement = document.getElementById('root');
     if (rootElement) {
-      rootElement.style.display = 'block';
+      if (isIOS || isSafari) {
+        // Для iOS/Safari восстанавливаем transform
+        rootElement.style.transform = '';
+        rootElement.style.position = '';
+        rootElement.style.visibility = '';
+        rootElement.style.opacity = '';
+        rootElement.style.pointerEvents = '';
+      } else {
+        // Для других браузеров восстанавливаем обычные стили
+        rootElement.style.visibility = '';
+        rootElement.style.position = '';
+        rootElement.style.top = '';
+        rootElement.style.left = '';
+        rootElement.style.zIndex = '';
+        rootElement.style.opacity = '';
+        rootElement.style.pointerEvents = '';
+      }
+    }
+    
+    // Восстанавливаем скролл
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
     }
   }, []);
   

@@ -1225,7 +1225,7 @@ const LyricsEditorContent = memo(({
   onOpenTimestampEditor
 }) => {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', zIndex: 99000 }}>
       <Typography variant="h5" sx={{ 
         color: 'white', 
         mb: 3, 
@@ -1434,8 +1434,7 @@ const LyricsLine = memo(({
     position: 'absolute',
     transform: 'translateY(-50%)',
     zIndex: isActive ? 10 : 5,
-    // Плавные переходы для смены строк
-    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    // Убираем transition чтобы не конфликтовать с animation
     willChange: 'opacity, transform, filter',
   };
 
@@ -1443,18 +1442,19 @@ const LyricsLine = memo(({
     return (
       <Box
         key={`active-${lineKey}`}
+        className="lyrics-line"
         sx={{
           ...baseStyles,
-          top: '60%',
+          top: '70%',
           opacity: 1,
           filter: 'none',
           transform: 'translateY(-50%) scale(1)',
-          // Анимация появления активной строки
-          animation: 'fadeInScale 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
-          '@keyframes fadeInScale': {
+          // Упрощенная анимация появления активной строки
+          animation: 'activeLineAppear 0.5s ease-out forwards',
+          '@keyframes activeLineAppear': {
             '0%': {
-              opacity: 0.7,
-              transform: 'translateY(-50%) scale(0.95)',
+              opacity: 0.5,
+              transform: 'translateY(-40%) scale(0.92)',
             },
             '100%': {
               opacity: 1,
@@ -1473,7 +1473,7 @@ const LyricsLine = memo(({
             maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' } : { xs: '98%', sm: '95%' },
             minHeight: isMainDisplay ? '3.5em' : '2.5em',
             position: 'static',
-            transition: 'all 0.4s ease',
+            textShadow: '0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(255,255,255,0.1)',
           }}
         >
           {text}
@@ -1486,24 +1486,36 @@ const LyricsLine = memo(({
     return (
       <Box
         key={`prev-${lineKey}`}
+        className="lyrics-line"
         sx={{
           ...baseStyles,
-          top: '25%',
-          opacity: 0.4,
-          filter: 'blur(2.2px)',
-          transform: 'translateY(-50%) scale(0.9)',
+          top: '35%',
+          opacity: 0.3,
+          filter: 'blur(2.5px)',
+          transform: 'translateY(-50%) scale(0.85)',
+          // Упрощенная анимация ухода предыдущей строки
+          animation: 'previousLineExit 0.4s ease-out forwards',
+          '@keyframes previousLineExit': {
+            '0%': {
+              opacity: 0.6,
+              transform: 'translateY(-50%) scale(0.92)',
+            },
+            '100%': {
+              opacity: 0.3,
+              transform: 'translateY(-50%) scale(0.85)',
+            }
+          }
         }}
       >
         <Typography
           variant="h5"
           sx={{
-            color: 'rgba(255,255,255,0.5)',
-            fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
+            color: 'rgba(255,255,255,0.4)',
+            fontSize: isMainDisplay ? { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' } : { xs: '1rem', sm: '1.2rem' },
             fontWeight: 400,
             ...baseStyles,
             maxWidth: isMainDisplay ? { xs: '92%', sm: '87%', md: '82%', lg: '75%' } : { xs: '96%', sm: '92%' },
             position: 'static',
-            transition: 'all 0.4s ease',
           }}
         >
           {text}
@@ -1516,24 +1528,36 @@ const LyricsLine = memo(({
     return (
       <Box
         key={`next-${lineKey}`}
+        className="lyrics-line"
         sx={{
           ...baseStyles,
-          top: '75%',
-          opacity: 0.3,
-          filter: 'blur(2.5px)',
-          transform: 'translateY(-50%) scale(0.85)',
+          top: '80%',
+          opacity: 0.25,
+          filter: 'blur(3px)',
+          transform: 'translateY(-50%) scale(0.8)',
+          // Упрощенная анимация появления следующей строки
+          animation: 'nextLineEnter 0.4s ease-out forwards',
+          '@keyframes nextLineEnter': {
+            '0%': {
+              opacity: 0.1,
+              transform: 'translateY(-60%) scale(0.75)',
+            },
+            '100%': {
+              opacity: 0.25,
+              transform: 'translateY(-50%) scale(0.8)',
+            }
+          }
         }}
       >
         <Typography
           variant="h6"
           sx={{
-            color: 'rgba(255,255,255,0.3)',
-            fontSize: isMainDisplay ? { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' } : { xs: '1rem', sm: '1.2rem' },
+            color: 'rgba(255,255,255,0.25)',
+            fontSize: isMainDisplay ? { xs: '1rem', sm: '1.2rem', md: '1.4rem' } : { xs: '0.9rem', sm: '1rem' },
             fontWeight: 400,
             ...baseStyles,
             maxWidth: isMainDisplay ? { xs: '90%', sm: '85%', md: '80%', lg: '70%' } : { xs: '94%', sm: '90%' },
             position: 'static',
-            transition: 'all 0.4s ease',
           }}
         >
           {text}
@@ -1543,6 +1567,16 @@ const LyricsLine = memo(({
   }
 
   return null;
+}, (prevProps, nextProps) => {
+  // Предотвращаем ненужные обновления во время анимаций
+  return (
+    prevProps.text === nextProps.text &&
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.isPrevious === nextProps.isPrevious &&
+    prevProps.isNext === nextProps.isNext &&
+    prevProps.lineKey === nextProps.lineKey &&
+    prevProps.isMainDisplay === nextProps.isMainDisplay
+  );
 });
 
 // Оптимизированный компонент прогресс-бара
@@ -1576,6 +1610,7 @@ const LyricsProgressDots = memo(({ total, current }) => (
 const StaticLyricsLine = memo(({ text, index, isMainDisplay }) => (
   <Typography
     variant="h5"
+    className="lyrics-line"
     sx={{
       color: 'white',
       fontSize: isMainDisplay ? { xs: '1.4rem', sm: '1.6rem', md: '1.8rem' } : { xs: '1.2rem', sm: '1.4rem' },
@@ -1584,7 +1619,7 @@ const StaticLyricsLine = memo(({ text, index, isMainDisplay }) => (
       lineHeight: 1.4,
       letterSpacing: '-0.01em',
       mb: 0,
-      textShadow: 'none',
+      textShadow: '0 2px 8px rgba(0,0,0,0.2)',
       width: '100%',
       maxWidth: isMainDisplay ? { xs: '95%', sm: '90%', md: '85%', lg: '75%' } : { xs: '98%', sm: '95%' },
       margin: '0 auto',
@@ -1596,18 +1631,19 @@ const StaticLyricsLine = memo(({ text, index, isMainDisplay }) => (
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      paddingBottom: '0.5rem',
+      paddingBottom: '0.8rem',
       opacity: 0,
-      animation: `fadeInUp 0.25s ease forwards`,
-      animationDelay: `${index * 0.02}s`,
-      '@keyframes fadeInUp': {
+      // Упрощенная анимация появления
+      animation: `staticLineAppear 0.3s ease-out forwards`,
+      animationDelay: `${index * 0.05}s`,
+      '@keyframes staticLineAppear': {
         '0%': {
           opacity: 0,
-          transform: 'translateY(20px)'
+          transform: 'translateY(20px)',
         },
         '100%': {
           opacity: 1,
-          transform: 'translateY(0)'
+          transform: 'translateY(0)',
         }
       }
     }}
@@ -1650,7 +1686,7 @@ const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       updateCurrentLine(currentTime);
-    }, 200); // Увеличен дебаунс до 200мс
+    }, 300); // Компромисс между плавностью и отзывчивостью
 
     return () => clearTimeout(timeoutId);
   }, [currentTime, updateCurrentLine]);
@@ -1698,7 +1734,9 @@ const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor
   // Синхронизированные тексты - БЕЗ AnimatePresence и motion.div
   if (lyricsData.has_synced_lyrics && filteredLines.length > 0) {
     return (
-        <Box sx={{
+        <Box 
+          className="lyrics-container"
+          sx={{
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -1707,6 +1745,7 @@ const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor
           alignItems: 'center',
           position: 'relative',
           overflow: 'hidden',
+
       }}>
         {/* Предыдущая строка */}
         {currentLineIndex > 0 && filteredLines[currentLineIndex - 1] && (
@@ -1750,7 +1789,9 @@ const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor
   // Статические тексты - упрощенная анимация через CSS
   if (lyricsData.lyrics && filteredLines.length > 0) {
     return (
-      <Box sx={{
+      <Box 
+        className="lyrics-container"
+        sx={{
           width: '100%',
         height: '100%',
         display: 'flex',
@@ -1761,7 +1802,17 @@ const LyricsModernView = memo(({ lyricsData, loading, currentTime, dominantColor
         overflow: 'auto',
         padding: isMainDisplay ? '20px 0' : '10px 0',
         '&::-webkit-scrollbar': { display: 'none' },
-        scrollbarWidth: 'none'
+        scrollbarWidth: 'none',
+        // Упрощенная анимация появления контейнера
+        animation: 'containerFadeIn 0.3s ease-out forwards',
+        '@keyframes containerFadeIn': {
+          '0%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 1,
+          }
+        }
       }}>
         {filteredLines.map((line, index) => (
           <StaticLyricsLine
@@ -2145,7 +2196,57 @@ const VolumeControls = memo(({
 
 // Компонент портала для полноэкранного плеера
 const FullScreenPlayerPortal = memo(({ open, onClose, ...props }) => {
-  const portalContainer = document.getElementById('fullscreen-player-portal');
+  const [portalContainer, setPortalContainer] = useState(null);
+  
+  useEffect(() => {
+    // Безопасно получаем контейнер портала
+    let container = null;
+    try {
+      container = document.getElementById('fullscreen-player-portal');
+      
+      // Если контейнер не найден, создаем его
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'fullscreen-player-portal';
+        document.body.appendChild(container);
+      }
+      
+      setPortalContainer(container);
+    } catch (error) {
+      console.error('Ошибка при создании портала:', error);
+    }
+  }, []);
+  
+  // Обновляем состояние контейнера при изменении открытия/закрытия
+  useEffect(() => {
+    if (portalContainer) {
+      if (open) {
+        portalContainer.classList.add('active');
+        // Дополнительные проверки для мобильных устройств
+        try {
+          // Предотвращаем scroll на iOS
+          const viewport = document.querySelector('meta[name=viewport]');
+          if (viewport) {
+            viewport.setAttribute('content', viewport.getAttribute('content') + ', user-scalable=no');
+          }
+        } catch (e) {
+          console.warn('Не удалось обновить viewport meta:', e);
+        }
+      } else {
+        portalContainer.classList.remove('active');
+        // Восстанавливаем scroll на iOS
+        try {
+          const viewport = document.querySelector('meta[name=viewport]');
+          if (viewport) {
+            const content = viewport.getAttribute('content').replace(', user-scalable=no', '');
+            viewport.setAttribute('content', content);
+          }
+        } catch (e) {
+          console.warn('Не удалось восстановить viewport meta:', e);
+        }
+      }
+    }
+  }, [open, portalContainer]);
   
   if (!open || !portalContainer) return null;
   

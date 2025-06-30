@@ -23,11 +23,11 @@ export const DISABLE_LINK_PREVIEWS = false;
 // - URL со спецсимволами
 export const URL_REGEX = /\b((?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)|(?:www\.)?(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?::\d{1,5})?(?:[/?#]\S*)?|(?:@)?\b(?:donationalerts\.[a-zA-Z]{2,6})\/\S+\b)/gi;
 
-// Регулярка для @упоминаний пользователей
-export const USERNAME_MENTION_REGEX = /(?<!\w)@(\w+)/g;
+// Регулярка для @упоминаний пользователей - Safari-совместимая версия
+export const USERNAME_MENTION_REGEX = /(^|[^a-zA-Z0-9_])@(\w+)/g;
 
-// Регулярка для #хештегов (поддерживает латиницу и кириллицу)
-export const HASHTAG_REGEX = /(?<![а-яА-Яa-zA-Z0-9_])#([а-яА-Яa-zA-Z0-9_]+)/g;
+// Регулярка для #хештегов (поддерживает латиницу и кириллицу) - Safari-совместимая версия
+export const HASHTAG_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])#([а-яА-Яa-zA-Z0-9_]+)/g;
 
 // Компонент предпросмотра ссылки, который можно использовать везде
 export const LinkPreview = ({ url }) => {
@@ -254,24 +254,38 @@ export const processTextWithLinks = (text, theme) => {
   
   USERNAME_MENTION_REGEX.lastIndex = 0;
   while ((match = USERNAME_MENTION_REGEX.exec(text)) !== null) {
+    const prefix = match[1];
+    const username = match[2];
+    const fullMatch = match[0];
+    
+    const adjustedIndex = prefix ? match.index + prefix.length : match.index;
+    const adjustedMatch = prefix ? fullMatch.substring(prefix.length) : fullMatch;
+    
     combinedMatches.push({
       type: 'mention',
-      match: match[0],
-      username: match[1],
-      index: match.index,
-      length: match[0].length
+      match: adjustedMatch,
+      username: username,
+      index: adjustedIndex,
+      length: adjustedMatch.length
     });
   }
   
   
   HASHTAG_REGEX.lastIndex = 0;
   while ((match = HASHTAG_REGEX.exec(text)) !== null) {
+    const prefix = match[1];
+    const hashtag = match[2];
+    const fullMatch = match[0];
+    
+    const adjustedIndex = prefix ? match.index + prefix.length : match.index;
+    const adjustedMatch = prefix ? fullMatch.substring(prefix.length) : fullMatch;
+    
     combinedMatches.push({
       type: 'hashtag',
-      match: match[0],
-      hashtag: match[1],
-      index: match.index,
-      length: match[0].length
+      match: adjustedMatch,
+      hashtag: hashtag,
+      index: adjustedIndex,
+      length: adjustedMatch.length
     });
   }
   

@@ -1,12 +1,60 @@
 import React from 'react';
-import { Box, IconButton, Avatar, Typography, alpha } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, IconButton, Avatar, Typography, alpha, styled } from '@mui/material';
 import { Icon } from '@iconify/react';
 
 const PlayerControls = (props) => <Box {...props} />;
-const VolumeControl = (props) => <Box {...props} />;
-const VolumeSlider = (props) => <input {...props} />;
 
+const VolumeControl = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  position: 'relative',
+  '&:hover .volume-slider': {
+    width: '60px',
+    opacity: 1,
+    marginLeft: theme.spacing(0.5),
+  }
+}));
+
+const VolumeSlider = styled('input')(({ theme }) => ({
+  width: 0,
+  height: 3,
+  borderRadius: 1.5,
+  backgroundColor: alpha(theme.palette.primary.main, 0.2),
+  appearance: 'none',
+  outline: 'none',
+  transition: 'all 0.2s ease',
+  opacity: 0,
+  cursor: 'pointer',
+  '&::-webkit-slider-thumb': {
+    appearance: 'none',
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    cursor: 'pointer',
+  },
+  '&::-moz-range-thumb': {
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+    cursor: 'pointer',
+    border: 'none',
+  }
+}));
+
+/**
+ * HeaderPlayer - компонент плеера в хедере
+ * @param {Function} onOpenFullscreen - функция для открытия фуллскрин плеера при клике на обложку
+ * 
+ * Пример использования:
+ * <HeaderPlayer 
+ *   currentTrack={currentTrack}
+ *   isPlaying={isPlaying}
+ *   onOpenFullscreen={() => setFullscreenPlayerOpen(true)}
+ *   // ... другие пропы
+ * />
+ */
 const HeaderPlayer = ({
   currentTrack,
   isPlaying,
@@ -20,27 +68,44 @@ const HeaderPlayer = ({
   theme,
   truncateTitle,
   isMobile = false,
-  onClose
+  onClose,
+  onOpenFullscreen
 }) => {
   if (!currentTrack) return null;
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', position: 'relative' }}>
       <Box 
-        component={Link} 
-        to="/music" 
+        onClick={onOpenFullscreen || (() => console.warn('onOpenFullscreen не передан в HeaderPlayer'))}
         sx={{ 
           display: 'flex', 
           alignItems: 'center',
           textDecoration: 'none',
           color: 'inherit',
-          minWidth: 0, 
+          minWidth: 0,
+          cursor: onOpenFullscreen ? 'pointer' : 'default',
+          borderRadius: '8px',
+          padding: '4px',
+          transition: 'all 0.2s ease',
+          '&:hover': onOpenFullscreen ? {
+            backgroundColor: alpha(theme.palette.primary.main, 0.08),
+            transform: 'scale(1.02)'
+          } : {}
         }}
       >
         <Avatar 
           variant="rounded" 
           src={currentTrack.cover_path || '/static/uploads/system/album_placeholder.jpg'} 
           alt={currentTrack.title}
-          sx={{ width: 32, height: 32, mr: 1, borderRadius: '4px' }}
+          sx={{ 
+            width: 32, 
+            height: 32, 
+            mr: 1, 
+            borderRadius: '4px',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`
+            }
+          }}
         />
         <Box sx={{ minWidth: 0, maxWidth: 180 }}>
           <Typography variant="body2" fontWeight="medium" noWrap>
@@ -76,7 +141,7 @@ const HeaderPlayer = ({
         <IconButton size="small" onClick={nextTrack} sx={{ p: 0.5, opacity: 0.6, transition: 'all 0.2s', '&:hover': { opacity: 1 } }}>
           <Icon icon="solar:skip-next-bold" width="20" height="20" />
         </IconButton>
-        <VolumeControl sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+        <VolumeControl>
           <IconButton 
             size="small" 
             onClick={toggleMute}
@@ -95,7 +160,6 @@ const HeaderPlayer = ({
             step={0.01} 
             value={isMuted ? 0 : volume}
             onChange={(e) => setVolume(parseFloat(e.target.value))}
-            style={{ width: 0, height: 3, borderRadius: 1.5, backgroundColor: alpha(theme.palette.primary.main, 0.2), appearance: 'none', outline: 'none', transition: 'all 0.2s ease', opacity: 0 }}
           />
         </VolumeControl>
       </PlayerControls>

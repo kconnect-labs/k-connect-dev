@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -135,18 +135,6 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
-
 const AllTracksBlock = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -167,6 +155,10 @@ const AllTracksBlock = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  
+  // Refs для управления поиском
+  const searchTimeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   const loadTracks = useCallback(async (pageNum = 1, append = false) => {
     try {
@@ -200,32 +192,52 @@ const AllTracksBlock = () => {
     }
   }, []);
 
-  // Debounced search используя MusicContext
-  const debouncedSearch = useCallback(
-    debounce((query) => {
-      if (query.trim()) {
-        searchTracks(query)
-          .then((results) => {
-            console.log('Search results from context:', results);
-          })
-          .catch((error) => {
-            console.error('Error searching tracks:', error);
-          });
+  // Стабильная функция поиска
+  const performSearch = useCallback(async (query) => {
+    // Отменяем предыдущий запрос если он еще выполняется
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Проверяем минимальную длину запроса
+    if (!query.trim() || query.trim().length < 2) {
+      console.log('[AllTracksBlock] Запрос слишком короткий:', query);
+      return;
+    }
+    
+    console.log('[AllTracksBlock] Выполняем поиск для:', query);
+    
+    // Создаем новый AbortController для этого запроса
+    abortControllerRef.current = new AbortController();
+    
+    try {
+      const results = await searchTracks(query);
+      console.log('[AllTracksBlock] Результаты поиска:', results);
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('[AllTracksBlock] Ошибка поиска:', error);
       }
-    }, 500),
-    [searchTracks]
-  );
+    } finally {
+      abortControllerRef.current = null;
+    }
+  }, [searchTracks]);
 
   useEffect(() => {
     loadTracks();
   }, [loadTracks]);
 
-  // Обработка поиска
+  // Очистка при размонтировании компонента
   useEffect(() => {
-    if (searchQuery.trim()) {
-      debouncedSearch(searchQuery);
-    }
-  }, [searchQuery, debouncedSearch]);
+    return () => {
+      console.log('[AllTracksBlock] Размонтирование - очищаем ресурсы');
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLoadMore = useCallback(() => {
     if (!loadingMore && hasMore) {
@@ -248,14 +260,39 @@ const AllTracksBlock = () => {
     const query = e.target.value;
     setSearchQuery(query);
     
-    if (!query.trim()) {
-      // Очищаем поиск
+    console.log('[AllTracksBlock] Изменение поискового запроса:', query);
+    
+    // Отменяем предыдущий таймер
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Отменяем активный поиск если запрос слишком короткий
+    if (query.trim().length < 2) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       return;
     }
+    
+    // Устанавливаем новый таймер для debounce
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(query.trim());
+    }, 1200); // 1.2 секунды debounce
   };
 
   const clearSearch = () => {
+    console.log('[AllTracksBlock] Очистка поиска');
     setSearchQuery('');
+    // Отменяем активный поиск
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    // Отменяем таймер debounce
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = null;
+    }
   };
 
   const formatDuration = (seconds) => {

@@ -1333,8 +1333,19 @@ const BalancePage = () => {
   const formatNumberWithSpaces = (number) => {
     if (number === null || number === undefined) return '0';
     
-    // Преобразуем в строку и разделяем по группам по 3 цифры
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    // Safari-совместимый способ разделения чисел пробелами
+    // Используем простую логику без lookahead/lookbehind
+    const str = number.toString();
+    const parts = [];
+    let i = str.length;
+    
+    while (i > 0) {
+      const start = Math.max(0, i - 3);
+      parts.unshift(str.slice(start, i));
+      i = start;
+    }
+    
+    return parts.join(' ');
   };
 
   

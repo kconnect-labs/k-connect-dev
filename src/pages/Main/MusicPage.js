@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext, useRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -463,6 +463,10 @@ const MusicPage = React.memo(() => {
   const [isMobileNavVisible, setIsMobileNavVisible] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [searchLoading, setSearchLoading] = useState(false);
+  
+  // Refs для управления поиском
+  const searchTimeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
   
   const { section } = useParams();
 
@@ -1363,56 +1367,82 @@ const MusicPage = React.memo(() => {
   }, [tabValue, tracks, likedTracks, searchQuery, searchResults]);
 
   
-  const debouncedSearch = useCallback(
-    debounce((query) => {
-      if (query.trim()) {
-        setSearchLoading(true);
-        
-        
-        musicContext.searchTracks(query)
-          .then((results) => {
-            setSearchResults(results || []);
-            setSearchLoading(false);
-            
-            if (results.length === 0) {
-              setSnackbar({
-                open: true,
-                message: 'По вашему запросу ничего не найдено',
-                severity: 'info'
-              });
-            }
-          })
-          .catch((error) => {
-            console.error('Error searching tracks:', error);
-            setSearchLoading(false);
-            
-            setSnackbar({
-              open: true,
-              message: 'Ошибка при поиске. Попробуйте позже.',
-              severity: 'error'
-            });
-          });
-      } else {
-        setSearchResults([]);
+  // Стабильная функция поиска
+  const performSearch = useCallback(async (query) => {
+    // Отменяем предыдущий запрос если он еще выполняется
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Проверяем минимальную длину запроса
+    if (!query.trim() || query.trim().length < 2) {
+      console.log('[MusicPage] Запрос слишком короткий:', query);
+      return;
+    }
+    
+    console.log('[MusicPage] Выполняем поиск для:', query);
+    setSearchLoading(true);
+    
+    // Создаем новый AbortController для этого запроса
+    abortControllerRef.current = new AbortController();
+    
+    try {
+      const results = await musicContext.searchTracks(query);
+      console.log('[MusicPage] Результаты поиска:', results);
+      
+      if (results.length === 0) {
+        setSnackbar({
+          open: true,
+          message: 'По вашему запросу ничего не найдено',
+          severity: 'info'
+        });
       }
-    }, 500),
-    [setSnackbar, musicContext.searchTracks]
-  );
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('[MusicPage] Ошибка поиска:', error);
+        setSnackbar({
+          open: true,
+          message: 'Ошибка при поиске. Попробуйте позже.',
+          severity: 'error'
+        });
+      }
+    } finally {
+      setSearchLoading(false);
+      abortControllerRef.current = null;
+    }
+  }, [musicContext.searchTracks, setSnackbar]);
 
   
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
     
+    console.log('[MusicPage] Изменение поискового запроса:', query);
     
+    // Отменяем предыдущий таймер
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Если запрос пустой, очищаем поиск
     if (!query.trim()) {
-      
       clearSearch();
       return;
     }
     
+    // Отменяем активный поиск если запрос слишком короткий
+    if (query.trim().length < 2) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        setSearchLoading(false);
+      }
+      return;
+    }
     
-    debouncedSearch(query);
+    // Устанавливаем новый таймер для debounce
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(query.trim());
+    }, 1200); // 1.2 секунды debounce
   };
   
   const handleSearchFocus = () => {
@@ -1427,9 +1457,22 @@ const MusicPage = React.memo(() => {
 
   
   const clearSearch = () => {
+    console.log('[MusicPage] Очистка поиска');
     setSearchQuery('');
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
+    }
+    
+    // Отменяем активный поиск
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      setSearchLoading(false);
+    }
+    
+    // Отменяем таймер debounce
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = null;
     }
     
     
@@ -1445,8 +1488,6 @@ const MusicPage = React.memo(() => {
     if (musicContext.resetPagination) {
       musicContext.resetPagination(currentType);
     }
-    
-    console.log('Поисковый запрос очищен');
   };
 
   
@@ -1458,6 +1499,22 @@ const MusicPage = React.memo(() => {
   const effectiveLoading = useMemo(() => {
     return isLoading || localLoading;
   }, [isLoading, localLoading]);
+
+  // Очистка при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      console.log('[MusicPage] Размонтирование - очищаем ресурсы поиска');
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+      // Очистка стилей body
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, []);
 
   
   useEffect(() => {

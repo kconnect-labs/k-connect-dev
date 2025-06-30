@@ -340,7 +340,8 @@ const Header = ({ toggleSidebar }) => {
     nextTrack,
     prevTrack,
     toggleMute,
-    setVolume 
+    setVolume,
+    openFullScreenPlayer
   } = useMusic();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -1052,7 +1053,8 @@ const Header = ({ toggleSidebar }) => {
                     setVolume={setVolume}
                     theme={theme}
                     truncateTitle={truncateTitle}
-                isMobile={true}
+                    isMobile={true}
+                    onOpenFullscreen={openFullScreenPlayer}
                   />
                 </Box>
               </Collapse>
@@ -1172,6 +1174,7 @@ const Header = ({ toggleSidebar }) => {
                     setVolume={setVolume}
                     theme={theme}
                     truncateTitle={truncateTitle}
+                    onOpenFullscreen={openFullScreenPlayer}
                   />
                 )}
               </Box>
