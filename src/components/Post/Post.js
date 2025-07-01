@@ -422,8 +422,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         });
 
         // Обработка упоминаний пользователей
-        content = content.replace(USERNAME_MENTION_REGEX, (match, username) => {
-          return `[${match}](/profile/${username})`;
+        content = content.replace(USERNAME_MENTION_REGEX, (match, prefix, username) => {
+          const adjustedMatch = prefix ? match.substring(prefix.length) : match;
+          return `${prefix || ''}[${adjustedMatch}](/profile/${username})`;
         });
         
         // Обработка хештегов

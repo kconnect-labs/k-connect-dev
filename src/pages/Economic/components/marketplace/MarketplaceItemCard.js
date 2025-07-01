@@ -88,7 +88,7 @@
                 src={item.image_url}
                 alt={item.item_name}
                 loading="lazy"
-                style={{ position: 'relative', zIndex: 2, width: '70%', height: '70%', display: 'block', margin: 'auto' }}
+                style={{ position: 'relative', zIndex: 2, width: '100%', height: '100%', display: 'block', margin: 'auto', maxWidth: '100%', maxHeight: '100%' }}
               />
               <PriceBadge sx={{
                 position: 'absolute',

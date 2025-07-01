@@ -255,7 +255,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 }
               })
             }}>
-              <img src={item.image_url} alt={item.item_name} style={{ width: '75%', height: '75%', objectFit: 'contain', borderRadius: 'inherit', position: 'relative', zIndex: 2, display: 'block', margin: 'auto' }} />
+              <img src={item.image_url} alt={item.item_name} style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: 'inherit', position: 'relative', zIndex: 2, display: 'block', margin: 'auto', maxWidth: '100%', maxHeight: '100%' }} />
               <MarketPriceChip>
                 <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
                 {price}

@@ -2,19 +2,13 @@ import React, { useState, useEffect, useCallback, useMemo, useRef, memo } from '
 import ReactDOM from 'react-dom';
 import { 
   Dialog, 
-  DialogContent, 
   Box, 
   useMediaQuery, 
   useTheme, 
   IconButton, 
   Typography, 
   Slider,
-  LinearProgress,
   Avatar,
-  Chip,
-  Fade,
-  Zoom,
-  Grow,
   CircularProgress,
   TextField,
   Button,
@@ -28,9 +22,7 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
   QueueMusic as QueueMusicIcon,
-  Lyrics as LyricsIcon,
   MusicNote as MusicNoteIcon,
-  ContentCopy as ContentCopyIcon,
   Edit as EditIcon,
   Save as SaveIcon,
   Schedule as ScheduleIcon,
@@ -58,7 +50,8 @@ import {
   ShuffleIcon, 
   RepeatIcon,
   CloseIcon,
-  ShareIcon
+  LyricsIcon,
+  ContentCopy
 } from '../icons/CustomIcons';
 
 const defaultCover = '/static/uploads/system/album_placeholder.jpg';
@@ -308,30 +301,75 @@ const PlayerHeader = memo(({ onClose, onOpenLyricsEditor, showLyricsEditor, them
 ));
 
 // Мемоизированная информация о треке
-const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => (
-  <TrackInfo>
-    <TrackTitle variant="h3">
-      {currentTrack.title}
-    </TrackTitle>
-    <TrackArtist 
-      variant="h5" 
-      onClick={() => onArtistClick(currentTrack.artist)}
-    >
-      {currentTrack.artist}
-    </TrackArtist>
-    {currentTrack.album && (
-      <Typography 
-        variant="body1" 
-        sx={{ 
-          color: 'rgba(255,255,255,0.6)',
-          fontSize: '0.9rem'
-        }}
-      >
-        {currentTrack.album}
-      </Typography>
-    )}
-  </TrackInfo>
-));
+const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => {
+  // Разделяем артистов по запятой и очищаем от лишних пробелов
+  const artists = useMemo(() => {
+    if (!currentTrack.artist) return [];
+    return currentTrack.artist.split(',').map(artist => artist.trim()).filter(artist => artist.length > 0);
+  }, [currentTrack.artist]);
+
+  return (
+    <TrackInfo>
+      <TrackTitle variant="h3">
+        {currentTrack.title}
+      </TrackTitle>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 0.5 }}>
+        {artists.map((artist, index) => (
+          <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+            <TrackArtist 
+              variant="h5" 
+              onClick={() => onArtistClick(artist)}
+              sx={{ 
+                color: 'rgba(255,255,255,0.8)',
+                fontSize: '1.2rem',
+                cursor: 'pointer',
+                transition: 'color 0.2s ease',
+                '&:hover': {
+                  color: 'white',
+                  textDecoration: 'underline'
+                },
+                '@media (max-width: 768px)': {
+                  fontSize: '1rem'
+                },
+                display: 'inline',
+                marginBottom: 0
+              }}
+            >
+              {artist}
+            </TrackArtist>
+            {index < artists.length - 1 && (
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  color: 'rgba(255,255,255,0.6)',
+                  fontSize: '1.2rem',
+                  mx: 0.5,
+                  cursor: 'default',
+                  '@media (max-width: 768px)': {
+                    fontSize: '1rem'
+                  }
+                }}
+              >
+                ,
+              </Typography>
+            )}
+          </Box>
+        ))}
+      </Box>
+      {currentTrack.album && (
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            color: 'rgba(255,255,255,0.6)',
+            fontSize: '0.9rem'
+          }}
+        >
+          {currentTrack.album}
+        </Typography>
+      )}
+    </TrackInfo>
+  );
+});
 
 // Мемоизированная обертка диалога
 const PlayerDialog = memo(({ open, onClose, children }) => (
@@ -2056,7 +2094,7 @@ const SecondaryPlayControls = memo(({
         '&:hover': { color: 'white' }
       }}
     >
-      <ShareIcon size={24} color="rgba(255,255,255,0.8)" />
+      <ContentCopy size={24} color="rgb(255, 255, 255)" />
     </ControlButton>
   </SecondaryControls>
 ), (prevProps, nextProps) => {

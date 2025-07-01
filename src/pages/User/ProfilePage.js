@@ -247,6 +247,13 @@ const ProfilePage = () => {
           if (response.data.current_user_is_moderator !== undefined) {
             setIsCurrentUserModerator(response.data.current_user_is_moderator);
           }
+          
+          // Получаем надетые предметы из API профиля
+          if (response.data.equipped_items) {
+            setEquippedItems(response.data.equipped_items);
+          } else {
+            setEquippedItems([]);
+          }
         } else {
           console.error('User data not found in response', response.data);
           setUser(null); 
@@ -453,6 +460,20 @@ const ProfilePage = () => {
     setUsernameCardOpen(false);
   };
 
+  // Функция для обновления надетых предметов
+  const refreshEquippedItems = async () => {
+    if (user?.id) {
+      try {
+        const response = await axios.get(`/api/inventory/user/${user.id}/equipped`);
+        if (response.data.success) {
+          setEquippedItems(response.data.equipped_items || []);
+        }
+      } catch (error) {
+        console.error('Error refreshing equipped items:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     const restoreMyBackground = () => {
       if (globalProfileBackgroundEnabled) {
@@ -480,25 +501,6 @@ const ProfilePage = () => {
       restoreMyBackground();
     }
   }, [user, globalProfileBackgroundEnabled, setProfileBackground, clearProfileBackground]);
-
-  useEffect(() => {
-    const fetchEquippedItems = async () => {
-      if (user?.id) {
-        try {
-          const response = await axios.get(`/api/inventory/user/${user.id}`);
-          if (response.data.success) {
-            // Новый формат: response.data.items - массив
-            const items = response.data.items || [];
-            const equipped = items.filter(item => item.is_equipped);
-            setEquippedItems(equipped.slice(0, 3));
-          }
-        } catch (error) {
-          console.error('Error fetching equipped items:', error);
-        }
-      }
-    };
-    fetchEquippedItems();
-  }, [user]);
 
   const [searchParams] = useSearchParams();
   const itemIdToOpen = searchParams.get('item');
@@ -1324,7 +1326,12 @@ const ProfilePage = () => {
           
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
             <UpgradeEffects item={user}>
-              <InventoryTab userId={user?.id} itemIdToOpen={itemIdToOpen} />
+              <InventoryTab 
+                userId={user?.id} 
+                itemIdToOpen={itemIdToOpen} 
+                onEquippedItemsUpdate={refreshEquippedItems}
+                currentUserId={currentUser?.id}
+              />
             </UpgradeEffects>
           </TabPanel>
           

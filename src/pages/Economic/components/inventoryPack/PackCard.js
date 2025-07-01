@@ -88,12 +88,14 @@ const MainItem = styled(Box)(({ theme }) => ({
     border: '2px solid rgba(208, 188, 255, 0.5)',
   },
   '& img': {
-    width: '75%',
-    height: '75%',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
     position: 'relative',
     zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
   '&::before': {
     content: '""',
@@ -127,12 +129,14 @@ const SideItem = styled(Box)(({ theme }) => ({
     border: '1px solid rgba(208, 188, 255, 0.4)',
   },
   '& img': {
-    width: '75%',
-    height: '75%',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
     position: 'relative',
     zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
   '&::before': {
     content: '""',

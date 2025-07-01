@@ -92,12 +92,14 @@ const ItemImage = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
   '& img': {
-    width: '75%',
-    height: '75%',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
     position: 'relative',
     zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
   '&::before': {
     content: '""',
@@ -213,6 +215,18 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     message: '',
     severity: 'success' // 'success', 'error', 'warning', 'info'
   });
+  
+  // Пагинация
+  const [pagination, setPagination] = useState({
+    page: 1,
+    per_page: 15,
+    total: 0,
+    pages: 0,
+    has_next: false,
+    has_prev: false
+  });
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -251,23 +265,55 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     }
   }, [itemIdToOpen, items]);
 
-  const fetchInventory = async () => {
+  const fetchInventory = async (page = 1, append = false) => {
     try {
-      setLoading(true);
-      const response = await axios.get('/api/inventory/my-inventory');
+      if (page === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      
+      const response = await axios.get(`/api/inventory/my-inventory?page=${page}&per_page=15`);
       if (response.data.success) {
-        setItems(response.data.items);
+        const newItems = response.data.items;
         
-        // Предзагружаем изображения для всех предметов
-        if (response.data.items && response.data.items.length > 0) {
-          await inventoryImageService.preloadInventoryImages(response.data.items);
+        if (append) {
+          setItems(prevItems => [...prevItems, ...newItems]);
+        } else {
+          setItems(newItems);
+        }
+        
+        // Обновляем пагинацию
+        setPagination(response.data.pagination);
+        setHasMore(response.data.pagination.has_next);
+        
+        // Предзагружаем изображения для новых предметов
+        if (newItems && newItems.length > 0) {
+          await inventoryImageService.preloadInventoryImages(newItems);
         }
       }
     } catch (error) {
       console.error('Error fetching inventory:', error);
-      setError('Ошибка при загрузке инвентаря');
+      if (!append) {
+        setError('Ошибка при загрузке инвентаря');
+      }
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const loadMoreItems = () => {
+    if (!loadingMore && hasMore) {
+      fetchInventory(pagination.page + 1, true);
+    }
+  };
+
+  // Обработчик прокрутки для бесконечной загрузки
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollHeight - scrollTop <= clientHeight * 1.5 && !loadingMore && hasMore) {
+      loadMoreItems();
     }
   };
 
@@ -335,12 +381,12 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   };
 
   const handleItemUpdate = () => {
-    fetchInventory();
+    fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
   };
 
   const handleTransferSuccess = () => {
-    fetchInventory();
+    fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
   };
 
@@ -531,7 +577,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   }
 
   return (
-    <StyledContainer>
+    <StyledContainer onScroll={handleScroll} sx={{ height: '100vh', overflowY: 'auto' }}>
       <InfoBlock
         title="Мой Инвентарь"
         description="Лимитированные вещи в коннекте - коллекционные предметы, которые можно получить из паков и сундуков"
@@ -589,109 +635,136 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
           )}
         </Box>
       ) : (
-        <Grid container spacing={0.5} sx={{ 
-          display: 'flex',
-          flexWrap: 'wrap',
-          px: 0.3, // 2.5px с каждой стороны
-          '& .MuiGrid-item': {
-            flex: '0 0 calc(25% - 5px)',
-            maxWidth: 'calc(25% - 5px)',
-            minWidth: 'calc(25% - 5px)',
-            margin: '2.5px !important', // 5px между карточками
-            '@media (max-width: 768px)': {
-              flex: '0 0 calc(50% - 5px)',
-              maxWidth: 'calc(50% - 5px)',
-              minWidth: 'calc(50% - 5px)',
+        <>
+          <Grid container spacing={0.5} sx={{ 
+            display: 'flex',
+            flexWrap: 'wrap',
+            px: 0.3, // 2.5px с каждой стороны
+            '& .MuiGrid-item': {
+              flex: '0 0 calc(25% - 5px)',
+              maxWidth: 'calc(25% - 5px)',
+              minWidth: 'calc(25% - 5px)',
+              margin: '2.5px !important', // 5px между карточками
+              '@media (max-width: 768px)': {
+                flex: '0 0 calc(50% - 5px)',
+                maxWidth: 'calc(50% - 5px)',
+                minWidth: 'calc(50% - 5px)',
+              }
             }
-          }
-        }}>
-          {filteredItems.map((item) => (
-            <Grid item key={item.id}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
-                  <UpgradeEffects item={item}>
-                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                      {item?.marketplace?.status === 'active' && (
-                        <PriceBadge>
-                          <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
-                          {item.marketplace.price}
-                        </PriceBadge>
-                      )}
-                      <ItemImage sx={{ 
-                        width: 100, 
-                        height: 100, 
-                        mb: 2,
-                        transition: 'all 0.3s ease',
-                        ...(item.background_url && {
-                          '&::before': {
-                            backgroundImage: `url(${item.background_url})`,
-                          }
-                        })
-                      }}>
-                        <img 
-                          src={item.image_url}
-                          alt={item.item_name}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
+          }}>
+            {filteredItems.map((item) => (
+              <Grid item key={item.id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
+                    <UpgradeEffects item={item}>
+                      <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                        {item?.marketplace?.status === 'active' && (
+                          <PriceBadge>
+                            <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                            {item.marketplace.price}
+                          </PriceBadge>
+                        )}
+                        <ItemImage sx={{ 
+                          width: 100, 
+                          height: 100, 
+                          mb: 2,
+                          transition: 'all 0.3s ease',
+                          ...(item.background_url && {
+                            '&::before': {
+                              backgroundImage: `url(${item.background_url})`,
+                            }
+                          })
+                        }}>
+                          <img 
+                            src={item.image_url}
+                            alt={item.item_name}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </ItemImage>
+
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontWeight: 600, 
+                            mb: 1,
+                            color: 'text.primary',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
                           }}
-                        />
-                      </ItemImage>
+                        >
+                          {item.item_name}
+                        </Typography>
 
-                      <Typography 
-                        variant="body2" 
-                        sx={{ 
-                          fontWeight: 600, 
-                          mb: 1,
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {item.item_name}
-                      </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
+                          <RarityChip
+                            rarity={item.rarity} 
+                            label={getRarityLabel(item.rarity)}
+                            size="small"
+                          />
+                        </Box>
 
-                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
-                        <RarityChip
-                          rarity={item.rarity} 
-                          label={getRarityLabel(item.rarity)}
-                          size="small"
-                        />
-                      </Box>
+                        <Typography 
+                          variant="caption" 
+                          sx={{
+                            color: 'text.secondary',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {item.pack_name}
+                        </Typography>
 
-                      <Typography 
-                        variant="caption" 
-                        sx={{
-                          color: 'text.secondary',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        {item.pack_name}
-                      </Typography>
-
-                      <Typography 
-                        variant="caption" 
-                        sx={{
-                          color: 'text.secondary',
-                          fontSize: '0.7rem',
-                          opacity: 0.7,
-                          mt: 'auto',
-                          pt: 1
-                        }}
-                      >
-                        Нажмите для подробностей
-                      </Typography>
-                    </CardContent>
-                  </UpgradeEffects>
-                </StyledCard>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
+                        <Typography 
+                          variant="caption" 
+                          sx={{
+                            color: 'text.secondary',
+                            fontSize: '0.7rem',
+                            opacity: 0.7,
+                            mt: 'auto',
+                            pt: 1
+                          }}
+                        >
+                          Нажмите для подробностей
+                        </Typography>
+                      </CardContent>
+                    </UpgradeEffects>
+                  </StyledCard>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+          
+          {/* Индикатор загрузки для пагинации */}
+          {loadingMore && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+              <CircularProgress size={40} />
+            </Box>
+          )}
+          
+          {/* Информация о загрузке */}
+          {!loadingMore && hasMore && (
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Прокрутите вниз для загрузки еще предметов
+              </Typography>
+            </Box>
+          )}
+          
+          {/* Информация о конце списка */}
+          {!hasMore && items.length > 0 && (
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Загружено {items.length} из {pagination.total} предметов
+              </Typography>
+            </Box>
+          )}
+        </>
       )}
 
       {/* Модальное окно информации о предмете */}

@@ -108,12 +108,14 @@ const ItemImage = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
   '& img': {
-    width: '75%',
-    height: '75%',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
     position: 'relative',
     zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
   '&::before': {
     content: '""',

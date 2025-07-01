@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef, useMemo, useCallback } from 'react';
 import { 
   Box, 
   CircularProgress, 
@@ -16,7 +16,7 @@ import { StyledSelect } from './StyledComponents';
 import inventoryImageService from '../../../../services/InventoryImageService';
 import OptimizedImage from '../../../../components/OptimizedImage';
 
-const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
+const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId }, ref) => {
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
@@ -25,13 +25,25 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     const [modalLoading, setModalLoading] = useState(false);
     const [modalError, setModalError] = useState('');
     const navigate = useNavigate();
-    const [sortBy, setSortBy] = useState('name');
+    const [sortBy, setSortBy] = useState('date');
     const [filterPack, setFilterPack] = useState('all');
     const [filterRarity, setFilterRarity] = useState('all');
     const [showUpgradedOnly, setShowUpgradedOnly] = useState(false);
     const [showItemInfo, setShowItemInfo] = useState(false);
     const [externalItem, setExternalItem] = useState(null);
     const [copyStatus, setCopyStatus] = useState('');
+    
+    // Пагинация
+    const [pagination, setPagination] = useState({
+      page: 1,
+      per_page: 15,
+      total: 0,
+      pages: 0,
+      has_next: false,
+      has_prev: false
+    });
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
   
     useImperativeHandle(ref, () => ({
       openItemModalById: (id) => {
@@ -47,9 +59,11 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
       const fetchInventory = async () => {
         try {
           setLoading(true);
-          const response = await axios.get(`/api/inventory/user/${userId}`);
+          const response = await axios.get(`/api/inventory/user/${userId}?page=1&per_page=15`);
           if (response.data.success && Array.isArray(response.data.items)) {
             setInventory(response.data.items);
+            setPagination(response.data.pagination);
+            setHasMore(response.data.pagination.has_next);
             if (response.data.items && response.data.items.length > 0) {
               await inventoryImageService.preloadInventoryImages(response.data.items);
             }
@@ -142,8 +156,65 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
       setModalError('');
     };
   
+    // Функции для надевания и снятия предметов
+    const handleEquipItem = async (itemId) => {
+      try {
+        const response = await fetch(`/api/inventory/equip/${itemId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Обновляем инвентарь
+          const updatedInventory = inventory.map(item => 
+            item.id === itemId ? { ...item, is_equipped: true } : item
+          );
+          setInventory(updatedInventory);
+          
+          // Обновляем надетые предметы в профиле
+          if (onEquippedItemsUpdate) {
+            onEquippedItemsUpdate();
+          }
+        }
+      } catch (error) {
+        console.error('Error equipping item:', error);
+      }
+    };
+
+    const handleUnequipItem = async (itemId) => {
+      try {
+        const response = await fetch(`/api/inventory/unequip/${itemId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Обновляем инвентарь
+          const updatedInventory = inventory.map(item => 
+            item.id === itemId ? { ...item, is_equipped: false } : item
+          );
+          setInventory(updatedInventory);
+          
+          // Обновляем надетые предметы в профиле
+          if (onEquippedItemsUpdate) {
+            onEquippedItemsUpdate();
+          }
+        }
+      } catch (error) {
+        console.error('Error unequipping item:', error);
+      }
+    };
+  
     // Функции сортировки и фильтрации
-    const getFilteredAndSortedInventory = () => {
+    const filteredAndSortedInventory = useMemo(() => {
       let filtered = [...inventory];
   
       // Фильтрация по паку
@@ -173,18 +244,20 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
             return a.pack_name.localeCompare(b.pack_name);
           case 'upgrade':
             return (b.upgrade_level || 0) - (a.upgrade_level || 0);
+          case 'date':
+            return new Date(b.obtained_at) - new Date(a.obtained_at);
           default:
             return 0;
         }
       });
   
       return filtered;
-    };
+    }, [inventory, filterPack, filterRarity, showUpgradedOnly, sortBy]);
   
-    const getUniquePacks = () => {
+    const getUniquePacks = useMemo(() => {
       const packs = [...new Set(inventory.map(item => item.pack_name))];
       return packs.sort();
-    };
+    }, [inventory]);
   
     const handleCopyLink = () => {
       if (!selectedItem) return;
@@ -194,6 +267,35 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
         setTimeout(() => setCopyStatus(''), 1500);
       });
     };
+  
+    const loadMoreItems = useCallback(async () => {
+      if (!loadingMore && hasMore) {
+        try {
+          setLoadingMore(true);
+          const response = await axios.get(`/api/inventory/user/${userId}?page=${pagination.page + 1}&per_page=15`);
+          if (response.data.success && Array.isArray(response.data.items)) {
+            setInventory(prev => [...prev, ...response.data.items]);
+            setPagination(response.data.pagination);
+            setHasMore(response.data.pagination.has_next);
+            if (response.data.items && response.data.items.length > 0) {
+              await inventoryImageService.preloadInventoryImages(response.data.items);
+            }
+          }
+        } catch (error) {
+          console.error('Error loading more items:', error);
+        } finally {
+          setLoadingMore(false);
+        }
+      }
+    }, [loadingMore, hasMore, userId, pagination.page]);
+  
+    // Обработчик прокрутки для бесконечной загрузки
+    const handleScroll = useCallback((e) => {
+      const { scrollTop, scrollHeight, clientHeight } = e.target;
+      if (scrollHeight - scrollTop <= clientHeight * 1.5 && !loadingMore && hasMore) {
+        loadMoreItems();
+      }
+    }, [loadingMore, hasMore, loadMoreItems]);
   
     if (loading) {
       return (
@@ -205,7 +307,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   
     return (
       <>
-        <Box sx={{ p: 2 }}>
+        <Box sx={{ p: 2, height: '100vh', overflowY: 'auto' }} onScroll={handleScroll}>
           {/* Панель сортировки и фильтрации */}
           <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {/* Сортировка */}
@@ -229,6 +331,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                 },
               }}
             >
+              <MenuItem value="date">По дате получения</MenuItem>
               <MenuItem value="name">По названию</MenuItem>
               <MenuItem value="rarity">По редкости</MenuItem>
               <MenuItem value="pack">По паку</MenuItem>
@@ -257,7 +360,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
               }}
             >
               <MenuItem value="all">Все Пачки</MenuItem>
-              {getUniquePacks().map((pack) => (
+              {getUniquePacks.map((pack) => (
                 <MenuItem key={pack} value={pack}>{pack}</MenuItem>
               ))}
             </StyledSelect>
@@ -313,154 +416,182 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
             <Box textAlign="center" py={4}>
               <CircularProgress size={24} />
             </Box>
-          ) : getFilteredAndSortedInventory().length === 0 ? (
+          ) : filteredAndSortedInventory.length === 0 ? (
             <Box textAlign="center" py={4}>
               <Typography variant="body1" color="text.secondary">
                 {inventory.length === 0 ? 'Инвентарь пуст' : 'Предметы не найдены'}
               </Typography>
             </Box>
           ) : (
-            <Grid container spacing={1}>
-              {getFilteredAndSortedInventory().map((item) => (
-                <Grid item xs={4} key={item.id}>
-                  <UpgradeEffects item={item}>
-                    <Box
-                      onClick={() => handleItemClick(item)}
-                      sx={{
-                        p: 1,
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        backdropFilter: 'blur(10px)',
-                        borderRadius: 1.5,
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        transition: 'all 0.3s ease',
-                        cursor: 'pointer',
-                        overflow: 'hidden',
-                        '&:hover': {
-                          transform: 'translateY(-2px)',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                        },
-                      }}
-                    >
+            <>
+              <Grid container spacing={1}>
+                {filteredAndSortedInventory.map((item, index) => (
+                  <Grid item xs={4} key={`${item.id}-${item.obtained_at}-${index}`}>
+                    <UpgradeEffects item={item}>
                       <Box
+                        onClick={() => handleItemClick(item)}
                         sx={{
-                          width: '100%',
-                          aspectRatio: '1',
-                          borderRadius: 1,
-                          background: 'rgba(208, 188, 255, 0.1)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          mb: 0.5,
+                          p: 1,
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(10px)',
+                          borderRadius: 1.5,
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          transition: 'all 0.3s ease',
+                          cursor: 'pointer',
                           overflow: 'hidden',
-                          position: 'relative',
-                          ...(item.background_url && {
-                            '&::before': {
-                              content: '""',
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              backgroundImage: `url(${item.background_url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat',
-                              borderRadius: 'inherit',
-                              zIndex: 1,
-                            }
-                          })
+                          '&:hover': {
+                            transform: 'translateY(-2px)',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                          },
                         }}
                       >
-                        <OptimizedImage
-                          src={item.image_url}
-                          alt={item.item_name}
-                          width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                          height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                          fallbackText="Предмет недоступен"
-                          showSkeleton={true}
-                          style={{
+                        <Box
+                          sx={{
+                            width: '100%',
+                            aspectRatio: '1',
+                            borderRadius: 1,
+                            background: 'rgba(208, 188, 255, 0.1)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 0.5,
+                            overflow: 'hidden',
                             position: 'relative',
-                            zIndex: 2,
-                            objectFit: 'contain'
+                            ...(item.background_url && {
+                              '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundImage: `url(${item.background_url})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                borderRadius: 'inherit',
+                                zIndex: 1,
+                              }
+                            })
                           }}
-                        />
-                        {item.marketplace && (
-                          <Box
-                            sx={{
-                              position: 'absolute',
-                              top: 4,
-                              right: 4,
-                              padding: '2px 6px',
-                              borderRadius: '8px',
-                              background: 'rgba(0, 0, 0, 0.7)',
-                              backdropFilter: 'blur(5px)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '2px',
-                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                        >
+                          <OptimizedImage
+                            src={item.image_url}
+                            alt={item.item_name}
+                            width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
+                            height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
+                            fallbackText="Предмет недоступен"
+                            showSkeleton={true}
+                            style={{
+                              position: 'relative',
+                              zIndex: 2,
+                              objectFit: 'contain'
                             }}
-                          >
-                            <img
-                              src="/static/icons/KBalls.svg"
-                              alt="KBalls"
-                              style={{
-                                width: '12px',
-                                height: '12px',
-                              }}
-                            />
-                            <Typography
-                              variant="caption"
+                          />
+                          {item.marketplace && (
+                            <Box
                               sx={{
-                                color: '#fff',
-                                fontWeight: 'bold',
-                                fontSize: '0.65rem',
+                                position: 'absolute',
+                                top: 4,
+                                right: 4,
+                                padding: '2px 6px',
+                                borderRadius: '8px',
+                                background: 'rgba(0, 0, 0, 0.7)',
+                                backdropFilter: 'blur(5px)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '2px',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                zIndex: 3,
                               }}
                             >
-                              {item.marketplace.price}
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
-                      <Typography 
-                        variant="caption" 
-                        sx={{ 
-                          fontWeight: 500, 
-                          display: 'block',
-                          textAlign: 'center',
-                          mb: 0.5,
-                          fontSize: '0.7rem',
-                          lineHeight: 1.2,
-                        }}
-                      >
-                        {item.item_name}
-                      </Typography>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          gap: 0.5,
-                        }}
-                      >
-                        <Chip
-                          label={getRarityLabel(item.rarity || 'common')}
-                          size="small"
-                          sx={{
-                            backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
-                            color: getRarityColor(item.rarity || 'common'),
-                            fontWeight: 'bold',
-                            fontSize: '0.6rem',
-                            height: 16,
-                            '& .MuiChip-label': {
-                              padding: '0 4px',
-                            },
+                              <img
+                                src="/static/icons/KBalls.svg"
+                                alt="KBalls"
+                                style={{
+                                  width: '12px',
+                                  height: '12px',
+                                }}
+                              />
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color: '#fff',
+                                  fontWeight: 'bold',
+                                  fontSize: '0.65rem',
+                                }}
+                              >
+                                {item.marketplace.price}
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                        <Typography 
+                          variant="caption" 
+                          sx={{ 
+                            fontWeight: 500, 
+                            display: 'block',
+                            textAlign: 'center',
+                            mb: 0.5,
+                            fontSize: '0.7rem',
+                            lineHeight: 1.2,
                           }}
-                        />
+                        >
+                          {item.item_name}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            gap: 0.5,
+                          }}
+                        >
+                          <Chip
+                            label={getRarityLabel(item.rarity || 'common')}
+                            size="small"
+                            sx={{
+                              backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
+                              color: getRarityColor(item.rarity || 'common'),
+                              fontWeight: 'bold',
+                              fontSize: '0.6rem',
+                              height: 16,
+                              '& .MuiChip-label': {
+                                padding: '0 4px',
+                              },
+                            }}
+                          />
+                        </Box>
                       </Box>
-                    </Box>
-                  </UpgradeEffects>
-                </Grid>
-              ))}
-            </Grid>
+                    </UpgradeEffects>
+                  </Grid>
+                ))}
+              </Grid>
+              
+              {/* Индикатор загрузки для пагинации */}
+              {loadingMore && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+                  <CircularProgress size={24} />
+                </Box>
+              )}
+              
+              {/* Информация о загрузке */}
+              {!loadingMore && hasMore && (
+                <Box sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Прокрутите вниз для загрузки еще предметов
+                  </Typography>
+                </Box>
+              )}
+              
+              {/* Информация о конце списка */}
+              {!hasMore && inventory.length > 0 && (
+                <Box sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Загружено {inventory.length} из {pagination.total} предметов
+                  </Typography>
+                </Box>
+              )}
+            </>
           )}
         </Box>
   
@@ -589,6 +720,42 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                           ✓ Надет
                         </Typography>
                       )}
+                      
+                      {/* Кнопки для надевания/снятия предметов */}
+                      {!readOnlyItem && currentUserId && selectedItem.user_id === currentUserId && (
+                        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+                          {!selectedItem.is_equipped ? (
+                            <Button
+                              variant="contained"
+                              fullWidth
+                              onClick={() => handleEquipItem(selectedItem.id)}
+                              sx={{
+                                background: 'rgba(76, 175, 80, 0.8)',
+                                '&:hover': {
+                                  background: 'rgba(76, 175, 80, 1)',
+                                }
+                              }}
+                            >
+                              Надеть
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              fullWidth
+                              onClick={() => handleUnequipItem(selectedItem.id)}
+                              sx={{
+                                background: 'rgba(244, 67, 54, 0.8)',
+                                '&:hover': {
+                                  background: 'rgba(244, 67, 54, 1)',
+                                }
+                              }}
+                            >
+                              Снять
+                            </Button>
+                          )}
+                        </Box>
+                      )}
+                      
                       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
                         <Button
                           size="small"
