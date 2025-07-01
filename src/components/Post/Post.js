@@ -76,6 +76,7 @@ import PhotoIcon from '@mui/icons-material/Photo';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
@@ -85,6 +86,7 @@ import { VerificationBadge } from '../../UIKIT';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import FactModal from './FactModal';
 
 const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
@@ -188,35 +190,6 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const ActionButton = styled(Box)(({ theme, active }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
-  padding: '6px 10px',
-  borderRadius: '14px',
-  cursor: 'pointer',
-  color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    transform: 'translateY(-1px)',
-  },
-  '& .icon': {
-    fontSize: '18px',
-  },
-  '& .count': {
-    fontSize: '0.8rem',
-  }
-}));
-
-const ActionsContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '4px',
-  marginTop: '16px',
-  padding: '0 8px',
-});
-
 const ChannelTag = styled(Chip)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.08)',
   color: 'rgba(255, 255, 255, 0.8)',
@@ -230,18 +203,6 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   }
 }));
 
-const ViewMenuPill = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  borderRadius: '20px',
-  padding: '4px 8px 4px 12px',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  }
-}));
 
 const HeartAnimation = styled(motion.div)(({ theme }) => ({
   position: 'absolute',
@@ -383,6 +344,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const [mediaError, setMediaError] = useState({ type: null, url: null }); 
   
   const [showSensitive, setShowSensitive] = useState(false);
+  
+  const [factModal, setFactModal] = useState({
+    open: false,
+    loading: false,
+    error: null
+  });
   
   const reportReasons = [
     t('post.report.reasons.spam'),
@@ -1285,7 +1252,60 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     setReportDialog({...reportDialog, open: true});
   };
 
-  
+  const handleFactsClick = () => {
+    handleMenuClose();
+    setFactModal({ ...factModal, open: true });
+  };
+
+  const handleFactModalClose = () => {
+    setFactModal({ open: false, loading: false, error: null });
+  };
+
+  const handleFactSubmit = async (factData) => {
+    setFactModal({ ...factModal, loading: true, error: null });
+    
+    try {
+      if (post.fact) {
+        // Обновляем существующий факт
+        await axios.put(`/api/facts/${post.fact.id}`, factData);
+      } else {
+        // Создаем новый факт и привязываем к посту
+        const factResponse = await axios.post('/api/facts', factData);
+        const factId = factResponse.data.fact.id;
+        await axios.post(`/api/posts/${post.id}/attach-fact`, { fact_id: factId });
+      }
+      
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
+    } catch (error) {
+      console.error('Error submitting fact:', error);
+      setFactModal({ 
+        ...factModal, 
+        loading: false, 
+        error: error.response?.data?.error || 'Ошибка при сохранении факта' 
+      });
+    }
+  };
+
+  const handleFactDelete = async () => {
+    setFactModal({ ...factModal, loading: true, error: null });
+    
+    try {
+      // Отвязываем факт от поста
+      await axios.delete(`/api/posts/${post.id}/detach-fact`);
+      
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting fact:', error);
+      setFactModal({ 
+        ...factModal, 
+        loading: false, 
+        error: error.response?.data?.error || 'Ошибка при удалении факта' 
+      });
+    }
+  };
+
   const handlePostClick = (e) => {
     if (e.target.closest('a, button')) return; 
     incrementViewCount();
@@ -1318,6 +1338,16 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       icon: <MessageCircle size={16} />,
       onClick: handleOpenPostFromMenu 
     });
+    
+    // Добавляем кнопку "Факты" для пользователя с ID 3
+    if (currentUser && currentUser.id === 3) {
+      items.push({
+        id: 'facts',
+        label: 'Факты',
+        icon: <FactCheckIcon fontSize="small" />,
+        onClick: handleFactsClick
+      });
+    }
     
     if (isCurrentUserPost) {
       if (isPostEditable()) {
@@ -1707,6 +1737,53 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     };
   }, [lastLikedUsers, isMobile]);
 
+  const FactCard = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: '12px',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '4px',
+      height: '100%',
+      backgroundColor: '#FFA726',
+      borderRadius: '2px 0 0 2px',
+    }
+  }));
+
+  const FactHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1.5),
+    gap: theme.spacing(0.5),
+  }));
+
+  const FactTitle = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+  }));
+
+  const FactText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.85rem',
+    lineHeight: 1.5,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: theme.spacing(1.5),
+  }));
+
+  const FactFooter = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontStyle: 'italic',
+  }));
+
   return (
     <>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -2095,6 +2172,103 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   </Box>
                 )}
                 
+                {/* Блок фактов оригинального поста в репосте */}
+                {post.original_post.fact && (
+                  <Box
+                    sx={{
+                      mt: 1.5,
+                      p: 1.5,
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      position: 'relative',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '8px',
+                        height: '100%',
+                        backgroundColor: '#6e5a9d',
+                        borderRadius: '8px 0 0 8px',
+                      }
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: '0.8rem',
+                          color: 'rgba(255, 255, 255, 0.9)',
+                        }}
+                      >
+                        Проверка фактов
+                      </Typography>
+                      <Tooltip 
+                        title="Это разъяснение было предоставлено организацией"
+                        placement="top"
+                        arrow
+                        sx={{
+                          '& .MuiTooltip-tooltip': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '0.7rem',
+                            maxWidth: 180,
+                          }
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 14,
+                            height: 14,
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            cursor: 'help',
+                            fontSize: '0.65rem',
+                            color: 'rgba(255, 255, 255, 0.7)',
+                            '&:hover': {
+                              backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                            }
+                          }}
+                        >
+                          ?
+                        </Box>
+                      </Tooltip>
+                    </Box>
+                    
+                    <Typography
+                      sx={{
+                        fontSize: '0.75rem',
+                        lineHeight: 1.4,
+                        color: 'rgba(255, 255, 255, 0.8)',
+                      }}
+                    >
+                      {post.original_post.fact.explanation_text}
+                    </Typography>
+                    
+                    <Typography
+                      sx={{
+                        fontSize: '0.7rem',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      Предоставлено {post.original_post.fact.who_provided}
+                    </Typography>
+                  </Box>
+                )}
+                
                 {/* Статистика оригинального поста */}
                 <Box sx={{ 
                   display: 'flex', 
@@ -2251,6 +2425,105 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             </Box>
           )}
           
+          {/* Блок фактов */}
+          {post?.fact && (
+            <Box
+              sx={{
+                mt: 1,
+                mb: 1,
+                p: 2,
+                borderRadius: '8px',
+                backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                backdropFilter: 'blur(50px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                position: 'relative',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '8px',
+                  height: '100%',
+                  backgroundColor: '#6e5a9d',
+                  borderRadius: '8px 0 0 8px',
+                }
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 1,
+                  gap: 0.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                  }}
+                >
+                  Проверка фактов
+                </Typography>
+                <Tooltip 
+                  title="Это разъяснение было предоставлено организацией"
+                  placement="top"
+                  arrow
+                  sx={{
+                    '& .MuiTooltip-tooltip': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      backdropFilter: 'blur(10px)',
+                      fontSize: '0.75rem',
+                      maxWidth: 200,
+                    }
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 16,
+                      height: 16,
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      cursor: 'help',
+                      fontSize: '0.7rem',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      }
+                    }}
+                  >
+                    ?
+                  </Box>
+                </Tooltip>
+              </Box>
+              
+              <Typography
+                sx={{
+                  fontSize: '0.85rem',
+                  lineHeight: 1.5,
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  mb: 1.5,
+                }}
+              >
+                {post.fact.explanation_text}
+              </Typography>
+              
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  fontStyle: 'italic',
+                }}
+              >
+                Это разъяснение было предоставлено {post.fact.who_provided}
+              </Typography>
+            </Box>
+          )}
           
           <Box sx={{
             display: 'flex',
@@ -2369,6 +2642,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         onClose={handleMenuClose}
         onClick={(e) => e.stopPropagation()}
       >
+        {currentUser && currentUser.id === 3 && (
+          <MenuItem onClick={handleFactsClick}>
+            <ListItemIcon>
+              <FactCheckIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Факты</ListItemText>
+          </MenuItem>
+        )}
         {isCurrentUserPost && (
           <>
             <MenuItem onClick={handleEdit}>
@@ -3369,6 +3650,18 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         y={contextMenuState.y}
         show={contextMenuState.show && contextMenuState.data?.postId === post.id}
         onClose={closeContextMenu}
+      />
+      
+      {/* Модалка для работы с фактами */}
+      <FactModal
+        open={factModal.open}
+        onClose={handleFactModalClose}
+        onSubmit={handleFactSubmit}
+        onDelete={handleFactDelete}
+        loading={factModal.loading}
+        error={factModal.error}
+        existingFact={post?.fact}
+        postId={post?.id}
       />
     </>
   );
