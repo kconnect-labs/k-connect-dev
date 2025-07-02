@@ -25,6 +25,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
+import { handleImageError as safeImageError } from '../../../../utils/imageUtils';
 
 // Стилизованные компоненты
 const PostInput = styled(TextField)(({ theme }) => ({
@@ -625,6 +626,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                             width: '100%',
                             borderRadius: '8px'
                           }}
+                          onError={safeImageError}
                         />
                         <IconButton
                           onClick={() => {
@@ -726,9 +728,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                       src={track.cover_path.startsWith('/static/') ? track.cover_path : `/static/uploads/music/covers/${track.cover_path}`} 
                       alt={track.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        e.target.src = '/uploads/system/album_placeholder.jpg';
-                      }}
+                      onError={safeImageError}
                     />
                     <MusicNoteIcon 
                       sx={{ 

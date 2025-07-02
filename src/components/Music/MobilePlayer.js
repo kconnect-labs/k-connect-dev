@@ -247,7 +247,7 @@ const MobilePlayer = memo(() => {
         }
       );
     }
-  }, [currentTrack]);
+  }, [currentTrack?.cover_path]);
   
   
   useEffect(() => {

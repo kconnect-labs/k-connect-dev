@@ -554,7 +554,7 @@ const DesktopPlayer = memo(() => {
         }
       );
     }
-  }, [currentTrack]);
+  }, [currentTrack?.cover_path]);
   
   useEffect(() => {
     

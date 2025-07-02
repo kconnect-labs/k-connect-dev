@@ -3,16 +3,13 @@ import {
   Box, 
   Typography,
   Avatar,
-  IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
   Snackbar,
   Card,
-  CardContent,
   styled,
-  AvatarGroup,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -20,21 +17,17 @@ import {
   Button,
   TextField,
   CircularProgress,
-  Paper,
-  Skeleton,
+
   Alert,
   FormControlLabel,
   Checkbox,
   List,
   ListItem,
-  CardActions,
-  CardHeader,
+
   Chip,
-  Divider,
-  Badge,
+
   Tooltip,
-  Collapse,
-  Zoom,
+
   useTheme,
   useMediaQuery
 } from '@mui/material';
@@ -48,7 +41,7 @@ import ReactMarkdown from 'react-markdown';
 import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
-import { optimizeImage } from '../../utils/imageUtils';
+import { optimizeImage, handleImageError as safeImageError } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
 import Lottie from 'lottie-react'; 
@@ -56,18 +49,13 @@ import { MessageCircle, Repeat2, Link2, Heart } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import ShareIcon from '@mui/icons-material/Share';
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
+
 import ImageGrid from './ImageGrid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import LinkIcon from '@mui/icons-material/Link';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FlagIcon from '@mui/icons-material/Flag';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
@@ -243,42 +231,8 @@ const LottieWrapper = styled(Box)(({ theme }) => ({
   opacity: 0.8,
 }));
 
-const InteractionButton = styled(Box)(({ theme, active, isLike }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '8px 16px',
-  borderRadius: '12px',
-  cursor: 'pointer',
-  backgroundColor: active ? 'rgba(140, 82, 255, 0.1)' : 'rgba(255, 255, 255, 0.03)',
-  border: `1px solid ${active ? 'rgba(140, 82, 255, 0.2)' : 'rgba(255, 255, 255, 0.06)'}`,
-  transition: 'all 0.2s ease',
-  gap: '6px',
-  '&:hover': {
-    backgroundColor: active ? 'rgba(140, 82, 255, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-    transform: 'translateY(-2px)',
-    boxShadow: active 
-      ? '0 4px 12px rgba(140, 82, 255, 0.2)' 
-      : '0 4px 12px rgba(0, 0, 0, 0.1)',
-  },
-  '& .icon': {
-    fontSize: '20px',
-    color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-    transition: 'all 0.2s ease',
-  },
-  '& .text': {
-    color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-    fontSize: '0.9rem',
-    transition: 'all 0.2s ease',
-  }
-}));
 
-const InteractionContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  marginTop: '16px',
-  padding: '0 8px',
-}));
+
 
 const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusColor }) => {
   const { t } = useLanguage();
@@ -1532,7 +1486,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       
       const loadSpiderAnimation = async () => {
         try {
-          const response = await fetch('/static/json/error/spider.json?_nocache=' + Date.now());
+          const response = await fetch('https://k-connect.ru/static/json/error/spider.json');
           const animationData = await response.json();
           setSpiderAnimation(animationData);
         } catch (error) {
@@ -1930,12 +1884,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       }} 
                       src={`/static/images/bages/${post.user.achievement.image_path}`} 
                       alt={post.user.achievement.bage}
-                      onError={(e) => {
-                        console.error("Achievement badge failed to load:", e);
-                        if (e.target && e.target instanceof HTMLImageElement) {
-                          e.target.style.display = 'none';
-                        }
-                      }}
+                      onError={safeImageError}
                     />
                   )}
                 </Typography>
@@ -2370,9 +2319,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                         height: '100%', 
                         objectFit: 'cover' 
                       }}
-                      onError={(e) => {
-                        e.target.src = '/uploads/system/album_placeholder.jpg';
-                      }}
+                      onError={safeImageError}
                     />
                     <Box 
                       sx={{ 
@@ -2587,7 +2534,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                               zIndex: 10
                             }
                           }}
-                          onError={e => { e.target.src = `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`; }}
+                          onError={safeImageError}
                         />
                       );
                     })}

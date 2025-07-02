@@ -3,9 +3,7 @@ import {
   Box, 
   Typography,
   Container,
-  Grid,
   Card,
-  CardContent,
   Avatar,
   Button,
   CircularProgress,
@@ -15,46 +13,22 @@ import {
   styled,
   InputBase,
   Tooltip,
-  Fade,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
   Snackbar,
-  Chip,
   useTheme,
-  useMediaQuery,
-  CardMedia,
   ImageList,
   ImageListItem,
   Alert,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import PostService from '../../services/PostService';
 import axios from '../../services/axiosConfig';
-import ImageIcon from '@mui/icons-material/Image';
-import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
-import SendIcon from '@mui/icons-material/Send';
+import { handleImageError as safeImageError } from '../../utils/imageUtils';
+
 import CloseIcon from '@mui/icons-material/Close';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RefreshIcon from '@mui/icons-material/Refresh';
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import ReportIcon from '@mui/icons-material/Report';
-import { formatTimeAgo, formatDate } from '../../utils/dateUtils';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ImageGrid from '../../components/Post/ImageGrid';
 import { Post } from '../../components/Post';
 import RepostItem from '../../components/RepostItem';
 import PostSkeleton from '../../components/Post/PostSkeleton';
@@ -64,8 +38,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { MusicContext } from '../../context/MusicContext';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+
 import ContentLoader from '../../components/UI/ContentLoader';
 import TimerIcon from '@mui/icons-material/Timer';
 import UpdateInfo from '../../components/Updates/UpdateInfo';
@@ -73,7 +46,7 @@ import UpdateService from '../../services/UpdateService';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
 import WarningIcon from '@mui/icons-material/Warning';
-import TelegramIcon from '@mui/icons-material/Telegram';
+// import TelegramIcon from '@mui/icons-material/Telegram';
 
 
 
@@ -270,12 +243,7 @@ const OnlineUsers = () => {
                 boxSizing: 'border-box',
                 background: '#222',
               }}
-              onError={e => {
-                const img = e.target;
-                if (img && typeof img.src !== 'undefined') {
-                  img.src = '/static/uploads/system/avatar.png';
-                }
-              }}
+              onError={safeImageError}
             />
             <Box
               sx={{
@@ -370,13 +338,7 @@ const UserRecommendation = ({ user }) => {
               border: '2px solid rgba(208, 188, 255, 0.3)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
             }}
-            onError={(e) => {
-              console.error(`Failed to load avatar for ${user.name}`);
-              const imgElement = e.target;
-              if (imgElement && typeof imgElement.src !== 'undefined') {
-                imgElement.src = `/static/uploads/avatar/system/avatar.png`;
-              }
-            }}
+            onError={safeImageError}
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography 
@@ -1377,87 +1339,6 @@ const CreatePost = ({ onPostCreated }) => {
 };
 
 
-const TelegramPromo = () => {
-  const { t } = useLanguage();
-  
-  const handleSubscribe = () => {
-    window.open('https://t.me/kcon_news', '_blank');
-  };
-  
-  return (
-    <Box 
-      component={Paper} 
-      sx={{ 
-        p: 2.5, 
-        borderRadius: '12px', 
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        overflow: 'hidden',
-        display: { xs: 'none', sm: 'block' },
-        position: 'relative',
-        marginBottom:'-6px',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '2px',
-          background: 'primary.main',
-        }
-      }}
-    >
-      <Box sx={{ mb: 2 }}>
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            fontWeight: 600, 
-            color: 'primary.main',
-            fontSize: '0.95rem',
-            mb: 0.5
-          }}
-        >
-          Подпишись на телеграм канал автора
-        </Typography>
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: 'text.secondary',
-            fontSize: '0.8rem'
-          }}
-        >
-          t.me/kcon_news
-        </Typography>
-      </Box>
-      
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={handleSubscribe}
-        startIcon={<TelegramIcon />}
-        sx={{
-          borderRadius: '8px',
-          textTransform: 'none',
-          fontWeight: 600,
-          fontSize: '0.9rem',
-          py: 0.8,
-          boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
-          '&:hover': {
-            boxShadow: '0 6px 16px rgba(208, 188, 255, 0.4)',
-            transform: 'translateY(-1px)'
-          },
-          transition: 'all 0.2s ease'
-        }}
-      >
-        Подписаться
-      </Button>
-    </Box>
-  );
-};
-
-
 const MainPage = React.memo(() => {
   const { user } = useContext(AuthContext);
   const { t } = useLanguage();
@@ -1938,7 +1819,6 @@ const MainPage = React.memo(() => {
         </LeftColumn>
         
         <RightColumn>
-          <TelegramPromo />
           
           <Box 
             component={Paper} 

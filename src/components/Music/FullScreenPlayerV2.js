@@ -503,15 +503,15 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
 
   // Извлечение доминирующего цвета из обложки - мемоизировано
   useEffect(() => {
-    if (currentTrack?.cover_path && coverPath) {
+    if (currentTrack?.cover_path) {
       extractDominantColor(
-        coverPath,
+        currentTrack.cover_path || '/static/uploads/system/album_placeholder.jpg',
         (color) => {
           setDominantColor(color);
         }
       );
     }
-  }, [coverPath]);
+  }, [currentTrack?.cover_path]); // Только при изменении cover_path
 
   // Загрузка текстов песен - оптимизировано
   useEffect(() => {
