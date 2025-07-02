@@ -2,14 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Paper, BottomNavigation as MuiBottomNavigation, BottomNavigationAction, alpha } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import HomeIcon from '@mui/icons-material/Home';
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
-import PeopleIcon from '@mui/icons-material/People';
-import PersonIcon from '@mui/icons-material/Person';
-import AppsIcon from '@mui/icons-material/Apps';
-import VideogameAssetRoundedIcon from '@mui/icons-material/VideogameAssetRounded';
-import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useTheme } from '@mui/material/styles';
 import { ThemeSettingsContext } from '../App';
 
@@ -61,12 +53,7 @@ const AppBottomNavigation = ({ user }) => {
     return null;
   }
   
-  
-  const isClickerPage = location.pathname.startsWith('/clicker');
-  if (isClickerPage) {
-    return null;
-  }
-  
+
   const getCurrentValue = () => {
     const path = location.pathname;
     if (path === '/' || path === '/feed' || path === '/main') return 0;

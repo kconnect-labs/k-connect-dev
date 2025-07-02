@@ -1,4 +1,37 @@
-import React, { useState, useRef } from 'react';
+/*
+BACKEND API CODE TO IMPLEMENT:
+
+// POST /api/minigames/roulette/spin
+// Body: { betAmount: number }
+// Response: { 
+//   winningIndex: number,  // индекс выигранного элемента в массиве items
+//   items: [               // массив всех элементов рулетки
+//     { 
+//       id: number,
+//       type: 'balls' | 'noballs',
+//       text: string,
+//       image: string,
+//       multiplier?: number  // для balls - множитель ставки
+//     }
+//   ],
+//   totalWin: number,      // общая сумма выигрыша
+//   balance: number        // новый баланс пользователя
+// }
+
+Example response:
+{
+  "winningIndex": 15,
+  "items": [
+    { "id": 1, "type": "balls", "text": "+200₽", "image": "/static/icons/balls.png", "multiplier": 2 },
+    { "id": 2, "type": "noballs", "text": "Без выигрыша", "image": "/static/icons/noballs.png" },
+    // ... 46 more items (total 48 items for 2 full circles)
+  ],
+  "totalWin": 200,
+  "balance": 1500
+}
+*/
+
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -15,9 +48,66 @@ import Confetti from 'react-confetti';
 import RoulettePro from 'react-roulette-pro';
 import 'react-roulette-pro/dist/index.css';
 
+// Глобальные стили для рулетки
+const GlobalRouletteStyles = styled('div')`
+  .roulette-pro-regular-design-prize-item-horizontal {
+    background: url(http://k-connect.ru/static/img/minigames/item.png) !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    position: relative !important;
+    overflow: hidden !important;
+    
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1;
+    }
+    
+    & > * {
+      position: relative;
+      z-index: 2;
+    }
+  }
+  
+  .roulette-pro-regular-prize-item-wrapper {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+  
+  .roulette-pro-regular-prize-item-image {
+    margin: auto;
+    margin-top: 20px;
+    max-width: 75% !important;
+    max-height: 75% !important;
+    width: 75% !important;
+    height: 75% !important;
+    object-fit: contain !important;
+    display: block !important;
+    position: relative !important;
+    z-index: 3 !important;
+  }
+  
+  .roulette-pro-prize-list.horizontal {
+    gap: 4px !important;
+  }
+`;
+
 const ICONS = {
-  balls: '/static/icons/balls.png',
-  noballs: '/static/icons/noballs.png',
+  balls: 'http://k-connect.ru/static/icons/balls.png',
+  noballs: 'http://k-connect.ru/static/icons/noballs.png',
 };
 
 const bounce = keyframes`
@@ -33,9 +123,10 @@ const GameContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   maxWidth: 900,
   margin: '0 auto',
-  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0.7)}, ${alpha(theme.palette.primary.main, 0.3)})`,
-  backdropFilter: 'blur(12px)',
-  borderRadius: 20,
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  borderRadius: 8,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
 }));
 
@@ -125,12 +216,14 @@ const PrizeDisplay = styled(Box)(({ theme, win }) => ({
   textAlign: 'center',
   marginTop: theme.spacing(3),
   padding: theme.spacing(2),
-  borderRadius: 10,
-  background: win ? alpha(theme.palette.success.main, 0.13) : alpha(theme.palette.error.main, 0.09),
-  color: win ? theme.palette.success.main : theme.palette.text.primary,
+  borderRadius: 8,
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
+  border: win ? '2px solid #16a34a' : '2px solid #dc2626',
+  color: '#ffffff',
   fontWeight: 700,
   fontSize: '1.2rem',
-  boxShadow: win ? `0 0 16px 2px ${alpha(theme.palette.success.main, 0.18)}` : 'none',
+  boxShadow: win ? '0 0 16px 2px rgba(22, 163, 74, 0.3)' : '0 0 16px 2px rgba(220, 38, 38, 0.3)',
 }));
 
 const ITEM_WIDTH = 144;
@@ -140,6 +233,11 @@ const CENTER_INDEX = Math.floor(VISIBLE_ITEMS / 2); // Центр всегда �
 const LOOP_COUNT = 8;
 const FIXED_START_ITEMS = 8;
 const WIN_OFFSET_FROM_START = FIXED_START_ITEMS + CENTER_INDEX;
+
+// Константы для рулетки
+const TOTAL_ITEMS = 100; // Больше элементов для бесконечной ленты
+const ITEMS_PER_CIRCLE = 24; // Элементов в одном круге
+const SPIN_DURATION = 4000; // Фиксированная длительность (4 секунды)
 
 function getLongReelData(betAmount) {
   // 16 balls, 32 noballs, перемешать
@@ -166,38 +264,148 @@ const renderPrize = (prize, idx, { isActive }) => (
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      width: 90,
-      minWidth: 90,
-      height: 110,
-      background: 'transparent',
-      borderRadius: 2,
-      border: isActive ? '2.5px solid #a78bfa' : 'none',
-      boxShadow: isActive ? '0 0 16px 2px #a78bfa55' : 'none',
-      p: 0,
-      m: '0 6px',
-      transition: 'box-shadow 0.2s, border 0.2s',
+      width: 100,
+      minWidth: 100,
+      height: 120,
+      backgroundImage: 'url(http://k-connect.ru/static/img/minigames/item.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backdropFilter: 'blur(20px)',
+      borderRadius: 8,
+      border: isActive 
+        ? '3px solid #D0BCFF' 
+        : '1px solid rgba(255, 255, 255, 0.12)',
+      boxShadow: isActive 
+        ? '0 0 20px 4px rgba(208, 188, 255, 0.4)' 
+        : '0 2px 8px rgba(0,0,0,0.1)',
+      p: 1.5,
+      m: '0 2px',
+      transition: 'all 0.3s ease',
+      position: 'relative',
+      transform: isActive ? 'scale(1.05)' : 'scale(1)',
+      overflow: 'hidden',
     }}
   >
+    {/* Overlay для затемнения фона */}
     <Box
-      component="img"
-      src={prize.image}
-      alt={prize.type}
-      sx={{ width: 54, height: 54, mb: 0.5, filter: prize.type === 'noballs' ? 'grayscale(0.7)' : 'none' }}
-    />
-    <Typography
       sx={{
-        fontSize: '0.95rem',
-        fontWeight: 700,
-        color: prize.type === 'balls' ? '#4ade80' : '#a1a1aa',
-        textShadow: prize.type === 'balls' ? '0 0 8px #4ade8033' : 'none',
-        mt: 0.5,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0, 0, 0, 0.3)',
+        borderRadius: 8,
       }}
-      align="center"
+    />
+    
+    {/* Основной контент */}
+    <Box
+      sx={{
+        position: 'relative',
+        zIndex: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+      }}
     >
-      {prize.text}
-    </Typography>
+      <Box
+        component="img"
+        src={prize.type === 'balls' ? ICONS.balls : ICONS.noballs}
+        alt={prize.type}
+        sx={{ 
+          width: 24, 
+          height: 24, 
+          mb: 1,
+          opacity: 0.8,
+          filter: prize.type === 'noballs' 
+            ? 'grayscale(1)' 
+            : 'none',
+          transition: 'all 0.3s ease',
+        }}
+      />
+      <Typography
+        sx={{
+          fontSize: '0.85rem',
+          fontWeight: 600,
+          color: '#ffffff',
+          textAlign: 'center',
+          lineHeight: 1.2,
+          px: 0.5,
+          textShadow: '0 1px 3px rgba(0,0,0,0.5)',
+        }}
+      >
+        {prize.text}
+      </Typography>
+    </Box>
+    
+    {isActive && (
+      <Box
+        sx={{
+          position: 'absolute',
+          top: -3,
+          left: -3,
+          right: -3,
+          bottom: -3,
+          border: '3px solid #f59e0b',
+          borderRadius: 8,
+          pointerEvents: 'none',
+          animation: 'pulse 2s infinite',
+          '@keyframes pulse': {
+            '0%': { opacity: 1, transform: 'scale(1)' },
+            '50%': { opacity: 0.7, transform: 'scale(1.02)' },
+            '100%': { opacity: 1, transform: 'scale(1)' },
+          },
+        }}
+      />
+    )}
   </Box>
 );
+
+// Функция для создания данных рулетки (временная, до подключения бэка)
+function generateRouletteData(betAmount) {
+  const baseItems = [];
+  
+  // Создаем базовый набор из 20 элементов
+  for (let i = 0; i < 20; i++) {
+    // Примерно 1/3 выигрышных элементов
+    const isWin = Math.random() < 0.33;
+    
+    if (isWin) {
+      const multiplier = Math.random() < 0.7 ? 2 : (Math.random() < 0.8 ? 3 : 5);
+      baseItems.push({
+        id: i + 1,
+        type: 'balls',
+        text: `+${betAmount * multiplier}₽`,
+        image: ICONS.balls,
+        multiplier
+      });
+    } else {
+      baseItems.push({
+        id: i + 1,
+        type: 'noballs',
+        text: 'Без выигрыша',
+        image: ICONS.noballs
+      });
+    }
+  }
+  
+  // Дублируем элементы для создания бесконечной ленты
+  const items = [];
+  for (let cycle = 0; cycle < 5; cycle++) {
+    baseItems.forEach((item, index) => {
+      items.push({
+        ...item,
+        id: cycle * baseItems.length + index + 1,
+      });
+    });
+  }
+  
+  return items;
+}
 
 const RouletteGame = () => {
   const theme = useTheme();
@@ -206,118 +414,358 @@ const RouletteGame = () => {
   const [prize, setPrize] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [prizeIndex, setPrizeIndex] = useState(0);
-  const [reelData, setReelData] = useState(() => getLongReelData(100));
+  const [reelData, setReelData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [gameResult, setGameResult] = useState(null);
 
-  const handleSpin = () => {
+  // Загружаем начальные данные при монтировании компонента
+  useEffect(() => {
+    updateRouletteData(betAmount);
+  }, []);
+
+  const handleSpin = async () => {
     if (isSpinning) return;
+    
     setIsSpinning(true);
     setPrize(null);
     setShowConfetti(false);
-    const newData = getLongReelData(betAmount);
-    setReelData(newData);
-    // Выбираем случайный индекс balls или noballs с шансом 40%/60%
-    const ballsIndexes = newData.map((item, idx) => item.type === 'balls' ? idx : null).filter(idx => idx !== null);
-    const noballsIndexes = newData.map((item, idx) => item.type === 'noballs' ? idx : null).filter(idx => idx !== null);
-    const winType = Math.random() < 0.4 ? 'balls' : 'noballs';
-    let idx;
-    if (winType === 'balls') {
-      idx = ballsIndexes[Math.floor(Math.random() * ballsIndexes.length)];
-    } else {
-      idx = noballsIndexes[Math.floor(Math.random() * noballsIndexes.length)];
+    setGameResult(null); // Очищаем предыдущий результат
+    
+    try {
+      // API вызов к бэкенду
+      const response = await fetch('/api/minigames/roulette/spin', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ betAmount: betAmount })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Произошла ошибка при игре');
+      }
+      
+      // Обновляем данные рулетки новыми элементами с бэка
+      setReelData(data.items);
+      
+      // Небольшая задержка, чтобы данные успели обновиться
+      setTimeout(() => {
+        // Сохраняем результат игры
+        setGameResult(data);
+        // Устанавливаем правильный индекс выигрышного элемента
+        setPrizeIndex(data.winningIndex);
+      }, 100);
+      
+    } catch (error) {
+      console.error('Ошибка при запросе к серверу:', error);
+      setIsSpinning(false);
+      // Показать сообщение об ошибке пользователю
+      setPrize({
+        type: 'error',
+        amount: 0,
+        text: error.message || 'Произошла ошибка сервера'
+      });
     }
-    setPrizeIndex(idx);
   };
 
+  const handleSpinComplete = () => {
+    if (!gameResult) {
+      setIsSpinning(false);
+      return;
+    }
+    
+    const { winningItem, totalWin, subscriptionReward } = gameResult;
+    
+    // Используем данные с бэкенда напрямую
+    let prizeData = {
+      type: winningItem.type,
+      amount: totalWin,
+      text: winningItem.text
+    };
+    
+    // Проверяем, есть ли выигрыш подписки
+    if (subscriptionReward) {
+      prizeData.isSubscription = true;
+      prizeData.subscriptionType = subscriptionReward.type;
+      prizeData.subscriptionDays = subscriptionReward.days;
+    }
+    
+    setPrize(prizeData);
+    
+    // Показываем конфетти если есть выигрыш (баллы или подписка)
+    if (totalWin > 0 || subscriptionReward) {
+      setShowConfetti(true);
+      // Убираем конфетти через 3 секунды
+      setTimeout(() => setShowConfetti(false), 3000);
+    }
+    
+    setIsSpinning(false);
+  };
+
+  // Функция для обновления данных рулетки при изменении ставки
+  const updateRouletteData = async (newBetAmount) => {
+    if (isSpinning) return; // Не обновляем во время игры
+    
+    try {
+      const response = await fetch('/api/minigames/roulette/preview', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'include',
+        body: JSON.stringify({ betAmount: newBetAmount })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setReelData(data.items);
+        }
+      } else {
+        // В случае ошибки используем временную генерацию
+        setReelData(generateRouletteData(newBetAmount));
+      }
+    } catch (error) {
+      console.error('Ошибка при получении превью:', error);
+      // В случае ошибки используем временную генерацию
+      setReelData(generateRouletteData(newBetAmount));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Добавляем таймер безопасности для завершения анимации
+  useEffect(() => {
+    if (isSpinning && gameResult) {
+      const timer = setTimeout(() => {
+        handleSpinComplete();
+      }, SPIN_DURATION + 500); // Запас времени на завершение анимации
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSpinning, gameResult]);
+
   return (
-    <GameContainer>
-      <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 800, letterSpacing: 1 }}>
-        Кейс-рулетка
-      </Typography>
-      <Box sx={{ position: 'relative', width: '100%', maxWidth: 900, mx: 'auto', my: 4 }}>
-        <RoulettePro
-          prizes={reelData}
-          prizeIndex={prizeIndex}
-          renderPrize={renderPrize}
-          onPrizeDefined={() => {
-            const win = reelData[prizeIndex].type === 'balls';
-            setPrize({
-              type: win ? 'balls' : 'noballs',
-              amount: win ? betAmount * 2 : 0,
-            });
-            if (win) setShowConfetti(true);
-            setIsSpinning(false);
-          }}
-          spinning={isSpinning}
-          start={isSpinning}
-          options={{
-            stopOnPrize: true,
-            prizeSlot: 3, // центр
-            duration: 2600,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)', // быстрое начало, плавное замедление
-          }}
-          style={{ height: 130 }}
-        />
-      </Box>
-      <BetAmount>
-        <Typography>Ставка:</Typography>
-        <Slider
-          value={betAmount}
-          onChange={(e, v) => setBetAmount(v)}
-          min={100}
-          max={10000}
-          step={100}
-          valueLabelDisplay="auto"
-          valueLabelFormat={v => `${v} ₽`}
-          sx={{ flex: 1, mx: 2 }}
-          disabled={isSpinning}
-        />
-        <Typography sx={{ fontWeight: 700 }}>{betAmount} ₽</Typography>
-      </BetAmount>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleSpin}
-          disabled={isSpinning}
-          startIcon={isSpinning ? <CircularProgress size={22} /> : <CasinoIcon />}
-          sx={{
-            minWidth: 220,
-            height: 56,
-            fontSize: '1.15rem',
-            borderRadius: 28,
-            fontWeight: 700,
-            background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.dark} 90%)`,
-            boxShadow: '0 3px 12px 2px rgba(0,0,0,0.18)',
-            letterSpacing: 1,
-            '&:hover': {
-              transform: 'scale(1.05)',
-            },
-          }}
-        >
-          {isSpinning ? 'Крутится...' : 'Крутить'}
-        </Button>
-      </Box>
-      {prize && (
-        <PrizeDisplay win={prize.type === 'balls'}>
-          {prize.type === 'balls' ? (
-            <>
-              Поздравляем! Вы выиграли <b>{prize.amount} ₽</b>
-            </>
-          ) : (
-            <>Без выигрыша</>
-          )}
-        </PrizeDisplay>
-      )}
-      {showConfetti && (
-        <Confetti
-          width={window.innerWidth}
-          height={window.innerHeight}
-          recycle={false}
-          numberOfPieces={180}
-          gravity={0.3}
-        />
-      )}
-    </GameContainer>
+    <GlobalRouletteStyles>
+      <GameContainer sx={{ mt: 3 }}>
+        <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 800, letterSpacing: 1, color: '#ffffff' }}>
+          Рулетка удачи
+        </Typography>
+        
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+            <CircularProgress sx={{ color: '#D0BCFF' }} />
+            <Typography sx={{ ml: 2, color: '#ffffff' }}>Загрузка...</Typography>
+          </Box>
+        ) : (
+          <>
+            <Box sx={{ position: 'relative', width: '100%', maxWidth: 900, mx: 'auto', my: 4 }}>
+              <RoulettePro
+                prizes={reelData}
+                prizeIndex={prizeIndex}
+                renderPrize={renderPrize}
+                onPrizeDefined={handleSpinComplete}
+                spinning={isSpinning}
+                start={isSpinning}
+                options={{
+                  stopOnPrize: true,
+                  prizeSlot: 3, // центральная позиция
+                  duration: SPIN_DURATION, // Фиксированная длительность
+                  easing: 'cubic-bezier(0.23, 1, 0.32, 1)', // Плавное замедление
+                  spinCount: 4, // 4 оборота для более плавной анимации
+                  withoutAnimation: false,
+                  stopAtCenter: true,
+                  infinite: false, // Убираем бесконечность для точной остановки
+                }}
+                style={{ 
+                  height: 140,
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: 8,
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                }}
+              />
+              
+              {/* Центральный указатель */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 4,
+                  height: '70%',
+                  background: '#D0BCFF',
+                  borderRadius: 8,
+                  boxShadow: '0 0 10px rgba(208, 188, 255, 0.5)',
+                  zIndex: 10,
+                  pointerEvents: 'none',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: -6,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '6px solid transparent',
+                    borderRight: '6px solid transparent',
+                    borderTop: '10px solid #D0BCFF',
+                  },
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    bottom: -6,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 0,
+                    height: 0,
+                    borderLeft: '6px solid transparent',
+                    borderRight: '6px solid transparent',
+                    borderBottom: '10px solid #D0BCFF',
+                  },
+                }}
+              />
+            </Box>
+
+            <BetAmount>
+              <Typography sx={{ fontWeight: 600, minWidth: 60, color: '#ffffff' }}>Ставка:</Typography>
+              <Slider
+                value={betAmount}
+                onChange={(e, v) => {
+                  setBetAmount(v);
+                  updateRouletteData(v);
+                }}
+                min={100}
+                max={50000}
+                step={100}
+                valueLabelDisplay="auto"
+                valueLabelFormat={v => (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <img src="http://k-connect.ru/static/icons/KBalls.svg" width="12" height="12" alt="" />
+                    {v}
+                  </Box>
+                )}
+                sx={{ 
+                  flex: 1, 
+                  mx: 3,
+                  '& .MuiSlider-thumb': {
+                    width: 20,
+                    height: 20,
+                    backgroundColor: '#D0BCFF',
+                  },
+                  '& .MuiSlider-track': {
+                    height: 4,
+                    backgroundColor: '#D0BCFF',
+                  },
+                  '& .MuiSlider-rail': {
+                    height: 4,
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                  '& .MuiSlider-valueLabel': {
+                    backgroundColor: '#D0BCFF',
+                    color: '#000000',
+                  },
+                }}
+                disabled={isSpinning || isLoading}
+              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 80, justifyContent: 'flex-end' }}>
+                <img src="http://k-connect.ru/static/icons/KBalls.svg" width="16" height="16" alt="" />
+                <Typography sx={{ fontWeight: 700, color: '#ffffff' }}>
+                  {betAmount}
+                </Typography>
+              </Box>
+            </BetAmount>
+
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Button
+                variant="contained"
+                size="medium"
+                onClick={handleSpin}
+                disabled={isSpinning || isLoading || reelData.length === 0}
+                startIcon={isSpinning ? <CircularProgress size={18} color="inherit" /> : <CasinoIcon />}
+                sx={{
+                  minWidth: 180,
+                  height: 44,
+                  fontSize: '1rem',
+                  borderRadius: 8,
+                  fontWeight: 600,
+                  background: isSpinning 
+                    ? 'rgba(255, 255, 255, 0.1)' 
+                    : '#D0BCFF',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  color: isSpinning ? '#ffffff' : '#000000',
+                  boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
+                  letterSpacing: 0.5,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: isSpinning ? 'none' : 'translateY(-2px)',
+                    background: isSpinning ? 'rgba(255, 255, 255, 0.1)' : '#C4A7FF',
+                    boxShadow: isSpinning ? undefined : '0 6px 16px rgba(196, 167, 255, 0.4)',
+                  },
+                  '&:active': {
+                    transform: isSpinning ? 'none' : 'translateY(0) scale(0.98)',
+                  },
+                }}
+              >
+                {isSpinning ? 'Крутится...' : 'Крутить'}
+              </Button>
+            </Box>
+
+            {prize && (
+              <PrizeDisplay win={prize.amount > 0 || prize.isSubscription}>
+                {(prize.amount > 0 || prize.isSubscription) ? (
+                  prize.isSubscription ? (
+                    <>
+                      🎉 Поздравляем! Вы выиграли подписку <strong>{prize.subscriptionType.toUpperCase()} на {prize.subscriptionDays} дня</strong> 🎉
+                    </>
+                  ) : (
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                      🎉 Поздравляем! Вы выиграли 
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <img src="http://k-connect.ru/static/icons/KBalls.svg" width="20" height="20" alt="" />
+                        <strong>{prize.amount}</strong>
+                      </Box>
+                      🎉
+                    </Box>
+                  )
+                ) : prize.type === 'error' ? (
+                  <>
+                    ❌ Ошибка: {prize.text}
+                  </>
+                ) : (
+                  <>
+                    😔 Не повезло... Попробуйте еще раз!
+                  </>
+                )}
+              </PrizeDisplay>
+            )}
+          </>
+        )}
+
+        {showConfetti && (
+          <Confetti
+            width={window.innerWidth}
+            height={window.innerHeight}
+            recycle={false}
+            numberOfPieces={200}
+            gravity={0.25}
+            colors={['#D0BCFF', '#C4A7FF', '#B794F6', '#9F7AEA', '#805AD5', '#6B46C1', '#553C9A']}
+          />
+        )}
+      </GameContainer>
+    </GlobalRouletteStyles>
   );
 };
 

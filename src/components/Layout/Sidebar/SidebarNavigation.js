@@ -256,14 +256,6 @@ const SidebarNavigation = memo(({
     !isChannel && (
       <>
         <NavButton
-          text={t('sidebar.navigation.minigames')}
-          icon={icons.games}
-          path="/minigames"
-          active={isActive('/minigames')}
-          themeColor={primaryColor}
-        />
-        
-        <NavButton
           text={t('sidebar.navigation.subscription_plans')}
           icon={icons.subscription}
           path="/sub-planes"
@@ -311,8 +303,8 @@ const SidebarNavigation = memo(({
           <NavButton
             text={t('sidebar.navigation.more.api_docs')}
             icon={icons.api}
-            path="/api-docs"
-            active={isActive('/api-docs')}
+            path="/documentapi"
+            active={isActive('/documentapi')}
             themeColor={primaryColor}
             nested={true}
           />

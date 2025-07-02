@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTra
 import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import ProfileService from './services/ProfileService'; 
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import AppBottomNavigation from './components/BottomNavigation';
 import { MusicProvider } from './context/MusicContext';
@@ -15,10 +14,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ChannelsPage from './pages/Main/ChannelsPage';
 import MusicPlayerCore from './components/MusicPlayerCore';
 import { setSessionContext } from './services/ProfileService';
-import RouletteGame from './pages/MiniGames/RouletteGame';
 import JoinGroupChat from './pages/Messenger/JoinGroupChat';
-import { MessengerProvider } from './contexts/MessengerContext';
-import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
@@ -95,12 +91,6 @@ const MarketplacePage = lazy(() => import('./pages/Economic/components/marketpla
 const GrantsPage = lazy(() => import('./pages/Economic/components/grantPage/GrantsPage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
-const TestNotifications = lazy(() => import('./components/TestNotifications'));
-const MiniGamesPage = lazy(() => import('./pages/MiniGames/MiniGamesPage'));
-const CupsGamePage = lazy(() => import('./pages/MiniGames/CupsGamePage'));
-const LuckyNumberGame = lazy(() => import('./pages/MiniGames/LuckyNumberGame'));
-const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
-const BlackjackPage = lazy(() => import('./pages/MiniGames/BlackjackPage'));
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
@@ -476,18 +466,11 @@ const AppRoutes = () => {
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
           <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
           <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/lucky-number" element={isAuthenticated ? <LuckyNumberGame /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/clicker" element={isAuthenticated ? <ClickerPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/blackjack" element={isAuthenticated ? <BlackjackPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/roulette" element={isAuthenticated ? <RouletteGame /> : <Navigate to="/login" replace />} />
           <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
-          <Route path="/api-docs" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
+          <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
           <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />
           <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
           <Route path="/updates" element={<UpdatesPage />} />
-          <Route path="/test-notifications" element={<TestNotifications />} />
           <Route path="/cookies" element={<PublicPages />} />
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
           <Route path="/marketplace" element={<MarketplacePage />} />
