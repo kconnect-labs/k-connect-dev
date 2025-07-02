@@ -354,6 +354,8 @@ const Header = ({ toggleSidebar }) => {
   const [languageMenuAnchorEl, setLanguageMenuAnchorEl] = useState(null);
   const isLanguageMenuOpen = Boolean(languageMenuAnchorEl);
 
+  const [isInMessengerChat, setIsInMessengerChat] = useState(false);
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -1007,10 +1009,23 @@ const Header = ({ toggleSidebar }) => {
     </Menu>
   );
 
+  useEffect(() => {
+    const handleMessengerLayoutChange = (event) => {
+      const { isInChat } = event.detail;
+      setIsInMessengerChat(isInChat);
+    };
+    
+    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    
+    return () => {
+      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    };
+  }, []);
+
   return (
     <StyledAppBar 
       sx={{ 
-        display: isMusicPage && isMobile ? 'none' : 'block',
+        display: (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',
       }}
       style={themeValues.headerStyle}
     >

@@ -36,7 +36,7 @@ const MessageItem = ({
   dateSeparatorText = ''
 }) => {
   const [showActions, setShowActions] = useState(false);
-  const { getFileUrl, avatarCache, getAvatarUrl, deleteMessage } = useMessenger();
+  const { getFileUrl, avatarCache, getAvatarUrl, deleteMessage, messages, setMessages } = useMessenger();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxImage, setLightboxImage] = useState(null);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
@@ -76,20 +76,36 @@ const MessageItem = ({
       setIsDeleting(true);
       setDeleteDialogOpen(false);
       
-      
+      // Сохраняем позицию скролла
       const messagesContainer = messagesContainerRef.current;
       const scrollTop = messagesContainer?.scrollTop;
       const scrollHeight = messagesContainer?.scrollHeight;
       
       try {
-        
-        const result = await deleteMessage(message.id);
-        
-        if (result && result.success) {
+        // Для временных сообщений просто удаляем из локального состояния
+        if (typeof message.id === 'string' && message.id.startsWith('temp_')) {
+          console.log(`Удаление временного сообщения ${message.id} из локального состояния`);
           
+          // Находим чат, в котором находится сообщение
+          const chatId = Object.keys(messages).find(chatId => 
+            messages[chatId].some(msg => msg.id === message.id)
+          );
+          
+          if (chatId) {
+            setMessages(prevMessages => {
+              const updatedChatMessages = (prevMessages[chatId] || [])
+                .filter(msg => msg.id !== message.id);
+                
+              return {
+                ...prevMessages,
+                [chatId]: updatedChatMessages
+              };
+            });
+          }
+          
+          // Применяем анимацию удаления
           if (messageRef.current) {
             messageRef.current.classList.add('deleting');
-            
             
             setTimeout(() => {
               if (messageRef.current) {
@@ -100,13 +116,47 @@ const MessageItem = ({
                 messageRef.current.style.marginBottom = '0';
                 messageRef.current.style.padding = '0';
                 
-                
                 setTimeout(() => {
                   if (messagesContainer) {
-                    
                     const newScrollHeight = messagesContainer.scrollHeight;
                     const heightDiff = scrollHeight - newScrollHeight;
                     
+                    if (heightDiff > 0 && scrollTop) {
+                      messagesContainer.scrollTop = scrollTop - heightDiff;
+                    } else if (scrollTop) {
+                      messagesContainer.scrollTop = scrollTop;
+                    }
+                  }
+                }, 50);
+              }
+            }, 50);
+          }
+          
+          console.log(`Временное сообщение ${message.id} успешно удалено`);
+          return;
+        }
+        
+        // Для обычных сообщений используем функцию из контекста
+        const result = await deleteMessage(message.id);
+        
+        if (result && result.success) {
+          // Применяем анимацию удаления
+          if (messageRef.current) {
+            messageRef.current.classList.add('deleting');
+            
+            setTimeout(() => {
+              if (messageRef.current) {
+                messageRef.current.style.opacity = '0';
+                messageRef.current.style.transform = 'scale(0.8)';
+                messageRef.current.style.maxHeight = '0';
+                messageRef.current.style.marginTop = '0';
+                messageRef.current.style.marginBottom = '0';
+                messageRef.current.style.padding = '0';
+                
+                setTimeout(() => {
+                  if (messagesContainer) {
+                    const newScrollHeight = messagesContainer.scrollHeight;
+                    const heightDiff = scrollHeight - newScrollHeight;
                     
                     if (heightDiff > 0 && scrollTop) {
                       messagesContainer.scrollTop = scrollTop - heightDiff;
@@ -120,7 +170,6 @@ const MessageItem = ({
           }
           console.log(`Сообщение ${message.id} успешно удалено`);
         } else {
-          
           console.error(`Ошибка при удалении сообщения: ${result?.error || 'Неизвестная ошибка'}`);
           setError(result?.error || 'Что-то пошло не так при удалении сообщения');
           setIsDeleting(false);
@@ -495,33 +544,33 @@ const MessageItem = ({
         }}
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
-    >
-      <div className="message-container">
-        {!isCurrentUser && isGroupChat && (
-          <div className="message-avatar">
-            {senderAvatar ? (
-              <img src={senderAvatar} alt={message.sender_name || 'Avatar'} />
-            ) : (
-              <div className="avatar-placeholder">
-                {(message.sender_name?.charAt(0) || 'U').toUpperCase()}
-              </div>
-            )}
-          </div>
-        )}
-        
-        <div className="message-content">
+      >
+        <div className="message-container">
           {!isCurrentUser && isGroupChat && (
-            <div className="message-sender">{message.sender_name || getSenderName(message.sender_id)}</div>
+            <div className="message-avatar">
+              {senderAvatar ? (
+                <img src={senderAvatar} alt={message.sender_name || 'Avatar'} />
+              ) : (
+                <div className="avatar-placeholder">
+                  {(message.sender_name?.charAt(0) || 'U').toUpperCase()}
+                </div>
+              )}
+            </div>
           )}
           
+          <div className="message-content">
+            {!isCurrentUser && isGroupChat && (
+              <div className="message-sender">{message.sender_name || getSenderName(message.sender_id)}</div>
+            )}
+            
             {message.reply_to_id && renderReplyContent()}
-          
-          <div className="message-bubble">
-            {renderMessageContent()}
+            
+            <div className="message-bubble">
+              {renderMessageContent()}
             </div>
           </div>
           
-          {/* Кнопки действий с сообщением - полупрозрачные, чтобы не мешали контенту */}
+          {/* Кнопки действий с сообщением */}
           <div className={`message-actions ${showActions ? 'visible' : ''}`} onClick={(e) => e.stopPropagation()}>
             <IconButton 
               size="small" 
@@ -551,7 +600,7 @@ const MessageItem = ({
         </div>
       </div>
       
-      {/* Диалог подтверждения удаления - улучшенный стиль */}
+      {/* Диалог подтверждения удаления */}
       <Dialog
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}
@@ -655,4 +704,4 @@ const MessageItem = ({
   );
 };
 
-export default MessageItem; 
+export default MessageItem;

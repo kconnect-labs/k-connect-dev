@@ -91,6 +91,8 @@ const MarketplacePage = lazy(() => import('./pages/Economic/components/marketpla
 const GrantsPage = lazy(() => import('./pages/Economic/components/grantPage/GrantsPage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
+const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
+
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
@@ -466,6 +468,8 @@ const AppRoutes = () => {
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
           <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
           <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
+          <Route path="/minigames/clicker" element={isAuthenticated ? <ClickerPage /> : <Navigate to="/login" replace />} />
+
           <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
           <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
           <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />

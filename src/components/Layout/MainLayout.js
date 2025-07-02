@@ -23,10 +23,10 @@ const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 
-const ContentWrapper = styled(Box)(({ theme, isMusicPage, isMobile }) => ({
+const ContentWrapper = styled(Box)(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
   display: 'flex',
   flexGrow: 1,
-  paddingTop: isMusicPage && isMobile ? 0 : 40, 
+  paddingTop: isMusicPage && isMobile ? 0 : (isInMessengerChat ? 0 : 40), 
 }));
 
 
@@ -103,11 +103,30 @@ const MainLayout = ({ children }) => {
   
   const sidebarWidth = 280;
   
+  const isBanned = user && user.ban === 1;
+  const isOnBanPage = location.pathname === '/ban';
+  
+  const shouldShowFullLayout = !isBanned && !isOnBanPage;
+  const [isInMessengerChat, setIsInMessengerChat] = useState(false);
+
   useEffect(() => {
     if (isMobile) {
       setSidebarOpen(false);
     }
   }, [location, isMobile]);
+
+  useEffect(() => {
+    const handleMessengerLayoutChange = (event) => {
+      const { isInChat } = event.detail;
+      setIsInMessengerChat(isInChat);
+    };
+    
+    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    
+    return () => {
+      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    };
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -124,11 +143,6 @@ const MainLayout = ({ children }) => {
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
   
-  const isBanned = user && user.ban === 1;
-  const isOnBanPage = location.pathname === '/ban';
-  
-  const shouldShowFullLayout = !isBanned && !isOnBanPage;
-
   if (isAuthPage) {
     return (
       <Box sx={{ 
@@ -159,7 +173,7 @@ const MainLayout = ({ children }) => {
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       
-      <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile}>
+      <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile} isInMessengerChat={isInMessengerChat}>
         <Overlay 
           className={sidebarOpen ? 'active' : ''} 
           onClick={closeSidebar}
@@ -167,7 +181,10 @@ const MainLayout = ({ children }) => {
         
         <SidebarContainer 
           open={sidebarOpen} 
-          sx={{ width: sidebarWidth }}
+          sx={{ 
+            width: sidebarWidth,
+            display: isInMessengerChat ? 'none' : 'block'
+          }}
         >
           <MemoizedSidebar open={sidebarOpen} onClose={closeSidebar} />
         </SidebarContainer>
@@ -175,7 +192,9 @@ const MainLayout = ({ children }) => {
         <ContentContainer 
           sx={{ 
             color: themeSettings?.textColor || theme.palette.text.primary,
-            width: { md: `calc(100% - ${sidebarWidth}px)` },
+            width: { 
+              md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
+            },
             paddingBottom: {
               xs: hasBottomPlayer ? theme.spacing(12) : 0,
               sm: hasBottomPlayer ? theme.spacing(12) : 0,

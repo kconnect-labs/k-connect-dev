@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback, memo, useMemo } from '
 import { useMessenger } from '../../contexts/MessengerContext';
 import MessageInput from './MessageInput';
 import MessageItem from './MessageItem';
-import TypingIndicator from './TypingIndicator';
 import useIntersectionObserver from '../../hooks/useIntersectionObserver';
 import { Menu, MenuItem, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Box, Typography, TextField, IconButton, Avatar, List, ListItem, ListItemIcon, ListItemText, ListItemAvatar } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,42 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const MemoizedMessageItem = memo(MessageItem);
 
-const ModeratorBanner = () => {
-  return (
-    <div className="moderator-banner">
-      <div className="moderator-banner-content">
-        <i className="fas fa-shield-alt mr-2"></i>
-        <span>
-          <strong>Внимание!</strong> Вы общаетесь с модератором платформы. Пожалуйста, будьте вежливы и корректны. Модератор поможет решить ваши вопросы или проблемы.
-        </span>
-      </div>
-      <style jsx>{`
-        .moderator-banner {
-          background-color:rgb(26 26 26);
-          border-left: 4px solidrgb(131, 59, 246);
-          padding: 10px 15px;
-          margin-bottom: 15px;
-          border-radius: 4px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-          position: sticky;
-          top: -16px;
-          z-index: 100;
-        }
-        .moderator-banner-content {
-          display: flex;
-          align-items: center;
-          font-size: 14px;
-          color:rgb(167, 109, 187);
-        }
-        .moderator-banner-content i {
-          font-size: 18px;
-          color:rgba(178, 59, 246, 0.83);
-          margin-right: 8px;
-        }
-      `}</style>
-    </div>
-  );
-};
+
 
 const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const { 
@@ -146,6 +110,62 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       chatIdRef.current = activeChat.id;
     }
   }, [activeChat]);
+  
+  // Скрываем header и bottom navigation при открытии чата
+  useEffect(() => {
+    // Проверяем, является ли устройство мобильным
+    const isMobileDevice = window.innerWidth <= 768;
+    
+    if (activeChat?.id && isMobileDevice) {
+      // Скрываем header и bottom navigation только на мобильных
+      document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+        detail: { isInChat: true } 
+      }));
+      
+      // Добавляем класс для полного экрана
+      document.body.classList.add('messenger-chat-fullscreen');
+    } else {
+      // Показываем header и bottom navigation
+      document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+        detail: { isInChat: false } 
+      }));
+      
+      // Убираем класс для полного экрана
+      document.body.classList.remove('messenger-chat-fullscreen');
+    }
+    
+    // Обработчик изменения размера окна
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      
+      if (activeChat?.id) {
+        if (isMobile) {
+          // Скрываем на мобильных
+          document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+            detail: { isInChat: true } 
+          }));
+          document.body.classList.add('messenger-chat-fullscreen');
+        } else {
+          // Показываем на десктопе
+          document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+            detail: { isInChat: false } 
+          }));
+          document.body.classList.remove('messenger-chat-fullscreen');
+        }
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Очистка при размонтировании
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+        detail: { isInChat: false } 
+      }));
+      document.body.classList.remove('messenger-chat-fullscreen');
+    };
+  }, [activeChat?.id]);
   
   useEffect(() => {
     let mounted = true;
@@ -355,7 +375,31 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     const typingUserIds = Object.keys(typingUsers[activeChat.id]);
     if (typingUserIds.length === 0) return null;
     
-    return <TypingIndicator userIds={typingUserIds} chatMembers={activeChat.members} />;
+    const typingUserNames = typingUserIds.map(userId => {
+      const member = activeChat.members?.find(m => m.user_id === parseInt(userId));
+      const name = member?.name || member?.username || 'Кто-то';
+      return name.length > 6 ? name.substring(0, 6) + '...' : name;
+    });
+    
+    let typingText = '';
+    if (typingUserNames.length === 1) {
+      typingText = `${typingUserNames[0]} печатает...`;
+    } else if (typingUserNames.length === 2) {
+      typingText = `${typingUserNames[0]} и ${typingUserNames[1]} печатают...`;
+    } else {
+      typingText = `${typingUserNames.length} человек печатают...`;
+    }
+    
+    return (
+      <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <div className="typing-animation">
+          <span className="dot"></span>
+          <span className="dot"></span>
+          <span className="dot"></span>
+        </div>
+        {typingText}
+      </Typography>
+    );
   }, [activeChat, typingUsers]);
   
   const renderScrollToBottom = () => {
@@ -436,20 +480,82 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   }, [getChatTitle]);
   
   const chatMessages = activeChat ? (messages[activeChat.id] || []) : [];
-  const memoizedMessages = React.useMemo(() => {
-    if (!activeChat) return [];
-    
-    return chatMessages.map((message) => (
-      <MemoizedMessageItem 
-        key={message.id}
-        message={message}
-        isCurrentUser={message.sender_id === user?.id}
-        decryptedContent={activeChat?.encrypted ? decryptMessage(message, activeChat.id) : message.content}
-        onReply={() => setReplyTo(message)}
-        replyMessage={message.reply_to_id ? chatMessages.find(m => m.id === message.reply_to_id) : null}
-        chatMembers={activeChat?.members}
-      />
-    ));
+
+  // Форматирование текста разделителя
+  const formatDateSeparator = (dateKey) => {
+    if (!dateKey) return '';
+    const today = new Date();
+    const todayKey = today.toISOString().slice(0, 10);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const yesterdayKey = yesterday.toISOString().slice(0, 10);
+    if (dateKey === todayKey) return 'Сегодня';
+    if (dateKey === yesterdayKey) return 'Вчера';
+    const date = new Date(dateKey);
+    return date.toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  // Группировка сообщений с разделителями дат
+  const memoizedMessages = useMemo(() => {
+    if (!activeChat || !chatMessages.length) return [];
+    const messagesWithSeparators = [];
+    let lastDateKey = null;
+    chatMessages.forEach((message, index) => {
+      // Получаем date_key или создаем из created_at
+      let dateKey = message.date_key;
+      if (!dateKey && message.created_at) {
+        try {
+          const date = new Date(message.created_at);
+          if (!isNaN(date.getTime())) {
+            dateKey = date.toISOString().slice(0, 10);
+          }
+        } catch (e) {
+          console.warn('Invalid date format:', message.created_at);
+        }
+      }
+      
+      if (dateKey && dateKey !== lastDateKey) {
+        messagesWithSeparators.push({
+          type: 'date_separator',
+          text: formatDateSeparator(dateKey),
+          id: `separator_${dateKey}_${index}`
+        });
+        lastDateKey = dateKey;
+      }
+      messagesWithSeparators.push({
+        type: 'message',
+        data: message
+      });
+    });
+    return messagesWithSeparators.map(item => {
+      if (item.type === 'date_separator') {
+        return (
+          <div key={item.id} className="date-separator">
+            <span>{item.text}</span>
+          </div>
+        );
+      } else {
+        const message = item.data;
+        const replyMessage = message.reply_to_id ? chatMessages.find(m => m.id === message.reply_to_id && !m.is_temp) : null;
+        
+        // Добавляем логирование для отладки ответов
+        if (message.reply_to_id) {
+          console.log(`Message ${message.id} has reply_to_id: ${message.reply_to_id}, found reply message:`, replyMessage ? replyMessage.id : 'NOT FOUND');
+        }
+        
+        return (
+          <MemoizedMessageItem
+            key={message.id}
+            message={message}
+            isCurrentUser={message.sender_id === user?.id}
+            decryptedContent={activeChat?.encrypted ? decryptMessage(message, activeChat.id) : message.content}
+            onReply={() => setReplyTo(message)}
+            replyMessage={replyMessage}
+            chatMembers={activeChat?.members}
+          />
+        );
+      }
+    });
   }, [chatMessages, user, activeChat, decryptMessage, setReplyTo]);
   
   const formatLastActive = (dateObject) => {
@@ -643,8 +749,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       display: 'flex', 
       flexDirection: 'column',
       height: '100%',
-      bgcolor: 'background.paper'
-    }}>
+      background: 'transparent',
+        }}>
       {/* Заголовок чата */}
       <Box sx={{ 
         display: 'flex', 
@@ -652,8 +758,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         p: 2, 
         borderBottom: '1px solid',
         borderColor: 'divider',
-        bgcolor: 'background.paper'
-      }}>
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(20px)',
+    }}>
         {isMobile && (
           <IconButton 
             onClick={backAction}
@@ -691,9 +798,19 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             </Typography>
           )}
           {activeChat.is_group && (
-            <Typography variant="caption" color="text.secondary">
-              {activeChat.members?.length || 0} участников
-            </Typography>
+            <Box sx={{ 
+              minHeight: '20px', 
+              display: 'flex', 
+              alignItems: 'center'
+            }}>
+              {renderTypingIndicator() ? (
+                renderTypingIndicator()
+              ) : (
+                <Typography variant="caption" color="text.secondary">
+                  {activeChat.members?.length || 0} участников
+                </Typography>
+              )}
+            </Box>
           )}
           {activeChat.encrypted && <Typography variant="caption" color="text.secondary">🔒</Typography>}
         </Box>
@@ -713,7 +830,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
               boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
-              borderRadius: isMobile ? 0 : 3,
+              borderRadius: '8px',
               border: '1px solid rgba(40,40,40,0.5)',
               minWidth: 180,
               p: 0.5
@@ -742,13 +859,12 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         fullWidth
         PaperProps={{
           sx: {
-            backgroundColor: 'rgba(10, 10, 10, 0.75)',
+            background: 'rgba(255, 255, 255, 0.03)',
             color: '#fff',
-            boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: isMobile ? 0 : 3,
-            border: '1px solid rgba(40,40,40,0.5)'
+            backdropFilter: 'blur(50px)',
+            WebkitBackdropFilter: 'blur(50px)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.12)'
           }
         }}
       >
@@ -849,13 +965,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         flexDirection: 'column',
         gap: 1
       }}>
-        {/* Показываем баннер модератора если собеседник модератор ИЛИ есть сообщения от модераторов */}
-        {(
-          (activeChat?.chat_type === 'personal' && 
-           activeChat?.members?.some(member => member.id !== user?.id && member.is_moderator)) ||
-          hasModeratorMessages
-        ) && <ModeratorBanner />}
-        
+
+      
         {/* Триггер для загрузки предыдущих сообщений при прокрутке вверх */}
         {hasMoreMessagesForChat && (
           <div 
@@ -875,9 +986,6 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         <div className="messages-list">
           {memoizedMessages}
         </div>
-        
-        {/* Индикатор "Печатает..." */}
-        {renderTypingIndicator()}
         
         {/* Невидимый элемент для прокрутки вниз */}
         <div ref={messagesEndRef} />

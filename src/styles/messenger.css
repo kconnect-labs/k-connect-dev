@@ -349,7 +349,7 @@
 .message-item {
   margin-bottom: 12px;
   align-self: flex-start;
-  max-width: 85%; /* Ограничиваем ширину всего блока сообщения */
+  max-width: 95%; /* Увеличиваем с 90% до 95% (+5%) */
   transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
   position: relative;
 }
@@ -451,9 +451,10 @@
   margin: 0;
   font-size: 15px;
   white-space: normal;
-  word-break: break-all; /* Разбивать все длинные слова */
+  word-break: break-word; /* Изменяем с break-all на break-word */
   overflow-wrap: break-word;
-  hyphens: none;
+  hyphens: auto; /* Добавляем автоматические переносы */
+  line-height: 1.4; /* Улучшаем читаемость */
 }
 
 /* Время сообщения, встроенное в одну линию с текстом */
@@ -496,11 +497,11 @@
 /* Специальные стили для длинных сообщений */
 @media (min-width: 400px) {
   .message-text-container {
-    max-width: 350px;
+    max-width: 370px; /* Увеличиваем с 350px до 370px (+5%) */
   }
   
   .message-photo, .message-video {
-    max-width: 240px;
+    max-width: 252px; /* Увеличиваем с 240px до 252px (+5%) */
   }
   
   .message-photo img {
@@ -511,11 +512,11 @@
 /* Стили для мобильного вида */
 @media (max-width: 399px) {
   .message-text-container {
-    max-width: 260px;
+    max-width: 273px; /* Увеличиваем с 260px до 273px (+5%) */
   }
   
   .message-photo, .message-video {
-    max-width: 180px;
+    max-width: 189px; /* Увеличиваем с 180px до 189px (+5%) */
   }
   
   .message-photo img {
@@ -548,7 +549,7 @@
 
 .message-photo img {
   height: auto;
-  max-width: 100%;
+  max-width: 95vw; /* Увеличиваем с 90vw до 95vw (+5%) */
   width: 100%;
   border-radius: 8px;
   cursor: pointer;
@@ -573,6 +574,8 @@
 
 .message-audio audio {
   margin-top: 4px;
+  width: 95vw; /* Увеличиваем с 90vw до 95vw (+5%) */
+  max-width: 315px; /* Увеличиваем с 300px до 315px (+5%) */
 }
 
 .message-file {
@@ -638,22 +641,26 @@
 .typing-indicator {
   display: flex;
   align-items: center;
-  margin: 8px 0;
-  max-width: 200px;
+  margin: 4px 0;
+  max-width: 180px;
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .typing-animation {
   display: flex;
   align-items: center;
-  margin-right: 8px;
+  margin-right: 6px;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--primary, #D0BCFF);
-  margin: 0 2px;
+  margin: 0 1px;
   animation: typing-dot 1s infinite ease-in-out;
 }
 
@@ -663,12 +670,38 @@
 
 @keyframes typing-dot {
   0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50% { transform: translateY(-4px); opacity: 1; }
+  50% { transform: translateY(-3px); opacity: 1; }
+}
+
+/* Компактный индикатор печати для заголовка */
+.typing-animation .dot {
+  width: 4px;
+  height: 4px;
+  margin: 0 0.5px;
+}
+
+@keyframes typing-dot {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-2px); opacity: 1; }
 }
 
 .typing-text {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Стили для анимации в заголовке чата */
+.chat-header .typing-animation {
+  margin-right: 4px;
+}
+
+.chat-header .dot {
+  width: 4px;
+  height: 4px;
+  margin: 0 0.5px;
 }
 
 /* Поле ввода сообщения */
@@ -1097,7 +1130,7 @@
   .chat-window {
     display: flex;
     flex-direction: column;
-    height: 99vh;
+    height: 100vh;
     width: 100vw;
     max-width: 100%;
     overflow: hidden;
@@ -1130,7 +1163,7 @@
   }
   
   .message-item {
-    max-width: 90%;
+    max-width: 95%; /* Увеличиваем с 90% до 95% (+5%) */
   }
   
   .message-bubble {
@@ -1141,12 +1174,12 @@
   /* Правильное название для мобильных */
   .message-photo img,
   .message-video video {
-    max-width: 90vw;
+    max-width: 95vw; /* Увеличиваем с 90vw до 95vw (+5%) */
   }
   
   .message-audio audio {
-    width: 90vw;
-    max-width: 300px;
+    width: 95vw; /* Увеличиваем с 90vw до 95vw (+5%) */
+    max-width: 315px; /* Увеличиваем с 300px до 315px (+5%) */
   }
 }
 
@@ -1156,7 +1189,7 @@ input, textarea, select {
   touch-action: manipulation;
 }
 
-/* u0410u0434u0430u043fu0442u0438u043du043eu0441u0442u044c */
+/* u0410u0434u0430u043du0438u0441u0442u044c */
 
 .back-button-icon {
   font-size: 24px;
@@ -1180,15 +1213,46 @@ input, textarea, select {
   z-index: 5;
 }
 
+.date-separator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.1) 80%,
+    transparent 100%
+  );
+  z-index: -1;
+}
+
 .date-separator span {
-  background-color: rgba(0, 0, 0, 0.028);
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(3px);
+  background: rgba(208, 188, 255, 0.1);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(208, 188, 255, 0.15);
+  min-width: 80px;
+}
+
+/* Адаптивность для разделителей дат */
+@media (max-width: 768px) {
+  .date-separator {
+    margin: 12px 8px;
+  }
+  
+  .date-separator span {
+    font-size: 12px;
+    padding: 5px 12px;
+    min-width: 70px;
+  }
 }
 
 /* Стили для пользовательского статуса в хедере */
@@ -1197,4 +1261,65 @@ input, textarea, select {
   color: rgba(255, 255, 255, 0.6);
   margin-top: 2px;
   display: block;
+}
+
+/* Стили для полного экрана чата - только на мобильных */
+@media (max-width: 768px) {
+  .messenger-chat-fullscreen {
+    overflow: hidden !important;
+  }
+  
+  .messenger-chat-fullscreen .MuiAppBar-root {
+    display: none !important;
+  }
+  
+  .messenger-chat-fullscreen #app-bottom-navigation {
+    display: none !important;
+  }
+  
+  .messenger-chat-fullscreen .MuiDrawer-root {
+    display: none !important;
+  }
+  
+  /* Полноэкранный контейнер для чата */
+  .messenger-chat-fullscreen .messenger-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999 !important;
+    background-color: var(--background-color, #1A1A1A) !important;
+  }
+  
+  /* Скрываем основной контент при полном экране чата */
+  .messenger-chat-fullscreen .content-wrapper {
+    padding-top: 0 !important;
+  }
+  
+  .messenger-chat-fullscreen .content-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .messenger-chat-fullscreen .content-container {
+    margin-top: 0 !important;
+  }
+  
+  .messenger-chat-fullscreen .messenger-container {
+    height: 100vh !important;
+  }
+  
+  .messenger-chat-fullscreen .chat-window {
+    height: 100vh !important;
+  }
+  
+  /* Убираем margin-top у контейнера мессенджера */
+  .messenger-chat-fullscreen .MuiBox-root {
+    margin-top: 0 !important;
+  }
 } 

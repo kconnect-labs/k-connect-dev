@@ -341,14 +341,15 @@ const MessengerPage = () => {
         <Box sx={{ 
           display: 'flex', 
           flexDirection: { xs: 'column', md: 'row' },
-          height: { xs: 'calc(100vh - 120px)', md: 'calc(100vh - 104px)' },
+          height: { xs: '100vh', md: 'calc(100vh - 70px)' },
           maxWidth: '1400px',
           mx: 'auto',
-          mt: 1,
-          mb: 2, 
+          mt: { xs: 0, md: 1 },
           overflow: 'hidden',
-          bgcolor: 'content.main',
-          borderRadius: 2,
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: "8px",
+          border: '1px solid rgba(255, 255, 255, 0.12)', 
           position: 'relative'
         }}>
           {/* Боковая панель со списком чатов */}
@@ -423,13 +424,13 @@ const MessengerPage = () => {
         fullWidth
         PaperProps={{
           sx: {
-            backgroundColor: 'rgba(10, 10, 10, 0.75)',
+            backgroundColor: 'rgba(255, 255, 255, 0.03)',
             color: '#fff',
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: isMobile ? 0 : 3,
-            border: '1px solid rgba(40,40,40,0.5)'
+            backdropFilter: 'blur(50px)',
+            WebkitBackdropFilter: 'blur(50px)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.12)'
           }
         }}
       >

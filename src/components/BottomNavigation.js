@@ -52,7 +52,11 @@ const AppBottomNavigation = ({ user }) => {
   if (isAuthPage || isSettingsPage || isBadgeShopPage) {
     return null;
   }
-  
+    
+  const isClickerPage = location.pathname.startsWith('/minigames/clicker');
+  if (isClickerPage) {
+    return null;
+  }
 
   const getCurrentValue = () => {
     const path = location.pathname;
