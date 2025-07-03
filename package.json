@@ -31,6 +31,7 @@
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.525.0",
     "notistack": "^3.0.2",
+    "pako": "^2.1.0",
     "photoswipe": "^5.4.4",
     "plyr": "^3.7.8",
     "react": "^18.3.1",

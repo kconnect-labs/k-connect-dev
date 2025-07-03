@@ -17,9 +17,220 @@ import {
 } from '@mui/icons-material';
 import { useMessenger } from '../../contexts/MessengerContext';
 import axios from 'axios';
+import Lottie from 'lottie-react';
+import pako from 'pako';
 
 // API URL для мессенджера
 const API_URL = 'https://k-connect.ru/apiMes';
+
+// Функция для определения типа стикера
+const getStickerType = (sticker) => {
+  if (!sticker.url) return 'unknown';
+  
+  // Сначала проверяем данные стикера, если есть
+  if (sticker.mime_type) {
+    if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
+    if (sticker.mime_type === 'video/webm') return 'webm';
+    return 'static';
+  }
+  
+  // Если данных нет, проверяем URL (менее надежно)
+  const url = sticker.url.toLowerCase();
+  if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
+  if (url.includes('.webm')) return 'webm';
+  
+  // Для API эндпоинтов делаем асинхронную проверку
+  if (url.includes('/api/messenger/stickers/')) {
+    return 'api_check_needed';
+  }
+  
+  return 'static'; // webp, png, jpeg
+};
+
+// Компонент для TGS стикера с улучшенной загрузкой
+const TGSSticker = ({ src, style, onClick }) => {
+  const [animationData, setAnimationData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const loadTGS = async () => {
+      try {
+        setLoading(true);
+        setError(false);
+        
+        const response = await fetch(src);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        
+        // Проверяем, действительно ли это TGS файл
+        if (contentType !== 'application/x-tgsticker') {
+          console.log('Not a TGS file, falling back to image:', contentType);
+          setError(true);
+          return;
+        }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        let jsonData;
+        
+        try {
+          // Пробуем распаковать как gzip
+          const decompressed = pako.inflate(arrayBuffer);
+          const textDecoder = new TextDecoder();
+          jsonData = JSON.parse(textDecoder.decode(decompressed));
+        } catch (gzipError) {
+          // Если не gzip, пробуем как обычный JSON
+          const textDecoder = new TextDecoder();
+          jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+        }
+        
+        setAnimationData(jsonData);
+      } catch (error) {
+        console.error('Error loading TGS:', error);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (src) {
+      loadTGS();
+    }
+  }, [src]);
+
+  if (loading) {
+    return (
+      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress size={24} />
+      </div>
+    );
+  }
+
+  if (error || !animationData) {
+    // Fallback to image if TGS loading failed
+    return (
+      <img
+        src={src}
+        style={style}
+        onClick={onClick}
+        alt="Стикер"
+      />
+    );
+  }
+
+  return (
+    <div style={style} onClick={onClick}>
+      <Lottie
+        animationData={animationData}
+        loop={true}
+        autoplay={true}
+        style={{ width: '100%', height: '100%' }}
+      />
+    </div>
+  );
+};
+
+// Компонент для асинхронной проверки типа стикера
+const AsyncStickerRenderer = ({ src, style, onClick }) => {
+  const [stickerType, setStickerType] = useState('loading');
+  const [animationData, setAnimationData] = useState(null);
+  
+  useEffect(() => {
+    const checkStickerType = async () => {
+      try {
+        // Сначала пробуем загрузить как TGS
+        const response = await fetch(src);
+        
+        if (!response.ok) {
+          setStickerType('static');
+          return;
+        }
+        
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType === 'application/x-tgsticker') {
+          // Это TGS файл, пробуем его загрузить
+          try {
+            const arrayBuffer = await response.arrayBuffer();
+            let jsonData;
+            
+            try {
+              // Пробуем распаковать как gzip
+              const decompressed = pako.inflate(arrayBuffer);
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(decompressed));
+            } catch (gzipError) {
+              // Если не gzip, пробуем как обычный JSON
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+            }
+            
+            setAnimationData(jsonData);
+            setStickerType('tgs');
+          } catch (error) {
+            console.error('Error loading TGS data:', error);
+            setStickerType('static');
+          }
+        } else if (contentType === 'video/webm') {
+          setStickerType('webm');
+        } else {
+          setStickerType('static');
+        }
+      } catch (error) {
+        console.error('Error checking sticker type:', error);
+        setStickerType('static');
+      }
+    };
+    
+    checkStickerType();
+  }, [src]);
+  
+  if (stickerType === 'loading') {
+    return (
+      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress size={24} />
+      </div>
+    );
+  }
+  
+  if (stickerType === 'tgs' && animationData) {
+    return (
+      <div style={style} onClick={onClick}>
+        <Lottie
+          animationData={animationData}
+          loop={true}
+          autoplay={true}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    );
+  } else if (stickerType === 'webm') {
+    return (
+      <video
+        src={src}
+        style={style}
+        onClick={onClick}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+    );
+  } else {
+    return (
+      <img
+        src={src}
+        style={style}
+        onClick={onClick}
+        alt="Стикер"
+      />
+    );
+  }
+};
 
 const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   const theme = useTheme();
@@ -166,7 +377,6 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                   {activePack.stickers.map((sticker) => (
                     <Grid item xs={3} sm={2.4} key={sticker.id}>
                       <Box
-                        onClick={() => handleStickerClick(activePack, sticker)}
                         sx={{
                           width: '100%',
                           aspectRatio: '1',
@@ -181,37 +391,63 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                           '&:hover': {
                             transform: 'scale(1.05)',
                             background: 'rgba(255, 255, 255, 0.1)'
-                          },
-                          '&:active': {
-                            transform: 'scale(0.95)'
                           }
                         }}
                       >
-                        {/* Определяем тип стикера по URL или имени файла */}
-                        {sticker.url && sticker.url.toLowerCase().includes('.webm') ? (
-                          <video
-                            src={sticker.url}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        ) : (
-                          <img
-                            src={sticker.url}
-                            alt={sticker.name}
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'contain'
-                            }}
-                          />
-                        )}
+                        {(() => {
+                          const stickerType = getStickerType(sticker);
+                          const commonStyle = {
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain'
+                          };
+
+                          const handleClick = () => handleStickerClick(activePack, sticker);
+
+                          // Для API эндпоинтов используем асинхронную проверку
+                          if (stickerType === 'api_check_needed') {
+                            return (
+                              <AsyncStickerRenderer
+                                src={sticker.url}
+                                style={commonStyle}
+                                onClick={handleClick}
+                              />
+                            );
+                          }
+
+                          // Для известных типов используем прямой рендеринг
+                          if (stickerType === 'tgs') {
+                            return (
+                              <TGSSticker
+                                src={sticker.url}
+                                style={commonStyle}
+                                onClick={handleClick}
+                              />
+                            );
+                          } else if (stickerType === 'webm') {
+                            return (
+                              <video
+                                src={sticker.url}
+                                style={commonStyle}
+                                onClick={handleClick}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                              />
+                            );
+                          } else {
+                            // Статичные стикеры (webp, png, jpeg)
+                            return (
+                              <img
+                                src={sticker.url}
+                                alt={sticker.name}
+                                style={commonStyle}
+                                onClick={handleClick}
+                              />
+                            );
+                          }
+                        })()}
                       </Box>
                     </Grid>
                   ))}
@@ -260,33 +496,54 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                           justifyContent: 'center',
                           background: 'rgba(255, 255, 255, 0.1)'
                         }}>
-                          {pack.stickers && pack.stickers[0] ? (
-                            // Проверяем тип первого стикера для превью в табе
-                            pack.stickers[0].url && pack.stickers[0].url.toLowerCase().includes('.webm') ? (
-                              <video
-                                src={pack.stickers[0].url}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'contain'
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={pack.stickers[0].url}
-                                alt={pack.name}
-                                style={{
-                                  width: '100%',
-                                  height: '100%',
-                                  objectFit: 'contain'
-                                }}
-                              />
-                            )
-                          ) : (
+                          {pack.stickers && pack.stickers[0] ? (() => {
+                            const stickerType = getStickerType(pack.stickers[0]);
+                            const commonStyle = {
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain'
+                            };
+
+                            // Для табов используем упрощенную логику - только статичные превью
+                            // TGS и WEBM в табах могут быть ресурсозатратными
+                            if (stickerType === 'api_check_needed') {
+                              // Для API эндпоинтов показываем статичное изображение
+                              return (
+                                <img
+                                  src={pack.stickers[0].url}
+                                  alt="pack preview"
+                                  style={commonStyle}
+                                />
+                              );
+                            } else if (stickerType === 'tgs') {
+                              // Для TGS в табах показываем иконку или первый кадр
+                              return (
+                                <TGSSticker
+                                  src={pack.stickers[0].url}
+                                  style={commonStyle}
+                                  onClick={() => {}}
+                                />
+                              );
+                            } else if (stickerType === 'webm') {
+                              return (
+                                <video
+                                  src={pack.stickers[0].url}
+                                  style={commonStyle}
+                                  muted
+                                  playsInline
+                                  loop
+                                />
+                              );
+                            } else {
+                              return (
+                                <img
+                                  src={pack.stickers[0].url}
+                                  alt="pack preview"
+                                  style={commonStyle}
+                                />
+                              );
+                            }
+                          })() : (
                             <StickerIcon sx={{ fontSize: 20, color: 'rgba(255, 255, 255, 0.5)' }} />
                           )}
                         </Box>
