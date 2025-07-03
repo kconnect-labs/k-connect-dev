@@ -18,6 +18,7 @@ import JoinGroupChat from './pages/Messenger/JoinGroupChat';
 import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
+import { MessengerProvider } from './contexts/MessengerContext';
 import axios from 'axios';
 
 export const SessionContext = React.createContext({
@@ -98,6 +99,7 @@ const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTra
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
 const PlaylistsPage = lazy(() => import('./pages/MusicPage/PlaylistsPage'));
 const FriendsPage = lazy(() => import('./pages/User/FriendsPage'));
+const StickerManagePage = lazy(() => import('./pages/Info/StickerManagePage'));
 
 
 export const ThemeSettingsContext = React.createContext({
@@ -482,6 +484,7 @@ const AppRoutes = () => {
           <Route path="/item/:itemId" element={<ItemRedirectPage />} />
           <Route path="/friends/:username" element={<FriendsPage />} />
           <Route path="/friends" element={<FriendsRedirect />} />
+          <Route path="/inform/sticker" element={isAuthenticated ? <StickerManagePage /> : <Navigate to="/login" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (
@@ -1114,27 +1117,29 @@ function App() {
                 <LanguageProvider>
                   <MusicProvider>
                     <PostDetailProvider>
+                      <MessengerProvider>
                         <Box sx={{ 
                           display: 'flex', 
                           flexDirection: 'column', 
                           minHeight: '100vh',
                           bgcolor: 'background.default'
                         }}>
-                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                          <Suspense fallback={<LoadingIndicator />}>
-                            <DefaultSEO />
-                            <Routes>
-                              <Route path="/rules" element={<PublicPages />} />
-                              <Route path="/privacy-policy" element={<PublicPages />} />
-                              <Route path="/terms-of-service" element={<PublicPages />} />
-                              <Route path="/about" element={<PublicPages />} />
-                              <Route path="/cookies" element={<PublicPages />} />
-                              <Route path="*" element={<AppRoutes />} />
-                            </Routes>
-                            <MusicPlayerCore />
-                          </Suspense>
-                      </ErrorBoundary>
-                      </Box>
+                          <ErrorBoundary FallbackComponent={ErrorFallback}>
+                            <Suspense fallback={<LoadingIndicator />}>
+                              <DefaultSEO />
+                              <Routes>
+                                <Route path="/rules" element={<PublicPages />} />
+                                <Route path="/privacy-policy" element={<PublicPages />} />
+                                <Route path="/terms-of-service" element={<PublicPages />} />
+                                <Route path="/about" element={<PublicPages />} />
+                                <Route path="/cookies" element={<PublicPages />} />
+                                <Route path="*" element={<AppRoutes />} />
+                              </Routes>
+                              <MusicPlayerCore />
+                            </Suspense>
+                          </ErrorBoundary>
+                        </Box>
+                      </MessengerProvider>
                     </PostDetailProvider>
                   </MusicProvider>
                 </LanguageProvider>

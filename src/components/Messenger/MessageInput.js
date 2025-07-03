@@ -4,8 +4,10 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import PhotoIcon from '@mui/icons-material/Photo';
 import CloseIcon from '@mui/icons-material/Close';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import StickerPicker from './StickerPicker';
 
 const MessageInput = ({ 
   onSendMessage, 
@@ -17,6 +19,7 @@ const MessageInput = ({
   const [message, setMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [typingTimeout, setTypingTimeout] = useState(null);
+  const [showStickerPicker, setShowStickerPicker] = useState(false);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
   
@@ -157,21 +160,46 @@ const MessageInput = ({
       });
   }, [onFileUpload]);
   
+  // Обработка выбора стикера
+  const handleStickerSelect = useCallback((stickerData) => {
+    // Отправляем стикер как специальное сообщение
+    const stickerMessage = `[STICKER_${stickerData.pack_id}_${stickerData.sticker_id}]`;
+    onSendMessage(stickerMessage);
+    setShowStickerPicker(false);
+  }, [onSendMessage]);
+  
+  // Переключение стикер-пикера
+  const toggleStickerPicker = useCallback(() => {
+    setShowStickerPicker(prev => !prev);
+  }, []);
+  
+  // Закрытие стикер-пикера
+  const closeStickerPicker = useCallback(() => {
+    setShowStickerPicker(false);
+  }, []);
   
   const renderReplyInfo = () => {
     if (!replyTo) return null;
     
     let previewContent = '';
     if (replyTo.message_type === 'text') {
-      previewContent = replyTo.content.length > 30 
-        ? replyTo.content.substring(0, 30) + '...'
-        : replyTo.content;
+      // Проверяем, является ли текстовое сообщение стикером
+      const stickerMatch = replyTo.content.match(/\[STICKER_(\d+)_(\d+)\]/);
+      if (stickerMatch) {
+        previewContent = '🏷️ Стикер';
+      } else {
+        previewContent = replyTo.content.length > 30 
+          ? replyTo.content.substring(0, 30) + '...'
+          : replyTo.content;
+      }
     } else if (replyTo.message_type === 'photo') {
       previewContent = '📷 Фото';
     } else if (replyTo.message_type === 'video') {
       previewContent = '🎬 Видео';
     } else if (replyTo.message_type === 'audio') {
       previewContent = '🎵 Аудио';
+    } else if (replyTo.message_type === 'sticker') {
+      previewContent = '🏷️ Стикер';
     } else {
       previewContent = '📎 Файл';
     }
@@ -278,6 +306,20 @@ const MessageInput = ({
         
         <IconButton 
           size="small"
+          onClick={toggleStickerPicker}
+          sx={{ 
+            color: showStickerPicker ? '#D0BCFF' : '#6b6b6b', 
+            padding: '8px',
+            '&:hover': { 
+              color: '#D0BCFF'
+            }
+          }}
+        >
+          <EmojiEmotionsIcon fontSize="small" />
+        </IconButton>
+        
+        <IconButton 
+          size="small"
           onClick={handleSendMessage}
           disabled={!message.trim() && !isUploading}
           sx={{
@@ -295,6 +337,13 @@ const MessageInput = ({
           )}
         </IconButton>
       </Box>
+      
+      {/* Стикер-пикер */}
+      <StickerPicker
+        isOpen={showStickerPicker}
+        onStickerSelect={handleStickerSelect}
+        onClose={closeStickerPicker}
+      />
     </Box>
   );
 };

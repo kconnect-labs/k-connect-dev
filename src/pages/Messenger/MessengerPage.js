@@ -241,6 +241,16 @@ const MessengerPage = () => {
   // На мобильных устройствах показываем либо список, либо чат
   const handleChatSelect = () => {
     if (isMobile) {
+      console.log('MessengerPage: Handling chat selection - hiding header and navigation');
+      
+      // Отправляем событие для скрытия хедера и навигации
+      document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+        detail: { isInChat: true } 
+      }));
+      
+      // Добавляем класс для полного экрана
+      document.body.classList.add('messenger-chat-fullscreen');
+      
       console.log('Handling chat selection - setting slideIn to TRUE');
       // Сначала установим slideIn, затем обновим отображение
       setSlideIn(true);
@@ -253,6 +263,16 @@ const MessengerPage = () => {
   
   const handleBackToList = () => {
     if (isMobile) {
+      console.log('MessengerPage: Handling back to list - showing header and navigation');
+      
+      // Отправляем событие для показа хедера и навигации
+      document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
+        detail: { isInChat: false } 
+      }));
+      
+      // Убираем класс для полного экрана
+      document.body.classList.remove('messenger-chat-fullscreen');
+      
       // First start slide out animation
       setSlideIn(false);
       // Only show sidebar after animation completes
@@ -364,6 +384,7 @@ const MessengerPage = () => {
             <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
               <Button
                 variant="contained"
+                sx={{backgroundColor: 'rgba(255, 255, 255, 0.03)', color: '#fff',border: '1px solid rgba(255, 255, 255, 0.32)', borderRadius: '8px'}}
                 startIcon={<AddIcon />}
                 onClick={() => setCreateGroupOpen(true)}
                 fullWidth
@@ -382,7 +403,7 @@ const MessengerPage = () => {
               id="mobile-chat-container"
               className={`messenger-main ${slideIn ? 'slide-in' : 'slide-out'}`}
               sx={{ 
-                display: 'block',
+                display: slideIn ? 'block' : 'none', // Полностью скрываем когда не активен
                 transform: slideIn ? 'translateX(0%) !important' : 'translateX(100%) !important',
                 transition: 'transform 0.3s ease-in-out',
                 position: 'fixed',
@@ -392,12 +413,14 @@ const MessengerPage = () => {
                 bottom: 0,
                 width: '100%',
                 height: '100vh',
-                zIndex: 1300,
+                zIndex: slideIn ? 1300 : -1, // Управляем z-index
                 backgroundColor: theme.palette.background.paper,
                 overflowX: 'hidden',  
                 maxWidth: '100vw',
                 WebkitOverflowScrolling: 'touch',
                 touchAction: 'manipulation',
+                // Дополнительная защита от блокировки интерфейса
+                pointerEvents: slideIn ? 'auto' : 'none',
               }}
             >
               <ChatWindow backAction={handleBackToList} isMobile={isMobile} />

@@ -23,6 +23,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import SimpleImageViewer from '../../components/SimpleImageViewerMes';
+import { TextWithLinks } from './linkUtils';
+import StickerPackModal from './StickerPackModal';
 
 
 const MessageItem = ({ 
@@ -46,6 +48,10 @@ const MessageItem = ({
   const messageRef = useRef(null);
   const messagesContainerRef = useRef(null);
   
+  // Состояние для модалки стикерпака
+  const [stickerModalOpen, setStickerModalOpen] = useState(false);
+  const [selectedStickerPackId, setSelectedStickerPackId] = useState(null);
+  const [selectedStickerId, setSelectedStickerId] = useState(null);
   
   useEffect(() => {
     messagesContainerRef.current = document.querySelector('.messages-list');
@@ -186,6 +192,18 @@ const MessageItem = ({
     setError(null);
   };
   
+  // Обработчик клика на стикер
+  const handleStickerClick = (packId, stickerId) => {
+    setSelectedStickerPackId(parseInt(packId));
+    setSelectedStickerId(parseInt(stickerId));
+    setStickerModalOpen(true);
+  };
+  
+  const handleCloseStickerModal = () => {
+    setStickerModalOpen(false);
+    setSelectedStickerPackId(null);
+    setSelectedStickerId(null);
+  };
   
   const getSenderInfo = useCallback((senderId) => {
     if (!chatMembers.length) return { name: 'Пользователь', avatar: null };
@@ -317,6 +335,12 @@ const MessageItem = ({
     }
   };
   
+  // Функция для определения, является ли сообщение коротким
+  const isShortMessage = (text) => {
+    if (!text) return true;
+    // Простая эвристика: если меньше 50 символов или меньше 2 строк, считаем коротким
+    return text.length <= 50 && !text.includes('\n');
+  };
   
   const renderMessageContent = () => {
     const timeElement = (
@@ -328,29 +352,111 @@ const MessageItem = ({
 
     switch (message.message_type) {
       case 'text':
+        // Проверяем, является ли текстовое сообщение стикером
+        const stickerMatch = decryptedContent.match(/\[STICKER_(\d+)_(\d+)\]/);
+        if (stickerMatch) {
+          // Обрабатываем как стикер
+          const packId = stickerMatch[1];
+          const stickerId = stickerMatch[2];
+          const stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
+          
+          return (
+            <div className="sticker-message" style={{
+              position: 'relative',
+              display: 'inline-block',
+              maxWidth: '256px',
+              minWidth: '150px'
+            }}>
+              <img 
+                src={stickerUrl}
+                alt="Стикер"
+                loading="lazy"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleStickerClick(packId, stickerId);
+                }}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: '256px',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  cursor: 'pointer'
+                }}
+              />
+              {/* Время справа внизу как в Телеграме */}
+              <div className="sticker-time-bubble">
+                {formatMessageTime(message.created_at)}
+                {isCurrentUser && (
+                  <span style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    color: 'rgba(255, 255, 255, 0.9)'
+                  }}>
+                    {(message.read_by && message.read_by.length > 0) || 
+                     (message.read_count && message.read_count > 0) ? 
+                      <DoneAllIcon sx={{ fontSize: 12 }} /> : 
+                      <DoneIcon sx={{ fontSize: 12 }} />}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        }
         
-        const isLongMessage = decryptedContent.length > 30;
+        // Обычный текст
+        const isShort = isShortMessage(decryptedContent);
         
-        return (
-          <div className="message-text-container" 
-               style={{ 
-                 flexDirection: isLongMessage ? 'column' : 'row',
-                 alignItems: isLongMessage ? 'flex-end' : 'flex-end',
-                 flexWrap: 'nowrap',
-                 justifyContent: 'space-between'
-               }}>
-            <p className="message-text" style={{ 
-              whiteSpace: 'pre-wrap', 
-              wordBreak: 'break-all',
-          overflowWrap: 'break-word',
-              display: isLongMessage ? 'block' : 'inline',
-              textAlign: 'left',
-              width: isLongMessage ? '100%' : 'auto',
-              marginRight: isLongMessage ? '0' : '8px'
-            }}>{decryptedContent}</p>
-            {timeElement}
-          </div>
-        );
+        if (isShort) {
+          // Короткое сообщение - время в одной строке с текстом
+          return (
+            <div className="message-text-container" 
+                 style={{ 
+                   display: 'flex',
+                   alignItems: 'flex-end',
+                   gap: '8px',
+                   flexWrap: 'wrap'
+                 }}>
+              <div className="message-text" style={{ 
+                whiteSpace: 'pre-wrap', 
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                display: 'inline',
+                textAlign: 'left',
+                flex: '0 1 auto'
+              }}>
+                <TextWithLinks text={decryptedContent} isCurrentUser={isCurrentUser} />
+              </div>
+              <div style={{ flex: '0 0 auto', alignSelf: 'flex-end' }}>
+                {timeElement}
+              </div>
+            </div>
+          );
+        } else {
+          // Длинное сообщение - время на отдельной строке
+          return (
+            <div className="message-text-container" 
+                 style={{ 
+                   flexDirection: 'column',
+                   alignItems: 'flex-end',
+                   flexWrap: 'nowrap',
+                   justifyContent: 'space-between'
+                 }}>
+              <div className="message-text" style={{ 
+                whiteSpace: 'pre-wrap', 
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                display: 'block',
+                textAlign: 'left',
+                width: '100%',
+                marginBottom: '4px'
+              }}>
+                <TextWithLinks text={decryptedContent} isCurrentUser={isCurrentUser} />
+              </div>
+              {timeElement}
+            </div>
+          );
+        }
         
       case 'photo':
         const photoUrl = message.photo_url || getFileUrl(message.chat_id, message.content);
@@ -450,6 +556,79 @@ const MessageItem = ({
           </div>
         );
         
+      case 'sticker':
+        // Обрабатываем стикеры как в Телеграме - без обводки
+        let stickerUrl = null;
+        let packId = null;
+        let stickerId = null;
+        
+        // Если есть данные стикера
+        if (message.sticker_data) {
+          packId = message.sticker_data.pack_id;
+          stickerId = message.sticker_data.sticker_id;
+          stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
+        } else {
+          // Извлекаем данные стикера из контента [STICKER_PACKID_STICKERID]
+          const stickerMatch = decryptedContent.match(/\[STICKER_(\d+)_(\d+)\]/);
+          if (stickerMatch) {
+            packId = stickerMatch[1];
+            stickerId = stickerMatch[2];
+            stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
+          }
+        }
+        
+        if (!stickerUrl) {
+          return (
+            <div className="message-text-container">
+              <p className="message-text">❓ Стикер недоступен</p>
+              {timeElement}
+            </div>
+          );
+        }
+        
+        return (
+          <div className="sticker-message" style={{
+            position: 'relative',
+            display: 'inline-block',
+            maxWidth: '256px',
+            minWidth: '150px'
+          }}>
+            <img 
+              src={stickerUrl}
+              alt="Стикер"
+              loading="lazy"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleStickerClick(packId, stickerId);
+              }}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxWidth: '256px',
+                objectFit: 'contain',
+                borderRadius: '12px',
+                cursor: 'pointer'
+              }}
+            />
+            {/* Время справа внизу как в Телеграме */}
+            <div className="sticker-time-bubble">
+              {formatMessageTime(message.created_at)}
+              {isCurrentUser && (
+                <span style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center',
+                  color: 'rgba(255, 255, 255, 0.9)'
+                }}>
+                  {(message.read_by && message.read_by.length > 0) || 
+                   (message.read_count && message.read_count > 0) ? 
+                    <DoneAllIcon sx={{ fontSize: 12 }} /> : 
+                    <DoneIcon sx={{ fontSize: 12 }} />}
+                </span>
+              )}
+            </div>
+          </div>
+        );
+        
       default:
         return (
           <div className="message-text-container">
@@ -478,9 +657,15 @@ const MessageItem = ({
     
     switch (replyMessage.message_type) {
       case 'text':
-        previewContent = replyMessage.content.length > 30 
-          ? replyMessage.content.substring(0, 15) + '...'
-          : replyMessage.content;
+        // Проверяем, является ли текстовое сообщение стикером
+        const stickerMatch = replyMessage.content.match(/\[STICKER_(\d+)_(\d+)\]/);
+        if (stickerMatch) {
+          previewContent = '🏷️ Стикер';
+        } else {
+          previewContent = replyMessage.content.length > 30 
+            ? replyMessage.content.substring(0, 15) + '...'
+            : replyMessage.content;
+        }
         break;
       case 'photo':
         previewContent = '📷 Фото';
@@ -490,6 +675,9 @@ const MessageItem = ({
         break;
       case 'audio':
         previewContent = '🎵 Аудио';
+        break;
+      case 'sticker':
+        previewContent = '🏷️ Стикер';
         break;
       default:
         previewContent = '📎 Файл';
@@ -700,6 +888,14 @@ const MessageItem = ({
           {error}
         </Alert>
       </Snackbar>
+      
+      {/* Модалка стикерпака */}
+      <StickerPackModal
+        open={stickerModalOpen}
+        onClose={handleCloseStickerModal}
+        packId={selectedStickerPackId}
+        stickerId={selectedStickerId}
+      />
     </>
   );
 };

@@ -35,13 +35,15 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   
   const navigate = useNavigate();
   const [replyTo, setReplyTo] = useState(null);
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null); // Якорь для прокрутки вниз
+  const messagesAnchorRef = useRef(null); // Дополнительный якорь в самом низу списка
   const loadMoreTriggerRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const chatIdRef = useRef(null);
   const typingTimestampRef = useRef(null);
+  const previousScrollHeightRef = useRef(0); // Для сохранения позиции при загрузке старых сообщений
   
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -116,8 +118,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     // Проверяем, является ли устройство мобильным
     const isMobileDevice = window.innerWidth <= 768;
     
-    if (activeChat?.id && isMobileDevice) {
+    if (activeChat && isMobileDevice) {
       // Скрываем header и bottom navigation только на мобильных
+      console.log('ChatWindow: Hiding header and navigation - entering chat', activeChat.id);
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: true } 
       }));
@@ -126,6 +129,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       document.body.classList.add('messenger-chat-fullscreen');
     } else {
       // Показываем header и bottom navigation
+      console.log('ChatWindow: Showing header and navigation - exiting chat or desktop');
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: false } 
       }));
@@ -134,38 +138,15 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       document.body.classList.remove('messenger-chat-fullscreen');
     }
     
-    // Обработчик изменения размера окна
-    const handleResize = () => {
-      const isMobile = window.innerWidth <= 768;
-      
-      if (activeChat?.id) {
-        if (isMobile) {
-          // Скрываем на мобильных
-          document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
-            detail: { isInChat: true } 
-          }));
-          document.body.classList.add('messenger-chat-fullscreen');
-        } else {
-          // Показываем на десктопе
-          document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
-            detail: { isInChat: false } 
-          }));
-          document.body.classList.remove('messenger-chat-fullscreen');
-        }
-      }
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Очистка при размонтировании
+    // Cleanup при размонтировании
     return () => {
-      window.removeEventListener('resize', handleResize);
+      console.log('ChatWindow: Cleanup - ensuring header and navigation are visible');
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: false } 
       }));
       document.body.classList.remove('messenger-chat-fullscreen');
     };
-  }, [activeChat?.id]);
+  }, [activeChat]);
   
   useEffect(() => {
     let mounted = true;
@@ -222,31 +203,43 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     }
   }, [activeChat, messages]);
   
+  // Улучшенная функция прокрутки к низу с использованием якоря
   const scrollToBottom = useCallback((smooth = false) => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ 
+    // Используем якорь в самом низу списка сообщений
+    const anchorElement = messagesAnchorRef.current || messagesEndRef.current;
+    if (anchorElement) {
+      anchorElement.scrollIntoView({ 
         behavior: smooth ? 'smooth' : 'auto',
-        block: 'end'
+        block: 'end',
+        inline: 'nearest'
       });
+      console.log('Scrolled to bottom using anchor');
     }
   }, []);
   
+  // Принудительная прокрутка к низу при открытии чата или получении новых сообщений
   useEffect(() => {
     if (activeChat && messages[activeChat.id] && autoScrollEnabled) {
-      setTimeout(() => {
-      scrollToBottom();
-      }, 100);
+      // Небольшая задержка для рендера сообщений
+      const timeoutId = setTimeout(() => {
+        scrollToBottom();
+      }, 150);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [activeChat, messages, scrollToBottom, autoScrollEnabled]);
   
+  // Прокрутка к низу при смене чата
   useEffect(() => {
     if (activeChat && messages[activeChat.id]) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         scrollToBottom();
         setAutoScrollEnabled(true);
-      }, 100);
+      }, 200);
+      
+      return () => clearTimeout(timeoutId);
     }
-  }, [activeChat?.id]);
+  }, [activeChat?.id, scrollToBottom]);
   
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -294,24 +287,40 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
                                Object.prototype.hasOwnProperty.call(hasMoreMessages, activeChat.id) && 
                                hasMoreMessages[activeChat.id];
                                
+  // Улучшенная логика загрузки старых сообщений с сохранением позиции скролла
   useIntersectionObserver({
     target: loadMoreTriggerRef,
     onIntersect: () => {
       if (activeChat && hasMoreMessagesForChat && !loadingMessages) {
         const container = messagesContainerRef.current;
         if (container) {
+          // Сохраняем текущую позицию скролла и высоту контента
           const scrollHeight = container.scrollHeight;
           const scrollPosition = container.scrollTop;
+          previousScrollHeightRef.current = scrollHeight;
+          
+          console.log('Loading more messages. Current scroll:', scrollPosition, 'height:', scrollHeight);
+          
+          // Отключаем автопрокрутку при загрузке старых сообщений
+          setAutoScrollEnabled(false);
           
           loadMessages(activeChat.id).then(() => {
-            setTimeout(() => {
+            // Восстанавливаем позицию скролла после загрузки
+            requestAnimationFrame(() => {
               if (container) {
                 const newScrollHeight = container.scrollHeight;
-                const addedHeight = newScrollHeight - scrollHeight;
+                const addedHeight = newScrollHeight - previousScrollHeightRef.current;
                 
-                container.scrollTop = scrollPosition + addedHeight;
+                // Устанавливаем новую позицию скролла с учетом добавленного контента
+                const newScrollPosition = scrollPosition + addedHeight;
+                container.scrollTop = newScrollPosition;
+                
+                console.log('Restored scroll position. New height:', newScrollHeight, 
+                           'added:', addedHeight, 'new position:', newScrollPosition);
               }
-            }, 100); 
+            });
+          }).catch(error => {
+            console.error('Error loading more messages:', error);
           });
         } else {
           loadMessages(activeChat.id);
@@ -332,7 +341,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       
       setReplyTo(null);
       
-      setTimeout(() => scrollToBottom(true), 100);
+      // Включаем автопрокрутку и прокручиваем к низу при отправке сообщения
+      setAutoScrollEnabled(true);
+      setTimeout(() => scrollToBottom(true), 150);
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error);
     }
@@ -347,7 +358,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       
       setReplyTo(null);
       
-      setTimeout(() => scrollToBottom(true), 100);
+      // Включаем автопрокрутку и прокручиваем к низу при отправке файла
+      setAutoScrollEnabled(true);
+      setTimeout(() => scrollToBottom(true), 150);
     } catch (error) {
       console.error('Ошибка загрузки файла:', error);
     }
@@ -956,17 +969,18 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Область сообщений */}
-      <Box sx={{ 
-        flex: 1, 
-        overflow: 'auto',
-        p: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1
-      }}>
-
-      
+      {/* Область сообщений с улучшенным контейнером */}
+      <Box 
+        ref={messagesContainerRef}
+        sx={{ 
+          flex: 1, 
+          overflow: 'auto',
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1
+        }}
+      >
         {/* Триггер для загрузки предыдущих сообщений при прокрутке вверх */}
         {hasMoreMessagesForChat && (
           <div 
@@ -985,10 +999,20 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         {/* Список сообщений */}
         <div className="messages-list">
           {memoizedMessages}
+          
+          {/* Якорь в самом низу списка сообщений */}
+          <div 
+            ref={messagesAnchorRef} 
+            style={{ 
+              height: '1px', 
+              visibility: 'hidden',
+              marginTop: '8px'
+            }} 
+          />
         </div>
         
-        {/* Невидимый элемент для прокрутки вниз */}
-        <div ref={messagesEndRef} />
+        {/* Резервный невидимый элемент для прокрутки вниз */}
+        <div ref={messagesEndRef} style={{ height: '1px' }} />
       </Box>
       
       {/* Кнопка прокрутки вниз */}
@@ -1002,6 +1026,39 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         replyTo={replyTo}
         onCancelReply={() => setReplyTo(null)}
       />
+      
+      {/* Диалог подтверждения удаления чата */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        PaperProps={{
+          sx: {
+            background: 'rgba(255, 255, 255, 0.03)',
+            color: '#fff',
+            backdropFilter: 'blur(50px)',
+            WebkitBackdropFilter: 'blur(50px)',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.12)'
+          }
+        }}
+      >
+        <DialogTitle sx={{ bgcolor: 'transparent', color: '#fff' }}>
+          Удалить чат?
+        </DialogTitle>
+        <DialogContent sx={{ bgcolor: 'transparent', color: '#fff' }}>
+          <DialogContentText sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            Вы уверены, что хотите удалить этот чат? Это действие нельзя отменить.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: 'transparent' }}>
+          <Button onClick={handleCloseDeleteDialog} sx={{ color: '#fff' }}>
+            Отмена
+          </Button>
+          <Button onClick={handleDeleteChat} sx={{ color: '#f44336' }} autoFocus>
+            Удалить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

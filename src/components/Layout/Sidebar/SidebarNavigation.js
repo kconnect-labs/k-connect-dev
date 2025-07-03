@@ -72,7 +72,8 @@ const SidebarNavigation = memo(({
     rules: <Icon icon="solar:document-text-outline" width="20" height="20" />,
     api: <Icon icon="solar:code-outline" width="20" height="20" />,
     marketplace: <Icon icon="solar:shop-2-outline" width="20" height="20" />,
-    pack: <Icon icon="solar:box-outline" width="20" height="20" />
+    pack: <Icon icon="solar:box-outline" width="20" height="20" />,
+    sticker: <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />,
   }), []);
   
   const mainMenu = useMemo(() => (
@@ -315,6 +316,13 @@ const SidebarNavigation = memo(({
             active={isActive('/documentapi')}
             themeColor={primaryColor}
             nested={true}
+          />
+          <NavButton
+            text="СтикерМенеджер"
+            icon={icons.sticker}
+            path="/inform/sticker"
+            active={isActive('/inform/sticker')}
+            themeColor={primaryColor}
           />
           
           <NavButton

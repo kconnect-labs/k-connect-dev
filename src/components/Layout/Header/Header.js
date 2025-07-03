@@ -1012,6 +1012,7 @@ const Header = ({ toggleSidebar }) => {
   useEffect(() => {
     const handleMessengerLayoutChange = (event) => {
       const { isInChat } = event.detail;
+      console.log('Header: Received messenger-layout-change event, isInChat:', isInChat);
       setIsInMessengerChat(isInChat);
     };
     

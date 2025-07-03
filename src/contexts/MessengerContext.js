@@ -1178,8 +1178,14 @@ export const MessengerProvider = ({ children }) => {
             return true;
           });
           
+          // 🔥 ИСПРАВЛЕНИЕ: Извлекаем счетчики непрочитанных из WebSocket ответа
+          const newUnreadCounts = {};
+          
           
           filteredChats.forEach(chat => {
+            // 🔥 Устанавливаем unread_count для каждого чата
+            newUnreadCounts[chat.id] = chat.unread_count || 0;
+            
             
             if (chat.last_message && chat.last_message.created_at) {
               chat.last_message.created_at = formatToLocalTime(chat.last_message.created_at);
@@ -1246,6 +1252,10 @@ export const MessengerProvider = ({ children }) => {
           });
           
           setChats(filteredChats);
+          
+          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из WebSocket
+          setUnreadCounts(newUnreadCounts);
+          console.log('Загружены счетчики непрочитанных через WebSocket:', newUnreadCounts);
           
           
           const newHasMoreMessages = {};
@@ -1789,8 +1799,13 @@ export const MessengerProvider = ({ children }) => {
         }));
       }
     } else if (user && !isFromCurrentUser) {
+      // 🔥 ИСПРАВЛЕНИЕ: Автоматически читаем сообщения в реальном времени если чат открыт
+      console.log(`Auto-reading message ${message.id} in active chat ${numChatId}`);
       
-      markMessageAsRead(message.id);
+      // Сразу отмечаем как прочитанное с небольшой задержкой
+      setTimeout(async () => {
+        await markMessageAsRead(message.id);
+      }, 500); // Небольшая задержка для корректной обработки
     }
     
     console.log(`=== END NEW MESSAGE DEBUG ===`);
@@ -1834,9 +1849,53 @@ export const MessengerProvider = ({ children }) => {
   };
   
   
-  const markAllMessagesAsRead = (chatId) => {
+  const markAllMessagesAsRead = async (chatId) => {
     if (!user || !chatId || isChannel) return;
     
+    // Сначала пытаемся использовать новый API эндпоинт
+    try {
+      const response = await fetch(`${API_URL}/messenger/chats/${chatId}/read-all`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionKey}`,
+          'Accept': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          logger.info(`Marked ${result.marked_count || 0} messages as read in chat ${chatId} via API`);
+          
+          // Обнуляем счетчик непрочитанных для этого чата
+          setUnreadCounts(prev => ({
+            ...prev,
+            [chatId]: 0
+          }));
+          
+          // Уведомляем других участников через WebSocket о прочтении
+          if (websocketClient.current && websocketClient.current.isConnected) {
+            const chatMessages = messages[chatId] || [];
+            const unreadMessages = chatMessages.filter(msg => 
+              msg.sender_id !== user?.id && 
+              (!msg.read_by || !msg.read_by.includes(user.id))
+            );
+            
+            // Отправляем read_receipt для каждого непрочитанного сообщения
+            unreadMessages.forEach(msg => {
+              websocketClient.current.sendReadReceipt(msg.id, chatId);
+              // Обновляем локальный статус
+              updateReadStatus(msg.id, chatId, user.id);
+            });
+          }
+          return;
+        }
+      }
+    } catch (error) {
+      logger.error('Error using new API for marking messages as read, falling back to old method:', error);
+    }
+    
+    // Fallback к старому методу
     const chatMessages = messages[chatId] || [];
     
     const unreadMessages = chatMessages.filter(msg => 
@@ -1844,11 +1903,9 @@ export const MessengerProvider = ({ children }) => {
       (!msg.read_by || !msg.read_by.includes(user.id))
     );
     
-    
     unreadMessages.forEach(msg => {
       markMessageAsRead(msg.id);
     });
-    
     
     if (unreadMessages.length > 0) {
       setUnreadCounts(prev => ({
@@ -1972,8 +2029,14 @@ export const MessengerProvider = ({ children }) => {
             return true;
           });
           
+          // 🔥 ИСПРАВЛЕНИЕ: Извлекаем счетчики непрочитанных из API ответа
+          const newUnreadCounts = {};
+          
           
           filteredChats.forEach(chat => {
+            // 🔥 Устанавливаем unread_count для каждого чата
+            newUnreadCounts[chat.id] = chat.unread_count || 0;
+            
             
             if (chat.last_message && chat.last_message.created_at) {
               chat.last_message.created_at = formatToLocalTime(chat.last_message.created_at);
@@ -2040,6 +2103,10 @@ export const MessengerProvider = ({ children }) => {
           });
           
           setChats(filteredChats);
+          
+          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из API
+          setUnreadCounts(newUnreadCounts);
+          console.log('Загружены счетчики непрочитанных:', newUnreadCounts);
           
           
           const newHasMoreMessages = {};
@@ -2839,16 +2906,14 @@ export const MessengerProvider = ({ children }) => {
         console.log(`MessengerContext.setActiveAndLoadChat: Already have ${messages[chatId].length} messages for chat ${chatId}`);
       }
       
-      
-      if (user && messages[chatId] && messages[chatId].length > 0) {
-        messages[chatId].forEach(msg => {
-          if (msg.sender_id !== user.id && (!msg.read_by || !msg.read_by.includes(user.id))) {
-            markMessageAsRead(msg.id);
-          }
-        });
+      // 🔥 ИСПРАВЛЕНИЕ: Используем обновленную функцию markAllMessagesAsRead
+      if (user) {
+        setTimeout(async () => {
+          await markAllMessagesAsRead(chatId);
+        }, 500); // Небольшая задержка для загрузки сообщений
       }
     }
-  }, [isChannel, chats, messages, user, loadMessages, activeChat]);
+  }, [isChannel, chats, messages, user, loadMessages, activeChat, markAllMessagesAsRead]);
   
   
   const updateLastMessage = (chatId, message) => {
@@ -3330,7 +3395,52 @@ export const MessengerProvider = ({ children }) => {
         window.MESSENGER_DEV_MODE = enable;
         console.log(`Messenger logging ${enable ? 'enabled' : 'disabled'}`);
       }
-    }
+    },
+    // Функция для отметки всех сообщений в чате как прочитанных (через API)
+    markAllChatMessagesAsRead: async (chatId) => {
+      if (!sessionKey || !chatId || isChannel) return;
+      
+      try {
+        const response = await fetch(`${API_URL}/messenger/chats/${chatId}/read-all`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${sessionKey}`,
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success && result.marked_count > 0) {
+            logger.info(`Marked ${result.marked_count} messages as read in chat ${chatId}`);
+            
+            // Обнуляем счетчик непрочитанных для этого чата
+            setUnreadCounts(prev => ({
+              ...prev,
+              [chatId]: 0
+            }));
+            
+            // Уведомляем других участников через WebSocket о прочтении
+            if (websocketClient.current && websocketClient.current.isConnected) {
+              const chatMessages = messages[chatId] || [];
+              const unreadMessages = chatMessages.filter(msg => 
+                msg.sender_id !== user?.id && 
+                (!msg.read_by || !msg.read_by.includes(user.id))
+              );
+              
+              // Отправляем read_receipt для каждого непрочитанного сообщения
+              unreadMessages.forEach(msg => {
+                websocketClient.current.sendReadReceipt(msg.id, chatId);
+                // Обновляем локальный статус
+                updateReadStatus(msg.id, chatId, user.id);
+              });
+            }
+          }
+        }
+      } catch (error) {
+        logger.error('Error marking all chat messages as read:', error);
+      }
+    },
   };
   
   return (

@@ -462,6 +462,15 @@ const MorePage = () => {
             <ListItemText primary="Маркетплейс" />
           </MenuListItem>
           
+          {!isChannel && (
+            <MenuListItem button component={Link} to="/inform/sticker">
+              <MenuItemIcon>
+                <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />
+              </MenuItemIcon>
+              <ListItemText primary="Управление стикерами" />
+            </MenuListItem>
+          )}
+          
           <HighlightedMenuItem
             button 
             component={Link} 

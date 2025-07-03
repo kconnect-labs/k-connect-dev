@@ -22,13 +22,11 @@ const AppBottomNavigation = ({ user }) => {
   useEffect(() => {
     const handleMessengerLayoutChange = (event) => {
       const { isInChat } = event.detail;
-      console.log('Bottom navigation received layout change event:', isInChat ? 'in chat' : 'not in chat');
+      console.log('BottomNavigation: Received messenger-layout-change event, isInChat:', isInChat);
       setVisibleInMessenger(!isInChat);
     };
     
-    
     document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
-    
     
     return () => {
       document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
@@ -38,7 +36,7 @@ const AppBottomNavigation = ({ user }) => {
   
   const isInMessenger = location.pathname.startsWith('/messenger');
   if (isInMessenger && !visibleInMessenger) {
-    console.log('Bottom navigation hidden in messenger chat');
+    console.log('BottomNavigation: Hidden in messenger chat, visible state:', visibleInMessenger);
     return null;
   }
   
