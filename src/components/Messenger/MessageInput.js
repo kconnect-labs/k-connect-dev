@@ -14,7 +14,8 @@ const MessageInput = ({
   onTyping,
   onFileUpload,
   replyTo,
-  onCancelReply
+  onCancelReply,
+  isMobile = false
 }) => {
   const [message, setMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
@@ -240,12 +241,16 @@ const MessageInput = ({
   return (
     <Box
       sx={{
-        borderTop: '1px solid #2C2C2C',
+        position: 'sticky',
+        bottom: 0,
+        zIndex: 6,
         padding: '8px',
-        backgroundColor: '#121212',
+        pb: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
+        backgroundColor: 'transparent' ? isMobile : '#1a1a1a',
+        borderRadius: 0,
+        boxShadow: 'none',
         display: 'flex',
-        flexDirection: 'column',
-        position: 'relative'
+        flexDirection: 'column'
       }}
     >
       {renderReplyInfo()}
@@ -254,9 +259,10 @@ const MessageInput = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: '#1C1C1C',
-          borderRadius: '18px',
-          padding: '0 4px'
+          backgroundColor: '#262626',
+          borderRadius: isMobile ? '18px' : '8px',
+          padding: isMobile ? '0 4px' : '4px 6px',
+          boxShadow: isMobile ? 'none' : '0px 0px 2px rgb(0 0 0 / 43%), 0px 4px 16px rgb(46 46 46 / 86%)',
         }}
       >
         <IconButton 

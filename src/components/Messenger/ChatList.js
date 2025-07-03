@@ -4,9 +4,10 @@ import ChatItem from './ChatItem';
 import SearchUsers from './SearchUsers';
 import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import RefreshIcon from '@mui/icons-material/Refresh';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ClearIcon from '@mui/icons-material/Clear';
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 const ChatList = ({ onSelectChat }) => {
   const { 
@@ -17,7 +18,8 @@ const ChatList = ({ onSelectChat }) => {
     unreadCounts,
     refreshChats,
     onlineUsers,
-    user
+    user,
+    createGroupChat
   } = useMessenger();
   
   const [searchMode, setSearchMode] = useState(false);
@@ -120,35 +122,18 @@ const ChatList = ({ onSelectChat }) => {
   }, [setActiveChat, onSelectChat]);
   
   
-  const handleRefreshChats = useCallback(() => {
-    refreshChats();
-  }, [refreshChats]);
+  const handleCreateGroup = useCallback(async () => {
+    const title = prompt('Название группы:');
+    if (!title) return;
+    try {
+      await createGroupChat(title, []);
+      refreshChats();
+    } catch (e) {
+      console.error('Ошибка создания группы', e);
+    }
+  }, [createGroupChat, refreshChats]);
   
   
-  const renderHeader = () => {
-    return (
-      <div className="chat-list-header">
-        <h2>Сообщения</h2>
-        <div className="header-actions">
-          <IconButton 
-            size="small"
-            color={searchMode ? "primary" : "default"}
-            onClick={toggleSearchMode}
-            title={searchMode ? "Вернуться к чатам" : "Найти пользователя"}
-          >
-            {searchMode ? <ArrowBackIcon /> : <PersonSearchIcon />}
-          </IconButton>
-          <IconButton 
-            size="small"
-            onClick={handleRefreshChats}
-            title="Обновить список чатов"
-          >
-            <RefreshIcon />
-          </IconButton>
-        </div>
-      </div>
-    );
-  };
   
   
   const renderSearch = () => {
@@ -211,9 +196,15 @@ const ChatList = ({ onSelectChat }) => {
     );
   };
   
+  // Открытие поиска по внешнему событию (Новый чат)
+  useEffect(() => {
+    const toggleSearch = () => setSearchMode(prev => !prev);
+    window.addEventListener('messenger-new-chat', toggleSearch);
+    return () => window.removeEventListener('messenger-new-chat', toggleSearch);
+  }, []);
+  
   return (
     <div className="chat-list">
-      {renderHeader()}
       {renderSearch()}
       {!searchMode && renderContent()}
     </div>

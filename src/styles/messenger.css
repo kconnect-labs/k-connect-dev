@@ -54,14 +54,14 @@
 }
 
 .chat-search {
-  padding: 12px 16px;
+  padding: 0 8px;
   position: relative;
 }
 
 .chat-search input {
   width: 100%;
   padding: 10px 12px;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;
@@ -1133,7 +1133,7 @@
 }
 
 .search-header {
-  padding: 12px 16px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
 }
 
@@ -1151,7 +1151,7 @@
 .search-input {
   width: 100%;
   padding: 12px 16px;
-  border-radius: 20px;
+  border-radius: 8px;
   border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;

@@ -57,6 +57,11 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const API_URL = 'https://k-connect.ru/apiMes';
   const BASE_URL = 'https://k-connect.ru';
   
+  const BOTTOM_SCROLL_THRESHOLD = 200;
+  
+  const HEADER_HEIGHT = 56; // px, adjust if header size changes
+  const INPUT_HEIGHT = 80;  // px, approximate fixed input height
+  
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -205,15 +210,17 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   
   // Улучшенная функция прокрутки к низу с использованием якоря
   const scrollToBottom = useCallback((smooth = false) => {
-    // Используем якорь в самом низу списка сообщений
+    const container = messagesContainerRef.current;
+    if (container) {
+      const behavior = smooth ? 'smooth' : 'auto';
+      container.scrollTo({ top: container.scrollHeight, behavior });
+      return;
+    }
+
+    // fallback to anchor
     const anchorElement = messagesAnchorRef.current || messagesEndRef.current;
     if (anchorElement) {
-      anchorElement.scrollIntoView({ 
-        behavior: smooth ? 'smooth' : 'auto',
-        block: 'end',
-        inline: 'nearest'
-      });
-      console.log('Scrolled to bottom using anchor');
+      anchorElement.scrollIntoView({ behavior, block: 'end', inline: 'nearest' });
     }
   }, []);
   
@@ -244,7 +251,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
       const { scrollHeight, scrollTop, clientHeight } = messagesContainerRef.current;
-      const scrolledToBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 50;
+      const scrolledToBottom = Math.abs(scrollHeight - scrollTop - clientHeight) <= BOTTOM_SCROLL_THRESHOLD;
       setIsAtBottom(scrolledToBottom);
       
       if (scrolledToBottom && !autoScrollEnabled) {
@@ -294,34 +301,34 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       if (activeChat && hasMoreMessagesForChat && !loadingMessages) {
         const container = messagesContainerRef.current;
         if (container) {
-          // Сохраняем текущую позицию скролла и высоту контента
-          const scrollHeight = container.scrollHeight;
-          const scrollPosition = container.scrollTop;
-          previousScrollHeightRef.current = scrollHeight;
-          
-          console.log('Loading more messages. Current scroll:', scrollPosition, 'height:', scrollHeight);
-          
-          // Отключаем автопрокрутку при загрузке старых сообщений
+          // Save current metrics before loading new portion
+          const prevScrollHeight = container.scrollHeight;
+          const prevScrollTop = container.scrollTop;
+
+          // Disable auto-scroll while we are fetching older messages
           setAutoScrollEnabled(false);
-          
-          loadMessages(activeChat.id).then(() => {
-            // Восстанавливаем позицию скролла после загрузки
-            requestAnimationFrame(() => {
-              if (container) {
-                const newScrollHeight = container.scrollHeight;
-                const addedHeight = newScrollHeight - previousScrollHeightRef.current;
-                
-                // Устанавливаем новую позицию скролла с учетом добавленного контента
-                const newScrollPosition = scrollPosition + addedHeight;
-                container.scrollTop = newScrollPosition;
-                
-                console.log('Restored scroll position. New height:', newScrollHeight, 
-                           'added:', addedHeight, 'new position:', newScrollPosition);
-              }
+
+          loadMessages(activeChat.id)
+            .then(() => {
+              // Wait for DOM to paint new messages
+              requestAnimationFrame(() => {
+                const currContainer = messagesContainerRef.current;
+                if (!currContainer) return;
+
+                const newScrollHeight = currContainer.scrollHeight;
+                // Сохраняем позицию так, чтобы пользователь остался примерно там же,
+                // но если он был прямо на самом верху (prevScrollTop≈0), добавим небольшой
+                // отступ, чтобы новые сообщения не оказывались уже прокрученными.
+                let newTop = newScrollHeight - prevScrollHeight + prevScrollTop;
+                if (prevScrollTop < 5) {
+                  newTop += 20; // микро-отступ, чтобы дать возможности доскроллить
+                }
+                currContainer.scrollTop = newTop;
+              });
+            })
+            .catch((error) => {
+              console.error('Error loading more messages:', error);
             });
-          }).catch(error => {
-            console.error('Error loading more messages:', error);
-          });
         } else {
           loadMessages(activeChat.id);
         }
@@ -549,7 +556,12 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         );
       } else {
         const message = item.data;
-        const replyMessage = message.reply_to_id ? chatMessages.find(m => m.id === message.reply_to_id && !m.is_temp) : null;
+        // На сервере reply_to_id и id могут приходить как строки или числа.
+        // Поэтому приводим к строке для корректного поиска, а также не
+        // блокируем поиск временными сообщениями, если они есть.
+        const replyMessage = message.reply_to_id ?
+          chatMessages.find(m => String(m.id) === String(message.reply_to_id))
+          : null;
         
         // Добавляем логирование для отладки ответов
         if (message.reply_to_id) {
@@ -761,19 +773,22 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     <Box sx={{ 
       display: 'flex', 
       flexDirection: 'column',
-      height: '100%',
-      background: 'transparent',
-        }}>
+      height: '100dvh',        // динамическая высота вьюпорта, корректно реагирует на скрытие/появление адресной строки/клавиатуры
+      maxHeight: '100dvh',
+      overscrollBehavior: 'contain', // предотвращает "bounce-scroll"
+      background: isMobile ? 'rgb(26 26 26)' : 'transparent',
+    }}>
       {/* Заголовок чата */}
       <Box sx={{ 
+        position: 'sticky', // фиксация при прокрутке
+        top: 0,
+        zIndex: 5,
         display: 'flex', 
         alignItems: 'center', 
-        p: 2, 
+        p: 0.5, 
         borderBottom: '1px solid',
         borderColor: 'divider',
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-    }}>
+      }}>
         {isMobile && (
           <IconButton 
             onClick={backAction}
@@ -812,7 +827,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
           )}
           {activeChat.is_group && (
             <Box sx={{ 
-              minHeight: '20px', 
+              minHeight: '10px', 
               display: 'flex', 
               alignItems: 'center'
             }}>
@@ -844,7 +859,6 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
               backdropFilter: 'blur(12px)',
               WebkitBackdropFilter: 'blur(12px)',
               borderRadius: '8px',
-              border: '1px solid rgba(40,40,40,0.5)',
               minWidth: 180,
               p: 0.5
             }
@@ -877,7 +891,6 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             backdropFilter: 'blur(50px)',
             WebkitBackdropFilter: 'blur(50px)',
             borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)'
           }
         }}
       >
@@ -975,7 +988,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         sx={{ 
           flex: 1, 
           overflow: 'auto',
-          p: 2,
+          pt: `${HEADER_HEIGHT}px`,
+          pb: `${INPUT_HEIGHT}px`,
+          px: 2,
           display: 'flex',
           flexDirection: 'column',
           gap: 1
@@ -1020,6 +1035,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       
       {/* Поле ввода сообщения */}
       <MessageInput 
+        isMobile={isMobile}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
         onFileUpload={handleFileUpload}
@@ -1038,7 +1054,6 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             backdropFilter: 'blur(50px)',
             WebkitBackdropFilter: 'blur(50px)',
             borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)'
           }
         }}
       >

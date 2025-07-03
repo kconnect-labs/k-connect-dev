@@ -12,6 +12,7 @@ import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { ArrowBack, MoreVert, Info, Link, Delete, Edit } from '@mui/icons-material';
+import ChatIcon from '@mui/icons-material/Chat';
 
 const MessengerPage = () => {
   const theme = useTheme();
@@ -380,14 +381,35 @@ const MessengerPage = () => {
             height: '100%',
             overflow: 'hidden'
           }}>
-            {/* Кнопка создания группы */}
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+            {/* Кнопки "Новый чат" и "Создать группу" */}
+            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
               <Button
                 variant="contained"
-                sx={{backgroundColor: 'rgba(255, 255, 255, 0.03)', color: '#fff',border: '1px solid rgba(255, 255, 255, 0.32)', borderRadius: '8px'}}
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.32)',
+                  borderRadius: '8px'
+                }}
+                startIcon={<ChatIcon />}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('messenger-new-chat'));
+                }}
+              >
+                Новый чат
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.32)',
+                  borderRadius: '8px'
+                }}
                 startIcon={<AddIcon />}
                 onClick={() => setCreateGroupOpen(true)}
-                fullWidth
               >
                 Создать группу
               </Button>

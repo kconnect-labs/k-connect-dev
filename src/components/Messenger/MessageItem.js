@@ -678,6 +678,7 @@ const MessageItem = ({
                 whiteSpace: 'pre-wrap', 
                 wordBreak: 'break-word',
                 overflowWrap: 'break-word',
+                margin: 'auto',
                 display: 'inline',
                 textAlign: 'left',
                 flex: '0 1 auto'
