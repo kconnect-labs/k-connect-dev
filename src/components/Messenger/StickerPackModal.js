@@ -265,15 +265,31 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
                           }
                         }}
                       >
-                        <img
-                          src={sticker.url}
-                          alt={sticker.name}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
+                        {/* Определяем тип стикера - если это webm, используем video */}
+                        {sticker.url && sticker.url.toLowerCase().includes('.webm') ? (
+                          <video
+                            src={sticker.url}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        ) : (
+                          <img
+                            src={sticker.url}
+                            alt={sticker.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        )}
                       </Box>
                     </Grid>
                   ))}

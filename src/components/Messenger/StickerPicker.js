@@ -187,15 +187,31 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                           }
                         }}
                       >
-                        <img
-                          src={sticker.url}
-                          alt={sticker.name}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain'
-                          }}
-                        />
+                        {/* Определяем тип стикера по URL или имени файла */}
+                        {sticker.url && sticker.url.toLowerCase().includes('.webm') ? (
+                          <video
+                            src={sticker.url}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        ) : (
+                          <img
+                            src={sticker.url}
+                            alt={sticker.name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain'
+                            }}
+                          />
+                        )}
                       </Box>
                     </Grid>
                   ))}
@@ -245,15 +261,31 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                           background: 'rgba(255, 255, 255, 0.1)'
                         }}>
                           {pack.stickers && pack.stickers[0] ? (
-                            <img
-                              src={pack.stickers[0].url}
-                              alt={pack.name}
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                objectFit: 'contain'
-                              }}
-                            />
+                            // Проверяем тип первого стикера для превью в табе
+                            pack.stickers[0].url && pack.stickers[0].url.toLowerCase().includes('.webm') ? (
+                              <video
+                                src={pack.stickers[0].url}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'contain'
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={pack.stickers[0].url}
+                                alt={pack.name}
+                                style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'contain'
+                                }}
+                              />
+                            )
                           ) : (
                             <StickerIcon sx={{ fontSize: 20, color: 'rgba(255, 255, 255, 0.5)' }} />
                           )}

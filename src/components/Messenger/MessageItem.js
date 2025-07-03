@@ -367,23 +367,48 @@ const MessageItem = ({
               maxWidth: '256px',
               minWidth: '150px'
             }}>
-              <img 
-                src={stickerUrl}
-                alt="Стикер"
-                loading="lazy"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleStickerClick(packId, stickerId);
-                }}
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  maxWidth: '256px',
-                  objectFit: 'contain',
-                  borderRadius: '12px',
-                  cursor: 'pointer'
-                }}
-              />
+              {/* Определяем тип стикера - если это webm, используем video */}
+              {stickerUrl.toLowerCase().includes('.webm') || 
+               (message.sticker_data && message.sticker_data.file_name && 
+                message.sticker_data.file_name.toLowerCase().includes('.webm')) ? (
+                <video
+                  src={stickerUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStickerClick(packId, stickerId);
+                  }}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxWidth: '256px',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                    cursor: 'pointer'
+                  }}
+                />
+              ) : (
+                <img 
+                  src={stickerUrl}
+                  alt="Стикер"
+                  loading="lazy"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleStickerClick(packId, stickerId);
+                  }}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxWidth: '256px',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                    cursor: 'pointer'
+                  }}
+                />
+              )}
               {/* Время справа внизу как в Телеграме */}
               <div className="sticker-time-bubble">
                 {formatMessageTime(message.created_at)}
@@ -593,23 +618,48 @@ const MessageItem = ({
             maxWidth: '256px',
             minWidth: '150px'
           }}>
-            <img 
-              src={stickerUrl}
-              alt="Стикер"
-              loading="lazy"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleStickerClick(packId, stickerId);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                maxWidth: '256px',
-                objectFit: 'contain',
-                borderRadius: '12px',
-                cursor: 'pointer'
-              }}
-            />
+            {/* Определяем тип стикера - если это webm, используем video */}
+            {stickerUrl.toLowerCase().includes('.webm') || 
+             (message.sticker_data && message.sticker_data.file_name && 
+              message.sticker_data.file_name.toLowerCase().includes('.webm')) ? (
+              <video
+                src={stickerUrl}
+                autoPlay
+                loop
+                muted
+                playsInline
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleStickerClick(packId, stickerId);
+                }}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: '256px',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  cursor: 'pointer'
+                }}
+              />
+            ) : (
+              <img 
+                src={stickerUrl}
+                alt="Стикер"
+                loading="lazy"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleStickerClick(packId, stickerId);
+                }}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxWidth: '256px',
+                  objectFit: 'contain',
+                  borderRadius: '12px',
+                  cursor: 'pointer'
+                }}
+              />
+            )}
             {/* Время справа внизу как в Телеграме */}
             <div className="sticker-time-bubble">
               {formatMessageTime(message.created_at)}
