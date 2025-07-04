@@ -43,7 +43,11 @@ const SidebarNavigation = memo(({
   const { t } = useLanguage();
   const { expandedMore, expandedAdminMod, expandedShops, expandedSocial, toggleExpandMore, toggleExpandAdminMod, toggleExpandShops, toggleExpandSocial } = useContext(SidebarContext);
   const { unreadCounts } = useMessenger();
-  const totalUnread = useMemo(() => Object.values(unreadCounts || {}).reduce((a,b)=>a+ b,0), [unreadCounts]);
+  const totalUnread = useMemo(() => {
+    const total = Object.values(unreadCounts || {}).filter(c=>c>0).length;
+    console.log('🧭 SidebarNavigation: unreadCounts changed:', unreadCounts, 'totalUnread:', total);
+    return total;
+  }, [unreadCounts]);
   
   const isActive = useCallback((path) => {
     if (path === '/' && location.pathname === '/') {
@@ -84,7 +88,7 @@ const SidebarNavigation = memo(({
     marketplace: <Icon icon="solar:shop-2-outline" width="20" height="20" />,
     pack: <Icon icon="solar:box-outline" width="20" height="20" />,
     sticker: <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />,
-  }), []);
+  }), [totalUnread]);
   
   const mainMenu = useMemo(() => (
     <>

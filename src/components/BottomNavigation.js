@@ -15,7 +15,8 @@ const AppBottomNavigation = ({ user }) => {
   const [visibleInMessenger, setVisibleInMessenger] = useState(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
   const { unreadCounts } = useMessenger();
-  const totalUnread = Object.values(unreadCounts || {}).reduce((a,b)=>a+b,0);
+  const totalUnread = Object.values(unreadCounts || {}).filter(c=>c>0).length;
+  console.log('📱 BottomNavigation: unreadCounts:', unreadCounts, 'totalUnread:', totalUnread);
   const theme = useTheme();
   
   

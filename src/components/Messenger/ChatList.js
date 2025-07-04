@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, memo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, memo, useRef, useMemo } from 'react';
 import { useMessenger } from '../../contexts/MessengerContext';
 import ChatItem from './ChatItem';
 import SearchUsers from './SearchUsers';
@@ -22,7 +22,22 @@ const ChatList = ({ onSelectChat }) => {
   
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredChats, setFilteredChats] = useState([]);
+  const filteredChats = useMemo(() => {
+    if (!searchQuery.trim()) return chats;
+    const query = searchQuery.toLowerCase();
+    return chats.filter(chat => {
+      if (chat.title && chat.title.toLowerCase().includes(query)) return true;
+      if (!chat.is_group && chat.members) {
+        const otherMember = chat.members.find(member => member.user_id !== user?.id);
+        if (otherMember && (
+          (otherMember.name && otherMember.name.toLowerCase().includes(query)) ||
+          (otherMember.username && otherMember.username.toLowerCase().includes(query))
+        )) return true;
+      }
+      if (chat.last_message && chat.last_message.message_type === 'text' && chat.last_message.content && chat.last_message.content.toLowerCase().includes(query)) return true;
+      return false;
+    });
+  }, [searchQuery, chats, user]);
   const initialLoadRef = useRef(false);
   
   
@@ -59,45 +74,6 @@ const ChatList = ({ onSelectChat }) => {
   }, [refreshChats]);
   
   
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredChats(chats);
-      return;
-    }
-    
-    const query = searchQuery.toLowerCase();
-    const filtered = chats.filter(chat => {
-      
-      if (chat.title && chat.title.toLowerCase().includes(query)) {
-        return true;
-      }
-      
-      
-      if (!chat.is_group && chat.members) {
-        const otherMember = chat.members.find(member => member.user_id !== user?.id);
-        if (otherMember && (
-          (otherMember.name && otherMember.name.toLowerCase().includes(query)) ||
-          (otherMember.username && otherMember.username.toLowerCase().includes(query))
-        )) {
-          return true;
-        }
-      }
-      
-      
-      if (chat.last_message && 
-          chat.last_message.message_type === 'text' && 
-          chat.last_message.content &&
-          chat.last_message.content.toLowerCase().includes(query)) {
-        return true;
-      }
-      
-      return false;
-    });
-    
-    setFilteredChats(filtered);
-  }, [searchQuery, chats, user]);
-  
-  
   const toggleSearchMode = useCallback(() => {
     setSearchMode(prev => !prev);
     
@@ -108,15 +84,8 @@ const ChatList = ({ onSelectChat }) => {
   
   
   const handleChatSelect = useCallback((chatId) => {
-    console.log('ChatList: Handling chat selection for chat ID:', chatId);
-    
     setActiveChat(chatId);
-    
-    
-    if (onSelectChat) {
-      console.log('ChatList: Calling external onSelectChat handler');
-      onSelectChat();
-    }
+    if (onSelectChat) onSelectChat();
   }, [setActiveChat, onSelectChat]);
   
   
@@ -179,17 +148,20 @@ const ChatList = ({ onSelectChat }) => {
     
     return (
       <div className="chat-list-items">
-        {filteredChats.map(chat => (
-          <ChatItem
-            key={chat.id}
-            chat={chat}
-            isActive={activeChat?.id === chat.id}
-            unreadCount={unreadCounts[chat.id] || 0}
-            onClick={() => handleChatSelect(chat.id)}
-            currentUserId={user?.id}
-            onlineUsers={onlineUsers}
-          />
-        ))}
+        {filteredChats.map(chat => {
+          const unreadCount = unreadCounts[chat.id] || 0;
+          return (
+            <MemoizedChatItem
+              key={chat.id}
+              chat={chat}
+              isActive={activeChat?.id === chat.id}
+              unreadCount={unreadCount}
+              onClick={() => handleChatSelect(chat.id)}
+              currentUserId={user?.id}
+              onlineUsers={onlineUsers}
+            />
+          );
+        })}
       </div>
     );
   };
@@ -208,5 +180,7 @@ const ChatList = ({ onSelectChat }) => {
     </div>
   );
 };
+
+const MemoizedChatItem = React.memo(ChatItem);
 
 export default memo(ChatList); 

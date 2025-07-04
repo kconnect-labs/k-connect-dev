@@ -231,6 +231,11 @@ class EnhancedWebSocketClient {
           this.log('Re-authentication required');
           this.sendAuth();
           break;
+        case 'unread_counts':
+          // Сервер прислал актуальную карту непрочитанных чатов
+          // Forward to main message handler instead of calling setUnreadCounts directly
+          this.emit('unread_counts', data);
+          break;
         default:
           // Forward other message types to event handlers
           this.emit(data.type, data);
@@ -906,6 +911,11 @@ export const MessengerProvider = ({ children }) => {
       handleWebSocketMessage(data);
     });
     
+    // Handle unread counts updates
+    client.on('unread_counts', (data) => {
+      handleWebSocketMessage(data);
+    });
+    
     return client;
   }, [sessionKey, isChannel, deviceId]);
   
@@ -1315,21 +1325,31 @@ export const MessengerProvider = ({ children }) => {
           
           setMessages(prev => {
             const existingMessages = prev[chatId] || [];
+
+            // Определяем, это первоначальная загрузка или загрузка старых сообщений
+            const isLoadingOlderMessages = existingMessages.length > 0;
             
-            console.log(`=== LOAD MESSAGES STATE UPDATE ===`);
-            console.log(`Chat ${chatId}: existing messages:`, existingMessages.length);
-            console.log(`Chat ${chatId}: new messages:`, newMessages.length);
+            let mergedMessages;
             
-            // Объединяем сообщения
-            const mergedMessages = [...existingMessages];
+            if (isLoadingOlderMessages) {
+              // Загружаем старые сообщения - добавляем в начало
+              console.log('📜 WebSocket: Loading older messages - adding to beginning');
+              const uniqueNewMessages = newMessages.filter(newMsg => 
+                !existingMessages.some(msg => msg.id === newMsg.id)
+              );
+              mergedMessages = [...uniqueNewMessages, ...existingMessages];
+            } else {
+              // Первоначальная загрузка - добавляем как обычно
+              console.log('🆕 WebSocket: Initial message loading');
+              mergedMessages = [...existingMessages];
+              newMessages.forEach(newMsg => {
+                if (!mergedMessages.some(msg => msg.id === newMsg.id)) {
+                  mergedMessages.push(newMsg);
+                }
+              });
+            }
             
-            newMessages.forEach(newMsg => {
-              if (!mergedMessages.some(msg => msg.id === newMsg.id)) {
-                mergedMessages.push(newMsg);
-              }
-            });
-            
-            // Сортируем по ID
+            // Сортируем по ID для корректного порядка
             mergedMessages.sort((a, b) => a.id - b.id);
             
             // Добавляем флаг о сообщениях модератора
@@ -1338,7 +1358,7 @@ export const MessengerProvider = ({ children }) => {
             console.log(`Chat ${chatId}: final merged messages:`, mergedMessages.length);
             console.log(`Chat ${chatId}: first message date:`, mergedMessages[0]?.created_at);
             console.log(`Chat ${chatId}: last message date:`, mergedMessages[mergedMessages.length - 1]?.created_at);
-            console.log(`=== END LOAD MESSAGES STATE UPDATE ===`);
+            console.log(`=== END WEBSOCKET LOAD MESSAGES STATE UPDATE ===`);
             
             return {
               ...prev,
@@ -1455,6 +1475,15 @@ export const MessengerProvider = ({ children }) => {
             return prev;
           });
         }
+        break;
+      
+      case 'unread_counts':
+        // Сервер прислал актуальную карту непрочитанных чатов
+        console.log('Received unread_counts via WebSocket:', data);
+        const newUnreadCounts = data.counts || {};
+        const totalChats = data.totalChats || 0;
+        
+        setUnreadCounts(newUnreadCounts);
         break;
       
       default:
@@ -1818,10 +1847,8 @@ export const MessengerProvider = ({ children }) => {
     if (activeChat?.id !== numChatId) {
       
       if (!isFromCurrentUser) {
-        setUnreadCounts(prev => ({
-          ...prev,
-          [numChatId]: (prev[numChatId] || 0) + 1
-        }));
+        // Removed local unreadCounts increment - rely entirely on server WebSocket updates
+        console.log(`New message from another user in chat ${numChatId}, waiting for server unread_counts update`);
       }
     } else if (user && !isFromCurrentUser) {
       // 🔥 ИСПРАВЛЕНИЕ: Автоматически читаем сообщения в реальном времени если чат открыт
@@ -1933,14 +1960,7 @@ export const MessengerProvider = ({ children }) => {
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
-          logger.info(`Marked ${result.marked_count || 0} messages as read in chat ${chatId} via API`);
-          
-          // Обнуляем счетчик непрочитанных для этого чата
-          setUnreadCounts(prev => ({
-            ...prev,
-            [chatId]: 0
-          }));
-          
+
           // Если сервер не нашел непрочитанных сообщений, не отправляем read_receipt
           if (result.marked_count === 0) {
             logger.info(`No unread messages found in chat ${chatId}, skipping read_receipt`);
@@ -1989,10 +2009,8 @@ export const MessengerProvider = ({ children }) => {
     });
     
     if (unreadMessages.length > 0) {
-      setUnreadCounts(prev => ({
-        ...prev,
-        [chatId]: 0
-      }));
+      // Removed local unreadCounts update - rely entirely on server WebSocket updates
+      console.log(`Marked ${unreadMessages.length} messages as read in chat ${chatId}, waiting for server update`);
     }
   };
   
@@ -2016,13 +2034,7 @@ export const MessengerProvider = ({ children }) => {
       });
       
       
-      
-      if (activeChat?.id === chatId && userId === user?.id) {
-        setUnreadCounts(prev => ({
-          ...prev,
-          [chatId]: 0
-        }));
-      }
+
       
       // Обновляем last_message в списке чатов, чтобы галочки отображались сразу и там
       const lastMsg = updatedMessages.length ? updatedMessages[updatedMessages.length - 1] : null;
@@ -2406,20 +2418,34 @@ export const MessengerProvider = ({ children }) => {
           setMessages(prev => {
             const existingMessages = prev[chatId] || [];
             
-            console.log(`=== LOAD MESSAGES STATE UPDATE ===`);
+            console.log(`=== API LOAD MESSAGES STATE UPDATE ===`);
             console.log(`Chat ${chatId}: existing messages:`, existingMessages.length);
             console.log(`Chat ${chatId}: new messages:`, newMessages.length);
             
-            // Объединяем сообщения
-            const mergedMessages = [...existingMessages];
+            // Определяем, это первоначальная загрузка или загрузка старых сообщений
+            const isLoadingOlderMessages = existingMessages.length > 0;
             
-            newMessages.forEach(newMsg => {
-              if (!mergedMessages.some(msg => msg.id === newMsg.id)) {
-                mergedMessages.push(newMsg);
-              }
-            });
+            let mergedMessages;
             
-            // Сортируем по ID
+            if (isLoadingOlderMessages) {
+              // Загружаем старые сообщения - добавляем в начало
+              console.log('📜 API: Loading older messages - adding to beginning');
+              const uniqueNewMessages = newMessages.filter(newMsg => 
+                !existingMessages.some(msg => msg.id === newMsg.id)
+              );
+              mergedMessages = [...uniqueNewMessages, ...existingMessages];
+            } else {
+              // Первоначальная загрузка - добавляем как обычно
+              console.log('🆕 API: Initial message loading');
+              mergedMessages = [...existingMessages];
+              newMessages.forEach(newMsg => {
+                if (!mergedMessages.some(msg => msg.id === newMsg.id)) {
+                  mergedMessages.push(newMsg);
+                }
+              });
+            }
+            
+            // Сортируем по ID для корректного порядка
             mergedMessages.sort((a, b) => a.id - b.id);
             
             // Добавляем флаг о сообщениях модератора
@@ -2428,7 +2454,7 @@ export const MessengerProvider = ({ children }) => {
             console.log(`Chat ${chatId}: final merged messages:`, mergedMessages.length);
             console.log(`Chat ${chatId}: first message date:`, mergedMessages[0]?.created_at);
             console.log(`Chat ${chatId}: last message date:`, mergedMessages[mergedMessages.length - 1]?.created_at);
-            console.log(`=== END LOAD MESSAGES STATE UPDATE ===`);
+            console.log(`=== END API LOAD MESSAGES STATE UPDATE ===`);
             
             return {
               ...prev,
@@ -2960,13 +2986,7 @@ export const MessengerProvider = ({ children }) => {
       
       console.log(`MessengerContext.setActiveAndLoadChat: Activating chat ${chatId}, isGroup=${chat.is_group}`);
       setActiveChat(chat);
-      
-      
-      setUnreadCounts(prev => ({
-        ...prev,
-        [chatId]: 0
-      }));
-      
+
       
       if (!messages[chatId] || messages[chatId].length === 0) {
         console.log(`MessengerContext.setActiveAndLoadChat: No messages loaded for chat ${chatId}, loading...`);
@@ -3495,11 +3515,8 @@ export const MessengerProvider = ({ children }) => {
           if (result.success && result.marked_count > 0) {
             logger.info(`Marked ${result.marked_count} messages as read in chat ${chatId}`);
             
-            // Обнуляем счетчик непрочитанных для этого чата
-            setUnreadCounts(prev => ({
-              ...prev,
-              [chatId]: 0
-            }));
+            // Removed local unreadCounts update - rely entirely on server WebSocket updates
+            console.log(`API marked ${result.marked_count} messages as read in chat ${chatId}, waiting for server unread_counts update`);
             
             // Уведомляем других участников через WebSocket о прочтении
             if (websocketClient.current && websocketClient.current.isConnected) {
@@ -3546,6 +3563,31 @@ export const MessengerProvider = ({ children }) => {
       .finally(() => setFetchingSessionKey(false));
     }
   }, [sessionKey, authContext?.isAuthenticated, jwtToken, fetchingSessionKey]);
+  
+  // Removed local unreadCounts update for active chat - rely entirely on server WebSocket updates
+  // The server will handle unread count updates when messages are read in active chat
+  
+  // ---- Звуковое оповещение о новых непрочитанных ----
+  const notificationAudioRef = useRef(null);
+  const prevTotalUnreadRef = useRef(0);
+
+  useEffect(() => {
+    const currentTotal = Object.values(unreadCounts).reduce((t, c) => t + c, 0);
+    const prevTotal = prevTotalUnreadRef.current;
+    const isOnMessengerPage = window.location.pathname.startsWith('/messenger');
+
+    // Если количество непрочитанных увеличилось и мы не в мессенджере, воспроизводим звук
+    if (currentTotal > prevTotal && !isOnMessengerPage) {
+      try {
+        if (!notificationAudioRef.current) {
+          notificationAudioRef.current = new Audio('/static/sounds/message.mp3');
+        }
+        notificationAudioRef.current.play().catch(() => {});
+      } catch {}
+    }
+    prevTotalUnreadRef.current = currentTotal;
+  }, [unreadCounts]);
+  // ---- конец звукового оповещения ----
   
   return (
     <MessengerContext.Provider value={value}>

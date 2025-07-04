@@ -1204,4 +1204,16 @@ const MessageItem = ({
   );
 };
 
-export default MessageItem;
+// Кастомное сравнение props для мемоизации
+function areEqual(prevProps, nextProps) {
+  // Сравниваем только id, isCurrentUser и decryptedContent (если нужно)
+  return (
+    prevProps.message.id === nextProps.message.id &&
+    prevProps.message.updated_at === nextProps.message.updated_at &&
+    prevProps.isCurrentUser === nextProps.isCurrentUser &&
+    prevProps.decryptedContent === nextProps.decryptedContent &&
+    prevProps.showAvatar === nextProps.showAvatar
+  );
+}
+
+export default React.memo(MessageItem, areEqual);

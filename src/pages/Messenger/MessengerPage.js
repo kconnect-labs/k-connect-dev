@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Typography, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, List, ListItem, ListItemAvatar, ListItemText, Avatar, Checkbox, IconButton, Menu, MenuItem, ListItemIcon, Snackbar } from '@mui/material';
 import { MessengerProvider } from '../../contexts/MessengerContext';
 import { AuthContext } from '../../context/AuthContext';
@@ -38,26 +38,30 @@ const MessengerPage = () => {
   const [activeTab, setActiveTab] = useState('followers'); // 'followers' или 'following'
   
   // Найти место, где отображается название группы и добавить редактируемое поле только для админа
-  const isCurrentUserAdmin = currentChat && currentChat.members && authContext.user && currentChat.members.some(m => m.user_id === authContext.user.id && m.role === 'admin');
+  const isCurrentUserAdmin = useMemo(() => (
+    currentChat && currentChat.members && authContext.user && currentChat.members.some(m => m.user_id === authContext.user.id && m.role === 'admin')
+  ), [currentChat, authContext.user]);
   const [editTitle, setEditTitle] = useState("");
   const [editingTitle, setEditingTitle] = useState(false);
   
-  // Функция для получения значения cookie по имени
-  const getCookie = (name) => {
+  // Мемоизация getCookie
+  const getCookie = useCallback((name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
     return null;
-  };
+  }, []);
   
-  // Получаем токены из разных источников
-  const sessionKeyCookie = getCookie('session_key') || getCookie('jwt') || getCookie('token');
-  const jwtToken = localStorage.getItem('token') || sessionKeyCookie;
+  // Мемоизация sessionKeyCookie и jwtToken
+  const sessionKeyCookie = useMemo(() => getCookie('session_key') || getCookie('jwt') || getCookie('token'), [getCookie]);
+  const jwtToken = useMemo(() => localStorage.getItem('token') || sessionKeyCookie, [sessionKeyCookie]);
   
-  // Получаем ключ из всех возможных источников
-  const sessionKey = authContext.sessionKey || authContext.session_key || 
+  // Мемоизация sessionKey
+  const sessionKey = useMemo(() => (
+    authContext.sessionKey || authContext.session_key || 
                     localStorage.getItem('session_key') || sessionKeyCookie || 
-                    forcedSessionKey || jwtToken;
+    forcedSessionKey || jwtToken
+  ), [authContext.sessionKey, authContext.session_key, sessionKeyCookie, forcedSessionKey, jwtToken]);
   
   // Настройка API для мессенджера через путь /apiMes/ (будет проксирован через NGINX)
   const API_URL = 'https://k-connect.ru/apiMes';
@@ -111,8 +115,8 @@ const MessengerPage = () => {
     }
   };
 
-  // Обработчик выбора пользователя
-  const handleUserSelect = (user) => {
+  // Мемоизация handleUserSelect
+  const handleUserSelect = useCallback((user) => {
     setSelectedUsers(prev => {
       const isSelected = prev.some(u => u.id === user.id);
       if (isSelected) {
@@ -121,7 +125,7 @@ const MessengerPage = () => {
         return [...prev, user];
       }
     });
-  };
+  }, []);
   
   // Принудительно запрашиваем session_key с сервера, если нет
   useEffect(() => {
@@ -239,49 +243,32 @@ const MessengerPage = () => {
     );
   }
 
-  // На мобильных устройствах показываем либо список, либо чат
-  const handleChatSelect = () => {
+  // Мемоизация handleChatSelect и handleBackToList
+  const handleChatSelect = useCallback(() => {
     if (isMobile) {
-      console.log('MessengerPage: Handling chat selection - hiding header and navigation');
-      
-      // Отправляем событие для скрытия хедера и навигации
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: true } 
       }));
-      
-      // Добавляем класс для полного экрана
       document.body.classList.add('messenger-chat-fullscreen');
-      
-      console.log('Handling chat selection - setting slideIn to TRUE');
-      // Сначала установим slideIn, затем обновим отображение
       setSlideIn(true);
-      // Важно: на мобильных устройствах скрываем sidebar немедленно
       setTimeout(() => {
         setShowSidebar(false);
-      }, 50); // Малая задержка для анимации
+      }, 50);
     }
-  };
+  }, [isMobile]);
   
-  const handleBackToList = () => {
+  const handleBackToList = useCallback(() => {
     if (isMobile) {
-      console.log('MessengerPage: Handling back to list - showing header and navigation');
-      
-      // Отправляем событие для показа хедера и навигации
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: false } 
       }));
-      
-      // Убираем класс для полного экрана
       document.body.classList.remove('messenger-chat-fullscreen');
-      
-      // First start slide out animation
       setSlideIn(false);
-      // Only show sidebar after animation completes
       setTimeout(() => {
         setShowSidebar(true);
-      }, 300); // Match transition time
+      }, 300);
     }
-  };
+  }, [isMobile]);
   
   // Обработчик копирования ссылки-приглашения
   const handleCopyInviteLink = async () => {
@@ -351,6 +338,17 @@ const MessengerPage = () => {
     }
   };
 
+  // Мемоизация списков пользователей для диалога создания группы
+  const followersList = useMemo(() => followers, [followers]);
+  const followingList = useMemo(() => following, [following]);
+  const selectedUsersIds = useMemo(() => selectedUsers.map(u => u.id), [selectedUsers]);
+
+  // Вынесем onClick для кнопок в переменные, чтобы не создавать новые функции на каждый рендер
+  const handleNewChatClick = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('messenger-new-chat'));
+  }, []);
+  const handleCreateGroupOpen = useCallback(() => setCreateGroupOpen(true), []);
+
   return (
     <Box sx={{ mt: 2.5 }}>
       <SEO 
@@ -393,9 +391,7 @@ const MessengerPage = () => {
                   borderRadius: '8px'
                 }}
                 startIcon={<ChatIcon />}
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('messenger-new-chat'));
-                }}
+                onClick={handleNewChatClick}
               >
                 Новый чат
               </Button>
@@ -409,7 +405,7 @@ const MessengerPage = () => {
                   borderRadius: '8px'
                 }}
                 startIcon={<AddIcon />}
-                onClick={() => setCreateGroupOpen(true)}
+                onClick={handleCreateGroupOpen}
               >
                 Создать группу
               </Button>
@@ -521,13 +517,13 @@ const MessengerPage = () => {
             </Box>
           ) : (
             <List sx={{ maxHeight: 400, overflow: 'auto' }}>
-              {(activeTab === 'followers' ? followers : following).map((user) => (
+              {(activeTab === 'followers' ? followersList : followingList).map((user) => (
                 <ListItem
                   key={user.id}
                   secondaryAction={
                     <Checkbox
                       edge="end"
-                      checked={selectedUsers.some(u => u.id === user.id)}
+                      checked={selectedUsersIds.includes(user.id)}
                       onChange={() => handleUserSelect(user)}
                     />
                   }

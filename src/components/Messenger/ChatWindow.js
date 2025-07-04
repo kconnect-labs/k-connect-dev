@@ -13,6 +13,215 @@ import { ArrowBack, Info, Link, Close } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const MemoizedMessageItem = memo(MessageItem);
+const MemoizedMessageInput = memo(MessageInput, (prevProps, nextProps) => {
+  return (
+    prevProps.replyTo?.id === nextProps.replyTo?.id &&
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.onSendMessage === nextProps.onSendMessage &&
+    prevProps.onTyping === nextProps.onTyping &&
+    prevProps.onFileUpload === nextProps.onFileUpload &&
+    prevProps.onCancelReply === nextProps.onCancelReply
+  );
+});
+
+// Отдельный мемоизированный компонент для блока ввода сообщений
+const MessageInputBlock = memo(({ 
+  isMobile, 
+  inputRef, 
+  handleSendMessageCallback, 
+  handleTypingCallback, 
+  handleFileUploadCallback, 
+  replyTo, 
+  handleCancelReply 
+}) => {
+  return (
+    <MemoizedMessageInput 
+      isMobile={isMobile}
+      containerRef={inputRef}
+      onSendMessage={handleSendMessageCallback}
+      onTyping={handleTypingCallback}
+      onFileUpload={handleFileUploadCallback}
+      replyTo={replyTo}
+      onCancelReply={handleCancelReply}
+    />
+  );
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.inputRef === nextProps.inputRef &&
+    prevProps.handleSendMessageCallback === nextProps.handleSendMessageCallback &&
+    prevProps.handleTypingCallback === nextProps.handleTypingCallback &&
+    prevProps.handleFileUploadCallback === nextProps.handleFileUploadCallback &&
+    prevProps.replyTo?.id === nextProps.replyTo?.id &&
+    prevProps.handleCancelReply === nextProps.handleCancelReply
+  );
+});
+
+// Отдельный мемоизированный компонент для списка сообщений
+const MessagesList = memo(({ 
+  hasMoreMessagesForChat, 
+  loadingMessages, 
+  loadMoreTriggerRef, 
+  memoizedMessages, 
+  messagesAnchorRef, 
+  messagesEndRef 
+}) => {
+  return (
+    <>
+      {/* Триггер для загрузки предыдущих сообщений при прокрутке вверх */}
+      {hasMoreMessagesForChat && (
+        <div 
+          ref={loadMoreTriggerRef} 
+          className="load-more-trigger"
+        >
+          {loadingMessages && (
+            <div className="loading-more">
+              <div className="loading-spinner-small"></div>
+              <span>Загрузка истории...</span>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Список сообщений */}
+      <div className="messages-list">
+        {memoizedMessages}
+        
+        {/* Якорь в самом низу списка сообщений */}
+        <div 
+          ref={messagesAnchorRef} 
+          style={{ 
+            height: '1px', 
+            visibility: 'hidden',
+            marginTop: '8px'
+          }} 
+        />
+      </div>
+      
+      {/* Резервный невидимый элемент для прокрутки вниз */}
+      <div ref={messagesEndRef} style={{ height: '1px' }} />
+    </>
+  );
+});
+
+// Отдельный мемоизированный компонент для заголовка чата
+const ChatHeader = memo(({ 
+  isMobile, 
+  backAction, 
+  getChatAvatar, 
+  getChatTitle, 
+  getAvatarLetter, 
+  activeChat, 
+  userStatus, 
+  renderTypingIndicator, 
+  handleOpenMenu, 
+  anchorEl, 
+  handleCloseMenu, 
+  handleOpenProfile, 
+  handleOpenDeleteDialog,
+  setGroupInfoOpen,
+  BASE_URL
+}) => {
+  return (
+    <Box sx={{ 
+      position: 'sticky', // фиксация при прокрутке
+      top: 0,
+      zIndex: 5,
+      display: 'flex', 
+      alignItems: 'center', 
+      p: 0.5, 
+      borderBottom: '1px solid',
+      borderColor: 'divider',
+    }}>
+      {isMobile && (
+        <IconButton 
+          onClick={backAction}
+          sx={{ mr: 2 }}
+        >
+          <ArrowBack />
+        </IconButton>
+      )}
+      
+      <Avatar 
+        src={getChatAvatar() ? `${BASE_URL}${getChatAvatar()}` : undefined}
+        alt={getChatTitle()}
+        sx={{ 
+          width: 40, 
+          height: 40, 
+          mr: 2,
+          cursor: 'pointer'
+        }}
+        onClick={() => {
+          if (activeChat?.is_group) {
+            setGroupInfoOpen(true);
+          }
+        }}
+      >
+        {getAvatarLetter()}
+      </Avatar>
+      
+      <Box sx={{ flex: 1 }}>
+        <Typography variant="subtitle1" noWrap>
+          {getChatTitle()}
+        </Typography>
+        {!activeChat.is_group && activeChat.chat_type !== 'group' && (
+          <Typography variant="caption" color="text.secondary">
+            {userStatus}
+          </Typography>
+        )}
+        {activeChat.is_group && (
+          <Box sx={{ 
+            minHeight: '10px', 
+            display: 'flex', 
+            alignItems: 'center'
+          }}>
+            {renderTypingIndicator() ? (
+              renderTypingIndicator()
+            ) : (
+              <Typography variant="caption" color="text.secondary">
+                {activeChat.members?.length || 0} участников
+              </Typography>
+            )}
+          </Box>
+        )}
+        {activeChat.encrypted && <Typography variant="caption" color="text.secondary">🔒</Typography>}
+      </Box>
+      
+      <IconButton onClick={(e) => handleOpenMenu(e)}>
+        <MoreVertIcon />
+      </IconButton>
+      
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        PaperProps={{
+          sx: {
+            backgroundColor: 'rgba(10, 10, 10, 0.75)',
+            color: '#fff',
+            boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: '8px',
+            minWidth: 180,
+            p: 0.5
+          }
+        }}
+      >
+        {!activeChat?.is_group && (
+          <MenuItem onClick={handleOpenProfile}>
+            <PersonIcon fontSize="small" style={{ marginRight: '8px' }} />
+            Профиль пользователя
+          </MenuItem>
+        )}
+        <MenuItem onClick={handleOpenDeleteDialog}>
+          <DeleteIcon fontSize="small" style={{ marginRight: '8px' }} />
+          Удалить чат
+        </MenuItem>
+      </Menu>
+    </Box>
+  );
+});
 
 
 
@@ -48,6 +257,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const TYPING_REFRESH_INTERVAL = 4000; // ms between repeated typing_start if still typing
   const TYPING_END_DELAY = 5000; // ms after last keypress to send typing_end
   const previousScrollHeightRef = useRef(0); // Для сохранения позиции при загрузке старых сообщений
+  const scrollAnchorRef = useRef(null); // Для точного позиционирования при загрузке старых сообщений
   
   const [anchorEl, setAnchorEl] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -105,7 +315,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       const result = await deleteChat(activeChat.id);
       
       if (result.success) {
-        console.log(`Чат ${activeChat.id} успешно удален`);
+
         
         if (isMobile && backAction) {
           backAction();
@@ -131,7 +341,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     
     if (activeChat && isMobileDevice) {
       // Скрываем header и bottom navigation только на мобильных
-      console.log('ChatWindow: Hiding header and navigation - entering chat', activeChat.id);
+      
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: true } 
       }));
@@ -140,7 +350,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       document.body.classList.add('messenger-chat-fullscreen');
     } else {
       // Показываем header и bottom navigation
-      console.log('ChatWindow: Showing header and navigation - exiting chat or desktop');
+      
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: false } 
       }));
@@ -151,7 +361,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     
     // Cleanup при размонтировании
     return () => {
-      console.log('ChatWindow: Cleanup - ensuring header and navigation are visible');
+      
       document.dispatchEvent(new CustomEvent('messenger-layout-change', { 
         detail: { isInChat: false } 
       }));
@@ -163,19 +373,18 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     let mounted = true;
     
     if (activeChat?.id && (!messages[activeChat.id] || messages[activeChat.id].length === 0)) {
-      console.log(`ChatWindow: Loading messages for chat ${activeChat.id}, is_group=${activeChat.is_group}`, 
-        { chat: activeChat, messagesState: messages });
+      // Load messages for chat
       
       const timer = setTimeout(() => {
         if (mounted && chatIdRef.current === activeChat.id) {
-          console.log(`ChatWindow: Executing loadMessages for chat ${activeChat.id}`);
+
           loadMessages(activeChat.id);
           
           if (activeChat.is_group) {
             setTimeout(() => {
               if (mounted && chatIdRef.current === activeChat.id && 
                   (!messages[activeChat.id] || messages[activeChat.id].length === 0)) {
-                console.log(`ChatWindow: Retry loading messages for group chat ${activeChat.id}`);
+
                 loadMessages(activeChat.id);
               }
             }, 1500);
@@ -307,33 +516,62 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       if (activeChat && hasMoreMessagesForChat && !loadingMessages) {
         const container = messagesContainerRef.current;
         if (container) {
-          // Save current metrics before loading new portion
+
+          
           const prevScrollHeight = container.scrollHeight;
           const prevScrollTop = container.scrollTop;
+          
 
-          // Disable auto-scroll while we are fetching older messages
+
           setAutoScrollEnabled(false);
 
           loadMessages(activeChat.id)
             .then(() => {
-              // Wait for DOM to paint new messages
-              requestAnimationFrame(() => {
+              // Используем несколько попыток для корректировки позиции
+              let attempts = 0;
+              const maxAttempts = 5;
+              
+              const adjustScrollPosition = () => {
+                attempts++;
                 const currContainer = messagesContainerRef.current;
-                if (!currContainer) return;
+                if (!currContainer || attempts > maxAttempts) return;
 
                 const newScrollHeight = currContainer.scrollHeight;
-                // Сохраняем позицию так, чтобы пользователь остался примерно там же,
-                // но если он был прямо на самом верху (prevScrollTop≈0), добавим небольшой
-                // отступ, чтобы новые сообщения не оказывались уже прокрученными.
-                let newTop = newScrollHeight - prevScrollHeight + prevScrollTop;
-                if (prevScrollTop < 5) {
-                  newTop += 20; // микро-отступ, чтобы дать возможности доскроллить
+                const heightDifference = newScrollHeight - prevScrollHeight;
+                
+                
+                if (heightDifference > 0) {
+                  // Новые сообщения добавились, корректируем позицию
+                  const newScrollTop = prevScrollTop + heightDifference;
+                  
+                  // Отключаем плавную прокрутку для точного позиционирования
+                  currContainer.style.scrollBehavior = 'auto';
+                  currContainer.scrollTop = newScrollTop;
+                  
+                  // Проверяем, что позиция установилась корректно
+                  setTimeout(() => {
+                    const actualScrollTop = currContainer.scrollTop;
+                    
+                    // Восстанавливаем плавную прокрутку
+                    currContainer.style.scrollBehavior = 'smooth';
+                    
+                    // Если позиция не установилась корректно, попробуем еще раз
+                    if (Math.abs(actualScrollTop - newScrollTop) > 10 && attempts < maxAttempts) {
+                      adjustScrollPosition();
+                    }
+                  }, 50);
+                } else if (attempts < maxAttempts) {
+                  setTimeout(adjustScrollPosition, 100);
                 }
-                currContainer.scrollTop = newTop;
+              };
+              
+              // Начинаем корректировку позиции
+              requestAnimationFrame(() => {
+                setTimeout(adjustScrollPosition, 50);
               });
             })
             .catch((error) => {
-              console.error('Error loading more messages:', error);
+              setAutoScrollEnabled(true); // Восстанавливаем автопрокрутку при ошибке
             });
         } else {
           loadMessages(activeChat.id);
@@ -345,7 +583,13 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     rootMargin: '100px'
   });
   
-  const handleSendMessage = useCallback(async (text) => {
+  // Мемоизируем setReplyTo чтобы избежать ререндеров MessageItem
+  const handleSetReplyTo = useCallback((message) => {
+    setReplyTo(message);
+  }, []);
+
+  // Мемоизируем обработчики для MessageInput
+  const handleSendMessageCallback = useCallback(async (text) => {
     if (!activeChat || !text.trim()) return;
     
     try {
@@ -361,8 +605,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       console.error('Ошибка отправки сообщения:', error);
     }
   }, [activeChat, replyTo, sendTextMessage, scrollToBottom]);
-  
-  const handleFileUpload = useCallback(async (file, type) => {
+
+  const handleFileUploadCallback = useCallback(async (file, type) => {
     if (!activeChat || !file) return;
     
     try {
@@ -378,8 +622,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       console.error('Ошибка загрузки файла:', error);
     }
   }, [activeChat, replyTo, uploadFile, scrollToBottom]);
-  
-  const handleTyping = useCallback((isTyping) => {
+
+  const handleTypingCallback = useCallback((isTyping) => {
     if (!activeChat) return;
     
     // User is typing – decide whether to (re)send typing_start
@@ -412,6 +656,10 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       typingTimestampRef.current = 0;
     }
   }, [activeChat, sendTypingIndicator]);
+
+  const handleCancelReply = useCallback(() => {
+    setReplyTo(null);
+  }, []);
   
   const renderTypingIndicator = useCallback(() => {
     if (!activeChat || !typingUsers[activeChat.id]) return null;
@@ -446,16 +694,19 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     );
   }, [activeChat, typingUsers]);
   
+  // Мемоизируем обработчики для кнопки прокрутки
+  const handleScrollToBottom = useCallback(() => {
+    setAutoScrollEnabled(true);
+    scrollToBottom(true);
+  }, [scrollToBottom]);
+  
   const renderScrollToBottom = () => {
     if (isAtBottom) return null;
     
     return (
       <button 
         className="scroll-to-bottom"
-        onClick={() => {
-          setAutoScrollEnabled(true);
-          scrollToBottom(true);
-        }}
+        onClick={handleScrollToBottom}
       >
         ↓
       </button>
@@ -506,7 +757,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         
         if (photo && otherUserId && typeof photo === 'string') {
           if (!photo.startsWith('/') && !photo.startsWith('http') && !photo.startsWith('/static/')) {
-            console.log(`ChatWindow: строим правильный путь аватара для ${otherUserId}`);
+
             return `/static/uploads/avatar/${otherUserId}/${photo}`;
           }
         }
@@ -539,7 +790,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     return date.toLocaleDateString('ru-RU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   };
 
-  // Группировка сообщений с разделителями дат
+  // Группировка сообщений с разделителями дат - оптимизированная версия
   const memoizedMessages = useMemo(() => {
     if (!activeChat || !chatMessages.length) return [];
     const messagesWithSeparators = [];
@@ -587,10 +838,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
           chatMessages.find(m => String(m.id) === String(message.reply_to_id))
           : null;
         
-        // Добавляем логирование для отладки ответов
-        if (message.reply_to_id) {
-          console.log(`Message ${message.id} has reply_to_id: ${message.reply_to_id}, found reply message:`, replyMessage ? replyMessage.id : 'NOT FOUND');
-        }
+        // Reply message handling
         
         // Determine if avatar should be shown (only on last message in consecutive block)
         let showAvatar = true;
@@ -608,7 +856,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             message={message}
             isCurrentUser={message.sender_id === user?.id}
             decryptedContent={activeChat?.encrypted ? decryptMessage(message, activeChat.id) : message.content}
-            onReply={() => setReplyTo(message)}
+            onReply={handleSetReplyTo}
             replyMessage={replyMessage}
             chatMembers={activeChat?.members}
             showAvatar={showAvatar}
@@ -616,7 +864,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         );
       }
     });
-  }, [chatMessages, user, activeChat, decryptMessage, setReplyTo]);
+  }, [chatMessages, user?.id, activeChat?.id, activeChat?.encrypted, activeChat?.is_group, activeChat?.members, decryptMessage, handleSetReplyTo]);
   
   const formatLastActive = (dateObject) => {
     if (!dateObject) return "Не в сети";
@@ -808,7 +1056,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   // Отправляем read_receipt для всех сообщений при открытии чата или получении новых сообщений
   useEffect(() => {
     if (activeChat && messages[activeChat.id] && messages[activeChat.id].length > 0) {
-      console.log(`ChatWindow useEffect triggered: chat ${activeChat.id}, messages count: ${messages[activeChat.id].length}`);
+  
       markAllMessagesAsRead(activeChat.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -843,104 +1091,24 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       overscrollBehavior: 'contain', // предотвращает "bounce-scroll"
       background: isMobile ? 'rgb(26 26 26)' : 'transparent',
     }}>
-      {/* Заголовок чата */}
-      <Box sx={{ 
-        position: 'sticky', // фиксация при прокрутке
-        top: 0,
-        zIndex: 5,
-        display: 'flex', 
-        alignItems: 'center', 
-        p: 0.5, 
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-      }}>
-        {isMobile && (
-          <IconButton 
-            onClick={backAction}
-            sx={{ mr: 2 }}
-          >
-            <ArrowBack />
-          </IconButton>
-        )}
-        
-        <Avatar 
-          src={getChatAvatar() ? `${BASE_URL}${getChatAvatar()}` : undefined}
-          alt={getChatTitle()}
-          sx={{ 
-            width: 40, 
-            height: 40, 
-            mr: 2,
-            cursor: 'pointer'
-          }}
-          onClick={() => {
-            if (activeChat?.is_group) {
-              setGroupInfoOpen(true);
-            }
-          }}
-        >
-          {getAvatarLetter()}
-        </Avatar>
-        
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="subtitle1" noWrap>
-            {getChatTitle()}
-          </Typography>
-          {!activeChat.is_group && activeChat.chat_type !== 'group' && (
-            <Typography variant="caption" color="text.secondary">
-              {userStatus}
-            </Typography>
-          )}
-          {activeChat.is_group && (
-            <Box sx={{ 
-              minHeight: '10px', 
-              display: 'flex', 
-              alignItems: 'center'
-            }}>
-              {renderTypingIndicator() ? (
-                renderTypingIndicator()
-              ) : (
-                <Typography variant="caption" color="text.secondary">
-                  {activeChat.members?.length || 0} участников
-                </Typography>
-              )}
-            </Box>
-          )}
-          {activeChat.encrypted && <Typography variant="caption" color="text.secondary">🔒</Typography>}
-        </Box>
-        
-        <IconButton onClick={(e) => handleOpenMenu(e)}>
-          <MoreVertIcon />
-        </IconButton>
-        
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleCloseMenu}
-          PaperProps={{
-            sx: {
-              backgroundColor: 'rgba(10, 10, 10, 0.75)',
-              color: '#fff',
-              boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              borderRadius: '8px',
-              minWidth: 180,
-              p: 0.5
-            }
-          }}
-        >
-          {!activeChat?.is_group && (
-            <MenuItem onClick={handleOpenProfile}>
-              <PersonIcon fontSize="small" style={{ marginRight: '8px' }} />
-              Профиль пользователя
-            </MenuItem>
-          )}
-          <MenuItem onClick={handleOpenDeleteDialog}>
-            <DeleteIcon fontSize="small" style={{ marginRight: '8px' }} />
-            Удалить чат
-          </MenuItem>
-        </Menu>
-      </Box>
+      {/* Заголовок чата - мемоизированный */}
+      <ChatHeader
+        isMobile={isMobile}
+        backAction={backAction}
+        getChatAvatar={getChatAvatar}
+        getChatTitle={getChatTitle}
+        getAvatarLetter={getAvatarLetter}
+        activeChat={activeChat}
+        userStatus={userStatus}
+        renderTypingIndicator={renderTypingIndicator}
+        handleOpenMenu={handleOpenMenu}
+        anchorEl={anchorEl}
+        handleCloseMenu={handleCloseMenu}
+        handleOpenProfile={handleOpenProfile}
+        handleOpenDeleteDialog={handleOpenDeleteDialog}
+        setGroupInfoOpen={setGroupInfoOpen}
+        BASE_URL={BASE_URL}
+      />
 
       {/* Диалог с информацией о группе */}
       <Dialog
@@ -1061,52 +1229,28 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
           gap: 1
         }}
       >
-        {/* Триггер для загрузки предыдущих сообщений при прокрутке вверх */}
-        {hasMoreMessagesForChat && (
-          <div 
-            ref={loadMoreTriggerRef} 
-            className="load-more-trigger"
-          >
-            {loadingMessages && (
-              <div className="loading-more">
-                <div className="loading-spinner-small"></div>
-                <span>Загрузка истории...</span>
-              </div>
-            )}
-          </div>
-        )}
-        
-        {/* Список сообщений */}
-        <div className="messages-list">
-          {memoizedMessages}
-          
-          {/* Якорь в самом низу списка сообщений */}
-          <div 
-            ref={messagesAnchorRef} 
-            style={{ 
-              height: '1px', 
-              visibility: 'hidden',
-              marginTop: '8px'
-            }} 
-          />
-        </div>
-        
-        {/* Резервный невидимый элемент для прокрутки вниз */}
-        <div ref={messagesEndRef} style={{ height: '1px' }} />
+        <MessagesList
+          hasMoreMessagesForChat={hasMoreMessagesForChat}
+          loadingMessages={loadingMessages}
+          loadMoreTriggerRef={loadMoreTriggerRef}
+          memoizedMessages={memoizedMessages}
+          messagesAnchorRef={messagesAnchorRef}
+          messagesEndRef={messagesEndRef}
+        />
       </Box>
       
       {/* Кнопка прокрутки вниз */}
       {renderScrollToBottom()}
       
-      {/* Поле ввода сообщения */}
-      <MessageInput 
+      {/* Поле ввода сообщения - мемоизированное */}
+      <MessageInputBlock 
         isMobile={isMobile}
-        containerRef={inputRef}
-        onSendMessage={handleSendMessage}
-        onTyping={handleTyping}
-        onFileUpload={handleFileUpload}
+        inputRef={inputRef}
+        handleSendMessageCallback={handleSendMessageCallback}
+        handleTypingCallback={handleTypingCallback}
+        handleFileUploadCallback={handleFileUploadCallback}
         replyTo={replyTo}
-        onCancelReply={() => setReplyTo(null)}
+        handleCancelReply={handleCancelReply}
       />
       
       {/* Диалог подтверждения удаления чата */}
@@ -1144,4 +1288,14 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   );
 };
 
-export default memo(ChatWindow); 
+// Кастомное сравнение для ChatWindow
+function chatWindowAreEqual(prevProps, nextProps) {
+  return (
+    prevProps.backAction === nextProps.backAction &&
+    prevProps.isMobile === nextProps.isMobile &&
+    prevProps.currentChat?.id === nextProps.currentChat?.id &&
+    prevProps.setCurrentChat === nextProps.setCurrentChat
+  );
+}
+
+export default memo(ChatWindow, chatWindowAreEqual); 
