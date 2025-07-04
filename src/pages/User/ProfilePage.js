@@ -825,15 +825,6 @@ const ProfilePage = () => {
                     </>
                   )}
 
-                  <UserBanInfo 
-                    userBanInfo={userBanInfo}
-                    user={user}
-                    currentUser={currentUser}
-                    isCurrentUserModerator={isCurrentUserModerator}
-                    showTooltip={false}
-                    showDetailed={true}
-                  />
-
                   <UserScamBadge user={user} />
                   
                   <UserSubscriptionBadge user={user} />

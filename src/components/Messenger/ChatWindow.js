@@ -30,7 +30,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     uploadFile,
     user,
     onlineUsers,
-    deleteChat
+    deleteChat,
+    markAllMessagesAsRead
   } = useMessenger();
   
   const navigate = useNavigate();
@@ -42,7 +43,10 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const chatIdRef = useRef(null);
-  const typingTimestampRef = useRef(null);
+  const typingTimestampRef = useRef(0);
+  const typingEndTimeoutRef = useRef(null);
+  const TYPING_REFRESH_INTERVAL = 4000; // ms between repeated typing_start if still typing
+  const TYPING_END_DELAY = 5000; // ms after last keypress to send typing_end
   const previousScrollHeightRef = useRef(0); // Для сохранения позиции при загрузке старых сообщений
   
   const [anchorEl, setAnchorEl] = useState(null);
@@ -60,7 +64,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const BOTTOM_SCROLL_THRESHOLD = 200;
   
   const HEADER_HEIGHT = 56; // px, adjust if header size changes
-  const INPUT_HEIGHT = 80;  // px, approximate fixed input height
+  
+  const inputRef = useRef(null);
+  const [inputHeightState, setInputHeightState] = useState(60);
   
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -376,16 +382,34 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const handleTyping = useCallback((isTyping) => {
     if (!activeChat) return;
     
+    // User is typing – decide whether to (re)send typing_start
     if (isTyping) {
-      const now = new Date().getTime();
-      const lastTypingEvent = typingTimestampRef.current || 0;
+      const now = Date.now();
       
-      if (now - lastTypingEvent > 2000) {
-        sendTypingIndicator(activeChat.id, isTyping);
+      // If we have not sent typing_start recently, send it now
+      if (now - typingTimestampRef.current > TYPING_REFRESH_INTERVAL) {
+        sendTypingIndicator(activeChat.id, true);
         typingTimestampRef.current = now;
       }
+
+      // Reset the "typing_end" timer so that it will fire TYPING_END_DELAY ms after the last keystroke
+      if (typingEndTimeoutRef.current) {
+        clearTimeout(typingEndTimeoutRef.current);
+      }
+      typingEndTimeoutRef.current = setTimeout(() => {
+        sendTypingIndicator(activeChat.id, false);
+        typingEndTimeoutRef.current = null;
+        typingTimestampRef.current = 0;
+      }, TYPING_END_DELAY);
     } else {
-      sendTypingIndicator(activeChat.id, isTyping);
+      // Explicit request to stop typing (e.g., message sent or input cleared)
+      if (typingEndTimeoutRef.current) {
+        clearTimeout(typingEndTimeoutRef.current);
+        typingEndTimeoutRef.current = null;
+      }
+      // Prevent duplicate "typing_end" if we've already sent it very recently
+      sendTypingIndicator(activeChat.id, false);
+      typingTimestampRef.current = 0;
     }
   }, [activeChat, sendTypingIndicator]);
   
@@ -568,6 +592,16 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
           console.log(`Message ${message.id} has reply_to_id: ${message.reply_to_id}, found reply message:`, replyMessage ? replyMessage.id : 'NOT FOUND');
         }
         
+        // Determine if avatar should be shown (only on last message in consecutive block)
+        let showAvatar = true;
+        if (activeChat?.is_group && message.sender_id !== user?.id) {
+          const currentIdx = chatMessages.findIndex(m => m.id === message.id);
+          const nextMsg = chatMessages[currentIdx + 1];
+          if (nextMsg && nextMsg.sender_id === message.sender_id) {
+            showAvatar = false;
+          }
+        }
+        
         return (
           <MemoizedMessageItem
             key={message.id}
@@ -577,6 +611,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             onReply={() => setReplyTo(message)}
             replyMessage={replyMessage}
             chatMembers={activeChat?.members}
+            showAvatar={showAvatar}
           />
         );
       }
@@ -757,6 +792,36 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       setEditingTitle(false);
     }
   }, [groupInfoOpen, activeChat?.title]);
+
+  useEffect(() => {
+    const update = () => {
+      if (inputRef.current) {
+        const h = inputRef.current.offsetHeight || 60;
+        setInputHeightState(h);
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
+  // Отправляем read_receipt для всех сообщений при открытии чата или получении новых сообщений
+  useEffect(() => {
+    if (activeChat && messages[activeChat.id] && messages[activeChat.id].length > 0) {
+      console.log(`ChatWindow useEffect triggered: chat ${activeChat.id}, messages count: ${messages[activeChat.id].length}`);
+      markAllMessagesAsRead(activeChat.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeChat?.id, messages[activeChat?.id]?.length]);
+
+  // Optionally add cleanup for unmount
+  useEffect(() => {
+    return () => {
+      if (typingEndTimeoutRef.current) {
+        clearTimeout(typingEndTimeoutRef.current);
+      }
+    };
+  }, []);
 
   if (!activeChat) {
     return (
@@ -989,8 +1054,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
           flex: 1, 
           overflow: 'auto',
           pt: `${HEADER_HEIGHT}px`,
-          pb: `${INPUT_HEIGHT}px`,
-          px: 2,
+          pb: isMobile ? 0 : `${inputHeightState}px`,
+          px: 0.5,
           display: 'flex',
           flexDirection: 'column',
           gap: 1
@@ -1036,6 +1101,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       {/* Поле ввода сообщения */}
       <MessageInput 
         isMobile={isMobile}
+        containerRef={inputRef}
         onSendMessage={handleSendMessage}
         onTyping={handleTyping}
         onFileUpload={handleFileUpload}

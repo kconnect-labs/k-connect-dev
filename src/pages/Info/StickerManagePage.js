@@ -45,8 +45,6 @@ import {
   Image as ImageIcon,
   Movie as MovieIcon,
   EmojiEmotions as EmojiIcon,
-  Public as PublicIcon,
-  Lock as LockIcon,
   ArrowBack as ArrowBackIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -55,6 +53,7 @@ import SEO from '../../components/SEO';
 import { useMessenger } from '../../contexts/MessengerContext';
 import Lottie from 'lottie-react';
 import pako from 'pako';
+import StickerPackModal from '../../components/Messenger/StickerPackModal';
 
 // API URL для мессенджера
 const API_URL = 'https://k-connect.ru/apiMes';
@@ -349,7 +348,7 @@ const StickerManagePage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   // Используем MessengerContext для правильной авторизации
-  const { sessionKey, isChannel, loading: messengerLoading } = useMessenger();
+  const { sessionKey, isChannel, loading: messengerLoading, user } = useMessenger();
   
   // Логируем состояние для отладки
   useEffect(() => {
@@ -362,7 +361,8 @@ const StickerManagePage = () => {
   }, [sessionKey, isChannel, messengerLoading]);
   
   // Состояния
-  const [packs, setPacks] = useState([]);
+  const [ownedPacks, setOwnedPacks] = useState([]);
+  const [installedPacks, setInstalledPacks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -380,11 +380,12 @@ const StickerManagePage = () => {
   const [manageStickersOpen, setManageStickersOpen] = useState(false);
   
   // Состояния для публичных стикерпаков
-  const [mainTab, setMainTab] = useState(0); // 0 - Мои паки, 1 - Публичные
+  const [mainTab, setMainTab] = useState(0); // 0 - Мои, 1 - Добавленные, 2 - Публичные
   const [publicPacks, setPublicPacks] = useState([]);
   const [publicLoading, setPublicLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [installingPacks, setInstallingPacks] = useState(new Set());
+  const [modalPackId, setModalPackId] = useState(null);
   
   // Формы
   const [packForm, setPackForm] = useState({
@@ -472,7 +473,18 @@ const StickerManagePage = () => {
       console.log('Sticker packs response:', response.data);
       
       if (response.data.success) {
-        setPacks(response.data.packs || []);
+        const all = response.data.packs || [];
+        const owned = [];
+        const installed = [];
+        all.forEach(p => {
+          if (user && p.creator_id === user.id) {
+            owned.push(p);
+          } else {
+            installed.push(p);
+          }
+        });
+        setOwnedPacks(owned);
+        setInstalledPacks(installed);
       } else {
         setError(response.data.error || 'Ошибка загрузки стикерпаков');
       }
@@ -486,7 +498,7 @@ const StickerManagePage = () => {
     } finally {
       setLoading(false);
     }
-  }, [isChannel, sessionKey]); // Убираем getAuthHeaders из зависимостей
+  }, [isChannel, sessionKey, user]);
 
   // Инициализация - загружаем данные только когда есть sessionKey и пользователь не канал
   useEffect(() => {
@@ -1072,14 +1084,14 @@ const StickerManagePage = () => {
 
   // Загрузка публичных паков при смене вкладки или поиска
   useEffect(() => {
-    if (mainTab === 1) { // Вкладка "Публичные"
+    if (mainTab === 2) { // Вкладка "Публичные"
       loadPublicPacks();
     }
   }, [mainTab, loadPublicPacks]);
 
   // Дебаунс для поиска
   useEffect(() => {
-    if (mainTab === 1) { // Только для вкладки "Публичные"
+    if (mainTab === 2) { // Только для вкладки "Публичные"
       const debounceTimer = setTimeout(() => {
         loadPublicPacks();
       }, 500); // 500мс задержка
@@ -1088,10 +1100,30 @@ const StickerManagePage = () => {
     }
   }, [searchQuery, mainTab, loadPublicPacks]);
 
+  // Удаление установленного стикерпака из коллекции
+  const handleUninstallPack = async (packId) => {
+    if (isChannel) return;
+    if (!window.confirm('Убрать стикерпак из вашей коллекции?')) return;
+    try {
+      const headers = getAuthHeaders();
+      if (!headers) return;
+      const response = await axios.delete(`${API_URL}/messenger/sticker-packs/${packId}/uninstall`, { headers });
+      if (response.data.success) {
+        setSuccess('Стикерпак удалён');
+        loadPacks();
+      } else {
+        setError(response.data.error || 'Ошибка удаления стикерпака');
+      }
+    } catch (error) {
+      console.error('Error uninstalling pack:', error);
+      setError('Ошибка удаления стикерпака');
+    }
+  };
+
   // Если инициализированы но нет sessionKey - пользователь не авторизован
   if (initialized && !sessionKey && !isChannel) {
     return (
-      <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
+      <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3, mb: 10 }}>
         <Alert severity="warning" sx={cardStyles}>
           Необходима авторизация для управления стикерпаками. 
           <Button onClick={() => window.location.href = '/login'} sx={{ ml: 2 }}>
@@ -1124,8 +1156,10 @@ const StickerManagePage = () => {
     );
   }
 
+  const installedIds = new Set([...installedPacks.map(p=>p.id), ...ownedPacks.map(p=>p.id)]);
+
   return (
-    <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
+    <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3, mb: 10 }}>
       <SEO 
         title="Управление стикерпаками - K-Connect"
         description="Создание и редактирование стикерпаков для мессенджера K-Connect"
@@ -1169,13 +1203,14 @@ const StickerManagePage = () => {
             }
           }}
         >
-          <Tab label="Мои стикерпаки" />
-          <Tab label="Публичные стикерпаки" />
+          <Tab label="Мои" />
+          <Tab label="Добавленные" />
+          <Tab label="Публичные" />
         </Tabs>
       </Box>
 
       {/* Поиск для публичных стикерпаков */}
-      {mainTab === 1 && (
+      {mainTab === 2 && (
         <Box sx={{ mb: 3 }}>
           <TextField
             fullWidth
@@ -1199,21 +1234,16 @@ const StickerManagePage = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <Grid container spacing={3}>
-              {packs.map((pack) => (
-                <Grid item xs={12} sm={6} md={4} key={pack.id}>
-                  <Card sx={cardStyles}>
-                    <CardContent>
+            <Grid container spacing={2}>
+              {ownedPacks.map((pack) => (
+                <Grid item xs={6} sm={4} md={3} key={pack.id} sx={{ display: 'flex' }}>
+                  <Card sx={{ ...cardStyles, width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                    <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Box sx={{ flex: 1 }}>
                           <Typography variant="h6" gutterBottom>
                             {pack.name}
                           </Typography>
-                          {pack.description && (
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {pack.description}
-                            </Typography>
-                          )}
                         </Box>
                         <IconButton
                           size="small"
@@ -1226,89 +1256,38 @@ const StickerManagePage = () => {
                         </IconButton>
                       </Box>
 
-                      {/* Статус */}
-                      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                      {/* Кол-во стикеров */}
+                      <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                         <Chip
                           size="small"
-                          icon={pack.is_public ? <PublicIcon /> : <LockIcon />}
-                          label={pack.is_public ? 'Публичный' : 'Приватный'}
-                          variant="outlined"
-                        />
-                        <Chip
-                          size="small"
-                          label={`${pack.stickers?.length || 0} стикеров`}
+                          label={`${pack.sticker_count || pack.total_stickers || pack.sticker_total || pack.stickers?.length || 0} стикеров`}
                           variant="outlined"
                         />
                       </Box>
 
-                      {/* Превью стикеров */}
+                      {/* Большой превью первой наклейки */}
                       {pack.stickers && pack.stickers.length > 0 && (
-                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                          {pack.stickers.slice(0, 4).map((sticker) => (
-                            <Box
-                              key={sticker.id}
-                              sx={{
-                                width: 40,
-                                height: 40,
-                                ...cardStyles,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                overflow: 'hidden',
-                                position: 'relative',
-                                '&:hover .delete-btn': {
-                                  opacity: 1
-                                }
-                              }}
-                            >
-                              <StickerRenderer sticker={sticker} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              <IconButton
-                                className="delete-btn"
-                                size="small"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteSticker(pack.id, sticker.id);
-                                }}
-                                sx={{
-                                  position: 'absolute',
-                                  top: -2,
-                                  right: -2,
-                                  width: 16,
-                                  height: 16,
-                                  bgcolor: 'error.main',
-                                  color: 'white',
-                                  opacity: 0,
-                                  transition: 'opacity 0.2s',
-                                  '&:hover': {
-                                    bgcolor: 'error.dark'
-                                  }
-                                }}
-                              >
-                                <CloseIcon sx={{ fontSize: 12 }} />
-                              </IconButton>
-                            </Box>
-                          ))}
-                          {pack.stickers.length > 4 && (
-                            <Box
-                              sx={{
-                                width: 40,
-                                height: 40,
-                                ...cardStyles,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                            >
-                              <Typography variant="caption">
-                                +{pack.stickers.length - 4}
-                              </Typography>
-                            </Box>
-                          )}
+                        <Box
+                          sx={{
+                            width: '100%',
+                            aspectRatio: '1',
+                            ...cardStyles,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 1,
+                            overflow: 'hidden'
+                          }}
+                        >
+                          <StickerRenderer
+                            sticker={pack.stickers[0]}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          />
                         </Box>
                       )}
 
                       {/* Действия */}
-                      <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
                         <Button
                           size="small"
                           startIcon={<AddIcon />}
@@ -1324,12 +1303,13 @@ const StickerManagePage = () => {
               ))}
 
               {/* Карточка создания нового пака */}
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={6} sm={4} md={3} sx={{ display: 'flex' }}>
                 <Card
                   sx={{
                     ...cardStyles,
-                    height: '100%',
+                    width: '100%',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
@@ -1339,7 +1319,7 @@ const StickerManagePage = () => {
                   }}
                   onClick={() => setCreateDialogOpen(true)}
                 >
-                  <CardContent sx={{ textAlign: 'center' }}>
+                  <CardContent sx={{ textAlign: 'center', p: 1 }}>
                     <FolderIcon sx={{ fontSize: 48, mb: 2, color: 'text.secondary' }} />
                     <Typography variant="h6" gutterBottom>
                       Создать стикерпак
@@ -1353,6 +1333,64 @@ const StickerManagePage = () => {
             </Grid>
           )}
         </>
+      ) : mainTab === 1 ? (
+        /* Вкладка "Добавленные" */
+        <>
+          {installedPacks.length === 0 ? (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body1">У вас нет добавленных стикерпаков</Typography>
+            </Box>
+          ) : (
+            <Grid container spacing={2}>
+              {installedPacks.map(pack => (
+                <Grid item xs={6} sm={4} md={3} key={pack.id} sx={{ display: 'flex' }}>
+                  <Card sx={{ ...cardStyles, width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }} onClick={() => setModalPackId(pack.id)}>
+                    <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                      <Typography variant="h6" gutterBottom>{pack.name}</Typography>
+                      {/* Большой превью первой наклейки */}
+                      {pack.stickers && pack.stickers.length > 0 && (
+                        <Box
+                          sx={{
+                            width: '100%',
+                            aspectRatio: '1',
+                            ...cardStyles,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 1,
+                            overflow: 'hidden'
+                          }}
+                        >
+                          <StickerRenderer
+                            sticker={pack.stickers[0]}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          />
+                        </Box>
+                      )}
+                      {/* Кол-во стикеров */}
+                      <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                        <Chip
+                          size="small"
+                          label={`${pack.sticker_count || pack.total_stickers || pack.sticker_total || pack.stickers?.length || 0} стикеров`}
+                          variant="outlined"
+                        />
+                      </Box>
+                      <Button
+                        size="small"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={(e) => { e.stopPropagation(); handleUninstallPack(pack.id); }}
+                        sx={{ ...buttonStyles, mt: 'auto' }}
+                      >
+                        Убрать стикерпак
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </>
       ) : (
         // Вкладка "Публичные стикерпаки"
         <>
@@ -1361,90 +1399,62 @@ const StickerManagePage = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
               {publicPacks.map((pack) => (
-                <Grid item xs={12} sm={6} md={4} key={pack.id}>
-                  <Card sx={cardStyles}>
-                    <CardContent>
+                <Grid item xs={6} sm={4} md={3} key={pack.id} sx={{ display: 'flex' }}>
+                  <Card sx={{ ...cardStyles, width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }} onClick={() => setModalPackId(pack.id)}>
+                    <CardContent sx={{ p: 1, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
                         <Box sx={{ flex: 1 }}>
                           <Typography variant="h6" gutterBottom>
                             {pack.name}
                           </Typography>
-                          {pack.description && (
-                            <Typography variant="body2" color="text.secondary" gutterBottom>
-                              {pack.description}
-                            </Typography>
-                          )}
                           <Typography variant="caption" color="text.secondary">
                             Автор: {pack.owner_name}
                           </Typography>
                         </Box>
                       </Box>
 
-                      {/* Статус */}
-                      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                      {/* Кол-во стикеров */}
+                      <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
                         <Chip
                           size="small"
-                          icon={<PublicIcon />}
-                          label="Публичный"
-                          variant="outlined"
-                        />
-                        <Chip
-                          size="small"
-                          label={`${pack.sticker_count || 0} стикеров`}
+                          label={`${pack.sticker_count || pack.total_stickers || pack.sticker_total || pack.stickers?.length || 0} стикеров`}
                           variant="outlined"
                         />
                       </Box>
 
-                      {/* Превью стикеров */}
+                      {/* Большой превью первой наклейки */}
                       {pack.stickers && pack.stickers.length > 0 && (
-                        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 2 }}>
-                          {pack.stickers.slice(0, 4).map((sticker) => (
-                            <Box
-                              key={sticker.id}
-                              sx={{
-                                width: 40,
-                                height: 40,
-                                ...cardStyles,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                overflow: 'hidden'
-                              }}
-                            >
-                              <StickerRenderer sticker={sticker} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            </Box>
-                          ))}
-                          {pack.sticker_count > 4 && (
-                            <Box
-                              sx={{
-                                width: 40,
-                                height: 40,
-                                ...cardStyles,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                              }}
-                            >
-                              <Typography variant="caption">
-                                +{pack.sticker_count - 4}
-                              </Typography>
-                            </Box>
-                          )}
+                        <Box
+                          sx={{
+                            width: '100%',
+                            aspectRatio: '1',
+                            ...cardStyles,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 1,
+                            overflow: 'hidden'
+                          }}
+                        >
+                          <StickerRenderer
+                            sticker={pack.stickers[0]}
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          />
                         </Box>
                       )}
 
                       {/* Действия */}
-                      <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
                         <Button
                           size="small"
-                          startIcon={installingPacks.has(pack.id) ? <CircularProgress size={16} /> : <AddIcon />}
-                          onClick={() => handleInstallPack(pack.id)}
-                          disabled={installingPacks.has(pack.id) || isChannel}
+                          startIcon={installingPacks.has(pack.id) ? <CircularProgress size={16} /> : installedIds.has(pack.id) ? null : <AddIcon />}
+                          onClick={(e)=>{e.stopPropagation(); if(!installedIds.has(pack.id)) handleInstallPack(pack.id);}}
+                          disabled={installingPacks.has(pack.id) || isChannel || installedIds.has(pack.id)}
                           sx={buttonStyles}
                         >
-                          {installingPacks.has(pack.id) ? 'Устанавливается...' : 'Установить стикерпак'}
+                          {installingPacks.has(pack.id) ? 'Устанавливается...' : installedIds.has(pack.id) ? 'Уже добавлен' : 'Установить стикерпак'}
                         </Button>
                       </Box>
                     </CardContent>
@@ -1453,7 +1463,7 @@ const StickerManagePage = () => {
               ))}
 
               {publicPacks.length === 0 && !publicLoading && (
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <EmojiIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
                     <Typography variant="h6" gutterBottom>
@@ -1906,6 +1916,13 @@ const StickerManagePage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Модалка просмотра стикерпака */}
+      <StickerPackModal
+        open={Boolean(modalPackId)}
+        packId={modalPackId}
+        onClose={() => setModalPackId(null)}
+      />
     </Box>
   );
 };

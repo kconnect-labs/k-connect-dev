@@ -6,8 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ClearIcon from '@mui/icons-material/Clear';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 const ChatList = ({ onSelectChat }) => {
   const { 

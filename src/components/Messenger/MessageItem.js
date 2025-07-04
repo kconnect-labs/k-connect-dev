@@ -246,7 +246,8 @@ const MessageItem = ({
   replyMessage,
   chatMembers = [],
   showDateSeparator = false,
-  dateSeparatorText = ''
+  dateSeparatorText = '',
+  showAvatar = true
 }) => {
   const [showActions, setShowActions] = useState(false);
   const { getFileUrl, avatarCache, getAvatarUrl, deleteMessage, messages, setMessages } = useMessenger();
@@ -671,14 +672,12 @@ const MessageItem = ({
                  style={{ 
                    display: 'flex',
                    alignItems: 'flex-end',
-                   gap: '8px',
-                   flexWrap: 'wrap'
+                   gap: '8px'
                  }}>
               <div className="message-text" style={{ 
                 whiteSpace: 'pre-wrap', 
                 wordBreak: 'break-word',
                 overflowWrap: 'break-word',
-                margin: 'auto',
                 display: 'inline',
                 textAlign: 'left',
                 flex: '0 1 auto'
@@ -1027,7 +1026,7 @@ const MessageItem = ({
       
       <div 
         ref={messageRef}
-        className={`message-item ${isCurrentUser ? 'my-message' : 'their-message'} ${isDeleting ? 'deleting' : ''}`}
+        className={`message-item ${isCurrentUser ? 'my-message' : 'their-message'} ${isDeleting ? 'deleting' : ''} ${!isCurrentUser && isGroupChat && !showAvatar ? 'no-avatar' : ''}`}
         style={{
           transition: 'opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease',
           opacity: isDeleting ? 0 : 1,
@@ -1038,7 +1037,7 @@ const MessageItem = ({
         onMouseLeave={() => setShowActions(false)}
       >
         <div className="message-container">
-          {!isCurrentUser && isGroupChat && (
+          {!isCurrentUser && isGroupChat && showAvatar && (
             <div className="message-avatar">
               {senderAvatar ? (
                 <img src={senderAvatar} alt={message.sender_name || 'Avatar'} />
@@ -1051,13 +1050,14 @@ const MessageItem = ({
           )}
           
           <div className="message-content">
-            {!isCurrentUser && isGroupChat && (
-              <div className="message-sender">{message.sender_name || getSenderName(message.sender_id)}</div>
-            )}
-            
             {message.reply_to_id && renderReplyContent()}
-            
             <div className="message-bubble">
+              {/* Имя внутри баббла сверху */}
+              {!isCurrentUser && isGroupChat && (
+                <div className="sender-name-in-bubble">
+                  {message.sender_name || getSenderName(message.sender_id)}
+                </div>
+              )}
               {renderMessageContent()}
             </div>
           </div>

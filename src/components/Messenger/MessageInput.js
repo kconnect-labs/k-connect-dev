@@ -15,25 +15,14 @@ const MessageInput = ({
   onFileUpload,
   replyTo,
   onCancelReply,
-  isMobile = false
+  isMobile = false,
+  containerRef
 }) => {
   const [message, setMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
-  const [typingTimeout, setTypingTimeout] = useState(null);
   const [showStickerPicker, setShowStickerPicker] = useState(false);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
-  
-  
-  useEffect(() => {
-    return () => {
-      if (typingTimeout) {
-        clearTimeout(typingTimeout);
-        
-        onTyping(false);
-      }
-    };
-  }, [typingTimeout, onTyping]);
   
   
   useEffect(() => {
@@ -70,13 +59,8 @@ const MessageInput = ({
     }, 10);
     
     
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-      setTypingTimeout(null);
-    }
-    
     onTyping(false);
-  }, [message, onSendMessage, typingTimeout, onTyping, isUploading]);
+  }, [message, onSendMessage, isUploading, onTyping]);
   
   
   const handleKeyDown = useCallback((e) => {
@@ -91,32 +75,10 @@ const MessageInput = ({
     const newMessage = e.target.value;
     setMessage(newMessage);
     
-    
-    if (newMessage.trim() && !typingTimeout) {
+    if (newMessage.trim()) {
       onTyping(true);
-      
-      
-      const timeout = setTimeout(() => {
-        onTyping(false);
-        setTypingTimeout(null);
-      }, 3000);
-      
-      setTypingTimeout(timeout);
-    } else if (!newMessage.trim() && typingTimeout) {
-      clearTimeout(typingTimeout);
-      onTyping(false);
-      setTypingTimeout(null);
-    } else if (typingTimeout) {
-      
-      clearTimeout(typingTimeout);
-      const timeout = setTimeout(() => {
-        onTyping(false);
-        setTypingTimeout(null);
-      }, 3000);
-      
-      setTypingTimeout(timeout);
     }
-  }, [onTyping, typingTimeout]);
+  }, [onTyping]);
   
   
   const triggerFileUpload = useCallback(() => {
@@ -240,12 +202,13 @@ const MessageInput = ({
   
   return (
     <Box
+      ref={containerRef}
       sx={{
         position: 'sticky',
         bottom: 0,
         zIndex: 6,
         padding: '8px',
-        pb: 'calc(env(safe-area-inset-bottom, 0px) + 8px)',
+        pb: 'calc(env(safe-area-inset-bottom, 0px) + 20px)',
         backgroundColor: 'transparent' ? isMobile : '#1a1a1a',
         borderRadius: 0,
         boxShadow: 'none',

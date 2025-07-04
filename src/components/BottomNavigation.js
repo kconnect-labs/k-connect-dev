@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Paper, BottomNavigation as MuiBottomNavigation, BottomNavigationAction, alpha } from '@mui/material';
+import { Paper, BottomNavigation as MuiBottomNavigation, BottomNavigationAction, alpha, Badge } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import { ThemeSettingsContext } from '../App';
+import { useMessenger } from '../contexts/MessengerContext';
 
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
@@ -13,6 +14,8 @@ const AppBottomNavigation = ({ user }) => {
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
+  const { unreadCounts } = useMessenger();
+  const totalUnread = Object.values(unreadCounts || {}).reduce((a,b)=>a+b,0);
   const theme = useTheme();
   
   
@@ -174,7 +177,11 @@ const AppBottomNavigation = ({ user }) => {
         />
         <BottomNavigationAction 
           label="Мессенджер" 
-          icon={<Icon icon="solar:chat-round-dots-bold" width="28" height="28" />}
+          icon={totalUnread>0 ? (
+            <Badge badgeContent={totalUnread>99? '99+': totalUnread}
+               sx={{ '& .MuiBadge-badge': { backgroundColor:'#2f2f2f', border:'1px solid #b1b1b1', color:'#fff' } }}>
+              <Icon icon="solar:chat-round-dots-bold" width="28" height="28" />
+            </Badge>) : <Icon icon="solar:chat-round-dots-bold" width="28" height="28" />}
           sx={{ 
             minWidth: 'auto',
             '& .MuiBottomNavigationAction-label': {

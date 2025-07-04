@@ -8,6 +8,8 @@ import { NavButton, MoreButton } from '../../../UIKIT';
 import { SidebarContext } from '../../../context/SidebarContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
+import Badge from '@mui/material/Badge';
+import { useMessenger } from '../../../contexts/MessengerContext';
 
 // Clean, minimal nested list styling
 const NestedList = styled(List)(({ theme }) => ({
@@ -40,6 +42,8 @@ const SidebarNavigation = memo(({
   const location = useLocation();
   const { t } = useLanguage();
   const { expandedMore, expandedAdminMod, expandedShops, expandedSocial, toggleExpandMore, toggleExpandAdminMod, toggleExpandShops, toggleExpandSocial } = useContext(SidebarContext);
+  const { unreadCounts } = useMessenger();
+  const totalUnread = useMemo(() => Object.values(unreadCounts || {}).reduce((a,b)=>a+ b,0), [unreadCounts]);
   
   const isActive = useCallback((path) => {
     if (path === '/' && location.pathname === '/') {
@@ -50,7 +54,13 @@ const SidebarNavigation = memo(({
   
   const icons = useMemo(() => ({
     home: <Icon icon="material-symbols:home-outline" width="22" height="22" />,
-    messenger: <Icon icon="tabler:mail" width="22" height="22" />,
+    messenger: totalUnread>0 ? (
+      <Badge overlap="circular" badgeContent={totalUnread>99? '99+': totalUnread}
+        sx={{ '& .MuiBadge-badge': { backgroundColor:'#2f2f2f', border:'1px solid #b1b1b1', color:'#fff' } }}
+      >
+        <Icon icon="tabler:mail" width="22" height="22" />
+      </Badge>
+    ) : <Icon icon="tabler:mail" width="22" height="22" />,
     music: <Icon icon="tabler:music" width="22" height="22" />,
     shop: <Icon icon="tabler:coins" width="22" height="22" />,
     inventory: <Icon icon="tabler:backpack" width="22" height="22" />,

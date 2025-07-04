@@ -312,7 +312,7 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
-  padding-right: 10px;
+  padding:0 10px;
   min-height: min-content; /* Обеспечиваем минимальную высоту */
 }
 
@@ -544,9 +544,9 @@
 
 /* Элемент сообщения */
 .message-item {
-  margin-bottom: 12px;
+  margin-bottom: 2.5px;
   align-self: flex-start;
-  max-width: 95%; /* Увеличиваем с 90% до 95% (+5%) */
+  max-width: 75%;
   transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease;
   position: relative;
 }
@@ -578,7 +578,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  margin: 0 8px;
+  margin: 0 4px !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -876,11 +876,6 @@
   width: 4px;
   height: 4px;
   margin: 0 0.5px;
-}
-
-@keyframes typing-dot {
-  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50% { transform: translateY(-2px); opacity: 1; }
 }
 
 .typing-text {
@@ -1362,7 +1357,7 @@
   }
 }
 
-/* u041fu0440u0435u0434u043eu0442u0432u0440u0430u0449u0430u0435u043c u0437u0443u043c u043du0430 u0432u0441u0435u0445 u043fu043eu043bl044fu0445 u0432u0432u043eu0434u0430 */
+/* u041fu0440u0435u043du0430u0442u0432u0440u0430u0449u0430u0435u043c u0437u0443u043c u043du0430 u0432u0441u0435u0445 u043fu043eu043bl044fu0445 u0432u0432u043eu0434u0430 */
 input, textarea, select {
   font-size: 16px !important;
   touch-action: manipulation;
@@ -1645,7 +1640,10 @@ input, textarea, select {
   display: block !important;
 }
 
-/* Баббл времени для стикеров */
+/* Баббл времени для стикеров
+   Показываем только при наведении мыши,
+   на мобильных остаётся скрытым (нет hover)
+*/
 .sticker-message .sticker-time-bubble {
   position: absolute !important;
   bottom: 8px !important;
@@ -1661,6 +1659,13 @@ input, textarea, select {
   gap: 2px !important;
   min-height: 16px !important;
   z-index: 10 !important;
+  opacity: 0 !important;
+  pointer-events: none !important; /* не мешаем клику по стикеру */
+  transition: opacity 0.15s ease-in-out !important;
+}
+
+.sticker-message:hover .sticker-time-bubble {
+  opacity: 1 !important;
 }
 
 /* Убираем стандартное время для стикеров */
@@ -1708,4 +1713,17 @@ input, textarea, select {
     font-size: 10px !important;
     min-height: 14px !important;
   }
+}
+
+.sender-name-in-bubble {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  margin-bottom: 2px !important;
+  color: #D0BCFF !important;
+  display: block !important;
+}
+
+/* Отступ для сообщений без аватара (когда сообщения подряд от одного автора) */
+.message-item.their-message.no-avatar .message-container {
+  padding-left: 44px !important; /* 36px аватар + 8px отступ */
 } 

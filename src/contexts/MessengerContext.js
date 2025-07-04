@@ -504,10 +504,22 @@ class EnhancedWebSocketClient {
   }
 
   sendReadReceipt(messageId, chatId) {
+    // Дополнительная проверка - не отправляем read_receipt для несуществующих сообщений
+    // или для своих собственных сообщений
+    if (!messageId || !chatId) {
+      console.warn('sendReadReceipt: Missing messageId or chatId');
+      return;
+    }
+    
+    console.log(`WebSocket: Sending read_receipt for message ${messageId} in chat ${chatId}`);
+    
     return this.sendMessage({
       type: 'read_receipt',
-      messageId: messageId,
-      chatId: chatId
+      messageId,
+      chatId,
+      // Добавляем snake_case поля для совместимости с различными версиями backend
+      message_id: messageId,
+      chat_id: chatId
     });
   }
 
@@ -703,8 +715,13 @@ export const MessengerProvider = ({ children }) => {
   const jwtToken = localStorage.getItem('token') || sessionKeyCookie;
   
   
-  const sessionKey = authContext?.sessionKey || authContext?.session_key || 
-                   localStorage.getItem('session_key') || sessionKeyCookie || jwtToken;
+  // Состояние для принудительно сохранённого ключа и его загрузки
+  const [forcedSessionKey, setForcedSessionKey] = useState(null);
+  const [fetchingSessionKey, setFetchingSessionKey] = useState(false);
+  
+  // Итоговый ключ сессии (проверяем все источники, включая только что полученный)
+  const sessionKey = authContext?.sessionKey || authContext?.session_key ||
+                     localStorage.getItem('session_key') || sessionKeyCookie || forcedSessionKey || jwtToken;
   
   
   const [deviceId] = useState(() => {
@@ -937,6 +954,13 @@ export const MessengerProvider = ({ children }) => {
       try {
         await client.connect();
         logger.info('Enhanced WebSocket connection initiated');
+
+        // Сразу после подключения запрашиваем список чатов – это даст количества непрочитанных
+        try {
+          client.sendMessage({ type: 'get_chats' });
+        } catch (e) {
+          logger.debug('failed initial get_chats', e);
+        }
       } catch (error) {
         logger.error('Error connecting Enhanced WebSocket:', error);
         setError('Failed to connect to messaging server');
@@ -1054,6 +1078,7 @@ export const MessengerProvider = ({ children }) => {
         break;
       
       case 'message_read':
+      case 'read_receipt':
         
         console.log('Received message_read event:', data);
         const messageId = data.messageId || data.message_id;
@@ -1814,17 +1839,52 @@ export const MessengerProvider = ({ children }) => {
   
   
   const markMessageAsRead = async (messageId) => {
-    if (!sessionKey || !messageId || isChannel) return;
+    if (!user || !messageId || isChannel) return;
     
     try {
-      // Mark as read via REST API
-      await fetch(`${API_URL}/messenger/read/${messageId}`, {
+      // Находим сообщение в кэше
+      const message = Object.values(messages).flat().find(msg => msg.id === messageId);
+      
+      // Проверяем, что это не наше собственное сообщение
+      if (message && message.sender_id === user?.id) {
+        logger.debug(`Skipping read receipt for own message ${messageId}`);
+        return;
+      }
+      
+      // Отправляем запрос на сервер
+      const response = await fetch(`${API_URL}/messenger/read/${messageId}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${sessionKey}`,
           'Accept': 'application/json'
         }
       });
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          logger.debug(`Message ${messageId} marked as read via API`);
+          
+          // Обновляем локальное состояние
+          setMessages(prevMessages => {
+            const updatedMessages = { ...prevMessages };
+            
+            Object.keys(updatedMessages).forEach(chatId => {
+              updatedMessages[chatId] = updatedMessages[chatId].map(msg => {
+                if (msg.id === messageId) {
+                  const currentReadBy = msg.read_by || [];
+                  if (!currentReadBy.includes(user.id)) {
+                    return { ...msg, read_by: [...currentReadBy, user.id], read_count: (msg.read_count || 0) + 1 };
+                  }
+                }
+                return msg;
+              });
+            });
+            
+            return updatedMessages;
+          });
+        }
+      }
       
       // Send read receipt via Enhanced WebSocket
       if (websocketClient.current && websocketClient.current.isConnected) {
@@ -1834,13 +1894,19 @@ export const MessengerProvider = ({ children }) => {
         );
         
         if (chatId) {
-          logger.debug(`Sending read receipt for message ${messageId} in chat ${chatId}`);
-          
-          // Use Enhanced WebSocket client method
-          websocketClient.current.sendReadReceipt(messageId, parseInt(chatId));
-          
-          // Update local read status
-          updateReadStatus(messageId, parseInt(chatId), user?.id);
+          // Дополнительная проверка - не отправляем read_receipt для своих сообщений
+          const targetMessage = messages[chatId].find(msg => msg.id === messageId);
+          if (targetMessage && targetMessage.sender_id !== user?.id) {
+            logger.debug(`Sending read receipt for message ${messageId} in chat ${chatId} from user ${targetMessage.sender_id} (current user: ${user?.id})`);
+            
+            // Use Enhanced WebSocket client method
+            websocketClient.current.sendReadReceipt(messageId, parseInt(chatId));
+            
+            // Update local read status
+            updateReadStatus(messageId, parseInt(chatId), user?.id);
+          } else {
+            logger.debug(`Skipping read receipt for message ${messageId} - own message or invalid (sender: ${targetMessage?.sender_id}, current user: ${user?.id})`);
+          }
         }
       }
     } catch (err) {
@@ -1851,6 +1917,8 @@ export const MessengerProvider = ({ children }) => {
   
   const markAllMessagesAsRead = async (chatId) => {
     if (!user || !chatId || isChannel) return;
+    
+    console.log(`markAllMessagesAsRead called for chat ${chatId}, user:`, user);
     
     // Сначала пытаемся использовать новый API эндпоинт
     try {
@@ -1873,6 +1941,12 @@ export const MessengerProvider = ({ children }) => {
             [chatId]: 0
           }));
           
+          // Если сервер не нашел непрочитанных сообщений, не отправляем read_receipt
+          if (result.marked_count === 0) {
+            logger.info(`No unread messages found in chat ${chatId}, skipping read_receipt`);
+            return;
+          }
+          
           // Уведомляем других участников через WebSocket о прочтении
           if (websocketClient.current && websocketClient.current.isConnected) {
             const chatMessages = messages[chatId] || [];
@@ -1881,12 +1955,19 @@ export const MessengerProvider = ({ children }) => {
               (!msg.read_by || !msg.read_by.includes(user.id))
             );
             
-            // Отправляем read_receipt для каждого непрочитанного сообщения
-            unreadMessages.forEach(msg => {
-              websocketClient.current.sendReadReceipt(msg.id, chatId);
-              // Обновляем локальный статус
-              updateReadStatus(msg.id, chatId, user.id);
-            });
+                          // Берём только последний (максимальный id) непрочитанный
+              if (unreadMessages.length) {
+                const lastUnread = unreadMessages.reduce((a, b) => (a.id > b.id ? a : b));
+                // Дополнительная проверка - не отправляем read_receipt для своих сообщений
+                if (lastUnread && lastUnread.sender_id !== user?.id) {
+                  console.log(`markAllChatMessagesAsRead: Sending read_receipt for message ${lastUnread.id} from user ${lastUnread.sender_id} (current user: ${user?.id})`);
+                  websocketClient.current.sendReadReceipt(lastUnread.id, chatId);
+                  // Локально обновляем статус всех сообщений <= lastUnread.id
+                  updateReadStatus(lastUnread.id, chatId, user.id);
+                } else {
+                  console.log(`markAllChatMessagesAsRead: Skipping read_receipt for message ${lastUnread?.id} - own message or invalid`);
+                }
+              }
           }
           return;
         }
@@ -1923,18 +2004,12 @@ export const MessengerProvider = ({ children }) => {
     
     setMessages(prev => {
       const chatMessages = prev[chatId] || [];
-      
       const updatedMessages = chatMessages.map(msg => {
-        if (msg.id === messageId) {
-          
+        // Если это сообщение от текущего пользователя (отправителя), ставим двойную галочку
+        if (msg.sender_id === user?.id) {
           const currentReadBy = msg.read_by || [];
-          
           if (!currentReadBy.includes(userId)) {
-            return {
-              ...msg,
-              read_by: [...currentReadBy, userId],
-              read_count: (msg.read_count || 0) + 1
-            };
+            return { ...msg, read_by: [...currentReadBy, userId], read_count: (msg.read_count || 0) + 1 };
           }
         }
         return msg;
@@ -1947,6 +2022,12 @@ export const MessengerProvider = ({ children }) => {
           ...prev,
           [chatId]: 0
         }));
+      }
+      
+      // Обновляем last_message в списке чатов, чтобы галочки отображались сразу и там
+      const lastMsg = updatedMessages.length ? updatedMessages[updatedMessages.length - 1] : null;
+      if (lastMsg) {
+        updateLastMessage(chatId, lastMsg);
       }
       
       return {
@@ -2055,9 +2136,9 @@ export const MessengerProvider = ({ children }) => {
                   member.avatar = avatarCache[userId];
                 }
                 
-                else if (userId) {
+                else {
                   const photo = member.photo || member.avatar;
-                  if (photo) {
+                  if (userId && photo) {
                     
                     member.avatar = getAvatarUrl(userId, photo);
                   }
@@ -3423,17 +3504,14 @@ export const MessengerProvider = ({ children }) => {
             // Уведомляем других участников через WebSocket о прочтении
             if (websocketClient.current && websocketClient.current.isConnected) {
               const chatMessages = messages[chatId] || [];
-              const unreadMessages = chatMessages.filter(msg => 
-                msg.sender_id !== user?.id && 
-                (!msg.read_by || !msg.read_by.includes(user.id))
-              );
+              console.log(`markAllMessagesAsRead: Chat ${chatId} has ${chatMessages.length} messages`);
               
-              // Отправляем read_receipt для каждого непрочитанного сообщения
-              unreadMessages.forEach(msg => {
-                websocketClient.current.sendReadReceipt(msg.id, chatId);
-                // Обновляем локальный статус
-                updateReadStatus(msg.id, chatId, user.id);
-              });
+              // Просто отправляем read_receipt для последнего сообщения в чате
+              if (chatMessages.length > 0) {
+                const lastMessage = chatMessages[chatMessages.length - 1];
+                console.log(`Sending read_receipt for last message ${lastMessage.id} in chat ${chatId}`);
+                websocketClient.current.sendReadReceipt(lastMessage.id, chatId);
+              }
             }
           }
         }
@@ -3442,6 +3520,32 @@ export const MessengerProvider = ({ children }) => {
       }
     },
   };
+  
+  // Автоматически запрашиваем session_key, если он ещё не доступен
+  useEffect(() => {
+    if (!sessionKey && authContext?.isAuthenticated && !fetchingSessionKey) {
+      const API_URL = 'https://k-connect.ru/apiMes';
+      setFetchingSessionKey(true);
+      axios.get(`${API_URL}/auth/get-session-key`, {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+          'Cache-Control': 'no-cache'
+        }
+      })
+      .then(res => {
+        if (res.data?.session_key) {
+          localStorage.setItem('session_key', res.data.session_key);
+          setForcedSessionKey(res.data.session_key);
+          console.log('MessengerContext: session_key fetched and saved');
+        }
+      })
+      .catch(err => {
+        console.error('MessengerContext: error fetching session_key', err);
+      })
+      .finally(() => setFetchingSessionKey(false));
+    }
+  }, [sessionKey, authContext?.isAuthenticated, jwtToken, fetchingSessionKey]);
   
   return (
     <MessengerContext.Provider value={value}>
