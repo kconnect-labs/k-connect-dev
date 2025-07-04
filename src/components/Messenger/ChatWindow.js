@@ -93,13 +93,13 @@ const MessagesList = memo(({
           style={{ 
             height: '1px', 
             visibility: 'hidden',
-            marginTop: '8px'
+            marginTop: '5px',
+            width: '100%',
+            flexShrink: 0
           }} 
         />
       </div>
-      
-      {/* Резервный невидимый элемент для прокрутки вниз */}
-      <div ref={messagesEndRef} style={{ height: '1px' }} />
+
     </>
   );
 });
@@ -276,6 +276,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const inputRef = useRef(null);
   const [inputHeightState, setInputHeightState] = useState(60);
   
+  const lastChatIdRef = useRef();
+
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -371,24 +373,23 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     let mounted = true;
     
     if (activeChat?.id && (!messages[activeChat.id] || messages[activeChat.id].length === 0)) {
-      // Load messages for chat
+      // Load messages for chat - НЕМЕДЛЕННО
       
       const timer = setTimeout(() => {
         if (mounted && chatIdRef.current === activeChat.id) {
-
           loadMessages(activeChat.id);
           
+          // Дополнительная загрузка для групповых чатов
           if (activeChat?.is_group) {
             setTimeout(() => {
               if (mounted && chatIdRef.current === activeChat.id && 
                   (!messages[activeChat.id] || messages[activeChat.id].length === 0)) {
-
                 loadMessages(activeChat.id);
               }
-            }, 1500);
+            }, 500); // Уменьшили задержку с 1500 до 500
           }
         }
-      }, 100);
+      }, 50); // Уменьшили задержку с 100 до 50
       
       return () => {
         mounted = false;
@@ -421,45 +422,39 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     }
   }, [activeChat, messages]);
   
-  // Улучшенная функция прокрутки к низу с использованием якоря
-  const scrollToBottom = useCallback((smooth = false) => {
+  // Улучшенная функция прокрутки к низу — ТОЛЬКО scrollTop = scrollHeight
+  const scrollToBottom = useCallback(() => {
     const container = messagesContainerRef.current;
     if (container) {
-      const behavior = smooth ? 'smooth' : 'auto';
-      container.scrollTo({ top: container.scrollHeight, behavior });
-      return;
+      container.scrollTop = container.scrollHeight;
+      // Для надёжности повторяем через requestAnimationFrame
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
     }
+  }, []);
 
-    // fallback to anchor
-    const anchorElement = messagesAnchorRef.current || messagesEndRef.current;
-    if (anchorElement) {
-      anchorElement.scrollIntoView({ behavior, block: 'end', inline: 'nearest' });
+  // Функция для принудительной прокрутки к самому низу
+  const forceScrollToBottom = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+      requestAnimationFrame(() => {
+        container.scrollTop = container.scrollHeight;
+      });
     }
   }, []);
   
-  // Принудительная прокрутка к низу при открытии чата или получении новых сообщений
+  // Автоскролл как в Telegram/WhatsApp
   useEffect(() => {
     if (activeChat && messages[activeChat.id] && autoScrollEnabled) {
-      // Небольшая задержка для рендера сообщений
-      const timeoutId = setTimeout(() => {
+      scrollToBottom();
+      // Для надёжности повторяем через requestAnimationFrame
+      requestAnimationFrame(() => {
         scrollToBottom();
-      }, 150);
-      
-      return () => clearTimeout(timeoutId);
+      });
     }
-  }, [activeChat, messages, scrollToBottom, autoScrollEnabled]);
-  
-  // Прокрутка к низу при смене чата
-  useEffect(() => {
-    if (activeChat && messages[activeChat.id]) {
-      const timeoutId = setTimeout(() => {
-        scrollToBottom();
-        setAutoScrollEnabled(true);
-      }, 200);
-      
-      return () => clearTimeout(timeoutId);
-    }
-  }, [activeChat?.id, scrollToBottom]);
+  }, [activeChat?.id, messages[activeChat?.id]?.length, autoScrollEnabled]);
   
   const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -598,7 +593,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       
       // Включаем автопрокрутку и прокручиваем к низу при отправке сообщения
       setAutoScrollEnabled(true);
-      setTimeout(() => scrollToBottom(true), 150);
+      scrollToBottom(); // Немедленная прокрутка
+      setTimeout(() => scrollToBottom(), 100); // Плавная прокрутка для красоты
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error);
     }
@@ -615,7 +611,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       
       // Включаем автопрокрутку и прокручиваем к низу при отправке файла
       setAutoScrollEnabled(true);
-      setTimeout(() => scrollToBottom(true), 150);
+      scrollToBottom(); // Немедленная прокрутка
+      setTimeout(() => scrollToBottom(), 100); // Плавная прокрутка для красоты
     } catch (error) {
       console.error('Ошибка загрузки файла:', error);
     }
@@ -695,8 +692,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   // Мемоизируем обработчики для кнопки прокрутки
   const handleScrollToBottom = useCallback(() => {
     setAutoScrollEnabled(true);
-    scrollToBottom(true);
-  }, [scrollToBottom]);
+    forceScrollToBottom(); // Принудительная прокрутка к самому низу
+    setTimeout(() => scrollToBottom(), 50); // Плавная прокрутка для красоты
+  }, [scrollToBottom, forceScrollToBottom]);
   
   const renderScrollToBottom = () => {
     if (isAtBottom) return null;
@@ -1068,6 +1066,22 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (activeChat?.id !== lastChatIdRef.current) {
+      lastChatIdRef.current = activeChat?.id;
+      let attempts = 0;
+      const maxAttempts = 5;
+      function tryScroll() {
+        scrollToBottom();
+        attempts++;
+        if (attempts < maxAttempts) {
+          setTimeout(tryScroll, 60);
+        }
+      }
+      tryScroll();
+    }
+  }, [activeChat?.id]);
 
   // ДОБАВЛЯЕМ: если нет активного чата, показываем только баннер
   if (!activeChat) {

@@ -348,90 +348,90 @@ const MessengerPage = () => {
           border: '1px solid rgba(255, 255, 255, 0.12)', 
           position: 'relative'
         }}>
-        {/* Боковая панель со списком чатов */}
-        <Box sx={{ 
-          width: { xs: '100%', md: '350px' },
-          borderRight: { md: `1px solid ${theme.palette.divider}` },
-          display: isMobile && !showSidebar ? 'none' : 'block',
-          height: '100%',
-          overflow: 'hidden'
-        }}>
-          {/* Кнопки "Новый чат" и "Создать группу" */}
-          <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
-            <Button
-              variant="contained"
-              sx={{
-                flex: 1,
-                backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                color: '#fff',
-                border: '1px solid rgba(255, 255, 255, 0.32)',
-                borderRadius: '8px'
-              }}
-              startIcon={<ChatIcon />}
-              onClick={handleNewChatClick}
-            >
-              Новый чат
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                flex: 1,
-                backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                color: '#fff',
-                border: '1px solid rgba(255, 255, 255, 0.32)',
-                borderRadius: '8px'
-              }}
-              startIcon={<AddIcon />}
-              onClick={handleCreateGroupOpen}
-            >
-              Создать группу
-            </Button>
-          </Box>
-          
-          {/* Явно передаем обработчик выбора чата */}
-          <ChatList onSelectChat={handleChatSelect} />
-        </Box>
-        
-        {/* Основная область с чатом */}
-        {isMobile ? (
-          <Box 
-            id="mobile-chat-container"
-            className={`messenger-main ${slideIn ? 'slide-in' : 'slide-out'}`}
-            sx={{ 
-              display: slideIn ? 'block' : 'none', // Полностью скрываем когда не активен
-              transform: slideIn ? 'translateX(0%) !important' : 'translateX(100%) !important',
-              transition: 'transform 0.3s ease-in-out',
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              height: '100vh',
-              zIndex: slideIn ? 1300 : -1, // Управляем z-index
-              backgroundColor: theme.palette.background.paper,
-              overflowX: 'hidden',  
-              maxWidth: '100vw',
-              WebkitOverflowScrolling: 'touch',
-              touchAction: 'manipulation',
-              // Дополнительная защита от блокировки интерфейса
-              pointerEvents: slideIn ? 'auto' : 'none',
-            }}
-          >
-            <ChatWindow backAction={handleBackToList} isMobile={isMobile} />
-          </Box>
-        ) : (
+          {/* Боковая панель со списком чатов */}
           <Box sx={{ 
-            flex: 1, 
-            display: 'flex',
-            flexDirection: 'column',
+            width: { xs: '100%', md: '350px' },
+            borderRight: { md: `1px solid ${theme.palette.divider}` },
+            display: isMobile && !showSidebar ? 'none' : 'block',
             height: '100%',
             overflow: 'hidden'
           }}>
-            <ChatWindow />
+            {/* Кнопки "Новый чат" и "Создать группу" */}
+            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
+              <Button
+                variant="contained"
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.32)',
+                  borderRadius: '8px'
+                }}
+                startIcon={<ChatIcon />}
+                onClick={handleNewChatClick}
+              >
+                Новый чат
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  flex: 1,
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  color: '#fff',
+                  border: '1px solid rgba(255, 255, 255, 0.32)',
+                  borderRadius: '8px'
+                }}
+                startIcon={<AddIcon />}
+                onClick={handleCreateGroupOpen}
+              >
+                Создать группу
+              </Button>
+            </Box>
+            
+            {/* Явно передаем обработчик выбора чата */}
+            <ChatList onSelectChat={handleChatSelect} />
           </Box>
-        )}
-      </Box>
+          
+          {/* Основная область с чатом */}
+          {isMobile ? (
+            <Box 
+              id="mobile-chat-container"
+              className={`messenger-main ${slideIn ? 'slide-in' : 'slide-out'}`}
+              sx={{ 
+                display: slideIn ? 'block' : 'none', // Полностью скрываем когда не активен
+                transform: slideIn ? 'translateX(0%) !important' : 'translateX(100%) !important',
+                transition: 'transform 0.3s ease-in-out',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100%',
+                height: '100vh',
+                zIndex: slideIn ? 1300 : -1, // Управляем z-index
+                backgroundColor: theme.palette.background.paper,
+                overflowX: 'hidden',  
+                maxWidth: '100vw',
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'manipulation',
+                // Дополнительная защита от блокировки интерфейса
+                pointerEvents: slideIn ? 'auto' : 'none',
+              }}
+            >
+              <ChatWindow backAction={handleBackToList} isMobile={isMobile} />
+            </Box>
+          ) : (
+            <Box sx={{ 
+              flex: 1, 
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              overflow: 'hidden'
+            }}>
+              <ChatWindow />
+            </Box>
+          )}
+        </Box>
       )}
 
       {/* Диалог создания группы */}

@@ -1114,34 +1114,34 @@ function App() {
                 }}/>
               )}
               <SessionProvider>
-                <MessengerProvider>
-                  <LanguageProvider>
-                    <MusicProvider>
-                      <PostDetailProvider>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            minHeight: '100vh',
-                            bgcolor: 'background.default'
-                          }}>
-                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                              <Suspense fallback={<LoadingIndicator />}>
-                                <DefaultSEO />
-                                <Routes>
-                                  <Route path="/rules" element={<PublicPages />} />
-                                  <Route path="/privacy-policy" element={<PublicPages />} />
-                                  <Route path="/terms-of-service" element={<PublicPages />} />
-                                  <Route path="/about" element={<PublicPages />} />
-                                  <Route path="/cookies" element={<PublicPages />} />
-                                  <Route path="*" element={<AppRoutes />} />
-                                </Routes>
-                                <MusicPlayerCore />
-                              </Suspense>
-                            </ErrorBoundary>
-                          </Box>
-                      </PostDetailProvider>
-                    </MusicProvider>
-                  </LanguageProvider>
+              <MessengerProvider>
+                <LanguageProvider>
+                  <MusicProvider>
+                    <PostDetailProvider>
+                        <Box sx={{ 
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          minHeight: '100vh',
+                          bgcolor: 'background.default'
+                        }}>
+                          <ErrorBoundary FallbackComponent={ErrorFallback}>
+                            <Suspense fallback={<LoadingIndicator />}>
+                              <DefaultSEO />
+                              <Routes>
+                                <Route path="/rules" element={<PublicPages />} />
+                                <Route path="/privacy-policy" element={<PublicPages />} />
+                                <Route path="/terms-of-service" element={<PublicPages />} />
+                                <Route path="/about" element={<PublicPages />} />
+                                <Route path="/cookies" element={<PublicPages />} />
+                                <Route path="*" element={<AppRoutes />} />
+                              </Routes>
+                              <MusicPlayerCore />
+                            </Suspense>
+                          </ErrorBoundary>
+                        </Box>
+                    </PostDetailProvider>
+                  </MusicProvider>
+                </LanguageProvider>
                 </MessengerProvider>
               </SessionProvider>
             </DefaultPropsProvider>
