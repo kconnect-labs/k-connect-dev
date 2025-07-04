@@ -164,12 +164,12 @@ const ChatHeader = memo(({
         <Typography variant="subtitle1" noWrap>
           {getChatTitle()}
         </Typography>
-        {!activeChat.is_group && activeChat.chat_type !== 'group' && (
+        {!activeChat?.is_group && activeChat?.chat_type !== 'group' && (
           <Typography variant="caption" color="text.secondary">
             {userStatus}
           </Typography>
         )}
-        {activeChat.is_group && (
+        {activeChat?.is_group && (
           <Box sx={{ 
             minHeight: '10px', 
             display: 'flex', 
@@ -184,7 +184,7 @@ const ChatHeader = memo(({
             )}
           </Box>
         )}
-        {activeChat.encrypted && <Typography variant="caption" color="text.secondary">🔒</Typography>}
+        {activeChat?.encrypted && <Typography variant="caption" color="text.secondary">🔒</Typography>}
       </Box>
       
       <IconButton onClick={(e) => handleOpenMenu(e)}>
@@ -222,8 +222,6 @@ const ChatHeader = memo(({
     </Box>
   );
 });
-
-
 
 const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const { 
@@ -287,7 +285,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   };
   
   const handleOpenProfile = () => {
-    if (!activeChat || activeChat.is_group) return;
+    if (!activeChat || activeChat?.is_group) return;
     
     const otherUser = activeChat.members?.find(member => {
       const memberId = member.user_id || member.id;
@@ -380,7 +378,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
 
           loadMessages(activeChat.id);
           
-          if (activeChat.is_group) {
+          if (activeChat?.is_group) {
             setTimeout(() => {
               if (mounted && chatIdRef.current === activeChat.id && 
                   (!messages[activeChat.id] || messages[activeChat.id].length === 0)) {
@@ -716,7 +714,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const getChatTitle = useCallback(() => {
     if (!activeChat) return 'Чат';
     
-    if (activeChat.is_group || activeChat.chat_type === 'group') {
+    if (activeChat?.is_group || activeChat?.chat_type === 'group') {
       return activeChat.title || 'Групповой чат';
     } else {
       const otherMember = activeChat.members?.find(member => {
@@ -739,7 +737,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const getChatAvatar = useCallback(() => {
     if (!activeChat) return null;
     
-    if (activeChat.is_group || activeChat.chat_type === 'group') {
+    if (activeChat?.is_group || activeChat?.chat_type === 'group') {
       return activeChat.avatar || null;
     } else {
       const otherMember = activeChat.members?.find(member => {
@@ -926,7 +924,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   };
   
   const otherUser = useMemo(() => {
-    if (!activeChat || activeChat.is_group || !activeChat.members) return null;
+    if (!activeChat || activeChat?.is_group || !activeChat?.members) return null;
     
     return activeChat.members.find(member => {
       const memberId = member.user_id || member.id;
@@ -1071,17 +1069,19 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     };
   }, []);
 
+  // ДОБАВЛЯЕМ: если нет активного чата, показываем только баннер
   if (!activeChat) {
     return (
-      <div className="chat-window chat-window-empty">
+      <Box className="chat-window chat-window-empty" sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100%' }}>
         <div className="empty-state">
           <h3>Выберите чат или начните новый</h3>
           <p>Выберите существующий чат слева или создайте новый, чтобы начать общение</p>
         </div>
-      </div>
+      </Box>
     );
   }
-  
+
+  // ОСНОВНОЙ RETURN (Box ...)
   return (
     <Box sx={{ 
       display: 'flex', 

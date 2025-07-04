@@ -104,10 +104,6 @@ const ChatList = ({ onSelectChat }) => {
   
   
   const renderSearch = () => {
-    if (searchMode) {
-      return <SearchUsers onClose={toggleSearchMode} />;
-    }
-    
     return (
       <div className="chat-search">
         <input
@@ -132,37 +128,35 @@ const ChatList = ({ onSelectChat }) => {
   
   
   const renderContent = () => {
-    if (loading) {
-      return <div className="chat-list-loading">Загрузка чатов...</div>;
-    }
-    
-    if (filteredChats.length === 0) {
-      return (
-        <div className="chat-list-empty">
-          {searchQuery
-            ? 'Нет результатов по вашему запросу'
-            : 'У вас пока нет чатов. Найдите пользователя, чтобы начать беседу.'}
-        </div>
-      );
-    }
-    
     return (
-      <div className="chat-list-items">
-        {filteredChats.map(chat => {
-          const unreadCount = unreadCounts[chat.id] || 0;
-          return (
-            <MemoizedChatItem
-              key={chat.id}
-              chat={chat}
-              isActive={activeChat?.id === chat.id}
-              unreadCount={unreadCount}
-              onClick={() => handleChatSelect(chat.id)}
-              currentUserId={user?.id}
-              onlineUsers={onlineUsers}
-            />
-          );
-        })}
-      </div>
+      <>
+        {loading && <div className="chat-list-loading">Загрузка чатов...</div>}
+        {!loading && filteredChats.length === 0 && (
+          <div className="chat-list-empty">
+            {searchQuery
+              ? 'Нет результатов по вашему запросу'
+              : 'У вас пока нет чатов. Найдите пользователя, чтобы начать беседу.'}
+          </div>
+        )}
+        {!loading && filteredChats.length > 0 && (
+          <div className="chat-list-items">
+            {filteredChats.map(chat => {
+              const unreadCount = unreadCounts[chat.id] || 0;
+              return (
+                <MemoizedChatItem
+                  key={chat.id}
+                  chat={chat}
+                  isActive={activeChat?.id === chat.id}
+                  unreadCount={unreadCount}
+                  onClick={() => handleChatSelect(chat.id)}
+                  currentUserId={user?.id}
+                  onlineUsers={onlineUsers}
+                />
+              );
+            })}
+          </div>
+        )}
+      </>
     );
   };
   
@@ -175,8 +169,14 @@ const ChatList = ({ onSelectChat }) => {
   
   return (
     <div className="chat-list">
-      {renderSearch()}
-      {!searchMode && renderContent()}
+      {searchMode ? (
+        <SearchUsers onClose={toggleSearchMode} />
+      ) : (
+        <>
+          {renderSearch()}
+          {renderContent()}
+        </>
+      )}
     </div>
   );
 };

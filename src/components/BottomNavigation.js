@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useTheme } from '@mui/material/styles';
 import { ThemeSettingsContext } from '../App';
-import { useMessenger } from '../contexts/MessengerContext';
 
+import { useMessenger } from '../contexts/MessengerContext';
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
 

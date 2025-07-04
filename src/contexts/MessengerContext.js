@@ -689,25 +689,6 @@ export const MessengerProvider = ({ children }) => {
   const isChannel = authContext?.user?.type === 'channel';
   
   
-  if (isChannel) {
-    console.warn('MessengerContext: Канал не может использовать мессенджер. Доступ заблокирован.');
-    
-    
-    return (
-      <MessengerContext.Provider value={{ 
-        isChannel: true,
-        loading: false,
-        error: 'Каналы не могут использовать мессенджер',
-        chats: [],
-        messages: {},
-        user: null
-      }}>
-        {children}
-      </MessengerContext.Provider>
-    );
-  }
-  
-  
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -1288,8 +1269,17 @@ export const MessengerProvider = ({ children }) => {
           
           setChats(filteredChats);
           
-          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из WebSocket
-          setUnreadCounts(newUnreadCounts);
+          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из WebSocket ответа
+          setUnreadCounts(prevCounts => {
+            const prevKeys = Object.keys(prevCounts);
+            const newKeys = Object.keys(newUnreadCounts);
+
+            if (prevKeys.length === newKeys.length && prevKeys.every(k => prevCounts[k] === newUnreadCounts[k])) {
+              return prevCounts;
+            }
+
+            return newUnreadCounts;
+          });
           console.log('Загружены счетчики непрочитанных через WebSocket:', newUnreadCounts);
           
           
@@ -1480,10 +1470,22 @@ export const MessengerProvider = ({ children }) => {
       case 'unread_counts':
         // Сервер прислал актуальную карту непрочитанных чатов
         console.log('Received unread_counts via WebSocket:', data);
-        const newUnreadCounts = data.counts || {};
+        const incomingCounts = data.counts || {};
         const totalChats = data.totalChats || 0;
-        
-        setUnreadCounts(newUnreadCounts);
+
+        // Обновляем состояние только если значения действительно изменились, 
+        // чтобы избежать лишних ререндеров и возможной рекурсивной петли обновлений
+        setUnreadCounts(prevCounts => {
+          const prevKeys = Object.keys(prevCounts);
+          const newKeys = Object.keys(incomingCounts);
+
+          if (prevKeys.length === newKeys.length && prevKeys.every(key => prevCounts[key] === incomingCounts[key])) {
+            // Никаких фактических изменений нет – возвращаем предыдущее состояние
+            return prevCounts;
+          }
+
+          return incomingCounts;
+        });
         break;
       
       default:
@@ -1596,16 +1598,13 @@ export const MessengerProvider = ({ children }) => {
       console.error('Ошибка получения информации о пользователе:', err);
       setError('Ошибка получения информации о пользователе');
     }
-  }, [sessionKey, isChannel, API_URL]);
+  }, [sessionKey, API_URL]);
   
   
   useEffect(() => {
-    if (sessionKey && !isChannel) {
+    if (sessionKey) {
       console.log('MessengerContext: Initializing with session key');
       fetchCurrentUser();
-      
-    } else if (isChannel) {
-      console.warn('MessengerContext: Channels cannot use messenger');
     } else {
       console.warn('MessengerContext: No session key available');
     }
@@ -2075,7 +2074,7 @@ export const MessengerProvider = ({ children }) => {
   
   
   const loadChats = useCallback(async () => {
-    if (!sessionKey || isChannel) return;
+    if (!sessionKey) return;
     if (globalLoading) return;
     
     
@@ -2198,8 +2197,17 @@ export const MessengerProvider = ({ children }) => {
           setChats(filteredChats);
           
           // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из API
-          setUnreadCounts(newUnreadCounts);
-          console.log('Загружены счетчики непрочитанных:', newUnreadCounts);
+          setUnreadCounts(prevCounts => {
+            const prevKeys = Object.keys(prevCounts);
+            const newKeys = Object.keys(newUnreadCounts);
+
+            if (prevKeys.length === newKeys.length && prevKeys.every(k => prevCounts[k] === newUnreadCounts[k])) {
+              return prevCounts; // без изменений
+            }
+
+            console.log('Загружены счетчики непрочитанных:', newUnreadCounts);
+            return newUnreadCounts;
+          });
           
           
           const newHasMoreMessages = {};
@@ -2230,7 +2238,7 @@ export const MessengerProvider = ({ children }) => {
   
   
   const getChatDetails = async (chatId) => {
-    if (!sessionKey || !chatId || isChannel) return null;
+    if (!sessionKey || !chatId) return null;
     
     try {
       const response = await fetch(`${API_URL}/messenger/chats/${chatId}`, {
@@ -2976,7 +2984,6 @@ export const MessengerProvider = ({ children }) => {
   
   
   const setActiveAndLoadChat = useCallback((chatId) => {
-    if (isChannel) return;
     
     const chat = chats.find(c => c.id === chatId);
     
@@ -3018,7 +3025,6 @@ export const MessengerProvider = ({ children }) => {
   
   
   const updateLastMessage = (chatId, message) => {
-    if (isChannel) return;
     
     setChats(prev => {
       return prev.map(chat => {
@@ -3036,7 +3042,6 @@ export const MessengerProvider = ({ children }) => {
   
   
   const refreshChats = () => {
-    if (isChannel) return;
     
     
     if (!user) {
@@ -3051,7 +3056,6 @@ export const MessengerProvider = ({ children }) => {
   
   
   const getTotalUnreadCount = () => {
-    if (isChannel) return 0;
     return Object.values(unreadCounts).reduce((total, count) => total + count, 0);
   };
   
@@ -3452,11 +3456,6 @@ export const MessengerProvider = ({ children }) => {
     
     
     deleteChat: async (chatId) => {
-      
-      if (isChannel) {
-        console.warn('MessengerContext: Канал не может использовать мессенджер. Операция заблокирована.');
-        return { success: false, error: 'Операция недоступна для каналов' };
-      }
 
       try {
         const response = await axios.delete(`${API_URL}/messenger/chats/${chatId}`, {
@@ -3499,7 +3498,7 @@ export const MessengerProvider = ({ children }) => {
     },
     // Функция для отметки всех сообщений в чате как прочитанных (через API)
     markAllChatMessagesAsRead: async (chatId) => {
-      if (!sessionKey || !chatId || isChannel) return;
+      if (!sessionKey || !chatId) return;
       
       try {
         const response = await fetch(`${API_URL}/messenger/chats/${chatId}/read-all`, {
@@ -3588,6 +3587,8 @@ export const MessengerProvider = ({ children }) => {
     prevTotalUnreadRef.current = currentTotal;
   }, [unreadCounts]);
   // ---- конец звукового оповещения ----
+  
+
   
   return (
     <MessengerContext.Provider value={value}>

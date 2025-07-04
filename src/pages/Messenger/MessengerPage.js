@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState, useMemo, useCallback } from 'react';
 import { Box, Typography, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, List, ListItem, ListItemAvatar, ListItemText, Avatar, Checkbox, IconButton, Menu, MenuItem, ListItemIcon, Snackbar } from '@mui/material';
-import { MessengerProvider } from '../../contexts/MessengerContext';
 import { AuthContext } from '../../context/AuthContext';
 import ChatList from '../../components/Messenger/ChatList';
 import ChatWindow from '../../components/Messenger/ChatWindow';
@@ -188,60 +187,7 @@ const MessengerPage = () => {
     console.log('API URL:', API_URL);
   }, [authContext, sessionKey, sessionKeyCookie, jwtToken, forcedSessionKey, API_URL]);
   
-  // Если идет загрузка аутентификации или ключа сессии
-  if (authContext.loading || isLoadingSessionKey) {
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '70vh' 
-      }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-  
-  // Если пользователь является каналом, показываем сообщение о недоступности
-  if (isChannel) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '70vh'
-      }}>
-        <Typography variant="h6" color="error" gutterBottom>
-          Функция недоступна
-        </Typography>
-        <Typography variant="body1">
-          Каналы не могут использовать мессенджер. Мессенджер доступен только для обычных пользователей.
-        </Typography>
-      </Box>
-    );
-  }
-  
-  // Если нет ключа сессии, показываем ошибку и вывод отладочной информации
-  if (!sessionKey) {
-    return (
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '70vh'
-      }}>
-        <Typography variant="h6" gutterBottom>
-          Ошибка авторизации
-        </Typography>
-        <Typography variant="body1" mb={2}>
-          Для доступа к мессенджеру необходимо авторизоваться
-        </Typography>
-        
-      </Box>
-    );
-  }
+
 
   // Мемоизация handleChatSelect и handleBackToList
   const handleChatSelect = useCallback(() => {
@@ -356,7 +302,38 @@ const MessengerPage = () => {
         description="Обмен сообщениями и чаты на платформе К-Коннект"
       />
       
-      <MessengerProvider>
+      {/* Если идет загрузка аутентификации или ключа сессии */}
+      {(authContext.loading || isLoadingSessionKey) && (
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '70vh' 
+        }}>
+          <CircularProgress />
+        </Box>
+      )}
+      
+      {/* Если нет ключа сессии, показываем ошибку */}
+      {!sessionKey && !authContext.loading && !isLoadingSessionKey && (
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '70vh'
+        }}>
+          <Typography variant="h6" gutterBottom>
+            Ошибка авторизации
+          </Typography>
+          <Typography variant="body1" mb={2}>
+            Для доступа к мессенджеру необходимо авторизоваться
+          </Typography>
+        </Box>
+      )}
+      
+      {/* Основной контент мессенджера */}
+      {!authContext.loading && !isLoadingSessionKey && sessionKey && (
         <Box sx={{ 
           display: 'flex', 
           flexDirection: { xs: 'column', md: 'row' },
@@ -371,91 +348,91 @@ const MessengerPage = () => {
           border: '1px solid rgba(255, 255, 255, 0.12)', 
           position: 'relative'
         }}>
-          {/* Боковая панель со списком чатов */}
+        {/* Боковая панель со списком чатов */}
+        <Box sx={{ 
+          width: { xs: '100%', md: '350px' },
+          borderRight: { md: `1px solid ${theme.palette.divider}` },
+          display: isMobile && !showSidebar ? 'none' : 'block',
+          height: '100%',
+          overflow: 'hidden'
+        }}>
+          {/* Кнопки "Новый чат" и "Создать группу" */}
+          <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
+            <Button
+              variant="contained"
+              sx={{
+                flex: 1,
+                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.32)',
+                borderRadius: '8px'
+              }}
+              startIcon={<ChatIcon />}
+              onClick={handleNewChatClick}
+            >
+              Новый чат
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                flex: 1,
+                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                color: '#fff',
+                border: '1px solid rgba(255, 255, 255, 0.32)',
+                borderRadius: '8px'
+              }}
+              startIcon={<AddIcon />}
+              onClick={handleCreateGroupOpen}
+            >
+              Создать группу
+            </Button>
+          </Box>
+          
+          {/* Явно передаем обработчик выбора чата */}
+          <ChatList onSelectChat={handleChatSelect} />
+        </Box>
+        
+        {/* Основная область с чатом */}
+        {isMobile ? (
+          <Box 
+            id="mobile-chat-container"
+            className={`messenger-main ${slideIn ? 'slide-in' : 'slide-out'}`}
+            sx={{ 
+              display: slideIn ? 'block' : 'none', // Полностью скрываем когда не активен
+              transform: slideIn ? 'translateX(0%) !important' : 'translateX(100%) !important',
+              transition: 'transform 0.3s ease-in-out',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100vh',
+              zIndex: slideIn ? 1300 : -1, // Управляем z-index
+              backgroundColor: theme.palette.background.paper,
+              overflowX: 'hidden',  
+              maxWidth: '100vw',
+              WebkitOverflowScrolling: 'touch',
+              touchAction: 'manipulation',
+              // Дополнительная защита от блокировки интерфейса
+              pointerEvents: slideIn ? 'auto' : 'none',
+            }}
+          >
+            <ChatWindow backAction={handleBackToList} isMobile={isMobile} />
+          </Box>
+        ) : (
           <Box sx={{ 
-            width: { xs: '100%', md: '350px' },
-            borderRight: { md: `1px solid ${theme.palette.divider}` },
-            display: isMobile && !showSidebar ? 'none' : 'block',
+            flex: 1, 
+            display: 'flex',
+            flexDirection: 'column',
             height: '100%',
             overflow: 'hidden'
           }}>
-            {/* Кнопки "Новый чат" и "Создать группу" */}
-            <Box sx={{ p: 1, display: 'flex', gap: 1 }}>
-              <Button
-                variant="contained"
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  color: '#fff',
-                  border: '1px solid rgba(255, 255, 255, 0.32)',
-                  borderRadius: '8px'
-                }}
-                startIcon={<ChatIcon />}
-                onClick={handleNewChatClick}
-              >
-                Новый чат
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  color: '#fff',
-                  border: '1px solid rgba(255, 255, 255, 0.32)',
-                  borderRadius: '8px'
-                }}
-                startIcon={<AddIcon />}
-                onClick={handleCreateGroupOpen}
-              >
-                Создать группу
-              </Button>
-            </Box>
-            
-            {/* Явно передаем обработчик выбора чата */}
-            <ChatList onSelectChat={handleChatSelect} />
+            <ChatWindow />
           </Box>
-          
-          {/* Основная область с чатом */}
-          {isMobile ? (
-            <Box 
-              id="mobile-chat-container"
-              className={`messenger-main ${slideIn ? 'slide-in' : 'slide-out'}`}
-              sx={{ 
-                display: slideIn ? 'block' : 'none', // Полностью скрываем когда не активен
-                transform: slideIn ? 'translateX(0%) !important' : 'translateX(100%) !important',
-                transition: 'transform 0.3s ease-in-out',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: '100%',
-                height: '100vh',
-                zIndex: slideIn ? 1300 : -1, // Управляем z-index
-                backgroundColor: theme.palette.background.paper,
-                overflowX: 'hidden',  
-                maxWidth: '100vw',
-                WebkitOverflowScrolling: 'touch',
-                touchAction: 'manipulation',
-                // Дополнительная защита от блокировки интерфейса
-                pointerEvents: slideIn ? 'auto' : 'none',
-              }}
-            >
-              <ChatWindow backAction={handleBackToList} isMobile={isMobile} />
-            </Box>
-          ) : (
-            <Box sx={{ 
-              flex: 1, 
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              overflow: 'hidden'
-            }}>
-              <ChatWindow />
-            </Box>
-          )}
-        </Box>
-      </MessengerProvider>
+        )}
+      </Box>
+      )}
 
       {/* Диалог создания группы */}
       <Dialog 

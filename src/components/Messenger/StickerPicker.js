@@ -300,7 +300,10 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     onClose();
   };
 
-  if (!isOpen) return null;
+  // Рендерим содержимое только если пикер открыт
+  if (!isOpen) {
+    return null;
+  }
 
   const activePack = stickerPacks[activeTab];
 
