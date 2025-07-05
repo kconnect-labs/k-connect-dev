@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTransition, useRef, useCallback } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import AppBottomNavigation from './components/BottomNavigation';
@@ -325,6 +326,7 @@ const AppRoutes = () => {
   const { user, isAuthenticated, loading, checkAuth, error, setUser } = useContext(AuthContext);
   const location = useLocation();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   
   const background = location.state && location.state.background;
@@ -496,7 +498,8 @@ const AppRoutes = () => {
           </Routes>
         )}
       </PageTransition>
-      <AppBottomNavigation user={user} />
+      {/* Bottom navigation рендерится только на мобильных устройствах */}
+      {isMobile && <AppBottomNavigation user={user} isMobile={isMobile} />}
     </MainLayout>
   );
 };

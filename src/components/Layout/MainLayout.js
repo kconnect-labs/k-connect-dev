@@ -88,9 +88,13 @@ const MemoizedHeader = memo(({ toggleSidebar, isMobile }) => (
 ));
 
 
-const MemoizedSidebar = memo(({ open, onClose }) => (
-  <Sidebar open={open} onClose={onClose} />
-));
+const MemoizedSidebar = memo(({ open, onClose, isMobile }) => {
+  // На мобильных устройствах сайдбар вообще не рендерится
+  if (isMobile) {
+    return null;
+  }
+  return <Sidebar open={open} onClose={onClose} />;
+});
 
 const MainLayout = ({ children }) => {
   const theme = useTheme();
@@ -174,31 +178,40 @@ const MainLayout = ({ children }) => {
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       
       <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile} isInMessengerChat={isInMessengerChat}>
-        <Overlay 
-          className={sidebarOpen ? 'active' : ''} 
-          onClick={closeSidebar}
-        />
+        {/* Overlay рендерится только на PC, так как сайдбар только там */}
+        {!isMobile && (
+          <Overlay 
+            className={sidebarOpen ? 'active' : ''} 
+            onClick={closeSidebar}
+          />
+        )}
         
-        <SidebarContainer 
-          open={sidebarOpen} 
-          sx={{ 
-            width: sidebarWidth,
-            display: isInMessengerChat ? 'none' : 'block'
-          }}
-        >
-          <MemoizedSidebar open={sidebarOpen} onClose={closeSidebar} />
-        </SidebarContainer>
+        {/* Сайдбар рендерится только на PC */}
+        {!isMobile && (
+          <SidebarContainer 
+            open={sidebarOpen} 
+            sx={{ 
+              width: sidebarWidth,
+              display: isInMessengerChat ? 'none' : 'block'
+            }}
+          >
+            <MemoizedSidebar open={sidebarOpen} onClose={closeSidebar} isMobile={isMobile} />
+          </SidebarContainer>
+        )}
         
         <ContentContainer 
           sx={{ 
             color: themeSettings?.textColor || theme.palette.text.primary,
             width: { 
+              // На мобильных устройствах контент занимает всю ширину
+              xs: '100%',
+              sm: '100%',
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
             },
             paddingBottom: {
               xs: hasBottomPlayer ? theme.spacing(12) : 0,
               sm: hasBottomPlayer ? theme.spacing(12) : 0,
-              md: hasBottomPlayer ? theme.spacing(12) : theme.spacing(2)
+              md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2)
             }
           }}
         >
@@ -206,8 +219,10 @@ const MainLayout = ({ children }) => {
         </ContentContainer>
       </ContentWrapper>
       
-      {hasBottomPlayer && <MobilePlayer />}
-      {hasDesktopPlayer && <DesktopPlayer />}
+      {/* Bottom navigation рендерится только на мобильных устройствах */}
+      {isMobile && hasBottomPlayer && <MobilePlayer isMobile={isMobile} />}
+      {/* Desktop player рендерится только на PC */}
+      {!isMobile && hasDesktopPlayer && <DesktopPlayer isMobile={isMobile} />}
     </MainContainer>
   );
 };

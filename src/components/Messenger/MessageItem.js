@@ -110,7 +110,19 @@ const TGSSticker = ({ src, style, onClick }) => {
 
   if (loading) {
     return (
-      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ 
+        ...style, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'rgba(255,255,255,0.03)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '8px',
+        minHeight: style?.maxWidth || '120px',
+        minWidth: style?.maxWidth || '120px' 
+      }}>
         <CircularProgress size={24} />
       </div>
     );
@@ -197,7 +209,19 @@ const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
   
   if (stickerType === 'loading') {
     return (
-      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ 
+        ...style,
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'rgba(255,255,255,0.03)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: '8px',
+        minHeight: style?.maxWidth || '120px',
+        minWidth: style?.maxWidth || '120px'
+      }}>
         <CircularProgress size={24} />
       </div>
     );

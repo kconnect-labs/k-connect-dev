@@ -9,7 +9,11 @@ import { useMessenger } from '../contexts/MessengerContext';
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
 
-const AppBottomNavigation = ({ user }) => {
+const AppBottomNavigation = ({ user, isMobile }) => {
+  // AppBottomNavigation рендерится только на мобильных устройствах
+  if (!isMobile) {
+    return null;
+  }
   const navigate = useNavigate();
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState(true);
