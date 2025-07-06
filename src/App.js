@@ -101,6 +101,8 @@ const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
 const PlaylistsPage = lazy(() => import('./pages/MusicPage/PlaylistsPage'));
 const FriendsPage = lazy(() => import('./pages/User/FriendsPage'));
 const StickerManagePage = lazy(() => import('./pages/Info/StickerManagePage'));
+const StreetBlacklistPage = lazy(() => import('./pages/Collab/StreetBlacklistPage'));
+const StreetBlacklistV1Page = lazy(() => import('./pages/Collab/StreetBlacklistV1Page'));
 
 
 export const ThemeSettingsContext = React.createContext({
@@ -1116,37 +1118,89 @@ function App() {
                   `
                 }}/>
               )}
-              <SessionProvider>
-              <MessengerProvider>
-                <LanguageProvider>
-                  <MusicProvider>
-                    <PostDetailProvider>
-                        <Box sx={{ 
-                          display: 'flex', 
-                          flexDirection: 'column', 
-                          minHeight: '100vh',
-                          bgcolor: 'background.default'
-                        }}>
-                          <ErrorBoundary FallbackComponent={ErrorFallback}>
-                            <Suspense fallback={<LoadingIndicator />}>
-                              <DefaultSEO />
-                              <Routes>
-                                <Route path="/rules" element={<PublicPages />} />
-                                <Route path="/privacy-policy" element={<PublicPages />} />
-                                <Route path="/terms-of-service" element={<PublicPages />} />
-                                <Route path="/about" element={<PublicPages />} />
-                                <Route path="/cookies" element={<PublicPages />} />
-                                <Route path="*" element={<AppRoutes />} />
-                              </Routes>
-                              <MusicPlayerCore />
-                            </Suspense>
-                          </ErrorBoundary>
-                        </Box>
-                    </PostDetailProvider>
-                  </MusicProvider>
-                </LanguageProvider>
-                </MessengerProvider>
-              </SessionProvider>
+              <Routes>
+                <Route path="/street/blacklist" element={
+                  <SessionProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            minHeight: '100vh',
+                            bgcolor: 'background.default'
+                          }}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                              <Suspense fallback={<LoadingIndicator />}>
+                                <DefaultSEO />
+                                <StreetBlacklistPage />
+                                <MusicPlayerCore />
+                              </Suspense>
+                            </ErrorBoundary>
+                          </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                  </SessionProvider>
+                } />
+                <Route path="/street/blacklist/v1" element={
+                  <SessionProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            minHeight: '100vh',
+                            bgcolor: 'background.default'
+                          }}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                              <Suspense fallback={<LoadingIndicator />}>
+                                <DefaultSEO />
+                                <StreetBlacklistV1Page />
+                                <MusicPlayerCore />
+                              </Suspense>
+                            </ErrorBoundary>
+                          </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                  </SessionProvider>
+                } />
+                <Route path="*" element={
+                  <SessionProvider>
+                  <MessengerProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                            <Box sx={{ 
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              minHeight: '100vh',
+                              bgcolor: 'background.default'
+                            }}>
+                              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Suspense fallback={<LoadingIndicator />}>
+                                  <DefaultSEO />
+                                  <Routes>
+                                    <Route path="/rules" element={<PublicPages />} />
+                                    <Route path="/privacy-policy" element={<PublicPages />} />
+                                    <Route path="/terms-of-service" element={<PublicPages />} />
+                                    <Route path="/about" element={<PublicPages />} />
+                                    <Route path="/cookies" element={<PublicPages />} />
+                                    <Route path="*" element={<AppRoutes />} />
+                                  </Routes>
+                                  <MusicPlayerCore />
+                                </Suspense>
+                              </ErrorBoundary>
+                            </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                    </MessengerProvider>
+                  </SessionProvider>
+                } />
+              </Routes>
             </DefaultPropsProvider>
             {/* <CookieBanner /> */}
           </ThemeProvider>

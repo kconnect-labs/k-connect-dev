@@ -49,10 +49,11 @@ const getStickerType = (sticker) => {
 };
 
   // Компонент для TGS стикера с улучшенной загрузкой и кешированием
-  const TGSSticker = ({ src, style, onClick, getCachedFile, setCachedFile }) => {
+  const TGSSticker = React.memo(({ src, style, onClick, getCachedFile, setCachedFile }) => {
     const [animationData, setAnimationData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [isStatic, setIsStatic] = useState(true); // По умолчанию статичный режим
 
     useEffect(() => {
       const loadTGS = async () => {
@@ -142,11 +143,16 @@ const getStickerType = (sticker) => {
   }
 
   return (
-    <div style={style} onClick={onClick}>
+    <div 
+      style={style} 
+      onClick={onClick}
+      onMouseEnter={() => setIsStatic(false)} // Включаем анимацию при наведении
+      onMouseLeave={() => setIsStatic(true)}  // Отключаем анимацию при уходе мыши
+    >
       <Lottie
         animationData={animationData}
-        loop={true}
-        autoplay={true}
+        loop={!isStatic} // Зацикливание только когда не статичный
+        autoplay={!isStatic} // Автовоспроизведение только когда не статичный
         style={{ width: '100%', height: '100%' }}
         onError={(error) => {
           console.error('Lottie animation error:', error);
@@ -155,12 +161,13 @@ const getStickerType = (sticker) => {
       />
     </div>
   );
-};
+  });
 
 // Компонент для асинхронной проверки типа стикера с кешированием
-const AsyncStickerRenderer = ({ src, style, onClick, getCachedFile, setCachedFile }) => {
+const AsyncStickerRenderer = React.memo(({ src, style, onClick, getCachedFile, setCachedFile }) => {
   const [stickerType, setStickerType] = useState('loading');
   const [animationData, setAnimationData] = useState(null);
+  const [isStatic, setIsStatic] = useState(true); // По умолчанию статичный режим
   
   useEffect(() => {
     const checkStickerType = async () => {
@@ -240,11 +247,16 @@ const AsyncStickerRenderer = ({ src, style, onClick, getCachedFile, setCachedFil
   
   if (stickerType === 'tgs' && animationData) {
     return (
-      <div style={style} onClick={onClick}>
+      <div 
+        style={style} 
+        onClick={onClick}
+        onMouseEnter={() => setIsStatic(false)} // Включаем анимацию при наведении
+        onMouseLeave={() => setIsStatic(true)}  // Отключаем анимацию при уходе мыши
+      >
         <Lottie
           animationData={animationData}
-          loop={true}
-          autoplay={true}
+          loop={!isStatic} // Зацикливание только когда не статичный
+          autoplay={!isStatic} // Автовоспроизведение только когда не статичный
           style={{ width: '100%', height: '100%' }}
           onError={(error) => {
             console.error('Lottie animation error:', error);
@@ -259,10 +271,15 @@ const AsyncStickerRenderer = ({ src, style, onClick, getCachedFile, setCachedFil
         src={src}
         style={style}
         onClick={onClick}
-        autoPlay
-        loop
+        autoPlay={false} // Отключаем автовоспроизведение
+        loop={false} // Отключаем зацикливание
         muted
         playsInline
+        onMouseEnter={(e) => e.target.play()} // Воспроизводим при наведении
+        onMouseLeave={(e) => {
+          e.target.pause();
+          e.target.currentTime = 0; // Возвращаем к началу
+        }}
       />
     );
   } else {
@@ -275,7 +292,7 @@ const AsyncStickerRenderer = ({ src, style, onClick, getCachedFile, setCachedFil
       />
     );
   }
-};
+  });
 
 const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   const theme = useTheme();
@@ -464,7 +481,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   }, []);
 
   // Компонент для кешированных изображений
-  const CachedImage = ({ src, alt, style, onClick }) => {
+  const CachedImage = React.memo(({ src, alt, style, onClick }) => {
     const [imageSrc, setImageSrc] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -518,10 +535,10 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
         onClick={onClick}
       />
     );
-  };
+  });
 
   // Компонент для кешированных видео
-  const CachedVideo = ({ src, style, onClick, autoPlay = true, loop = true, muted = true, playsInline = true }) => {
+  const CachedVideo = React.memo(({ src, style, onClick, autoPlay = false, loop = false, muted = true, playsInline = true }) => {
     const [videoSrc, setVideoSrc] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -576,9 +593,14 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
         loop={loop}
         muted={muted}
         playsInline={playsInline}
+        onMouseEnter={(e) => e.target.play()} // Воспроизводим при наведении
+        onMouseLeave={(e) => {
+          e.target.pause();
+          e.target.currentTime = 0; // Возвращаем к началу
+        }}
       />
     );
-  };
+  });
 
   // Функция для принудительного обновления кеша
   const refreshStickerPacks = useCallback(async () => {
@@ -800,8 +822,8 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                                 src={sticker.url}
                                 style={commonStyle}
                                 onClick={handleClick}
-                                autoPlay
-                                loop
+                                autoPlay={false}
+                                loop={false}
                                 muted
                                 playsInline
                               />
@@ -903,7 +925,8 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                                   style={commonStyle}
                                   muted
                                   playsInline
-                                  loop
+                                  loop={false}
+                                  autoPlay={false}
                                 />
                               );
                             } else {

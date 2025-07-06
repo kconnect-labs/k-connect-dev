@@ -146,6 +146,7 @@ const TGSSticker = ({ src, style, onClick }) => {
         animationData={animationData}
         loop={true}
         autoplay={true}
+        speed={0.75}
         style={{ width: '100%', height: '100%' }}
       />
     </div>
@@ -234,6 +235,7 @@ const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
           animationData={animationData}
           loop={true}
           autoplay={true}
+          speed={0.75}
           style={{ width: '100%', height: '100%' }}
         />
       </div>
