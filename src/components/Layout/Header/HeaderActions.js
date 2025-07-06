@@ -62,8 +62,8 @@ const HeaderActions = ({
       <Icon icon="solar:magnifer-bold" width="24" height="24" />
     </IconButton>
     
-    {/* Уведомления рендерятся только на PC */}
-    {user && !isMobile && (
+    {/* Уведомления рендерятся везде */}
+    {user && (
       <Box sx={{ display: 'flex', alignItems: 'center', opacity: 0.6, transition: 'opacity 0.2s', '&:hover': { opacity: 1 } }}>
         <NotificationList onNewNotification={handleNewNotification} />
       </Box>
