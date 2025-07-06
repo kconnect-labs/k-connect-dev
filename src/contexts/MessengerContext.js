@@ -1023,6 +1023,11 @@ export const MessengerProvider = ({ children }) => {
         const newMessageChatId = data.chatId || data.chat_id;
         const newMessage = data.message;
         
+        // Добавляем temp_id если он есть в данных
+        if (data.temp_id) {
+          newMessage.temp_id = data.temp_id;
+        }
+        
         
         if (newMessage?.sender) {
           const senderId = newMessage.sender.id || newMessage.sender_id;
@@ -1698,21 +1703,7 @@ export const MessengerProvider = ({ children }) => {
   const handleNewMessage = (message, chatId) => {
     if (!message || !chatId) return;
     
-    console.log(`=== NEW MESSAGE DEBUG ===`);
-    console.log(`Handling new message in chat ${chatId}: message ID ${message.id}`);
-    console.log('Message object:', message);
-    console.log('Original created_at:', message.created_at);
-    console.log('Reply to ID:', message.reply_to_id); // Добавляем логирование reply_to_id
-    
-    // Форматируем дату сообщения
-    if (message.created_at) {
-      const originalDate = message.created_at;
-      message.created_at = formatToLocalTime(message.created_at);
-      console.log(`Date formatted in handleNewMessage: ${originalDate} -> ${message.created_at}`);
-    } else {
-      console.log('No created_at in message');
-    }
-    
+    // Обработка аватара отправителя
     if (message.sender) {
       const senderId = message.sender.id || message.sender_id;
       
@@ -1737,12 +1728,12 @@ export const MessengerProvider = ({ children }) => {
       }
     }
     
-    
+    // Обработка файлов сообщений
     if (message.message_type && message.message_type !== 'text') {
       const messageType = message.message_type;
       const content = message.content;
       
-      
+      // Генерируем URL для файлов
       if (content) {
         if (messageType === 'photo' && !message.photo_url) {
           message.photo_url = getFileUrl(chatId, content);
@@ -1762,105 +1753,72 @@ export const MessengerProvider = ({ children }) => {
       }
     }
     
-    
     const isFromCurrentUser = message.sender_id === user?.id;
-    
-    
     const numChatId = typeof chatId === 'string' ? parseInt(chatId) : chatId;
-    
     
     setMessages(prev => {
       const chatMessages = prev[numChatId] || [];
       
-      
+      // Проверяем, есть ли уже сообщение с таким ID
       if (chatMessages.some(m => m.id === message.id)) {
+        console.log(`Сообщение с ID ${message.id} уже существует, пропускаем`);
         return prev;
       }
       
+      // ДЕДУПЛИКАЦИЯ: Если это сообщение от текущего пользователя и есть tempId
+      if (isFromCurrentUser && message.temp_id) {
+        // Ищем временное сообщение с таким tempId
+        const tempMessageIndex = chatMessages.findIndex(m => 
+          m.is_temp && m.id === message.temp_id
+        );
+        
+        if (tempMessageIndex !== -1) {
+          console.log(`Заменяем временное сообщение ${message.temp_id} на реальное ${message.id}`);
+          // Заменяем временное сообщение на реальное
+          const newChatMessages = [...chatMessages];
+          newChatMessages[tempMessageIndex] = message;
+          
+          return {
+            ...prev,
+            [numChatId]: newChatMessages.sort((a, b) => a.id - b.id)
+          };
+        }
+      }
+      
+      // ДЕДУПЛИКАЦИЯ: Проверяем на дубликаты по содержимому и времени (для сообщений без tempId)
+      if (isFromCurrentUser && !message.temp_id) {
+        const now = new Date();
+        const messageTime = new Date(message.created_at);
+        const timeDiff = Math.abs(now - messageTime);
+        
+        // Если сообщение было создано в последние 10 секунд, проверяем на дубликаты
+        if (timeDiff < 10000) {
+          const duplicateIndex = chatMessages.findIndex(m => 
+            m.content === message.content && 
+            m.sender_id === message.sender_id &&
+            m.is_temp && // Только временные сообщения
+            Math.abs(new Date(m.created_at) - messageTime) < 5000 // В пределах 5 секунд
+          );
+          
+          if (duplicateIndex !== -1) {
+            console.log(`Заменяем временное сообщение на реальное (дедупликация по содержимому)`);
+            const newChatMessages = [...chatMessages];
+            newChatMessages[duplicateIndex] = message;
+            
+            return {
+              ...prev,
+              [numChatId]: newChatMessages.sort((a, b) => a.id - b.id)
+            };
+          }
+        }
+      }
+      
+      // Если это новое сообщение, добавляем его
       return {
         ...prev,
         [numChatId]: [...chatMessages, message].sort((a, b) => a.id - b.id)
       };
     });
-    
-    
-    setChats(prev => {
-      
-      const chatIndex = prev.findIndex(c => c.id === numChatId);
-      
-      
-      if (chatIndex === -1) {
-        console.log(`Chat ${numChatId} not found in chat list, refreshing chats...`);
-        setTimeout(() => refreshChats(), 100);
-        return prev;
-      }
-      
-      
-      const chat = { ...prev[chatIndex], last_message: message };
-      
-      
-      if (!chat.is_group && chat.members) {
-        
-        const otherMember = chat.members.find(m => {
-          const memberId = m.user_id || m.id;
-          
-          const memberIdStr = memberId ? String(memberId) : null;
-          const currentUserIdStr = user?.id ? String(user.id) : null;
-          return memberIdStr && currentUserIdStr && memberIdStr !== currentUserIdStr;
-        });
-        
-        if (otherMember) {
-          const otherUserId = otherMember.user_id || otherMember.id;
-          
-          
-          if (!chat.avatar || 
-              (chat.avatar && typeof chat.avatar === 'string' && !chat.avatar.startsWith('/static/'))) {
-            
-            
-            if (otherUserId && avatarCache[otherUserId]) {
-              chat.avatar = avatarCache[otherUserId];
-              console.log(`Применение кэшированной аватарки для чата ${numChatId}`);
-            }
-            
-            else {
-              const photo = otherMember.photo || otherMember.avatar;
-              if (otherUserId && photo) {
-                chat.avatar = getAvatarUrl(otherUserId, photo);
-                console.log(`Обновление аватара чата ${numChatId} при новом сообщении: ${chat.avatar}`);
-              }
-            }
-          }
-        }
-      }
-      
-      
-      const newChats = [...prev];
-      newChats.splice(chatIndex, 1);
-      
-      
-      console.log(`Moving chat ${numChatId} to top of chat list`);
-      return [chat, ...newChats];
-    });
-    
-    
-    if (activeChat?.id !== numChatId) {
-      
-      if (!isFromCurrentUser) {
-        // Removed local unreadCounts increment - rely entirely on server WebSocket updates
-        console.log(`New message from another user in chat ${numChatId}, waiting for server unread_counts update`);
-      }
-    } else if (user && !isFromCurrentUser) {
-      // 🔥 ИСПРАВЛЕНИЕ: Автоматически читаем сообщения в реальном времени если чат открыт
-      console.log(`Auto-reading message ${message.id} in active chat ${numChatId}`);
-      
-      // Сразу отмечаем как прочитанное с небольшой задержкой
-      setTimeout(async () => {
-        await markMessageAsRead(message.id);
-      }, 500); // Небольшая задержка для корректной обработки
-    }
-    
-    console.log(`=== END NEW MESSAGE DEBUG ===`);
-    console.log(`Message ${message.id} processed successfully for chat ${chatId}`);
   };
   
   
@@ -2677,7 +2635,7 @@ export const MessengerProvider = ({ children }) => {
           return [updatedChat, ...newChats];
         });
         
-        // Отправляем сообщение через WebSocket
+        // Отправляем сообщение через WebSocket с tempId
         websocketClient.current.sendChatMessage(chatId, messageText, replyToId, tempMessage.id);
         
         return tempMessage;
