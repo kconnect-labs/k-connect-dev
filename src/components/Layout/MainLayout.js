@@ -23,7 +23,9 @@ const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 
-const ContentWrapper = styled(Box)(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
+const ContentWrapper = styled(Box, {
+  shouldForwardProp: (prop) => !['isMusicPage', 'isMobile', 'isInMessengerChat'].includes(prop),
+})(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
   display: 'flex',
   flexGrow: 1,
   paddingTop: isMusicPage && isMobile ? 0 : (isInMessengerChat ? 0 : 40), 
