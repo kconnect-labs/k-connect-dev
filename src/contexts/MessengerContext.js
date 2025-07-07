@@ -704,10 +704,36 @@ export const MessengerProvider = ({ children }) => {
   // Состояние для принудительно сохранённого ключа и его загрузки
   const [forcedSessionKey, setForcedSessionKey] = useState(null);
   const [fetchingSessionKey, setFetchingSessionKey] = useState(false);
+  const [sessionKeyAttempts, setSessionKeyAttempts] = useState(0);
+  
+  // Сбрасываем счетчик попыток при смене пользователя
+  useEffect(() => {
+    setSessionKeyAttempts(0);
+  }, [authContext?.user?.id]);
+  
+  const sessionKeyCookieValue = getCookie('session_key');
   
   // Итоговый ключ сессии (проверяем все источники, включая только что полученный)
   const sessionKey = authContext?.sessionKey || authContext?.session_key ||
-                     localStorage.getItem('session_key') || sessionKeyCookie || forcedSessionKey || jwtToken;
+                     localStorage.getItem('session_key') || 
+                     getCookie('session_key') || // Добавляем проверку session_key в cookie
+                     sessionKeyCookie || forcedSessionKey || jwtToken;
+  
+  // Логируем источник session_key для отладки
+  React.useEffect(() => {
+    if (sessionKey) {
+      let source = 'unknown';
+      if (authContext?.sessionKey) source = 'authContext.sessionKey';
+      else if (authContext?.session_key) source = 'authContext.session_key';
+      else if (localStorage.getItem('session_key')) source = 'localStorage';
+      else if (getCookie('session_key')) source = 'cookie session_key';
+      else if (sessionKeyCookie) source = 'cookie jwt/token';
+      else if (forcedSessionKey) source = 'forced session key';
+      else if (jwtToken) source = 'jwt token';
+      
+      console.log(`MessengerContext: session_key получен из: ${source}`);
+    }
+  }, [sessionKey, authContext?.sessionKey, authContext?.session_key, sessionKeyCookie, forcedSessionKey, jwtToken]);
   
   
   const [deviceId] = useState(() => {
@@ -729,11 +755,17 @@ export const MessengerProvider = ({ children }) => {
       console.log('Контекст мессенджера: Использование JWT токена в качестве session_key');
     }
     
-    if (sessionKeyCookie && !localStorage.getItem('session_key')) {
-      localStorage.setItem('session_key', sessionKeyCookie);
+    // Проверяем session_key в cookie и сохраняем в localStorage если его там нет
+    if (sessionKeyCookieValue && !localStorage.getItem('session_key')) {
+      localStorage.setItem('session_key', sessionKeyCookieValue);
       console.log('Контекст мессенджера: Сохранение session_key из cookie в localStorage');
     }
-  }, [jwtToken, sessionKeyCookie]);
+    
+    if (sessionKeyCookie && !localStorage.getItem('session_key')) {
+      localStorage.setItem('session_key', sessionKeyCookie);
+      console.log('Контекст мессенджера: Сохранение других session токенов из cookie в localStorage');
+    }
+  }, [jwtToken, sessionKeyCookie, sessionKeyCookieValue]);
   
   
   useEffect(() => {
@@ -3497,9 +3529,22 @@ export const MessengerProvider = ({ children }) => {
   
   // Автоматически запрашиваем session_key, если он ещё не доступен
   useEffect(() => {
+    // Проверяем, находимся ли мы в development режиме
+    const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+    
+    // В development режиме ограничиваем количество попыток до 3
+    if (isDevelopment && sessionKeyAttempts >= 3) {
+      console.warn('MessengerContext: Превышено максимальное количество попыток получения session_key (3) в development режиме');
+      return;
+    }
+    
     if (!sessionKey && authContext?.isAuthenticated && !fetchingSessionKey) {
       const API_URL = 'https://k-connect.ru/apiMes';
       setFetchingSessionKey(true);
+      setSessionKeyAttempts(prev => prev + 1);
+      
+      console.log(`MessengerContext: Попытка ${sessionKeyAttempts + 1} получения session_key`);
+      
       axios.get(`${API_URL}/auth/get-session-key`, {
         withCredentials: true,
         headers: {
@@ -3512,14 +3557,21 @@ export const MessengerProvider = ({ children }) => {
           localStorage.setItem('session_key', res.data.session_key);
           setForcedSessionKey(res.data.session_key);
           console.log('MessengerContext: session_key fetched and saved');
+          // Сбрасываем счетчик попыток при успешном получении
+          setSessionKeyAttempts(0);
         }
       })
       .catch(err => {
-        console.error('MessengerContext: error fetching session_key', err);
+        console.error(`MessengerContext: error fetching session_key (попытка ${sessionKeyAttempts + 1})`, err);
+        
+        // В development режиме показываем предупреждение о CORS
+        if (isDevelopment && err.code === 'ERR_NETWORK') {
+          console.warn('MessengerContext: Возможная ошибка CORS в development режиме. Проверьте настройки бэкенда.');
+        }
       })
       .finally(() => setFetchingSessionKey(false));
     }
-  }, [sessionKey, authContext?.isAuthenticated, jwtToken, fetchingSessionKey]);
+  }, [sessionKey, authContext?.isAuthenticated, jwtToken, fetchingSessionKey, sessionKeyAttempts]);
   
   // Removed local unreadCounts update for active chat - rely entirely on server WebSocket updates
   // The server will handle unread count updates when messages are read in active chat

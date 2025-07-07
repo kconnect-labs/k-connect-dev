@@ -45,8 +45,7 @@ const SidebarNavigation = memo(({
   const { unreadCounts } = useMessenger();
   const totalUnread = useMemo(() => {
     const total = Object.values(unreadCounts || {}).filter(c=>c>0).length;
-    console.log('🧭 SidebarNavigation: unreadCounts changed:', unreadCounts, 'totalUnread:', total);
-    return total;
+     return total;
   }, [unreadCounts]);
   
   const isActive = useCallback((path) => {
