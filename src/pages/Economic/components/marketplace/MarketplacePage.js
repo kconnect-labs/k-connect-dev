@@ -4,7 +4,6 @@ import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import MarketplaceItemCard from './MarketplaceItemCard';
 import MarketplaceModal from './MarketplaceModal';
 import { FilterList, Sort } from '@mui/icons-material';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
@@ -12,6 +11,7 @@ import { AuthContext } from '../../../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import inventoryImageService from '../../../../services/InventoryImageService';
+import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -381,10 +381,12 @@ const MarketplacePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <MarketplaceItemCard
-                  listing={listing}
-                  onClick={() => handleItemClick(listing)}
-                />
+                <Box onClick={() => handleItemClick(listing)}>
+                  <InventoryItemCard item={{ ...listing.item, marketplace: { price: listing.price } }} />
+                  <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 0.5, opacity: 0.8 }}>
+                    @{listing.seller_name || listing.seller_username || 'seller'}
+                  </Typography>
+                </Box>
               </motion.div>
             </Grid>
           ))
