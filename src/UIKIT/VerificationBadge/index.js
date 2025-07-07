@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tooltip, SvgIcon } from '@mui/material';
+import React, { useState } from 'react';
+import { Tooltip, SvgIcon, Box, styled } from '@mui/material';
 
 /**
  * Modern verification badge component with different styles based on status
@@ -7,16 +7,28 @@ import { Tooltip, SvgIcon } from '@mui/material';
  * @param {Object} props - Component props
  * @param {string|number} props.status - Verification status code
  * @param {string} props.size - Size of the badge ('small' or default)
+ * @param {Function} props.onClick - Optional click handler
  * @returns {React.ReactElement}
  */
 const VerifiedBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 24 : 21,
+      fontSize: props.size === 'small' ? 22 : 19,
       ml: 0.5,
       color: props.color,
-      filter: `drop-shadow(0 0 3px ${props.color}66)`,
+      filter: `drop-shadow(0 0 6px ${props.color}80)`,
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: `drop-shadow(0 0 8px ${props.color}aa)`,
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -28,11 +40,22 @@ const VerifiedBadge = React.forwardRef((props, ref) => (
 const OfficialBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 24 : 21,
+      fontSize: props.size === 'small' ? 22 : 19,
       ml: 0.5,
       color: props.color,
-      filter: `drop-shadow(0 0 3px ${props.color}66)`,
+      filter: `drop-shadow(0 0 6px ${props.color}80)`,
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: `drop-shadow(0 0 8px ${props.color}aa)`,
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -44,11 +67,22 @@ const OfficialBadge = React.forwardRef((props, ref) => (
 const VIPBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 24 : 21,
+      fontSize: props.size === 'small' ? 22 : 19,
       ml: 0.5,
       color: props.color,
-      filter: `drop-shadow(0 0 3px ${props.color}66)`,
+      filter: `drop-shadow(0 0 6px ${props.color}80)`,
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: `drop-shadow(0 0 8px ${props.color}aa)`,
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -61,11 +95,22 @@ const VIPBadge = React.forwardRef((props, ref) => (
 const ModeratorBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 24 : 21,
+      fontSize: props.size === 'small' ? 22 : 19,
       ml: 0.5,
       color: props.color,
-      filter: `drop-shadow(0 0 3px ${props.color}66)`,
+      filter: `drop-shadow(0 0 6px ${props.color}80)`,
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: `drop-shadow(0 0 8px ${props.color}aa)`,
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -78,11 +123,22 @@ const ModeratorBadge = React.forwardRef((props, ref) => (
 const SupportBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 24 : 21,
+      fontSize: props.size === 'small' ? 22 : 19,
       ml: 0.5,
       color: props.color,
-      filter: `drop-shadow(0 0 3px ${props.color}66)`,
+      filter: `drop-shadow(0 0 6px ${props.color}80)`,
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: `drop-shadow(0 0 8px ${props.color}aa)`,
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -95,11 +151,22 @@ const SupportBadge = React.forwardRef((props, ref) => (
 const ChannelVerifiedBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 26 : 22,
+      fontSize: props.size === 'small' ? 20 : 18,
       ml: 0.5,
       color: '#1e88e5',
-      filter: 'drop-shadow(0 0 4px rgba(30, 136, 229, 0.4))',
+      filter: 'drop-shadow(0 0 8px rgba(30, 136, 229, 0.6))',
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: 'drop-shadow(0 0 10px rgba(30, 136, 229, 0.8))',
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -112,11 +179,22 @@ const ChannelVerifiedBadge = React.forwardRef((props, ref) => (
 const ChannelPremiumBadge = React.forwardRef((props, ref) => (
   <SvgIcon 
     ref={ref}
+    onClick={props.onClick}
+    onTouchStart={props.onTouchStart}
     sx={{ 
-      fontSize: props.size === 'small' ? 26 : 22,
+      fontSize: props.size === 'small' ? 20 : 18,
       ml: 0.5,
       color: '#7c4dff',
-      filter: 'drop-shadow(0 0 4px rgba(124, 77, 255, 0.4))',
+      filter: 'drop-shadow(0 0 8px rgba(124, 77, 255, 0.6))',
+      cursor: props.onClick ? 'pointer' : 'default',
+      transition: 'all 0.2s ease',
+      '&:hover': props.onClick ? {
+        transform: 'scale(1.1)',
+        filter: 'drop-shadow(0 0 10px rgba(124, 77, 255, 0.8))',
+      } : {},
+      '&:active': props.onClick ? {
+        transform: 'scale(0.95)',
+      } : {},
     }}
   >
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -126,54 +204,162 @@ const ChannelPremiumBadge = React.forwardRef((props, ref) => (
   </SvgIcon>
 ));
 
-const VerificationBadge = React.forwardRef(({ status, size }, ref) => {
+const CustomTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  '& .MuiTooltip-tooltip': {
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(40px)',
+    fontSize: '0.75rem',
+    maxWidth: 250,
+    padding: '8px 12px',
+    borderRadius: '12px',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    color: 'rgba(255, 255, 255, 0.9)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+  },
+  '& .MuiTooltip-arrow': {
+    color: 'rgba(255, 255, 255, 0.03)',
+  }
+}));
+
+const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  
   if (!status) return null;
   
   const getColorAndTitle = (status) => {
     if (status === 'verified') {
-      return { color: '#D0BCFF', title: 'Верифицирован' };
+      return { 
+        color: '#D0BCFF', 
+        title: '✓ Верифицированный аккаунт',
+        description: 'Этот аккаунт прошел верификацию и подтвержден администрацией'
+      };
     }
     
     switch(Number(status)) {
       case 1:
-        return { color: '#9e9e9e', title: 'Верифицирован' };
+        return { 
+          color: '#9e9e9e', 
+          title: '✓ Верифицированный аккаунт',
+          description: 'Этот аккаунт прошел верификацию.'
+        };
       case 2:
-        return { color: '#d67270', title: 'Официальный аккаунт' };
+        return { 
+          color: '#d67270', 
+          title: '🏛️ Официальный аккаунт',
+          description: 'Официальный аккаунт подтвержденный администрацией'
+        };
       case 3:
-        return { color: '#b39ddb', title: 'VIP аккаунт' };
+        return { 
+          color: '#b39ddb', 
+          title: '👑 VIP аккаунт',
+          description: 'Аккаунт друга проекта'
+        };
       case 4:
-        return { color: '#ff9800', title: 'Модератор' };
+        return { 
+          color: '#ff9800', 
+          title: '🛡️ Модератор',
+          description: 'Модератор платформы с правами управления контентом'
+        };
       case 5:
-        return { color: '#4caf50', title: 'Поддержка' };
+        return { 
+          color: '#4caf50', 
+          title: '💬 Поддержка',
+          description: 'Представитель службы поддержки платформы'
+        };
       case 6:
-        return { color: '#1e88e5', title: 'Канал (Верифицированный)', isChannelVerified: true };
+        return { 
+          color: '#1e88e5', 
+          title: '📺 Канал (Верифицированный)',
+          description: 'Официальный верифицированный канал с подтвержденной подлинностью',
+          isChannelVerified: true 
+        };
       case 7:
-        return { color: '#7c4dff', title: 'Канал (Премиум)', isChannelPremium: true };
+        return { 
+          color: '#7c4dff', 
+          title: '⭐ Канал (Премиум)',
+          description: 'Премиум канал с расширенными возможностями и привилегиями',
+          isChannelPremium: true 
+        };
       default:
-        return { color: '#D0BCFF', title: 'Верифицирован' };
+        return { 
+          color: '#D0BCFF', 
+          title: '✓ Верифицированный аккаунт',
+          description: 'Этот аккаунт прошел верификацию и подтвержден администрацией'
+        };
     }
   };
   
-  const { color, title, isChannelVerified, isChannelPremium } = getColorAndTitle(status);
+  const { color, title, description, isChannelVerified, isChannelPremium } = getColorAndTitle(status);
+
+  const handleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    // Показываем тултип на мобильных устройствах при клике
+    if (onClick) {
+      onClick(status, title, description);
+    } else {
+      // Если нет onClick, просто показываем тултип
+      setTooltipOpen(true);
+      setTimeout(() => setTooltipOpen(false), 3000);
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    // Показываем тултип на мобильных устройствах при касании
+    if (onClick) {
+      onClick(status, title, description);
+    } else {
+      setTooltipOpen(true);
+      setTimeout(() => setTooltipOpen(false), 3000);
+    }
+  };
+
+  const tooltipContent = (
+    <Box sx={{ textAlign: 'center', p: 0.5 }}>
+      <Box sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5 }}>
+        {title}
+      </Box>
+      <Box sx={{ fontSize: '0.75rem', opacity: 0.8, maxWidth: 200 }}>
+        {description}
+      </Box>
+    </Box>
+  );
 
   return (
-    <Tooltip title={title} placement="top" arrow>
-      {isChannelVerified ? (
-        <ChannelVerifiedBadge ref={ref} size={size} />
-      ) : isChannelPremium ? (
-        <ChannelPremiumBadge ref={ref} size={size} />
-      ) : Number(status) === 2 ? (
-        <OfficialBadge ref={ref} size={size} color={color} />
-      ) : Number(status) === 3 ? (
-        <VIPBadge ref={ref} size={size} color={color} />
-      ) : Number(status) === 4 ? (
-        <ModeratorBadge ref={ref} size={size} color={color} />
-      ) : Number(status) === 5 ? (
-        <SupportBadge ref={ref} size={size} color={color} />
-      ) : (
-        <VerifiedBadge ref={ref} size={size} color={color} />
-      )}
-    </Tooltip>
+    <CustomTooltip 
+      title={tooltipContent}
+      placement="top" 
+      arrow
+      open={tooltipOpen}
+      onClose={() => setTooltipOpen(false)}
+      disableFocusListener
+      disableHoverListener
+      disableTouchListener
+    >
+      <span>
+        {isChannelVerified ? (
+          <ChannelVerifiedBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : isChannelPremium ? (
+          <ChannelPremiumBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : Number(status) === 2 ? (
+          <OfficialBadge ref={ref} size={size} color={color} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : Number(status) === 3 ? (
+          <VIPBadge ref={ref} size={size} color={color} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : Number(status) === 4 ? (
+          <ModeratorBadge ref={ref} size={size} color={color} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : Number(status) === 5 ? (
+          <SupportBadge ref={ref} size={size} color={color} onClick={handleClick} onTouchStart={handleTouchStart} />
+        ) : (
+          <VerifiedBadge ref={ref} size={size} color={color} onClick={handleClick} onTouchStart={handleTouchStart} />
+        )}
+      </span>
+    </CustomTooltip>
   );
 });
 
