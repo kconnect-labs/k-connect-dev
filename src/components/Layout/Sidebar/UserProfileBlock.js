@@ -15,22 +15,12 @@ const UserProfileWrapper = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1.5),
   position: 'relative',
   gap: theme.spacing(1.5),
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: 0,
-    left: '10%',
-    right: '10%',
-    height: '1px',
-    background: theme.palette.mode === 'dark' 
-      ? `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)`
-      : `linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent)`,
-  }
 }));
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: 48,
   height: 48,
+  borderRadius: '8px',
   border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   transition: 'transform 0.2s ease',
@@ -94,7 +84,21 @@ const UserProfileBlock = ({ user }) => {
   if (!user) return null;
   
   return (
-    <UserProfileWrapper>
+    <UserProfileWrapper
+      component={RouterLink}
+      to={`/profile/${user?.username || user?.id}`}
+      sx={{
+        textDecoration: 'none',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        borderRadius: '12px',
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          transform: 'translateY(-1px)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        }
+      }}
+    >
       <StyledAvatar 
         src={user?.photo ? (user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`) : undefined}
         alt={user?.name || t('sidebar.profile.default_name')}

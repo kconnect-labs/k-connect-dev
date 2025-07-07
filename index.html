@@ -64,6 +64,35 @@
         -ms-user-select: none;
         user-select: none;
       }
+          
+      /* Оптимизация для анимаций текстов в плеере */
+      .lyrics-container {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      
+      .lyrics-line {
+        will-change: transform, opacity, filter;
+        transform-style: preserve-3d;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      
+      /* Ускорение анимаций на мощных устройствах */
+      @media (prefers-reduced-motion: no-preference) {
+        .lyrics-line {
+          transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+      }
+      
+      /* Уменьшение анимаций для пользователей с предпочтением */
+      @media (prefers-reduced-motion: reduce) {
+        .lyrics-line {
+          animation-duration: 0.2s !important;
+          transition-duration: 0.2s !important;
+        }
+      }
     </style>
     
     <script>
@@ -98,6 +127,22 @@
     <noscript>Для работы К-Коннект необходим JavaScript</noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.js"></script>
+
+    <!-- Service Worker Registration for Push Notifications -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/custom-sw.js')
+            .then(function(registration) {
+              console.log('Воркер зареган йоу:', registration);
+            })
+            .catch(function(error) {
+              console.log('воркер помер:', error);
+            });
+        });
+      }
+    </script>
+    
 
   </body>
 </html>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { 
   Box, 
   Grid, 
@@ -17,10 +17,13 @@ import {
   Alert,
   Avatar,
   InputAdornment,
-  Snackbar
+  Snackbar,
+  Tabs,
+  Tab,
+  Badge
 } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Diamond as DiamondIcon,
   Star as StarIcon,
@@ -28,7 +31,12 @@ import {
   RadioButtonUnchecked as UnequippedIcon,
   Send as SendIcon,
   Close as CloseIcon,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Upgrade as UpgradeIcon,
+  ShoppingCart as ShoppingCartIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
+  CompareArrows as CompareArrowsIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
@@ -44,6 +52,7 @@ import {
   getFallbackColor,
   useUpgradeEffects
 } from './upgradeEffectsConfig';
+import inventoryImageService from '../../../../services/InventoryImageService';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -70,8 +79,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
-  width: 80,
-  height: 80,
+  width: 100,
+  height: 100,
   borderRadius: 12,
   background: 'rgba(255, 255, 255, 0.1)',
   display: 'flex',
@@ -81,11 +90,29 @@ const ItemImage = styled(Box)(({ theme }) => ({
   boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
   margin: '0 auto 16px',
   overflow: 'hidden',
+  position: 'relative',
   '& img': {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
   },
 }));
 
@@ -141,20 +168,65 @@ const UserAvatar = styled(Avatar)(() => ({
   backgroundColor: '#444444'
 }));
 
-const InventoryPage = () => {
-  const [inventory, setInventory] = useState([]);
+const PriceBadge = styled(Box)({
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  padding: '6px 12px',
+  borderRadius: '20px',
+  fontSize: '0.875rem',
+  fontWeight: 'bold',
+  color: '#fff',
+  background: 'rgba(0, 0, 0, 0.7)',
+  backdropFilter: 'blur(5px)',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 4,
+  zIndex: 2,
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+});
+
+const KBallsIcon = styled('img')({
+  width: '16px',
+  height: '16px',
+  marginRight: '4px',
+});
+
+const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState(0);
-  const [userPoints, setUserPoints] = useState(0);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [itemInfoModalOpen, setItemInfoModalOpen] = useState(false);
+  const [showItemInfo, setShowItemInfo] = useState(false);
+  const [externalItem, setExternalItem] = useState(null);
+  const [externalLoading, setExternalLoading] = useState(false);
+  const [externalError, setExternalError] = useState('');
+  const [transferDialogOpen, setTransferDialogOpen] = useState(false);
+  const [recipientUsername, setRecipientUsername] = useState('');
+  const [transferring, setTransferring] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
+  const [showEquipped, setShowEquipped] = useState(true);
+  const { user } = useAuth();
   const [notification, setNotification] = useState({
     open: false,
     message: '',
     severity: 'success' // 'success', 'error', 'warning', 'info'
   });
-  const { user } = useAuth();
+  
+  // Пагинация
+  const [pagination, setPagination] = useState({
+    page: 1,
+    per_page: 15,
+    total: 0,
+    pages: 0,
+    has_next: false,
+    has_prev: false
+  });
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -163,22 +235,85 @@ const InventoryPage = () => {
     }
   }, [user]);
 
-  const fetchInventory = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/inventory/my-inventory');
-      const data = await response.json();
-      
-      if (data.success) {
-        setInventory(data.items);
+  useEffect(() => {
+    if (itemIdToOpen) {
+      // Сначала ищем в инвентаре
+      const found = items.find(i => String(i.id) === String(itemIdToOpen));
+      if (found) {
+        setSelectedItem(found);
+        setShowItemInfo(true);
+        setExternalItem(null);
+        setExternalError('');
       } else {
-        setError('Ошибка загрузки инвентаря');
+        // Если нет — грузим отдельно
+        setExternalLoading(true);
+        setExternalError('');
+        setShowItemInfo(true);
+        setSelectedItem(null);
+        fetch(`/api/inventory/item/${itemIdToOpen}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.item) {
+              setExternalItem(data.item);
+            } else {
+              setExternalError('Не удалось получить предмет');
+            }
+          })
+          .catch(() => setExternalError('Ошибка при получении предмета'))
+          .finally(() => setExternalLoading(false));
       }
-    } catch (err) {
-      setError('Ошибка сети');
-      console.error('Error fetching inventory:', err);
+    }
+  }, [itemIdToOpen, items]);
+
+  const fetchInventory = async (page = 1, append = false) => {
+    try {
+      if (page === 1) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      
+      const response = await axios.get(`/api/inventory/my-inventory?page=${page}&per_page=15`);
+      if (response.data.success) {
+        const newItems = response.data.items;
+        
+        if (append) {
+          setItems(prevItems => [...prevItems, ...newItems]);
+        } else {
+          setItems(newItems);
+        }
+        
+        // Обновляем пагинацию
+        setPagination(response.data.pagination);
+        setHasMore(response.data.pagination.has_next);
+        
+        // Предзагружаем изображения для новых предметов
+        if (newItems && newItems.length > 0) {
+          await inventoryImageService.preloadInventoryImages(newItems);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      if (!append) {
+        setError('Ошибка при загрузке инвентаря');
+      }
     } finally {
       setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const loadMoreItems = () => {
+    if (!loadingMore && hasMore) {
+      fetchInventory(pagination.page + 1, true);
+    }
+  };
+
+  // Обработчик прокрутки для бесконечной загрузки
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollHeight - scrollTop <= clientHeight * 1.5 && !loadingMore && hasMore) {
+      loadMoreItems();
     }
   };
 
@@ -237,21 +372,21 @@ const InventoryPage = () => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-    setItemInfoModalOpen(true);
+    setShowItemInfo(true);
   };
 
   const handleCloseItemInfoModal = () => {
-    setItemInfoModalOpen(false);
+    setShowItemInfo(false);
     setSelectedItem(null);
   };
 
   const handleItemUpdate = () => {
-    fetchInventory();
+    fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
   };
 
   const handleTransferSuccess = () => {
-    fetchInventory();
+    fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
   };
 
@@ -295,23 +430,23 @@ const InventoryPage = () => {
   };
 
   const filteredItems = activeTab === 0 
-    ? inventory 
+    ? items 
     : activeTab === 1 
-    ? inventory.filter(item => item.is_equipped)
-    : inventory.filter(item => !item.is_equipped);
+    ? items.filter(item => item.is_equipped)
+    : items.filter(item => !item.is_equipped);
 
   const tabs = [
     {
       value: 0,
-      label: `Все (${inventory.length})`
+      label: `Все (${items.length})`
     },
     {
       value: 1,
-      label: `Надетые (${inventory.filter(item => item.is_equipped).length})`
+      label: `Надетые (${items.filter(item => item.is_equipped).length})`
     },
     {
       value: 2,
-      label: `Не надетые (${inventory.filter(item => !item.is_equipped).length})`
+      label: `Не надетые (${items.filter(item => !item.is_equipped).length})`
     }
   ];
 
@@ -326,6 +461,77 @@ const InventoryPage = () => {
   const handleCloseNotification = () => {
     setNotification(prev => ({ ...prev, open: false }));
   };
+
+  const handleUpgradeItem = async (item) => {
+    if (!item.upgradeable || item.upgrade_level >= 1) {
+      return;
+    }
+
+    try {
+      setUpgrading(true);
+      const response = await axios.post(`/api/inventory/upgrade/${item.id}`);
+      
+      if (response.data.success) {
+        setUserPoints(response.data.remaining_points);
+        // Обновляем предмет в списке
+        setItems(prevItems => 
+          prevItems.map(i => 
+            i.id === item.id 
+              ? { ...i, upgrade_level: response.data.upgrade_level }
+              : i
+          )
+        );
+        alert(`Предмет "${item.item_name}" успешно улучшен!`);
+      } else {
+        alert(response.data.message || 'Ошибка улучшения предмета');
+      }
+    } catch (error) {
+      console.error('Error upgrading item:', error);
+      alert('Ошибка при улучшении предмета');
+    } finally {
+      setUpgrading(false);
+    }
+  };
+
+  const handleTransferItem = async () => {
+    if (!selectedItem || !recipientUsername.trim()) {
+      return;
+    }
+
+    try {
+      setTransferring(true);
+      const response = await axios.post(`/api/inventory/transfer/${selectedItem.id}`, {
+        recipient_username: recipientUsername.trim()
+      });
+      
+      if (response.data.success) {
+        setUserPoints(response.data.remaining_points);
+        // Удаляем предмет из списка
+        setItems(prevItems => prevItems.filter(i => i.id !== selectedItem.id));
+        setTransferDialogOpen(false);
+        setRecipientUsername('');
+        setSelectedItem(null);
+        alert(`Предмет "${selectedItem.item_name}" успешно передан!`);
+      } else {
+        alert(response.data.message || 'Ошибка передачи предмета');
+      }
+    } catch (error) {
+      console.error('Error transferring item:', error);
+      alert('Ошибка при передаче предмета');
+    } finally {
+      setTransferring(false);
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    openItemModalById: (id) => {
+      const item = items.find(i => String(i.id) === String(id));
+      if (item) {
+        setSelectedItem(item);
+        setShowItemInfo(true);
+      }
+    }
+  }));
 
   if (!user) {
     return (
@@ -371,7 +577,7 @@ const InventoryPage = () => {
   }
 
   return (
-    <StyledContainer>
+    <StyledContainer onScroll={handleScroll} sx={{ height: '100vh', overflowY: 'auto' }}>
       <InfoBlock
         title="Мой Инвентарь"
         description="Лимитированные вещи в коннекте - коллекционные предметы, которые можно получить из паков и сундуков"
@@ -424,110 +630,151 @@ const InventoryPage = () => {
                 },
               }}
             >
-              Купить паки
+              Купить Пачки
             </Button>
           )}
         </Box>
       ) : (
-        <Grid container spacing={0.5} sx={{ 
-          display: 'flex',
-          flexWrap: 'wrap',
-          px: 0.3, // 2.5px с каждой стороны
-          '& .MuiGrid-item': {
-            flex: '0 0 calc(25% - 5px)',
-            maxWidth: 'calc(25% - 5px)',
-            minWidth: 'calc(25% - 5px)',
-            margin: '2.5px !important', // 5px между карточками
-            '@media (max-width: 768px)': {
-              flex: '0 0 calc(50% - 5px)',
-              maxWidth: 'calc(50% - 5px)',
-              minWidth: 'calc(50% - 5px)',
+        <>
+          <Grid container spacing={0.5} sx={{ 
+            display: 'flex',
+            flexWrap: 'wrap',
+            px: 0.3, // 2.5px с каждой стороны
+            '& .MuiGrid-item': {
+              flex: '0 0 calc(25% - 5px)',
+              maxWidth: 'calc(25% - 5px)',
+              minWidth: 'calc(25% - 5px)',
+              margin: '2.5px !important', // 5px между карточками
+              '@media (max-width: 768px)': {
+                flex: '0 0 calc(50% - 5px)',
+                maxWidth: 'calc(50% - 5px)',
+                minWidth: 'calc(50% - 5px)',
+              }
             }
-          }
-        }}>
-          {filteredItems.map((item) => (
-            <Grid item key={item.id}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
-                  <UpgradeEffects item={item}>
-                    <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                      <ItemImage sx={{ 
-                        width: 80, 
-                        height: 80, 
-                        mb: 2,
-                        transition: 'all 0.3s ease'
-                      }}>
-                      <img 
-                        src={item.image_url}
-                        alt={item.item_name}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </ItemImage>
+          }}>
+            {filteredItems.map((item) => (
+              <Grid item key={item.id}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
+                    <UpgradeEffects item={item}>
+                      <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+                        {item?.marketplace?.status === 'active' && (
+                          <PriceBadge>
+                            <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                            {item.marketplace.price}
+                          </PriceBadge>
+                        )}
+                        <ItemImage sx={{ 
+                          width: 100, 
+                          height: 100, 
+                          mb: 2,
+                          transition: 'all 0.3s ease',
+                          ...(item.background_url && {
+                            '&::before': {
+                              backgroundImage: `url(${item.background_url})`,
+                            }
+                          })
+                        }}>
+                          <img 
+                            src={item.image_url}
+                            alt={item.item_name}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </ItemImage>
 
-                    <Typography 
-                        variant="body2" 
-                      sx={{ 
-                        fontWeight: 600, 
-                        mb: 1,
-                          color: 'text.primary',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                      }}
-                    >
-                      {item.item_name}
-                    </Typography>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ 
+                            fontWeight: 600, 
+                            mb: 1,
+                            color: 'text.primary',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          {item.item_name}
+                        </Typography>
 
-                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
-                      <RarityChip
-                          rarity={item.rarity} 
-                          label={getRarityLabel(item.rarity)}
-                        size="small"
-                      />
-                    </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
+                          <RarityChip
+                            rarity={item.rarity} 
+                            label={getRarityLabel(item.rarity)}
+                            size="small"
+                          />
+                        </Box>
 
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
-                        color: 'text.secondary',
-                          fontSize: '0.75rem'
-                        }}
-                      >
-                        {item.pack_name}
-                      </Typography>
-
-                      <Typography 
-                        variant="caption" 
-                        sx={{
+                        <Typography 
+                          variant="caption" 
+                          sx={{
                             color: 'text.secondary',
-                          fontSize: '0.7rem',
-                          opacity: 0.7,
-                          mt: 'auto',
-                          pt: 1
-                        }}
-                      >
-                        Нажмите для подробностей
-                      </Typography>
-                  </CardContent>
-                  </UpgradeEffects>
-                </StyledCard>
-              </motion.div>
-            </Grid>
-          ))}
-        </Grid>
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {item.pack_name}
+                        </Typography>
+
+                        <Typography 
+                          variant="caption" 
+                          sx={{
+                            color: 'text.secondary',
+                            fontSize: '0.7rem',
+                            opacity: 0.7,
+                            mt: 'auto',
+                            pt: 1
+                          }}
+                        >
+                          Нажмите для подробностей
+                        </Typography>
+                      </CardContent>
+                    </UpgradeEffects>
+                  </StyledCard>
+                </motion.div>
+              </Grid>
+            ))}
+          </Grid>
+          
+          {/* Индикатор загрузки для пагинации */}
+          {loadingMore && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+              <CircularProgress size={40} />
+            </Box>
+          )}
+          
+          {/* Информация о загрузке */}
+          {!loadingMore && hasMore && (
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Прокрутите вниз для загрузки еще предметов
+              </Typography>
+            </Box>
+          )}
+          
+          {/* Информация о конце списка */}
+          {!hasMore && items.length > 0 && (
+            <Box sx={{ textAlign: 'center', py: 2 }}>
+              <Typography variant="body2" color="text.secondary">
+                Загружено {items.length} из {pagination.total} предметов
+              </Typography>
+            </Box>
+          )}
+        </>
       )}
 
       {/* Модальное окно информации о предмете */}
       <ItemInfoModal
-        open={itemInfoModalOpen}
-        onClose={handleCloseItemInfoModal}
-        item={selectedItem}
+        open={showItemInfo}
+        onClose={() => setShowItemInfo(false)}
+        item={selectedItem || externalItem}
+        loading={externalLoading}
+        error={externalError}
+        readOnly={!!externalItem}
         userPoints={userPoints}
         onItemUpdate={handleItemUpdate}
         onTransferSuccess={handleTransferSuccess}
@@ -571,7 +818,7 @@ const InventoryPage = () => {
       </Snackbar>
     </StyledContainer>
   );
-};
+});
 
 const UpgradeEffects = ({ item, children }) => {
   const { dominantColor, isUpgraded } = useUpgradeEffects(item);
@@ -606,4 +853,4 @@ const UpgradeEffects = ({ item, children }) => {
   );
 };
 
-export default InventoryPage; 
+export default InventoryTab; 

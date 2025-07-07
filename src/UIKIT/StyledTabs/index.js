@@ -2,52 +2,76 @@ import React from 'react';
 import { Tabs, Tab, Box, Paper, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const StyledTabsContainer = styled(Paper)(({ theme, fullWidth = false }) => ({
-  borderRadius: '16px',
-  background: 'rgba(26,26,26, 0.03)',
-  backdropFilter: 'blur(20px)',
-  backgroundImage: 'unset',
-  boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-  overflow: 'hidden',
-  mb: 1,
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  width: fullWidth ? '100%' : 'auto',
-  maxWidth: fullWidth ? 'none' : 750,
-  minWidth: 320,
-  mx: 'auto',
-  position: 'relative',
-  '::before': {
-    content: '""',
-    position: 'absolute',
-    left: -80,
-    top: '50%',
-    transform: 'translateY(-50%) rotate(-12deg)',
-    width: 180,
-    height: 220,
-    background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-    opacity: 0.25,
-    filter: 'blur(18px)',
-    borderRadius: '50%',
-    zIndex: 1,
-    pointerEvents: 'none',
-  },
-  '::after': {
-    content: '""',
-    position: 'absolute',
-    right: -80,
-    top: '50%',
-    transform: 'translateY(-50%) rotate(12deg)',
-    width: 180,
-    height: 220,
-    background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-    opacity: 0.25,
-    filter: 'blur(18px)',
-    borderRadius: '50%',
-    zIndex: 1,
-    pointerEvents: 'none',
-  },
-  zIndex: 2,
-}));
+const getTabsContainerStyle = (customStyle, theme, fullWidth) => {
+  if (customStyle) {
+    return {
+      borderRadius: '16px',
+      background: 'rgba(255,255,255,0.03)',
+      backdropFilter: 'blur(20px)',
+      backgroundImage: 'unset',
+      boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+      overflow: 'hidden',
+      mb: 1,
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      width: fullWidth ? '100%' : 'auto',
+      maxWidth: fullWidth ? 'none' : 750,
+      minWidth: 320,
+      mx: 'auto',
+      position: 'relative',
+      zIndex: 2,
+    };
+  }
+  return {
+    borderRadius: '16px',
+    background: 'rgba(26,26,26, 0.03)',
+    backdropFilter: 'blur(20px)',
+    backgroundImage: 'unset',
+    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+    overflow: 'hidden',
+    mb: 1,
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    width: fullWidth ? '100%' : 'auto',
+    maxWidth: fullWidth ? 'none' : 750,
+    minWidth: 320,
+    mx: 'auto',
+    position: 'relative',
+    '::before': {
+      content: '""',
+      position: 'absolute',
+      left: -80,
+      top: '50%',
+      transform: 'translateY(-50%) rotate(-12deg)',
+      width: 180,
+      height: 220,
+      background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
+      opacity: 0.25,
+      filter: 'blur(18px)',
+      borderRadius: '50%',
+      zIndex: 1,
+      pointerEvents: 'none',
+    },
+    '::after': {
+      content: '""',
+      position: 'absolute',
+      right: -80,
+      top: '50%',
+      transform: 'translateY(-50%) rotate(12deg)',
+      width: 180,
+      height: 220,
+      background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
+      opacity: 0.25,
+      filter: 'blur(18px)',
+      borderRadius: '50%',
+      zIndex: 1,
+      pointerEvents: 'none',
+    },
+    zIndex: 2,
+  };
+};
+
+const StyledTabsContainer = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'customStyle',
+})(({ theme, fullWidth = false, customStyle = false }) => getTabsContainerStyle(customStyle, theme, fullWidth));
 
 const StyledTabs = ({ 
   value, 
@@ -56,12 +80,13 @@ const StyledTabs = ({
   variant = 'standard',
   centered = false,
   fullWidth = false,
+  customStyle = false,
   ...props 
 }) => {
   const theme = useTheme();
 
   return (
-    <StyledTabsContainer fullWidth={fullWidth}>
+    <StyledTabsContainer fullWidth={fullWidth} customStyle={customStyle}>
       <Tabs
         value={value}
         onChange={onChange}

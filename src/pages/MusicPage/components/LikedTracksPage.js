@@ -100,7 +100,7 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const LikedTracksPage = ({ onBack }) => {
-  const { playTrack, isPlaying, currentTrack, togglePlay } = useMusic();
+  const { playTrack, isPlaying, currentTrack, togglePlay, forceLoadTracks } = useMusic();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -110,7 +110,11 @@ const LikedTracksPage = ({ onBack }) => {
 
   useEffect(() => {
     fetchLikedTracks();
-  }, []);
+    // Принудительно загружаем треки в MusicContext для секции 'liked'
+    if (forceLoadTracks) {
+      forceLoadTracks('liked');
+    }
+  }, [forceLoadTracks]);
 
   const fetchLikedTracks = async () => {
     try {
@@ -133,7 +137,7 @@ const LikedTracksPage = ({ onBack }) => {
     if (isPlaying && currentTrack?.id === track.id) {
       togglePlay();
     } else {
-      playTrack(track);
+      playTrack(track, 'liked');
     }
   }, [isPlaying, currentTrack, playTrack, togglePlay]);
 
@@ -141,13 +145,18 @@ const LikedTracksPage = ({ onBack }) => {
     try {
       const response = await apiClient.post(`/api/music/${trackId}/like`);
       if (response.data.success) {
-        setTracks(prevTracks => 
-          prevTracks.map(track => 
-            track.id === trackId 
-              ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
-              : track
-          )
-        );
+        setTracks(prevTracks => {
+          const track = prevTracks.find(t => t.id === trackId);
+          if (track && track.is_liked) {
+            return prevTracks.filter(t => t.id !== trackId);
+          } else {
+            return prevTracks.map(track => 
+              track.id === trackId 
+                ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
+                : track
+            );
+          }
+        });
       }
     } catch (err) {
       console.error('Error toggling like:', err);

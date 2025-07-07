@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTransition, useRef, useCallback } from 'react';
-import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import ProfileService from './services/ProfileService'; 
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import AppBottomNavigation from './components/BottomNavigation';
 import { MusicProvider } from './context/MusicContext';
@@ -15,14 +15,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ChannelsPage from './pages/Main/ChannelsPage';
 import MusicPlayerCore from './components/MusicPlayerCore';
 import { setSessionContext } from './services/ProfileService';
-import RouletteGame from './pages/MiniGames/RouletteGame';
 import JoinGroupChat from './pages/Messenger/JoinGroupChat';
-import { MessengerProvider } from './contexts/MessengerContext';
-import CookieBanner from './components/CookieBanner';
 import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
-import AppLoadingScreen from './components/AppLoadingScreen';
+import { MessengerProvider } from './contexts/MessengerContext';
 import axios from 'axios';
 
 export const SessionContext = React.createContext({
@@ -65,7 +62,6 @@ const ForgotPassword = lazy(() => import('./pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/Auth/ResetPassword'));
 const RegisterProfile = lazy(() => import('./pages/Auth/RegisterProfile'));
 const EmailConfirmation = lazy(() => import('./pages/Auth/EmailConfirmation'));
-const ElementAuth = lazy(() => import('./pages/Auth/ElementAuth'));
 const MainLayout = lazy(() => import('./components/Layout/MainLayout'));
 const ProfilePage = lazy(() => import('./pages/User/ProfilePage'));
 const MainPage = lazy(() => import('./pages/Main/MainPage'));
@@ -87,24 +83,24 @@ const NotFound = lazy(() => import('./pages/Info/NotFound'));
 const AdminPage = lazy(() => import('./pages/Admin/AdminPage'));
 const ModeratorPage = lazy(() => import('./pages/Admin/ModeratorPage'));
 const UpdatesPage = lazy(() => import('./pages/Main/UpdatesPage'));
-const SharePreviewTest = lazy(() => import('./components/SharePreviewTest'));
 const BadgeShopPage = lazy(() => import('./pages/Economic/BadgeShopPage'));
 const BalancePage = lazy(() => import('./pages/Economic/BalancePage'));
 const UsernameAuctionPage = lazy(() => import('./pages/Economic/UsernameAuctionPage'));
 const InventoryPackPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPackPage'));
 const InventoryPage = lazy(() => import('./pages/Economic/components/inventoryPack/InventoryPage'));
+const MarketplacePage = lazy(() => import('./pages/Economic/components/marketplace/MarketplacePage'));
+const GrantsPage = lazy(() => import('./pages/Economic/components/grantPage/GrantsPage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
-const TestNotifications = lazy(() => import('./components/TestNotifications'));
-const MiniGamesPage = lazy(() => import('./pages/MiniGames/MiniGamesPage'));
-const CupsGamePage = lazy(() => import('./pages/MiniGames/CupsGamePage'));
-const LuckyNumberGame = lazy(() => import('./pages/MiniGames/LuckyNumberGame'));
 const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
-const BlackjackPage = lazy(() => import('./pages/MiniGames/BlackjackPage'));
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
 const PlaylistsPage = lazy(() => import('./pages/MusicPage/PlaylistsPage'));
+const FriendsPage = lazy(() => import('./pages/User/FriendsPage'));
+const StickerManagePage = lazy(() => import('./pages/Info/StickerManagePage'));
+const StreetBlacklistPage = lazy(() => import('./pages/Collab/StreetBlacklistPage'));
+const StreetBlacklistV1Page = lazy(() => import('./pages/Collab/StreetBlacklistV1Page'));
 
 
 export const ThemeSettingsContext = React.createContext({
@@ -330,6 +326,7 @@ const AppRoutes = () => {
   const { user, isAuthenticated, loading, checkAuth, error, setUser } = useContext(AuthContext);
   const location = useLocation();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   
   const background = location.state && location.state.background;
@@ -395,7 +392,6 @@ const AppRoutes = () => {
   const isLoginPage = currentPath === '/login';
   const isRegisterPage = currentPath === '/register';
   const isPasswordRecoveryPage = currentPath === '/forgot-password' || currentPath === '/reset-password';
-  const isElementAuthPage = currentPath.startsWith('/auth_elem') || currentPath === '/element-auth';
   
   
   
@@ -423,18 +419,6 @@ const AppRoutes = () => {
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Suspense>
-      </Box>
-    );
-  }
-  if (isElementAuthPage) {
-    return (
-      <Box sx={{ minHeight: '100vh', background: theme.palette.background.default, display: 'flex', flexDirection: 'column' }}>
-        <Routes location={location}>
-          <Route path="/element-auth" element={<ElementAuth />} />
-          <Route path="/auth_elem/:token" element={<ElementAuth />} />
-          <Route path="/auth_elem/direct/:token" element={<ElementAuth />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
       </Box>
     );
   }
@@ -470,7 +454,7 @@ const AppRoutes = () => {
           <Route path="/notifications" element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />} />
           <Route path="/search" element={isAuthenticated ? <SearchPage /> : <Navigate to="/login" replace />} />
           <Route path="/music" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPage /> : <Navigate to="/login" replace />} />
+          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPage onBack={() => window.history.back()} /> : <Navigate to="/login" replace />} />
           <Route path="/music/all" element={isAuthenticated ? <AllTracksPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/playlists" element={isAuthenticated ? <PlaylistsPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/:section" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
@@ -480,7 +464,6 @@ const AppRoutes = () => {
           <Route path="/messenger/join/:inviteCode" element={isAuthenticated ? <JoinGroupChat /> : <Navigate to="/login" replace />} />
           <Route path="/bugs" element={<BugReportPage />} />
           <Route path="/leaderboard" element={<RequireAuth><LeaderboardPage /></RequireAuth>} />          
-          <Route path="/share-preview-test" element={isAuthenticated ? <SharePreviewTest /> : <Navigate to="/login" replace />} />
           <Route path="/more" element={isAuthenticated ? <MorePage /> : <Navigate to="/login" replace />} />
           <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/login" replace />} />
           <Route path="/moderator" element={isAuthenticated ? <ModeratorPage /> : <Navigate to="/login" replace />} />
@@ -488,20 +471,21 @@ const AppRoutes = () => {
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
           <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
           <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/lucky-number" element={isAuthenticated ? <LuckyNumberGame /> : <Navigate to="/login" replace />} />
           <Route path="/minigames/clicker" element={isAuthenticated ? <ClickerPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/blackjack" element={isAuthenticated ? <BlackjackPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/roulette" element={isAuthenticated ? <RouletteGame /> : <Navigate to="/login" replace />} />
+
           <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
-          <Route path="/api-docs" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
+          <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
           <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />
           <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
           <Route path="/updates" element={<UpdatesPage />} />
-          <Route path="/test-notifications" element={<TestNotifications />} />
           <Route path="/cookies" element={<PublicPages />} />
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
+          <Route path="/marketplace" element={<MarketplacePage />} />
+          <Route path="/grant" element={isAuthenticated ? <GrantsPage /> : <Navigate to="/login" replace />} />
+          <Route path="/item/:itemId" element={<ItemRedirectPage />} />
+          <Route path="/friends/:username" element={<FriendsPage />} />
+          <Route path="/friends" element={<FriendsRedirect />} />
+          <Route path="/inform/sticker" element={isAuthenticated ? <StickerManagePage /> : <Navigate to="/login" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (
@@ -513,39 +497,13 @@ const AppRoutes = () => {
           </Routes>
         )}
       </PageTransition>
-      <AppBottomNavigation user={user} />
+      {/* Bottom navigation рендерится только на мобильных устройствах */}
+      {isMobile && <AppBottomNavigation user={user} isMobile={isMobile} />}
     </MainLayout>
   );
 };
 const MemoizedAppRoutes = React.memo(AppRoutes);
-const preloadMusicImages = () => { 
-  if (process.env.NODE_ENV === 'development') {
-    return;
-  }
 
-  const basePaths = [
-    '/static/uploads/system',
-    '/uploads/system'
-  ];
-  
-  const imageFiles = [
-    'like_playlist.jpg',
-    'all_tracks.jpg',
-    'random_tracks.jpg',
-    'album_placeholder.jpg',
-    'playlist_placeholder.jpg'
-  ];  
-  basePaths.forEach(basePath => {
-    imageFiles.forEach(file => {
-      const path = `${basePath}/${file}`;
-      const img = new Image();
-      img.src = path;
-      img.onerror = () => {
-        console.warn(`Image not found: ${path}. Using gradient placeholder.`);
-      };
-    });
-  });
-};
 const DefaultSEO = () => {
   
   const currentUrl = typeof window !== 'undefined' 
@@ -634,11 +592,12 @@ const SessionProvider = ({ children }) => {
   const broadcastUpdate = (type, data) => {
     if (broadcastChannel.current) {
       try {
-        broadcastChannel.current.postMessage({
+        const message = {
           type,
           data,
           timestamp: Date.now()
-        });
+        };
+        broadcastChannel.current.postMessage(message);
       } catch (error) {
         console.error('Error broadcasting update:', error);
       }
@@ -713,383 +672,145 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
   const [themeSettings, setThemeSettings] = useState(() => {
+    const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
+    const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
     
-    const getStoredValue = (key, defaultValue) => {
-      
-      const sessionValue = sessionStorage.getItem(key);
-      if (sessionValue) return sessionValue;
-      
-      
-      const localValue = localStorage.getItem(key);
-      if (localValue) return localValue;
-      
-      
-      const cookieValue = getCookie(key);
-      if (cookieValue) return cookieValue;
-      
-      
-      try {
-        const themeData = JSON.parse(localStorage.getItem('themeData') || '{}');
-        if (themeData[key]) return themeData[key];
-      } catch (e) {
-        console.warn('Error parsing theme data JSON:', e);
+    // Упрощенные настройки для 3 тем
+    const getThemeColors = (mode) => {
+      switch (mode) {
+        case 'light':
+          return {
+            backgroundColor: '#ffffff',
+            textColor: '#000000'
+          };
+        case 'contrast':
+          return {
+            backgroundColor: '#000000',
+            textColor: '#FFFFFF'
+          };
+        default: // default theme
+          return {
+            backgroundColor: '#131313', //НЕ ЗАБУДЬ ВЕРНУТЬ 131313
+            textColor: '#FFFFFF'
+          };
       }
-      
-      return defaultValue;
     };
     
-    
-    const sessionTheme = sessionStorage.getItem('themeMode');
-    const localTheme = localStorage.getItem('theme') || localStorage.getItem('themeMode');
-    const cookieTheme = getCookie('themeMode') || getCookie('theme');
-    
-    
-    const savedThemeMode = sessionTheme || localTheme || cookieTheme || 'dark';
-    
-    
-    if (savedThemeMode) {
-      localStorage.setItem('theme', savedThemeMode);
-      localStorage.setItem('themeMode', savedThemeMode);
-      sessionStorage.setItem('theme', savedThemeMode);
-      sessionStorage.setItem('themeMode', savedThemeMode);
-      setCookie('theme', savedThemeMode);
-      setCookie('themeMode', savedThemeMode);
-    }
+    const colors = getThemeColors(savedThemeMode);
     
     return {
       mode: savedThemeMode,
-      backgroundColor: getStoredValue('backgroundColor', 
-                      (savedThemeMode === 'light' ? '#f5f5f5' : savedThemeMode === 'contrast' ? '#080808' : '#131313')),
-      paperColor: getStoredValue('paperColor', 
-                 (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      headerColor: getStoredValue('headerColor', 
-                  (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#121212')),
-      bottomNavColor: getStoredValue('bottomNavColor', 
-                     (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      contentColor: getStoredValue('contentColor', 
-                   (savedThemeMode === 'light' ? '#ffffff' : savedThemeMode === 'contrast' ? '#101010' : '#1A1A1A')),
-      primaryColor: getStoredValue('primaryColor', 
-                   (savedThemeMode === 'light' ? '#8c52ff' : savedThemeMode === 'contrast' ? '#7B46E3' : '#D0BCFF')),
-      textColor: getStoredValue('textColor', 
-                (savedThemeMode === 'light' ? '#121212' : '#FFFFFF')),
+      backgroundColor: colors.backgroundColor,
+      textColor: colors.textColor,
+      primaryColor: savedPrimaryColor
     };
   });
   
-  
-  const recoverThemeSettings = useCallback(() => {
-    console.log('Running theme recovery check...');
-    
-    
-    const currentMode = themeSettings.mode;
-    
-    
-    const sessionTheme = sessionStorage.getItem('themeMode');
-    const localTheme = localStorage.getItem('themeMode');
-    const cookieTheme = getCookie('themeMode');
-    
-    
-    if (!sessionTheme || !localTheme || !cookieTheme) {
-      console.log('Theme storage inconsistency detected, restoring...');
-      
-      
-      saveThemeSettings('theme', currentMode);
-      saveThemeSettings('themeMode', currentMode);
-      
-      
-      Object.entries(themeSettings).forEach(([key, value]) => {
-        if (key !== 'mode' && value) {
-          saveThemeSettings(key, value);
-        }
-      });
-      
-      
-      try {
-        const themeData = {};
-        Object.entries(themeSettings).forEach(([key, value]) => {
-          if (value) {
-            themeData[key] = value;
-            if (key === 'mode') {
-              themeData['theme'] = value;
-              themeData['themeMode'] = value;
-            }
-          }
-        });
-        localStorage.setItem('themeData', JSON.stringify(themeData));
-        sessionStorage.setItem('themeData', JSON.stringify(themeData));
-      } catch (e) {
-        console.error('Error creating theme data backup:', e);
-      }
-    }
-  }, [themeSettings]);
-  
-  
-  useEffect(() => {
-    
-    recoverThemeSettings();
-    
-    
-    const recoveryInterval = setInterval(recoverThemeSettings, 30000);
-    
-    
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        recoverThemeSettings();
-      }
-    };
-    
-    const handleFocus = () => {
-      recoverThemeSettings();
-    };
-    
-    window.addEventListener('focus', handleFocus);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      clearInterval(recoveryInterval);
-      window.removeEventListener('focus', handleFocus);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [recoverThemeSettings]);
   
   const onAboutSubdomain = useMemo(() => isAboutSubdomain(), []);
   const onShareSubdomain = useMemo(() => isShareSubdomain(), []);
   
   useEffect(() => {
     if (onShareSubdomain) {
-
       console.log('Share subdomain detected, user will be redirected via share.html');
     }
   }, [onShareSubdomain]);
-  
-  useEffect(() => {
-    preloadMusicImages();
-  }, []);
 
-  // Убираем автоматический таймер - экран загрузки будет скрываться только после реальной загрузки всех ресурсов
-
-  const getContrastTextColor = (hexColor) => {
-    if (themeSettings.mode === 'dark' || themeSettings.mode === 'contrast') {
-      return '#FFFFFF';
-    }
-    
-    if (!hexColor || typeof hexColor !== 'string') {
-      return '#000000'; 
-    }
-    
-    const color = hexColor.charAt(0) === '#' ? hexColor.substring(1) : hexColor;
-    
-    if (!/^[0-9A-Fa-f]{6}$/.test(color)) {
-      console.warn('Invalid hex color provided to getContrastTextColor:', hexColor);
-      return '#000000';
-    }
-    
-    const r = parseInt(color.substr(0, 2), 16);
-    const g = parseInt(color.substr(2, 2), 16);
-    const b = parseInt(color.substr(4, 2), 16);
-    
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    return luminance > 0.6 ? '#000000' : '#FFFFFF';
-  };
-
-  
-  const loadThemeSettings = async (forceDefault = false) => {
-    try {
-      if (forceDefault) {
-        
-        const defaultSettings = {
-          background_color: '#131313',
-          container_color: '#1A1A1A',
-          header_color: '#1A1A1A',
-          bottom_nav_color: '#1A1A1A',
-          content_color: '#1A1A1A',
-          welcome_bubble_color: '#131313',
-          avatar_border_color: '#D0BCFF'
-        };
-        applyThemeSettings(defaultSettings);
-        return;
-      }
-
-      const response = await ProfileService.getSettings();
-      if (response && response.success && response.settings) {
-        applyThemeSettings(response.settings);
-      }
-    } catch (error) {
-      console.error('Error loading theme settings:', error);
-      
-      applyThemeSettings({
-        background_color: '#131313',
-        container_color: '#1A1A1A',
-        header_color: '#1A1A1A',
-        bottom_nav_color: '#1A1A1A',
-        content_color: '#1A1A1A',
-        welcome_bubble_color: '#131313',
-        avatar_border_color: '#D0BCFF'
-      });
-    }
-  };
-
-  
-  const applyThemeSettings = (settings) => {
-    
-    const backgroundColor = settings.background_color || '#131313';
-    const containerColor = settings.container_color || '#1A1A1A';
-    const headerColor = settings.header_color || settings.container_color || '#1A1A1A';
-    const bottomNavColor = settings.bottom_nav_color || settings.container_color || '#1A1A1A';
-    const contentColor = settings.content_color || settings.container_color || '#1A1A1A';
-    const welcomeBubbleColor = settings.welcome_bubble_color || '#131313';
-    const primaryColor = settings.avatar_border_color || '#D0BCFF';
-
-    
-    const backgroundTextColor = getContrastTextColor(backgroundColor);
-    const containerTextColor = getContrastTextColor(containerColor);
-    const headerTextColor = getContrastTextColor(headerColor);
-    const contentTextColor = getContrastTextColor(contentColor);
-    const bottomNavTextColor = getContrastTextColor(bottomNavColor);
-
-    
-    updateThemeSettings({
-      backgroundColor: backgroundColor,
-      paperColor: containerColor,
-      headerColor: headerColor,
-      bottomNavColor: bottomNavColor,
-      contentColor: contentColor,
-      primaryColor: primaryColor,
-      textColor: containerTextColor,
-      headerTextColor: headerTextColor,
-      contentTextColor: contentTextColor,
-      bottomNavTextColor: bottomNavTextColor,
-      backgroundTextColor: backgroundTextColor
-    });
-    
-    
-    document.documentElement.style.setProperty('--background-color', backgroundColor);
-    document.documentElement.style.setProperty('--container-color', containerColor);
-    document.documentElement.style.setProperty('--header-color', headerColor);
-    document.documentElement.style.setProperty('--bottom-nav-color', bottomNavColor);
-    document.documentElement.style.setProperty('--content-color', contentColor);
-    document.documentElement.style.setProperty('--welcome-bubble-color', welcomeBubbleColor);
-    document.documentElement.style.setProperty('--avatar-border-color', primaryColor);
-    
-    
-    document.documentElement.style.setProperty('--background-text-color', backgroundTextColor);
-    document.documentElement.style.setProperty('--container-text-color', containerTextColor);
-    document.documentElement.style.setProperty('--header-text-color', headerTextColor);
-    document.documentElement.style.setProperty('--content-text-color', contentTextColor);
-    document.documentElement.style.setProperty('--bottom-nav-text-color', bottomNavTextColor);
-    
-    
-    document.documentElement.style.setProperty('--primary', primaryColor);
-    document.documentElement.style.setProperty('--primary-light', primaryColor);
-    document.documentElement.style.setProperty('--primary-dark', primaryColor);
-    
-    console.log('Theme settings applied:', {
-      backgroundColor, 
-      containerColor, 
-      headerColor, 
-      bottomNavColor, 
-      contentColor,
-      backgroundTextColor, 
-      containerTextColor,
-      headerTextColor,
-      contentTextColor,
-      bottomNavTextColor
-    });
-  };
-  
-  
-  const authContextValue = useContext(AuthContext) || {};
-  
-  
-  useEffect(() => {
-    if (authContextValue.isAuthenticated) {
-      
-      loadThemeSettings();
-    } else if (!authContextValue.loading) {
-      
-      loadThemeSettings(true);
-    }
-  }, [authContextValue.isAuthenticated, authContextValue.loading]);
-  
-  
   const updateThemeSettings = (newSettings) => {
     setThemeSettings(prev => {
+      // Проверяем, действительно ли изменились настройки
+      const hasChanges = Object.keys(newSettings).some(key => 
+        prev[key] !== newSettings[key]
+      );
+      
+      if (!hasChanges) {
+        return prev; // Возвращаем предыдущее состояние без изменений
+      }
+      
       const updated = { ...prev, ...newSettings };
       
-      
+      // Сохраняем только основные настройки
       if (newSettings.mode) {
-        saveThemeSettings('theme', newSettings.mode);
-        saveThemeSettings('themeMode', newSettings.mode);
+        localStorage.setItem('theme', newSettings.mode);
+        localStorage.setItem('themeMode', newSettings.mode);
       }
-      if (newSettings.backgroundColor) saveThemeSettings('backgroundColor', newSettings.backgroundColor);
-      if (newSettings.paperColor) saveThemeSettings('paperColor', newSettings.paperColor);
-      if (newSettings.headerColor) saveThemeSettings('headerColor', newSettings.headerColor);
-      if (newSettings.bottomNavColor) saveThemeSettings('bottomNavColor', newSettings.bottomNavColor);
-      if (newSettings.contentColor) saveThemeSettings('contentColor', newSettings.contentColor);
-      if (newSettings.primaryColor) saveThemeSettings('primaryColor', newSettings.primaryColor);
-      if (newSettings.textColor) saveThemeSettings('textColor', newSettings.textColor);
+      if (newSettings.backgroundColor) {
+        localStorage.setItem('backgroundColor', newSettings.backgroundColor);
+      }
+      if (newSettings.textColor) {
+        localStorage.setItem('textColor', newSettings.textColor);
+      }
+      if (newSettings.primaryColor) {
+        localStorage.setItem('primaryColor', newSettings.primaryColor);
+      }
       
       return updated;
     });
   };
-
   
-  const [colorOverride, setColorOverride] = useState(null);
-
+  
+  const { isAuthenticated } = useContext(AuthContext) || {};
+  const prevAuthState = useRef({ isAuthenticated: null, loading: null });
+  
+  useEffect(() => {
+    const currentAuthState = {
+      isAuthenticated: isAuthenticated,
+      loading: false
+    };
+    
+    // Проверяем, действительно ли изменилось состояние
+    if (
+      prevAuthState.current.isAuthenticated !== currentAuthState.isAuthenticated ||
+      prevAuthState.current.loading !== currentAuthState.loading
+    ) {
+      if (currentAuthState.isAuthenticated) {
+        // Только если тема не 'default', устанавливаем её
+        if (themeSettings.mode !== 'default') {
+          updateThemeSettings({ mode: themeSettings.mode });
+        }
+      } else if (!currentAuthState.loading) {
+        // Только если тема не 'default', устанавливаем 'default'
+        if (themeSettings.mode !== 'default') {
+          updateThemeSettings({ mode: 'default' });
+        }
+      }
+      
+      // Обновляем предыдущее состояние
+      prevAuthState.current = currentAuthState;
+    }
+  }, [isAuthenticated, themeSettings.mode]);
+  
+  
   const theme = useMemo(() => {
     const themeObj = createTheme({
       palette: {
-        mode: themeSettings.mode === 'dark' ? 'dark' : 'light',
+        mode: themeSettings.mode === 'light' ? 'light' : 'dark',
         primary: {
           main: themeSettings.primaryColor || '#D0BCFF',
-          light: themeSettings.primaryColor || '#E9DDFF',
-          dark: themeSettings.primaryColor || '#B69DF8',
         },
         secondary: {
-          main: themeSettings.secondaryColor || '#f28c9a',
+          main: '#f28c9a',
         },
         background: {
           default: themeSettings.backgroundColor || '#131313',
-          paper: themeSettings.paperColor || '#1A1A1A',
+          paper: themeSettings.backgroundColor || '#131313',
         },
         text: {
-          primary: themeSettings.textColor || 
-                  (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-          secondary: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-        },
-        header: {
-          main: themeSettings.headerColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.headerTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-        },
-        bottomNav: {
-          main: themeSettings.bottomNavColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.bottomNavTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
-        },
-        content: {
-          main: themeSettings.contentColor || themeSettings.paperColor || '#1A1A1A',
-          contrastText: themeSettings.contentTextColor || 
-                        (themeSettings.mode === 'dark' ? '#FFFFFF' : '#121212'),
+          primary: themeSettings.textColor || '#FFFFFF',
+          secondary: themeSettings.mode === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)',
         },
       },
       typography: {
         fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-        h1: { fontSize: '2.5rem', fontWeight: 700 },
-        h2: { fontSize: '2rem', fontWeight: 700 },
-        h3: { fontSize: '1.8rem', fontWeight: 600 },
-        h4: { fontSize: '1.5rem', fontWeight: 600 },
-        h5: { fontSize: '1.2rem', fontWeight: 500 },
-        h6: { fontSize: '1rem', fontWeight: 500 },
       },
       shape: {
-        borderRadius: 12, 
+        borderRadius: 12,
       },
       components: {
         MuiButton: {
           styleOverrides: {
             root: {
-              borderRadius: '12px', 
+              borderRadius: '12px',
               textTransform: 'none',
               fontWeight: 500,
             },
@@ -1098,107 +819,34 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              lineHeight: 1,
               backgroundColor: themeSettings.backgroundColor || '#131313',
-              color: themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : (themeSettings.textColor || (themeSettings.mode === 'light' ? '#121212' : '#FFFFFF')),
-              '& *': themeSettings.mode === 'contrast' 
-                ? { color: 'inherit' }
-                : {},
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
         MuiCard: {
           styleOverrides: {
             root: {
-              borderRadius: '15px', 
+              borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: themeSettings.contentColor || themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.contentTextColor || getContrastTextColor(themeSettings.contentColor || '#1A1A1A'),
+              backgroundColor: themeSettings.backgroundColor || '#131313',
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
         MuiPaper: {
           styleOverrides: {
             root: {
-              borderRadius: '12px', 
-              backgroundColor: themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.contentTextColor || getContrastTextColor(themeSettings.paperColor || '#1A1A1A'),
-            },
-          },
-        },
-        MuiAppBar: {
-          styleOverrides: {
-            root: {
-              backgroundColor: themeSettings.headerColor || themeSettings.paperColor || '#1A1A1A',
-              color: themeSettings.headerTextColor || getContrastTextColor(themeSettings.headerColor || '#1A1A1A'),
-            },
-          },
-        },
-        MuiBottomNavigation: {
-          styleOverrides: {
-            root: {
-              backgroundColor: themeSettings.bottomNavColor || themeSettings.paperColor || '#1A1A1A',
-            },
-          },
-        },
-        MuiBottomNavigationAction: {
-          styleOverrides: {
-            root: {
-              color: themeSettings.mode === 'dark' || themeSettings.mode === 'contrast' 
-                ? '#FFFFFF' 
-                : themeSettings.bottomNavTextColor || getContrastTextColor(themeSettings.bottomNavColor || '#1A1A1A'),
-              '&.Mui-selected': {
-                color: themeSettings.primaryColor || '#D0BCFF',
-              },
-            },
-            label: {
-              color: 'inherit',
-              '&.Mui-selected': {
-                color: 'inherit',
-              },
-            },
-            iconOnly: {
-              color: 'inherit',
-            },
-          },
-        },
-        MuiTextField: {
-          styleOverrides: {
-            root: {
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '10px', 
-                '& fieldset': {
-                  borderColor: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                },
-                '&:hover fieldset': {
-                  borderColor: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: themeSettings.primaryColor || '#D0BCFF', 
-                },
-              },
-              '& .MuiInputLabel-root': {
-                color: themeSettings.mode === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-                '&.Mui-focused': {
-                  color: themeSettings.primaryColor || '#D0BCFF', 
-                },
-              },
+              borderRadius: '12px',
+              backgroundColor: themeSettings.backgroundColor || '#131313',
+              color: themeSettings.textColor || '#FFFFFF',
             },
           },
         },
       },
     });
-    if (colorOverride) {
-      return applyColorOverrideToTheme(themeObj, colorOverride);
-    }
     return themeObj;
-  }, [themeSettings, colorOverride]);
+  }, [themeSettings]);
 
   
   const [profileBackground, setProfileBackgroundState] = useState(null);
@@ -1245,13 +893,23 @@ function App() {
       }
     };
 
-    // При старте — запрос к API и применение
-    axios.get('/api/user/settings/global-profile-bg').then(res => {
-      if (res.data && res.data.success) {
-        setGlobalProfileBackgroundEnabled(res.data.enabled);
-        applyProfileBackground(res.data.enabled);
-      }
-    });
+    // При старте — запрос к API и применение (только для авторизованных пользователей)
+    // Проверяем наличие токена в localStorage/cookies
+    const hasAuthToken = localStorage.getItem('authToken') || 
+                        document.cookie.includes('authToken') ||
+                        localStorage.getItem('user_id') ||
+                        document.cookie.includes('user_id');
+    
+    if (hasAuthToken) {
+      axios.get('/api/user/settings/global-profile-bg').then(res => {
+        if (res.data && res.data.success) {
+          setGlobalProfileBackgroundEnabled(res.data.enabled);
+          applyProfileBackground(res.data.enabled);
+        }
+      }).catch(error => {
+        console.log('Не удалось загрузить настройки фона профиля:', error);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -1272,15 +930,12 @@ function App() {
   const themeContextValue = useMemo(() => ({
     themeSettings,
     updateThemeSettings,
-    loadThemeSettings,
     setProfileBackground,
     clearProfileBackground,
     profileBackground,
     globalProfileBackgroundEnabled,
     setGlobalProfileBackgroundEnabled,
-    colorOverride,
-    setColorOverride,
-  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled, colorOverride]);
+  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled]);
 
   
   const location = useLocation();
@@ -1319,19 +974,24 @@ function App() {
   }
 
   
+  const isInitialized = useRef(false);
+  
   useEffect(() => {
-    
     localStorage.setItem('themeMode', themeSettings.mode);
   }, [themeSettings.mode]);
 
   
   useEffect(() => {
+    if (isInitialized.current) return; // Предотвращаем повторное выполнение
+    
     const savedThemeMode = localStorage.getItem('themeMode');
     
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
       console.log('Theme mode mismatch, restoring from localStorage');
       updateThemeSettings({ mode: savedThemeMode });
     }
+    
+    isInitialized.current = true;
   }, []);
 
   useEffect(() => {
@@ -1340,157 +1000,67 @@ function App() {
           event.key === 'theme' ||
           event.key === 'themeMode' ||
           event.key === 'backgroundColor' ||
-          event.key === 'paperColor' ||
-          event.key === 'headerColor' ||
-          event.key === 'bottomNavColor' ||
-          event.key === 'contentColor' ||
-          event.key === 'primaryColor' ||
-          event.key === 'textColor'
+          event.key === 'textColor' ||
+          event.key === 'primaryColor'
         )) {
         console.log(`Storage change detected for ${event.key}:`, event.newValue);
+        
+        // Проверяем, действительно ли изменилось значение
+        const currentValue = event.key === 'theme' || event.key === 'themeMode' 
+          ? themeSettings.mode 
+          : themeSettings[event.key];
+        
+        if (currentValue === event.newValue) {
+          return; // Значение не изменилось, пропускаем обновление
+        }
         
         const settingUpdate = {};
         
         if (event.key === 'theme' || event.key === 'themeMode') {
           settingUpdate.mode = event.newValue;
         } else {
-          const stateKey = event.key.charAt(0).toLowerCase() + event.key.slice(1);
-          settingUpdate[stateKey] = event.newValue;
+          settingUpdate[event.key] = event.newValue;
         }
         
-        setThemeSettings(prev => ({
-          ...prev,
-          ...settingUpdate
-        }));
+        updateThemeSettings(settingUpdate);
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
     
-    const handlePageFocus = () => {
-      const sessionTheme = sessionStorage.getItem('themeMode');
-      
-      if (!sessionTheme && localStorage.getItem('themeMode')) {
-        const modeFromLocal = localStorage.getItem('themeMode');
-        sessionStorage.setItem('themeMode', modeFromLocal);
-        sessionStorage.setItem('theme', modeFromLocal);
-        
-        ['backgroundColor', 'paperColor', 'headerColor', 'bottomNavColor', 
-         'contentColor', 'primaryColor', 'textColor'].forEach(key => {
-          const value = localStorage.getItem(key);
-          if (value) {
-            sessionStorage.setItem(key, value);
-          }
-        });
-        
-        updateThemeSettings({ mode: modeFromLocal });
-      }
-    };
-    
-    window.addEventListener('focus', handlePageFocus);
-    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handlePageFocus);
     };
-  }, []);
+  }, [themeSettings]);
 
+  // --- ДОБАВЛЯЕМ useEffect для загрузки темы пользователя ---
   useEffect(() => {
-    const applyThemeToDocument = () => {
-      const mode = sessionStorage.getItem('themeMode') || localStorage.getItem('themeMode') || getCookie('themeMode') || 'dark';
-      document.documentElement.setAttribute('data-theme', mode);
-      document.documentElement.classList.add(`theme-${mode}`);
-      
-      
-      document.querySelector('html').setAttribute('data-theme', mode);
-      
-      
-      let metaTheme = document.querySelector('meta[name="theme-color"]');
-      if (!metaTheme) {
-        metaTheme = document.createElement('meta');
-        metaTheme.setAttribute('name', 'theme-color');
-        document.head.appendChild(metaTheme);
-      }
-      
-      
-      if (mode === 'light') {
-        metaTheme.setAttribute('content', '#ffffff');
-      } else if (mode === 'contrast') {
-        metaTheme.setAttribute('content', '#080808');
-      } else {
-        metaTheme.setAttribute('content', '#131313');
-      }
-      
-      const themeVars = {
-        backgroundColor: sessionStorage.getItem('backgroundColor') || localStorage.getItem('backgroundColor') || getCookie('backgroundColor'),
-        paperColor: sessionStorage.getItem('paperColor') || localStorage.getItem('paperColor') || getCookie('paperColor'),
-        headerColor: sessionStorage.getItem('headerColor') || localStorage.getItem('headerColor') || getCookie('headerColor'),
-        bottomNavColor: sessionStorage.getItem('bottomNavColor') || localStorage.getItem('bottomNavColor') || getCookie('bottomNavColor'),
-        contentColor: sessionStorage.getItem('contentColor') || localStorage.getItem('contentColor') || getCookie('contentColor'),
-        primaryColor: sessionStorage.getItem('primaryColor') || localStorage.getItem('primaryColor') || getCookie('primaryColor'),
-        textColor: sessionStorage.getItem('textColor') || localStorage.getItem('textColor') || getCookie('textColor')
-      };
-      
-      Object.entries(themeVars).forEach(([key, value]) => {
-        if (value) {
-          const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-          document.documentElement.style.setProperty(`--${cssKey}`, value);
-        }
-      });
-      
-      
+    const loadUserSettings = async () => {
       try {
-        const themeData = JSON.parse(localStorage.getItem('themeData') || sessionStorage.getItem('themeData') || '{}');
-        Object.entries(themeData).forEach(([key, value]) => {
-          if (value && key !== 'mode' && key !== 'theme' && key !== 'themeMode') {
-            const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            document.documentElement.style.setProperty(`--${cssKey}`, value);
-          }
-        });
+        const response = await fetch('/api/profile/settings');
+        const data = await response.json();
+        if (data && data.success && data.settings) {
+          // Применяем настройки темы
+          setThemeSettings(prev => ({
+            ...prev,
+            primaryColor: data.settings.primary_color || '#D0BCFF',
+            mode: data.settings.theme || 'dark',
+          }));
+          localStorage.setItem('primaryColor', data.settings.primary_color || '#D0BCFF');
+          localStorage.setItem('theme', data.settings.theme || 'dark');
+          console.log('Настройки пользователя загружены:', data.settings);
+        }
       } catch (e) {
-        console.warn('Error applying theme data from JSON backup:', e);
+        console.error('Ошибка загрузки настроек:', e);
+        // fallback: дефолт
+        setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
       }
     };
-    
-    applyThemeToDocument();
-    
-    if (document.readyState === 'complete') {
-      applyThemeToDocument();
-    } else {
-      window.addEventListener('load', applyThemeToDocument);
-      return () => window.removeEventListener('load', applyThemeToDocument);
-    }
-  }, []);
 
-  function applyColorOverrideToTheme(theme, colorOverride) {
-    function replaceColors(obj) {
-      if (typeof obj === 'string') {
-        if (
-          obj.toLowerCase() === '#d0bcff' ||
-          obj.replace(/\s/g, '').toLowerCase() === 'rgb(208,188,255)'
-        ) {
-          return colorOverride;
-        }
-        return obj;
-      }
-      if (Array.isArray(obj)) {
-        return obj.map(replaceColors);
-      }
-      if (typeof obj === 'object' && obj !== null) {
-        const newObj = {};
-        for (const key in obj) {
-          newObj[key] = replaceColors(obj[key]);
-        }
-        return newObj;
-      }
-      return obj;
-    }
-    // Клонируем тему и заменяем цвета в palette и components
-    const patchedTheme = { ...theme };
-    if (patchedTheme.palette) patchedTheme.palette = replaceColors(patchedTheme.palette);
-    if (patchedTheme.components) patchedTheme.components = replaceColors(patchedTheme.components);
-    return patchedTheme;
-  }
+    // Загружаем настройки при инициализации приложения
+    loadUserSettings();
+  }, []);
+  // --- КОНЕЦ ДОБАВЛЕНИЯ ---
 
   return (
     <HelmetProvider>
@@ -1545,45 +1115,94 @@ function App() {
                   `
                 }}/>
               )}
-              <SessionProvider>
-                <LanguageProvider>
-                  <MusicProvider>
-                    <PostDetailProvider>
-                        <Box sx={{ 
-                          display: 'flex', 
-                          flexDirection: 'column', 
-                          minHeight: '100vh',
-                          bgcolor: 'background.default'
-                        }}>
-                        <ErrorBoundary FallbackComponent={ErrorFallback}>
-                          <Suspense fallback={<LoadingIndicator />}>
-                            <DefaultSEO />
-                            <Routes>
-                              <Route path="/rules" element={<PublicPages />} />
-                              <Route path="/privacy-policy" element={<PublicPages />} />
-                              <Route path="/terms-of-service" element={<PublicPages />} />
-                              <Route path="/about" element={<PublicPages />} />
-                              <Route path="/cookies" element={<PublicPages />} />
-                              <Route path="*" element={<AppRoutes />} />
-                            </Routes>
-                            <MusicPlayerCore />
-                          </Suspense>
-                      </ErrorBoundary>
-                      </Box>
-                    </PostDetailProvider>
-                  </MusicProvider>
-                </LanguageProvider>
-              </SessionProvider>
+              <Routes>
+                <Route path="/street/blacklist" element={
+                  <SessionProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            minHeight: '100vh',
+                            bgcolor: 'background.default'
+                          }}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                              <Suspense fallback={<LoadingIndicator />}>
+                                <DefaultSEO />
+                                <StreetBlacklistPage />
+                                <MusicPlayerCore />
+                              </Suspense>
+                            </ErrorBoundary>
+                          </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                  </SessionProvider>
+                } />
+                <Route path="/street/blacklist/v1" element={
+                  <SessionProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                          <Box sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            minHeight: '100vh',
+                            bgcolor: 'background.default'
+                          }}>
+                            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                              <Suspense fallback={<LoadingIndicator />}>
+                                <DefaultSEO />
+                                <StreetBlacklistV1Page />
+                                <MusicPlayerCore />
+                              </Suspense>
+                            </ErrorBoundary>
+                          </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                  </SessionProvider>
+                } />
+                <Route path="*" element={
+                  <SessionProvider>
+                  <MessengerProvider>
+                    <LanguageProvider>
+                      <MusicProvider>
+                        <PostDetailProvider>
+                            <Box sx={{ 
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              minHeight: '100vh',
+                              bgcolor: 'background.default'
+                            }}>
+                              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Suspense fallback={<LoadingIndicator />}>
+                                  <DefaultSEO />
+                                  <Routes>
+                                    <Route path="/rules" element={<PublicPages />} />
+                                    <Route path="/privacy-policy" element={<PublicPages />} />
+                                    <Route path="/terms-of-service" element={<PublicPages />} />
+                                    <Route path="/about" element={<PublicPages />} />
+                                    <Route path="/cookies" element={<PublicPages />} />
+                                    <Route path="*" element={<AppRoutes />} />
+                                  </Routes>
+                                  <MusicPlayerCore />
+                                </Suspense>
+                              </ErrorBoundary>
+                            </Box>
+                        </PostDetailProvider>
+                      </MusicProvider>
+                    </LanguageProvider>
+                    </MessengerProvider>
+                  </SessionProvider>
+                } />
+              </Routes>
             </DefaultPropsProvider>
             {/* <CookieBanner /> */}
           </ThemeProvider>
         </ThemeSettingsContext.Provider>
       </AuthProvider>
-      {isAppLoading && (
-        <AppLoadingScreen 
-          onLoadingComplete={() => setIsAppLoading(false)} 
-        />
-      )}
     </HelmetProvider>
   );
 }
@@ -1623,30 +1242,38 @@ const getCookie = (name) => {
   return null;
 };
 
-const saveThemeSettings = (key, value) => {
-  try {
-    localStorage.setItem(key, value);
-    
-    sessionStorage.setItem(key, value);
-    
-    setCookie(key, value, 365);
-    
-    if (key === 'themeMode' || key === 'theme') {
-      document.documentElement.setAttribute('data-theme', value);
-    } else {
-      const cssVarKey = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-      document.documentElement.style.setProperty(`--${cssVarKey}`, value);
-    }
-    
-    try {
-      const currentThemeData = JSON.parse(localStorage.getItem('themeData') || '{}');
-      currentThemeData[key] = value;
-      localStorage.setItem('themeData', JSON.stringify(currentThemeData));
-      sessionStorage.setItem('themeData', JSON.stringify(currentThemeData));
-    } catch (e) {
-      console.error('Error saving theme data JSON:', e);
-    }
-  } catch (error) {
-    console.error(`Error saving theme setting ${key}:`, error);
+// Компонент для редиректа с /item/:itemId
+function ItemRedirectPage() {
+  const { itemId } = useParams();
+  const navigate = useNavigate();
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!itemId) return;
+    axios.get(`/api/inventory/item/${itemId}`)
+      .then(res => {
+        if (res.data && res.data.success && res.data.item && res.data.item.user && res.data.item.user.username) {
+          navigate(`/profile/${res.data.item.user.username}?item=${itemId}`, { replace: true });
+        } else {
+          setError('Владелец предмета не найден');
+        }
+      })
+      .catch(() => setError('Ошибка при получении информации о предмете'));
+  }, [itemId, navigate]);
+
+  if (error) {
+    return <div style={{textAlign:'center',marginTop:40}}><h2>Ошибка</h2><p>{error}</p></div>;
   }
-};
+  return <div style={{textAlign:'center',marginTop:40}}><h2>Загрузка...</h2></div>;
+}
+
+function FriendsRedirect() {
+  const { user } = useContext(AuthContext);
+  if (user && user.username) {
+    window.location.replace(`/friends/${user.username}`);
+    return null;
+  }
+  // If not logged in, redirect to login or show error
+  window.location.replace('/login');
+  return null;
+}

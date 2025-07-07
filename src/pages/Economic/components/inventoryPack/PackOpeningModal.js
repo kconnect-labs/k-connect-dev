@@ -13,19 +13,17 @@ import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Close as CloseIcon,
-  Diamond as DiamondIcon,
-  Star as StarIcon,
-  Celebration as CelebrationIcon
+  FiberManualRecord as DotIcon
 } from '@mui/icons-material';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    background: 'rgba(255, 255, 255, 0.03)',
+    background: 'rgba(18, 18, 18, 0.95)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: window.innerWidth <= 768 ? 0 : '8px',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-    maxWidth: window.innerWidth <= 768 ? '100vw' : 500,
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: window.innerWidth <= 768 ? 0 : '16px',
+    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
+    maxWidth: window.innerWidth <= 768 ? '100vw' : 400,
     width: window.innerWidth <= 768 ? '100%' : '90%',
     overflow: 'hidden',
     '@media (max-width: 768px)': {
@@ -38,115 +36,88 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 const ModalContent = styled(Box)(({ theme }) => ({
   position: 'relative',
-  padding: theme.spacing(3),
+  padding: theme.spacing(4),
   textAlign: 'center',
-  minHeight: 400,
+  minHeight: 320,
 }));
 
 const PackContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  width: 200,
-  height: 200,
-  margin: '0 auto 24px',
-  background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%)',
-  borderRadius: 12,
+  width: 140,
+  height: 140,
+  margin: '0 auto 32px',
+  background: 'rgba(255, 255, 255, 0.03)',
+  borderRadius: 16,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.08)',
   overflow: 'hidden',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'radial-gradient(circle at center, rgba(208, 188, 255, 0.1) 0%, transparent 70%)',
-    pointerEvents: 'none',
-  },
 }));
 
 const ItemContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  width: 120,
-  height: 120,
+  width: 250,
+  height: 250,
   borderRadius: 12,
-  background: 'rgba(208, 188, 255, 0.1)',
+  background: 'rgba(255, 255, 255, 0.05)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  border: '3px solid rgba(208, 188, 255, 0.3)',
-  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
   overflow: 'hidden',
+  position: 'relative',
+  margin: '0 auto',
 }));
 
 const ItemImage = styled('img')({
   width: '100%',
   height: '100%',
   objectFit: 'contain',
-  borderRadius: 'inherit',
+  borderRadius: 8,
+  maxWidth: '100%',
+  maxHeight: '100%',
 });
 
 const RarityChip = styled(Chip)(({ rarity, theme }) => {
   const colors = {
-    common: { bg: '#95a5a6', color: '#fff' },
-    rare: { bg: '#3498db', color: '#fff' },
-    epic: { bg: '#9b59b6', color: '#fff' },
-    legendary: { bg: '#f39c12', color: '#fff' },
+    common: { bg: 'rgba(156, 163, 175, 0.2)', color: '#9CA3AF', border: 'rgba(156, 163, 175, 0.3)' },
+    rare: { bg: 'rgba(59, 130, 246, 0.2)', color: '#3B82F6', border: 'rgba(59, 130, 246, 0.3)' },
+    epic: { bg: 'rgba(147, 51, 234, 0.2)', color: '#9333EA', border: 'rgba(147, 51, 234, 0.3)' },
+    legendary: { bg: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', border: 'rgba(245, 158, 11, 0.3)' },
   };
   
   return {
     background: colors[rarity]?.bg || colors.common.bg,
     color: colors[rarity]?.color || colors.common.color,
-    fontWeight: 700,
-    fontSize: '1rem',
-    padding: '8px 16px',
+    border: `1px solid ${colors[rarity]?.border || colors.common.border}`,
+    fontWeight: 500,
+    fontSize: '0.875rem',
+    padding: '6px 12px',
+    backdropFilter: 'blur(10px)',
     '& .MuiChip-label': {
-      padding: '4px 12px',
+      padding: '2px 8px',
     },
   };
 });
 
-const Sparkle = styled(motion.div)({
-  position: 'absolute',
-  width: 4,
-  height: 4,
-  background: '#d0bcff',
-  borderRadius: '50%',
-  pointerEvents: 'none',
+const LoadingDots = styled(Box)({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: '8px',
+  margin: '24px 0',
 });
 
-const PackOpeningModal = ({ pack, onClose }) => {
+const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, onBalanceUpdate }) => {
   const [opening, setOpening] = useState(true);
   const [obtainedItem, setObtainedItem] = useState(null);
   const [showResult, setShowResult] = useState(false);
-  const [sparkles, setSparkles] = useState([]);
 
   useEffect(() => {
     if (pack && pack.purchase_id) {
       openPack();
     }
   }, [pack]);
-
-  useEffect(() => {
-    if (opening) {
-      // Создаем искры во время открытия
-      const sparkleInterval = setInterval(() => {
-        setSparkles(prev => [
-          ...prev,
-          {
-            id: Date.now(),
-            x: Math.random() * 100,
-            y: Math.random() * 100,
-            delay: Math.random() * 0.5,
-          }
-        ]);
-      }, 100);
-
-      return () => clearInterval(sparkleInterval);
-    }
-  }, [opening]);
 
   const openPack = async () => {
     try {
@@ -165,7 +136,7 @@ const PackOpeningModal = ({ pack, onClose }) => {
           setObtainedItem(data.item);
           setOpening(false);
           setShowResult(true);
-        }, 2000);
+        }, 2500);
       } else {
         alert(data.message || 'Ошибка открытия пака');
         onClose();
@@ -173,30 +144,6 @@ const PackOpeningModal = ({ pack, onClose }) => {
     } catch (err) {
       alert('Ошибка сети');
       onClose();
-    }
-  };
-
-  const getRarityIcon = (rarity) => {
-    switch (rarity) {
-      case 'legendary':
-        return <DiamondIcon sx={{ fontSize: 24 }} />;
-      case 'epic':
-        return <StarIcon sx={{ fontSize: 24 }} />;
-      default:
-        return null;
-    }
-  };
-
-  const getRarityColor = (rarity) => {
-    switch (rarity) {
-      case 'legendary':
-        return '#f39c12';
-      case 'epic':
-        return '#9b59b6';
-      case 'rare':
-        return '#3498db';
-      default:
-        return '#95a5a6';
     }
   };
 
@@ -221,6 +168,65 @@ const PackOpeningModal = ({ pack, onClose }) => {
     }
   };
 
+  const handleOpenAnother = async () => {
+    if (!opening) {
+      try {
+        setOpening(true);
+        setShowResult(false);
+        setObtainedItem(null);
+        
+        // Покупаем новый пак того же типа
+        const buyResponse = await fetch(`/api/inventory/packs/${pack.id}/buy`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
+        
+        const buyData = await buyResponse.json();
+        
+        if (buyData.success) {
+          // Обновляем баланс пользователя
+          if (onBalanceUpdate) {
+            onBalanceUpdate(buyData.remaining_points);
+          }
+          
+          // Открываем новый пак
+          const openResponse = await fetch(`/api/inventory/packs/${buyData.purchase_id}/open`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          const openData = await openResponse.json();
+          
+          if (openData.success) {
+            // Имитируем задержку открытия
+            setTimeout(() => {
+              setObtainedItem(openData.item);
+              setOpening(false);
+              setShowResult(true);
+            }, 2500);
+          } else {
+            alert(openData.message || 'Ошибка открытия пака');
+            onClose();
+          }
+        } else {
+          alert(buyData.message || 'Ошибка покупки пака');
+          setOpening(false);
+          setShowResult(true);
+        }
+      } catch (error) {
+        console.error('Error buying/opening pack:', error);
+        alert('Ошибка сети');
+        setOpening(false);
+        setShowResult(true);
+      }
+    }
+  };
+
   return (
     <StyledDialog
       open={true}
@@ -239,9 +245,10 @@ const PackOpeningModal = ({ pack, onClose }) => {
               position: 'absolute',
               right: 16,
               top: 16,
-              color: 'text.secondary',
+              color: 'rgba(255, 255, 255, 0.6)',
               '&:hover': {
-                color: 'primary.main',
+                color: 'rgba(255, 255, 255, 0.9)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
               },
             }}
           >
@@ -252,84 +259,79 @@ const PackOpeningModal = ({ pack, onClose }) => {
             {opening ? (
               <motion.div
                 key="opening"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 <Typography 
-                  variant="h4" 
+                  variant="h5" 
                   sx={{ 
-                    fontWeight: 700, 
-                    mb: 3,
+                    fontWeight: 400, 
+                    mb: 4,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    letterSpacing: '0.5px'
                   }}
                 >
-                  Открываем пак...
+                  Открытие пака
                 </Typography>
 
                 <PackContainer>
                   <motion.div
                     animate={{ 
-                      rotate: [0, 360],
-                      scale: [1, 1.1, 1],
+                      scale: [1, 1.05, 1],
+                      opacity: [0.7, 1, 0.7]
                     }}
                     transition={{ 
-                      rotate: { duration: 2, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
                     }}
                   >
-                    <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-                      {/* Искры */}
-                      {sparkles.map((sparkle) => (
-                        <Sparkle
-                          key={sparkle.id}
-                          initial={{ 
-                            opacity: 0, 
-                            scale: 0,
-                            x: sparkle.x,
-                            y: sparkle.y,
-                          }}
-                          animate={{ 
-                            opacity: [0, 1, 0],
-                            scale: [0, 1, 0],
-                            x: sparkle.x + (Math.random() - 0.5) * 50,
-                            y: sparkle.y + (Math.random() - 0.5) * 50,
-                          }}
-                          transition={{ 
-                            duration: 1,
-                            delay: sparkle.delay,
-                          }}
-                          onAnimationComplete={() => {
-                            setSparkles(prev => prev.filter(s => s.id !== sparkle.id));
-                          }}
-                        />
-                      ))}
-                      
-                      <Typography 
-                        variant="h2" 
-                        sx={{ 
-                          fontWeight: 700,
-                        }}
-                      >
-                        ?
-                      </Typography>
-                    </Box>
+                    <Typography 
+                      sx={{ 
+                        fontSize: '3rem',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontWeight: 300
+                      }}
+                    >
+                      ?
+                    </Typography>
                   </motion.div>
                 </PackContainer>
 
-                <CircularProgress 
-                  size={40} 
-                  sx={{ mb: 2 }} 
-                />
+                <LoadingDots>
+                  {[0, 1, 2].map((i) => (
+                    <motion.div
+                      key={i}
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 1, 0.5]
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        delay: i * 0.2,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <DotIcon sx={{ 
+                        fontSize: 8, 
+                        color: 'rgba(255, 255, 255, 0.6)' 
+                      }} />
+                    </motion.div>
+                  ))}
+                </LoadingDots>
                 
                 <Typography 
-                  variant="body1" 
+                  variant="body2" 
                   sx={{ 
-                    color: 'text.secondary',
-                    fontSize: '1.1rem'
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '0.875rem',
+                    fontWeight: 300
                   }}
                 >
-                  Пожалуйста, подождите...
+                  Обработка...
                 </Typography>
               </motion.div>
             ) : (
@@ -339,64 +341,59 @@ const PackOpeningModal = ({ pack, onClose }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    fontWeight: 400, 
+                    mb: 3,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  Получен предмет
+                </Typography>
+
                 <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
                   transition={{ 
                     type: "spring", 
                     stiffness: 200, 
-                    damping: 15,
+                    damping: 20,
                     delay: 0.2
                   }}
                 >
-                  <Typography 
-                    variant="h4" 
-                    sx={{ 
-                      fontWeight: 700, 
-                      mb: 1,
-                    }}
-                  >
-                    Поздравляем!
-                  </Typography>
+                  <ItemContainer sx={{
+                    ...(obtainedItem?.background_url && {
+                      backgroundImage: `url(${obtainedItem.background_url})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                    })
+                  }}>
+                    <ItemImage 
+                      src={`/inventory/${obtainedItem?.id}`}
+                      alt={obtainedItem?.name}
+                      onError={(e) => {
+                        console.error(`Failed to load image: /inventory/${obtainedItem?.id}`);
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </ItemContainer>
                 </motion.div>
 
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 200, 
-                    damping: 15,
-                    delay: 0.4
-                  }}
-                >
-                  <PackContainer>
-                    <ItemContainer>
-                      <ItemImage 
-                        src={`/inventory/${obtainedItem?.id}`}
-                        alt={obtainedItem?.name}
-                        onError={(e) => {
-                          console.error(`Failed to load image: /inventory/${obtainedItem?.id}`);
-                          e.target.style.display = 'none';
-                        }}
-                        onLoad={() => {
-                          console.log(`Successfully loaded image: /inventory/${obtainedItem?.id}`);
-                        }}
-                      />
-                    </ItemContainer>
-                  </PackContainer>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
+                  transition={{ delay: 0.4 }}
                 >
                   <Typography 
-                    variant="h5" 
+                    variant="h6" 
                     sx={{ 
-                      fontWeight: 600, 
-                      mb: 1
+                      fontWeight: 500, 
+                      mb: 2,
+                      color: 'rgba(255, 255, 255, 0.95)',
+                      fontSize: '1.25rem'
                     }}
                   >
                     {obtainedItem?.name}
@@ -406,40 +403,70 @@ const PackOpeningModal = ({ pack, onClose }) => {
                     <RarityChip
                       rarity={obtainedItem?.rarity}
                       label={getRarityLabel(obtainedItem?.rarity)}
-                      icon={getRarityIcon(obtainedItem?.rarity)}
                     />
                   </Box>
 
                   <Typography 
-                    variant="body1" 
+                    variant="body2" 
                     sx={{ 
-                      color: 'text.secondary',
-                      mb: 3,
-                      fontSize: '1.1rem'
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      mb: 4,
+                      fontSize: '0.875rem',
+                      fontWeight: 300
                     }}
                   >
-                    Предмет добавлен в ваш инвентарь!
+                    Предмет добавлен в инвентарь
                   </Typography>
 
-                  <Button
-                    variant="contained"
-                    onClick={onClose}
-                    startIcon={<CelebrationIcon />}
-                    sx={{
-                      background: 'linear-gradient(135deg, #d0bcff 0%, #9c64f2 100%)',
-                      color: '#1a1a1a',
-                      fontWeight: 600,
-                      borderRadius: 1,
-                      px: 4,
-                      py: 1.5,
-                      fontSize: '1.1rem',
-                      '&:hover': {
-                        background: 'linear-gradient(135deg, #cabcfc 0%, #8a5ce8 100%)',
-                      },
-                    }}
-                  >
-                    Отлично!
-                  </Button>
+                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                    <Button
+                      variant="outlined"
+                      onClick={handleOpenAnother}
+                      sx={{
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontWeight: 500,
+                        borderRadius: '8px',
+                        px: 3,
+                        py: 1.5,
+                        fontSize: '0.875rem',
+                        textTransform: 'none',
+                        background: 'transparent',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          borderColor: 'rgba(255, 255, 255, 0.5)',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          transform: 'translateY(-1px)'
+                        },
+                      }}
+                    >
+                      Купить еще
+                    </Button>
+                    
+                    <Button
+                      variant="outlined"
+                      onClick={onClose}
+                      sx={{
+                        borderColor: 'rgba(255, 255, 255, 0.3)',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontWeight: 500,
+                        borderRadius: '8px',
+                        px: 3,
+                        py: 1.5,
+                        fontSize: '0.875rem',
+                        textTransform: 'none',
+                        background: 'transparent',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          borderColor: 'rgba(255, 255, 255, 0.5)',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          transform: 'translateY(-1px)'
+                        },
+                      }}
+                    >
+                      Продолжить
+                    </Button>
+                  </Box>
                 </motion.div>
               </motion.div>
             )}

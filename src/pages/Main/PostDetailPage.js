@@ -1278,6 +1278,19 @@ const PostDetailPage = ({ isOverlay = false }) => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Добавляем состояния для пагинации комментариев
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [hasMoreComments, setHasMoreComments] = useState(false);
+  const [commentsPagination, setCommentsPagination] = useState({
+    page: 1,
+    limit: 20,
+    total: 0,
+    total_pages: 0,
+    has_next: false,
+    has_prev: false
+  });
+  
   const [commentText, setCommentText] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyingTo, setReplyingTo] = useState(null);
@@ -1301,9 +1314,8 @@ const PostDetailPage = ({ isOverlay = false }) => {
   const [lastCommentTime, setLastCommentTime] = useState(0);
   const [waitUntil, setWaitUntil] = useState(0);
   
-  
-  const MIN_COMMENT_INTERVAL = 3000; 
-
+  // Минимальный интервал между комментариями
+  const MIN_COMMENT_INTERVAL = 3000;
   
   const [commentDeleteDialog, setCommentDeleteDialog] = useState({
     open: false,
@@ -1324,65 +1336,79 @@ const PostDetailPage = ({ isOverlay = false }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   
-  
   const viewCounted = useRef(false);
   
   const { t } = useLanguage();
+  
+  const loadComments = async (page = 1, append = false) => {
+    try {
+      if (page === 1) {
+        setCommentsLoading(true);
+      }
+      
+      const response = await axios.get(`/api/posts/${postId}/comments`, {
+        params: {
+          page: page,
+          limit: 20
+        }
+      });
+      
+      if (response.data.comments) {
+        const sanitizedComments = response.data.comments.map(comment => {
+          if (comment.image) {
+            comment.image = sanitizeImagePath(comment.image);
+          }
+          
+          if (comment.replies && comment.replies.length > 0) {
+            comment.replies = comment.replies.map(reply => {
+              if (reply.image) {
+                reply.image = sanitizeImagePath(reply.image);
+              }
+              return reply;
+            });
+          }
+          
+          return comment;
+        });
+        
+        if (append) {
+          setComments(prev => [...prev, ...sanitizedComments]);
+        } else {
+          setComments(sanitizedComments);
+        }
+        
+        setCommentsPagination(response.data.pagination);
+        setHasMoreComments(response.data.pagination.has_next);
+      }
+    } catch (error) {
+      console.error('Error loading comments:', error);
+      setSnackbar({
+        open: true,
+        message: 'Ошибка при загрузке комментариев',
+        severity: 'error'
+      });
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+  
+  const loadMoreComments = async () => {
+    if (!hasMoreComments || commentsLoading) return;
+    
+    const nextPage = commentsPagination.page + 1;
+    await loadComments(nextPage, true);
+  };
   
   useEffect(() => {
     const fetchPost = async () => {
       try {
         setLoading(true);
+        // Загружаем пост БЕЗ комментариев (include_comments=false по умолчанию)
         const response = await axios.get(`/api/posts/${postId}`);
         setPost(response.data.post);
         
-        
-        if (response.data.comments && response.data.comments.length > 0) {
-          
-          const sanitizedComments = response.data.comments.map(comment => {
-            
-            if (comment.image) {
-              comment.image = sanitizeImagePath(comment.image);
-            }
-            
-            
-            if (comment.replies && comment.replies.length > 0) {
-              comment.replies = comment.replies.map(reply => {
-                if (reply.image) {
-                  reply.image = sanitizeImagePath(reply.image);
-                }
-                return reply;
-              });
-            }
-            
-            return comment;
-          });
-          
-          setComments(sanitizedComments);
-        } else {
-          setComments([]);
-        }
-        
-        
-        console.log("DEBUG - Post data received:", response.data);
-        
-        const hasReplyWithImage = response.data.comments && response.data.comments.some(comment => 
-          comment.replies && comment.replies.some(reply => reply.image)
-        );
-        console.log("DEBUG - Any replies with image field:", hasReplyWithImage);
-        
-        const replyWithImage = response.data.comments && response.data.comments
-          .flatMap(c => c.replies || [])
-          .find(r => r.image);
-        if (replyWithImage) {
-          console.log("DEBUG - Example reply with image:", replyWithImage);
-        }
-        
-        const totalReplies = response.data.comments ? response.data.comments.reduce(
-          (sum, comment) => sum + (comment.replies ? comment.replies.length : 0), 
-          0
-        ) : 0;
-        console.log(`DEBUG - Total replies: ${totalReplies}`);
+        // Загружаем первую страницу комментариев отдельно
+        await loadComments(1, false);
         
         setLoading(false);
         
@@ -1399,7 +1425,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
     fetchPost();
   }, [postId, navigate]);
 
-  
   const incrementViewCount = async (postId) => {
     try {
       
@@ -1649,12 +1674,10 @@ const PostDetailPage = ({ isOverlay = false }) => {
   const handleReplySubmit = async (commentId, parentReplyId = null) => {
     if (!replyText.trim() && !replyImage) return;
 
-    
     if (!requireAuth(user, isAuthenticated, navigate)) {
       return;
     }
 
-    
     const now = Date.now();
     if (now < waitUntil) {
       const secondsRemaining = Math.ceil((waitUntil - now) / 1000);
@@ -1666,7 +1689,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
       });
       return;
     }
-    
     
     if (now - lastCommentTime < MIN_COMMENT_INTERVAL) {
       setCommentError("Пожалуйста, не отправляйте комментарии слишком часто");
@@ -1707,7 +1729,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
         });
       }
 
-      
       if (response.data.reply && response.data.reply.image) {
         response.data.reply.image = sanitizeImagePath(response.data.reply.image);
       }
@@ -1722,12 +1743,13 @@ const PostDetailPage = ({ isOverlay = false }) => {
         });
       }
 
-      
+      // Обновляем комментарии, добавляя новый ответ
       setComments(prev => prev.map(comment => 
         comment.id === commentId
           ? {
               ...comment,
-              replies: [...(comment.replies || []), response.data.reply]
+              replies: [...(comment.replies || []), response.data.reply],
+              replies_count: (comment.replies_count || 0) + 1
             }
           : comment
       ));
@@ -1748,18 +1770,15 @@ const PostDetailPage = ({ isOverlay = false }) => {
         severity: 'success'
       });
       
-      
       setLastCommentTime(Date.now());
     } catch (error) {
       console.error('Error adding reply:', error);
-      
       
       if (error.response && error.response.status === 429) {
         const rateLimit = error.response.data.rate_limit;
         let errorMessage = t('post.errorTooFrequent');
         
         if (rateLimit && rateLimit.reset) {
-          
           const resetTime = new Date(rateLimit.reset * 1000);
           const now = new Date();
           const diffSeconds = Math.round((resetTime - now) / 1000);
@@ -1772,11 +1791,9 @@ const PostDetailPage = ({ isOverlay = false }) => {
             errorMessage += `Следующий комментарий можно отправить через ${diffSeconds} сек.`;
           }
           
-          
           setWaitUntil(now.getTime() + (diffSeconds * 1000));
         } else {
           errorMessage += t('post.wait');
-          
           setWaitUntil(Date.now() + 30000);
         }
         
@@ -1914,23 +1931,22 @@ const PostDetailPage = ({ isOverlay = false }) => {
   
   const confirmDeleteComment = async () => {
     try {
-      
       setCommentDeleteDialog(prev => ({ ...prev, deleting: true }));
       
-      
-      const updatedComments = JSON.parse(JSON.stringify(
-        comments.filter(comment => comment.id !== commentDeleteDialog.commentId)
-      ));
-      
-      
+      // Удаляем комментарий из локального состояния
+      const updatedComments = comments.filter(comment => comment.id !== commentDeleteDialog.commentId);
       setComments(updatedComments);
       
+      // Обновляем счетчик общего количества комментариев
+      setCommentsPagination(prev => ({
+        ...prev,
+        total: Math.max(0, prev.total - 1)
+      }));
       
       setCommentDeleteDialog(prev => ({ ...prev, deleted: true, deleting: false }));
       
-      
+      // Отправляем запрос на сервер для фактического удаления
       await axios.post(`/api/comments/${commentDeleteDialog.commentId}/delete`);
-      
       
       setTimeout(() => {
         setCommentDeleteDialog(prev => ({ ...prev, open: false }));
@@ -1939,12 +1955,15 @@ const PostDetailPage = ({ isOverlay = false }) => {
     } catch (error) {
       console.error('Error deleting comment:', error);
       
-      
+      // В случае ошибки перезагружаем комментарии
       setSnackbar({
         open: true,
         message: t('post.errorDeleteComment'),
         severity: 'error'
       });
+      
+      // Перезагружаем первую страницу комментариев
+      await loadComments(1, false);
     }
   };
 
@@ -1974,37 +1993,32 @@ const PostDetailPage = ({ isOverlay = false }) => {
   
   const confirmDeleteReply = async () => {
     try {
-      
       setReplyDeleteDialog(prev => ({ ...prev, deleting: true }));
       
       console.log("Before deletion - Comment ID:", replyDeleteDialog.commentId, "Reply ID:", replyDeleteDialog.replyId);
       console.log("Comments count:", comments.length);
       
-      
+      // Обновляем комментарии, удаляя ответ
       const newComments = comments.map(comment => {
-        
         if (comment.id !== replyDeleteDialog.commentId) {
           return {...comment};
         }
         
-        
         return {
           ...comment,
-          replies: comment.replies.filter(reply => reply.id !== replyDeleteDialog.replyId)
+          replies: comment.replies.filter(reply => reply.id !== replyDeleteDialog.replyId),
+          replies_count: Math.max(0, (comment.replies_count || 0) - 1)
         };
       });
       
       console.log("After filtering - Comments count:", newComments.length);
       
-      
       setComments(newComments);
-      
       
       setReplyDeleteDialog(prev => ({ ...prev, deleted: true, deleting: false }));
       
-      
+      // Отправляем запрос на сервер для фактического удаления
       await axios.post(`/api/replies/${replyDeleteDialog.replyId}/delete`);
-      
       
       setTimeout(() => {
         setReplyDeleteDialog(prev => ({ ...prev, open: false }));
@@ -2013,40 +2027,16 @@ const PostDetailPage = ({ isOverlay = false }) => {
     } catch (error) {
       console.error('Error deleting reply:', error);
       
-      
       setSnackbar({
         open: true,
         message: t('post.errorDeleteReply'),
         severity: 'error'
       });
       
-      
+      // В случае ошибки перезагружаем комментарии
       try {
         console.log("Reloading comments after error");
-        const response = await axios.get(`/api/posts/${postId}`);
-        if (response.data.comments) {
-          
-          const sanitizedComments = response.data.comments.map(comment => {
-            
-            if (comment.image) {
-              comment.image = sanitizeImagePath(comment.image);
-            }
-            
-            
-            if (comment.replies && comment.replies.length > 0) {
-              comment.replies = comment.replies.map(reply => {
-                if (reply.image) {
-                  reply.image = sanitizeImagePath(reply.image);
-                }
-                return reply;
-              });
-            }
-            
-            return comment;
-          });
-          
-          setComments(sanitizedComments);
-        }
+        await loadComments(commentsPagination.page, false);
       } catch (refreshError) {
         console.error('Error refreshing comments after delete error:', refreshError);
       }
@@ -2124,7 +2114,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         />
       )}
 
-      
+      {/* Comments Section */}
       <Box sx={{ px: { xs: 2, sm: 0 }, mb: 2 }}>
         <Typography 
           variant="h6" 
@@ -2141,7 +2131,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
             <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
-            {t('post.comments')} ({post?.total_comments_count || (comments ? comments.length : 0)})
+            {t('post.comments')} ({commentsPagination.total || 0})
           </Box>
         </Typography>
 
@@ -2294,52 +2284,88 @@ const PostDetailPage = ({ isOverlay = false }) => {
           </Box>
         )}
 
-        {loading ? (
+        {loading || commentsLoading && commentsPagination.page === 1 ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', my: { xs: 2, sm: 3 } }}>
             <CircularProgress size={30} thickness={4} />
           </Box>
         ) : (comments && comments.length > 0) ? (
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: { xs: 0.5, sm: 0.5 } 
-          }}>
-            {comments.map(comment => (
-              <Comment 
-                key={comment.id} 
-                comment={comment} 
-                onLike={handleLikeComment}
-                onLikeReply={(replyId) => handleLikeReply(replyId)}
-                onReply={(replyOrComment, commentId) => {
-                  setActiveComment(commentId ? { id: commentId } : replyOrComment);
-                  setReplyFormOpen(true);
-                  setReplyText('');
-                  setReplyingToReply(replyOrComment.id !== comment.id ? replyOrComment : null);
-                }}
-                isReplyFormOpen={replyFormOpen}
-                activeCommentId={activeComment?.id}
-                replyText={replyText}
-                onReplyTextChange={setReplyText}
-                onReplySubmit={handleReplySubmit}
-                replyingToReply={replyingToReply}
-                setReplyingToReply={setReplyingToReply}
-                setReplyFormOpen={setReplyFormOpen}
-                setActiveComment={setActiveComment}
-                onDeleteComment={handleDeleteComment}
-                onDeleteReply={handleDeleteReply}
-                isSubmittingComment={isSubmittingComment}
-                waitUntil={waitUntil}
-                handleReplyImageChange={handleReplyImageChange}
-                currentLightboxImage={currentLightboxImage}
-                setCurrentLightboxImage={setCurrentLightboxImage}
-                replyFileInputRef={replyFileInputRef}
-                handleRemoveReplyImage={handleRemoveReplyImage}
-                replyImage={replyImage}
-                replyImagePreview={replyImagePreview}
-                setReplyImage={setReplyImage}
-                setLightboxOpen={setLightboxOpen}
-              />
-            ))}
+          <Box>
+            <Box sx={{ 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: { xs: 0.5, sm: 0.5 } 
+            }}>
+              {comments.map(comment => (
+                <Comment 
+                  key={comment.id} 
+                  comment={comment} 
+                  onLike={handleLikeComment}
+                  onLikeReply={(replyId) => handleLikeReply(replyId)}
+                  onReply={(replyOrComment, commentId) => {
+                    setActiveComment(commentId ? { id: commentId } : replyOrComment);
+                    setReplyFormOpen(true);
+                    setReplyText('');
+                    setReplyingToReply(replyOrComment.id !== comment.id ? replyOrComment : null);
+                  }}
+                  isReplyFormOpen={replyFormOpen}
+                  activeCommentId={activeComment?.id}
+                  replyText={replyText}
+                  onReplyTextChange={setReplyText}
+                  onReplySubmit={handleReplySubmit}
+                  replyingToReply={replyingToReply}
+                  setReplyingToReply={setReplyingToReply}
+                  setReplyFormOpen={setReplyFormOpen}
+                  setActiveComment={setActiveComment}
+                  onDeleteComment={handleDeleteComment}
+                  onDeleteReply={handleDeleteReply}
+                  isSubmittingComment={isSubmittingComment}
+                  waitUntil={waitUntil}
+                  handleReplyImageChange={handleReplyImageChange}
+                  currentLightboxImage={currentLightboxImage}
+                  setCurrentLightboxImage={setCurrentLightboxImage}
+                  replyFileInputRef={replyFileInputRef}
+                  handleRemoveReplyImage={handleRemoveReplyImage}
+                  replyImage={replyImage}
+                  replyImagePreview={replyImagePreview}
+                  setReplyImage={setReplyImage}
+                  setLightboxOpen={setLightboxOpen}
+                />
+              ))}
+            </Box>
+            
+            {/* Load More Comments Button */}
+            {hasMoreComments && (
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                mt: 3,
+                mb: 2
+              }}>
+                <Button
+                  variant="outlined"
+                  onClick={loadMoreComments}
+                  disabled={commentsLoading}
+                  startIcon={commentsLoading ? <CircularProgress size={16} /> : <ChatBubbleOutlineIcon />}
+                  sx={{
+                    borderRadius: '20px',
+                    px: 3,
+                    py: 1,
+                    textTransform: 'none',
+                    borderColor: 'rgba(140, 82, 255, 0.3)',
+                    color: 'primary.main',
+                    '&:hover': {
+                      borderColor: 'primary.main',
+                      backgroundColor: 'rgba(140, 82, 255, 0.05)'
+                    }
+                  }}
+                >
+                  {commentsLoading 
+                    ? 'Загрузка...' 
+                    : `Загрузить еще (${commentsPagination.total - comments.length})`
+                  }
+                </Button>
+              </Box>
+            )}
           </Box>
         ) : (
           <Box sx={{ 
@@ -2374,7 +2400,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-
 
       <Dialog
         open={commentDeleteDialog.open}

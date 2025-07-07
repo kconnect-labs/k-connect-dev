@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Alert } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Alert, DialogActions } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Close as CloseIcon, Diamond as DiamondIcon, Star as StarIcon, Lock as LockIcon } from '@mui/icons-material';
@@ -8,6 +8,7 @@ import PackOpeningModal from './PackOpeningModal';
 import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
+import inventoryImageService from '../../../../services/InventoryImageService';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -43,35 +44,46 @@ const InventoryPackPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPack, setSelectedPack] = useState(null);
-  const [openingPack, setOpeningPack] = useState(false);
-  const [userPoints, setUserPoints] = useState(0);
-  const [packDetailsOpen, setPackDetailsOpen] = useState(false);
   const [selectedPackDetails, setSelectedPackDetails] = useState(null);
-  const [confirmPurchaseOpen, setConfirmPurchaseOpen] = useState(false);
-  const [packToPurchase, setPackToPurchase] = useState(null);
+  const [openingPack, setOpeningPack] = useState(null);
+  const [showPackDetails, setShowPackDetails] = useState(false);
+  const [userPoints, setUserPoints] = useState(0);
+  const [purchases, setPurchases] = useState([]);
+  const [showPurchases, setShowPurchases] = useState(false);
   const { user } = useAuth();
+  const [confirmPack, setConfirmPack] = useState(null);
+  const [openedPack, setOpenedPack] = useState(null);
 
   useEffect(() => {
     fetchPacks();
     if (user) {
       fetchUserPoints();
+      fetchPurchases();
     }
   }, [user]);
 
   const fetchPacks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/inventory/packs');
-      const data = await response.json();
-      
-      if (data.success) {
-        setPacks(data.packs);
-      } else {
-        setError('Ошибка загрузки паков');
+      const response = await axios.get('/api/inventory/packs');
+      if (response.data.success) {
+        setPacks(response.data.packs);
+        
+        // Предзагружаем изображения для всех паков
+        const packContents = response.data.packs.flatMap(pack => 
+          pack.contents ? pack.contents.map(content => ({
+            pack_id: pack.id,
+            item_name: content.item_name
+          })) : []
+        );
+        
+        if (packContents.length > 0) {
+          await inventoryImageService.checkImagesBatch(packContents);
+        }
       }
-    } catch (err) {
-      setError('Ошибка сети');
-      console.error('Error fetching packs:', err);
+    } catch (error) {
+      console.error('Error fetching packs:', error);
+      setError('Ошибка при загрузке паков');
     } finally {
       setLoading(false);
     }
@@ -86,54 +98,19 @@ const InventoryPackPage = () => {
     }
   };
 
-  const handleBuyPack = async (pack) => {
-    if (!user) {
-      alert('Необходимо авторизоваться');
-      return;
-    }
-
-    if (userPoints < pack.price) {
-      alert('Недостаточно баллов');
-      return;
-    }
-
-    // Открываем модалку подтверждения
-    setPackToPurchase(pack);
-    setConfirmPurchaseOpen(true);
-  };
-
-  const handleConfirmPurchase = async () => {
-    if (!packToPurchase) return;
-
+  const fetchPurchases = async () => {
     try {
-      const response = await fetch(`/api/inventory/packs/${packToPurchase.id}/buy`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      
-      if (data.success) {
-        setUserPoints(data.remaining_points);
-        setSelectedPack({ ...packToPurchase, purchase_id: data.purchase_id });
-        setOpeningPack(true);
-        fetchPacks(); // Обновляем список паков
-        setConfirmPurchaseOpen(false);
-        setPackToPurchase(null);
-      } else {
-        alert(data.message || 'Ошибка покупки пака');
+      const response = await axios.get('/api/inventory/my-purchases');
+      if (response.data.success) {
+        setPurchases(response.data.purchases);
       }
-    } catch (err) {
-      alert('Ошибка сети');
-      console.error('Error buying pack:', err);
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
     }
   };
 
-  const handleCancelPurchase = () => {
-    setConfirmPurchaseOpen(false);
-    setPackToPurchase(null);
+  const handleBuyPack = (pack) => {
+    setConfirmPack(pack);
   };
 
   const handlePackOpened = () => {
@@ -144,11 +121,11 @@ const InventoryPackPage = () => {
 
   const handlePackClick = (pack, packContents) => {
     setSelectedPackDetails({ pack, contents: packContents });
-    setPackDetailsOpen(true);
+    setShowPackDetails(true);
   };
 
   const handleClosePackDetails = () => {
-    setPackDetailsOpen(false);
+    setShowPackDetails(false);
     setSelectedPackDetails(null);
   };
 
@@ -194,6 +171,26 @@ const InventoryPackPage = () => {
   const isSoldOut = selectedPackDetails?.pack.is_limited && 
                     (selectedPackDetails.pack.max_quantity - selectedPackDetails.pack.sold_quantity <= 0);
 
+  const fetchPackDetails = async (packId) => {
+    try {
+      const response = await axios.get(`/api/inventory/packs/${packId}`);
+      if (response.data.success) {
+        const packData = response.data.pack;
+        setSelectedPackDetails(packData);
+        
+        // Предзагружаем изображения содержимого пака
+        if (packData.contents && packData.contents.length > 0) {
+          await inventoryImageService.preloadPackImages(packData.contents, packId);
+        }
+        
+        setShowPackDetails(true);
+      }
+    } catch (error) {
+      console.error('Error fetching pack details:', error);
+      setError('Ошибка при загрузке информации о паке');
+    }
+  };
+
   if (loading) {
     return (
       <StyledContainer>
@@ -228,8 +225,8 @@ const InventoryPackPage = () => {
   return (
     <StyledContainer>
       <InfoBlock
-        title="Паки и Сундуки"
-        description="Откройте паки и сундуки, чтобы получить уникальные предметы для вашей коллекции"
+        title="Пачки"
+        description="Откройте Пачки, чтобы получить уникальные предметы для вашей коллекции"
         styleVariant="dark"
         sx={{ 
           textAlign: 'center',
@@ -264,14 +261,14 @@ const InventoryPackPage = () => {
               width: {
                 xs: '100%', // 1 в ряд на мобильных
                 sm: 'calc(50% - 6px)', // 2 в ряд на планшетах
-                md: 'calc(33.333% - 8px)', // 3 в ряд на средних экранах
+                md: 'calc(25% - 9px)', // 4 в ряд на средних экранах
                 lg: 'calc(25% - 9px)', // 4 в ряд на больших экранах
                 xl: 'calc(20% - 9.6px)', // 5 в ряд на очень больших экранах
               },
               minWidth: {
                 xs: '280px',
-                sm: '200px',
-                md: '250px',
+                sm: '250px',
+                md: '300px',
               },
               maxWidth: {
                 xs: 'none',
@@ -298,17 +295,17 @@ const InventoryPackPage = () => {
       </Box>
 
       <AnimatePresence>
-        {openingPack && selectedPack && (
+        {openedPack && (
           <PackOpeningModal
-            pack={selectedPack}
-            onClose={handlePackOpened}
+            pack={openedPack}
+            onClose={() => setOpenedPack(null)}
           />
         )}
       </AnimatePresence>
 
       {/* Модалка с подробностями пака */}
       <Dialog
-        open={packDetailsOpen}
+        open={showPackDetails}
         onClose={handleClosePackDetails}
         maxWidth="md"
         fullWidth
@@ -508,151 +505,41 @@ const InventoryPackPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Модалка подтверждения покупки */}
-      <Dialog
-        open={confirmPurchaseOpen}
-        onClose={handleCancelPurchase}
-        maxWidth="sm"
-        fullWidth
-        fullScreen={window.innerWidth <= 768}
+      <Dialog open={!!confirmPack} onClose={() => setConfirmPack(null)}
         PaperProps={{
           sx: {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: window.innerWidth <= 768 ? 0 : '8px',
-            '@media (max-width: 768px)': {
-              margin: 0,
-              maxWidth: '100vw',
-              maxHeight: '100vh',
-              borderRadius: 0,
-            }
+            borderRadius: '8px',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           }
         }}
       >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          color: 'text.primary',
-          pb: 1,
-          '@media (max-width: 768px)': {
-            padding: '16px',
-          }
-        }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
-            Подтверждение покупки
+        <DialogTitle>Подтверждение покупки</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Купить пак <b>{confirmPack?.display_name}</b> за <b>{confirmPack?.price}</b> баллов?
           </Typography>
-          <IconButton
-            onClick={handleCancelPurchase}
-            sx={{ color: 'text.secondary' }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        
-        <DialogContent sx={{ 
-          p: 3,
-          '@media (max-width: 768px)': {
-            padding: '16px',
-          }
-        }}>
-          {packToPurchase && (
-            <>
-              <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-                  {packToPurchase.display_name}
-                </Typography>
-                
-                <Typography variant="body1" sx={{ color: 'text.secondary', mb: 3 }}>
-                  Вы точно уверены, что хотите купить этот пак за {packToPurchase.price} баллов?
-                </Typography>
-
-                <Box sx={{ 
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  mb: 3,
-                  gap: 1 
-                }}>
-                  <Chip 
-                    icon={<DiamondIcon />}
-                    label={`${packToPurchase.price} баллов`}
-                    sx={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      color: 'text.primary',
-                      fontWeight: 500,
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                    }}
-                  />
-                  {packToPurchase.is_limited && (
-                    <Chip 
-                      icon={<LockIcon />}
-                      label={`Осталось: ${packToPurchase.max_quantity - packToPurchase.sold_quantity}`}
-                      sx={{
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        color: 'text.secondary',
-                        fontSize: '0.75rem',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                      }}
-                    />
-                  )}
-                </Box>
-              </Box>
-
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                gap: 2,
-                flexWrap: 'wrap',
-                '@media (max-width: 768px)': {
-                  flexDirection: 'column',
-                  alignItems: 'stretch',
-                }
-              }}>
-                <Button
-                  variant="outlined"
-                  onClick={handleCancelPurchase}
-                  sx={{
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    color: 'text.primary',
-                    fontWeight: 500,
-                    '&:hover': {
-                      borderColor: 'rgba(255, 255, 255, 0.4)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    },
-                    '@media (max-width: 768px)': {
-                      width: '100%',
-                    }
-                  }}
-                >
-                  Отмена
-                </Button>
-                
-                <Button
-                  variant="contained"
-                  onClick={handleConfirmPurchase}
-                  sx={{
-                    background: 'linear-gradient(135deg, #d0bcff 0%, #9c64f2 100%)',
-                    color: '#1a1a1a',
-                    fontWeight: 600,
-                    borderRadius: 1,
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    '&:hover': {
-                      background: 'linear-gradient(135deg, #cabcfc 0%, #8a5ce8 100%)',
-                    },
-                    '@media (max-width: 768px)': {
-                      width: '100%',
-                    }
-                  }}
-                >
-                  Купить пак
-                </Button>
-              </Box>
-            </>
-          )}
         </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConfirmPack(null)}>Отмена</Button>
+          <Button
+            variant="contained"
+            onClick={async () => {
+              const res = await fetch(`/api/inventory/packs/${confirmPack.id}/buy`, { method: 'POST', credentials: 'include' });
+              const data = await res.json();
+              if (data.success) {
+                setOpenedPack({ ...confirmPack, purchase_id: data.purchase_id });
+              } else {
+                alert(data.message || 'Ошибка покупки');
+              }
+              setConfirmPack(null);
+            }}
+          >
+            Купить
+          </Button>
+        </DialogActions>
       </Dialog>
     </StyledContainer>
   );

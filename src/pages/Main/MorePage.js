@@ -399,7 +399,7 @@ const MorePage = () => {
             <ListItemText primary={t('more_page.sections.social.search')} />
           </MenuListItem>
 
-          <MenuListItem button component={Link} to="/subscriptions">
+          <MenuListItem button component={Link} to={user && user.username ? `/friends/${user.username}` : '/friends'}>
             <MenuItemIcon>
               <Icon icon="solar:users-group-rounded-bold" width="20" height="20" />
             </MenuItemIcon>
@@ -426,11 +426,11 @@ const MorePage = () => {
       <MenuSection>
         <SectionTitle>{t('more_page.sections.entertainment.title')}</SectionTitle>
         <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
-          {!isChannel && (
+        {!isChannel && (
             <HighlightedMenuItem 
               button 
               component={Link} 
-              to="/minigames"
+              to="/minigames/clicker"
               color="secondary"
             >
               <MenuItemIcon sx={{ color: theme.palette.secondary.main }}>
@@ -441,12 +441,11 @@ const MorePage = () => {
               />
             </HighlightedMenuItem>
           )}
-          
           <MenuListItem button component={Link} to="/economic/packs">
             <MenuItemIcon>
               <Icon icon="solar:box-bold" width="20" height="20" />
             </MenuItemIcon>
-            <ListItemText primary="Паки и Сундуки" />
+            <ListItemText primary="Пачки" />
           </MenuListItem>
           
           <MenuListItem button component={Link} to="/economic/inventory">
@@ -455,6 +454,49 @@ const MorePage = () => {
             </MenuItemIcon>
             <ListItemText primary="Мой Инвентарь" />
           </MenuListItem>
+          
+          <MenuListItem button component={Link} to="/marketplace">
+            <MenuItemIcon>
+              <Icon icon="solar:shop-2-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText primary="Маркетплейс" />
+          </MenuListItem>
+          
+          {!isChannel && (
+            <MenuListItem button component={Link} to="/inform/sticker">
+              <MenuItemIcon>
+                <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />
+              </MenuItemIcon>
+              <ListItemText primary="Управление стикерами" />
+            </MenuListItem>
+          )}
+          
+          <HighlightedMenuItem
+            button 
+            component={Link} 
+            to="/grant"
+            color="secondary"
+          >
+            <MenuItemIcon sx={{ color: theme.palette.secondary.main }}>
+              <Icon icon="solar:star-bold" width="20" height="20" />
+            </MenuItemIcon>
+            <ListItemText 
+              primary="Гранты каналам"
+            />
+            <Chip 
+              label="NEW"
+              size="small" 
+              color="secondary" 
+              sx={{ 
+                height: 18, 
+                fontSize: '0.6rem',
+                fontWeight: 'bold',
+                flexShrink: 0,
+                ml: 0.5,
+                maxWidth: 45
+              }} 
+            />
+          </HighlightedMenuItem>
           
           <HighlightedMenuItem
             button 
@@ -559,7 +601,7 @@ const MorePage = () => {
             <ListItemText primary={t('more_page.sections.platform.messenger')} />
           </MenuListItem>
           
-          <MenuListItem button component={Link} to="/api-docs">
+          <MenuListItem button component={Link} to="/documentapi">
             <MenuItemIcon>
               <Icon icon="solar:code-bold" width="20" height="20" />
             </MenuItemIcon>

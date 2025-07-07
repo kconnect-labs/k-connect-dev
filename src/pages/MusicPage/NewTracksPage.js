@@ -63,18 +63,6 @@ const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
   }
 }));
 
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
-
 const NewTracksPage = () => {
   const navigate = useNavigate();
   const { 
@@ -93,38 +81,74 @@ const NewTracksPage = () => {
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchInputRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const searchTimeoutRef = useRef(null);
 
   // Состояние для уведомлений
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  // Debounced search
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
-      if (!query.trim()) {
-        return;
+  // Стабильная функция поиска с использованием useRef
+  const performSearch = useCallback(async (query) => {
+    // Отменяем предыдущий запрос если он еще выполняется
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Проверяем минимальную длину запроса
+    if (!query.trim() || query.trim().length < 2) {
+      console.log('[NewTracksPage] Запрос слишком короткий:', query);
+      return;
+    }
+    
+    console.log('[NewTracksPage] Выполняем поиск для:', query);
+    setSearchLoading(true);
+    
+    // Создаем новый AbortController для этого запроса
+    abortControllerRef.current = new AbortController();
+    
+    try {
+      const results = await searchTracks(query);
+      console.log('[NewTracksPage] Результаты поиска:', results);
+      
+      if (results.length === 0) {
+        console.log('[NewTracksPage] Поиск не дал результатов для запроса:', query);
       }
-      setSearchLoading(true);
-      try {
-        const results = await searchTracks(query);
-        console.log('Search results:', results);
-      } catch (error) {
-        console.error('Error searching tracks:', error);
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        console.error('[NewTracksPage] Ошибка поиска:', error);
         setSnackbar({ open: true, message: 'Ошибка поиска', severity: 'error' });
-      } finally {
-        setSearchLoading(false);
       }
-    }, 500),
-    [searchTracks]
-  );
+    } finally {
+      setSearchLoading(false);
+      abortControllerRef.current = null;
+    }
+  }, [searchTracks]);
 
   // Обработчики поиска
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
     
-    if (query.trim()) {
-      debouncedSearch(query);
+    console.log('[NewTracksPage] Изменение поискового запроса:', query);
+    
+    // Отменяем предыдущий таймер
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+    
+    // Отменяем активный поиск если запрос слишком короткий
+    if (query.trim().length < 2) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        setSearchLoading(false);
+      }
+      return;
+    }
+    
+    // Устанавливаем новый таймер для debounce
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(query.trim());
+    }, 1200); // 1.2 секунды debounce
   };
 
   const handleSearchFocus = () => {
@@ -136,9 +160,20 @@ const NewTracksPage = () => {
   };
 
   const clearSearch = () => {
+    console.log('[NewTracksPage] Очистка поиска');
     setSearchQuery('');
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
+    }
+    // Отменяем активный поиск
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      setSearchLoading(false);
+    }
+    // Отменяем таймер debounce
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = null;
     }
   };
 
@@ -151,10 +186,7 @@ const NewTracksPage = () => {
         }
       }, 100);
     } else {
-      setSearchQuery('');
-      if (searchInputRef.current) {
-        searchInputRef.current.value = '';
-      }
+      clearSearch();
     }
   }, [showSearchBar]);
 
@@ -164,6 +196,19 @@ const NewTracksPage = () => {
     }
     setSnackbar({ ...snackbar, open: false });
   };
+
+  // Очистка при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      console.log('[NewTracksPage] Размонтирование - очищаем все ресурсы');
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Если есть поисковый запрос, показываем страницу поиска
   if (searchQuery.trim()) {
@@ -180,7 +225,7 @@ const NewTracksPage = () => {
               <Search sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
               <input
                 ref={searchInputRef}
-                placeholder="Поиск трека или исполнителя"
+                placeholder="Поиск трека или исполнителя (мин. 2 символа)"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={handleSearchFocus}
@@ -214,6 +259,13 @@ const NewTracksPage = () => {
           {searchLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
               <CircularProgress />
+              <Typography sx={{ ml: 2 }}>Поиск...</Typography>
+            </Box>
+          ) : searchQuery.trim() && searchQuery.trim().length < 2 ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <Typography variant="body1" color="text.secondary">
+                Введите минимум 2 символа для поиска
+              </Typography>
             </Box>
           ) : searchResults && searchResults.length > 0 ? (
             <Grid container spacing={1}>
@@ -269,11 +321,16 @@ const NewTracksPage = () => {
                 </Grid>
               ))}
             </Grid>
-          ) : (
-            <Typography variant="body1" sx={{ textAlign: 'center', p: 4 }}>
-              Ничего не найдено
-            </Typography>
-          )}
+          ) : searchQuery.trim().length >= 2 ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4 }}>
+              <Typography variant="body1" sx={{ textAlign: 'center', mb: 1 }}>
+                Ничего не найдено по запросу "{searchQuery}"
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                Попробуйте изменить поисковый запрос
+              </Typography>
+            </Box>
+          ) : null}
         </Box>
 
         <Snackbar
@@ -324,7 +381,7 @@ const NewTracksPage = () => {
               <Search sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
               <input
                 ref={searchInputRef}
-                placeholder="Поиск трека или исполнителя"
+                placeholder="Поиск трека или исполнителя (мин. 2 символа)"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={handleSearchFocus}

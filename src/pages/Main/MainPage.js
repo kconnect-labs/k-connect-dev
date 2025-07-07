@@ -3,9 +3,7 @@ import {
   Box, 
   Typography,
   Container,
-  Grid,
   Card,
-  CardContent,
   Avatar,
   Button,
   CircularProgress,
@@ -15,46 +13,22 @@ import {
   styled,
   InputBase,
   Tooltip,
-  Fade,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
   Snackbar,
-  Chip,
   useTheme,
-  useMediaQuery,
-  CardMedia,
   ImageList,
   ImageListItem,
   Alert,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import PostService from '../../services/PostService';
 import axios from '../../services/axiosConfig';
-import ImageIcon from '@mui/icons-material/Image';
-import VideoCameraBackIcon from '@mui/icons-material/VideoCameraBack';
-import SendIcon from '@mui/icons-material/Send';
+import { handleImageError as safeImageError } from '../../utils/imageUtils';
+
 import CloseIcon from '@mui/icons-material/Close';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ShareIcon from '@mui/icons-material/Share';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import RefreshIcon from '@mui/icons-material/Refresh';
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import ReportIcon from '@mui/icons-material/Report';
-import { formatTimeAgo, formatDate } from '../../utils/dateUtils';
-import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ImageGrid from '../../components/Post/ImageGrid';
 import { Post } from '../../components/Post';
 import RepostItem from '../../components/RepostItem';
 import PostSkeleton from '../../components/Post/PostSkeleton';
@@ -64,14 +38,17 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import { MusicContext } from '../../context/MusicContext';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import ContentLoader from '../../components/UI/ContentLoader';
+
+
 import TimerIcon from '@mui/icons-material/Timer';
 import UpdateInfo from '../../components/Updates/UpdateInfo';
 import UpdateService from '../../services/UpdateService';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import DynamicIslandNotification from '../../components/DynamicIslandNotification';
+import WarningIcon from '@mui/icons-material/Warning';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import StarIcon from '@mui/icons-material/Star';
+// import TelegramIcon from '@mui/icons-material/Telegram';
 
 
 
@@ -149,6 +126,15 @@ const RightColumn = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     gap: theme.spacing(1), 
   },
+}));
+
+const SupportBlock = styled(Box)(({ theme }) => ({
+  borderRadius: '12px',
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  overflow: 'hidden',
+  position: 'relative',
 }));
 
 
@@ -268,12 +254,7 @@ const OnlineUsers = () => {
                 boxSizing: 'border-box',
                 background: '#222',
               }}
-              onError={e => {
-                const img = e.target;
-                if (img && typeof img.src !== 'undefined') {
-                  img.src = '/static/uploads/system/avatar.png';
-                }
-              }}
+              onError={safeImageError}
             />
             <Box
               sx={{
@@ -368,13 +349,7 @@ const UserRecommendation = ({ user }) => {
               border: '2px solid rgba(208, 188, 255, 0.3)',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
             }}
-            onError={(e) => {
-              console.error(`Failed to load avatar for ${user.name}`);
-              const imgElement = e.target;
-              if (imgElement && typeof imgElement.src !== 'undefined') {
-                imgElement.src = `/static/uploads/avatar/system/avatar.png`;
-              }
-            }}
+            onError={safeImageError}
           />
           <Box sx={{ minWidth: 0, flex: 1 }}>
             <Typography 
@@ -474,6 +449,7 @@ const CreatePost = ({ onPostCreated }) => {
   const fileInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [mediaNotification, setMediaNotification] = useState({ open: false, message: '' });
+  const [isNsfw, setIsNsfw] = useState(false);
   
   
   const [musicSelectOpen, setMusicSelectOpen] = useState(false);
@@ -668,6 +644,7 @@ const CreatePost = ({ onPostCreated }) => {
     setMediaPreview([]);
     setMediaType('');
     setSelectedTracks([]);
+    setIsNsfw(false);
     setError('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -683,7 +660,7 @@ const CreatePost = ({ onPostCreated }) => {
     if (currentTrack && currentTrack.id === track.id) {
       togglePlay(); 
     } else {
-      playTrack(track); 
+      playTrack(track, 'main');
     }
   };
   
@@ -697,6 +674,7 @@ const CreatePost = ({ onPostCreated }) => {
       
       const formData = new FormData();
       formData.append('content', content.trim());
+      formData.append('is_nsfw', isNsfw.toString());
       
       console.log("Added content to FormData:", content.trim());
       
@@ -1266,11 +1244,11 @@ const CreatePost = ({ onPostCreated }) => {
                 startIcon={<ImageOutlinedIcon />}
                 sx={{
                   color: mediaFiles.length > 0 ? 'primary.main' : 'text.secondary',
-                  borderRadius: '24px',
+                  borderRadius: '8px',
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   fontWeight: 500,
-                  padding: '6px 12px',
+                  padding: '4px 8px',
                   border: mediaFiles.length > 0 
                     ? '1px solid rgba(208, 188, 255, 0.5)' 
                     : '1px solid rgba(255, 255, 255, 0.12)',
@@ -1290,11 +1268,11 @@ const CreatePost = ({ onPostCreated }) => {
                 startIcon={<MusicNoteIcon />}
                 sx={{
                   color: selectedTracks.length > 0 ? 'primary.main' : 'text.secondary',
-                  borderRadius: '24px',
+                  borderRadius: '8px',
                   textTransform: 'none',
                   fontSize: '0.875rem',
                   fontWeight: 500,
-                  padding: '6px 12px',
+                  padding: '4px 8px',
                   border: selectedTracks.length > 0 
                     ? '1px solid rgba(208, 188, 255, 0.5)' 
                     : '1px solid rgba(255, 255, 255, 0.12)',
@@ -1307,6 +1285,39 @@ const CreatePost = ({ onPostCreated }) => {
               >
                 {selectedTracks.length ? t('main_page.post.create.music_count', { count: selectedTracks.length }) : t('main_page.post.create.music')}
               </Button>
+              
+              {/* NSFW кнопка - показывается только при наличии медиа */}
+              {(mediaFiles.length > 0 || selectedTracks.length > 0) && (
+                <Tooltip title="Деликатный контент" placement="top">
+                  <IconButton
+                    onClick={() => setIsNsfw(!isNsfw)}
+                    sx={{
+                      color: isNsfw ? '#ff6b6b' : 'text.secondary',
+                      borderRadius: '50%',
+                      width: 36,
+                      height: 36,
+                      minWidth: 36,
+                      minHeight: 36,
+                      padding: 0,
+                      border: isNsfw 
+                        ? '1px solid rgba(255, 107, 107, 0.5)' 
+                        : '1px solid rgba(255, 255, 255, 0.12)',
+                      backgroundColor: isNsfw ? 'rgba(255, 107, 107, 0.1)' : 'transparent',
+                      '&:hover': {
+                        backgroundColor: isNsfw 
+                          ? 'rgba(255, 107, 107, 0.2)' 
+                          : 'rgba(255, 107, 107, 0.08)',
+                        borderColor: 'rgba(255, 107, 107, 0.4)'
+                      },
+                      transition: 'all 0.2s ease',
+                      flexShrink: 0
+                    }}
+                    size="small"
+                  >
+                    <WarningIcon sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
             
             <Button 
@@ -1347,7 +1358,6 @@ const MainPage = React.memo(() => {
   const [recommendations, setRecommendations] = useState([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(true);
   const [trendingBadges, setTrendingBadges] = useState([]);
-  const [loadingTrendingBadges, setLoadingTrendingBadges] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [feedType, setFeedType] = useState('all'); 
@@ -1551,55 +1561,6 @@ const MainPage = React.memo(() => {
     
   }, []);
 
-  
-  useEffect(() => {
-    const fetchTrendingBadges = async () => {
-      try {
-        setLoadingTrendingBadges(true);
-        
-        const response = await axios.get('/api/badges/trending');
-        if (response.data && Array.isArray(response.data.badges)) {
-          setTrendingBadges(response.data.badges);
-        } else {
-          setTrendingBadges([]);
-        }
-      } catch (error) {
-        console.error('Error fetching trending badges:', error);
-        setTrendingBadges([]);
-      } finally {
-        setLoadingTrendingBadges(false);
-      }
-    };
-
-    fetchTrendingBadges();
-  }, []);
-
-  
-  const getFallbackRecommendations = () => {
-    return [
-      {
-        id: 'local1',
-        name: 'Анна Смирнова',
-        username: 'anna_smirnova',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'UX/UI дизайнер, люблю путешествия и фотографию'
-      },
-      {
-        id: 'local2',
-        name: 'Иван Петров',
-        username: 'ivan_petrov',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'Разработчик, любитель музыки и хороших книг'
-      },
-      {
-        id: 'local3',
-        name: 'Маргарита К.',
-        username: 'rita_k',
-        photo: '/static/uploads/system/user_placeholder.png',
-        about: 'Фотограф, путешественник, искатель приключений'
-      }
-    ];
-  };
 
   
   const loadMorePosts = async () => {
@@ -1870,6 +1831,139 @@ const MainPage = React.memo(() => {
         
         <RightColumn>
           
+          <SupportBlock sx={{ display: { xs: 'none', sm: 'block' }, mb: '-5px' }}>
+            <Box sx={{ p: 1.5, pt: 1.5 }}>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                mb: 1.5,
+                gap: 1
+              }}>
+                <Box sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.2), rgba(184, 169, 255, 0.15))',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px solid rgba(208, 188, 255, 0.3)',
+                  boxShadow: '0 2px 8px rgba(208, 188, 255, 0.15)'
+                }}>
+                  <FavoriteIcon sx={{ 
+                    color: '#D0BCFF', 
+                    fontSize: 20,
+                    filter: 'drop-shadow(0 1px 2px rgba(208, 188, 255, 0.3))'
+                  }} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ 
+                    fontWeight: 600, 
+                    color: '#D0BCFF',
+                    fontSize: '1.1rem',
+                    letterSpacing: '0.2px'
+                  }}>
+                    Поддержите проект
+                  </Typography>
+                  <Typography variant="caption" sx={{ 
+                    color: 'text.secondary',
+                    fontSize: '0.75rem',
+                    opacity: 0.8
+                  }}>
+                    Помогите развитию платформы
+                  </Typography>
+                </Box>
+              </Box>
+              
+              <Typography variant="body2" sx={{ 
+                color: 'text.secondary',
+                mb: 2,
+                lineHeight: 1.5,
+                fontSize: '0.85rem'
+              }}>
+                Ваша поддержка помогает нам создавать новые функции, улучшать производительность и развивать сообщество.
+              </Typography>
+              
+              <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+                <Button
+                  variant="contained"
+                  size="small"
+                  startIcon={<StarIcon sx={{ fontSize: 16 }} />}
+                  onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
+                  sx={{
+                    flex: 1,
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    fontSize: '0.8rem',
+                    background: 'rgba(208, 188, 255, 0.15)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(208, 188, 255, 0.3)',
+                    color: '#D0BCFF',
+                    '&:hover': {
+                      background: 'rgba(208, 188, 255, 0.25)',
+                      borderColor: 'rgba(208, 188, 255, 0.5)',
+                      transform: 'translateY(-1px)'
+                    },
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Подписаться
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<FavoriteIcon sx={{ fontSize: 16 }} />}
+                  onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
+                  sx={{
+                    flex: 1,
+                    borderRadius: '8px',
+                    textTransform: 'none',
+                    fontWeight: 500,
+                    fontSize: '0.8rem',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(20px)',
+                    borderColor: 'rgba(208, 188, 255, 0.3)',
+                    color: '#D0BCFF',
+                    '&:hover': {
+                      background: 'rgba(208, 188, 255, 0.1)',
+                      borderColor: 'rgba(208, 188, 255, 0.5)',
+                      transform: 'translateY(-1px)'
+                    },
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Донат
+                </Button>
+              </Box>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 1,
+                p: 1.5,
+                borderRadius: '8px',
+                background: 'rgba(208, 188, 255, 0.05)',
+                border: '1px solid rgba(208, 188, 255, 0.15)'
+              }}>
+                <Box sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #4CAF50, #45A049)',
+                  boxShadow: '0 0 6px rgba(76, 175, 80, 0.4)'
+                }} />
+                <Typography variant="caption" sx={{ 
+                  color: 'text.secondary',
+                  fontSize: '0.7rem',
+                  fontWeight: 500
+                }}>
+                  Безопасные платежи через Boosty
+                </Typography>
+              </Box>
+            </Box>
+          </SupportBlock>
+          
           <Box 
             component={Paper} 
             sx={{ 
@@ -1888,20 +1982,39 @@ const MainPage = React.memo(() => {
             
             {loadingRecommendations ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 3, px: 2 }}>
-                <ContentLoader
-                  height={170}
-                  width="100%"
-                  speed={2}
-                  backgroundColor="#292929"
-                  foregroundColor="#333333"
-                >
-                  
-                  <rect x="0" y="0" rx="8" ry="8" width="100%" height="50" />
-                  
-                  <rect x="0" y="60" rx="8" ry="8" width="100%" height="50" />
-                  
-                  <rect x="0" y="120" rx="8" ry="8" width="100%" height="50" />
-                </ContentLoader>
+                <Box sx={{ 
+                  width: '100%', 
+                  height: 170,
+                  '@keyframes pulse': {
+                    '0%': { opacity: 1 },
+                    '50%': { opacity: 0.5 },
+                    '100%': { opacity: 1 }
+                  }
+                }}>
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: 50, 
+                    borderRadius: '8px',
+                    backgroundColor: '#292929',
+                    mb: 1,
+                    animation: 'pulse 2s infinite'
+                  }} />
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: 50, 
+                    borderRadius: '8px',
+                    backgroundColor: '#292929',
+                    mb: 1,
+                    animation: 'pulse 2s infinite'
+                  }} />
+                  <Box sx={{ 
+                    width: '100%', 
+                    height: 50, 
+                    borderRadius: '8px',
+                    backgroundColor: '#292929',
+                    animation: 'pulse 2s infinite'
+                  }} />
+                </Box>
               </Box>
             ) : recommendations.length === 0 ? (
               <Box sx={{ 

@@ -88,8 +88,29 @@
       "blackjack_win": "Выигрыш в игре \"21\"",
       "blackjack_tie": "Ничья в игре \"21\"",
       "blackjack_lose": "Проигрыш в игре \"21\"",
+      "blackjack_bet": "Ставка в игре \"21\"",
+      "roulette_win": "Выигрыш в рулетке",
+      "roulette_bet": "Ставка в рулетке",
+      "cups_win": "Выигрыш в игре \"Чашки\"",
       "minigame_bet": "Ставка в мини-игре",
       "game_transaction": "Транзакция в мини-игре",
+      "auction_bid": "Ставка на аукционе",
+      "auction_refund": "Возврат ставки с аукциона",
+      "auction_sale": "Продажа на аукционе",
+      "username_auction_bid": "Ставка на аукционе юзернейма",
+      "username_auction_refund": "Возврат ставки с аукциона юзернейма",
+      "username_auction_sale": "Продажа юзернейма на аукционе",
+      "username_purchase": "Покупка юзернейма",
+      "pack_purchase": "Покупка пачки",
+      "marketplace_buy": "Покупка на маркетплейсе",
+      "marketplace_sell": "Продажа на маркетплейсе",
+      "item_transfer": "Передача предмета",
+      "item_upgrade": "Апгрейд предмета",
+      "conversion_deposit": "Конвертация - пополнение",
+      "conversion_withdrawal": "Конвертация - списание",
+      "compensation": "Компенсация",
+      "custom_period_activity": "Начисление баллов за активность за период",
+      "top_prize": "Приз за топ",
       "withdrawal": "Вывод заработанных баллов",
       "no_history": "У вас пока нет истории транзакций",
       "load_more": "Следующая страница",
@@ -156,13 +177,13 @@
         "features": {
           "title": "Возможности подписки",
           "basic": {
-            "monthly_points": "Ежемесячное пополнение на 10№.000 баллов",
+            "monthly_points": "X2 К баллам Активности",
             "no_ads": "Отсутствие рекламы",
             "badge_limit": "Создание до 5 бейджиков",
             "username_limit": "Покупка до 5 Юзернеймов"
           },
           "premium": {
-            "monthly_points": "Ежемесячное пополнение на 35.000 баллов",
+            "monthly_points": "X4 К баллам Активности",
             "features": "Расширенные функции платформы",
             "support": "Приоритетная поддержка",
             "badge_limit": "Создание до 8 бейджиков",
@@ -170,7 +191,7 @@
           },
           "ultimate": {
             "premium_benefits": "Все преимущества Premium",
-            "monthly_points": "Ежемесячное пополнение на 75.000 баллов",
+            "monthly_points": "X8 К баллам Активности",
             "animated_badges": "Создание Анимированных бейджиков",
             "unlimited_badges": "Безлимитное создание бейджиков",
             "unlimited_usernames": "Покупка неограниченного количества Юзернеймов"
@@ -341,9 +362,9 @@
       }
     },
     "subscription_types": {
-      "basic": "Базовая",
-      "premium": "Премиум",
-      "ultimate": "Ультимейт"
+      "basic": "Basic",
+      "premium": "Premium",
+      "ultimate": "Ultimate"
     },
     "common": {
       "loading": "Загрузка...",
@@ -435,7 +456,7 @@
       "my_profile": "Мой профиль",
       "settings": "Настройки",
       "search": "Поиск",
-      "subscriptions": "Подписки",
+      "subscriptions": "Друзья",
       "channels": "Каналы",
       "rating": "Рейтинг",
       "create_channel": "Создать канал",
@@ -473,30 +494,30 @@
       "feed": "Лента",
       "messenger": "Мессенджер",
       "music": "Музыка",
-      "subscriptions": "Подписки",
+      "subscriptions": "Друзья",
       "channels": "Каналы",
       "search": "Поиск",
       "management": "Управление",
       "admin_panel": "Админ Панель",
       "moderate": "Модерировать",
       "shops": {
-        "title": "Магазины",
-        "badge_shop": "Магазин бейджиков",
-        "username_auction": "Аукцион юзернеймов"
+        "title": "Экономика",
+        "badge_shop": "Бейджики",
+        "username_auction": "Юзернеймы"
       },
-      "minigames": "Мини-игры",
+      "minigames": "Кликер",
       "subscription_plans": "Планы подписок",
       "more": {
         "title": "Еще",
         "leaderboard": "Лидерборд",
         "bug_reports": "Баг-репорты",
         "rules": "Правила",
-        "api_docs": "API Документация",
+        "api_docs": "API",
         "about": "О платформе"
       }
     },
     "footer": {
-      "version": "К-Коннект v2.8",
+      "version": "К-Коннект",
       "copyright": "Правообладателям",
       "email": "verif@k-connect.ru"
     }
@@ -574,7 +595,8 @@
       "posts": "Публикации",
       "wall": "Стена",
       "media": "Медиа",
-      "about": "Инфо"
+      "about": "Инфо",
+      "attachments": "Вложения" 
     },
     "create_post": {
       "placeholder": "Что у вас нового?",
@@ -612,7 +634,12 @@
       "expired": "Подписка истекла",
       "channel": "Канал",
       "pick_me": "Пикми",
-      "active": "Подписка {type} активна до {date}"
+      "active": "Подписка {type} активна до {date}",
+      "expires": "Истекает",
+      "total_duration": "Общая длительность",
+      "months": "месяцев",
+      "active_subscription": "Активная подписка",
+      "active": "Активна"
     },
     "medals": {
       "title": "Медали",
@@ -653,6 +680,10 @@
     "awarded_on": "Выдана: {{date}}",
     "awarded_by": "Кем: {{by}}",
     "feed": {
+      "tabs": {
+        "posts": "Посты",
+        "attachments": "Вложения"
+      },
       "wall": {
         "loading_error": "Произошла ошибка при загрузке записей стены",
         "empty": "На стене пока нет записей",
@@ -666,6 +697,15 @@
         "empty_description": "Пользователь еще не создал ни одного поста",
         "error_title": "Произошла ошибка",
         "all_loaded": "Все посты загружены"
+      },
+      "attachments": {
+        "empty": "Нет вложений",
+        "empty_description": "У этого пользователя пока нет вложений",
+        "loading_error": "Ошибка загрузки вложений",
+        "error_title": "Ошибка загрузки вложений",
+        "play_video": "Смотреть видео",
+        "view_image": "Увеличить",
+        "all_loaded": "Все вложения загружены"
       }
     }
   },
@@ -902,7 +942,7 @@
       },
       "entertainment": {
         "title": "Развлечения",
-        "minigames": "Мини-игры",
+        "minigames": "Кликер",
         "username_auction": "Аукцион юзернеймов",
         "subscription_plans": "Планы подписок",
         "new_badge": "Новое"
@@ -923,7 +963,7 @@
       }
     },
     "footer": {
-      "version": "К-Коннект v2.8",
+      "version": "К-Коннект v2.9",
       "email": "verif@k-connect.ru"
     }
   }

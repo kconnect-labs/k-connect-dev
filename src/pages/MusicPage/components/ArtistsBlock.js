@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -43,18 +43,6 @@ const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
   }
 }));
 
-const debounce = (func, wait) => {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
-
 const ArtistsBlock = () => {
   const navigate = useNavigate();
   const [popularArtists, setPopularArtists] = useState([]);
@@ -62,6 +50,10 @@ const ArtistsBlock = () => {
   const [artistSearchQuery, setArtistSearchQuery] = useState('');
   const [artistSearchResults, setArtistSearchResults] = useState([]);
   const [isArtistSearching, setIsArtistSearching] = useState(false);
+
+  // Refs для управления поиском
+  const searchTimeoutRef = useRef(null);
+  const abortControllerRef = useRef(null);
 
   // Загрузка популярных артистов
   const fetchPopularArtists = useCallback(async () => {
@@ -88,54 +80,98 @@ const ArtistsBlock = () => {
       return;
     }
     
+    // Отменяем предыдущий запрос если он еще выполняется
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    // Создаем новый AbortController для этого запроса
+    abortControllerRef.current = new AbortController();
+    
     try {
       setIsArtistSearching(true);
+      console.log('[ArtistsBlock] Выполняем поиск артистов для:', query);
+      
       const searchEndpoint = `/api/search/artists?query=${encodeURIComponent(query.trim())}`;
       
-      const response = await axios.get(searchEndpoint);
+      const response = await axios.get(searchEndpoint, {
+        signal: abortControllerRef.current.signal
+      });
       
       if (response.data.success) {
         setArtistSearchResults(response.data.artists || []);
+        console.log('[ArtistsBlock] Результаты поиска артистов:', response.data.artists);
       } else {
         console.error('Ошибка при поиске артистов:', response.data.error);
         setArtistSearchResults([]);
       }
     } catch (error) {
-      console.error('Ошибка при поиске артистов:', error);
-      setArtistSearchResults([]);
-      
-      // Fallback поиск
-      try {
-        const fallbackResponse = await axios.get(`/api/moderator/artists?search=${encodeURIComponent(query.trim())}&page=1&per_page=10`);
+      if (error.name !== 'AbortError' && error.name !== 'CanceledError') {
+        console.error('Ошибка при поиске артистов:', error);
+        setArtistSearchResults([]);
         
-        if (fallbackResponse.data.success) {
-          setArtistSearchResults(fallbackResponse.data.artists || []);
+        // Fallback поиск
+        try {
+          const fallbackResponse = await axios.get(`/api/moderator/artists?search=${encodeURIComponent(query.trim())}&page=1&per_page=10`, {
+            signal: abortControllerRef.current.signal
+          });
+          
+          if (fallbackResponse.data.success) {
+            setArtistSearchResults(fallbackResponse.data.artists || []);
+          }
+        } catch (fallbackError) {
+          if (fallbackError.name !== 'AbortError' && fallbackError.name !== 'CanceledError') {
+            console.error('Fallback search also failed:', fallbackError);
+          }
         }
-      } catch (fallbackError) {
-        console.error('Fallback search also failed:', fallbackError);
       }
     } finally {
       setIsArtistSearching(false);
+      abortControllerRef.current = null;
     }
   };
-
-  // Debounced поиск
-  const debouncedArtistSearch = useCallback(
-    debounce((query) => {
-      if (query.trim().length >= 2) {
-        searchArtists(query);
-      } else {
-        setArtistSearchResults([]);
-      }
-    }, 500),
-    []
-  );
 
   // Обработчик изменения поиска
   const handleArtistSearchChange = (e) => {
     const query = e.target.value;
     setArtistSearchQuery(query);
-    debouncedArtistSearch(query);
+    
+    console.log('[ArtistsBlock] Изменение поискового запроса:', query);
+    
+    // Отменяем предыдущий таймер
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Отменяем активный поиск если запрос слишком короткий
+    if (query.trim().length < 2) {
+      setArtistSearchResults([]);
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      return;
+    }
+    
+    // Устанавливаем новый таймер для debounce
+    searchTimeoutRef.current = setTimeout(() => {
+      searchArtists(query);
+    }, 1200); // 1.2 секунды debounce
+  };
+
+  // Очистка поиска
+  const clearArtistSearch = () => {
+    console.log('[ArtistsBlock] Очистка поиска');
+    setArtistSearchQuery('');
+    setArtistSearchResults([]);
+    // Отменяем активный поиск
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    // Отменяем таймер debounce
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = null;
+    }
   };
 
   // Клик по артисту
@@ -147,6 +183,19 @@ const ArtistsBlock = () => {
   useEffect(() => {
     fetchPopularArtists();
   }, [fetchPopularArtists]);
+
+  // Очистка при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      console.log('[ArtistsBlock] Размонтирование - очищаем ресурсы');
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <Box sx={{ 
@@ -190,7 +239,7 @@ const ArtistsBlock = () => {
             {artistSearchQuery && (
               <IconButton 
                 size="small" 
-                onClick={() => setArtistSearchQuery('')}
+                onClick={clearArtistSearch}
                 sx={{ color: 'rgba(255, 255, 255, 0.7)', p: 0.5 }}
               >
                 <Box sx={{ fontSize: 18, fontWeight: 'bold' }}>×</Box>

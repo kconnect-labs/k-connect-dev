@@ -174,11 +174,28 @@ instance.interceptors.request.use(
     if (config.method !== 'get') {
       const url = config.url || '';
       for (const pattern of STATE_CHANGING_PATTERNS) {
-        if (config.method === pattern.method && 
-            (url.includes(pattern.urlPattern) || url.match(new RegExp(pattern.urlPattern.replace('*', '.*'))))) {
-
-          config._invalidatesCache = true;
-          break;
+        if (config.method === pattern.method) {
+          // Более безопасная логика для совместимости с Safari
+          const urlPattern = pattern.urlPattern;
+          let matches = false;
+          
+          try {
+            // Простая проверка без сложных regex конструкций
+            if (urlPattern.includes('*')) {
+              const simplePattern = urlPattern.replace(/\*/g, '');
+              matches = url.includes(simplePattern);
+            } else {
+              matches = url.includes(urlPattern);
+            }
+          } catch (e) {
+            // Fallback для очень старых браузеров
+            matches = url.indexOf(urlPattern.replace(/\*/g, '')) !== -1;
+          }
+          
+          if (matches) {
+            config._invalidatesCache = true;
+            break;
+          }
         }
       }
     }

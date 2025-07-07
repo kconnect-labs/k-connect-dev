@@ -3,16 +3,13 @@ import {
   Box, 
   Typography,
   Avatar,
-  IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
   Snackbar,
   Card,
-  CardContent,
   styled,
-  AvatarGroup,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -20,22 +17,19 @@ import {
   Button,
   TextField,
   CircularProgress,
-  Paper,
-  Skeleton,
+
   Alert,
   FormControlLabel,
   Checkbox,
   List,
   ListItem,
-  CardActions,
-  CardHeader,
+
   Chip,
-  Divider,
-  Badge,
+
   Tooltip,
-  Collapse,
-  Zoom,
-  useTheme
+
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -47,32 +41,21 @@ import ReactMarkdown from 'react-markdown';
 import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
-import { optimizeImage } from '../../utils/imageUtils';
+import { optimizeImage, handleImageError as safeImageError } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
 import Lottie from 'lottie-react'; 
+import { MessageCircle, Repeat2, Link2, Heart } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import ShareIcon from '@mui/icons-material/Share';
-import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
-import ThumbUpRoundedIcon from '@mui/icons-material/ThumbUpRounded';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
+
 import ImageGrid from './ImageGrid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import LinkIcon from '@mui/icons-material/Link';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FlagIcon from '@mui/icons-material/Flag';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
@@ -81,6 +64,7 @@ import PhotoIcon from '@mui/icons-material/Photo';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
@@ -89,8 +73,12 @@ import MusicTrack from './MusicTrack';
 import { VerificationBadge } from '../../UIKIT';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import FactModal from './FactModal';
 
-const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
+const PostCard = styled(Card, {
+  shouldForwardProp: (prop) => !['isPinned', 'statusColor'].includes(prop),
+})(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
   borderRadius: theme.spacing(1),
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -192,35 +180,6 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const ActionButton = styled(Box)(({ theme, active }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
-  padding: '6px 10px',
-  borderRadius: '14px',
-  cursor: 'pointer',
-  color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    transform: 'translateY(-1px)',
-  },
-  '& .icon': {
-    fontSize: '18px',
-  },
-  '& .count': {
-    fontSize: '0.8rem',
-  }
-}));
-
-const ActionsContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '4px',
-  marginTop: '16px',
-  padding: '0 8px',
-});
-
 const ChannelTag = styled(Chip)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.08)',
   color: 'rgba(255, 255, 255, 0.8)',
@@ -234,18 +193,6 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   }
 }));
 
-const ViewMenuPill = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  borderRadius: '20px',
-  padding: '4px 8px 4px 12px',
-  border: '1px solid rgba(255, 255, 255, 0.08)',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  }
-}));
 
 const HeartAnimation = styled(motion.div)(({ theme }) => ({
   position: 'absolute',
@@ -286,42 +233,8 @@ const LottieWrapper = styled(Box)(({ theme }) => ({
   opacity: 0.8,
 }));
 
-const InteractionButton = styled(Box)(({ theme, active, isLike }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '8px 16px',
-  borderRadius: '12px',
-  cursor: 'pointer',
-  backgroundColor: active ? 'rgba(140, 82, 255, 0.1)' : 'rgba(255, 255, 255, 0.03)',
-  border: `1px solid ${active ? 'rgba(140, 82, 255, 0.2)' : 'rgba(255, 255, 255, 0.06)'}`,
-  transition: 'all 0.2s ease',
-  gap: '6px',
-  '&:hover': {
-    backgroundColor: active ? 'rgba(140, 82, 255, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-    transform: 'translateY(-2px)',
-    boxShadow: active 
-      ? '0 4px 12px rgba(140, 82, 255, 0.2)' 
-      : '0 4px 12px rgba(0, 0, 0, 0.1)',
-  },
-  '& .icon': {
-    fontSize: '20px',
-    color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-    transition: 'all 0.2s ease',
-  },
-  '& .text': {
-    color: active ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.8)',
-    fontSize: '0.9rem',
-    transition: 'all 0.2s ease',
-  }
-}));
 
-const InteractionContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  marginTop: '16px',
-  padding: '0 8px',
-}));
+
 
 const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusColor }) => {
   const { t } = useLanguage();
@@ -335,6 +248,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const [liked, setLiked] = useState(post?.user_liked || post?.is_liked || false);
   const [likesCount, setLikesCount] = useState(post?.likes_count || 0);
   const [viewsCount, setViewsCount] = useState(post?.views_count || 0);
+  const [lastLikedUsers, setLastLikedUsers] = useState([]);
   const [clickTimer, setClickTimer] = useState(null); 
   const isCurrentUserPost = currentUser && post?.user && currentUser.id === post.user.id;
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
@@ -383,8 +297,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     submitted: false,
     error: null
   });
-  
   const [mediaError, setMediaError] = useState({ type: null, url: null }); 
+  
+  const [showSensitive, setShowSensitive] = useState(false);
+  
+  const [factModal, setFactModal] = useState({
+    open: false,
+    loading: false,
+    error: null
+  });
   
   const reportReasons = [
     t('post.report.reasons.spam'),
@@ -395,6 +316,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     t('post.report.reasons.harmful_content'),
     t('post.report.reasons.other')
   ];
+  
+  const isMobile = useMediaQuery('(max-width:600px)');
   
   useEffect(() => {
     if (post) {
@@ -422,8 +345,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         });
 
         // Обработка упоминаний пользователей
-        content = content.replace(USERNAME_MENTION_REGEX, (match, username) => {
-          return `[${match}](/profile/${username})`;
+        content = content.replace(USERNAME_MENTION_REGEX, (match, prefix, username) => {
+          const adjustedMatch = prefix ? match.substring(prefix.length) : match;
+          return `${prefix || ''}[${adjustedMatch}](/profile/${username})`;
         });
         
         // Обработка хештегов
@@ -451,14 +375,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       
       try {
         if (post.music) {
-          console.log('Processing music data:', post.music);
           let parsedTracks;
           
           if (typeof post.music === 'string') {
             try {
               parsedTracks = JSON.parse(post.music);
             } catch (parseError) {
-              console.error('Failed to parse music JSON:', parseError);
               parsedTracks = [];
             }
           } else if (Array.isArray(post.music)) {
@@ -473,7 +395,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           setMusicTracks([]);
         }
       } catch (musicError) {
-        console.error('Error processing music data:', musicError);
         setMusicTracks([]);
       }
     }
@@ -1114,14 +1035,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   useEffect(() => {
     if (post && post.id) {
-      console.log(`Post ${post.id} music data:`, post.music);
     }
   }, [post]);
   
   
   useEffect(() => {
     if (musicTracks.length > 0) {
-      console.log(`Rendering post ${post.id} with ${musicTracks.length} music tracks:`, musicTracks);
     }
   }, [musicTracks, post.id]);
 
@@ -1164,27 +1083,22 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         
         const viewKey = `post_viewed_${post.id}`;
         if (sessionStorage.getItem(viewKey)) {
-          console.log(`Post ${post.id} already viewed in this session`);
           return;
         }
 
         
         sessionStorage.setItem(viewKey, 'true');
-        console.log(`Setting view flag for post ${post.id}`);
 
         
         const attemptViewCount = async (retries = 3) => {
           try {
             
-            console.log(`Incrementing view count for post ${post.id}`);
             const response = await axios.post(`/api/posts/${post.id}/view`);
             if (response.data && response.data.success) {
               
-              console.log(`View count updated for post ${post.id} to ${response.data.views_count}`);
               setViewsCount(response.data.views_count);
             }
           } catch (error) {
-            console.error(`Error incrementing view count (attempt ${4-retries}/3):`, error);
             
             if (retries > 1) {
               setTimeout(() => attemptViewCount(retries - 1), 1000); 
@@ -1284,7 +1198,60 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     setReportDialog({...reportDialog, open: true});
   };
 
-  
+  const handleFactsClick = () => {
+    handleMenuClose();
+    setFactModal({ ...factModal, open: true });
+  };
+
+  const handleFactModalClose = () => {
+    setFactModal({ open: false, loading: false, error: null });
+  };
+
+  const handleFactSubmit = async (factData) => {
+    setFactModal({ ...factModal, loading: true, error: null });
+    
+    try {
+      if (post.fact) {
+        // Обновляем существующий факт
+        await axios.put(`/api/facts/${post.fact.id}`, factData);
+      } else {
+        // Создаем новый факт и привязываем к посту
+        const factResponse = await axios.post('/api/facts', factData);
+        const factId = factResponse.data.fact.id;
+        await axios.post(`/api/posts/${post.id}/attach-fact`, { fact_id: factId });
+      }
+      
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
+    } catch (error) {
+      console.error('Error submitting fact:', error);
+      setFactModal({ 
+        ...factModal, 
+        loading: false, 
+        error: error.response?.data?.error || 'Ошибка при сохранении факта' 
+      });
+    }
+  };
+
+  const handleFactDelete = async () => {
+    setFactModal({ ...factModal, loading: true, error: null });
+    
+    try {
+      // Отвязываем факт от поста
+      await axios.delete(`/api/posts/${post.id}/detach-fact`);
+      
+      // Перезагружаем страницу для обновления данных
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting fact:', error);
+      setFactModal({ 
+        ...factModal, 
+        loading: false, 
+        error: error.response?.data?.error || 'Ошибка при удалении факта' 
+      });
+    }
+  };
+
   const handlePostClick = (e) => {
     if (e.target.closest('a, button')) return; 
     incrementViewCount();
@@ -1307,16 +1274,26 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     items.push({
       id: 'share',
       label: t('post.context_menu.copy_link'),
-      icon: <ShareIcon fontSize="small" />,
+      icon: <Link2 size={16} />,
       onClick: handleCopyLink 
     });
     
     items.push({
       id: 'comment',
       label: t('post.context_menu.comment'),
-      icon: <ChatBubbleOutlineIcon fontSize="small" />,
+      icon: <MessageCircle size={16} />,
       onClick: handleOpenPostFromMenu 
     });
+    
+    // Добавляем кнопку "Факты" для пользователя с ID 3
+    if (currentUser && currentUser.id === 3) {
+      items.push({
+        id: 'facts',
+        label: 'Факты',
+        icon: <FactCheckIcon fontSize="small" />,
+        onClick: handleFactsClick
+      });
+    }
     
     if (isCurrentUserPost) {
       if (isPostEditable()) {
@@ -1501,7 +1478,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       
       const loadSpiderAnimation = async () => {
         try {
-          const response = await fetch('/static/json/error/spider.json?_nocache=' + Date.now());
+          const response = await fetch('/static/json/error/spider.json');
           const animationData = await response.json();
           setSpiderAnimation(animationData);
         } catch (error) {
@@ -1611,6 +1588,148 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     }
   };
 
+  // NSFW Overlay (монотонный стиль)
+  const NSFWOverlay = (
+    <Box
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 2,
+        borderRadius: '12px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: isMobile ? 2 : 4,
+        textAlign: 'center',
+        overflow: 'hidden',
+      }}
+    >
+      <Box sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', mb: isMobile ? 1 : 2 }}>
+        <ShieldOutlinedIcon sx={{ fontSize: isMobile ? 48 : 72, color: '#bdbdbd' }} />
+        <Typography
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -54%)',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: isMobile ? 8 : 14,
+            letterSpacing: 0.5,
+            userSelect: 'none',
+            pointerEvents: 'none',
+            textShadow: '0 1px 2px rgba(0,0,0,0.18)'
+          }}
+        >
+          18+
+        </Typography>
+      </Box>
+      <Typography variant="h6" sx={{ fontWeight: 500, mb: isMobile ? 1 : 2, color: '#fff', fontSize: isMobile ? '1rem' : '1.25rem' }}>
+        Деликатный контент
+      </Typography>
+      <Button
+        variant="contained"
+        disableElevation
+        sx={{
+          borderRadius: '8px',
+          fontWeight: 500,
+          mb: isMobile ? 1 : 2,
+          background: '#5c5b5e',
+          color: '#fff',
+          boxShadow: 'none',
+          fontSize: isMobile ? '0.75rem' : '0.85rem',
+          px: isMobile ? 0.5 : 1,
+          py: isMobile ? 0.25 : 0.5,
+        }}
+        onClick={() => setShowSensitive(true)}
+      >
+        Посмотреть
+      </Button>
+      <Typography variant="caption" sx={{ color: '#bdbdbd', opacity: 0.7, mt: isMobile ? 1 : 2, fontSize: isMobile ? '0.75rem' : '0.9rem', wordBreak: 'break-word', maxWidth: '100%' }}>
+        Тут может быть шокирующий контент
+      </Typography>
+    </Box>
+  );
+
+  // Добавляем эффект для hover-появления аватарок
+  useEffect(() => {
+    const likeBox = document.querySelectorAll('.like-avatars');
+    const parentBox = document.querySelectorAll('[data-like-parent]');
+    parentBox.forEach((el, idx) => {
+      el.onmouseenter = () => {
+        if (likeBox[idx]) {
+          likeBox[idx].style.opacity = 1;
+          likeBox[idx].style.pointerEvents = 'auto';
+          likeBox[idx].style.transform = 'translateY(-50%) translateX(8px)';
+        }
+      };
+      el.onmouseleave = () => {
+        if (likeBox[idx]) {
+          likeBox[idx].style.opacity = 0;
+          likeBox[idx].style.pointerEvents = 'none';
+          likeBox[idx].style.transform = 'translateY(-50%)';
+        }
+      };
+    });
+    return () => {
+      parentBox.forEach((el, idx) => {
+        el.onmouseenter = null;
+        el.onmouseleave = null;
+      });
+    };
+  }, [lastLikedUsers, isMobile]);
+
+  const FactCard = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: '12px',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '4px',
+      height: '100%',
+      backgroundColor: '#FFA726',
+      borderRadius: '2px 0 0 2px',
+    }
+  }));
+
+  const FactHeader = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(1.5),
+    gap: theme.spacing(0.5),
+  }));
+
+  const FactTitle = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    fontSize: '0.9rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+  }));
+
+  const FactText = styled(Typography)(({ theme }) => ({
+    fontSize: '0.85rem',
+    lineHeight: 1.5,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: theme.spacing(1.5),
+  }));
+
+  const FactFooter = styled(Typography)(({ theme }) => ({
+    fontSize: '0.75rem',
+    color: 'rgba(255, 255, 255, 0.6)',
+    fontStyle: 'italic',
+  }));
+
   return (
     <>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -1662,7 +1781,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 transform: `rotate(${heart.rotation}deg)`
               }}
             >
-              <FavoriteIcon style={{ fontSize: heart.size }} />
+              <Heart size={heart.size} />
             </HeartAnimation>
           ))}
         </AnimatePresence>
@@ -1705,10 +1824,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   {isPinned && (
                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
                       <Tooltip title={t('post.pin.tooltip')}>
-                        <PushPinIcon sx={{ 
-                          fontSize: 16, 
-                          color: statusColor || 'primary.main'
-                        }} />
+                        <span>
+                          <PushPinIcon sx={{ 
+                            fontSize: 16, 
+                            color: statusColor || 'primary.main'
+                          }} />
+                        </span>
                       </Tooltip>
                     </Box>
                   )}
@@ -1757,12 +1878,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       }} 
                       src={`/static/images/bages/${post.user.achievement.image_path}`} 
                       alt={post.user.achievement.bage}
-                      onError={(e) => {
-                        console.error("Achievement badge failed to load:", e);
-                        if (e.target && e.target instanceof HTMLImageElement) {
-                          e.target.style.display = 'none';
-                        }
-                      }}
+                      onError={safeImageError}
                     />
                   )}
                 </Typography>
@@ -1792,9 +1908,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   transformLinkUri={null} 
                   remarkPlugins={[]}
                   rehypePlugins={[]}
-                >
-                  {processedContent}
-                </ReactMarkdown>
+                  children={processedContent}
+                />
               )}
             </MarkdownContent>
             
@@ -1853,7 +1968,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             >
               {/* Заголовок с информацией о репосте */}
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                <RepeatIcon sx={{ fontSize: 16, mr: 0.5, color: theme.palette.primary.main }} />
+                <Repeat2 size={16} color={theme.palette.primary.main} style={{ marginRight: '4px' }} />
                 <Typography 
                   variant="caption" 
                   color="text.secondary"
@@ -1999,6 +2114,105 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   </Box>
                 )}
                 
+                {/* Блок фактов оригинального поста в репосте */}
+                {post.original_post.fact && (
+                  <Box
+                    sx={{
+                      mt: 1.5,
+                      p: 1.5,
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(8px)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      position: 'relative',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '8px',
+                        height: '100%',
+                        backgroundColor: '#6e5a9d',
+                        borderRadius: '8px 0 0 8px',
+                      }
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontWeight: 600,
+                          fontSize: '0.8rem',
+                          color: 'rgba(255, 255, 255, 0.9)',
+                        }}
+                      >
+                        Проверка фактов
+                      </Typography>
+                      <Tooltip 
+                        title="Это разъяснение было предоставлено организацией"
+                        placement="top"
+                        arrow
+                        sx={{
+                          '& .MuiTooltip-tooltip': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            backdropFilter: 'blur(10px)',
+                            fontSize: '0.7rem',
+                            maxWidth: 180,
+                          }
+                        }}
+                      >
+                        <span>
+                          <Box
+                            sx={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 14,
+                              height: 14,
+                              borderRadius: '50%',
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                              border: '1px solid rgba(255, 255, 255, 0.2)',
+                              cursor: 'help',
+                              fontSize: '0.65rem',
+                              color: 'rgba(255, 255, 255, 0.7)',
+                              '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                              }
+                            }}
+                          >
+                            ?
+                          </Box>
+                        </span>
+                      </Tooltip>
+                    </Box>
+                    
+                    <Typography
+                      sx={{
+                        fontSize: '0.75rem',
+                        lineHeight: 1.4,
+                        color: 'rgba(255, 255, 255, 0.8)',
+                      }}
+                    >
+                      {post.original_post.fact.explanation_text}
+                    </Typography>
+                    
+                    <Typography
+                      sx={{
+                        fontSize: '0.7rem',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      Предоставлено {post.original_post.fact.who_provided}
+                    </Typography>
+                  </Box>
+                )}
+                
                 {/* Статистика оригинального поста */}
                 <Box sx={{ 
                   display: 'flex', 
@@ -2015,14 +2229,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <FavoriteBorderIcon sx={{ fontSize: 12, mr: 0.5, color: 'text.secondary' }} />
+                      <Heart size={12} color="text.secondary" style={{ marginRight: '4px' }} />
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                         {post.original_post.likes_count || 0}
                       </Typography>
                     </Box>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <ChatBubbleOutlineIcon sx={{ fontSize: 12, mr: 0.5, color: 'text.secondary' }} />
+                      <MessageCircle size={12} color="text.secondary" style={{ marginRight: '4px' }} />
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
                         {post.original_post.comments_count || 0}
                       </Typography>
@@ -2041,23 +2255,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           )}
           
           {videoUrl && mediaError.type !== 'video' ? (
-            <Box sx={{ 
-              mb: 2,
-              position: 'relative',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              transition: 'transform 0.2s ease',
-              '&:hover': {
-                transform: 'scale(1.01)',
-              }
-            }}
-            data-no-navigate
-            >
-              <VideoPlayer 
-                videoUrl={videoUrl} 
-                poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined}
-                onError={() => handleVideoError(videoUrl)}
-              />
+            <Box sx={{ mb: 2, position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
+              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
+                  <VideoPlayer videoUrl={videoUrl} poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined} onError={() => handleVideoError(videoUrl)} />
+                </Box>
+                {post.is_nsfw && !showSensitive && NSFWOverlay}
+              </Box>
             </Box>
           ) : mediaError.type === 'video' && (
             <Box sx={{ mb: 2 }}>
@@ -2067,21 +2271,13 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           
           
           {images.length > 0 && mediaError.type !== 'image' ? (
-            <Box sx={{ 
-              mb: 2, 
-              width: '100%', 
-              position: 'relative',
-              '&:hover::after': {
-                opacity: 0.7,
-              }
-            }}
-            data-no-navigate
-            >
-              <ImageGrid 
-                images={images}
-                onImageClick={handleOpenImage}
-                onImageError={handleImageError}
-              />
+            <Box sx={{ mb: 2, width: '100%', position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
+              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
+                  <ImageGrid images={images} onImageClick={handleOpenImage} onImageError={handleImageError} />
+                </Box>
+                {post.is_nsfw && !showSensitive && NSFWOverlay}
+              </Box>
             </Box>
           ) : mediaError.type === 'image' && (
             <Box sx={{ mb: 2 }}>
@@ -2096,8 +2292,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 <MusicTrack key={`track-${index}`} onClick={(e) => handleTrackPlay(track, e)}>
                   <Box 
                     sx={{ 
-                      width: 40, 
-                      height: 40, 
+                      width: 48, 
+                      height: 48, 
                       borderRadius: '8px', 
                       overflow: 'hidden', 
                       position: 'relative',
@@ -2118,9 +2314,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                         height: '100%', 
                         objectFit: 'cover' 
                       }}
-                      onError={(e) => {
-                        e.target.src = '/uploads/system/album_placeholder.jpg';
-                      }}
+                      onError={safeImageError}
                     />
                     <Box 
                       sx={{ 
@@ -2173,77 +2367,208 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             </Box>
           )}
           
-          
-          <ActionsContainer>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title={liked ? t('post.unlike') : t('post.like')}>
-              <ActionButton onClick={handleLike} active={liked}>
-                <Box className="icon">
-                  {liked ? (
-                    <FavoriteIcon />
-                  ) : (
-                    <FavoriteBorderIcon />
-                  )}
-                </Box>
-                {likesCount > 0 && (
-                    <span className="count">{t('post.likes_count', { count: likesCount })}</span>
-                )}
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={t('post.comment_item')}>
-              <ActionButton onClick={handleCommentClick}>
-                <Box className="icon">
-                  {post?.total_comments_count > 0 || post?.comments_count > 0 ? (
-                    <ChatBubbleIcon />
-                  ) : (
-                    <ChatBubbleOutlineIcon />
-                  )}
-                </Box>
-                {(post?.total_comments_count > 0 || post?.comments_count > 0) && (
-                    <span className="count">
-                      {t('post.comments_count', { count: post?.total_comments_count || post?.comments_count })}
+          {/* Блок фактов */}
+          {post?.fact && (
+            <Box
+              sx={{
+                mt: 1,
+                mb: 1,
+                p: 2,
+                borderRadius: '8px',
+                backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                backdropFilter: 'blur(50px)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                position: 'relative',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '8px',
+                  height: '100%',
+                  backgroundColor: '#6e5a9d',
+                  borderRadius: '8px 0 0 8px',
+                }
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  mb: 1,
+                  gap: 0.5,
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                  }}
+                >
+                  Проверка фактов
+                </Typography>
+                <Tooltip 
+                  title="Это разъяснение было предоставлено организацией"
+                  placement="top"
+                  arrow
+                  sx={{
+                    '& .MuiTooltip-tooltip': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                      backdropFilter: 'blur(10px)',
+                      fontSize: '0.75rem',
+                      maxWidth: 200,
+                    }
+                  }}
+                >
+                  <span>
+                    <Box
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        cursor: 'help',
+                        fontSize: '0.7rem',
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        }
+                      }}
+                    >
+                      ?
+                    </Box>
                   </span>
+                </Tooltip>
+              </Box>
+              
+              <Typography
+                sx={{
+                  fontSize: '0.85rem',
+                  lineHeight: 1.5,
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  mb: 1.5,
+                }}
+              >
+                {post.fact.explanation_text}
+              </Typography>
+              
+              <Typography
+                sx={{
+                  fontSize: '0.75rem',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  fontStyle: 'italic',
+                }}
+              >
+                Это разъяснение было предоставлено {post.fact.who_provided}
+              </Typography>
+            </Box>
+          )}
+          
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 2,
+            gap: 1.7 // уменьшено с 2
+          }}>
+            {/* Левая группа: лайк, коммент, репост, поделиться */}
+            <Box sx={{
+              display: 'flex',
+              gap: 1.7, // уменьшено с 2
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '10px', // было 12px
+              px: 2.5, // было 3
+              py: 0.85, // было 1
+              alignItems: 'center',
+              minWidth: 185 // было 220
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
+                {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
+                {/* Аватарки последних лайкнувших — появляются при наведении */}
+                {!isMobile && lastLikedUsers.length > 0 && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: '110%',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      transition: 'opacity 0.25s cubic-bezier(.4,2,.6,1), transform 0.25s cubic-bezier(.4,2,.6,1)',
+                      zIndex: 20,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                    }}
+                    className="like-avatars"
+                  >
+                    {lastLikedUsers.slice(0, 3).map((user, index) => {
+                      const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
+                      return (
+                        <Avatar
+                          key={user.id}
+                          src={avatarUrl}
+                          alt={user.name}
+                          sx={{
+                            width: 22,
+                            height: 22,
+                            border: '1.5px solid #fff',
+                            ml: index > 0 ? -0.7 : 0,
+                            zIndex: 3 - index,
+                            background: '#eee',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
+                            transition: 'transform 0.18s',
+                            '&:hover': {
+                              transform: 'scale(1.13)',
+                              zIndex: 10
+                            }
+                          }}
+                          onError={safeImageError}
+                        />
+                      );
+                    })}
+                  </Box>
                 )}
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={reposted ? t('post.reposted') : t('post.repost')}>
-              <ActionButton onClick={handleRepostClick} active={reposted}>
-                <Box className="icon">
-                  <RepeatIcon />
-                </Box>
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={t('post.share')}>
-              <ActionButton onClick={handleShare}>
-                <Box className="icon">
-                  <ShareRoundedIcon />
-                </Box>
-              </ActionButton>
-              </Tooltip>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
+                <MessageCircle size={21} color="#fff" />
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
+                <Repeat2 size={21} color="#fff" />
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
+                <Link2 size={21} color="#fff" />
+              </Box>
             </Box>
 
-            <Box sx={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Tooltip title={t('post.views')}>
-              <ActionButton>
-                <Box className="icon">
-                  <VisibilityIcon />
-                </Box>
-                  <span className="count">{t('post.views_count', { count: viewsCount })}</span>
-              </ActionButton>
-              </Tooltip>
-
-              <Tooltip title={t('post.menu_title')}>
-              <ActionButton onClick={handleMenuOpen} data-no-navigate>
-                <Box className="icon">
-                  <Icon icon="solar:menu-dots-bold" />
-                </Box>
-              </ActionButton>
-              </Tooltip>
+            {/* Правая группа: просмотры и меню */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '10px', // было 12px
+              px: 1.7, // было 2
+              py: 0.85, // было 1
+              minWidth: 68, // было 80
+              justifyContent: 'center',
+              gap: 0.85 // было 1
+            }}>
+              <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography>
+              <MoreVertIcon sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }} onClick={handleMenuOpen} data-no-navigate />
             </Box>
-          </ActionsContainer>
+          </Box>
         </Box>
       </PostCard>
 
@@ -2261,6 +2586,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         onClose={handleMenuClose}
         onClick={(e) => e.stopPropagation()}
       >
+        {currentUser && currentUser.id === 3 && (
+          <MenuItem onClick={handleFactsClick}>
+            <ListItemIcon>
+              <FactCheckIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Факты</ListItemText>
+          </MenuItem>
+        )}
         {isCurrentUserPost && (
           <>
             <MenuItem onClick={handleEdit}>
@@ -2287,7 +2620,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         )}
         <MenuItem onClick={handleCopyLink}>
           <ListItemIcon>
-            <LinkIcon fontSize="small" />
+            <Link2 size={16} />
           </ListItemIcon>
           <ListItemText>{t('post.menu_actions.copy_link')}</ListItemText>
         </MenuItem>
@@ -2365,7 +2698,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               display: 'flex',
               alignItems: 'flex-start'
             }}>
-              <RepeatIcon sx={{ mr: 1, fontSize: '18px', color: '#7B68EE', mt: '2px' }} />
+              <Repeat2 size={18} color="#7B68EE" style={{ marginRight: '8px', marginTop: '2px' }} />
               <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
                 {t('post.repost_dialog.original_post_notice')}
               </Typography>
@@ -3261,6 +3594,18 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         y={contextMenuState.y}
         show={contextMenuState.show && contextMenuState.data?.postId === post.id}
         onClose={closeContextMenu}
+      />
+      
+      {/* Модалка для работы с фактами */}
+      <FactModal
+        open={factModal.open}
+        onClose={handleFactModalClose}
+        onSubmit={handleFactSubmit}
+        onDelete={handleFactDelete}
+        loading={factModal.loading}
+        error={factModal.error}
+        existingFact={post?.fact}
+        postId={post?.id}
       />
     </>
   );

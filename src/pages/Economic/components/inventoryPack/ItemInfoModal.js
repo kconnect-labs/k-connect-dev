@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -25,7 +25,10 @@ import {
   Search as SearchIcon,
   Upgrade as UpgradeIcon,
   Diamond as DiamondIcon,
-  Star as StarIcon
+  Star as StarIcon,
+  Store as StoreIcon,
+  RemoveShoppingCart as RemoveFromMarketIcon,
+  ContentCopy as ContentCopyIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import {
@@ -79,7 +82,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
-    height: 400,
+    height: '90vh',
     maxWidth: 'none',
     maxHeight: 'none',
     '@media (max-width: 768px)': {
@@ -92,8 +95,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
-  width: 120,
-  height: 120,
+  width: 250,
+  height: 250,
   borderRadius: 16,
   background: 'rgba(255, 255, 255, 0.1)',
   display: 'flex',
@@ -103,11 +106,29 @@ const ItemImage = styled(Box)(({ theme }) => ({
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
   margin: '0 auto 24px',
   overflow: 'hidden',
+  position: 'relative',
   '& img': {
     width: '100%',
     height: '100%',
     objectFit: 'contain',
     borderRadius: 'inherit',
+    position: 'relative',
+    zIndex: 2,
+    maxWidth: '100%',
+    maxHeight: '100%',
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    borderRadius: 'inherit',
+    zIndex: 1,
   },
 }));
 
@@ -157,6 +178,31 @@ const UserAvatar = styled(Avatar)(() => ({
   backgroundColor: '#444444'
 }));
 
+const MarketPriceChip = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  background: 'rgba(0, 0, 0, 0.7)',
+  backdropFilter: 'blur(5px)',
+  borderRadius: '20px',
+  padding: '6px 12px',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '4px',
+  color: '#fff',
+  fontWeight: 'bold',
+  fontSize: '0.9rem',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  zIndex: 2,
+}));
+
+const KBallsIcon = styled('img')({
+  width: '16px',
+  height: '16px',
+  marginRight: '4px',
+});
+
 const ItemInfoModal = ({ 
   open, 
   onClose, 
@@ -170,6 +216,7 @@ const ItemInfoModal = ({
   const [transferLoading, setTransferLoading] = useState(false);
   const [transferError, setTransferError] = useState('');
   const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState(false);
   const [userSearch, setUserSearch] = useState({
     loading: false,
     exists: false,
@@ -181,6 +228,11 @@ const ItemInfoModal = ({
     message: '',
     severity: 'success'
   });
+  const debounceTimerRef = useRef(null);
+  const [marketplaceModalOpen, setMarketplaceModalOpen] = useState(false);
+  const [price, setPrice] = useState('');
+  const [marketplaceLoading, setMarketplaceLoading] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
 
   useEffect(() => {
     if (!open) {
@@ -256,6 +308,7 @@ const ItemInfoModal = ({
   };
 
   const handleUpgradeItem = async () => {
+    setUpgradeConfirmOpen(false);
     try {
       setUpgradeLoading(true);
       const response = await fetch(`/api/inventory/upgrade/${item.id}`, {
@@ -264,9 +317,7 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
       });
-      
       const data = await response.json();
-      
       if (data.success) {
         showNotification(data.message, 'success');
         onItemUpdate();
@@ -281,6 +332,8 @@ const ItemInfoModal = ({
   };
 
   const handleTransferItem = () => {
+    setRecipientUsername('');
+    setTransferError('');
     setTransferModalOpen(true);
   };
 
@@ -288,91 +341,126 @@ const ItemInfoModal = ({
     setTransferModalOpen(false);
     setRecipientUsername('');
     setTransferError('');
-    setUserSearch({ loading: false, exists: false, suggestions: [] });
+    setUserSearch({
+      loading: false,
+      exists: false,
+      suggestions: []
+    });
     setSelectedRecipientId(null);
   };
 
-  const searchUser = async (query) => {
-    if (query.length < 2) {
-      setUserSearch({ loading: false, exists: false, suggestions: [] });
-      return;
+  const searchUser = (query) => {
+    setUserSearch(prev => ({...prev, loading: true}));
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
-
-    try {
-      setUserSearch(prev => ({ ...prev, loading: true }));
-      const response = await axios.get(`/api/user/search?q=${encodeURIComponent(query)}`);
-      
-      if (response.data.success) {
-        const users = response.data.users;
-        const exactMatch = users.find(user => 
-          user.username.toLowerCase() === query.toLowerCase()
-        );
-        
-        setUserSearch({
-          loading: false,
-          exists: !!exactMatch,
-          suggestions: exactMatch ? [] : users.slice(0, 5)
+    debounceTimerRef.current = setTimeout(() => {
+      const url = `/api/search/recipients?query=${encodeURIComponent(query)}`;
+      axios.get(url)
+        .then(response => {
+          if (response.data && response.data.users && response.data.users.length > 0) {
+            const exactMatch = response.data.users.find(u => 
+              u.username.toLowerCase() === query.toLowerCase()
+            );
+            if (exactMatch) {
+              setSelectedRecipientId(exactMatch.id);
+            } else {
+              setSelectedRecipientId(null);
+            }
+            setUserSearch(prev => ({
+              ...prev,
+              loading: false,
+              exists: !!exactMatch,
+              suggestions: response.data.users.slice(0, 3),
+            }));
+          } else {
+            setUserSearch(prev => ({
+              ...prev,
+              loading: false,
+              exists: false,
+              suggestions: [],
+            }));
+            setSelectedRecipientId(null);
+          }
+        })
+        .catch(error => {
+          setUserSearch(prev => ({
+            ...prev,
+            loading: false,
+            exists: false,
+            suggestions: [],
+          }));
+          setSelectedRecipientId(null);
         });
-        
-        if (exactMatch) {
-          setSelectedRecipientId(exactMatch.id);
-        }
-      }
-    } catch (error) {
-      setUserSearch({ loading: false, exists: false, suggestions: [] });
-    }
+    }, 300); 
   };
 
   const handleUsernameChange = (e) => {
-    const value = e.target.value;
-    setRecipientUsername(value);
-    setSelectedRecipientId(null);
-    
-    if (value.trim()) {
-      searchUser(value.trim());
+    const username = e.target.value;
+    setRecipientUsername(username);
+    if (username.trim()) {
+      searchUser(username.trim());
     } else {
-      setUserSearch({ loading: false, exists: false, suggestions: [] });
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      setUserSearch(prev => ({
+        ...prev,
+        loading: false,
+        exists: false,
+        suggestions: [],
+      }));
+      setSelectedRecipientId(null);
     }
   };
 
   const selectSuggestion = (username, userId) => {
     setRecipientUsername(username);
     setSelectedRecipientId(userId);
-    setUserSearch({ loading: false, exists: true, suggestions: [] });
+    setUserSearch(prev => ({
+      ...prev,
+      loading: false,
+      exists: true,
+      suggestions: []
+    }));
   };
 
   const handleConfirmTransfer = async () => {
-    if (!recipientUsername.trim() || !selectedRecipientId) {
-      setTransferError('Выберите получателя');
+    if (!recipientUsername.trim()) {
+      setTransferError('Введите имя пользователя');
       return;
     }
-
+    if (!selectedRecipientId) {
+      setTransferError('Пользователь не найден');
+      return;
+    }
+    if (userPoints < 5000) {
+      setTransferError('Недостаточно баллов для передачи (требуется 5000)');
+      return;
+    }
+    setTransferLoading(true);
+    setTransferError('');
     try {
-      setTransferLoading(true);
-      setTransferError('');
-      
       const response = await fetch(`/api/inventory/transfer/${item.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          recipient_username: recipientUsername
+          recipient_username: recipientUsername.trim()
         }),
       });
-      
       const data = await response.json();
-      
       if (data.success) {
-        showNotification(data.message, 'success');
         handleCloseTransferModal();
-        onTransferSuccess();
-        onClose();
+        if (typeof onTransferSuccess === 'function') onTransferSuccess();
+        if (typeof onClose === 'function') onClose();
       } else {
-        setTransferError(data.message);
+        setTransferError(data.message || 'Ошибка передачи предмета');
       }
-    } catch (error) {
-      setTransferError('Ошибка при передаче предмета');
+    } catch (err) {
+      setTransferError('Ошибка сети');
     } finally {
       setTransferLoading(false);
     }
@@ -388,6 +476,49 @@ const ItemInfoModal = ({
 
   const handleCloseNotification = () => {
     setNotification(prev => ({ ...prev, open: false }));
+  };
+
+  const handleListOnMarketplace = async () => {
+    try {
+      setMarketplaceLoading(true);
+      const response = await axios.post(`/api/marketplace/list/${item.id}`, {
+        price: parseInt(price)
+      });
+      
+      if (response.data.success) {
+        showNotification('Предмет выставлен на маркетплейс', 'success');
+        onItemUpdate();
+        setMarketplaceModalOpen(false);
+      }
+    } catch (error) {
+      showNotification(error.response?.data?.message || 'Ошибка при выставлении предмета', 'error');
+    } finally {
+      setMarketplaceLoading(false);
+    }
+  };
+
+  const handleRemoveFromMarketplace = async () => {
+    try {
+      setMarketplaceLoading(true);
+      const response = await axios.post(`/api/marketplace/cancel/${item.marketplace.id}`);
+      
+      if (response.data.success) {
+        showNotification('Предмет снят с маркетплейса', 'success');
+        onItemUpdate();
+      }
+    } catch (error) {
+      showNotification(error.response?.data?.message || 'Ошибка при снятии предмета', 'error');
+    } finally {
+      setMarketplaceLoading(false);
+    }
+  };
+
+  const handleCopyLink = () => {
+    const url = `https://k-connect.ru/item/${item.id}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopyStatus('Скопировано!');
+      setTimeout(() => setCopyStatus(''), 1500);
+    });
   };
 
   if (!item) return null;
@@ -425,20 +556,25 @@ const ItemInfoModal = ({
           
           <DialogContent sx={{ pt: 0 }}>
             <Box sx={{ mb: 3, textAlign: 'center' }}>
-              <ItemImage sx={{ 
-                width: 120, 
-                height: 120, 
-                mb: 2,
-                transition: 'all 0.3s ease'
-              }}>
-                <img 
-                  src={item.image_url}
-                  alt={item.item_name}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              </ItemImage>
+              <Box position="relative">
+                <UpgradeEffects item={item}>
+                  <ItemImage sx={{
+                    ...(item?.background_url && {
+                      '&::before': {
+                        backgroundImage: `url(${item.background_url})`,
+                      }
+                    })
+                  }}>
+                    <img src={item?.image_url} alt={item?.item_name} />
+                  </ItemImage>
+                </UpgradeEffects>
+                {item?.marketplace?.status === 'active' && (
+                  <MarketPriceChip>
+                    <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                    {item.marketplace.price}
+                  </MarketPriceChip>
+                )}
+              </Box>
               
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
                 {item.item_name}
@@ -450,103 +586,148 @@ const ItemInfoModal = ({
                   label={getRarityLabel(item.rarity)}
                   icon={getRarityIcon(item.rarity)}
                 />
+                {item.upgrade_level === 1 && (
+                  <Chip label="Улучшено" color="success" size="small" sx={{ ml: 1, fontWeight: 600 }} />
+                )}
               </Box>
 
               <Box sx={{ mb: 3 }}>
                 <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                   Пак: {item.pack_name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
                   Статус: {item.is_equipped ? 'Экипировано' : 'Не экипировано'}
                 </Typography>
+                {item.item_number && item.total_count && (
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                    Экземпляр: {item.item_number} из {item.total_count}
+                  </Typography>
+                )}
               </Box>
 
-              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
-                {!item.is_equipped ? (
-                  <Button
-                    variant="outlined"
-                    onClick={handleEquipItem}
-                    disabled={upgradeLoading}
-                    startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
-                    fullWidth
-                    sx={{
-                      borderColor: 'rgba(255, 255, 255, 0.2)',
-                      color: 'text.primary',
-                      fontWeight: 500,
-                      '&:hover': {
-                        borderColor: 'rgba(255, 255, 255, 0.4)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      },
-                    }}
-                  >
-                    Экипировать
-                  </Button>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    onClick={handleUnequipItem}
-                    disabled={upgradeLoading}
-                    startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
-                    fullWidth
-                    sx={{
-                      borderColor: 'rgba(255, 255, 255, 0.2)',
-                      color: 'text.primary',
-                      fontWeight: 500,
-                      '&:hover': {
-                        borderColor: 'rgba(255, 255, 255, 0.4)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      },
-                    }}
-                  >
-                    Снять
-                  </Button>
-                )}
-
-                {item.upgradeable && item.upgrade_level === 0 && (
-                  <Button
-                    variant="outlined"
-                    onClick={handleUpgradeItem}
-                    disabled={upgradeLoading || userPoints < Math.floor(item.pack_price / 2)}
-                    startIcon={upgradeLoading ? <CircularProgress size={16} /> : <UpgradeIcon />}
-                    fullWidth
-                    sx={{
-                      borderColor: 'rgba(255, 152, 0, 0.3)',
-                      color: '#ff9800',
-                      fontWeight: 500,
-                      '&:hover': {
-                        borderColor: 'rgba(255, 152, 0, 0.5)',
-                        backgroundColor: 'rgba(255, 152, 0, 0.05)',
-                      },
-                    }}
-                  >
-                    {upgradeLoading ? 'Улучшение...' : `Улучшить (${Math.floor(item.pack_price / 2)} очков)`}
-                  </Button>
-                )}
-
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
                 <Button
-                  variant="outlined"
-                  onClick={handleTransferItem}
-                  startIcon={<SendIcon />}
-                  fullWidth
-                  disabled={userPoints < 5000}
-                  sx={{
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    color: 'text.primary',
-                    '&:hover': {
-                      borderColor: 'rgba(255, 255, 255, 0.4)',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                    },
-                    '&:disabled': {
-                      borderColor: 'rgba(255, 255, 255, 0.1)',
-                      color: 'text.secondary',
-                    },
-                  }}
+                  size="small"
+                  variant="text"
+                  startIcon={<ContentCopyIcon fontSize="small" />}
+                  onClick={handleCopyLink}
+                  sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
                 >
-                  Передать (5000 баллов)
+                  {copyStatus || 'Скопировать'}
                 </Button>
               </Box>
             </Box>
           </DialogContent>
+          <DialogActions sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'center', pb: 3, px: 3 }}>
+            {!item.is_equipped ? (
+              <Button
+                variant="outlined"
+                onClick={handleEquipItem}
+                disabled={upgradeLoading}
+                startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
+                fullWidth
+                sx={{
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'text.primary',
+                  fontWeight: 500,
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  },
+                }}
+              >
+                Экипировать
+              </Button>
+            ) : (
+              <Button
+                variant="outlined"
+                onClick={handleUnequipItem}
+                disabled={upgradeLoading}
+                startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
+                fullWidth
+                sx={{
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'text.primary',
+                  fontWeight: 500,
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  },
+                }}
+              >
+                Снять
+              </Button>
+            )}
+            {item.upgradeable && item.upgrade_level === 0 && (
+              <Button
+                variant="outlined"
+                onClick={() => setUpgradeConfirmOpen(true)}
+                disabled={upgradeLoading || userPoints < Math.floor(item.pack_price ? item.pack_price / 2 : 0)}
+                startIcon={upgradeLoading ? <CircularProgress size={16} /> : <UpgradeIcon />}
+                fullWidth
+                sx={{
+                  borderColor: 'rgba(255, 152, 0, 0.3)',
+                  color: '#ff9800',
+                  fontWeight: 500,
+                  '&:hover': {
+                    borderColor: 'rgba(255, 152, 0, 0.5)',
+                    backgroundColor: 'rgba(255, 152, 0, 0.05)',
+                  },
+                }}
+              >
+                {upgradeLoading ? 'Улучшение...' : `Улучшить (${Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков)`}
+              </Button>
+            )}
+            <Button
+              variant="outlined"
+              onClick={handleTransferItem}
+              startIcon={<SendIcon />}
+              fullWidth
+              disabled={userPoints < 5000}
+              sx={{
+                borderColor: 'rgba(255, 255, 255, 0.2)',
+                color: 'text.primary',
+                '&:hover': {
+                  borderColor: 'rgba(255, 255, 255, 0.4)',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                },
+                '&:disabled': {
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                  color: 'text.secondary',
+                },
+              }}
+            >
+              Передать (5000 баллов)
+            </Button>
+            {!item?.is_equipped && (
+              item?.marketplace?.status === 'active' ? (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={<RemoveFromMarketIcon />}
+                  onClick={handleRemoveFromMarketplace}
+                  disabled={marketplaceLoading}
+                  fullWidth
+                >
+                  {marketplaceLoading ? (
+                    <CircularProgress size={24} color="inherit" />
+                  ) : (
+                    'Снять с продажи'
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<StoreIcon />}
+                  onClick={() => setMarketplaceModalOpen(true)}
+                  fullWidth
+                >
+                  Выставить на маркетплейс
+                </Button>
+              )
+            )}
+          </DialogActions>
         </UpgradeEffects>
       </StyledDialog>
 
@@ -556,23 +737,52 @@ const ItemInfoModal = ({
         onClose={handleCloseTransferModal}
         maxWidth="sm"
         fullWidth
-        PaperComponent={StyledDialog}
+        fullScreen={window.innerWidth <= 768}
+        PaperProps={{
+          sx: {
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: window.innerWidth <= 768 ? 0 : 1,
+            '@media (max-width: 768px)': {
+              margin: 0,
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+              borderRadius: 0,
+            }
+          }
+        }}
       >
-        <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <DialogTitle sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          color: 'text.primary',
+          pb: 1
+        }}>
+          <Typography variant="h5" sx={{ fontWeight: 600 }}>
             Передать предмет
           </Typography>
+          <IconButton
+            onClick={handleCloseTransferModal}
+            sx={{ color: 'text.secondary' }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
-        
-        <UpgradeEffects item={item}>
-          <DialogContent sx={{ pt: 0 }}>
-            <Box sx={{ mb: 3, textAlign: 'center' }}>
-              <UpgradeEffects item={item}>
+        <DialogContent sx={{ pt: 0 }}>
+          {item && (
+            <>
+              <Box sx={{ mb: 3, textAlign: 'center' }}>
                 <ItemImage sx={{ 
-                  width: 80, 
-                  height: 80, 
+                  width: 125,
+                  height: 125,
                   mb: 2,
-                  transition: 'all 0.3s ease'
+                  ...(item?.background_url && {
+                    '&::before': {
+                      backgroundImage: `url(${item.background_url})`,
+                    }
+                  })
                 }}>
                   <img 
                     src={item.image_url}
@@ -582,157 +792,217 @@ const ItemInfoModal = ({
                     }}
                   />
                 </ItemImage>
-              </UpgradeEffects>
-              
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                {item.item_name}
-              </Typography>
-              
-              <RarityChip
-                rarity={item.rarity || 'common'}
-                label={getRarityLabel(item.rarity || 'common')}
-                icon={getRarityIcon(item.rarity || 'common')}
-                size="small"
-              />
-            </Box>
-
-            <Alert severity="info" sx={{ mb: 3 }}>
-              Стоимость передачи: 5000 баллов
-            </Alert>
-
-            {transferError && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                {transferError}
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  {item.item_name}
+                </Typography>
+                <RarityChip
+                  rarity={item.rarity || 'common'}
+                  label={getRarityLabel(item.rarity || 'common')}
+                  icon={getRarityIcon(item.rarity || 'common')}
+                  size="small"
+                />
+              </Box>
+              <Alert severity="info" sx={{ mb: 3 }}>
+                Стоимость передачи: 5000 баллов
               </Alert>
-            )}
-
-            <TextField
-              fullWidth
-              label="Имя пользователя получателя"
-              value={recipientUsername}
-              onChange={handleUsernameChange}
-              placeholder="Введите username получателя"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {userSearch.loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <SearchIcon sx={{ color: 'text.secondary' }} />
-                    )}
-                  </InputAdornment>
-                )
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
+              {transferError && (
+                <Alert severity="error" sx={{ mb: 3 }}>
+                  {transferError}
+                </Alert>
+              )}
+              <TextField
+                fullWidth
+                label="Имя пользователя получателя"
+                value={recipientUsername}
+                onChange={handleUsernameChange}
+                placeholder="Введите username получателя"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {userSearch.loading ? (
+                        <CircularProgress size={20} />
+                      ) : (
+                        <SearchIcon sx={{ color: 'text.secondary' }} />
+                      )}
+                    </InputAdornment>
+                  )
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.2)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'primary.main',
+                    },
                   },
-                  '&:hover fieldset': {
-                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                  '& .MuiInputLabel-root': {
+                    color: 'text.secondary',
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'primary.main',
+                  '& .MuiInputBase-input': {
+                    color: 'text.primary',
                   },
-                },
-                '& .MuiInputLabel-root': {
-                  color: 'text.secondary',
-                },
-                '& .MuiInputBase-input': {
-                  color: 'text.primary',
-                },
-              }}
-            />
-
-            {userSearch.suggestions.length > 0 && !userSearch.exists && (
-              <SuggestionsContainer>
-                <Box sx={{ p: 2, pb: 1 }}>
-                  <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
-                    Похожие пользователи:
+                }}
+              />
+              {userSearch.suggestions.length > 0 && !userSearch.exists && (
+                <SuggestionsContainer>
+                  <Box sx={{ p: 2, pb: 1 }}>
+                    <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
+                      Похожие пользователи:
+                    </Typography>
+                  </Box>
+                  {userSearch.suggestions.map((user) => (
+                    <SuggestionItem
+                      key={user.id}
+                      onClick={() => selectSuggestion(user.username, user.id)}
+                    >
+                      <UserAvatar 
+                        src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
+                        alt={user.username}
+                      >
+                        {user.username.charAt(0).toUpperCase()}
+                      </UserAvatar>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                          {user.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          @{user.username}
+                        </Typography>
+                      </Box>
+                    </SuggestionItem>
+                  ))}
+                </SuggestionsContainer>
+              )}
+              {userSearch.exists && selectedRecipientId && (
+                <Box sx={{ 
+                  p: 2, 
+                  mb: 3, 
+                  bgcolor: 'rgba(40, 40, 40, 0.4)', 
+                  backdropFilter: 'blur(5px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(60, 60, 60, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <CheckCircleIcon sx={{ color: '#4CAF50', mr: 1 }} />
+                  <Typography variant="body2">
+                    Получатель подтвержден: <strong>{recipientUsername}</strong>
                   </Typography>
                 </Box>
-                {userSearch.suggestions.map((user) => (
-                  <SuggestionItem
-                    key={user.id}
-                    onClick={() => selectSuggestion(user.username, user.id)}
-                  >
-                    <UserAvatar 
-                      src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
-                      alt={user.username}
-                    >
-                      {user.username.charAt(0).toUpperCase()}
-                    </UserAvatar>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                        {user.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        @{user.username}
-                      </Typography>
-                    </Box>
-                  </SuggestionItem>
-                ))}
-              </SuggestionsContainer>
-            )}
-
-            {userSearch.exists && selectedRecipientId && (
-              <Box sx={{ 
-                p: 2, 
-                mb: 3, 
-                bgcolor: 'rgba(40, 40, 40, 0.4)', 
-                backdropFilter: 'blur(5px)',
-                borderRadius: 2,
-                border: '1px solid rgba(60, 60, 60, 0.4)',
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <CheckCircleIcon sx={{ color: '#4CAF50', mr: 1 }} />
-                <Typography variant="body2">
-                  Получатель подтвержден: <strong>{recipientUsername}</strong>
-                </Typography>
-              </Box>
-            )}
-          </DialogContent>
-          
-          <DialogActions sx={{ p: 3, pt: 0 }}>
-            <Button
-              onClick={handleCloseTransferModal}
-              sx={{
+              )}
+            </>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ p: 3, pt: 0 }}>
+          <Button
+            onClick={handleCloseTransferModal}
+            sx={{
+              color: 'text.secondary',
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              },
+            }}
+          >
+            Отмена
+          </Button>
+          <Button
+            onClick={handleConfirmTransfer}
+            disabled={transferLoading || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000}
+            variant="contained"
+            startIcon={transferLoading ? <CircularProgress size={16} /> : <SendIcon />}
+            sx={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: 'text.primary',
+              fontWeight: 500,
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              '&:hover': {
+                background: 'rgba(255, 255, 255, 0.15)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+              },
+              '&:disabled': {
+                background: 'rgba(255, 255, 255, 0.05)',
                 color: 'text.secondary',
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-                '&:hover': {
-                  borderColor: 'rgba(255, 255, 255, 0.4)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                },
-              }}
-            >
-              Отмена
-            </Button>
-            <Button
-              onClick={handleConfirmTransfer}
-              disabled={transferLoading || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000}
-              variant="contained"
-              startIcon={transferLoading ? <CircularProgress size={16} /> : <SendIcon />}
-              sx={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                color: 'text.primary',
-                fontWeight: 500,
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                },
-                '&:disabled': {
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  color: 'text.secondary',
-                  borderColor: 'rgba(255, 255, 255, 0.1)',
-                },
-              }}
-            >
-              {transferLoading ? 'Передача...' : 'Передать'}
-            </Button>
-          </DialogActions>
-        </UpgradeEffects>
+                borderColor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
+          >
+            {transferLoading ? 'Передача...' : 'Передать'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Модалка подтверждения улучшения */}
+      <Dialog open={upgradeConfirmOpen} onClose={() => setUpgradeConfirmOpen(false)} maxWidth="xs" fullWidth>
+        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1 }}>Вы уверены?</DialogTitle>
+        <DialogContent sx={{ pb: 0 }}>
+          <Typography variant="body2">Потратить {Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков на улучшение этого предмета?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setUpgradeConfirmOpen(false)} color="secondary" size="small">Нет</Button>
+          <Button onClick={handleUpgradeItem} color="primary" size="small" disabled={upgradeLoading}>{upgradeLoading ? <CircularProgress size={16} /> : 'Да'}</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Marketplace Modal */}
+      <Dialog
+        open={marketplaceModalOpen}
+        onClose={() => setMarketplaceModalOpen(false)}
+        PaperProps={{
+          sx: {
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 2,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }
+        }}
+      >
+        <DialogTitle>
+          Выставить на маркетплейс
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" mb={2}>
+            Укажите цену, за которую хотите продать предмет
+          </Typography>
+          <TextField
+            fullWidth
+            type="number"
+            label="Цена"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    <img src="/static/icons/KBalls.svg" alt="KBalls" style={{ width: 16, height: 16 }} />
+                  </Box>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setMarketplaceModalOpen(false)} color="inherit">
+            Отмена
+          </Button>
+          <Button
+            onClick={handleListOnMarketplace}
+            variant="contained"
+            color="primary"
+            disabled={!price || marketplaceLoading}
+          >
+            {marketplaceLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              'Выставить'
+            )}
+          </Button>
+        </DialogActions>
       </Dialog>
 
       {/* Уведомления */}
