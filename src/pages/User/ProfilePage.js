@@ -1228,7 +1228,14 @@ const ProfilePage = () => {
         </Grid>
         
         
-        <Grid item xs={12} md={7} sx={{ pt: 0, ml: { xs: 0, md: '5px' }, mb: '100px' }}>
+        <Grid item xs={12} md={7} sx={{
+          pt: 0,
+          ml: { xs: 0, md: '5px' },
+          mb: '100px',
+          ...(tabValue === 2 && {
+            height: '100vh',
+          })
+        }}>
         
           <Paper sx={{ 
             borderRadius: '12px', 

@@ -15,6 +15,7 @@ import { UpgradeEffects } from './index';
 import { StyledSelect } from './StyledComponents';
 import inventoryImageService from '../../../../services/InventoryImageService';
 import OptimizedImage from '../../../../components/OptimizedImage';
+import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
 
 const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId }, ref) => {
     const [inventory, setInventory] = useState([]);
@@ -428,140 +429,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, 
                 {filteredAndSortedInventory.map((item, index) => (
                   <Grid item xs={4} key={`${item.id}-${item.obtained_at}-${index}`}>
                     <UpgradeEffects item={item}>
-                      <Box
-                        onClick={() => handleItemClick(item)}
-                        sx={{
-                          p: 1,
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(10px)',
-                          borderRadius: 1.5,
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          transition: 'all 0.3s ease',
-                          cursor: 'pointer',
-                          overflow: 'hidden',
-                          '&:hover': {
-                            transform: 'translateY(-2px)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                          },
-                        }}
-                      >
-                        <Box
-                          sx={{
-                            width: '100%',
-                            aspectRatio: '1',
-                            borderRadius: 1,
-                            background: 'rgba(208, 188, 255, 0.1)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            mb: 0.5,
-                            overflow: 'hidden',
-                            position: 'relative',
-                            ...(item.background_url && {
-                              '&::before': {
-                                content: '""',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                backgroundImage: `url(${item.background_url})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat',
-                                borderRadius: 'inherit',
-                                zIndex: 1,
-                              }
-                            })
-                          }}
-                        >
-                          <OptimizedImage
-                            src={item.image_url}
-                            alt={item.item_name}
-                            width="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                            height="75%" // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                            fallbackText="Предмет недоступен"
-                            showSkeleton={true}
-                            style={{
-                              position: 'relative',
-                              zIndex: 2,
-                              objectFit: 'contain'
-                            }}
-                          />
-                          {item.marketplace && (
-                            <Box
-                              sx={{
-                                position: 'absolute',
-                                top: 4,
-                                right: 4,
-                                padding: '2px 6px',
-                                borderRadius: '8px',
-                                background: 'rgba(0, 0, 0, 0.7)',
-                                backdropFilter: 'blur(5px)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '2px',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                zIndex: 3,
-                              }}
-                            >
-                              <img
-                                src="/static/icons/KBalls.svg"
-                                alt="KBalls"
-                                style={{
-                                  width: '12px',
-                                  height: '12px',
-                                }}
-                              />
-                              <Typography
-                                variant="caption"
-                                sx={{
-                                  color: '#fff',
-                                  fontWeight: 'bold',
-                                  fontSize: '0.65rem',
-                                }}
-                              >
-                                {item.marketplace.price}
-                              </Typography>
-                            </Box>
-                          )}
-                        </Box>
-                        <Typography 
-                          variant="caption" 
-                          sx={{ 
-                            fontWeight: 500, 
-                            display: 'block',
-                            textAlign: 'center',
-                            mb: 0.5,
-                            fontSize: '0.7rem',
-                            lineHeight: 1.2,
-                          }}
-                        >
-                          {item.item_name}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            gap: 0.5,
-                          }}
-                        >
-                          <Chip
-                            label={getRarityLabel(item.rarity || 'common')}
-                            size="small"
-                            sx={{
-                              backgroundColor: `${getRarityColor(item.rarity || 'common')}20`,
-                              color: getRarityColor(item.rarity || 'common'),
-                              fontWeight: 'bold',
-                              fontSize: '0.6rem',
-                              height: 16,
-                              '& .MuiChip-label': {
-                                padding: '0 4px',
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Box>
+                      <InventoryItemCard item={item} onClick={() => handleItemClick(item)} />
                     </UpgradeEffects>
                   </Grid>
                 ))}
