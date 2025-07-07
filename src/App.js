@@ -93,7 +93,6 @@ const GrantsPage = lazy(() => import('./pages/Economic/components/grantPage/Gran
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
 const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
-
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));

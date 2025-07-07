@@ -76,7 +76,9 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import FactModal from './FactModal';
 
-const PostCard = styled(Card)(({ theme, isPinned, statusColor }) => ({
+const PostCard = styled(Card, {
+  shouldForwardProp: (prop) => !['isPinned', 'statusColor'].includes(prop),
+})(({ theme, isPinned, statusColor }) => ({
   marginBottom: theme.spacing(2),
   borderRadius: theme.spacing(1),
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
@@ -1081,27 +1083,22 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         
         const viewKey = `post_viewed_${post.id}`;
         if (sessionStorage.getItem(viewKey)) {
-          console.log(`Post ${post.id} already viewed in this session`);
           return;
         }
 
         
         sessionStorage.setItem(viewKey, 'true');
-        console.log(`Setting view flag for post ${post.id}`);
 
         
         const attemptViewCount = async (retries = 3) => {
           try {
             
-            console.log(`Incrementing view count for post ${post.id}`);
             const response = await axios.post(`/api/posts/${post.id}/view`);
             if (response.data && response.data.success) {
               
-              console.log(`View count updated for post ${post.id} to ${response.data.views_count}`);
               setViewsCount(response.data.views_count);
             }
           } catch (error) {
-            console.error(`Error incrementing view count (attempt ${4-retries}/3):`, error);
             
             if (retries > 1) {
               setTimeout(() => attemptViewCount(retries - 1), 1000); 
@@ -1827,10 +1824,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   {isPinned && (
                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
                       <Tooltip title={t('post.pin.tooltip')}>
-                        <PushPinIcon sx={{ 
-                          fontSize: 16, 
-                          color: statusColor || 'primary.main'
-                        }} />
+                        <span>
+                          <PushPinIcon sx={{ 
+                            fontSize: 16, 
+                            color: statusColor || 'primary.main'
+                          }} />
+                        </span>
                       </Tooltip>
                     </Box>
                   )}
@@ -1909,9 +1908,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   transformLinkUri={null} 
                   remarkPlugins={[]}
                   rehypePlugins={[]}
-                >
-                  {processedContent}
-                </ReactMarkdown>
+                  children={processedContent}
+                />
               )}
             </MarkdownContent>
             
@@ -2168,26 +2166,28 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                           }
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 14,
-                            height: 14,
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            cursor: 'help',
-                            fontSize: '0.65rem',
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            '&:hover': {
-                              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                            }
-                          }}
-                        >
-                          ?
-                        </Box>
+                        <span>
+                          <Box
+                            sx={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 14,
+                              height: 14,
+                              borderRadius: '50%',
+                              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                              border: '1px solid rgba(255, 255, 255, 0.2)',
+                              cursor: 'help',
+                              fontSize: '0.65rem',
+                              color: 'rgba(255, 255, 255, 0.7)',
+                              '&:hover': {
+                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                              }
+                            }}
+                          >
+                            ?
+                          </Box>
+                        </span>
                       </Tooltip>
                     </Box>
                     
@@ -2421,26 +2421,28 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     }
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 16,
-                      height: 16,
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      cursor: 'help',
-                      fontSize: '0.7rem',
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                      }
-                    }}
-                  >
-                    ?
-                  </Box>
+                  <span>
+                    <Box
+                      sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        cursor: 'help',
+                        fontSize: '0.7rem',
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                        }
+                      }}
+                    >
+                      ?
+                    </Box>
+                  </span>
                 </Tooltip>
               </Box>
               
