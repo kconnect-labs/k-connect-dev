@@ -6475,6 +6475,319 @@ const ModeratorPage = () => {
         </DialogActions>
       </StyledDialog>
       
+      {/* Dialog для создания ключей */}
+      <StyledDialog 
+        open={modKeysDialogOpen} 
+        onClose={handleCloseCreateKeyDialog} 
+        maxWidth="md"
+        fullWidth
+      >
+        <Box 
+          sx={{
+            position: 'relative',
+            overflow: 'hidden',
+            p: 2,
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)'
+          }}
+        >
+          <Box 
+            sx={{ 
+              position: 'absolute',
+              top: -50,
+              right: -50,
+              width: 150,
+              height: 150,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
+              zIndex: 0
+            }} 
+          />
+          <Box sx={{ position: 'relative', zIndex: 1 }}>
+            <Typography variant="h5" fontWeight="bold" color="primary.light">
+              Создание ключа активации
+            </Typography>
+            <Typography variant="caption" color="rgba(255,255,255,0.6)">
+              Создайте ключ для активации баллов или подписки
+            </Typography>
+          </Box>
+        </Box>
+        
+        <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
+          {generatedKeys.length > 0 ? (
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                mb: 1
+              }}>
+                <Typography variant="subtitle1" fontWeight="bold" color="rgba(255,255,255,0.87)">
+                  Сгенерированные ключи:
+                </Typography>
+                <Button
+                  size="small"
+                  startIcon={<ContentCopyIcon />}
+                  onClick={() => {
+                    navigator.clipboard.writeText(generatedKeys.join('\n'));
+                    showNotification('success', 'Ключи скопированы');
+                  }}
+                  sx={{ color: 'rgba(255,255,255,0.7)' }}
+                >
+                  Копировать все
+                </Button>
+              </Box>
+              
+              <Paper 
+                variant="outlined" 
+                sx={{ 
+                  p: 2, 
+                  maxHeight: 200, 
+                  overflow: 'auto',
+                  bgcolor: 'rgba(0,0,0,0.2)',
+                  border: '1px solid rgba(255,255,255,0.1)'
+                }}
+              >
+                {generatedKeys.map((key, index) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    fontFamily="monospace"
+                    sx={{ mb: 0.5, color: 'rgba(255,255,255,0.87)' }}
+                  >
+                    {key}
+                  </Typography>
+                ))}
+              </Paper>
+              
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    setGeneratedKeys([]);
+                  }}
+                  sx={{ color: 'rgba(255,255,255,0.7)' }}
+                >
+                  Создать еще
+                </Button>
+              </Box>
+            </Box>
+          ) : (
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: 'rgba(255,255,255,0.7)' }}>Тип ключа</InputLabel>
+                  <Select
+                    name="type"
+                    value={modKeysForm.type}
+                    label="Тип ключа"
+                    onChange={handleModKeysFormChange}
+                    sx={{ color: 'rgba(255,255,255,0.87)' }}
+                  >
+                    <MenuItem value="points">Баллы</MenuItem>
+                    <MenuItem value="subscription">Подписка</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              
+              {modKeysForm.type === 'points' ? (
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="points"
+                    label="Количество баллов"
+                    type="number"
+                    fullWidth
+                    value={modKeysForm.points}
+                    onChange={handleModKeysFormChange}
+                    InputProps={{ inputProps: { min: 1 } }}
+                    sx={{ 
+                      '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                      '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' }
+                    }}
+                  />
+                </Grid>
+              ) : (
+                <>
+                  <Grid item xs={12} sm={6}>
+                    <FormControl fullWidth>
+                      <InputLabel sx={{ color: 'rgba(255,255,255,0.7)' }}>Тип подписки</InputLabel>
+                      <Select
+                        name="subscription_type"
+                        value={modKeysForm.subscription_type}
+                        label="Тип подписки"
+                        onChange={handleModKeysFormChange}
+                        sx={{ color: 'rgba(255,255,255,0.87)' }}
+                      >
+                        <MenuItem value="basic">Базовая</MenuItem>
+                        <MenuItem value="premium">Премиум</MenuItem>
+                        <MenuItem value="ultimate">Ультимейт</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      name="subscription_duration_days"
+                      label="Срок действия подписки (дней)"
+                      type="number"
+                      fullWidth
+                      value={modKeysForm.subscription_duration_days}
+                      onChange={handleModKeysFormChange}
+                      InputProps={{ inputProps: { min: 1 } }}
+                      sx={{ 
+                        '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                        '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' }
+                      }}
+                    />
+                  </Grid>
+                </>
+              )}
+              
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="max_uses"
+                  label="Макс. число использований"
+                  type="number"
+                  fullWidth
+                  value={modKeysForm.max_uses}
+                  onChange={handleModKeysFormChange}
+                  InputProps={{ inputProps: { min: 1 } }}
+                  helperText="Сколько раз можно использовать каждый ключ"
+                  sx={{ 
+                    '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                    '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' },
+                    '& .MuiFormHelperText-root': { color: 'rgba(255,255,255,0.5)' }
+                  }}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="count"
+                  label="Количество ключей"
+                  type="number"
+                  fullWidth
+                  value={modKeysForm.count}
+                  onChange={handleModKeysFormChange}
+                  InputProps={{ inputProps: { min: 1, max: 100 } }}
+                  helperText="От 1 до 100 ключей"
+                  sx={{ 
+                    '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                    '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' },
+                    '& .MuiFormHelperText-root': { color: 'rgba(255,255,255,0.5)' }
+                  }}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="expires_days"
+                  label="Срок действия (дней)"
+                  type="number"
+                  fullWidth
+                  value={modKeysForm.expires_days}
+                  onChange={handleModKeysFormChange}
+                  InputProps={{ inputProps: { min: 0 } }}
+                  helperText="0 = бессрочно"
+                  sx={{ 
+                    '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                    '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' },
+                    '& .MuiFormHelperText-root': { color: 'rgba(255,255,255,0.5)' }
+                  }}
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  name="description"
+                  label="Описание"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={modKeysForm.description}
+                  onChange={handleModKeysFormChange}
+                  helperText="Необязательное описание для администраторов"
+                  sx={{ 
+                    '& .MuiInputLabel-root': { color: 'rgba(255,255,255,0.7)' },
+                    '& .MuiInputBase-input': { color: 'rgba(255,255,255,0.87)' },
+                    '& .MuiFormHelperText-root': { color: 'rgba(255,255,255,0.5)' }
+                  }}
+                />
+              </Grid>
+            </Grid>
+          )}
+          
+          {modKeysCreateError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {modKeysCreateError}
+            </Alert>
+          )}
+          
+          {modKeysCreateSuccess && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {modKeysCreateSuccess}
+            </Alert>
+          )}
+        </DialogContent>
+        
+        <DialogActions sx={{ p: 2, px: 3, justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <Button 
+            onClick={handleCloseCreateKeyDialog} 
+            variant="outlined"
+            color="inherit"
+            sx={{ 
+              borderRadius: 8,
+              px: 3,
+              borderColor: 'rgba(255,255,255,0.2)',
+              color: 'rgba(255,255,255,0.7)',
+              '&:hover': {
+                borderColor: 'rgba(255,255,255,0.4)',
+                background: 'rgba(255,255,255,0.05)'
+              }
+            }}
+          >
+            Отмена
+          </Button>
+          {generatedKeys.length === 0 && (
+            <Button 
+              onClick={handleCreateKey} 
+              color="primary" 
+              variant="contained"
+              disabled={modKeysCreateLoading}
+              startIcon={modKeysCreateLoading ? <CircularProgress size={20} /> : <VpnKeyIcon />}
+              sx={{ 
+                borderRadius: 8,
+                px: 4,
+                py: 0.75,
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+                background: 'linear-gradient(45deg, #3f51b5 30%, #5c6bc0 90%)',
+                '&:hover': {
+                  boxShadow: '0 6px 16px rgba(0, 0, 0, 0.5)',
+                }
+              }}
+            >
+              {modKeysCreateLoading ? 'Создание...' : 'Создать ключ'}
+            </Button>
+          )}
+          
+          {generatedKeys.length > 0 && (
+            <Button
+              onClick={() => {
+                handleCloseCreateKeyDialog();
+                setGeneratedKeys([]);
+              }}
+              variant="contained"
+              sx={{ 
+                borderRadius: 8,
+                px: 4,
+                py: 0.75
+              }}
+            >
+              Закрыть
+            </Button>
+          )}
+        </DialogActions>
+      </StyledDialog>
+      
       <DecorationMenu
         open={decorationMenuOpen}
         onClose={handleCloseDecorationMenu}
