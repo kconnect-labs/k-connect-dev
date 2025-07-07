@@ -16,7 +16,6 @@ import ChannelsPage from './pages/Main/ChannelsPage';
 import MusicPlayerCore from './components/MusicPlayerCore';
 import { setSessionContext } from './services/ProfileService';
 import JoinGroupChat from './pages/Messenger/JoinGroupChat';
-import CookiePage from './pages/Info/CookiesPage';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
@@ -92,7 +91,6 @@ const MarketplacePage = lazy(() => import('./pages/Economic/components/marketpla
 const GrantsPage = lazy(() => import('./pages/Economic/components/grantPage/GrantsPage'));
 const SimpleApiDocsPage = lazy(() => import('./pages/Info/SimpleApiDocsPage'));
 const SubPlanes = lazy(() => import('./pages/Economic/SubPlanes'));
-const ClickerPage = lazy(() => import('./pages/MiniGames/ClickerPage'));
 const AboutPage = lazy(() => import('./pages/Info/AboutPage'));
 const LikedTracksPage = lazy(() => import('./pages/MusicPage/components/LikedTracksPage'));
 const AllTracksPage = lazy(() => import('./pages/MusicPage/AllTracksPage'));
@@ -304,8 +302,6 @@ const PublicPages = () => {
     PublicPage = TermsOfServicePage;
   } else if (path === '/about') {
     return <AboutPage />;
-  } else if (path === '/cookies') {
-    PublicPage = CookiePage;
   }
 
   const content = (
@@ -471,14 +467,12 @@ const AppRoutes = () => {
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
           <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
           <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/clicker" element={isAuthenticated ? <ClickerPage /> : <Navigate to="/login" replace />} />
 
           <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
           <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
           <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />
           <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
           <Route path="/updates" element={<UpdatesPage />} />
-          <Route path="/cookies" element={<PublicPages />} />
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
           <Route path="/marketplace" element={<MarketplacePage />} />
           <Route path="/grant" element={isAuthenticated ? <GrantsPage /> : <Navigate to="/login" replace />} />
@@ -1184,7 +1178,6 @@ function App() {
                                     <Route path="/privacy-policy" element={<PublicPages />} />
                                     <Route path="/terms-of-service" element={<PublicPages />} />
                                     <Route path="/about" element={<PublicPages />} />
-                                    <Route path="/cookies" element={<PublicPages />} />
                                     <Route path="*" element={<AppRoutes />} />
                                   </Routes>
                                   <MusicPlayerCore />
@@ -1199,7 +1192,6 @@ function App() {
                 } />
               </Routes>
             </DefaultPropsProvider>
-            {/* <CookieBanner /> */}
           </ThemeProvider>
         </ThemeSettingsContext.Provider>
       </AuthProvider>
