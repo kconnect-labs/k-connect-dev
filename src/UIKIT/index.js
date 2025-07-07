@@ -9,6 +9,7 @@ import PlaylistGrid from './PlaylistGrid';
 import VerificationBadge from './VerificationBadge';
 import CommentSystem from './CommentSystem';
 import TransferMenu from './TransferMenu';
+import InventoryItemCard from './InventoryItemCard';
 
 
 export {
@@ -28,5 +29,6 @@ export {
   PlaylistGrid,
   VerificationBadge,
   CommentSystem,
-  TransferMenu
+  TransferMenu,
+  InventoryItemCard
 };

@@ -53,6 +53,7 @@ import {
   useUpgradeEffects
 } from './upgradeEffectsConfig';
 import inventoryImageService from '../../../../services/InventoryImageService';
+import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -659,82 +660,11 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <StyledCard onClick={() => handleItemClick(item)} sx={{ height: 250 }}>
+                  <Box onClick={() => handleItemClick(item)}>
                     <UpgradeEffects item={item}>
-                      <CardContent sx={{ textAlign: 'center', p: 2, height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                        {item?.marketplace?.status === 'active' && (
-                          <PriceBadge>
-                            <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
-                            {item.marketplace.price}
-                          </PriceBadge>
-                        )}
-                        <ItemImage sx={{ 
-                          width: 100, 
-                          height: 100, 
-                          mb: 2,
-                          transition: 'all 0.3s ease',
-                          ...(item.background_url && {
-                            '&::before': {
-                              backgroundImage: `url(${item.background_url})`,
-                            }
-                          })
-                        }}>
-                          <img 
-                            src={item.image_url}
-                            alt={item.item_name}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                          />
-                        </ItemImage>
-
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            fontWeight: 600, 
-                            mb: 1,
-                            color: 'text.primary',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}
-                        >
-                          {item.item_name}
-                        </Typography>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mb: 1 }}>
-                          <RarityChip
-                            rarity={item.rarity} 
-                            label={getRarityLabel(item.rarity)}
-                            size="small"
-                          />
-                        </Box>
-
-                        <Typography 
-                          variant="caption" 
-                          sx={{
-                            color: 'text.secondary',
-                            fontSize: '0.75rem'
-                          }}
-                        >
-                          {item.pack_name}
-                        </Typography>
-
-                        <Typography 
-                          variant="caption" 
-                          sx={{
-                            color: 'text.secondary',
-                            fontSize: '0.7rem',
-                            opacity: 0.7,
-                            mt: 'auto',
-                            pt: 1
-                          }}
-                        >
-                          Нажмите для подробностей
-                        </Typography>
-                      </CardContent>
+                      <InventoryItemCard item={item} />
                     </UpgradeEffects>
-                  </StyledCard>
+                  </Box>
                 </motion.div>
               </Grid>
             ))}
