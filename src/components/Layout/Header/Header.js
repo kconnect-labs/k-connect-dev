@@ -203,7 +203,7 @@ const PointsIcon = styled(Box)(({ theme }) => ({
 const SearchInputWrapper = styled(Box)(({ theme, fullWidth }) => ({
   position: 'relative',
   borderRadius: 16,
-  backgroundColor: '#131313',
+  backgroundColor: '#080808',
   width: fullWidth ? '100%' : 450,
   display: 'flex',
   transition: 'all 0.3s ease',
@@ -225,7 +225,7 @@ const StyledSearchInput = styled(TextField)(({ theme }) => ({
   width: '100%',
   '& .MuiInputBase-root': {
     color: theme.palette.common.white,
-    backgroundColor: '#131313',
+    backgroundColor: '#080808',
     borderRadius: 24,
     padding: theme.spacing(0.5, 1),
     '&:hover': {

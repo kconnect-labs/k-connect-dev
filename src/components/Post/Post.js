@@ -76,6 +76,21 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import FactModal from './FactModal';
 
+// CSS анимация для скелетона
+const skeletonKeyframes = `
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+`;
+
 const PostCard = styled(Card, {
   shouldForwardProp: (prop) => !['isPinned', 'statusColor'].includes(prop),
 })(({ theme, isPinned, statusColor }) => ({
@@ -307,6 +322,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     error: null
   });
   
+  const [lastComment, setLastComment] = useState(null);
+  const [lastCommentLoading, setLastCommentLoading] = useState(false);
+  
   const reportReasons = [
     t('post.report.reasons.spam'),
     t('post.report.reasons.insult'),
@@ -371,6 +389,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         } else {
           fetchLastLikedUsers(post.id);
         }
+      }
+      
+      // Загружаем последний комментарий
+      if (post.id && (post.comments_count > 0 || post.total_comments_count > 0)) {
+        fetchLastComment(post.id);
       }
       
       try {
@@ -473,6 +496,27 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       }
     } catch (error) {
       console.error('Error fetching last liked users:', error);
+    }
+  };
+
+  const fetchLastComment = async (postId) => {
+    try {
+      setLastCommentLoading(true);
+      const response = await axios.get(`/api/posts/${postId}/comments`, {
+        params: { page: 1, limit: 1 }
+      });
+      
+      if (response.data.comments && response.data.comments.length > 0) {
+        const comment = response.data.comments[0];
+        setLastComment(comment);
+      } else {
+        setLastComment(null);
+      }
+    } catch (error) {
+      console.error('Error fetching last comment:', error);
+      setLastComment(null);
+    } finally {
+      setLastCommentLoading(false);
     }
   };
 
@@ -1732,6 +1776,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
 
   return (
     <>
+      <style>{skeletonKeyframes}</style>
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
           <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -2464,6 +2509,236 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               >
                 Это разъяснение было предоставлено {post.fact.who_provided}
               </Typography>
+            </Box>
+          )}
+          
+          {/* Компонент последнего комментария в стиле ВК */}
+          {lastComment && !lastCommentLoading && (
+            <Box
+              sx={{
+                mt: 1.5,
+                mb: 1.5,
+                p: 1.5,
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                '&:hover': {
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                }
+              }}
+              onClick={handleCommentClick}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                {/* Аватар автора комментария */}
+                <Avatar
+                  src={lastComment.user?.avatar_url || `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`}
+                  alt={lastComment.user?.name || 'User'}
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    flexShrink: 0
+                  }}
+                  onError={safeImageError}
+                />
+                
+                {/* Контент комментария */}
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  {/* Имя автора и время */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                    <Typography
+                      sx={{
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        textDecoration: 'none',
+                        '&:hover': {
+                          color: theme.palette.primary.main
+                        }
+                      }}
+                      component={Link}
+                      to={`/profile/${lastComment.user?.username || 'unknown'}`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {lastComment.user?.name || 'Пользователь'}
+                    </Typography>
+                    
+                    {/* Верификация */}
+                    {lastComment.user?.verification?.status === 'verified' && (
+                      <CheckCircleIcon 
+                        sx={{ 
+                          fontSize: 14, 
+                          color: '#4CAF50',
+                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
+                        }} 
+                      />
+                    )}
+                    
+                    <Typography
+                      sx={{
+                        fontSize: '0.7rem',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        ml: 'auto'
+                      }}
+                    >
+                      {formatTimeAgo(lastComment.timestamp)}
+                    </Typography>
+                  </Box>
+                  
+                  {/* Текст комментария */}
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      lineHeight: 1.4,
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      wordBreak: 'break-word',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {lastComment.content}
+                  </Typography>
+                  
+                  {/* Изображение комментария (если есть) */}
+                  {lastComment.image && (
+                    <Box
+                      sx={{
+                        mt: 0.8,
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        maxWidth: 120,
+                        maxHeight: 80
+                      }}
+                    >
+                      <img
+                        src={lastComment.image}
+                        alt="Comment"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover'
+                        }}
+                        onError={safeImageError}
+                      />
+                    </Box>
+                  )}
+                  
+                  {/* Лайки комментария */}
+                  {lastComment.likes_count > 0 && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.8 }}>
+                      <Heart 
+                        size={12} 
+                        color={lastComment.user_liked ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.4)'} 
+                        fill={lastComment.user_liked ? theme.palette.primary.main : 'none'}
+                      />
+                      <Typography
+                        sx={{
+                          fontSize: '0.7rem',
+                          color: 'rgba(255, 255, 255, 0.6)'
+                        }}
+                      >
+                        {lastComment.likes_count}
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+              
+              {/* Индикатор "Показать все комментарии" */}
+              {(post?.total_comments_count > 1 || post?.comments_count > 1) && (
+                <Box
+                  sx={{
+                    mt: 1,
+                    pt: 1,
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      fontSize: '0.75rem',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      fontWeight: 500,
+                      '&:hover': {
+                        color: theme.palette.primary.main
+                      }
+                    }}
+                  >
+                    Показать все {(post?.total_comments_count || post?.comments_count) - 1} комментариев
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+          
+          {/* Скелетон загрузки последнего комментария */}
+          {lastCommentLoading && (
+            <Box
+              sx={{
+                mt: 1.5,
+                mb: 1.5,
+                p: 1.5,
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)'
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    flexShrink: 0
+                  }}
+                />
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                    <Box
+                      sx={{
+                        width: 80,
+                        height: 12,
+                        borderRadius: '6px',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        animation: 'pulse 1.5s ease-in-out infinite'
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        width: 50,
+                        height: 10,
+                        borderRadius: '5px',
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        animation: 'pulse 1.5s ease-in-out infinite',
+                        animationDelay: '0.2s'
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: 16,
+                      borderRadius: '8px',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      animation: 'pulse 1.5s ease-in-out infinite',
+                      animationDelay: '0.4s'
+                    }}
+                  />
+                </Box>
+              </Box>
             </Box>
           )}
           

@@ -459,7 +459,7 @@ const StreetBlacklistV1Page = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          backgroundColor: '#131313',
+          backgroundColor: '#080808',
           color: '#D0BCFF',
           position: 'relative',
           overflow: 'hidden',
