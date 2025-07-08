@@ -65,6 +65,7 @@ const SidebarNavigation = memo(({
       </Badge>
     ) : <Icon icon="tabler:mail" width="22" height="22" />,
     music: <Icon icon="tabler:music" width="22" height="22" />,
+    event: <Icon icon="tabler:flag" width="22" height="22" />,
     shop: <Icon icon="tabler:coins" width="22" height="22" />,
     inventory: <Icon icon="tabler:backpack" width="22" height="22" />,
     auction: <Icon icon="tabler:at" width="22" height="22" />,
@@ -290,6 +291,29 @@ const SidebarNavigation = memo(({
   
   const moreSection = useMemo(() => (
     <>
+      <NavButton
+        text="Ивент"
+        icon={icons.event}
+        path="https://k-connect.ru/street/blacklist"
+        active={false}
+        themeColor="#8aff8a"
+        target="_blank"
+        rel="noopener noreferrer"
+        component="a"
+        sx={{
+          '&:hover': {
+            backgroundColor: 'rgba(138, 255, 138, 0.1)',
+            borderColor: 'rgba(138, 255, 138, 0.3)',
+          },
+          '& .MuiListItemIcon-root': {
+            color: '#8aff8a !important',
+          },
+          '& .MuiListItemText-primary': {
+            color: '#8aff8a !important',
+          }
+        }}
+      />
+
       <MoreButton 
         text={t('sidebar.navigation.more.title')}
         icon={icons.more}

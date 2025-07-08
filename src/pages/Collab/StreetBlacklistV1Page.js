@@ -48,7 +48,8 @@ const StreetBlacklistV1Page = () => {
   const [formData, setFormData] = useState({
     nickname: '',
     car_name: '',
-    car_image: null
+    car_image: null,
+    tags: []
   });
   const [stats, setStats] = useState({
     total_participants: 0,
@@ -113,6 +114,7 @@ const StreetBlacklistV1Page = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('nickname', formData.nickname);
       formDataToSend.append('car_name', formData.car_name);
+      formDataToSend.append('tags', JSON.stringify(formData.tags));
       if (formData.car_image) {
         formDataToSend.append('car_image', formData.car_image);
       }
@@ -123,7 +125,7 @@ const StreetBlacklistV1Page = () => {
 
       if (response.data.success) {
         setAdminDialogOpen(false);
-        setFormData({ nickname: '', car_name: '', car_image: null });
+        setFormData({ nickname: '', car_name: '', car_image: null, tags: [] });
         fetchParticipants();
         fetchStats();
       }
@@ -138,6 +140,7 @@ const StreetBlacklistV1Page = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('nickname', formData.nickname);
       formDataToSend.append('car_name', formData.car_name);
+      formDataToSend.append('tags', JSON.stringify(formData.tags));
       if (formData.car_image) {
         formDataToSend.append('car_image', formData.car_image);
       }
@@ -149,7 +152,7 @@ const StreetBlacklistV1Page = () => {
       if (response.data.success) {
         setEditDialogOpen(false);
         setEditingParticipant(null);
-        setFormData({ nickname: '', car_name: '', car_image: null });
+        setFormData({ nickname: '', car_name: '', car_image: null, tags: [] });
         fetchParticipants();
       }
     } catch (err) {
@@ -197,13 +200,14 @@ const StreetBlacklistV1Page = () => {
     setFormData({
       nickname: participant.nickname,
       car_name: participant.car_name,
-      car_image: null
+      car_image: null,
+      tags: participant.tags
     });
     setEditDialogOpen(true);
   };
 
   const openAddDialog = () => {
-    setFormData({ nickname: '', car_name: '', car_image: null });
+    setFormData({ nickname: '', car_name: '', car_image: null, tags: [] });
     setAdminDialogOpen(true);
   };
 
@@ -431,6 +435,44 @@ const StreetBlacklistV1Page = () => {
       default:
         return `#${rank}`;
     }
+  };
+
+  // Функция для получения цвета тега
+  const getTagColor = (tag) => {
+    switch (tag) {
+      case 'дрифт':
+        return '#ff6b6b'; // Красный для дрифта
+      case 'спринт':
+        return '#4ecdc4'; // Бирюзовый для спринта
+      case 'тоге':
+        return '#45b7d1'; // Синий для тоге
+      default:
+        return '#95a5a6';
+    }
+  };
+
+  // Функция для получения иконки тега
+  const getTagIcon = (tag) => {
+    switch (tag) {
+      case 'дрифт':
+        return 'DR'; // Дрифт
+      case 'спринт':
+        return 'SP'; // Спринт
+      case 'тоге':
+        return 'TG'; // Тоге
+      default:
+        return 'RC';
+    }
+  };
+
+  // Функция для обработки изменения тегов
+  const handleTagChange = (tag) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.includes(tag)
+        ? prev.tags.filter(t => t !== tag)
+        : [...prev.tags, tag]
+    }));
   };
 
   return (
@@ -681,6 +723,41 @@ const StreetBlacklistV1Page = () => {
                         </Typography>
                       </Box>
 
+                      {/* Теги участника в правом верхнем углу */}
+                      {participant.tags && participant.tags.length > 0 && (
+                        <Box sx={{ 
+                          position: 'absolute', 
+                          top: 8, 
+                          left: 8, 
+                          zIndex: 2,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 0.5
+                        }}>
+                          {participant.tags.map((tag, index) => (
+                            <Box
+                              key={index}
+                              sx={{
+                                backgroundColor: `${getTagColor(tag)}20`,
+                                color: getTagColor(tag),
+                                border: `1px solid ${getTagColor(tag)}40`,
+                                borderRadius: 1,
+                                px: 1,
+                                py: 0.5,
+                                fontSize: '0.7rem',
+                                fontWeight: 700,
+                                textAlign: 'center',
+                                minWidth: '32px',
+                                backdropFilter: 'blur(10px)',
+                                boxShadow: `0 2px 8px ${getTagColor(tag)}30`
+                              }}
+                                                          >
+                                {getTagIcon(tag)}
+                              </Box>
+                          ))}
+                        </Box>
+                      )}
+
                       {/* Машина игрока */}
                       <Box sx={{ 
                         display: 'flex', 
@@ -922,6 +999,35 @@ const StreetBlacklistV1Page = () => {
               sx: { color: '#ffffffb0' }
             }}
           />
+          
+          {/* Выбор тегов */}
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" sx={{ color: '#ffffffb0', mb: 1 }}>
+              Стиль вождения:
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {['дрифт', 'спринт', 'тоге'].map((tag) => (
+                <Chip
+                  key={tag}
+                  label={`${getTagIcon(tag)} ${tag}`}
+                  clickable
+                  variant={formData.tags.includes(tag) ? "filled" : "outlined"}
+                  onClick={() => handleTagChange(tag)}
+                  sx={{
+                    backgroundColor: formData.tags.includes(tag) ? `${getTagColor(tag)}20` : 'transparent',
+                    color: formData.tags.includes(tag) ? getTagColor(tag) : '#ffffffb0',
+                    border: `1px solid ${getTagColor(tag)}40`,
+                    fontWeight: 600,
+                    fontSize: '0.8rem',
+                    '&:hover': {
+                      backgroundColor: `${getTagColor(tag)}30`,
+                    }
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+          
           <input
             type="file"
             accept="image/*"
@@ -996,6 +1102,35 @@ const StreetBlacklistV1Page = () => {
               sx: { color: '#ffffffb0' }
             }}
           />
+          
+          {/* Выбор тегов */}
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" sx={{ color: '#ffffffb0', mb: 1 }}>
+              Стиль вождения:
+            </Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {['дрифт', 'спринт', 'тоге'].map((tag) => (
+                <Chip
+                  key={tag}
+                  label={`${getTagIcon(tag)} ${tag}`}
+                  clickable
+                  variant={formData.tags.includes(tag) ? "filled" : "outlined"}
+                  onClick={() => handleTagChange(tag)}
+                  sx={{
+                    backgroundColor: formData.tags.includes(tag) ? `${getTagColor(tag)}20` : 'transparent',
+                    color: formData.tags.includes(tag) ? getTagColor(tag) : '#ffffffb0',
+                    border: `1px solid ${getTagColor(tag)}40`,
+                    fontWeight: 600,
+                    fontSize: '0.8rem',
+                    '&:hover': {
+                      backgroundColor: `${getTagColor(tag)}30`,
+                    }
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+          
           <input
             type="file"
             accept="image/*"

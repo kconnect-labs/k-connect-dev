@@ -148,14 +148,20 @@ const NavButton = ({
   ...rest 
 }) => {
 
-  const componentProps = path ? {
-    component: RouterLink,
-    to: path,
-    target,
-    rel
-  } : {
-    onClick
-  };
+  const componentProps = path ? 
+    (path.startsWith('http') ? {
+      component: 'a',
+      href: path,
+      target,
+      rel
+    } : {
+      component: RouterLink,
+      to: path,
+      target,
+      rel
+    }) : {
+      onClick
+    };
 
 
   const nestedStyles = nested ? {
