@@ -16,7 +16,7 @@ import SidebarFooter from './SidebarFooter';
 
 
 const SidebarContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(0, 0),
+  padding: 0,
   height: 'calc(100vh - 65px)',
   position: 'sticky',
   top: '55px',
@@ -27,6 +27,7 @@ const SidebarContainer = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
+  transition: 'all 0.3s ease',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': {
     width: '0px',
@@ -44,12 +45,10 @@ const SidebarContainer = styled(Paper)(({ theme }) => ({
     marginLeft: 'auto',
   },
   [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(1.2, 0.8),
     width: '220px',
   },
   [theme.breakpoints.down('md')]: {
     width: '210px',
-    padding: theme.spacing(1, 0.8),
   }
 }));
 

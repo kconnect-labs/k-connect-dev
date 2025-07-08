@@ -24,7 +24,6 @@ const NavItemStyled = styled(ListItem)(({ theme, active, isspecial, themecolor }
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    transform: 'translateX(3px) scale(1.02)',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
   },
   '&::before': {
