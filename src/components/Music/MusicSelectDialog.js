@@ -106,6 +106,8 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
   const [searchResults, setSearchResults] = useState([]);
   const [currentPlayingTrack, setCurrentPlayingTrack] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoadingAllTracks, setIsLoadingAllTracks] = useState(false);
+  const [isLoadingLikedTracks, setIsLoadingLikedTracks] = useState(false);
   const audioRef = React.useRef(new Audio());
   const lastSearchQuery = React.useRef('');
   
@@ -113,10 +115,34 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
   const { 
     tracks, 
     likedTracks,
-
     isLoading,
     searchTracks: contextSearchTracks,
+    forceLoadTracks,
   } = useMusic();
+  
+  
+  // Загружаем треки при открытии модалки, если они еще не загружены
+  useEffect(() => {
+    if (open) {
+      console.log('Загружаем треки при открытии модалки выбора музыки');
+      
+      // Загружаем все треки, если их нет
+      if (tracks.length === 0 && !isLoadingAllTracks && forceLoadTracks) {
+        setIsLoadingAllTracks(true);
+        forceLoadTracks('all').finally(() => {
+          setIsLoadingAllTracks(false);
+        });
+      }
+      
+      // Загружаем любимые треки, если их нет
+      if (likedTracks.length === 0 && !isLoadingLikedTracks && forceLoadTracks) {
+        setIsLoadingLikedTracks(true);
+        forceLoadTracks('liked').finally(() => {
+          setIsLoadingLikedTracks(false);
+        });
+      }
+    }
+  }, [open, tracks.length, likedTracks.length, isLoadingAllTracks, isLoadingLikedTracks, forceLoadTracks]);
   
   
   const stopAudio = () => {
@@ -161,27 +187,25 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
         setIsSearching(true);
         try {
           
+          // Сначала делаем локальный поиск по уже загруженным трекам
           const filteredTracks = tracks.filter(track => 
             track.title.toLowerCase().includes(query.toLowerCase()) ||
             track.artist.toLowerCase().includes(query.toLowerCase())
           );
           
-          
-          if (filteredTracks.length >= 5) {
-            setSearchResults(filteredTracks);
-          } else {
-            
-            try {
-              const response = await contextSearchTracks(query);
-              if (response && Array.isArray(response)) {
-                setSearchResults(response);
-              } else {
-                setSearchResults(filteredTracks); 
-              }
-            } catch (error) {
-              console.error('Error searching tracks from API:', error);
-              setSearchResults(filteredTracks); 
+          // Всегда делаем API поиск для получения полных результатов
+          try {
+            const response = await contextSearchTracks(query);
+            if (response && Array.isArray(response) && response.length > 0) {
+              setSearchResults(response);
+            } else {
+              // Если API не вернул результатов, используем локальный поиск
+              setSearchResults(filteredTracks);
             }
+          } catch (error) {
+            console.error('Error searching tracks from API:', error);
+            // При ошибке API используем локальный поиск
+            setSearchResults(filteredTracks);
           }
         } catch (error) {
           console.error('Error searching tracks:', error);
@@ -415,7 +439,11 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
           </Box>
         )}
         
-        {isLoading || isSearching ? (
+        {isSearching ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+            <CircularProgress size={30} />
+          </Box>
+        ) : (tabValue === 0 && isLoadingAllTracks) || (tabValue === 1 && isLoadingLikedTracks) ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
             <CircularProgress size={30} />
           </Box>
@@ -432,9 +460,39 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
               {searchQuery 
                 ? 'Ничего не найдено' 
                 : tabValue === 0 
-                  ? 'Нет доступных треков' 
-                  : 'У вас пока нет любимых треков'}
+                  ? (isLoadingAllTracks ? 'Загрузка треков...' : 'Нет доступных треков') 
+                  : (isLoadingLikedTracks ? 'Загрузка любимых треков...' : 'У вас пока нет любимых треков')}
             </Typography>
+            {!searchQuery && tabValue === 0 && !isLoadingAllTracks && tracks.length === 0 && (
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={() => {
+                  setIsLoadingAllTracks(true);
+                  forceLoadTracks && forceLoadTracks('all').finally(() => {
+                    setIsLoadingAllTracks(false);
+                  });
+                }}
+                sx={{ mt: 2 }}
+              >
+                Загрузить треки
+              </Button>
+            )}
+            {!searchQuery && tabValue === 1 && !isLoadingLikedTracks && likedTracks.length === 0 && (
+              <Button 
+                variant="outlined" 
+                size="small" 
+                onClick={() => {
+                  setIsLoadingLikedTracks(true);
+                  forceLoadTracks && forceLoadTracks('liked').finally(() => {
+                    setIsLoadingLikedTracks(false);
+                  });
+                }}
+                sx={{ mt: 2 }}
+              >
+                Загрузить любимые треки
+              </Button>
+            )}
           </Box>
         ) : (
           <List disablePadding>

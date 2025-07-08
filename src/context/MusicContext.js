@@ -137,10 +137,11 @@ export const MusicProvider = ({ children }) => {
       const currentPath = window.location.pathname;
       const isMusicPage = currentPath.startsWith('/music');
       
-      if (!isMusicPage) {
-        console.log('Не на музыкальной странице, пропускаем загрузку треков');
-        return;
-      }
+      // Убираем проверку на музыкальную страницу, чтобы треки загружались всегда
+      // if (!isMusicPage) {
+      //   console.log('Не на музыкальной странице, пропускаем загрузку треков');
+      //   return;
+      // }
       
       
       if (isLoadingRef.current === false && (
