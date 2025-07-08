@@ -17,7 +17,8 @@ const VerifiedBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 22 : 19,
-      ml: 0.5,
+
+      mt: '5px',
       color: props.color,
       filter: `drop-shadow(0 0 6px ${props.color}80)`,
       cursor: props.onClick ? 'pointer' : 'default',
@@ -44,7 +45,8 @@ const OfficialBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 22 : 19,
-      ml: 0.5,
+
+      mt: '5px',
       color: props.color,
       filter: `drop-shadow(0 0 6px ${props.color}80)`,
       cursor: props.onClick ? 'pointer' : 'default',
@@ -71,7 +73,8 @@ const VIPBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 22 : 19,
-      ml: 0.5,
+
+      mt: '5px',
       color: props.color,
       filter: `drop-shadow(0 0 6px ${props.color}80)`,
       cursor: props.onClick ? 'pointer' : 'default',
@@ -99,7 +102,8 @@ const ModeratorBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 22 : 19,
-      ml: 0.5,
+
+      mt: '5px',
       color: props.color,
       filter: `drop-shadow(0 0 6px ${props.color}80)`,
       cursor: props.onClick ? 'pointer' : 'default',
@@ -127,7 +131,8 @@ const SupportBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 22 : 19,
-      ml: 0.5,
+
+      mt: '5px',
       color: props.color,
       filter: `drop-shadow(0 0 6px ${props.color}80)`,
       cursor: props.onClick ? 'pointer' : 'default',
@@ -155,7 +160,8 @@ const ChannelVerifiedBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 20 : 18,
-      ml: 0.5,
+
+      mt: '5px',
       color: '#1e88e5',
       filter: 'drop-shadow(0 0 8px rgba(30, 136, 229, 0.6))',
       cursor: props.onClick ? 'pointer' : 'default',
@@ -183,7 +189,8 @@ const ChannelPremiumBadge = React.forwardRef((props, ref) => (
     onTouchStart={props.onTouchStart}
     sx={{ 
       fontSize: props.size === 'small' ? 20 : 18,
-      ml: 0.5,
+
+      mt: '5px',
       color: '#7c4dff',
       filter: 'drop-shadow(0 0 8px rgba(124, 77, 255, 0.6))',
       cursor: props.onClick ? 'pointer' : 'default',

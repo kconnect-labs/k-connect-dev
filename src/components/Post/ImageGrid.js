@@ -39,7 +39,7 @@ const BackgroundImage = styled('div')({
 
 const Image = styled('img')(({ isSingle, isMobile }) => ({
   maxWidth: '100%',
-  maxHeight: isSingle ? (isMobile ? '600px' : '450px') : '100%',
+  maxHeight: isSingle ? (isMobile ? '620px' : '620px') : '100%',
   width: 'auto',
   height: isSingle ? '100%' : 'auto',
   objectFit: isSingle ? 'contain' : 'contain',
@@ -75,7 +75,7 @@ const ImageOverlay = styled(Box)({
   }
 });
 
-const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, hideOverlay = false, miniMode = false, maxHeight = 400 }) => {
+const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, hideOverlay = false, miniMode = false, maxHeight = 620 }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [optimizedImages, setOptimizedImages] = useState([]);
@@ -102,7 +102,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         return {
           gridTemplateColumns: '1fr',
           gridTemplateRows: 'auto',
-          maxHeight: isMobile ? '600px' : '450px',
+          maxHeight: isMobile ? '620px' : '620px',
           height: 'auto'
         };
       case 2:
@@ -430,7 +430,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
           onClick={(event) => openLightbox(0, event)}
           sx={{
             height: miniMode ? '150px' : 'auto',
-            maxHeight: miniMode ? '150px' : maxHeight,
+            maxHeight: miniMode ? '150px' : '620px',
           }}
         >
           {renderImage(singleImage, 0, true)}

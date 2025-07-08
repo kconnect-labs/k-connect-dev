@@ -1798,8 +1798,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 sx={{ 
                   width: 40, 
                   height: 40,
-                  mr: 1.5,
-                  border: '2px solid #D0BCFF'
+                  mr: 1.5
                 }}
               />
               <Box sx={{ flex: 1 , whiteSpace: 'nowrap' }}>
@@ -1999,8 +1998,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     width: 18, 
                     height: 18, 
                     ml: 0.5,
-                    mr: 0.5,
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
+                    mr: 0.5
                   }}
                 />
                 <Typography 
@@ -2520,7 +2518,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                           sx={{
                             width: 22,
                             height: 22,
-                            border: '1.5px solid #fff',
                             ml: index > 0 ? -0.7 : 0,
                             zIndex: 3 - index,
                             background: '#eee',
@@ -2787,8 +2784,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 sx={{ 
                   width: 35, 
                   height: 35, 
-                  mr: 1.5,
-                  border: '2px solid rgba(100, 90, 140, 0.4)'
+                  mr: 1.5
                 }}
               >
                 {post?.user?.name ? post?.user?.name[0] : '?'}
