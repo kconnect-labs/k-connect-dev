@@ -11,20 +11,19 @@ import { Link as RouterLink } from 'react-router-dom';
 
 
 const NavItemStyled = styled(ListItem)(({ theme, active, isspecial, themecolor }) => ({
-  borderRadius: theme.spacing(1.5),
+  borderRadius: '8px',
   marginBottom: theme.spacing(0.5),
-  padding: theme.spacing(0.8, 1.4),
-  backgroundColor: active ? 
-    'rgba(255, 255, 255, 0.1)' : 
-    'transparent',
+  padding: theme.spacing(0.8, 1.2),
+  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
+  WebkitBackdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
   position: 'relative',
   overflow: 'hidden',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: active ? 
-      'rgba(255, 255, 255, 0.15)' : 
-      'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     transform: 'translateX(3px) scale(1.02)',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
   },
@@ -46,11 +45,11 @@ const NavItemStyled = styled(ListItem)(({ theme, active, isspecial, themecolor }
     top: '20%',
   },
   [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(0.7, 1.2),
+    padding: theme.spacing(0.7, 1),
     marginBottom: theme.spacing(0.4),
   },
   [theme.breakpoints.down('md')]: {
-    padding: theme.spacing(0.6, 1.1),
+    padding: theme.spacing(0.6, 0.9),
     marginBottom: theme.spacing(0.3),
   }
 }));

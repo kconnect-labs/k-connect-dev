@@ -19,7 +19,6 @@ const NestedList = styled(List)(({ theme }) => ({
 
 // Minimal navigation container
 const NavigationContainer = styled(List)(({ theme }) => ({
-  padding: theme.spacing(1),
   '& .MuiListItem-root': {
     marginBottom: theme.spacing(0.25),
     borderRadius: theme.spacing(1),

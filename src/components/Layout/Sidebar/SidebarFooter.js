@@ -5,94 +5,59 @@ import { Icon } from '@iconify/react';
 
 // Enhanced footer container with better styling
 const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
-  marginTop: 'auto',
-  padding: theme.spacing(2, 1.5, 1.5),
+  padding: theme.spacing(1.5, 1, 1),
   textAlign: 'center',
   position: 'relative',
-  borderRadius: theme.spacing(1, 1, 0, 0),
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: '10%',
-    right: '10%',
-    height: '2px',
-    borderRadius: '1px',
-  },
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: theme.spacing(1, 1, 0, 0),
-    pointerEvents: 'none',
-  },
   [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(1.5, 1, 1),
+    padding: theme.spacing(1, 0.8, 0.8),
   }
 }));
 
 // Enhanced typography with better styling
 const FooterTypography = styled(Typography)(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-  fontSize: {
-    xs: '0.65rem',
-    sm: '0.7rem',
-    md: '0.75rem'
-  },
+  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)',
+  fontSize: '0.7rem',
   fontWeight: 400,
-  letterSpacing: '0.3px',
+  letterSpacing: '0.2px',
   transition: 'color 0.2s ease-in-out',
   '&:hover': {
-    color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
+    color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
   }
 }));
 
 // Version chip with enhanced styling
 const VersionChip = styled(Chip)(({ theme, themecolor }) => ({
-  background: `linear-gradient(135deg, ${themecolor || theme.palette.primary.main}20, ${themecolor || theme.palette.primary.main}10)`,
-  border: `1px solid ${themecolor || theme.palette.primary.main}30`,
-  color: themecolor || theme.palette.primary.main,
-  fontWeight: 600,
-  fontSize: '0.7rem',
-  height: '24px',
+  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+  border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
+  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+  fontWeight: 500,
+  fontSize: '0.65rem',
+  height: '20px',
   '& .MuiChip-label': {
-    padding: theme.spacing(0, 1),
+    padding: theme.spacing(0, 0.8),
   },
   '&:hover': {
-    background: `linear-gradient(135deg, ${themecolor || theme.palette.primary.main}30, ${themecolor || theme.palette.primary.main}20)`,
-    transform: 'translateY(-1px)',
-    boxShadow: `0 2px 8px ${themecolor || theme.palette.primary.main}20`,
+    background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
   },
   transition: 'all 0.2s ease-in-out',
 }));
 
 // Enhanced title typography
 const FooterTitle = styled(Typography)(({ theme, themecolor }) => ({
-  fontWeight: 600,
-  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)',
-  marginBottom: theme.spacing(1),
-  letterSpacing: '0.5px',
-  fontSize: {
-    xs: '0.75rem',
-    sm: '0.8rem',
-    md: '0.85rem',
-  },
-  textShadow: theme.palette.mode === 'dark' 
-    ? `0 1px 2px ${themecolor || theme.palette.primary.main}20`
-    : 'none',
+  fontWeight: 500,
+  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+  marginBottom: theme.spacing(0.8),
+  letterSpacing: '0.3px',
+  fontSize: '0.75rem',
 }));
 
 // Contact info container
 const ContactInfo = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(0.3),
-  marginTop: theme.spacing(1),
-  padding: theme.spacing(1, 0),
-  borderTop: `1px solid ${theme.palette.divider}30`,
+  gap: theme.spacing(0.2),
+  marginTop: theme.spacing(0.8),
+  padding: theme.spacing(0.5, 0),
 }));
 
 const areEqual = (prevProps, nextProps) => {

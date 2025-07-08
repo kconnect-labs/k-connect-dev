@@ -9,7 +9,6 @@ import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../../context/AuthContext';
 import { ThemeSettingsContext } from '../../../App';
 import { SidebarProvider } from '../../../context/SidebarContext';
-import { LanguageProvider } from '../../../context/LanguageContext';
 import axios from 'axios';
 import SidebarNavigation from './SidebarNavigation';
 import UserProfileBlock from './UserProfileBlock';
@@ -17,22 +16,17 @@ import SidebarFooter from './SidebarFooter';
 
 
 const SidebarContainer = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2, 1.5),
-  borderRadius: theme.spacing(2),
+  padding: theme.spacing(0, 0),
   height: 'calc(100vh - 65px)',
   position: 'sticky',
   top: '55px',
   overflowY: 'auto',
   overflowX: 'hidden',
-  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.07)',
-  background: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
+  boxShadow: 'none',
+  background: 'transparent',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  transition: 'all 0.3s ease',
   scrollbarWidth: 'none',
   '&::-webkit-scrollbar': {
     width: '0px',
@@ -44,21 +38,18 @@ const SidebarContainer = styled(Paper)(({ theme }) => ({
   '&::-webkit-scrollbar-thumb': {
     backgroundColor: 'transparent',
   },
-  '&:hover': {
-    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
-  },
   [theme.breakpoints.up('md')]: {
     width: '230px',
     marginRight: 0,
     marginLeft: 'auto',
   },
   [theme.breakpoints.down('lg')]: {
-    padding: theme.spacing(1.5, 1.2),
+    padding: theme.spacing(1.2, 0.8),
     width: '220px',
   },
   [theme.breakpoints.down('md')]: {
     width: '210px',
-    padding: theme.spacing(1.2, 1),
+    padding: theme.spacing(1, 0.8),
   }
 }));
 
@@ -86,8 +77,6 @@ const Sidebar = memo(({ isMobile }) => {
 
     const sidebarStyle = {
       color: sidebarTextColor,
-      boxShadow: `0 4px 15px ${alpha('#000000', 0.07)}`,
-      borderColor: alpha(sidebarTextColor, 0.08)
     };
 
     return {

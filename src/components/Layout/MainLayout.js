@@ -7,8 +7,6 @@ import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
 import { MobilePlayer, DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
-import LanguageSwitcher from '../LanguageSwitcher';
-
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
