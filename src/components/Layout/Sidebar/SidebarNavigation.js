@@ -55,19 +55,19 @@ const SidebarNavigation = memo(({
   }, [location.pathname]);
   
   const icons = useMemo(() => ({
-    home: <Icon icon="material-symbols:home-outline" width="22" height="22" />,
+    home: <Icon icon="solar:home-2-outline" width="22" height="22" />,
     messenger: totalUnread>0 ? (
       <Badge overlap="circular" badgeContent={totalUnread>99? '99+': totalUnread}
         sx={{ '& .MuiBadge-badge': { backgroundColor:'#2f2f2f', border:'1px solid #b1b1b1', color:'#fff' } }}
       >
-        <Icon icon="tabler:mail" width="22" height="22" />
+        <Icon icon="solar:chat-round-dots-outline" width="22" height="22" />
       </Badge>
-    ) : <Icon icon="tabler:mail" width="22" height="22" />,
-    music: <Icon icon="tabler:music" width="22" height="22" />,
-    shop: <Icon icon="tabler:coins" width="22" height="22" />,
-    inventory: <Icon icon="tabler:backpack" width="22" height="22" />,
-    auction: <Icon icon="tabler:at" width="22" height="22" />,
-    badge: <Icon icon="tabler:award" width="22" height="22" />,
+    ) : <Icon icon="solar:chat-round-dots-outline" width="22" height="22" />,
+    music: <Icon icon="solar:music-notes-outline" width="22" height="22" />,
+    shop: <Icon icon="solar:shop-2-outline" width="22" height="22" />,
+    inventory: <Icon icon="solar:bag-4-outline" width="22" height="22" />,
+    auction: <Icon icon="solar:at-outline" width="22" height="22" />,
+    badge: <Icon icon="solar:medal-star-outline" width="22" height="22" />,
     person: <Icon icon="solar:user-outline" width="20" height="20" />,
     people: <Icon icon="solar:users-group-two-rounded-outline" width="20" height="20" />,
     channels: <Icon icon="solar:users-group-rounded-outline" width="20" height="20" />,
