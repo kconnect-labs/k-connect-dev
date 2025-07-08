@@ -1,6 +1,5 @@
 import React, { memo, useMemo, useCallback, useContext } from 'react';
 import { List, Collapse, styled, Box } from '@mui/material';
-import { Icon } from '@iconify/react';
 import { useLocation } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -10,6 +9,32 @@ import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 import Badge from '@mui/material/Badge';
 import { useMessenger } from '../../../contexts/MessengerContext';
+import { 
+  IoHomeOutline, 
+  IoChatbubblesOutline, 
+  IoMusicalNotesOutline, 
+  IoBagOutline, 
+  IoAtOutline, 
+  IoMedalOutline, 
+  IoPersonOutline, 
+  IoPeopleOutline, 
+  IoPeopleCircleOutline, 
+  IoSearchOutline, 
+  IoShieldOutline, 
+  IoShieldCheckmarkOutline, 
+  IoGameControllerOutline, 
+  IoStarOutline, 
+  IoEllipsisHorizontalOutline, 
+  IoArrowUpOutline, 
+  IoArrowDownOutline, 
+  IoBarChartOutline, 
+  IoBugOutline, 
+  IoDocumentTextOutline, 
+  IoCodeOutline, 
+  IoStorefrontOutline, 
+  IoCubeOutline, 
+  IoHappyOutline 
+} from 'react-icons/io5';
 
 // Clean, minimal nested list styling
 const NestedList = styled(List)(({ theme }) => ({
@@ -55,37 +80,37 @@ const SidebarNavigation = memo(({
   }, [location.pathname]);
   
   const icons = useMemo(() => ({
-    home: <Icon icon="solar:home-2-outline" width="22" height="22" />,
+    home: <IoHomeOutline size={22} />,
     messenger: totalUnread>0 ? (
       <Badge overlap="circular" badgeContent={totalUnread>99? '99+': totalUnread}
         sx={{ '& .MuiBadge-badge': { backgroundColor:'#2f2f2f', border:'1px solid #b1b1b1', color:'#fff' } }}
       >
-        <Icon icon="solar:chat-round-dots-outline" width="22" height="22" />
+        <IoChatbubblesOutline size={22} />
       </Badge>
-    ) : <Icon icon="solar:chat-round-dots-outline" width="22" height="22" />,
-    music: <Icon icon="solar:music-notes-outline" width="22" height="22" />,
-    shop: <Icon icon="solar:shop-2-outline" width="22" height="22" />,
-    inventory: <Icon icon="solar:bag-4-outline" width="22" height="22" />,
-    auction: <Icon icon="solar:at-outline" width="22" height="22" />,
-    badge: <Icon icon="solar:medal-star-outline" width="22" height="22" />,
-    person: <Icon icon="solar:user-outline" width="20" height="20" />,
-    people: <Icon icon="solar:users-group-two-rounded-outline" width="20" height="20" />,
-    channels: <Icon icon="solar:users-group-rounded-outline" width="20" height="20" />,
-    search: <Icon icon="solar:magnifer-outline" width="20" height="20" />,
-    admin: <Icon icon="solar:shield-user-outline" width="20" height="20" />,
-    moderator: <Icon icon="solar:shield-star-outline" width="20" height="20" />,
-    games: <Icon icon="solar:gamepad-outline" width="20" height="20" />,
-    subscription: <Icon icon="solar:crown-outline" width="20" height="20" />,
-    more: <Icon icon="solar:menu-dots-outline" width="20" height="20" />,
-    arrowUp: <Icon icon="solar:alt-arrow-up-outline" width="20" height="20" />,
-    arrowDown: <Icon icon="solar:alt-arrow-down-outline" width="20" height="20" />,
-    leaderboard: <Icon icon="solar:chart-outline" width="20" height="20" />,
-    bug: <Icon icon="solar:bug-outline" width="20" height="20" />,
-    rules: <Icon icon="solar:document-text-outline" width="20" height="20" />,
-    api: <Icon icon="solar:code-outline" width="20" height="20" />,
-    marketplace: <Icon icon="solar:shop-2-outline" width="20" height="20" />,
-    pack: <Icon icon="solar:box-outline" width="20" height="20" />,
-    sticker: <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />,
+    ) : <IoChatbubblesOutline size={22} />,
+    music: <IoMusicalNotesOutline size={22} />,
+    shop: <IoBagOutline size={22} />,
+    inventory: <IoBagOutline size={22} />,
+    auction: <IoAtOutline size={22} />,
+    badge: <IoMedalOutline size={22} />,
+    person: <IoPersonOutline size={20} />,
+    people: <IoPeopleOutline size={20} />,
+    channels: <IoPeopleCircleOutline size={20} />,
+    search: <IoSearchOutline size={20} />,
+    admin: <IoShieldOutline size={20} />,
+    moderator: <IoShieldCheckmarkOutline size={20} />,
+    games: <IoGameControllerOutline size={20} />,
+         subscription: <IoStarOutline size={20} />,
+    more: <IoEllipsisHorizontalOutline size={20} />,
+    arrowUp: <IoArrowUpOutline size={20} />,
+    arrowDown: <IoArrowDownOutline size={20} />,
+    leaderboard: <IoBarChartOutline size={20} />,
+    bug: <IoBugOutline size={20} />,
+    rules: <IoDocumentTextOutline size={20} />,
+    api: <IoCodeOutline size={20} />,
+    marketplace: <IoStorefrontOutline size={20} />,
+         pack: <IoBagOutline size={20} />,
+    sticker: <IoHappyOutline size={20} />,
   }), [totalUnread]);
   
   const mainMenu = useMemo(() => (

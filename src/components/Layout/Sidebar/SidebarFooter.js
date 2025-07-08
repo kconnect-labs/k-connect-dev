@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Box, Typography, styled, useTheme, Chip } from '@mui/material';
 import { useLanguage } from '../../../context/LanguageContext';
-import { Icon } from '@iconify/react';
+import { IoStar } from 'react-icons/io5';
 
 // Enhanced footer container with better styling
 const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
@@ -79,7 +79,7 @@ const SidebarFooter = ({ primaryColor }) => {
           label="v2.9" 
           size="small" 
           themecolor={primaryColor}
-          icon={<Icon icon="solar:star-bold" width="12" height="12" />}
+          icon={<IoStar size={16} />}
         />
         
         <ContactInfo>
