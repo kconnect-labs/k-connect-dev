@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, styled, useTheme, useMediaQuery, IconButton, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
+  height: '100%',
   borderRadius: '8px',
   overflow: 'hidden',
   cursor: 'zoom-in',
@@ -27,52 +24,28 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const CarouselContainer = styled(Box)(({ theme, isMobile }) => ({
+const BackgroundImage = styled('div')({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  filter: 'blur(10px)',
+  opacity: 0.5,
+  transform: 'scale(1.1)', 
+});
+
+const Image = styled('img')(({ isSingle, isMobile }) => ({
+  maxWidth: '100%',
+  maxHeight: isSingle ? (isMobile ? '600px' : '450px') : '100%',
+  width: 'auto',
+  height: isSingle ? '100%' : 'auto',
+  objectFit: isSingle ? 'contain' : 'contain',
   position: 'relative',
-  width: '100%',
-  borderRadius: '8px',
-  overflow: 'hidden',
-  backgroundColor: '#11111C',
-}));
-
-const CarouselImage = styled('img')(({ isMobile }) => ({
-  width: '100%',
-  maxHeight: '600px',
-  objectFit: 'contain',
+  zIndex: 2,
   display: 'block',
-  transition: 'opacity 0.3s ease',
-}));
-
-const CarouselButton = styled(IconButton)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  transform: 'translateY(-50%)',
-  backgroundColor: 'rgba(20, 20, 20, 0.2)',
-  backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  color: 'white',
-  '&:hover': {
-    backgroundColor: 'rgba(27, 27, 27, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-  },
-  zIndex: 10,
-  width: 44,
-  height: 44,
-  borderRadius: '50%',
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-}));
-
-const ImageCounter = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '10px',
-  right: '10px',
-  backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  color: 'white',
-  padding: '4px 8px',
-  borderRadius: '12px',
-  fontSize: '0.8rem',
-  fontWeight: 'bold',
-  zIndex: 10,
 }));
 
 const ImageOverlay = styled(Box)({
@@ -103,26 +76,107 @@ const ImageOverlay = styled(Box)({
 });
 
 const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, hideOverlay = false, miniMode = false, maxHeight = 400 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [optimizedImages, setOptimizedImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorImages, setErrorImages] = useState({});
-  const [imageDimensions, setImageDimensions] = useState({});
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
   
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const carouselRef = useRef(null);
   
   const imageArray = Array.isArray(images) 
     ? images.filter(Boolean) 
     : (typeof images === 'string' && images ? [images] : []);
   
-  if (imageArray.length === 0) {
+  const limitedImages = imageArray.slice(0, 9);
+  const remainingCount = imageArray.length - 9;
+  
+  if (limitedImages.length === 0) {
     return null;
   }
+  
+  const getGridLayout = (count, isMobile = false) => {
+    switch (count) {
+      case 1:
+        return {
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: 'auto',
+          maxHeight: isMobile ? '600px' : '450px',
+          height: 'auto'
+        };
+      case 2:
+        return {
+          gridTemplateColumns: '1fr 1fr',
+          gridTemplateRows: '350px',
+          maxHeight: '350px'
+        };
+      case 3:
+        return {
+          gridTemplateColumns: '2fr 1fr',
+          gridTemplateRows: '200px 200px',
+          gridTemplateAreas: '"img1 img2" "img1 img3"',
+          maxHeight: '400px'
+        };
+      case 4:
+        return {
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gridTemplateRows: 'repeat(2, 200px)',
+          gridTemplateAreas: '"img1 img2" "img3 img4"',
+          maxHeight: '400px'
+        };
+      case 5:
+        return {
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: '200px 200px',
+          gridTemplateAreas: '"img1 img1 img2" "img3 img4 img5"',
+          maxHeight: '400px'
+        };
+      case 6:
+        return {
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: '180px 180px',
+          gridTemplateAreas: '"img1 img2 img3" "img4 img5 img6"',
+          maxHeight: '360px'
+        };
+      case 7:
+        return {
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: 'repeat(3, 160px)',
+          gridTemplateAreas: '"img1 img1 img2" "img3 img4 img5" "img6 img7 img7"',
+          maxHeight: '480px'
+        };
+      case 8:
+        return {
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateRows: 'repeat(2, 180px)',
+          gridTemplateAreas: '"img1 img2 img3 img4" "img5 img6 img7 img8"',
+          maxHeight: '360px'
+        };
+      case 9:
+        return {
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateRows: 'repeat(3, 140px)',
+          gridTemplateAreas: '"img1 img2 img3" "img4 img5 img6" "img7 img8 img9"',
+          maxHeight: '420px'
+        };
+      default:
+        if (count > 9) {
+          const columns = count >= 12 ? 4 : 3;
+          const rows = Math.ceil(count / columns);
+          return {
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gridTemplateRows: `repeat(${rows}, ${500 / rows}px)`,
+            maxHeight: `${rows * (500 / rows)}px`
+          };
+        }
+        return {
+          gridTemplateColumns: '1fr',
+          gridTemplateRows: '300px',
+          maxHeight: isMobile ? '600px' : '450px'
+        };
+    }
+  };
 
   const formatImageUrl = (url) => {
     if (!url) return '';
@@ -158,61 +212,6 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     return `${url}${url.includes('?') ? '&' : '?'}format=${format}`;
   };
 
-  // Функции для конвертации цветов
-  const rgbToHsl = (r, g, b) => {
-    r /= 255;
-    g /= 255;
-    b /= 255;
-
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-
-    if (max === min) {
-      h = s = 0;
-    } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
-      }
-      h /= 6;
-    }
-
-    return [h * 360, s * 100, l * 100];
-  };
-
-  const hslToRgb = (h, s, l) => {
-    h /= 360;
-    s /= 100;
-    l /= 100;
-
-    let r, g, b;
-
-    if (s === 0) {
-      r = g = b = l;
-    } else {
-      const hue2rgb = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1/6) return p + (q - p) * 6 * t;
-        if (t < 1/2) return q;
-        if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-        return p;
-      };
-
-      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      const p = 2 * l - q;
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
-    }
-
-    return [r * 255, g * 255, b * 255];
-  };
-
   useEffect(() => {
     const loadOptimizedImages = async () => {
       if (!images || images.length === 0) {
@@ -228,7 +227,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         console.log('WebP support detected:', webpSupported);
         
         const optimizedResults = await Promise.all(
-          imageArray.map(async (imageUrl) => {
+          limitedImages.map(async (imageUrl) => {
             let formattedUrl = formatImageUrl(imageUrl);
             
             if (webpSupported && formattedUrl.startsWith('/static/')) {
@@ -250,24 +249,13 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         );
         
         setOptimizedImages(optimizedResults);
-        
-        // Загружаем размеры всех изображений
-        await Promise.all(
-          imageArray.map((imageUrl, index) => loadImageDimensions(imageUrl, index))
-        );
-        
       } catch (error) {
         console.error('Error optimizing images:', error);
         
-        setOptimizedImages(imageArray.map(url => ({
+        setOptimizedImages(limitedImages.map(url => ({
           src: formatImageUrl(url),
           originalSrc: formatImageUrl(url)
         })));
-        
-        // Загружаем размеры даже при ошибке оптимизации
-        await Promise.all(
-          imageArray.map((imageUrl, index) => loadImageDimensions(imageUrl, index))
-        );
       } finally {
         setLoading(false);
       }
@@ -276,107 +264,23 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     loadOptimizedImages();
   }, [images]);
 
-  const getOptimizedImageUrl = (url) => {
+  const getOptimizedImageUrl = (url, isSingle = false) => {
+    const width = isSingle ? 1200 : 600;
+    const height = isSingle ? 900 : 600;
+    
     if (url.startsWith('http')) {
       return url;
     }
     
     if (url.includes('/static/uploads/')) {
-      return `${url}?width=1200&height=800&optimize=true`;
+      return `${url}?width=${width}&height=${height}&optimize=true`;
     }
     
     return url;
   };
 
-  const loadImageDimensions = (url, index) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const aspectRatio = img.width / img.height;
-        const maxWidth = isMobile ? 400 : 600;
-        const maxHeight = 600;
-        
-        let calculatedHeight;
-        if (aspectRatio > 1) {
-          // Широкая фотография
-          calculatedHeight = maxWidth / aspectRatio;
-        } else {
-          // Высокая фотография
-          calculatedHeight = Math.min(maxHeight, maxWidth / aspectRatio);
-        }
-        
-        // Извлекаем доминирующий цвет
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 50;
-        canvas.height = 50;
-        ctx.drawImage(img, 0, 0, 50, 50);
-        const imageData = ctx.getImageData(0, 0, 50, 50);
-        const data = imageData.data;
-        
-        let r = 0, g = 0, b = 0;
-        let count = 0;
-        
-        // Анализируем каждый пиксель
-        for (let i = 0; i < data.length; i += 4) {
-          const pixelR = data[i];
-          const pixelG = data[i + 1];
-          const pixelB = data[i + 2];
-          
-          // Игнорируем слишком темные и слишком светлые пиксели
-          const brightness = (pixelR + pixelG + pixelB) / 3;
-          if (brightness > 30 && brightness < 220) {
-            r += pixelR;
-            g += pixelG;
-            b += pixelB;
-            count++;
-          }
-        }
-        
-        // Вычисляем средний цвет
-        if (count > 0) {
-          r = Math.round(r / count);
-          g = Math.round(g / count);
-          b = Math.round(b / count);
-        } else {
-          // Если не нашли подходящих пикселей, берем средний цвет
-          r = Math.round(data.reduce((sum, val, i) => i % 4 === 0 ? sum + val : sum, 0) / (data.length / 4));
-          g = Math.round(data.reduce((sum, val, i) => i % 4 === 1 ? sum + val : sum, 0) / (data.length / 4));
-          b = Math.round(data.reduce((sum, val, i) => i % 4 === 2 ? sum + val : sum, 0) / (data.length / 4));
-        }
-        
-        // Делаем цвет более насыщенным
-        const hsl = rgbToHsl(r, g, b);
-        hsl[1] = Math.min(100, hsl[1] * 1.5); // Увеличиваем насыщенность
-        const [newR, newG, newB] = hslToRgb(hsl[0], hsl[1], hsl[2]);
-        
-        setImageDimensions(prev => ({
-          ...prev,
-          [index]: {
-            width: img.width,
-            height: img.height,
-            aspectRatio,
-            calculatedHeight: Math.min(calculatedHeight, maxHeight),
-            dominantColor: `rgb(${Math.round(newR)}, ${Math.round(newG)}, ${Math.round(newB)})`
-          }
-        }));
-        resolve();
-      };
-      img.onerror = () => {
-        setImageDimensions(prev => ({
-          ...prev,
-          [index]: {
-            calculatedHeight: 600,
-            dominantColor: '#11111C'
-          }
-        }));
-        resolve();
-      };
-      img.src = formatImageUrl(url);
-    });
-  };
-
   const openLightbox = (index, event) => {
+    
     if (event) {
       event.stopPropagation();
     }
@@ -393,57 +297,46 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     setLightboxOpen(false);
   };
 
-  const nextImage = () => {
-    setSelectedIndex((prev) => (prev + 1) % imageArray.length);
-  };
-
-  const prevImage = () => {
-    setSelectedIndex((prev) => (prev - 1 + imageArray.length) % imageArray.length);
-  };
-
-  // Функции для свайпов
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches ? e.targetTouches[0].clientX : e.clientX);
-  };
-
-  const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches ? e.targetTouches[0].clientX : e.clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+  const getCellGridArea = (index, count) => {
+    if (count === 1) return '';
     
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && imageArray.length > 1) {
-      nextImage();
+    if (count === 2) {
+      return index === 0 ? 'span 1 / span 1 / auto / auto' : 'span 1 / span 1 / auto / auto';
     }
-    if (isRightSwipe && imageArray.length > 1) {
-      prevImage();
+    
+    if (count === 3) {
+      if (index === 0) return 'span 2 / span 1 / auto / auto';
+      return 'span 1 / span 1 / auto / auto';
     }
-  };
-
-  // Функции для drag мыши
-  const onMouseDown = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.clientX);
-  };
-
-  const onMouseMove = (e) => {
-    if (touchStart !== null) {
-      setTouchEnd(e.clientX);
+    
+    if (count === 4) {
+      return 'span 1 / span 1 / auto / auto';
     }
-  };
-
-  const onMouseUp = () => {
-    if (touchStart !== null && touchEnd !== null) {
-      onTouchEnd();
+    
+    if (count === 5) {
+      if (index === 0) return 'span 1 / span 2 / auto / auto';
+      return 'span 1 / span 1 / auto / auto';
     }
-    setTouchStart(null);
-    setTouchEnd(null);
+    
+    if (count === 6) {
+      return 'span 1 / span 1 / auto / auto';
+    }
+    
+    if (count === 7) {
+      if (index === 0) return 'span 1 / span 2 / auto / auto';
+      if (index === 6) return 'span 1 / span 2 / auto / auto';
+      return 'span 1 / span 1 / auto / auto';
+    }
+    
+    if (count === 8) {
+      return 'span 1 / span 1 / auto / auto';
+    }
+    
+    if (count === 9) {
+      return 'span 1 / span 1 / auto / auto';
+    }
+    
+    return '';
   };
 
   const handleImageError = (url, index) => {
@@ -457,11 +350,9 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     }
   };
 
-  const renderImage = (image, index) => {
+  const renderImage = (image, index, isSingle) => {
     const imageUrl = formatImageUrl(image);
-    const optimizedUrl = getOptimizedImageUrl(imageUrl);
-    const imageDim = imageDimensions[index];
-    const calculatedHeight = imageDim?.calculatedHeight || 600;
+    const optimizedUrl = getOptimizedImageUrl(imageUrl, isSingle);
     
     const hasError = errorImages[imageUrl];
     
@@ -473,8 +364,9 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
             alignItems: 'center',
             justifyContent: 'center',
             width: '100%',
-            maxHeight: `${calculatedHeight}px`,
+            height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            borderRadius: '8px',
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '0.8rem',
             padding: '10px',
@@ -487,85 +379,66 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     }
     
     return (
-      <CarouselImage
-        src={optimizedUrl}
-        alt={`Изображение ${index + 1}`}
-        loading="lazy"
-        isMobile={isMobile}
-        onError={() => handleImageError(imageUrl, index)}
-        sx={{
-          width: '100%',
-          height: 'auto',
-          objectFit: 'contain',
-        }}
-      />
+      <React.Fragment>
+        <BackgroundImage
+          style={{ backgroundImage: `url(${optimizedUrl})` }}
+        />
+        <Image
+          src={optimizedUrl}
+          alt={`Изображение ${index + 1}`}
+          loading="lazy"
+          isSingle={isSingle}
+          isMobile={isMobile}
+          onError={() => handleImageError(imageUrl, index)}
+        />
+        {!hideOverlay && (
+          <ImageOverlay />
+        )}
+      </React.Fragment>
     );
   };
 
   if (loading) {
-    const defaultHeight = imageArray.length === 1 ? 600 : 600;
     return (
       <Box
         sx={{
-          width: '100%',
-          height: '600px',
-          maxHeight: `${defaultHeight}px`,
-          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: 'grid',
+          gap: 1,
+          ...getGridLayout(limitedImages.length, isMobile),
+          opacity: 0.7,
         }}
       >
-        <Typography color="text.secondary">Загрузка...</Typography>
+        {limitedImages.map((_, index) => (
+          <Box
+            key={index}
+            sx={{
+              bgcolor: 'rgba(0, 0, 0, 0.1)',
+              borderRadius: '12px',
+              gridArea: getCellGridArea(index, limitedImages.length)
+            }}
+          />
+        ))}
       </Box>
     );
   }
 
-  // Если только одно изображение
-  if (imageArray.length === 1) {
-    const singleImage = imageArray[0];
-    const imageDim = imageDimensions[0];
-    const calculatedHeight = imageDim?.calculatedHeight || 600;
-    const dominantColor = imageDim?.dominantColor || '#11111C';
-    
+  if (limitedImages.length === 1) {
+    const singleImage = limitedImages[0];
     return (
       <Box sx={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', mb: 1 }}>
         <ImageContainer
           onClick={(event) => openLightbox(0, event)}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          onMouseUp={onMouseUp}
-          onMouseLeave={onMouseUp}
           sx={{
-            maxHeight: miniMode ? '150px' : `${calculatedHeight}px`,
-            width: '100%',
-            backgroundColor: dominantColor,
-            userSelect: 'none',
+            height: miniMode ? '150px' : 'auto',
+            maxHeight: miniMode ? '150px' : maxHeight,
           }}
         >
-          <CarouselImage
-            src={getOptimizedImageUrl(formatImageUrl(singleImage))}
-            alt="Изображение"
-            loading="lazy"
-            isMobile={isMobile}
-            onError={() => handleImageError(formatImageUrl(singleImage), 0)}
-            sx={{
-              width: '100%',
-              height: 'auto',
-              objectFit: 'contain',
-              pointerEvents: 'none',
-            }}
-          />
-          {!hideOverlay && <ImageOverlay />}
+          {renderImage(singleImage, 0, true)}
         </ImageContainer>
         
         {lightboxOpen && (
           <SimpleImageViewer
-            src={formatImageUrl(imageArray[selectedIndex])}
+            src={formatImageUrl(limitedImages[selectedIndex])}
             onClose={closeLightbox}
             alt="Полноразмерное изображение"
           />
@@ -574,88 +447,55 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
     );
   }
 
-  // Карусель для нескольких изображений
-  const currentImageDim = imageDimensions[selectedIndex];
-  const calculatedHeight = currentImageDim?.calculatedHeight || 600;
-  const dominantColor = currentImageDim?.dominantColor || '#11111C';
+  const layoutProps = getGridLayout(limitedImages.length, isMobile);
   
   return (
     <Box sx={{ mb: 1 }}>
-      <CarouselContainer
-        ref={carouselRef}
-        isMobile={isMobile}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
+      <Box
         sx={{
-          maxHeight: `${calculatedHeight}px`,
-          backgroundColor: dominantColor,
-          userSelect: 'none',
+          display: 'grid',
+          gap: '4px',
+          ...layoutProps,
+          borderRadius: '8px',
+          overflow: 'hidden'
         }}
       >
-        <CarouselImage
-          src={getOptimizedImageUrl(formatImageUrl(imageArray[selectedIndex]))}
-          alt={`Изображение ${selectedIndex + 1}`}
-          loading="lazy"
-          isMobile={isMobile}
-          onError={() => handleImageError(formatImageUrl(imageArray[selectedIndex]), selectedIndex)}
-          sx={{
-            width: '100%',
-            height: 'auto',
-            objectFit: 'contain',
-            pointerEvents: 'none',
-          }}
-        />
-        
-        {/* Счетчик изображений */}
-        <ImageCounter>
-          {selectedIndex + 1} / {imageArray.length}
-        </ImageCounter>
-        
-        {/* Кнопка "Назад" */}
-        {imageArray.length > 1 && (
-          <CarouselButton
-            onClick={prevImage}
-            sx={{ left: '16px' }}
+        {limitedImages.map((image, index) => (
+          <ImageContainer
+            key={`image-${index}`}
+            onClick={(event) => openLightbox(index, event)}
+            sx={{
+              gridArea: getCellGridArea(index, limitedImages.length),
+              cursor: 'pointer',
+              height: '100%',
+            }}
           >
-            <NavigateBeforeIcon sx={{ fontSize: 24, fontWeight: 'bold' }} />
-          </CarouselButton>
-        )}
+            {renderImage(image, index, false)}
+          </ImageContainer>
+        ))}
         
-        {/* Кнопка "Вперед" */}
-        {imageArray.length > 1 && (
-          <CarouselButton
-            onClick={nextImage}
-            sx={{ right: '16px' }}
+        {remainingCount > 0 && (
+          <Box
+            sx={{
+              position: 'absolute',
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.7)',
+              color: '#fff',
+              padding: '4px 8px',
+              borderRadius: '8px 0 0 0',
+              fontSize: '0.8rem',
+              fontWeight: 'bold',
+            }}
           >
-            <NavigateNextIcon sx={{ fontSize: 24, fontWeight: 'bold' }} />
-          </CarouselButton>
+            +{remainingCount}
+          </Box>
         )}
-        
-        {/* Оверлей для открытия лайтбокса */}
-        <Box
-          onClick={(event) => openLightbox(selectedIndex, event)}
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            cursor: 'zoom-in',
-            zIndex: 5,
-          }}
-        >
-          {!hideOverlay && <ImageOverlay />}
-        </Box>
-      </CarouselContainer>
+      </Box>
       
       {lightboxOpen && (
         <SimpleImageViewer
-          src={formatImageUrl(imageArray[selectedIndex])}
+          src={formatImageUrl(limitedImages[selectedIndex])}
           onClose={closeLightbox}
           alt="Полноразмерное изображение"
         />
