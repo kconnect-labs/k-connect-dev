@@ -387,7 +387,7 @@ export const MusicProvider = ({ children }) => {
     return () => {
       isMounted = false;
     };
-  }, [currentSection, hasMoreByType, tracks.length, likedTracks.length, popularTracks.length, newTracks.length, randomTracks.length]);
+  }, [currentSection, tracks.length, likedTracks.length, popularTracks.length, newTracks.length, randomTracks.length]);
   
   
   useEffect(() => {
