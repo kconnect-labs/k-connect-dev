@@ -20,6 +20,7 @@ import {
   Alert,
   Dialog,
 } from '@mui/material';
+import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -53,90 +54,13 @@ import { usePageCommands } from '../../context/CommandPalleteContext';
 
 
 
-const OnlineUsersCard = styled(Card)(({ theme }) => ({
-  borderRadius: '12px',
-  overflow: 'hidden',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  border: theme.palette.mode === 'dark' 
-    ? '1px solid rgba(255, 255, 255, 0.1)' 
-    : '1px solid rgba(0, 0, 0, 0.1)'
-}));
 
 
 
 
 
-const PostInput = styled(InputBase)(({ theme }) => ({
-  width: '100%',
-  borderRadius: '10px',
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-  },
-  '& .MuiInputBase-input': {
-    padding: '8px',
-  },
-}));
-
-const PostActions = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingTop: theme.spacing(1),
-}));
 
 
-const ContentContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(),
-  width: '100%',
-  maxWidth: '100%',
-  overflow: { xs: 'hidden', md: 'visible' },
-  [theme.breakpoints.up('md')]: {
-    flexDirection: 'row',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1), 
-  },
-}));
-
-const LeftColumn = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '5px',
-  [theme.breakpoints.up('md')]: {
-    width: '62%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: '5px', 
-  },
-}));
-
-const RightColumn = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
-  [theme.breakpoints.up('md')]: {
-    width: '32%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1), 
-  },
-}));
-
-const SupportBlock = styled(Box)(({ theme }) => ({
-  borderRadius: '12px',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  overflow: 'hidden',
-  position: 'relative',
-}));
 
 
 const OnlineUsers = () => {
@@ -144,7 +68,6 @@ const OnlineUsers = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const theme = useTheme();
   
   useEffect(() => {
     const fetchOnlineUsers = async () => {
@@ -169,7 +92,6 @@ const OnlineUsers = () => {
     
     fetchOnlineUsers();
     
-    
     const interval = setInterval(fetchOnlineUsers, 60000);
     
     return () => clearInterval(interval);
@@ -181,10 +103,10 @@ const OnlineUsers = () => {
   
   if (loading) {
     return (
-      <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
-        <CircularProgress size={18} sx={{ mr: 1 }} />
-        <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>{t('main_page.loading')}</Typography>
-      </OnlineUsersCard>
+      <div className="online-users-card loading-container">
+        <div className="loading-spinner"></div>
+        <span className="loading-text">{t('main_page.loading')}</span>
+      </div>
     );
   }
   
@@ -193,87 +115,31 @@ const OnlineUsers = () => {
   }
   
   return (
-    <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center', overflowX: 'auto' }}>
-      <Box sx={{
-        display: 'flex',
-        flexWrap: 'nowrap',
-        gap: 1,
-        overflowX: 'auto',
-        pb: 0,
-        '&::-webkit-scrollbar': { height: '0px', display: 'none' },
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none',
-      }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            px: 1,
-            py: 0.5,
-            borderRadius: '12px',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            border: '1px solid rgba(76, 175, 80, 0.2)',
-            minWidth: 'fit-content',
-            height: 36,
-            mr: 0.5
-          }}
-        >
-          <Box
-            sx={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              backgroundColor: '#4caf50',
-              boxShadow: '0 0 8px rgba(76, 175, 80, 0.5)'
-            }}
-          />
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: '0.75rem',
-              fontWeight: 500,
-              color: '#4caf50'
-            }}
-          >
+    <div className="online-users-card">
+      <div className="online-users-container">
+        <div className="online-count-badge">
+          <div className="online-indicator"></div>
+          <span className="online-count-text">
             {t('main_page.online_count', { count: onlineUsers.length })}
-          </Typography>
-        </Box>
+          </span>
+        </div>
         {onlineUsers.map(user => (
-          <Box
+          <div
             key={user.id}
-            sx={{ position: 'relative', cursor: 'pointer', mx: 0.25 }}
+            className="user-avatar-container"
             onClick={() => handleUserClick(user.username)}
           >
-            <Avatar
+            <img
               src={user.photo}
               alt={user.username}
-              sx={{
-                width: 36,
-                height: 36,
-                border: `2px solid ${theme.palette.background.paper}`,
-                boxSizing: 'border-box',
-                background: '#222',
-              }}
+              className="user-avatar"
               onError={safeImageError}
             />
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: 2,
-                right: 2,
-                width: 9,
-                height: 9,
-                borderRadius: '50%',
-                backgroundColor: '#4caf50',
-                border: `1.5px solid ${theme.palette.background.paper}`,
-                boxSizing: 'border-box',
-              }}
-            />
-          </Box>
+            <div className="user-status-indicator"></div>
+          </div>
         ))}
-      </Box>
-    </OnlineUsersCard>
+      </div>
+    </div>
   );
 };
 
@@ -287,19 +153,16 @@ const UserRecommendation = ({ user }) => {
   const handleFollow = async (e) => {
     e.stopPropagation();
     try {
-      
       setFollowing(!following);
       
       const response = await axios.post(`/api/profile/follow`, {
         followed_id: user.id
       });
       
-      
       if (response.data && response.data.success) {
         setFollowing(response.data.is_following);
       }
     } catch (error) {
-      
       setFollowing(following);
       console.error('Error toggling follow:', error);
     }
@@ -309,130 +172,58 @@ const UserRecommendation = ({ user }) => {
     navigate(`/profile/${user.username}`);
   };
 
-  
   const getAvatarSrc = () => {
     if (!user.photo) return '/static/uploads/system/avatar.png';
-    
     
     if (user.photo.startsWith('/') || user.photo.startsWith('http')) {
       return user.photo;
     }
     
-    
     return `/static/uploads/avatar/${user.id}/${user.photo}`;
   };
-  
   
   const isChannelAccount = currentUser && currentUser.account_type === 'channel';
   
   return (
-    <Box 
+    <div 
+      className="user-recommendation"
       onClick={handleCardClick} 
-      sx={{ 
-        cursor: 'pointer',
-        py: 2,
-        px: 2.5,
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.03)'
-        }
-      }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Avatar 
+      <div className="user-recommendation-content">
+        <div className="user-info">
+          <img 
             src={getAvatarSrc()}
             alt={user.name || user.username}
-            sx={{ 
-              width: 42, 
-              height: 42, 
-              mr: 1.5,
-              border: '2px solid rgba(208, 188, 255, 0.3)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-            }}
+            className="user-avatar-large"
             onError={safeImageError}
           />
-          <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography 
-              variant="body2" 
-              fontWeight="500" 
-              noWrap 
-              sx={{ 
-                color: theme => theme.palette.text.primary,
-                letterSpacing: '0.1px'
-              }}
-            >
+          <div className="user-details">
+            <div className="user-name">
               {user.name || user.username}
-            </Typography>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: 0.75
-            }}>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                noWrap 
-                sx={{ 
-                  fontSize: '0.75rem',
-                  color: '#a0a0a0'
-                }}
-              >
+            </div>
+            <div className="user-username">
+              <span className="username-text">
                 @{user.username}
-              </Typography>
+              </span>
               {user.is_verified && (
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 12,
-                    height: 12,
-                    bgcolor: '#8470FF',
-                    borderRadius: '50%',
-                    fontSize: '0.6rem',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}
-                >
+                <span className="verified-badge">
                   ✓
-                </Box>
+                </span>
               )}
-            </Box>
-          </Box>
+            </div>
+          </div>
           
           {!isChannelAccount && (
-            <Button
-              variant={following ? "text" : "contained"}
-              size="small"
+            <button
+              className={`follow-button ${following ? 'following' : ''}`}
               onClick={handleFollow}
-              sx={{
-                minWidth: 'auto',
-                height: 32,
-                borderRadius: '16px',
-                textTransform: 'none',
-                px: following ? 2 : 2,
-                ml: 1,
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                ...(following && {
-                  color: '#a0a0a0',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 0, 0, 0.04)',
-                    color: '#ff5252',
-                    borderColor: 'rgba(255, 82, 82, 0.2)'
-                  }
-                })
-              }}
             >
               {following ? t('main_page.follow.unfollow') : t('main_page.follow.follow')}
-            </Button>
+            </button>
           )}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -983,14 +774,14 @@ const CreatePost = ({ onPostCreated }) => {
               alt={user.name}
               sx={{ mr: 1.5, width: 42, height: 42, border: '2px solid #D0BCFF' }}
             />
-            <PostInput 
+            <textarea 
+              className="post-input"
               placeholder={t('main_page.post.create.placeholder')}
-              multiline
-              maxRows={6}
+              rows={1}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               onPaste={handlePaste}
-              fullWidth
+              style={{ resize: 'none' }}
             />
           </Box>
           
@@ -1230,8 +1021,8 @@ const CreatePost = ({ onPostCreated }) => {
             </Box>
           )}
           
-          <PostActions>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+          <div className="post-actions">
+            <div style={{ display: 'flex', gap: 8 }}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -1319,7 +1110,7 @@ const CreatePost = ({ onPostCreated }) => {
                   </IconButton>
                 </Tooltip>
               )}
-            </Box>
+            </div>
             
             <Button 
               variant="contained" 
@@ -1335,7 +1126,7 @@ const CreatePost = ({ onPostCreated }) => {
             >
               {t('main_page.post.create.publish')}
             </Button>
-          </PostActions>
+          </div>
           
           
           <MusicSelectDialog
@@ -1802,8 +1593,8 @@ const MainPage = React.memo(() => {
       overflow: { xs: 'hidden', md: 'visible' },
       pb: { xs: '100px', sm: 0 }
     }}>
-      <ContentContainer>
-        <LeftColumn>
+      <div className="content-container">
+        <div className="left-column">
           <OnlineUsers />
           <CreatePost onPostCreated={handlePostCreated} />
           
@@ -1907,9 +1698,9 @@ const MainPage = React.memo(() => {
               </Box>
             )}
           </Box>
-        </LeftColumn>
+        </div>
         
-        <RightColumn>
+        <div className="right-column">
           
           <Box 
             component={Paper} 
@@ -2025,8 +1816,8 @@ const MainPage = React.memo(() => {
               />
             </Box>
           )}
-        </RightColumn>
-      </ContentContainer>
+        </div>
+      </div>
       
       
       <SimpleImageViewer 
