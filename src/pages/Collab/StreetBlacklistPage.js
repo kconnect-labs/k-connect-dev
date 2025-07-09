@@ -108,21 +108,39 @@ const StreetBlacklistPage = () => {
         <Typography variant="body1" sx={{ color: '#ffffffb0', maxWidth: 720, mb: 6, zIndex: 2 }}>
           Держи двигатель горячим: улицы проснутся внезапно. Самые быстрые и отчаянные заберут место в Blacklist.
         </Typography>
-        <Button
-          href="/"
-          variant="contained"
-          sx={{
-            backgroundColor: '#8aff8a',
-            color: '#000',
-            '&:hover': { backgroundColor: '#6be96b' },
-            fontWeight: 700,
-            px: 4,
-            boxShadow: '0 0 10px rgba(138,255,138,0.6)',
-            zIndex: 2,
-          }}
-        >
-          Вернуться в К-Коннект
-        </Button>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', zIndex: 2 }}>
+          <Button
+            href="/"
+            variant="contained"
+            sx={{
+              backgroundColor: '#8aff8a',
+              color: '#000',
+              '&:hover': { backgroundColor: '#6be96b' },
+              fontWeight: 700,
+              px: 4,
+              boxShadow: '0 0 10px rgba(138,255,138,0.6)',
+            }}
+          >
+            Вернуться в К-Коннект
+          </Button>
+          <Button
+            href="/street/blacklist/v1"
+            variant="outlined"
+            sx={{
+              borderColor: '#ff4444',
+              color: '#ff4444',
+              '&:hover': { 
+                borderColor: '#ff6666',
+                backgroundColor: 'rgba(255, 68, 68, 0.1)'
+              },
+              fontWeight: 700,
+              px: 4,
+              boxShadow: '0 0 10px rgba(255, 68, 68, 0.3)',
+            }}
+          >
+            К списку
+          </Button>
+        </Box>
       </Box>
     </>
   );

@@ -43,6 +43,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
+import { VerificationBadge } from '../../UIKIT';
 
 // Ленивая загрузка тяжелых компонентов
 const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
@@ -50,7 +51,6 @@ const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
 const ImageGrid = React.lazy(() => import('./ImageGrid'));
 const RepostImageGrid = React.lazy(() => import('./RepostImageGrid'));
 const MusicTrack = React.lazy(() => import('./MusicTrack'));
-const VerificationBadge = React.lazy(() => import('../../UIKIT').then(module => ({ default: module.VerificationBadge })));
 const Lottie = React.lazy(() => import('lottie-react'));
 // Ленивая загрузка синтаксиса только когда нужен
 const SyntaxHighlighter = React.lazy(() => import('react-syntax-highlighter').then(module => ({
@@ -1674,12 +1674,10 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                         }} 
                       />
                     ) : (
-                      <Suspense fallback={<Box sx={{ width: 20, height: 20, ml: 0.5 }} />}>
-                        <VerificationBadge 
-                          status={post.user.verification.status} 
-                          size="small" 
-                        />
-                      </Suspense>
+                      <VerificationBadge 
+                        status={post.user.verification.status} 
+                        size="small" 
+                      />
                     )
                   )}
                   {post.user?.achievement && (
