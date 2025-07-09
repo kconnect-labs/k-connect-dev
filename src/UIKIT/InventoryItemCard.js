@@ -51,7 +51,7 @@ const InventoryItemCardPure = memo(({ item, onClick, className = '', style = {},
       {...other}
     >
       <div 
-        className="image-container"
+        className={`image-container ${item.background_url ? 'has-background' : ''}`}
         style={{
           '--background-url': item.background_url ? `url(${item.background_url})` : 'none'
         }}
