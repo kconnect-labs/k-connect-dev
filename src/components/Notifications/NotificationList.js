@@ -694,39 +694,17 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
           }}
         />
       </ListItemAvatar>
-      <ListItemText
-        primary={
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-            <Typography 
-              component="div"
-              variant="body2" 
-              fontWeight={!notification.is_read ? 600 : 400}
-              sx={{ 
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: 'calc(100% - 80px)'
-              }}
-            >
-              {senderName}
-            </Typography>
-            <Typography 
-              component="div"
-              variant="caption" 
-              color="text.secondary"
-              sx={{ 
-                ml: 1,
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-                fontSize: '0.65rem'
-              }}
-            >
-              {formatRelativeTime(notification.created_at)}
-            </Typography>
-          </Box>
-        }
-        secondary={renderNotificationContent()}
-      />
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+          <Typography component="span" variant="body2" fontWeight={!notification.is_read ? 600 : 400} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 'calc(100% - 80px)' }}>
+            {senderName}
+          </Typography>
+          <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1, whiteSpace: 'nowrap', flexShrink: 0, fontSize: '0.65rem' }}>
+            {formatRelativeTime(notification.created_at)}
+          </Typography>
+        </Box>
+        <Box>{renderNotificationContent()}</Box>
+      </Box>
       <Box className="notification-bg-icon">
         {getNotificationIcon(notification.type || 'default')}
       </Box>
@@ -834,44 +812,19 @@ const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAs
           />
         </ListItemAvatar>
         
-        <ListItemText
-          primary={
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography 
-                component="div"
-                variant="body2" 
-                fontWeight={group.unreadCount > 0 ? 600 : 400}
-                sx={{ 
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: 'calc(100% - 120px)'
-                }}
-              >
-                {userName}
-              </Typography>
-              <Typography 
-                component="div"
-                variant="caption" 
-                color="text.secondary"
-                sx={{ 
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                  fontSize: '0.65rem'
-                }}
-              >
-                {formatRelativeTime(group.latestNotification.created_at)}
-              </Typography>
-            </Box>
-          }
-          secondary={
-            <Box sx={{ mt: 1 }}>
-              <Typography component="div" variant="body2" color="text.primary">
-                {getGroupSummary()}
-              </Typography>
-            </Box>
-          }
-        />
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography component="span" variant="body2" fontWeight={group.unreadCount > 0 ? 600 : 400} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 'calc(100% - 120px)' }}>
+              {userName}
+            </Typography>
+            <Typography component="span" variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', flexShrink: 0, fontSize: '0.65rem' }}>
+              {formatRelativeTime(group.latestNotification.created_at)}
+            </Typography>
+          </Box>
+          <Typography component="span" variant="body2" color="text.primary" sx={{ display: 'block', mt: 1 }}>
+            {getGroupSummary()}
+          </Typography>
+        </Box>
         
         {/* Счетчик уведомлений в группе */}
         {group.notifications.length > 1 && (
