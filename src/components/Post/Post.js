@@ -374,6 +374,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const [lastComment, setLastComment] = useState(null);
   const [lastCommentLoading, setLastCommentLoading] = useState(false);
   
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Hearts animation state
+  const [hearts, setHearts] = useState([]);
+  const [lastTap, setLastTap] = useState({ time: 0, x: 0, y: 0 });
+  
   const reportReasons = [
     t('post.report.reasons.spam'),
     t('post.report.reasons.insult'),
@@ -438,8 +446,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         }
       }
       
-      // Загружаем последний комментарий
-      if (post.id && (post.comments_count > 0 || post.total_comments_count > 0)) {
+      // Загружаем последний комментарий (всегда, чтобы хуки вызывались в одинаковом порядке)
+      if (post.id) {
         fetchLastComment(post.id);
       }
       
@@ -560,16 +568,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         setLastComment(null);
       }
     } catch (error) {
-      console.error('Error fetching last comment:', error);
       setLastComment(null);
     } finally {
       setLastCommentLoading(false);
     }
   };
 
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
   const processImages = () => {
     if (mediaError.type === 'image') {
       return []; 
@@ -1124,16 +1128,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   };
 
   
-  useEffect(() => {
-    if (post && post.id) {
-    }
-  }, [post]);
-  
-  
-  useEffect(() => {
-    if (musicTracks.length > 0) {
-    }
-  }, [musicTracks, post.id]);
+
 
   
   const getOptimizedImageUrl = (url) => {
@@ -1411,12 +1406,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     
     return items;
   };
-  
-  
-  const [hearts, setHearts] = useState([]);
-  
-  
-  const [lastTap, setLastTap] = useState({ time: 0, x: 0, y: 0 });
   
   
   const getRandomRotation = () => {
@@ -2664,7 +2653,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                         color: 'rgba(255, 255, 255, 0.9)',
                         textDecoration: 'none',
                         '&:hover': {
-                          color: theme.palette.primary.main
+                          color: '#D0BCFF'
                         }
                       }}
                       component={Link}
@@ -2673,17 +2662,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     >
                       {lastComment.user?.name || 'Пользователь'}
                     </Typography>
-                    
-                    {/* Верификация */}
-                    {lastComment.user?.verification?.status === 'verified' && (
-                      <CheckCircleIcon 
-                        sx={{ 
-                          fontSize: 14, 
-                          color: '#4CAF50',
-                          filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
-                        }} 
-                      />
-                    )}
+
                     
                     <Typography
                       sx={{
@@ -2737,24 +2716,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     </Box>
                   )}
                   
-                  {/* Лайки комментария */}
-                  {lastComment.likes_count > 0 && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.8 }}>
-                      <Heart 
-                        size={12} 
-                        color={lastComment.user_liked ? theme.palette.primary.main : 'rgba(255, 255, 255, 0.4)'} 
-                        fill={lastComment.user_liked ? theme.palette.primary.main : 'none'}
-                      />
-                      <Typography
-                        sx={{
-                          fontSize: '0.7rem',
-                          color: 'rgba(255, 255, 255, 0.6)'
-                        }}
-                      >
-                        {lastComment.likes_count}
-                      </Typography>
-                    </Box>
-                  )}
+
                 </Box>
               </Box>
               
@@ -2762,8 +2724,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               {(post?.total_comments_count > 1 || post?.comments_count > 1) && (
                 <Box
                   sx={{
-                    mt: 1,
-                    pt: 1,
+                    mt: 0.7,
+                    pt: 0.3,
                     borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                     display: 'flex',
                     alignItems: 'center',
@@ -2776,7 +2738,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       color: 'rgba(255, 255, 255, 0.6)',
                       fontWeight: 500,
                       '&:hover': {
-                        color: theme.palette.primary.main
+                        color: '#D0BCFF'
                       }
                     }}
                   >

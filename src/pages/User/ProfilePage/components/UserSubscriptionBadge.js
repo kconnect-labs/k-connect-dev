@@ -15,6 +15,7 @@ const UserSubscriptionBadge = ({ user }) => {
         label={t('profile.subscription.channel')}
         size="small"
         sx={{
+          borderRadius: 1,
           bgcolor: (user.status_color) 
             ? `${user.status_color}26` 
             : theme => theme.palette.mode === 'dark'
@@ -72,6 +73,7 @@ const UserSubscriptionBadge = ({ user }) => {
               subscriptionTypeLabel}
         size="small"
         sx={{
+          borderRadius: 1,
           bgcolor: user.subscription.type === 'premium' ? 'rgba(186, 104, 200, 0.15)' : 
                   user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255, 0.15)' :
                   user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255, 0.15)' : 

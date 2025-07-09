@@ -18,7 +18,7 @@ const OwnedUsernames = ({ ownedUsernames, user, t, getLighterColor, handleUserna
           backdropFilter: 'blur(5px)',
           px: 1.2,
           py: 0.4,
-          borderRadius: 4,
+          borderRadius: 1,
           border: (user.status_color && user.status_text && user.subscription) ? 
             `1px solid ${user.status_color}33` : 
             theme.palette.mode === 'dark' ? '1px solid rgba(208, 188, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)',

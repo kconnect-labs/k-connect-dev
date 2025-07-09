@@ -162,7 +162,7 @@ const UserStatus = ({ statusText, statusColor }) => {
             background: `linear-gradient(135deg, ${statusColor || '#D0BCFF'} 0%, ${gradientColor} 100%)`,
             color: textColor,
             padding: '8px 12px',
-            borderRadius: '18px',
+            borderRadius: '12px',
             fontSize: '14px',
             fontWeight: 500,
             whiteSpace: 'nowrap',

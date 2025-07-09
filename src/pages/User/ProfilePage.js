@@ -743,7 +743,7 @@ const ProfilePage = () => {
                         : theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
                       px: 1.2,
                       py: 0.4,
-                      borderRadius: 4,
+                      borderRadius: 1,
                       border: user?.profile_id === 2
                         ? '1px solid rgba(255,255,255,0.15)'
                         : theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)'
@@ -777,7 +777,7 @@ const ProfilePage = () => {
                             : theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.03)',
                           px: 1.2,
                           py: 0.4,
-                          borderRadius: 4,
+                          borderRadius: 1,
                           border: user?.profile_id === 2
                             ? '1px solid rgba(255,255,255,0.15)'
                             : theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
@@ -828,12 +828,14 @@ const ProfilePage = () => {
                 }}>
                   
                   <Paper sx={{ 
-                    p: 1.5, 
-                    borderRadius: 2, 
+                    p: 1, 
+                    borderRadius: 1, 
                     textAlign: 'center',
                     background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                     backdropFilter: 'blur(5px)',
-                    border: theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
+                    border: (user.status_color && user.status_text && user.subscription) ? 
+                    `1px solid ${user.status_color}33` : 
+                    theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
                     transition: 'all 0.2s ease',
                     '&:hover': {
                       background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
@@ -863,8 +865,8 @@ const ProfilePage = () => {
                     component={Link}
                     to={`/friends/${user?.username}`}
                     sx={{ 
-                      p: 1.5, 
-                      borderRadius: 2, 
+                      p: 1, 
+                      borderRadius: 1, 
                       textAlign: 'center',
                       background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                       backdropFilter: 'blur(5px)',
@@ -906,8 +908,8 @@ const ProfilePage = () => {
                       component={Link}
                       to={`/friends/${user?.username}`}
                       sx={{ 
-                        p: 1.5, 
-                        borderRadius: 2, 
+                        p: 1, 
+                        borderRadius: 1, 
                         textAlign: 'center',
                         background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
                         backdropFilter: 'blur(5px)',
@@ -946,165 +948,7 @@ const ProfilePage = () => {
                 </Box>
                 
                 
-                {(!user?.subscription || user.subscription.type !== 'channel') && (
-                  <Grid container spacing={1} sx={{ mt: 1 }}> 
-                    
-                    
-                    {(!user?.subscription || user.subscription.type !== 'channel') ? (
-                      <Grid item xs={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                          <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                            {t('profile.followers')}
-                          </Typography>
-                          
-                          
-                          {loadingFollowers ? (
-                            <CircularProgress size={20} />
-                          ) : followers && followers.length > 0 ? (
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                              {followers.slice(0, 3).map(follower => (
-                                <Tooltip key={follower.id} title={follower.name} arrow>
-                                  <Avatar 
-                                    src={follower.avatar_url} 
-                                    alt={follower.name}
-                                    component={Link}
-                                    to={`/profile/${follower.username}`}
-                                    sx={{ 
-                                      width: 32, 
-                                      height: 32, 
-                                      border: (user.status_color && user.status_text && user.subscription) ? 
-                                        `1px solid ${user.status_color}` : 
-                                        '1px solid #D0BCFF', 
-                                      flexShrink: 0 
-                                    }}
-                                    onError={(e) => {
-                                      console.error(`Failed to load follower avatar for ${follower.username}`);
-                                      if (follower.id) {
-                                        e.target.src = `/static/uploads/avatar/${follower.id}/${follower.photo || 'avatar.png'}`;
-                                      }
-                                    }}
-                                  />
-                                </Tooltip>
-                              ))}
-                              {followersCount > 3 && (
-                                <Tooltip title={t('profile.show_all_followers')}>
-                                  <Avatar 
-                                    component={Link}
-                                    to={`/friends/${user?.username}`}
-                                    sx={{ 
-                                      width: 32, 
-                                      height: 32, 
-                                      bgcolor: (user.status_color && user.status_text && user.subscription) ? 
-                                        `${user.status_color}26` : 
-                                        'rgba(208, 188, 255, 0.15)', 
-                                      fontSize: '0.75rem',
-                                      color: (user.status_color && user.status_text && user.subscription) ? 
-                                        user.status_color : 
-                                        '#D0BCFF',
-                                      flexShrink: 0 
-                                    }}
-                                  >
-                                    +{followersCount - 3}
-                                  </Avatar>
-                                </Tooltip>
-                              )}
-                            </Box>
-                          ) : (
-                            <Typography variant="caption" color="text.secondary">
-                              {t('profile.no_followers')}
-                            </Typography>
-                          )}
-                        </Box>
-                      </Grid>
-                    ) : (
-                      
-                      <Grid item xs={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                          <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                            {t('profile.followers')}
-                          </Typography>
-                          <Typography variant="body2">
-                            {followersCount || 0}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    )}
-                    
-                    
-                    <Grid item xs={6}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
-                          {t('profile.subscriptions')}
-                        </Typography>
-                        
-                        
-                        {user?.subscription && user.subscription.type === 'channel' ? (
-                          <Typography variant="body2">
-                            {followingCount || 0}
-                          </Typography>
-                        ) : (
-                          loadingFollowing ? (
-                            <CircularProgress size={20} />
-                          ) : followingList.length > 0 ? (
-                            <Box sx={{ display: 'flex', gap: 1 }}>
-                              {followingList.slice(0, 3).map(following => (
-                                <Tooltip key={following.id} title={following.name} arrow>
-                                  <Avatar 
-                                    src={following.avatar_url} 
-                                    alt={following.name}
-                                    component={Link}
-                                    to={`/profile/${following.username}`}
-                                    sx={{ 
-                                      width: 32, 
-                                      height: 32, 
-                                      border: (user.status_color && user.status_text && user.subscription) ? 
-                                        `1px solid ${user.status_color}` : 
-                                        '1px solid #D0BCFF', 
-                                      flexShrink: 0 
-                                    }}
-                                    onError={(e) => {
-                                      console.error(`Failed to load following avatar for ${following.username}`);
-                                      if (following.id) {
-                                        e.target.src = `/static/uploads/avatar/${following.id}/${following.photo || 'avatar.png'}`;
-                                      }
-                                    }}
-                                  />
-                                </Tooltip>
-                              ))}
-                              {followingCount > 3 && (
-                                <Tooltip title={t('profile.show_all_following')}>
-                                  <Avatar 
-                                    component={Link}
-                                    to={`/friends/${user?.username}`}
-                                    sx={{ 
-                                      width: 32, 
-                                      height: 32, 
-                                      bgcolor: (user.status_color && user.status_text && user.subscription) ? 
-                                        `${user.status_color}26` : 
-                                        'rgba(208, 188, 255, 0.15)', 
-                                      fontSize: '0.75rem',
-                                      color: (user.status_color && user.status_text && user.subscription) ? 
-                                        user.status_color : 
-                                        '#D0BCFF',
-                                      flexShrink: 0 
-                                    }}
-                                  >
-                                    +{followingCount - 3}
-                                  </Avatar>
-                                </Tooltip>
-                              )}
-                            </Box>
-                          ) : (
-                            <Typography variant="caption" color="text.secondary">
-                              {t('profile.no_following')}
-                            </Typography>
-                          )
-                        )}
-                      </Box>
-                    </Grid>
-                  </Grid>
-                )}
-                
+
                 
                 {socials && socials.length > 0 && (
                   <Box sx={{ 

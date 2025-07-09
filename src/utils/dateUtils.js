@@ -6,17 +6,13 @@
  * The formatters in this file provide better timezone handling and should be preferred.
  */
 
-import { useLanguage } from '../context/LanguageContext';
-
 export const getLocalTimezoneOffset = () => {
   return new Date().getTimezoneOffset();
 };
 
-
 export const getMoscowTimezoneOffset = () => {
   return -180; 
 };
-
 
 export const getUserTimezoneName = () => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -30,18 +26,12 @@ export const getUserTimezoneName = () => {
 export const parseDate = (dateString) => {
   if (!dateString) return new Date();
   
-  
-  
-  
   if (dateString.endsWith('Z')) {
     return new Date(dateString);
   } 
-  
   else if (dateString.includes('T') && !dateString.includes('Z')) {
-    
     return new Date(dateString + 'Z');
   } 
-  
   else {
     return new Date(dateString);
   }
@@ -72,7 +62,70 @@ export const debugDate = (dateString) => {
   };
 };
 
+// Pure function for formatting time differences
+export const formatTimeAgoDiff = (diffInSeconds, t) => {
+  if (diffInSeconds < 0) {
+    return t ? t('post.time.just_now') : 'только что';
+  } else if (diffInSeconds < 60) {
+    return t ? t('post.time.just_now') : 'только что';
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    if (t) {
+      const minuteForm = minutes % 10 === 1 && minutes % 100 !== 11 
+        ? t('post.time.minute')
+        : ([2, 3, 4].includes(minutes % 10) && ![12, 13, 14].includes(minutes % 100))
+          ? t('post.time.minutes')
+          : t('post.time.minutes_many');
+      return `${minutes} ${minuteForm} ${t('post.time.ago')}`;
+    }
+    // Fallback без перевода
+    const minuteForm = minutes % 10 === 1 && minutes % 100 !== 11
+      ? 'минуту'
+      : ([2, 3, 4].includes(minutes % 10) && ![12, 13, 14].includes(minutes % 100))
+        ? 'минуты'
+        : 'минут';
+    return `${minutes} ${minuteForm} назад`;
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    if (t) {
+      const hourForm = hours % 10 === 1 && hours % 100 !== 11
+        ? t('post.time.hour')
+        : ([2, 3, 4].includes(hours % 10) && ![12, 13, 14].includes(hours % 100))
+          ? t('post.time.hours')
+          : t('post.time.hours_many');
+      return `${hours} ${hourForm} ${t('post.time.ago')}`;
+    }
+    // Fallback без перевода
+    const hourForm = hours % 10 === 1 && hours % 100 !== 11
+      ? 'час'
+      : ([2, 3, 4].includes(hours % 10) && ![12, 13, 14].includes(hours % 100))
+        ? 'часа'
+        : 'часов';
+    return `${hours} ${hourForm} назад`;
+  } else if (diffInSeconds < 2592000) {
+    const days = Math.floor(diffInSeconds / 86400);
+    if (t) {
+      const dayForm = days % 10 === 1 && days % 100 !== 11
+        ? t('post.time.day')
+        : ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100))
+          ? t('post.time.days')
+          : t('post.time.days_many');
+      return `${days} ${dayForm} ${t('post.time.ago')}`;
+    }
+    // Fallback без перевода
+    const dayForm = days % 10 === 1 && days % 100 !== 11
+      ? 'день'
+      : ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100))
+        ? 'дня'
+        : 'дней';
+    return `${days} ${dayForm} назад`;
+  } else {
+    const date = new Date(Date.now() - (diffInSeconds * 1000));
+    return formatDateTimeShort(date.toISOString());
+  }
+};
 
+// Pure function that doesn't use hooks
 export const formatTimeAgo = (dateString) => {
   if (!dateString) return '';
   
@@ -84,50 +137,10 @@ export const formatTimeAgo = (dateString) => {
   return formatTimeAgoDiff(diffInSeconds);
 };
 
-
-const formatTimeAgoDiff = (diffInSeconds) => {
-  const { t } = useLanguage();
-  
-  if (diffInSeconds < 0) {
-    return t('post.time.just_now');
-  } else if (diffInSeconds < 60) {
-    return t('post.time.just_now');
-  } else if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    const minuteForm = minutes % 10 === 1 && minutes % 100 !== 11 
-      ? t('post.time.minute')
-      : ([2, 3, 4].includes(minutes % 10) && ![12, 13, 14].includes(minutes % 100))
-        ? t('post.time.minutes')
-        : t('post.time.minutes_many');
-    return `${minutes} ${minuteForm} ${t('post.time.ago')}`;
-  } else if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    const hourForm = hours % 10 === 1 && hours % 100 !== 11
-      ? t('post.time.hour')
-      : ([2, 3, 4].includes(hours % 10) && ![12, 13, 14].includes(hours % 100))
-        ? t('post.time.hours')
-        : t('post.time.hours_many');
-    return `${hours} ${hourForm} ${t('post.time.ago')}`;
-  } else if (diffInSeconds < 2592000) {
-    const days = Math.floor(diffInSeconds / 86400);
-    const dayForm = days % 10 === 1 && days % 100 !== 11
-      ? t('post.time.day')
-      : ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100))
-        ? t('post.time.days')
-        : t('post.time.days_many');
-    return `${days} ${dayForm} ${t('post.time.ago')}`;
-  } else {
-    const date = new Date(Date.now() - (diffInSeconds * 1000));
-    return formatDateTimeShort(date.toISOString());
-  }
-};
-
-
 export const formatDate = (dateString) => {
   if (!dateString) return '';
   
   const date = parseDate(dateString);
-  
   
   return new Intl.DateTimeFormat(navigator.language || 'ru-RU', {
     day: 'numeric',
@@ -138,7 +151,6 @@ export const formatDate = (dateString) => {
     timeZone: getUserTimezoneName() 
   }).format(date);
 };
-
 
 export const formatDateTimeShort = (dateString) => {
   if (!dateString) return '';
@@ -153,7 +165,6 @@ export const formatDateTimeShort = (dateString) => {
     timeZone: getUserTimezoneName()
   }).format(date);
 };
-
 
 export const getRussianWordForm = (number, forms) => {
   const cases = [2, 0, 1, 1, 1, 2];
