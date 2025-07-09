@@ -588,9 +588,9 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                     {t('balance.transfer_menu.recipient.similar_users')}
                   </Typography>
                 </Box>
-                {userSearch.suggestions.map((user) => (
+                {userSearch.suggestions.map((user, index) => (
                   <UserCard
-                    key={user.id}
+                    key={user.id || `user-${index}`}
                     decoration={user.decoration}
                     onClick={() => selectSuggestion(user.username, user.id)}
                   >

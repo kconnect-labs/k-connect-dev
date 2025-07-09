@@ -836,6 +836,7 @@ const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAs
           primary={
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography 
+                component="div"
                 variant="body2" 
                 fontWeight={group.unreadCount > 0 ? 600 : 400}
                 sx={{ 
@@ -848,6 +849,7 @@ const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAs
                 {userName}
               </Typography>
               <Typography 
+                component="div"
                 variant="caption" 
                 color="text.secondary"
                 sx={{ 
@@ -862,7 +864,7 @@ const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAs
           }
           secondary={
             <Box sx={{ mt: 1 }}>
-              <Typography variant="body2" color="text.primary">
+              <Typography component="div" variant="body2" color="text.primary">
                 {getGroupSummary()}
               </Typography>
             </Box>

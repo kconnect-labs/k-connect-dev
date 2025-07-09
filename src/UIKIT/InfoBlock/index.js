@@ -86,7 +86,7 @@ const InfoBlock = ({
       )}
       {description && (
         <StyledDescription styleVariant={styleVariant} style={descriptionSx}>
-          <Typography variant="body2">
+          <Typography component="div" variant="body2">
             {description}
           </Typography>
         </StyledDescription>

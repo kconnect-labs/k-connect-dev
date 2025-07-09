@@ -115,7 +115,9 @@ const NotificationContainer = styled(Box, {
   };
 });
 
-const IconContainer = styled(Box)(({ theme, notificationType }) => {
+const IconContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'notificationType',
+})(({ theme, notificationType }) => {
   const colors = {
     success: '#4caf50',
     error: '#ff5252',

@@ -589,7 +589,9 @@ const DetailValue = styled(Typography)(({ theme }) => ({
   maxWidth: '50%',
 }));
 
-const TransactionAvatar = styled(Avatar)(({ theme, transactionType }) => ({
+const TransactionAvatar = styled(Avatar, {
+  shouldForwardProp: (prop) => prop !== 'transactionType',
+})(({ theme, transactionType }) => ({
   width: 46,
   height: 46,
   borderRadius: 14,
@@ -647,7 +649,9 @@ const TransactionDetailContent = styled(DialogContent)(({ theme }) => ({
 }));
 
 // Add styled component for expandable content
-const ExpandableContent = styled(Box)(({ theme, expanded }) => ({
+const ExpandableContent = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'expanded',
+})(({ theme, expanded }) => ({
   maxHeight: expanded ? '1000px' : '0',
   overflow: 'hidden',
   opacity: expanded ? 1 : 0,
@@ -656,7 +660,9 @@ const ExpandableContent = styled(Box)(({ theme, expanded }) => ({
   })
 }));
 
-const ExpandIcon = styled(ExpandMoreIcon)(({ theme, expanded }) => ({
+const ExpandIcon = styled(ExpandMoreIcon, {
+  shouldForwardProp: (prop) => prop !== 'expanded',
+})(({ theme, expanded }) => ({
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
   }),
@@ -1751,16 +1757,16 @@ const BalancePage = () => {
           <>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <CalendarTodayIcon sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }} />
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+              <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
                 {`${weekRange.start} — ${weekRange.end}`}
               </Typography>
             </Box>
 
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}>
+            <Typography component="div" variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}>
               {`+${formatNumberWithSpaces(weeklyEstimate)} ${t('balance.current_balance.points_suffix')}`}
             </Typography>
 
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
               {t('balance.weekly_forecast.description')}
             </Typography>
           </>
@@ -1813,7 +1819,7 @@ const BalancePage = () => {
         }
         description={
           <ExpandableContent expanded={isPointsInfoExpanded}>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
               {t('balance.weekly_forecast.how_to_earn.description')}
             </Typography>
             <Box component="ul" sx={{ 
@@ -1822,7 +1828,7 @@ const BalancePage = () => {
               pl: 2,
               '& li': { mb: 1 }
             }}>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography component="div" variant="subtitle2" gutterBottom>
                 {t('balance.points.earning_methods.title')}
               </Typography>
               <li key="points-posts">{t('balance.points.earning_methods.posts')}</li>
@@ -1831,7 +1837,7 @@ const BalancePage = () => {
               <li key="points-reposts">{t('balance.points.earning_methods.reposts')}</li>
               <li key="points-reactions">{t('balance.points.earning_methods.reactions')}</li>
             </Box>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
               {t('balance.weekly_forecast.how_to_earn.details')}
             </Typography>
           </ExpandableContent>
@@ -2293,8 +2299,8 @@ const BalancePage = () => {
                           {t('balance.assets.badges.purchases.title', { count: badge.purchases.length })}
                         </Typography>
                         <List dense sx={{ bgcolor: alpha(theme.palette.background.paper, 0.3), borderRadius: 2, mb: 1 }}>
-                          {badge.purchases.map((purchase) => (
-                            <ListItem key={purchase.id}>
+                          {badge.purchases.map((purchase, index) => (
+                            <ListItem key={purchase.id || `purchase-${index}`}>
                               <ListItemAvatar>
                                 <Avatar 
                                   src={purchase.buyer.avatar_url} 
@@ -2410,10 +2416,10 @@ const BalancePage = () => {
           ) : (
             <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
               <AccountBalanceWalletIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography component="div" variant="h6" gutterBottom>
                 {t('balance.assets.empty.title')}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography component="div" variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 {t('balance.assets.empty.description')}
               </Typography>
               <Button 
@@ -2455,13 +2461,13 @@ const BalancePage = () => {
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6" fontWeight="bold">
+                  <Typography component="div" variant="h6" fontWeight="bold">
                     {t('balance.subscription.active.title')}
                   </Typography>
                 </Box>
                 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography variant="body1">
+                  <Typography component="div" variant="body1">
                     {t('balance.subscription.active.type')}: <Chip 
                       label={subscription.type === 'basic' ? t('balance.subscription.types.basic') : 
                             subscription.type === 'premium' ? t('balance.subscription.types.premium') : 
@@ -2473,15 +2479,15 @@ const BalancePage = () => {
                     />
                   </Typography>
                   
-                  <Typography variant="body2">
+                  <Typography component="div" variant="body2">
                     {t('balance.subscription.active.expires')}: {new Date(subscription.expires_at).toLocaleDateString()} 
-                    <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
                       {t('balance.subscription.active.days_left', { days: Math.ceil((new Date(subscription.expires_at) - new Date()) / (1000 * 60 * 60 * 24)) })}
                     </Typography>
                   </Typography>
                   
                   <Box sx={{ mt: 1 }}>
-                    <Typography variant="body2" fontWeight="medium">
+                    <Typography component="div" variant="body2" fontWeight="medium">
                       {t('balance.subscription.active.features.title')}:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
@@ -2519,10 +2525,10 @@ const BalancePage = () => {
           ) : (
             <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
               <FlashOnIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
-              <Typography variant="h6" gutterBottom>
+              <Typography component="div" variant="h6" gutterBottom>
                 У вас нет активной подписки
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography component="div" variant="body2" color="text.secondary" sx={{ mb: 3 }}>
                 Активируйте подписку, чтобы получить доступ к расширенным возможностям платформы
               </Typography>
               <Button 
@@ -2558,7 +2564,7 @@ const BalancePage = () => {
           <HeaderGlow />
           <DialogHeaderContent>
             <MonetizationOnIcon color="primary" sx={{ mr: 1.5, fontSize: 24 }} />
-            <Typography variant="h6" fontWeight="bold" color="primary.light">
+            <Typography component="div" variant="h6" fontWeight="bold" color="primary.light">
               Пополнение баланса
             </Typography>
           </DialogHeaderContent>
@@ -2585,7 +2591,7 @@ const BalancePage = () => {
           
           {activeTopupTab === 0 && !keySuccess ? (
             <ContentBox>
-              <Typography variant="body1" gutterBottom>
+              <Typography component="div" variant="body1" gutterBottom>
                 {t('balance.topup.key.enter')}
               </Typography>
               
@@ -2614,19 +2620,19 @@ const BalancePage = () => {
                 }}
               />
               
-              <Typography variant="caption" color="text.secondary">
+              <Typography component="div" variant="caption" color="text.secondary">
                 {t('balance.topup.key.hint')}
               </Typography>
             </ContentBox>
           ) : activeTopupTab === 1 ? (
             <ContentBox>
-              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              <Typography component="div" variant="subtitle1" fontWeight="bold" gutterBottom>
                 {t('balance.topup.donate.title')}
               </Typography>
-              <Typography variant="body2" paragraph>
+              <Typography component="div" variant="body2" paragraph>
                 {t('balance.topup.donate.description')}
               </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <Typography component="div" variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
                 {t('balance.topup.donate.rate')}
               </Typography>
               <Button
@@ -2662,10 +2668,10 @@ const BalancePage = () => {
                 zIndex: 2
               }}>
                 <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
-                <Typography variant="h6" gutterBottom align="center">
+                <Typography component="div" variant="h6" gutterBottom align="center">
                   {t('balance.topup.key.success.title')}
                 </Typography>
-                <Typography variant="body1" align="center">
+                <Typography component="div" variant="body1" align="center">
                   {keySuccess.message}
                 </Typography>
                 
@@ -2685,10 +2691,10 @@ const BalancePage = () => {
                       to: { opacity: 1, transform: 'translateY(0)' }
                     }
                   }}>
-                    <Typography variant="subtitle2" color="text.secondary" gutterBottom align="center">
+                    <Typography component="div" variant="subtitle2" color="text.secondary" gutterBottom align="center">
                       {t('balance.topup.key.success.new_balance')}
                     </Typography>
-                    <Typography variant="h6" color="primary" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography component="div" variant="h6" color="primary" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <AccountBalanceWalletIcon sx={{ mr: 1 }} />
                       {keySuccess.newBalance} {t('balance.topup.key.success.points')}
                     </Typography>
@@ -2709,7 +2715,7 @@ const BalancePage = () => {
                       to: { opacity: 1, transform: 'translateY(0)' }
                     }
                   }}>
-                    <Typography variant="subtitle2" color="text.secondary" gutterBottom align="center">
+                    <Typography component="div" variant="subtitle2" color="text.secondary" gutterBottom align="center">
                       {t('balance.topup.key.success.subscription_activated')}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
@@ -2719,10 +2725,10 @@ const BalancePage = () => {
                         sx={{ fontSize: '1rem', py: 2, px: 1 }}
                       />
                     </Box>
-                    <Typography variant="body2" color="text.secondary" align="center">
+                    <Typography component="div" variant="body2" color="text.secondary" align="center">
                       {t('balance.topup.key.success.expires_at', { date: keySuccess.expiresAt ? new Date(keySuccess.expiresAt).toLocaleDateString() : t('balance.subscription.duration.unlimited') })}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
+                    <Typography component="div" variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
                       {t('balance.topup.key.success.duration', { days: keySuccess.duration_days })}
                     </Typography>
                   </Box>
@@ -2776,7 +2782,7 @@ const BalancePage = () => {
           <HeaderGlow />
           <DialogHeaderContent>
             <CheckCircleIcon color="success" sx={{ mr: 1.5, fontSize: 24 }} />
-            <Typography variant="h6" fontWeight="bold" color="success.main">
+            <Typography component="div" variant="h6" fontWeight="bold" color="success.main">
               {t('balance.transactions.success.title')}
             </Typography>
           </DialogHeaderContent>
@@ -2802,15 +2808,15 @@ const BalancePage = () => {
               <CheckCircleIcon color="success" sx={{ fontSize: 50 }} />
             </SuccessIconWrapper>
             
-            <Typography variant="h5" gutterBottom>
+            <Typography component="div" variant="h5" gutterBottom>
               {t('balance.transactions.success.title')}
             </Typography>
             
-            <Typography variant="body1" color="text.secondary" paragraph>
+            <Typography component="div" variant="body1" color="text.secondary" paragraph>
               {t('balance.transactions.success.amount_sent', { amount: transferData.amount, username: transferData.username })}
             </Typography>
             
-            <Typography variant="subtitle2" sx={{ mb: 2 }}>
+            <Typography component="div" variant="subtitle2" sx={{ mb: 2 }}>
               {t('balance.transactions.success.receipt_info')}
             </Typography>
             
