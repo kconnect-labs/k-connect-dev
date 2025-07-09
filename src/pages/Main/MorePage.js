@@ -141,16 +141,6 @@ const MorePage = () => {
       <div className="menu-section">
         <h6 className="section-title">{t('more_page.sections.social.title')}</h6>
         <ul className="menu-list">
-          <li>
-            <Link to="/search" className="menu-list-item">
-              <div className="menu-item-icon">
-                <Icon icon="solar:magnifer-bold" width="20" height="20" />
-              </div>
-              <div className="menu-list-item-text">
-                <div className="menu-list-item-primary">{t('more_page.sections.social.search')}</div>
-              </div>
-            </Link>
-          </li>
 
           <li>
             <Link to={user && user.username ? `/friends/${user.username}` : '/friends'} className="menu-list-item">
