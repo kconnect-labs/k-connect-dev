@@ -1,0 +1,212 @@
+.charts-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.charts-block-desktop {
+  flex-direction: row;
+  gap: 24px;
+}
+.charts-block-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.chart-card {
+  background: rgba(0,0,0,0.03);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 0 0 4px 0;
+  height: 100%;
+  min-width: 0;
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 4px 14px;
+  border-radius: 12px 12px 0 0;
+  background: rgba(255,255,255,0.01);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.chart-header-icon {
+  display: flex;
+  align-items: center;
+}
+.chart-header-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+}
+.chart-track-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 0;
+}
+.chart-track-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.01);
+  border: 1px solid rgba(255,255,255,0.03);
+  margin: 0 8px 5px 8px;
+  padding: 6px 6px 6px 6px;
+  cursor: pointer;
+  transition: background 0.14s;
+  min-height: 48px;
+}
+.chart-track-item:first-child {
+ margin-top: 5px;
+}
+.chart-track-item.active {
+  background: rgba(208,188,255,0.10);
+  border-color: #d0bcff33;
+}
+.chart-track-item:hover {
+  background: rgba(255,255,255,0.06);
+}
+.track-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 9px;
+  object-fit: cover;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.track-info {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  justify-content: center;
+  text-align: left;
+  align-items: flex-start;
+}
+.track-title {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.98rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.15;
+  text-align: left;
+}
+.track-artist {
+  color: #bdbdbd;
+  font-size: 0.89rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+  text-align: left;
+}
+.track-meta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #bdbdbd;
+  font-size: 0.78rem;
+  margin-top: 1px;
+  text-align: left;
+}
+.meta-icon {
+  vertical-align: middle;
+  margin-right: 1px;
+}
+.track-duration {
+  font-size: 0.78rem;
+}
+.track-genre {
+  background: rgba(255,255,255,0.07);
+  border-radius: 5px;
+  padding: 0 5px;
+  font-size: 0.75em;
+  color: #bdbdbd;
+  margin-left: 1px;
+}
+.dot {
+  margin: 0 2px;
+  color: #bdbdbd;
+}
+.track-actions {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.like-btn, .play-btn {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+  color: #bdbdbd;
+  font-size: 1rem;
+}
+.like-btn.liked {
+  color: #ff2d55;
+}
+.play-btn.playing {
+  color: #d0bcff;
+}
+.like-btn:hover, .play-btn:hover {
+  background: rgba(208,188,255,0.10);
+  color: #fff;
+}
+.charts-block-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+}
+@media (max-width: 900px) {
+  .charts-block-desktop {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .charts-block-col {
+    width: 100%;
+    min-width: 0;
+  }
+  .chart-card {
+    margin-bottom: 10px;
+  }
+  .chart-header {
+    padding: 10px 10px 3px 10px;
+    font-size: 0.97rem;
+  }
+  .chart-track-item {
+    margin: 0 4px 4px 4px;
+    padding: 4px 4px 4px 4px;
+    min-height: 38px;
+  }
+  .track-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+  }
+  .like-btn, .play-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.95rem;
+  }
+  .track-title {
+    font-size: 0.93rem;
+  }
+  .track-artist {
+    font-size: 0.82rem;
+  }
+  .track-meta {
+    font-size: 0.7rem;
+  }
+} 

@@ -23,7 +23,7 @@ const UserProfileBlock = ({ user }) => {
       to={`/profile/${user?.username || user?.id}`}
     >
       <img 
-        className="user-avatar"
+        className="SIDEBAR-user-avatar"
         src={user?.photo ? (user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`) : undefined}
         alt={user?.name || t('sidebar.profile.default_name')}
         onError={(e) => {

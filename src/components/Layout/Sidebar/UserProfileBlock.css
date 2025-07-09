@@ -21,7 +21,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.user-avatar {
+.SIDEBAR-user-avatar {
   width: 48px;
   height: 48px;
   border-radius: 8px;
@@ -32,7 +32,7 @@
   object-fit: cover;
 }
 
-.user-avatar:hover {
+.SIDEBAR-user-avatar:hover {
   transform: scale(1.05);
 }
 
@@ -69,7 +69,7 @@
     color: inherit;
   }
   
-  .user-avatar {
+  .SIDEBAR-user-avatar {
     border-color: rgba(0, 0, 0, 0.1);
   }
   
@@ -96,11 +96,11 @@
     transform: none;
   }
   
-  .user-avatar {
+  .SIDEBAR-user-avatar {
     transition: none;
   }
   
-  .user-avatar:hover {
+  .SIDEBAR-user-avatar:hover {
     transform: none;
   }
 }
@@ -110,13 +110,13 @@
   will-change: transform;
 }
 
-.user-avatar {
+.SIDEBAR-user-avatar {
   will-change: transform;
 }
 
 /* Поддержка высокого DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .user-avatar {
+  .SIDEBAR-user-avatar {
     border-width: 0.5px;
   }
 }
@@ -130,7 +130,7 @@
     transform: none !important;
   }
   
-  .user-avatar {
+  .SIDEBAR-user-avatar {
     border: 1px solid #ccc !important;
     box-shadow: none !important;
   }
