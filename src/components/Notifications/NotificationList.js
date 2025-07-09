@@ -698,6 +698,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
         primary={
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
             <Typography 
+              component="div"
               variant="body2" 
               fontWeight={!notification.is_read ? 600 : 400}
               sx={{ 
@@ -710,6 +711,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
               {senderName}
             </Typography>
             <Typography 
+              component="div"
               variant="caption" 
               color="text.secondary"
               sx={{ 
@@ -1135,7 +1137,7 @@ const NotificationList = ({ onNewNotification }) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <NotificationHeader>
-          <Typography variant="subtitle1" fontWeight="bold">
+          <Typography component="div" variant="subtitle1" fontWeight="bold">
             {t('notifications.title')}
             {unreadCount > 0 && (
               <Badge 
@@ -1191,7 +1193,7 @@ const NotificationList = ({ onNewNotification }) => {
             </Box>
           ) : error ? (
             <EmptyNotifications>
-              <Typography variant="body2" color="error">
+              <Typography component="div" variant="body2" color="error">
                 {t('notifications.error.load_failed')}
               </Typography>
             </EmptyNotifications>
@@ -1212,8 +1214,8 @@ const NotificationList = ({ onNewNotification }) => {
           ) : (
             <EmptyNotifications>
               <NotificationsIcon sx={{ fontSize: 40, opacity: 0.5, mb: 2 }} />
-              <Typography variant="body1">{t('notifications.empty.no_notifications')}</Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography component="div" variant="body1">{t('notifications.empty.no_notifications')}</Typography>
+              <Typography component="div" variant="body2" color="text.secondary">
                 {t('notifications.empty.description')}
               </Typography>
             </EmptyNotifications>
