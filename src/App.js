@@ -685,7 +685,7 @@ function App() {
           };
         default: // default theme
           return {
-            backgroundColor: '#1f1921', //НЕ ЗАБУДЬ ВЕРНУТЬ 131313
+            backgroundColor: '#131313', //НЕ ЗАБУДЬ ВЕРНУТЬ 131313
             textColor: '#FFFFFF'
           };
       }
@@ -787,8 +787,8 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: themeSettings.backgroundColor || '#1f1921',
-          paper: themeSettings.backgroundColor || '#1f1921',
+          default: themeSettings.backgroundColor || '#131313',
+          paper: themeSettings.backgroundColor || '#131313',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
@@ -814,7 +814,7 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              backgroundColor: themeSettings.backgroundColor || '#1f1921',
+              backgroundColor: themeSettings.backgroundColor || '#131313',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -824,7 +824,7 @@ function App() {
             root: {
               borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: themeSettings.backgroundColor || '#1f1921',
+              backgroundColor: themeSettings.backgroundColor || '#131313',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -833,7 +833,7 @@ function App() {
           styleOverrides: {
             root: {
               borderRadius: '12px',
-              backgroundColor: themeSettings.backgroundColor || '#1f1921',
+              backgroundColor: themeSettings.backgroundColor || '#131313',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },

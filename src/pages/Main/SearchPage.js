@@ -691,9 +691,9 @@ const SearchPage = () => {
                       )}
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      {posts.slice(0, 3).map((post) => (
+                      {posts.slice(0, 3).map((post, index) => (
                         <Card 
-                          key={post.id} 
+                          key={`${post.id}-${index}`} 
                           sx={{ 
                             display: 'flex', 
                             flexDirection: 'column',
@@ -1053,9 +1053,9 @@ const SearchPage = () => {
               </NoResultsContainer>
             ) : (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {posts.map((post) => (
+                {posts.map((post, index) => (
                   <Card 
-                    key={post.id} 
+                    key={`${post.id}-${index}`} 
                     sx={{ 
                       display: 'flex', 
                       flexDirection: 'column',

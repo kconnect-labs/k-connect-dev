@@ -1419,7 +1419,11 @@ const MainPage = React.memo(() => {
 						if (requestId !== currentRequestId - 1) return
 
 						if (response.data && Array.isArray(response.data.posts)) {
-							setPosts(response.data.posts)
+							// Дедупликация постов по ID
+							const uniquePosts = response.data.posts.filter((post, index, self) => 
+								index === self.findIndex(p => p.id === post.id)
+							);
+							setPosts(uniquePosts)
 							setHasMore(response.data.has_next === true)
 							setPage(2)
 						} else {
@@ -1492,7 +1496,11 @@ const MainPage = React.memo(() => {
         if (requestId !== currentRequestId - 1) return;
         
         if (response.data && Array.isArray(response.data.posts)) {
-          setPosts(response.data.posts);
+          // Дедупликация постов по ID
+          const uniquePosts = response.data.posts.filter((post, index, self) => 
+            index === self.findIndex(p => p.id === post.id)
+          );
+          setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
           setPage(2);
         } else {
@@ -1564,7 +1572,11 @@ const MainPage = React.memo(() => {
         if (requestId !== currentRequestId - 1) return;
         
         if (response.data && Array.isArray(response.data.posts)) {
-          setPosts(response.data.posts);
+          // Дедупликация постов по ID
+          const uniquePosts = response.data.posts.filter((post, index, self) => 
+            index === self.findIndex(p => p.id === post.id)
+          );
+          setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
           setPage(2);
         } else {
@@ -1708,7 +1720,11 @@ const MainPage = React.memo(() => {
           if (requestId !== currentRequestId - 1) return;
           
           if (response.data && Array.isArray(response.data.posts)) {
-            setPosts(response.data.posts);
+            // Дедупликация постов по ID
+            const uniquePosts = response.data.posts.filter((post, index, self) => 
+              index === self.findIndex(p => p.id === post.id)
+            );
+            setPosts(uniquePosts);
             setHasMore(response.data.has_next === true);
             setPage(2);
           } else {
@@ -1836,12 +1852,12 @@ const MainPage = React.memo(() => {
               </>
             ) : posts.length > 0 ? (
               <Box sx={{ mt: 0 }}>
-                {posts.map((post) => (
+                {posts.map((post, index) => (
                   post.is_repost ? (
-                    <RepostItem key={post.id} post={post} />
+                    <RepostItem key={`${post.id}-${index}`} post={post} />
                   ) : (
                     <Post 
-                      key={post.id} 
+                      key={`${post.id}-${index}`} 
                       post={post} 
                       showPostDetails={false}
                       onOpenLightbox={handleOpenLightbox}

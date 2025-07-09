@@ -29,7 +29,7 @@ const StyledSearchInput = React.forwardRef(({ focused, placeholder, value, onCha
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        {...props}
+      {...props}
       />
       {endAdornment && (
         <div className="search-input-end-adornment">
@@ -117,16 +117,16 @@ const HeaderSearch = ({
   return (
     <SearchInputWrapper focused={focused} isMobile={isMobile}>
       <div className="search-container" onClick={(e) => e.stopPropagation()}>
-        <StyledSearchInput
-          focused={focused}
-          placeholder={t('header.search.placeholder')}
-          value={searchQuery}
-          onChange={handleSearchChange}
+          <StyledSearchInput
+            focused={focused}
+            placeholder={t('header.search.placeholder')}
+            value={searchQuery}
+            onChange={handleSearchChange}
           onFocus={() => { 
             if (handleSearchFocus) handleSearchFocus(); 
             setFocused(true); 
           }}
-          onBlur={() => setFocused(false)}
+            onBlur={() => setFocused(false)}
           ref={searchInputRef}
           startAdornment={
             <svg className="search-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -136,18 +136,18 @@ const HeaderSearch = ({
           endAdornment={
             <button 
               className="clear-button"
-              onClick={toggleSearch}
+                    onClick={toggleSearch}
               type="button"
-            >
+                  >
               <svg className="clear-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
               </svg>
             </button>
           }
-        />
+          />
         
-        {showSearchResults && (
-          <SearchResultsContainer focused={focused}>
+          {showSearchResults && (
+            <SearchResultsContainer focused={focused}>
             <SearchResultTabs>
               <SearchResultTab 
                 label={t('header.search.tabs.all')} 
@@ -159,36 +159,36 @@ const HeaderSearch = ({
                 active={searchTab === 1}
                 onClick={() => handleTabClick(1)}
               />
-            </SearchResultTabs>
+              </SearchResultTabs>
             
             <div className="search-results-content">
-              {searchLoading ? (
+                {searchLoading ? (
                 <div className="search-loading">
                   <div className="loading-spinner"></div>
                 </div>
-              ) : searchTab === 0 ? (
-                searchResults.users.length > 0 ? (
+                ) : searchTab === 0 ? (
+                  searchResults.users.length > 0 ? (
                   <div className="search-results-list">
-                    {searchResults.users.map(user => (
+                      {searchResults.users.map(user => (
                       <div 
-                        key={user.id} 
+                          key={user.id} 
                         className="search-result-item"
-                        onClick={() => handleSearchItemClick(`/profile/${user.username}`)}
+                          onClick={() => handleSearchItemClick(`/profile/${user.username}`)}
                       >
                         <div className="search-result-avatar">
                           <img 
-                            src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'} 
-                            alt={user.name || user.username}
+                              src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'} 
+                              alt={user.name || user.username}
                             onError={(e) => {
                               e.target.onerror = null;
                               e.target.src = '/static/uploads/avatar/system/avatar.png';
                             }}
-                          />
+                            />
                         </div>
                         <div className="search-result-content">
                           <div className="search-result-name">
-                            {user.name}
-                            {user.verification_status === 'verified' && (
+                                {user.name}
+                                {user.verification_status === 'verified' && (
                               <svg className="verified-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                               </svg>
@@ -197,36 +197,36 @@ const HeaderSearch = ({
                           <div className="search-result-username">@{user.username}</div>
                         </div>
                       </div>
-                    ))}
+                      ))}
                   </div>
-                ) : (
+                  ) : (
                   <div className="search-no-results">
                     <span>{t('header.search.no_results.users')}</span>
                   </div>
-                )
-              ) : (
-                searchResults.channels.length > 0 ? (
+                  )
+                ) : (
+                  searchResults.channels.length > 0 ? (
                   <div className="search-results-list">
-                    {searchResults.channels.map(channel => (
+                      {searchResults.channels.map(channel => (
                       <div 
-                        key={channel.id} 
+                          key={channel.id} 
                         className="search-result-item"
-                        onClick={() => handleSearchItemClick(`/profile/${channel.username}`)}
+                          onClick={() => handleSearchItemClick(`/profile/${channel.username}`)}
                       >
                         <div className="search-result-avatar">
                           <img 
-                            src={channel.photo} 
-                            alt={channel.name}
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = '/static/uploads/avatar/system/avatar.png';
-                            }}
-                          />
+                              src={channel.photo} 
+                              alt={channel.name}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/static/uploads/avatar/system/avatar.png';
+                              }}
+                            />
                         </div>
                         <div className="search-result-content">
                           <div className="search-result-name">
-                            {channel.name}
-                            {channel.is_verified && (
+                                {channel.name}
+                                {channel.is_verified && (
                               <svg className="verified-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                               </svg>
@@ -235,29 +235,29 @@ const HeaderSearch = ({
                           <div className="search-result-username">@{channel.username}</div>
                         </div>
                       </div>
-                    ))}
+                      ))}
                   </div>
-                ) : (
+                  ) : (
                   <div className="search-no-results">
                     <span>{t('header.search.no_results.channels')}</span>
                   </div>
-                )
-              )}
+                  )
+                )}
               
               {((searchTab === 0 && searchResults.users.length > 0) || 
                 (searchTab === 1 && searchResults.channels.length > 0)) && (
                 <div className="search-view-all">
                   <button 
                     className="view-all-button"
-                    onClick={handleViewAll}
-                  >
-                    {t('header.search.view_all')}
+                      onClick={handleViewAll}
+                    >
+                      {t('header.search.view_all')}
                   </button>
                 </div>
               )}
             </div>
-          </SearchResultsContainer>
-        )}
+            </SearchResultsContainer>
+          )}
       </div>
     </SearchInputWrapper>
   );

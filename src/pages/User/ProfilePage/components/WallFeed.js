@@ -53,10 +53,19 @@ const WallFeed = ({ userId }) => {
 
       
       if (response.data.posts && Array.isArray(response.data.posts)) {
+        // Дедупликация постов по ID
+        const uniqueNewPosts = response.data.posts.filter((post, index, self) => 
+          index === self.findIndex(p => p.id === post.id)
+        );
+        
         if (pageNumber === 1) {
-          setWallPosts(response.data.posts);
+          setWallPosts(uniqueNewPosts);
         } else {
-          setWallPosts(prev => [...prev, ...response.data.posts]);
+          setWallPosts(prev => {
+            const existingPostIds = new Set(prev.map(p => p.id));
+            const filteredNewPosts = uniqueNewPosts.filter(post => !existingPostIds.has(post.id));
+            return [...prev, ...filteredNewPosts];
+          });
         }
         
         setHasMore(response.data.has_next);
@@ -185,7 +194,7 @@ const WallFeed = ({ userId }) => {
         
         if (wallPosts.length === index + 1) {
           return (
-            <Box ref={lastPostElementRef} key={post.id}>
+            <Box ref={lastPostElementRef} key={`${post.id}-${index}`}>
               <Post 
                 post={post} 
                 onDelete={handleDeletePost}
@@ -196,7 +205,7 @@ const WallFeed = ({ userId }) => {
         } else {
           return (
             <Post 
-              key={post.id} 
+              key={`${post.id}-${index}`} 
               post={post} 
               onDelete={handleDeletePost}
               showActions

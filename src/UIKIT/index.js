@@ -1,5 +1,5 @@
 import { ContextMenu, useContextMenu } from './ContextMenu';
-import NavButton, { MoreButton, NavItemStyled, NavIconStyled, NavTextStyled } from './NavButton';
+import NavButton, { MoreButton } from './NavButton';
 import UsernameCard from './UsernameCard';
 import SessionManager from './SessionManager';
 import PlaylistModal from './PlaylistModal';
@@ -17,9 +17,6 @@ export {
   useContextMenu,
   NavButton,
   MoreButton,
-  NavItemStyled,
-  NavIconStyled,
-  NavTextStyled,
   UsernameCard,
   SessionManager,
   PlaylistModal,
