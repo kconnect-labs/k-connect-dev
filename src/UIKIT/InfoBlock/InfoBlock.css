@@ -1,0 +1,77 @@
+/* InfoBlock - Оптимизированные стили без Material UI */
+
+.info-block {
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+.info-block__title {
+  font-family: inherit;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.info-block__description {
+  font-family: inherit;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Варианты стилей */
+.info-block--default {
+  /* Стили по умолчанию уже определены в JS */
+}
+
+.info-block--dark {
+  /* Стили для темной темы уже определены в JS */
+}
+
+/* Мобильные оптимизации */
+@media (max-width: 768px) {
+  .info-block {
+    padding: 12px;
+    margin-bottom: 6px;
+  }
+  
+  .info-block__title {
+    font-size: 1.25rem !important;
+  }
+  
+  .info-block__description {
+    font-size: 0.8rem !important;
+  }
+}
+
+/* Поддержка темной темы */
+@media (prefers-color-scheme: dark) {
+  .info-block--default {
+    background: rgba(255, 255, 255, 0.02) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  .info-block--default .info-block__description {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+}
+
+/* Оптимизации для производительности */
+.info-block {
+  /* Базовые оптимизации без анимаций */
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .info-block {
+    /* Более четкие границы на retina дисплеях */
+    border-width: 0.5px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .info-block {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+} 

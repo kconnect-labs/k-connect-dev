@@ -109,7 +109,7 @@ const LeftColumn = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: '5px',
   [theme.breakpoints.up('md')]: {
-    width: '68%',
+    width: '62%',
   },
   [theme.breakpoints.down('sm')]: {
     gap: '5px', 

@@ -761,7 +761,8 @@
       "cancel": "Отмена",
       "saving": "Сохранение...",
       "save_changes": "Сохранить изменения",
-      "save": "Сохранить"
+      "save": "Сохранить",
+      "delete_current_audio": "Удалить аудио"
     },
     "context_menu": {
       "copy_link": "Копировать ссылку",

@@ -1,0 +1,159 @@
+/* InventoryItemCardPure - Оптимизированные стили без Material UI */
+
+.inventory-item-card {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.inventory-item-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.image-container {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: rgba(208, 188, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.image-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--background-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.image-container:not([style*="--background-url"])::before {
+  display: none;
+}
+
+.marketplace-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 3;
+}
+
+.kballs-icon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.price-text {
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.item-name {
+  font-weight: 500;
+  display: block;
+  text-align: center;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rarity-container {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.rarity-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  height: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.6rem;
+  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+/* Оптимизации для производительности */
+.inventory-item-card {
+  will-change: transform;
+  contain: layout style paint;
+}
+
+.image-container {
+  contain: layout style paint;
+}
+
+/* Поддержка темной темы */
+@media (prefers-color-scheme: dark) {
+  .inventory-item-card {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .inventory-item-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* Мобильные оптимизации */
+@media (max-width: 768px) {
+  .inventory-item-card {
+    padding: 6px;
+  }
+  
+  .item-name {
+    font-size: 0.65rem;
+  }
+  
+  .rarity-chip {
+    font-size: 0.55rem;
+    height: 14px;
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .inventory-item-card {
+    transition: none;
+  }
+  
+  .inventory-item-card:hover {
+    transform: none;
+  }
+} 

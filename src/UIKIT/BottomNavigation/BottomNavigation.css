@@ -1,0 +1,110 @@
+/* BottomNavigation - Оптимизированные стили без Material UI */
+
+.bottom-navigation {
+  display: block;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+.bottom-navigation__container {
+  display: flex;
+  height: 75px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: space-around;
+}
+
+/* Скрываем на десктопе */
+@media (min-width: 700px) {
+  .bottom-navigation {
+    display: none;
+  }
+}
+
+/* Мобильные оптимизации */
+@media (max-width: 480px) {
+  .bottom-navigation__container {
+    height: 70px;
+  }
+}
+
+/* Поддержка темной темы */
+@media (prefers-color-scheme: dark) {
+  .bottom-navigation {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .bottom-navigation {
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Оптимизации для производительности */
+.bottom-navigation {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .bottom-navigation {
+    border-top-width: 0.5px;
+  }
+}
+
+/* BottomNavigationAction стили */
+.bottom-navigation-action {
+  font-family: inherit;
+  outline: none;
+}
+
+.bottom-navigation-action:hover {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.bottom-navigation-action--active:hover {
+  color: inherit !important;
+}
+
+.bottom-navigation-action__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+}
+
+.bottom-navigation-action__label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Поддержка темной темы для actions */
+@media (prefers-color-scheme: light) {
+  .bottom-navigation-action {
+    color: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  .bottom-navigation-action:hover {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
+  
+  .bottom-navigation-action--active {
+    color: inherit !important;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .bottom-navigation {
+    display: none !important;
+  }
+} 

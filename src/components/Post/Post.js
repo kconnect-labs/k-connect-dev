@@ -2392,14 +2392,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {lastComment && !lastCommentLoading && (
             <Box
               sx={{
-                mt: 1.5,
-                p: 1.5,
-                borderRadius: '12px',
+                padding: '12px',
+                borderRadius: '0 0 12px 12px',
                 background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
+                marginTop: '12px', 
+                marginBottom: '-13px',
+                marginLeft: '-17px',
+                marginRight: '-17px',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.18)',
