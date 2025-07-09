@@ -1,12 +1,12 @@
 .charts-block {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  margin-bottom: 24px;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 .charts-block-desktop {
   flex-direction: row;
-  gap: 24px;
+  gap: 4px;
 }
 .charts-block-col {
   flex: 1 1 0;
@@ -172,7 +172,7 @@
 @media (max-width: 900px) {
   .charts-block-desktop {
     flex-direction: column;
-    gap: 16px;
+    gap: 4px;
   }
   .charts-block-col {
     width: 100%;
