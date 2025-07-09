@@ -5,7 +5,7 @@ import { getGradientEffects, gradientBorder } from '../styles/gradientEffects';
 import { rgba } from 'framer-motion';
 
 const InfoBlockContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'customStyle',
+  shouldForwardProp: (prop) => prop !== 'customStyle' && prop !== 'styleVariant',
 })(({ theme, styleVariant = 'default', customStyle = false }) => (
   customStyle
     ? {
@@ -33,7 +33,9 @@ const InfoBlockContainer = styled(Box, {
       }
 ));
 
-const StyledTitle = styled('div')(({ theme, styleVariant = 'default' }) => ({
+const StyledTitle = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'styleVariant',
+})(({ theme, styleVariant = 'default' }) => ({
   fontWeight: 700,
   margin: 0,
   color: styleVariant === 'dark' ? 'white' : theme.palette.text.primary,
@@ -41,7 +43,9 @@ const StyledTitle = styled('div')(({ theme, styleVariant = 'default' }) => ({
   ...theme.components?.InfoBlock?.styleOverrides?.title,
 }));
 
-const StyledDescription = styled('div')(({ theme, styleVariant = 'default' }) => ({
+const StyledDescription = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'styleVariant',
+})(({ theme, styleVariant = 'default' }) => ({
   color: styleVariant === 'dark' ? 'rgba(255,255,255,0.7)' : theme.palette.text.secondary,
   ...theme.components?.InfoBlock?.styleOverrides?.description,
 }));

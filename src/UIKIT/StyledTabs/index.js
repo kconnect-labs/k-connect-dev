@@ -70,7 +70,7 @@ const getTabsContainerStyle = (customStyle, theme, fullWidth) => {
 };
 
 const StyledTabsContainer = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'customStyle',
+  shouldForwardProp: (prop) => prop !== 'customStyle' && prop !== 'fullWidth',
 })(({ theme, fullWidth = false, customStyle = false }) => getTabsContainerStyle(customStyle, theme, fullWidth));
 
 const StyledTabs = ({ 
