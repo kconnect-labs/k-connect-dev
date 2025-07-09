@@ -16,9 +16,9 @@ const twinkle = keyframes`
   }
 `;
 
-const VibeWidgetContainer = styled(Paper)(({ theme, hasCurrentTrack }) => ({
+const VibeWidgetContainer = styled(Paper)(({ theme, $hasCurrentTrack }) => ({
   position: 'relative',
-  height: hasCurrentTrack ? '320px' : '240px',
+  height: $hasCurrentTrack ? '320px' : '240px',
   borderRadius: '12px',
   overflow: 'hidden',
   cursor: 'pointer',
@@ -107,7 +107,7 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
   const showCurrentTrack = isVibePlaying && currentTrack;
 
   return (
-    <VibeWidgetContainer onClick={onClick} elevation={8} hasCurrentTrack={showCurrentTrack}>
+    <VibeWidgetContainer onClick={onClick} elevation={8} $hasCurrentTrack={showCurrentTrack}>
       <StarsContainer />
       <ContentOverlay>
         <Typography 

@@ -375,7 +375,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       });
       
       if (response.data && Array.isArray(response.data.users)) {
-        setLastLikedUsers(response.data.users);
+        // Дедупликация пользователей по ID
+        const uniqueUsers = response.data.users.filter((user, index, self) => 
+          index === self.findIndex(u => u.id === user.id)
+        );
+        setLastLikedUsers(uniqueUsers);
       }
     } catch (error) {
       console.error('Error fetching last liked users:', error);
@@ -1198,7 +1202,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   const addHeart = (x, y) => {
     const newHeart = {
-      id: Date.now() + Math.random(),
+      id: `${Date.now()}-${Math.random()}-${hearts.length}`,
       x,
       y,
       rotation: getRandomRotation(),
@@ -2333,7 +2337,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
                       return (
                         <Avatar
-                          key={user.id}
+                          key={`${user.id}-${index}`}
                           src={avatarUrl}
                           alt={user.name}
                           sx={{
@@ -2392,14 +2396,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {lastComment && !lastCommentLoading && (
             <Box
               sx={{
-                mt: 1.5,
-                p: 1.5,
-                borderRadius: '12px',
+                padding: '12px',
+                borderRadius: '0 0 12px 12px',
                 background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
+                marginTop: '12px', 
+                marginBottom: '-13px',
+                marginLeft: '-17px',
+                marginRight: '-17px',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.18)',

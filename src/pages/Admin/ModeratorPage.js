@@ -1723,7 +1723,7 @@ const ModeratorPage = () => {
         <Box sx={{ width: '100%' }}>
           {posts.map((post, index) => (
             <Paper 
-              key={post.id}
+              key={`${post.id}-${index}`}
               ref={index === posts.length - 1 ? lastPostElementRef : null}
               sx={{ 
                 p: { xs: 1.5, sm: 2 }, 

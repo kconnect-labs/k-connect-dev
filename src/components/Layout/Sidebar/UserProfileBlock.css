@@ -1,0 +1,145 @@
+/* UserProfileBlock - Оптимизированные стили без Material UI */
+
+.user-profile-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  position: relative;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  color: inherit;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+.user-profile-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.SIDEBAR-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.SIDEBAR-user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.user-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #FFFFFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.user-name-tag {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* Поддержка светлой темы */
+@media (prefers-color-scheme: light) {
+  .user-profile-wrapper {
+    color: inherit;
+  }
+  
+  .SIDEBAR-user-avatar {
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-name {
+    color: inherit;
+  }
+  
+  .user-name-tag {
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .user-profile-wrapper:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .user-profile-wrapper {
+    transition: none;
+  }
+  
+  .user-profile-wrapper:hover {
+    transform: none;
+  }
+  
+  .SIDEBAR-user-avatar {
+    transition: none;
+  }
+  
+  .SIDEBAR-user-avatar:hover {
+    transform: none;
+  }
+}
+
+/* Оптимизации для производительности */
+.user-profile-wrapper {
+  will-change: transform;
+}
+
+.SIDEBAR-user-avatar {
+  will-change: transform;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .SIDEBAR-user-avatar {
+    border-width: 0.5px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .user-profile-wrapper {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  
+  .SIDEBAR-user-avatar {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+  
+  .user-name {
+    color: black !important;
+  }
+  
+  .user-name-tag {
+    color: #666 !important;
+  }
+} 

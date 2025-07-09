@@ -1,0 +1,337 @@
+@import '../../uikit.module.css';
+
+/* NavButton - Оптимизированные стили без Material UI */
+
+/* Основной контейнер навигационной кнопки */
+.nav-button {
+  border-radius: 12px;
+  margin-bottom: 4px;
+  padding: 8px 14px 8px 0;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateX(3px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button--active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-button--active:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Индикатор активности (полоска слева) */
+.nav-button::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 0px;
+  background-color: var(--primary, #D0BCFF);
+  border-radius: 0 3px 3px 0;
+  transition: width 0.3s ease, height 0.3s ease;
+  box-shadow: none;
+}
+
+.nav-button--active::before {
+  width: 3px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-button:hover::before {
+  width: 2px;
+  height: 60%;
+  top: 20%;
+}
+
+.nav-button--active:hover::before {
+  width: 3px;
+}
+
+/* Специальные кнопки (красный цвет) */
+.nav-button--special::before {
+  background-color: #f44336;
+}
+
+/* Иконка навигации */
+.nav-button__icon {
+  min-width: 32px;
+  color: rgba(255, 255, 255, 0.75);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.nav-button__icon svg {
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.nav-button--active .nav-button__icon {
+  color: var(--primary, #D0BCFF);
+}
+
+.nav-button--active .nav-button__icon svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.nav-button--special .nav-button__icon {
+  color: #f44336;
+}
+
+.nav-button:hover .nav-button__icon {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.nav-button:hover .nav-button__icon svg {
+  transform: scale(1.15);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+.nav-button--active:hover .nav-button__icon {
+  color: var(--primary, #D0BCFF);
+}
+
+.nav-button--special:hover .nav-button__icon {
+  color: #f44336;
+}
+
+/* Текст навигации */
+.nav-button__text {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.25px;
+  transition: all 0.3s ease;
+  text-shadow: none;
+  flex: 1;
+  text-align: left;
+}
+
+.nav-button--active .nav-button__text {
+  font-weight: 600;
+  color: var(--primary, #D0BCFF);
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nav-button--special .nav-button__text {
+  color: #f44336;
+}
+
+.nav-button:hover .nav-button__text {
+  letter-spacing: 0.4px;
+  font-weight: 600;
+}
+
+/* Вложенные кнопки */
+.nav-button--nested {
+  padding-left: 16px;
+  border-radius: 10px;
+  margin-bottom: 3px;
+  padding: 6px 12px 6px 16px;
+}
+
+/* Контейнер для endIcon */
+.nav-button__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.nav-button__left-content {
+  display: flex;
+  align-items: center;
+}
+
+/* MoreButton стили */
+.more-button {
+  justify-content: space-between;
+  padding-right: 18px;
+  margin-top: 8px;
+}
+
+.more-button__arrow {
+  transition: transform 0.3s ease;
+  transform: rotate(0deg);
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-button__arrow svg {
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.more-button--active .more-button__arrow {
+  transform: rotate(180deg);
+  color: var(--primary, #D0BCFF);
+}
+
+.more-button--special .more-button__arrow {
+  color: #f44336;
+}
+
+.more-button:hover .more-button__arrow {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.more-button:hover .more-button__arrow svg {
+  transform: scale(1.1);
+}
+
+.more-button--active:hover .more-button__arrow {
+  color: var(--primary, #D0BCFF);
+}
+
+.more-button--special:hover .more-button__arrow {
+  color: #f44336;
+}
+
+/* Светлая тема */
+@media (prefers-color-scheme: light) {
+  .nav-button {
+    color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  .nav-button--active {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+  
+  .nav-button--active:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  
+  .nav-button__icon {
+    color: rgba(0, 0, 0, 0.75);
+  }
+  
+  .nav-button:hover .nav-button__icon {
+    color: rgba(0, 0, 0, 0.95);
+  }
+  
+  .nav-button__text {
+    color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .more-button__arrow {
+    color: rgba(0, 0, 0, 0.75);
+  }
+  
+  .more-button:hover .more-button__arrow {
+    color: rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .nav-button {
+    padding: 7px 12px 7px 0;
+    margin-bottom: 3px;
+  }
+  
+  .nav-button__icon {
+    min-width: 30px;
+  }
+  
+  .nav-button__icon svg {
+    font-size: 1.15rem;
+  }
+  
+  .nav-button__text {
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+  }
+  
+  .nav-button--active .nav-button__text {
+    letter-spacing: 0.35px;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav-button {
+    padding: 6px 11px;
+    margin-bottom: 2px;
+  }
+  
+  .nav-button__icon {
+    min-width: 28px;
+  }
+  
+  .nav-button__icon svg {
+    font-size: 1.1rem;
+  }
+  
+  .nav-button__text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .nav-button,
+  .nav-button::before,
+  .nav-button__icon,
+  .nav-button__icon svg,
+  .nav-button__text,
+  .more-button__arrow,
+  .more-button__arrow svg {
+    transition: none;
+  }
+  
+  .nav-button:hover {
+    transform: none;
+  }
+  
+  .nav-button:hover .nav-button__icon svg {
+    transform: none;
+  }
+  
+  .more-button:hover .more-button__arrow svg {
+    transform: none;
+  }
+}
+
+/* Оптимизации для производительности */
+.nav-button {
+  will-change: transform, background-color;
+  contain: layout style paint;
+}
+
+.nav-button__icon {
+  will-change: color, transform;
+}
+
+.nav-button__text {
+  will-change: color, font-weight, letter-spacing;
+}
+
+.more-button__arrow {
+  will-change: transform, color;
+} 

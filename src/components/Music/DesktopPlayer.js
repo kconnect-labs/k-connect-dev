@@ -809,7 +809,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
         />
       </PlayerContainer>
       
-      <FullScreenPlayer open={isFullScreenPlayerOpen} onClose={closeFullScreen} />
+
       
       <Snackbar
         open={shareSnackbar.open && !isFullScreenPlayerOpen}

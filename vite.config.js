@@ -39,6 +39,10 @@ export default defineConfig(({ mode }) => {
               runtime: 'automatic',
               development: !isProduction,
               importSource: 'react'
+            }],
+            ['@babel/preset-typescript', {
+              isTSX: true,
+              allExtensions: true
             }]
           ]
         },
@@ -95,9 +99,8 @@ export default defineConfig(({ mode }) => {
 
     // --- ESBuild ---
     esbuild: {
-      loader: { '.js': 'jsx' },
+      loader: 'jsx',
       jsx: 'automatic',
-      jsxInject: "import React from 'react'",
     },
 
     // --- Build Options ---

@@ -1,0 +1,154 @@
+@import '../../../uikit.module.css';
+
+/* HeaderActions - Оптимизированные стили без Material UI */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+.action-tooltip {
+  position: relative;
+}
+
+.action-tooltip:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  min-width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.action-button:hover {
+  background-color: rgba(208, 188, 255, 0.08);
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+.action-button--active {
+  background-color: rgba(208, 188, 255, 0.1);
+  color: var(--primary-color, #D0BCFF);
+}
+
+.action-button--active:hover {
+  background-color: rgba(208, 188, 255, 0.15);
+}
+
+.action-button--profile {
+  margin-left: 4px;
+  opacity: 1;
+}
+
+.notification-container {
+  display: flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.notification-container:hover {
+  opacity: 1;
+}
+
+.profile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(208, 188, 255, 0.3);
+  object-fit: cover;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover .profile-avatar {
+  border-color: rgba(208, 188, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(208, 188, 255, 0.2);
+}
+
+/* Поддержка светлой темы */
+@media (prefers-color-scheme: light) {
+  .action-button:hover {
+    background-color: rgba(208, 188, 255, 0.08);
+  }
+  
+  .action-button--active {
+    background-color: rgba(208, 188, 255, 0.1);
+  }
+  
+  .action-button--active:hover {
+    background-color: rgba(208, 188, 255, 0.15);
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .action-button {
+    transition: none;
+  }
+  
+  .action-button:hover {
+    transform: none;
+  }
+  
+  .notification-container {
+    transition: none;
+  }
+  
+  .profile-avatar {
+    transition: none;
+  }
+}
+
+/* Оптимизации для производительности */
+.header-actions {
+  will-change: transform;
+}
+
+.action-button {
+  will-change: transform, opacity;
+}
+
+.notification-container {
+  will-change: opacity;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .profile-avatar {
+    border-width: 0.5px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .header-actions {
+    display: none !important;
+  }
+} 
