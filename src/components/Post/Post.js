@@ -24,18 +24,14 @@ import { MusicContext } from '../../context/MusicContext';
 import { useLanguage } from '../../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import { formatTimeAgo, formatTimeAgoDiff, parseDate, getRussianWordForm } from '../../utils/dateUtils';
-import SimpleImageViewer from '../SimpleImageViewer';
-import VideoPlayer from '../VideoPlayer';
 import { optimizeImage, handleImageError as safeImageError } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
-import Lottie from 'lottie-react'; 
 import { MessageCircle, Repeat2, Link2, Heart } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import ImageGrid from './ImageGrid';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -47,11 +43,22 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
-import RepostImageGrid from './RepostImageGrid';  
-import MusicTrack from './MusicTrack';
-import { VerificationBadge } from '../../UIKIT';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+// Ленивая загрузка тяжелых компонентов
+const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
+const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
+const ImageGrid = React.lazy(() => import('./ImageGrid'));
+const RepostImageGrid = React.lazy(() => import('./RepostImageGrid'));
+const MusicTrack = React.lazy(() => import('./MusicTrack'));
+const VerificationBadge = React.lazy(() => import('../../UIKIT').then(module => ({ default: module.VerificationBadge })));
+const Lottie = React.lazy(() => import('lottie-react'));
+// Ленивая загрузка синтаксиса только когда нужен
+const SyntaxHighlighter = React.lazy(() => import('react-syntax-highlighter').then(module => ({
+  default: module.Prism
+})));
+const vscDarkPlus = React.lazy(() => import('react-syntax-highlighter/dist/esm/styles/prism').then(module => ({
+  default: module.vscDarkPlus
+})));
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
 import MediaErrorDisplay from './MediaErrorDisplay';
@@ -1667,10 +1674,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                         }} 
                       />
                     ) : (
-                      <VerificationBadge 
-                        status={post.user.verification.status} 
-                        size="small" 
-                      />
+                      <Suspense fallback={<Box sx={{ width: 20, height: 20, ml: 0.5 }} />}>
+                        <VerificationBadge 
+                          status={post.user.verification.status} 
+                          size="small" 
+                        />
+                      </Suspense>
                     )
                   )}
                   {post.user?.achievement && (
@@ -1892,27 +1901,31 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 {/* Replacing the single image with our new RepostImageGrid component */}
                 {post.original_post.image && (
                   <Box sx={{ mb: 1 }}>
-                    <RepostImageGrid 
-                      images={post.original_post.images || [post.original_post.image]} 
-                      onImageClick={(index) => {
-                        setCurrentImageIndex(index);
-                        setLightboxImages(post.original_post.images || [post.original_post.image]);
-                        setLightboxOpen(true);
-                      }}
-                    />
+                    <Suspense fallback={<Box sx={{ width: '100%', height: 150, bgcolor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>}>
+                      <RepostImageGrid 
+                        images={post.original_post.images || [post.original_post.image]} 
+                        onImageClick={(index) => {
+                          setCurrentImageIndex(index);
+                          setLightboxImages(post.original_post.images || [post.original_post.image]);
+                          setLightboxOpen(true);
+                        }}
+                      />
+                    </Suspense>
                   </Box>
                 )}
                 
                 {/* Видео оригинального поста (если есть) */}
                 {post.original_post.video && (
                   <Box sx={{ mt: 1 }}>
-                    <VideoPlayer 
-                      videoUrl={post.original_post.video} 
-                      sx={{ maxHeight: '200px' }}
-                      onError={() => {
-                        console.error("Repost video failed to load:", post.original_post.video);
-                      }}
-                    />
+                    <Suspense fallback={<Box sx={{ width: '100%', height: 200, bgcolor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>}>
+                      <VideoPlayer 
+                        videoUrl={post.original_post.video} 
+                        sx={{ maxHeight: '200px' }}
+                        onError={() => {
+                          console.error("Repost video failed to load:", post.original_post.video);
+                        }}
+                      />
+                    </Suspense>
                   </Box>
                 )}
                 
@@ -2060,7 +2073,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             <Box sx={{ mb: 2, position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
               <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
                 <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
-                  <VideoPlayer videoUrl={videoUrl} poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined} onError={() => handleVideoError(videoUrl)} />
+                  <Suspense fallback={<Box sx={{ width: '100%', height: 200, bgcolor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>}>
+                    <VideoPlayer videoUrl={videoUrl} poster={images.length > 0 ? formatVideoUrl(images[0]) : undefined} onError={() => handleVideoError(videoUrl)} />
+                  </Suspense>
                 </Box>
                 {post.is_nsfw && !showSensitive && NSFWOverlay}
               </Box>
@@ -2076,7 +2091,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             <Box sx={{ mb: 2, width: '100%', position: 'relative', borderRadius: '12px', overflow: 'hidden' }} data-no-navigate>
               <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
                 <Box sx={{ filter: post.is_nsfw && !showSensitive ? 'blur(16px)' : 'none', transition: 'filter 0.3s', pointerEvents: post.is_nsfw && !showSensitive ? 'none' : 'auto', width: '100%', height: '100%' }}>
-                  <ImageGrid images={images} onImageClick={handleOpenImage} onImageError={handleImageError} />
+                  <Suspense fallback={<Box sx={{ width: '100%', height: 200, bgcolor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CircularProgress /></Box>}>
+                    <ImageGrid images={images} onImageClick={handleOpenImage} onImageError={handleImageError} />
+                  </Suspense>
                 </Box>
                 {post.is_nsfw && !showSensitive && NSFWOverlay}
               </Box>
@@ -2091,7 +2108,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {musicTracks.length > 0 && (
             <Box sx={{ mt: 0, mb: 0 }}>
               {musicTracks.map((track, index) => (
-                <MusicTrack key={`track-${index}`} onClick={(e) => handleTrackPlay(track, e)}>
+                <Suspense key={`track-${index}`} fallback={<Box sx={{ display: 'flex', alignItems: 'center', p: 2, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, mb: 1 }}><CircularProgress size={20} /></Box>}>
+                  <MusicTrack onClick={(e) => handleTrackPlay(track, e)}>
                   <Box 
                     sx={{ 
                       width: 48, 
@@ -2165,6 +2183,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     {formatDuration(track.duration)}
                   </Typography>
                 </MusicTrack>
+                </Suspense>
               ))}
             </Box>
           )}
