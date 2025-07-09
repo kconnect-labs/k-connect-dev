@@ -722,7 +722,7 @@ const PurchaseButton = styled(Button)(({ theme }) => ({
 
 const UsernameShopTab = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   
@@ -2095,7 +2095,7 @@ const SettingsPage = () => {
 
   const theme = useTheme();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const { user, updateUserData } = useContext(AuthContext);
   const { themeSettings, updateThemeSettings, setProfileBackground, clearProfileBackground, globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
   const { enqueueSnackbar } = useSnackbar();

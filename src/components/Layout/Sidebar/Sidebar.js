@@ -55,10 +55,14 @@ const SidebarContainer = styled(Paper)(({ theme }) => ({
   [theme.breakpoints.down('lg')]: {
     padding: theme.spacing(1.5, 1.2),
     width: '220px',
+    marginLeft: 'auto',
+
   },
   [theme.breakpoints.down('md')]: {
     width: '210px',
     padding: theme.spacing(1.2, 1),
+    marginLeft: 'auto',
+
   }
 }));
 

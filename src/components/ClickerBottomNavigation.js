@@ -45,7 +45,10 @@ const ClickerBottomNavigation = ({ activeSection, onSectionChange, isMobile }) =
         bottom: 0, 
         left: 0, 
         right: 0,
-        display: { xs: 'block', md: 'none' },
+        display: 'block',
+        '@media (min-width: 700px)': {
+          display: 'none',
+        },
         zIndex: 1000,
         borderTop: `1px solid ${borderColor}`,
         backgroundColor: getBackgroundColor(),

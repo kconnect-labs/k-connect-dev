@@ -323,7 +323,7 @@ const AppRoutes = () => {
   const { user, isAuthenticated, loading, checkAuth, error, setUser } = useContext(AuthContext);
   const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   
   
   const background = location.state && location.state.background;

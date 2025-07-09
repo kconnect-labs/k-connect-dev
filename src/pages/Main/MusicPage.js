@@ -510,7 +510,7 @@ const MusicPage = React.memo(() => {
   const [playlistDetailsLoading, setPlaylistDetailsLoading] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const { themeSettings } = useContext(ThemeSettingsContext);
   const searchInputRef = useRef(null);

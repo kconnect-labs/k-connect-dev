@@ -662,7 +662,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const BadgeShopPage = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useContext(AuthContext);

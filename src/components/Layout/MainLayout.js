@@ -35,7 +35,7 @@ const ContentWrapper = styled(Box, {
 const SidebarContainer = styled(Box)(({ theme, open }) => ({
   flexShrink: 0,
   marginLeft: 'auto', 
-  [theme.breakpoints.down('md')]: {
+  '@media (max-width: 700px)': {
     position: 'fixed',
     zIndex: theme.zIndex.drawer,
     right: open ? 0 : -280, 
@@ -57,13 +57,13 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   marginRight: { xs: 0, md: 0 },
   maxWidth: '100%',
   color: theme.palette.text.primary,
-  [theme.breakpoints.up('md')]: {
+  '@media (min-width: 700px)': {
     maxWidth: '1050px', 
     paddingRight: '10px',
     paddingLeft: '10px',
     marginRight: 'auto',
   },
-  [theme.breakpoints.down('sm')]: {
+  '@media (max-width: 700px)': {
     padding: 0,
   },
 }));
@@ -103,7 +103,7 @@ const MainLayout = ({ children }) => {
   const { themeSettings, profileBackground } = useContext(ThemeSettingsContext);
   const { user, isLoading } = useContext(AuthContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const location = useLocation();
   const { currentTrack } = useMusic();
   

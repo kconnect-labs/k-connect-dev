@@ -65,7 +65,7 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
     opacity: 0.6,
     pointerEvents: 'none',
   },
-  '@media (max-width: 900px)': {
+  '@media (max-width: 700px)': {
     width: '85%',
     minWidth: 'auto',
   },

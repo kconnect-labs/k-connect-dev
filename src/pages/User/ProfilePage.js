@@ -519,13 +519,13 @@ const ProfilePage = () => {
         container 
         spacing={0.5}
         sx={{
-          flexDirection: { xs: 'column', md: 'row' },
-          flexWrap: { xs: 'nowrap', md: 'nowrap' }
+          flexDirection: { xs: 'column', lg: 'row' },
+          flexWrap: { xs: 'nowrap', lg: 'nowrap' }
         }}
       >
         
-        <Grid item xs={12} md={5} sx={{ 
-          position: { xs: 'static', md: 'sticky' },
+                <Grid item xs={12} lg={5} sx={{
+          position: { xs: 'static', lg: 'sticky' },
           top: '60px',
           height: 'fit-content',
           zIndex: 2
@@ -1228,9 +1228,9 @@ const ProfilePage = () => {
         </Grid>
         
         
-        <Grid item xs={12} md={7} sx={{
+        <Grid item xs={12} lg={7} sx={{
           pt: 0,
-          ml: { xs: 0, md: '5px' },
+          ml: { xs: 0, lg: '5px' },
           mb: '100px',
           ...(tabValue === 2 && {
             height: '100vh',

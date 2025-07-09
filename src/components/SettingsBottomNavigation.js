@@ -48,7 +48,10 @@ const SettingsBottomNavigation = ({ activeTab, onTabChange, user, isMobile }) =>
         bottom: 0, 
         left: 0, 
         right: 0,
-        display: { xs: 'block', md: 'none' },
+        display: 'block',
+        '@media (min-width: 700px)': {
+          display: 'none',
+        },
         zIndex: 1000,
         borderTop: `1px solid ${borderColor}`,
         background: 'rgba(0, 0, 0, 0.5)',

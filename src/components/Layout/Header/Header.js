@@ -123,7 +123,7 @@ const PlayerSection = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   flexGrow: 1,
   maxWidth: 400,
-  [theme.breakpoints.down('md')]: {
+  '@media (max-width: 700px)': {
     display: 'none',
   },
 }));
@@ -183,7 +183,7 @@ const PointsChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-icon': {
     color: 'inherit',
   },
-  [theme.breakpoints.down('md')]: {
+  '@media (max-width: 700px)': {
     display: 'none',
   },
 }));
@@ -207,7 +207,7 @@ const SearchInputWrapper = styled(Box)(({ theme, fullWidth }) => ({
   width: fullWidth ? '100%' : 450,
   display: 'flex',
   transition: 'all 0.3s ease',
-  [theme.breakpoints.down('sm')]: {
+  '@media (max-width: 700px)': {
     width: '100vw',
     margin: 0,
     borderRadius: 0,
@@ -256,7 +256,7 @@ const SearchResultsContainer = styled(Paper)(({ theme }) => ({
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
-  [theme.breakpoints.down('sm')]: {
+  '@media (max-width: 700px)': {
     position: 'fixed',
     top: '48px',
     left: 0,
@@ -293,7 +293,7 @@ const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const [userChannels, setUserChannels] = useState([]);
   const [accounts, setAccounts] = useState({
     current_account: null,

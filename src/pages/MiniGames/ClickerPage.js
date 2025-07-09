@@ -220,7 +220,7 @@ const formatCompactNumber = (number) => {
 const ClickerPage = () => {
   const theme = useTheme();
   const { user } = useContext(AuthContext);
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery('(max-width:700px)');
   const [activeSection, setActiveSection] = useState('click'); 
   
   
