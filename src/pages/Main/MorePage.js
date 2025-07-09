@@ -426,21 +426,7 @@ const MorePage = () => {
       <MenuSection>
         <SectionTitle>{t('more_page.sections.entertainment.title')}</SectionTitle>
         <List disablePadding sx={{ width: '100%', overflow: 'hidden', px: 0.5, boxSizing: 'border-box' }}>
-        {/* {!isChannel && (
-            <HighlightedMenuItem 
-              button 
-              component={Link} 
-              to="/minigames/clicker"
-              color="secondary"
-            >
-              <MenuItemIcon sx={{ color: theme.palette.secondary.main }}>
-                <Icon icon="solar:gamepad-bold" width="20" height="20" />
-              </MenuItemIcon>
-              <ListItemText 
-                primary={t('more_page.sections.entertainment.minigames')}
-              />
-            </HighlightedMenuItem>
-          )} */}
+
           <MenuListItem button component={Link} to="/economic/packs">
             <MenuItemIcon>
               <Icon icon="solar:box-bold" width="20" height="20" />

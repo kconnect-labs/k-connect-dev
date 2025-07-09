@@ -50,8 +50,8 @@ const StyledTabs = ({
     <div 
       className={`styled-tabs-container ${customStyle ? 'styled-tabs--custom' : 'styled-tabs--default'} ${className}`}
       style={containerStyles}
-      {...props}
-    >
+        {...props}
+      >
       <div className="styled-tabs" style={tabsContainerStyles}>
         {tabs.map((tab) => {
           const IconComponent = tab.icon;

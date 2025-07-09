@@ -107,12 +107,12 @@ const InfoBlock = ({
     >
       {title && (
         <div className="info-block__title" style={titleStyles}>
-          {title}
+            {title}
         </div>
       )}
       {description && (
         <div className="info-block__description" style={descriptionStyles}>
-          {description}
+            {description}
         </div>
       )}
       {children}
