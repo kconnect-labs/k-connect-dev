@@ -24,6 +24,9 @@
     "date-fns": "^4.1.0",
     "dexie-react-hooks": "^1.1.7",
     "emoji-mart": "^5.6.0",
+    "typescript": "^5.8.3",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.10",
     "emoji-picker-react": "^4.12.2",
     "framer-motion": "^12.9.4",
     "jspdf": "^3.0.1",
@@ -75,15 +78,15 @@
     "yet-another-react-lightbox": "^3.23.1"
   },
   "scripts": {
-    "start": "NODE_OPTIONS='--max-old-space-size=8192' vite --host 0.0.0.0 --port 3005 --config vite.dev.config.js --force",
-    "dev": "NODE_OPTIONS='--max-old-space-size=8192' vite --host 0.0.0.0 --port 3005 --config vite.dev.config.js --force",
-    "build": "NODE_OPTIONS='--max-old-space-size=8192' vite build",
-    "build:prod": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode production",
-    "build:analyze": "NODE_OPTIONS='--max-old-space-size=8192' vite build --mode analyze",
-    "build:stats": "echo '🚀 Начало сборки...' && NODE_OPTIONS='--max-old-space-size=8192' time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
+    "start": "vite --host 0.0.0.0 --port 3005 --config vite.dev.config.js --force",
+    "dev": "vite --host 0.0.0.0 --port 3005 --config vite.dev.config.js --force",
+    "build": "vite build",
+    "build:prod": "vite build --mode production",
+    "build:analyze": "vite build --mode analyze",
+    "build:stats": "echo '🚀 Начало сборки...' && time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite dist && npm cache clean --force",
-    "optimize": "NODE_OPTIONS='--max-old-space-size=8192' vite optimize && NODE_OPTIONS='--max-old-space-size=8192' vite build"
+    "optimize": "vite optimize && vite build"
   },
   "browserslist": {
     "production": [

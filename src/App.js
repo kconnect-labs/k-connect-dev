@@ -20,7 +20,8 @@ import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
 import axios from 'axios';
-
+import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
+import { CommandPalleteModal } from './components/Layout/CommandPalette/CommandPalleteModal.js';
 export const SessionContext = React.createContext({
   sessionActive: true,
   sessionExpired: false,
@@ -1164,6 +1165,7 @@ function App() {
                     <LanguageProvider>
                       <MusicProvider>
                         <PostDetailProvider>
+                          <CommandPaletteProvider>
                             <Box sx={{ 
                               display: 'flex', 
                               flexDirection: 'column', 
@@ -1181,9 +1183,12 @@ function App() {
                                     <Route path="*" element={<AppRoutes />} />
                                   </Routes>
                                   <MusicPlayerCore />
+                                  <CommandPalleteModal />
+
                                 </Suspense>
                               </ErrorBoundary>
                             </Box>
+                          </CommandPaletteProvider>
                         </PostDetailProvider>
                       </MusicProvider>
                     </LanguageProvider>

@@ -28,8 +28,7 @@ import {
 
   Tooltip,
 
-  useTheme,
-  useMediaQuery
+  useTheme
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -251,6 +250,47 @@ const LottieWrapper = styled(Box)(({ theme }) => ({
 
 
 
+// Выносим MediaErrorDisplay за пределы компонента Post
+const MediaErrorDisplay = ({ type, t }) => {
+  const [spiderAnimation, setSpiderAnimation] = useState(null);
+  
+  useEffect(() => {
+    const loadSpiderAnimation = async () => {
+      try {
+        const response = await fetch('/static/json/error/spider.json');
+        const animationData = await response.json();
+        setSpiderAnimation(animationData);
+      } catch (error) {
+        console.error(t('post.media_error.animation_load_error'), error);
+      }
+    };
+    
+    loadSpiderAnimation();
+  }, [t]);
+  
+  return (
+    <MediaErrorContainer>
+      {spiderAnimation && (
+        <LottieWrapper>
+          <Lottie 
+            animationData={spiderAnimation} 
+            loop 
+            autoplay
+          />
+        </LottieWrapper>
+      )}
+      <Typography variant="h6" gutterBottom>
+        {type === 'image' ? t('post.media_error.image_load_error') : t('post.media_error.video_load_error')}
+      </Typography>
+      <Typography variant="body2">
+        {type === 'image' 
+          ? t('post.media_error.image_deleted')
+          : t('post.media_error.video_format')}
+      </Typography>
+    </MediaErrorContainer>
+  );
+};
+
 const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusColor }) => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -258,7 +298,16 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const { user: currentUser } = useContext(AuthContext);
   const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const { setPostDetail, openPostDetail } = usePostDetail();
-  const { show: showContextMenu } = useContextMenu();
+  const { show: showContextMenu, contextMenuState, handleContextMenu, closeContextMenu } = useContextMenu();
+  // вместо useMediaQuery используем window.matchMedia, чтобы убрать useSyncExternalStore
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 600 : false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handler = () => setIsMobile(window.innerWidth <= 600);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
   
   const [liked, setLiked] = useState(post?.user_liked || post?.is_liked || false);
   const [likesCount, setLikesCount] = useState(post?.likes_count || 0);
@@ -334,8 +383,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     t('post.report.reasons.harmful_content'),
     t('post.report.reasons.other')
   ];
-  
-  const isMobile = useMediaQuery('(max-width:600px)');
   
   useEffect(() => {
     if (post) {
@@ -1301,8 +1348,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     incrementViewCount();
   };
   
-  const { contextMenuState, handleContextMenu, closeContextMenu } = useContextMenu();
-  
   const handlePostContextMenu = (e) => {
     
     e.stopPropagation();
@@ -1515,46 +1560,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   };
 
   
-  const MediaErrorDisplay = ({ type }) => {
-    const [spiderAnimation, setSpiderAnimation] = useState(null);
-    
-    useEffect(() => {
-      
-      const loadSpiderAnimation = async () => {
-        try {
-          const response = await fetch('/static/json/error/spider.json');
-          const animationData = await response.json();
-          setSpiderAnimation(animationData);
-        } catch (error) {
-          console.error(t('post.media_error.animation_load_error'), error);
-        }
-      };
-      
-      loadSpiderAnimation();
-    }, []);
-    
-    return (
-      <MediaErrorContainer>
-        {spiderAnimation && (
-          <LottieWrapper>
-            <Lottie 
-              animationData={spiderAnimation} 
-              loop 
-              autoplay
-            />
-          </LottieWrapper>
-        )}
-        <Typography variant="h6" gutterBottom>
-          {type === 'image' ? t('post.media_error.image_load_error') : t('post.media_error.video_load_error')}
-        </Typography>
-        <Typography variant="body2">
-          {type === 'image' 
-            ? t('post.media_error.image_deleted')
-            : t('post.media_error.video_format')}
-        </Typography>
-      </MediaErrorContainer>
-    );
-  };
+
   
   // Add pin post handler
   const handlePinPost = async () => {
@@ -2308,7 +2314,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             </Box>
           ) : mediaError.type === 'video' && (
             <Box sx={{ mb: 2 }}>
-              <MediaErrorDisplay type="video" />
+              <MediaErrorDisplay type="video" t={t} />
             </Box>
           )}
           
@@ -2324,7 +2330,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             </Box>
           ) : mediaError.type === 'image' && (
             <Box sx={{ mb: 2 }}>
-              <MediaErrorDisplay type="image" />
+                              <MediaErrorDisplay type="image" t={t} />
             </Box>
           )}
           
