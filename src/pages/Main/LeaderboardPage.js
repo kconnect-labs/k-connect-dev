@@ -73,7 +73,9 @@ const isLightColor = (color) => {
   return brightness > 128;
 };
 
-const UserCard = styled(motion.div)(({ theme, position, decoration }) => {
+const UserCard = styled(motion.div, {
+  shouldForwardProp: (prop) => prop !== 'position' && prop !== 'decoration',
+})(({ theme, position, decoration }) => {
   // Определяем тип фона (градиент, изображение или цвет)
   const isGradient = decoration?.background?.includes('linear-gradient');
   const isImage = decoration?.background?.includes('/');
@@ -175,7 +177,9 @@ const DecorationItem = styled('img')(({ customStyles }) => ({
   transition: 'transform 0.35s cubic-bezier(.4,2,.3,1), z-index 0.2s',
 }));
 
-const ScoreDisplay = styled(Box)(({ theme, position, isLightBackground }) => ({
+const ScoreDisplay = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'position' && prop !== 'isLightBackground',
+})(({ theme, position, isLightBackground }) => ({
   minWidth: 50,
   maxWidth: 50,
   display: 'flex',
@@ -191,7 +195,9 @@ const ScoreDisplay = styled(Box)(({ theme, position, isLightBackground }) => ({
   whiteSpace: 'nowrap',
 }));
 
-const RankNumber = styled(Box)(({ theme, position }) => ({
+const RankNumber = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'position',
+})(({ theme, position }) => ({
   width: 36,
   height: 36,
   display: 'flex',
@@ -216,7 +222,9 @@ const PositionIcon = ({ position }) => {
   return <Typography variant="body1">{position}</Typography>;
 };
 
-const UserAvatar = styled(Avatar)(({ theme, position }) => ({
+const UserAvatar = styled(Avatar, {
+  shouldForwardProp: (prop) => prop !== 'position',
+})(({ theme, position }) => ({
   width: 50,
   height: 50,
   marginRight: theme.spacing(2),
@@ -238,7 +246,9 @@ const UserInfo = styled(Box)({
   justifyContent: 'center'
 });
 
-const ScoreChip = styled(Chip)(({ theme, position }) => ({
+const ScoreChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== 'position',
+})(({ theme, position }) => ({
   fontWeight: 'bold',
   backgroundColor: position === 1 
     ? '#FDB836'
@@ -250,7 +260,9 @@ const ScoreChip = styled(Chip)(({ theme, position }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
-const StatsChip = styled(Chip)(({ theme, isLightBackground }) => ({
+const StatsChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== 'isLightBackground',
+})(({ theme, isLightBackground }) => ({
   marginRight: theme.spacing(1),
   height: 24,
   backgroundColor: 'transparent',
