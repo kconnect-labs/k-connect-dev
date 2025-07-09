@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef, lazy, Suspense } from 'react';
 import { 
   Box, 
   Typography,
@@ -10,24 +10,10 @@ import {
   Snackbar,
   Card,
   styled,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
   CircularProgress,
-
   Alert,
-  FormControlLabel,
-  Checkbox,
-  List,
-  ListItem,
-
-  Chip,
-
   Tooltip,
-
   useTheme
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,17 +36,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import ImageGrid from './ImageGrid';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FlagIcon from '@mui/icons-material/Flag';
-import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import EditIcon from '@mui/icons-material/Edit';
-import PhotoIcon from '@mui/icons-material/Photo';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
@@ -73,7 +53,18 @@ import { VerificationBadge } from '../../UIKIT';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
-import FactModal from './FactModal';
+
+import MediaErrorDisplay from './MediaErrorDisplay';
+import HeartAnimation from './HeartAnimation';
+import ChannelTag from './ChannelTag';
+import ShowMoreButton from './ShowMoreButton';
+import MarkdownContent from './MarkdownContent';
+import BlurredMenu from './BlurredMenu';
+
+const ReportDialog = lazy(() => import('./ReportDialog'));
+const FactModal = lazy(() => import('./FactModal'));
+const RepostModal = lazy(() => import('./RepostModal'));
+const DeleteDialog = lazy(() => import('./DeleteDialog'));
 
 // CSS анимация для скелетона
 const skeletonKeyframes = `
@@ -108,188 +99,7 @@ const PostCard = styled(Card, {
   },
 }));
 
-const MarkdownContent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isExpanded'
-})(({ theme, isExpanded }) => ({
-  '& p': {
-    margin: theme.spacing(0.5, 0),
-    lineHeight: 1.2,
-  },
-  '& h1, & h2, & h3, & h4, & h5, & h6': {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    fontWeight: 600,
-  },
-  '& a': {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  '& ul, & ol': {
-    marginLeft: theme.spacing(2),
-    lineHeight: 1,
-  },
-  '& li': {
-    lineHeight: 1,
-  },
-  '& code': {
-    fontFamily: 'monospace',
-    backgroundColor: theme.palette.action.hover,
-    padding: theme.spacing(0, 0.6),
-    borderRadius: 3,
-    fontSize: '0.85rem',
-  },
-  '& pre': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(50px)',
-    WebkitBackdropFilter: 'blur(50px)',
-    padding: theme.spacing(1.5),
-    borderRadius: theme.shape.borderRadius,
-    overflowX: 'auto',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    '& code': {
-      backgroundColor: 'transparent',
-      padding: 0,
-    },
-  },
-  maxHeight: isExpanded ? 'none' : '450px',
-  overflow: isExpanded ? 'visible' : 'hidden',
-  position: 'relative',
-  transition: 'max-height 0.3s ease',
-}));
-
-const BlurredMenu = styled(Menu)(({ theme }) => ({
-  '& .MuiPaper-root': {
-    background: 'linear-gradient(135deg, rgb(19 19 19 / 51%) 0%, rgb(25 24 24 / 39%) 100%)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '12px',
-    '& .MuiMenuItem-root': {
-      '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      },
-    }
-  }
-}));
-
-const ShowMoreButton = styled(Button)(({ theme }) => ({
-  margin: '8px auto 0',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: 'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.8) 30%, rgba(26,26,26,1) 100%)',
-  color: theme.palette.primary.main,
-  borderRadius: '0 0 10px 10px',
-  textTransform: 'none',
-  fontWeight: 'normal',
-  padding: '8px',
-  width: '100%',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  '&:hover': {
-    background: 'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.9) 30%, rgba(26,26,26,1) 100%)',
-  }
-}));
-
-const ChannelTag = styled(Chip)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-  color: 'rgba(255, 255, 255, 0.8)',
-  height: 24,
-  borderRadius: 12,
-  fontSize: '0.75rem',
-  fontWeight: 500,
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  '& .MuiChip-label': {
-    padding: '0 8px',
-  }
-}));
-
-
-const HeartAnimation = styled(motion.div)(({ theme }) => ({
-  position: 'absolute',
-  '& svg': {
-    filter: 'drop-shadow(0 0 5px rgba(224, 187, 255, 0.7))',
-    color: 'transparent',
-    fill: 'url(#heartGradient)',
-  },
-  zIndex: 100,
-  pointerEvents: 'none',
-}));
-
-
-const MediaErrorContainer = styled(Box)(({ theme }) => ({
-  height: '220px',
-  position: 'relative',
-  width: '100%',
-  aspectRatio: '16/9',
-  borderRadius: '24px',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  background: 'linear-gradient(327deg, rgb(206 188 255 / 77%) 0%, rgb(97 76 147) 100%)',
-  backdropFilter: 'blur(20px)',
-  boxShadow: 'inset 0 0 0 1px rgba(206, 188, 255, 0.2)',
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: 'rgba(255, 255, 255, 0.9)',
-}));
-
-const LottieWrapper = styled(Box)(({ theme }) => ({
-  width: '100%',
-  maxWidth: '150px', 
-  height: '150px', 
-  marginBottom: theme.spacing(1),
-  opacity: 0.8,
-}));
-
-
-
-
-// Выносим MediaErrorDisplay за пределы компонента Post
-const MediaErrorDisplay = ({ type, t }) => {
-  const [spiderAnimation, setSpiderAnimation] = useState(null);
-  
-  useEffect(() => {
-    const loadSpiderAnimation = async () => {
-      try {
-        const response = await fetch('/static/json/error/spider.json');
-        const animationData = await response.json();
-        setSpiderAnimation(animationData);
-      } catch (error) {
-        console.error(t('post.media_error.animation_load_error'), error);
-      }
-    };
-    
-    loadSpiderAnimation();
-  }, [t]);
-  
-  return (
-    <MediaErrorContainer>
-      {spiderAnimation && (
-        <LottieWrapper>
-          <Lottie 
-            animationData={spiderAnimation} 
-            loop 
-            autoplay
-          />
-        </LottieWrapper>
-      )}
-      <Typography variant="h6" gutterBottom>
-        {type === 'image' ? t('post.media_error.image_load_error') : t('post.media_error.video_load_error')}
-      </Typography>
-      <Typography variant="body2">
-        {type === 'image' 
-          ? t('post.media_error.image_deleted')
-          : t('post.media_error.video_format')}
-      </Typography>
-    </MediaErrorContainer>
-  );
-};
+const EditPostDialog = lazy(() => import('./EditPostDialog'));
 
 const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusColor }) => {
   const { t } = useLanguage();
@@ -953,62 +763,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   };
   
   
-  const renderRepostInputWithMentions = () => {
-    if (!repostContent) return null;
-    
-    const parts = [];
-    let lastIndex = 0;
-    
-    USERNAME_MENTION_REGEX.lastIndex = 0;
-    
-    let match;
-    while ((match = USERNAME_MENTION_REGEX.exec(repostContent)) !== null) {
-      if (match.index > lastIndex) {
-        parts.push(<span key={`text-${lastIndex}`}>{repostContent.substring(lastIndex, match.index)}</span>);
-      }
-      
-      parts.push(
-        <span 
-          key={`mention-${match.index}`}
-          style={{ 
-            color: '#7B68EE', 
-            fontWeight: 'bold',
-            background: 'rgba(123, 104, 238, 0.08)',
-            padding: '0 4px',
-            borderRadius: '4px'
-          }}
-        >
-          {match[0]}
-        </span>
-      );
-      
-      lastIndex = match.index + match[0].length;
-    }
-    
-    if (lastIndex < repostContent.length) {
-      parts.push(<span key={`text-end`}>{repostContent.substring(lastIndex)}</span>);
-    }
-    
-    return (
-      <Box sx={{ 
-        position: 'absolute', 
-        top: 0, 
-        left: 0, 
-        right: 0, 
-        bottom: 0, 
-        padding: '16.5px 14px',
-        color: 'rgba(255, 255, 255, 0.9)',
-        fontSize: '0.95rem',
-        pointerEvents: 'none', 
-        overflow: 'hidden',
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignContent: 'flex-start'
-      }}>
-        {parts}
-      </Box>
-    );
-  };
+
 
   
   const handleCreateRepost = async () => {
@@ -2883,251 +2638,18 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       </BlurredMenu>
       
       
-      <Dialog
-        open={repostModalOpen}
-        onClose={handleCloseRepostModal}
-        onClick={(e) => e.stopPropagation()}
-        PaperProps={{
-          sx: {
-            bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-            width: '100%',
-            maxWidth: '500px',
-            borderRadius: '16px',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
-            '&:before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: '16px',
-              background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-              backdropFilter: 'blur(30px)',
-              zIndex: -1
-            }
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          borderBottom: '1px solid rgba(100, 90, 140, 0.1)',
-          px: 3,
-          py: 2,
-          color: 'white',
-          fontWeight: 500,
-          fontSize: '1.1rem',
-          display: 'flex',
-          alignItems: 'center',
-          '&:before': {
-            content: '""',
-            display: 'inline-block',
-            width: '18px',
-            height: '18px',
-            marginRight: '10px',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237B68EE'%3E%3Cpath d='M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z'%3E%3C/path%3E%3C/svg%3E")`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat'
-          }
-        }}>
-            {t('post.repost_dialog.title')}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3, px: 3 }}>
-          {post.type === 'repost' && (
-            <Box sx={{ 
-              mb: 2,
-              p: 1.5, 
-              borderRadius: '8px',
-              bgcolor: 'rgba(123, 104, 238, 0.08)',
-              border: '1px solid rgba(123, 104, 238, 0.15)',
-              fontSize: '0.85rem',
-              color: 'rgba(255, 255, 255, 0.85)',
-              display: 'flex',
-              alignItems: 'flex-start'
-            }}>
-              <Repeat2 size={18} color="#7B68EE" style={{ marginRight: '8px', marginTop: '2px' }} />
-              <Typography variant="body2" sx={{ fontSize: '0.85rem' }}>
-                {t('post.repost_dialog.original_post_notice')}
-              </Typography>
-            </Box>
-          )}
-          <Box sx={{ position: 'relative' }}>
-            <TextField
-              autoFocus
-              multiline
-              rows={3}
-              fullWidth
-              placeholder={t('post.repost_dialog.comment_placeholder')}
-              value={repostContent}
-              onChange={(e) => setRepostContent(e.target.value)}
-              variant="outlined"
-              helperText={t('post.repost_dialog.mention_helper')}
-              sx={{
-                mb: 2.5,
-                '& .MuiOutlinedInput-root': {
-                  bgcolor: 'rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(255, 255, 255, 0.09)',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'rgba(100, 90, 140, 0.3)'
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#7B68EE',
-                    borderWidth: '1px'
-                  },
-                  '& .MuiOutlinedInput-input': {
-                    fontSize: '0.95rem',
-                    color: 'transparent',  
-                    caretColor: 'rgba(255, 255, 255, 0.9)'  
-                  }
-                },
-                '& .MuiFormHelperText-root': {
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  fontSize: '0.75rem',
-                  marginTop: '4px'
-                }
-              }}
-            />
-            {renderRepostInputWithMentions()}
-          </Box>
-          
-          
-          <Box 
-            sx={{ 
-              p: 2.5, 
-              border: '1px solid rgba(255, 255, 255, 0.09)', 
-              borderRadius: '12px',
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(5px)',
-              boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
-              position: 'relative',
-              overflow: 'hidden',
-              '&:before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                bgcolor: 'rgba(100, 90, 140, 0.02)',
-                backdropFilter: 'blur(5px)',
-                borderRadius: '12px',
-                zIndex: 0
-              }
-            }}
-          >
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              mb: 1.5,
-              position: 'relative',
-              zIndex: 1
-            }}>
-              <Avatar 
-                src={post?.user?.avatar_url} 
-                alt={post?.user?.name}
-                sx={{ 
-                  width: 35, 
-                  height: 35, 
-                  mr: 1.5
-                }}
-              >
-                {post?.user?.name ? post?.user?.name[0] : '?'}
-              </Avatar>
-              <Box>
-                <Typography variant="body2" fontWeight="medium" sx={{ 
-                  color: 'rgba(255, 255, 255, 0.95)',
-                  lineHeight: 1.2
-                }}>
-                  {post?.user?.name}
-                </Typography>
-                <Typography variant="caption" sx={{ 
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  fontSize: '0.7rem',
-                  display: 'block'
-                }}>
-                  {formatTimeAgo(post?.timestamp)}
-                </Typography>
-              </Box>
-            </Box>
-            <Typography variant="body2" sx={{ 
-              mb: 1, 
-              display: '-webkit-box', 
-              WebkitLineClamp: 3, 
-              WebkitBoxOrient: 'vertical', 
-              overflow: 'hidden',
-              color: 'rgba(255, 255, 255, 0.85)',
-              position: 'relative',
-              zIndex: 1,
-              fontSize: '0.9rem',
-              lineHeight: 1.5 
-            }}>
-              {post?.content}
-            </Typography>
-            {post?.image && (
-              <Box 
-                component="img" 
-                src={post.image} 
-                alt={t('post.media.post_image_alt')}
-                sx={{
-                  width: '100%',
-                  height: '120px',
-                  objectFit: 'cover',
-                  borderRadius: '8px',
-                  mt: 1,
-                  opacity: 0.9,
-                  position: 'relative',
-                  zIndex: 1
-                }}
-              />
-            )}
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ p: 1.5, justifyContent: 'space-between' }}>
-          <Button 
-            onClick={handleCloseRepostModal} 
-            sx={{ 
-              borderRadius: '10px', 
-              color: 'rgba(255, 255, 255, 0.7)',
-              px: 2,
-              '&:hover': {
-                bgcolor: 'rgba(255, 255, 255, 0.08)',
-                color: 'rgba(255, 255, 255, 0.9)'
-              }
-            }}
-          >
-            {t('post.dialog.cancel')}
-          </Button>
-          <Button 
-            onClick={handleCreateRepost} 
-            variant="contained" 
-            disabled={repostLoading}
-            sx={{ 
-              borderRadius: '10px',
-              bgcolor: '#7B68EE',
-              boxShadow: 'none',
-              px: 3,
-              '&:hover': {
-                bgcolor: '#8778F0',
-                boxShadow: 'none'
-              },
-              '&.Mui-disabled': {
-                bgcolor: 'rgba(100, 90, 140, 0.3)',
-                color: 'rgba(255, 255, 255, 0.5)'
-              }
-            }}
-            endIcon={repostLoading ? <CircularProgress size={16} color="inherit" /> : null}
-          >
-            {t('post.repost_dialog.repost_button')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Suspense fallback={null}>
+        <RepostModal
+          open={repostModalOpen}
+          onClose={handleCloseRepostModal}
+          post={post}
+          repostContent={repostContent}
+          setRepostContent={setRepostContent}
+          repostLoading={repostLoading}
+          handleCreateRepost={handleCreateRepost}
+          t={t}
+        />
+      </Suspense>
       
       
       {lightboxOpen && !onOpenLightbox && (
@@ -3140,290 +2662,46 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       )}
       
       
-      <Dialog
-        open={deleteDialog.open}
-        onClose={() => !deleteDialog.deleting && !deleteDialog.deleted && setDeleteDialog({ ...deleteDialog, open: false })}
-        PaperProps={{
-          sx: {
-            bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-            width: '100%',
-            maxWidth: '400px',
-            borderRadius: '16px',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
-            '&:before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: '16px',
-              background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-              backdropFilter: 'blur(30px)',
-              zIndex: -1
-            }
-          }
-        }}
-      >
-        <Box sx={{ p: 3 }}>
-          {deleteDialog.deleted ? (
-            <>
-              <Box sx={{ textAlign: 'center', py: 2 }}>
-                <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
-                <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-                  {t('post.delete_dialog.success_title')}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  {t('post.delete_dialog.success_message')}
-                </Typography>
-              </Box>
-            </>
-          ) : (
-            <>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mb: 2, 
-                  color: '#f44336',
-                  fontWeight: 'medium',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <DeleteIcon sx={{ mr: 1 }} /> {t('post.delete_dialog.title')}
-              </Typography>
-              <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                {t('post.delete_dialog.confirmation')}
-              </Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button 
-                  onClick={() => setDeleteDialog({ ...deleteDialog, open: false })}
-                  disabled={deleteDialog.deleting}
-                  sx={{ 
-                    borderRadius: '10px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    px: 2,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.08)',
-                      color: 'rgba(255, 255, 255, 0.9)'
-                    }
-                  }}
-                >
-                  {t('post.delete_dialog.cancel')}
-                </Button>
-                <Button 
-                  onClick={confirmDelete}
-                  disabled={deleteDialog.deleting}
-                  variant="contained" 
-                  color="error"
-                  sx={{ 
-                    borderRadius: '10px',
-                    boxShadow: 'none',
-                    px: 2
-                  }}
-                  endIcon={deleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
-                >
-                  {deleteDialog.deleting ? t('post.delete_dialog.deleting') : t('post.delete_dialog.delete')}
-                </Button>
-              </Box>
-            </>
-          )}
-        </Box>
-      </Dialog>
+      <Suspense fallback={null}>
+        <DeleteDialog
+          open={deleteDialog.open}
+          onClose={() => !deleteDialog.deleting && !deleteDialog.deleted && setDeleteDialog({ ...deleteDialog, open: false })}
+          deleteDialog={deleteDialog}
+          setDeleteDialog={setDeleteDialog}
+          confirmDelete={confirmDelete}
+          t={t}
+        />
+      </Suspense>
       
       
-      <Dialog
-        open={reportDialog.open}
-        onClose={() => !reportDialog.submitting && !reportDialog.submitted && setReportDialog({...reportDialog, open: false})}
-        PaperProps={{
-          sx: {
-            bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-            width: '100%',
-            maxWidth: '450px',
-            borderRadius: '16px',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
-            '&:before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: '16px',
-              background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-              backdropFilter: 'blur(30px)',
-              zIndex: -1
-            }
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          borderBottom: '1px solid rgba(100, 90, 140, 0.1)',
-          px: 3,
-          py: 2,
-          color: 'white',
-          fontWeight: 500,
-          fontSize: '1.1rem',
-          display: 'flex',
-          alignItems: 'center',
-          '&:before': {
-            content: '""',
-            display: 'inline-block',
-            width: '18px',
-            height: '18px',
-            marginRight: '10px',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF9800'%3E%3Cpath d='M14.4 6l-.24-1.2c-.09-.46-.5-.8-.98-.8H6c-.55 0-1 .45-1 1v15c0 .55.45 1 1 1s1-.45 1-1v-6h5.6l.24 1.2c.09.47.5.8.98.8H19c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1h-4.6z'%3E%3C/path%3E%3C/svg%3E")`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat'
-          }
-        }}>
-          {t('post.report_dialog.title')}
-        </DialogTitle>
-        
-        {reportDialog.submitted ? (
-          <Box sx={{ p: 3, textAlign: 'center' }}>
-            <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
-            <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
-              {t('post.report_dialog.success_title')}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-              {t('post.report_dialog.success_message')}
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            <DialogContent sx={{ pt: 3, px: 3 }}>
-              <Typography variant="body2" sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                {t('post.report_dialog.description')}
-              </Typography>
-              
-              {reportDialog.error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                  {reportDialog.error}
-                </Alert>
-              )}
-              
-              <Box 
-                sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  gap: 1.5,
-                  mb: 2
-                }}
-              >
-                {reportReasons.map(reason => (
-                  <Button
-                    key={reason}
-                    variant={reportDialog.reason === reason ? "contained" : "outlined"}
-                    color={reportDialog.reason === reason ? "warning" : "inherit"}
-                    onClick={() => setReportDialog({...reportDialog, reason, error: null})}
-                    sx={{
-                      borderRadius: '10px',
-                      justifyContent: 'flex-start',
-                      textTransform: 'none',
-                      py: 1,
-                      backgroundColor: reportDialog.reason === reason ? 'rgba(255, 152, 0, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                      borderColor: reportDialog.reason === reason ? 'rgba(255, 152, 0, 0.5)' : 'rgba(255, 255, 255, 0.1)',
-                      '&:hover': {
-                        backgroundColor: reportDialog.reason === reason ? 'rgba(255, 152, 0, 0.15)' : 'rgba(255, 255, 255, 0.1)',
-                        borderColor: reportDialog.reason === reason ? 'rgba(255, 152, 0, 0.6)' : 'rgba(255, 255, 255, 0.2)',
-                      }
-                    }}
-                  >
-                    {reason}
-                  </Button>
-                ))}
-              </Box>
-              
-              {reportDialog.reason === t('post.report.reasons.other') && (
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  placeholder={t('post.report.placeholder')}
-                  variant="outlined"
-                  value={reportDialog.customReason || ''}
-                  onChange={(e) => setReportDialog({...reportDialog, customReason: e.target.value})}
-                  sx={{
-                    mb: 2,
-                    '& .MuiOutlinedInput-root': {
-                      bgcolor: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '10px',
-                      '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255, 152, 0, 0.5)'
-                      },
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#ff9800',
-                        borderWidth: '1px'
-                      }
-                    }
-                  }}
-                />
-              )}
-              
-              
-              <Box 
-                sx={{ 
-                  p: 2, 
-                  border: '1px solid rgba(255, 152, 0, 0.3)', 
-                  borderRadius: '10px',
-                  bgcolor: 'rgba(255, 152, 0, 0.05)',
-                }}
-              >
-                <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255, 255, 255, 0.5)', mb: 1 }}>
-                  {t('post.report_dialog.post_by_user', { username: post?.user?.name })}
-                </Typography>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    fontSize: '0.8rem'
-                  }}
-                >
-                  {post?.content}
-                </Typography>
-              </Box>
-            </DialogContent>
-            <DialogActions sx={{ p: 2, justifyContent: 'space-between' }}>
-              <Button 
-                onClick={() => setReportDialog({...reportDialog, open: false})}
-                disabled={reportDialog.submitting}
-                sx={{ 
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  '&:hover': {
-                    bgcolor: 'rgba(255, 255, 255, 0.05)'
-                  }
-                }}
-              >
-                {t('post.report_dialog.cancel')}
-              </Button>
-              <Button 
-                onClick={handleReportSubmit}
-                disabled={reportDialog.submitting || !reportDialog.reason}
-                variant="contained" 
-                color="warning"
-                startIcon={reportDialog.submitting ? <CircularProgress size={16} color="inherit" /> : <ReportProblemIcon />}
-                sx={{ 
-                  bgcolor: '#ff9800',
-                  '&:hover': {
-                    bgcolor: '#f57c00'
-                  }
-                }}
-              >
-                {reportDialog.submitting ? t('post.report_dialog.submitting') : t('post.report_dialog.submit')}
-              </Button>
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
+      <Suspense fallback={null}>
+        <ReportDialog
+          open={reportDialog.open}
+          onClose={() => !reportDialog.submitting && !reportDialog.submitted && setReportDialog({...reportDialog, open: false})}
+          reportDialog={reportDialog}
+          t={t}
+          post={post}
+          reportReasons={reportReasons}
+          setReportDialog={setReportDialog}
+          handleReportSubmit={handleReportSubmit}
+          submitting={reportDialog.submitting}
+          error={reportDialog.error}
+        />
+      </Suspense>
+      
+      
+      <Suspense fallback={null}>
+        <FactModal
+          open={factModal.open}
+          onClose={handleFactModalClose}
+          onSubmit={handleFactSubmit}
+          onDelete={handleFactDelete}
+          loading={factModal.loading}
+          error={factModal.error}
+          existingFact={post.fact}
+          postId={post.id}
+        />
+      </Suspense>
       
       
       <Snackbar
@@ -3442,397 +2720,22 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       </Snackbar>
       
       
-      <Dialog
-        open={editDialog.open}
-        onClose={() => !editDialog.submitting && handleCloseEditDialog()}
-        PaperProps={{
-          sx: {
-            borderRadius: '16px',
-            bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-            width: '95%',
-            maxWidth: '600px',
-            border: '1px solid rgba(100, 90, 140, 0.1)',
-            '&:before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              borderRadius: '16px',
-              background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-              backdropFilter: 'blur(30px)',
-              zIndex: -1
-            }
-          }
-        }}
-        fullWidth
-        maxWidth="md"
-      >
-        <DialogTitle sx={{ 
-          borderBottom: '1px solid rgba(100, 90, 140, 0.1)',
-          px: 3,
-          py: 2,
-          color: 'white',
-          fontWeight: 500,
-          fontSize: '1.1rem',
-          display: 'flex',
-          alignItems: 'center',
-          '&:before': {
-            content: '""',
-            display: 'inline-block',
-            width: '18px',
-            height: '18px',
-            marginRight: '10px',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232196f3'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z'%3E%3C/path%3E%3C/svg%3E")`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat'
-          }
-        }}>
-          {t('post.edit_dialog.title')}
-        </DialogTitle>
-        <DialogContent sx={{ pt: 3, px: 3 }}>
-          <Typography variant="caption" sx={{ display: 'block', color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}>
-            {t('post.edit_dialog.time_limit')}
-          </Typography>
-          
-          {editDialog.error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {editDialog.error}
-            </Alert>
-          )}
-          
-          
-          <TextField
-            fullWidth
-            multiline
-            minRows={3}
-            maxRows={8}
-            label={t('post.edit_dialog.post_text')}
-            value={editDialog.content}
-            onChange={handleEditContentChange}
-            margin="normal"
-            disabled={editDialog.submitting}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                bgcolor: 'rgba(255, 255, 255, 0.08)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '12px',
-                border: '1px solid rgba(255, 255, 255, 0.09)',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.1)',
-                },
-                '&:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(100, 90, 140, 0.3)'
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#2196f3',
-                  borderWidth: '1px'
-                }
-              },
-              '& .MuiInputLabel-root': {
-                color: 'rgba(255, 255, 255, 0.7)'
-              },
-              '& .MuiInputBase-input': {
-                color: 'rgba(255, 255, 255, 0.9)'
-              }
-            }}
-          />
-          
-          
-          {(post.images?.length > 0 || post.image) && !editDialog.deleteImages && (
-            <Box sx={{ mt: 2, mb: 1 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('post.edit_dialog.current_images')}
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {post.images ? post.images.map((img, idx) => (
-                  <Box 
-                    key={`current-img-${idx}`}
-                    component="img"
-                    src={img}
-                    alt={t('post.edit_dialog.image_alt', { number: idx + 1 })}
-                    sx={{ 
-                      width: 80, 
-                      height: 80, 
-                      objectFit: 'cover',
-                      borderRadius: 1
-                    }}
-                  />
-                )) : post.image && (
-                  <Box 
-                    component="img"
-                    src={post.image}
-                    alt={t('post.edit_dialog.post_image_alt')}
-                    sx={{ 
-                      width: 80, 
-                      height: 80, 
-                      objectFit: 'cover',
-                      borderRadius: 1
-                    }}
-                  />
-                )}
-              </Box>
-              <FormControlLabel
-                control={
-                  <Checkbox 
-                    checked={editDialog.deleteImages}
-                    onChange={handleToggleDeleteImages}
-                    disabled={editDialog.submitting}
-                    sx={{
-                      color: 'rgba(255, 255, 255, 0.5)',
-                      '&.Mui-checked': {
-                        color: '#2196f3',
-                      }
-                    }}
-                  />
-                }
-                label={t('post.edit_dialog.delete_current_images')}
-                sx={{ 
-                  mt: 1,
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  '& .MuiFormControlLabel-label': {
-                    fontSize: '0.9rem'
-                  }
-                }}
-              />
-            </Box>
-          )}
-          
-          
-          {post.video && !editDialog.deleteVideo && (
-            <Box sx={{ mt: 2, mb: 1 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('post.edit_dialog.current_video')}
-              </Typography>
-              <Box 
-                component="video"
-                src={post.video}
-                controls
-                sx={{ 
-                  maxWidth: '100%',
-                  height: 120,
-                  borderRadius: 1
-                }}
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox 
-                    checked={editDialog.deleteVideo}
-                    onChange={handleToggleDeleteVideo}
-                    disabled={editDialog.submitting}
-                    sx={{
-                      color: 'rgba(255, 255, 255, 0.5)',
-                      '&.Mui-checked': {
-                        color: '#2196f3',
-                      }
-                    }}
-                  />
-                }
-                label={t('post.edit_dialog.delete_current_video')}
-                sx={{ 
-                  mt: 1, 
-                  display: 'block',
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  '& .MuiFormControlLabel-label': {
-                    fontSize: '0.9rem'
-                  }
-                }}
-              />
-            </Box>
-          )}
-          
-          
-          {post.music && post.music.length > 0 && !editDialog.deleteMusic && (
-            <Box sx={{ mt: 2, mb: 1 }}>
-              <Typography variant="subtitle2" gutterBottom>
-                {t('post.edit_dialog.current_audio')}
-              </Typography>
-              <List dense>
-                {post.music.map((track, idx) => (
-                  <ListItem key={`music-${idx}`} sx={{ py: 0.5 }}>
-                    <ListItemIcon sx={{ minWidth: 36 }}>
-                      <MusicNoteIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText 
-                      primary={track.title} 
-                      secondary={track.artist}
-                      primaryTypographyProps={{ noWrap: true, variant: 'body2' }}
-                      secondaryTypographyProps={{ noWrap: true, variant: 'caption' }}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-              <FormControlLabel
-                control={
-                  <Checkbox 
-                    checked={editDialog.deleteMusic}
-                    onChange={handleToggleDeleteMusic}
-                    disabled={editDialog.submitting}
-                    sx={{
-                      color: 'rgba(255, 255, 255, 0.5)',
-                      '&.Mui-checked': {
-                        color: '#2196f3',
-                      }
-                    }}
-                  />
-                }
-                label={t('post.edit_dialog.delete_music')}
-                sx={{ 
-                  mt: 0.5,
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  '& .MuiFormControlLabel-label': {
-                    fontSize: '0.9rem'
-                  }
-                }}
-              />
-            </Box>
-          )}
-          
-          
-          <Box sx={{ mt: 2 }}>
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<PhotoIcon />}
-              disabled={editDialog.submitting}
-              sx={{ 
-                mr: 1, 
-                mb: 1,
-                borderRadius: '10px',
-                backdropFilter: 'blur(5px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                color: 'rgba(255, 255, 255, 0.8)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  borderColor: 'rgba(255, 255, 255, 0.2)',
-                }
-              }}
-            >
-              {t('post.edit_dialog.add_images')}
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                hidden
-                onChange={handleEditImageSelect}
-              />
-            </Button>
-            
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<VideocamIcon />}
-              disabled={editDialog.submitting || (post.video && !editDialog.deleteVideo)}
-              sx={{ 
-                mb: 1,
-                borderRadius: '10px',
-                backdropFilter: 'blur(5px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                color: 'rgba(255, 255, 255, 0.8)',
-                '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  borderColor: 'rgba(255, 255, 255, 0.2)',
-                }
-              }}
-            >
-              {post.video && !editDialog.deleteVideo ? t('post.edit_dialog.delete_current_video') : t('post.edit_dialog.add_video')}
-              <input
-                type="file"
-                accept="video/*"
-                hidden
-                onChange={handleEditVideoSelect}
-                disabled={post.video && !editDialog.deleteVideo}
-              />
-            </Button>
-          </Box>
-          
-          
-          {editDialog.previews.length > 0 && (
-            <Box sx={{ mt: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {editDialog.previews.map((preview, idx) => (
-                <Box
-                  key={`preview-${idx}`}
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}
-                >
-                  <img
-                    src={preview}
-                    alt={`Preview ${idx + 1}`}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                </Box>
-              ))}
-            </Box>
-          )}
-          
-          
-          {editDialog.newVideo && (
-            <Box sx={{ 
-              mt: 2,
-              p: 1.5,
-              borderRadius: '10px',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)'
-            }}>
-              <Typography variant="caption" color="rgba(255, 255, 255, 0.7)">
-                {t('post.edit_dialog.new_video_selected', { name: editDialog.newVideo.name })}
-              </Typography>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button 
-            onClick={handleCloseEditDialog} 
-            variant="outlined" 
-            color="primary"
-            disabled={editDialog.submitting}
-            sx={{
-              borderRadius: '10px',
-              borderColor: 'rgba(33, 150, 243, 0.3)',
-              color: 'rgba(255, 255, 255, 0.8)',
-              '&:hover': {
-                borderColor: 'rgba(33, 150, 243, 0.5)',
-                backgroundColor: 'rgba(33, 150, 243, 0.05)'
-              }
-            }}
-          >
-            {t('post.edit_dialog.cancel')}
-          </Button>
-          <Button 
-            onClick={handleSubmitEdit} 
-            variant="contained" 
-            color="primary"
-            disabled={editDialog.submitting}
-            startIcon={editDialog.submitting ? <CircularProgress size={16} color="inherit" /> : null}
-            sx={{
-              borderRadius: '10px',
-              backgroundColor: '#2196f3',
-              '&:hover': {
-                backgroundColor: '#1976d2'
-              }
-            }}
-          >
-            {editDialog.submitting ? t('post.edit_dialog.saving') : t('post.edit_dialog.save')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Suspense fallback={null}>
+        <EditPostDialog
+          open={editDialog.open}
+          onClose={() => !editDialog.submitting && handleCloseEditDialog()}
+          editDialog={editDialog}
+          t={t}
+          post={post}
+          handleEditContentChange={handleEditContentChange}
+          handleToggleDeleteImages={handleToggleDeleteImages}
+          handleToggleDeleteVideo={handleToggleDeleteVideo}
+          handleToggleDeleteMusic={handleToggleDeleteMusic}
+          handleSubmitEdit={handleSubmitEdit}
+          submitting={editDialog.submitting}
+          error={editDialog.error}
+        />
+      </Suspense>
       
       
       <ContextMenu
@@ -3841,18 +2744,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         y={contextMenuState.y}
         show={contextMenuState.show && contextMenuState.data?.postId === post.id}
         onClose={closeContextMenu}
-      />
-      
-      {/* Модалка для работы с фактами */}
-      <FactModal
-        open={factModal.open}
-        onClose={handleFactModalClose}
-        onSubmit={handleFactSubmit}
-        onDelete={handleFactDelete}
-        loading={factModal.loading}
-        error={factModal.error}
-        existingFact={post?.fact}
-        postId={post?.id}
       />
     </>
   );
