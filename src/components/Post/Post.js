@@ -37,7 +37,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
 import { useLanguage } from '../../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
-import { formatTimeAgo, getRussianWordForm } from '../../utils/dateUtils';
+import { formatTimeAgo, formatTimeAgoDiff, parseDate, getRussianWordForm } from '../../utils/dateUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import VideoPlayer from '../VideoPlayer';
 import { optimizeImage, handleImageError as safeImageError } from '../../utils/imageUtils';
@@ -299,6 +299,17 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const { setPostDetail, openPostDetail } = usePostDetail();
   const { show: showContextMenu, contextMenuState, handleContextMenu, closeContextMenu } = useContextMenu();
+
+  // Функция для форматирования времени с переводами
+  const formatTimeAgoWithTranslation = (dateString) => {
+    if (!dateString) return '';
+    
+    const date = parseDate(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    return formatTimeAgoDiff(diffInSeconds, t);
+  };
   // вместо useMediaQuery используем window.matchMedia, чтобы убрать useSyncExternalStore
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 600 : false);
 
@@ -1947,8 +1958,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   transformLinkUri={null} 
                   remarkPlugins={[]}
                   rehypePlugins={[]}
-                  children={processedContent}
-                />
+                >
+                  {processedContent}
+                </ReactMarkdown>
               )}
             </MarkdownContent>
             
