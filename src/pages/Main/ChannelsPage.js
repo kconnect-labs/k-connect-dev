@@ -184,7 +184,9 @@ const ChannelDescription = styled(Typography)(({ theme }) => ({
   flexGrow: 0,
 }));
 
-const StyledChip = styled(Chip)(({ theme, isFollowing, themecolor }) => ({
+const StyledChip = styled(Chip, {
+  shouldForwardProp: (prop) => prop !== 'isFollowing' && prop !== 'themecolor',
+})(({ theme, isFollowing, themecolor }) => ({
   borderRadius: '8px',
   fontWeight: 500,
   background: isFollowing ? 
@@ -228,7 +230,9 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   }
 }));
 
-const StyledTabs = styled(Tabs)(({ theme, themecolor }) => ({
+const StyledTabs = styled(Tabs, {
+  shouldForwardProp: (prop) => prop !== 'themecolor',
+})(({ theme, themecolor }) => ({
   minHeight: '38px',
   '& .MuiTabs-indicator': {
     height: 3,
@@ -241,7 +245,9 @@ const StyledTabs = styled(Tabs)(({ theme, themecolor }) => ({
   }
 }));
 
-const LoadMoreButton = styled(Button)(({ theme, themecolor }) => ({
+const LoadMoreButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'themecolor',
+})(({ theme, themecolor }) => ({
   borderRadius: '12px',
   padding: theme.spacing(1, 3),
   marginTop: theme.spacing(2),

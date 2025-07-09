@@ -5,7 +5,9 @@ import VerifiedIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContextMenu from './ContextMenu/ContextMenu';
 
-const UserCardContainer = styled(Paper)(({ theme, cardRadius }) => ({
+const UserCardContainer = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'cardRadius',
+})(({ theme, cardRadius }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(1.5, 2),
