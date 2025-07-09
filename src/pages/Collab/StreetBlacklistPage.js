@@ -30,7 +30,7 @@ const StreetBlacklistPage = () => {
           justifyContent: 'center',
           textAlign: 'center',
           px: 2,
-          backgroundColor: '#080808',
+          backgroundColor: '#1f1921',
           color: '#D0BCFF',
           position: 'relative',
           overflow: 'hidden',

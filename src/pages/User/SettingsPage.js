@@ -3039,16 +3039,16 @@ const SettingsPage = () => {
       };
       
       let themeMode = 'dark';
-      let backgroundColor = '#080808';
+      let backgroundColor = '#1f1921';
       let textColor = '#FFFFFF';
       
       if (theme === 'default') {
         // Дефолтная тема - темный фон, белый текст
         saveThemeSetting('theme', 'default');
-        saveThemeSetting('backgroundColor', '#080808');
+        saveThemeSetting('backgroundColor', '#1f1921');
         saveThemeSetting('textColor', '#FFFFFF');
         themeMode = 'dark';
-        backgroundColor = '#080808';
+        backgroundColor = '#1f1921';
         textColor = '#FFFFFF';
         
       } else if (theme === 'light') {
@@ -5838,7 +5838,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
     {
       id: 'default',
       name: 'По умолчанию',
-      bg: '#080808',
+      bg: '#1f1921',
       paper: '#1c1c1c',
       primary: '#D0BCFF',
       textColor: '#FFFFFF'
