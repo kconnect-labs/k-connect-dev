@@ -262,7 +262,7 @@ const PostsList = ({ posts, loading, userAvatar, userName, userId, isCurrentUser
             <PostContent>
               <MarkdownContent>
                 <Typography variant="body1" sx={{ fontSize: '0.95rem', lineHeight: 1.5, mb: 1, overflow: 'hidden' }}>
-                  <ReactMarkdown transformLinkUri={null}>{post.content}</ReactMarkdown>
+                  <ReactMarkdown urlTransform={(url) => url}>{post.content}</ReactMarkdown>
                 </Typography>
               </MarkdownContent>
             </PostContent>

@@ -1954,10 +1954,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               {processedContent && (
                 <ReactMarkdown 
                   components={markdownComponents}
-                  skipHtml={false}
-                  transformLinkUri={null} 
-                  remarkPlugins={[]}
-                  rehypePlugins={[]}
+                  urlTransform={(url) => url}
                 >
                   {processedContent}
                 </ReactMarkdown>

@@ -146,6 +146,7 @@ export const LinkPreview = ({ url }) => {
             backgroundColor: 'rgba(0, 0, 0, 0.02)'
           }}>
             <Typography 
+              component="div"
               variant="body2" 
               sx={{ 
                 margin: 0,
@@ -168,6 +169,7 @@ export const LinkPreview = ({ url }) => {
             </Typography>
             {preview?.description && (
               <Typography
+                component="div"
                 variant="caption"
                 sx={{
                   margin: 0,
@@ -197,6 +199,7 @@ export const LinkPreview = ({ url }) => {
             }}>
               <LinkIcon fontSize="small" sx={{ color: theme.palette.primary.main, mr: 0.5, fontSize: '0.75rem' }} />
               <Typography 
+                component="span"
                 variant="caption" 
                 sx={{ 
                   margin: 0,
@@ -374,7 +377,7 @@ export const linkRenderers = {
       const { parts, urls } = processTextWithLinks(children, theme);
       return (
         <>
-          <Typography component="p" variant="body1" sx={{ mb: 1 }}>
+          <Typography component="div" variant="body1" sx={{ mb: 1 }}>
             {parts}
           </Typography>
           {urls.length > 0 && !DISABLE_LINK_PREVIEWS && urls.map((url, index) => (
@@ -393,7 +396,7 @@ export const linkRenderers = {
     })) {
       return <>{children}</>;
     }
-    return <Typography component="p" variant="body1" sx={{ mb: 1 }}>{children}</Typography>;
+    return <Typography component="div" variant="body1" sx={{ mb: 1 }}>{children}</Typography>;
   },
   
   a: ({ node, children, href }) => {
@@ -485,7 +488,7 @@ export const TextWithLinks = ({ text }) => {
   
   return (
     <>
-      <Typography component="p" variant="body1" sx={{ mb: 1 }}>
+      <Typography component="div" variant="body1" sx={{ mb: 1 }}>
         {parts}
       </Typography>
       

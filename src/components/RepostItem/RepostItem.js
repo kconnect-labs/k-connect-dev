@@ -321,7 +321,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
                 fontSize: '0.95rem',
                 lineHeight: 1.5
               }}>
-                <ReactMarkdown transformLinkUri={null}>{repost.repost_text}</ReactMarkdown>
+                <ReactMarkdown urlTransform={(url) => url}>{repost.repost_text}</ReactMarkdown>
               </Typography>
             </MarkdownContent>
           )}
@@ -357,7 +357,7 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
                 lineHeight: 1.5,
                 color: 'rgba(255, 255, 255, 0.8)'
               }}>
-                <ReactMarkdown transformLinkUri={null}>{originalPost.content}</ReactMarkdown>
+                <ReactMarkdown urlTransform={(url) => url}>{originalPost.content}</ReactMarkdown>
               </Typography>
             </MarkdownContent>
             

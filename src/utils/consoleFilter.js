@@ -45,6 +45,9 @@ class ConsoleFilter {
       /bing\.com/,
       /baidu\.com/,
       /yandex\.com/,
+      
+      /ReactMarkdown.*defaultProps.*will be removed/,
+      /Support for defaultProps will be removed from function components/,
     ];
     
     this.init();
