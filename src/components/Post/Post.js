@@ -2518,12 +2518,111 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             </Box>
           )}
           
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mt: 2,
+            gap: 1.7 // уменьшено с 2
+          }}>
+            {/* Левая группа: лайк, коммент, репост, поделиться */}
+            <Box sx={{
+              display: 'flex',
+              gap: 1.7, // уменьшено с 2
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '10px', // было 12px
+              px: 2.5, // было 3
+              py: 0.85, // было 1
+              alignItems: 'center',
+              minWidth: 185 // было 220
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
+                {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
+                {/* Аватарки последних лайкнувших — появляются при наведении */}
+                {!isMobile && lastLikedUsers.length > 0 && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      left: '110%',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      transition: 'opacity 0.25s cubic-bezier(.4,2,.6,1), transform 0.25s cubic-bezier(.4,2,.6,1)',
+                      zIndex: 20,
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                    }}
+                    className="like-avatars"
+                  >
+                    {lastLikedUsers.slice(0, 3).map((user, index) => {
+                      const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
+                      return (
+                        <Avatar
+                          key={user.id}
+                          src={avatarUrl}
+                          alt={user.name}
+                          sx={{
+                            width: 22,
+                            height: 22,
+                            ml: index > 0 ? -0.7 : 0,
+                            zIndex: 3 - index,
+                            background: '#eee',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
+                            transition: 'transform 0.18s',
+                            '&:hover': {
+                              transform: 'scale(1.13)',
+                              zIndex: 10
+                            }
+                          }}
+                          onError={safeImageError}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
+                <MessageCircle size={21} color="#fff" />
+                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
+                <Repeat2 size={21} color="#fff" />
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
+                <Link2 size={21} color="#fff" />
+              </Box>
+            </Box>
+
+            {/* Правая группа: просмотры и меню */}
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              background: 'rgba(0, 0, 0, 0.05)',
+              backdropFilter: 'blur(40px)',
+              border: '1px solid #333',
+              borderRadius: '10px', // было 12px
+              px: 1.7, // было 2
+              py: 0.85, // было 1
+              minWidth: 68, // было 80
+              justifyContent: 'center',
+              gap: 0.85 // было 1
+            }}>
+              <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography>
+              <MoreVertIcon sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }} onClick={handleMenuOpen} data-no-navigate />
+            </Box>
+          </Box>
+          
           {/* Компонент последнего комментария в стиле ВК */}
           {lastComment && !lastCommentLoading && (
             <Box
               sx={{
                 mt: 1.5,
-                mb: 1.5,
                 p: 1.5,
                 borderRadius: '12px',
                 background: 'rgba(255, 255, 255, 0.03)',
@@ -2747,106 +2846,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               </Box>
             </Box>
           )}
-          
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mt: 2,
-            gap: 1.7 // уменьшено с 2
-          }}>
-            {/* Левая группа: лайк, коммент, репост, поделиться */}
-            <Box sx={{
-              display: 'flex',
-              gap: 1.7, // уменьшено с 2
-              background: 'rgba(0, 0, 0, 0.05)',
-              backdropFilter: 'blur(40px)',
-              border: '1px solid #333',
-              borderRadius: '10px', // было 12px
-              px: 2.5, // было 3
-              py: 0.85, // было 1
-              alignItems: 'center',
-              minWidth: 185 // было 220
-            }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
-                {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
-                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
-                {/* Аватарки последних лайкнувших — появляются при наведении */}
-                {!isMobile && lastLikedUsers.length > 0 && (
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      left: '110%',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      opacity: 0,
-                      pointerEvents: 'none',
-                      transition: 'opacity 0.25s cubic-bezier(.4,2,.6,1), transform 0.25s cubic-bezier(.4,2,.6,1)',
-                      zIndex: 20,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-                    }}
-                    className="like-avatars"
-                  >
-                    {lastLikedUsers.slice(0, 3).map((user, index) => {
-                      const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
-                      return (
-                        <Avatar
-                          key={user.id}
-                          src={avatarUrl}
-                          alt={user.name}
-                          sx={{
-                            width: 22,
-                            height: 22,
-                            ml: index > 0 ? -0.7 : 0,
-                            zIndex: 3 - index,
-                            background: '#eee',
-                            boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
-                            transition: 'transform 0.18s',
-                            '&:hover': {
-                              transform: 'scale(1.13)',
-                              zIndex: 10
-                            }
-                          }}
-                          onError={safeImageError}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
-                <MessageCircle size={21} color="#fff" />
-                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
-                <Repeat2 size={21} color="#fff" />
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
-                <Link2 size={21} color="#fff" />
-              </Box>
-            </Box>
-
-            {/* Правая группа: просмотры и меню */}
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              background: 'rgba(0, 0, 0, 0.05)',
-              backdropFilter: 'blur(40px)',
-              border: '1px solid #333',
-              borderRadius: '10px', // было 12px
-              px: 1.7, // было 2
-              py: 0.85, // было 1
-              minWidth: 68, // было 80
-              justifyContent: 'center',
-              gap: 0.85 // было 1
-            }}>
-              <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography>
-              <MoreVertIcon sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }} onClick={handleMenuOpen} data-no-navigate />
-            </Box>
-          </Box>
         </Box>
       </PostCard>
 
