@@ -62,7 +62,7 @@ import { ThemeSettingsContext } from '../../App';
 import { motion } from 'framer-motion';
 import NotificationService from '../../services/NotificationService';
 import { generatePlaceholder } from '../../utils/imageUtils';
-import SettingsBottomNavigation from '../../components/SettingsBottomNavigation';
+import SettingsBottomNavigation from '../../components/SettingsBottomNavigation.tsx';
 import LoginSettingsTab from '../../components/LoginSettingsTab';
 import { useSnackbar } from 'notistack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';

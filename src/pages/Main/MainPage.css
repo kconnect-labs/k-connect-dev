@@ -167,7 +167,7 @@
 .content-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
   max-width: 100%;
   overflow: hidden;

@@ -4,7 +4,24 @@ import { Icon } from '@iconify/react';
 import { ThemeSettingsContext } from '../App';
 import './BottomNavigation.css';
 
-const SettingsBottomNavigation = ({ activeTab, onTabChange, user, isMobile }) => {
+interface User {
+  username: string;
+  account_type?: string;
+}
+
+interface SettingsBottomNavigationProps {
+  activeTab: number;
+  onTabChange: (event: React.SyntheticEvent | null, newValue: number) => void;
+  user: User | null;
+  isMobile: boolean;
+}
+
+const SettingsBottomNavigation: React.FC<SettingsBottomNavigationProps> = ({ 
+  activeTab, 
+  onTabChange, 
+  user, 
+  isMobile 
+}) => {
   // SettingsBottomNavigation рендерится только на мобильных устройствах
   if (!isMobile) {
     return null;
@@ -14,7 +31,7 @@ const SettingsBottomNavigation = ({ activeTab, onTabChange, user, isMobile }) =>
   const isChannel = user?.account_type === 'channel';
   const { themeSettings } = useContext(ThemeSettingsContext);
 
-  const handleNavigationChange = (newValue) => {
+  const handleNavigationChange = (newValue: number): void => {
     if (newValue === -1) {
       navigate(-1); 
     } else {

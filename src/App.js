@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import { useMediaQuery } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import AppBottomNavigation from './components/BottomNavigation';
+import AppBottomNavigation from './components/BottomNavigation.tsx';
 import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';

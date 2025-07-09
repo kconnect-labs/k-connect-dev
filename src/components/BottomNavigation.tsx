@@ -7,7 +7,25 @@ import './BottomNavigation.css';
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
 
-const AppBottomNavigation = ({ user, isMobile }) => {
+interface User {
+  username: string;
+  account_type?: string;
+}
+
+interface BottomNavigationProps {
+  user: User | null;
+  isMobile: boolean;
+}
+
+interface UnreadCounts {
+  [key: string]: number;
+}
+
+interface MessengerContextType {
+  unreadCounts: UnreadCounts;
+}
+
+const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }) => {
   // AppBottomNavigation рендерится только на мобильных устройствах
   if (!isMobile) {
     return null;
@@ -15,25 +33,25 @@ const AppBottomNavigation = ({ user, isMobile }) => {
   
   const navigate = useNavigate();
   const location = useLocation();
-  const [visibleInMessenger, setVisibleInMessenger] = useState(true);
+  const [visibleInMessenger, setVisibleInMessenger] = useState<boolean>(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
-  const { unreadCounts } = useMessenger();
-  const totalUnread = Object.values(unreadCounts || {}).filter(c=>c>0).length;
+  const { unreadCounts } = useMessenger() as MessengerContextType;
+  const totalUnread = Object.values(unreadCounts || {}).filter((c: number) => c > 0).length;
   console.log('📱 BottomNavigation: unreadCounts:', unreadCounts, 'totalUnread:', totalUnread);
   
   const isChannel = user?.account_type === 'channel';
   
   useEffect(() => {
-    const handleMessengerLayoutChange = (event) => {
+    const handleMessengerLayoutChange = (event: CustomEvent) => {
       const { isInChat } = event.detail;
       console.log('BottomNavigation: Received messenger-layout-change event, isInChat:', isInChat);
       setVisibleInMessenger(!isInChat);
     };
     
-    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
     
     return () => {
-      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
+      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
     };
   }, []);
   
@@ -57,7 +75,7 @@ const AppBottomNavigation = ({ user, isMobile }) => {
     return null;
   }
 
-  const getCurrentValue = () => {
+  const getCurrentValue = (): number | false => {
     const path = location.pathname;
     if (path === '/' || path === '/feed' || path === '/main') return 0;
     if (path === '/music') return 1;
@@ -69,7 +87,7 @@ const AppBottomNavigation = ({ user, isMobile }) => {
 
   console.log("BottomNavigation rendering, user:", user, "pathname:", location.pathname);
   
-  const handleNavigationChange = (newValue) => {
+  const handleNavigationChange = (newValue: number): void => {
     switch(newValue) {
       case 0:
         navigate('/');

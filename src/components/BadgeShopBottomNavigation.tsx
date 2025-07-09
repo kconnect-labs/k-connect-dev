@@ -4,7 +4,17 @@ import { Icon } from '@iconify/react';
 import { ThemeSettingsContext } from '../App';
 import './BottomNavigation.css';
 
-const BadgeShopBottomNavigation = ({ tabValue, onTabChange, isMobile }) => {
+interface BadgeShopBottomNavigationProps {
+  tabValue: number;
+  onTabChange: (event: React.SyntheticEvent | null, newValue: number) => void;
+  isMobile: boolean;
+}
+
+const BadgeShopBottomNavigation: React.FC<BadgeShopBottomNavigationProps> = ({ 
+  tabValue, 
+  onTabChange, 
+  isMobile 
+}) => {
   // BadgeShopBottomNavigation рендерится только на мобильных устройствах
   if (!isMobile) {
     return null;
@@ -13,7 +23,7 @@ const BadgeShopBottomNavigation = ({ tabValue, onTabChange, isMobile }) => {
   const navigate = useNavigate();
   const { themeSettings } = useContext(ThemeSettingsContext);
 
-  const handleNavigationChange = (newValue) => {
+  const handleNavigationChange = (newValue: number): void => {
     if (newValue === -1) {
       navigate(-1); 
     } else {

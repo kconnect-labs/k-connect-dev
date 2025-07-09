@@ -52,7 +52,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { Fade } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import BadgeShopBottomNavigation from '../../components/BadgeShopBottomNavigation';
+import BadgeShopBottomNavigation from '../../components/BadgeShopBottomNavigation.tsx';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const StyledCard = styled(Card)(({ theme }) => ({

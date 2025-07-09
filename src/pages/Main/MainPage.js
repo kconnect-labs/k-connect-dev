@@ -1118,10 +1118,10 @@ const CreatePost = ({ onPostCreated }) => {
               disabled={isSubmitting || (!content.trim() && mediaFiles.length === 0 && selectedTracks.length === 0)}
               endIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
               sx={{
-                borderRadius: '24px',
+                borderRadius: '8px',
                 textTransform: 'none',
                 fontWeight: 500,
-                padding: '6px 16px'
+                padding: '6px 8px'
               }}
             >
               {t('main_page.post.create.publish')}
