@@ -1,1 +1,95 @@
- 
+.inventory-item-card {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.inventory-item-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.image-container {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: rgba(208, 188, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+
+.image-container.has-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: var(--background-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.marketplace-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 3;
+}
+
+.kballs-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.price-text {
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.65rem;
+}
+
+.item-name {
+  font-weight: 500;
+  display: block;
+  text-align: center;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.rarity-container {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.rarity-chip {
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.6rem;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} 
