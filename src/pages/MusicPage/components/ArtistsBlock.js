@@ -265,7 +265,7 @@ const ArtistsBlock = () => {
 									{artistSearchResults.map((artist, index) => (
 										<ArtistCard
 											artist={artist}
-											index={artist.id || index}
+											index={index}
 											onClick={() => handleArtistClick(artist.id)}
                       key={artist.id || index}
 										/>
