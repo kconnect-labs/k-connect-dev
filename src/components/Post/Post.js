@@ -2526,32 +2526,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 </Box>
               </Box>
               
-              {/* Индикатор "Показать все комментарии" */}
-              {(post?.total_comments_count > 1 || post?.comments_count > 1) && (
-                <Box
-                  sx={{
-                    mt: 0.7,
-                    pt: 0.3,
-                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      fontSize: '0.75rem',
-                      color: 'rgba(255, 255, 255, 0.6)',
-                      fontWeight: 500,
-                      '&:hover': {
-                        color: '#D0BCFF'
-                      }
-                    }}
-                  >
-                    Показать все {(post?.total_comments_count || post?.comments_count) - 1} комментариев
-                  </Typography>
-                </Box>
-              )}
             </Box>
           )}
           
