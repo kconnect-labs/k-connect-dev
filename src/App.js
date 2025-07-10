@@ -1110,62 +1110,13 @@ function App() {
                   `
                 }}/>
               )}
-              <Routes>
-                <Route path="/street/blacklist" element={
-                  <SessionProvider>
-                    <LanguageProvider>
-                      <MusicProvider>
-                        <PostDetailProvider>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            minHeight: '100vh',
-                            bgcolor: 'background.default'
-                          }}>
-                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                              <Suspense fallback={<LoadingIndicator />}>
-                                <DefaultSEO />
-                                <StreetBlacklistPage />
-                                <MusicPlayerCore />
-                              </Suspense>
-                            </ErrorBoundary>
-                          </Box>
-                        </PostDetailProvider>
-                      </MusicProvider>
-                    </LanguageProvider>
-                  </SessionProvider>
-                } />
-                <Route path="/street/blacklist/v1" element={
-                  <SessionProvider>
-                    <LanguageProvider>
-                      <MusicProvider>
-                        <PostDetailProvider>
-                          <Box sx={{ 
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            minHeight: '100vh',
-                            bgcolor: 'background.default'
-                          }}>
-                            <ErrorBoundary FallbackComponent={ErrorFallback}>
-                              <Suspense fallback={<LoadingIndicator />}>
-                                <DefaultSEO />
-                                <StreetBlacklistV1Page />
-                                <MusicPlayerCore />
-                              </Suspense>
-                            </ErrorBoundary>
-                          </Box>
-                        </PostDetailProvider>
-                      </MusicProvider>
-                    </LanguageProvider>
-                  </SessionProvider>
-                } />
-                <Route path="*" element={
-                  <SessionProvider>
-                  <MessengerProvider>
-                    <LanguageProvider>
-                      <MusicProvider>
-                        <PostDetailProvider>
-                          <CommandPaletteProvider>
+              <SessionProvider>
+                <MessengerProvider>
+                  <Routes>
+                    <Route path="/street/blacklist" element={
+                      <LanguageProvider>
+                        <MusicProvider>
+                          <PostDetailProvider>
                             <Box sx={{ 
                               display: 'flex', 
                               flexDirection: 'column', 
@@ -1175,27 +1126,71 @@ function App() {
                               <ErrorBoundary FallbackComponent={ErrorFallback}>
                                 <Suspense fallback={<LoadingIndicator />}>
                                   <DefaultSEO />
-                                  <Routes>
-                                    <Route path="/rules" element={<PublicPages />} />
-                                    <Route path="/privacy-policy" element={<PublicPages />} />
-                                    <Route path="/terms-of-service" element={<PublicPages />} />
-                                    <Route path="/about" element={<PublicPages />} />
-                                    <Route path="*" element={<AppRoutes />} />
-                                  </Routes>
+                                  <StreetBlacklistPage />
                                   <MusicPlayerCore />
-                                  <CommandPalleteModal />
-
                                 </Suspense>
                               </ErrorBoundary>
                             </Box>
-                          </CommandPaletteProvider>
-                        </PostDetailProvider>
-                      </MusicProvider>
-                    </LanguageProvider>
-                    </MessengerProvider>
-                  </SessionProvider>
-                } />
-              </Routes>
+                          </PostDetailProvider>
+                        </MusicProvider>
+                      </LanguageProvider>
+                    } />
+                    <Route path="/street/blacklist/v1" element={
+                      <LanguageProvider>
+                        <MusicProvider>
+                          <PostDetailProvider>
+                            <Box sx={{ 
+                              display: 'flex', 
+                              flexDirection: 'column', 
+                              minHeight: '100vh',
+                              bgcolor: 'background.default'
+                            }}>
+                              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                <Suspense fallback={<LoadingIndicator />}>
+                                  <DefaultSEO />
+                                  <StreetBlacklistV1Page />
+                                  <MusicPlayerCore />
+                                </Suspense>
+                              </ErrorBoundary>
+                            </Box>
+                          </PostDetailProvider>
+                        </MusicProvider>
+                      </LanguageProvider>
+                    } />
+                    <Route path="*" element={
+                      <LanguageProvider>
+                        <MusicProvider>
+                          <PostDetailProvider>
+                            <CommandPaletteProvider>
+                              <Box sx={{ 
+                                display: 'flex', 
+                                flexDirection: 'column', 
+                                minHeight: '100vh',
+                                bgcolor: 'background.default'
+                              }}>
+                                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                  <Suspense fallback={<LoadingIndicator />}>
+                                    <DefaultSEO />
+                                    <Routes>
+                                      <Route path="/rules" element={<PublicPages />} />
+                                      <Route path="/privacy-policy" element={<PublicPages />} />
+                                      <Route path="/terms-of-service" element={<PublicPages />} />
+                                      <Route path="/about" element={<PublicPages />} />
+                                      <Route path="*" element={<AppRoutes />} />
+                                    </Routes>
+                                    <MusicPlayerCore />
+                                    <CommandPalleteModal />
+                                  </Suspense>
+                                </ErrorBoundary>
+                              </Box>
+                            </CommandPaletteProvider>
+                          </PostDetailProvider>
+                        </MusicProvider>
+                      </LanguageProvider>
+                    } />
+                  </Routes>
+                </MessengerProvider>
+              </SessionProvider>
             </DefaultPropsProvider>
           </ThemeProvider>
         </ThemeSettingsContext.Provider>

@@ -204,14 +204,14 @@ instance.interceptors.request.use(
     loadingManager.startRequest(url);
     
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`🚀 API Request [${config.requestId}]:`, {
-        method: config.method,
-        url: config.url,
-        data: config.data,
-        params: config.params
-      });
-    }
+    // if (process.env.NODE_ENV !== 'production') {
+    //   console.log(`🚀 API Request [${config.requestId}]:`, {
+    //     method: config.method,
+    //     url: config.url,
+    //     data: config.data,
+    //     params: config.params
+    //   });
+    // }
     
     return config;
   },

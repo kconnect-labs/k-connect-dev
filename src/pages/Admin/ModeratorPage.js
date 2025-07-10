@@ -1137,8 +1137,10 @@ const ModeratorPage = () => {
       loadMore ? setLoadingMore(true) : setLoading(true);
       const currentPage = loadMore ? pageStates.badges + 1 : 1;
       const response = await axios.get(`/api/moderator/badges?page=${currentPage}&per_page=${rowsPerPage}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`);
+      console.log('[DEBUG] Badges API response:', response.data);
       if (response.data && response.data.badges) {
         const newBadges = response.data.badges;
+        console.log('[DEBUG] Processed badges:', newBadges.map(b => ({ id: b.id, name: b.name, upgrade: b.upgrade, color_upgrade: b.color_upgrade })));
         if (loadMore) {
           setBadges(prevBadges => [...prevBadges, ...newBadges]);
           setPageStates(prev => ({ ...prev, badges: currentPage }));
@@ -2780,6 +2782,7 @@ const ModeratorPage = () => {
 
   
   const openEditBadgeDialog = (badge) => {
+    console.log('Opening edit dialog for badge:', badge);
     setSelectedBadge(badge);
     setEditBadgeName(badge.name);
     setEditBadgeDescription(badge.description || '');
@@ -2836,7 +2839,9 @@ const ModeratorPage = () => {
           name: editBadgeName,
           description: editBadgeDescription,
           price: price,
-          is_active: editBadgeActive
+          is_active: editBadgeActive,
+          upgrade: editBadgeUpgrade,
+          color_upgrade: editBadgeColorUpgrade
         });
         
         response = await axios.put(`/api/moderator/badges/${selectedBadge.id}`, formData, {
@@ -2851,8 +2856,8 @@ const ModeratorPage = () => {
           description: editBadgeDescription || '',
           price: price,
           is_active: editBadgeActive,
-          upgrade: editBadgeUpgradeEnabled ? editBadgeUpgrade : '',
-          color_upgrade: editBadgeUpgradeEnabled ? editBadgeColorUpgrade : ''
+          upgrade: editBadgeUpgrade,
+          color_upgrade: editBadgeUpgrade ? editBadgeColorUpgrade : ''
         };
         
         console.log('[DEBUG] Updating badge without image:', {
@@ -2878,8 +2883,8 @@ const ModeratorPage = () => {
                   description: editBadgeDescription || '',
                   price: price,
                   is_active: editBadgeActive,
-                  upgrade: editBadgeUpgradeEnabled ? editBadgeUpgrade : null,
-                  color_upgrade: editBadgeUpgradeEnabled ? editBadgeColorUpgrade : null,
+                  upgrade: editBadgeUpgrade,
+                  color_upgrade: editBadgeUpgrade ? editBadgeColorUpgrade : null,
                   image_path: response.data.badge.image_path || badge.image_path
                 }
               : badge
@@ -3092,7 +3097,7 @@ const ModeratorPage = () => {
                           </Typography>
                         }
                         action={
-                          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             {permissions.edit_badges && (
                               <IconButton 
                                 onClick={() => openEditBadgeDialog(badge)}
@@ -3129,7 +3134,7 @@ const ModeratorPage = () => {
                           e.target.src = '/static/images/bages/default.svg';
                         }}
                       />
-                      <CardContent sx={{ flexGrow: 1 }}>
+                      <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                           <Chip 
                             icon={<PaidIcon />} 
@@ -3149,12 +3154,10 @@ const ModeratorPage = () => {
                           />
                         </Box>
                         
-                        {(badge.upgrade || badge.color_upgrade) && (
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                            <StarsIcon sx={{ fontSize: 16, color: '#ff9800' }} />
+                        {badge.upgrade && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                             <Chip 
-                              icon={<StarsIcon />} 
-                              label={badge.upgrade || 'Улучшен'} 
+                              label="Улучшен" 
                               size="small"
                               sx={{ 
                                 borderRadius: 1,
@@ -3167,7 +3170,8 @@ const ModeratorPage = () => {
                             />
                           </Box>
                         )}
-                      </CardContent>
+                        
+                                                </CardContent>
                     </Card>
                   </Grid>
                 </Zoom>
@@ -5388,7 +5392,7 @@ const ModeratorPage = () => {
               </Paper>
             </Grid>
             
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <Paper 
                 elevation={0} 
                 sx={{ 
@@ -5404,11 +5408,11 @@ const ModeratorPage = () => {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <StarsIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
-                  <Typography variant="subtitle1" color="rgba(255, 255, 255, 0.87)">Улучшения</Typography>
+                  <Typography variant="subtitle1" color="rgba(255, 255, 255, 0.87)">Улучшен</Typography>
                 </Box>
                 <Switch 
-                  checked={editBadgeUpgradeEnabled}
-                  onChange={(e) => setEditBadgeUpgradeEnabled(e.target.checked)}
+                  checked={editBadgeUpgrade}
+                  onChange={(e) => setEditBadgeUpgrade(e.target.checked)}
                   color="primary"
                   sx={{ 
                     '& .MuiSwitch-switchBase.Mui-checked': {
@@ -5425,114 +5429,67 @@ const ModeratorPage = () => {
               </Paper>
             </Grid>
             
-            {editBadgeUpgradeEnabled && (
-              <>
-                <Grid item xs={12}>
-                  <TextField
-                    label="Текст улучшения"
-                    type="text"
-                    fullWidth
-                    value={editBadgeUpgrade}
-                    onChange={(e) => setEditBadgeUpgrade(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                    placeholder="Например: VIP, Premium, Gold"
-                    helperText="Текст, который будет отображаться как улучшение"
-                    FormHelperTextProps={{
-                      sx: { color: 'rgba(255,255,255,0.5)' }
-                    }}
-                    InputProps={{
-                      sx: {
-                        borderRadius: 2,
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        color: 'rgba(255,255,255,0.87)',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255,255,255,0.1)',
-                        },
-                        '&.Mui-focused': {
-                          backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                          boxShadow: '0 0 0 2px rgba(255, 152, 0, 0.3)'
-                        }
-                      }
-                    }}
-                    InputLabelProps={{
-                      sx: { color: 'rgba(255,255,255,0.7)' }
-                    }}
-                    sx={{
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255,255,255,0.2)'
+            {editBadgeUpgrade && (
+              <Grid item xs={12} md={6}>
+                <TextField
+                  label="Цвет улучшения"
+                  type="text"
+                  fullWidth
+                  value={editBadgeColorUpgrade}
+                  onChange={(e) => setEditBadgeColorUpgrade(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  placeholder="#FFD700"
+                  helperText="Цвет в формате HEX (например, #FFD700 для золотого)"
+                  FormHelperTextProps={{
+                    sx: { color: 'rgba(255,255,255,0.5)' }
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Box 
+                          sx={{ 
+                            width: 20, 
+                            height: 20, 
+                            borderRadius: '50%', 
+                            backgroundColor: editBadgeColorUpgrade || 'transparent',
+                            border: '2px solid rgba(255,255,255,0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      borderRadius: 2,
+                      backgroundColor: 'rgba(255,255,255,0.05)',
+                      color: 'rgba(255,255,255,0.87)',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255,255,255,0.1)',
                       },
-                      '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255,255,255,0.3)'
-                      },
-                      '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#ff9800'
+                      '&.Mui-focused': {
+                        backgroundColor: 'rgba(255, 152, 0, 0.15)',
+                        boxShadow: '0 0 0 2px rgba(255, 152, 0, 0.3)'
                       }
-                    }}
-                  />
-                </Grid>
-                
-                <Grid item xs={12}>
-                  <TextField
-                    label="Цвет улучшения"
-                    type="text"
-                    fullWidth
-                    value={editBadgeColorUpgrade}
-                    onChange={(e) => setEditBadgeColorUpgrade(e.target.value)}
-                    variant="outlined"
-                    size="small"
-                    placeholder="#FFD700"
-                    helperText="Цвет в формате HEX (например, #FFD700 для золотого)"
-                    FormHelperTextProps={{
-                      sx: { color: 'rgba(255,255,255,0.5)' }
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Box 
-                            sx={{ 
-                              width: 20, 
-                              height: 20, 
-                              borderRadius: '50%', 
-                              backgroundColor: editBadgeColorUpgrade || 'transparent',
-                              border: '2px solid rgba(255,255,255,0.3)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}
-                          />
-                        </InputAdornment>
-                      ),
-                      sx: {
-                        borderRadius: 2,
-                        backgroundColor: 'rgba(255,255,255,0.05)',
-                        color: 'rgba(255,255,255,0.87)',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255,255,255,0.1)',
-                        },
-                        '&.Mui-focused': {
-                          backgroundColor: 'rgba(255, 152, 0, 0.15)',
-                          boxShadow: '0 0 0 2px rgba(255, 152, 0, 0.3)'
-                        }
-                      }
-                    }}
-                    InputLabelProps={{
-                      sx: { color: 'rgba(255,255,255,0.7)' }
-                    }}
-                    sx={{
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255,255,255,0.2)'
-                      },
-                      '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(255,255,255,0.3)'
-                      },
-                      '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#ff9800'
-                      }
-                    }}
-                  />
-                </Grid>
-              </>
+                    }
+                  }}
+                  InputLabelProps={{
+                    sx: { color: 'rgba(255,255,255,0.7)' }
+                  }}
+                  sx={{
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255,255,255,0.2)'
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255,255,255,0.3)'
+                    },
+                    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#ff9800'
+                    }
+                  }}
+                />
+              </Grid>
             )}
             
             <Grid item xs={12}>

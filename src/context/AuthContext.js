@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext, useCallback } fr
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ThemeSettingsContext } from '../App';
-
+import { resetMessengerSocket } from '../utils/MessengerSocket';
 
 import AuthService from '../services/AuthService';
 import ProfileService from '../services/ProfileService';
@@ -264,6 +264,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       persistAuthState(false);
       
+      resetMessengerSocket();
+      
       
       setUser(null);
       setIsAuthenticated(false);
@@ -282,6 +284,9 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.removeItem('token');
       persistAuthState(false);
+      
+      resetMessengerSocket();
+      
       setUser(null);
       setIsAuthenticated(false);
     } finally {

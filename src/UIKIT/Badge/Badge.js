@@ -101,12 +101,6 @@ const Badge = ({
 
   // Эффект для создания летающих бейджиков при upgrade
   useEffect(() => {
-    console.log('Badge upgrade effect check:', {
-      upgrade: achievement?.upgrade,
-      container: !!containerRef.current,
-      imageLoaded,
-      achievement
-    });
     if (!achievement?.upgrade || !containerRef.current || !imageLoaded) return;
 
     const container = containerRef.current;
