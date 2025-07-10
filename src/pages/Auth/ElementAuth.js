@@ -70,6 +70,13 @@ const ElementAuth = () => {
         setStatus("Авторизация успешна. Перенаправляем...");
         console.log("[BROWSER] Перенаправление на:", result.redirect);
         
+        // Сохраняем session_key в localStorage
+        if (result.session_key) {
+          localStorage.setItem('session_key', result.session_key);
+          console.log("[BROWSER] Session key сохранен:", result.session_key);
+        } else {
+          console.warn("[BROWSER] Session key не получен от сервера");
+        }
         
         if (result.elem_connected) {
           localStorage.setItem('elem_connected', 'true');

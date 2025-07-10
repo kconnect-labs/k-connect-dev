@@ -282,7 +282,11 @@ const StyledTab = styled(Tab)(({ theme }) => ({
 const FileInput = styled('input')({
   display: 'none',
 });
-
+const ElementIcon = (props) => (
+  <SvgIcon {...props}>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.17 14.93l-4.11-4.11 1.41-1.41 2.7 2.7 5.88-5.88 1.41 1.41-7.29 7.29z" />
+  </SvgIcon>
+);
 const getSocialIcon = (name, url) => {
   if (url) {
     const lowerUrl = url.toLowerCase();
@@ -2144,7 +2148,11 @@ const SettingsPage = () => {
   const [userAchievements, setUserAchievements] = useState([]);
   const [loadingAchievements, setLoadingAchievements] = useState(false);
   const [updatingActiveBadge, setUpdatingActiveBadge] = useState(false);
-    
+  const [elementConnected, setElementConnected] = useState(false);
+  const [elementLinking, setElementLinking] = useState(false);
+  const [elementToken, setElementToken] = useState('');
+  const [loadingElementStatus, setLoadingElementStatus] = useState(false);
+  
   const [socialDialogOpen, setSocialDialogOpen] = useState(false);
   const [newSocialName, setNewSocialName] = useState('');
   const [newSocialLink, setNewSocialLink] = useState('');
@@ -2203,6 +2211,19 @@ const SettingsPage = () => {
     fetchUserAchievements();
     fetchUserWarnings();
     fetchUserDecorations();
+    
+    const handleStorageChange = (e) => {
+      if (e.key === 'elem_connected' && e.newValue === 'true') {
+        checkElementStatus();
+        localStorage.removeItem('elem_connected'); 
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
     fetchSettings();
   }, []);
   
@@ -2268,7 +2289,17 @@ const SettingsPage = () => {
       setLoadingDecorations(false);
     }
   };
-  
+  useEffect(() => {
+    const checkElementOnFocus = () => {
+      checkElementStatus();
+    };
+    
+    window.addEventListener('focus', checkElementOnFocus);
+    
+    return () => {
+      window.removeEventListener('focus', checkElementOnFocus);
+    };
+  }, []);
   const fetchProfileData = async () => {
     try {
       setLoading(true);
@@ -2288,9 +2319,15 @@ const SettingsPage = () => {
         
         
         setIsCustomProfileActive(profileData.user.profile_id === 2);
-        
-        
+        if (profileData.user.element_connected !== undefined) {
+          setElementConnected(profileData.user.element_connected);
+        } else {
+          
+          setElementConnected(!!profileData.user.elem_id);
+        }
       }
+
+      
       
       setLoading(false);
     } catch (error) {
@@ -3213,6 +3250,87 @@ const SettingsPage = () => {
     }
   };
 
+    
+  
+  const checkElementStatus = async () => {
+    try {
+      
+      if (!loadingElementStatus && elementConnected !== null) {
+        return elementConnected;
+      }
+      
+      setLoadingElementStatus(true);
+      const response = await axios.get('/api/profile/element/status');
+      
+      const isConnected = response.data && response.data.connected;
+      if (isConnected) {
+        setElementConnected(true);
+      } else {
+        setElementConnected(false);
+      }
+      setLoadingElementStatus(false);
+      return isConnected;
+    } catch (error) {
+      console.error('Ошибка при проверке статуса Element:', error);
+      setElementConnected(false);
+      setLoadingElementStatus(false);
+      return false;
+    }
+  };
+  
+  
+  const generateElementToken = async () => {
+    try {
+      setElementLinking(true);
+      
+      
+      const randomToken = Math.random().toString(36).substring(2, 15) + 
+                          Math.random().toString(36).substring(2, 15);
+      
+      setElementToken(randomToken);
+      showNotification('info', 'Перейдите по ссылке, чтобы привязать Element аккаунт');
+      
+    } catch (error) {
+      console.error('Ошибка при генерации токена Element:', error);
+      showNotification('error', 'Не удалось сгенерировать токен для Element');
+      setElementLinking(false);
+    }
+  };
+  
+  
+  const handleLinkElement = () => {
+    generateElementToken();
+    
+    
+    const checkInterval = setInterval(() => {
+      checkElementStatus().then(isConnected => {
+        if (isConnected) {
+          
+          clearInterval(checkInterval);
+          setElementLinking(false);
+          setElementToken('');
+          showNotification('success', 'Element аккаунт успешно подключен!');
+        }
+      });
+    }, 2000); 
+    
+    
+    localStorage.setItem('element_auth_pending', 'true');
+    
+    
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      localStorage.removeItem('element_auth_pending');
+    }, 120000);
+  };
+  
+  
+  const handleCancelElementLinking = () => {
+    setElementToken('');
+    setElementLinking(false);
+    
+    localStorage.removeItem('element_auth_pending');
+  };
   
   const handleClearActiveBadge = async () => {
     try {
@@ -5073,6 +5191,62 @@ const SettingsPage = () => {
                         <CheckIcon fontSize="small" />
                       ) : 'Подключить'}
                     </Button>
+                  </ListItem>
+                                    {/* Element аккаунт */}
+                                    <ListItem 
+                    sx={{ 
+                      py: 1.5, 
+                      px: 2, 
+                  borderRadius: 2,
+                  bgcolor: alpha(theme.palette.background.default, 0.4),
+                  border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                  mb: 1
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 40 }}>
+                      <ElementIcon sx={{ color: elementConnected ? '#D0BCFF' : '#777' }} />
+                    </ListItemIcon>
+                    <ListItemText 
+                      primary="Element"
+                      primaryTypographyProps={{ fontWeight: 500 }}
+                      secondary={loadingElementStatus ? "Проверка статуса..." : (elementConnected ? "Подключен" : "Не подключен")}
+                    />
+                          {loadingElementStatus ? (
+                      <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
+                    ) : (
+                      elementLinking ? (
+                        <IconButton 
+                          edge="end" 
+                          color="error" 
+                          onClick={handleCancelElementLinking}
+                          size="small"
+                        >
+                          <CloseIcon fontSize="small" />
+                        </IconButton>
+                    ) : (
+                      <Button
+                          variant="contained"
+                          size="small"
+                          onClick={elementConnected ? null : handleLinkElement}
+                          disabled={elementConnected}
+                          sx={{
+                            bgcolor: elementConnected ? 'transparent' : 'rgba(208, 188, 255, 0.1)',
+                            color: elementConnected ? 'success.main' : '#D0BCFF',
+                            border: elementConnected ? 'none' : '1px solid rgba(208, 188, 255, 0.3)',
+                            boxShadow: 'none',
+                            minWidth: 'auto',
+                            px: 2,
+                            '&:hover': {
+                              bgcolor: 'rgba(208, 188, 255, 0.2)',
+                            }
+                          }}
+                        >
+                          {elementConnected ? (
+                            <CheckIcon fontSize="small" />
+                          ) : 'Подключить'}
+                      </Button>
+                      )
+                    )}
                   </ListItem>
                 </List>
               </SettingsCardContent>
