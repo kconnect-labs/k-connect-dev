@@ -44,6 +44,7 @@ import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
 import { VerificationBadge } from '../../UIKIT';
+import Badge from '../../UIKIT/Badge/Badge';
 
 // Ленивая загрузка тяжелых компонентов
 const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
@@ -1632,7 +1633,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       color: 'primary.main'
                     },
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    height: '24px'
                   }}
                 >
                   {post.user?.name}
@@ -1685,17 +1687,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     )
                   )}
                   {post.user?.achievement && (
-                    <Box 
-                      component="img" 
-                      sx={{ 
-                        width: 'auto', 
-                        height: 20,  
-                        ml: 0.5
-                      }} 
-                      src={`/static/images/bages/${post.user.achievement.image_path}`} 
-                      alt={post.user.achievement.bage}
-                      onError={safeImageError}
-                    />
+                    <Box sx={{ ml: 0.5 }}>
+                      <Badge 
+                        achievement={post.user.achievement}
+                        size="post"
+                      />
+                    </Box>
                   )}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.75rem' }}>
@@ -1841,6 +1838,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       status={post.original_post.user?.verification.status} 
                       size="small" 
                     />
+                  )}
+                  {post.original_post.user?.achievement && (
+                    <Box sx={{ ml: 0.5 }}>
+                      <Badge 
+                        achievement={post.original_post.user.achievement}
+                        size="post"
+                      />
+                    </Box>
                   )}
                 </Typography>
               </Box>
@@ -2447,6 +2452,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       onClick={(e) => e.stopPropagation()}
                     >
                       {lastComment.user?.name || 'Пользователь'}
+                      {lastComment.user?.achievement && (
+                        <Box sx={{ ml: 0.5, display: 'inline-flex'}}>
+                          <Badge 
+                            achievement={lastComment.user.achievement}
+                            size="post"
+                          />
+                        </Box>
+                      )}
                     </Typography>
 
                     

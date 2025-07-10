@@ -20,7 +20,7 @@ import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 import 'react-medium-image-zoom/dist/styles.css';
 import { ThemeSettingsContext } from '../../App';
-import { UsernameCard, VerificationBadge } from '../../UIKIT';
+import { UsernameCard, VerificationBadge, Badge } from '../../UIKIT';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
@@ -53,6 +53,7 @@ import UserScamBadge from './ProfilePage/components/UserScamBadge';
 import UserSubscriptionBadge from './ProfilePage/components/UserSubscriptionBadge';
 import { OwnedUsernames } from './ProfilePage/components';
 import { ProfileAbout } from './ProfilePage/components';
+import './ProfilePage.css';
 
 
 
@@ -707,20 +708,14 @@ const ProfilePage = () => {
 
 
                     {user?.achievement && (
-                      <Box 
-                        component="img" 
-                        sx={{ 
-                          width: 'auto', 
-                          height: 25, 
-                          ml: 0.5
-                        }} 
-                        src={`/static/images/bages/${user.achievement.image_path}`} 
-                        alt={user.achievement.bage}
+                      <Badge 
+                        achievement={user.achievement}
+                        size="medium"
+                        className="profile-achievement-badge"
+                        showTooltip={true}
+                        tooltipText={user.achievement.bage}
                         onError={(e) => {
                           console.error("Achievement badge failed to load:", e);
-                          if (e.target && e.target instanceof HTMLImageElement) {
-                            e.target.style.display = 'none';
-                          }
                         }}
                       />
                     )}
