@@ -3083,7 +3083,7 @@ export const MessengerProvider = ({ children }) => {
       // Проверяем состояние подключения
       if (client && !client.isConnected && !client.isConnecting) {
         console.log('[MessengerContext] Session key available, connecting to WebSocket');
-        connectEnhancedWebSocket();
+      connectEnhancedWebSocket();
       } else if (client && client.isConnected) {
         console.log('[MessengerContext] WebSocket already connected');
         websocketClient.current = client;

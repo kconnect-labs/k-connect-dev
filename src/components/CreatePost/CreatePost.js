@@ -7,28 +7,29 @@ import {
   Avatar, 
   Snackbar, 
   Alert, 
-  TextField, 
   IconButton, 
   ImageList,
+  TextField,
   ImageListItem,
   Typography,
   Tooltip
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { AuthContext } from '../../../../context/AuthContext';
-import { MusicContext } from '../../../../context/MusicContext';
-import { useLanguage } from '../../../../context/LanguageContext';
-import PostService from '../../../../services/PostService';
-import MusicSelectDialog from '../../../../components/Music/MusicSelectDialog';
-import DynamicIslandNotification from '../../../../components/DynamicIslandNotification';
+import { AuthContext } from '../../context/AuthContext';
+import { MusicContext } from '../../context/MusicContext';
+import { useLanguage } from '../../context/LanguageContext';
+import MusicSelectDialog from '../Music/MusicSelectDialog';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
-import { handleImageError as safeImageError } from '../../../../utils/imageUtils';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import { handleImageError as safeImageError } from '../../utils/imageUtils';
 import ReactMarkdown from 'react-markdown';
-import MarkdownContent from '../../../../components/Post/MarkdownContent';
-import { getMarkdownComponents } from '../../../../components/Post/MarkdownConfig';
+import MarkdownContent from '../Post/MarkdownContent';
+import axios from 'axios';
+import { getMarkdownComponents } from '../Post/MarkdownConfig';
 
 // Стилизованные компоненты
 const PostInput = styled(TextField)(({ theme }) => ({
@@ -42,7 +43,7 @@ const PostInput = styled(TextField)(({ theme }) => ({
       ? '1px solid rgba(255, 255, 255, 0.05)'
       : '1px solid rgba(0, 0, 0, 0.05)',
     fontSize: '0.95rem',
-    padding: theme.spacing(1, 1.5),
+    padding: theme.spacing(1.5, 2),
     color: theme.palette.text.primary,
     transition: 'all 0.3s ease',
     '&:hover': {
@@ -71,10 +72,10 @@ const PostActions = styled(Box)(({ theme }) => ({
 }));
 
 const PublishButton = styled(Button)(({ theme }) => ({
-  borderRadius: '12px',
-  textTransform: 'none',
-  fontSize: '0.8rem',
-  fontWeight: 400,
+borderRadius: '12px',
+textTransform: 'none',
+fontSize: '0.8rem',
+fontWeight: 400,
   boxShadow: '0 2px 8px rgba(124, 77, 255, 0.25)',
   padding: theme.spacing(0.4, 1.5),
   background: theme.palette.mode === 'dark'
@@ -174,144 +175,71 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
 
   const handleDrop = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
-    
-    const files = e.dataTransfer.files;
-    if (!files.length) return;
+    dragCounter.current = 0;
 
-    let hasInvalidSize = false;
-
-    Array.from(files).forEach(file => {
-      const isVideo = file.type.startsWith('video/');
-      const isImage = file.type.startsWith('image/');
-
-      if (isVideo && file.size > MAX_VIDEO_SIZE) {
-        setSizeErrorMessage(`Размер видео превышает лимит в 150МБ`);
-        setShowSizeError(true);
-        hasInvalidSize = true;
-      }
-
-      if (isImage && file.size > MAX_PHOTO_SIZE) {
-        setSizeErrorMessage(`Размер изображения превышает лимит в 50МБ`);
-        setShowSizeError(true);
-        hasInvalidSize = true;
-      }
-    });
-
-    if (hasInvalidSize) return;
-
-    processFiles(files);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      processFiles(files);
+    }
   };
 
   const handleMediaChange = (event) => {
-    event.preventDefault();
-    const files = event.target.files;
-    if (!files.length) return;
-
-    let hasInvalidSize = false;
-    
-    // Проверяем размер после выбора
-    Array.from(files).forEach(file => {
-      const isVideo = file.type.startsWith('video/');
-      const isImage = file.type.startsWith('image/');
-
-      if (isVideo && file.size > MAX_VIDEO_SIZE) {
-        setSizeErrorMessage(`Размер видео превышает лимит в 150МБ`);
-        setShowSizeError(true);
-        hasInvalidSize = true;
-      }
-
-      if (isImage && file.size > MAX_PHOTO_SIZE) {
-        setSizeErrorMessage(`Размер изображения превышает лимит в 50МБ`);
-        setShowSizeError(true);
-        hasInvalidSize = true;
-      }
-    });
-
-    if (hasInvalidSize) {
-      event.target.value = '';
-      return;
+    const files = Array.from(event.target.files);
+    if (files.length > 0) {
+      processFiles(files);
     }
-
-    processFiles(files);
+    event.target.value = '';
   };
 
-  // Обновляем processFiles для работы с уже проверенными файлами
   const processFiles = (files) => {
-    if (!files.length) return;
+    const validFiles = [];
+    const previews = [];
 
-    // Проверяем MIME-типы файлов
-    const allFiles = Array.from(files);
-    const validTypeFiles = allFiles.filter(file => {
-      const isValidImage = ALLOWED_IMAGE_TYPES.includes(file.type);
-      const isValidVideo = ALLOWED_VIDEO_TYPES.includes(file.type);
-
-      if (!isValidImage && !isValidVideo) {
-        window.dispatchEvent(new CustomEvent('showError', {
-          detail: {
-            message: `Неподдерживаемый формат файла: ${file.name}. Разрешены только изображения (JPEG, PNG, GIF, WEBP) и видео (MP4, WEBM, MOV, AVI, MKV)`,
-            severity: 'error'
-          }
-        }));
-        return false;
+    files.forEach(file => {
+      // Проверка размера файла
+      if (file.type.startsWith('image/')) {
+        if (file.size > MAX_PHOTO_SIZE) {
+          setSizeErrorMessage(`Файл ${file.name} слишком большой. Максимальный размер: 50MB`);
+          setShowSizeError(true);
+          return;
+        }
+        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+          setError(`Неподдерживаемый формат изображения: ${file.name}`);
+          return;
+        }
+      } else if (file.type.startsWith('video/')) {
+        if (file.size > MAX_VIDEO_SIZE) {
+          setSizeErrorMessage(`Файл ${file.name} слишком большой. Максимальный размер: 150MB`);
+          setShowSizeError(true);
+          return;
+        }
+        if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
+          setError(`Неподдерживаемый формат видео: ${file.name}`);
+          return;
+        }
+      } else {
+        setError(`Неподдерживаемый тип файла: ${file.name}`);
+        return;
       }
-      return true;
+
+      validFiles.push(file);
+
+      // Создание превью
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previews.push(e.target.result);
+        if (previews.length === validFiles.length) {
+          setMediaPreview(previews);
+        }
+      };
+      reader.readAsDataURL(file);
     });
 
-    if (validTypeFiles.length === 0) {
-      return;
-    }
-
-    const imageFiles = validTypeFiles.filter(file => ALLOWED_IMAGE_TYPES.includes(file.type));
-    const videoFiles = validTypeFiles.filter(file => ALLOWED_VIDEO_TYPES.includes(file.type));
-
-    // Если уже есть видео, не позволяем добавлять изображения
-    if (mediaType === 'video' && imageFiles.length > 0) {
-      setMediaNotification({
-        open: true,
-        message: 'Нельзя прикрепить фото и видео одновременно'
-      });
-      return;
-    }
-
-    // Если уже есть изображения, не позволяем добавлять видео
-    if (mediaType === 'image' && videoFiles.length > 0) {
-      setMediaNotification({
-        open: true,
-        message: 'Нельзя прикрепить фото и видео одновременно'
-      });
-      return;
-    }
-
-    // Обработка видео
-    if (videoFiles.length > 0) {
-      setMediaFiles([videoFiles[0]]);
-      setMediaType('video');
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setMediaPreview([reader.result]);
-      };
-      reader.readAsDataURL(videoFiles[0]);
-      return;
-    }
-
-    // Обработка изображений
-    if (imageFiles.length > 0) {
-      setMediaFiles(prev => [...prev, ...imageFiles]);
-      setMediaType('image');
-      
-      // Создаем превью для всех изображений
-      const newPreviews = [];
-      imageFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          newPreviews.push(reader.result);
-          if (newPreviews.length === imageFiles.length) {
-            setMediaPreview(prev => [...prev, ...newPreviews]);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+    if (validFiles.length > 0) {
+      setMediaFiles(validFiles);
+      setMediaType(validFiles[0].type.startsWith('image/') ? 'image' : 'video');
     }
   };
 
@@ -319,15 +247,11 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
     setMediaFiles([]);
     setMediaPreview([]);
     setMediaType('');
-    setSelectedTracks([]);
-    setError('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const handleMusicSelect = (tracks) => {
     setSelectedTracks(tracks);
+    setMusicSelectOpen(false);
   };
 
   const handleRemoveTrack = (trackId) => {
@@ -340,54 +264,19 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
     setMediaPreview([]);
     setMediaType('');
     setSelectedTracks([]);
-    setIsNsfw(false);
     setError('');
     setShowPreview(false);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   const handleTrackPlay = (track, event) => {
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     
     if (currentTrack && currentTrack.id === track.id) {
       togglePlay(); 
     } else {
-      playTrack(track, 'create-post');
-    }
-  };
-
-  const handlePaste = (e) => {
-    const clipboardData = e.clipboardData;
-    if (clipboardData.items) {
-      const items = clipboardData.items;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-          e.preventDefault();  
-          const file = items[i].getAsFile();
-          if (file) {
-            if (mediaType && mediaType === 'video') {
-              setMediaNotification({
-                open: true,
-                message: 'Нельзя прикрепить фото и видео одновременно'
-              });
-              return;
-            }
-
-            // Обновляем тип медиа на 'images' для множественной загрузки
-            setMediaType('images');
-            setMediaFiles(prev => [...prev, file]);
-            
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              setMediaPreview(prev => [...prev, reader.result]);
-            };
-            reader.readAsDataURL(file);
-            break;
-          }
-        }
-      }
+      playTrack(track, 'main');
     }
   };
 
@@ -439,52 +328,62 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       }
       
       console.log("Sending post request to server...");
-      const response = await PostService.createPost(formData);
+      const response = await axios.post('/api/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
       console.log('Post created:', response);
       
-      if (response && response.success) {
+      if (response.data && response.data.success) {
+        setSnackbar({
+          open: true,
+          message: 'Пост успешно создан!',
+          severity: 'success'
+        });
+        
         clearForm();
-        if (onPostCreated && response.post) {
-          onPostCreated(response.post);
-        }
-        console.log('Post created successfully');
-      }
-    } catch (error) {
-      console.error('Error creating post:', error);
-      
-      if (error.response && error.response.status === 429) {
-        const rateLimit = error.response.data.rate_limit;
-        let errorMessage = "Превышен лимит публикации постов. ";
         
-        if (rateLimit && rateLimit.reset) {
-          const resetTime = new Date(rateLimit.reset * 1000);
-          const now = new Date();
-          const diffSeconds = Math.round((resetTime - now) / 1000);
-          
-          if (diffSeconds > 60) {
-            const minutes = Math.floor(diffSeconds / 60);
-            const seconds = diffSeconds % 60;
-            errorMessage += `Следующий пост можно опубликовать через ${minutes} мин. ${seconds} сек.`;
-          } else {
-            errorMessage += `Следующий пост можно опубликовать через ${diffSeconds} сек.`;
-          }
-        } else {
-          errorMessage += "Пожалуйста, повторите попытку позже.";
+        if (onPostCreated) {
+          onPostCreated(response.data.post);
         }
-        
-        setError(errorMessage);
-      } else if (error.response && error.response.data && error.response.data.error) {
-        setError(error.response.data.error);
       } else {
-        setError("Произошла ошибка при создании поста. Пожалуйста, попробуйте еще раз.");
+        setError(response.data?.error || 'Ошибка создания поста');
+      }
+    } catch (err) {
+      console.error('Error creating post:', err);
+      
+      if (err.response?.status === 429) {
+        const retryAfter = err.response.headers['retry-after'];
+        const timeRemaining = retryAfter ? parseInt(retryAfter) : 60;
+        
+        setRateLimitDialog({
+          open: true,
+          message: `Слишком много запросов. Попробуйте через ${timeRemaining} секунд.`,
+          timeRemaining
+        });
+      } else {
+        setError(err.response?.data?.error || 'Ошибка создания поста');
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!user) return null;
-  
+  const handlePaste = (e) => {
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    
+    for (let item of items) {
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) {
+          processFiles([file]);
+        }
+      }
+    }
+  };
+
   return (
     <Paper 
       elevation={0} 
@@ -508,6 +407,21 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
           {error}
         </Alert>
       )}
+      
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setSnackbar(prev => ({ ...prev, open: false }))} 
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       
       <Box 
         sx={{ 
@@ -575,15 +489,15 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
               }}
             />
             <Box sx={{ flex: 1, position: 'relative' }}>
-            <PostInput
-              placeholder={postType === 'wall' ? t('profile.create_post.wall_placeholder') : t('profile.create_post.placeholder')}
-              multiline
-              value={content}
+              <PostInput
+                placeholder={postType === 'wall' ? t('profile.create_post.wall_placeholder') : t('profile.create_post.placeholder')}
+                multiline
+                value={content}
                 onChange={(e) => {
                   setContent(e.target.value);
                 }}
-              onPaste={handlePaste}
-              fullWidth
+                onPaste={handlePaste}
+                fullWidth
                 minRows={1}
                 maxRows={8}
                 sx={{
@@ -798,6 +712,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
             </Box>
           </Box>
           
+          {/* Медиа превью */}
           {mediaPreview.length > 0 && (
             <Box sx={{ position: 'relative', mb: 2 }}>
               <Box sx={{ 
@@ -839,7 +754,6 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                             width: '100%',
                             borderRadius: '8px'
                           }}
-                          onError={safeImageError}
                         />
                         <IconButton
                           onClick={() => {
@@ -901,8 +815,9 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
             </Box>
           )}
           
+          {/* Музыкальные треки */}
           {selectedTracks.length > 0 && (
-            <Box sx={{ mt: 2, mb: 1 }}>
+            <Box sx={{ mt: 2, mb: 2 }}>
               {selectedTracks.map(track => (
                 <Box 
                   key={track.id}
@@ -910,59 +825,120 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                     display: 'flex', 
                     alignItems: 'center', 
                     py: 1, 
-                    px: 2, 
+                    px: 1.5, 
                     mb: 1, 
-                    borderRadius: '8px',
-                    bgcolor: theme => theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.05)'
-                      : 'rgba(0, 0, 0, 0.03)',
-                    border: theme => theme.palette.mode === 'dark'
-                      ? '1px solid rgba(255, 255, 255, 0.08)'
-                      : '1px solid rgba(0, 0, 0, 0.05)'
+                    borderRadius: '10px',
+                    bgcolor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
                   }}
+                  onClick={(e) => handleTrackPlay(track, e)}
                 >
                   <Box 
                     sx={{ 
-                      width: 36, 
-                      height: 36, 
-                      borderRadius: '4px', 
+                      width: 32, 
+                      height: 32, 
+                      borderRadius: '6px', 
                       overflow: 'hidden',
                       mr: 1.5,
                       position: 'relative',
-                      bgcolor: theme => theme.palette.mode === 'dark' 
-                        ? 'rgba(0, 0, 0, 0.3)'
-                        : 'rgba(0, 0, 0, 0.1)',
+                      bgcolor: 'rgba(0, 0, 0, 0.3)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
                     }}
                   >
                     <img 
-                      src={track.cover_path.startsWith('/static/') ? track.cover_path : `/static/uploads/music/covers/${track.cover_path}`} 
+                      src={
+                        !track.cover_path ? '/uploads/system/album_placeholder.jpg' :
+                        track.cover_path.startsWith('/static/') ? track.cover_path :
+                        track.cover_path.startsWith('static/') ? `/${track.cover_path}` :
+                        track.cover_path.startsWith('http') ? track.cover_path :
+                        `/static/music/${track.cover_path}`
+                      } 
                       alt={track.title}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={safeImageError}
+                      onError={(e) => {
+                        e.target.src = '/uploads/system/album_placeholder.jpg';
+                      }}
                     />
-                    <MusicNoteIcon 
-                      sx={{ 
-                        position: 'absolute', 
-                        fontSize: 16, 
-                        color: 'rgba(255, 255, 255, 0.7)'
-                      }} 
-                    />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        background: 'linear-gradient(145deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3))',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
+                    >
+                      {currentTrack && currentTrack.id === track.id && isPlaying ? (
+                        <PauseIcon sx={{ color: 'white', fontSize: 16 }} />
+                      ) : (
+                        <MusicNoteIcon 
+                          sx={{ 
+                            fontSize: 14, 
+                            color: 'rgba(255, 255, 255, 0.9)',
+                            filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))'
+                          }}
+                        />
+                      )}
+                    </Box>
                   </Box>
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography variant="body2" noWrap>
+                  <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: currentTrack && currentTrack.id === track.id ? 'medium' : 'normal',
+                        color: currentTrack && currentTrack.id === track.id ? 'primary.main' : 'text.primary',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        fontSize: '0.85rem'
+                      }}
+                    >
                       {track.title}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary" noWrap>
+                    <Typography 
+                      variant="caption" 
+                      color="text.secondary"
+                      sx={{
+                        display: 'block',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        fontSize: '0.75rem'
+                      }}
+                    >
                       {track.artist}
                     </Typography>
                   </Box>
+                  {currentTrack && currentTrack.id === track.id ? (
+                    isPlaying ? (
+                      <PauseIcon color="primary" fontSize="small" sx={{ mr: 1, fontSize: 16 }} />
+                    ) : (
+                      <PlayArrowIcon color="primary" fontSize="small" sx={{ mr: 1, fontSize: 16 }} />
+                    )
+                  ) : null}
                   <IconButton 
                     size="small" 
-                    onClick={() => handleRemoveTrack(track.id)}
-                    sx={{ ml: 1 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveTrack(track.id);
+                    }}
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      '&:hover': {
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                      }
+                    }}
                   >
                     <CloseIcon fontSize="small" />
                   </IconButton>
@@ -1010,20 +986,20 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
               </label>
               
               <Button
-                onClick={() => setMusicSelectOpen(true)}
                 startIcon={<MusicNoteIcon sx={{ fontSize: 18 }} />}
+                onClick={() => setMusicSelectOpen(true)}
                 sx={{
                   color: selectedTracks.length > 0 ? 'primary.main' : 'text.secondary',
                   borderRadius: '10px',
                   textTransform: 'none',
                   fontSize: '0.8rem',
                   fontWeight: 500,
-                  padding: '4px 10px',
                   border: selectedTracks.length > 0 
-                    ? '1px solid rgba(208, 188, 255, 0.5)' 
+                    ? '1px solid rgba(208, 188, 255, 0.5)'
                     : theme => theme.palette.mode === 'dark'
                       ? '1px solid rgba(255, 255, 255, 0.12)'
                       : '1px solid rgba(0, 0, 0, 0.12)',
+                  padding: '4px 10px',
                   '&:hover': {
                     backgroundColor: 'rgba(208, 188, 255, 0.08)',
                     borderColor: 'rgba(208, 188, 255, 0.4)'
@@ -1034,7 +1010,6 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
                 {selectedTracks.length > 0 ? t('profile.create_post.music_count', { count: selectedTracks.length }) : t('profile.create_post.music')}
               </Button>
               
-              {/* NSFW кнопка - показывается только при наличии медиа */}
               {(mediaFiles.length > 0 || selectedTracks.length > 0) && (
                 <Tooltip title="Деликатный контент" placement="top">
                   <IconButton
@@ -1090,31 +1065,6 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
           />
         </Box>
       </Box>
-      
-      <Snackbar
-        open={mediaNotification.open}
-        autoHideDuration={3000}
-        onClose={() => setMediaNotification({ ...mediaNotification, open: false })}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert 
-          onClose={() => setMediaNotification({ ...mediaNotification, open: false })} 
-          severity="warning"
-          sx={{ width: '100%' }}
-        >
-          {mediaNotification.message}
-        </Alert>
-      </Snackbar>
-      
-      <DynamicIslandNotification
-        open={showSizeError}
-        message={sizeErrorMessage}
-        shortMessage="Ошибка размера файла"
-        notificationType="error"
-        animationType="pill"
-        autoHideDuration={5000}
-        onClose={() => setShowSizeError(false)}
-      />
     </Paper>
   );
 };
