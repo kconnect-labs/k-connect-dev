@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
+import { imageCache, createImageProps } from '../../utils/imageUtils';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -229,7 +230,12 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         const optimizedResults = await Promise.all(
           limitedImages.map(async (imageUrl) => {
             let formattedUrl = formatImageUrl(imageUrl);
-            
+            // Проверяем кэш
+            const cacheKey = `${formattedUrl}-optimized`;
+            const cachedResult = imageCache.get(cacheKey);
+            if (cachedResult) {
+              return cachedResult;
+            }
             if (webpSupported && formattedUrl.startsWith('/static/')) {
               formattedUrl = addFormatParam(formattedUrl, 'webp');
             }
@@ -241,10 +247,13 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
               preferWebP: webpSupported
             });
             
-            return {
+            const result = {
               ...optimized,
               originalSrc: formatImageUrl(imageUrl)
             };
+            imageCache.set(cacheKey, result);
+
+            return result;
           })
         );
         
@@ -377,19 +386,20 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         </Box>
       );
     }
-    
+    const imageProps = createImageProps(optimizedUrl, {
+      lazy: true,
+      alt: `Изображение ${index + 1}`,
+      isSingle,
+      isMobile,
+      onError: () => handleImageError(imageUrl, index)
+    });
     return (
       <React.Fragment>
         <BackgroundImage
           style={{ backgroundImage: `url(${optimizedUrl})` }}
         />
         <Image
-          src={optimizedUrl}
-          alt={`Изображение ${index + 1}`}
-          loading="lazy"
-          isSingle={isSingle}
-          isMobile={isMobile}
-          onError={() => handleImageError(imageUrl, index)}
+          {...imageProps}
         />
         {!hideOverlay && (
           <ImageOverlay />
