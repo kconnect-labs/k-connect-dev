@@ -59,7 +59,16 @@ import { usePageCommands } from '../../context/CommandPalleteContext';
 
 
 
-
+const OnlineUsersCard = styled(Card)(({ theme }) => ({
+  borderRadius: '12px',
+  overflow: 'hidden',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'blur(20px)',
+  border: theme.palette.mode === 'dark' 
+    ? '1px solid rgba(255, 255, 255, 0.1)' 
+    : '1px solid rgba(0, 0, 0, 0.1)'
+}));
 
 
 
@@ -68,6 +77,7 @@ const OnlineUsers = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const theme = useTheme();
   
   useEffect(() => {
     const fetchOnlineUsers = async () => {
@@ -92,6 +102,7 @@ const OnlineUsers = () => {
     
     fetchOnlineUsers();
     
+    
     const interval = setInterval(fetchOnlineUsers, 60000);
     
     return () => clearInterval(interval);
@@ -103,10 +114,10 @@ const OnlineUsers = () => {
   
   if (loading) {
     return (
-      <div className="online-users-card loading-container">
-        <div className="loading-spinner"></div>
-        <span className="loading-text">{t('main_page.loading')}</span>
-      </div>
+      <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
+        <CircularProgress size={18} sx={{ mr: 1 }} />
+        <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>{t('main_page.loading')}</Typography>
+      </OnlineUsersCard>
     );
   }
   
@@ -115,34 +126,89 @@ const OnlineUsers = () => {
   }
   
   return (
-    <div className="online-users-card">
-      <div className="online-users-container">
-        <div className="online-count-badge">
-          <div className="online-indicator"></div>
-          <span className="online-count-text">
+    <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center', overflowX: 'auto' }}>
+      <Box sx={{
+        display: 'flex',
+        flexWrap: 'nowrap',
+        gap: 1,
+        overflowX: 'auto',
+        pb: 0,
+        '&::-webkit-scrollbar': { height: '0px', display: 'none' },
+        msOverflowStyle: 'none',
+        scrollbarWidth: 'none',
+      }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            px: 1,
+            py: 0.5,
+            borderRadius: '12px',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+            border: '1px solid rgba(76, 175, 80, 0.2)',
+            minWidth: 'fit-content',
+            height: 36,
+            mr: 0.5
+          }}
+        >
+          <Box
+            sx={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              backgroundColor: '#4caf50',
+              boxShadow: '0 0 8px rgba(76, 175, 80, 0.5)'
+            }}
+          />
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 500,
+              color: '#4caf50'
+            }}
+          >
             {t('main_page.online_count', { count: onlineUsers.length })}
-          </span>
-        </div>
+          </Typography>
+        </Box>
         {onlineUsers.map(user => (
-          <div
+          <Box
             key={user.id}
-            className="user-avatar-container"
+            sx={{ position: 'relative', cursor: 'pointer', mx: 0.25 }}
             onClick={() => handleUserClick(user.username)}
           >
-            <img
+            <Avatar
               src={user.photo}
               alt={user.username}
-              className="user-avatar"
+              sx={{
+                width: 36,
+                height: 36,
+                border: `2px solid ${theme.palette.background.paper}`,
+                boxSizing: 'border-box',
+                background: '#222',
+              }}
               onError={safeImageError}
             />
-            <div className="user-status-indicator"></div>
-          </div>
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 2,
+                right: 2,
+                width: 9,
+                height: 9,
+                borderRadius: '50%',
+                backgroundColor: '#4caf50',
+                border: `1.5px solid ${theme.palette.background.paper}`,
+                boxSizing: 'border-box',
+              }}
+            />
+          </Box>
         ))}
-      </div>
-    </div>
+      </Box>
+    </OnlineUsersCard>
   );
 };
-
 
 const UserRecommendation = ({ user }) => {
   const { t } = useLanguage();

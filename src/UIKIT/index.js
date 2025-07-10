@@ -10,6 +10,7 @@ import VerificationBadge from './VerificationBadge';
 import CommentSystem from './CommentSystem';
 import TransferMenu from './TransferMenu';
 import InventoryItemCard from './InventoryItemCard';
+import Badge from './Badge';
 
 
 export {
@@ -27,5 +28,6 @@ export {
   VerificationBadge,
   CommentSystem,
   TransferMenu,
-  InventoryItemCard
+  InventoryItemCard,
+  Badge
 };

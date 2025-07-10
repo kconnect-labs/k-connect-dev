@@ -1,0 +1,364 @@
+/* ===== BADGE COMPONENT STYLES ===== */
+
+.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  
+}
+
+/* Размеры бейджиков */
+.badge--post {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  margin-top: 9px !important;
+}
+
+.badge--small {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+}
+
+.badge--medium {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+}
+
+.badge--large {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+}
+
+.badge--shop {
+  width: 150px !important;
+  height: 150px !important;
+  min-width: 150px !important;
+  min-height: 150px !important;
+}
+
+/* Основное изображение бейджика */
+.badge__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Состояния загрузки */
+.badge--loaded .badge__image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.badge--error .badge__image {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* Hover эффекты */
+.badge--hovered {
+  transform: scale(1.1);
+  z-index: 10;
+}
+
+.badge--hovered .badge__image {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+/* ===== UPGRADE EFFECTS ===== */
+
+/* Контейнер для upgrade эффектов */
+.badge-upgrade-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--badge-size) * 2);
+  height: calc(var(--badge-size) * 2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Уменьшенная область для постов */
+.badge--post .badge-upgrade-effect {
+  width: calc(var(--badge-size) * 1.5);
+  height: calc(var(--badge-size) * 1.5);
+}
+
+
+
+
+
+/* Увеличенное расстояние искр для магазина */
+.badge--shop .badge-sparkle:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-60px); }
+.badge--shop .badge-sparkle:nth-child(2) { transform: translate(-50%, -50%) rotate(60deg) translateY(-60px); }
+.badge--shop .badge-sparkle:nth-child(3) { transform: translate(-50%, -50%) rotate(120deg) translateY(-60px); }
+.badge--shop .badge-sparkle:nth-child(4) { transform: translate(-50%, -50%) rotate(180deg) translateY(-60px); }
+.badge--shop .badge-sparkle:nth-child(5) { transform: translate(-50%, -50%) rotate(240deg) translateY(-60px); }
+.badge--shop .badge-sparkle:nth-child(6) { transform: translate(-50%, -50%) rotate(300deg) translateY(-60px); }
+
+/* Уменьшенное расстояние искр для постов */
+.badge--post .badge-sparkle:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-10px); }
+.badge--post .badge-sparkle:nth-child(2) { transform: translate(-50%, -50%) rotate(60deg) translateY(-10px); }
+.badge--post .badge-sparkle:nth-child(3) { transform: translate(-50%, -50%) rotate(120deg) translateY(-10px); }
+.badge--post .badge-sparkle:nth-child(4) { transform: translate(-50%, -50%) rotate(180deg) translateY(-10px); }
+.badge--post .badge-sparkle:nth-child(5) { transform: translate(-50%, -50%) rotate(240deg) translateY(-10px); }
+.badge--post .badge-sparkle:nth-child(6) { transform: translate(-50%, -50%) rotate(300deg) translateY(-10px); }
+
+/* ===== FLYING BADGE PARTICLES ===== */
+
+/* Летающие бейджики */
+.badge-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--particle-size, 12px);
+  height: var(--particle-size, 12px);
+  pointer-events: none;
+  z-index: 2;
+  animation: particle-float 6s ease-out infinite;
+  animation-delay: var(--particle-delay, 0s);
+  color: var(--particle-color, #FFD700);
+  filter: drop-shadow(0 0 6px var(--particle-color, #FFD700));
+  transform-origin: center;
+}
+
+.badge-particle svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  animation: particle-rotate 3s linear infinite;
+  animation-delay: var(--particle-delay, 0s);
+  fill: currentColor;
+  opacity: 0.5;
+}
+
+/* ===== ANIMATIONS ===== */
+
+/* Вращение искр */
+@keyframes sparkle-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Вращение SVG в искрах */
+@keyframes sparkle-rotate-svg {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.2); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Пульсация искр */
+@keyframes sparkle-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-20px) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-20px) scale(1.3);
+  }
+}
+
+/* Уменьшенная пульсация искр для постов */
+@keyframes sparkle-pulse-post {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-10px) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-10px) scale(1.3);
+  }
+}
+
+/* Увеличенная пульсация искр для магазина */
+@keyframes sparkle-pulse-shop {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-60px) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg)) translateY(-60px) scale(1.3);
+  }
+}
+
+.badge--post .badge-sparkle {
+  animation: sparkle-pulse-post 3s ease-in-out infinite;
+}
+
+.badge--shop .badge-sparkle {
+  animation: sparkle-pulse-shop 3s ease-in-out infinite;
+}
+
+/* Плавающие частицы-бейджики */
+@keyframes particle-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--particle-x, 0), var(--particle-y, 0)) scale(0) rotate(var(--particle-rotation, 0deg));
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(var(--particle-x, 0), var(--particle-y, 0)) scale(1) rotate(var(--particle-rotation, 0deg));
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translate(
+      calc(var(--particle-x, 0) * 1.1), 
+      calc(var(--particle-y, 0) * 1.1)
+    ) scale(0.9) rotate(calc(var(--particle-rotation, 0deg) + 180deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(
+      calc(var(--particle-x, 0) * 1.2), 
+      calc(var(--particle-y, 0) * 1.2)
+    ) scale(0) rotate(calc(var(--particle-rotation, 0deg) + 360deg));
+  }
+}
+
+/* Вращение частиц */
+@keyframes particle-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== UPGRADED BADGE SPECIFIC STYLES ===== */
+
+.badge--upgraded {
+  filter: drop-shadow(0 0 8px var(--upgrade-color, #FFD700));
+}
+
+.badge--upgraded .badge__image {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) brightness(1.1);
+}
+
+.badge--upgraded.badge--hovered {
+  filter: drop-shadow(0 0 12px var(--upgrade-color, #FFD700));
+  transform: scale(1.15);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 768px) {
+  .badge--large {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  
+  .badge-upgrade-effect {
+    width: calc(var(--badge-size) * 2.2);
+    height: calc(var(--badge-size) * 2.2);
+  }
+  
+  .badge-particle {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge--medium {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+  }
+  
+  .badge--large {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+  }
+  
+  .badge-particle {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Отключаем анимации для пользователей с предпочтением reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .badge__image,
+  .badge-sparkles,
+  .badge-sparkle,
+  .badge-sparkle-svg,
+  .badge-particle,
+  .badge-particle svg {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .badge--hovered {
+    transform: none !important;
+  }
+}
+
+/* Оптимизация для GPU */
+.badge,
+.badge-upgrade-effect,
+.badge-sparkles,
+.badge-particle {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Фокус для клавиатурной навигации */
+.badge:focus {
+  outline: 2px solid var(--upgrade-color, #FFD700);
+  outline-offset: 2px;
+}
+
+/* Улучшенный контраст для скринридеров */
+.badge__image {
+  alt: attr(alt);
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+
+@media (prefers-color-scheme: dark) {
+  .badge__image {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+  
+  .badge--hovered .badge__image {
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  }
+}
+
+/* ===== SHOP BADGE SPECIFIC STYLES ===== */
+
+.badge--shop .badge-sparkle {
+  width: 20px;
+  height: 20px;
+}
