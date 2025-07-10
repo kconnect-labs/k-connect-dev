@@ -1,0 +1,53 @@
+.Base {
+  border-radius: var(--border-radius-md);
+  background-color: var(--surface);
+  padding: var(--padding);
+  background-color: var(--background-secondary);
+  
+}
+
+.Title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-family: "SF Pro Display","Roboto","Arial",sans-serif;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Description {
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: "SF Pro Display","Roboto","Arial",sans-serif;
+}
+
+.Header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.Content {
+  padding:6px;
+}
+
+.Footer {
+  display: flex;
+  /* align-items: start; */
+  flex-direction: column;
+  padding-top: 6px;
+}
+
+.left {
+  align-items: start;
+}
+
+.right {
+  align-items: end;
+}
+
+.center {
+  align-items: center;
+}

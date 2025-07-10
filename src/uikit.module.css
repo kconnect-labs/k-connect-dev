@@ -1,6 +1,8 @@
 /* UIKIT: Универсальные утилитарные классы для всего проекта */
+/* кста эту штуку уже придумали, называется tailwindcss */
 
 /* флекс помощники */
+
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
 .flex-row { flex-direction: row; }
@@ -74,6 +76,10 @@
 /* Контейнер и производительность */
 .contain { contain: layout style paint; }
 .will-change-transform { will-change: transform; }
+
+/* бордеры */
+.border-default { border: 1px solid var(--border-color); }
+
 
 /* Разное */
 .pointer { cursor: pointer; }
