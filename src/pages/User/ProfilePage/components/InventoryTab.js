@@ -487,10 +487,10 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, 
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: 2,
+                  borderRadius: 1,
                   p: 3,
                   width: 400,
-                  height: 550,
+                  height: 'auto',
                   overflow: 'auto',
                   position: 'relative',
                 }}
@@ -587,41 +587,6 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, 
                         <Typography variant="body2" color="primary.main" sx={{ fontWeight: 600 }}>
                           ✓ Надет
                         </Typography>
-                      )}
-                      
-                      {/* Кнопки для надевания/снятия предметов */}
-                      {!readOnlyItem && currentUserId && selectedItem.user_id === currentUserId && (
-                        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-                          {!selectedItem.is_equipped ? (
-                            <Button
-                              variant="contained"
-                              fullWidth
-                              onClick={() => handleEquipItem(selectedItem.id)}
-                              sx={{
-                                background: 'rgba(76, 175, 80, 0.8)',
-                                '&:hover': {
-                                  background: 'rgba(76, 175, 80, 1)',
-                                }
-                              }}
-                            >
-                              Надеть
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="contained"
-                              fullWidth
-                              onClick={() => handleUnequipItem(selectedItem.id)}
-                              sx={{
-                                background: 'rgba(244, 67, 54, 0.8)',
-                                '&:hover': {
-                                  background: 'rgba(244, 67, 54, 1)',
-                                }
-                              }}
-                            >
-                              Снять
-                            </Button>
-                          )}
-                        </Box>
                       )}
                       
                       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>

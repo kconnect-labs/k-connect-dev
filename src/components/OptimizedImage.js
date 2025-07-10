@@ -17,7 +17,7 @@ const StyledImage = styled('img')(({ theme, loaded, error }) => ({
   maxWidth: '100%',
   maxHeight: '100%',
   objectFit: 'contain',
-  transition: 'opacity 0.3s ease',
+  transition: 'opacity 1s ease',
   opacity: loaded && !error ? 1 : 0,
   filter: error ? 'grayscale(100%)' : 'none',
 }));
@@ -42,6 +42,7 @@ const OptimizedImage = ({
   fallbackText = 'Изображение недоступно',
   showSkeleton = true,
   lazy = true,
+  skipExistenceCheck = false,
   onLoad,
   onError,
   ...props 
@@ -56,6 +57,12 @@ const OptimizedImage = ({
     const checkImageExists = async () => {
       if (!src) {
         setImageExists(false);
+        return;
+      }
+
+      // Если пропуск проверки существования, сразу считаем что изображение есть
+      if (skipExistenceCheck) {
+        setImageExists(true);
         return;
       }
 
@@ -88,6 +95,9 @@ const OptimizedImage = ({
           }]);
           setImageExists(result[0]?.exists || false);
         }
+      } else if (src.startsWith('/static/')) {
+        // Для статических файлов считаем, что изображение существует
+        setImageExists(true);
       } else {
         // Для других URL считаем, что изображение существует
         setImageExists(true);
@@ -95,7 +105,7 @@ const OptimizedImage = ({
     };
 
     checkImageExists();
-  }, [src]);
+  }, [src, skipExistenceCheck]);
 
   const handleLoad = () => {
     setLoaded(true);
@@ -111,7 +121,7 @@ const OptimizedImage = ({
     if (onError) onError();
   };
 
-  // Если изображение не существует в кеше, показываем fallback
+  // Если изображение точно не существует в кеше, показываем fallback
   if (imageExists === false) {
     return (
       <ImageContainer sx={{ width, height }}>
@@ -122,18 +132,35 @@ const OptimizedImage = ({
     );
   }
 
+  // Если skipExistenceCheck=true, но изображение еще не загрузилось и не было ошибки, показываем skeleton
+  if (skipExistenceCheck && !loaded && !error && showSkeleton) {
+    return (
+      <ImageContainer sx={{ width, height }}>
+        <Skeleton 
+          variant="rectangular" 
+          width="100%" 
+          height="100%" 
+          animation="wave"
+          sx={{ 
+            borderRadius: 1,
+            background: 'rgba(255, 255, 255, 0.1)'
+          }}
+        />
+      </ImageContainer>
+    );
+  }
+
   const imageProps = createImageProps(src, {
     lazy,
     alt,
     onLoad: handleLoad,
     onError: handleError,
-    style: { display: loaded || error ? 'block' : 'none' },
     ...props
   });
 
   return (
     <ImageContainer sx={{ width, height }}>
-      {showSkeleton && !loaded && !error && imageExists !== false && (
+      {showSkeleton && !loaded && !error && imageExists !== false && imageExists !== null && !skipExistenceCheck && (
         <Skeleton 
           variant="rectangular" 
           width="100%" 

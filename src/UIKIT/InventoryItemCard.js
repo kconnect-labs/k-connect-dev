@@ -78,6 +78,12 @@ const InventoryItemCardPure = memo(({ item, onClick, className = '', style = {},
             </span>
           </div>
         )}
+        
+        {item.is_equipped && (
+          <div className="equipped-badge">
+            <span className="equipped-text">Надет</span>
+          </div>
+        )}
       </div>
 
       <div className="item-name">

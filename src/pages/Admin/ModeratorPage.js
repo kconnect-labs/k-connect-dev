@@ -207,6 +207,8 @@ const ModeratorPage = () => {
   const [editBadgeActive, setEditBadgeActive] = useState(true);
   const [editBadgeImage, setEditBadgeImage] = useState(null);
   const [editBadgeImagePreview, setEditBadgeImagePreview] = useState('');
+  const [editBadgeUpgrade, setEditBadgeUpgrade] = useState(false);
+  const [editBadgeColorUpgrade, setEditBadgeColorUpgrade] = useState('');
   const [editArtistName, setEditArtistName] = useState('');
   const [editArtistBio, setEditArtistBio] = useState('');
   const [editArtistAvatar, setEditArtistAvatar] = useState(null);
@@ -2785,6 +2787,8 @@ const ModeratorPage = () => {
     setEditBadgeActive(badge.is_active);
     setEditBadgeImage(null);
     setEditBadgeImagePreview(`/static/images/bages/shop/${badge.image_path}`);
+    setEditBadgeUpgrade(!!badge.upgrade);
+    setEditBadgeColorUpgrade(badge.color_upgrade || '');
     setEditBadgeDialogOpen(true);
   };
 
@@ -2824,6 +2828,8 @@ const ModeratorPage = () => {
         formData.append('price', price);
         formData.append('is_active', editBadgeActive);
         formData.append('image', editBadgeImage);
+        formData.append('upgrade', editBadgeUpgrade ? 'true' : '');
+        formData.append('color_upgrade', editBadgeUpgrade ? editBadgeColorUpgrade : '');
         
         console.log('[DEBUG] Updating badge with image:', {
           id: selectedBadge.id,
@@ -2844,7 +2850,9 @@ const ModeratorPage = () => {
           name: editBadgeName,
           description: editBadgeDescription || '',
           price: price,
-          is_active: editBadgeActive
+          is_active: editBadgeActive,
+          upgrade: editBadgeUpgradeEnabled ? editBadgeUpgrade : '',
+          color_upgrade: editBadgeUpgradeEnabled ? editBadgeColorUpgrade : ''
         };
         
         console.log('[DEBUG] Updating badge without image:', {
@@ -2870,6 +2878,8 @@ const ModeratorPage = () => {
                   description: editBadgeDescription || '',
                   price: price,
                   is_active: editBadgeActive,
+                  upgrade: editBadgeUpgradeEnabled ? editBadgeUpgrade : null,
+                  color_upgrade: editBadgeUpgradeEnabled ? editBadgeColorUpgrade : null,
                   image_path: response.data.badge.image_path || badge.image_path
                 }
               : badge
@@ -3138,6 +3148,25 @@ const ModeratorPage = () => {
                             sx={{ borderRadius: 1 }}
                           />
                         </Box>
+                        
+                        {(badge.upgrade || badge.color_upgrade) && (
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <StarsIcon sx={{ fontSize: 16, color: '#ff9800' }} />
+                            <Chip 
+                              icon={<StarsIcon />} 
+                              label={badge.upgrade || 'Улучшен'} 
+                              size="small"
+                              sx={{ 
+                                borderRadius: 1,
+                                background: badge.color_upgrade ? badge.color_upgrade : 'rgba(255, 152, 0, 0.2)',
+                                color: badge.color_upgrade ? '#fff' : '#ff9800',
+                                border: badge.color_upgrade ? `1px solid ${badge.color_upgrade}` : '1px solid rgba(255, 152, 0, 0.3)',
+                                fontSize: '0.7rem',
+                                height: 20
+                              }}
+                            />
+                          </Box>
+                        )}
                       </CardContent>
                     </Card>
                   </Grid>
@@ -5358,6 +5387,153 @@ const ModeratorPage = () => {
                 />
               </Paper>
             </Grid>
+            
+            <Grid item xs={12}>
+              <Paper 
+                elevation={0} 
+                sx={{ 
+                  p: 1.5, 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  height: '100%'
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <StarsIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                  <Typography variant="subtitle1" color="rgba(255, 255, 255, 0.87)">Улучшения</Typography>
+                </Box>
+                <Switch 
+                  checked={editBadgeUpgradeEnabled}
+                  onChange={(e) => setEditBadgeUpgradeEnabled(e.target.checked)}
+                  color="primary"
+                  sx={{ 
+                    '& .MuiSwitch-switchBase.Mui-checked': {
+                      color: '#ff9800',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 152, 0, 0.08)',
+                      },
+                    },
+                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                      backgroundColor: '#ff9800',
+                    },
+                  }}
+                />
+              </Paper>
+            </Grid>
+            
+            {editBadgeUpgradeEnabled && (
+              <>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Текст улучшения"
+                    type="text"
+                    fullWidth
+                    value={editBadgeUpgrade}
+                    onChange={(e) => setEditBadgeUpgrade(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                    placeholder="Например: VIP, Premium, Gold"
+                    helperText="Текст, который будет отображаться как улучшение"
+                    FormHelperTextProps={{
+                      sx: { color: 'rgba(255,255,255,0.5)' }
+                    }}
+                    InputProps={{
+                      sx: {
+                        borderRadius: 2,
+                        backgroundColor: 'rgba(255,255,255,0.05)',
+                        color: 'rgba(255,255,255,0.87)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255,255,255,0.1)',
+                        },
+                        '&.Mui-focused': {
+                          backgroundColor: 'rgba(255, 152, 0, 0.15)',
+                          boxShadow: '0 0 0 2px rgba(255, 152, 0, 0.3)'
+                        }
+                      }
+                    }}
+                    InputLabelProps={{
+                      sx: { color: 'rgba(255,255,255,0.7)' }
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255,255,255,0.2)'
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255,255,255,0.3)'
+                      },
+                      '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#ff9800'
+                      }
+                    }}
+                  />
+                </Grid>
+                
+                <Grid item xs={12}>
+                  <TextField
+                    label="Цвет улучшения"
+                    type="text"
+                    fullWidth
+                    value={editBadgeColorUpgrade}
+                    onChange={(e) => setEditBadgeColorUpgrade(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                    placeholder="#FFD700"
+                    helperText="Цвет в формате HEX (например, #FFD700 для золотого)"
+                    FormHelperTextProps={{
+                      sx: { color: 'rgba(255,255,255,0.5)' }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Box 
+                            sx={{ 
+                              width: 20, 
+                              height: 20, 
+                              borderRadius: '50%', 
+                              backgroundColor: editBadgeColorUpgrade || 'transparent',
+                              border: '2px solid rgba(255,255,255,0.3)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          />
+                        </InputAdornment>
+                      ),
+                      sx: {
+                        borderRadius: 2,
+                        backgroundColor: 'rgba(255,255,255,0.05)',
+                        color: 'rgba(255,255,255,0.87)',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255,255,255,0.1)',
+                        },
+                        '&.Mui-focused': {
+                          backgroundColor: 'rgba(255, 152, 0, 0.15)',
+                          boxShadow: '0 0 0 2px rgba(255, 152, 0, 0.3)'
+                        }
+                      }
+                    }}
+                    InputLabelProps={{
+                      sx: { color: 'rgba(255,255,255,0.7)' }
+                    }}
+                    sx={{
+                      '& .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255,255,255,0.2)'
+                      },
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255,255,255,0.3)'
+                      },
+                      '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: '#ff9800'
+                      }
+                    }}
+                  />
+                </Grid>
+              </>
+            )}
             
             <Grid item xs={12}>
               <Box 

@@ -618,20 +618,7 @@ const ProfilePage = () => {
                             : '0 8px 20px rgba(0, 0, 0, 0.25)',
                         bgcolor: 'primary.dark',
                         transition: 'all 0.3s ease',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          transform: 'scale(1.03)',
-                          boxShadow: (user?.status_color && user?.status_text && user.subscription) 
-                            ? `0 0 20px ${user.status_color}B3` 
-                            : user?.subscription 
-                              ? (user.subscription.type === 'premium' ? '0 0 20px rgba(186, 104, 200, 0.7)' : user.subscription.type === 'pick-me' ? '0 0 20px rgba(208, 188, 255, 0.7)' : user.subscription.type === 'ultimate' ? '0 0 20px rgba(124, 77, 255, 0.7)' : '0 0 20px rgba(66, 165, 245, 0.7)') 
-                              : '0 10px 25px rgba(0, 0, 0, 0.35)',
-                          border: (user?.status_color && user?.status_text && user.subscription) 
-                            ? `4px solid ${user.status_color}CC` 
-                            : user?.subscription 
-                              ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200, 0.8)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255, 0.8)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255, 0.8)' : 'rgba(66, 165, 245, 0.8)'}`
-                              : '4px solid rgba(208, 188, 255, 0.4)'
-                        }
+                        cursor: 'pointer'
                       }}
                       onError={(e) => {
                         if (user?.id) {
@@ -777,12 +764,7 @@ const ProfilePage = () => {
                             ? '1px solid rgba(255,255,255,0.15)'
                             : theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
                           textDecoration: 'none',
-                          '&:hover': {
-                            textDecoration: 'none',
-                            background: user?.profile_id === 2
-                              ? 'rgba(0,0,0,0.4)'
-                              : theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'
-                          }
+                          cursor: 'pointer'
                         })}
                       >
                         @{user.connect_info[0].username}
@@ -831,11 +813,7 @@ const ProfilePage = () => {
                     border: (user.status_color && user.status_text && user.subscription) ? 
                     `1px solid ${user.status_color}33` : 
                     theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
-                      transform: 'translateY(-2px)'
-                    }
+                    transition: 'all 0.2s ease'
                   }}>
                     <Typography 
                       variant="h6" 
@@ -870,13 +848,6 @@ const ProfilePage = () => {
                         theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
                       textDecoration: 'none',
                       transition: 'all 0.2s ease',
-                      '&:hover': {
-                        background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
-                        transform: 'translateY(-2px)',
-                        boxShadow: (user.status_color && user.status_text && user.subscription) ? 
-                          `0 4px 15px ${user.status_color}33` : 
-                          '0 4px 15px rgba(0,0,0,0.1)'
-                      }
                     }}
                   >
                     <Typography 
@@ -913,13 +884,6 @@ const ProfilePage = () => {
                           theme => theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.05)' : '1px solid rgba(0,0,0,0.05)',
                         textDecoration: 'none',
                         transition: 'all 0.2s ease',
-                        '&:hover': {
-                          background: theme => theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: (user.status_color && user.status_text && user.subscription) ? 
-                            `0 4px 15px ${user.status_color}33` : 
-                            '0 4px 15px rgba(0,0,0,0.1)'
-                        }
                       }}
                     >
                       <Typography 
@@ -968,13 +932,7 @@ const ProfilePage = () => {
                               social.color || 'primary.main',
                             padding: 1,
                             bgcolor: 'rgba(255, 255, 255, 0.07)',
-                            '&:hover': {
-                              bgcolor: (user.status_color && user.status_text && user.subscription) ? 
-                                `${user.status_color}15` : 
-                                'rgba(255, 255, 255, 0.12)',
-                              transform: 'translateY(-2px)',
-                              transition: 'transform 0.2s'
-                            }
+
                           }}
                         >
                           {social.icon ? (
@@ -1133,12 +1091,13 @@ const ProfilePage = () => {
           
           <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
             <UpgradeEffects item={user}>
-              <InventoryTab 
-                userId={user?.id} 
-                itemIdToOpen={itemIdToOpen} 
-                onEquippedItemsUpdate={refreshEquippedItems}
-                currentUserId={currentUser?.id}
-              />
+                          <InventoryTab 
+              userId={user?.id} 
+              itemIdToOpen={itemIdToOpen} 
+              equippedItems={equippedItems}
+              onEquippedItemsUpdate={refreshEquippedItems}
+              currentUserId={currentUser?.id}
+            />
             </UpgradeEffects>
           </TabPanel>
           

@@ -194,8 +194,9 @@ const KBallsIcon = styled('img')({
   marginRight: '4px',
 });
 
-const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
+const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
   const [items, setItems] = useState([]);
+  const [profileEquippedItems, setProfileEquippedItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -210,6 +211,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   const [userPoints, setUserPoints] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [showEquipped, setShowEquipped] = useState(true);
+  const [upgradedItems, setUpgradedItems] = useState([]);
+  const [loadingUpgraded, setLoadingUpgraded] = useState(false);
   const { user } = useAuth();
   const [notification, setNotification] = useState({
     open: false,
@@ -233,8 +236,35 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     if (user) {
       fetchInventory();
       fetchUserPoints();
+      fetchProfileEquippedItems();
+      fetchUpgradedItems();
     }
   }, [user]);
+
+  const fetchProfileEquippedItems = async () => {
+    try {
+      const response = await axios.get(`/api/profile/${user.username}`);
+      if (response.data.success && response.data.user && response.data.equipped_items) {
+        setProfileEquippedItems(response.data.equipped_items);
+      }
+    } catch (error) {
+      console.error('Error fetching profile equipped items:', error);
+    }
+  };
+
+  const fetchUpgradedItems = async () => {
+    try {
+      setLoadingUpgraded(true);
+      const response = await axios.get(`/api/inventory/user/${user.id}/upgraded`);
+      if (response.data.success) {
+        setUpgradedItems(response.data.items);
+      }
+    } catch (error) {
+      console.error('Error fetching upgraded items:', error);
+    } finally {
+      setLoadingUpgraded(false);
+    }
+  };
 
   useEffect(() => {
     if (itemIdToOpen) {
@@ -384,6 +414,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
   const handleItemUpdate = () => {
     fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
+    fetchProfileEquippedItems(); // Обновляем надетые предметы
+    fetchUpgradedItems(); // Обновляем улучшенные предметы
   };
 
   const handleTransferSuccess = () => {
@@ -430,11 +462,24 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     }
   };
 
+  // Создаем список надетых предметов из профиля
+  const equippedItemsFromProfile = (equippedItems.length > 0 ? equippedItems : profileEquippedItems).map(equipped => ({
+    ...equipped,
+    is_equipped: true,
+    // Добавляем недостающие поля для совместимости
+    id: equipped.background_id || equipped.item_id,
+    item_name: equipped.item_name || 'Предмет',
+    rarity: equipped.rarity || 'common',
+    upgrade_level: equipped.upgrade_level || 0,
+    upgradeable: equipped.upgradeable || false,
+    image_url: equipped.background_url || equipped.image_url,
+  }));
+
   const filteredItems = activeTab === 0 
     ? items 
     : activeTab === 1 
-    ? items.filter(item => item.is_equipped)
-    : items.filter(item => !item.is_equipped);
+    ? upgradedItems
+    : items;
 
   const tabs = [
     {
@@ -443,11 +488,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
     },
     {
       value: 1,
-      label: `Надетые (${items.filter(item => item.is_equipped).length})`
-    },
-    {
-      value: 2,
-      label: `Не надетые (${items.filter(item => !item.is_equipped).length})`
+      label: `Улучшенные (${upgradedItems.length})`
     }
   ];
 
@@ -608,14 +649,12 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
         />
       </Box>
 
-      {filteredItems.length === 0 ? (
+      {filteredItems.length === 0 && !loadingUpgraded ? (
         <Box textAlign="center" py={8}>
           <Typography variant="h6" mb={2}>
             {activeTab === 0 
               ? 'У вас пока нет предметов в инвентаре'
-              : activeTab === 1 
-              ? 'У вас нет надетых предметов'
-              : 'У вас нет ненадетых предметов'
+              : 'У вас нет улучшенных предметов'
             }
           </Typography>
           {activeTab === 0 && (
@@ -672,6 +711,13 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen }, ref) => {
           
           {/* Индикатор загрузки для пагинации */}
           {loadingMore && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
+              <CircularProgress size={40} />
+            </Box>
+          )}
+          
+          {/* Индикатор загрузки для улучшенных предметов */}
+          {activeTab === 1 && loadingUpgraded && (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
               <CircularProgress size={40} />
             </Box>
