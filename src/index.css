@@ -12,13 +12,24 @@
   --primary: #D0BCFF;
   --primary-light: #E9DDFF;
   --primary-dark: #9A7ACE;
+
   --background: #131313;
-  --background-secondary: #1C1C1C;
+  --background-secondary: #1c1c1c;
+
+  --border-color: #ffffff33;
+
   --surface: #1D1D1D;
   --text-primary: #FFFFFF;
   --text-secondary: #C2C2C2;
   --error: #F28C9A;
   --success: #6CD67D;
+
+
+
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+
+  --padding: 16px;
 }
 
 * {
