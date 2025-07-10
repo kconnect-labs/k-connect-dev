@@ -92,7 +92,7 @@ const getCoverPath = (track) => {
 
 // Оптимизированная функция форматирования времени
 const formatTime = (seconds) => {
-  if (!seconds || seconds < 0) return '0:00';
+  if (!seconds || seconds < 0 || isNaN(seconds)) return '0:00';
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
@@ -451,6 +451,10 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
   
   const formattedCurrentTime = useMemo(() => formatTime(currentTime), [currentTime]);
   const formattedDuration = useMemo(() => formatTime(duration), [duration]);
+  
+  // Проверка на валидность времени
+  const safeCurrentTime = useMemo(() => isNaN(currentTime) ? 0 : currentTime, [currentTime]);
+  const safeDuration = useMemo(() => isNaN(duration) ? 100 : duration, [duration]);
   
   const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
 
@@ -1947,8 +1951,8 @@ const ProgressSlider = memo(({
 }) => (
   <ProgressContainer>
     <Slider
-      value={currentTime}
-      max={duration}
+      value={isNaN(currentTime) || currentTime === undefined ? 0 : Math.max(0, currentTime)}
+      max={isNaN(duration) || duration === undefined ? 100 : Math.max(1, duration)}
       onChange={onTimeChange}
                   sx={{
                     color: 'white',

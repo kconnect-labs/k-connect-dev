@@ -1,0 +1,81 @@
+/* UIKIT: Универсальные утилитарные классы для всего проекта */
+
+/* флекс помощники */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.gap-2 { gap: 2px; }
+.gap-4 { gap: 4px; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+
+/* Размеры */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-w-0 { min-width: 0; }
+.max-w-full { max-width: 100%; }
+.box-border { box-sizing: border-box; }
+
+/* Текст */
+.text-center { text-align: center; }
+.text-ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.font-bold { font-weight: bold; }
+.font-medium { font-weight: 500; }
+.font-normal { font-weight: 400; }
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.2rem; }
+
+/* Границы и радиусы */
+.rounded { border-radius: 8px; }
+.rounded-md { border-radius: 12px; }
+.rounded-lg { border-radius: 16px; }
+.rounded-full { border-radius: 50%; }
+.border { border: 1px solid var(--border-color, #eee); }
+.shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.shadow-md { box-shadow: 0 4px 15px rgba(0,0,0,0.07); }
+
+/* Кнопки и интерактив */
+.btn { cursor: pointer; transition: all 0.2s; border: none; outline: none; }
+.btn:hover { opacity: 0.85; }
+.bg-transparent { background: transparent; }
+.bg-white { background: #fff; }
+.bg-primary { background: var(--primary, #D0BCFF); }
+.opacity-60 { opacity: 0.6; }
+.opacity-100 { opacity: 1; }
+
+/* Изображения и аватары */
+.avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.img-cover { object-fit: cover; }
+.img-contain { object-fit: contain; }
+
+/* Утилиты */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.overflow-hidden { overflow: hidden; }
+.z-1 { z-index: 1; }
+.z-2 { z-index: 2; }
+
+/* Анимации */
+.transition { transition: all 0.2s ease; }
+.transition-fast { transition: all 0.1s ease; }
+
+/* Скрыть полосу прокрутки (webkit) */
+.hide-scrollbar::-webkit-scrollbar { width: 0; background: transparent; }
+
+/* Контейнер и производительность */
+.contain { contain: layout style paint; }
+.will-change-transform { will-change: transform; }
+
+/* Разное */
+.pointer { cursor: pointer; }
+.no-select { user-select: none; }
+.bg-blur { backdrop-filter: blur(20px); } 

@@ -1,5 +1,6 @@
 import React, { memo, useRef, useEffect } from 'react';
 import { useMusic } from '../context/MusicContext';
+import FullScreenPlayer from './Music';
 
 
 window.audioTiming = {
@@ -20,7 +21,10 @@ const MusicPlayerCore = memo(() => {
     getDurationRaw,
     isPlaying,
     setCurrentTime,
-    setDuration 
+    setDuration,
+    isFullScreenPlayerOpen,
+    openFullScreenPlayer,
+    closeFullScreenPlayer
   } = useMusic();
   
   const formatTime = (time) => {
@@ -101,7 +105,14 @@ const MusicPlayerCore = memo(() => {
     };
   }, [audioRef, setCurrentTime, setDuration, isPlaying]);
   
-  return null; 
+  return (
+    <>
+      <FullScreenPlayer
+        open={isFullScreenPlayerOpen}
+        onClose={closeFullScreenPlayer}
+      />
+    </>
+  ); 
 });
 
 export default MusicPlayerCore; 

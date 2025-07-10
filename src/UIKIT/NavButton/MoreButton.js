@@ -1,31 +1,5 @@
 import React, { memo } from 'react';
-import { NavItemStyled, NavIconStyled, NavTextStyled } from './NavButton';
-import { Box, styled } from '@mui/material';
-
-
-const MoreButtonStyled = styled(NavItemStyled)(({ theme, active, themecolor }) => ({
-  justifyContent: 'space-between',
-  paddingRight: theme.spacing(1.8),
-  marginTop: theme.spacing(0.8),
-  '& .arrow-icon': {
-    transition: 'transform 0.3s ease',
-    transform: active ? 'rotate(180deg)' : 'rotate(0deg)',
-    color: active ? (themecolor || theme.palette.primary.main) : 
-      (theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.75)' : 'rgba(0, 0, 0, 0.75)'),
-    '& .MuiSvgIcon-root': {
-      fontSize: '1.1rem',
-      transition: 'all 0.3s ease',
-    }
-  },
-  '&:hover .arrow-icon': {
-    color: active ? (themecolor || theme.palette.primary.main) : 
-      (theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)'),
-    '& .MuiSvgIcon-root': {
-      transform: 'scale(1.1)',
-    }
-  }
-}));
-
+import NavButton from './NavButton';
 
 const areEqual = (prevProps, nextProps) => {
   return (
@@ -46,36 +20,35 @@ const MoreButton = ({
   arrowDownIcon,
   ...rest 
 }) => {
-
   const ArrowIcon = active ? 
     (arrowUpIcon || arrowIcon) : 
     (arrowDownIcon || arrowIcon);
 
+  const buttonClasses = [
+    'nav-button',
+    'more-button',
+    active ? 'more-button--active' : '',
+    rest.isSpecial ? 'more-button--special' : ''
+  ].filter(Boolean).join(' ');
+
   return (
-    <MoreButtonStyled
-      button
+    <button
+      className={buttonClasses}
       onClick={onClick}
-      active={active ? 1 : 0}
-      themecolor={themeColor}
       {...rest}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <NavIconStyled 
-          active={active ? 1 : 0}
-          themecolor={themeColor}
-        >
+      <div className="nav-button__left-content">
+        <div className="nav-button__icon">
           {icon}
-        </NavIconStyled>
-        <NavTextStyled 
-          primary={text} 
-          active={active ? 1 : 0}
-          themecolor={themeColor}
-        />
-      </Box>
-      <Box className="arrow-icon">
+        </div>
+        <div className="nav-button__text">
+          {text}
+        </div>
+      </div>
+      <div className="more-button__arrow">
         {ArrowIcon}
-      </Box>
-    </MoreButtonStyled>
+      </div>
+    </button>
   );
 };
 

@@ -25,8 +25,7 @@ import {
   Step,
   StepLabel,
   Divider,
-  Avatar,
-  Badge,
+    Avatar,
   useTheme,
   useMediaQuery,
   Select,
@@ -52,8 +51,9 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import { Fade } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
-import BadgeShopBottomNavigation from '../../components/BadgeShopBottomNavigation';
+import BadgeShopBottomNavigation from '../../components/BadgeShopBottomNavigation.tsx';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import Badge from '../../UIKIT/Badge/Badge';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -78,14 +78,14 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     '& .MuiCardMedia-root': {
-      height: '100px',
+      height: '150px',
     }
   }
 }));
 
 const BadgeImage = styled('img')({
   width: '100%',
-  height: '130px',
+  height: '150px',
   objectFit: 'contain',
   padding: '12px',
   transition: 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)',
@@ -93,7 +93,6 @@ const BadgeImage = styled('img')({
     transform: 'scale(1.05)',
   },
   '@media (max-width: 600px)': {
-    height: '100px',
     padding: '8px',
   },
 });
@@ -683,7 +682,9 @@ const BadgeShopPage = () => {
     price: '',
     royalty_percentage: 30,
     max_copies: '',
-    image: null
+    image: null,
+    is_upgraded: false,
+    particle_color: '#FFD700'
   });
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -803,6 +804,7 @@ const BadgeShopPage = () => {
       setLoading(true);
     try {
       const response = await axios.get('/api/badges/shop');
+
       setBadges(response.data.badges || []);
     } catch (error) {
       console.error('Error fetching badges:', error);
@@ -839,6 +841,13 @@ const BadgeShopPage = () => {
         return;
       }
 
+      // Проверяем баланс с учетом улучшения
+      const creationCost = newBadge.is_upgraded ? 9000 : 3000;
+      if (userPoints < creationCost) {
+        setError(`Недостаточно баллов. Требуется: ${creationCost} баллов`);
+        return;
+      }
+
       const formData = new FormData();
       formData.append('name', newBadge.name);
       formData.append('description', newBadge.description);
@@ -857,7 +866,13 @@ const BadgeShopPage = () => {
       formData.append('image', newBadge.image);
       formData.append('strip_path_prefix', true);
       formData.append('file_path_mode', 'clean');
-      formData.append('auto_assign_to_creator', true); 
+      formData.append('auto_assign_to_creator', true);
+      
+      // Добавляем данные об улучшении
+      if (newBadge.is_upgraded) {
+        formData.append('is_upgraded', true);
+        formData.append('particle_color', newBadge.particle_color);
+      } 
 
       const response = await axios.post('/api/badges/create', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -870,7 +885,9 @@ const BadgeShopPage = () => {
         price: '',
         royalty_percentage: 30,
         max_copies: '',
-        image: null
+        image: null,
+        is_upgraded: false,
+        particle_color: '#FFD700'
       });
       
       
@@ -1210,16 +1227,74 @@ const BadgeShopPage = () => {
           <Grid item xs={6} sm={4} md={3} key={badge.id}>
             <StyledCard onClick={() => handleBadgeClick(badge)} sx={{ cursor: 'pointer', height: '100%' }}>
               <Box sx={{ position: 'relative', overflow: 'hidden' }}>
-                <BadgeImage 
-                  className="badge-image"
-                  src={`/static/images/bages/shop/${badge.image_path}`}
-                  alt={badge.name || 'Бейджик'} 
-                />
+                {(badge.is_upgraded || badge.upgrade) ? (
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    height: '150px',
+                    padding: '12px',
+                    '@media (max-width: 600px)': {
+                      padding: '8px',
+                    }
+                  }}>
+
+                    <Badge 
+                      achievement={{
+                        image_path: `shop/${badge.image_path}`,
+                        upgrade: badge.is_upgraded || badge.upgrade,
+                        color_upgrade: badge.particle_color || badge.color_upgrade || '#FFD700',
+                        bage: badge.name || 'Бейджик'
+                      }}
+                      size="shop"
+                      showTooltip={true}
+                      tooltipText={badge.name || 'Бейджик'}
+                    />
+                  </Box>
+                ) : (
+                  <BadgeImage 
+                    className="badge-image"
+                    src={`/static/images/bages/shop/${badge.image_path}`}
+                    alt={badge.name || 'Бейджик'} 
+                  />
+                )}
                 <BadgeOverlay className="badge-overlay">
                   <Typography variant="body2" color="white" sx={{ textAlign: 'center' }}>
                     Нажмите для подробностей
                   </Typography>
                 </BadgeOverlay>
+                {(badge.is_upgraded || badge.upgrade) && (
+                  <Chip
+                    size="small"
+                    label="Улучшенный"
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      left: 8,
+                      height: 24,
+                      borderRadius: 12,
+                      fontWeight: 500,
+                      backgroundColor: 'rgba(183, 0, 255, 0.9)',
+                      color: '#fffff',
+                      border: '1px solid rgba(255, 0, 179, 0.18)',
+                      backdropFilter: 'blur(4px)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                      '& .MuiChip-label': {
+                        fontSize: '0.7rem',
+                        padding: '0 8px',
+                        letterSpacing: '0.02em',
+                      },
+                      '@media (max-width: 600px)': {
+                        height: 20,
+                        top: 6,
+                        left: 6,
+                        '& .MuiChip-label': {
+                          fontSize: '0.65rem',
+                        }
+                      }
+                    }}
+                  />
+                )}
                 {badge.max_copies > 0 && (
                   <CopiesChip
                     size="small"
@@ -1331,7 +1406,31 @@ const BadgeShopPage = () => {
             </BadgeDialogHeader>
             <BadgeDialogContent>
               <Box sx={{ position: 'relative', mb: 4 }}>
-                <BadgeDialogImage src={getBadgeImageUrl(selectedBadge.image_path)} alt={selectedBadge.name} />
+                {(selectedBadge.is_upgraded || selectedBadge.upgrade) ? (
+                  <Box sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    height: '200px',
+                    '@media (max-width: 600px)': {
+                      height: '150px',
+                    }
+                  }}>
+                    <Badge 
+                      achievement={{
+                        image_path: `shop/${selectedBadge.image_path}`,
+                        upgrade: selectedBadge.is_upgraded || selectedBadge.upgrade,
+                        color_upgrade: selectedBadge.particle_color || selectedBadge.color_upgrade || '#FFD700',
+                        bage: selectedBadge.name || 'Бейджик'
+                      }}
+                      size="large"
+                      showTooltip={true}
+                      tooltipText={selectedBadge.name || 'Бейджик'}
+                    />
+                  </Box>
+                ) : (
+                  <BadgeDialogImage src={getBadgeImageUrl(selectedBadge.image_path)} alt={selectedBadge.name} />
+                )}
               </Box>
               
               <CreatorInfo>
@@ -1345,6 +1444,35 @@ const BadgeShopPage = () => {
                   </Typography>
                 </Box>
               </CreatorInfo>
+
+              {(selectedBadge.is_upgraded || selectedBadge.upgrade) && (
+                <Box sx={{ 
+                  mb: 3, 
+                  p: 2, 
+                  bgcolor: 'rgba(255, 215, 0, 0.1)', 
+                  borderRadius: 2,
+                  border: '1px solid rgba(255, 215, 0, 0.3)'
+                }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Box
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: selectedBadge.particle_color || '#FFD700',
+                        border: '2px solid #fff',
+                        boxShadow: '0 0 0 1px rgba(0,0,0,0.1)'
+                      }}
+                    />
+                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#FFD700' }}>
+                      Улучшенный бейджик
+                    </Typography>
+                  </Box>
+                                      <Typography variant="body2" color="text.secondary">
+                      Включает анимированные частицы с цветом {selectedBadge.particle_color || selectedBadge.color_upgrade || '#FFD700'}
+                    </Typography>
+                </Box>
+              )}
 
               {selectedBadge.purchases?.length > 0 && (
                 <Box sx={{ mb: 3 }}>
@@ -1462,6 +1590,7 @@ const BadgeShopPage = () => {
         onClose={() => setOpenCreateDialog(false)} 
         maxWidth="sm" 
         fullWidth
+        fullScreen={isMobile}
         sx={{ 
           position: 'fixed',
           zIndex: 1000000,
@@ -1469,9 +1598,10 @@ const BadgeShopPage = () => {
             position: 'fixed',
           },
           '& .MuiPaper-root': {
-            borderRadius: '16px',
+            borderRadius: isMobile ? '0' : '16px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            height: isMobile ? '100vh' : 'auto'
           }
         }}
       >
@@ -1516,7 +1646,9 @@ const BadgeShopPage = () => {
         </DialogTitle>
         <DialogContent sx={{ 
           padding: theme.spacing(3), 
-          bgcolor: 'background.paper'
+          bgcolor: 'background.paper',
+          height: isMobile ? 'calc(100vh - 120px)' : 'auto',
+          overflowY: 'auto'
         }}>
           <Box sx={{ pt: 1 }}>
             
@@ -1535,6 +1667,57 @@ const BadgeShopPage = () => {
               </Typography>
             </Box>
             
+            {/* Кнопка улучшенного бейджика */}
+            <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(208, 188, 255, 0.1)', borderRadius: 1, border: '1px solid rgba(208, 188, 255, 0.3)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                  Улучшенный Бейдж
+                </Typography>
+                <Button
+                  variant={newBadge.is_upgraded ? "contained" : "outlined"}
+                  size="small"
+                  onClick={() => setNewBadge({ ...newBadge, is_upgraded: !newBadge.is_upgraded })}
+                  sx={{ 
+                    borderRadius: '20px',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    minWidth: '100px'
+                  }}
+                >
+                  {newBadge.is_upgraded ? 'Включено' : 'Включить'}
+                </Button>
+              </Box>
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                Добавляет анимированные частицы с настраиваемым цветом
+              </Typography>
+              {newBadge.is_upgraded && (
+                <TextField
+                  fullWidth
+                  label="Цвет частиц (HEX)"
+                  value={newBadge.particle_color}
+                  onChange={(e) => setNewBadge({ ...newBadge, particle_color: e.target.value })}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    sx: { borderRadius: '8px' },
+                    startAdornment: (
+                      <Box
+                        sx={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: '50%',
+                          backgroundColor: newBadge.particle_color,
+                          border: '2px solid #fff',
+                          boxShadow: '0 0 0 1px rgba(0,0,0,0.1)',
+                          mr: 1
+                        }}
+                      />
+                    )
+                  }}
+                  helperText="Например: #FFD700 для золотого цвета"
+                />
+              )}
+            </Box>
             
             <Box sx={{ mb: 2, p: 2, bgcolor: 'rgba(0, 0, 0, 0.03)', borderRadius: 1 }}>
               <Typography variant="subtitle2" gutterBottom>
@@ -1735,7 +1918,7 @@ const BadgeShopPage = () => {
           <Button
             onClick={handleCreateBadge}
             variant="contained"
-            disabled={!newBadge.name || !newBadge.price || !newBadge.image}
+            disabled={!newBadge.name || !newBadge.price || !newBadge.image || userPoints < (newBadge.is_upgraded ? 9000 : 3000)}
             sx={{ 
               borderRadius: '8px',
               textTransform: 'none',
@@ -1744,7 +1927,7 @@ const BadgeShopPage = () => {
               px: 3
             }}
           >
-            Создать за 3000 баллов
+            Создать за {newBadge.is_upgraded ? '9000' : '3000'} баллов
           </Button>
         </DialogActions>
       </Dialog>

@@ -44,6 +44,7 @@ import { usePostDetail } from '../../context/PostDetailContext';
 
 import { ContextMenu, useContextMenu } from '../../UIKIT';
 import { VerificationBadge } from '../../UIKIT';
+import Badge from '../../UIKIT/Badge/Badge';
 
 // Ленивая загрузка тяжелых компонентов
 const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
@@ -375,7 +376,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       });
       
       if (response.data && Array.isArray(response.data.users)) {
-        setLastLikedUsers(response.data.users);
+        // Дедупликация пользователей по ID
+        const uniqueUsers = response.data.users.filter((user, index, self) => 
+          index === self.findIndex(u => u.id === user.id)
+        );
+        setLastLikedUsers(uniqueUsers);
       }
     } catch (error) {
       console.error('Error fetching last liked users:', error);
@@ -1198,7 +1203,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
   
   const addHeart = (x, y) => {
     const newHeart = {
-      id: Date.now() + Math.random(),
+      id: `${Date.now()}-${Math.random()}-${hearts.length}`,
       x,
       y,
       rotation: getRandomRotation(),
@@ -1628,7 +1633,8 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       color: 'primary.main'
                     },
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    height: '24px'
                   }}
                 >
                   {post.user?.name}
@@ -1681,17 +1687,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     )
                   )}
                   {post.user?.achievement && (
-                    <Box 
-                      component="img" 
-                      sx={{ 
-                        width: 'auto', 
-                        height: 20,  
-                        ml: 0.5
-                      }} 
-                      src={`/static/images/bages/${post.user.achievement.image_path}`} 
-                      alt={post.user.achievement.bage}
-                      onError={safeImageError}
-                    />
+                    <Box sx={{ ml: 0.5 }}>
+                      <Badge 
+                        achievement={post.user.achievement}
+                        size="post"
+                      />
+                    </Box>
                   )}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', fontSize: '0.75rem' }}>
@@ -1837,6 +1838,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       status={post.original_post.user?.verification.status} 
                       size="small" 
                     />
+                  )}
+                  {post.original_post.user?.achievement && (
+                    <Box sx={{ ml: 0.5 }}>
+                      <Badge 
+                        achievement={post.original_post.user.achievement}
+                        size="post"
+                      />
+                    </Box>
                   )}
                 </Typography>
               </Box>
@@ -2333,7 +2342,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
                       return (
                         <Avatar
-                          key={user.id}
+                          key={`${user.id}-${index}`}
                           src={avatarUrl}
                           alt={user.name}
                           sx={{
@@ -2392,14 +2401,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           {lastComment && !lastCommentLoading && (
             <Box
               sx={{
-                mt: 1.5,
-                p: 1.5,
-                borderRadius: '12px',
+                padding: '12px',
+                borderRadius: '0 0 12px 12px',
                 background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
+                marginTop: '12px', 
+                marginBottom: '-13px',
+                marginLeft: '-17px',
+                marginRight: '-17px',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.18)',
@@ -2442,6 +2452,14 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                       onClick={(e) => e.stopPropagation()}
                     >
                       {lastComment.user?.name || 'Пользователь'}
+                      {lastComment.user?.achievement && (
+                        <Box sx={{ ml: 0.5, display: 'inline-flex'}}>
+                          <Badge 
+                            achievement={lastComment.user.achievement}
+                            size="post"
+                          />
+                        </Box>
+                      )}
                     </Typography>
 
                     

@@ -88,13 +88,19 @@ const PostsFeed = ({ userId, statusColor }) => {
       });
       if (!isMounted.current) return;
       if (response.data.posts && Array.isArray(response.data.posts)) {
-        const newPosts = response.data.posts;
+        // Дедупликация постов по ID
+        const uniqueNewPosts = response.data.posts.filter((post, index, self) => 
+          index === self.findIndex(p => p.id === post.id)
+        );
+        
         if (pageNumber === 1) {
-          setPosts(newPosts);
+          setPosts(uniqueNewPosts);
         } else {
           setPosts(prevPosts => {
             const prevArray = Array.isArray(prevPosts) ? prevPosts : [];
-            return [...prevArray, ...newPosts];
+            const existingPostIds = new Set(prevArray.map(p => p.id));
+            const filteredNewPosts = uniqueNewPosts.filter(post => !existingPostIds.has(post.id));
+            return [...prevArray, ...filteredNewPosts];
           });
         }
         setHasMore(response.data.has_next);
@@ -323,7 +329,7 @@ const PostsFeed = ({ userId, statusColor }) => {
           {posts.map((post, index) => {
             if (posts.length === index + 1) {
               return (
-                <Box ref={lastPostElementRef} key={post.id}>
+                <Box ref={lastPostElementRef} key={`${post.id}-${index}`}>
                   <Post 
                     post={post} 
                     onDelete={handleDeletePost}
@@ -335,7 +341,7 @@ const PostsFeed = ({ userId, statusColor }) => {
             } else {
               return (
                 <Post 
-                  key={post.id} 
+                  key={`${post.id}-${index}`} 
                   post={post} 
                   onDelete={handleDeletePost}
                   showActions

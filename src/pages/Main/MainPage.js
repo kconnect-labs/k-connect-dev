@@ -20,6 +20,7 @@ import {
   Alert,
   Dialog,
 } from '@mui/material';
+import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -53,6 +54,11 @@ import { usePageCommands } from '../../context/CommandPalleteContext';
 
 
 
+
+
+
+
+
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
@@ -64,79 +70,6 @@ const OnlineUsersCard = styled(Card)(({ theme }) => ({
     : '1px solid rgba(0, 0, 0, 0.1)'
 }));
 
-
-
-
-
-const PostInput = styled(InputBase)(({ theme }) => ({
-  width: '100%',
-  borderRadius: '10px',
-  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-  },
-  '& .MuiInputBase-input': {
-    padding: '8px',
-  },
-}));
-
-const PostActions = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  paddingTop: theme.spacing(1),
-}));
-
-
-const ContentContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(),
-  width: '100%',
-  maxWidth: '100%',
-  overflow: { xs: 'hidden', md: 'visible' },
-  [theme.breakpoints.up('md')]: {
-    flexDirection: 'row',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1), 
-  },
-}));
-
-const LeftColumn = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '5px',
-  [theme.breakpoints.up('md')]: {
-    width: '68%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: '5px', 
-  },
-}));
-
-const RightColumn = styled(Box)(({ theme }) => ({
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(2),
-  [theme.breakpoints.up('md')]: {
-    width: '32%',
-  },
-  [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1), 
-  },
-}));
-
-const SupportBlock = styled(Box)(({ theme }) => ({
-  borderRadius: '12px',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  overflow: 'hidden',
-  position: 'relative',
-}));
 
 
 const OnlineUsers = () => {
@@ -277,7 +210,6 @@ const OnlineUsers = () => {
   );
 };
 
-
 const UserRecommendation = ({ user }) => {
   const { t } = useLanguage();
   const [following, setFollowing] = useState(user.is_following || false);
@@ -287,19 +219,16 @@ const UserRecommendation = ({ user }) => {
   const handleFollow = async (e) => {
     e.stopPropagation();
     try {
-      
       setFollowing(!following);
       
       const response = await axios.post(`/api/profile/follow`, {
         followed_id: user.id
       });
       
-      
       if (response.data && response.data.success) {
         setFollowing(response.data.is_following);
       }
     } catch (error) {
-      
       setFollowing(following);
       console.error('Error toggling follow:', error);
     }
@@ -309,130 +238,58 @@ const UserRecommendation = ({ user }) => {
     navigate(`/profile/${user.username}`);
   };
 
-  
   const getAvatarSrc = () => {
     if (!user.photo) return '/static/uploads/system/avatar.png';
-    
     
     if (user.photo.startsWith('/') || user.photo.startsWith('http')) {
       return user.photo;
     }
     
-    
     return `/static/uploads/avatar/${user.id}/${user.photo}`;
   };
-  
   
   const isChannelAccount = currentUser && currentUser.account_type === 'channel';
   
   return (
-    <Box 
+    <div 
+      className="user-recommendation"
       onClick={handleCardClick} 
-      sx={{ 
-        cursor: 'pointer',
-        py: 2,
-        px: 2.5,
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          backgroundColor: 'rgba(255, 255, 255, 0.03)'
-        }
-      }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Avatar 
+      <div className="user-recommendation-content">
+        <div className="user-info">
+          <img 
             src={getAvatarSrc()}
             alt={user.name || user.username}
-            sx={{ 
-              width: 42, 
-              height: 42, 
-              mr: 1.5,
-              border: '2px solid rgba(208, 188, 255, 0.3)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
-            }}
+            className="user-avatar-large"
             onError={safeImageError}
           />
-          <Box sx={{ minWidth: 0, flex: 1 }}>
-            <Typography 
-              variant="body2" 
-              fontWeight="500" 
-              noWrap 
-              sx={{ 
-                color: theme => theme.palette.text.primary,
-                letterSpacing: '0.1px'
-              }}
-            >
+          <div className="user-details">
+            <div className="user-name">
               {user.name || user.username}
-            </Typography>
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: 0.75
-            }}>
-              <Typography 
-                variant="caption" 
-                color="text.secondary" 
-                noWrap 
-                sx={{ 
-                  fontSize: '0.75rem',
-                  color: '#a0a0a0'
-                }}
-              >
+            </div>
+            <div className="user-username">
+              <span className="username-text">
                 @{user.username}
-              </Typography>
+              </span>
               {user.is_verified && (
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 12,
-                    height: 12,
-                    bgcolor: '#8470FF',
-                    borderRadius: '50%',
-                    fontSize: '0.6rem',
-                    color: 'white',
-                    fontWeight: 'bold'
-                  }}
-                >
+                <span className="verified-badge">
                   ✓
-                </Box>
+                </span>
               )}
-            </Box>
-          </Box>
+            </div>
+          </div>
           
           {!isChannelAccount && (
-            <Button
-              variant={following ? "text" : "contained"}
-              size="small"
+            <button
+              className={`follow-button ${following ? 'following' : ''}`}
               onClick={handleFollow}
-              sx={{
-                minWidth: 'auto',
-                height: 32,
-                borderRadius: '16px',
-                textTransform: 'none',
-                px: following ? 2 : 2,
-                ml: 1,
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                ...(following && {
-                  color: '#a0a0a0',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 0, 0, 0.04)',
-                    color: '#ff5252',
-                    borderColor: 'rgba(255, 82, 82, 0.2)'
-                  }
-                })
-              }}
             >
               {following ? t('main_page.follow.unfollow') : t('main_page.follow.follow')}
-            </Button>
+            </button>
           )}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -983,14 +840,14 @@ const CreatePost = ({ onPostCreated }) => {
               alt={user.name}
               sx={{ mr: 1.5, width: 42, height: 42, border: '2px solid #D0BCFF' }}
             />
-            <PostInput 
+            <textarea 
+              className="post-input"
               placeholder={t('main_page.post.create.placeholder')}
-              multiline
-              maxRows={6}
+              rows={1}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               onPaste={handlePaste}
-              fullWidth
+              style={{ resize: 'none' }}
             />
           </Box>
           
@@ -1230,8 +1087,8 @@ const CreatePost = ({ onPostCreated }) => {
             </Box>
           )}
           
-          <PostActions>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+          <div className="post-actions">
+            <div style={{ display: 'flex', gap: 8 }}>
               <input
                 ref={fileInputRef}
                 type="file"
@@ -1319,7 +1176,7 @@ const CreatePost = ({ onPostCreated }) => {
                   </IconButton>
                 </Tooltip>
               )}
-            </Box>
+            </div>
             
             <Button 
               variant="contained" 
@@ -1327,15 +1184,15 @@ const CreatePost = ({ onPostCreated }) => {
               disabled={isSubmitting || (!content.trim() && mediaFiles.length === 0 && selectedTracks.length === 0)}
               endIcon={isSubmitting ? <CircularProgress size={16} color="inherit" /> : null}
               sx={{
-                borderRadius: '24px',
+                borderRadius: '8px',
                 textTransform: 'none',
                 fontWeight: 500,
-                padding: '6px 16px'
+                padding: '6px 8px'
               }}
             >
               {t('main_page.post.create.publish')}
             </Button>
-          </PostActions>
+          </div>
           
           
           <MusicSelectDialog
@@ -1419,7 +1276,11 @@ const MainPage = React.memo(() => {
 						if (requestId !== currentRequestId - 1) return
 
 						if (response.data && Array.isArray(response.data.posts)) {
-							setPosts(response.data.posts)
+							// Дедупликация постов по ID
+							const uniquePosts = response.data.posts.filter((post, index, self) => 
+								index === self.findIndex(p => p.id === post.id)
+							);
+							setPosts(uniquePosts)
 							setHasMore(response.data.has_next === true)
 							setPage(2)
 						} else {
@@ -1492,7 +1353,11 @@ const MainPage = React.memo(() => {
         if (requestId !== currentRequestId - 1) return;
         
         if (response.data && Array.isArray(response.data.posts)) {
-          setPosts(response.data.posts);
+          // Дедупликация постов по ID
+          const uniquePosts = response.data.posts.filter((post, index, self) => 
+            index === self.findIndex(p => p.id === post.id)
+          );
+          setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
           setPage(2);
         } else {
@@ -1564,7 +1429,11 @@ const MainPage = React.memo(() => {
         if (requestId !== currentRequestId - 1) return;
         
         if (response.data && Array.isArray(response.data.posts)) {
-          setPosts(response.data.posts);
+          // Дедупликация постов по ID
+          const uniquePosts = response.data.posts.filter((post, index, self) => 
+            index === self.findIndex(p => p.id === post.id)
+          );
+          setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
           setPage(2);
         } else {
@@ -1708,7 +1577,11 @@ const MainPage = React.memo(() => {
           if (requestId !== currentRequestId - 1) return;
           
           if (response.data && Array.isArray(response.data.posts)) {
-            setPosts(response.data.posts);
+            // Дедупликация постов по ID
+            const uniquePosts = response.data.posts.filter((post, index, self) => 
+              index === self.findIndex(p => p.id === post.id)
+            );
+            setPosts(uniquePosts);
             setHasMore(response.data.has_next === true);
             setPage(2);
           } else {
@@ -1786,8 +1659,8 @@ const MainPage = React.memo(() => {
       overflow: { xs: 'hidden', md: 'visible' },
       pb: { xs: '100px', sm: 0 }
     }}>
-      <ContentContainer>
-        <LeftColumn>
+      <div className="content-container">
+        <div className="left-column">
           <OnlineUsers />
           <CreatePost onPostCreated={handlePostCreated} />
           
@@ -1836,12 +1709,12 @@ const MainPage = React.memo(() => {
               </>
             ) : posts.length > 0 ? (
               <Box sx={{ mt: 0 }}>
-                {posts.map((post) => (
+                {posts.map((post, index) => (
                   post.is_repost ? (
-                    <RepostItem key={post.id} post={post} />
+                    <RepostItem key={`${post.id}-${index}`} post={post} />
                   ) : (
                     <Post 
-                      key={post.id} 
+                      key={`${post.id}-${index}`} 
                       post={post} 
                       showPostDetails={false}
                       onOpenLightbox={handleOpenLightbox}
@@ -1891,9 +1764,9 @@ const MainPage = React.memo(() => {
               </Box>
             )}
           </Box>
-        </LeftColumn>
+        </div>
         
-        <RightColumn>
+        <div className="right-column">
           
           <Box 
             component={Paper} 
@@ -2009,8 +1882,8 @@ const MainPage = React.memo(() => {
               />
             </Box>
           )}
-        </RightColumn>
-      </ContentContainer>
+        </div>
+      </div>
       
       
       <SimpleImageViewer 

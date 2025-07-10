@@ -16,6 +16,19 @@ export default defineConfig({
   
   plugins: [
     react({
+      babel: {
+        presets: [
+          ['@babel/preset-react', {
+            runtime: 'automatic',
+            development: true,
+            importSource: 'react'
+          }],
+          ['@babel/preset-typescript', {
+            isTSX: true,
+            allExtensions: true
+          }]
+        ]
+      },
       include: "**/*.{jsx,js,tsx,ts}",
       fastRefresh: true,
       jsxRuntime: 'automatic',
@@ -47,7 +60,7 @@ export default defineConfig({
       loader: {
         '.js': 'jsx',
         '.jsx': 'jsx',
-        '.ts': 'tsx',
+        '.ts': 'ts',
         '.tsx': 'tsx'
       },
     },

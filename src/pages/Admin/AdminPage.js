@@ -1576,8 +1576,8 @@ const AdminPage = () => {
             <Box>
               <Typography variant="h6" sx={{ mb: 2 }}>Последние посты</Typography>
               {userPosts.length > 0 ? (
-                userPosts.map(post => (
-                  <Paper key={post.id} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
+                userPosts.map((post, index) => (
+                  <Paper key={`${post.id}-${index}`} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <Avatar src={post.author_avatar ? (post.author_avatar.startsWith('/') ? post.author_avatar : `/static/uploads/avatar/${post.author_id}/${post.author_avatar}`) : undefined} sx={{ mr: 1 }} />
@@ -1629,8 +1629,8 @@ const AdminPage = () => {
             <Box>
               <Typography variant="h6" sx={{ mb: 2 }}>Музыкальные треки</Typography>
               {userTracks.length > 0 ? (
-                userTracks.map(track => (
-                  <Paper key={track.id} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
+                userTracks.map((track, index) => (
+                  <Paper key={`${track.id}-${index}`} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <Avatar src={track.cover ? `/static/uploads/tracks/${track.id}/${track.cover}` : undefined} sx={{ mr: 1, width: 50, height: 50 }} />
@@ -1938,8 +1938,8 @@ const AdminPage = () => {
                 <Typography variant="body1">У пользователя нет постов</Typography>
               ) : (
                 <List>
-                  {userPosts.map((post) => (
-                    <React.Fragment key={post.id}>
+                  {userPosts.map((post, index) => (
+                    <React.Fragment key={`${post.id}-${index}`}>
                       <ListItem
                         secondaryAction={
                           <IconButton edge="end" onClick={() => openDeletePostDialog(post)}>
@@ -1967,8 +1967,8 @@ const AdminPage = () => {
                 <Typography variant="body1">У пользователя нет загруженных треков</Typography>
               ) : (
                 <List>
-                  {userTracks.map((track) => (
-                    <React.Fragment key={track.id}>
+                  {userTracks.map((track, index) => (
+                    <React.Fragment key={`${track.id}-${index}`}>
                       <ListItem>
                         <ListItemAvatar>
                           <Avatar>

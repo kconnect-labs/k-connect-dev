@@ -62,7 +62,7 @@ import { ThemeSettingsContext } from '../../App';
 import { motion } from 'framer-motion';
 import NotificationService from '../../services/NotificationService';
 import { generatePlaceholder } from '../../utils/imageUtils';
-import SettingsBottomNavigation from '../../components/SettingsBottomNavigation';
+import SettingsBottomNavigation from '../../components/SettingsBottomNavigation.tsx';
 import LoginSettingsTab from '../../components/LoginSettingsTab';
 import { useSnackbar } from 'notistack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -3039,16 +3039,16 @@ const SettingsPage = () => {
       };
       
       let themeMode = 'dark';
-      let backgroundColor = '#1f1921';
+      let backgroundColor = '#131313';
       let textColor = '#FFFFFF';
       
       if (theme === 'default') {
         // Дефолтная тема - темный фон, белый текст
         saveThemeSetting('theme', 'default');
-        saveThemeSetting('backgroundColor', '#1f1921');
+        saveThemeSetting('backgroundColor', '#131313');
         saveThemeSetting('textColor', '#FFFFFF');
         themeMode = 'dark';
-        backgroundColor = '#1f1921';
+        backgroundColor = '#131313';
         textColor = '#FFFFFF';
         
       } else if (theme === 'light') {
@@ -5838,7 +5838,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
     {
       id: 'default',
       name: 'По умолчанию',
-      bg: '#1f1921',
+      bg: '#131313',
       paper: '#1c1c1c',
       primary: '#D0BCFF',
       textColor: '#FFFFFF'

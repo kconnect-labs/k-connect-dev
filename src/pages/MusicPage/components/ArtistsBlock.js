@@ -19,17 +19,17 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Стили из старого файла
-const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
+const StyledSearchInput = styled(Box)(({ theme, $focused }) => ({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
   borderRadius: 24,
-  backgroundColor: focused 
+  backgroundColor: $focused 
     ? theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' 
     : theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
   padding: theme.spacing(1, 2),
   transition: 'all 0.3s ease',
-  boxShadow: focused ? `0 0 0 2px ${theme.palette.primary.main}66` : 'none',
+  boxShadow: $focused ? `0 0 0 2px ${theme.palette.primary.main}66` : 'none',
   '& input': {
     width: '100%',
     border: 'none',
@@ -222,7 +222,7 @@ const ArtistsBlock = () => {
         
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <StyledSearchInput 
-            focused={artistSearchQuery.length > 0} 
+            $focused={artistSearchQuery.length > 0} 
             sx={{ 
               mr: 1, 
               width: { xs: '150px', sm: '200px', md: '250px' },

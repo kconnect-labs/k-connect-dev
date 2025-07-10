@@ -1,5 +1,5 @@
 import { ContextMenu, useContextMenu } from './ContextMenu';
-import NavButton, { MoreButton, NavItemStyled, NavIconStyled, NavTextStyled } from './NavButton';
+import NavButton, { MoreButton } from './NavButton';
 import UsernameCard from './UsernameCard';
 import SessionManager from './SessionManager';
 import PlaylistModal from './PlaylistModal';
@@ -10,6 +10,7 @@ import VerificationBadge from './VerificationBadge';
 import CommentSystem from './CommentSystem';
 import TransferMenu from './TransferMenu';
 import InventoryItemCard from './InventoryItemCard';
+import Badge from './Badge';
 
 
 export {
@@ -17,9 +18,6 @@ export {
   useContextMenu,
   NavButton,
   MoreButton,
-  NavItemStyled,
-  NavIconStyled,
-  NavTextStyled,
   UsernameCard,
   SessionManager,
   PlaylistModal,
@@ -30,5 +28,6 @@ export {
   VerificationBadge,
   CommentSystem,
   TransferMenu,
-  InventoryItemCard
+  InventoryItemCard,
+  Badge
 };

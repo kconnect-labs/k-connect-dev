@@ -1,0 +1,260 @@
+@import '../../../uikit.module.css';
+
+/* HeaderPlayer - Оптимизированные стили без Material UI */
+
+.header-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  border-radius: 8px;
+  padding: 4px;
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.track-info--clickable {
+  cursor: pointer;
+}
+
+.track-info--clickable:hover {
+  background-color: rgba(208, 188, 255, 0.08);
+  transform: scale(1.02);
+}
+
+.track-cover {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  object-fit: cover;
+}
+
+.track-info--clickable:hover .track-cover {
+  box-shadow: 0 4px 12px rgba(208, 188, 255, 0.3);
+}
+
+.track-details {
+  min-width: 0;
+  max-width: 180px;
+}
+
+.track-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  color: inherit;
+}
+
+.track-artist {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 16px;
+}
+
+.control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  min-width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.control-button:hover {
+  opacity: 1;
+}
+
+.control-button--play {
+  color: var(--primary-color, #D0BCFF);
+  background-color: rgba(208, 188, 255, 0.05);
+  padding: 6px;
+  margin: 0 4px;
+  min-width: 32px;
+  height: 32px;
+}
+
+.control-button--play:hover {
+  background-color: rgba(208, 188, 255, 0.15);
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.volume-control:hover .volume-slider {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.volume-slider {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 3px;
+  margin-left: 4px;
+  border-radius: 1.5px;
+  background-color: rgba(208, 188, 255, 0.2);
+  appearance: none;
+  outline: none;
+  transition: all 0.2s ease;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  transition-delay: 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color, #D0BCFF);
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color, #D0BCFF);
+  cursor: pointer;
+  border: none;
+}
+
+.close-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  min-width: 28px;
+  height: 28px;
+  z-index: 2;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+/* Поддержка светлой темы */
+@media (prefers-color-scheme: light) {
+  .track-artist {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .track-info--clickable:hover {
+    background-color: rgba(208, 188, 255, 0.08);
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .track-info {
+    transition: none;
+  }
+  
+  .track-info--clickable:hover {
+    transform: none;
+  }
+  
+  .track-cover {
+    transition: none;
+  }
+  
+  .control-button {
+    transition: none;
+  }
+  
+  .volume-slider {
+    transition: none;
+  }
+  
+  .close-button {
+    transition: none;
+  }
+}
+
+/* Оптимизации для производительности */
+.header-player {
+  will-change: transform;
+}
+
+.track-info {
+  will-change: transform;
+}
+
+.control-button {
+  will-change: opacity;
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .volume-slider {
+    height: 2px;
+  }
+  
+  .volume-slider::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .volume-slider::-moz-range-thumb {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .header-player {
+    display: none !important;
+  }
+} 
