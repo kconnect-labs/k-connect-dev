@@ -655,6 +655,19 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         return;
       }
 
+      if (
+				!editDialog.content.trim() &&
+				(!editDialog.newImages || editDialog.newImages.length === 0) &&
+				(!editDialog.newVideo || editDialog.newVideo === null)
+			) {
+				setEditDialog({
+					...editDialog,
+					error:
+						'Пост не может быть пустым. Пожалуйста, добавьте текст или файлы.',
+				})
+				return
+			}
+
       setEditDialog({ ...editDialog, submitting: true, error: null });
       
       const formData = new FormData();
