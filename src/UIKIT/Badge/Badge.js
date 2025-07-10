@@ -34,11 +34,11 @@ const Badge = ({
   // Мемоизируем размеры для оптимизации
   const badgeSize = useMemo(() => {
     switch (size) {
-      case 'post': return { width: 24, height: 24}; 
-      case 'small': return { width: 16, height: 16 };
-      case 'large': return { width: 32, height: 32 };
-      case 'shop': return { width: 150, height: 150 };
-      default: return { width: 24, height: 24 };
+      case 'post': return { height: 24 };
+      case 'small': return { height: 16 };
+      case 'large': return { height: 32 };
+      case 'shop': return { height: 150 };
+      default: return { height: 24 };
     }
   }, [size]);
 
@@ -177,9 +177,10 @@ const Badge = ({
       ref={containerRef}
       className={badgeClasses}
       style={{ 
-        width: badgeSize.width, 
         height: badgeSize.height,
-        '--badge-size': `${badgeSize.width}px`,
+        minHeight: badgeSize.height,
+        maxHeight: badgeSize.height,
+        '--badge-size': `${badgeSize.height}px`,
         '--upgrade-color': achievement.color_upgrade || '#FFD700'
       }}
       onMouseEnter={() => setIsHovered(true)}
@@ -195,8 +196,8 @@ const Badge = ({
         onLoad={handleImageLoad}
         onError={handleImageError}
         style={{
-          width: badgeSize.width,
-          height: badgeSize.height,
+          minHeight: badgeSize.height,
+          maxHeight: badgeSize.height,
           objectFit: 'contain'
         }}
       />
