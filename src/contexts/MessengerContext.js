@@ -330,19 +330,19 @@ export const MessengerProvider = ({ children }) => {
     
     // Setup event handlers
     client.on('connected', (data) => {
-      logger.info('Enhanced WebSocket connected:', data);
+      logger.info('улучшенный сокет подключен:', data);
       setIsSocketConnected(true);
       setSocketStats(client.getStats());
     });
     
     client.on('disconnected', (data) => {
-      logger.warn('Enhanced WebSocket disconnected:', data);
+      logger.warn('улучшенный сокет отключен:', data);
         setIsSocketConnected(false);
       setSocketStats(client.getStats());
     });
     
     client.on('error', (error) => {
-      logger.error('Enhanced WebSocket error:', error);
+      logger.error('Enhance d WebSocket error:', error);
       setError(error.message || 'WebSocket connection error');
     });
     
@@ -398,13 +398,13 @@ export const MessengerProvider = ({ children }) => {
   
   // Enhanced force reconnect function
   const forceReconnectWebSocket = useCallback(() => {
-    logger.info('Force reconnecting Enhanced WebSocket');
+    logger.info('принудительное переподключение сокета');
     
     if (websocketClient.current) {
       try {
         websocketClient.current.disconnect();
       } catch (error) {
-        logger.error('Error during force disconnect:', error);
+        logger.error('ошибка при принудительном отключении сокета:', error);
       }
     }
     
@@ -413,7 +413,7 @@ export const MessengerProvider = ({ children }) => {
     if (newClient) {
       websocketClient.current = newClient;
       newClient.connect().catch(error => {
-        logger.error('Error during force reconnect:', error);
+        logger.error('ошибка при принудительном переподключении сокета:', error);
       });
     }
   }, [initializeWebSocket]);
@@ -447,64 +447,28 @@ export const MessengerProvider = ({ children }) => {
     
     logger.info('Connecting Enhanced WebSocket...');
     
-    // Устанавливаем обработчики событий для синглтон клиента
-    if (client) {
-      // Очищаем все предыдущие обработчики
-      if (client.eventHandlers) {
-        Object.keys(client.eventHandlers).forEach(event => {
-          client.eventHandlers[event] = [];
-        });
-      }
+    // Используем initializeWebSocket для правильной настройки обработчиков
+    const setupClient = initializeWebSocket();
+    if (setupClient) {
       
-      // Устанавливаем обработчики событий аналогично initializeWebSocket
-      client.on('connected', (data) => {
-        logger.info('Enhanced WebSocket connected:', data);
-        setIsSocketConnected(true);
-        setSocketStats(client.getStats());
-      });
-      
-      client.on('disconnected', (data) => {
-        logger.warn('Enhanced WebSocket disconnected:', data);
-        setIsSocketConnected(false);
-        setSocketStats(client.getStats());
-      });
-      
-      client.on('error', (error) => {
-        logger.error('Enhanced WebSocket error:', error);
-        setError(error.message || 'WebSocket connection error');
-      });
-      
-      // Устанавливаем обработчики сообщений
-      const messageEvents = [
-        'new_message', 'message_read', 'typing_indicator', 'typing_indicator_end', 
-        'user_status', 'chat_update', 'chats', 'messages', 'message_sent', 
-        'message_deleted', 'unread_counts'
-      ];
-      
-      messageEvents.forEach(event => {
-        client.on(event, (data) => {
-          handleWebSocketMessage({ type: event, ...data });
-        });
-      });
-      
-      websocketClient.current = client;
+      websocketClient.current = setupClient;
       
       try {
-        await client.connect();
-        logger.info('Enhanced WebSocket connection initiated');
+        await setupClient.connect();
+        logger.info('улучшенный сокет подключен');
 
         // Сразу после подключения запрашиваем список чатов
         try {
-          client.sendMessage({ type: 'get_chats' });
+          setupClient.sendMessage({ type: 'get_chats' });
         } catch (e) {
           logger.debug('failed initial get_chats', e);
         }
       } catch (error) {
-        logger.error('Error connecting Enhanced WebSocket:', error);
+        logger.error('Ошибка подключения улучшенного сокета:', error);
         setError('Failed to connect to messaging server');
       }
     }
-  }, [isChannel, sessionKey, deviceId, handleWebSocketMessage]);
+  }, [isChannel, sessionKey, deviceId, initializeWebSocket]);
   
   // Update socket stats periodically
   useEffect(() => {
