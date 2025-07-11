@@ -136,7 +136,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
 
   return (
     <motion.div
-      className={`leaderboard-user-card ${hasBottom0 ? 'has-bottom0' : ''}`}
+      className={`leaderboard-LEAD-user-card ${hasBottom0 ? 'has-bottom0' : ''}`}
       style={cardStyle}
       variants={cardVariants}
       initial="hidden"
@@ -154,7 +154,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       )}
 
       {/* Основной контент */}
-      <div className="user-card-content">
+      <div className="LEAD-user-card-content">
         {/* Очки */}
         <div className="score-display" style={scoreStyle}>
           {formatCompactNumber(user.score)}
@@ -162,7 +162,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
 
         {/* Аватар */}
         <div 
-          className="user-avatar"
+          className="LEAD-user-avatar"
           style={{ border: getAvatarBorder() }}
         >
           {user.avatar_url ? (
@@ -177,11 +177,11 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
         </div>
 
         {/* Информация о пользователе */}
-        <div className="user-info">
-          <div className="user-name-section">
+        <div className="LEAD-user-info">
+          <div className="LEAD-user-name-section">
             <Link 
               to={`/profile/${user.username}`}
-              className="user-name"
+              className="LEAD-user-name"
             >
               {user.name}
             </Link>

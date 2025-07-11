@@ -11,7 +11,7 @@
 }
 
 /* Основная карточка */
-.leaderboard-user-card {
+.leaderboard-LEAD-user-card {
   display: flex;
   align-items: center;
   padding: 16px;
@@ -26,29 +26,29 @@
   min-height: 80px;
 }
 
-.leaderboard-user-card:hover {
+.leaderboard-LEAD-user-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--card-shadow-hover);
 }
 
 /* Эффект для декораций с bottom: 0 */
-.leaderboard-user-card.has-bottom0 {
+.leaderboard-LEAD-user-card.has-bottom0 {
   overflow: hidden;
   transition: overflow 0.2s;
 }
 
-.leaderboard-user-card.has-bottom0:hover {
+.leaderboard-LEAD-user-card.has-bottom0:hover {
   overflow: visible;
 }
 
-.leaderboard-user-card.has-bottom0:hover .decoration-bottom0 {
+.leaderboard-LEAD-user-card.has-bottom0:hover .decoration-bottom0 {
   transform: scale(1.18);
   transform-origin: right bottom;
   z-index: 10;
 }
 
 /* Контент карточки */
-.user-card-content {
+.LEAD-user-card-content {
   position: relative;
   z-index: 2;
   display: flex;
@@ -71,7 +71,7 @@
 }
 
 /* Аватар пользователя */
-.user-avatar {
+.LEAD-user-avatar {
   width: 50px;
   height: 50px;
   margin-right: 16px;
@@ -99,7 +99,7 @@
 }
 
 /* Информация о пользователе */
-.user-info {
+.LEAD-user-info {
   flex: 1;
   overflow: hidden;
   display: flex;
@@ -107,13 +107,13 @@
   justify-content: center;
 }
 
-.user-name-section {
+.LEAD-user-name-section {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.user-name {
+.LEAD-user-name {
   font-weight: bold;
   text-decoration: none;
   color: inherit;
@@ -124,7 +124,7 @@
   transition: color 0.2s ease;
 }
 
-.user-name:hover {
+.LEAD-user-name:hover {
   text-decoration: underline;
   color: var(--primary-color);
 }
@@ -166,12 +166,12 @@
 
 /* Адаптивность */
 @media (max-width: 600px) {
-  .leaderboard-user-card {
+  .leaderboard-LEAD-user-card {
     padding: 12px;
     min-height: 70px;
   }
 
-  .user-avatar {
+  .LEAD-user-avatar {
     width: 40px;
     height: 40px;
     margin-right: 12px;
@@ -225,7 +225,7 @@
 }
 
 /* Поддержка кастомных тем через CSS переменные */
-.leaderboard-user-card[data-theme="light"] {
+.leaderboard-LEAD-user-card[data-theme="light"] {
   --card-background: #ffffff;
   --text-primary: rgba(0, 0, 0, 0.87);
   --text-secondary: rgba(0, 0, 0, 0.6);
@@ -233,7 +233,7 @@
   --rank-background: #757575;
 }
 
-.leaderboard-user-card[data-theme="dark"] {
+.leaderboard-LEAD-user-card[data-theme="dark"] {
   --card-background: #1e1e1e;
   --text-primary: rgba(255, 255, 255, 0.87);
   --text-secondary: rgba(255, 255, 255, 0.6);

@@ -106,61 +106,61 @@ const LeaderboardPage = () => {
   return (
     <LeaderboardContainer maxWidth="md">
       <LeaderboardHeader>
-        <Box
-          sx={{
-            width: '100%',
-            maxWidth: 750,
-            minWidth: 320,
-            mx: 'auto',
-            mb: 1,
-            p: { xs: 2, md: 3 },
-            background: '#1c1c1c',
-            borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: 'white',
-            textAlign: 'left',
-            position: 'relative',
-            overflow: 'hidden',
-            '::before': {
-              content: '""',
-              position: 'absolute',
-              left: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(-12deg)',
-              width: 180,
-              height: 220,
-              background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            '::after': {
-              content: '""',
-              position: 'absolute',
-              right: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(12deg)',
-              width: 180,
-              height: 220,
-              background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            zIndex: 2,
-          }}
-        >
-          <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: 'white' }}>
-            Рейтинг ТОП лидеров
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-            20 пользователей, получивших наибольшее количество очков сообщества K-Коннект за совокупность активности: созданных постов и историй, полученных лайков, комментариев, ответов, репостов, просмотров и реакций на истории.
-          </Typography>
-        </Box>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 750,
+          minWidth: 320,
+          mx: 'auto',
+          mb: 1,
+          p: { xs: 2, md: 3 },
+          background: '#1c1c1c',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          textAlign: 'left',
+          position: 'relative',
+          overflow: 'hidden',
+          '::before': {
+            content: '""',
+            position: 'absolute',
+            left: -80,
+            top: '50%',
+            transform: 'translateY(-50%) rotate(-12deg)',
+            width: 180,
+            height: 220,
+            background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
+            opacity: 0.25,
+            filter: 'blur(18px)',
+            borderRadius: '50%',
+            zIndex: 1,
+            pointerEvents: 'none',
+          },
+          '::after': {
+            content: '""',
+            position: 'absolute',
+            right: -80,
+            top: '50%',
+            transform: 'translateY(-50%) rotate(12deg)',
+            width: 180,
+            height: 220,
+            background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
+            opacity: 0.25,
+            filter: 'blur(18px)',
+            borderRadius: '50%',
+            zIndex: 1,
+            pointerEvents: 'none',
+          },
+          zIndex: 2,
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: 700, mb: 1, color: 'white' }}>
+          Рейтинг ТОП лидеров
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          20 пользователей, получивших наибольшее количество очков сообщества K-Коннект за совокупность активности: созданных постов и историй, полученных лайков, комментариев, ответов, репостов, просмотров и реакций на истории.
+        </Typography>
+      </Box>
 
         <Paper sx={{
           borderRadius: '16px',
@@ -207,15 +207,15 @@ const LeaderboardPage = () => {
           },
           zIndex: 2,
         }}>
-          <Tabs 
-            value={timePeriod} 
-            onChange={handleTimePeriodChange}
-            variant="fullWidth"
-            sx={{ 
-              '& .MuiTab-root': {
+        <Tabs 
+          value={timePeriod} 
+          onChange={handleTimePeriodChange}
+          variant="fullWidth"
+          sx={{ 
+            '& .MuiTab-root': {
                 color: theme => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                 backgroundColor: '#1c1c1c',
-                fontWeight: 'bold',
+              fontWeight: 'bold',
                 fontSize: '1rem',
                 textTransform: 'none',
                 borderRadius: 0,
@@ -237,8 +237,8 @@ const LeaderboardPage = () => {
           >
             <Tab label="Неделя" value="week" />
             <Tab label="Месяц" value="month" />
-            <Tab label="Всё время" value="all_time" />
-          </Tabs>
+          <Tab label="Всё время" value="all_time" />
+        </Tabs>
         </Paper>
 
         {user && userPosition && (
@@ -294,13 +294,13 @@ const LeaderboardPage = () => {
               zIndex: 2,
             }}
           >
-            <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center">
               <MilitaryTechIcon sx={{ mr: 1, fontSize: 28, color: '#D0BCFF' }} />
               <Typography variant="h6" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
                 Ваше место: {userPosition}
               </Typography>
-            </Box>
-            <Box>
+              </Box>
+              <Box>
               <Typography sx={{ color: '#D0BCFF', fontWeight: 700, fontSize: '1.1rem' }}>
                 {formatCompactNumber(userScore)} очков
               </Typography>
