@@ -19,6 +19,7 @@
   --text-secondary: #C2C2C2;
   --error: #F28C9A;
   --success: #6CD67D;
+  --border-color: rgba(255, 255, 255, 0.1);
 }
 
 * {

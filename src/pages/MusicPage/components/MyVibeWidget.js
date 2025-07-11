@@ -4,6 +4,7 @@ import { styled, keyframes } from '@mui/material/styles';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import { alpha } from '@mui/material/styles';
+import styles from './MyVibe.module.css';
 
 const twinkle = keyframes`
   0%, 100% {
@@ -107,55 +108,59 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
   const showCurrentTrack = isVibePlaying && currentTrack;
 
   return (
-    <VibeWidgetContainer onClick={onClick} elevation={8} $hasCurrentTrack={showCurrentTrack}>
-      <StarsContainer />
-      <ContentOverlay>
-        <Typography 
-          variant="h4" 
-          component="h2" 
-          sx={{ fontWeight: 'bold' }}
-        >
-          Мой Вайб
-        </Typography>
-        <Typography variant="body2" sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}>
-          Персональные рекомендации
-        </Typography>
-        <PlayButton sx={{ mt: 2 }}>
-          {isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
-        </PlayButton>
-      </ContentOverlay>
-      
-      {showCurrentTrack && (
-        <CurrentTrackInfo>
-          <Typography 
-            variant="caption" 
-            sx={{ 
-              color: alpha('#FFFFFF', 0.7),
-              display: 'block',
-              fontSize: '0.7rem',
-              fontWeight: 500,
-              mb: 0.5
-            }}
-          >
-            Сейчас играет:
-          </Typography>
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: '#FFFFFF',
-              fontWeight: 600,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              fontSize: '0.85rem'
-            }}
-          >
-            {currentTrack.title} - {currentTrack.artist}
-          </Typography>
-        </CurrentTrackInfo>
-      )}
-    </VibeWidgetContainer>
-  );
+		<div
+			className={`${styles.container} ${
+				showCurrentTrack ? styles.hasCurrentTrack : ''
+			}`}
+			onClick={onClick}
+		>
+			<StarsContainer />
+			<div className={styles.contentOverlay}>
+				<h2 className='font-bold text-lg'>
+					Мой Вайб
+				</h2>
+				<Typography
+					variant='body2'
+					sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}
+				>
+					Персональные рекомендации
+				</Typography>
+				<PlayButton sx={{ mt: 2 }}>
+					{isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
+				</PlayButton>
+			</div>
+
+			{showCurrentTrack && (
+				<CurrentTrackInfo>
+					<Typography
+						variant='caption'
+						sx={{
+							color: alpha('#FFFFFF', 0.7),
+							display: 'block',
+							fontSize: '0.7rem',
+							fontWeight: 500,
+							mb: 0.5,
+						}}
+					>
+						Сейчас играет:
+					</Typography>
+					<Typography
+						variant='body2'
+						sx={{
+							color: '#FFFFFF',
+							fontWeight: 600,
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+							whiteSpace: 'nowrap',
+							fontSize: '0.85rem',
+						}}
+					>
+						{currentTrack.title} - {currentTrack.artist}
+					</Typography>
+				</CurrentTrackInfo>
+			)}
+		</div>
+	)
 };
 
 export default MyVibeWidget; 
