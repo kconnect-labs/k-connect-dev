@@ -10,6 +10,7 @@
   position: relative;
   box-sizing: border-box;
   contain: layout style paint;
+  justify-content: center;
 }
 
 .track-info {
