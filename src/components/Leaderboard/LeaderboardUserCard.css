@@ -1,0 +1,242 @@
+/* CSS переменные для тем */
+:root {
+  --card-background: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --rank-background: #424242;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --primary-color: #D0BCFF;
+}
+
+/* Основная карточка */
+.leaderboard-user-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 5px;
+  background-color: var(--card-background);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 80px;
+}
+
+.leaderboard-user-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Эффект для декораций с bottom: 0 */
+.leaderboard-user-card.has-bottom0 {
+  overflow: hidden;
+  transition: overflow 0.2s;
+}
+
+.leaderboard-user-card.has-bottom0:hover {
+  overflow: visible;
+}
+
+.leaderboard-user-card.has-bottom0:hover .decoration-bottom0 {
+  transform: scale(1.18);
+  transform-origin: right bottom;
+  z-index: 10;
+}
+
+/* Контент карточки */
+.user-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Отображение очков */
+.score-display {
+  min-width: 50px;
+  max-width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 16px;
+  font-size: 0.875rem;
+  font-weight: bold;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Аватар пользователя */
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  margin-right: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-fallback {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+/* Информация о пользователе */
+.user-info {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-name-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-name {
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.user-name:hover {
+  text-decoration: underline;
+  color: var(--primary-color);
+}
+
+/* Бейдж достижения */
+.achievement-badge {
+  display: flex;
+  align-items: center;
+  cursor: help;
+}
+
+.achievement-image {
+  width: auto;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Ранг */
+.rank-number {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  margin-left: auto;
+}
+
+.rank-icon {
+  font-size: 1.3rem;
+}
+
+.rank-text {
+  font-size: 1rem;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+  .leaderboard-user-card {
+    padding: 12px;
+    min-height: 70px;
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+  }
+
+  .score-display {
+    min-width: 40px;
+    max-width: 40px;
+    margin-right: 12px;
+    font-size: 0.8rem;
+  }
+
+  .rank-number {
+    width: 32px;
+    height: 32px;
+  }
+
+  .rank-icon {
+    font-size: 1.1rem;
+  }
+
+  .rank-text {
+    font-size: 0.9rem;
+  }
+
+  .achievement-image {
+    height: 20px;
+  }
+}
+
+/* Темная тема (по умолчанию) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-background: #1e1e1e;
+    --text-primary: rgba(255, 255, 255, 0.87);
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --border-color: rgba(255, 255, 255, 0.12);
+    --rank-background: #424242;
+  }
+}
+
+/* Светлая тема */
+@media (prefers-color-scheme: light) {
+  :root {
+    --card-background: #ffffff;
+    --text-primary: rgba(0, 0, 0, 0.87);
+    --text-secondary: rgba(0, 0, 0, 0.6);
+    --border-color: rgba(0, 0, 0, 0.12);
+    --rank-background: #757575;
+  }
+}
+
+/* Поддержка кастомных тем через CSS переменные */
+.leaderboard-user-card[data-theme="light"] {
+  --card-background: #ffffff;
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --border-color: rgba(0, 0, 0, 0.12);
+  --rank-background: #757575;
+}
+
+.leaderboard-user-card[data-theme="dark"] {
+  --card-background: #1e1e1e;
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --rank-background: #424242;
+} 

@@ -31,6 +31,7 @@ import {
   DialogActions as MuiDialogActions,
   TextField,
   Snackbar,
+  Alert,
   InputAdornment,
   useMediaQuery,
   TableRow,
@@ -73,6 +74,7 @@ import { TransferMenu } from '../../UIKIT';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InfoBlock from '../../UIKIT/InfoBlock';
+import { UltimateDecorationModal } from '../../components/UltimateDecorationModal';
 import { useLanguage } from '@/context/LanguageContext';
 
 
@@ -708,9 +710,17 @@ const BalancePage = () => {
   const [subscription, setSubscription] = useState(null);
   const [isTransferring, setIsTransferring] = useState(false);
   
+  // Состояние для проверки декорации
+  const [isCheckingDecoration, setIsCheckingDecoration] = useState(false);
+  const [decorationCheckError, setDecorationCheckError] = useState('');
+  
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [gameTransactions, setGameTransactions] = useState([]);
+  
+  // Состояние для модалки выбора декорации Ultimate
+  const [decorationModalOpen, setDecorationModalOpen] = useState(false);
+  const [availableDecorations, setAvailableDecorations] = useState([]);
   
   const debounceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -1367,7 +1377,7 @@ const BalancePage = () => {
         });
         
         setUserPoints(data.new_balance);
-      } else if (data.type === 'subscription') {
+      } else       if (data.type === 'subscription') {
         
         setKeySuccess({
           message: data.message,
@@ -1378,6 +1388,12 @@ const BalancePage = () => {
         });
         
         fetchSubscriptionStatus();
+        
+        // Проверяем, нужно ли показать модалку выбора декорации
+        if (data.subscription_type === 'ultimate' && data.needs_decoration_selection) {
+          setAvailableDecorations(data.available_decorations || []);
+          setDecorationModalOpen(true);
+        }
       }
       
     } catch (error) {
@@ -1528,6 +1544,49 @@ const BalancePage = () => {
     // Just update the balance and history
     fetchUserPoints();
     fetchTransferHistory();
+  };
+
+  const handleDecorationSelectionSuccess = (selectedDecoration) => {
+    // Обновляем статус подписки после выбора декорации
+    fetchSubscriptionStatus();
+    
+    // Показываем уведомление об успешном выборе
+    setSnackbar({
+      open: true,
+      message: `Декорация "${selectedDecoration.name}" успешно применена!`,
+      severity: 'success'
+    });
+  };
+
+  const handleCheckDecoration = async () => {
+    setIsCheckingDecoration(true);
+    setDecorationCheckError('');
+
+    try {
+      const response = await axios.get('/api/ultimate/decorations/check');
+      
+      if (response.data.success) {
+        if (response.data.needs_selection) {
+          // Показываем модалку выбора декорации
+          setAvailableDecorations(response.data.available_decorations || []);
+          setDecorationModalOpen(true);
+        } else {
+          // У пользователя уже есть декорация
+          setSnackbar({
+            open: true,
+            message: 'У вас уже есть декорация профиля',
+            severity: 'info'
+          });
+        }
+      } else {
+        setDecorationCheckError(response.data.error || 'Ошибка при проверке декорации');
+      }
+    } catch (error) {
+      console.error('Ошибка при проверке декорации:', error);
+      setDecorationCheckError(error.response?.data?.error || 'Произошла ошибка при проверке декорации');
+    } finally {
+      setIsCheckingDecoration(false);
+    }
   };
 
   const getTransactionDescription = (transaction) => {
@@ -2550,11 +2609,12 @@ const BalancePage = () => {
       <StyledDialog
         open={openKeyDialog}
         onClose={() => {
-          if (!isSubmittingKey) {
+          if (!isSubmittingKey && !isCheckingDecoration) {
             setOpenKeyDialog(false);
             setKeyValue('');
             setKeyError('');
             setKeySuccess(null);
+            setDecorationCheckError('');
             setActiveTopupTab(0);
           }
         }}
@@ -2582,11 +2642,17 @@ const BalancePage = () => {
         <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
           <Tabs 
             value={activeTopupTab} 
-            onChange={(e, newValue) => setActiveTopupTab(newValue)}
+            onChange={(e, newValue) => {
+              setActiveTopupTab(newValue);
+              // Сбрасываем ошибки при смене вкладок
+              setKeyError('');
+              setDecorationCheckError('');
+            }}
             sx={{ mb: 3 }}
           >
             <Tab label={t('balance.topup.tabs.key')} />
             <Tab label={t('balance.topup.tabs.donate')} />
+            <Tab label="Проверить декорацию" />
           </Tabs>
           
           {activeTopupTab === 0 && !keySuccess ? (
@@ -2643,6 +2709,41 @@ const BalancePage = () => {
                 onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
               >
                 {t('balance.topup.donate.button')}
+              </Button>
+            </ContentBox>
+          ) : activeTopupTab === 2 ? (
+            <ContentBox>
+              <Typography component="div" variant="subtitle1" fontWeight="bold" gutterBottom>
+                Проверить доступность декорации
+              </Typography>
+              <Typography component="div" variant="body2" paragraph>
+                Если у вас есть Ultimate подписка и еще нет декорации профиля, 
+                вы можете получить одну декорацию бесплатно.
+              </Typography>
+              
+              {decorationCheckError && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                  {decorationCheckError}
+                </Alert>
+              )}
+              
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<DiamondIcon />}
+                fullWidth
+                onClick={handleCheckDecoration}
+                disabled={isCheckingDecoration}
+                sx={{ mt: 2 }}
+              >
+                {isCheckingDecoration ? (
+                  <>
+                    <CircularProgress size={16} color="inherit" sx={{ mr: 1 }} />
+                    Проверяем...
+                  </>
+                ) : (
+                  'Проверить доступность'
+                )}
               </Button>
             </ContentBox>
           ) : (
@@ -2865,6 +2966,14 @@ const BalancePage = () => {
         onClose={() => setNewTransferMenuOpen(false)}
         userPoints={userPoints}
         onSuccess={handleNewTransferSuccess}
+      />
+
+      {/* Ultimate Decoration Selection Modal */}
+      <UltimateDecorationModal
+        open={decorationModalOpen}
+        onClose={() => setDecorationModalOpen(false)}
+        availableDecorations={availableDecorations}
+        onSuccess={handleDecorationSelectionSuccess}
       />
     </Container>
   );
