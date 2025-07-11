@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { useMusic } from '../../../context/MusicContext';
 import apiClient from '../../../services/axiosConfig';
 import './charts-block.css';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const ChartsBlock = () => {
   const { playTrack, isPlaying, currentTrack, togglePlay } = useMusic();
@@ -14,6 +15,7 @@ const ChartsBlock = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => { fetchCharts(); }, []);
 
@@ -139,29 +141,35 @@ const ChartsBlock = () => {
     return (
       <div className="charts-block">
         {renderChartSection(
-          'Популярные треки',
+          `${t('music.popular_tracks')}`,
           <Icon icon="solar:trending-up-bold" width={22} height={22} />, charts.most_played, 'most_played')}
         {renderChartSection(
-          'Новинки',
+          `${t('music.new_tracks')}`,
           <Icon icon="solar:music-note-2-bold" width={22} height={22} />, charts.new_releases, 'new_releases')}
       </div>
     );
   }
   // Десктоп — две колонки
   return (
-    <div className="charts-block charts-block-desktop">
-      <div className="charts-block-col">
-        {renderChartSection(
-          'Популярные треки',
-          <Icon icon="solar:trending-up-bold" width={22} height={22} />, charts.most_played, 'most_played')}
-      </div>
-      <div className="charts-block-col">
-        {renderChartSection(
-          'Новинки',
-          <Icon icon="solar:music-note-2-bold" width={22} height={22} />, charts.new_releases, 'new_releases')}
-      </div>
-    </div>
-  );
+		<div className='charts-block charts-block-desktop'>
+			<div className='charts-block-col'>
+				{renderChartSection(
+					`${t('music.popular_tracks')}`,
+					<Icon icon='solar:trending-up-bold' width={22} height={22} />,
+					charts.most_played,
+					'most_played'
+				)}
+			</div>
+			<div className='charts-block-col'>
+				{renderChartSection(
+					`${t('music.new_tracks')}`,
+					<Icon icon='solar:music-note-2-bold' width={22} height={22} />,
+					charts.new_releases,
+					'new_releases'
+				)}
+			</div>
+		</div>
+	)
 };
 
 export default ChartsBlock; 

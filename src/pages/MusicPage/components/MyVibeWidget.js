@@ -5,6 +5,7 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PauseRoundedIcon from '@mui/icons-material/PauseRounded';
 import { alpha } from '@mui/material/styles';
 import styles from './MyVibe.module.css';
+import { useLanguage } from '../../../context/LanguageContext';
 
 const twinkle = keyframes`
   0%, 100% {
@@ -106,6 +107,7 @@ const PlayButton = styled(IconButton)(({ theme }) => ({
 const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
   const isVibePlaying = isPlaying && currentSection === 'my-vibe';
   const showCurrentTrack = isVibePlaying && currentTrack;
+  const { t } = useLanguage();
 
   return (
 		<div
@@ -117,13 +119,13 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
 			<StarsContainer />
 			<div className={styles.contentOverlay}>
 				<h2 className='font-bold text-lg'>
-					Мой Вайб
+					{t('music.my_vibe.title')}
 				</h2>
 				<Typography
 					variant='body2'
 					sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}
 				>
-					Персональные рекомендации
+					{t('music.my_vibe.description')}
 				</Typography>
 				<PlayButton sx={{ mt: 2 }}>
 					{isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
@@ -142,7 +144,7 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
 							mb: 0.5,
 						}}
 					>
-						Сейчас играет:
+            {t('music.my_vibe.now_playing')}
 					</Typography>
 					<Typography
 						variant='body2'

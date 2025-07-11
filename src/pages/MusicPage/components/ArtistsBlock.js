@@ -18,6 +18,7 @@ import styles from './ArtistBlock.module.css'
 import { BlockContainer } from './BlockContainer'
 
 import { ArtistCard } from './ArtistCard'
+import { useLanguage } from '../../../context/LanguageContext'
 
 // Стили из старого файла
 const StyledSearchInput = styled(Box)(({ theme, $focused }) => ({
@@ -55,6 +56,7 @@ const ArtistsBlock = () => {
 	const [artistSearchQuery, setArtistSearchQuery] = useState('')
 	const [artistSearchResults, setArtistSearchResults] = useState([])
 	const [isArtistSearching, setIsArtistSearching] = useState(false)
+	const {t} = useLanguage()
 
 	// Refs для управления поиском
 	const searchTimeoutRef = useRef(null)
@@ -221,7 +223,9 @@ const ArtistsBlock = () => {
 		<BlockContainer className={styles.container}>
 			{/* Заголовок и поиск */}
 			<div className={styles.header}>
-				<h6 className='font-bold text-lg'>Исполнители</h6>
+				<h6 className='font-bold text-lg'>
+					{t('music.artist_search.title')}
+				</h6>
 
 				<Box className='flex items-center'>
 					<div className={styles.SearchInput}>
@@ -229,7 +233,7 @@ const ArtistsBlock = () => {
 							sx={{ fontSize: 18, mr: 0.5, color: 'rgba(255, 255, 255, 0.7)' }}
 						/>
 						<input
-							placeholder='Найти исполнителя'
+							placeholder={t('music.artist_search.input_placeholder')}
 							value={artistSearchQuery}
 							onChange={handleArtistSearchChange}
 							style={{ fontSize: '16px' }}
@@ -389,7 +393,7 @@ const ArtistsBlock = () => {
 									}}
 								>
 									<Typography color='rgba(255, 255, 255, 0.7)'>
-										Артисты не найдены
+										{t('music.artist_search.no_results')}
 									</Typography>
 								</Box>
 							)}
