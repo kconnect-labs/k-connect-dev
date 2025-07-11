@@ -12,24 +12,18 @@
   contain: layout style paint;
   justify-content: center;
 }
-
-.track-info {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
+.MINI-track-info {
   min-width: 0;
-  border-radius: 8px;
-  padding: 4px;
-  transition: all 0.2s ease;
-  cursor: default;
+  display: flex;
+  flex-direction: row;
+
 }
 
-.track-info--clickable {
+.MINI-track-info--clickable {
   cursor: pointer;
 }
 
-.track-info--clickable:hover {
+.MINI-track-info--clickable:hover {
   background-color: rgba(208, 188, 255, 0.08);
   transform: scale(1.02);
 }
@@ -43,7 +37,7 @@
   object-fit: cover;
 }
 
-.track-info--clickable:hover .track-cover {
+.MINI-track-info--clickable:hover .track-cover {
   box-shadow: 0 4px 12px rgba(208, 188, 255, 0.3);
 }
 
@@ -191,18 +185,18 @@
     color: rgba(0, 0, 0, 0.7);
   }
   
-  .track-info--clickable:hover {
+  .MINI-track-info--clickable:hover {
     background-color: rgba(208, 188, 255, 0.08);
   }
 }
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .track-info {
+  .MINI-track-info {
     transition: none;
   }
   
-  .track-info--clickable:hover {
+  .MINI-track-info--clickable:hover {
     transform: none;
   }
   
@@ -228,7 +222,7 @@
   will-change: transform;
 }
 
-.track-info {
+.MINI-track-info {
   will-change: transform;
 }
 

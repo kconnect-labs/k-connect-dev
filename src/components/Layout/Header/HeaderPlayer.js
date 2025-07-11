@@ -39,7 +39,7 @@ const HeaderPlayer = ({
   return (
     <div className="header-player" style={playerStyles}>
       <div 
-        className={`track-info ${onOpenFullscreen ? 'track-info--clickable' : ''}`}
+        className={`MINI-track-info ${onOpenFullscreen ? 'MINI-track-info--clickable' : ''}`}
         onClick={onOpenFullscreen || (() => console.warn('onOpenFullscreen не передан в HeaderPlayer'))}
       >
         <img 

@@ -155,8 +155,8 @@ const AlbumArtContainer = memo(styled(Box)(({ theme }) => ({
 })));
 
 const AlbumArt = memo(styled.img(({ theme }) => ({
-  width: 'min(70vw, 400px)',
-  height: 'min(70vw, 400px)',
+  width: 'min(70vw, 350px)',
+  height: 'min(70vw, 350px)',
   borderRadius: '20px',
   boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
   objectFit: 'cover',
@@ -1895,7 +1895,7 @@ const AlbumArtLyricsContainer = memo(({
   currentTrack,
   filteredLines 
 }) => (
-  <AlbumArtContainer sx={{maxHeight:'390px', width: '100%'}}>
+  <AlbumArtContainer sx={{maxHeight:'350px', width: '100%'}}>
     {lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
       <Box
         key="lyrics-display"

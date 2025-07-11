@@ -760,7 +760,15 @@ function App() {
   };
   
   
-  const { isAuthenticated } = useContext(AuthContext) || {};
+  const authContext = useContext(AuthContext);
+  const { isAuthenticated, loading } = authContext || {};
+  
+  // Логируем только важные изменения состояния авторизации
+  useEffect(() => {
+    if (isAuthenticated && !loading) {
+      console.log('✅ Пользователь успешно авторизован');
+    }
+  }, [isAuthenticated, loading]);
   const prevAuthState = useRef({ isAuthenticated: null, loading: null });
   
   useEffect(() => {
@@ -904,23 +912,8 @@ function App() {
       }
     };
 
-    // При старте — запрос к API и применение (только для авторизованных пользователей)
-    // Проверяем наличие токена в localStorage/cookies
-    const hasAuthToken = localStorage.getItem('authToken') || 
-                        document.cookie.includes('authToken') ||
-                        localStorage.getItem('user_id') ||
-                        document.cookie.includes('user_id');
-    
-    if (hasAuthToken) {
-      axios.get('/api/user/settings/global-profile-bg').then(res => {
-        if (res.data && res.data.success) {
-          setGlobalProfileBackgroundEnabled(res.data.enabled);
-          applyProfileBackground(res.data.enabled);
-        }
-      }).catch(error => {
-        console.log('Не удалось загрузить настройки фона профиля:', error);
-      });
-    }
+    // Применение фона при старте (настройки загружаются в отдельном useEffect)
+    applyProfileBackground(globalProfileBackgroundEnabled);
   }, []);
 
   useEffect(() => {
@@ -1066,12 +1059,36 @@ function App() {
         // fallback: дефолт
         setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
       }
+      
+      // Загружаем настройки глобального фона профиля
+      try {
+        const bgResponse = await axios.get('/api/user/settings/global-profile-bg');
+        if (bgResponse.data && bgResponse.data.success) {
+          setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
+          // Применяем фон сразу после загрузки настроек
+          if (bgResponse.data.enabled) {
+            let myBg = localStorage.getItem('myProfileBackgroundUrl');
+            if (!myBg) {
+              const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
+              if (match) myBg = decodeURIComponent(match[1]);
+            }
+            if (myBg) setProfileBackground(myBg);
+            else clearProfileBackground();
+          } else {
+            clearProfileBackground();
+          }
+          console.log('Настройки глобального фона профиля загружены:', bgResponse.data);
+        }
+      } catch (error) {
+        console.log('Не удалось загрузить настройки фона профиля:', error);
+      }
     };
 
     // Загружаем настройки при инициализации приложения
     loadUserSettings();
   }, []);
-  // --- КОНЕЦ ДОБАВЛЕНИЯ ---
+
+
 
   return (
     <HelmetProvider>

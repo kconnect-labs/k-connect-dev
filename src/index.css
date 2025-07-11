@@ -8,6 +8,30 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/font/SF-Pro-Display-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/font/SF-Pro-Display-Heavy.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/font/SF-Pro-Display-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --primary: #D0BCFF;
   --primary-light: #E9DDFF;
@@ -20,6 +44,12 @@
   --error: #F28C9A;
   --success: #6CD67D;
   --border-color: rgba(255, 255, 255, 0.1);
+  
+  /* Font weights */
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-heavy: 800;
+  --font-weight-black: 900;
 }
 
 * {

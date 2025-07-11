@@ -29,7 +29,7 @@
 }
 
 .logo-text {
-  font-weight: bold;
+  font-weight: var(--font-weight-black);
   font-size: 1.2rem;
   margin-left: 8px;
   display: flex;
@@ -41,6 +41,7 @@
   color: #FFFFFF;
   opacity: 0.9;
   line-height: 1.2;
+  font-weight: var(--font-weight-black);
 }
 
 /* Поддержка светлой темы */
