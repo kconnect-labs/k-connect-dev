@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Box, Container, Typography, TextField, Button, Paper, Grid, Chip, Avatar, IconButton, Divider, CircularProgress } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
+import styles from '../../uikit.module.css';
 
-
+// Иконки из MUI (оставляем только иконки)
 import BugReportIcon from '@mui/icons-material/BugReport';
 import SendIcon from '@mui/icons-material/Send';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
@@ -13,50 +12,6 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import PendingIcon from '@mui/icons-material/Pending';
-
-
-const BugContainer = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(8),
-}));
-
-const BugHeader = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(4),
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A1A1A' : '#f8f8f8',
-  borderRadius: theme.shape.borderRadius,
-}));
-
-const BugCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(2),
-  transition: 'transform 0.2s',
-  cursor: 'pointer',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: theme.shadows[4],
-  },
-}));
-
-const BugDetailCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(3),
-}));
-
-const CommentCard = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  marginTop: theme.spacing(1),
-  marginBottom: theme.spacing(1),
-  backgroundColor: theme.palette.mode === 'dark' ? '#222' : '#f0f0f0',
-}));
-
-const ImagePreview = styled('img')(({ theme }) => ({
-  maxWidth: '100%',
-  maxHeight: '200px',
-  borderRadius: theme.shape.borderRadius,
-  marginTop: theme.spacing(1),
-}));
-
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -69,64 +24,46 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
-
-const StatusBadge = ({ status }) => {
-  
+const StatusBadge = React.memo(({ status }) => {
   if (!status || status === 'Неизвестно') {
     return (
-      <Chip 
-        icon={<PendingIcon />} 
-        label="Открыт" 
-        color="error" 
-        sx={{ fontWeight: 'bold' }} 
-        size="small"
-      />
+      <span className={`${styles.chip} ${styles['chip-error']}`}>
+        <ErrorIcon style={{ fontSize: 16 }} />
+        Открыт
+      </span>
     );
   }
   
   if (status === 'Решено') {
     return (
-      <Chip 
-        icon={<CheckCircleIcon />} 
-        label={status} 
-        color="success" 
-        sx={{ fontWeight: 'bold' }} 
-        size="small"
-      />
+      <span className={`${styles.chip} ${styles['chip-success']}`}>
+        <CheckCircleIcon style={{ fontSize: 16 }} />
+        {status}
+      </span>
     );
   } else if (status === 'В обработке') {
     return (
-      <Chip 
-        icon={<PendingIcon />} 
-        label={status} 
-        color="primary" 
-        sx={{ fontWeight: 'bold' }} 
-        size="small"
-      />
+      <span className={`${styles.chip} ${styles['chip-primary']}`}>
+        <PendingIcon style={{ fontSize: 16 }} />
+        {status}
+      </span>
     );
   } else if (status === 'Открыт') {
     return (
-      <Chip 
-        icon={<ErrorIcon />} 
-        label={status} 
-        color="error" 
-        sx={{ fontWeight: 'bold' }} 
-        size="small"
-      />
+      <span className={`${styles.chip} ${styles['chip-error']}`}>
+        <ErrorIcon style={{ fontSize: 16 }} />
+        {status}
+      </span>
     );
   }
   
-  
   return (
-    <Chip 
-      icon={<PendingIcon />} 
-      label="Открыт" 
-      color="error" 
-      sx={{ fontWeight: 'bold' }} 
-      size="small"
-    />
+    <span className={`${styles.chip} ${styles['chip-error']}`}>
+      <PendingIcon style={{ fontSize: 16 }} />
+      Открыт
+    </span>
   );
-};
+});
 
 const BugReportPage = () => {
   const { user, isAuthenticated } = useContext(AuthContext);
@@ -144,12 +81,11 @@ const BugReportPage = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState('');
 
-  
   useEffect(() => {
     loadBugs();
   }, []);
 
-  const loadBugs = async () => {
+  const loadBugs = useCallback(async () => {
     setLoading(true);
     try {
       const response = await axios.get('/api/bugs');
@@ -160,23 +96,23 @@ const BugReportPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleBugClick = async (bugId) => {
+  const handleBugClick = useCallback(async (bugId) => {
     try {
       const response = await axios.get(`/api/bugs/${bugId}`);
       setSelectedBug(response.data.bug);
     } catch (err) {
       console.error('Error loading bug details:', err);
     }
-  };
+  }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setNewBug(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = useCallback((e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
@@ -188,9 +124,9 @@ const BugReportPage = () => {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     setSubmitLoading(true);
     setError('');
@@ -212,7 +148,6 @@ const BugReportPage = () => {
       });
 
       if (response.data.success) {
-        
         setNewBug({
           subject: '',
           text: '',
@@ -220,7 +155,6 @@ const BugReportPage = () => {
         });
         setImageFile(null);
         setImagePreview('');
-        
         loadBugs();
       }
     } catch (err) {
@@ -229,9 +163,9 @@ const BugReportPage = () => {
     } finally {
       setSubmitLoading(false);
     }
-  };
+  }, [newBug, imageFile, loadBugs]);
 
-  const handleCommentSubmit = async () => {
+  const handleCommentSubmit = useCallback(async () => {
     if (!commentText.trim()) return;
     
     try {
@@ -240,7 +174,6 @@ const BugReportPage = () => {
       });
       
       if (response.data.success) {
-        
         setSelectedBug(prev => ({
           ...prev,
           comments: [...prev.comments, response.data.comment]
@@ -250,16 +183,15 @@ const BugReportPage = () => {
     } catch (err) {
       console.error('Error submitting comment:', err);
     }
-  };
+  }, [commentText, selectedBug?.id]);
 
-  const handleToggleLike = async (bugId) => {
+  const handleToggleLike = useCallback(async (bugId) => {
     if (!isAuthenticated) return;
     
     try {
       const response = await axios.post(`/api/bugs/${bugId}/reaction`);
       
       if (response.data.success) {
-        
         setBugs(prev => prev.map(bug => {
           if (bug.id === bugId) {
             return {
@@ -272,7 +204,6 @@ const BugReportPage = () => {
           }
           return bug;
         }));
-        
         
         if (selectedBug && selectedBug.id === bugId) {
           setSelectedBug(prev => ({
@@ -287,10 +218,9 @@ const BugReportPage = () => {
     } catch (err) {
       console.error('Error toggling reaction:', err);
     }
-  };
+  }, [isAuthenticated, selectedBug?.id]);
 
-  const handleChangeStatus = async (bugId, newStatus) => {
-    
+  const handleChangeStatus = useCallback(async (bugId, newStatus) => {
     if (!isAuthenticated || ![3, 54, 57].includes(user?.id)) return;
     
     try {
@@ -299,12 +229,10 @@ const BugReportPage = () => {
       });
       
       if (response.data.success) {
-        
         setSelectedBug(prev => ({
           ...prev,
           status: response.data.status
         }));
-        
         
         setBugs(prev => prev.map(bug => {
           if (bug.id === bugId) {
@@ -316,369 +244,408 @@ const BugReportPage = () => {
     } catch (err) {
       console.error('Error changing status:', err);
     }
-  };
+  }, [isAuthenticated, user?.id]);
 
-  const isAdmin = isAuthenticated && user && [3, 54, 57].includes(user.id);
+  const isAdmin = useMemo(() => isAuthenticated && user && [3, 54, 57].includes(user.id), [isAuthenticated, user]);
 
-  
+  // Мемоизированные компоненты для предотвращения ререндеров
+  const BugForm = useMemo(() => (
+    <div className={`${styles.card} ${styles['mb-8']}`}>
+      <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
+        Сообщить о проблеме
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div className={styles['mb-5']}>
+          <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
+            Заголовок
+          </label>
+          <input
+            type="text"
+            name="subject"
+            className={styles.input}
+            required
+            value={newBug.subject}
+            onChange={handleInputChange}
+            maxLength={40}
+            placeholder="Краткое описание проблемы"
+          />
+          <small className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+            До 40 символов
+          </small>
+        </div>
+
+        <div className={styles['mb-5']}>
+          <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
+            Описание
+          </label>
+          <textarea
+            name="text"
+            className={`${styles.input} ${styles.textarea}`}
+            required
+            value={newBug.text}
+            onChange={handleInputChange}
+            maxLength={700}
+            placeholder="Подробное описание проблемы"
+          />
+          <small className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+            До 700 символов
+          </small>
+        </div>
+
+        <div className={`${styles.flex} ${styles['gap-4']} ${styles['mb-5']}`}>
+          <div style={{ flex: 1 }}>
+            <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
+              Сайт
+            </label>
+            <select
+              name="site_link"
+              className={styles.input}
+              value={newBug.site_link}
+              onChange={handleInputChange}
+            >
+              <option value="k-connect.ru">К-Коннект</option>
+              <option value="elemsocial.com">Элемент</option>
+              <option value="clientelement.sault">Клиент Элемента</option>
+            </select>
+          </div>
+          <div style={{ flex: 1 }}>
+            <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
+              Фото
+            </label>
+            <label className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']} ${styles['gap-2']}`} style={{ cursor: 'pointer' }}>
+              <PhotoCamera style={{ fontSize: 20 }} />
+              Загрузить фото
+              <input
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
+        </div>
+
+        {imagePreview && (
+          <div className={styles['mb-5']}>
+            <img src={imagePreview} alt="Preview" className={styles['img-preview']} />
+          </div>
+        )}
+
+        {error && (
+          <div className={`${styles['mb-5']} ${styles['text-error']}`}>
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+          disabled={submitLoading}
+        >
+          {submitLoading ? (
+            <div className={styles.spinner}></div>
+          ) : (
+            <SendIcon style={{ fontSize: 20 }} />
+          )}
+          Отправить
+        </button>
+      </form>
+    </div>
+  ), [newBug, imagePreview, error, submitLoading, handleSubmit, handleInputChange, handleImageChange]);
+
+  const BugList = useMemo(() => (
+    <div>
+      {bugs.map((bug, index) => (
+        <div 
+          key={bug.id} 
+          className={`${styles.card} ${styles.pointer} ${styles['mb-4']}`}
+          style={{ marginBottom: index === bugs.length - 1 ? '0' : '16px' }}
+          onClick={() => handleBugClick(bug.id)}
+        >
+          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-3']}`}>
+            <h3 className={`${styles['text-base']} ${styles['font-bold']}`} style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {bug.subject}
+            </h3>
+            <StatusBadge status={bug.status} />
+          </div>
+          
+          <p className={`${styles['text-secondary']} ${styles['mb-3']}`} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {bug.text}
+          </p>
+          
+          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+            <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
+              <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+                {bug.user_name || 'Гость'} • {formatDate(bug.date)}
+              </span>
+              <span className={`${styles.chip} ${styles['chip-primary']}`} style={{ fontSize: '10px' }}>
+                {bug.site_link}
+              </span>
+            </div>
+            
+            <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
+              <button
+                className={`${styles.btn} ${styles['bg-transparent']}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleLike(bug.id);
+                }}
+                disabled={!isAuthenticated}
+                style={{ 
+                  color: bug.is_liked_by_user ? '#2196f3' : 'inherit',
+                  padding: '4px'
+                }}
+              >
+                {bug.is_liked_by_user ? 
+                  <ThumbUpIcon style={{ fontSize: 20 }} /> : 
+                  <ThumbUpOutlinedIcon style={{ fontSize: 20 }} />
+                }
+              </button>
+              <span style={{ fontSize: '14px' }}>
+                {bug.likes_count || 0}
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  ), [bugs, handleBugClick, handleToggleLike, isAuthenticated]);
+
+  // Список баг-репортов
   if (!selectedBug) {
     return (
-      <Container maxWidth="md">
-        <BugContainer>
-          <BugHeader elevation={0}>
-            <Grid container alignItems="center" spacing={2}>
-              <Grid item>
-                <BugReportIcon fontSize="large" color="error" />
-              </Grid>
-              <Grid item xs>
-                <Typography variant="h4" component="h1" fontWeight="bold">
-                  Баг-репорты
-                </Typography>
-                <Typography variant="body1" color="textSecondary">
-                  Сообщите о найденных ошибках и проблемах на сайте
-                </Typography>
-              </Grid>
-            </Grid>
-          </BugHeader>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
+        <div className={`${styles.card} ${styles['mb-8']}`}>
+          <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-4']}`}>
+            <BugReportIcon style={{ fontSize: 48, color: '#f44336' }} />
+            <div>
+              <h1 className={`${styles['text-lg']} ${styles['font-bold']} ${styles['mb-2']}`} style={{ margin: '0 0 8px 0' }}>
+                Баг-репорты
+              </h1>
+              <p className={styles['text-secondary']} style={{ margin: 0 }}>
+                Сообщите о найденных ошибках и проблемах на сайте
+              </p>
+            </div>
+          </div>
+        </div>
 
-          
-          <Paper sx={{ padding: 3, marginBottom: 4 }}>
-            <Typography variant="h6" component="h2" gutterBottom>
-              Сообщить о проблеме
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    name="subject"
-                    label="Заголовок"
-                    fullWidth
-                    required
-                    value={newBug.subject}
-                    onChange={handleInputChange}
-                    inputProps={{ maxLength: 40 }}
-                    helperText="До 40 символов"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    name="text"
-                    label="Описание"
-                    fullWidth
-                    required
-                    multiline
-                    rows={4}
-                    value={newBug.text}
-                    onChange={handleInputChange}
-                    inputProps={{ maxLength: 700 }}
-                    helperText="До 700 символов"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="site_link"
-                    label="Сайт"
-                    select
-                    fullWidth
-                    value={newBug.site_link}
-                    onChange={handleInputChange}
-                    SelectProps={{
-                      native: true,
-                    }}
-                  >
-                    <option value="k-connect.ru">К-Коннект</option>
-                    <option value="elemsocial.com">Элемент</option>
-                    <option value="clientelement.sault">Клиент Элемента</option>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    component="label"
-                    variant="outlined"
-                    startIcon={<PhotoCamera />}
-                    fullWidth
-                  >
-                    Загрузить фото
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </Button>
-                </Grid>
-                {imagePreview && (
-                  <Grid item xs={12}>
-                    <ImagePreview src={imagePreview} alt="Preview" />
-                  </Grid>
-                )}
-                {error && (
-                  <Grid item xs={12}>
-                    <Typography color="error">{error}</Typography>
-                  </Grid>
-                )}
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={submitLoading}
-                    startIcon={
-                      submitLoading ? (
-                        <CircularProgress size={20} color="inherit" />
-                      ) : (
-                        <SendIcon />
-                      )
-                    }
-                  >
-                    Отправить
-                  </Button>
-                </Grid>
-              </Grid>
-            </form>
-          </Paper>
+        {BugForm}
 
-          
-          <Typography variant="h6" component="h2" gutterBottom>
-            Список проблем
-          </Typography>
-          
-          {loading ? (
-            <Box display="flex" justifyContent="center" my={4}>
-              <CircularProgress />
-            </Box>
-          ) : bugs.length === 0 ? (
-            <Typography align="center" color="textSecondary" my={4}>
-              Баг-репортов пока нет
-            </Typography>
-          ) : (
-            bugs.map(bug => (
-              <BugCard key={bug.id} onClick={() => handleBugClick(bug.id)}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} display="flex" justifyContent="space-between" alignItems="center">
-                    <Typography variant="h6" component="h3" noWrap>
-                      {bug.subject}
-                    </Typography>
-                    <StatusBadge status={bug.status} />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="body2" color="textSecondary" noWrap>
-                      {bug.text}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                      <Box display="flex" alignItems="center">
-                        <Typography variant="caption" color="textSecondary">
-                          {bug.user_name || 'Гость'} • {formatDate(bug.date)}
-                        </Typography>
-                        <Chip 
-                          size="small" 
-                          label={bug.site_link} 
-                          sx={{ ml: 1, fontSize: '0.7rem' }} 
-                        />
-                      </Box>
-                      <Box display="flex" alignItems="center">
-                        <IconButton 
-                          size="small" 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleToggleLike(bug.id);
-                          }}
-                          color={bug.is_liked_by_user ? "primary" : "default"}
-                          disabled={!isAuthenticated}
-                        >
-                          {bug.is_liked_by_user ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-                        </IconButton>
-                        <Typography variant="body2" sx={{ ml: 0.5 }}>
-                          {bug.likes_count || 0}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </BugCard>
-            ))
-          )}
-        </BugContainer>
-      </Container>
+        {/* Список баг-репортов */}
+        <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
+          Список проблем
+        </h2>
+        
+        {loading ? (
+          <div className={styles.loading}>
+            <div className={styles.spinner}></div>
+          </div>
+        ) : bugs.length === 0 ? (
+          <div className={`${styles['text-center']} ${styles['text-secondary']}`} style={{ padding: '48px 0' }}>
+            Баг-репортов пока нет
+          </div>
+        ) : (
+          BugList
+        )}
+      </div>
     );
   }
 
-  
+  // Детальный вид баг-репорта
   return (
-    <Container maxWidth="md">
-      <BugContainer>
-        <Button 
-          variant="outlined" 
-          onClick={() => setSelectedBug(null)}
-          sx={{ mb: 2 }}
-        >
-          Назад к списку
-        </Button>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
+      <button 
+        className={`${styles.btn} ${styles['btn-outline']} ${styles['mb-5']}`}
+        onClick={() => setSelectedBug(null)}
+      >
+        ← Назад к списку
+      </button>
 
-        <BugDetailCard>
-          <Grid container spacing={2}>
-            <Grid item xs={12} display="flex" justifyContent="space-between" alignItems="center">
-              <Typography variant="h5" component="h1">
-                {selectedBug.subject}
-              </Typography>
-              <StatusBadge status={selectedBug.status} />
-            </Grid>
-            
-            <Grid item xs={12}>
-              <Typography variant="body1">
-                {selectedBug.text}
-              </Typography>
-            </Grid>
-            
-            {selectedBug.image_url && (
-              <Grid item xs={12}>
-                <Box
-                  component="img"
-                  src={`https://${window.location.hostname}${selectedBug.image_url}`}
-                  alt="Bug report"
-                  sx={{
-                    maxWidth: '100%',
-                    maxHeight: '300px',
-                    borderRadius: 1,
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => window.open(`https://${window.location.hostname}${selectedBug.image_url}`, '_blank')}
-                />
-              </Grid>
-            )}
-            
-            <Grid item xs={12}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Box>
-                  <Box display="flex" alignItems="center">
-                    <Avatar
-                      src={selectedBug.user_avatar}
-                      alt={selectedBug.user_name || 'Гость'}
-                      sx={{ width: 24, height: 24, mr: 1 }}
-                    >
-                      {selectedBug.user_name ? selectedBug.user_name[0] : 'G'}
-                    </Avatar>
-                    <Typography variant="body2">
-                      {selectedBug.user_name || 'Гость'}
-                    </Typography>
-                  </Box>
-                  <Typography variant="caption" color="textSecondary">
-                    {formatDate(selectedBug.date)}
-                  </Typography>
-                </Box>
-                
-                <Box display="flex" alignItems="center">
-                  <IconButton 
-                    size="small" 
-                    onClick={() => handleToggleLike(selectedBug.id)}
-                    color={selectedBug.is_liked_by_user ? "primary" : "default"}
-                    disabled={!isAuthenticated}
-                  >
-                    {selectedBug.is_liked_by_user ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-                  </IconButton>
-                  <Typography variant="body2" sx={{ ml: 0.5 }}>
-                    {selectedBug.likes_count || 0}
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-            
-            {isAdmin && (
-              <Grid item xs={12}>
-                <Divider sx={{ my: 1 }} />
-                <Box display="flex" gap={1}>
-                  <Button 
-                    size="small" 
-                    variant="outlined" 
-                    color="success"
-                    onClick={() => handleChangeStatus(selectedBug.id, 'Решено')}
-                  >
-                    Решено
-                  </Button>
-                  <Button 
-                    size="small" 
-                    variant="outlined" 
-                    color="primary"
-                    onClick={() => handleChangeStatus(selectedBug.id, 'В обработке')}
-                  >
-                    В обработке
-                  </Button>
-                  <Button 
-                    size="small" 
-                    variant="outlined" 
-                    color="error"
-                    onClick={() => handleChangeStatus(selectedBug.id, 'Открыт')}
-                  >
-                    Открыт
-                  </Button>
-                </Box>
-              </Grid>
-            )}
-          </Grid>
-        </BugDetailCard>
-
-        <Typography variant="h6" component="h2" sx={{ mt: 4, mb: 2 }}>
-          Комментарии ({selectedBug.comments?.length || 0})
-        </Typography>
+      <div className={`${styles.card} ${styles['mb-8']}`}>
+        <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-5']}`}>
+          <h1 className={`${styles['text-lg']} ${styles['font-bold']}`} style={{ margin: 0 }}>
+            {selectedBug.subject}
+          </h1>
+          <StatusBadge status={selectedBug.status} />
+        </div>
         
+        <p className={`${styles['mb-5']}`} style={{ lineHeight: '1.6' }}>
+          {selectedBug.text}
+        </p>
         
-        {selectedBug.comments?.length > 0 ? (
-          selectedBug.comments.map(comment => (
-            <CommentCard key={comment.id}>
-              <Box display="flex" alignItems="flex-start">
-                <Avatar
-                  src={comment.user_avatar}
-                  alt={comment.user_name || 'Гость'}
-                  sx={{ width: 32, height: 32, mr: 2 }}
-                >
-                  {comment.user_name ? comment.user_name[0] : 'G'}
-                </Avatar>
-                <Box flex={1}>
-                  <Box display="flex" justifyContent="space-between">
-                    <Typography variant="subtitle2">
-                      {comment.user_name || 'Гость'}
-                    </Typography>
-                    <Typography variant="caption" color="textSecondary">
-                      {formatDate(comment.timestamp)}
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2">{comment.comment_text}</Typography>
-                </Box>
-              </Box>
-            </CommentCard>
-          ))
-        ) : (
-          <Typography align="center" color="textSecondary" my={2}>
-            Комментариев пока нет
-          </Typography>
+        {selectedBug.image_url && (
+          <div className={styles['mb-5']}>
+            <img
+              src={`https://${window.location.hostname}${selectedBug.image_url}`}
+              alt="Bug report"
+              className={styles['img-detail']}
+              onClick={() => window.open(`https://${window.location.hostname}${selectedBug.image_url}`, '_blank')}
+            />
+          </div>
         )}
         
-        
-        <Paper sx={{ padding: 2, mt: 2 }}>
-          <TextField
-            fullWidth
-            placeholder="Добавить комментарий..."
-            multiline
-            rows={2}
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            inputProps={{ maxLength: 500 }}
-          />
-          <Box display="flex" justifyContent="flex-end" mt={1}>
-            <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              onClick={handleCommentSubmit}
-              disabled={!commentText.trim()}
+        <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+          <div>
+            <div className={`${styles.flex} ${styles['items-center']} ${styles['mb-2']}`}>
+              <img
+                src={selectedBug.user_avatar}
+                alt={selectedBug.user_name || 'Гость'}
+                className={`${styles.avatar} ${styles['avatar-small']} ${styles['mr-2']}`}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div 
+                className={`${styles.avatar} ${styles['avatar-small']} ${styles['mr-2']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
+                style={{ 
+                  background: '#2196f3', 
+                  color: 'white', 
+                  fontSize: '12px',
+                  display: 'none'
+                }}
+              >
+                {selectedBug.user_name ? selectedBug.user_name[0] : 'G'}
+              </div>
+              <span style={{ fontSize: '14px' }}>
+                {selectedBug.user_name || 'Гость'}
+              </span>
+            </div>
+            <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+              {formatDate(selectedBug.date)}
+            </span>
+          </div>
+          
+          <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
+            <button
+              className={`${styles.btn} ${styles['bg-transparent']}`}
+              onClick={() => handleToggleLike(selectedBug.id)}
+              disabled={!isAuthenticated}
+              style={{ 
+                color: selectedBug.is_liked_by_user ? '#2196f3' : 'inherit',
+                padding: '4px'
+              }}
             >
-              Отправить
-            </Button>
-          </Box>
-        </Paper>
-      </BugContainer>
-    </Container>
+              {selectedBug.is_liked_by_user ? 
+                <ThumbUpIcon style={{ fontSize: 20 }} /> : 
+                <ThumbUpOutlinedIcon style={{ fontSize: 20 }} />
+              }
+            </button>
+            <span style={{ fontSize: '14px' }}>
+              {selectedBug.likes_count || 0}
+            </span>
+          </div>
+        </div>
+        
+        {isAdmin && (
+          <>
+            <div className={styles.divider}></div>
+            <div className={`${styles.flex} ${styles['gap-2']}`}>
+              <button 
+                className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
+                style={{ color: '#4caf50', borderColor: '#4caf50' }}
+                onClick={() => handleChangeStatus(selectedBug.id, 'Решено')}
+              >
+                Решено
+              </button>
+              <button 
+                className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
+                style={{ color: '#2196f3', borderColor: '#2196f3' }}
+                onClick={() => handleChangeStatus(selectedBug.id, 'В обработке')}
+              >
+                В обработке
+              </button>
+              <button 
+                className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
+                style={{ color: '#f44336', borderColor: '#f44336' }}
+                onClick={() => handleChangeStatus(selectedBug.id, 'Открыт')}
+              >
+                Открыт
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
+        Комментарии ({selectedBug.comments?.length || 0})
+      </h2>
+      
+      {/* Список комментариев */}
+      {selectedBug.comments?.length > 0 ? (
+        <div>
+          {selectedBug.comments.map((comment, index) => (
+            <div 
+              key={comment.id} 
+              className={`${styles['comment-card']} ${styles['mb-3']}`}
+              style={{ marginBottom: index === selectedBug.comments.length - 1 ? '0' : '12px' }}
+            >
+              <div className={`${styles.flex} ${styles['items-start']} ${styles['gap-3']}`}>
+                <img
+                  src={comment.user_avatar}
+                  alt={comment.user_name || 'Гость'}
+                  className={`${styles.avatar} ${styles['avatar-medium']}`}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div 
+                  className={`${styles.avatar} ${styles['avatar-medium']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
+                  style={{ 
+                    background: '#2196f3', 
+                    color: 'white', 
+                    fontSize: '14px',
+                    display: 'none'
+                  }}
+                >
+                  {comment.user_name ? comment.user_name[0] : 'G'}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className={`${styles.flex} ${styles['justify-between']} ${styles['mb-2']}`}>
+                    <span className={styles['font-medium']} style={{ fontSize: '14px' }}>
+                      {comment.user_name || 'Гость'}
+                    </span>
+                    <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+                      {formatDate(comment.timestamp)}
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.5' }}>
+                    {comment.comment_text}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className={`${styles['text-center']} ${styles['text-secondary']}`} style={{ padding: '24px 0' }}>
+          Комментариев пока нет
+        </div>
+      )}
+      
+      {/* Форма добавления комментария */}
+      <div className={`${styles.card} ${styles['mt-4']}`}>
+        <textarea
+          className={`${styles.input} ${styles.textarea}`}
+          placeholder="Добавить комментарий..."
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          maxLength={500}
+          rows={2}
+        />
+        <div className={`${styles.flex} ${styles['justify-end']} ${styles['mt-2']}`}>
+          <button
+            className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+            onClick={handleCommentSubmit}
+            disabled={!commentText.trim()}
+          >
+            Отправить
+            <SendIcon style={{ fontSize: 20 }} />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 
