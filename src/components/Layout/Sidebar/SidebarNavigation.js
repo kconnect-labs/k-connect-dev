@@ -117,7 +117,7 @@ const SidebarNavigation = memo(({
       />
 
       <NavButton
-        text="Инвентарь"
+        text={t('sidebar.navigation.inventory')}
         icon={icons.inventory}
         path="/economic/inventory"
         active={isActive('/economic/inventory')}
@@ -129,7 +129,7 @@ const SidebarNavigation = memo(({
   const socialMenu = useMemo(() => (
     <>
       <NavButton
-        text="Социальное"
+        text={t('sidebar.navigation.social.title')}
         icon={icons.people}
         active={expandedSocial}
         onClick={toggleExpandSocial}
@@ -139,7 +139,7 @@ const SidebarNavigation = memo(({
       <Collapse in={expandedSocial} timeout="auto" unmountOnExit>
         <NestedList component="div" disablePadding>
           <NavButton
-            text={t('sidebar.navigation.subscriptions')}
+            text={t('sidebar.navigation.social.subscriptions')}
             icon={icons.people}
             path={user && user.username ? `/friends/${user.username}` : '/friends'}
             active={isActive(user && user.username ? `/friends/${user.username}` : '/friends')}
@@ -147,7 +147,7 @@ const SidebarNavigation = memo(({
             nested={true}
           />
           <NavButton
-            text="Гранты"
+            text={t('sidebar.navigation.social.grants')}
             icon={icons.subscription}
             path="/grant"
             active={isActive('/grant')}
@@ -155,7 +155,7 @@ const SidebarNavigation = memo(({
             nested={true}
           />
           <NavButton
-            text={t('sidebar.navigation.channels')}
+            text={t('sidebar.navigation.social.channels')}
             icon={icons.channels}
             path="/channels"
             active={isActive('/channels')}
@@ -164,7 +164,7 @@ const SidebarNavigation = memo(({
           />
           {!isChannel && (
             <NavButton
-              text={t('sidebar.navigation.more.leaderboard')}
+              text={t('sidebar.navigation.social.leaderboard')}
               icon={icons.leaderboard}
               path="/leaderboard"
               active={isActive('/leaderboard')}
@@ -218,54 +218,57 @@ const SidebarNavigation = memo(({
     )
   ), [icons, isActive, isAdmin, isModeratorUser, expandedAdminMod, toggleExpandAdminMod, t]);
 
-  const shopsMenu = useMemo(() => (
-    <>
-      <NavButton
-        text={t('sidebar.navigation.shops.title')}
-        icon={icons.shop}
-        active={expandedShops}
-        onClick={toggleExpandShops}
-        endIcon={expandedShops ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-        themeColor={primaryColor}
-      />
-      <Collapse in={expandedShops} timeout="auto" unmountOnExit>
-        <NestedList component="div" disablePadding>
-          <NavButton
-            text="Бейджи"
-            icon={icons.badge}
-            path="/badge-shop"
-            active={isActive('/badge-shop')}
-            themeColor={primaryColor}
-            nested={true}
-          />
-          <NavButton
-            text="Маркетплейс"
-            icon={icons.marketplace}
-            path="/marketplace"
-            active={isActive('/marketplace')}
-            themeColor={primaryColor}
-            nested={true}
-          />
-          <NavButton
-            text="Юзернеймы"
-            icon={icons.auction}
-            path="/username-auction"
-            active={isActive('/username-auction')}
-            themeColor={primaryColor}
-            nested={true}
-          />
-          <NavButton
-            text="Пачки"
-            icon={icons.pack}
-            path="/economic/packs"
-            active={isActive('/economic/packs')}
-            themeColor={primaryColor}
-            nested={true}
-          />
-        </NestedList>
-      </Collapse>
-    </>
-  ), [icons, isActive, primaryColor, expandedShops, toggleExpandShops, t]);
+  const shopsMenu = useMemo(
+		() => (
+			<>
+				<NavButton
+					text={t('sidebar.navigation.shops.title')}
+					icon={icons.shop}
+					active={expandedShops}
+					onClick={toggleExpandShops}
+					endIcon={expandedShops ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+					themeColor={primaryColor}
+				/>
+				<Collapse in={expandedShops} timeout='auto' unmountOnExit>
+					<NestedList component='div' disablePadding>
+						<NavButton
+							text={t('sidebar.navigation.shops.badge_shop')}
+							icon={icons.badge}
+							path='/badge-shop'
+							active={isActive('/badge-shop')}
+							themeColor={primaryColor}
+							nested={true}
+						/>
+						<NavButton
+							text={t('sidebar.navigation.shops.marketplace')}
+							icon={icons.marketplace}
+							path='/marketplace'
+							active={isActive('/marketplace')}
+							themeColor={primaryColor}
+							nested={true}
+						/>
+						<NavButton
+							text={t('sidebar.navigation.shops.username_auction')}
+							icon={icons.auction}
+							path='/username-auction'
+							active={isActive('/username-auction')}
+							themeColor={primaryColor}
+							nested={true}
+						/>
+						<NavButton
+							text={t('sidebar.navigation.shops.packs')}
+							icon={icons.pack}
+							path='/economic/packs'
+							active={isActive('/economic/packs')}
+							themeColor={primaryColor}
+							nested={true}
+						/>
+					</NestedList>
+				</Collapse>
+			</>
+		),
+		[icons, isActive, primaryColor, expandedShops, toggleExpandShops, t]
+	)
   
   const extraMenu = useMemo(() => (
     !isChannel && (
@@ -292,7 +295,7 @@ const SidebarNavigation = memo(({
   const moreSection = useMemo(() => (
     <>
       <NavButton
-        text="Ивент"
+        text={t('sidebar.navigation.event')}
         icon={icons.event}
         path="https://k-connect.ru/street/blacklist"
         active={false}
@@ -355,7 +358,7 @@ const SidebarNavigation = memo(({
             nested={true}
           />
           <NavButton
-            text="СтикерМенеджер"
+            text={t('sidebar.navigation.more.stickers')}
             icon={icons.sticker}
             path="/inform/sticker"
             active={isActive('/inform/sticker')}

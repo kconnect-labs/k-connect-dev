@@ -26,23 +26,8 @@ import ChartsBlock from './components/ChartsBlock';
 import ArtistsBlock from './components/ArtistsBlock';
 import apiClient from '../../services/axiosConfig';
 import {BlockContainer, BlockContainerContent, BlockContainerIcon, MusicTypeContainer} from './components/BlockContainer';
+import { useLanguage } from '../../context/LanguageContext';
 
-// Стили для блоков
-// const BlockContainer = styled(Paper)(({ theme }) => ({
-//   padding: theme.spacing(1),
-//   marginBottom: theme.spacing(0.5),
-//   borderRadius: 12,
-//   background: 'rgba(255, 255, 255, 0.03)',
-//   backdropFilter: 'blur(20px)',
-//   display: 'flex',
-//   alignItems: 'center',
-//   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-//   cursor: 'pointer',
-//   transition: 'box-shadow 0.2s, transform 0.2s',
-//   borderWidth: '1px',
-//   borderStyle: 'solid',
-//   borderColor: 'rgba(255, 255, 255, 0.1)',
-// }));
 
 const MusicPage = () => {
   const navigate = useNavigate();
@@ -59,6 +44,7 @@ const MusicPage = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const {t} = useLanguage();
 
   // Обработчики для MyVibeWidget
   const handleVibeClick = useCallback(async () => {
@@ -118,24 +104,24 @@ const MusicPage = () => {
 
 				{/* Мои любимые */}
 				<MusicTypeContainer
-					title='Мои любимые'
-					description='Ваши избранные треки'
+					title={t('music.links.favorites.title')}
+					description={t('music.links.favorites.title')}
 					icon={<Favorite sx={{ fontSize: 24 }} />}
 					onClick={() => navigate('/music/liked')}
 				/>
 
 				{/* Все треки */}
 				<MusicTypeContainer
-					title='Все треки'
-					description='Полная коллекция с поиском'
+					title={t('music.links.all_tracks.title')}
+					description={t('music.links.all_tracks.title')}
 					icon={<Star sx={{ fontSize: 24 }} />}
 					onClick={() => navigate('/music/all')}
 				/>
 
 				{/* Плейлисты */}
 				<MusicTypeContainer
-					title='Плейлисты'
-					description='Создавайте и управляйте плейлистами'
+					title={t('music.links.playlists.title')}
+					description={t('music.links.playlists.title')}
 					icon={<MusicNote sx={{ fontSize: 24 }} />}
 					onClick={() => navigate('/music/playlists')}
 				/>

@@ -494,8 +494,14 @@
       "feed": "Лента",
       "messenger": "Мессенджер",
       "music": "Музыка",
-      "subscriptions": "Друзья",
-      "channels": "Каналы",
+      "inventory": "Инвентарь",
+      "social": {
+        "title": "Социальное",
+        "grants": "Гранты",
+        "subscriptions": "Друзья",
+        "channels": "Каналы",
+        "leaderboard": "Лидерборд"
+      },
       "search": "Поиск",
       "management": "Управление",
       "admin_panel": "Админ Панель",
@@ -503,16 +509,19 @@
       "shops": {
         "title": "Экономика",
         "badge_shop": "Бейджики",
-        "username_auction": "Юзернеймы"
+        "username_auction": "Юзернеймы",
+        "marketplace": "Маркетплейс",
+        "packs": "Пачки"
       },
       "minigames": "Кликер",
       "subscription_plans": "Планы подписок",
+      "event": "Инвент",
       "more": {
         "title": "Еще",
-        "leaderboard": "Лидерборд",
         "bug_reports": "Баг-репорты",
         "rules": "Правила",
         "api_docs": "API",
+        "stickers": "менеджер стикеров",
         "about": "О платформе"
       }
     },
@@ -1061,5 +1070,34 @@
       "description": "Включить персональный плейлист 'Мой Вайб'"
     }
     
+  },
+  "music": {
+    "my_vibe": {
+      "title": "Мой Вайб",
+      "description": "Персональные рекомендации",
+      "now_playing": "Сейчас играет:"
+    },
+    "links": {
+      "favorites": {
+        "title": "Мои любимые",
+        "description": "Ваши избранные треки"
+      },
+      "all_tracks": {
+        "title": "Все треки",
+        "description": "Полная коллекция с поиском"
+      },
+      "playlists": {
+        "title": "Плейлисты",
+        "description": "Создавайте и управляйте плейлистами"
+      }
+    },
+    "popular_tracks": "Популярные треки",
+    "new_tracks": "Новые треки",
+    "artist_search": {
+      "title": "Исполнители",
+      "input_placeholder": "Поиск исполнителей",
+      "no_results": "Артисты не найдены"
+    }
   }
+
 }
