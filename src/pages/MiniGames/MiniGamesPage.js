@@ -138,7 +138,8 @@ const MiniGamesPage = () => {
       icon: <TouchAppIcon sx={{ fontSize: 40 }} />,
       color: '#3f51b5',
       path: '/minigames/clicker',
-      available: true
+      available: false,
+      seasonEnded: true
     },
     {
       id: 'blackjack',

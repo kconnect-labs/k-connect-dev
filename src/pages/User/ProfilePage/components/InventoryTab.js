@@ -88,32 +88,27 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, 
         setModalLoading(true);
         setModalError('');
         setReadOnlyItem(false);
-        // Проверяем, есть ли предмет в инвентаре
-        axios.get(`/api/inventory/user/${userId}`)
-          .then(res => {
-            const found = res.data.items?.find(i => String(i.id) === String(itemIdToOpen));
-            if (found) {
-              setSelectedItem(found);
-              setReadOnlyItem(false);
-              setModalLoading(false);
-            } else {
-              // Если нет — грузим отдельно
-              axios.get(`/api/inventory/item/${itemIdToOpen}`)
-                .then(r => {
-                  if (r.data.success && r.data.item) {
-                    setSelectedItem(r.data.item);
-                    setReadOnlyItem(true);
-                  } else {
-                    setModalError('Не удалось получить предмет');
-                  }
-                })
-                .catch(() => setModalError('Ошибка при получении предмета'))
-                .finally(() => setModalLoading(false));
-            }
-          })
-          .catch(() => setModalError('Ошибка при получении инвентаря'));
+        
+        const foundInCurrentInventory = inventory.find(i => String(i.id) === String(itemIdToOpen));
+        if (foundInCurrentInventory) {
+          setSelectedItem(foundInCurrentInventory);
+          setReadOnlyItem(false);
+          setModalLoading(false);
+        } else {
+          axios.get(`/api/inventory/item/${itemIdToOpen}/details`)
+            .then(r => {
+              if (r.data.success && r.data.item) {
+                setSelectedItem(r.data.item);
+                setReadOnlyItem(true);
+              } else {
+                setModalError('Не удалось получить предмет');
+              }
+            })
+            .catch(() => setModalError('Ошибка при получении предмета'))
+            .finally(() => setModalLoading(false));
+        }
       }
-    }, [itemIdToOpen, userId]);
+    }, [itemIdToOpen, userId, inventory]);
   
     const getRarityColor = (rarity) => {
       switch (rarity) {

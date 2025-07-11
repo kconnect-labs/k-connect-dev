@@ -270,13 +270,13 @@ const SidebarNavigation = memo(({
   const extraMenu = useMemo(() => (
     !isChannel && (
       <>
-              {/* <NavButton
+              <NavButton
           text={t('sidebar.navigation.minigames')}
           icon={icons.games}
-          path="/minigames/clicker"
-          active={isActive('/minigames/clicker')}
+          path="/minigames"
+          active={isActive('/minigames')}
           themeColor={primaryColor}
-        /> */}
+        />
         
         <NavButton
           text={t('sidebar.navigation.subscription_plans')}

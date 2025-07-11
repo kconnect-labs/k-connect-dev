@@ -505,7 +505,7 @@
         "badge_shop": "Бейджики",
         "username_auction": "Юзернеймы"
       },
-      "minigames": "Кликер",
+      "minigames": "Мини-игры",
       "subscription_plans": "Планы подписок",
       "more": {
         "title": "Еще",
@@ -944,7 +944,7 @@
       },
       "entertainment": {
         "title": "Развлечения и Экономика",
-        "minigames": "Кликер",
+        "minigames": "Мини-игры",
         "username_auction": "Аукцион юзернеймов",
         "subscription_plans": "Планы подписок",
         "new_badge": "Новое"

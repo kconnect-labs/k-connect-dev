@@ -237,7 +237,17 @@ const MorePage = () => {
               </div>
             </Link>
           </li>
-          
+
+          <li>
+            <Link to="/minigames" className="highlighted-menu-item">
+              <div className="menu-item-icon">
+                <Icon icon="solar:star-bold" width="20" height="20" />
+              </div>
+              <div className="menu-list-item-text">
+                <div className="menu-list-item-primary">Мини-игры</div>
+              </div>
+            </Link>
+          </li>
           <li>
             <Link to="/username-auction" className="highlighted-menu-item">
               <div className="menu-item-icon">

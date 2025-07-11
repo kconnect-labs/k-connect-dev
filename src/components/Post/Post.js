@@ -1485,33 +1485,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
     </Box>
   );
 
-  // Добавляем эффект для hover-появления аватарок
-  useEffect(() => {
-    const likeBox = document.querySelectorAll('.like-avatars');
-    const parentBox = document.querySelectorAll('[data-like-parent]');
-    parentBox.forEach((el, idx) => {
-      el.onmouseenter = () => {
-        if (likeBox[idx]) {
-          likeBox[idx].style.opacity = 1;
-          likeBox[idx].style.pointerEvents = 'auto';
-          likeBox[idx].style.transform = 'translateY(-50%) translateX(8px)';
-        }
-      };
-      el.onmouseleave = () => {
-        if (likeBox[idx]) {
-          likeBox[idx].style.opacity = 0;
-          likeBox[idx].style.pointerEvents = 'none';
-          likeBox[idx].style.transform = 'translateY(-50%)';
-        }
-      };
-    });
-    return () => {
-      parentBox.forEach((el, idx) => {
-        el.onmouseenter = null;
-        el.onmouseleave = null;
-      });
-    };
-  }, [lastLikedUsers, isMobile]);
+
 
   const FactCard = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -2330,53 +2304,10 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               alignItems: 'center',
               minWidth: 185 // было 220
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike} data-like-parent>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike}>
                 {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
                 <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
-                {/* Аватарки последних лайкнувших — появляются при наведении */}
-                {!isMobile && lastLikedUsers.length > 0 && (
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      left: '110%',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      opacity: 0,
-                      pointerEvents: 'none',
-                      transition: 'opacity 0.25s cubic-bezier(.4,2,.6,1), transform 0.25s cubic-bezier(.4,2,.6,1)',
-                      zIndex: 20,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-                    }}
-                    className="like-avatars"
-                  >
-                    {lastLikedUsers.slice(0, 3).map((user, index) => {
-                      const avatarUrl = user.avatar_url || (user.avatar ? `/static/uploads${user.avatar}` : null) || `/static/uploads/avatar/${user.id}/${user.photo || 'avatar.png'}`;
-                      return (
-                        <Avatar
-                          key={`${user.id}-${index}`}
-                          src={avatarUrl}
-                          alt={user.name}
-                          sx={{
-                            width: 22,
-                            height: 22,
-                            ml: index > 0 ? -0.7 : 0,
-                            zIndex: 3 - index,
-                            background: '#eee',
-                            boxShadow: '0 1px 2px rgba(0,0,0,0.10)',
-                            transition: 'transform 0.18s',
-                            '&:hover': {
-                              transform: 'scale(1.13)',
-                              zIndex: 10
-                            }
-                          }}
-                          onError={safeImageError}
-                        />
-                      );
-                    })}
-                  </Box>
-                )}
+
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
                 <MessageCircle size={21} color="#fff" />

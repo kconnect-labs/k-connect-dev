@@ -1,41 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Paper, 
-  Button, 
-  TextField, 
-  Grid, 
-  useTheme,
-  alpha,
-  Divider,
-  Tooltip,
-  Fade,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Backdrop,
-  CircularProgress,
-  Snackbar,
-  Alert,
-  useMediaQuery
-} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import styles from '../../uikit.module.css';
+
+// Иконки из MUI (оставляем только иконки)
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
-import SEO from '../../components/SEO';
-import axios from 'axios';
 
+// Компонент SEO (оставляем как есть)
+import SEO from '../../components/SEO';
 
 const CupImage = ({ lifted, winner }) => {
   return (
-    <Box sx={{ 
-      position: 'relative',
+    <div className={styles.relative} style={{ 
       width: '100%',
       height: '100%',
       display: 'flex',
@@ -44,7 +23,7 @@ const CupImage = ({ lifted, winner }) => {
       alignItems: 'center',
     }}>
       
-      <Box sx={{ 
+      <div style={{ 
         width: '80%',
         height: '80%',
         backgroundImage: 'url("/static/icons/cup.png")',
@@ -58,7 +37,7 @@ const CupImage = ({ lifted, winner }) => {
       
       
       {winner && (
-        <Box sx={{ 
+        <div style={{ 
           position: 'absolute',
           bottom: '10%',
           left: '50%',
@@ -73,15 +52,12 @@ const CupImage = ({ lifted, winner }) => {
           transition: 'opacity 0.3s ease 0.4s'
         }} />
       )}
-    </Box>
+    </div>
   );
 };
 
 const CupsGamePage = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
   
   const [balance, setBalance] = useState(0);
   const [betAmount, setBetAmount] = useState('10');
@@ -93,7 +69,6 @@ const CupsGamePage = () => {
   const [error, setError] = useState(null);
   const [gameAnimation, setGameAnimation] = useState(false);
   const [revealResult, setRevealResult] = useState(false);
-  
   
   const fetchBalance = useCallback(async () => {
     try {
@@ -114,12 +89,10 @@ const CupsGamePage = () => {
     fetchBalance();
   }, [fetchBalance]);
   
-  
   const handleBetChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '');
     setBetAmount(value);
   };
-  
   
   const handleCupSelect = (cupIndex) => {
     if (!isPlaying) {
@@ -127,14 +100,11 @@ const CupsGamePage = () => {
     }
   };
   
-  
   const formatNumber = (num) => {
     return parseInt(num).toLocaleString();
   };
   
-  
   const startGame = async () => {
-    
     const bet = parseInt(betAmount, 10);
     if (isNaN(bet) || bet <= 0) {
       setError('Пожалуйста, введите корректную ставку.');
@@ -165,10 +135,8 @@ const CupsGamePage = () => {
       console.log('Game response:', response.data); 
 
       if (response?.data?.success) {
-        
         setTimeout(() => {
           setGameAnimation(false);
-          
           
           const processedResult = {
             ...response.data,
@@ -178,7 +146,6 @@ const CupsGamePage = () => {
           
           setGameResult(processedResult);
           setRevealResult(true);
-          
           
           if (response.data.balance !== undefined) {
             setBalance(parseInt(response.data.balance));
@@ -201,7 +168,6 @@ const CupsGamePage = () => {
     }
   };
   
-  
   const resetGame = () => {
     setIsPlaying(false);
     setSelectedCup(null);
@@ -209,505 +175,513 @@ const CupsGamePage = () => {
     setRevealResult(false);
   };
   
-  
   const setMaxBet = () => {
     setBetAmount(Math.floor(balance).toString());
   };
   
-  
   const predefinedBets = [10, 50, 100, 500];
   
   return (
-    <Container 
-      maxWidth="md" 
-      sx={{ 
-        mt: { xs: 2, sm: 3 }, 
-        mb: { xs: 10, sm: 10 }, 
-        pb: { xs: '80px', sm: 0 }, 
-        px: { xs: 1, sm: 2 }
-      }}
-    >
+    <div style={{ 
+      margin: '0 auto', 
+      padding: '4px',
+      marginTop: '16px',
+      marginBottom: '80px'
+    }}>
       <SEO title="Три чаши | Мини-игры | К-Коннект" description="Игра Три чаши - угадайте, под какой чашей находится шарик!" />
       
-      
-      <Box sx={{ 
-        display: 'flex', 
-        flexDirection: { xs: 'column', sm: 'row' },
-        justifyContent: 'space-between', 
-        alignItems: { xs: 'flex-start', sm: 'center' }, 
-        gap: { xs: 2, sm: 0 },
-        mb: 3 
-      }}>
-        <Button 
-          startIcon={<ArrowBackIcon />}
+      {/* Заголовок и баланс */}
+      <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-5']}`}>
+        <button 
+          className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
           onClick={() => navigate('/minigames')}
-          sx={{ 
-            color: theme.palette.text.primary,
-            '&:hover': {
-              backgroundColor: alpha(theme.palette.primary.main, 0.1)
-            }
+          style={{
+            padding: '12px 20px',
+            fontSize: '14px',
+            fontWeight: '500',
+            borderRadius: '8px',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            background: 'transparent',
+            color: 'white',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
           }}
         >
+          <ArrowBackIcon style={{ fontSize: 20 }} />
           К играм
-        </Button>
+        </button>
         
-        <Box sx={{ 
-          p: 1.5, 
-          borderRadius: 2,
-          backgroundColor: alpha(theme.palette.background.paper, 0.5),
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+        <div className={`${styles.card} ${styles['p-3']}`} style={{ 
+          background: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           backdropFilter: 'blur(8px)',
-          width: { xs: '100%', sm: 'auto' }
+          minWidth: '150px'
         }}>
-          <Typography variant="body2" color="text.secondary" align={isMobile ? "left" : "right"}>
+          <p className={styles['text-secondary']} style={{ margin: '0 0 4px 0', fontSize: '14px' }}>
             Ваш баланс:
-          </Typography>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+          </p>
+          <h3 className={styles['text-lg']} style={{ 
+            margin: 0, 
+            color: '#e91e63',
+            fontWeight: 'bold'
+          }}>
             {formatNumber(balance)} баллов
-          </Typography>
-        </Box>
-      </Box>
+          </h3>
+        </div>
+      </div>
       
-      
-      <Paper 
-        elevation={2}
-        sx={{ 
-          p: 3, 
-          mb: 4, 
-          borderRadius: 3,
-          background: `linear-gradient(135deg, ${alpha('#e91e63', 0.1)}, ${alpha('#e91e63', 0.05)})`,
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
-        <Box 
-          sx={{ 
-            position: 'absolute', 
-            top: 0, 
-            left: 0, 
-            width: '100%', 
-            height: '100%', 
-            opacity: 0.1,
-            background: `radial-gradient(circle at 30% 50%, ${alpha('#e91e63', 0.3)} 0%, transparent 70%)`,
-            zIndex: 0 
-          }} 
-        />
+      {/* Заголовок игры */}
+      <div className={`${styles.card} ${styles['mb-6']}`} style={{
+        background: 'linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(233, 30, 99, 0.05))',
+        border: '1px solid rgba(233, 30, 99, 0.2)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          opacity: 0.1,
+          background: 'radial-gradient(circle at 30% 50%, rgba(233, 30, 99, 0.3) 0%, transparent 70%)',
+          zIndex: 0 
+        }} />
         
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Box 
-              component="img" 
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']} ${styles['mb-2']}`}>
+            <img 
               src="/static/icons/cup.png" 
               alt="Cup icon"
-              sx={{ 
+              style={{ 
                 width: 36, 
                 height: 36,
                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
               }} 
             />
-            <Typography variant="h4" component="h1" sx={{ 
-              fontWeight: 700,
-              fontSize: { xs: '1.75rem', sm: '2.125rem' }
+            <h1 className={styles['text-lg']} style={{ 
+              fontWeight: 'bold',
+              margin: 0,
+              fontSize: '2rem'
             }}>
               Три чаши
-            </Typography>
-            <Tooltip title="Правила игры">
-              <Button 
-                size="small" 
-                sx={{ ml: 'auto' }}
-                onClick={() => setShowRules(true)}
-              >
-                <HelpOutlineIcon />
-              </Button>
-            </Tooltip>
-          </Box>
+            </h1>
+            <button 
+              className={`${styles.btn} ${styles['bg-transparent']}`}
+              onClick={() => setShowRules(true)}
+              style={{ 
+                marginLeft: 'auto',
+                padding: '8px',
+                fontSize: '14px',
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: 'transparent',
+                color: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <HelpOutlineIcon style={{ fontSize: 20 }} />
+            </button>
+          </div>
           
-          <Typography variant="body1" color="text.secondary">
+          <p className={styles['text-secondary']} style={{ margin: 0 }}>
             Угадайте, под какой чашей находится шарик, и выиграйте в два раза больше своей ставки!
-          </Typography>
-        </Box>
-      </Paper>
+          </p>
+        </div>
+      </div>
       
-      
-      <Paper sx={{ 
-        p: { xs: 2, sm: 3 }, 
-        borderRadius: 3, 
-        mb: 3,
-        background: theme.palette.mode === 'dark' 
-          ? 'linear-gradient(to bottom, #424242, #303030)'
-          : 'linear-gradient(to bottom, #ffffff, #f5f5f5)'
+      {/* Основная игровая область */}
+      <div className={`${styles.card} ${styles['mb-5']}`} style={{
+        background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01))',
+        border: '1px solid rgba(255, 255, 255, 0.12)'
       }}>
         
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom sx={{ 
+        {/* Секция ставки */}
+        <div className={styles['mb-6']}>
+          <h3 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-4']}`} style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            '&:before': {
-              content: '""',
-              display: 'block',
+            gap: '8px'
+          }}>
+            <div style={{
               width: 3,
               height: 20,
               backgroundColor: '#e91e63',
               borderRadius: 4
-            }
-          }}>
+            }} />
             Ваша ставка
-          </Typography>
+          </h3>
           
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: { xs: 'column', sm: 'row' },
-            gap: 2, 
-            alignItems: 'flex-start', 
-            flexWrap: { sm: 'wrap' }
-          }}>
-            <TextField
-              label="Сумма ставки"
-              variant="outlined"
-              value={betAmount}
-              onChange={handleBetChange}
-              disabled={isPlaying}
-              sx={{ 
-                width: { xs: '100%', sm: 200 },
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 2
-                }
-              }}
-              InputProps={{
-                endAdornment: (
-                  <Button 
-                    variant="text" 
-                    size="small" 
-                    onClick={setMaxBet}
-                    disabled={isPlaying}
-                    sx={{ 
-                      minWidth: 'auto', 
-                      color: theme.palette.text.secondary,
-                      '&:hover': {
-                        backgroundColor: 'transparent',
-                        color: theme.palette.primary.main
-                      }
-                    }}
-                  >
-                    max
-                  </Button>
-                )
-              }}
-            />
+          <div className={`${styles.flex} ${styles['gap-4']} ${styles['mb-4']}`} style={{ flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '200px' }}>
+              <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
+                Сумма ставки
+              </label>
+              <div className={styles.relative}>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={betAmount}
+                  onChange={handleBetChange}
+                  disabled={isPlaying}
+                  placeholder="Введите сумму"
+                />
+                <button 
+                  className={`${styles.btn} ${styles['bg-transparent']}`}
+                  onClick={setMaxBet}
+                  disabled={isPlaying}
+                  style={{ 
+                    position: 'absolute',
+                    right: '8px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    cursor: isPlaying ? 'not-allowed' : 'pointer',
+                    opacity: isPlaying ? 0.5 : 1,
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  max
+                </button>
+              </div>
+            </div>
             
-            <Box sx={{ 
-              display: 'flex', 
-              gap: 1, 
-              flexWrap: 'wrap',
-              width: { xs: '100%', sm: 'auto' }
-            }}>
+            <div className={`${styles.flex} ${styles['gap-2']}`} style={{ flexWrap: 'wrap' }}>
               {predefinedBets.map((bet) => (
-                <Button 
+                <button 
                   key={bet}
-                  variant="outlined"
+                  className={`${styles.btn} ${styles['btn-outline']}`}
                   disabled={isPlaying}
                   onClick={() => setBetAmount(bet.toString())}
-                  sx={{ 
-                    flex: { xs: 1, sm: 'none' },
-                    minWidth: '60px',
-                    borderRadius: 2,
-                    borderColor: alpha(theme.palette.divider, 0.5),
-                    '&:hover': {
-                      borderColor: theme.palette.primary.main,
-                      backgroundColor: alpha(theme.palette.primary.main, 0.1)
-                    }
+                  style={{ 
+                    minWidth: '80px',
+                    padding: '8px 16px',
+                    fontSize: '14px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    background: 'transparent',
+                    color: 'white',
+                    cursor: isPlaying ? 'not-allowed' : 'pointer',
+                    opacity: isPlaying ? 0.5 : 1,
+                    transition: 'all 0.2s ease',
+                    flex: '1 1 auto'
                   }}
                 >
                   {bet}
-                </Button>
+                </button>
               ))}
-            </Box>
-          </Box>
-        </Box>
+            </div>
+          </div>
+        </div>
         
-        <Divider sx={{ my: 3 }} />
+        <div className={styles.divider} />
         
-        
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom sx={{ 
+        {/* Секция выбора чаши */}
+        <div className={styles['mb-6']}>
+          <h3 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-4']}`} style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
-            '&:before': {
-              content: '""',
-              display: 'block',
+            gap: '8px'
+          }}>
+            <div style={{
               width: 3,
               height: 20,
               backgroundColor: '#e91e63',
               borderRadius: 4
-            }
-          }}>
+            }} />
             Выберите чашу
-          </Typography>
+          </h3>
           
-          <Box sx={{ 
-            mt: 3,
+          <div className={`${styles.card} ${styles['p-4']}`} style={{
+            background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01))',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
             position: 'relative',
-            background: theme.palette.mode === 'dark' 
-              ? 'linear-gradient(to bottom, #212121, #1e1e1e)' 
-              : 'linear-gradient(to bottom, #f0f0f0, #e0e0e0)',
-            borderRadius: 4,
-            p: 2,
-            py: 3,
-            mb: 3,
-            overflow: 'hidden',
-            '&:before': {
-              content: '""',
+            overflow: 'hidden'
+          }}>
+            <div style={{
               position: 'absolute',
               top: 0,
               left: 0,
               right: 0,
               height: '5px',
               background: 'linear-gradient(to right, #e91e63, #9c27b0)'
-            }
-          }}>
-            <Grid container spacing={2} justifyContent="center">
+            }} />
+            
+            <div className={`${styles.flex} ${styles['gap-4']}`} style={{ justifyContent: 'center' }}>
               {[1, 2, 3].map((cup) => (
-                <Grid item xs={4} sm={4} key={cup}>
-                  <Box
-                    onClick={() => handleCupSelect(cup)}
-                    sx={{
-                      height: { xs: 140, sm: 180 },
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      cursor: isPlaying ? 'default' : 'pointer',
-                      position: 'relative',
-                      transition: 'all 0.3s ease-in-out',
-                      transform: (selectedCup === cup && !gameAnimation) ? 'translateY(-5px)' : 'translateY(0)',
-                      filter: isPlaying && selectedCup !== cup ? 'grayscale(40%) brightness(0.8)' : 'none',
-                      '&:hover': {
-                        transform: isPlaying ? 
-                          'translateY(0)' : 
-                          (selectedCup === cup ? 'translateY(-5px)' : 'translateY(-8px)'),
-                      },
-                      animation: gameAnimation && selectedCup === cup ? 'shake 0.5s ease-in-out' : 'none',
-                      '@keyframes shake': {
-                        '0%, 100%': { transform: 'translateX(0)' },
-                        '25%': { transform: 'translateX(-5px) rotate(-5deg)' },
-                        '50%': { transform: 'translateX(5px) rotate(5deg)' },
-                        '75%': { transform: 'translateX(-5px) rotate(-5deg)' }
-                      }
-                    }}
-                  >
-                    
-                    {selectedCup === cup && !isPlaying && (
-                      <Box 
-                        sx={{ 
-                          position: 'absolute',
-                          bottom: -5,
-                          left: '25%',
-                          width: '50%',
-                          height: 3,
-                          background: '#e91e63',
-                          borderRadius: 4,
-                          boxShadow: '0 0 8px rgba(233, 30, 99, 0.6)',
-                          transition: 'opacity 0.3s ease',
-                          zIndex: 1
-                        }} 
-                      />
-                    )}
-                    
-                    
-                    <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
-                      <CupImage 
-                        lifted={revealResult} 
-                        winner={gameResult && gameResult.winning_cup === cup}
-                      />
-                    </Box>
-                    
-                    <Typography 
-                      variant="subtitle2" 
-                      align="center" 
-                      sx={{
-                        fontSize: { xs: '0.8rem', sm: '0.9rem' },
-                        fontWeight: 600,
-                        color: selectedCup === cup ? '#e91e63' : 'text.secondary',
-                        mt: 1,
-                        transition: 'color 0.3s ease'
-                      }}
-                    >
-                      Чаша {cup}
-                    </Typography>
-                  </Box>
-                </Grid>
+                <div
+                  key={cup}
+                  onClick={() => handleCupSelect(cup)}
+                  className={`${styles.flex} ${styles['flex-col']} ${styles['items-center']} ${styles['justify-center']}`}
+                  style={{
+                    height: '180px',
+                    cursor: isPlaying ? 'default' : 'pointer',
+                    position: 'relative',
+                    transition: 'all 0.3s ease-in-out',
+                    transform: (selectedCup === cup && !gameAnimation) ? 'translateY(-5px)' : 'translateY(0)',
+                    filter: isPlaying && selectedCup !== cup ? 'grayscale(40%) brightness(0.8)' : 'none',
+                    flex: 1,
+                    maxWidth: '120px'
+                  }}
+                >
+                  
+                  {selectedCup === cup && !isPlaying && (
+                    <div style={{ 
+                      position: 'absolute',
+                      bottom: -5,
+                      left: '25%',
+                      width: '50%',
+                      height: 3,
+                      background: '#e91e63',
+                      borderRadius: 4,
+                      boxShadow: '0 0 8px rgba(233, 30, 99, 0.6)',
+                      transition: 'opacity 0.3s ease',
+                      zIndex: 1
+                    }} />
+                  )}
+                  
+                  <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                    <CupImage 
+                      lifted={revealResult} 
+                      winner={gameResult && gameResult.winning_cup === cup}
+                    />
+                  </div>
+                  
+                  <p className={styles['text-sm']} style={{
+                    fontWeight: 600,
+                    color: selectedCup === cup ? '#e91e63' : 'rgba(255, 255, 255, 0.7)',
+                    marginTop: '8px',
+                    transition: 'color 0.3s ease',
+                    textAlign: 'center'
+                  }}>
+                    Чаша {cup}
+                  </p>
+                </div>
               ))}
-            </Grid>
-          </Box>
-        </Box>
+            </div>
+          </div>
+        </div>
         
-        
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 4 }}>
+        {/* Кнопка игры */}
+        <div className={`${styles.flex} ${styles['justify-center']} ${styles['mt-6']}`}>
           {!isPlaying ? (
-            <Button
-              variant="contained"
-              size="large"
+            <button
+              className={`${styles.btn} ${styles['btn-primary']}`}
               onClick={startGame}
               disabled={selectedCup === null || betAmount === '' || parseInt(betAmount, 10) <= 0 || loading}
-              sx={{ 
+              style={{ 
                 minWidth: 200, 
-                py: 1.5,
-                fontSize: '1.1rem',
-                borderRadius: 3,
+                padding: '16px 32px',
+                fontSize: '16px',
+                fontWeight: '600',
+                borderRadius: '12px',
                 backgroundColor: '#e91e63',
-                '&:hover': {
-                  backgroundColor: '#c2185b'
-                },
-                boxShadow: '0 4px 12px rgba(233, 30, 99, 0.3)'
+                border: 'none',
+                color: 'white',
+                cursor: (selectedCup === null || betAmount === '' || parseInt(betAmount, 10) <= 0 || loading) ? 'not-allowed' : 'pointer',
+                opacity: (selectedCup === null || betAmount === '' || parseInt(betAmount, 10) <= 0 || loading) ? 0.6 : 1,
+                boxShadow: '0 4px 12px rgba(233, 30, 99, 0.3)',
+                transition: 'all 0.2s ease'
               }}
-              startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
             >
-              {loading ? 'Загрузка...' : 'Играть'}
-            </Button>
+              {loading ? (
+                <div className={styles.flex} style={{ alignItems: 'center', gap: '8px' }}>
+                  <div className={styles.spinner} />
+                  Загрузка...
+                </div>
+              ) : (
+                'Играть'
+              )}
+            </button>
           ) : (
-            <Button
-              variant="outlined"
-              size="large"
+            <button
+              className={`${styles.btn} ${styles['btn-outline']}`}
               onClick={resetGame}
-              sx={{ 
+              style={{ 
                 minWidth: 200, 
-                py: 1.5,
-                fontSize: '1.1rem',
-                borderRadius: 3,
-                borderColor: '#e91e63',
+                padding: '16px 32px',
+                fontSize: '16px',
+                fontWeight: '600',
+                borderRadius: '12px',
+                border: '2px solid #e91e63',
+                background: 'transparent',
                 color: '#e91e63',
-                '&:hover': {
-                  borderColor: '#c2185b',
-                  backgroundColor: alpha('#e91e63', 0.05)
-                }
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               Играть снова
-            </Button>
+            </button>
           )}
-        </Box>
-      </Paper>
+        </div>
+      </div>
       
-      
+      {/* Результат игры */}
       {gameResult && (
-        <Fade in={true} timeout={800}>
-          <Paper
-            sx={{
-              p: 3,
-              mb: 3,
-              borderRadius: 3,
-              backgroundColor: gameResult.is_win ? alpha(theme.palette.success.main, 0.1) : alpha(theme.palette.error.main, 0.1),
-              border: `1px solid ${gameResult.is_win ? alpha(theme.palette.success.main, 0.3) : alpha(theme.palette.error.main, 0.3)}`
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
-              {gameResult.is_win ? (
-                <EmojiEventsIcon sx={{ color: theme.palette.success.main, fontSize: 28 }} />
-              ) : (
-                <SentimentVeryDissatisfiedIcon sx={{ color: theme.palette.error.main, fontSize: 28 }} />
-              )}
-              <Typography variant="h5" sx={{ 
-                color: gameResult.is_win ? theme.palette.success.main : theme.palette.error.main,
-                fontWeight: 700,
-                fontSize: { xs: '1.25rem', sm: '1.5rem' }
-              }}>
-                {gameResult.is_win ? 'Поздравляем!' : 'Вы не угадали!'}
-              </Typography>
-            </Box>
-            
-            <Typography variant="body1" paragraph>
-              {gameResult.is_win 
-                ? `Вы выиграли ${formatNumber(gameResult.winnings || gameResult.bet * 2)} баллов! Шарик был под чашей ${gameResult.winning_cup}.`
-                : `Шарик был под чашей ${gameResult.winning_cup}. Вы потеряли ${formatNumber(gameResult.bet)} баллов.`
-              }
-            </Typography>
-            
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: { xs: 'column', sm: 'row' },
-              alignItems: { xs: 'flex-start', sm: 'center' }, 
-              justifyContent: 'space-between',
-              gap: 2,
-              mt: 2 
+        <div className={`${styles.card} ${styles['mb-5']}`} style={{
+          backgroundColor: gameResult.is_win ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
+          border: `1px solid ${gameResult.is_win ? 'rgba(76, 175, 80, 0.3)' : 'rgba(244, 67, 54, 0.3)'}`,
+          animation: 'fadeIn 0.8s ease-in'
+        }}>
+          <div className={`${styles.flex} ${styles['items-center']} ${styles['mb-3']} ${styles['gap-2']}`}>
+            {gameResult.is_win ? (
+              <EmojiEventsIcon style={{ color: '#4caf50', fontSize: 28 }} />
+            ) : (
+              <SentimentVeryDissatisfiedIcon style={{ color: '#f44336', fontSize: 28 }} />
+            )}
+            <h2 className={styles['text-lg']} style={{ 
+              color: gameResult.is_win ? '#4caf50' : '#f44336',
+              fontWeight: 'bold',
+              margin: 0
             }}>
-              <Typography variant="body2" color="text.secondary">
-                Новый баланс: <strong>{formatNumber(gameResult.new_balance || gameResult.balance)}</strong> баллов
-              </Typography>
-              
-
-            </Box>
-          </Paper>
-        </Fade>
+              {gameResult.is_win ? 'Поздравляем!' : 'Вы не угадали!'}
+            </h2>
+          </div>
+          
+          <p className={styles['mb-3']}>
+            {gameResult.is_win 
+              ? `Вы выиграли ${formatNumber(gameResult.winnings || gameResult.bet * 2)} баллов! Шарик был под чашей ${gameResult.winning_cup}.`
+              : `Шарик был под чашей ${gameResult.winning_cup}. Вы потеряли ${formatNumber(gameResult.bet)} баллов.`
+            }
+          </p>
+          
+          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+            <p className={styles['text-secondary']} style={{ margin: 0 }}>
+              Новый баланс: <strong>{formatNumber(gameResult.new_balance || gameResult.balance)}</strong> баллов
+            </p>
+          </div>
+        </div>
       )}
       
-      
-      <Dialog
-        open={showRules}
-        onClose={() => setShowRules(false)}
-        sx={{ 
-          '& .MuiDialog-paper': { 
-            borderRadius: 3,
-            '@media (max-width: 600px)': {
-              width: '100%',
-              maxWidth: '100%',
-              margin: 0,
-              borderRadius: 0,
-            }
-          } 
-        }}
-      >
-        <DialogTitle>Правила игры "Три чаши"</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <Typography paragraph>
-              "Три чаши" - это классическая игра на везение и интуицию. Правила просты:
-            </Typography>
+      {/* Модальное окно с правилами */}
+      {showRules && (
+        <div className={styles.relative} style={{ zIndex: 1000 }}>
+          <div className={styles.absolute} style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            backdropFilter: 'blur(4px)'
+          }} onClick={() => setShowRules(false)} />
+          
+          <div className={`${styles.card} ${styles['p-6']}`} style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflow: 'auto',
+            zIndex: 1001
+          }}>
+            <h2 className={`${styles['text-lg']} ${styles['font-bold']} ${styles['mb-4']}`}>
+              Правила игры "Три чаши"
+            </h2>
             
-            <Typography component="ol" sx={{ pl: 2 }}>
-              <li>Сделайте ставку из своего баланса очков.</li>
-              <li>Выберите одну из трех чаш, под которой, как вы думаете, находится шарик.</li>
-              <li>Если вы угадали, ваша ставка утраивается!</li>
-              <li>Если не угадали, вы теряете сумму ставки.</li>
-            </Typography>
+            <div className={styles['mb-4']}>
+              <p className={styles['mb-3']}>
+                "Три чаши" - это классическая игра на везение и интуицию. Правила просты:
+              </p>
+              
+              <ol style={{ paddingLeft: '20px' }}>
+                <li className={styles['mb-2']}>Сделайте ставку из своего баланса очков.</li>
+                <li className={styles['mb-2']}>Выберите одну из трех чаш, под которой, как вы думаете, находится шарик.</li>
+                <li className={styles['mb-2']}>Если вы угадали, ваша ставка утраивается!</li>
+                <li className={styles['mb-2']}>Если не угадали, вы теряете сумму ставки.</li>
+              </ol>
+              
+              <p className={styles['mb-3']}>
+                Шанс выигрыша составляет 1 к 3, что даёт 33.3% вероятность победы.
+              </p>
+              
+              <p>
+                Удачи в игре!
+              </p>
+            </div>
             
-            <Typography paragraph sx={{ mt: 2 }}>
-              Шанс выигрыша составляет 1 к 3, что даёт 33.3% вероятность победы.
-            </Typography>
-            
-            <Typography>
-              Удачи в игре!
-            </Typography>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowRules(false)} autoFocus>
-            Понятно
-          </Button>
-        </DialogActions>
-      </Dialog>
+            <div className={`${styles.flex} ${styles['justify-end']}`}>
+              <button 
+                className={`${styles.btn} ${styles['btn-primary']}`}
+                onClick={() => setShowRules(false)}
+                style={{
+                  padding: '12px 24px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  borderRadius: '8px',
+                  backgroundColor: '#e91e63',
+                  border: 'none',
+                  color: 'white',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                Понятно
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
+      {/* Загрузка */}
+      {loading && (
+        <div className={styles.absolute} style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 999
+        }}>
+          <div className={styles.spinner} />
+        </div>
+      )}
       
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      {/* Уведомления об ошибках */}
+      {error && (
+        <div className={`${styles.card} ${styles['p-3']}`} style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: 'rgba(244, 67, 54, 0.1)',
+          border: '1px solid rgba(244, 67, 54, 0.3)',
+          color: '#f44336',
+          zIndex: 1000,
+          maxWidth: '90%',
+          width: '400px'
+        }}>
+          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+            <span>{error}</span>
+            <button 
+              className={`${styles.btn} ${styles['bg-transparent']}`}
+              onClick={() => setError(null)}
+              style={{ color: '#f44336' }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
       
-      
-      <Snackbar 
-        open={!!error} 
-        autoHideDuration={5000} 
-        onClose={() => setError(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
-          {error}
-        </Alert>
-      </Snackbar>
-    </Container>
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
   );
 };
 

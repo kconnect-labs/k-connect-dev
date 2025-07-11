@@ -20,6 +20,7 @@ import JoinGroupChat from './pages/Messenger/JoinGroupChat';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
+
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
 import { CommandPalleteModal } from './components/Layout/CommandPalette/CommandPalleteModal.js';
@@ -103,7 +104,9 @@ const FriendsPage = lazy(() => import('./pages/User/FriendsPage'));
 const StickerManagePage = lazy(() => import('./pages/Info/StickerManagePage'));
 const StreetBlacklistPage = lazy(() => import('./pages/Collab/StreetBlacklistPage'));
 const StreetBlacklistV1Page = lazy(() => import('./pages/Collab/StreetBlacklistV1Page'));
-
+const MiniGamesPage = lazy(() => import('./pages/MiniGames/MiniGamesPage'));
+const CupsGamePage = lazy(() => import('./pages/MiniGames/CupsGamePage'));
+const BlackjackPage = lazy(() => import('./pages/MiniGames/BlackjackPage'));
 
 export const ThemeSettingsContext = React.createContext({
   themeSettings: {
@@ -484,7 +487,10 @@ const AppRoutes = () => {
           <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
           <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
           <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
-
+          <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
+          <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
+          <Route path="/minigames/blackjack" element={isAuthenticated ? <BlackjackPage /> : <Navigate to="/login" replace />} />
+  
           <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
           <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
           <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />
