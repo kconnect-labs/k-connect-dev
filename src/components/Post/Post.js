@@ -2296,6 +2296,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               gap: 1.7, // уменьшено с 2
               background: 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(40px)',
+              WebkitBackdropFilter: 'blur(0px)',
               border: '1px solid #333',
               borderRadius: '10px', // было 12px
               px: 2.5, // было 3
@@ -2326,6 +2327,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               alignItems: 'center',
               background: 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(40px)',
+              WebkitBackdropFilter: 'blur(0px)',
               border: '1px solid #333',
               borderRadius: '10px', // было 12px
               px: 1.7, // было 2

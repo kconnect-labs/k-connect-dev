@@ -228,10 +228,10 @@ function App() {
     
     // Настройки для темной темы
     const getThemeColors = (mode) => {
-      return {
+          return {
         backgroundColor: '#131313',
-        textColor: '#FFFFFF'
-      };
+            textColor: '#FFFFFF'
+          };
     };
     
     const colors = getThemeColors(savedThemeMode);
@@ -245,7 +245,7 @@ function App() {
   });
   
   
-
+  
 
   const updateThemeSettings = (newSettings) => {
     setThemeSettings(prev => {
@@ -473,7 +473,7 @@ function App() {
         }
         
         const settingUpdate = {};
-        settingUpdate[event.key] = event.newValue;
+          settingUpdate[event.key] = event.newValue;
         
         updateThemeSettings(settingUpdate);
       }
@@ -601,13 +601,13 @@ function App() {
               <CssBaseline />
               <SessionProvider>
                 <MessengerProvider>
-                  <LanguageProvider>
-                    <MusicProvider>
-                      <PostDetailProvider>
-                        <CommandPaletteProvider>
-                          <ErrorBoundary FallbackComponent={ErrorFallback}>
-                            <Suspense fallback={<LoadingIndicator />}>
-                              <DefaultSEO />
+                      <LanguageProvider>
+                        <MusicProvider>
+                          <PostDetailProvider>
+                            <CommandPaletteProvider>
+                                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                                  <Suspense fallback={<LoadingIndicator />}>
+                                    <DefaultSEO />
                               {isAuthPage ? (
                                 <AuthRoutes setUser={authContext?.setUser} />
                               ) : isPublicPage ? (
@@ -617,14 +617,14 @@ function App() {
                               ) : (
                                 <MainRoutes setUser={authContext?.setUser} background={location.state?.background} />
                               )}
-                              <MusicPlayerCore />
-                              <CommandPalleteModal />
-                            </Suspense>
-                          </ErrorBoundary>
-                        </CommandPaletteProvider>
-                      </PostDetailProvider>
-                    </MusicProvider>
-                  </LanguageProvider>
+                                    <MusicPlayerCore />
+                                    <CommandPalleteModal />
+                                  </Suspense>
+                                </ErrorBoundary>
+                            </CommandPaletteProvider>
+                          </PostDetailProvider>
+                        </MusicProvider>
+                      </LanguageProvider>
                 </MessengerProvider>
               </SessionProvider>
             </DefaultPropsProvider>

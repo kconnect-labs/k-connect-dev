@@ -212,8 +212,8 @@ const MainLayout = ({ children }) => {
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
             },
             paddingBottom: {
-              xs: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
-              sm: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
+              xs: hasBottomPlayer ? theme.spacing(12) : theme.spacing(10),
+              sm: hasBottomPlayer ? theme.spacing(12) : theme.spacing(10),
               md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2)
             }
           }}

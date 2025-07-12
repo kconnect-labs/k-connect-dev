@@ -60,7 +60,7 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
     console.log('BottomNavigation: Hidden in messenger chat, visible state:', visibleInMessenger);
     return null;
   }
-
+  
   // Проверяем, есть ли активный полный экран плеер
   const isFullscreenPlayerActive = document.body.classList.contains('fullscreen-player-active');
   if (isFullscreenPlayerActive) {
