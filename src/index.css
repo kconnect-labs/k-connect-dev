@@ -82,6 +82,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   height: 100vh;
+
 }
 
 /* Для мобильных устройств - исправляем проблему с 100vh */
@@ -97,7 +98,7 @@ body {
 }
 
 /* Стили для фоновых изображений профиля */
-.profile-background-active {
+.profile-background-active:not(body) {
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -108,12 +109,11 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  overflow: auto !important;
 }
 
 /* Для мобильных устройств с фоновыми изображениями */
 @supports (-webkit-touch-callout: none) {
-  .profile-background-active {
+  .profile-background-active:not(body) {
     height: -webkit-fill-available !important;
   }
 }
@@ -150,7 +150,6 @@ input, textarea, select {
   border-radius: 0;
 }
 
-
 .selectable {
   -webkit-user-select: text;
   -moz-user-select: text;
@@ -165,7 +164,7 @@ input, textarea, select {
   user-select: none;
 }
 
-
+/* Оптимизированные скроллбары */
 ::-webkit-scrollbar {
   width: 1px;
   height: 1px;
@@ -230,4 +229,3 @@ input, textarea, select {
     -ms-transform: translateZ(0);
   }
 }
-
