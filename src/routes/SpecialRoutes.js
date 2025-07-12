@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
+import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
 const StreetBlacklistPage = React.lazy(() => import('../pages/Collab/StreetBlacklistPage'));
@@ -14,7 +15,7 @@ const SpecialRoutes = () => {
       minHeight: '100vh',
       bgcolor: 'background.default'
     }}>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<LoadingIndicator />}>
         <Routes>
           <Route path="/street/blacklist" element={<StreetBlacklistPage />} />
           <Route path="/street/blacklist/v1" element={<StreetBlacklistV1Page />} />

@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MainLayout from '../components/Layout/MainLayout';
 import { RequireAuth } from '../App';
+import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
 const RegisterProfile = React.lazy(() => import('../pages/Auth/RegisterProfile'));
@@ -60,14 +61,14 @@ const MainRoutes = ({ setUser, background }) => {
 
   return (
     <MainLayout>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<LoadingIndicator />}>
         <Routes location={background || location}>
           <Route path="/register/profile" element={<RegisterProfile setUser={setUser} />} />
           <Route path="/register/channel" element={<RegisterChannel />} />
           <Route path="/confirm-email/:token" element={<EmailConfirmation />} />                    
           <Route path="/" element={
             loading ? (
-              <div>Loading...</div>
+              <LoadingIndicator />
             ) : isAuthenticated ? (
               <MainPage />
             ) : (

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Auth/Login'));
@@ -17,7 +18,7 @@ const AuthRoutes = ({ setUser }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', background: theme.palette.background.default, display: 'flex', flexDirection: 'column' }}>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<LoadingIndicator />}>
         <Routes>
           <Route path="/login" element={
             isAuthenticated ? (

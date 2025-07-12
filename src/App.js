@@ -7,8 +7,6 @@ import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
 import { useBlurOptimization } from './hooks/useBlurOptimization';
-import { usePerformanceOptimization } from './hooks/usePerformanceOptimization';
-import { optimizeScrollPerformance, optimizeAnimations, optimizeMemoryUsage } from './utils/renderOptimization';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -218,9 +216,6 @@ function App() {
   
   // Глобальный хук оптимизации блюра
   const blurOptimization = useBlurOptimization();
-  
-  // Хук оптимизации производительности
-  const performanceOptimization = usePerformanceOptimization();
   
   const [themeSettings, setThemeSettings] = useState(() => {
     const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
@@ -546,21 +541,7 @@ function App() {
     }
   }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
 
-  // --- ДОБАВЛЯЕМ useEffect для применения оптимизаций производительности ---
-  useEffect(() => {
-    // Применяем оптимизации при загрузке приложения
-    optimizeScrollPerformance();
-    optimizeAnimations();
-    
-    // Очистка памяти на слабых устройствах
-    const memoryInterval = optimizeMemoryUsage();
-    
-    return () => {
-      if (memoryInterval) {
-        clearInterval(memoryInterval);
-      }
-    };
-  }, []);
+
 
   // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
   useEffect(() => {

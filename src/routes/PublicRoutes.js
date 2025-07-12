@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MainLayout from '../components/Layout/MainLayout';
+import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
 const RulesPage = React.lazy(() => import('../pages/Info/RulesPage'));
@@ -14,7 +15,7 @@ const PublicRoutes = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   const content = (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <React.Suspense fallback={<LoadingIndicator />}>
       <Routes>
         <Route path="/rules" element={<RulesPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
