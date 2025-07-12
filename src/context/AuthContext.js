@@ -36,8 +36,8 @@ export const AuthProvider = ({ children }) => {
 
   
   const logSessionState = () => {
-    console.log('Auth state:', { isAuthenticated, user });
-    console.log('Cookies:', document.cookie);
+
+
     const authCookies = document.cookie
       .split(';')
       .map(cookie => cookie.trim())
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
         cookie.startsWith('jwt=') || 
         cookie.startsWith('auth=')
       );
-    console.log('Auth cookies:', authCookies);
+
   };
 
   
@@ -74,13 +74,13 @@ export const AuthProvider = ({ children }) => {
       
       const now = Date.now();
       if (!force && isAuthenticated && user && now - lastAuthCheck < 30 * 60 * 1000) { 
-        console.log('Using cached authentication data from localStorage');
+
         return user;
       }
       
       
       if (window._authCheckInProgress) {
-        console.log('Auth check already in progress, skipping duplicate check');
+
         return user;
       }
       
@@ -88,17 +88,17 @@ export const AuthProvider = ({ children }) => {
       window._authCheckInProgress = true;
       
       setLoading(true);
-      console.log('Checking authentication...');
+
       
       
       const response = await AuthService.checkAuth();
-      console.log('Auth check response:', response);
+
       
       
       if (response && response.data) {
         if (response.data.isAuthenticated && response.data.user) {
           const userData = response.data.user;
-          console.log('User authenticated:', userData);
+
           setUser(userData);
           setIsAuthenticated(true);
           setLastAuthCheck(now); 
@@ -110,21 +110,21 @@ export const AuthProvider = ({ children }) => {
           return userData;
         } else if (response.data.needsProfileSetup || response.data.hasSession) {
           
-          console.log('User needs profile setup or has session but no profile');
+
           setUser(null);
           setIsAuthenticated(true); 
           persistAuthState(true, null);
           
           
           if (!window.location.pathname.includes('/register/profile')) {
-            console.log('Redirecting to profile registration page');
+
             navigate('/register/profile', { replace: true });
           }
           
           window._authCheckInProgress = false;
           return null;
         } else {
-          console.log('User not authenticated');
+
           setUser(null);
           setIsAuthenticated(false);
           persistAuthState(false);
@@ -152,7 +152,7 @@ export const AuthProvider = ({ children }) => {
           
           
           if (force && !isPublicPage) {
-            console.log('Redirecting to login page');
+
             navigate('/login', { replace: true });
           }
         }
@@ -200,7 +200,7 @@ export const AuthProvider = ({ children }) => {
         
         
         if (!credentials.preventRedirect) {
-          console.log('Перезагружаем страницу для применения сессии...');
+
           
           window.location.href = '/';
           return { success: true, user: response.user };
@@ -210,7 +210,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         
         if (response.ban_info) {
-          console.log('User account is banned:', response.ban_info);
+
           setError({ 
             message: 'Аккаунт заблокирован', 
             ban_info: response.ban_info 
@@ -394,7 +394,7 @@ export const AuthProvider = ({ children }) => {
 
   
   useEffect(() => {
-    console.log('Auth state changed:', { isAuthenticated, loading, user });
+
     
     if (isAuthenticated && user) {
       persistAuthState(true, user);

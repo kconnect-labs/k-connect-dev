@@ -8,7 +8,7 @@ class NotificationService {
 
     
     const hardcodedVapidKey = 'BHHDcCL7H0Aze-qL17sSPR-x4PcDrvConfsgy-BaRmEkSBq8QyacSjt-EDocdQbxvEwplO0GbBVFe0UWmM0HKp0=';
-    console.log(`Using hardcoded VAPID key: ${hardcodedVapidKey.substring(0, 10)}...`);
+
     return hardcodedVapidKey;
     
   }
@@ -20,25 +20,25 @@ class NotificationService {
         const existingRegistrations = await navigator.serviceWorker.getRegistrations();
         for (const reg of existingRegistrations) {
           if (reg.active && reg.active.scriptURL.includes('service-worker.js')) {
-            console.log('Push service worker already registered with scope:', reg.scope);
+
             return reg;
           }
         }
         
         
-        console.log('Registering push service worker...');
+
         const registration = await navigator.serviceWorker.register('/service-worker.js', {
           scope: '/',
           updateViaCache: 'none' 
         });
-        console.log('Push service worker registered with scope:', registration.scope);
+
         
         
         if (registration.installing) {
-          console.log('Service worker installing...');
+
           registration.installing.addEventListener('statechange', e => {
             if (e.target.state === 'activated') {
-              console.log('Service worker activated!');
+
             }
           });
         }
@@ -55,11 +55,11 @@ class NotificationService {
   
   async subscribeToPushNotifications() {
     try {
-      console.log('Starting push notification subscription process...');
+
       
       
       if (Notification.permission !== 'granted') {
-        console.log('Notification permission not granted, requesting permission...');
+
         const permission = await this.requestNotificationPermission();
         if (permission !== 'granted') {
           throw new Error(`Notification permission not granted: ${permission}`);
@@ -69,27 +69,27 @@ class NotificationService {
       
       let registration;
       if (navigator.serviceWorker.controller) {
-        console.log('Service worker already controlling, getting ready state...');
+
         registration = await navigator.serviceWorker.ready;
       } else {
-        console.log('Service worker not controlling, registering new service worker...');
+
         registration = await this.registerServiceWorker();
       }
       
-      console.log('Getting VAPID public key...');
+
       const vapidPublicKey = await this.getVapidPublicKey();
-      console.log('VAPID public key retrieved, length:', vapidPublicKey.length);
+
       
       
       const convertedVapidKey = this.urlBase64ToUint8Array(vapidPublicKey);
-      console.log('Converted VAPID key to Uint8Array, length:', convertedVapidKey.length);
+
       
       
-      console.log('Checking for existing push subscriptions...');
+
       let subscription = await registration.pushManager.getSubscription();
       
       if (subscription) {
-        console.log('Existing subscription found:', subscription.endpoint);
+
         
         
         const currentServerKey = new Uint8Array(subscription.options.applicationServerKey);
@@ -105,7 +105,7 @@ class NotificationService {
         }
         
         if (needsResubscribe) {
-          console.log('Server key changed, unsubscribing from old subscription...');
+
           await subscription.unsubscribe();
           subscription = null;
         }
@@ -113,13 +113,13 @@ class NotificationService {
       
       
       if (!subscription) {
-        console.log('Creating new push subscription...');
+
         try {
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: convertedVapidKey
           });
-          console.log('Successfully subscribed to push notifications');
+
         } catch (subscribeError) {
           console.error('Error subscribing to push:', subscribeError);
           throw subscribeError;
@@ -127,9 +127,9 @@ class NotificationService {
       }
       
       
-      console.log('Saving subscription to server...');
+
       await this.saveSubscription(subscription);
-      console.log('Subscription successfully saved to server');
+
       
       return subscription;
     } catch (error) {
@@ -141,7 +141,7 @@ class NotificationService {
   async unsubscribeFromPushNotifications() {
     try {
       if (!navigator.serviceWorker.controller) {
-        console.log('No active service worker found');
+
         return false;
       }
       
@@ -178,9 +178,9 @@ class NotificationService {
         url: 'https://k-connect.ru'
       };
       
-      console.log('Saving subscription to server:', payload);
+
       const response = await axios.post('/api/notifications/push-subscription', payload);
-      console.log('Subscription saved successfully:', response.data);
+
       return response.data;
     } catch (error) {
       console.error('Error saving subscription to server:', error);
@@ -337,7 +337,7 @@ class NotificationService {
       throw new Error('Invalid VAPID key: empty string');
     }
     
-    console.log(`Converting VAPID key to Uint8Array. Input length: ${base64String.length}, browser: ${this.getBrowserInfo()}`);
+
     
     try {
       let base64 = base64String.replace(/-/g, '+').replace(/_/g, '/');
@@ -345,15 +345,15 @@ class NotificationService {
         base64 += '=';
       }
       
-      console.log(`Normalized base64 length: ${base64.length}`);
+
       const binaryStr = atob(base64);
-      console.log(`Decoded binary string length: ${binaryStr.length}`);
+
       const outputArray = new Uint8Array(binaryStr.length);
       for (let i = 0; i < binaryStr.length; ++i) {
         outputArray[i] = binaryStr.charCodeAt(i);
       }
       
-      console.log(`Final Uint8Array length: ${outputArray.length}`);
+
       const isSafari = /safari/i.test(navigator.userAgent) && !/chrome/i.test(navigator.userAgent) && !/android/i.test(navigator.userAgent);
       const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
       
@@ -369,13 +369,13 @@ class NotificationService {
   }
   async sendTestNotification() {
     try {
-      console.log('Sending test notification request...');
+
       const response = await axios.post('/api/notifications/test', {
         url: 'https://k-connect.ru',
         title: 'Тестовое уведомление',
         body: 'Уведомления настроены и работают'
       });
-      console.log('Test notification response:', response.data);
+
       return response.data;
     } catch (error) {
       console.error('Error sending test notification:', error);

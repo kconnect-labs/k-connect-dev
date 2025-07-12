@@ -129,7 +129,7 @@ const MessengerPage = () => {
   // Принудительно запрашиваем session_key с сервера, если нет
   useEffect(() => {
     if (!sessionKey && authContext.isAuthenticated && authContext.user && !isLoadingSessionKey) {
-      console.log("Запрашиваем session_key с сервера напрямую...");
+
       setIsLoadingSessionKey(true);
       
       (async () => {
@@ -143,7 +143,7 @@ const MessengerPage = () => {
           });
           
           if (response.data?.session_key) {
-            console.log("Получили session_key от сервера:", response.data.session_key);
+
             localStorage.setItem('session_key', response.data.session_key);
             setForcedSessionKey(response.data.session_key);
           }
@@ -152,7 +152,7 @@ const MessengerPage = () => {
           
           // Запасной вариант - используем JWT как session_key
           if (jwtToken && !localStorage.getItem('session_key')) {
-            console.log("Используем JWT как session_key");
+
             localStorage.setItem('session_key', jwtToken);
             setForcedSessionKey(jwtToken);
           }
@@ -167,7 +167,7 @@ const MessengerPage = () => {
   useEffect(() => {
     if (sessionKeyCookie && !localStorage.getItem('session_key')) {
       localStorage.setItem('session_key', sessionKeyCookie);
-      console.log('MessengerPage: Saved session key from cookie to localStorage');
+
     }
   }, [sessionKeyCookie]);
   
@@ -176,15 +176,15 @@ const MessengerPage = () => {
   
   // Debug
   useEffect(() => {
-    console.log('Auth Context:', authContext);
-    console.log('User Type:', authContext.user?.type);
-    console.log('Session Key from Auth Context:', authContext.sessionKey || authContext.session_key);
-    console.log('Session Key from localStorage:', localStorage.getItem('session_key'));
-    console.log('Session Key from cookie:', sessionKeyCookie);
-    console.log('JWT Token:', jwtToken);
-    console.log('Forced Session Key:', forcedSessionKey);
-    console.log('Final Session Key:', sessionKey);
-    console.log('API URL:', API_URL);
+
+
+
+
+
+
+
+
+
   }, [authContext, sessionKey, sessionKeyCookie, jwtToken, forcedSessionKey, API_URL]);
   
 

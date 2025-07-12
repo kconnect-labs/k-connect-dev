@@ -2428,7 +2428,7 @@ const SettingsPage = () => {
       if (isSupported && window.PushNotifications) {
         window.PushNotifications.checkSubscription()
           .then(isSubscribed => {
-            console.log('Push subscription status:', isSubscribed);
+
             setPushSubscriptionStatus(isSubscribed);
           })
           .catch(error => {
@@ -2534,11 +2534,11 @@ const SettingsPage = () => {
   const handleEnablePushNotifications = async () => {
     try {
       setPushLoading(true);
-      console.log('Starting push notification setup...');
+
       
       
       const isSupported = await NotificationService.isPushNotificationSupported();
-      console.log('Push notifications supported:', isSupported);
+
       
       if (!isSupported) {
         showNotification('error', 'Push-уведомления не поддерживаются вашим браузером');
@@ -2548,7 +2548,7 @@ const SettingsPage = () => {
       
       
       const permission = await NotificationService.getNotificationPermissionStatus();
-      console.log('Current permission status:', permission);
+
       
       if (permission === 'denied') {
         showNotification('error', 'Разрешение на уведомления заблокировано. Пожалуйста, измените настройки в браузере.');
@@ -2558,17 +2558,17 @@ const SettingsPage = () => {
       
       try {
         
-        console.log('Subscribing to push notifications...');
+
         await NotificationService.subscribeToPushNotifications();
         setPushSubscribed(true);
         
         
-        console.log('Updating notification preferences on server...');
+
         try {
           await axios.post('/api/notifications/preferences', {
             push_notifications_enabled: true
           });
-          console.log('Notification preferences updated successfully');
+
         } catch (prefError) {
           console.error('Error updating notification preferences:', prefError);
           if (prefError.response) {
@@ -2578,9 +2578,9 @@ const SettingsPage = () => {
         
         
         try {
-          console.log('Sending test notification...');
+
           const testResult = await NotificationService.sendTestNotification();
-          console.log('Test notification result:', testResult);
+
           showNotification('success', 'Push-уведомления успешно включены');
         } catch (testError) {
           console.error('Error sending test notification:', testError);
@@ -2685,7 +2685,7 @@ const SettingsPage = () => {
   const handleSaveProfile = async () => {
     try {
       setSaving(true);
-      console.log('Starting profile save...');
+
       
       let hasErrors = false;
       let responses = [];
@@ -2693,7 +2693,7 @@ const SettingsPage = () => {
 
       if (name !== user.name) {
         try {
-          console.log('Updating name...');
+
           const formData = new FormData();
           formData.append('name', name);
           
@@ -2703,7 +2703,7 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('Name update response:', response.data);
+
           responses.push({ 
             type: 'name', 
             success: response.data.success || false, 
@@ -2725,7 +2725,7 @@ const SettingsPage = () => {
 
       if (username !== user.username) {
         try {
-          console.log('Updating username...');
+
           const formData = new FormData();
           formData.append('username', username);
           
@@ -2735,7 +2735,7 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('Username update response:', response.data);
+
           responses.push({ 
             type: 'username', 
             success: response.data.success || false, 
@@ -2757,7 +2757,7 @@ const SettingsPage = () => {
 
       if (about !== (user.about || '')) {
         try {
-          console.log('Updating about...');
+
           const formData = new FormData();
           formData.append('about', about);
           
@@ -2767,7 +2767,7 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('About update response:', response.data);
+
           responses.push({ 
             type: 'about', 
             success: response.data.success || false, 
@@ -2789,7 +2789,7 @@ const SettingsPage = () => {
 
       if (avatarFile) {
         try {
-          console.log('Uploading avatar...');
+
           const formData = new FormData();
           formData.append('avatar', avatarFile);
           
@@ -2799,7 +2799,7 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('Avatar upload response:', response.data);
+
           responses.push({ 
             type: 'avatar', 
             success: response.data.success || false, 
@@ -2821,7 +2821,7 @@ const SettingsPage = () => {
 
       if (bannerFile) {
         try {
-          console.log('Uploading banner...');
+
           const formData = new FormData();
           formData.append('banner', bannerFile);
           
@@ -2831,7 +2831,7 @@ const SettingsPage = () => {
             }
           });
           
-          console.log('Banner upload response:', response.data);
+
           responses.push({ 
             type: 'banner', 
             success: response.data.success || false, 
@@ -2877,7 +2877,7 @@ const SettingsPage = () => {
         console.error('Save errors:', failedResponses);
         showNotification('error', errorMessage);
       } else {
-        console.log('All operations successful');
+
         showNotification('success', 'Профиль успешно сохранен');
         
 
@@ -3093,24 +3093,6 @@ const SettingsPage = () => {
         themeMode = 'dark';
         backgroundColor = '#131313';
         textColor = '#FFFFFF';
-        
-      } else if (theme === 'light') {
-        // Белая тема - белый фон, черный текст
-        saveThemeSetting('theme', 'light');
-        saveThemeSetting('backgroundColor', '#ffffff');
-        saveThemeSetting('textColor', '#000000');
-        themeMode = 'light';
-        backgroundColor = '#ffffff';
-        textColor = '#000000';
-        
-      } else if (theme === 'contrast') {
-        // Контрастная тема - черный фон, белый текст
-        saveThemeSetting('theme', 'contrast');
-        saveThemeSetting('backgroundColor', '#000000');
-        saveThemeSetting('textColor', '#FFFFFF');
-        themeMode = 'contrast';
-        backgroundColor = '#000000';
-        textColor = '#FFFFFF';
       }
       
       // Обновляем настройки темы для немедленного применения
@@ -3134,7 +3116,7 @@ const SettingsPage = () => {
         
         const data = await response.json();
         if (data && data.success) {
-          console.log('Тема успешно сохранена в БД:', themeMode);
+
         } else {
           console.error('Ошибка сохранения темы в БД:', data?.error);
         }
@@ -3169,7 +3151,7 @@ const SettingsPage = () => {
       }
       
       const newTelegramEnabled = !notificationPrefs.telegramNotificationsEnabled;
-      console.log('Переключение Telegram уведомлений на:', newTelegramEnabled);
+
       
       try {
         
@@ -3178,7 +3160,7 @@ const SettingsPage = () => {
           telegram_notifications_enabled: newTelegramEnabled
         });
         
-        console.log('Ответ сервера при изменении настроек Telegram-уведомлений:', response.data);
+
         
         if (response.data && response.data.success) {
           setNotificationPrefs({
@@ -3521,14 +3503,12 @@ const SettingsPage = () => {
           const parsedStatus = parseStatusText(statusTextToUse);
           setStatusText(parsedStatus.text);
           setSelectedIcon(parsedStatus.iconName);
-          console.log("Loaded status text:", parsedStatus.text, "icon:", parsedStatus.iconName);
         }
         
         
         const statusColorToUse = profileData.user?.status_color || profileData.status_color;
         if (statusColorToUse) {
           setStatusColor(statusColorToUse);
-          console.log("Loaded status color:", statusColorToUse);
         }
         
         setInitialLoaded(true);
@@ -6048,22 +6028,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
       primary: '#D0BCFF',
       textColor: '#FFFFFF'
     },
-    {
-      id: 'light',
-      name: 'Светлая тема',
-      bg: '#ffffff',
-      paper: '#ffffff',
-      primary: '#8c52ff',
-      textColor: '#000000'
-    },
-    {
-      id: 'contrast',
-      name: 'Контрастная',
-      bg: '#000000',
-      paper: '#000000',
-      primary: '#7B46E3',
-      textColor: '#FFFFFF'
-    }
+
   ];
 
   return (
@@ -6123,13 +6088,7 @@ const ThemeSelector = ({ onThemeSelect }) => {
 };
 
 
-const handleOpenSessionManager = () => {
-  setSessionManagerOpen(true);
-};
 
-const handleCloseSessionManager = () => {
-  setSessionManagerOpen(false);
-};
 
 function AccentColorBlock() {
   const [pendingAccentColor, setPendingAccentColor] = useState(() => localStorage.getItem('accentColorOverride') || '#d0bcff');
@@ -6140,20 +6099,20 @@ function AccentColorBlock() {
 
   const isChanged = pendingAccentColor !== appliedAccentColor || pendingTextColorMode !== appliedTextColorMode;
 
-  console.log('isChanged:', isChanged);
-  console.log('pendingAccentColor:', pendingAccentColor);
-  console.log('appliedAccentColor:', appliedAccentColor);
+
+
+
 
   const handleApply = async () => {
-    console.log('handleApply вызван');
-    console.log('pendingAccentColor:', pendingAccentColor);
+
+
     setIsApplying(true);
     
     try {
       // Сохраняем в localStorage
       localStorage.setItem('accentColorOverride', pendingAccentColor);
       localStorage.setItem('primaryColor', pendingAccentColor);
-      console.log('localStorage установлен:', localStorage.getItem('primaryColor'));
+
       
       // Сохраняем в БД через API
       const response = await fetch('/api/profile/settings', {
@@ -6168,7 +6127,7 @@ function AccentColorBlock() {
       
       const data = await response.json();
       if (data && data.success) {
-        console.log('Primary color успешно сохранен в БД:', pendingAccentColor);
+
         
         // Обновляем страницу после успешного сохранения
         window.location.reload();
@@ -6179,7 +6138,7 @@ function AccentColorBlock() {
       setAppliedAccentColor(pendingAccentColor);
       setAppliedTextColorMode(pendingTextColorMode);
       setIsApplying(false);
-      console.log('handleApply завершен');
+
     } catch (error) {
       console.error('Ошибка при сохранении primary color:', error);
       setIsApplying(false);

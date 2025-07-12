@@ -225,7 +225,6 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
       
       try {
         const webpSupported = supportsWebP();
-        console.log('WebP support detected:', webpSupported);
         
         const optimizedResults = await Promise.all(
           limitedImages.map(async (imageUrl) => {

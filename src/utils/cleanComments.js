@@ -42,7 +42,7 @@ node cleanComments.js [опции]
   --backup        Создать .bak файлы перед изменением
   --help          Показать это сообщение
   `;
-  console.log(helpText);
+
   process.exit(0);
 }
 const targetDir = path.resolve(__dirname, options.path);
@@ -71,7 +71,7 @@ function walkDir(dir, callback) {
   });
 }
 function removeComments(filePath) {
-  console.log(`Обработка файла: ${filePath}`);
+
   stats.processed++;
   try {
     let content = fs.readFileSync(filePath, 'utf8');
@@ -84,19 +84,19 @@ function removeComments(filePath) {
       const bytesRemoved = originalSize - noComments.length;
       stats.bytesRemoved += bytesRemoved;
       stats.modified++;
-      console.log(`  Найдены комментарии для удаления: ${bytesRemoved} байт`);
+
       if (!options.dryRun) {
         if (options.backup) {
           fs.writeFileSync(`${filePath}.bak`, content, 'utf8');
-          console.log(`  Создана резервная копия: ${filePath}.bak`);
+
         }
         fs.writeFileSync(filePath, noComments, 'utf8');
-        console.log(`  Файл обновлен`);
+
       } else {
-        console.log(`  [Режим просмотра] Файл не изменен`);
+
       }
     } else {
-      console.log('  Комментарии не найдены');
+
     }
   } catch (err) {
     console.error(`Ошибка при обработке файла ${filePath}: ${err.message}`);
@@ -115,20 +115,20 @@ function removeBraceComments(content) {
   });
 }
 function main() {
-  console.log(`Начинаем поиск и удаление комментариев в ${targetDir}...`);
+
   if (options.dryRun) {
-    console.log('РЕЖИМ ПРОСМОТРА: Файлы не будут изменены');
+
   }
   walkDir(targetDir, (filePath) => {
     removeComments(filePath);
   });
-  console.log('\nСтатистика обработки:');
-  console.log(`Проверено файлов: ${stats.processed}`);
-  console.log(`Модифицировано файлов: ${stats.modified}`);
-  console.log(`Удалено байт: ${stats.bytesRemoved}`);
-  console.log(`Ошибок: ${stats.errors}`);
+
+
+
+
+
   if (options.dryRun && stats.modified > 0) {
-    console.log('\nДля применения изменений запустите скрипт без опции --dry-run');
+
   }
 }
 main(); 

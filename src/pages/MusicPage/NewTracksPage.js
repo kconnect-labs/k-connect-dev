@@ -96,11 +96,11 @@ const NewTracksPage = () => {
 
     // Проверяем минимальную длину запроса
     if (!query.trim() || query.trim().length < 2) {
-      console.log('[NewTracksPage] Запрос слишком короткий:', query);
+
       return;
     }
     
-    console.log('[NewTracksPage] Выполняем поиск для:', query);
+
     setSearchLoading(true);
     
     // Создаем новый AbortController для этого запроса
@@ -108,10 +108,10 @@ const NewTracksPage = () => {
     
     try {
       const results = await searchTracks(query);
-      console.log('[NewTracksPage] Результаты поиска:', results);
+
       
       if (results.length === 0) {
-        console.log('[NewTracksPage] Поиск не дал результатов для запроса:', query);
+
       }
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -129,7 +129,7 @@ const NewTracksPage = () => {
     const query = e.target.value;
     setSearchQuery(query);
     
-    console.log('[NewTracksPage] Изменение поискового запроса:', query);
+
     
     // Отменяем предыдущий таймер
     if (searchTimeoutRef.current) {
@@ -160,7 +160,7 @@ const NewTracksPage = () => {
   };
 
   const clearSearch = () => {
-    console.log('[NewTracksPage] Очистка поиска');
+
     setSearchQuery('');
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
@@ -200,7 +200,7 @@ const NewTracksPage = () => {
   // Очистка при размонтировании компонента
   useEffect(() => {
     return () => {
-      console.log('[NewTracksPage] Размонтирование - очищаем все ресурсы');
+
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }

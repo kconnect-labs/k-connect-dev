@@ -265,7 +265,7 @@ const UsernameAuctionPage = () => {
             setUserAuctions(data.active_auctions || []);
           } else if (type === 'transaction_complete') {
 
-            console.log(`Получено уведомление о транзакции: ${data.type} для аукциона ${data.auctionId}`);
+
             
 
             if (data.type === 'buy_now' || data.type === 'accept_bid' || data.type === 'place_bid') {
@@ -394,7 +394,7 @@ const UsernameAuctionPage = () => {
         };
         
         broadcastChannel.current.postMessage(message);
-        console.log('Отправлено обновление в другие вкладки:', type, message);
+
       } catch (error) {
         console.error('Ошибка при отправке обновления:', error);
       }
@@ -602,7 +602,7 @@ const UsernameAuctionPage = () => {
     const transactionId = `bid-${selectedAuction.id}-${Date.now()}`;
     
     if (localStorage.getItem(transactionId)) {
-      console.log('Операция уже выполняется, предотвращение дублирования');
+
       setLoadingButtons(prev => ({ ...prev, bid: false }));
       return;
     }
@@ -764,7 +764,7 @@ const UsernameAuctionPage = () => {
     const transactionId = `buy-${auctionId}-${Date.now()}`;
     
     if (localStorage.getItem(transactionId)) {
-      console.log('Операция уже выполняется, предотвращение дублирования');
+
       setLoadingButtons(prev => ({ ...prev, buy: null }));
       return;
     }
@@ -828,7 +828,7 @@ const UsernameAuctionPage = () => {
     const transactionId = `accept-bid-${auction.id}-${Date.now()}`;
     
     if (localStorage.getItem(transactionId)) {
-      console.log('Операция уже выполняется, предотвращение дублирования');
+
       setLoadingButtons(prev => ({ ...prev, accept: null }));
       return;
     }
@@ -880,20 +880,20 @@ const UsernameAuctionPage = () => {
     }
     
     if (sessionExpired) {
-      console.log('Сессия истекла, запрос отклонен');
+
       return false;
     }
     
     const currentTime = Date.now();
     if (lastFetchTime.current && (currentTime - lastFetchTime.current) < MIN_UPDATE_INTERVAL) {
-      console.log('Последний запрос был слишком недавно, ожидаем...');
+
       return false;
     }
     
     lastFetchTime.current = currentTime;
     
     if (document.visibilityState !== 'visible') {
-      console.log('Страница не видима, запрос отклонен');
+
       return false;
     }
     

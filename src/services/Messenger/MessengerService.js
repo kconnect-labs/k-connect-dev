@@ -34,15 +34,15 @@ class MessengerService {
         this.userStatusCache.delete(key);
       }
     });
-    console.log('Cache cleanup completed. Avatar cache size:', this.avatarCache.size, 'Profile cache size:', this.userProfileCache.size, 'Status cache size:', this.userStatusCache.size);
+
   }
   initSocket(options = {}) {
     if (this.socket && this.socket.connected && !options.forceNew) {
-      console.log("Socket already connected with ID:", this.socket.id);
+
       return Promise.resolve(this.socket);
     }
     if (options.forceNew && this.socket) {
-      console.log("Forcing socket reconnection due to forceNew option");
+
       try {
         this.socket.disconnect();
       } catch (e) {
@@ -52,11 +52,11 @@ class MessengerService {
       this.connectionPromise = null;
     }
     if (this.connectionPromise && !options.forceNew) {
-      console.log("Socket connection already in progress");
+
       return this.connectionPromise;
     }
     this.connectionPromise = new Promise((resolve, reject) => {
-      console.log("Initializing Socket.IO connection to messenger...");
+
       const socketOptions = {
         path: '/socket.io',
         transports: ['websocket', 'polling'],
@@ -70,14 +70,14 @@ class MessengerService {
       };
       if (this.socket) {
         if (!this.socket.connected) {
-          console.log("Attempting to reconnect existing socket");
+
           this.socket.connect();
         }
       } else {
         this.socket = io(window.location.origin, socketOptions);
       }
       this.socket.on('connect', () => {
-        console.log('Connected to Socket.IO server with ID:', this.socket.id);
+
         this.connectionPromise = null;
         if (this.eventListeners['connect']) {
           this.eventListeners['connect'].forEach(callback => callback());
@@ -95,9 +95,9 @@ class MessengerService {
         }
       });
       this.socket.on('disconnect', (reason) => {
-        console.log('Disconnected from Socket.IO server. Reason:', reason);
+
         if (reason === 'io server disconnect' || reason === 'transport close') {
-          console.log('Attempting to reconnect...');
+
           this.socket.connect();
         }
         if (this.eventListeners['disconnect']) {
@@ -105,20 +105,20 @@ class MessengerService {
         }
       });
       this.socket.on('reconnect', (attemptNumber) => {
-        console.log(`Socket.IO reconnected after ${attemptNumber} attempts`);
+
         if (this.eventListeners['reconnect']) {
           this.eventListeners['reconnect'].forEach(callback => callback(attemptNumber));
         }
       });
       this.socket.on('reconnect_attempt', (attemptNumber) => {
-        console.log(`Socket.IO reconnect attempt ${attemptNumber}`);
+
         if (this.eventListeners['reconnect_attempt']) {
           this.eventListeners['reconnect_attempt'].forEach(callback => callback(attemptNumber));
         }
       });
       this.socket.on('messenger_connected', (data) => {
         try {
-          console.log('Received messenger_connected event:', data);
+
           if (this.eventListeners['messenger_connected']) {
             this.eventListeners['messenger_connected'].forEach(callback => callback(data));
           }
@@ -129,7 +129,7 @@ class MessengerService {
       });
       this.socket.on('new_message', (message) => {
         try {
-          console.log('Received new_message event:', message);
+
           if (message && message.user_id) {
             const cachedAvatar = this.getAvatarFromCache(message.user_id);
             if (cachedAvatar) {
@@ -145,7 +145,7 @@ class MessengerService {
       });
       this.socket.on('new_message_notification', (notification) => {
         try {
-          console.log('Received new_message_notification event:', notification);
+
           if (notification && notification.sender_id) {
             const cachedAvatar = this.getAvatarFromCache(notification.sender_id);
             if (cachedAvatar) {
@@ -161,7 +161,7 @@ class MessengerService {
       });
       this.socket.on('user_status_changed', (statusData) => {
         try {
-          console.log('Received user_status_changed event:', statusData);
+
           if (statusData && statusData.user_id) {
             this.setUserStatusInCache(statusData.user_id, {
               is_online: statusData.is_online,
@@ -178,7 +178,7 @@ class MessengerService {
       });
       this.socket.on('contacts_status', (statusData) => {
         try {
-          console.log('Received contacts_status event:', statusData);
+
           if (statusData && statusData.contacts && Array.isArray(statusData.contacts)) {
             statusData.contacts.forEach(contact => {
               if (contact && contact.user_id) {
@@ -218,13 +218,13 @@ class MessengerService {
       return Promise.reject(new Error('Socket not connected'));
     }
     return new Promise((resolve) => {
-      console.log('Requesting contacts status...');
+
       this.socket.emit('get_contacts_status');
       resolve(); 
     });
   }
   sequentialRejoin(rooms, index) {
-    console.log("sequentialRejoin: Method is deprecated. Using only personal user room now.");
+
   }
   on(event, callback) {
     if (!this.eventListeners[event]) {
@@ -238,33 +238,33 @@ class MessengerService {
     }
   }
   async joinChatRoom(chatId) {
-    console.log(`joinChatRoom: Больше не используется. Сервер будет отправлять сообщения в персональную комнату пользователя`);
+
     return true;
   }
   async leaveChatRoom(chatId) {
-    console.log(`leaveChatRoom: Больше не используется. Сервер отправляет сообщения в персональную комнату пользователя`);
+
     return true;
   }
   disconnect() {
-    console.log("Disconnecting from all socket connections...");
+
     try {
       this.joinedRooms.clear();
-      console.log("Cleared local room tracking");
+
       Object.keys(this.pendingJoins).forEach(key => {
-        console.log(`Cleaning up pending join for ${key}`);
+
         delete this.pendingJoins[key];
       });
       Object.keys(this.joinThrottleTimers).forEach(key => {
-        console.log(`Cleaning up throttle timer for ${key}`);
+
         clearTimeout(this.joinThrottleTimers[key]);
         delete this.joinThrottleTimers[key];
       });
       Object.keys(this.pendingRequests).forEach(key => {
-        console.log(`Cleaning up pending request for ${key}`);
+
         delete this.pendingRequests[key];
       });
       if (this.socket) {
-        console.log("Disconnecting socket...");
+
         this.socket.disconnect();
         this.socket = null;
       }
@@ -272,7 +272,7 @@ class MessengerService {
       if (this.cacheCleanupInterval) {
         clearInterval(this.cacheCleanupInterval);
       }
-      console.log("Successfully disconnected from all socket connections");
+
       return true;
     } catch (error) {
       console.error("Error during socket disconnect:", error);
@@ -336,7 +336,7 @@ class MessengerService {
         });
         try {
           await this.initSocket();
-          console.log("Socket initialized for messenger");
+
         } catch (error) {
           console.warn("Failed to initialize socket for messenger:", error);
         }
@@ -357,7 +357,7 @@ class MessengerService {
     return this.pendingRequests[requestKey];
   }
   sequentialJoin(rooms, index) {
-    console.log("sequentialJoin: Method is deprecated. Using only personal user room now.");
+
   }
   async getMessages(chatId, page = 1, perPage = 50) {
     try {
@@ -365,7 +365,7 @@ class MessengerService {
       if (this.pendingRequests[requestKey]) {
         return this.pendingRequests[requestKey];
       }
-      console.log(`Ensuring socket connection before fetching messages for chat ${chatId}`);
+
       await this.initSocket();
       const url = `${API_URL}/api/messenger/chats/${chatId}/messages?page=${page}&per_page=${perPage}`;
       this.pendingRequests[requestKey] = axios.get(url, {
@@ -668,7 +668,7 @@ class MessengerService {
         throw new Error('Socket.IO not connected');
       }
       return new Promise((resolve, reject) => {
-        console.log(`Sending message via socket to chat ${chatId}`);
+
         const messageData = {
           chat_id: chatId,
           content
@@ -694,32 +694,32 @@ class MessengerService {
   }
   async uploadAttachment(fileOrFormData, chatId = null, nocache = null) {
     try {
-      console.log("Загрузка вложения:", fileOrFormData, "для чата:", chatId);
+
       let formData;
       if (fileOrFormData instanceof FormData) {
         formData = fileOrFormData;
-        console.log("Используем переданный FormData объект");
+
         if (chatId && !formData.has('chat_id')) {
           formData.append('chat_id', chatId);
         }
       } else {
         formData = new FormData();
         const fileToUpload = fileOrFormData instanceof File ? fileOrFormData : (fileOrFormData.rawFile || fileOrFormData);
-        console.log("Создаем новый FormData с файлом:", fileToUpload);
+
         formData.append('file', fileToUpload);
         if (chatId) {
           formData.append('chat_id', chatId);
         }
       }
       formData.append('timestamp', Date.now().toString());
-      console.log("FormData entries:");
+
       for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + (pair[1] instanceof File ? pair[1].name : pair[1]));
+
       }
       const uploadUrl = nocache 
         ? `${API_URL}/api/messenger/upload?_nocache=${nocache}` 
         : `${API_URL}/api/messenger/upload`;
-      console.log("Отправляем запрос на:", uploadUrl);
+
       const response = await axios.post(
         uploadUrl,
         formData,
@@ -730,7 +730,7 @@ class MessengerService {
           timeout: 30000 
         }
       );
-      console.log("Ответ от сервера:", response.data);
+
       return response.data;
     } catch (error) {
       console.error('Ошибка загрузки вложения:', error);
@@ -803,11 +803,11 @@ class MessengerService {
   }
   async updateMessageWithAttachments(chatId, messageId, attachmentIds) {
     try {
-      console.log(`Обновление сообщения ${messageId} в чате ${chatId} с вложениями:`, attachmentIds);
+
       const response = await axios.put(
         `${API_URL}/api/messenger/chats/${chatId}/messages/${messageId}`,
       );
-      console.log("Ответ на обновление сообщения:", response.data);
+
       return response.data;
     } catch (error) {
       console.error('Ошибка при обновлении сообщения с вложениями:', error);

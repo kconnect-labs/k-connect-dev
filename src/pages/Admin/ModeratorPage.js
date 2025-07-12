@@ -682,7 +682,7 @@ const ModeratorPage = () => {
     try {
       
       if (window._moderatorCheckInProgress) {
-        console.log('ModeratorPage: Moderator check already in progress, waiting...');
+
         
         await new Promise(resolve => {
           const checkInterval = setInterval(() => {
@@ -698,7 +698,7 @@ const ModeratorPage = () => {
       
       const now = Date.now();
       if (now - lastModeratorCheck < 15 * 60 * 1000 && moderatorData) {
-        console.log('ModeratorPage: Using cached moderator data');
+
         return;
       }
       
@@ -1137,10 +1137,10 @@ const ModeratorPage = () => {
       loadMore ? setLoadingMore(true) : setLoading(true);
       const currentPage = loadMore ? pageStates.badges + 1 : 1;
       const response = await axios.get(`/api/moderator/badges?page=${currentPage}&per_page=${rowsPerPage}${searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : ''}`);
-      console.log('[DEBUG] Badges API response:', response.data);
+
       if (response.data && response.data.badges) {
         const newBadges = response.data.badges;
-        console.log('[DEBUG] Processed badges:', newBadges.map(b => ({ id: b.id, name: b.name, upgrade: b.upgrade, color_upgrade: b.color_upgrade })));
+
         if (loadMore) {
           setBadges(prevBadges => [...prevBadges, ...newBadges]);
           setPageStates(prev => ({ ...prev, badges: currentPage }));
@@ -1514,7 +1514,7 @@ const ModeratorPage = () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/moderator/debug/bug-reports');
-      console.log('[DEBUG] Bug reports debug info:', response.data);
+
       
       const { total_bug_reports, sample_reports, user_permissions } = response.data;
       
@@ -1542,12 +1542,12 @@ const ModeratorPage = () => {
   
   const deepDebugBugReports = async () => {
     setLoading(true);
-    console.log('Performing deep debug of bug reports...');
+
     
     try {
       
       const adminCheckResponse = await axios.get('/api/admin/debug/bug-report-table');
-      console.log('Admin DB check response:', adminCheckResponse.data);
+
       
       const tableInfo = adminCheckResponse.data.table_info || {};
       const sampleData = adminCheckResponse.data.sample_data || [];
@@ -1569,11 +1569,11 @@ const ModeratorPage = () => {
       
       try {
         const regularResponse = await axios.get('/api/moderator/bug-reports');
-        console.log('Regular API response:', regularResponse.data);
+
         
         
         const paginationResponse = await axios.get('/api/moderator/bug-reports?page=1&per_page=10');
-        console.log('Pagination check response:', paginationResponse.data);
+
         
         const regularData = regularResponse.data.bug_reports || [];
         const paginationData = paginationResponse.data.bug_reports || [];
@@ -1605,7 +1605,7 @@ const ModeratorPage = () => {
       
       try {
         const debugResponse = await axios.get('/api/moderator/debug/bug-reports');
-        console.log('Regular debug response:', debugResponse.data);
+
         
         const totalReports = debugResponse.data.total_reports || 0;
         const sampleReports = debugResponse.data.sample_reports || [];
@@ -2782,7 +2782,7 @@ const ModeratorPage = () => {
 
   
   const openEditBadgeDialog = (badge) => {
-    console.log('Opening edit dialog for badge:', badge);
+
     setSelectedBadge(badge);
     setEditBadgeName(badge.name);
     setEditBadgeDescription(badge.description || '');
@@ -2868,7 +2868,7 @@ const ModeratorPage = () => {
         response = await axios.put(`/api/moderator/badges/${selectedBadge.id}`, data);
       }
       
-      console.log('[DEBUG] Badge update response:', response.data);
+
       
       if (response.data.success) {
         showNotification('success', 'Бейджик успешно обновлен');
@@ -2912,11 +2912,11 @@ const ModeratorPage = () => {
       
       setLoading(true);
       
-      console.log(`[DEBUG] Deleting badge: ${selectedBadge.id} (${selectedBadge.name})`);
+
       
       const response = await axios.delete(`/api/moderator/badges/${selectedBadge.id}`);
       
-      console.log('[DEBUG] Badge delete response:', response.data);
+
       
       if (response.data.success) {
         showNotification('success', 'Бейджик успешно удален');
@@ -4327,13 +4327,13 @@ const ModeratorPage = () => {
   const fetchAvailableMedals = async () => {
     try {
       setLoadingMedals(true);
-      console.log('Fetching available medals...');
+
       const response = await axios.get('/api/moderator/medals/available');
-      console.log('Medals response:', response.data);
+
       
       if (response.data.success) {
         setAvailableMedals(response.data.medals);
-        console.log('Set available medals:', response.data.medals);
+
       } else {
         throw new Error(response.data.error || 'Failed to fetch available medals');
       }
@@ -4346,7 +4346,7 @@ const ModeratorPage = () => {
   };
 
   const openIssueMedalDialog = (user) => {
-    console.log('Opening medal dialog for user:', user);
+
     setMedalUser(user);
     setSelectedMedal('');
     setMedalDescription('');
@@ -6513,7 +6513,7 @@ const ModeratorPage = () => {
                         }
                       }}
                       onClick={() => {
-                        console.log('Selected medal:', medal);
+
                         setSelectedMedal(medal.name);
                         setMedalDescription(medal.description || '');
                       }}

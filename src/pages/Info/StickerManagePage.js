@@ -104,7 +104,7 @@ const TGSSticker = ({ src, style, onClick }) => {
         
         // Проверяем, действительно ли это TGS файл
         if (contentType !== 'application/x-tgsticker') {
-          console.log('Not a TGS file, falling back to image:', contentType);
+
           setError(true);
           return;
         }
@@ -420,7 +420,7 @@ const StickerManagePage = () => {
 
   // Функция для создания заголовков авторизации
   const getAuthHeaders = useCallback(() => {
-    console.log('getAuthHeaders called, sessionKey:', sessionKey ? 'present' : 'missing');
+
     
     if (!sessionKey) {
       console.error('No session key available');
@@ -448,7 +448,7 @@ const StickerManagePage = () => {
     }
     
     if (!sessionKey) {
-      console.log('Waiting for session key...');
+
       setLoading(false); // Останавливаем загрузку если нет sessionKey
       setError('Необходима авторизация');
       return;
@@ -464,13 +464,13 @@ const StickerManagePage = () => {
         return;
       }
 
-      console.log('Loading sticker packs with session key:', sessionKey ? 'present' : 'missing');
+
       
       const response = await axios.get(`${API_URL}/messenger/sticker-packs/my`, {
         headers
       });
       
-      console.log('Sticker packs response:', response.data);
+
       
       if (response.data.success) {
         const all = response.data.packs || [];
@@ -520,11 +520,11 @@ const StickerManagePage = () => {
     }
     
     if (sessionKey) {
-      console.log('Session key available, loading sticker packs...');
+
       setInitialized(true);
       loadPacks();
     } else {
-      console.log('No session key available yet, waiting...');
+
       // Не устанавливаем initialized = true, ждем появления sessionKey
     }
   }, [sessionKey, isChannel, initialized]); // Используем initialized вместо messengerLoading

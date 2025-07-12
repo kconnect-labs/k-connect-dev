@@ -38,13 +38,13 @@ const MorePage = () => {
   const checkModeratorStatus = async () => {
     try {
       if (window._moderatorCheckInProgress) {
-        console.log('MorePage: Moderator check already in progress, skipping...');
+
         return;
       }
       
       const now = Date.now();
       if (now - lastModeratorCheck < 15 * 60 * 1000) {
-        console.log('MorePage: Using cached moderator status');
+
         return;
       }
       

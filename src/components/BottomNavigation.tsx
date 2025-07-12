@@ -60,18 +60,22 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
     console.log('BottomNavigation: Hidden in messenger chat, visible state:', visibleInMessenger);
     return null;
   }
+
+  // Проверяем, есть ли активный полный экран плеер
+  const isFullscreenPlayerActive = document.body.classList.contains('fullscreen-player-active');
+  if (isFullscreenPlayerActive) {
+    return null;
+  }
   
   const authPages = ['/login', '/register', '/register/profile', '/confirm-email'];
   const isAuthPage = authPages.some(path => location.pathname.startsWith(path));
   const isSettingsPage = location.pathname.startsWith('/settings');
   const isBadgeShopPage = location.pathname.startsWith('/badge-shop');
-  
-  if (isAuthPage || isSettingsPage || isBadgeShopPage) {
-    return null;
-  }
-    
   const isClickerPage = location.pathname.startsWith('/minigames/clicker');
-  if (isClickerPage) {
+  const isBlackjackPage = location.pathname.startsWith('/minigames/blackjack');
+  const isCupsPage = location.pathname.startsWith('/minigames/cups');
+  
+  if (isAuthPage || isSettingsPage || isBadgeShopPage || isClickerPage || isBlackjackPage || isCupsPage) {
     return null;
   }
 

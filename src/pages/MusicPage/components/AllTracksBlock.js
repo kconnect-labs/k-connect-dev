@@ -170,7 +170,7 @@ const AllTracksBlock = () => {
       }
       
       const response = await apiClient.get(`/api/music?page=${pageNum}&per_page=20`);
-      console.log('All tracks response:', response.data);
+
       
       if (response.data && response.data.tracks) {
         const newTracks = response.data.tracks;
@@ -202,18 +202,18 @@ const AllTracksBlock = () => {
 
     // Проверяем минимальную длину запроса
     if (!query.trim() || query.trim().length < 2) {
-      console.log('[AllTracksBlock] Запрос слишком короткий:', query);
+
       return;
     }
     
-    console.log('[AllTracksBlock] Выполняем поиск для:', query);
+
     
     // Создаем новый AbortController для этого запроса
     abortControllerRef.current = new AbortController();
     
     try {
       const results = await searchTracks(query);
-      console.log('[AllTracksBlock] Результаты поиска:', results);
+
     } catch (error) {
       if (error.name !== 'AbortError') {
         console.error('[AllTracksBlock] Ошибка поиска:', error);
@@ -234,7 +234,7 @@ const AllTracksBlock = () => {
   // Очистка при размонтировании компонента
   useEffect(() => {
     return () => {
-      console.log('[AllTracksBlock] Размонтирование - очищаем ресурсы');
+
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -265,7 +265,7 @@ const AllTracksBlock = () => {
     const query = e.target.value;
     setSearchQuery(query);
     
-    console.log('[AllTracksBlock] Изменение поискового запроса:', query);
+
     
     // Отменяем предыдущий таймер
     if (searchTimeoutRef.current) {
@@ -287,7 +287,7 @@ const AllTracksBlock = () => {
   };
 
   const clearSearch = () => {
-    console.log('[AllTracksBlock] Очистка поиска');
+
     setSearchQuery('');
     // Отменяем активный поиск
     if (abortControllerRef.current) {

@@ -56,24 +56,24 @@ const PostService = {
         }
       }
       
-            console.log('Creating post with form data:');
+
       for (let [key, value] of formData.entries()) {
         if (value instanceof File) {
-          console.log(`${key}: File ${value.name} (${value.size} bytes)`);
+
         } else {
-          console.log(`${key}: ${value}`);
+
         }
       }
       
             try {
-        console.log('Attempting to create post with POST method');
+
         const response = await axios.post('/api/posts/create', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           },
           _invalidatesCache: true
         });
-        console.log('POST success:', response.data);
+
         
         axios.cache.clearPostsCache();
         
@@ -88,14 +88,14 @@ const PostService = {
         console.error('POST method failed:', postError);
         
                 try {
-          console.log('Attempting fallback: PUT method to /api/posts');
+
           const putResponse = await axios.put('/api/posts', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             },
             _invalidatesCache: true
           });
-          console.log('PUT success:', putResponse.data);
+
           
           axios.cache.clearPostsCache();
           
@@ -109,13 +109,13 @@ const PostService = {
         } catch (putError) {
           console.error('PUT method failed:', putError);
           
-                    console.log('Attempting final fallback: POST to /api/post/new');
+
           const finalResponse = await axios.post('/api/post/new', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
-          console.log('Final attempt success:', finalResponse.data);
+
           
 
           axios.cache.clearPostsCache();
@@ -152,7 +152,7 @@ const PostService = {
 
     deletePost: async (postId) => {
     try {
-      console.log(`Attempting to delete post ${postId} with DELETE method and cascade`);
+
       
             const response = await axios.delete(`/api/posts/${postId}`, {
         params: {
@@ -160,7 +160,7 @@ const PostService = {
           full_delete: true
         }
       });
-      console.log('DELETE method with cascade succeeded:', response.data);
+
       
 
       axios.cache.clearPostsCache();
@@ -178,13 +178,13 @@ const PostService = {
       
             if (error.response?.status === 404 || error.response?.status === 405 || error.response?.status === 500) {
         try {
-          console.log(`Falling back to POST method with cascade for deletion of post ${postId}`);
+
           
                     const response = await axios.post(`/api/posts/${postId}/delete`, {
             cascade: true,
             full_delete: true
           });
-          console.log('POST fallback method with cascade succeeded:', response.data);
+
           
 
           axios.cache.clearPostsCache();
@@ -201,12 +201,12 @@ const PostService = {
           console.error(`Fallback deletion also failed for post ${postId}:`, fallbackError);
           
                     try {
-            console.log(`Trying second fallback: POST to /api/posts/delete/${postId} with cascade`);
+
             const response = await axios.post(`/api/posts/delete/${postId}`, {
               cascade: true,
               full_delete: true
             });
-            console.log('Second fallback with cascade succeeded:', response.data);
+
             
 
             axios.cache.clearPostsCache();
@@ -221,9 +221,9 @@ const PostService = {
             return response.data;
           } catch (secondFallbackError) {
                         try {
-              console.log(`Final attempt: GET /api/posts/delete/${postId}/cascade`);
+
               const response = await axios.get(`/api/posts/delete/${postId}/cascade`);
-              console.log('Final cascade deletion attempt succeeded:', response.data);
+
               
 
               axios.cache.clearPostsCache();

@@ -12,14 +12,14 @@ let instance = null;
 export const getMessengerSocket = (config) => {
   // Если экземпляр не существует - создаем новый
   if (!instance) {
-    console.log('[MessengerSocket] Creating new singleton instance');
+
     instance = new EnhancedWebSocketClient(config);
     return instance;
   }
   
   // Если sessionKey изменился - пересоздаем экземпляр
   if (config && config.sessionKey && instance.config.sessionKey !== config.sessionKey) {
-    console.log('[MessengerSocket] SessionKey changed, recreating instance');
+
     instance.disconnect();
     instance = new EnhancedWebSocketClient(config);
     return instance;
@@ -28,11 +28,11 @@ export const getMessengerSocket = (config) => {
   // Если конфигурация передана, но экземпляр уже существует, обновляем только нужные поля
   if (config) {
     Object.assign(instance.config, config);
-    console.log('[MessengerSocket] Updated existing instance config');
+
   }
   
   // Если экземпляр существует и sessionKey не изменился - возвращаем существующий
-  console.log('[MessengerSocket] Returning existing singleton instance');
+
   return instance;
 };
 

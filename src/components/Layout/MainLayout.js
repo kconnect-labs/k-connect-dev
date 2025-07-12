@@ -8,6 +8,7 @@ import { ThemeSettingsContext } from '../../App';
 import { MobilePlayer, DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
 import LanguageSwitcher from '../LanguageSwitcher';
+import AppBottomNavigation from '../BottomNavigation';
 
 
 const MainContainer = styled(Box)(({ theme }) => ({
@@ -211,8 +212,8 @@ const MainLayout = ({ children }) => {
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
             },
             paddingBottom: {
-              xs: hasBottomPlayer ? theme.spacing(12) : 0,
-              sm: hasBottomPlayer ? theme.spacing(12) : 0,
+              xs: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
+              sm: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
               md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2)
             }
           }}
@@ -222,6 +223,7 @@ const MainLayout = ({ children }) => {
       </ContentWrapper>
       
       {/* Bottom navigation рендерится только на мобильных устройствах */}
+      {isMobile && <AppBottomNavigation user={user} isMobile={isMobile} />}
       {isMobile && hasBottomPlayer && <MobilePlayer isMobile={isMobile} />}
       {/* Desktop player рендерится только на PC */}
       {!isMobile && hasDesktopPlayer && <DesktopPlayer isMobile={isMobile} />}

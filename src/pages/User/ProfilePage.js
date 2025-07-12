@@ -130,10 +130,10 @@ const ProfilePage = () => {
     const fetchUserProfile = async () => {
       try {
         setLoading(true);
-        console.log(`Fetching profile for username: ${username}`);
+
         
         const response = await axios.get(`/api/profile/${username}`);
-        console.log("Profile API response:", response.data);
+
         
         
         console.log("Profile achievement data:", {
@@ -151,13 +151,13 @@ const ProfilePage = () => {
           
           if (response.data.achievement) {
             response.data.user.achievement = response.data.achievement;
-            console.log('Copied achievement data from root to user object:', response.data.achievement);
+
           }
           
           // Копируем connect_info из корневого объекта, если он есть
           if (response.data.connect_info) {
             response.data.user.connect_info = response.data.connect_info;
-            console.log('Copied connect_info from root to user object:', response.data.connect_info);
+
           }
           
           setUser(response.data.user);
@@ -170,12 +170,12 @@ const ProfilePage = () => {
           
           if (response.data.subscription) {
             response.data.user.subscription = response.data.subscription;
-            console.log('Subscription data found:', response.data.subscription);
+
           } else if (response.data.user.subscription) {
-            console.log('Subscription data found in user object:', response.data.user.subscription);
+
           } else {
-            console.log('No subscription data found in API response');
-            console.log('Full API response:', response.data);
+
+
           }
           
           
@@ -289,17 +289,17 @@ const ProfilePage = () => {
       setLoadingFollowing(true);
       setLoadingFriends(true);
       
-      console.log(`Загрузка подписчиков для пользователя ${user.id}`);
+
       
       axios.get(`/api/profile/${user.id}/followers`)
         .then(response => {
-          console.log('Ответ API подписчиков:', response.data);
+
           if (response.data && response.data.followers) {
             
             const followersData = Array.isArray(response.data.followers) 
               ? response.data.followers.filter(f => f && typeof f === 'object') 
               : [];
-            console.log(`Получено ${followersData.length} подписчиков`);
+
             setFollowers(followersData);
           } else {
             
@@ -315,17 +315,17 @@ const ProfilePage = () => {
           setLoadingFollowers(false);
         });
       
-      console.log(`Загрузка подписок для пользователя ${user.id}`);
+
       
       axios.get(`/api/profile/${user.id}/following`)
         .then(response => {
-          console.log('Ответ API подписок:', response.data);
+
           if (response.data && response.data.following) {
             
             const followingData = Array.isArray(response.data.following) 
               ? response.data.following.filter(f => f && typeof f === 'object') 
               : [];
-            console.log(`Получено ${followingData.length} подписок`);
+
             setFollowingList(followingData);
           } else {
             
@@ -341,17 +341,17 @@ const ProfilePage = () => {
           setLoadingFollowing(false);
         });
         
-      console.log(`Загрузка друзей для пользователя ${user.id}`);
+
       
       axios.get(`/api/profile/${user.id}/friends`)
         .then(response => {
-          console.log('Ответ API друзей:', response.data);
+
           if (response.data && response.data.friends) {
             
             const friendsData = Array.isArray(response.data.friends) 
               ? response.data.friends.filter(f => f && typeof f === 'object') 
               : [];
-            console.log(`Получено ${friendsData.length} друзей`);
+
             setFriends(friendsData);
           } else {
             

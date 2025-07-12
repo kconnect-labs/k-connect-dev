@@ -214,7 +214,7 @@ const Login = () => {
 
         
         if (event.data && typeof event.data === 'string') {
-          console.log("Получено сообщение от Element:", event.data);
+
           
           
           window.removeEventListener('message', elementAuthHandler);

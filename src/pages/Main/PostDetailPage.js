@@ -220,7 +220,7 @@ const Comment = ({
     
     if (comment.image) {
       const sanitizedPath = sanitizeImagePath(comment.image);
-      console.log('Opening comment image:', sanitizedPath);
+
       setCurrentLightboxImage(sanitizedPath);
       setLightboxOpen(true);
     }
@@ -234,7 +234,7 @@ const Comment = ({
         (comment.image.indexOf('/static/uploads/') !== comment.image.lastIndexOf('/static/uploads/'))) {
       
       const fixedUrl = comment.image.substring(comment.image.lastIndexOf('/static/uploads/'));
-      console.log("Fixing duplicated image path:", comment.image, "->", fixedUrl);
+
       
       
       comment.image = fixedUrl;
@@ -288,7 +288,7 @@ const Comment = ({
         (imageUrl.indexOf('/static/uploads/') !== imageUrl.lastIndexOf('/static/uploads/'))) {
       
       const fixedUrl = imageUrl.substring(imageUrl.lastIndexOf('/static/uploads/'));
-      console.log("Fixing duplicated reply image path:", imageUrl, "->", fixedUrl);
+
       
       
       setReplyImageFallbacks(prev => ({
@@ -310,7 +310,7 @@ const Comment = ({
     const fallbackUrl = getReplyImageFallback(imageUrl);
     
     if (fallbackUrl) {
-      console.log(`Trying fallback URL for reply ${replyId}:`, fallbackUrl);
+
       setReplyImageFallbacks(prev => ({
         ...prev,
         [replyId]: fallbackUrl
@@ -1431,20 +1431,20 @@ const PostDetailPage = ({ isOverlay = false }) => {
       const viewKey = `post_viewed_${postId}`;
       
       if (sessionStorage.getItem(viewKey)) {
-        console.log(`Post ${postId} already viewed in this session (detail page)`);
+
         return;
       }
       
       
       sessionStorage.setItem(viewKey, 'true');
-      console.log(`Setting view flag for post ${postId} (detail page)`);
+
       
-      console.log(`Incrementing view count for post ${postId} (detail page)`);
+
       const response = await axios.post(`/api/posts/${postId}/view`);
       
       
       if (response.data && response.data.success) {
-        console.log(`View count incremented successfully: ${response.data.views_count} (detail page)`);
+
         setPost(prevPost => {
           if (!prevPost) return null;
           
@@ -1461,11 +1461,11 @@ const PostDetailPage = ({ isOverlay = false }) => {
         if (retries <= 0) return;
         
         try {
-          console.log(`Retrying view count increment (${retries} attempts left) (detail page)`);
+
           const response = await axios.post(`/api/posts/${postId}/view`);
           
           if (response.data && response.data.success) {
-            console.log(`View count incremented on retry: ${response.data.views_count} (detail page)`);
+
             setPost(prevPost => {
               if (!prevPost) return null;
               return {
@@ -1706,7 +1706,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       let response;
       if (replyImage) {
-        console.log("Submitting reply with image", replyImage);
+
         const formData = new FormData();
         formData.append('content', replyText.trim());
         formData.append('image', replyImage);
@@ -1733,7 +1733,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         response.data.reply.image = sanitizeImagePath(response.data.reply.image);
       }
 
-      console.log("Reply submitted successfully, response:", response.data);
+
       if (response.data.reply) {
         console.log("Reply data structure:", {
           id: response.data.reply.id,
@@ -1974,7 +1974,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       return;
     }
     
-    console.log("Deleting reply:", replyId, "from comment:", commentId);
+
     console.log("Current comments structure:", JSON.stringify(comments.map(c => ({ 
       id: c.id, 
       content: c.content.substring(0, 20) + "...", 
@@ -1995,8 +1995,8 @@ const PostDetailPage = ({ isOverlay = false }) => {
     try {
       setReplyDeleteDialog(prev => ({ ...prev, deleting: true }));
       
-      console.log("Before deletion - Comment ID:", replyDeleteDialog.commentId, "Reply ID:", replyDeleteDialog.replyId);
-      console.log("Comments count:", comments.length);
+
+
       
       // Обновляем комментарии, удаляя ответ
       const newComments = comments.map(comment => {
@@ -2011,7 +2011,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
         };
       });
       
-      console.log("After filtering - Comments count:", newComments.length);
+
       
       setComments(newComments);
       
@@ -2035,7 +2035,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
       
       // В случае ошибки перезагружаем комментарии
       try {
-        console.log("Reloading comments after error");
+
         await loadComments(commentsPagination.page, false);
       } catch (refreshError) {
         console.error('Error refreshing comments after delete error:', refreshError);
@@ -2046,7 +2046,7 @@ const PostDetailPage = ({ isOverlay = false }) => {
 
   
   const handleClose = () => {
-    console.log("Closing post detail overlay");
+
     closePostDetail();
   };
   

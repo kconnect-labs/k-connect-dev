@@ -25,7 +25,7 @@ const ElementAuth = () => {
   const [attemptCount, setAttemptCount] = useState(0);
 
   useEffect(() => {
-    console.log("[BROWSER] Запуск авторизации с токеном:", token);
+
     checkServiceStatus();
     const timeoutId = setTimeout(() => tryAuth(), 500);
     return () => clearTimeout(timeoutId);
@@ -37,7 +37,7 @@ const ElementAuth = () => {
       const response = await fetch('/api/auth/status');
       const status = await response.json();
       setConnectionInfo(status);
-      console.log("[BROWSER] Статус сервиса:", status);
+
       
       if (!status.external_socket_connected) {
         setStatus("Ожидание подключения к серверу Element...");
@@ -50,7 +50,7 @@ const ElementAuth = () => {
   const tryAuth = async () => {
     setAttemptCount(prev => prev + 1);
     setStatus("Попытка авторизации...");
-    console.log("[BROWSER] Отправка запроса на сервер...");
+
 
     try {
       const response = await fetch(`/api/auth_elem/${token}`, {  
@@ -64,16 +64,16 @@ const ElementAuth = () => {
       }
       
       const result = await response.json();
-      console.log("[BROWSER] Ответ сервера:", result);
+
       
       if(result.status === "success" && result.redirect) {
         setStatus("Авторизация успешна. Перенаправляем...");
-        console.log("[BROWSER] Перенаправление на:", result.redirect);
+
         
         // Сохраняем session_key в localStorage
         if (result.session_key) {
           localStorage.setItem('session_key', result.session_key);
-          console.log("[BROWSER] Session key сохранен:", result.session_key);
+
         } else {
           console.warn("[BROWSER] Session key не получен от сервера");
         }

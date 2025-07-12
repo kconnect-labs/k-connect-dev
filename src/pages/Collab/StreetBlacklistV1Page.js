@@ -29,7 +29,7 @@ import {
 } from '@mui/icons-material';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from '../../context/AuthContext';
-import { useSession } from '../../App';
+import { useSession } from '../../hooks';
 import axios from 'axios';
 
 /**

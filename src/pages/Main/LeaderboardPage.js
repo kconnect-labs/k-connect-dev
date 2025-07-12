@@ -100,7 +100,7 @@ const LeaderboardPage = () => {
 
   const handleCardClick = (user) => {
     // Обработка клика по карточке пользователя
-    console.log('Clicked on user:', user.name);
+
   };
 
   return (

@@ -999,7 +999,6 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          console.log(`Post ${post.id} is more than 50% visible, triggering view count`);
           
           incrementViewCount();
           

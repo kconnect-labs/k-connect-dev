@@ -73,7 +73,7 @@ const AuthService = {
         }
       });
       
-      console.log('Ответ сервера при регистрации:', response.data);
+
       return response.data;
     } catch (error) {
       console.error('Ошибка при регистрации:', error);
@@ -88,7 +88,7 @@ const AuthService = {
 
   checkAuth: async () => {
     try {
-      console.log('Checking authentication status...');
+
       
       try {
         const response = await axios.get('/api/auth/check', {
@@ -98,7 +98,7 @@ const AuthService = {
             'Pragma': 'no-cache'
           }
         });
-        console.log('Auth check response:', response.data);
+
         
         if (response.data && response.data.sessionExists && !response.data.user) {
           response.data.hasSession = true;
@@ -108,7 +108,7 @@ const AuthService = {
         return response;
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          console.log('Primary auth endpoint not found, trying fallback...');
+
           const fallbackResponse = await axios.get('/api/check-auth', {
             withCredentials: true,
             headers: {
@@ -116,7 +116,7 @@ const AuthService = {
               'Pragma': 'no-cache'
             }
           });
-          console.log('Fallback auth check response:', fallbackResponse.data);
+
           
           if (fallbackResponse.data && fallbackResponse.data.sessionExists && !fallbackResponse.data.user) {
             fallbackResponse.data.hasSession = true;
@@ -162,7 +162,7 @@ const AuthService = {
 
   registerProfile: async (profileData) => {
     try {
-      console.log('Отправляемые данные профиля:', profileData);
+
       
       const response = await axios.post('/api/auth/register-profile', profileData, {
         withCredentials: true,
@@ -171,7 +171,7 @@ const AuthService = {
         }
       });
       
-      console.log('Ответ сервера при регистрации профиля:', response.data);
+
       return response.data;
     } catch (error) {
       console.error('Ошибка при регистрации профиля:', error);

@@ -80,7 +80,7 @@ const getStickerType = (sticker) => {
           
           // Проверяем, действительно ли это TGS файл
           if (contentType !== 'application/x-tgsticker') {
-            console.log('Not a TGS file, falling back to image:', contentType);
+
             setError(true);
             return;
           }
@@ -318,7 +318,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   const preloadStickers = useCallback(async (packs) => {
     if (!packs || packs.length === 0) return;
     
-    console.log('StickerPicker: Preloading sticker files...');
+
     setPreloading(true);
     
     try {
@@ -351,7 +351,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
         }
       }
       
-      console.log('StickerPicker: Preloading completed');
+
     } finally {
       setPreloading(false);
     }
@@ -382,14 +382,14 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     // Проверяем кеш
     const now = Date.now();
     if (cachedPacks.length > 0 && cacheTimestamp && (now - cacheTimestamp) < CACHE_DURATION) {
-      console.log('StickerPicker: Using cached sticker packs');
+
       setStickerPacks(cachedPacks);
       return;
     }
     
     try {
       setLoading(true);
-      console.log('StickerPicker: Loading sticker packs from API');
+
       
       const response = await axios.get(`${API_URL}/messenger/sticker-packs/my`, {
         headers: {
@@ -405,7 +405,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
         // Сохраняем в кеш
         setCachedPacks(packs);
         setCacheTimestamp(now);
-        console.log('StickerPicker: Cached sticker packs');
+
         
         // Запускаем предзагрузку всех стикеров в фоне
         preloadStickers(packs);
@@ -415,7 +415,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
       
       // Если API недоступен, используем кеш (даже если он устарел)
       if (cachedPacks.length > 0) {
-        console.log('StickerPicker: Using stale cache due to API error');
+
         setStickerPacks(cachedPacks);
       }
     } finally {
@@ -429,7 +429,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     const cached = stickerFileCache.current.get(cacheKey);
     
     if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
-      console.log('StickerPicker: Using cached sticker file:', url);
+
       return cached.data;
     }
     
@@ -449,12 +449,12 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
       data,
       timestamp: Date.now()
     });
-    console.log('StickerPicker: Cached sticker file:', url);
+
   }, []);
 
   const clearStickerFileCache = useCallback(() => {
     stickerFileCache.current.clear();
-    console.log('StickerPicker: Sticker file cache cleared');
+
   }, []);
 
   // Функция для очистки некорректных данных из кеша
@@ -472,11 +472,11 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     
     entriesToRemove.forEach(key => {
       stickerFileCache.current.delete(key);
-      console.log('StickerPicker: Removed invalid cache entry:', key);
+
     });
     
     if (entriesToRemove.length > 0) {
-      console.log('StickerPicker: Cleaned invalid cache entries');
+
     }
   }, []);
 
@@ -608,7 +608,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     
     try {
       setLoading(true);
-      console.log('StickerPicker: Force refreshing sticker packs');
+
       
       const response = await axios.get(`${API_URL}/messenger/sticker-packs/my`, {
         headers: {
@@ -624,7 +624,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
         // Обновляем кеш
         setCachedPacks(packs);
         setCacheTimestamp(Date.now());
-        console.log('StickerPicker: Cache refreshed');
+
         
         // Запускаем предзагрузку всех стикеров в фоне
         preloadStickers(packs);

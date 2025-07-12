@@ -166,14 +166,14 @@ const NotificationsPage = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        console.log("Fetching notifications...");
+
         const response = await axios.get('/api/notifications');
-        console.log("Notifications API response:", response.data);
+
         
         if (response.data && Array.isArray(response.data.notifications)) {
           setNotifications(response.data.notifications);
           setUnreadCount(response.data.unread_count || 0);
-          console.log(`Loaded ${response.data.notifications.length} notifications`);
+
         } else {
           console.warn("Invalid notifications data format:", response.data);
           setNotifications([]);
@@ -198,7 +198,7 @@ const NotificationsPage = () => {
     if (!notification || !notification.id) return;
     
     try {
-      console.log('Marking notification as read:', notification.id);
+
       await axios.post(`/api/notifications/${notification.id}/read`);
       
       setNotifications(prev => 
@@ -216,7 +216,7 @@ const NotificationsPage = () => {
 
   
   const groupedNotifications = useMemo(() => {
-    console.log("Grouping notifications:", notifications);
+
     
     
     const validNotifications = notifications.filter(

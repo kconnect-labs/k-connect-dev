@@ -397,13 +397,13 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
     try {
       setIsSubmitting(true);
       setError('');
-      console.log("Starting post submission...");
+
       
       const formData = new FormData();
       formData.append('content', content.trim());
       formData.append('is_nsfw', isNsfw.toString());
       
-      console.log("Added content to FormData:", content.trim());
+
       
       if (postType && postType !== 'post') {
         formData.append('type', postType);
@@ -416,16 +416,16 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       if (mediaType === 'image') {
         // Отправляем все изображения с правильным форматом
         mediaFiles.forEach((file, index) => {
-          console.log(`Adding image[${index}]:`, file.name, file.size);
+
           formData.append(`images[${index}]`, file); // Исправлено на правильный формат
         });
       } else if (mediaType === 'video') {
-        console.log("Adding video to FormData:", mediaFiles[0].name, mediaFiles[0].size);
+
         formData.append('video', mediaFiles[0]);
       }
       
       if (selectedTracks.length > 0) {
-        console.log(`Adding ${selectedTracks.length} music tracks to post`);
+
         
         const trackData = selectedTracks.map(track => ({
           id: track.id,
@@ -438,16 +438,16 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
         formData.append('music', JSON.stringify(trackData));
       }
       
-      console.log("Sending post request to server...");
+
       const response = await PostService.createPost(formData);
-      console.log('Post created:', response);
+
       
       if (response && response.success) {
         clearForm();
         if (onPostCreated && response.post) {
           onPostCreated(response.post);
         }
-        console.log('Post created successfully');
+
       }
     } catch (error) {
       console.error('Error creating post:', error);
