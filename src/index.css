@@ -97,6 +97,8 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   height: 100vh;
+  overflow-y: hidden;
+
 }
 
 /* Для мобильных устройств - исправляем проблему с 100vh */
