@@ -92,20 +92,7 @@
   box-shadow: 0 2px 8px rgba(208, 188, 255, 0.2);
 }
 
-/* Поддержка светлой темы */
-@media (prefers-color-scheme: light) {
-  .action-button:hover {
-    background-color: rgba(208, 188, 255, 0.08);
-  }
-  
-  .action-button--active {
-    background-color: rgba(208, 188, 255, 0.1);
-  }
-  
-  .action-button--active:hover {
-    background-color: rgba(208, 188, 255, 0.15);
-  }
-}
+
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {

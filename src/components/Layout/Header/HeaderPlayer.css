@@ -179,16 +179,6 @@
   opacity: 1;
 }
 
-/* Поддержка светлой темы */
-@media (prefers-color-scheme: light) {
-  .track-artist {
-    color: rgba(0, 0, 0, 0.7);
-  }
-  
-  .MINI-track-info--clickable:hover {
-    background-color: rgba(208, 188, 255, 0.08);
-  }
-}
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {

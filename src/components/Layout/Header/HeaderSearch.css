@@ -323,60 +323,6 @@
   background-color: rgba(208, 188, 255, 0.08);
 }
 
-/* Light theme support */
-@media (prefers-color-scheme: light) {
-  .search-input-wrapper {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-  
-  .search-input-wrapper.focused {
-    border-color: var(--primary, #D0BCFF);
-    background-color: rgba(255, 255, 255, 0.95);
-  }
-  
-  .search-input {
-    color: var(--text-primary, #000000);
-  }
-  
-  .search-input::placeholder {
-    color: rgba(0, 0, 0, 0.6);
-  }
-  
-  .search-results-container {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(208, 188, 255, 0.2);
-  }
-  
-  .search-result-tabs {
-    border-bottom-color: rgba(0, 0, 0, 0.1);
-  }
-  
-  .search-result-tab {
-    color: rgba(0, 0, 0, 0.7);
-  }
-  
-  .search-result-tab:hover {
-    background-color: rgba(208, 188, 255, 0.08);
-    color: rgba(0, 0, 0, 0.9);
-  }
-  
-  .search-result-name {
-    color: var(--text-primary, #000000);
-  }
-  
-  .search-result-username {
-    color: rgba(0, 0, 0, 0.6);
-  }
-  
-  .search-no-results {
-    color: rgba(0, 0, 0, 0.6);
-  }
-  
-  .clear-button:hover {
-    background-color: rgba(208, 188, 255, 0.1);
-  }
-}
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {

@@ -80,12 +80,7 @@
   }
 }
 
-@media (prefers-color-scheme: light) {
-  .sidebar-container {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.08);
-  }
-}
+
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {

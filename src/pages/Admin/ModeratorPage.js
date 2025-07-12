@@ -99,6 +99,7 @@ import StarsIcon from '@mui/icons-material/Stars';
 import DecorationMenu from '../../UIKIT/DecorationMenu';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CheckIcon from '@mui/icons-material/Check';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -168,6 +169,7 @@ const ModeratorPage = () => {
   const [comments, setComments] = useState([]);
   const [badges, setBadges] = useState([]);
   const [artists, setArtists] = useState([]);
+  const [logs, setLogs] = useState([]);
   
   
   const [deletePostDialogOpen, setDeletePostDialogOpen] = useState(false);
@@ -834,6 +836,10 @@ const ModeratorPage = () => {
           fetchArtists();
         }
         break;
+      case 8:
+        setLogs([]);
+        fetchLogs();
+        break;
       default:
         break;
     }
@@ -1187,6 +1193,22 @@ const ModeratorPage = () => {
       showNotification('error', 'Не удалось загрузить артистов');
     } finally {
       loadMore ? setLoadingMore(false) : setLoading(false);
+    }
+  };
+
+  const fetchLogs = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('/api/moderator/logs');
+      
+      if (response.data.success) {
+        setLogs(response.data.logs);
+      }
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+      showNotification('error', 'Ошибка при загрузке логов');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -4390,6 +4412,229 @@ const ModeratorPage = () => {
     setSelectedUserForDecorations(null);
   };
 
+  const renderLogs = () => {
+    return (
+      <>
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+            Логи действий модераторов
+          </Typography>
+          <Button
+            variant="outlined"
+            onClick={fetchLogs}
+            disabled={loading}
+            startIcon={loading ? <CircularProgress size={20} /> : <ListAltIcon />}
+            sx={{
+              borderRadius: 8,
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: 'rgba(255, 255, 255, 0.7)',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                background: 'rgba(255, 255, 255, 0.05)'
+              }
+            }}
+          >
+            Обновить
+          </Button>
+        </Box>
+
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+            <CircularProgress size={40} />
+          </Box>
+        ) : logs.length === 0 ? (
+          <Box 
+            sx={{ 
+              textAlign: 'center', 
+              py: 2,
+              borderRadius: 2,
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+            }}
+          >
+            <ListAltIcon sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.3)', mb: 2 }} />
+            <Typography variant="h6" color="rgba(255, 255, 255, 0.5)" gutterBottom>
+              Логи отсутствуют
+            </Typography>
+            <Typography variant="body2" color="rgba(255, 255, 255, 0.4)">
+              Нажмите "Обновить" для загрузки логов
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ px: 0 }}>
+            {logs.map((log, index) => (
+              <Box
+                key={log.id}
+                sx={{
+                  mb: 2,
+                  p: 3,
+                  borderRadius: 1,
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  }
+                }}
+              >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar
+                      src={log.moderator_avatar ? `static/uploads/${log.moderator_avatar}` : undefined}
+                      sx={{ 
+                        width: 40, 
+                        height: 40, 
+                        bgcolor: 'primary.main',
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      {log.moderator_name ? log.moderator_name.charAt(0).toUpperCase() : 'M'}
+                    </Avatar>
+                    <Box>
+                      <Typography variant="subtitle1" sx={{ color: 'rgba(255, 255, 255, 0.87)', fontWeight: 500 }}>
+                        {log.moderator_name || 'Неизвестный модератор'}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                        @{log.moderator_username || 'unknown'}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+                    {new Date(log.timestamp).toLocaleString('ru-RU')}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ mb: 2 }}>
+                  <Chip
+                    label={getActionTypeLabel(log.action_type)}
+                    size="small"
+                    sx={{
+                      borderRadius: 1,
+                      background: getActionTypeColor(log.action_type),
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontWeight: 500,
+                      fontSize: '0.75rem'
+                    }}
+                  />
+                </Box>
+
+                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
+                  <strong>Действие:</strong> {getActionTypeDescription(log.action_type)}
+                </Typography>
+
+                {log.target_id && (
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
+                    <strong>ID объекта:</strong> {log.target_id}
+                  </Typography>
+                )}
+
+                {log.details && (
+                  <Box 
+                    sx={{ 
+                      mt: 2, 
+                      p: 2, 
+                      borderRadius: 1, 
+                      background: 'rgba(0, 0, 0, 0.2)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)'
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+                      {log.details}
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
+            ))}
+          </Box>
+        )}
+      </>
+    );
+  };
+
+  const getActionTypeLabel = (actionType) => {
+    const labels = {
+      'delete_post': 'Удаление поста',
+      'delete_track': 'Удаление трека',
+      'delete_comment': 'Удаление комментария',
+      'delete_avatar': 'Удаление аватара',
+      'update_user': 'Обновление пользователя',
+      'delete_bug_report': 'Удаление баг-репорта',
+      'update_bug_report': 'Обновление баг-репорта',
+      'edit_badge': 'Редактирование бейджа',
+      'delete_badge': 'Удаление бейджа',
+      'manage_artist': 'Управление артистом',
+      'delete_artist': 'Удаление артиста',
+      'issue_warning': 'Выдача предупреждения',
+      'remove_warning': 'Снятие предупреждения',
+      'ban_user': 'Бан пользователя',
+      'unban_user': 'Снятие бана',
+      'issue_medal': 'Выдача медали',
+      'verify_user': 'Верификация пользователя',
+      'generate_keys': 'Генерация ключей',
+      'delete_key': 'Удаление ключа',
+      'grant_decoration': 'Выдача декорации',
+      'revoke_decoration': 'Отзыв декорации'
+    };
+    return labels[actionType] || actionType;
+  };
+
+  const getActionTypeColor = (actionType) => {
+    const colors = {
+      'delete_post': 'rgba(244, 67, 54, 0.2)',
+      'delete_track': 'rgba(244, 67, 54, 0.2)',
+      'delete_comment': 'rgba(244, 67, 54, 0.2)',
+      'delete_avatar': 'rgba(244, 67, 54, 0.2)',
+      'update_user': 'rgba(33, 150, 243, 0.2)',
+      'delete_bug_report': 'rgba(244, 67, 54, 0.2)',
+      'update_bug_report': 'rgba(76, 175, 80, 0.2)',
+      'edit_badge': 'rgba(255, 193, 7, 0.2)',
+      'delete_badge': 'rgba(244, 67, 54, 0.2)',
+      'manage_artist': 'rgba(156, 39, 176, 0.2)',
+      'delete_artist': 'rgba(244, 67, 54, 0.2)',
+      'issue_warning': 'rgba(255, 152, 0, 0.2)',
+      'remove_warning': 'rgba(76, 175, 80, 0.2)',
+      'ban_user': 'rgba(244, 67, 54, 0.2)',
+      'unban_user': 'rgba(76, 175, 80, 0.2)',
+      'issue_medal': 'rgba(255, 193, 7, 0.2)',
+      'verify_user': 'rgba(76, 175, 80, 0.2)',
+      'generate_keys': 'rgba(156, 39, 176, 0.2)',
+      'delete_key': 'rgba(244, 67, 54, 0.2)',
+      'grant_decoration': 'rgba(76, 175, 80, 0.2)',
+      'revoke_decoration': 'rgba(244, 67, 54, 0.2)'
+    };
+    return colors[actionType] || 'rgba(158, 158, 158, 0.2)';
+  };
+
+  const getActionTypeDescription = (actionType) => {
+    const descriptions = {
+      'delete_post': 'Модератор удалил пост',
+      'delete_track': 'Модератор удалил музыкальный трек',
+      'delete_comment': 'Модератор удалил комментарий',
+      'delete_avatar': 'Модератор удалил аватар пользователя',
+      'update_user': 'Модератор обновил информацию о пользователе',
+      'delete_bug_report': 'Модератор удалил баг-репорт',
+      'update_bug_report': 'Модератор обновил статус баг-репорта',
+      'edit_badge': 'Модератор отредактировал бейдж',
+      'delete_badge': 'Модератор удалил бейдж',
+      'manage_artist': 'Модератор управлял артистом',
+      'delete_artist': 'Модератор удалил артиста',
+      'issue_warning': 'Модератор выдал предупреждение пользователю',
+      'remove_warning': 'Модератор снял предупреждение с пользователя',
+      'ban_user': 'Модератор забанил пользователя',
+      'unban_user': 'Модератор снял бан с пользователя',
+      'issue_medal': 'Модератор выдал медаль пользователю',
+      'verify_user': 'Модератор верифицировал пользователя',
+      'generate_keys': 'Модератор сгенерировал ключи',
+      'delete_key': 'Модератор удалил ключ',
+      'grant_decoration': 'Модератор выдал декорацию пользователю',
+      'revoke_decoration': 'Модератор отозвал декорацию у пользователя'
+    };
+    return descriptions[actionType] || `Выполнено действие: ${actionType}`;
+  };
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       
@@ -4466,6 +4711,7 @@ const ModeratorPage = () => {
           <Tab icon={<BugReportIcon />} label="Баг-репорты" disabled={!permissions.manage_bug_reports && !permissions.delete_bug_reports} />
           <Tab icon={<EmojiEventsIcon />} label="Бейджики" disabled={!permissions.edit_badges && !permissions.delete_badges} />
           <Tab icon={<PersonAddIcon />} label="Артисты" disabled={!permissions.manage_artists && !permissions.delete_artists} />
+          <Tab icon={<ListAltIcon />} label="Логи" />
         </Tabs>
         
         
@@ -4478,6 +4724,7 @@ const ModeratorPage = () => {
           {tabValue === 5 && renderBugReports()}
           {tabValue === 6 && renderBadges()}
           {tabValue === 7 && renderArtists()}
+          {tabValue === 8 && renderLogs()}
         </Box>
       </Paper>
       

@@ -200,9 +200,16 @@ export const AuthProvider = ({ children }) => {
         
         
         if (!credentials.preventRedirect) {
-
-          
-          window.location.href = '/';
+          // Проверяем, есть ли deeplink trackId в localStorage
+          const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
+          if (deeplinkTrackId) {
+            // Если есть deeplink, переходим на страницу музыки
+            console.log('Redirecting to music page with deeplink trackId:', deeplinkTrackId);
+            window.location.href = `/music/track/${deeplinkTrackId}`;
+          } else {
+            // Обычный редирект на главную
+            window.location.href = '/';
+          }
           return { success: true, user: response.user };
         }
         

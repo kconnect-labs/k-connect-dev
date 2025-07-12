@@ -86,26 +86,6 @@
   }
 }
 
-/* Поддержка светлой темы */
-@media (prefers-color-scheme: light) {
-  .footer-title {
-    color: rgba(0, 0, 0, 0.95);
-    text-shadow: none;
-  }
-  
-  .footer-text {
-    color: rgba(0, 0, 0, 0.7);
-  }
-  
-  .footer-text:hover {
-    color: rgba(0, 0, 0, 0.9);
-  }
-  
-  .contact-info {
-    border-top-color: rgba(0, 0, 0, 0.1);
-  }
-}
-
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .version-chip {

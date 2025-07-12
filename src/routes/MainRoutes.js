@@ -91,7 +91,15 @@ const MainRoutes = ({ setUser, background }) => {
           <Route path="/music/all" element={isAuthenticated ? <AllTracksPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/playlists" element={isAuthenticated ? <PlaylistsPage /> : <Navigate to="/login" replace />} />
           <Route path="/music/:section" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/track/:trackId" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
+          <Route path="/music/track/:trackId" element={
+            loading ? (
+              <LoadingIndicator />
+            ) : isAuthenticated ? (
+              <MusicPage />
+            ) : (
+              <Navigate to="/login" replace state={{ from: location.pathname }} />
+            )
+          } />
           <Route path="/artist/:artistParam" element={isAuthenticated ? <ArtistPage /> : <Navigate to="/login" replace />} />
           <Route path="/messenger" element={isAuthenticated ? <MessengerPage /> : <Navigate to="/login" replace />} />
           <Route path="/messenger/join/:inviteCode" element={isAuthenticated ? <JoinGroupChat /> : <Navigate to="/login" replace />} />

@@ -49,6 +49,14 @@ export const RequireAuth = ({ children }) => {
     return children;
   }
   
+  // Сохраняем deeplink trackId в localStorage перед редиректом на логин
+  if (location.pathname.startsWith('/music/track/')) {
+    const trackId = location.pathname.split('/music/track/')[1];
+    if (trackId) {
+      console.log('Saving deeplink trackId before login redirect:', trackId);
+      localStorage.setItem('deeplinkTrackId', trackId);
+    }
+  }
   
   return (
     <Navigate 

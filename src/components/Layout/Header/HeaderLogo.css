@@ -44,16 +44,6 @@
   font-weight: var(--font-weight-black);
 }
 
-/* Поддержка светлой темы */
-@media (prefers-color-scheme: light) {
-  .logo-text {
-    color: inherit;
-  }
-  
-  .logo-text-content {
-    color: #000000;
-  }
-}
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {

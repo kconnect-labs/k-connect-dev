@@ -962,15 +962,29 @@ const BadgeShopPage = () => {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    if (file && file.type === 'image/svg+xml') {
-      setNewBadge({ ...newBadge, image: file });
-      
-      
-      const fileUrl = URL.createObjectURL(file);
-      setPreviewUrl(fileUrl);
-    } else {
-      setError('Пожалуйста, загрузите SVG файл');
+    if (!file) return;
+
+    // Проверяем тип файла
+    const allowedTypes = ['image/svg+xml', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Пожалуйста, загрузите SVG или GIF файл');
+      return;
     }
+
+    // Проверяем размер файла (100 КБ = 100 * 1024 байт)
+    const maxSize = 100 * 1024;
+    if (file.size > maxSize) {
+      const fileSizeKB = Math.round(file.size / 1024);
+      setError(`Размер файла превышает лимит в 100 КБ. Текущий размер: ${fileSizeKB} КБ`);
+      return;
+    }
+
+    setNewBadge({ ...newBadge, image: file });
+    setError(''); // Очищаем предыдущие ошибки
+    
+    // Создаем превью
+    const fileUrl = URL.createObjectURL(file);
+    setPreviewUrl(fileUrl);
   };
 
   const handleBadgeClick = (badge) => {
@@ -1724,7 +1738,10 @@ const BadgeShopPage = () => {
                 Требования к изображению:
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                • Загружайте только SVG формат
+                • Загружайте только SVG или GIF формат
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                • Максимальный размер файла: 100 КБ
               </Typography>
               <Typography variant="body2" color="textSecondary">
                 • Максимальная ширина: 100px
@@ -1865,7 +1882,7 @@ const BadgeShopPage = () => {
               <input
                 type="file"
                 hidden
-                accept=".svg"
+                accept=".svg,.gif"
                 onChange={handleImageChange}
               />
               <Box sx={{ textAlign: 'center' }}>
@@ -1873,23 +1890,26 @@ const BadgeShopPage = () => {
                   <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     <img 
                       src={previewUrl} 
-                      alt="SVG Preview" 
+                      alt="File Preview" 
                       style={{ 
                         height: 80, 
                         maxWidth: '100%', 
-                        marginBottom: theme.spacing(2),
+                        marginBottom: theme.spacing(1),
                         filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.1))'
                       }} 
                     />
+                    <Typography variant="caption" color="textSecondary" sx={{ mb: 1 }}>
+                      Размер: {Math.round(newBadge.image?.size / 1024)} КБ
+                    </Typography>
                     <Typography variant="body2" color="primary">
                       Нажмите, чтобы выбрать другой файл
-              </Typography>
+                    </Typography>
                   </Box>
                 ) : (
                   <>
 
                     <Typography variant="subtitle1" gutterBottom>
-                      Загрузите SVG изображение
+                      Загрузите SVG или GIF изображение
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                       Перетащите файл сюда или нажмите для выбора

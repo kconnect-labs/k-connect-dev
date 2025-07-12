@@ -68,6 +68,7 @@ export const MusicContext = createContext({
   setPlaylistTracks: () => {},
   openFullScreenPlayer: () => {},
   closeFullScreenPlayer: () => {},
+  playTrackById: () => {},
 });
 
 
@@ -602,7 +603,6 @@ export const MusicProvider = ({ children }) => {
   const playTrack = (track, section = null) => {
     
     if (isTrackLoading) {
-
       return;
     }
     
@@ -746,7 +746,6 @@ export const MusicProvider = ({ children }) => {
   
   const togglePlay = () => {
     if (isTrackLoading) {
-
       return;
     }
     
@@ -2532,6 +2531,36 @@ export const MusicProvider = ({ children }) => {
   }, [currentSection]);
   
   
+  // --- ФУНКЦИЯ: Загрузить трек по ID (без автозапуска) ---
+  const playTrackById = useCallback(async (trackId) => {
+    if (!trackId) return;
+    
+    try {
+      const response = await axios.get(`/api/music/${trackId}`);
+      if (response.data && response.data.success && response.data.track) {
+        // Просто устанавливаем трек как текущий, без автозапуска
+        setCurrentTrack(response.data.track);
+        console.log('Track loaded for deeplink:', trackId);
+      } else {
+        console.error('Failed to load track:', trackId);
+      }
+    } catch (e) {
+      console.error('Error loading track:', e);
+    }
+  }, []);
+
+  // --- Deeplink: загрузка трека по ID из localStorage ---
+  useEffect(() => {
+    // Проверяем, есть ли deeplink trackId в localStorage
+    const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
+    if (deeplinkTrackId) {
+      // Загружаем трек без автозапуска
+      playTrackById(deeplinkTrackId);
+      localStorage.removeItem('deeplinkTrackId');
+    }
+  }, [playTrackById]);
+
+  
   const musicContextValue = {
     tracks,
     popularTracks,
@@ -2579,6 +2608,7 @@ export const MusicProvider = ({ children }) => {
     openFullScreenPlayer,
     closeFullScreenPlayer,
     forceLoadTracks,
+    playTrackById,
   };
 
   return (

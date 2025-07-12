@@ -96,39 +96,7 @@
   padding: 0 4px;
 }
 
-/* Theme support */
-[data-theme="light"] .bottom-navigation {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.9);
-}
 
-[data-theme="light"] .bottom-nav-item {
-  color: rgba(0, 0, 0, 0.7);
-}
-
-[data-theme="light"] .bottom-nav-item:hover {
-  color: rgba(0, 0, 0, 0.9);
-}
-
-[data-theme="light"] .bottom-nav-item.active {
-  color: var(--primary-main, #D0BCFF);
-}
-
-[data-theme="contrast"] .bottom-navigation {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  background: #101010;
-}
-
-[data-theme="contrast"] .bottom-nav-item {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-[data-theme="contrast"] .bottom-nav-item:hover {
-  color: rgba(255, 255, 255, 1);
-}
-
-[data-theme="contrast"] .bottom-nav-item.active {
-  color: var(--primary-main, #D0BCFF);
 }
 
 /* CSS Variables */

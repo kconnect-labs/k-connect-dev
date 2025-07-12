@@ -210,44 +210,6 @@
   color: #f44336;
 }
 
-/* Светлая тема */
-@media (prefers-color-scheme: light) {
-  .nav-button {
-    color: rgba(0, 0, 0, 0.9);
-  }
-  
-  .nav-button:hover {
-    background-color: rgba(0, 0, 0, 0.04);
-  }
-  
-  .nav-button--active {
-    background-color: rgba(0, 0, 0, 0.08);
-  }
-  
-  .nav-button--active:hover {
-    background-color: rgba(0, 0, 0, 0.12);
-  }
-  
-  .nav-button__icon {
-    color: rgba(0, 0, 0, 0.75);
-  }
-  
-  .nav-button:hover .nav-button__icon {
-    color: rgba(0, 0, 0, 0.95);
-  }
-  
-  .nav-button__text {
-    color: rgba(0, 0, 0, 0.9);
-  }
-  
-  .more-button__arrow {
-    color: rgba(0, 0, 0, 0.75);
-  }
-  
-  .more-button:hover .more-button__arrow {
-    color: rgba(0, 0, 0, 0.95);
-  }
-}
 
 /* Адаптивность */
 @media (max-width: 1200px) {

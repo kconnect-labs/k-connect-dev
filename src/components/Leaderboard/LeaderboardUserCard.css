@@ -213,16 +213,6 @@
   }
 }
 
-/* Светлая тема */
-@media (prefers-color-scheme: light) {
-  :root {
-    --card-background: #ffffff;
-    --text-primary: rgba(0, 0, 0, 0.87);
-    --text-secondary: rgba(0, 0, 0, 0.6);
-    --border-color: rgba(0, 0, 0, 0.12);
-    --rank-background: #757575;
-  }
-}
 
 /* Поддержка кастомных тем через CSS переменные */
 .leaderboard-LEAD-user-card[data-theme="light"] {

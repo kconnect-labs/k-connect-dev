@@ -63,29 +63,6 @@
   line-height: 1.2;
 }
 
-/* Поддержка светлой темы */
-@media (prefers-color-scheme: light) {
-  .user-profile-wrapper {
-    color: inherit;
-  }
-  
-  .SIDEBAR-user-avatar {
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-  
-  .user-name {
-    color: inherit;
-  }
-  
-  .user-name-tag {
-    color: rgba(0, 0, 0, 0.5);
-  }
-  
-  .user-profile-wrapper:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-}
-
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .user-profile-wrapper {

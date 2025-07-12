@@ -35,11 +35,7 @@
   }
 }
 
-@media (prefers-color-scheme: light) {
-  .bottom-navigation {
-    border-top-color: rgba(0, 0, 0, 0.1);
-  }
-}
+
 
 /* Оптимизации для производительности */
 .bottom-navigation {
@@ -85,21 +81,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-}
-
-/* Поддержка темной темы для actions */
-@media (prefers-color-scheme: light) {
-  .bottom-navigation-action {
-    color: rgba(0, 0, 0, 0.7) !important;
-  }
-  
-  .bottom-navigation-action:hover {
-    color: rgba(0, 0, 0, 0.9) !important;
-  }
-  
-  .bottom-navigation-action--active {
-    color: inherit !important;
-  }
 }
 
 /* Поддержка печати */

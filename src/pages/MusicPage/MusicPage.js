@@ -19,7 +19,7 @@ import {
   PauseRounded,
   MusicNote
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useMusic } from '../../context/MusicContext';
 import MyVibeWidget from './components/MyVibeWidget';
 import ChartsBlock from './components/ChartsBlock';
@@ -31,10 +31,12 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const MusicPage = () => {
   const navigate = useNavigate();
+  const { trackId } = useParams();
   const { 
     currentTrack, 
     isPlaying, 
     playTrack, 
+    playTrackById,
     pauseTrack, 
     currentSection,
     togglePlay
@@ -87,6 +89,22 @@ const MusicPage = () => {
     }
     setSnackbar({ ...snackbar, open: false });
   };
+
+  // --- Deeplink: обработка trackId из URL ---
+  React.useEffect(() => {
+    if (trackId) {
+      console.log('Deeplink trackId detected:', trackId);
+      
+      // Если пользователь авторизован, загружаем трек
+      if (typeof playTrackById === 'function') {
+        playTrackById(trackId);
+      } else {
+        // Если не авторизован, сохраняем в localStorage
+        console.log('User not authenticated, saving trackId to localStorage:', trackId);
+        localStorage.setItem('deeplinkTrackId', trackId);
+      }
+    }
+  }, [trackId, playTrackById]);
 
   return (
 		<Box sx={{ p: 1, paddingBottom: 10 }}>
