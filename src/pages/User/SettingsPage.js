@@ -173,6 +173,8 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import { SessionManager } from '../../UIKIT';
 import ColorizeIcon from '@mui/icons-material/Colorize';
 import DeleteChannelDialog from '../../components/DeleteChannelDialog';
+import { useBlurOptimization } from '../../hooks/useBlurOptimization';
+import BlurOffIcon from '@mui/icons-material/BlurOff';
 
 
 const SettingsContainer = styled(Container)(({ theme }) => ({
@@ -2103,6 +2105,10 @@ const SettingsPage = () => {
   const { user, updateUserData } = useContext(AuthContext);
   const { themeSettings, updateThemeSettings, setProfileBackground, clearProfileBackground, globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
   const { enqueueSnackbar } = useSnackbar();
+  
+  // Хук для оптимизации блюра
+  const blurOptimization = useBlurOptimization();
+  const { isEnabled: blurOptimizationEnabled, toggleBlurOptimization } = blurOptimization;
   
   const [userDecorations, setUserDecorations] = useState([]);
   const [loadingDecorations, setLoadingDecorations] = useState(false);
@@ -5019,6 +5025,7 @@ const SettingsPage = () => {
                         </Box>
                       </Box>
                     )}
+                    
                     {/* Accent Color Picker */}
                     <Box sx={{ mt: 2 }}>
                       <AccentColorBlock />
@@ -5035,6 +5042,30 @@ const SettingsPage = () => {
                     <ProfileKonnectModal open={konnectModalOpen} onClose={() => setKonnectModalOpen(false)} />
                   </Box>
                 )}
+                
+                {/* Экспериментальная функция: оптимизация блюра - доступна всем */}
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
+                    Экспериментальные функции
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <IOSSwitch
+                      checked={blurOptimizationEnabled}
+                      onChange={toggleBlurOptimization}
+                      disabled={blurOptimization.isLoading}
+                      inputProps={{ 'aria-label': 'Экспериментальная функция: Оптимизация блюра' }}
+                    />
+                    <Box>
+                      <Typography variant="body2" fontWeight={500}>
+                        Экспериментальная функция: Оптимизация блюра
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                        Отключает blur эффекты для улучшения производительности. Добавляет легкий эффект зернистости и изменяет цвет хедера.
+                      </Typography>
+                    </Box>
+                    <BlurOffIcon sx={{ color: 'text.secondary', ml: 'auto' }} />
+                  </Box>
+                </Box>
               </SettingsCardContent>
             </SettingsCard>
           </Box>

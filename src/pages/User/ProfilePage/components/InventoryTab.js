@@ -92,21 +92,21 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, onEquippedItemsUpdate, 
         const foundInCurrentInventory = inventory.find(i => String(i.id) === String(itemIdToOpen));
         if (foundInCurrentInventory) {
           setSelectedItem(foundInCurrentInventory);
-          setReadOnlyItem(false);
-          setModalLoading(false);
-        } else {
+              setReadOnlyItem(false);
+              setModalLoading(false);
+            } else {
           axios.get(`/api/inventory/item/${itemIdToOpen}/details`)
-            .then(r => {
-              if (r.data.success && r.data.item) {
-                setSelectedItem(r.data.item);
-                setReadOnlyItem(true);
-              } else {
-                setModalError('Не удалось получить предмет');
-              }
-            })
-            .catch(() => setModalError('Ошибка при получении предмета'))
-            .finally(() => setModalLoading(false));
-        }
+                .then(r => {
+                  if (r.data.success && r.data.item) {
+                    setSelectedItem(r.data.item);
+                    setReadOnlyItem(true);
+                  } else {
+                    setModalError('Не удалось получить предмет');
+                  }
+                })
+                .catch(() => setModalError('Ошибка при получении предмета'))
+                .finally(() => setModalLoading(false));
+            }
       }
     }, [itemIdToOpen, userId, inventory]);
   

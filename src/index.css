@@ -31,6 +31,14 @@
   font-style: normal;
   font-display: swap;
 }
+html, body, #root {
+  transform: translateZ(0);
+  will-change: transform, opacity, backdrop-filter;
+}
+
+body {
+  overflow-y: hidden;
+}
 
 :root {
   --primary: #D0BCFF;
@@ -88,18 +96,17 @@ body {
 }
 
 /* Стили для фоновых изображений профиля */
-.profile-background-active {
+.profile-background-active:not(body) {
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
   background-attachment: fixed !important;
   height: 100vh !important;
-  overflow: auto !important;
 }
 
 /* Для мобильных устройств с фоновыми изображениями */
 @supports (-webkit-touch-callout: none) {
-  .profile-background-active {
+  .profile-background-active:not(body) {
     height: -webkit-fill-available !important;
   }
 }

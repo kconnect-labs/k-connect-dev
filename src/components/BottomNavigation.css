@@ -7,11 +7,10 @@
   right: 0;
   display: block;
   z-index: 1000;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(43, 43, 43, 0.606);
+  background: rgba(23, 23, 23, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 700px) {

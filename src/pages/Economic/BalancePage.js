@@ -70,7 +70,7 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import CallReceivedIcon from '@mui/icons-material/CallReceived';
 import CasinoIcon from '@mui/icons-material/Casino';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import { TransferMenu } from '../../UIKIT';
+import TransferMenu from '../../UIKIT/TransferMenu';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InfoBlock from '../../UIKIT/InfoBlock';

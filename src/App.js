@@ -8,6 +8,7 @@ import AppBottomNavigation from './components/BottomNavigation.tsx';
 import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
+import { useBlurOptimization } from './hooks/useBlurOptimization';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -688,6 +689,10 @@ const SessionProvider = ({ children }) => {
 function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
+  
+  // Глобальный хук оптимизации блюра
+  const blurOptimization = useBlurOptimization();
+  
   const [themeSettings, setThemeSettings] = useState(() => {
     const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
     const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
@@ -880,22 +885,8 @@ function App() {
 
   useEffect(() => {
     if (profileBackground) {
-      document.body.style.backgroundImage = `url(${profileBackground})`;
-      document.body.style.backgroundSize = 'cover';
-      document.body.style.backgroundPosition = 'center';
-      document.body.style.backgroundRepeat = 'no-repeat';
-      document.body.style.backgroundAttachment = 'fixed';
-      document.body.style.height = '100vh';
-      document.body.style.overflow = 'auto';
       document.body.classList.add('profile-background-active');
     } else {
-      document.body.style.backgroundImage = '';
-      document.body.style.backgroundSize = '';
-      document.body.style.backgroundPosition = '';
-      document.body.style.backgroundRepeat = '';
-      document.body.style.backgroundAttachment = '';
-      document.body.style.height = '';
-      document.body.style.overflow = '';
       document.body.classList.remove('profile-background-active');
     }
   }, [profileBackground]);
@@ -1093,6 +1084,32 @@ function App() {
     // Загружаем настройки при инициализации приложения
     loadUserSettings();
   }, []);
+
+  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра ---
+  useEffect(() => {
+    // Применяем оптимизацию блюра при загрузке приложения
+    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
+      console.log('🔄 Применяем оптимизацию блюра при загрузке приложения');
+      // Хук автоматически применит оптимизацию при изменении isEnabled
+    }
+  }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
+
+  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
+  useEffect(() => {
+    // Применяем оптимизацию блюра при переходе между страницами
+    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
+      console.log('🔄 Применяем оптимизацию блюра при переходе на:', location.pathname);
+      // Небольшая задержка для применения эффектов после рендера новой страницы
+      const timer = setTimeout(() => {
+        if (blurOptimization.isEnabled) {
+          // Принудительно применяем оптимизацию
+          blurOptimization.enableBlurOptimization();
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [location.pathname, blurOptimization.isEnabled, blurOptimization.isLoading]);
 
 
 
