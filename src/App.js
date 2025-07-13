@@ -546,13 +546,20 @@ function App() {
         if (bgResponse.data && bgResponse.data.success) {
           setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
           
-          // Если есть background URL в ответе, сохраняем его
+          // Если есть background URL в ответе
           if (bgResponse.data.background_url) {
-            saveUserBackground(bgResponse.data.background_url);
-            
-            // Если глобальные обои включены, применяем их сразу
             if (bgResponse.data.enabled) {
+              // Если глобальные обои включены, сохраняем и применяем их
+              saveUserBackground(bgResponse.data.background_url);
               setProfileBackground(bgResponse.data.background_url);
+            } else {
+              // Если глобальные обои выключены, удаляем из localStorage если там есть
+              const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+              if (savedBg) {
+                localStorage.removeItem('myProfileBackgroundUrl');
+                document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              }
+              clearProfileBackground();
             }
           }
         }
