@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface ProfileInfo {
   name: string;
@@ -25,6 +25,28 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Загружаем текущие данные профиля при инициализации
+  useEffect(() => {
+    const loadProfileInfo = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        const data = await response.json();
+        
+        if (response.ok && data.user) {
+          setProfileInfo({
+            name: data.user.name || '',
+            username: data.user.username || '',
+            about: data.user.about || '',
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load profile info:', err);
+      }
+    };
+
+    loadProfileInfo();
+  }, []);
 
   const updateName = useCallback(async (name: string) => {
     setLoading(true);
@@ -97,14 +119,14 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          about: about
+          about: about || '' // Отправляем пустую строку если about пустой
         }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setProfileInfo(prev => ({ ...prev, about }));
+        setProfileInfo(prev => ({ ...prev, about: about || '' }));
       } else {
         throw new Error(data.error || 'Не удалось обновить описание');
       }
@@ -149,7 +171,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           fetch('/api/profile/update-about', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ about: info.about }),
+            body: JSON.stringify({ about: info.about || '' }),
           })
         );
       }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, TextField, Grid, Button, CircularProgress } from '@mui/material';
 import { Save as SaveIcon, Check as CheckIcon } from '@mui/icons-material';
 
@@ -30,6 +30,13 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [formData, setFormData] = useState<ProfileInfo>(profileInfo || defaultProfileInfo);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Обновляем форму при изменении profileInfo
+  useEffect(() => {
+    if (profileInfo) {
+      setFormData(profileInfo);
+    }
+  }, [profileInfo]);
 
   const handleChange = (field: keyof ProfileInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: event.target.value }));
