@@ -96,7 +96,13 @@ const RegisterChannel = () => {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        navigate('/channel-dashboard', { replace: true });
+        // Если есть ID созданного канала, редиректим на него
+        if (data.channel_id) {
+          navigate(`/profile/${data.channel_username || data.channel_id}`, { replace: true });
+        } else {
+          // Если нет ID канала, редиректим на главную
+          navigate('/', { replace: true });
+        }
       } else {
         setError(data.error || 'Произошла ошибка при создании канала');
       }

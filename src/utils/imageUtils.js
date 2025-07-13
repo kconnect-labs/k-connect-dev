@@ -745,6 +745,14 @@ export const addLazyLoadingToImages = (selector = 'img:not([loading])', force = 
   images.forEach((img) => {
     if (!force && img.hasAttribute('loading')) return;
 
+    // Исключение для аватарок пользователя - они должны загружаться сразу
+    if (img.classList.contains('SIDEBAR-user-avatar') || 
+        img.classList.contains('user-avatar') || 
+        img.classList.contains('profile-avatar')) {
+      img.setAttribute('loading', 'eager');
+      return;
+    }
+
     const rect = img.getBoundingClientRect();
     const isAboveFold = rect.top < window.innerHeight && rect.bottom > 0;
 

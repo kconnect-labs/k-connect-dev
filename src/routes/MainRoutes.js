@@ -1,13 +1,11 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import MainLayout from '../components/Layout/MainLayout';
 import { RequireAuth } from '../App';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
-const RegisterChannel = React.lazy(() => import('../pages/Auth/RegisterChannel'));
 const ProfilePage = React.lazy(() => import('../pages/User/ProfilePage'));
 const MainPage = React.lazy(() => import('../pages/Main/MainPage'));
 const PostDetailPage = React.lazy(() => import('../pages/Main/PostDetailPage'));
@@ -55,19 +53,63 @@ const FriendsRedirect = React.lazy(() => import('../components/Redirects/Friends
 const ReferralPage = React.lazy(() => import('../pages/ReferralPage'));
 
 const MainRoutes = ({ setUser, background }) => {
-  const { isAuthenticated, loading } = useContext(AuthContext);
+  const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
+
+  // Вспомогательная функция для проверки профиля
+  const hasProfile = () => {
+    return user && user.username && user.id;
+  };
+
+  // Компонент для защищенных роутов с проверкой профиля
+  const ProtectedRoute = ({ children }) => {
+    if (loading) {
+      return <LoadingIndicator />;
+    }
+    
+    if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
+    }
+    
+    // Если пользователь аутентифицирован, но у него нет профиля, и мы не на страницах регистрации
+    if (!hasProfile() && !location.pathname.includes('/register/')) {
+      return <Navigate to="/register/profile" replace />;
+    }
+    
+    return children;
+  };
+
+  // Компонент для роутов, которые требуют профиль
+  const ProfileRequiredRoute = ({ children }) => {
+    if (loading) {
+      return <LoadingIndicator />;
+    }
+    
+    if (!isAuthenticated) {
+      return <Navigate to="/login" replace />;
+    }
+    
+    if (!hasProfile()) {
+      return <Navigate to="/register/profile" replace />;
+    }
+    
+    return children;
+  };
 
   return (
     <MainLayout>
       <React.Suspense fallback={<LoadingIndicator />}>
         <Routes location={background || location}>
-          <Route path="/register/channel" element={<RegisterChannel />} />                    
           <Route path="/" element={
             loading ? (
               <LoadingIndicator />
             ) : isAuthenticated ? (
-              <MainPage />
+              hasProfile() ? (
+                <MainPage />
+              ) : (
+                // Если пользователь аутентифицирован, но у него нет профиля, перенаправляем на регистрацию
+                <Navigate to="/register/profile" replace />
+              )
             ) : (
               <Navigate to="/login" replace state={{ from: location.pathname }} />
             )
@@ -75,56 +117,60 @@ const MainRoutes = ({ setUser, background }) => {
           <Route path="/feed" element={<Navigate to="/" replace />} />
           <Route path="/main" element={<Navigate to="/" replace />} />                  
           <Route path="/post/:postId" element={<PostDetailPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/:username" element={<ProfilePage />} />
-          <Route path="/profile/:username/followers" element={isAuthenticated ? <SubscriptionsPage tabIndex={0} /> : <Navigate to="/login" replace />} />
-          <Route path="/profile/:username/following" element={isAuthenticated ? <SubscriptionsPage tabIndex={1} /> : <Navigate to="/login" replace />} />
-          <Route path="/subscriptions" element={isAuthenticated ? <SubscriptionsPage /> : <Navigate to="/login" replace />} />
-          <Route path="/settings" element={isAuthenticated ? <SettingsPage /> : <Navigate to="/login" replace />} />
-          <Route path="/notifications" element={isAuthenticated ? <NotificationsPage /> : <Navigate to="/login" replace />} />
-          <Route path="/search" element={isAuthenticated ? <SearchPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/liked" element={isAuthenticated ? <LikedTracksPage onBack={() => window.history.back()} /> : <Navigate to="/login" replace />} />
-          <Route path="/music/all" element={isAuthenticated ? <AllTracksPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/playlists" element={isAuthenticated ? <PlaylistsPage /> : <Navigate to="/login" replace />} />
-          <Route path="/music/:section" element={isAuthenticated ? <MusicPage /> : <Navigate to="/login" replace />} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/profile/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/profile/:username/followers" element={<ProtectedRoute><SubscriptionsPage tabIndex={0} /></ProtectedRoute>} />
+          <Route path="/profile/:username/following" element={<ProtectedRoute><SubscriptionsPage tabIndex={1} /></ProtectedRoute>} />
+          <Route path="/subscriptions" element={<ProtectedRoute><SubscriptionsPage /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+          <Route path="/music" element={<ProtectedRoute><MusicPage /></ProtectedRoute>} />
+          <Route path="/music/liked" element={<ProtectedRoute><LikedTracksPage onBack={() => window.history.back()} /></ProtectedRoute>} />
+          <Route path="/music/all" element={<ProtectedRoute><AllTracksPage /></ProtectedRoute>} />
+          <Route path="/music/playlists" element={<ProtectedRoute><PlaylistsPage /></ProtectedRoute>} />
+          <Route path="/music/:section" element={<ProtectedRoute><MusicPage /></ProtectedRoute>} />
           <Route path="/music/track/:trackId" element={
             loading ? (
               <LoadingIndicator />
             ) : isAuthenticated ? (
-              <MusicPage />
+              hasProfile() ? (
+                <MusicPage />
+              ) : (
+                <Navigate to="/register/profile" replace />
+              )
             ) : (
               <Navigate to="/login" replace state={{ from: location.pathname }} />
             )
           } />
-          <Route path="/artist/:artistParam" element={isAuthenticated ? <ArtistPage /> : <Navigate to="/login" replace />} />
-          <Route path="/messenger" element={isAuthenticated ? <MessengerPage /> : <Navigate to="/login" replace />} />
-          <Route path="/messenger/join/:inviteCode" element={isAuthenticated ? <JoinGroupChat /> : <Navigate to="/login" replace />} />
+          <Route path="/artist/:artistParam" element={<ProtectedRoute><ArtistPage /></ProtectedRoute>} />
+          <Route path="/messenger" element={<ProtectedRoute><MessengerPage /></ProtectedRoute>} />
+          <Route path="/messenger/join/:inviteCode" element={<ProtectedRoute><JoinGroupChat /></ProtectedRoute>} />
           <Route path="/bugs" element={<BugReportPage />} />
           <Route path="/leaderboard" element={<RequireAuth><LeaderboardPage /></RequireAuth>} />          
-          <Route path="/more" element={isAuthenticated ? <MorePage /> : <Navigate to="/login" replace />} />
-          <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/login" replace />} />
-          <Route path="/moderator" element={isAuthenticated ? <ModeratorPage /> : <Navigate to="/login" replace />} />
-          <Route path="/badge-shop" element={isAuthenticated ? <BadgeShopPage /> : <Navigate to="/login" replace />} />
-          <Route path="/username-auction" element={isAuthenticated ? <UsernameAuctionPage /> : <Navigate to="/login" replace />} />         
-          <Route path="/economic/packs" element={isAuthenticated ? <InventoryPackPage /> : <Navigate to="/login" replace />} />
-          <Route path="/economic/inventory" element={isAuthenticated ? <InventoryPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames" element={isAuthenticated ? <MiniGamesPage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/cups" element={isAuthenticated ? <CupsGamePage /> : <Navigate to="/login" replace />} />
-          <Route path="/minigames/blackjack" element={isAuthenticated ? <BlackjackPage /> : <Navigate to="/login" replace />} />
-          <Route path="/balance" element={isAuthenticated ? <BalancePage /> : <Navigate to="/login" replace />} />
-          <Route path="/documentapi" element={isAuthenticated ? <SimpleApiDocsPage /> : <Navigate to="/login" replace />} />
-          <Route path="/sub-planes" element={isAuthenticated ? <SubPlanes /> : <Navigate to="/login" replace />} />
+          <Route path="/more" element={<ProtectedRoute><MorePage /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+          <Route path="/moderator" element={<ProtectedRoute><ModeratorPage /></ProtectedRoute>} />
+          <Route path="/badge-shop" element={<ProtectedRoute><BadgeShopPage /></ProtectedRoute>} />
+          <Route path="/username-auction" element={<ProtectedRoute><UsernameAuctionPage /></ProtectedRoute>} />         
+          <Route path="/economic/packs" element={<ProtectedRoute><InventoryPackPage /></ProtectedRoute>} />
+          <Route path="/economic/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+          <Route path="/minigames" element={<ProtectedRoute><MiniGamesPage /></ProtectedRoute>} />
+          <Route path="/minigames/cups" element={<ProtectedRoute><CupsGamePage /></ProtectedRoute>} />
+          <Route path="/minigames/blackjack" element={<ProtectedRoute><BlackjackPage /></ProtectedRoute>} />
+          <Route path="/balance" element={<ProtectedRoute><BalancePage /></ProtectedRoute>} />
+          <Route path="/documentapi" element={<ProtectedRoute><SimpleApiDocsPage /></ProtectedRoute>} />
+          <Route path="/sub-planes" element={<ProtectedRoute><SubPlanes /></ProtectedRoute>} />
           <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
           <Route path="/updates" element={<UpdatesPage />} />
           <Route path="/badge/:badgeId" element={<Navigate to="/badge-shop" replace state={{ openBadgeId: (location.pathname.match(/\/badge\/(\d+)/)?.[1] || null) }} />} />
           <Route path="/marketplace" element={<MarketplacePage />} />
-          <Route path="/grant" element={isAuthenticated ? <GrantsPage /> : <Navigate to="/login" replace />} />
+          <Route path="/grant" element={<ProtectedRoute><GrantsPage /></ProtectedRoute>} />
           <Route path="/item/:itemId" element={<ItemRedirectPage />} />
           <Route path="/friends/:username" element={<FriendsPage />} />
           <Route path="/friends" element={<FriendsRedirect />} />
-          <Route path="/referral" element={isAuthenticated ? <ReferralPage /> : <Navigate to="/login" replace />} />
-          <Route path="/inform/sticker" element={isAuthenticated ? <StickerManagePage /> : <Navigate to="/login" replace />} />
+          <Route path="/referral" element={<ProtectedRoute><ReferralPage /></ProtectedRoute>} />
+          <Route path="/inform/sticker" element={<ProtectedRoute><StickerManagePage /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>                
         {background && (

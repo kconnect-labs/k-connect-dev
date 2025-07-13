@@ -28,26 +28,10 @@ export const AuthProvider = ({ children }) => {
   
   const [user, setUser] = useState(savedUser);
   const [isAuthenticated, setIsAuthenticated] = useState(!!savedAuthState);
-  const [loading, setLoading] = useState(!savedAuthState);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [lastAuthCheck, setLastAuthCheck] = useState(savedAuthState?.lastCheck || 0);
   const navigate = useNavigate();
   const themeContext = useContext(ThemeSettingsContext) || {};
-
-  
-  const logSessionState = () => {
-
-
-    const authCookies = document.cookie
-      .split(';')
-      .map(cookie => cookie.trim())
-      .filter(cookie => 
-        cookie.startsWith('connect.sid=') || 
-        cookie.startsWith('jwt=') || 
-        cookie.startsWith('auth=')
-      );
-
-  };
 
   
   const persistAuthState = (authState, userData) => {
@@ -61,7 +45,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('k-connect-user', JSON.stringify(userData));
       }
     } else {
-      
       localStorage.removeItem('k-connect-auth-state');
       localStorage.removeItem('k-connect-user');
     }
@@ -70,112 +53,44 @@ export const AuthProvider = ({ children }) => {
   
   const checkAuth = useCallback(async (force = false) => {
     try {
-      
-      
-      const now = Date.now();
-      if (!force && isAuthenticated && user && now - lastAuthCheck < 30 * 60 * 1000) { 
-
-        return user;
-      }
-      
-      
-      if (window._authCheckInProgress) {
-
-        return user;
-      }
-      
-      
-      window._authCheckInProgress = true;
-      
       setLoading(true);
-
-      
       
       const response = await AuthService.checkAuth();
-
-      
       
       if (response && response.data) {
         if (response.data.isAuthenticated && response.data.user) {
           const userData = response.data.user;
-
           setUser(userData);
           setIsAuthenticated(true);
-          setLastAuthCheck(now); 
-          
-          
           persistAuthState(true, userData);
-          
-          window._authCheckInProgress = false;
           return userData;
         } else if (response.data.needsProfileSetup || response.data.hasSession) {
-          
-
           setUser(null);
-          setIsAuthenticated(true); 
+          setIsAuthenticated(true);
           persistAuthState(true, null);
-          
-          
-          if (!window.location.pathname.includes('/register/profile')) {
-
-            navigate('/register/profile', { replace: true });
-          }
-          
-          window._authCheckInProgress = false;
           return null;
         } else {
-
           setUser(null);
           setIsAuthenticated(false);
           persistAuthState(false);
-          window._authCheckInProgress = false;
-          
-          
-          const publicPages = [
-            '/login',
-            '/register',
-            '/auth_elem',
-            '/rules',
-            '/privacy-policy',
-            '/terms-of-service',
-            '/about',
-            '/bugs',
-            '/post',
-            '/profile'
-          ];
-          
-          
-          const isPublicPage = publicPages.some(page => 
-            window.location.pathname.includes(page)
-          );
-          
-          
-          
-          if (force && !isPublicPage) {
-
-            navigate('/login', { replace: true });
-          }
+          return null;
         }
       } else {
-        console.warn('Invalid response from auth check:', response);
         setUser(null);
         setIsAuthenticated(false);
         persistAuthState(false);
-        window._authCheckInProgress = false;
+        return null;
       }
-      
-      return null;
     } catch (error) {
       console.error('Auth check error:', error);
       setUser(null);
       setIsAuthenticated(false);
       persistAuthState(false);
-      window._authCheckInProgress = false;
+      return null;
     } finally {
       setLoading(false);
-      window._authCheckInProgress = false;
     }
-  }, [lastAuthCheck, user, navigate, isAuthenticated]);
+  }, []);
 
   
   const login = useCallback(async (credentials) => {
@@ -186,60 +101,39 @@ export const AuthProvider = ({ children }) => {
       const response = await AuthService.login(credentials);
       
       if (response.success) {
-        
+        // Сначала устанавливаем аутентификацию
         setUser(response.user);
         setIsAuthenticated(true);
-        
-        
         persistAuthState(true, response.user);
-        
         
         if (themeContext && themeContext.loadThemeSettings) {
           themeContext.loadThemeSettings();
         }
         
-        
         if (!credentials.preventRedirect) {
-          // Проверяем, есть ли deeplink trackId в localStorage
-          const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
-          if (deeplinkTrackId) {
-            // Если есть deeplink, переходим на страницу музыки
-            console.log('Redirecting to music page with deeplink trackId:', deeplinkTrackId);
-            window.location.href = `/music/track/${deeplinkTrackId}`;
-          } else if (!response.user) {
-            // Обычный редирект на страницу регистрации профиля, если response.user отсутствует
-            window.location.href = '/register/profile';
+          // Проверяем, есть ли у пользователя профиль
+          if (!response.user || !response.user.username || !response.user.id) {
+            // У пользователя нет профиля - редирект на регистрацию профиля
+            navigate('/register/profile', { replace: true });
           } else {
-            // Обычный редирект на главную
-            window.location.href = '/';
+            // У пользователя есть профиль - редирект на главную
+            const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
+            if (deeplinkTrackId) {
+              window.location.href = `/music/track/${deeplinkTrackId}`;
+            } else {
+              navigate('/', { replace: true });
+            }
           }
-          return { success: true, user: response.user };
         }
         
-        return { success: true, user: response.user };
+        return { success: true };
       } else {
-        
-        if (response.ban_info) {
-
-          setError({ 
-            message: 'Аккаунт заблокирован', 
-            ban_info: response.ban_info 
-          });
-          return { 
-            success: false, 
-            error: 'Аккаунт заблокирован', 
-            ban_info: response.ban_info 
-          };
-        }
-        
-        
         const errorMessage = response.error || 'Ошибка при входе в систему';
         setError({ message: errorMessage });
         return { success: false, error: errorMessage };
       }
     } catch (error) {
       console.error('Login error:', error);
-      
       
       if (error.response?.data?.ban_info) {
         const banInfo = error.response.data.ban_info;
@@ -267,25 +161,19 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      
       await AuthService.logout();
-      
       
       localStorage.removeItem('token');
       persistAuthState(false);
       
       resetMessengerSocket();
       
-      
       setUser(null);
       setIsAuthenticated(false);
-      setLastAuthCheck(0);
-      
       
       if (themeContext && themeContext.loadThemeSettings) {
         themeContext.loadThemeSettings(true);
       }
-      
       
       navigate('/login', { replace: true });
       
@@ -311,14 +199,24 @@ export const AuthProvider = ({ children }) => {
       const response = await AuthService.registerProfile(profileData);
       
       if (response.success && response.user) {
-        
+        // Обновляем данные пользователя
         setUser(response.user);
         setIsAuthenticated(true);
-        
-        
         persistAuthState(true, response.user);
         
+        // Делаем дополнительную проверку аутентификации для обновления сессии
+        try {
+          const authCheck = await checkAuth(true);
+          if (authCheck) {
+            // Если проверка прошла успешно, обновляем данные
+            setUser(authCheck);
+            persistAuthState(true, authCheck);
+          }
+        } catch (error) {
+          console.warn('Auth check after profile registration failed:', error);
+        }
         
+        // Редирект на главную
         navigate('/', { replace: true });
         return { success: true };
       } else {
@@ -338,50 +236,14 @@ export const AuthProvider = ({ children }) => {
 
   
   useEffect(() => {
-    const initAuth = async () => {
-      
-      if (savedAuthState && savedUser) {
-        setUser(savedUser);
-        setIsAuthenticated(true);
-        setLoading(false);
-        
-        
-        setTimeout(() => {
-          checkAuth(false).catch(console.error);
-        }, 1000);
-      } else {
-        
-        try {
-          await checkAuth(false);
-        } catch (error) {
-          console.error('Initial auth check failed:', error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    
-    initAuth();
-  }, []);
-
-  
-  useEffect(() => {
-    
-    window._authCheckInProgress = false;
-    
-    
     const interceptor = axios.interceptors.response.use(
       response => response,
       error => {
-        
         if (error.response && error.response.status === 401) {
-          
-          
           if (isAuthenticated) {
             setUser(null);
             setIsAuthenticated(false);
             persistAuthState(false);
-            
             
             const currentPath = window.location.pathname;
             const publicPages = ['/login', '/register', '/rules', '/about', '/privacy-policy', '/terms-of-service', '/bugs'];
@@ -397,19 +259,28 @@ export const AuthProvider = ({ children }) => {
     );
     
     return () => {
-      
       axios.interceptors.response.eject(interceptor);
     };
   }, [isAuthenticated, navigate]);
 
-  
+  // Автоматическая проверка аутентификации при изменении состояния
   useEffect(() => {
-
-    
-    if (isAuthenticated && user) {
-      persistAuthState(true, user);
+    if (isAuthenticated && !user) {
+      // Если пользователь аутентифицирован, но данных нет, делаем проверку
+      checkAuth(true).catch(console.error);
     }
-  }, [isAuthenticated, loading, user]);
+  }, [isAuthenticated, user, checkAuth]);
+
+  // Принудительная загрузка аватарок при изменении пользователя
+  useEffect(() => {
+    if (user && typeof window !== 'undefined') {
+      // Импортируем функцию только при необходимости
+      import('../utils/imageUtils').then(({ addLazyLoadingToImages }) => {
+        // Принудительно загружаем аватарки пользователя
+        addLazyLoadingToImages('.SIDEBAR-user-avatar, .user-avatar, .profile-avatar', true);
+      });
+    }
+  }, [user]);
 
   
   const contextValue = {

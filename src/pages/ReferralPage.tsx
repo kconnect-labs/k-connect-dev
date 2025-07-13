@@ -669,7 +669,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                 }}>
                   {user.photo ? (
                     <img
-                      src={user.photo}
+                      src={user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`}
                       alt={user.name}
                       style={{
                         width: '100%',
@@ -677,10 +677,27 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                         borderRadius: '50%',
                         objectFit: 'cover'
                       }}
+                      onError={(e) => {
+                        // Если аватарка не загрузилась, показываем первую букву имени
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextSibling.style.display = 'flex';
+                      }}
                     />
-                  ) : (
-                    user.name.charAt(0).toUpperCase()
-                  )}
+                  ) : null}
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    display: user.photo ? 'none' : 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: 'rgba(255, 255, 255, 0.9)'
+                  }}>
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
                 </div>
                 
                 <div style={{ flex: 1 }}>
