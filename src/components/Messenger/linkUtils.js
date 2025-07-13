@@ -44,13 +44,23 @@ export const processTextWithLinks = (text, theme) => {
     const adjustedIndex = prefix ? match.index + prefix.length : match.index;
     const adjustedMatch = prefix ? fullMatch.substring(prefix.length) : fullMatch;
     
-    combinedMatches.push({
-      type: 'mention',
-      match: adjustedMatch,
-      username: username,
-      index: adjustedIndex,
-      length: adjustedMatch.length
-    });
+    // Проверяем, не находится ли это упоминание внутри URL
+    const isInsideUrl = combinedMatches.some(urlMatch => 
+      urlMatch.type === 'url' && 
+      adjustedIndex >= urlMatch.index && 
+      adjustedIndex < urlMatch.index + urlMatch.length
+    );
+    
+    // Если упоминание не внутри URL, добавляем его
+    if (!isInsideUrl) {
+      combinedMatches.push({
+        type: 'mention',
+        match: adjustedMatch,
+        username: username,
+        index: adjustedIndex,
+        length: adjustedMatch.length
+      });
+    }
   }
   
   // Поиск хештегов

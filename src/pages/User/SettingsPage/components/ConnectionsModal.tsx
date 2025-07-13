@@ -230,7 +230,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
       <Dialog
         open={open}
         onClose={onClose}
-        maxWidth="sm"
+        maxWidth={false}
         fullWidth
         PaperProps={{
           sx: {
@@ -238,8 +238,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: { xs: 0, sm: 2 },
+            width: { xs: '100%', sm: '100%' },
+            maxWidth: { xs: '100%', sm: 550 },
             minHeight: { xs: '100vh', sm: 'auto' },
-            maxHeight: { xs: '100vh', sm: '80vh' },
+            maxHeight: { xs: '100vh', sm: '90vh' },
             m: { xs: 0, sm: 2 }
           }
         }}
@@ -421,7 +423,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
       <Dialog
         open={telegramDialogOpen}
         onClose={() => setTelegramDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth={false}
         fullWidth
               PaperProps={{
         sx: {
@@ -430,10 +432,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: { xs: 0, sm: 2 },
           m: { xs: 0, sm: 2 },
-          width: { xs: '100%', sm: 'auto' },
+          width: { xs: '100%', sm: '100%' },
           height: { xs: '100vh', sm: 'auto' },
-          maxWidth: { xs: '100%', sm: 500 },
-          maxHeight: { xs: '100vh', sm: '80vh' }
+          maxWidth: { xs: '100%', sm: 550 },
+          maxHeight: { xs: '100vh', sm: '90vh' }
         }
       }}
       >

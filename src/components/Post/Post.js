@@ -241,12 +241,22 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         HASHTAG_REGEX.lastIndex = 0;
         URL_REGEX.lastIndex = 0;
         
-        // Обработка обычных ссылок
+        // Создаем временные маркеры для URL, чтобы защитить их от обработки упоминаний
+        const urlMarkers = [];
+        let markerIndex = 0;
+        
+        // Обработка обычных ссылок с созданием маркеров
         content = content.replace(URL_REGEX, (match) => {
-          return `[${match}](${match.startsWith('http') ? match : `https://${match}`})`;
+          const marker = `__URL_MARKER_${markerIndex}__`;
+          urlMarkers.push({
+            marker,
+            replacement: `[${match}](${match.startsWith('http') ? match : `https://${match}`})`
+          });
+          markerIndex++;
+          return marker;
         });
 
-        // Обработка упоминаний пользователей
+        // Обработка упоминаний пользователей (только те, что не в URL)
         content = content.replace(USERNAME_MENTION_REGEX, (match, prefix, username) => {
           const adjustedMatch = prefix ? match.substring(prefix.length) : match;
           return `${prefix || ''}[${adjustedMatch}](/profile/${username})`;
@@ -255,6 +265,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
         // Обработка хештегов
         content = content.replace(HASHTAG_REGEX, (match, hashtag) => {
           return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
+        });
+        
+        // Восстанавливаем URL из маркеров
+        urlMarkers.forEach(({ marker, replacement }) => {
+          content = content.replace(marker, replacement);
         });
         
         setProcessedContent(content);

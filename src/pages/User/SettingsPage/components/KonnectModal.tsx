@@ -510,12 +510,12 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
+              maxWidth={false}
       fullWidth
       PaperProps={{
         sx: {
-          width: { xs: '100%', sm: 'auto' },
-          maxWidth: { xs: '100%', sm: 500 },
+          width: { xs: '100%', sm: '100%' },
+          maxWidth: { xs: '100%', sm: 550 },
           height: { xs: '100vh', sm: 'auto' },
           minHeight: { xs: '100vh', sm: 400 },
           bgcolor: 'rgba(255, 255, 255, 0.03)',

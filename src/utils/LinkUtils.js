@@ -232,11 +232,10 @@ export const processTextWithLinks = (text, theme) => {
   let lastIndex = 0;
   let match;
   
-  
   let processedText = text;
   let combinedMatches = [];
   
-  
+  // Сначала ищем все URL
   URL_REGEX.lastIndex = 0;
   while ((match = URL_REGEX.exec(text)) !== null) {
     combinedMatches.push({
@@ -247,7 +246,7 @@ export const processTextWithLinks = (text, theme) => {
     });
   }
   
-  
+  // Затем ищем упоминания, но исключаем те, которые находятся внутри URL
   USERNAME_MENTION_REGEX.lastIndex = 0;
   while ((match = USERNAME_MENTION_REGEX.exec(text)) !== null) {
     const prefix = match[1];
@@ -257,13 +256,23 @@ export const processTextWithLinks = (text, theme) => {
     const adjustedIndex = prefix ? match.index + prefix.length : match.index;
     const adjustedMatch = prefix ? fullMatch.substring(prefix.length) : fullMatch;
     
-    combinedMatches.push({
-      type: 'mention',
-      match: adjustedMatch,
-      username: username,
-      index: adjustedIndex,
-      length: adjustedMatch.length
-    });
+    // Проверяем, не находится ли это упоминание внутри URL
+    const isInsideUrl = combinedMatches.some(urlMatch => 
+      urlMatch.type === 'url' && 
+      adjustedIndex >= urlMatch.index && 
+      adjustedIndex < urlMatch.index + urlMatch.length
+    );
+    
+    // Если упоминание не внутри URL, добавляем его
+    if (!isInsideUrl) {
+      combinedMatches.push({
+        type: 'mention',
+        match: adjustedMatch,
+        username: username,
+        index: adjustedIndex,
+        length: adjustedMatch.length
+      });
+    }
   }
   
   
