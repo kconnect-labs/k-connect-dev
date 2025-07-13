@@ -153,9 +153,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               onBannerChange={onBannerChange}
               onAvatarDelete={onAvatarDelete}
               onBannerDelete={onBannerDelete}
-              profileData={profileData}
-              subscription={subscription}
-              onSuccess={onSuccess}
+
             />
           </Suspense>
         );

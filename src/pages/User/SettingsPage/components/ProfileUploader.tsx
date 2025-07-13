@@ -1,56 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, IconButton, Avatar, Switch, Paper } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, IconButton, Avatar } from '@mui/material';
 import { PhotoCamera, Delete } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-
-// iOS-style switch component
-const IOSSwitch = styled((props: any) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 42,
-  height: 26,
-  padding: 0,
-  '& .MuiSwitch-switchBase': {
-    padding: 0,
-    margin: 2,
-    transitionDuration: '300ms',
-    '&.Mui-checked': {
-      transform: 'translateX(16px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        backgroundColor: '#D0BCFF',
-        opacity: 1,
-        border: 0,
-      },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: 0.5,
-      },
-    },
-    '&.Mui-focusVisible .MuiSwitch-thumb': {
-      color: '#D0BCFF',
-      border: '6px solid #fff',
-    },
-    '&.Mui-disabled .MuiSwitch-thumb': {
-      color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
-    },
-    '&.Mui-disabled + .MuiSwitch-track': {
-      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxSizing: 'border-box',
-    width: 22,
-    height: 22,
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === 'light' ? '#555' : '#39393D',
-    opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
-      duration: 500,
-    }),
-  },
-}));
 
 interface ProfileUploaderProps {
   onAvatarChange?: (file: File) => void;
@@ -59,9 +9,6 @@ interface ProfileUploaderProps {
   onBannerDelete?: () => void;
   currentAvatar?: string;
   currentBanner?: string;
-  profileData?: any;
-  subscription?: any;
-  onSuccess?: () => void;
 }
 
 const ProfileUploader: React.FC<ProfileUploaderProps> = ({
@@ -71,44 +18,9 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   onBannerDelete,
   currentAvatar,
   currentBanner,
-  profileData,
-  subscription,
-  onSuccess,
 }) => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(currentAvatar || null);
   const [bannerPreview, setBannerPreview] = useState<string | null>(currentBanner || null);
-  const [isCustomProfileActive, setIsCustomProfileActive] = useState(false);
-
-  // Инициализация состояния необычного профиля
-  useEffect(() => {
-    if (profileData?.user?.profile_id) {
-      setIsCustomProfileActive(profileData.user.profile_id === 2);
-    }
-  }, [profileData]);
-
-  // Обработчик переключения необычного профиля
-  const handleCustomProfileToggle = async () => {
-    try {
-      const newProfileId = isCustomProfileActive ? 1 : 2;
-      const response = await fetch('/api/user/profile-style', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ profile_id: newProfileId })
-      });
-      
-      const data = await response.json();
-      if (data.success) {
-        setIsCustomProfileActive(!isCustomProfileActive);
-        if (onSuccess) onSuccess();
-      } else {
-        console.error('Error updating profile style:', data.error);
-      }
-    } catch (error) {
-      console.error('Error updating profile style:', error);
-    }
-  };
 
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -307,32 +219,6 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
       <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center', fontSize: '0.8rem' }}>
         Кликните на обложку или аватар для загрузки
       </Typography>
-
-      {/* Необычный профиль - только для Ultimate подписки */}
-      {subscription?.type === 'ultimate' && (
-        <Paper sx={{ 
-          mt: 3, 
-          p: 2, 
-          borderRadius: 2, 
-          bgcolor: 'rgba(18, 18, 18, 0.9)',
-          border: '1px solid rgba(255, 255, 255, 0.08)'
-        }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box>
-              <Typography variant="subtitle1" fontWeight={600} sx={{ color: 'text.primary' }}>
-                Необычный профиль
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Изменить внешний вид профиля
-              </Typography>
-            </Box>
-            <IOSSwitch 
-              checked={isCustomProfileActive}
-              onChange={handleCustomProfileToggle}
-            />
-          </Box>
-        </Paper>
-      )}
     </Box>
   );
 };

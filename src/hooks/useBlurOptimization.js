@@ -62,8 +62,32 @@ export const useBlurOptimization = () => {
         const savedState = await getFromIndexedDB(BLUR_OPTIMIZATION_KEY);
         const enabled = savedState === 'true';
         setIsEnabled(enabled);
+        
+        // Немедленно применяем стили при загрузке
         if (enabled) {
-          applyBlurOptimization();
+          // Проверяем, загружен ли DOM
+          if (document.readyState === 'loading') {
+            // Если DOM еще загружается, ждем события DOMContentLoaded
+            document.addEventListener('DOMContentLoaded', () => {
+              setTimeout(() => {
+                applyBlurOptimization();
+              }, 50);
+            }, { once: true });
+          } else {
+            // Если DOM уже загружен, применяем сразу
+            setTimeout(() => {
+              applyBlurOptimization();
+            }, 100);
+          }
+          
+          // Дополнительная проверка после полной загрузки страницы
+          if (document.readyState !== 'complete') {
+            window.addEventListener('load', () => {
+              setTimeout(() => {
+                applyBlurOptimization();
+              }, 100);
+            }, { once: true });
+          }
         }
       } catch (error) {
         console.error('Error loading blur optimization state:', error);
@@ -88,7 +112,6 @@ export const useBlurOptimization = () => {
   };
 
   const applyBlurOptimization = () => {
-    console.log('🔧 Applying blur optimization...');
     const elementsWithBlur = [];
     
     // Удаляем все blur эффекты и запоминаем элементы
@@ -96,33 +119,15 @@ export const useBlurOptimization = () => {
       let hadBlur = false;
       
       if (el.style && el.style.filter && el.style.filter.includes('blur')) {
-        console.log('Found element with filter blur:', el);
         el.style.filter = el.style.filter.replace(/blur\([^)]+\)/g, '');
         hadBlur = true;
       }
       if (el.style && el.style.backdropFilter && el.style.backdropFilter.includes('blur')) {
-        console.log('Found element with backdrop-filter blur:', el, 'Original:', el.style.backdropFilter);
-        // Заменяем backdrop-filter blur на background image с blur.png
         el.style.backdropFilter = el.style.backdropFilter.replace(/blur\([^)]+\)/g, '');
-        el.style.backgroundImage = 'url(/assets/blur.png)';
-        el.style.backgroundSize = 'cover';
-        el.style.backgroundPosition = 'center';
-        el.style.backgroundRepeat = 'no-repeat';
-        console.log('Applied background image to element:', el, 'New styles:', {
-          backdropFilter: el.style.backdropFilter,
-          backgroundImage: el.style.backgroundImage,
-          backgroundSize: el.style.backgroundSize
-        });
         hadBlur = true;
       }
       if (el.style && el.style.webkitBackdropFilter && el.style.webkitBackdropFilter.includes('blur')) {
-        console.log('Found element with webkit-backdrop-filter blur:', el);
-        // Заменяем webkit-backdrop-filter blur на background image с blur.png
         el.style.webkitBackdropFilter = el.style.webkitBackdropFilter.replace(/blur\([^)]+\)/g, '');
-        el.style.backgroundImage = 'url(/assets/blur.png)';
-        el.style.backgroundSize = 'cover';
-        el.style.backgroundPosition = 'center';
-        el.style.backgroundRepeat = 'no-repeat';
         hadBlur = true;
       }
       
@@ -130,8 +135,6 @@ export const useBlurOptimization = () => {
         elementsWithBlur.push(el);
       }
     });
-
-    console.log('Total elements with blur found:', elementsWithBlur.length);
 
     // Изменяем цвет хедера на более темный
     const headerElements = document.querySelectorAll('[data-header], .header, header, [class*="header"], [class*="Header"], [class*="appbar"], [class*="AppBar"]');
@@ -141,7 +144,7 @@ export const useBlurOptimization = () => {
         if (header.style.backgroundColor === 'rgba(255, 255, 255, 0.03)' || 
             header.style.backgroundColor === 'rgba(255, 255, 255, 0.1)' ||
             header.style.backgroundColor === 'rgba(255, 255, 255, 0.05)') {
-          header.style.backgroundColor = 'rgba(28, 28, 28, 0.95)';
+          header.style.backgroundColor = 'rgba(37, 37, 37, 0.72)';
         }
         // Отключаем только blur эффекты
         if (header.style.backdropFilter && header.style.backdropFilter.includes('blur')) {
@@ -153,11 +156,28 @@ export const useBlurOptimization = () => {
       }
     });
 
+    // Заменяем rgba(255, 255, 255, 0.03) на rgb(37 37 37 / 72%) во всех элементах
+    document.querySelectorAll('*').forEach(el => {
+      if (el.style) {
+        // Заменяем в background
+        if (el.style.background && el.style.background.includes('rgba(255, 255, 255, 0.03)')) {
+          el.style.background = el.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
+        }
+        // Заменяем в backgroundColor
+        if (el.style.backgroundColor && el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')) {
+          el.style.backgroundColor = el.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
+        }
+        // Заменяем в backgroundImage если есть rgba(255, 255, 255, 0.03)
+        if (el.style.backgroundImage && el.style.backgroundImage.includes('rgba(255, 255, 255, 0.03)')) {
+          el.style.backgroundImage = el.style.backgroundImage.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
+        }
+      }
+    });
 
     // Обрабатываем CSS правила в стилях
     processCSSRules();
 
-        // Добавляем затемнение ко всем элементам, где был удален blur
+    // Добавляем затемнение ко всем элементам, где был удален blur
     addDarkeningEffect(elementsWithBlur);
   };
 
@@ -185,29 +205,57 @@ export const useBlurOptimization = () => {
       el.classList.remove('grain-effect', 'darkening-effect');
     });
 
-    // Удаляем background image с blur.png со всех элементов
-    document.querySelectorAll('*').forEach(el => {
-      if (el.style && el.style.backgroundImage && el.style.backgroundImage.includes('blur.png')) {
-        el.style.backgroundImage = '';
-        el.style.backgroundSize = '';
-        el.style.backgroundPosition = '';
-        el.style.backgroundRepeat = '';
-      }
-    });
-
     // Восстанавливаем оригинальные стили хедера
     const headerElements = document.querySelectorAll('[data-header], .header, header, [class*="header"], [class*="Header"], [class*="appbar"], [class*="AppBar"]');
     headerElements.forEach(header => {
       if (header.style) {
         // Восстанавливаем оригинальный прозрачный фон
-        if (header.style.backgroundColor === 'rgba(28, 28, 28, 0.95)') {
+        if (header.style.backgroundColor === 'rgba(37, 37, 37, 0.72)') {
           header.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
         }
       }
     });
 
-    // Восстанавливаем оригинальные стили bottom navigation
+    // Восстанавливаем оригинальные цвета во всех элементах
+    document.querySelectorAll('*').forEach(el => {
+      if (el.style) {
+        // Восстанавливаем в background
+        if (el.style.background && el.style.background.includes('rgb(37 37 37 / 72%)')) {
+          el.style.background = el.style.background.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+        }
+        // Восстанавливаем в backgroundColor
+        if (el.style.backgroundColor && el.style.backgroundColor.includes('rgb(37 37 37 / 72%)')) {
+          el.style.backgroundColor = el.style.backgroundColor.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+        }
+        // Восстанавливаем в backgroundImage
+        if (el.style.backgroundImage && el.style.backgroundImage.includes('rgb(37 37 37 / 72%)')) {
+          el.style.backgroundImage = el.style.backgroundImage.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+        }
+      }
+    });
 
+    // Восстанавливаем цвета в CSS правилах
+    for (const sheet of document.styleSheets) {
+      try {
+        for (const rule of sheet.cssRules) {
+          if (rule.style) {
+            if (rule.style.background && rule.style.background.includes('rgb(37 37 37 / 72%)')) {
+              rule.style.background = rule.style.background.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+            }
+            if (rule.style.backgroundColor && rule.style.backgroundColor.includes('rgb(37 37 37 / 72%)')) {
+              rule.style.backgroundColor = rule.style.backgroundColor.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+            }
+            if (rule.style.backgroundImage && rule.style.backgroundImage.includes('rgb(37 37 37 / 72%)')) {
+              rule.style.backgroundImage = rule.style.backgroundImage.replace(/rgb\(37 37 37 \/ 72%\)/g, 'rgba(255, 255, 255, 0.03)');
+            }
+          }
+        }
+      } catch (e) {
+        // Пропускаем кроссдоменные стили
+      }
+    }
+
+    // Восстанавливаем оригинальные стили bottom navigation
   };
 
   const processCSSRules = () => {
@@ -221,23 +269,20 @@ export const useBlurOptimization = () => {
             }
             if (rule.style.backdropFilter && rule.style.backdropFilter.includes('blur')) {
               rule.style.backdropFilter = rule.style.backdropFilter.replace(/blur\([^)]+\)/g, '');
-              // Добавляем background image для элементов с backdrop-filter
-              if (rule.style.backgroundImage === 'none' || !rule.style.backgroundImage) {
-                rule.style.backgroundImage = 'url(/assets/blur.png)';
-                rule.style.backgroundSize = 'cover';
-                rule.style.backgroundPosition = 'center';
-                rule.style.backgroundRepeat = 'no-repeat';
-              }
             }
             if (rule.style.webkitBackdropFilter && rule.style.webkitBackdropFilter.includes('blur')) {
               rule.style.webkitBackdropFilter = rule.style.webkitBackdropFilter.replace(/blur\([^)]+\)/g, '');
-              // Добавляем background image для элементов с webkit-backdrop-filter
-              if (rule.style.backgroundImage === 'none' || !rule.style.backgroundImage) {
-                rule.style.backgroundImage = 'url(/assets/blur.png)';
-                rule.style.backgroundSize = 'cover';
-                rule.style.backgroundPosition = 'center';
-                rule.style.backgroundRepeat = 'no-repeat';
-              }
+            }
+            
+            // Заменяем цвета в CSS правилах
+            if (rule.style.background && rule.style.background.includes('rgba(255, 255, 255, 0.03)')) {
+              rule.style.background = rule.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
+            }
+            if (rule.style.backgroundColor && rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')) {
+              rule.style.backgroundColor = rule.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
+            }
+            if (rule.style.backgroundImage && rule.style.backgroundImage.includes('rgba(255, 255, 255, 0.03)')) {
+              rule.style.backgroundImage = rule.style.backgroundImage.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37 / 72%)');
             }
           }
         }
@@ -273,19 +318,30 @@ export const useBlurOptimization = () => {
         filter: inherit !important;
       }
       
-      /* Отключаем только blur в backdrop-filter и заменяем на background image */
+      /* Отключаем только blur в backdrop-filter */
       *[style*="backdrop-filter"] {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
-        background-image: url(/assets/blur.png) !important;
-        background-size: cover !important;
-        background-position: center !important;
-        background-repeat: no-repeat !important;
       }
       
       /* Отключаем только blur в filter */
       *[style*="filter"] {
         filter: none !important;
+      }
+      
+      /* Заменяем rgba(255, 255, 255, 0.03) на rgb(37 37 37 / 72%) */
+      *[style*="rgba(255, 255, 255, 0.03)"] {
+        background: rgb(37 37 37 / 72%) !important;
+        background-color: rgb(37 37 37 / 72%) !important;
+      }
+      
+      /* Заменяем в CSS классах */
+      .MuiPaper-root[style*="rgba(255, 255, 255, 0.03)"],
+      .MuiBox-root[style*="rgba(255, 255, 255, 0.03)"],
+      .MuiCard-root[style*="rgba(255, 255, 255, 0.03)"],
+      [style*="rgba(255, 255, 255, 0.03)"] {
+        background: rgb(37 37 37 / 72%) !important;
+        background-color: rgb(37 37 37 / 72%) !important;
       }
       
     `;
@@ -429,6 +485,59 @@ export const useBlurOptimization = () => {
   useEffect(() => {
     if (isEnabled) {
       applyBlurOptimization();
+      
+      // Добавляем MutationObserver для отслеживания новых элементов
+      const observer = new MutationObserver((mutations) => {
+        let shouldReapply = false;
+        
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                // Проверяем, есть ли в новом элементе стили с blur или rgba(255, 255, 255, 0.03)
+                if (node.style) {
+                  if ((node.style.backdropFilter && node.style.backdropFilter.includes('blur')) ||
+                      (node.style.filter && node.style.filter.includes('blur')) ||
+                      (node.style.background && node.style.background.includes('rgba(255, 255, 255, 0.03)')) ||
+                      (node.style.backgroundColor && node.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)'))) {
+                    shouldReapply = true;
+                  }
+                }
+                
+                // Проверяем дочерние элементы
+                const childElements = node.querySelectorAll ? node.querySelectorAll('*') : [];
+                childElements.forEach((child) => {
+                  if (child.style) {
+                    if ((child.style.backdropFilter && child.style.backdropFilter.includes('blur')) ||
+                        (child.style.filter && child.style.filter.includes('blur')) ||
+                        (child.style.background && child.style.background.includes('rgba(255, 255, 255, 0.03)')) ||
+                        (child.style.backgroundColor && child.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)'))) {
+                      shouldReapply = true;
+                    }
+                  }
+                });
+              }
+            });
+          }
+        });
+        
+        if (shouldReapply) {
+          setTimeout(() => {
+            applyBlurOptimization();
+          }, 50);
+        }
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style']
+      });
+      
+      return () => {
+        observer.disconnect();
+      };
     } else {
       removeBlurOptimization();
     }

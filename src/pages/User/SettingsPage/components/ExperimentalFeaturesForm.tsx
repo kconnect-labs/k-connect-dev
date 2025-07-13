@@ -64,7 +64,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
             Оптимизация блюра
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Отключает blur эффекты для улучшения производительности. Заменяет backdrop-filter на background image с blur.png, добавляет легкий эффект зернистости и изменяет цвет хедера.
+            Отключает blur эффекты для улучшения производительности. Добавляет легкий эффект зернистости и изменяет цвет хедера.
           </Typography>
         </Box>
         {'isLoading' in blurOptimization && blurOptimization.isLoading ? (

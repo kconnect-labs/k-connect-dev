@@ -85,7 +85,7 @@ export const ThemeSettingsContext = React.createContext({
   clearProfileBackground: () => {},
   profileBackground: null,
   globalProfileBackgroundEnabled: false,
-  setGlobalProfileBackgroundEnabled: () => {},
+  setGlobalProfileBackgroundEnabled: (enabled) => {},
   setUserBackground: () => {},
   restoreUserBackground: () => {},
 });
