@@ -86,7 +86,12 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { themeSettings } = useContext(ThemeSettingsContext);
   const { setUserBackground, restoreUserBackground } = useContext(ThemeSettingsContext);
-  const [totalLikes, setTotalLikes] = useState(0);
+  const [stats, setStats] = useState({
+    avg_likes_per_post: 0,
+    days_active: 0,
+    posts_count: 0,
+    total_likes: 0
+  });
   
   const [isOnline, setIsOnline] = useState(false);
   const [lastActive, setLastActive] = useState(null);
@@ -164,11 +169,6 @@ const ProfilePage = () => {
           }
           
           setUser(response.data.user);
-          
-          
-          if (response.data.user.total_likes !== undefined) {
-            setTotalLikes(response.data.user.total_likes);
-          }
           
           
           if (response.data.subscription) {
@@ -374,24 +374,39 @@ const ProfilePage = () => {
 
   
   useEffect(() => {
-    const fetchTotalLikes = async () => {
+    const fetchStats = async () => {
       try {
         if (user && user.id) {
           const response = await axios.get(`/api/profile/${user.id}/stats`);
-          if (response.data && response.data.total_likes !== undefined) {
-            setTotalLikes(response.data.total_likes);
+          if (response.data) {
+            setStats({
+              avg_likes_per_post: response.data.avg_likes_per_post || 0,
+              days_active: response.data.days_active || 0,
+              posts_count: response.data.posts_count || 0,
+              total_likes: response.data.total_likes || 0
+            });
           } else {
-            setTotalLikes(0);
+            setStats({
+              avg_likes_per_post: 0,
+              days_active: 0,
+              posts_count: 0,
+              total_likes: 0
+            });
           }
         }
       } catch (error) {
-        console.error('Error fetching total likes:', error);
-        setTotalLikes(0);
+        console.error('Error fetching stats:', error);
+        setStats({
+          avg_likes_per_post: 0,
+          days_active: 0,
+          posts_count: 0,
+          total_likes: 0
+        });
       }
     };
     
     if (user && user.id) {
-      fetchTotalLikes();
+      fetchStats();
     }
   }, [user?.id]);
 
@@ -1093,6 +1108,7 @@ const ProfilePage = () => {
               user={user} 
               socials={socials}
               onUsernameClick={handleUsernameClick}
+              stats={stats}
             />
           </TabPanel>
         </Grid>

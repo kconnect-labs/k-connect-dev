@@ -1,0 +1,368 @@
+.container {
+  padding: 24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.connectInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.connectInfoContent {
+  display: flex;
+  align-items: center;
+}
+
+.connectLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.connectLink:hover {
+  text-decoration: underline;
+}
+
+.connectSeparator {
+  margin: 0 8px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.about {
+  margin-top: 8px;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.infoItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.infoIcon {
+  margin-top: 4px;
+  color: #1976d2;
+}
+
+.infoContent {
+  flex: 1;
+}
+
+.infoLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-size: 0.875rem;
+  color: inherit;
+}
+
+.infoLink {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.infoLink:hover {
+  text-decoration: underline;
+}
+
+.usernamesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 16px;
+  padding: 2px 8px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.usernameChip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+}
+
+.usernameChip:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.usernameChipActive {
+  background: #1976d2;
+  color: white;
+  border-color: #1976d2;
+}
+
+.usernameChipActive:hover {
+  background: #1565c0;
+}
+
+.socialsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: rgb(208, 188, 255);
+}
+
+.socialsContainer a, svg {
+  color: rgb(208, 188, 255);
+}
+
+.socialButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.07);
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: rgb(208, 188, 255);
+}
+
+.socialButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.socialIconFallback {
+  width: 20px;
+  height: 20px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subscriptionContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+.subscriptionContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 1;
+}
+
+.subscriptionContainerPremium::before {
+  background: linear-gradient(90deg, #ba68c8, #9c27b0);
+}
+
+.subscriptionContainerUltimate::before {
+  background: linear-gradient(90deg, #7c4dff, #6200ea);
+}
+
+.subscriptionContainerPickMe::before {
+  background: linear-gradient(90deg, #d0bcff, #b388ff);
+}
+
+.subscriptionContainerChannel::before {
+  background: linear-gradient(90deg, #42a5f5, #1976d2);
+}
+
+.subscriptionContainerDefault::before {
+  background: linear-gradient(90deg, #fff, #ccc);
+}
+
+.subscriptionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid;
+  animation: pulse-subscription 2s infinite;
+}
+
+.subscriptionIconPremium {
+  background: rgba(186, 104, 200, 0.15);
+  border-color: rgba(186, 104, 200, 0.3);
+}
+
+.subscriptionIconUltimate {
+  background: rgba(124, 77, 255, 0.15);
+  border-color: rgba(124, 77, 255, 0.3);
+}
+
+.subscriptionIconPickMe {
+  background: rgba(208, 188, 255, 0.15);
+  border-color: rgba(208, 188, 255, 0.3);
+}
+
+.subscriptionIconChannel {
+  background: rgba(66, 165, 245, 0.15);
+  border-color: rgba(66, 165, 245, 0.3);
+}
+
+.subscriptionIconDefault {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.subscriptionIconImage {
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.subscriptionIconImage:hover {
+  transform: scale(1.1);
+}
+
+.subscriptionIconSvg {
+  width: 24px;
+  height: 24px;
+}
+
+.subscriptionContent {
+  flex: 1;
+}
+
+.subscriptionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.subscriptionTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.subscriptionTitlePremium {
+  color: #ba68c8;
+}
+
+.subscriptionTitleUltimate {
+  color: #7c4dff;
+}
+
+.subscriptionTitlePickMe {
+  color: #d0bcff;
+}
+
+.subscriptionTitleChannel {
+  color: #42a5f5;
+}
+
+.subscriptionExpires {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+}
+
+.subscriptionDuration {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.subscriptionDurationPremium {
+  color: rgba(186, 104, 200, 0.8);
+}
+
+.subscriptionDurationUltimate {
+  color: rgba(124, 77, 255, 0.8);
+}
+
+.subscriptionDurationPickMe {
+  color: rgba(208, 188, 255, 0.8);
+}
+
+.subscriptionDurationChannel {
+  color: rgba(66, 165, 245, 0.8);
+}
+
+@keyframes pulse-subscription {
+  0% {
+    box-shadow: 0 0 0 0 rgba(186, 104, 200, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(186, 104, 200, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(186, 104, 200, 0);
+  }
+}
+
+/* Responsive grid */
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .gridFullWidth {
+    grid-column: 1 / -1;
+  }
+} 
