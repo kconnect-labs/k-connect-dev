@@ -32,30 +32,45 @@ const RegisterProfile = ({ setUser }) => {
     about: '',
     agree_terms: false,
     agree_privacy: false,
-    chat_id: ''
+    chat_id: '',
+    referral_code: ''
   });
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [referralRewards, setReferralRewards] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const urlChatId = params.get('chat_id');
+    const urlReferralCode = params.get('ref');
     
     const storedChatId = localStorage.getItem('k-connect-chat-id');
     
     const chatId = urlChatId || storedChatId || '';
+    const referralCode = urlReferralCode || '';
     
     if (chatId) {
       console.log('Found chat_id:', chatId);
       setFormData(prev => ({ ...prev, chat_id: chatId }));
     }
+    
+    if (referralCode) {
+      console.log('Found referral code:', referralCode);
+      setFormData(prev => ({ ...prev, referral_code: referralCode.toUpperCase() }));
+    }
   }, [location.search]);
 
   const handleChange = (e) => {
     const { name, value, checked } = e.target;
-    const newValue = name === 'agree_terms' || name === 'agree_privacy' ? checked : value;
+    let newValue = name === 'agree_terms' || name === 'agree_privacy' ? checked : value;
+    
+    // Обработка реферального кода: преобразование в верхний регистр и удаление пробелов
+    if (name === 'referral_code') {
+      newValue = value.toUpperCase().replace(/\s/g, '');
+    }
+    
     setFormData(prev => ({ ...prev, [name]: newValue }));
     setError('');
   };
@@ -138,6 +153,14 @@ const RegisterProfile = ({ setUser }) => {
       if (profileResponse.success && profileResponse.user) {
         setUser(profileResponse.user);
         localStorage.removeItem('k-connect-chat-id');
+        
+        // Сохраняем информацию о реферальных наградах, если они были применены
+        if (profileResponse.referral_rewards) {
+          setReferralRewards(profileResponse.referral_rewards);
+          // Сохраняем в localStorage для отображения на главной странице
+          localStorage.setItem('k-connect-referral-rewards', JSON.stringify(profileResponse.referral_rewards));
+        }
+        
         navigate('/', { replace: true });
       } else if (profileResponse.error) {
         setError(profileResponse.error);
@@ -429,12 +452,42 @@ const RegisterProfile = ({ setUser }) => {
                 rows={4}
                 placeholder="Расскажите немного о себе..."
                 sx={{ 
-                  mb: 3,
+                  mb: 2.5,
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
                   }
                 }}
               />
+              
+              <TextField
+                margin="normal"
+                fullWidth
+                id="referral_code"
+                label="Реферальный код (необязательно)"
+                name="referral_code"
+                value={formData.referral_code}
+                onChange={handleChange}
+                variant="outlined"
+                placeholder="Введите код друга для получения бонусов"
+                sx={{ 
+                  mb: 1,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                  }
+                }}
+              />
+              <Typography 
+                variant="caption" 
+                color="text.secondary" 
+                sx={{ 
+                  mb: 3, 
+                  display: 'block',
+                  fontSize: '12px',
+                  lineHeight: 1.4
+                }}
+              >
+                💡 Попросите реферальный код у друга, чтобы получить бонусы при регистрации
+              </Typography>
               
               <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
                 Правовые соглашения

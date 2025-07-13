@@ -239,6 +239,17 @@ const MorePage = () => {
           </li>
 
           <li>
+            <Link to="/referral" className="highlighted-menu-item">
+              <div className="menu-item-icon">
+                <Icon icon="solar:users-group-two-rounded-bold" width="20" height="20" />
+              </div>
+              <div className="menu-list-item-text">
+                <div className="menu-list-item-primary">Реферальная программа</div>
+              </div>
+            </Link>
+          </li>
+
+          <li>
             <Link to="/minigames" className="highlighted-menu-item">
               <div className="menu-item-icon">
                 <Icon icon="solar:star-bold" width="20" height="20" />

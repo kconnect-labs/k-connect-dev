@@ -88,6 +88,7 @@ const SidebarNavigation = memo(({
     marketplace: <Icon icon="solar:shop-2-outline" width="20" height="20" />,
     pack: <Icon icon="solar:box-outline" width="20" height="20" />,
     sticker: <Icon icon="solar:sticker-smile-circle-2-bold" width="20" height="20" />,
+    referral: <Icon icon="solar:users-group-two-rounded-bold" width="20" height="20" />,
   }), [totalUnread]);
   
   const mainMenu = useMemo(() => (
@@ -339,7 +340,15 @@ const SidebarNavigation = memo(({
               nested={true}
             />
           )}
-          
+          <NavButton
+            text={t('sidebar.navigation.more.referral')}
+            icon={icons.referral}
+            path="/referral"
+            active={isActive('/referral')}
+            themeColor={primaryColor}
+            nested={true}
+          />
+
           <NavButton
             text={t('sidebar.navigation.more.rules')}
             icon={icons.rules}

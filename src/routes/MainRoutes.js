@@ -54,6 +54,7 @@ const ChannelsPage = React.lazy(() => import('../pages/Main/ChannelsPage'));
 const JoinGroupChat = React.lazy(() => import('../pages/Messenger/JoinGroupChat'));
 const ItemRedirectPage = React.lazy(() => import('../components/Redirects/ItemRedirectPage').then(module => ({ default: module.ItemRedirectPage })));
 const FriendsRedirect = React.lazy(() => import('../components/Redirects/FriendsRedirect').then(module => ({ default: module.FriendsRedirect })));
+const ReferralPage = React.lazy(() => import('../pages/ReferralPage'));
 
 const MainRoutes = ({ setUser, background }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
@@ -126,6 +127,7 @@ const MainRoutes = ({ setUser, background }) => {
           <Route path="/item/:itemId" element={<ItemRedirectPage />} />
           <Route path="/friends/:username" element={<FriendsPage />} />
           <Route path="/friends" element={<FriendsRedirect />} />
+          <Route path="/referral" element={isAuthenticated ? <ReferralPage /> : <Navigate to="/login" replace />} />
           <Route path="/inform/sticker" element={isAuthenticated ? <StickerManagePage /> : <Navigate to="/login" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>                

@@ -187,6 +187,18 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success) {
         
+        // Проверяем, нужно ли создать профиль
+        if (response.needsProfileSetup) {
+          // Пользователь верифицирован, но профиль не создан
+          setUser(null);
+          setIsAuthenticated(true);
+          persistAuthState(true, null);
+          
+          // Перенаправляем на страницу создания профиля
+          navigate('/register/profile', { replace: true });
+          return { success: true, needsProfileSetup: true };
+        }
+        
         setUser(response.user);
         setIsAuthenticated(true);
         

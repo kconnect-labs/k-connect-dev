@@ -342,6 +342,14 @@ const Login = () => {
         return;
       }
       
+      // Проверяем, нужно ли создать профиль
+      if (result && result.success && result.needsProfileSetup) {
+        // Пользователь верифицирован, но профиль не создан
+        // Перенаправление уже обработано в AuthContext
+        setLoading(false);
+        return;
+      }
+      
       
       
       localStorage.removeItem('login_error');

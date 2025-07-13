@@ -30,7 +30,9 @@ const AuthService = {
         return {
           success: true,
           user: response.data.user || null,
-          token: response.data.token || null
+          token: response.data.token || null,
+          needsProfileSetup: response.data.needsProfileSetup || false,
+          chat_id: response.data.chat_id || null
         };
       } else {
         return {
