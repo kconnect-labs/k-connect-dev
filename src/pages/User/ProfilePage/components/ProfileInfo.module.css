@@ -65,7 +65,7 @@
 
 .infoIcon {
   margin-top: 4px;
-  color: #1976d2;
+  color: #cfbcfb;
 }
 
 .infoContent {
@@ -85,7 +85,7 @@
 }
 
 .infoLink {
-  color: #1976d2;
+  color: #cfbcfb;
   text-decoration: none;
 }
 
@@ -136,13 +136,13 @@
 }
 
 .usernameChipActive {
-  background: #1976d2;
+  background: #cfbcfb;
   color: white;
-  border-color: #1976d2;
+  border-color: #cfbcfb;
 }
 
 .usernameChipActive:hover {
-  background: #1565c0;
+  background: #cfbcfb;
 }
 
 .socialsContainer {
@@ -226,7 +226,7 @@
 }
 
 .subscriptionContainerChannel::before {
-  background: linear-gradient(90deg, #42a5f5, #1976d2);
+  background: linear-gradient(90deg, #42a5f5, #cfbcfb);
 }
 
 .subscriptionContainerDefault::before {

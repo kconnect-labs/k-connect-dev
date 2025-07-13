@@ -13,11 +13,14 @@ import {
   Brush,
   AccountCircle,
   EmojiEvents,
-  AlternateEmail
+  AlternateEmail,
+  Favorite
 } from '@mui/icons-material';
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
 import ProfilePreview from './SettingsPage/components/ProfilePreview';
+import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
+import KonnectModal from './SettingsPage/components/KonnectModal';
 import { useProfile, useProfileInfo, useSubscription } from './SettingsPage/hooks';
 import { useLocalUser } from './SettingsPage/hooks/useLocalUser';
 import { AuthContext } from '../../context/AuthContext';
@@ -33,6 +36,8 @@ const SettingsPage = () => {
   const displayUser = user || localUser;
   
   const [openModal, setOpenModal] = useState<string | null>(null);
+  const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
+  const [konnectModalOpen, setKonnectModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState<{ open: boolean; message: string }>({
     open: false,
     message: 'Обновлено'
@@ -95,7 +100,13 @@ const SettingsPage = () => {
   }
 
   const handleOpenModal = (section: string) => {
-    setOpenModal(section);
+    if (section === 'connections') {
+      setKonnectModalOpen(true);
+    } else if (section === 'linked') {
+      setConnectionsModalOpen(true);
+    } else {
+      setOpenModal(section);
+    }
   };
 
   const handleCloseModal = () => {
@@ -228,6 +239,13 @@ const SettingsPage = () => {
       subtitle: 'Функции в разработке',
       icon: <Science />,
       color: 'rgba(168, 85, 247, 0.4)' // #a855f7 с прозрачностью
+    },
+    {
+      id: 'connections',
+      title: 'Коннектики',
+      subtitle: 'Поиск и управление связями',
+      icon: <Favorite />,
+      color: 'rgba(236, 72, 153, 0.4)' // #ec4899 с прозрачностью
     },
     {
       id: 'linked',
@@ -424,6 +442,18 @@ const SettingsPage = () => {
           loading={loading || profileInfoLoading || subscriptionLoading}
           subscription={subscription}
           onStatusUpdate={handleStatusUpdate}
+          onSuccess={showSuccess}
+        />
+
+        <ConnectionsModal
+          open={connectionsModalOpen}
+          onClose={() => setConnectionsModalOpen(false)}
+          onSuccess={showSuccess}
+        />
+
+        <KonnectModal
+          open={konnectModalOpen}
+          onClose={() => setKonnectModalOpen(false)}
           onSuccess={showSuccess}
         />
 
