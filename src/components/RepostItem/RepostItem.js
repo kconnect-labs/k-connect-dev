@@ -167,8 +167,18 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
   const [postMusicTracks, setPostMusicTracks] = useState([]);
   
   
+  // Проверяем, что repost существует
+  if (!repost) {
+    return null; // Не отображаем репост, если нет данных о репосте
+  }
+  
   const originalPost = repost.original_post;
   
+  
+  // Проверяем, что originalPost и originalPost.user существуют
+  if (!originalPost || !originalPost.user) {
+    return null; // Не отображаем репост, если нет данных об оригинальном посте
+  }
   
   const images = [];
   if (originalPost.images && Array.isArray(originalPost.images)) {
@@ -212,7 +222,9 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
     }
     
     
-    navigate(`/post/${originalPost.id}`);
+    if (originalPost && originalPost.id) {
+      navigate(`/post/${originalPost.id}`);
+    }
   };
   
   
@@ -330,18 +342,20 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
           <OriginalPostCard>
             <UserInfo>
               <Avatar 
-                src={originalPost.user.avatar_url}
-                alt={originalPost.user.name}
+                src={originalPost.user?.avatar_url || '/static/uploads/avatar/system/avatar.png'}
+                alt={originalPost.user?.name || 'User'}
                 sx={{ width: 32, height: 32, mr: 1 }}
               />
               <Box sx={{ flexGrow: 1 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Typography variant="body2" sx={{ fontWeight: 'medium', mr: 0.5 }}>
-                    {originalPost.user.name}
+                    {originalPost.user?.name || 'Unknown'}
                   </Typography>
-                  <VerificationBadge status={originalPost.user.verification} size="small" />
+                  {originalPost.user?.verification && (
+                    <VerificationBadge status={originalPost.user.verification} size="small" />
+                  )}
                   <Typography variant="caption" color="text.secondary" sx={{ ml: 0.5 }}>
-                    @{originalPost.user.username}
+                    @{originalPost.user?.username || 'unknown'}
                   </Typography>
                 </Box>
                 <Typography variant="caption" color="text.secondary">

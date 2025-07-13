@@ -3,12 +3,6 @@ import OptimizedImage from '../../../../components/OptimizedImage';
 
 // CSS анимации
 const styles = `
-  @keyframes levitation {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0px); }
-  }
-  
   @keyframes particle {
     0% {
       transform: scale(1) translate(0, 0) rotate(0deg);
@@ -58,8 +52,7 @@ const getContainerStyle = (index) => {
     alignItems: 'center',
     justifyContent: 'center',
     pointerEvents: 'none',
-    animation: `levitation ${3 + Math.random()}s ease-in-out infinite`,
-    animationDelay: `${index * 0.2}s`,
+    // Убрали анимацию движения
   };
 };
 
@@ -67,8 +60,8 @@ const getParticleStyle = (color, delay, duration) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
-  width: `${Math.random() * 8 + 4}px`,
-  height: `${Math.random() * 8 + 4}px`,
+  width: `${Math.random() * 12 + 6}px`, // Увеличили размер в 1.5 раза (было 4-12px, стало 6-18px)
+  height: `${Math.random() * 12 + 6}px`, // Увеличили размер в 1.5 раза
   background: `radial-gradient(circle at center, ${color} 0%, ${color} 50%, transparent 100%)`,
   clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
   animation: `particle ${duration}s ease-out infinite`,
@@ -152,7 +145,7 @@ const EquippedItem = ({ item, index = 0 }) => {
 
   const isUpgraded = item.upgrade_level === 1;
 
-  const particles = isUpgraded ? Array.from({ length: 20 }).map((_, i) => (
+  const particles = isUpgraded ? Array.from({ length: 10 }).map((_, i) => ( // Уменьшили количество частиц в 2 раза (с 20 до 10)
     <div
       key={i}
       style={getParticleStyle(particleColor, Math.random() * 4, Math.random() * 3 + 3)}

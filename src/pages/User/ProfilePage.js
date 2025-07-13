@@ -649,9 +649,9 @@ const ProfilePage = () => {
                       }}
                     />
                   </Tooltip>
-                  {/* {equippedItems.map((item, index) => (
+                   {equippedItems.map((item, index) => (
                     <EquippedItem key={item.id} item={item} index={index} />
-                  ))} */}
+                  ))} 
                   
                   
                   {isOnline && user?.subscription?.type !== 'channel' && (

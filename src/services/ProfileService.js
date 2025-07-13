@@ -21,7 +21,18 @@ const ProfileService = {
     }
     
     try {
-      const endpoint = username ? `/api/profile/${username}` : '/api/profile';
+      // Если username не передан, получаем его из localStorage
+      let targetUsername = username;
+      if (!targetUsername) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        targetUsername = currentUser.username;
+      }
+      
+      if (!targetUsername) {
+        throw new Error('No username available for profile fetch');
+      }
+      
+      const endpoint = `/api/profile/${targetUsername}`;
       const response = await axios.get(endpoint);
       return response.data;
     } catch (error) {

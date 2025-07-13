@@ -611,14 +611,14 @@ function App() {
           
           // Сохраняем обои только если глобальные обои включены
           if (globalProfileBackgroundEnabled) {
-            const savedBg = localStorage.getItem('myProfileBackgroundUrl');
-            if (!savedBg) {
-              saveUserBackground(userBg);
-            }
-            
+          const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+          if (!savedBg) {
+            saveUserBackground(userBg);
+          }
+          
             // Если обои еще не применены, применяем их
             if (!profileBackground) {
-              setProfileBackground(userBg);
+            setProfileBackground(userBg);
             }
           } else {
             // Если глобальные обои выключены, удаляем из localStorage если там есть
@@ -687,7 +687,7 @@ function App() {
     if (!isProfilePage) {
       // Если мы не на странице профиля и глобальные обои включены, восстанавливаем свои обои
       if (globalProfileBackgroundEnabled) {
-        restoreUserBackground();
+      restoreUserBackground();
       } else {
         // Если глобальные обои выключены, очищаем фон
         clearProfileBackground();

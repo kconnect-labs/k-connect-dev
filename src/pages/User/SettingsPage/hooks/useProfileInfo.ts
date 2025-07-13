@@ -30,7 +30,16 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   useEffect(() => {
     const loadProfileInfo = async () => {
       try {
-        const response = await fetch('/api/profile');
+        // Получаем текущего пользователя из контекста или localStorage
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const username = currentUser.username;
+        
+        if (!username) {
+          console.error('No username available for profile info');
+          return;
+        }
+        
+        const response = await fetch(`/api/profile/${username}`);
         const data = await response.json();
         
         if (response.ok && data.user) {

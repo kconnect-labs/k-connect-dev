@@ -1738,7 +1738,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
           </Box>
           
           {/* Отображение репоста (пост внутри поста) */}
-          {post.type === 'repost' && post.original_post && (
+          {post.type === 'repost' && post.original_post && post.original_post.user && (
             <Box 
               sx={{ 
                 mb: 2, 
@@ -1770,7 +1770,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   variant="caption" 
                   color="text.secondary"
                   component={Link}
-                  to={`/profile/${post.original_post.user?.username}`}
+                  to={`/profile/${post.original_post.user?.username || 'unknown'}`}
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
@@ -1790,7 +1790,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     : `/static/uploads/avatar/system/avatar.png`}
                   alt={post.original_post.user?.name || "User"}
                   component={Link}
-                  to={`/profile/${post.original_post.user?.username}`}
+                  to={`/profile/${post.original_post.user?.username || 'unknown'}`}
                   onClick={(e) => e.stopPropagation()}
                   sx={{ 
                     width: 18, 
@@ -1803,7 +1803,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                   variant="caption" 
                   color="text.primary"
                   component={Link}
-                  to={`/profile/${post.original_post.user?.username}`}
+                  to={`/profile/${post.original_post.user?.username || 'unknown'}`}
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
