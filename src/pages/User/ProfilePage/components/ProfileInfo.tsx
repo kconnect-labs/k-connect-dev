@@ -4,6 +4,14 @@ import { IconButton, Tooltip } from '@mui/material';
 import { useLanguage } from '../../../../context/LanguageContext';
 import { formatDate } from '../../../../utils/dateUtils';
 import { getLighterColor } from '../utils/colorUtils';
+
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LinkIcon from '@mui/icons-material/Link';
+import CakeIcon from '@mui/icons-material/Cake';
+import TodayIcon from '@mui/icons-material/Today';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import DiamondIcon from '@mui/icons-material/Diamond';
+import StarIcon from '@mui/icons-material/Star';
 import styles from './ProfileInfo.module.css';
 
 // Type definitions based on server response
@@ -132,48 +140,6 @@ interface ProfileInfoProps {
   onUsernameClick: (event: React.MouseEvent, username: string) => void;
 }
 
-// Вспомогательные компоненты для иконок
-const LocationIcon = () => (
-  <svg className={styles.infoIcon} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-  </svg>
-);
-
-const LinkIcon = () => (
-  <svg className={styles.infoIcon} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
-  </svg>
-);
-
-const CakeIcon = () => (
-  <svg className={styles.infoIcon} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.37.37.86.57 1.39.57.88 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"/>
-  </svg>
-);
-
-const TodayIcon = () => (
-  <svg className={styles.infoIcon} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-  </svg>
-);
-
-const EmailIcon = () => (
-  <svg className={styles.infoIcon} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-  </svg>
-);
-
-const DiamondIcon = () => (
-  <svg className={styles.subscriptionIconSvg} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
-  </svg>
-);
-
-const StarIcon = () => (
-  <svg className={styles.subscriptionIconSvg} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-  </svg>
-);
 
 // Компонент для отображения информации
 const InfoItem: React.FC<{
@@ -368,7 +334,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         </div>
         
         {user?.location && (
-          <InfoItem icon={<LocationIcon />} label={t('profile.location')}>
+          <InfoItem icon={<LocationOnIcon />} label={t('profile.location')}>
             {user.location}
           </InfoItem>
         )}
@@ -402,7 +368,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         
         {user?.purchased_usernames && user.purchased_usernames.length > 0 && (
           <div className={styles.gridFullWidth}>
-            <InfoItem icon={<EmailIcon />} label={t('profile.usernames')}>
+            <InfoItem icon={<AlternateEmailIcon />} label={t('profile.usernames')}>
               <div className={styles.usernamesContainer}>
                 {user.purchased_usernames.map((usernameObj, idx) => (
                   <button
