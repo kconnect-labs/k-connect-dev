@@ -609,15 +609,25 @@ function App() {
         if (response.data && response.data.user && response.data.user.profile_background_url) {
           const userBg = response.data.user.profile_background_url;
           
-          // Сохраняем обои только если их еще нет в localStorage
-          const savedBg = localStorage.getItem('myProfileBackgroundUrl');
-          if (!savedBg) {
-            saveUserBackground(userBg);
-          }
-          
-          // Если глобальные обои включены и обои еще не применены, применяем их
-          if (globalProfileBackgroundEnabled && !profileBackground) {
-            setProfileBackground(userBg);
+          // Сохраняем обои только если глобальные обои включены
+          if (globalProfileBackgroundEnabled) {
+            const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+            if (!savedBg) {
+              saveUserBackground(userBg);
+            }
+            
+            // Если обои еще не применены, применяем их
+            if (!profileBackground) {
+              setProfileBackground(userBg);
+            }
+          } else {
+            // Если глобальные обои выключены, удаляем из localStorage если там есть
+            const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+            if (savedBg) {
+              localStorage.removeItem('myProfileBackgroundUrl');
+              document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            }
+            clearProfileBackground();
           }
         }
       } catch (error) {
@@ -675,10 +685,15 @@ function App() {
     const isProfilePage = location.pathname.match(/^\/profile\/([^\/]+)$/);
     
     if (!isProfilePage) {
-      // Если мы не на странице профиля, восстанавливаем свои обои
-      restoreUserBackground();
+      // Если мы не на странице профиля и глобальные обои включены, восстанавливаем свои обои
+      if (globalProfileBackgroundEnabled) {
+        restoreUserBackground();
+      } else {
+        // Если глобальные обои выключены, очищаем фон
+        clearProfileBackground();
+      }
     }
-  }, [location.pathname]);
+  }, [location.pathname, globalProfileBackgroundEnabled]);
 
   // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при выходе ---
   useEffect(() => {

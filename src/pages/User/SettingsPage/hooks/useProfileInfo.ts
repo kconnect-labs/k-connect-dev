@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import axios from 'axios';
 
 interface ProfileInfo {
   name: string;
@@ -32,19 +31,22 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     setError(null);
     
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-
-      const response = await axios.post('/api/profile/update-name', formData, {
+      const response = await fetch('/api/profile/update-name', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name
+        }),
       });
 
-      if (response.data.success) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setProfileInfo(prev => ({ ...prev, name }));
       } else {
-        throw new Error(response.data.error || 'Не удалось обновить имя');
+        throw new Error(data.error || 'Не удалось обновить имя');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось обновить имя');
@@ -59,19 +61,22 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     setError(null);
     
     try {
-      const formData = new FormData();
-      formData.append('username', username);
-
-      const response = await axios.post('/api/profile/update-username', formData, {
+      const response = await fetch('/api/profile/update-username', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username
+        }),
       });
 
-      if (response.data.success) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setProfileInfo(prev => ({ ...prev, username }));
       } else {
-        throw new Error(response.data.error || 'Не удалось обновить имя пользователя');
+        throw new Error(data.error || 'Не удалось обновить имя пользователя');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось обновить имя пользователя');
@@ -86,19 +91,22 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     setError(null);
     
     try {
-      const formData = new FormData();
-      formData.append('about', about);
-
-      const response = await axios.post('/api/profile/update-about', formData, {
+      const response = await fetch('/api/profile/update-about', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          about: about
+        }),
       });
 
-      if (response.data.success) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         setProfileInfo(prev => ({ ...prev, about }));
       } else {
-        throw new Error(response.data.error || 'Не удалось обновить описание');
+        throw new Error(data.error || 'Не удалось обновить описание');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось обновить описание');
@@ -113,23 +121,54 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     setError(null);
     
     try {
-      const formData = new FormData();
-      Object.entries(info).forEach(([key, value]) => {
-        if (value !== undefined) {
-          formData.append(key, value);
-        }
-      });
-
-      const response = await axios.post('/api/profile/update', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      if (response.data.success) {
+      // Обновляем каждое поле отдельно, используя соответствующие эндпоинты
+      const updatePromises = [];
+      
+      if (info.name !== undefined) {
+        updatePromises.push(
+          fetch('/api/profile/update-name', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: info.name }),
+          })
+        );
+      }
+      
+      if (info.username !== undefined) {
+        updatePromises.push(
+          fetch('/api/profile/update-username', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: info.username }),
+          })
+        );
+      }
+      
+      if (info.about !== undefined) {
+        updatePromises.push(
+          fetch('/api/profile/update-about', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ about: info.about }),
+          })
+        );
+      }
+      
+      // Выполняем все запросы параллельно
+      const responses = await Promise.all(updatePromises);
+      const results = await Promise.all(responses.map(r => r.json()));
+      
+      // Проверяем, что все запросы прошли успешно
+      const allSuccessful = results.every(result => result.success);
+      
+      if (allSuccessful) {
         setProfileInfo(prev => ({ ...prev, ...info }));
       } else {
-        throw new Error(response.data.error || 'Не удалось обновить информацию профиля');
+        const errorMessages = results
+          .filter(result => !result.success)
+          .map(result => result.error)
+          .join(', ');
+        throw new Error(errorMessages || 'Не удалось обновить информацию профиля');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось обновить информацию профиля');

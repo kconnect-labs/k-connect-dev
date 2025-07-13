@@ -219,6 +219,21 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     try {
       await axios.delete('/api/profile/background');
       setProfileBackgroundUrl(null);
+      
+      // Очищаем localStorage от сохраненных обоев
+      localStorage.removeItem('myProfileBackgroundUrl');
+      document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      
+      // Если глобальные обои включены, выключаем их
+      if (globalProfileBackgroundEnabled) {
+        try {
+          await axios.post('/api/user/settings/global-profile-bg', { enabled: false });
+          setGlobalProfileBackgroundEnabled(false);
+        } catch (error) {
+          console.error('Error disabling global background:', error);
+        }
+      }
+      
       if (onSuccess) onSuccess();
     } catch (error: any) {
       console.error('Error deleting background:', error);
