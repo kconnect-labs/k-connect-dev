@@ -37,19 +37,36 @@ interface KonnectModalProps {
   onSuccess: (message: string) => void;
 }
 
+interface User {
+  id: number;
+  username: string;
+  name: string;
+  photo: string;
+  is_connected?: boolean;
+}
+
+interface Connection {
+  id: number;
+  username: string;
+  name: string;
+  photo: string;
+  connection_status: 'pending' | 'received' | 'confirmed';
+  confirmed_at?: string;
+}
+
 const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess }) => {
   const theme = useTheme();
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [connections, setConnections] = useState([]);
-  const [pendingConnection, setPendingConnection] = useState(null);
-  const [receivedConnection, setReceivedConnection] = useState(null);
+  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [connections, setConnections] = useState<Connection[]>([]);
+  const [pendingConnection, setPendingConnection] = useState<Connection | null>(null);
+  const [receivedConnection, setReceivedConnection] = useState<Connection | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [view, setView] = useState('search'); // 'search' | 'pending' | 'connected' | 'received'
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [menuUserId, setMenuUserId] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<'search' | 'pending' | 'connected' | 'received'>('search');
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [menuUserId, setMenuUserId] = useState<number | null>(null);
 
   // Загрузка коннектов при открытии модала
   useEffect(() => {
@@ -77,28 +94,29 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       const response = await axios.get('/api/user/connections/list?type=love');
       const data = response.data;
       if (data.success) {
-        setConnections(data.connections || []);
+        const connectionsData: Connection[] = data.connections || [];
+        setConnections(connectionsData);
         
         // Находим ожидающий коннект (который мы отправили)
-        const pending = data.connections.find(conn => conn.connection_status === 'pending');
-        setPendingConnection(pending);
+        const pending = connectionsData.find((conn: Connection) => conn.connection_status === 'pending');
+        setPendingConnection(pending || null);
         
         // Находим полученный коннект (который нам отправили)
-        const received = data.connections.find(conn => conn.connection_status === 'received');
-        setReceivedConnection(received);
+        const received = connectionsData.find((conn: Connection) => conn.connection_status === 'received');
+        setReceivedConnection(received || null);
         
         // Определяем, какой вид показывать
         if (pending) {
           setView('pending');
         } else if (received) {
           setView('received');
-        } else if (data.connections.some(conn => conn.connection_status === 'confirmed')) {
+        } else if (connectionsData.some((conn: Connection) => conn.connection_status === 'confirmed')) {
           setView('connected');
         } else {
           setView('search');
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       setError('Ошибка при загрузке коннектов');
     }
   };
@@ -117,7 +135,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       } else {
         setSearchResults([]);
       }
-    } catch (err) {
+    } catch (err: any) {
       setError('Ошибка при поиске пользователей');
       setSearchResults([]);
     }
@@ -234,82 +252,31 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
   };
 
   // Рендер ожидающего коннекта
-  const renderPendingView = () => (
-    <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
-        Ожидание подтверждения
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <Avatar 
-          src={`/static/uploads/avatar/${pendingConnection.id}/${pendingConnection.photo}`}
-          alt={pendingConnection.username}
-          sx={{ width: 64, height: 64, mr: 2 }}
-        />
-        <Box>
-          <Typography sx={{ color: '#fff' }}>{pendingConnection.username}</Typography>
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{pendingConnection.name}</Typography>
+  const renderPendingView = () => {
+    if (!pendingConnection) return null;
+    
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+          Ожидание подтверждения
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+          <Avatar 
+            src={`/static/uploads/avatar/${pendingConnection.id}/${pendingConnection.photo}`}
+            alt={pendingConnection.username}
+            sx={{ width: 64, height: 64, mr: 2 }}
+          />
+          <Box>
+            <Typography sx={{ color: '#fff' }}>{pendingConnection.username}</Typography>
+            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{pendingConnection.name}</Typography>
+          </Box>
         </Box>
-      </Box>
-      <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
-        Ожидаем подтверждения от пользователя
-      </Typography>
-      <Button
-        variant="outlined"
-        onClick={() => removeConnection(pendingConnection.username)}
-        disabled={loading}
-        sx={{
-          color: '#e57373',
-          borderColor: '#e57373',
-          '&:hover': {
-            borderColor: '#e57373',
-            bgcolor: 'rgba(229, 115, 115, 0.1)',
-          },
-        }}
-      >
-        Отменить коннект
-      </Button>
-    </Box>
-  );
-
-  // Рендер полученного коннекта
-  const renderReceivedView = () => (
-    <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
-        Новый коннект
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <Avatar 
-          src={`/static/uploads/avatar/${receivedConnection.id}/${receivedConnection.photo}`}
-          alt={receivedConnection.username}
-          sx={{ width: 64, height: 64, mr: 2 }}
-        />
-        <Box>
-          <Typography sx={{ color: '#fff' }}>{receivedConnection.username}</Typography>
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{receivedConnection.name}</Typography>
-        </Box>
-      </Box>
-      <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
-        Пользователь хочет создать коннект с вами
-      </Typography>
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-        <Button
-          variant="contained"
-          onClick={() => acceptConnection(receivedConnection.username)}
-          disabled={loading}
-          sx={{
-            bgcolor: 'rgba(76, 175, 80, 0.1)',
-            color: '#4caf50',
-            border: '1px solid #4caf50',
-            '&:hover': {
-              bgcolor: 'rgba(76, 175, 80, 0.2)',
-            },
-          }}
-        >
-          Принять
-        </Button>
+        <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+          Ожидаем подтверждения от пользователя
+        </Typography>
         <Button
           variant="outlined"
-          onClick={() => rejectConnection(receivedConnection.username)}
+          onClick={() => removeConnection(pendingConnection.username)}
           disabled={loading}
           sx={{
             color: '#e57373',
@@ -320,11 +287,70 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
             },
           }}
         >
-          Отклонить
+          Отменить коннект
         </Button>
       </Box>
-    </Box>
-  );
+    );
+  };
+
+  // Рендер полученного коннекта
+  const renderReceivedView = () => {
+    if (!receivedConnection) return null;
+    
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+          Новый коннект
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+          <Avatar 
+            src={`/static/uploads/avatar/${receivedConnection.id}/${receivedConnection.photo}`}
+            alt={receivedConnection.username}
+            sx={{ width: 64, height: 64, mr: 2 }}
+          />
+          <Box>
+            <Typography sx={{ color: '#fff' }}>{receivedConnection.username}</Typography>
+            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{receivedConnection.name}</Typography>
+          </Box>
+        </Box>
+        <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+          Пользователь хочет создать коннект с вами
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            onClick={() => acceptConnection(receivedConnection.username)}
+            disabled={loading}
+            sx={{
+              bgcolor: 'rgba(76, 175, 80, 0.1)',
+              color: '#4caf50',
+              border: '1px solid #4caf50',
+              '&:hover': {
+                bgcolor: 'rgba(76, 175, 80, 0.2)',
+              },
+            }}
+          >
+            Принять
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => rejectConnection(receivedConnection.username)}
+            disabled={loading}
+            sx={{
+              color: '#e57373',
+              borderColor: '#e57373',
+              '&:hover': {
+                borderColor: '#e57373',
+                bgcolor: 'rgba(229, 115, 115, 0.1)',
+              },
+            }}
+          >
+            Отклонить
+          </Button>
+        </Box>
+      </Box>
+    );
+  };
 
   // Рендер подключенных коннектов
   const renderConnectedView = () => (
@@ -332,8 +358,8 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
         Ваши коннекты
       </Typography>
-      {connections.filter(conn => conn.connection_status === 'confirmed').map((connection) => {
-        const daysSince = getDaysSince(connection.confirmed_at);
+      {connections.filter((conn: Connection) => conn.connection_status === 'confirmed').map((connection: Connection) => {
+        const daysSince = getDaysSince(connection.confirmed_at || '');
         return (
           <Box
             key={connection.id}
@@ -449,7 +475,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       }}>
         {searchQuery && searchResults.length > 0 && (
           <List>
-            {searchResults.map((user: any) => (
+            {searchResults.map((user: User) => (
               <ListItem
                 key={user.id}
                 sx={{
@@ -510,7 +536,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     <Dialog
       open={open}
       onClose={onClose}
-              maxWidth={false}
+      maxWidth={false}
       fullWidth
       PaperProps={{
         sx: {
