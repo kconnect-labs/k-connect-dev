@@ -99,6 +99,24 @@
   gap: 8px;
 }
 
+.statsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 16px;
+  padding: 2px 8px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .usernameChip {
   display: inline-flex;
   align-items: center;
@@ -131,6 +149,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  color: rgb(208, 188, 255);
+}
+
+.socialsContainer a, svg {
+  color: rgb(208, 188, 255);
 }
 
 .socialButton {
@@ -146,6 +169,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
+  color: rgb(208, 188, 255);
 }
 
 .socialButton:hover {

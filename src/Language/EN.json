@@ -598,9 +598,14 @@
 		"birthday": "Birthday",
 		"registration_date": "Registration date",
 		"not_available": "Not available",
-		"usernames": "Usernames",
-		"awarded_on": "Awarded on: {{date}}",
-		"awarded_by": "By: {{by}}",
+		    "usernames": "Usernames",
+    "awarded_on": "Awarded on: {{date}}",
+    "awarded_by": "By: {{by}}",
+    "stats": "Statistics",
+    "avg_likes_per_post": "Average likes per post",
+    "days_active": "Days active",
+    "posts_count": "Posts count",
+    "total_likes": "Total likes",
 		"feed": {
 			"wall": {
 				"loading_error": "Error loading wall posts",

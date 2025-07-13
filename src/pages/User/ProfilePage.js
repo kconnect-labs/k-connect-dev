@@ -1108,6 +1108,7 @@ const ProfilePage = () => {
               user={user} 
               socials={socials}
               onUsernameClick={handleUsernameClick}
+              stats={stats}
             />
           </TabPanel>
         </Grid>

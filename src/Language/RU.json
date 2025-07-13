@@ -690,6 +690,11 @@
     "usernames": "Юзернеймы",
     "awarded_on": "Выдана: {{date}}",
     "awarded_by": "Кем: {{by}}",
+    "stats": "Статистика",
+    "avg_likes_per_post": "Среднее лайков на пост",
+    "days_active": "Дней активности",
+    "posts_count": "Количество постов",
+    "total_likes": "Всего лайков",
     "feed": {
       "tabs": {
         "posts": "Посты",
