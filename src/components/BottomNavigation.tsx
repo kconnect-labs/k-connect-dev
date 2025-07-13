@@ -35,8 +35,22 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState<boolean>(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
-  const { unreadCounts } = useMessenger() as MessengerContextType;
-  const totalUnread = Object.values(unreadCounts || {}).filter((c: number) => c > 0).length;
+  let messengerContext: MessengerContextType | null = null;
+  let unreadCounts: UnreadCounts = {};
+  let totalUnread = 0;
+  
+  try {
+    messengerContext = useMessenger() as MessengerContextType;
+    unreadCounts = messengerContext?.unreadCounts || {};
+    totalUnread = Object.values(unreadCounts).filter((c: number) => c > 0).length;
+  } catch (error) {
+    // MessengerProvider может быть недоступен во время инициализации
+    console.warn('MessengerContext недоступен в BottomNavigation:', error);
+    unreadCounts = {};
+    totalUnread = 0;
+  }
+  
+
   console.log('📱 BottomNavigation: unreadCounts:', unreadCounts, 'totalUnread:', totalUnread);
   
   const isChannel = user?.account_type === 'channel';
@@ -69,13 +83,12 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   
   const authPages = ['/login', '/register', '/register/profile', '/confirm-email'];
   const isAuthPage = authPages.some(path => location.pathname.startsWith(path));
-  const isSettingsPage = location.pathname.startsWith('/settings');
   const isBadgeShopPage = location.pathname.startsWith('/badge-shop');
   const isClickerPage = location.pathname.startsWith('/minigames/clicker');
   const isBlackjackPage = location.pathname.startsWith('/minigames/blackjack');
   const isCupsPage = location.pathname.startsWith('/minigames/cups');
   
-  if (isAuthPage || isSettingsPage || isBadgeShopPage || isClickerPage || isBlackjackPage || isCupsPage) {
+  if (isAuthPage || isBadgeShopPage || isClickerPage || isBlackjackPage || isCupsPage) {
     return null;
   }
 

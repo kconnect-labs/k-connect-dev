@@ -88,6 +88,7 @@ export const useBlurOptimization = () => {
   };
 
   const applyBlurOptimization = () => {
+    console.log('🔧 Applying blur optimization...');
     const elementsWithBlur = [];
     
     // Удаляем все blur эффекты и запоминаем элементы
@@ -95,15 +96,33 @@ export const useBlurOptimization = () => {
       let hadBlur = false;
       
       if (el.style && el.style.filter && el.style.filter.includes('blur')) {
+        console.log('Found element with filter blur:', el);
         el.style.filter = el.style.filter.replace(/blur\([^)]+\)/g, '');
         hadBlur = true;
       }
       if (el.style && el.style.backdropFilter && el.style.backdropFilter.includes('blur')) {
+        console.log('Found element with backdrop-filter blur:', el, 'Original:', el.style.backdropFilter);
+        // Заменяем backdrop-filter blur на background image с blur.png
         el.style.backdropFilter = el.style.backdropFilter.replace(/blur\([^)]+\)/g, '');
+        el.style.backgroundImage = 'url(/assets/blur.png)';
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+        el.style.backgroundRepeat = 'no-repeat';
+        console.log('Applied background image to element:', el, 'New styles:', {
+          backdropFilter: el.style.backdropFilter,
+          backgroundImage: el.style.backgroundImage,
+          backgroundSize: el.style.backgroundSize
+        });
         hadBlur = true;
       }
       if (el.style && el.style.webkitBackdropFilter && el.style.webkitBackdropFilter.includes('blur')) {
+        console.log('Found element with webkit-backdrop-filter blur:', el);
+        // Заменяем webkit-backdrop-filter blur на background image с blur.png
         el.style.webkitBackdropFilter = el.style.webkitBackdropFilter.replace(/blur\([^)]+\)/g, '');
+        el.style.backgroundImage = 'url(/assets/blur.png)';
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+        el.style.backgroundRepeat = 'no-repeat';
         hadBlur = true;
       }
       
@@ -111,6 +130,8 @@ export const useBlurOptimization = () => {
         elementsWithBlur.push(el);
       }
     });
+
+    console.log('Total elements with blur found:', elementsWithBlur.length);
 
     // Изменяем цвет хедера на более темный
     const headerElements = document.querySelectorAll('[data-header], .header, header, [class*="header"], [class*="Header"], [class*="appbar"], [class*="AppBar"]');
@@ -164,6 +185,16 @@ export const useBlurOptimization = () => {
       el.classList.remove('grain-effect', 'darkening-effect');
     });
 
+    // Удаляем background image с blur.png со всех элементов
+    document.querySelectorAll('*').forEach(el => {
+      if (el.style && el.style.backgroundImage && el.style.backgroundImage.includes('blur.png')) {
+        el.style.backgroundImage = '';
+        el.style.backgroundSize = '';
+        el.style.backgroundPosition = '';
+        el.style.backgroundRepeat = '';
+      }
+    });
+
     // Восстанавливаем оригинальные стили хедера
     const headerElements = document.querySelectorAll('[data-header], .header, header, [class*="header"], [class*="Header"], [class*="appbar"], [class*="AppBar"]');
     headerElements.forEach(header => {
@@ -190,9 +221,23 @@ export const useBlurOptimization = () => {
             }
             if (rule.style.backdropFilter && rule.style.backdropFilter.includes('blur')) {
               rule.style.backdropFilter = rule.style.backdropFilter.replace(/blur\([^)]+\)/g, '');
+              // Добавляем background image для элементов с backdrop-filter
+              if (rule.style.backgroundImage === 'none' || !rule.style.backgroundImage) {
+                rule.style.backgroundImage = 'url(/assets/blur.png)';
+                rule.style.backgroundSize = 'cover';
+                rule.style.backgroundPosition = 'center';
+                rule.style.backgroundRepeat = 'no-repeat';
+              }
             }
             if (rule.style.webkitBackdropFilter && rule.style.webkitBackdropFilter.includes('blur')) {
               rule.style.webkitBackdropFilter = rule.style.webkitBackdropFilter.replace(/blur\([^)]+\)/g, '');
+              // Добавляем background image для элементов с webkit-backdrop-filter
+              if (rule.style.backgroundImage === 'none' || !rule.style.backgroundImage) {
+                rule.style.backgroundImage = 'url(/assets/blur.png)';
+                rule.style.backgroundSize = 'cover';
+                rule.style.backgroundPosition = 'center';
+                rule.style.backgroundRepeat = 'no-repeat';
+              }
             }
           }
         }
@@ -228,10 +273,14 @@ export const useBlurOptimization = () => {
         filter: inherit !important;
       }
       
-      /* Отключаем только blur в backdrop-filter */
+      /* Отключаем только blur в backdrop-filter и заменяем на background image */
       *[style*="backdrop-filter"] {
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
+        background-image: url(/assets/blur.png) !important;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
       }
       
       /* Отключаем только blur в filter */

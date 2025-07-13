@@ -89,7 +89,6 @@ export const ThemeSettingsContext = React.createContext({
   setUserBackground: () => {},
   restoreUserBackground: () => {},
 });
-
 const SessionProvider = ({ children }) => {
   const [sessionActive, setSessionActive] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
