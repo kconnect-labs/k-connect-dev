@@ -802,6 +802,13 @@ const AboutPage = () => {
         avatar: "https://k-connect.ru/static/uploads/avatar/3/bo4hc37yKu.jpg",
         description: "Создал К-Коннект как современную социальную сеть, ориентированную на объединение людей через творческий контент.",
         username: "@qsoul"
+      },
+      {
+        name: "рмоа динеров",
+        role: "Помощник Frontend",
+        avatar: "/static/moderators/rmoa.png",
+        description: "Помогает в оптимизации Фронтеда",
+        username: "@dinerov"
       }
     ],
     designers: [
