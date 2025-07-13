@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { 
   Box, 
   Typography, 
@@ -84,13 +84,16 @@ const ProfilePage = () => {
   const [socials, setSocials] = useState([]);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const { themeSettings, setProfileBackground, clearProfileBackground, globalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
+  const { themeSettings } = useContext(ThemeSettingsContext);
+  const { setUserBackground, restoreUserBackground } = useContext(ThemeSettingsContext);
   const [totalLikes, setTotalLikes] = useState(0);
   
   const [isOnline, setIsOnline] = useState(false);
   const [lastActive, setLastActive] = useState(null);
   
   const [fallbackAvatarUrl, setFallbackAvatarUrl] = useState('');
+  
+
   
 
   
@@ -272,15 +275,8 @@ const ProfilePage = () => {
     
     
     fetchUserProfile();
-  }, [username, setLoading, setUser, setFollowersCount, setFollowingCount, setFollowing, setPostsCount, setSocials, setTotalLikes]);
+  }, [username]);
   
-  
-  useEffect(() => {
-    if (!currentUser) {
-      setUser(null);
-    }
-  }, [currentUser]);
-
   
   useEffect(() => {
     
@@ -367,7 +363,14 @@ const ProfilePage = () => {
           setLoadingFriends(false);
         });
     }
-  }, [user]);
+  }, [user?.id]);
+
+  
+  useEffect(() => {
+    if (!currentUser) {
+      setUser(null);
+    }
+  }, [currentUser]);
 
   
   useEffect(() => {
@@ -390,7 +393,7 @@ const ProfilePage = () => {
     if (user && user.id) {
       fetchTotalLikes();
     }
-  }, [user]);
+  }, [user?.id]);
 
   
   const fetchOnlineStatus = async () => {
@@ -424,10 +427,52 @@ const ProfilePage = () => {
         verification_status: user.verification_status
       });
     }
-  }, [user]);
+  }, [user?.id]);
 
+  // Применяем обои пользователя при загрузке профиля
+  useEffect(() => {
+    // Проверяем, что пользователь авторизован
+    if (!isAuthenticated || !currentUser) {
+      return;
+    }
 
+    // Если данные пользователя еще не загружены, не применяем обои
+    if (!user || !user.username) {
+      return;
+    }
 
+    // Проверяем, не это ли наш собственный профиль
+    const isCurrentUserProfile = currentUser && currentUser.username === user.username;
+    
+    if (user.profile_background_url && !isCurrentUserProfile) {
+      // Применяем обои только если это не наш профиль
+      setUserBackground(user.profile_background_url);
+    } else if (isCurrentUserProfile) {
+      // Если это наш профиль, загружаем и применяем наши обои
+      if (user.profile_background_url) {
+        // Сохраняем обои пользователя в localStorage
+        localStorage.setItem('myProfileBackgroundUrl', user.profile_background_url);
+        document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(user.profile_background_url)};path=/;max-age=31536000`;
+        // Применяем обои
+        setUserBackground(user.profile_background_url);
+      } else {
+        restoreUserBackground();
+      }
+    } else if (user.profile_background_url) {
+      // Если это чужой профиль и у него есть обои, применяем их без сохранения
+      setUserBackground(user.profile_background_url);
+    }
+  }, [user?.username, user?.profile_background_url, currentUser?.username, setUserBackground, restoreUserBackground, isAuthenticated, currentUser]);
+
+  // Восстанавливаем обои при уходе со страницы профиля
+  useEffect(() => {
+    return () => {
+      // Восстанавливаем обои только при уходе со страницы профиля
+      if (user && user.username && currentUser && currentUser.username !== user.username) {
+        restoreUserBackground();
+      }
+    };
+  }, []); // Пустой массив зависимостей - срабатывает только при размонтировании компонента
 
   const handleUsernameClick = (event, username) => {
     event.preventDefault();
@@ -453,33 +498,7 @@ const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    const restoreMyBackground = () => {
-      if (globalProfileBackgroundEnabled) {
-        let myBg = localStorage.getItem('myProfileBackgroundUrl');
-        if (!myBg) {
-          const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-          if (match) myBg = decodeURIComponent(match[1]);
-        }
-        if (myBg) {
-          setProfileBackground(myBg);
-        } else {
-          clearProfileBackground();
-        }
-      } else {
-        clearProfileBackground();
-      }
-    };
 
-    if (user?.profile_background_url) {
-      setProfileBackground(user.profile_background_url);
-      return () => {
-        restoreMyBackground();
-      };
-    } else {
-      restoreMyBackground();
-    }
-  }, [user, globalProfileBackgroundEnabled, setProfileBackground, clearProfileBackground]);
 
   const [searchParams] = useSearchParams();
   const itemIdToOpen = searchParams.get('item');
@@ -630,9 +649,9 @@ const ProfilePage = () => {
                       }}
                     />
                   </Tooltip>
-                  {equippedItems.map((item, index) => (
+                  {/* {equippedItems.map((item, index) => (
                     <EquippedItem key={item.id} item={item} index={index} />
-                  ))}
+                  ))} */}
                   
                   
                   {isOnline && user?.subscription?.type !== 'channel' && (

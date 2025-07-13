@@ -4216,17 +4216,14 @@ const SettingsPage = () => {
   
   const handleGlobalProfileBackgroundToggle = async (event) => {
     const enabled = event.target.checked;
-    // Сохраняем настройку на сервере
-    await axios.post('/api/user/settings/global-profile-bg', { enabled });
-    setGlobalProfileBackgroundEnabled(enabled);
-    if (enabled && profileData?.user?.profile_background_url) {
-      setProfileBackground(profileData.user.profile_background_url);
-      localStorage.setItem('myProfileBackgroundUrl', profileData.user.profile_background_url);
-      document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(profileData.user.profile_background_url)}; path=/; max-age=${60*60*24*365}`;
-    } else {
-      clearProfileBackground();
-      localStorage.removeItem('myProfileBackgroundUrl');
-      document.cookie = 'myProfileBackgroundUrl=; path=/; max-age=0';
+    try {
+      // Только API - никаких манипуляций с localStorage или фоном
+      await axios.post('/api/user/settings/global-profile-bg', { enabled });
+      setGlobalProfileBackgroundEnabled(enabled);
+      showNotification('success', 'Настройка сохранена. Требуется перезагрузка страницы для применения изменений.');
+    } catch (error) {
+      showNotification('error', 'Ошибка при сохранении настройки');
+      console.error('Error saving global background setting:', error);
     }
   };
   
@@ -4997,7 +4994,7 @@ const SettingsPage = () => {
                         />
                         <Box>
                           <Typography variant="body2" fontWeight={500}>
-                            Экспериментальная функция: Глобальные обои профиля
+                            Экспериментальная функция: Глобальные обои профиля (Требуется перезагрузка)
                           </Typography>
                           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
                             При включении ваша фоновая картинка будет использоваться по всему сайту (кроме чужих профилей с их обоями)
