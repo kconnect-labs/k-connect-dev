@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ThemeSettingsContext } from '../App';
 import { resetMessengerSocket } from '../utils/MessengerSocket';
+import { addLazyLoadingToImages } from '../utils/imageUtils';
 
 import AuthService from '../services/AuthService';
 import ProfileService from '../services/ProfileService';
@@ -274,11 +275,8 @@ export const AuthProvider = ({ children }) => {
   // Принудительная загрузка аватарок при изменении пользователя
   useEffect(() => {
     if (user && typeof window !== 'undefined') {
-      // Импортируем функцию только при необходимости
-      import('../utils/imageUtils').then(({ addLazyLoadingToImages }) => {
-        // Принудительно загружаем аватарки пользователя
-        addLazyLoadingToImages('.SIDEBAR-user-avatar, .user-avatar, .profile-avatar', true);
-      });
+      // Принудительно загружаем аватарки пользователя
+      addLazyLoadingToImages('.SIDEBAR-user-avatar, .user-avatar, .profile-avatar', true);
     }
   }, [user]);
 

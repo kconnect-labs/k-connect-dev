@@ -132,6 +132,8 @@ const formatToLocalTime = (isoDateString) => {
 };
 
 export const MessengerProvider = ({ children }) => {
+  // Добавляем состояние для отслеживания готовности провайдера
+  const [isProviderReady, setIsProviderReady] = useState(false);
   
   const authContext = useContext(AuthContext);
   
@@ -2698,7 +2700,8 @@ export const MessengerProvider = ({ children }) => {
     isChannel,
     deviceId,
     useFallbackMode,
-    avatarCache, 
+    avatarCache,
+    isProviderReady, 
     getAvatarUrl, 
     setActiveChat: (chatId) => {
       
@@ -3044,6 +3047,11 @@ export const MessengerProvider = ({ children }) => {
   // Removed local unreadCounts update for active chat - rely entirely on server WebSocket updates
   // The server will handle unread count updates when messages are read in active chat
   
+  // Устанавливаем готовность провайдера после инициализации
+  useEffect(() => {
+    setIsProviderReady(true);
+  }, []);
+  
   // ---- Звуковое оповещение о новых непрочитанных ----
   const notificationAudioRef = useRef(null);
   const prevTotalUnreadRef = useRef(0);
@@ -3109,7 +3117,28 @@ export const MessengerProvider = ({ children }) => {
 export const useMessenger = () => {
   const context = React.useContext(MessengerContext);
   if (!context) {
+    // В development режиме показываем предупреждение вместо ошибки
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('useMessenger: MessengerProvider недоступен. Возможно, компонент рендерится до инициализации провайдера.');
+      // Возвращаем пустой объект с базовыми свойствами
+      return {
+        unreadCounts: {},
+        chats: [],
+        messages: {},
+        activeChat: null,
+        isSocketConnected: false,
+        sendTextMessage: () => Promise.resolve({ success: false }),
+        markMessageAsRead: () => Promise.resolve({ success: false }),
+        // Добавляем другие необходимые методы с пустыми реализациями
+      };
+    }
     throw new Error('useMessenger must be used within a MessengerProvider');
   }
+  
+  // Проверяем готовность провайдера
+  if (!context.isProviderReady && process.env.NODE_ENV === 'development') {
+    console.warn('useMessenger: MessengerProvider еще не готов, возвращаем базовые значения');
+  }
+  
   return context;
 }; 

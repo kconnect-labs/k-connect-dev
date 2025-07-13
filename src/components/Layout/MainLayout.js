@@ -108,6 +108,8 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
   const { currentTrack } = useMusic();
   
+
+  
   const sidebarWidth = 280;
   
   const isBanned = user && user.ban === 1;
@@ -158,6 +160,7 @@ const MainLayout = ({ children }) => {
             : 'none'),
         color: themeSettings?.textColor || theme.palette.text.primary
       }}
+
     >
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}

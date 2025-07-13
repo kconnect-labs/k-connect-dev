@@ -83,8 +83,12 @@ export const ThemeSettingsContext = React.createContext({
   updateThemeSettings: () => {},
   setProfileBackground: () => {},
   clearProfileBackground: () => {},
+  profileBackground: null,
+  globalProfileBackgroundEnabled: false,
+  setGlobalProfileBackgroundEnabled: (enabled) => {},
+  setUserBackground: () => {},
+  restoreUserBackground: () => {},
 });
-
 const SessionProvider = ({ children }) => {
   const [sessionActive, setSessionActive] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
@@ -247,9 +251,85 @@ function App() {
     };
   });
   
+  // Система обоев сайта
+  const [profileBackground, setProfileBackgroundState] = useState(null);
+  const [globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabledState] = useState(false);
+  const [userBackgroundUrl, setUserBackgroundUrl] = useState(null);
   
+  const setProfileBackground = (url) => {
+    setProfileBackgroundState(url);
+  };
+  const clearProfileBackground = () => {
+    setProfileBackgroundState(null);
+  };
   
+  // Сохраняем обои пользователя в localStorage
+  const saveUserBackground = (url) => {
+    if (url) {
+      localStorage.setItem('myProfileBackgroundUrl', url);
+      // Также сохраняем в куки для совместимости
+      document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(url)};path=/;max-age=31536000`;
 
+    } else {
+      localStorage.removeItem('myProfileBackgroundUrl');
+      document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+    setUserBackgroundUrl(url);
+  };
+  
+  // Восстанавливаем обои пользователя из localStorage
+  const restoreUserBackground = () => {
+    // Сначала пробуем localStorage, потом куки
+    let savedBg = localStorage.getItem('myProfileBackgroundUrl');
+    
+    if (!savedBg) {
+      const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
+      
+      if (match) {
+        savedBg = decodeURIComponent(match[1]);
+        // Переносим из куки в localStorage
+        localStorage.setItem('myProfileBackgroundUrl', savedBg);
+      }
+    }
+    
+    if (savedBg) {
+      // Если есть сохраненные обои, применяем их
+      setProfileBackground(savedBg);
+    } else {
+      // Если нет сохраненных обоев, очищаем текущие
+      clearProfileBackground();
+    }
+  };
+  
+  // Устанавливаем обои другого пользователя
+  const setUserBackground = (url) => {
+    if (url) {
+      setProfileBackground(url);
+    } else {
+      restoreUserBackground();
+    }
+  };
+  
+  const setGlobalProfileBackgroundEnabled = (enabled) => {
+    if (globalProfileBackgroundEnabled !== enabled) {
+      setGlobalProfileBackgroundEnabledState(enabled);
+      
+      if (enabled) {
+        // Если включаем глобальные обои, применяем сохраненные обои пользователя
+        const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+        if (savedBg) {
+          setProfileBackground(savedBg);
+        }
+      } else {
+        // Если выключаем, убираем обои и очищаем localStorage
+        clearProfileBackground();
+        localStorage.removeItem('myProfileBackgroundUrl');
+        document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      }
+    }
+  };
+  
+  
   const updateThemeSettings = (newSettings) => {
     setThemeSettings(prev => {
       // Проверяем, действительно ли изменились настройки
@@ -280,7 +360,7 @@ function App() {
   
   
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loading } = authContext || {};
+  const { isAuthenticated, loading, currentUser } = authContext || {};
   
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {
@@ -375,66 +455,6 @@ function App() {
   }, [themeSettings]);
 
   
-  const [profileBackground, setProfileBackgroundState] = useState(null);
-  const setProfileBackground = (url) => setProfileBackgroundState(url);
-  const clearProfileBackground = () => setProfileBackgroundState(null);
-
-  useEffect(() => {
-    if (profileBackground) {
-      document.body.classList.add('profile-background-active');
-    } else {
-      document.body.classList.remove('profile-background-active');
-    }
-  }, [profileBackground]);
-
-  const [globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled] = useState(false);
-
-  useEffect(() => {
-    // Проверка и применение фона при старте и при изменении переключателя
-    const applyProfileBackground = (enabled) => {
-      if (enabled) {
-        let myBg = localStorage.getItem('myProfileBackgroundUrl');
-        if (!myBg) {
-          const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-          if (match) myBg = decodeURIComponent(match[1]);
-        }
-        if (myBg) setProfileBackground(myBg);
-        else clearProfileBackground();
-      } else {
-        clearProfileBackground();
-      }
-    };
-
-    // Применение фона при старте (настройки загружаются в отдельном useEffect)
-    applyProfileBackground(globalProfileBackgroundEnabled);
-  }, []);
-
-  useEffect(() => {
-    // Следить за изменением переключателя и применять фон
-    if (globalProfileBackgroundEnabled) {
-      let myBg = localStorage.getItem('myProfileBackgroundUrl');
-      if (!myBg) {
-        const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-        if (match) myBg = decodeURIComponent(match[1]);
-      }
-      if (myBg) setProfileBackground(myBg);
-      else clearProfileBackground();
-    } else {
-      clearProfileBackground();
-    }
-  }, [globalProfileBackgroundEnabled]);
-
-  const themeContextValue = useMemo(() => ({
-    themeSettings,
-    updateThemeSettings,
-    setProfileBackground,
-    clearProfileBackground,
-    profileBackground,
-    globalProfileBackgroundEnabled,
-    setGlobalProfileBackgroundEnabled,
-  }), [themeSettings, profileBackground, globalProfileBackgroundEnabled]);
-
-  
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -492,9 +512,13 @@ function App() {
   // --- ДОБАВЛЯЕМ useEffect для загрузки темы пользователя ---
   useEffect(() => {
     const loadUserSettings = async () => {
+      console.log('🎨 ATTENTION: Начинаем загрузку настроек пользователя');
+      
       try {
         const response = await fetch('/api/profile/settings');
         const data = await response.json();
+        console.log('🎨 ATTENTION: Ответ API настроек:', data);
+        
         if (data && data.success && data.settings) {
           // Применяем настройки темы
           setThemeSettings(prev => ({
@@ -504,41 +528,111 @@ function App() {
           }));
           localStorage.setItem('primaryColor', data.settings.primary_color || '#D0BCFF');
           localStorage.setItem('theme', 'dark');
+          console.log('🎨 ATTENTION: Применены настройки темы пользователя');
 
         }
       } catch (e) {
-        console.error('Ошибка загрузки настроек:', e);
+        console.error('🎨 ATTENTION: Ошибка загрузки настроек:', e);
         // fallback: дефолт
         setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
       }
       
+
+      
       // Загружаем настройки глобального фона профиля
       try {
         const bgResponse = await axios.get('/api/user/settings/global-profile-bg');
+        
         if (bgResponse.data && bgResponse.data.success) {
           setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
-          // Применяем фон сразу после загрузки настроек
-          if (bgResponse.data.enabled) {
-            let myBg = localStorage.getItem('myProfileBackgroundUrl');
-            if (!myBg) {
-              const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-              if (match) myBg = decodeURIComponent(match[1]);
+          
+          // Если есть background URL в ответе, сохраняем его
+          if (bgResponse.data.background_url) {
+            saveUserBackground(bgResponse.data.background_url);
+            
+            // Если глобальные обои включены, применяем их сразу
+            if (bgResponse.data.enabled) {
+              setProfileBackground(bgResponse.data.background_url);
             }
-            if (myBg) setProfileBackground(myBg);
-            else clearProfileBackground();
-          } else {
-            clearProfileBackground();
           }
-
         }
       } catch (error) {
-
+        // Игнорируем ошибки
       }
     };
 
     // Загружаем настройки при инициализации приложения
     loadUserSettings();
   }, []);
+
+  // --- ДОБАВЛЯЕМ useEffect для загрузки обоев пользователя ---
+  useEffect(() => {
+    const loadUserBackground = async () => {
+      // Проверяем, что пользователь авторизован
+      // Также проверяем наличие токена в localStorage как fallback
+      const hasToken = localStorage.getItem('token') || document.cookie.includes('sessionid');
+      
+      // Если пользователь не авторизован в AuthContext, но есть токен, пробуем получить данные
+      if (!isAuthenticated || !currentUser) {
+        if (hasToken) {
+          try {
+            const response = await axios.get('/api/auth/me');
+            if (response.data && response.data.user) {
+              // Используем данные из API для загрузки обоев
+              await loadUserBackgroundFromUsername(response.data.user.username);
+            }
+          } catch (error) {
+            // Игнорируем ошибки
+          }
+        }
+        return;
+      }
+
+      // Если пользователь авторизован в AuthContext, используем его данные
+      if (currentUser && currentUser.username) {
+        await loadUserBackgroundFromUsername(currentUser.username);
+      }
+    };
+
+    const loadUserBackgroundFromUsername = async (username) => {
+      try {
+        // Получаем данные профиля текущего пользователя
+        const response = await axios.get(`/api/profile/${username}`);
+        
+        if (response.data && response.data.user && response.data.user.profile_background_url) {
+          const userBg = response.data.user.profile_background_url;
+          
+          // Сохраняем обои только если их еще нет в localStorage
+          const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+          if (!savedBg) {
+            saveUserBackground(userBg);
+          }
+          
+          // Если глобальные обои включены и обои еще не применены, применяем их
+          if (globalProfileBackgroundEnabled && !profileBackground) {
+            setProfileBackground(userBg);
+          }
+        }
+      } catch (error) {
+        // Игнорируем ошибки
+      }
+    };
+
+    // Загружаем обои пользователя при инициализации
+    loadUserBackground();
+  }, [globalProfileBackgroundEnabled, isAuthenticated, loading, currentUser]);
+
+  // --- ДОБАВЛЯЕМ useEffect для применения обоев при изменении глобальной настройки ---
+  useEffect(() => {
+    if (globalProfileBackgroundEnabled) {
+      const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+      if (savedBg) {
+        setProfileBackground(savedBg);
+      }
+    } else {
+      clearProfileBackground();
+    }
+  }, [globalProfileBackgroundEnabled]);
 
   // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра ---
   useEffect(() => {
@@ -568,6 +662,25 @@ function App() {
     }
   }, [location.pathname, blurOptimization.isEnabled, blurOptimization.isLoading]);
 
+  // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при переходе на другие страницы ---
+  useEffect(() => {
+    // Проверяем, находимся ли мы на странице профиля
+    const isProfilePage = location.pathname.match(/^\/profile\/([^\/]+)$/);
+    
+    if (!isProfilePage) {
+      // Если мы не на странице профиля, восстанавливаем свои обои
+      restoreUserBackground();
+    }
+  }, [location.pathname]);
+
+  // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при выходе ---
+  useEffect(() => {
+    if (!isAuthenticated && !loading) {
+      // При выходе из аккаунта очищаем обои
+      clearProfileBackground();
+      setUserBackgroundUrl(null);
+    }
+  }, [isAuthenticated, loading]);
 
 
   // Определяем тип роута
@@ -580,6 +693,20 @@ function App() {
   const isSpecialPage = ['/street/blacklist'].some(
     path => currentPath.startsWith(path)
   );
+
+  const themeContextValue = useMemo(() => {
+    return {
+      themeSettings,
+      updateThemeSettings,
+      globalProfileBackgroundEnabled,
+      setGlobalProfileBackgroundEnabled,
+      profileBackground,
+      setProfileBackground,
+      clearProfileBackground,
+      setUserBackground,
+      restoreUserBackground,
+    };
+  }, [themeSettings, globalProfileBackgroundEnabled, profileBackground]);
 
   return (
     <HelmetProvider>
@@ -625,7 +752,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
