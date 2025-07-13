@@ -544,7 +544,7 @@
 			"message": "Message",
 			"edit": "Edit"
 		},
-		"stats": {
+		"info_stats": {
 			"followers": "followers",
 			"following": "following",
 			"posts": "posts",
@@ -783,7 +783,6 @@
 		"errorLike": "Like error",
 		"errorLikeReply": "Reply like error",
 		"errorDelete": "Delete error",
-		"errorDeleteReply": "Reply delete error",
 		"errorRefresh": "Refresh error",
 		"errorRefreshReply": "Reply refresh error",
 		"errorView": "View error",

@@ -81,7 +81,6 @@
       "clicker_points": "Баллы из кликера",
       "transfer": "Исходящий перевод",
       "deposit": "Входящий перевод",
-      "username_purchase": "Покупка юзернейма",
       "weekly_points": "Еженедельные баллы",
       "activity_reward": "Начисление за активность",
       "transaction": "Транзакция",
@@ -628,7 +627,7 @@
       "message": "Сообщение",
       "edit": "Редактировать"
     },
-    "stats": {
+    "info_stats": {
       "followers": "подписчиков",
       "following": "подписок",
       "posts": "публикаций",
@@ -649,8 +648,7 @@
       "expires": "Истекает",
       "total_duration": "Общая длительность",
       "months": "месяцев",
-      "active_subscription": "Активная подписка",
-      "active": "Активна"
+      "active_subscription": "Активная подписка"
     },
     "medals": {
       "title": "Медали",
@@ -886,7 +884,6 @@
     "errorLike": "Ошибка лайка",
     "errorLikeReply": "Ошибка лайка ответа",
     "errorDelete": "Ошибка удаления",
-    "errorDeleteReply": "Ошибка удаления ответа",
     "errorRefresh": "Ошибка обновления",
     "errorRefreshReply": "Ошибка обновления ответа",
     "errorView": "Ошибка просмотра",

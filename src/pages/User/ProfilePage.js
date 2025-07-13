@@ -864,7 +864,7 @@ const ProfilePage = () => {
                     <Typography variant="caption" sx={{ 
                       color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                     }}>
-                      {t('profile.stats.posts')}
+                      {t('profile.info_stats.posts')}
                     </Typography>
                   </Paper>
                   
@@ -899,7 +899,7 @@ const ProfilePage = () => {
                     <Typography variant="caption" sx={{ 
                       color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                     }}>
-                      {t('profile.stats.followers')}
+                      {t('profile.info_stats.followers')}
                     </Typography>
                   </Paper>
                   
@@ -935,7 +935,7 @@ const ProfilePage = () => {
                       <Typography variant="caption" sx={{ 
                         color: user?.status_color ? getLighterColor(user.status_color) : theme => theme.palette.text.secondary
                       }}>
-                        {t('profile.stats.following')}
+                        {t('profile.info_stats.following')}
                       </Typography>
                     </Paper>
                   )}
