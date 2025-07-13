@@ -7,9 +7,7 @@ import { RequireAuth } from '../App';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
-const RegisterProfile = React.lazy(() => import('../pages/Auth/RegisterProfile'));
 const RegisterChannel = React.lazy(() => import('../pages/Auth/RegisterChannel'));
-const EmailConfirmation = React.lazy(() => import('../pages/Auth/EmailConfirmation'));
 const ProfilePage = React.lazy(() => import('../pages/User/ProfilePage'));
 const MainPage = React.lazy(() => import('../pages/Main/MainPage'));
 const PostDetailPage = React.lazy(() => import('../pages/Main/PostDetailPage'));
@@ -64,9 +62,7 @@ const MainRoutes = ({ setUser, background }) => {
     <MainLayout>
       <React.Suspense fallback={<LoadingIndicator />}>
         <Routes location={background || location}>
-          <Route path="/register/profile" element={<RegisterProfile setUser={setUser} />} />
-          <Route path="/register/channel" element={<RegisterChannel />} />
-          <Route path="/confirm-email/:token" element={<EmailConfirmation />} />                    
+          <Route path="/register/channel" element={<RegisterChannel />} />                    
           <Route path="/" element={
             loading ? (
               <LoadingIndicator />

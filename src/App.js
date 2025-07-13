@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTra
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
@@ -36,7 +36,7 @@ export const SessionContext = React.createContext({
 });
 
 export const RequireAuth = ({ children }) => {
-  const { isAuthenticated, loading } = useContext(AuthContext);
+  const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
   
   
@@ -84,6 +84,20 @@ export const ThemeSettingsContext = React.createContext({
   setProfileBackground: () => {},
   clearProfileBackground: () => {},
 });
+
+const AppRoutes = ({ isAuthPage, isPublicPage, isSpecialPage, background }) => {
+  const { setUser } = useAuth();
+  
+  if (isAuthPage) {
+    return <AuthRoutes setUser={setUser} />;
+  } else if (isPublicPage) {
+    return <PublicRoutes />;
+  } else if (isSpecialPage) {
+    return <SpecialRoutes />;
+  } else {
+    return <MainRoutes setUser={setUser} background={background} />;
+  }
+};
 
 const SessionProvider = ({ children }) => {
   const [sessionActive, setSessionActive] = useState(true);
@@ -279,8 +293,7 @@ function App() {
   };
   
   
-  const authContext = useContext(AuthContext);
-  const { isAuthenticated, loading } = authContext || {};
+  const { isAuthenticated, loading } = useAuth();
   
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {
@@ -571,7 +584,7 @@ function App() {
 
 
   // Определяем тип роута
-  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password', '/element-auth', '/auth_elem'].some(
+  const isAuthPage = ['/login', '/register', '/register/profile', '/confirm-email', '/forgot-password', '/reset-password', '/element-auth', '/auth_elem'].some(
     path => currentPath.startsWith(path)
   );
   const isPublicPage = ['/rules', '/privacy-policy', '/terms-of-service', '/about'].some(
@@ -597,15 +610,12 @@ function App() {
                                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                                   <Suspense fallback={<LoadingIndicator />}>
                                     <DefaultSEO />
-                              {isAuthPage ? (
-                                <AuthRoutes setUser={authContext?.setUser} />
-                              ) : isPublicPage ? (
-                                <PublicRoutes />
-                              ) : isSpecialPage ? (
-                                <SpecialRoutes />
-                              ) : (
-                                <MainRoutes setUser={authContext?.setUser} background={location.state?.background} />
-                              )}
+                                    <AppRoutes 
+                                      isAuthPage={isAuthPage}
+                                      isPublicPage={isPublicPage}
+                                      isSpecialPage={isSpecialPage}
+                                      background={location.state?.background}
+                                    />
                                     <MusicPlayerCore />
                                     <CommandPalleteModal />
                                   </Suspense>

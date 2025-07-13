@@ -518,10 +518,11 @@
       "event": "Инвент",
       "more": {
         "title": "Еще",
+        "referral": "Рефералы",
         "bug_reports": "Баг-репорты",
         "rules": "Правила",
         "api_docs": "API",
-        "stickers": "менеджер стикеров",
+        "stickers": "Стикеры",
         "about": "О платформе"
       }
     },

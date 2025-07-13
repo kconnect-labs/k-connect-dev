@@ -1,20 +1,21 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Auth/Login'));
 const Register = React.lazy(() => import('../pages/Auth/Register'));
+const RegisterProfile = React.lazy(() => import('../pages/Auth/RegisterProfile'));
+const EmailConfirmation = React.lazy(() => import('../pages/Auth/EmailConfirmation'));
 const ForgotPassword = React.lazy(() => import('../pages/Auth/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('../pages/Auth/ResetPassword'));
 const ElementAuth = React.lazy(() => import('../pages/Auth/ElementAuth'));
 
 const AuthRoutes = ({ setUser }) => {
   const theme = useTheme();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
 
   return (
     <Box sx={{ minHeight: '100vh', background: theme.palette.background.default, display: 'flex', flexDirection: 'column' }}>
@@ -34,6 +35,14 @@ const AuthRoutes = ({ setUser }) => {
               <Register setUser={setUser} />
             )
           } />
+          <Route path="/register/profile" element={
+            isAuthenticated ? (
+              <RegisterProfile setUser={setUser} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          <Route path="/confirm-email/:token" element={<EmailConfirmation />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/element-auth" element={<ElementAuth />} />

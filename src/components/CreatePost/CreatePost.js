@@ -385,6 +385,11 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
     }
   };
 
+  // Если пользователь не авторизован, не показываем компонент
+  if (!user) {
+    return null;
+  }
+
   return (
     <Paper 
       elevation={0} 
@@ -474,8 +479,8 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
           
           <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
             <Avatar 
-              src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
-              alt={user.name}
+              src={user?.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
+              alt={user?.name || 'User'}
               sx={{ 
                 mr: 1.5, 
                 width: 40, 

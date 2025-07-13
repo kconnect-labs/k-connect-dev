@@ -143,27 +143,9 @@ const MainLayout = ({ children }) => {
     setSidebarOpen(false);
   };
   
-  const authPages = ['/login', '/register', '/register/profile', '/confirm-email'];
-  const isAuthPage = authPages.some(path => location.pathname.startsWith(path));
-  
   const isMusicPage = location.pathname.startsWith('/music');
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
-  
-  if (isAuthPage) {
-    return (
-      <Box sx={{ 
-        backgroundColor: themeSettings?.backgroundColor || theme.palette.background.default,
-        color: themeSettings?.textColor || theme.palette.text.primary,
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'auto'
-      }}>
-        {children}
-      </Box>
-    );
-  }
 
   return (
     <MainContainer 

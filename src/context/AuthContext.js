@@ -187,18 +187,6 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success) {
         
-        // Проверяем, нужно ли создать профиль
-        if (response.needsProfileSetup) {
-          // Пользователь верифицирован, но профиль не создан
-          setUser(null);
-          setIsAuthenticated(true);
-          persistAuthState(true, null);
-          
-          // Перенаправляем на страницу создания профиля
-          navigate('/register/profile', { replace: true });
-          return { success: true, needsProfileSetup: true };
-        }
-        
         setUser(response.user);
         setIsAuthenticated(true);
         
@@ -218,6 +206,9 @@ export const AuthProvider = ({ children }) => {
             // Если есть deeplink, переходим на страницу музыки
             console.log('Redirecting to music page with deeplink trackId:', deeplinkTrackId);
             window.location.href = `/music/track/${deeplinkTrackId}`;
+          } else if (!response.user) {
+            // Обычный редирект на страницу регистрации профиля, если response.user отсутствует
+            window.location.href = '/register/profile';
           } else {
             // Обычный редирект на главную
             window.location.href = '/';

@@ -342,14 +342,6 @@ const Login = () => {
         return;
       }
       
-      // Проверяем, нужно ли создать профиль
-      if (result && result.success && result.needsProfileSetup) {
-        // Пользователь верифицирован, но профиль не создан
-        // Перенаправление уже обработано в AuthContext
-        setLoading(false);
-        return;
-      }
-      
       
       
       localStorage.removeItem('login_error');
@@ -675,10 +667,10 @@ const Login = () => {
               p: isMobile ? 3 : 4,
               width: '100%',
               maxWidth: '480px',
-              borderRadius: 4,
-              background: isMobile ? 'transparent' : 'rgba(30, 30, 40, 0.85)',
-              backdropFilter: 'blur(10px)',
-              border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '12px',
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
               mt: isMobile ? '70px' : 0
             }}
           >

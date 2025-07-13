@@ -182,8 +182,8 @@ const OnlineUsers = () => {
             onClick={() => handleUserClick(user.username)}
           >
             <Avatar
-              src={user.photo}
-              alt={user.username}
+              src={user?.photo || '/static/uploads/system/avatar.png'}
+              alt={user?.username || 'User'}
               sx={{
                 width: 36,
                 height: 36,
@@ -242,7 +242,7 @@ const UserRecommendation = ({ user }) => {
   };
 
   const getAvatarSrc = () => {
-    if (!user.photo) return '/static/uploads/system/avatar.png';
+    if (!user?.photo) return '/static/uploads/system/avatar.png';
     
     if (user.photo.startsWith('/') || user.photo.startsWith('http')) {
       return user.photo;
