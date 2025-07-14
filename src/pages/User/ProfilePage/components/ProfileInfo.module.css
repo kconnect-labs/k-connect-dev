@@ -152,7 +152,11 @@
   color: rgb(208, 188, 255);
 }
 
-.socialsContainer a, svg {
+.socialsContainer a {
+  color: rgb(208, 188, 255);
+}
+
+.socialsContainer svg {
   color: rgb(208, 188, 255);
 }
 

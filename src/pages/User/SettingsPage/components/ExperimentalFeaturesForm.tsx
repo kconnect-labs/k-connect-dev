@@ -15,8 +15,11 @@ interface ExperimentalFeaturesFormProps {
 }
 
 const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onSuccess }) => {
-  const blurOptimization = useBlurOptimization();
-  const { isEnabled: blurOptimizationEnabled, toggleBlurOptimization } = blurOptimization;
+  const {
+    isEnabled: blurOptimizationEnabled,
+    isLoading: blurOptimizationLoading,
+    toggleBlurOptimization
+  } = useBlurOptimization();
 
   const containerStyle = {
     p: 3,
@@ -41,6 +44,15 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
     }
   };
 
+  const handleBlurToggle = async () => {
+    try {
+      await toggleBlurOptimization();
+      onSuccess?.();
+    } catch (error) {
+      console.error('Error toggling blur optimization:', error);
+    }
+  };
+
   return (
     <Box sx={containerStyle}>
       <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600 }}>
@@ -54,9 +66,9 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
       {/* Оптимизация блюра */}
       <Box sx={featureItemStyle}>
         <Switch
-          checked={!!blurOptimizationEnabled}
-          onChange={toggleBlurOptimization}
-          disabled={typeof blurOptimization === 'object' && 'isLoading' in blurOptimization ? !!blurOptimization.isLoading : false}
+          checked={blurOptimizationEnabled}
+          onChange={handleBlurToggle}
+          disabled={blurOptimizationLoading}
           color="primary"
         />
         <Box sx={{ flex: 1 }}>
@@ -64,18 +76,17 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
             Оптимизация блюра
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Отключает blur эффекты для улучшения производительности. Добавляет легкий эффект зернистости и изменяет цвет хедера.
+            Отключает blur эффекты для модалок и боксов, заменяя их на сплошной цвет. Улучшает производительность на слабых устройствах.
           </Typography>
         </Box>
-        {'isLoading' in blurOptimization && blurOptimization.isLoading ? (
+        {blurOptimizationLoading ? (
           <CircularProgress size={20} />
         ) : (
           <BlurOffIcon sx={{ color: 'text.secondary' }} />
         )}
       </Box>
 
-
-
+      {/* Анимации (в разработке) */}
       <Box sx={featureItemStyle}>
         <Switch
           checked={false}

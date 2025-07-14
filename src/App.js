@@ -6,7 +6,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
-import { useBlurOptimization } from './hooks/useBlurOptimization';
+import { useBlurOptimization } from './hooks/useBlurOptimization.ts';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';

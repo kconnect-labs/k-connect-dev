@@ -680,7 +680,10 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       onError={(e) => {
                         // Если аватарка не загрузилась, показываем первую букву имени
                         e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextSibling.style.display = 'flex';
+                        const nextSibling = e.currentTarget.nextSibling as HTMLElement | null;
+                        if (nextSibling && 'style' in nextSibling) {
+                          nextSibling.style.display = 'flex';
+                        }
                       }}
                     />
                   ) : null}

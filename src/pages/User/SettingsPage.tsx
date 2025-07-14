@@ -313,6 +313,8 @@ const SettingsPage = () => {
           background: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 1,
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
         }}>
           Настройки
         </Typography>
@@ -345,6 +347,8 @@ const SettingsPage = () => {
                     color: 'white',
                     textTransform: 'none',
                     transition: 'all 0.2s ease',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
                     '&:hover': {
                       background: 'rgba(255, 255, 255, 0.1)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',

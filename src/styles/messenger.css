@@ -31,27 +31,7 @@
   font-weight: 500;
 }
 
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
 
-.header-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--primary, #D0BCFF);
-}
-
-.header-actions button:hover {
-  background-color: rgba(208, 188, 255, 0.08);
-}
 
 .chat-search {
   padding: 0 8px;
