@@ -540,15 +540,32 @@ const ProfilePage = () => {
       sx={{ 
         pt: 0, 
         pb: 4, 
-        px: { xs: 0.5, sm: 1 },
+        px: 0,
         width: '100%',
         marginRight: 'auto',
         marginLeft: '0!important',
-        paddingTop: '24px',
+        paddingTop: '15px',
         paddingBottom: '40px',
         paddingLeft: '0',
         paddingRight: '0',
         minHeight: 'calc(100vh - 64px)',
+        // Переопределяем стили Material-UI для отключения паддингов на всех экранах
+        '@media (min-width: 0px)': {
+          paddingLeft: '0 !important',
+          paddingRight: '0 !important',
+        },
+        '@media (min-width: 600px)': {
+          paddingLeft: '0 !important',
+          paddingRight: '0 !important',
+        },
+        '@media (min-width: 700px)': {
+          paddingLeft: '0 !important',
+          paddingRight: '0 !important',
+        },
+        '@media (min-width: 900px)': {
+          paddingLeft: '0 !important',
+          paddingRight: '0 !important',
+        },
       }}
     >
       <Grid 
@@ -562,7 +579,7 @@ const ProfilePage = () => {
         
                 <Grid item xs={12} lg={5} sx={{
           position: { xs: 'static', lg: 'sticky' },
-          top: '60px',
+          top: '50px',
           height: 'fit-content',
           zIndex: 2
         }}>
