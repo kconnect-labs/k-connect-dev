@@ -12,7 +12,7 @@ const NotFoundContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   padding: theme.spacing(3),
   textAlign: 'center',
-  background: 'linear-gradient(to bottom, #131313, #1a1a1a)',
+  background: 'linear-gradient(to bottom, #151515, #1a1a1a)',
 }));
 
 const ErrorCode = styled(Typography)(({ theme }) => ({

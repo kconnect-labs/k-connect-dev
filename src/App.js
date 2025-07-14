@@ -236,7 +236,7 @@ function App() {
     // Настройки для темной темы
     const getThemeColors = (mode) => {
           return {
-        backgroundColor: '#131313',
+        backgroundColor: '#151515',
             textColor: '#FFFFFF'
           };
     };
@@ -398,8 +398,8 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: themeSettings.backgroundColor || '#131313',
-          paper: themeSettings.backgroundColor || '#131313',
+          default: themeSettings.backgroundColor || '#151515',
+          paper: themeSettings.backgroundColor || '#151515',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
@@ -425,7 +425,7 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              backgroundColor: themeSettings.backgroundColor || '#131313',
+              backgroundColor: themeSettings.backgroundColor || '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -435,7 +435,7 @@ function App() {
             root: {
               borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: themeSettings.backgroundColor || '#131313',
+              backgroundColor: themeSettings.backgroundColor || '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -444,7 +444,7 @@ function App() {
           styleOverrides: {
             root: {
               borderRadius: '12px',
-              backgroundColor: themeSettings.backgroundColor || '#131313',
+              backgroundColor: themeSettings.backgroundColor || '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },

@@ -59,7 +59,7 @@ const MediaWrapper = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'light'
     ? alpha(theme.palette.grey[300], 0.5)
     : theme.palette.mode === 'contrast'
-      ? '#131313'
+      ? '#151515'
       : '#0A0A0A',
 }));
 

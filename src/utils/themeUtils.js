@@ -1,7 +1,7 @@
 // Утилиты для работы с темами
 export const getThemeColors = (mode) => {
   return {
-    backgroundColor: '#131313',
+    backgroundColor: '#151515',
     textColor: '#FFFFFF'
   };
 };

@@ -74,7 +74,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box>
       <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600 }}>
         Фото профиля
       </Typography>
