@@ -542,13 +542,25 @@ const RulesPage = () => {
                       <SubRuleItem>
                         <SubRuleNumber>1.1.1</SubRuleNumber>
                         <Typography variant="body2">
-                          Запрещены любые формы унижения достоинства, высказывания, направленные на создание конфликтных ситуаций.
+                          Запрещены оскорбления, унижения, насмешки, издевательства над внешностью, интеллектом, национальностью, религией, полом, возрастом.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>1.1.2</SubRuleNumber>
                         <Typography variant="body2">
-                          Запрещено целенаправленное преследование пользователей на платформе с целью причинения морального вреда.
+                          Запрещено целенаправленное преследование пользователей (сталкинг), массовые оскорбления, создание конфликтных ситуаций.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.1.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены угрозы физической расправы, насилия, смерти, причинения вреда здоровью или имуществу.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.1.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещена дискриминация по расовому, национальному, религиозному, половому, возрастному признакам.
                         </Typography>
                       </SubRuleItem>
                     </Box>
@@ -560,9 +572,34 @@ const RulesPage = () => {
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Законопослушность</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Запрещен контент, нарушающий законодательство Российской Федерации или страны проживания пользователя, 
-                      включая, но не ограничиваясь: призывы к насилию, экстремизму, терроризму, наркотикам.
+                      Запрещен контент, нарушающий законодательство Российской Федерации или страны проживания пользователя.
                     </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.2.1</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены призывы к насилию, экстремизму, терроризму, свержению власти, массовым беспорядкам.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.2.2</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещена пропаганда нацизма, фашизма, расизма, ксенофобии, религиозной нетерпимости.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.2.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены призывы к сепаратизму, нарушению территориальной целостности государства.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.2.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещена пропаганда наркотиков, алкоголя, табака среди несовершеннолетних.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
                   </Box>
                 </NumberedRuleItem>
                 
@@ -577,13 +614,25 @@ const RulesPage = () => {
                       <SubRuleItem>
                         <SubRuleNumber>1.3.1</SubRuleNumber>
                         <Typography variant="body2">
-                          Запрещено публиковать любые персональные данные без согласия их владельца: номера телефонов, адреса проживания, паспортные данные и т.д.
+                          Запрещено публиковать персональные данные: ФИО, номера телефонов, адреса, паспортные данные, ИНН, СНИЛС, медицинские данные.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>1.3.2</SubRuleNumber>
                         <Typography variant="body2">
-                          Запрещены угрозы физической расправы, нанесения ущерба имуществу или репутации.
+                          Запрещено публиковать интимные фото/видео без согласия участников (revenge porn, сливы).
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.3.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены угрозы физической расправы, нанесения ущерба имуществу, репутации, семье.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.3.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещено принуждение к действиям под угрозами, шантаж, вымогательство.
                         </Typography>
                       </SubRuleItem>
                     </Box>
@@ -595,9 +644,34 @@ const RulesPage = () => {
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Конфиденциальность и безопасность аккаунтов</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Запрещены попытки взлома аккаунтов, распространение вредоносного ПО, спама или фишинговых ссылок. 
-                      Каждый пользователь несёт ответственность за безопасность своего аккаунта.
+                      Запрещены попытки взлома аккаунтов, распространение вредоносного ПО, спама или фишинговых ссылок.
                     </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.4.1</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены попытки взлома, подбора паролей, кражи аккаунтов, фишинг.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.4.2</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещено распространение вирусов, троянов, вредоносных скриптов, программ.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.4.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещены фишинговые ссылки, поддельные сайты, обманные схемы для кражи данных.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.4.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещена массовая рассылка спама, рекламы, нежелательных сообщений.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
                   </Box>
                 </NumberedRuleItem>
                 
@@ -607,19 +681,30 @@ const RulesPage = () => {
                     <Typography variant="subtitle1" fontWeight="500">Интеллектуальная собственность</Typography>
                     <Typography variant="body2" color="text.secondary">
                       Уважайте авторские права. При использовании чужих материалов указывайте источник.
-                      Запрещено распространение пиратского контента, нелегальных копий программного обеспечения.
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
                         <SubRuleNumber>1.5.1</SubRuleNumber>
                         <Typography variant="body2">
-                          При публикации чужого контента необходимо указывать автора или источник.
+                          При публикации чужого контента обязательно указывайте автора, источник, ссылку на оригинал.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>1.5.2</SubRuleNumber>
                         <Typography variant="body2">
-                          Запрещено выдавать чужие работы за свои или публиковать их без разрешения автора.
+                          Запрещено выдавать чужие работы за свои, плагиат, копирование без указания автора.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.5.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещено распространение пиратских фильмов, музыки, игр, программного обеспечения.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>1.5.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещено использование товарных знаков, логотипов без разрешения правообладателей.
                         </Typography>
                       </SubRuleItem>
                     </Box>
@@ -685,25 +770,31 @@ const RulesPage = () => {
                       <SubRuleItem>
                         <SubRuleNumber>2.2.1</SubRuleNumber>
                         <Typography variant="body2">
-                          Изображения/видео сексуального характера с участием несовершеннолетних.
+                          Запрещены изображения/видео сексуального характера с участием несовершеннолетних (лица младше 18 лет).
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>2.2.2</SubRuleNumber>
                         <Typography variant="body2">
-                          Порнографический контент, включая изображения и видео интимного характера без согласия участников.
+                          Запрещена порнография: откровенные половые акты, гениталии, анальный секс, оральный секс, мастурбация.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>2.2.3</SubRuleNumber>
                         <Typography variant="body2">
-                          Материалы, изображающие сексуальное насилие или нарушение сексуального согласия.
+                          Запрещены материалы без согласия участников (revenge porn, интимные фото без разрешения).
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
                         <SubRuleNumber>2.2.4</SubRuleNumber>
                         <Typography variant="body2">
-                          Излишняя сексуализация, не соответствующая общим стандартам платформы.
+                          Запрещено сексуальное насилие, изнасилование, принуждение к сексуальным действиям.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>2.2.5</SubRuleNumber>
+                        <Typography variant="body2">
+                          Запрещена детская порнография, педофилия, сексуализация несовершеннолетних.
                         </Typography>
                       </SubRuleItem>
                     </Box>
@@ -839,8 +930,116 @@ const RulesPage = () => {
           <RuleSection>
             <RuleCard>
               <RuleCardHeader>
+                <BlockIcon color="warning" fontSize="large" sx={{ mr: 2 }} />
+                <SectionTitle variant="h5">III. Деликатный контент (NSFW)</SectionTitle>
+              </RuleCardHeader>
+              
+              <RuleCardContent>
+                <Typography variant="body1" paragraph>
+                  Посты с маркировкой NSFW (Not Safe For Work) могут содержать деликатный контент, но с строгими ограничениями:
+                </Typography>
+                
+                <NumberedRuleItem>
+                  <RuleNumber>3.1</RuleNumber>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="500">Разрешенный деликатный контент</Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.1.1</SubRuleNumber>
+                        <Typography variant="body2">
+                          Эротика: полуобнаженные тела, эротические позы, но без откровенных гениталий.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.1.2</SubRuleNumber>
+                        <Typography variant="body2">
+                          Нагота художественного характера: обнаженные тела в искусстве, фотографии, но без сексуального контекста.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.1.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Сексуализированный контент: откровенные наряды, позы, но без половых актов или гениталий.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+                
+                <NumberedRuleItem>
+                  <RuleNumber>3.2</RuleNumber>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="500">Запрещенный в NSFW контент</Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.2.1</SubRuleNumber>
+                        <Typography variant="body2">
+                          Откровенные гениталии (половые органы, анус) - даже в NSFW постах.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.2.2</SubRuleNumber>
+                        <Typography variant="body2">
+                          Половые акты: вагинальный, анальный, оральный секс, мастурбация.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.2.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          Сексуальные игрушки, вибраторы, дилдо в активном использовании.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.2.4</SubRuleNumber>
+                        <Typography variant="body2">
+                          Сексуальные жидкости: сперма, вагинальные выделения, слюна в сексуальном контексте.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+                
+                <NumberedRuleItem>
+                  <RuleNumber>3.3</RuleNumber>
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight="500">Модерация деликатного контента</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Все NSFW посты проходят дополнительную проверку модераторами. Контент на грани допустимого обсуждается в модераторском составе.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.3.1</SubRuleNumber>
+                        <Typography variant="body2">
+                          Посты с сомнительным контентом отправляются на обсуждение модераторской команде.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.3.2</SubRuleNumber>
+                        <Typography variant="body2">
+                          Решение о удалении принимается большинством голосов модераторов.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>3.3.3</SubRuleNumber>
+                        <Typography variant="body2">
+                          При повторных нарушениях NSFW правил аккаунт может быть заблокирован.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+              </RuleCardContent>
+            </RuleCard>
+          </RuleSection>
+        </motion.div>
+
+        
+        <motion.div variants={itemVariants}>
+          <RuleSection>
+            <RuleCard>
+              <RuleCardHeader>
                 <SecurityIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <SectionTitle variant="h5">III. Дополнительные ограничения</SectionTitle>
+                <SectionTitle variant="h5">IV. Дополнительные ограничения</SectionTitle>
               </RuleCardHeader>
               
               <RuleCardContent>
@@ -851,7 +1050,7 @@ const RulesPage = () => {
                 }}>
                   <Box sx={{ width: '100%' }}>
                     <NumberedRuleItem>
-                      <RuleNumber>3.1</RuleNumber>
+                      <RuleNumber>4.1</RuleNumber>
                       <Box>
                         <Typography variant="subtitle1" fontWeight="500">Возрастное ограничение</Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -859,13 +1058,13 @@ const RulesPage = () => {
                         </Typography>
                         <Box sx={{ mt: 1 }}>
                           <SubRuleItem>
-                            <SubRuleNumber>3.1.1</SubRuleNumber>
+                            <SubRuleNumber>4.1.1</SubRuleNumber>
                             <Typography variant="body2">
                               Пользователям младше 18 лет запрещен доступ к контенту с маркировкой 18+.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.1.2</SubRuleNumber>
+                            <SubRuleNumber>4.1.2</SubRuleNumber>
                             <Typography variant="body2">
                               При обнаружении аккаунта пользователя младше минимального возраста, аккаунт будет заблокирован до достижения пользователем соответствующего возраста.
                             </Typography>
@@ -875,7 +1074,7 @@ const RulesPage = () => {
                     </NumberedRuleItem>
                     
                     <NumberedRuleItem>
-                      <RuleNumber>3.2</RuleNumber>
+                      <RuleNumber>4.2</RuleNumber>
                       <Box>
                         <Typography variant="subtitle1" fontWeight="500">Фейковые аккаунты и имперсонация</Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -883,19 +1082,19 @@ const RulesPage = () => {
                         </Typography>
                         <Box sx={{ mt: 1 }}>
                           <SubRuleItem>
-                            <SubRuleNumber>3.2.1</SubRuleNumber>
+                            <SubRuleNumber>4.2.1</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено выдавать себя за публичных лиц, знаменитостей, брендов или организаций.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.2.2</SubRuleNumber>
+                            <SubRuleNumber>4.2.2</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено использовать чужие фотографии в качестве аватара без разрешения.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.2.3</SubRuleNumber>
+                            <SubRuleNumber>4.2.3</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено создание аккаунтов для подмены личности и введения других пользователей в заблуждение.
                             </Typography>
@@ -905,7 +1104,7 @@ const RulesPage = () => {
                     </NumberedRuleItem>
                     
                     <NumberedRuleItem>
-                      <RuleNumber>3.3</RuleNumber>
+                      <RuleNumber>4.3</RuleNumber>
                       <Box>
                         <Typography variant="subtitle1" fontWeight="500">Мини-игры и честная игра</Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -913,19 +1112,19 @@ const RulesPage = () => {
                         </Typography>
                         <Box sx={{ mt: 1 }}>
                           <SubRuleItem>
-                            <SubRuleNumber>3.3.1</SubRuleNumber>
+                            <SubRuleNumber>4.3.1</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено использование автокликеров, ботов и других автоматизированных средств.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.3.2</SubRuleNumber>
+                            <SubRuleNumber>4.3.2</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено использование уязвимостей и багов в мини-играх. При обнаружении таковых необходимо сообщить администрации.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.3.3</SubRuleNumber>
+                            <SubRuleNumber>4.3.3</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещена передача аккаунтов другим лицам для накрутки результатов или создание множественных аккаунтов для этой цели.
                             </Typography>
@@ -935,7 +1134,7 @@ const RulesPage = () => {
                     </NumberedRuleItem>
                     
                     <NumberedRuleItem>
-                      <RuleNumber>3.4</RuleNumber>
+                      <RuleNumber>4.4</RuleNumber>
                       <Box>
                         <Typography variant="subtitle1" fontWeight="500">Многоаккаунтность</Typography>
                         <Typography variant="body2" color="text.secondary">
@@ -943,13 +1142,13 @@ const RulesPage = () => {
                         </Typography>
                         <Box sx={{ mt: 1 }}>
                           <SubRuleItem>
-                            <SubRuleNumber>3.4.1</SubRuleNumber>
+                            <SubRuleNumber>4.4.1</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено использовать дополнительные аккаунты для обхода блокировок или ограничений.
                             </Typography>
                           </SubRuleItem>
                           <SubRuleItem>
-                            <SubRuleNumber>3.4.2</SubRuleNumber>
+                            <SubRuleNumber>4.4.2</SubRuleNumber>
                             <Typography variant="body2">
                               Запрещено использование множественных аккаунтов для искусственного увеличения рейтингов, голосований или статистики.
                             </Typography>
@@ -997,14 +1196,14 @@ const RulesPage = () => {
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
-              <RuleCardHeader>
-                <AddModeratorIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <SectionTitle variant="h5">IV. Действия администрации</SectionTitle>
-              </RuleCardHeader>
+                              <RuleCardHeader>
+                  <AddModeratorIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
+                  <SectionTitle variant="h5">V. Действия администрации</SectionTitle>
+                </RuleCardHeader>
               
               <RuleCardContent>
                 <NumberedRuleItem>
-                  <RuleNumber>4.1</RuleNumber>
+                  <RuleNumber>5.1</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Модерация контента</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1012,13 +1211,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>4.1.1</SubRuleNumber>
+                        <SubRuleNumber>5.1.1</SubRuleNumber>
                         <Typography variant="body2">
                           Администрация может удалять контент, не соответствующий правилам, без предварительного уведомления пользователя.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.1.2</SubRuleNumber>
+                        <SubRuleNumber>5.1.2</SubRuleNumber>
                         <Typography variant="body2">
                           При многократных нарушениях на контент может быть наложено требование предварительной модерации перед публикацией.
                         </Typography>
@@ -1028,30 +1227,30 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>4.2</RuleNumber>
+                  <RuleNumber>5.2</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Санкции за нарушения</Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>4.2.1</SubRuleNumber>
+                        <SubRuleNumber>5.2.1</SubRuleNumber>
                         <Typography variant="body2">
                           Первое нарушение: предупреждение с разъяснением нарушенного правила.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.2.2</SubRuleNumber>
+                        <SubRuleNumber>5.2.2</SubRuleNumber>
                         <Typography variant="body2">
                           Повторное нарушение: временная блокировка аккаунта на срок от 24 часов до 30 дней в зависимости от тяжести нарушения.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.2.3</SubRuleNumber>
+                        <SubRuleNumber>5.2.3</SubRuleNumber>
                         <Typography variant="body2">
                           Третье нарушение или серьезное нарушение: более длительная блокировка (от 30 до 90 дней) или ограничение возможностей аккаунта.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.2.4</SubRuleNumber>
+                        <SubRuleNumber>5.2.4</SubRuleNumber>
                         <Typography variant="body2">
                           Систематические или особо тяжкие нарушения: пожизненная блокировка аккаунта без возможности восстановления.
                         </Typography>
@@ -1061,7 +1260,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>4.3</RuleNumber>
+                  <RuleNumber>5.3</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Система баллов и экономика</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1069,19 +1268,19 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>4.3.1</SubRuleNumber>
+                        <SubRuleNumber>5.3.1</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещена искусственная накрутка баллов с использованием ботов, скриптов или мультиаккаунтов.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.3.2</SubRuleNumber>
+                        <SubRuleNumber>5.3.2</SubRuleNumber>
                         <Typography variant="body2">
                           Если администрация выявит накрутку или странное поведение в переводах, баллы будут аннулированы, а аккаунт может быть заблокирован.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.3.3</SubRuleNumber>
+                        <SubRuleNumber>5.3.3</SubRuleNumber>
                         <Typography variant="body2">
                           Администрация оставляет за собой право корректировать баланс пользователя в случае технических сбоев или нарушений.
                         </Typography>
@@ -1091,7 +1290,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>4.4</RuleNumber>
+                  <RuleNumber>5.4</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Обжалование решений</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1099,19 +1298,19 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>4.4.1</SubRuleNumber>
+                        <SubRuleNumber>5.4.1</SubRuleNumber>
                         <Typography variant="body2">
                           Обращение должно содержать чёткое объяснение вашей позиции и аргументы в пользу отмены решения модератора.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.4.2</SubRuleNumber>
+                        <SubRuleNumber>5.4.2</SubRuleNumber>
                         <Typography variant="body2">
                           Все апелляции рассматриваются в индивидуальном порядке. Администрация оставляет за собой право отказать в восстановлении контента или разблокировке аккаунта.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>4.4.3</SubRuleNumber>
+                        <SubRuleNumber>5.4.3</SubRuleNumber>
                         <Typography variant="body2">
                           По истечении 7 дней решение модерации считается финальным и не подлежит пересмотру.
                         </Typography>
@@ -1128,14 +1327,14 @@ const RulesPage = () => {
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
-              <RuleCardHeader>
-                <AssignmentIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <SectionTitle variant="h5">V. Ваши обязательства</SectionTitle>
-              </RuleCardHeader>
+                              <RuleCardHeader>
+                  <AssignmentIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
+                  <SectionTitle variant="h5">VI. Ваши обязательства</SectionTitle>
+                </RuleCardHeader>
               
               <RuleCardContent>
                 <NumberedRuleItem>
-                  <RuleNumber>5.1</RuleNumber>
+                  <RuleNumber>6.1</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Ответственность за контент</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1143,13 +1342,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>5.1.1</SubRuleNumber>
+                        <SubRuleNumber>6.1.1</SubRuleNumber>
                         <Typography variant="body2">
                           Пользователь несет полную ответственность за последствия публикации незаконного или неприемлемого контента.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>5.1.2</SubRuleNumber>
+                        <SubRuleNumber>6.1.2</SubRuleNumber>
                         <Typography variant="body2">
                           Репост, лайк или положительный комментарий контента, нарушающего правила, также может расцениваться как нарушение.
                         </Typography>
@@ -1159,7 +1358,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>5.2</RuleNumber>
+                  <RuleNumber>6.2</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Сообщения о нарушениях</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1167,13 +1366,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>5.2.1</SubRuleNumber>
+                        <SubRuleNumber>6.2.1</SubRuleNumber>
                         <Typography variant="body2">
                           При обнаружении контента, нарушающего правила, используйте функцию "Пожаловаться" для информирования модерации.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>5.2.2</SubRuleNumber>
+                        <SubRuleNumber>6.2.2</SubRuleNumber>
                         <Typography variant="body2">
                           Ложные жалобы и массовые необоснованные жалобы могут привести к ограничению возможности подачи жалоб в будущем.
                         </Typography>
@@ -1183,7 +1382,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>5.3</RuleNumber>
+                  <RuleNumber>6.3</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Сохранение доступа к аккаунту</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1191,13 +1390,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>5.3.1</SubRuleNumber>
+                        <SubRuleNumber>6.3.1</SubRuleNumber>
                         <Typography variant="body2">
                           Используйте надежный пароль
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>5.3.2</SubRuleNumber>
+                        <SubRuleNumber>6.3.2</SubRuleNumber>
                         <Typography variant="body2">
                           Не передавайте данные для входа в аккаунт третьим лицам. Действия, совершенные с вашего аккаунта, считаются совершенными вами.
                         </Typography>
@@ -1214,10 +1413,10 @@ const RulesPage = () => {
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
-              <RuleCardHeader>
-                <DiamondIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <SectionTitle variant="h5">VI. Правила для бейджиков</SectionTitle>
-              </RuleCardHeader>
+                              <RuleCardHeader>
+                  <DiamondIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
+                  <SectionTitle variant="h5">VII. Правила для бейджиков</SectionTitle>
+                </RuleCardHeader>
               
               <RuleCardContent>
                 <Typography variant="body1" paragraph>
@@ -1226,7 +1425,7 @@ const RulesPage = () => {
                 </Typography>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>6.1</RuleNumber>
+                  <RuleNumber>7.1</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Оригинальность контента</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1234,13 +1433,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>6.1.1</SubRuleNumber>
+                        <SubRuleNumber>7.1.1</SubRuleNumber>
                         <Typography variant="body2">
                           Каждый бейджик должен представлять собой уникальную авторскую работу.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>6.1.2</SubRuleNumber>
+                        <SubRuleNumber>7.1.2</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещено копирование существующих бейджиков с незначительными изменениями (цвет, размер и т.д.).
                         </Typography>
@@ -1250,7 +1449,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>6.2</RuleNumber>
+                  <RuleNumber>7.2</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Качество изображения</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1258,13 +1457,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>6.2.1</SubRuleNumber>
+                        <SubRuleNumber>7.2.1</SubRuleNumber>
                         <Typography variant="body2">
                           Используйте только форматы SVG для создания бейджиков для обеспечения высокого качества при любом размере отображения.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>6.2.2</SubRuleNumber>
+                        <SubRuleNumber>7.2.2</SubRuleNumber>
                         <Typography variant="body2">
                           Изображение должно быть четким, с хорошо различимыми деталями и без артефактов сжатия.
                         </Typography>
@@ -1274,7 +1473,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>6.3</RuleNumber>
+                  <RuleNumber>7.3</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Запрет на дублирование</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1284,18 +1483,18 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>6.4</RuleNumber>
+                  <RuleNumber>7.4</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Нарушения авторских прав</Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>6.4.1</SubRuleNumber>
+                        <SubRuleNumber>7.4.1</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещено использовать в бейджиках материалы, защищенные авторским правом, без соответствующего разрешения.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>6.4.2</SubRuleNumber>
+                        <SubRuleNumber>7.4.2</SubRuleNumber>
                         <Typography variant="body2">
                           Бейджики не должны нарушать права интеллектуальной собственности третьих лиц, включая логотипы и товарные знаки без должной авторизации.
                         </Typography>
@@ -1305,24 +1504,24 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>6.5</RuleNumber>
+                  <RuleNumber>7.5</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Модерация бейджиков</Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>6.5.1</SubRuleNumber>
+                        <SubRuleNumber>7.5.1</SubRuleNumber>
                         <Typography variant="body2">
                           Все бейджики проходят модерацию перед публикацией.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>6.5.2</SubRuleNumber>
+                        <SubRuleNumber>7.5.2</SubRuleNumber>
                         <Typography variant="body2">
                           Администрация оставляет за собой право отклонять бейджики, не соответствующие стандартам качества или нарушающие правила платформы.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>6.5.3</SubRuleNumber>
+                        <SubRuleNumber>7.5.3</SubRuleNumber>
                         <Typography variant="body2">
                           В случае обнаружения нарушений после публикации, бейджик может быть удален без предупреждения.
                         </Typography>
@@ -1366,10 +1565,10 @@ const RulesPage = () => {
         <motion.div variants={itemVariants}>
           <RuleSection>
             <RuleCard>
-              <RuleCardHeader>
-                <GroupIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
-                <SectionTitle variant="h5">VII. Правила ведения групп/каналов</SectionTitle>
-              </RuleCardHeader>
+                              <RuleCardHeader>
+                  <GroupIcon color="primary" fontSize="large" sx={{ mr: 2 }} />
+                  <SectionTitle variant="h5">VIII. Правила ведения групп/каналов</SectionTitle>
+                </RuleCardHeader>
               
               <RuleCardContent>
                 <Typography variant="body1" paragraph>
@@ -1378,7 +1577,7 @@ const RulesPage = () => {
                 </Typography>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>7.1</RuleNumber>
+                  <RuleNumber>8.1</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Запрет на шокирующий контент</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1386,13 +1585,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>7.1.1</SubRuleNumber>
+                        <SubRuleNumber>8.1.1</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещены материалы, демонстрирующие реальное насилие, издевательства, травмы и раны.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.1.2</SubRuleNumber>
+                        <SubRuleNumber>8.1.2</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещены видеоролики и изображения казней, убийств, пыток и других аналогичных действий.
                         </Typography>
@@ -1402,7 +1601,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>7.2</RuleNumber>
+                  <RuleNumber>8.2</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Ограничение экстремального контента</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1410,13 +1609,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>7.2.1</SubRuleNumber>
+                        <SubRuleNumber>8.2.1</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещен контент с неожиданными громкими звуками, мигающими изображениями или другими эффектами, способными нанести вред или причинить дискомфорт.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.2.2</SubRuleNumber>
+                        <SubRuleNumber>8.2.2</SubRuleNumber>
                         <Typography variant="body2">
                           Запрещены материалы, которые могут спровоцировать психологические расстройства или паническое состояние.
                         </Typography>
@@ -1426,7 +1625,7 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>7.3</RuleNumber>
+                  <RuleNumber>8.3</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Свобода творчества</Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -1434,13 +1633,13 @@ const RulesPage = () => {
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>7.3.1</SubRuleNumber>
+                        <SubRuleNumber>8.3.1</SubRuleNumber>
                         <Typography variant="body2">
                           Каналы могут самостоятельно определять тематическую направленность и стиль своего контента.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.3.2</SubRuleNumber>
+                        <SubRuleNumber>8.3.2</SubRuleNumber>
                         <Typography variant="body2">
                           Поощряется оригинальность и авторский подход к созданию материалов, соблюдающих общие правила платформы.
                         </Typography>
@@ -1450,30 +1649,30 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>7.4</RuleNumber>
+                  <RuleNumber>8.4</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Контентные ограничения</Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>7.4.1</SubRuleNumber>
+                        <SubRuleNumber>8.4.1</SubRuleNumber>
                         <Typography variant="body2">
                           Контент, пропагандирующий опасные действия или самоповреждение.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.4.2</SubRuleNumber>
+                        <SubRuleNumber>8.4.2</SubRuleNumber>
                         <Typography variant="body2">
                           Контент, демонстрирующий жестокое обращение с людьми или животными.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.4.3</SubRuleNumber>
+                        <SubRuleNumber>8.4.3</SubRuleNumber>
                         <Typography variant="body2">
                           Экстремистский контент или контент, разжигающий ненависть по признаку расы, национальности, религии и т.д.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.4.4</SubRuleNumber>
+                        <SubRuleNumber>8.4.4</SubRuleNumber>
                         <Typography variant="body2">
                           Контент, нарушающий законодательство.
                         </Typography>
@@ -1483,24 +1682,24 @@ const RulesPage = () => {
                 </NumberedRuleItem>
                 
                 <NumberedRuleItem>
-                  <RuleNumber>7.5</RuleNumber>
+                  <RuleNumber>8.5</RuleNumber>
                   <Box>
                     <Typography variant="subtitle1" fontWeight="500">Модерация каналов</Typography>
                     <Box sx={{ mt: 1 }}>
                       <SubRuleItem>
-                        <SubRuleNumber>7.5.1</SubRuleNumber>
+                        <SubRuleNumber>8.5.1</SubRuleNumber>
                         <Typography variant="body2">
                           Каналы несут полную ответственность за весь публикуемый контент.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.5.2</SubRuleNumber>
+                        <SubRuleNumber>8.5.2</SubRuleNumber>
                         <Typography variant="body2">
                           При первом нарушении канал получает предупреждение, при повторных нарушениях может быть временно или постоянно заблокирован.
                         </Typography>
                       </SubRuleItem>
                       <SubRuleItem>
-                        <SubRuleNumber>7.5.3</SubRuleNumber>
+                        <SubRuleNumber>8.5.3</SubRuleNumber>
                         <Typography variant="body2">
                           Администрация имеет право без предупреждения удалять контент, нарушающий правила.
                         </Typography>
@@ -1543,6 +1742,42 @@ const RulesPage = () => {
         
         <motion.div variants={itemVariants}>
           <RuleSection>
+            <RuleCard>
+              <RuleCardHeader>
+                <GavelIcon color="warning" fontSize="large" sx={{ mr: 2 }} />
+                <SectionTitle variant="h5">Важное примечание</SectionTitle>
+              </RuleCardHeader>
+              
+              <RuleCardContent>
+                <Box sx={{ 
+                  p: 2, 
+                  borderRadius: 2, 
+                  backgroundColor: 'rgba(255, 193, 7, 0.1)', 
+                  border: '1px solid rgba(255, 193, 7, 0.3)',
+                  mb: 2
+                }}>
+                  <Typography variant="body1" sx={{ fontWeight: 500, color: 'warning.main', mb: 1 }}>
+                    ⚠️ Право модерации
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Администрация и модерация К-Коннект оставляют за собой право удалять любой контент, 
+                    комментарии, посты, изображения или видео без предварительного уведомления и объяснения причин, 
+                    если они считают, что контент нарушает правила платформы или может нанести вред сообществу.
+                  </Typography>
+                </Box>
+                
+                <Typography variant="body2" color="text.secondary">
+                  Используя платформу К-Коннект, вы соглашаетесь с этими правилами и признаете право модерации 
+                  на принятие решений о контенте в интересах всего сообщества.
+                </Typography>
+              </RuleCardContent>
+            </RuleCard>
+          </RuleSection>
+        </motion.div>
+
+        
+        <motion.div variants={itemVariants}>
+          <RuleSection>
             <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', md: 'row' } }}>
               <RuleCard sx={{ flex: 1 }}>
                 <RuleCardHeader>
@@ -1574,7 +1809,7 @@ const RulesPage = () => {
                   </Typography>
                   
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                    Последнее обновление: 24 Мая 2025
+                    Последнее обновление: 16 Июля 2025
                   </Typography>
                 </RuleCardContent>
               </RuleCard>
