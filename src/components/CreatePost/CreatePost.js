@@ -396,12 +396,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       sx={{ 
         p: 2, 
         borderRadius: 1,
-        // background: 'rgba(255, 255, 255, 0.03)',
-        // backdropFilter: 'blur(20px)',
-        // WebkitBackdropFilter: 'blur(0px)',
-        // position: 'relative',
-        // overflow: 'hidden',
-        // border: '1px solid rgba(255, 255, 255, 0.1)',
+        //TODO: в компонентах убрать цвета и блюр. он теперь контролируется в App.js
       }}
     >
       {error && (
