@@ -2320,7 +2320,11 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', position: 'relative' }} onClick={handleLike}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
-                  {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
+                  {liked ? (
+                    <Icon icon="solar:heart-bold" width={21} height={21} color={theme.palette.primary.main} />
+                  ) : (
+                    <Icon icon="solar:heart-linear" width={21} height={21} color="#fff" />
+                  )}
                 </Box>
                 {likesCount > 0 && (
                   <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount}</Typography>
@@ -2328,7 +2332,7 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleCommentClick}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
-                  <MessageSquare size={21} color="#fff" />
+                  <Icon icon="solar:chat-round-dots-linear" width={21} height={21} color="#fff" />
                 </Box>
                 {(post?.total_comments_count || post?.comments_count) > 0 && (
                   <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{post?.total_comments_count || post?.comments_count}</Typography>
@@ -2336,12 +2340,12 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleRepostClick}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
-                  <RefreshCw size={21} color="#fff" />
+                  <Icon icon="solar:refresh-linear" width={21} height={21} color="#fff" />
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleShare}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
-                  <Share2 size={21} color="#fff" />
+                  <Icon icon="solar:share-linear" width={21} height={21} color="#fff" />
                 </Box>
               </Box>
             </Box>
