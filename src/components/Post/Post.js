@@ -27,7 +27,7 @@ import { formatTimeAgo, formatTimeAgoDiff, parseDate, getRussianWordForm } from 
 import { optimizeImage, handleImageError as safeImageError } from '../../utils/imageUtils';
 import { linkRenderers, URL_REGEX, USERNAME_MENTION_REGEX, HASHTAG_REGEX, processTextWithLinks, LinkPreview } from '../../utils/LinkUtils';
 import { Icon } from '@iconify/react';
-import { MessageCircle, Repeat2, Link2, Heart } from 'lucide-react';
+import { MessageCircle, Repeat2, Link2, Heart, Share2, MessageSquare, RefreshCw } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -2308,31 +2308,41 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             {/* Левая группа: лайк, коммент, репост, поделиться */}
             <Box sx={{
               display: 'flex',
-              gap: 1.7, // уменьшено с 2
+              gap: 1.7,
               background: 'rgba(0, 0, 0, 0.05)',
               backdropFilter: 'blur(40px)',
               WebkitBackdropFilter: 'blur(0px)',
               border: '1px solid #333',
-              borderRadius: '10px', // было 12px
-              px: 2.5, // было 3
-              py: 0.85, // было 1
-              alignItems: 'center',
-              minWidth: 185 // было 220
+              borderRadius: '10px',
+              px: 2.5,
+              py: 0.85,
+              alignItems: 'center'
             }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer', position: 'relative' }} onClick={handleLike}>
-                {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
-                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount > 0 ? likesCount : ''}</Typography>
-
+              <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', position: 'relative' }} onClick={handleLike}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
+                  {liked ? <Heart size={21} color={theme.palette.primary.main} fill={theme.palette.primary.main} /> : <Heart size={21} color="#fff" />}
+                </Box>
+                {likesCount > 0 && (
+                  <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{likesCount}</Typography>
+                )}
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleCommentClick}>
-                <MessageCircle size={21} color="#fff" />
-                <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{(post?.total_comments_count || post?.comments_count) > 0 ? (post?.total_comments_count || post?.comments_count) : ''}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleCommentClick}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
+                  <MessageSquare size={21} color="#fff" />
+                </Box>
+                {(post?.total_comments_count || post?.comments_count) > 0 && (
+                  <Typography sx={{ color: '#fff', fontSize: '0.85rem', ml: 0.4 }}>{post?.total_comments_count || post?.comments_count}</Typography>
+                )}
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleRepostClick}>
-                <Repeat2 size={21} color="#fff" />
+              <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleRepostClick}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
+                  <RefreshCw size={21} color="#fff" />
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.85, cursor: 'pointer' }} onClick={handleShare}>
-                <Link2 size={21} color="#fff" />
+              <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={handleShare}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 21, height: 21 }}>
+                  <Share2 size={21} color="#fff" />
+                </Box>
               </Box>
             </Box>
 
@@ -2340,19 +2350,15 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
-              background: 'rgba(0, 0, 0, 0.05)',
-              backdropFilter: 'blur(40px)',
-              WebkitBackdropFilter: 'blur(0px)',
-              border: '1px solid #333',
               borderRadius: '10px', // было 12px
-              px: 1.7, // было 2
+              px: 1.2, // было 2
               py: 0.85, // было 1
               minWidth: 68, // было 80
               justifyContent: 'center',
-              gap: 0.85 // было 1
+              gap: 0.5 // было 1
             }}>
-              <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography>
+              {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography> */}
               <MoreVertIcon sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }} onClick={handleMenuOpen} data-no-navigate />
             </Box>
           </Box>
