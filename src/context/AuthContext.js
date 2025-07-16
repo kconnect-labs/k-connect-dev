@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
       }));
       
       if (userData) {
+        console.log('💾 Сохраняем данные пользователя в localStorage:', userData);
         localStorage.setItem('k-connect-user', JSON.stringify(userData));
       }
     } else {
@@ -102,10 +103,37 @@ export const AuthProvider = ({ children }) => {
       const response = await AuthService.login(credentials);
       
       if (response.success) {
-        // Сначала устанавливаем аутентификацию
+        // Сначала устанавливаем аутентификацию с минимальными данными
         setUser(response.user);
         setIsAuthenticated(true);
         persistAuthState(true, response.user);
+        // Делаем дополнительную проверку авторизации для получения полных данных пользователя
+        try {
+          // Проверяем, есть ли уже полные данные пользователя
+          const hasFullData = response.user && (
+            response.user.about !== undefined || 
+            response.user.avatar_url !== undefined || 
+            response.user.account_type !== undefined ||
+            response.user.hasCredentials !== undefined
+          );
+          
+          if (hasFullData) {
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            console.log('🔍 Выполняем проверку авторизации для получения полных данных пользователя...');
+            const authCheck = await checkAuth(true);
+            if (authCheck) {
+              console.log('✅ Получены полные данные пользователя:', authCheck);
+              setUser(authCheck);
+              persistAuthState(true, authCheck);
+            } else {
+              console.log('⚠️ Проверка авторизации не вернула данные пользователя');
+            }
+          }
+        } catch (error) {
+          console.warn('❌ ошибка кароче:', error);
+        }
         
         if (themeContext && themeContext.loadThemeSettings) {
           themeContext.loadThemeSettings();
@@ -155,7 +183,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [navigate, themeContext]);
+  }, [navigate, themeContext, checkAuth]);
 
   
   const logout = useCallback(async () => {
