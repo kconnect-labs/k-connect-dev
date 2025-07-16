@@ -28,6 +28,8 @@ const PostsFeed = ({ userId, statusColor }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const isProfilePage = window.location.pathname.includes('/profile/');
 
+  console.log('PostsFeed: Component mounted with userId:', userId, 'type:', typeof userId);
+
   // username вычисляем один раз
   const username = React.useMemo(() => {
     const match = window.location.pathname.match(/\/profile\/([^/?#]+)/);
@@ -199,8 +201,18 @@ const PostsFeed = ({ userId, statusColor }) => {
     const handleGlobalPostCreated = (event) => {
       const newPost = event.detail;
       
-      if (newPost && newPost.user_id === parseInt(userId)) {
-        setPosts(prevPosts => [newPost, ...prevPosts]);
+      // Добавляем пост в ленту если:
+      // 1. Это обычный пост (type === 'post' или не указан) и автор совпадает с userId
+      // 2. Это не пост стены (type !== 'stena')
+      const userIdMatch = newPost && newPost.user && newPost.user.id === parseInt(userId);
+      const typeMatch = !newPost.type || newPost.type === 'post';
+      
+
+      if (newPost && userIdMatch && typeMatch) {
+        setPosts(prevPosts => {
+          const newPosts = [newPost, ...prevPosts];
+          return newPosts;
+        });
       }
     };
     

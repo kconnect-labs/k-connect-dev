@@ -41,12 +41,25 @@ import {
   getFallbackColor,
   useUpgradeEffects
 } from './upgradeEffectsConfig';
+import { InventoryItem, ItemAction } from './types';
 
-const UpgradeEffects = ({ item, children }) => {
+interface UpgradeEffectsProps {
+  item: InventoryItem;
+  children: React.ReactNode;
+}
+
+interface UserSuggestion {
+  id: number;
+  username: string;
+  name: string;
+  photo?: string;
+}
+
+const UpgradeEffects = ({ item, children }: UpgradeEffectsProps) => {
   const { dominantColor, isUpgraded } = useUpgradeEffects(item);
 
   if (!isUpgraded) {
-    return children;
+    return <>{children}</>;
   }
 
   return (
@@ -56,18 +69,12 @@ const UpgradeEffects = ({ item, children }) => {
       {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
         <AnimatedSparkle
           key={idx}
-          color={dominantColor}
-          delay={sparkle.delay}
-          size={sparkle.size}
           sx={sparkle.position}
         />
       ))}
       {EFFECTS_CONFIG.stars.map((star, idx) => (
         <AnimatedStar
           key={idx}
-          color={dominantColor}
-          delay={star.delay}
-          size={star.size}
           sx={star.position}
         />
       ))}
@@ -133,8 +140,8 @@ const ItemImage = styled(Box)(({ theme }) => ({
   },
 }));
 
-const RarityChip = styled(Chip)(({ rarity, theme }) => {
-  const colors = {
+const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
+  const colors: Record<string, { bg: string; color: string }> = {
     common: { bg: '#95a5a6', color: '#fff' },
     rare: { bg: '#3498db', color: '#fff' },
     epic: { bg: '#9b59b6', color: '#fff' },
@@ -142,8 +149,8 @@ const RarityChip = styled(Chip)(({ rarity, theme }) => {
   };
   
   return {
-    background: colors[rarity]?.bg || colors.common.bg,
-    color: colors[rarity]?.color || colors.common.color,
+    background: colors[rarity || 'common']?.bg || colors.common.bg,
+    color: colors[rarity || 'common']?.color || colors.common.color,
     fontWeight: 600,
     fontSize: '0.9rem',
     '& .MuiChip-label': {
@@ -204,6 +211,18 @@ const KBallsIcon = styled('img')({
   marginRight: '4px',
 });
 
+interface ItemInfoModalProps {
+  open: boolean;
+  onClose: () => void;
+  item: InventoryItem | null;
+  loading?: boolean;
+  error?: string;
+  readOnly?: boolean;
+  userPoints: number;
+  onItemUpdate?: (updatedItem: InventoryItem, action: ItemAction) => void;
+  onTransferSuccess?: (itemId: number) => void;
+}
+
 const ItemInfoModal = ({ 
   open, 
   onClose, 
@@ -211,25 +230,29 @@ const ItemInfoModal = ({
   userPoints, 
   onItemUpdate,
   onTransferSuccess 
-}) => {
+}: ItemInfoModalProps) => {
   const [transferModalOpen, setTransferModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState('');
   const [transferLoading, setTransferLoading] = useState(false);
   const [transferError, setTransferError] = useState('');
   const [upgradeLoading, setUpgradeLoading] = useState(false);
   const [upgradeConfirmOpen, setUpgradeConfirmOpen] = useState(false);
-  const [userSearch, setUserSearch] = useState({
+  const [userSearch, setUserSearch] = useState<{
+    loading: boolean;
+    exists: boolean;
+    suggestions: UserSuggestion[];
+  }>({
     loading: false,
     exists: false,
     suggestions: []
   });
-  const [selectedRecipientId, setSelectedRecipientId] = useState(null);
+  const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(null);
   const [notification, setNotification] = useState({
     open: false,
     message: '',
     severity: 'success'
   });
-  const debounceTimerRef = useRef(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [marketplaceModalOpen, setMarketplaceModalOpen] = useState(false);
   const [price, setPrice] = useState('');
   const [marketplaceLoading, setMarketplaceLoading] = useState(false);
@@ -247,7 +270,7 @@ const ItemInfoModal = ({
     }
   }, [open]);
 
-  const getRarityIcon = (rarity) => {
+  const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary': return <DiamondIcon />;
       case 'epic': return <StarIcon />;
@@ -256,7 +279,7 @@ const ItemInfoModal = ({
     }
   };
 
-  const getRarityLabel = (rarity) => {
+  const getRarityLabel = (rarity: string) => {
     switch (rarity) {
       case 'common': return 'Обычный';
       case 'rare': return 'Редкий';
@@ -267,6 +290,7 @@ const ItemInfoModal = ({
   };
 
   const handleEquipItem = async () => {
+    if (!item) return;
     try {
       const response = await fetch(`/api/inventory/equip/${item.id}`, {
         method: 'POST',
@@ -278,8 +302,18 @@ const ItemInfoModal = ({
       const data = await response.json();
       
       if (data.success) {
-        showNotification(data.message, 'success');
-        onItemUpdate();
+        showNotification(data.message);
+        
+        // Создаем обновленный предмет
+        const updatedItem: InventoryItem = {
+          ...item,
+          is_equipped: true
+        };
+        
+        // Вызываем onItemUpdate с обновленным предметом
+        if (onItemUpdate) {
+          onItemUpdate(updatedItem, 'equip');
+        }
       } else {
         showNotification(data.message, 'error');
       }
@@ -289,6 +323,7 @@ const ItemInfoModal = ({
   };
 
   const handleUnequipItem = async () => {
+    if (!item) return;
     try {
       const response = await fetch(`/api/inventory/unequip/${item.id}`, {
         method: 'POST',
@@ -300,8 +335,18 @@ const ItemInfoModal = ({
       const data = await response.json();
       
       if (data.success) {
-        showNotification(data.message, 'success');
-        onItemUpdate();
+        showNotification(data.message);
+        
+        // Создаем обновленный предмет
+        const updatedItem: InventoryItem = {
+          ...item,
+          is_equipped: false
+        };
+        
+        // Вызываем onItemUpdate с обновленным предметом
+        if (onItemUpdate) {
+          onItemUpdate(updatedItem, 'unequip');
+        }
       } else {
         showNotification(data.message, 'error');
       }
@@ -311,6 +356,10 @@ const ItemInfoModal = ({
   };
 
   const handleUpgradeItem = async () => {
+    if (!item || !item.upgradeable || item.upgrade_level >= 1) {
+      return;
+    }
+
     setUpgradeConfirmOpen(false);
     try {
       setUpgradeLoading(true);
@@ -322,8 +371,18 @@ const ItemInfoModal = ({
       });
       const data = await response.json();
       if (data.success) {
-        showNotification(data.message, 'success');
-        onItemUpdate();
+        showNotification(data.message);
+        
+        // Создаем обновленный предмет
+        const updatedItem: InventoryItem = {
+          ...item,
+          upgrade_level: data.upgrade_level
+        };
+        
+        // Вызываем onItemUpdate с обновленным предметом
+        if (onItemUpdate) {
+          onItemUpdate(updatedItem, 'upgrade');
+        }
       } else {
         showNotification(data.message, 'error');
       }
@@ -352,7 +411,7 @@ const ItemInfoModal = ({
     setSelectedRecipientId(null);
   };
 
-  const searchUser = (query) => {
+  const searchUser = (query: string) => {
     setUserSearch(prev => ({...prev, loading: true}));
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
@@ -362,7 +421,7 @@ const ItemInfoModal = ({
       axios.get(url)
         .then(response => {
           if (response.data && response.data.users && response.data.users.length > 0) {
-            const exactMatch = response.data.users.find(u => 
+            const exactMatch = response.data.users.find((u: any) => 
               u.username.toLowerCase() === query.toLowerCase()
             );
             if (exactMatch) {
@@ -395,10 +454,10 @@ const ItemInfoModal = ({
           }));
           setSelectedRecipientId(null);
         });
-    }, 300); 
+    }, 300) as NodeJS.Timeout;
   };
 
-  const handleUsernameChange = (e) => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const username = e.target.value;
     setRecipientUsername(username);
     if (username.trim()) {
@@ -418,7 +477,7 @@ const ItemInfoModal = ({
     }
   };
 
-  const selectSuggestion = (username, userId) => {
+  const selectSuggestion = (username: string, userId: number) => {
     setRecipientUsername(username);
     setSelectedRecipientId(userId);
     setUserSearch(prev => ({
@@ -430,18 +489,10 @@ const ItemInfoModal = ({
   };
 
   const handleConfirmTransfer = async () => {
-    if (!recipientUsername.trim()) {
-      setTransferError('Введите имя пользователя');
+    if (!item || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000) {
       return;
     }
-    if (!selectedRecipientId) {
-      setTransferError('Пользователь не найден');
-      return;
-    }
-    if (userPoints < 5000) {
-      setTransferError('Недостаточно баллов для передачи (требуется 5000)');
-      return;
-    }
+
     setTransferLoading(true);
     setTransferError('');
     try {
@@ -451,25 +502,32 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          recipient_username: recipientUsername.trim()
-        }),
+          recipient_id: selectedRecipientId
+        })
       });
+
       const data = await response.json();
+      
       if (data.success) {
-        handleCloseTransferModal();
-        if (typeof onTransferSuccess === 'function') onTransferSuccess();
+        showNotification(data.message);
+        
+        // Вызываем onTransferSuccess для мгновенного удаления предмета
+        if (typeof onTransferSuccess === 'function') {
+          onTransferSuccess(item.id);
+        }
+        
         if (typeof onClose === 'function') onClose();
       } else {
         setTransferError(data.message || 'Ошибка передачи предмета');
       }
-    } catch (err) {
-      setTransferError('Ошибка сети');
+    } catch (error) {
+      setTransferError('Ошибка при передаче предмета');
     } finally {
       setTransferLoading(false);
     }
   };
 
-  const showNotification = (message, severity = 'success') => {
+  const showNotification = (message: string, severity: 'success' | 'error' | 'warning' | 'info' = 'success') => {
     setNotification({
       open: true,
       message,
@@ -482,6 +540,7 @@ const ItemInfoModal = ({
   };
 
   const handleListOnMarketplace = async () => {
+    if (!item) return;
     try {
       setMarketplaceLoading(true);
       const response = await axios.post(`/api/marketplace/list/${item.id}`, {
@@ -490,10 +549,26 @@ const ItemInfoModal = ({
       
       if (response.data.success) {
         showNotification('Предмет выставлен на маркетплейс', 'success');
-        onItemUpdate();
+        
+        // Создаем обновленный предмет
+        const updatedItem: InventoryItem = {
+          ...item,
+          marketplace: {
+            id: response.data.listing_id,
+            status: 'active',
+            price: parseInt(price)
+          }
+        };
+        
+        // Вызываем onItemUpdate с обновленным предметом
+        if (onItemUpdate) {
+          onItemUpdate(updatedItem, 'marketplace_list');
+        }
+        
         setMarketplaceModalOpen(false);
+        setPrice('');
       }
-    } catch (error) {
+    } catch (error: any) {
       showNotification(error.response?.data?.message || 'Ошибка при выставлении предмета', 'error');
     } finally {
       setMarketplaceLoading(false);
@@ -501,15 +576,26 @@ const ItemInfoModal = ({
   };
 
   const handleRemoveFromMarketplace = async () => {
+    if (!item?.marketplace) return;
     try {
       setMarketplaceLoading(true);
       const response = await axios.post(`/api/marketplace/cancel/${item.marketplace.id}`);
       
       if (response.data.success) {
         showNotification('Предмет снят с маркетплейса', 'success');
-        onItemUpdate();
+        
+        // Создаем обновленный предмет
+        const updatedItem: InventoryItem = {
+          ...item,
+          marketplace: null
+        };
+        
+        // Вызываем onItemUpdate с обновленным предметом
+        if (onItemUpdate) {
+          onItemUpdate(updatedItem, 'marketplace_remove');
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       showNotification(error.response?.data?.message || 'Ошибка при снятии предмета', 'error');
     } finally {
       setMarketplaceLoading(false);
@@ -517,6 +603,7 @@ const ItemInfoModal = ({
   };
 
   const handleCopyLink = () => {
+    if (!item) return;
     const url = `https://k-connect.ru/item/${item.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
@@ -525,6 +612,7 @@ const ItemInfoModal = ({
   };
 
   const handleRecycleItem = async () => {
+    if (!item) return;
     setRecycleConfirmOpen(false);
     try {
       setRecycleLoading(true);
@@ -536,9 +624,14 @@ const ItemInfoModal = ({
       });
       const data = await response.json();
       if (data.success) {
-        showNotification(data.message, 'success');
+        showNotification(data.message);
+        
+        // Вызываем onTransferSuccess для мгновенного удаления предмета
+        if (typeof onTransferSuccess === 'function') {
+          onTransferSuccess(item.id);
+        }
+        
         if (typeof onClose === 'function') onClose();
-        if (typeof onItemUpdate === 'function') onItemUpdate();
       } else {
         showNotification(data.message, 'error');
       }
@@ -566,9 +659,9 @@ const ItemInfoModal = ({
             alignItems: 'center',
             pb: 1
           }}>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+            <Box component="div" sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
               Информация о предмете
-            </Typography>
+            </Box>
             <IconButton
               onClick={onClose}
               sx={{
@@ -585,17 +678,15 @@ const ItemInfoModal = ({
           <DialogContent sx={{ pt: 0 }}>
             <Box sx={{ mb: 3, textAlign: 'center' }}>
               <Box position="relative">
-                <UpgradeEffects item={item}>
-                  <ItemImage sx={{
-                    ...(item?.background_url && {
-                      '&::before': {
-                        backgroundImage: `url(${item.background_url})`,
-                      }
-                    })
-                  }}>
-                    <img src={item?.image_url} alt={item?.item_name} />
-                  </ItemImage>
-                </UpgradeEffects>
+                <ItemImage sx={{
+                  ...(item?.background_url && {
+                    '&::before': {
+                      backgroundImage: `url(${item.background_url})`,
+                    }
+                  })
+                }}>
+                  <img src={item?.image_url} alt={item?.item_name} />
+                </ItemImage>
                 {item?.marketplace?.status === 'active' && (
                   <MarketPriceChip>
                     <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
@@ -604,7 +695,7 @@ const ItemInfoModal = ({
                 )}
               </Box>
               
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
                 {item.item_name}
               </Typography>
 
@@ -612,7 +703,7 @@ const ItemInfoModal = ({
                 <RarityChip 
                   rarity={item.rarity} 
                   label={getRarityLabel(item.rarity)}
-                  icon={getRarityIcon(item.rarity)}
+                  icon={getRarityIcon(item.rarity) || undefined}
                 />
                 {item.upgrade_level === 1 && (
                   <Chip label="Улучшено" color="success" size="small" sx={{ ml: 1, fontWeight: 600 }} />
@@ -776,7 +867,7 @@ const ItemInfoModal = ({
             </Button>
           </DialogActions>
         </UpgradeEffects>
-      </StyledDialog>
+        </StyledDialog>
 
       {/* Модалка передачи предмета */}
       <Dialog
@@ -807,9 +898,9 @@ const ItemInfoModal = ({
           color: 'text.primary',
           pb: 1
         }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          <Box component="div" sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
             Передать предмет
-          </Typography>
+          </Box>
           <IconButton
             onClick={handleCloseTransferModal}
             sx={{ color: 'text.secondary' }}
@@ -835,17 +926,18 @@ const ItemInfoModal = ({
                     src={item.image_url}
                     alt={item.item_name}
                     onError={(e) => {
-                      e.target.style.display = 'none';
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
                     }}
                   />
                 </ItemImage>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                   {item.item_name}
                 </Typography>
                 <RarityChip
                   rarity={item.rarity || 'common'}
                   label={getRarityLabel(item.rarity || 'common')}
-                  icon={getRarityIcon(item.rarity || 'common')}
+                  icon={getRarityIcon(item.rarity || 'common') || undefined}
                   size="small"
                 />
               </Box>
@@ -1121,7 +1213,7 @@ const ItemInfoModal = ({
       >
         <Alert 
           onClose={handleCloseNotification} 
-          severity={notification.severity}
+          severity={notification.severity as 'success' | 'error' | 'warning' | 'info'}
           sx={{ 
             width: '100%',
             background: 'transparent',

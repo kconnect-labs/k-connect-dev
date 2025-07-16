@@ -75,13 +75,7 @@ const PostService = {
         });
 
         
-        axios.cache.clearPostsCache();
-        
-        if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent('post-created', {
-            detail: { post: response.data.post }
-          }));
-        }
+        // axios.cache.clearPostsCache();
         
         return response.data;
       } catch (postError) {
@@ -97,13 +91,7 @@ const PostService = {
           });
 
           
-          axios.cache.clearPostsCache();
-          
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('post-created', {
-              detail: { post: putResponse.data.post }
-            }));
-          }
+          // axios.cache.clearPostsCache();
           
           return putResponse.data;
         } catch (putError) {
@@ -118,15 +106,9 @@ const PostService = {
 
           
 
-          axios.cache.clearPostsCache();
+          // axios.cache.clearPostsCache();
           
 
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('post-created', {
-              detail: { post: finalResponse.data.post }
-            }));
-          }
-          
           return finalResponse.data;
         }
       }

@@ -15,6 +15,7 @@ import {
   Close as CloseIcon,
   FiberManualRecord as DotIcon
 } from '@mui/icons-material';
+import { Pack, InventoryItem } from './types';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -78,8 +79,8 @@ const ItemImage = styled('img')({
   maxHeight: '100%',
 });
 
-const RarityChip = styled(Chip)(({ rarity, theme }) => {
-  const colors = {
+const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
+  const colors: Record<string, { bg: string; color: string; border: string }> = {
     common: { bg: 'rgba(156, 163, 175, 0.2)', color: '#9CA3AF', border: 'rgba(156, 163, 175, 0.3)' },
     rare: { bg: 'rgba(59, 130, 246, 0.2)', color: '#3B82F6', border: 'rgba(59, 130, 246, 0.3)' },
     epic: { bg: 'rgba(147, 51, 234, 0.2)', color: '#9333EA', border: 'rgba(147, 51, 234, 0.3)' },
@@ -87,9 +88,9 @@ const RarityChip = styled(Chip)(({ rarity, theme }) => {
   };
   
   return {
-    background: colors[rarity]?.bg || colors.common.bg,
-    color: colors[rarity]?.color || colors.common.color,
-    border: `1px solid ${colors[rarity]?.border || colors.common.border}`,
+    background: colors[rarity || 'common']?.bg || colors.common.bg,
+    color: colors[rarity || 'common']?.color || colors.common.color,
+    border: `1px solid ${colors[rarity || 'common']?.border || colors.common.border}`,
     fontWeight: 500,
     fontSize: '0.875rem',
     padding: '6px 12px',
@@ -108,9 +109,25 @@ const LoadingDots = styled(Box)({
   margin: '24px 0',
 });
 
-const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, onBalanceUpdate }) => {
+interface PackOpeningModalProps {
+  pack: Pack & { purchase_id?: number };
+  onClose: () => void;
+  hasMorePacks?: boolean;
+  onOpenAnother?: () => void;
+  onBalanceUpdate?: (remainingPoints: number) => void;
+  onItemObtained?: (item: InventoryItem) => void;
+}
+
+const PackOpeningModal = ({ 
+  pack, 
+  onClose, 
+  hasMorePacks = false, 
+  onOpenAnother, 
+  onBalanceUpdate, 
+  onItemObtained 
+}: PackOpeningModalProps) => {
   const [opening, setOpening] = useState(true);
-  const [obtainedItem, setObtainedItem] = useState(null);
+  const [obtainedItem, setObtainedItem] = useState<InventoryItem | null>(null);
   const [showResult, setShowResult] = useState(false);
 
   useEffect(() => {
@@ -136,6 +153,11 @@ const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, 
           setObtainedItem(data.item);
           setOpening(false);
           setShowResult(true);
+          
+          // Уведомляем о получении предмета
+          if (onItemObtained) {
+            onItemObtained(data.item);
+          }
         }, 2500);
       } else {
         alert(data.message || 'Ошибка открытия пака');
@@ -147,7 +169,7 @@ const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, 
     }
   };
 
-  const getRarityLabel = (rarity) => {
+  const getRarityLabel = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return 'Легендарный';
@@ -208,6 +230,11 @@ const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, 
               setObtainedItem(openData.item);
               setOpening(false);
               setShowResult(true);
+              
+              // Уведомляем о получении предмета
+              if (onItemObtained) {
+                onItemObtained(openData.item);
+              }
             }, 2500);
           } else {
             alert(openData.message || 'Ошибка открытия пака');
@@ -373,10 +400,11 @@ const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, 
                   }}>
                     <ItemImage 
                       src={`/inventory/${obtainedItem?.id}`}
-                      alt={obtainedItem?.name}
+                      alt={obtainedItem?.item_name || 'Предмет'}
                       onError={(e) => {
                         console.error(`Failed to load image: /inventory/${obtainedItem?.id}`);
-                        e.target.style.display = 'none';
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
                       }}
                     />
                   </ItemContainer>
@@ -396,13 +424,13 @@ const PackOpeningModal = ({ pack, onClose, hasMorePacks = false, onOpenAnother, 
                       fontSize: '1.25rem'
                     }}
                   >
-                    {obtainedItem?.name}
+                    {obtainedItem?.item_name}
                   </Typography>
 
                   <Box sx={{ mb: 3 }}>
                     <RarityChip
                       rarity={obtainedItem?.rarity}
-                      label={getRarityLabel(obtainedItem?.rarity)}
+                      label={getRarityLabel(obtainedItem?.rarity || 'common')}
                     />
                   </Box>
 

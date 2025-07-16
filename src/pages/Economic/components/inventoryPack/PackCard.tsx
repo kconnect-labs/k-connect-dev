@@ -18,6 +18,7 @@ import {
   Percent as PercentIcon
 } from '@mui/icons-material';
 import OptimizedImage from '../../../../components/OptimizedImage';
+import { Pack, PackContent } from './types';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
@@ -171,8 +172,8 @@ const PriceChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-const RarityChip = styled(Chip)(({ rarity, theme }) => {
-  const colors = {
+const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
+  const colors: Record<string, { bg: string; color: string }> = {
     common: { bg: '#95a5a6', color: '#fff' },
     rare: { bg: '#3498db', color: '#fff' },
     epic: { bg: '#9b59b6', color: '#fff' },
@@ -180,8 +181,8 @@ const RarityChip = styled(Chip)(({ rarity, theme }) => {
   };
   
   return {
-    background: colors[rarity]?.bg || colors.common.bg,
-    color: colors[rarity]?.color || colors.common.color,
+    background: colors[rarity || 'common']?.bg || colors.common.bg,
+    color: colors[rarity || 'common']?.color || colors.common.color,
     fontWeight: 600,
     fontSize: '0.8rem',
     '& .MuiChip-label': {
@@ -220,11 +221,19 @@ const ItemPreview = styled(Box)(({ theme }) => ({
   zIndex: 3,
 }));
 
-const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
-  const [packContents, setPackContents] = useState([]);
+interface PackCardProps {
+  pack: Pack;
+  userPoints: number;
+  onBuy: () => Promise<void>;
+  disabled: boolean;
+  onPackClick?: (pack: Pack, packContents: PackContent[]) => void;
+}
+
+const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardProps) => {
+  const [packContents, setPackContents] = useState<PackContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [showItems, setShowItems] = useState(false);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<PackContent[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
 
   useEffect(() => {
@@ -244,7 +253,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
     }
   };
 
-  const handleBuyClick = async (e) => {
+  const handleBuyClick = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Предотвращаем всплытие события
     if (disabled) return;
     
@@ -268,7 +277,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
     }
   };
 
-  const getRarityIcon = (rarity) => {
+  const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return <DiamondIcon sx={{ fontSize: 16 }} />;
@@ -279,7 +288,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
     }
   };
 
-  const getRarityColor = (rarity) => {
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return '#f39c12';
@@ -292,7 +301,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
     }
   };
 
-  const getRarityLabel = (rarity) => {
+  const getRarityLabel = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return 'Легендарный';
@@ -313,13 +322,13 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
   const sideItems = displayItems.slice(1, 3);
 
   // Функция для сокращения длинных описаний
-  const truncateDescription = (text, maxLength = 50) => {
+  const truncateDescription = (text: string, maxLength: number = 50) => {
     if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength).trim() + '...';
   };
 
-  const isSoldOut = pack.is_limited && (pack.max_quantity - pack.sold_quantity <= 0);
+  const isSoldOut = pack.is_limited && pack.max_quantity && pack.sold_quantity && (pack.max_quantity - pack.sold_quantity <= 0);
 
   return (
     <motion.div
@@ -342,6 +351,8 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
               width="100%"
               height="100%"
               fallbackText="Пак"
+              onLoad={() => {}}
+              onError={() => {}}
             />
           ) : (
             <ItemContainer>
@@ -417,6 +428,8 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
                       height="75%"
                       fallbackText=""
                       showSkeleton={false}
+                      onLoad={() => {}}
+                      onError={() => {}}
                       style={{
                         position: 'relative',
                         zIndex: 2,
@@ -485,7 +498,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
             {pack.is_limited && (
               <Chip 
                 icon={<LockIcon />}
-                label={`Осталось: ${pack.max_quantity - pack.sold_quantity}`}
+                label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
                 sx={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   color: 'text.secondary',
@@ -504,7 +517,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }) => {
           <Button
             variant="outlined"
             fullWidth
-            disabled={disabled || loading || isSoldOut}
+            disabled={!!disabled || !!loading || !!isSoldOut}
             onClick={handleBuyClick}
             sx={{
               borderColor: 'rgba(255, 255, 255, 0.2)',

@@ -148,7 +148,12 @@ const WallFeed = ({ userId }) => {
     const handleGlobalPostCreated = (event) => {
       const newPost = event.detail;
       
-      if (newPost.type === 'stena' && newPost.recipient_id === parseInt(userId)) {
+      // Добавляем пост в стену если:
+      // 1. Это пост стены (type === 'stena')
+      // 2. Получатель совпадает с userId (стена этого пользователя)
+      if (newPost && 
+          newPost.type === 'stena' && 
+          newPost.recipient_id === parseInt(userId)) {
         setWallPosts(prevPosts => [newPost, ...prevPosts]);
       }
     };
