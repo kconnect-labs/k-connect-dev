@@ -309,7 +309,12 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
         const newItems = response.data.items;
         
         if (append) {
-          setItems(prevItems => [...prevItems, ...newItems]);
+          // Дедупликация по ID для предотвращения дублирования
+          setItems(prevItems => {
+            const existingIds = new Set(prevItems.map(item => item.id));
+            const uniqueNewItems = newItems.filter(item => !existingIds.has(item.id));
+            return [...prevItems, ...uniqueNewItems];
+          });
         } else {
           setItems(newItems);
         }
@@ -335,15 +340,21 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
   };
 
   const loadMoreItems = () => {
-    if (!loadingMore && hasMore) {
-      fetchInventory(pagination.page + 1, true);
+    if (!loadingMore && hasMore && pagination.page > 0) {
+      // Дополнительная проверка - убеждаемся, что мы не загружаем ту же страницу
+      const nextPage = pagination.page + 1;
+      console.log(`Loading page ${nextPage}, current items: ${items.length}`);
+      fetchInventory(nextPage, true);
     }
   };
 
   // Обработчик прокрутки для бесконечной загрузки
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
-    if (scrollHeight - scrollTop <= clientHeight * 1.5 && !loadingMore && hasMore) {
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+    
+    // Загружаем следующую страницу когда пользователь доскроллил до 80%
+    if (scrollPercentage >= 0.8 && !loadingMore && hasMore && !loading) {
       loadMoreItems();
     }
   };
@@ -411,7 +422,21 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     setSelectedItem(null);
   };
 
+  // Функция для удаления дубликатов по ID
+  const removeDuplicates = (items) => {
+    const seen = new Set();
+    return items.filter(item => {
+      if (seen.has(item.id)) {
+        return false;
+      }
+      seen.add(item.id);
+      return true;
+    });
+  };
+
   const handleItemUpdate = () => {
+    // Очищаем дубликаты перед обновлением
+    setItems(prevItems => removeDuplicates(prevItems));
     fetchInventory(1, false); // Перезагружаем с первой страницы
     fetchUserPoints();
     fetchProfileEquippedItems(); // Обновляем надетые предметы
