@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { 
   Box, 
   Typography, 
@@ -41,6 +41,18 @@ import {
   Forum as CommunityIcon,
   Send as SendIcon
 } from '@mui/icons-material';
+
+// TypeScript interfaces
+interface Benefit {
+  icon: React.ReactElement;
+  title: string;
+  description: string;
+}
+
+interface Topic {
+  icon: React.ReactElement;
+  label: string;
+}
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -190,8 +202,8 @@ const HeaderBlock = styled(Box)(({ theme }) => ({
   },
 }));
 
-const GrantsPage = () => {
-  const benefits = [
+const GrantsPage: React.FC = () => {
+  const benefits: Benefit[] = [
     {
       icon: <MonetizationIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Ежемесячные бонусы',
@@ -224,7 +236,7 @@ const GrantsPage = () => {
     }
   ];
 
-  const topics = [
+  const topics: Topic[] = [
     { icon: <BusinessIcon />, label: 'Бизнес и финансы' },
     { icon: <PsychologyIcon />, label: 'Психология и саморазвитие' },
     { icon: <GamingIcon />, label: 'Игры и киберспорт' },
@@ -240,13 +252,17 @@ const GrantsPage = () => {
     { icon: <CommunityIcon />, label: 'Сообщество и общение' }
   ];
 
-  const requirements = [
+  const requirements: string[] = [
     'Активность почти ежедневная (минимум один пост)',
     'Качественный и уникальный контент',
     'Соблюдение правил платформы',
     'Взаимодействие с аудиторией',
     'Регулярное обновление контента'
   ];
+
+  const handleApplyClick = (): void => {
+    window.open('https://t.me/kconnectsup_bot', '_blank');
+  };
 
   return (
     <StyledContainer>
@@ -295,7 +311,7 @@ const GrantsPage = () => {
           </SectionTitle>
           
           <Grid container spacing={3}>
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit: Benefit, index: number) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -329,7 +345,7 @@ const GrantsPage = () => {
           <StyledCard>
             <CardContent>
               <List>
-                {requirements.map((requirement, index) => (
+                {requirements.map((requirement: string, index: number) => (
                   <React.Fragment key={index}>
                     <ListItem>
                       <ListItemIcon>
@@ -365,7 +381,7 @@ const GrantsPage = () => {
           <StyledCard>
             <CardContent>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {topics.map((topic, index) => (
+                {topics.map((topic: Topic, index: number) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -457,7 +473,7 @@ const GrantsPage = () => {
             variant="contained"
             size="large"
             startIcon={<SendIcon />}
-            onClick={() => window.open('https://t.me/kconnectsup_bot', '_blank')}
+            onClick={handleApplyClick}
           >
             Подать заявку на грант
           </ApplyButton>
