@@ -157,28 +157,38 @@ const PrivacyPolicyPage = () => {
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы собираем следующие типы информации:
+            К-Коннект действует как платформа-посредник и собирает минимальную информацию, необходимую для функционирования сервиса:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Информация, которую вы предоставляете при регистрации (имя, email, дата рождения).
+                <strong>Данные регистрации:</strong> никнейм, который пользователь выбирает самостоятельно (не является персональными данными).
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Контент, который вы публикуете на платформе.
+                <strong>Email адрес:</strong> используется исключительно для подтверждения регистрации и предотвращения создания ботов. Мы не используем email для рассылок или маркетинга.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Информация об использовании сервиса (время активности, предпочтения).
+                <strong>Telegram ID:</strong> при регистрации через Telegram мы получаем только публичный Telegram ID и хеш для подтверждения подлинности аккаунта. Мы НЕ получаем username, аватар или другие данные Telegram.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Техническая информация (IP-адрес, тип устройства, браузер).
+                <strong>Пользовательский контент:</strong> посты, комментарии, изображения, которые пользователи загружают добровольно и по своей инициативе.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Техническая информация:</strong> IP-адреса для обеспечения безопасности сессий и предотвращения злоупотреблений.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Данные активности:</strong> время последнего входа для технического обслуживания системы.
               </Typography>
             </Box>
           </Box>
@@ -188,44 +198,89 @@ const PrivacyPolicyPage = () => {
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы используем собранную информацию для:
+            К-Коннект использует собранную информацию исключительно для:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Предоставления и улучшения наших услуг.
+                Обеспечения технического функционирования платформы.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Персонализации вашего опыта использования платформы.
+                Предотвращения злоупотреблений и обеспечения безопасности пользователей.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Обеспечения безопасности и предотвращения мошенничества.
+                Подтверждения регистрации (email) и верификации Telegram аккаунтов.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Коммуникации с вами по вопросам сервиса.
+                Соблюдения требований законодательства при наличии соответствующих запросов.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>К-Коннект НЕ использует данные для:</strong> таргетированной рекламы, продажи третьим лицам, создания профилей пользователей.
               </Typography>
             </Box>
           </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            3. Использование контента для маркетинга
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            К-Коннект может использовать публичный контент платформы (скриншоты, профили, посты) для маркетинговых целей:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Промо-материалы:</strong> создание рекламных роликов, постов, скриншотов для продвижения платформы.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Социальные сети:</strong> публикация контента в TikTok, и других платформах для привлечения новых пользователей.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Развлекательный контент:</strong> создание видео, мемов и развлекательных материалов на основе активности пользователей.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Ограничения:</strong> мы не используем приватные сообщения, личные данные или контент, помеченный как приватный.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Согласие пользователя:</strong> Регистрируясь на платформе, пользователь соглашается с возможным использованием публичного контента для маркетинговых целей К-Коннект.
+          </Typography>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
             3. Защита информации
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы принимаем следующие меры для защиты вашей информации:
+            К-Коннект принимает технические меры для защиты данных:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Шифрование данных при передаче и хранении.
+                Шифрование данных при передаче (HTTPS).
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Ограничение доступа к серверной инфраструктуре.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
@@ -235,12 +290,7 @@ const PrivacyPolicyPage = () => {
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Ограничение доступа к персональным данным.
-              </Typography>
-            </Box>
-            <Box component="li" sx={{ mb: 1 }}>
-              <Typography variant="body1">
-                Мониторинг и предотвращение несанкционированного доступа.
+                <strong>Важно:</strong> К-Коннект не гарантирует абсолютную безопасность данных, так как это технически невозможно.
               </Typography>
             </Box>
           </Box>
@@ -250,102 +300,164 @@ const PrivacyPolicyPage = () => {
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы не продаем ваши персональные данные третьим лицам. Мы можем делиться информацией только в следующих случаях:
+            К-Коннект НЕ продает и НЕ передает персональные данные третьим лицам. Передача данных возможна только в следующих случаях:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                С вашего явного согласия.
+                По требованию уполномоченных органов в соответствии с законодательством РФ.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Для выполнения юридических обязательств.
+                Для защиты прав и безопасности К-Коннект и других пользователей.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Для защиты наших прав и безопасности.
+                <strong>К-Коннект НЕ передает данные:</strong> рекламным сетям, аналитическим сервисам, маркетинговым компаниям.
               </Typography>
             </Box>
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            5. Ваши права
+            5. Ответственность пользователей
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Вы имеете право:
+            <strong>КРИТИЧЕСКИ ВАЖНО:</strong> К-Коннект действует как платформа-посредник. Пользователи несут полную ответственность за:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Получить доступ к своим персональным данным.
+                <strong>Контент:</strong> вся ответственность за загружаемые материалы лежит на пользователях.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Исправить неточные данные.
+                <strong>Персональные данные:</strong> пользователи сами решают, какую информацию публиковать.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Запросить удаление своих данных.
+                <strong>Соблюдение законов:</strong> пользователи обязаны соблюдать законодательство при публикации контента.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Отозвать согласие на обработку данных.
+                <strong>Авторские права:</strong> пользователи отвечают за соблюдение прав интеллектуальной собственности.
               </Typography>
             </Box>
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            6. Cookies и отслеживание
+            6. Ваши права
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы используем cookies и аналогичные технологии для:
+            Пользователи имеют право:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Сохранения ваших предпочтений.
+                Удалить свой аккаунт и все связанные данные в любое время.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Анализа использования сервиса.
+                Запросить удаление конкретного контента, который они опубликовали.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Улучшения безопасности.
+                Отозвать согласие на обработку данных, удалив аккаунт.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Ограничение:</strong> К-Коннект не может удалить контент, который был скопирован другими пользователями.
               </Typography>
             </Box>
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            7. Изменения в политике
+            7. Cookies и отслеживание
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Мы можем обновлять эту политику конфиденциальности время от времени. Мы уведомим вас о существенных изменениях через сервис К-Коннект.
+            К-Коннект использует минимальное количество cookies только для:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Сохранения сессии пользователя (авторизация).
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Базовой аналитики для улучшения работы платформы.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>К-Коннект НЕ использует:</strong> трекинговые cookies, рекламные пиксели, аналитику третьих сторон.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            8. Отказ от ответственности
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>К-Коннект действует как платформа-посредник и не несет ответственности за:</strong>
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Контент, опубликованный пользователями.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Нарушения авторских прав пользователями.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Персональные данные, которые пользователи добровольно публикуют.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Действия пользователей, нарушающие законодательство.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            9. Изменения в политике
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            К-Коннект может обновлять эту политику конфиденциальности. Пользователи будут уведомлены о существенных изменениях через платформу.
           </Typography>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            8. Контакты
+            10. Контакты
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Если у вас есть вопросы о нашей политике конфиденциальности, пожалуйста, свяжитесь с нами через форму обратной связи в приложении или напишите на support@k-connect.ru.
+            По вопросам политики конфиденциальности: verif@k-connect.ru
           </Typography>
           
           <Typography variant="body1" sx={{ mt: 4, fontStyle: 'italic' }}>
-            Используя К-Коннект, вы соглашаетесь с условиями этой политики конфиденциальности.
+            Используя К-Коннект, вы подтверждаете, что понимаете роль платформы как посредника и принимаете полную ответственность за публикуемый контент.
           </Typography>
         </Box>
       </RuleCard>

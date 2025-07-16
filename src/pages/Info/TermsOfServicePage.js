@@ -162,7 +162,38 @@ const TermsOfServicePage = () => {
           </Typography>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            2. Регистрация и безопасность аккаунта
+            2. Роль К-Коннект как платформы-посредника
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>КРИТИЧЕСКИ ВАЖНО:</strong> К-Коннект действует исключительно как платформа-посредник, предоставляющая техническую инфраструктуру для обмена информацией между пользователями. К-Коннект:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>НЕ создает, не редактирует и не контролирует</strong> контент, публикуемый пользователями.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>НЕ несет ответственности</strong> за действия, контент или поведение пользователей.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>НЕ является владельцем</strong> интеллектуальной собственности, публикуемой пользователями.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>НЕ гарантирует</strong> точность, законность или качество пользовательского контента.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            3. Регистрация и безопасность аккаунта
           </Typography>
           
           <Typography variant="body1" paragraph>
@@ -193,46 +224,137 @@ const TermsOfServicePage = () => {
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            3. Правила контента
+            4. Ответственность за контент
           </Typography>
           
           <Typography variant="body1" paragraph>
-            Вы несете полную ответственность за контент, который публикуете на К-Коннект. Вы обязуетесь не публиковать и не распространять:
+            <strong>ПОЛНАЯ ОТВЕТСТВЕННОСТЬ ПОЛЬЗОВАТЕЛЯ:</strong> Вы несете полную и исключительную ответственность за весь контент, который публикуете на К-Коннект:
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Контент, нарушающий чьи-либо права, включая права интеллектуальной собственности.
+                <strong>Законность:</strong> Вы гарантируете, что ваш контент не нарушает законодательство РФ или страны вашего проживания.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Незаконный, оскорбительный, дискриминационный, угрожающий или враждебный контент.
+                <strong>Авторские права:</strong> Вы гарантируете, что владеете правами на публикуемый контент или имеете разрешение на его использование.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Спам, фишинг, вредоносное ПО и другие формы нежелательного контента.
+                <strong>Персональные данные:</strong> Вы несете ответственность за публикацию персональных данных третьих лиц.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Личную информацию других лиц без их согласия.
+                <strong>Ущерб:</strong> Вы соглашаетесь возместить любой ущерб, причиненный вашим контентом.
               </Typography>
             </Box>
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            4. Интеллектуальная собственность
+            5. Правила контента
           </Typography>
           
           <Typography variant="body1" paragraph>
-            К-Коннект и весь контент, представленный на платформе, защищены авторским правом и другими законами об интеллектуальной собственности. Публикуя контент, вы сохраняете все права на него, но предоставляете К-Коннект неисключительную, бесплатную лицензию на использование, воспроизведение, модификацию и отображение этого контента в связи с нашими услугами.
+            Вы обязуетесь не публиковать и не распространять контент, который:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Нарушает чьи-либо права, включая права интеллектуальной собственности.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Является незаконным, оскорбительным, дискриминационным, угрожающим или враждебным.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Содержит спам, фишинг, вредоносное ПО и другие формы нежелательного контента.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Включает личную информацию других лиц без их согласия.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            6. Интеллектуальная собственность
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Права пользователей:</strong> Публикуя контент, вы сохраняете все права на него. К-Коннект не претендует на владение вашим контентом.
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Лицензия платформе:</strong> Вы предоставляете К-Коннект неисключительную, бесплатную лицензию на использование, воспроизведение, модификацию и отображение вашего контента исключительно в рамках функционирования платформы.
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Маркетинговая лицензия:</strong> Публикуя контент на платформе, вы также предоставляете К-Коннект право использовать ваш публичный контент (скриншоты, профили, посты) для маркетинговых целей, включая:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Создание рекламных материалов и промо-роликов.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Публикацию в социальных сетях (TikTok, Instagram, YouTube) для продвижения платформы.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Создание развлекательного контента ("рофло" видео, мемы) на основе активности пользователей.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Ограничения:</strong> К-Коннект не использует приватные сообщения, личные данные или контент, помеченный как приватный.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Права платформы:</strong> К-Коннект и весь контент, созданный самой платформой, защищены авторским правом.
           </Typography>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            5. Использование сервиса
+            7. Регистрация и верификация
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            К-Коннект предлагает два способа регистрации:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Email регистрация:</strong> Email адрес используется исключительно для подтверждения регистрации и предотвращения создания ботов. Мы не используем email для рассылок или маркетинга.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Telegram регистрация:</strong> При регистрации через Telegram мы получаем только публичный Telegram ID и хеш для подтверждения подлинности аккаунта. Мы НЕ получаем username, аватар или другие данные Telegram.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Верификация:</strong> Оба способа регистрации направлены на предотвращение создания фейковых аккаунтов и ботов. К-Коннект не собирает дополнительную персональную информацию.
+          </Typography>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            8. Использование сервиса
           </Typography>
           
           <Typography variant="body1" paragraph>
@@ -263,33 +385,52 @@ const TermsOfServicePage = () => {
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            6. Отказ от ответственности
+            9. Полный отказ от ответственности
           </Typography>
           
           <Typography variant="body1" paragraph>
-            К-Коннект не несет ответственности за:
+            <strong>К-Коннект НЕ несет ответственности за:</strong>
           </Typography>
           
           <Box component="ul" sx={{ pl: 2 }}>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Любые прямые, косвенные, случайные или штрафные убытки.
+                <strong>Любые прямые, косвенные, случайные или штрафные убытки</strong>, связанные с использованием платформы.
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Любые действия или контент, опубликованный третьими лицами.
+                <strong>Любые действия или контент</strong>, опубликованный третьими лицами (пользователями).
               </Typography>
             </Box>
             <Box component="li" sx={{ mb: 1 }}>
               <Typography variant="body1">
-                Перебои в работе сервиса или потерю данных.
+                <strong>Перебои в работе сервиса</strong> или потерю данных по техническим причинам.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Нарушения авторских прав</strong> или интеллектуальной собственности пользователями.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Персональные данные</strong>, которые пользователи добровольно публикуют.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Юридические последствия</strong> публикации незаконного контента пользователями.
               </Typography>
             </Box>
           </Box>
           
+          <Typography variant="body1" paragraph>
+            <strong>Ограничение ответственности:</strong> В максимальной степени, разрешенной законом, общая ответственность К-Коннект ограничена суммой, уплаченной пользователем за использование сервиса в течение последних 12 месяцев.
+          </Typography>
+          
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            7. Прекращение использования
+            10. Прекращение использования
           </Typography>
           
           <Typography variant="body1" paragraph>
@@ -315,7 +456,38 @@ const TermsOfServicePage = () => {
           </Box>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            8. Изменения условий
+            11. Возмещение ущерба
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            Вы соглашаетесь защищать, возмещать ущерб и ограждать К-Коннект от любых претензий, убытков, обязательств, расходов и издержек (включая судебные издержки), возникающих в связи с:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Вашим использованием платформы.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Контентом, который вы публикуете.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Нарушением вами настоящих условий.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Нарушением вами прав третьих лиц.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            12. Изменения условий
           </Typography>
           
           <Typography variant="body1" paragraph>
@@ -323,15 +495,84 @@ const TermsOfServicePage = () => {
           </Typography>
           
           <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
-            9. Применимое право
+            13. Применимое право
           </Typography>
           
           <Typography variant="body1" paragraph>
             Настоящие условия регулируются и толкуются в соответствии с законодательством Российской Федерации, без учета принципов коллизионного права.
           </Typography>
           
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            14. Возрастные ограничения
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            Регистрация разрешена с 12 лет (или 16 лет, в зависимости от законодательства вашей страны). Пользователи младше 18 лет не имеют доступа к контенту с маркировкой 18+.
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            <strong>Ответственность родителей:</strong> Родители или опекуны несовершеннолетних пользователей несут ответственность за их действия на платформе.
+          </Typography>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            15. Автоматическая модерация
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            К-Коннект использует автоматические системы модерации для выявления потенциально нарушающего правила контента:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Автоматическое удаление:</strong> Система может автоматически удалять контент, который нарушает правила.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Временные блокировки:</strong> Автоматические санкции могут применяться без предварительного уведомления.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                <strong>Ошибки системы:</strong> К-Коннект не несет ответственности за ложные срабатывания автоматической модерации.
+              </Typography>
+            </Box>
+          </Box>
+          
+          <Typography variant="h6" sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+            16. Технические ограничения
+          </Typography>
+          
+          <Typography variant="body1" paragraph>
+            К-Коннект оставляет за собой право:
+          </Typography>
+          
+          <Box component="ul" sx={{ pl: 2 }}>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Ограничивать доступ к определенным функциям платформы.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Изменять технические требования и интерфейс без предварительного уведомления.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Приостанавливать работу сервиса для технического обслуживания.
+              </Typography>
+            </Box>
+            <Box component="li" sx={{ mb: 1 }}>
+              <Typography variant="body1">
+                Ограничивать объем загружаемого контента или количество постов.
+              </Typography>
+            </Box>
+          </Box>
+          
           <Typography variant="body1" sx={{ mt: 4, fontStyle: 'italic' }}>
-            Используя К-Коннект, вы подтверждаете, что прочитали, поняли и соглашаетесь с этими Условиями использования.
+            Используя К-Коннект, вы подтверждаете, что прочитали, поняли и соглашаетесь с этими Условиями использования, а также принимаете полную ответственность за публикуемый контент и понимаете роль К-Коннект как платформы-посредника.
           </Typography>
         </Box>
       </RuleCard>
