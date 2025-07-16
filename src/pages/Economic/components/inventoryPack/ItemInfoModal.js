@@ -28,7 +28,8 @@ import {
   Star as StarIcon,
   Store as StoreIcon,
   RemoveShoppingCart as RemoveFromMarketIcon,
-  ContentCopy as ContentCopyIcon
+  ContentCopy as ContentCopyIcon,
+  Delete as DeleteIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 import {
@@ -233,6 +234,8 @@ const ItemInfoModal = ({
   const [price, setPrice] = useState('');
   const [marketplaceLoading, setMarketplaceLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
+  const [recycleConfirmOpen, setRecycleConfirmOpen] = useState(false);
+  const [recycleLoading, setRecycleLoading] = useState(false);
 
   useEffect(() => {
     if (!open) {
@@ -521,6 +524,31 @@ const ItemInfoModal = ({
     });
   };
 
+  const handleRecycleItem = async () => {
+    setRecycleConfirmOpen(false);
+    try {
+      setRecycleLoading(true);
+      const response = await fetch(`/api/inventory/recycle/${item.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        showNotification(data.message, 'success');
+        if (typeof onClose === 'function') onClose();
+        if (typeof onItemUpdate === 'function') onItemUpdate();
+      } else {
+        showNotification(data.message, 'error');
+      }
+    } catch (error) {
+      showNotification('Ошибка при утилизации предмета', 'error');
+    } finally {
+      setRecycleLoading(false);
+    }
+  };
+
   if (!item) return null;
 
   return (
@@ -727,6 +755,25 @@ const ItemInfoModal = ({
                 </Button>
               )
             )}
+            <Button
+              variant="outlined"
+              color="error"
+              startIcon={<DeleteIcon />}
+              onClick={() => setRecycleConfirmOpen(true)}
+              disabled={recycleLoading}
+              fullWidth
+              sx={{
+                borderColor: 'rgba(244, 67, 54, 0.3)',
+                color: '#f44336',
+                fontWeight: 500,
+                '&:hover': {
+                  borderColor: 'rgba(244, 67, 54, 0.5)',
+                  backgroundColor: 'rgba(244, 67, 54, 0.05)',
+                },
+              }}
+            >
+              Утилизировать
+            </Button>
           </DialogActions>
         </UpgradeEffects>
       </StyledDialog>
@@ -946,6 +993,52 @@ const ItemInfoModal = ({
         <DialogActions>
           <Button onClick={() => setUpgradeConfirmOpen(false)} color="secondary" size="small">Нет</Button>
           <Button onClick={handleUpgradeItem} color="primary" size="small" disabled={upgradeLoading}>{upgradeLoading ? <CircularProgress size={16} /> : 'Да'}</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Модалка подтверждения утилизации */}
+      <Dialog 
+        open={recycleConfirmOpen} 
+        onClose={() => setRecycleConfirmOpen(false)} 
+        maxWidth="xs" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            background: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: 2,
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1, color: 'text.primary' }}>
+          Утилизировать предмет?
+        </DialogTitle>
+        <DialogContent sx={{ pb: 0 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Вы получите {Math.floor(item.pack_price ? item.pack_price * 0.05 : 0)} баллов (5% от стоимости пака)
+          </Typography>
+          <Typography variant="body2" color="error">
+            Это действие нельзя отменить!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={() => setRecycleConfirmOpen(false)} 
+            color="inherit"
+            sx={{ color: 'text.secondary' }}
+          >
+            Отмена
+          </Button>
+          <Button 
+            onClick={handleRecycleItem} 
+            color="error" 
+            variant="contained"
+            disabled={recycleLoading}
+            startIcon={recycleLoading ? <CircularProgress size={16} /> : <DeleteIcon />}
+          >
+            {recycleLoading ? 'Утилизация...' : 'Утилизировать'}
+          </Button>
         </DialogActions>
       </Dialog>
 
