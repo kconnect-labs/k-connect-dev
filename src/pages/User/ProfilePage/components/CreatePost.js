@@ -444,10 +444,11 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       
       if (response && response.success) {
         clearForm();
+        console.log('CreatePost: Post created successfully:', response.post);
         if (onPostCreated && response.post) {
+          console.log('CreatePost: Calling onPostCreated with:', response.post);
           onPostCreated(response.post);
         }
-
       }
     } catch (error) {
       console.error('Error creating post:', error);

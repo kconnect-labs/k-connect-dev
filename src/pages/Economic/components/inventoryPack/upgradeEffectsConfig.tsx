@@ -2,6 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { styled, keyframes } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { Star as StarIcon } from '@mui/icons-material';
+import { InventoryItem } from './types';
+
+// ===== ТИПЫ =====
+interface SparkleProps {
+  color?: string;
+  delay?: number;
+  size?: string;
+}
+
+interface StarProps {
+  color?: string;
+  delay?: number;
+  size?: string;
+}
+
+interface GlowProps {
+  color?: string;
+}
+
+interface ColorCounts {
+  [key: string]: number;
+}
 
 // ===== АНИМАЦИИ =====
 export const sparkleAnimation = keyframes`
@@ -50,7 +72,7 @@ export const glowPulseAnimation = keyframes`
 `;
 
 // ===== СТИЛИЗОВАННЫЕ КОМПОНЕНТЫ =====
-export const AnimatedSparkle = styled(Box)(({ color, delay, size }) => ({
+export const AnimatedSparkle = styled(Box)<SparkleProps>(({ color, delay, size }) => ({
   position: 'absolute',
   width: size || '4px',
   height: size || '4px',
@@ -61,7 +83,7 @@ export const AnimatedSparkle = styled(Box)(({ color, delay, size }) => ({
   boxShadow: `0 0 6px ${color || '#FFD700'}`,
 }));
 
-export const AnimatedStar = styled(StarIcon)(({ color, delay, size }) => ({
+export const AnimatedStar = styled(StarIcon)<StarProps>(({ color, delay, size }) => ({
   position: 'absolute',
   fontSize: size || '12px',
   color: color || '#FFD700',
@@ -70,7 +92,7 @@ export const AnimatedStar = styled(StarIcon)(({ color, delay, size }) => ({
   filter: `drop-shadow(0 0 4px ${color || '#FFD700'})`,
 }));
 
-export const GlowEffect = styled(Box)(({ color }) => ({
+export const GlowEffect = styled(Box)<GlowProps>(({ color }) => ({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -152,7 +174,7 @@ export const EFFECTS_CONFIG = {
 };
 
 // ===== УТИЛИТЫ =====
-export const extractDominantColor = (imageUrl) => {
+export const extractDominantColor = (imageUrl: string): Promise<string> => {
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -161,6 +183,11 @@ export const extractDominantColor = (imageUrl) => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       
+      if (!ctx) {
+        resolve('#FFD700');
+        return;
+      }
+      
       canvas.width = img.width;
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
@@ -168,7 +195,7 @@ export const extractDominantColor = (imageUrl) => {
       try {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
-        const colorCounts = {};
+        const colorCounts: ColorCounts = {};
         const config = EFFECTS_CONFIG.colorExtraction;
         
         for (let i = 0; i < data.length; i += config.sampleRate) {
@@ -195,7 +222,7 @@ export const extractDominantColor = (imageUrl) => {
         
         // Находим самый частый цвет
         let maxCount = 0;
-        let dominantColorKey = null;
+        let dominantColorKey: string | null = null;
         
         for (const [colorKey, count] of Object.entries(colorCounts)) {
           if (count > maxCount) {
@@ -227,12 +254,12 @@ export const extractDominantColor = (imageUrl) => {
   });
 };
 
-export const getFallbackColor = (item) => {
+export const getFallbackColor = (item: InventoryItem): string => {
   const { fallbackColors } = EFFECTS_CONFIG;
   
   // Сначала пробуем по редкости
-  if (item.rarity && fallbackColors.rarity[item.rarity]) {
-    return fallbackColors.rarity[item.rarity];
+  if (item.rarity && fallbackColors.rarity[item.rarity as keyof typeof fallbackColors.rarity]) {
+    return fallbackColors.rarity[item.rarity as keyof typeof fallbackColors.rarity];
   }
   
   // Затем по типу предмета
@@ -247,8 +274,8 @@ export const getFallbackColor = (item) => {
 };
 
 // ===== ХУК ДЛЯ ЭФФЕКТОВ =====
-export const useUpgradeEffects = (item) => {
-  const [dominantColor, setDominantColor] = useState('#FFD700');
+export const useUpgradeEffects = (item: InventoryItem | null) => {
+  const [dominantColor, setDominantColor] = useState<string>('#FFD700');
   
   useEffect(() => {
     if (item && item.upgrade_level === 1 && item.image_url) {

@@ -53,6 +53,7 @@ import { usePageCommands } from '../../context/CommandPalleteContext';
 import ReactMarkdown from 'react-markdown';
 import MarkdownContent from '../../components/Post/MarkdownContent';
 import CreatePost from '../../components/CreatePost/CreatePost';
+import { usePostActions } from '../User/ProfilePage/hooks/usePostActions';
 
 
 
@@ -314,6 +315,8 @@ const MainPage = React.memo(() => {
   const navigate = useNavigate(); 
   const loadingMoreRef = useRef(false); 
   const loaderRef = useRef(null); 
+  
+  const { handlePostCreated } = usePostActions();
   
   
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -629,7 +632,7 @@ const MainPage = React.memo(() => {
     }
   };
   
-  const handlePostCreated = (newPost, deletedPostId = null) => {
+  const handlePostCreatedLocal = (newPost, deletedPostId = null) => {
     if (axios.cache) {
       axios.cache.clearPostsCache();
       axios.cache.clearByUrlPrefix('/api/posts/feed');
@@ -692,6 +695,20 @@ const MainPage = React.memo(() => {
     
     setPosts(prevPosts => [newPost, ...prevPosts]);
   };
+
+  const handleDeletePost = (postId, updatedPost) => {
+    if (updatedPost) {
+      setPosts(prevPosts => 
+        prevPosts.map(post => 
+          post.id.toString() === postId.toString() ? updatedPost : post
+        )
+      );
+    } else {
+      setPosts(prevPosts => 
+        prevPosts.filter(post => post.id.toString() !== postId.toString())
+      );
+    }
+  };
   
   const handleFollow = async (userId, isFollowing) => {
     try {
@@ -736,6 +753,38 @@ const MainPage = React.memo(() => {
   useEffect(() => {
     const update = UpdateService.getLatestUpdate();
     setLatestUpdate(update);
+  }, []);
+
+  // Обработчик глобального события удаления постов
+  useEffect(() => {
+    const handleGlobalPostDeleted = (event) => {
+      const { postId } = event.detail;
+      if (postId) {
+        setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+      }
+    };
+    
+    window.addEventListener('post-deleted', handleGlobalPostDeleted);
+    
+    return () => {
+      window.removeEventListener('post-deleted', handleGlobalPostDeleted);
+    };
+  }, []);
+
+  // Обработчик глобального события создания постов
+  useEffect(() => {
+    const handleGlobalPostCreated = (event) => {
+      const newPost = event.detail;
+      if (newPost && (!newPost.type || newPost.type === 'post')) {
+        setPosts(prevPosts => [newPost, ...prevPosts]);
+      }
+    };
+    
+    window.addEventListener('post_created', handleGlobalPostCreated);
+    
+    return () => {
+      window.removeEventListener('post_created', handleGlobalPostCreated);
+    };
   }, []);
   
   return (
@@ -807,6 +856,7 @@ const MainPage = React.memo(() => {
                       post={post} 
                       showPostDetails={false}
                       onOpenLightbox={handleOpenLightbox}
+                      onDelete={handleDeletePost}
                     />
                   )
                 ))}

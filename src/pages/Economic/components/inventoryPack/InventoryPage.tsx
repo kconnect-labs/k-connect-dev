@@ -39,6 +39,16 @@ import {
   CompareArrows as CompareArrowsIcon
 } from '@mui/icons-material';
 import { useAuth } from '../../../../context/AuthContext';
+
+// Тип для пользователя из AuthContext
+interface AuthUser {
+  id: number;
+  username: string;
+  name: string;
+  photo?: string;
+  account_type?: string;
+  [key: string]: any;
+}
 import axios from 'axios';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
 import StyledTabs from '../../../../UIKIT/StyledTabs';
@@ -54,6 +64,15 @@ import {
 } from './upgradeEffectsConfig';
 import inventoryImageService from '../../../../services/InventoryImageService';
 import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
+import { InventoryItem, EquippedItem, ItemAction } from './types';
+
+interface InventoryTabProps {
+  userId?: number;
+  itemIdToOpen?: string;
+  equippedItems?: EquippedItem[];
+  onEquippedItemsUpdate?: () => void;
+  currentUserId?: number;
+}
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -123,8 +142,8 @@ const PageTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
 }));
 
-const RarityChip = styled(Chip)(({ rarity, theme }) => {
-  const colors = {
+const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
+  const colors: Record<string, { bg: string; color: string }> = {
     common: { bg: '#95a5a6', color: '#fff' },
     rare: { bg: '#3498db', color: '#fff' },
     epic: { bg: '#9b59b6', color: '#fff' },
@@ -132,8 +151,8 @@ const RarityChip = styled(Chip)(({ rarity, theme }) => {
   };
   
   return {
-    background: colors[rarity]?.bg || colors.common.bg,
-    color: colors[rarity]?.color || colors.common.color,
+    background: colors[rarity || 'common']?.bg || colors.common.bg,
+    color: colors[rarity || 'common']?.color || colors.common.color,
     fontWeight: 600,
     fontSize: '0.8rem',
     '& .MuiChip-label': {
@@ -194,14 +213,14 @@ const KBallsIcon = styled('img')({
   marginRight: '4px',
 });
 
-const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
-  const [items, setItems] = useState([]);
-  const [profileEquippedItems, setProfileEquippedItems] = useState([]);
+const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
+  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [profileEquippedItems, setProfileEquippedItems] = useState<EquippedItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [showItemInfo, setShowItemInfo] = useState(false);
-  const [externalItem, setExternalItem] = useState(null);
+  const [externalItem, setExternalItem] = useState<InventoryItem | null>(null);
   const [externalLoading, setExternalLoading] = useState(false);
   const [externalError, setExternalError] = useState('');
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
@@ -211,13 +230,17 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
   const [userPoints, setUserPoints] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [showEquipped, setShowEquipped] = useState(true);
-  const [upgradedItems, setUpgradedItems] = useState([]);
+  const [upgradedItems, setUpgradedItems] = useState<InventoryItem[]>([]);
   const [loadingUpgraded, setLoadingUpgraded] = useState(false);
-  const { user } = useAuth();
-  const [notification, setNotification] = useState({
+  const { user } = useAuth() as { user: AuthUser | null };
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error' | 'warning' | 'info';
+  }>({
     open: false,
     message: '',
-    severity: 'success' // 'success', 'error', 'warning', 'info'
+    severity: 'success'
   });
   
   // Пагинация
@@ -241,8 +264,32 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   }, [user]);
 
+  // Обработчик глобального события получения предмета
+  useEffect(() => {
+    const handleGlobalItemObtained = (event: Event) => {
+      const customEvent = event as CustomEvent<InventoryItem>;
+      const newItem = customEvent.detail;
+      if (newItem) {
+        // Добавляем предмет в начало списка
+        setItems(prevItems => [newItem, ...prevItems]);
+        
+        // Если предмет улучшенный, добавляем в улучшенные
+        if (newItem.upgrade_level > 0) {
+          setUpgradedItems(prevItems => [newItem, ...prevItems]);
+        }
+      }
+    };
+    
+    window.addEventListener('item_obtained', handleGlobalItemObtained);
+    
+    return () => {
+      window.removeEventListener('item_obtained', handleGlobalItemObtained);
+    };
+  }, []);
+
   const fetchProfileEquippedItems = async () => {
     try {
+      if (!user || !user.username) return;
       const response = await axios.get(`/api/profile/${user.username}`);
       if (response.data.success && response.data.user && response.data.equipped_items) {
         setProfileEquippedItems(response.data.equipped_items);
@@ -254,6 +301,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
 
   const fetchUpgradedItems = async () => {
     try {
+      if (!user || !user.id) return;
       setLoadingUpgraded(true);
       const response = await axios.get(`/api/inventory/user/${user.id}/upgraded`);
       if (response.data.success) {
@@ -312,7 +360,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
           // Дедупликация по ID для предотвращения дублирования
           setItems(prevItems => {
             const existingIds = new Set(prevItems.map(item => item.id));
-            const uniqueNewItems = newItems.filter(item => !existingIds.has(item.id));
+            const uniqueNewItems = newItems.filter((item: InventoryItem) => !existingIds.has(item.id));
             return [...prevItems, ...uniqueNewItems];
           });
         } else {
@@ -349,8 +397,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
   };
 
   // Обработчик прокрутки для бесконечной загрузки
-  const handleScroll = (e) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.target;
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
     
     // Загружаем следующую страницу когда пользователь доскроллил до 80%
@@ -368,7 +416,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   };
 
-  const handleEquipItem = async (itemId) => {
+  const handleEquipItem = async (itemId: number) => {
     try {
       const response = await fetch(`/api/inventory/equip/${itemId}`, {
         method: 'POST',
@@ -381,7 +429,31 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
       
       if (data.success) {
         showNotification(data.message);
-        fetchInventory();
+        
+        // Мгновенно обновляем состояние предмета
+        setItems(prevItems => 
+          prevItems.map(item => 
+            item.id === itemId 
+              ? { ...item, is_equipped: true }
+              : item
+          )
+        );
+        
+        // Обновляем надетые предметы
+        setProfileEquippedItems(prev => {
+          const item = items.find(i => i.id === itemId);
+          if (item && !prev.find(e => e.item_id === itemId)) {
+            return [...prev, {
+              item_id: itemId,
+              item_name: item.item_name,
+              rarity: item.rarity,
+              upgrade_level: item.upgrade_level,
+              image_url: item.image_url,
+              background_url: item.image_url
+            }];
+          }
+          return prev;
+        });
       } else {
         showNotification(data.message, 'error');
       }
@@ -390,7 +462,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   };
 
-  const handleUnequipItem = async (itemId) => {
+  const handleUnequipItem = async (itemId: number) => {
     try {
       const response = await fetch(`/api/inventory/unequip/${itemId}`, {
         method: 'POST',
@@ -403,7 +475,20 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
       
       if (data.success) {
         showNotification(data.message);
-        fetchInventory();
+        
+        // Мгновенно обновляем состояние предмета
+        setItems(prevItems => 
+          prevItems.map(item => 
+            item.id === itemId 
+              ? { ...item, is_equipped: false }
+              : item
+          )
+        );
+        
+        // Удаляем из надетых предметов
+        setProfileEquippedItems(prev => 
+          prev.filter(e => e.item_id !== itemId)
+        );
       } else {
         showNotification(data.message, 'error');
       }
@@ -412,7 +497,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   };
 
-  const handleItemClick = (item) => {
+  const handleItemClick = (item: InventoryItem) => {
     setSelectedItem(item);
     setShowItemInfo(true);
   };
@@ -423,9 +508,9 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
   };
 
   // Функция для удаления дубликатов по ID
-  const removeDuplicates = (items) => {
+  const removeDuplicates = (items: InventoryItem[]) => {
     const seen = new Set();
-    return items.filter(item => {
+    return items.filter((item: InventoryItem) => {
       if (seen.has(item.id)) {
         return false;
       }
@@ -434,21 +519,86 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     });
   };
 
-  const handleItemUpdate = () => {
-    // Очищаем дубликаты перед обновлением
-    setItems(prevItems => removeDuplicates(prevItems));
-    fetchInventory(1, false); // Перезагружаем с первой страницы
-    fetchUserPoints();
-    fetchProfileEquippedItems(); // Обновляем надетые предметы
-    fetchUpgradedItems(); // Обновляем улучшенные предметы
+  const handleItemUpdate = (updatedItem: InventoryItem | null = null, action: ItemAction | null = null) => {
+    if (updatedItem && action) {
+      // Мгновенное обновление конкретного предмета
+      switch (action) {
+        case 'equip':
+          setItems(prevItems => 
+            prevItems.map(item => 
+              item.id === updatedItem.id 
+                ? { ...item, is_equipped: true }
+                : item
+            )
+          );
+          break;
+        case 'unequip':
+          setItems(prevItems => 
+            prevItems.map(item => 
+              item.id === updatedItem.id 
+                ? { ...item, is_equipped: false }
+                : item
+            )
+          );
+          break;
+        case 'upgrade':
+          setItems(prevItems => 
+            prevItems.map(item => 
+              item.id === updatedItem.id 
+                ? { ...item, upgrade_level: updatedItem.upgrade_level }
+                : item
+            )
+          );
+          // Обновляем в улучшенных предметах
+          setUpgradedItems(prevItems => {
+            const existingItem = prevItems.find(i => i.id === updatedItem.id);
+            if (existingItem) {
+              return prevItems.map(i => 
+                i.id === updatedItem.id 
+                  ? { ...i, upgrade_level: updatedItem.upgrade_level }
+                  : i
+              );
+            } else {
+              return [...prevItems, updatedItem];
+            }
+          });
+          break;
+        case 'marketplace_list':
+        case 'marketplace_remove':
+          setItems(prevItems => 
+            prevItems.map(item => 
+              item.id === updatedItem.id 
+                ? { ...item, marketplace: updatedItem.marketplace }
+                : item
+            )
+          );
+          break;
+        default:
+          break;
+      }
+    } else {
+      // Полная перезагрузка (для обратной совместимости)
+      setItems(prevItems => removeDuplicates(prevItems));
+      fetchInventory(1, false);
+      fetchUserPoints();
+      fetchProfileEquippedItems();
+      fetchUpgradedItems();
+    }
   };
 
-  const handleTransferSuccess = () => {
-    fetchInventory(1, false); // Перезагружаем с первой страницы
-    fetchUserPoints();
+  const handleTransferSuccess = (itemId: number | null) => {
+    if (itemId) {
+      // Мгновенно удаляем конкретный предмет
+      setItems(prevItems => prevItems.filter(i => i.id !== itemId));
+      setUpgradedItems(prevItems => prevItems.filter(i => i.id !== itemId));
+    } else {
+      // Полная перезагрузка (для обратной совместимости)
+      fetchInventory(1, false);
+      fetchUserPoints();
+    }
   };
 
-  const getRarityIcon = (rarity) => {
+  const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return <DiamondIcon sx={{ fontSize: 16 }} />;
@@ -459,7 +609,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   };
 
-  const getRarityColor = (rarity) => {
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return '#f39c12';
@@ -472,7 +622,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   };
 
-  const getRarityLabel = (rarity) => {
+  const getRarityLabel = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return 'Легендарный';
@@ -492,7 +642,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     ...equipped,
     is_equipped: true,
     // Добавляем недостающие поля для совместимости
-    id: equipped.background_id || equipped.item_id,
+    id: equipped.item_id,
     item_name: equipped.item_name || 'Предмет',
     rarity: equipped.rarity || 'common',
     upgrade_level: equipped.upgrade_level || 0,
@@ -517,7 +667,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     }
   ];
 
-  const showNotification = (message, severity = 'success') => {
+  const showNotification = (message: string, severity: 'success' | 'error' | 'warning' | 'info' = 'success') => {
     setNotification({
       open: true,
       message,
@@ -529,7 +679,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
     setNotification(prev => ({ ...prev, open: false }));
   };
 
-  const handleUpgradeItem = async (item) => {
+  const handleUpgradeItem = async (item: InventoryItem) => {
     if (!item.upgradeable || item.upgrade_level >= 1) {
       return;
     }
@@ -540,7 +690,8 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
       
       if (response.data.success) {
         setUserPoints(response.data.remaining_points);
-        // Обновляем предмет в списке
+        
+        // Мгновенно обновляем предмет в списке
         setItems(prevItems => 
           prevItems.map(i => 
             i.id === item.id 
@@ -548,13 +699,28 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
               : i
           )
         );
-        alert(`Предмет "${item.item_name}" успешно улучшен!`);
+        
+        // Обновляем в улучшенных предметах
+        setUpgradedItems(prevItems => {
+          const existingItem = prevItems.find(i => i.id === item.id);
+          if (existingItem) {
+            return prevItems.map(i => 
+              i.id === item.id 
+                ? { ...i, upgrade_level: response.data.upgrade_level }
+                : i
+            );
+          } else {
+            return [...prevItems, { ...item, upgrade_level: response.data.upgrade_level }];
+          }
+        });
+        
+        showNotification(`Предмет "${item.item_name}" успешно улучшен!`);
       } else {
-        alert(response.data.message || 'Ошибка улучшения предмета');
+        showNotification(response.data.message || 'Ошибка улучшения предмета', 'error');
       }
     } catch (error) {
       console.error('Error upgrading item:', error);
-      alert('Ошибка при улучшении предмета');
+      showNotification('Ошибка при улучшении предмета', 'error');
     } finally {
       setUpgrading(false);
     }
@@ -573,32 +739,37 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
       
       if (response.data.success) {
         setUserPoints(response.data.remaining_points);
-        // Удаляем предмет из списка
+        
+        // Мгновенно удаляем предмет из списка
         setItems(prevItems => prevItems.filter(i => i.id !== selectedItem.id));
+        
+        // Удаляем из улучшенных предметов если там есть
+        setUpgradedItems(prevItems => prevItems.filter(i => i.id !== selectedItem.id));
+        
         setTransferDialogOpen(false);
         setRecipientUsername('');
         setSelectedItem(null);
-        alert(`Предмет "${selectedItem.item_name}" успешно передан!`);
+        showNotification(`Предмет "${selectedItem.item_name}" успешно передан!`);
       } else {
-        alert(response.data.message || 'Ошибка передачи предмета');
+        showNotification(response.data.message || 'Ошибка передачи предмета', 'error');
       }
     } catch (error) {
       console.error('Error transferring item:', error);
-      alert('Ошибка при передаче предмета');
+      showNotification('Ошибка при передаче предмета', 'error');
     } finally {
       setTransferring(false);
     }
   };
 
   useImperativeHandle(ref, () => ({
-    openItemModalById: (id) => {
+    openItemModalById: (id: string | number) => {
       const item = items.find(i => String(i.id) === String(id));
       if (item) {
         setSelectedItem(item);
         setShowItemInfo(true);
       }
     }
-  }));
+  } as any));
 
   if (!user) {
     return (
@@ -631,7 +802,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
               {error}
             </Typography>
             <Button 
-              onClick={fetchInventory} 
+              onClick={() => fetchInventory()} 
               variant="contained" 
               sx={{ mt: 2, display: 'block', mx: 'auto' }}
             >
@@ -649,28 +820,28 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
         title="Мой Инвентарь"
         description="Лимитированные вещи в коннекте - коллекционные предметы, которые можно получить из паков и сундуков"
         styleVariant="dark"
-        sx={{ 
+        style={{ 
           textAlign: 'center',
-          mb: 1,
-          '& .MuiTypography-h5': {
-            textAlign: 'center',
-            fontWeight: 600
-          },
-          '& .MuiTypography-body2': {
-            textAlign: 'center',
-            opacity: 0.8
-          }
+          marginBottom: '8px',
         }}
+        children={null}
+        titleStyle={{}}
+        descriptionStyle={{}}
+        customStyle={false}
+        className=""
       />
 
       <Box sx={{ mb: 1 }}>
         <StyledTabs
           value={activeTab}
-          onChange={(e, newValue) => setActiveTab(newValue)}
+          onChange={(e: any, newValue: any) => setActiveTab(newValue)}
           tabs={tabs}
           variant="standard"
           centered
           fullWidth
+          customStyle={false}
+          className=""
+          style={{}}
         />
       </Box>
 
@@ -726,7 +897,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
                 >
                   <Box onClick={() => handleItemClick(item)}>
                     <UpgradeEffects item={item}>
-                      <InventoryItemCard item={item} />
+                      <InventoryItemCard item={item} {...({} as any)} />
                     </UpgradeEffects>
                   </Box>
                 </motion.div>
@@ -821,7 +992,7 @@ const InventoryTab = forwardRef(({ userId, itemIdToOpen, equippedItems = [] }, r
   );
 });
 
-const UpgradeEffects = ({ item, children }) => {
+const UpgradeEffects = ({ item, children }: { item: InventoryItem; children: React.ReactNode }) => {
   const { dominantColor, isUpgraded } = useUpgradeEffects(item);
 
   if (!isUpgraded) {
@@ -835,18 +1006,12 @@ const UpgradeEffects = ({ item, children }) => {
       {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
         <AnimatedSparkle
           key={idx}
-          color={dominantColor}
-          delay={sparkle.delay}
-          size={sparkle.size}
           sx={sparkle.position}
         />
       ))}
       {EFFECTS_CONFIG.stars.map((star, idx) => (
         <AnimatedStar
           key={idx}
-          color={dominantColor}
-          delay={star.delay}
-          size={star.size}
           sx={star.position}
         />
       ))}
@@ -854,4 +1019,4 @@ const UpgradeEffects = ({ item, children }) => {
   );
 };
 
-export default InventoryTab; 
+export default InventoryTab;

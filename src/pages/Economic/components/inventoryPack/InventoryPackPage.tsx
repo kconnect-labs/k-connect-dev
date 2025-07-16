@@ -9,6 +9,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
 import inventoryImageService from '../../../../services/InventoryImageService';
+import { Pack, PackContent, InventoryItem, PackDetails } from './types';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -39,20 +40,24 @@ const PageTitle = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
 }));
 
+interface PackWithPurchaseId extends Pack {
+  purchase_id?: number;
+}
+
 const InventoryPackPage = () => {
-  const [packs, setPacks] = useState([]);
+  const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [selectedPack, setSelectedPack] = useState(null);
-  const [selectedPackDetails, setSelectedPackDetails] = useState(null);
-  const [openingPack, setOpeningPack] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
+  const [selectedPackDetails, setSelectedPackDetails] = useState<PackDetails | null>(null);
+  const [openingPack, setOpeningPack] = useState<Pack | null>(null);
   const [showPackDetails, setShowPackDetails] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
-  const [purchases, setPurchases] = useState([]);
+  const [purchases, setPurchases] = useState<any[]>([]);
   const [showPurchases, setShowPurchases] = useState(false);
   const { user } = useAuth();
-  const [confirmPack, setConfirmPack] = useState(null);
-  const [openedPack, setOpenedPack] = useState(null);
+  const [confirmPack, setConfirmPack] = useState<Pack | null>(null);
+  const [openedPack, setOpenedPack] = useState<PackWithPurchaseId | null>(null);
 
   useEffect(() => {
     fetchPacks();
@@ -70,8 +75,8 @@ const InventoryPackPage = () => {
         setPacks(response.data.packs);
         
         // Предзагружаем изображения для всех паков
-        const packContents = response.data.packs.flatMap(pack => 
-          pack.contents ? pack.contents.map(content => ({
+        const packContents = response.data.packs.flatMap((pack: Pack) => 
+          pack.contents ? pack.contents.map((content: PackContent) => ({
             pack_id: pack.id,
             item_name: content.item_name
           })) : []
@@ -109,17 +114,26 @@ const InventoryPackPage = () => {
     }
   };
 
-  const handleBuyPack = (pack) => {
+  const handleBuyPack = (pack: Pack) => {
     setConfirmPack(pack);
   };
 
   const handlePackOpened = () => {
-    setOpeningPack(false);
+    setOpeningPack(null);
     setSelectedPack(null);
     fetchUserPoints(); // Обновляем баланс
   };
 
-  const handlePackClick = (pack, packContents) => {
+  const handleItemObtained = (item: InventoryItem) => {
+    // Отправляем глобальное событие для мгновенного добавления предмета в инвентарь
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('item_obtained', {
+        detail: item
+      }));
+    }
+  };
+
+  const handlePackClick = (pack: Pack, packContents: PackContent[]) => {
     setSelectedPackDetails({ pack, contents: packContents });
     setShowPackDetails(true);
   };
@@ -129,7 +143,7 @@ const InventoryPackPage = () => {
     setSelectedPackDetails(null);
   };
 
-  const getRarityColor = (rarity) => {
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return '#f39c12';
@@ -142,7 +156,7 @@ const InventoryPackPage = () => {
     }
   };
 
-  const getRarityLabel = (rarity) => {
+  const getRarityLabel = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return 'Легендарный';
@@ -157,7 +171,7 @@ const InventoryPackPage = () => {
     }
   };
 
-  const getRarityIcon = (rarity) => {
+  const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
         return <DiamondIcon sx={{ fontSize: 16 }} />;
@@ -169,9 +183,11 @@ const InventoryPackPage = () => {
   };
 
   const isSoldOut = selectedPackDetails?.pack.is_limited && 
+                    selectedPackDetails.pack.max_quantity && 
+                    selectedPackDetails.pack.sold_quantity &&
                     (selectedPackDetails.pack.max_quantity - selectedPackDetails.pack.sold_quantity <= 0);
 
-  const fetchPackDetails = async (packId) => {
+  const fetchPackDetails = async (packId: number) => {
     try {
       const response = await axios.get(`/api/inventory/packs/${packId}`);
       if (response.data.success) {
@@ -228,18 +244,15 @@ const InventoryPackPage = () => {
         title="Пачки"
         description="Откройте Пачки, чтобы получить уникальные предметы для вашей коллекции"
         styleVariant="dark"
-        sx={{ 
+        style={{ 
           textAlign: 'center',
-          mb: 3,
-          '& .MuiTypography-h5': {
-            textAlign: 'center',
-            fontWeight: 600
-          },
-          '& .MuiTypography-body2': {
-            textAlign: 'center',
-            opacity: 0.8
-          }
+          marginBottom: '24px',
         }}
+        children={null}
+        titleStyle={{}}
+        descriptionStyle={{}}
+        customStyle={false}
+        className=""
       />
 
       <Box sx={{ 
@@ -285,7 +298,7 @@ const InventoryPackPage = () => {
               <PackCard 
                 pack={pack}
                 userPoints={userPoints}
-                onBuy={() => handleBuyPack(pack)}
+                onBuy={async () => await handleBuyPack(pack)}
                 disabled={!user || userPoints < pack.price}
                 onPackClick={handlePackClick}
               />
@@ -299,6 +312,9 @@ const InventoryPackPage = () => {
           <PackOpeningModal
             pack={openedPack}
             onClose={() => setOpenedPack(null)}
+            onItemObtained={handleItemObtained}
+            onOpenAnother={() => {}}
+            onBalanceUpdate={() => {}}
           />
         )}
       </AnimatePresence>
@@ -419,9 +435,10 @@ const InventoryPackPage = () => {
                               maxHeight: '100%',
                               objectFit: 'contain',
                             }}
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
+                                                         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                               const target = e.target as HTMLImageElement;
+                               target.style.display = 'none';
+                             }}
                           />
                         </Box>
                         
@@ -465,7 +482,7 @@ const InventoryPackPage = () => {
                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
                     Цена: {selectedPackDetails.pack.price} баллов
                   </Typography>
-                  {selectedPackDetails.pack.is_limited && (
+                  {selectedPackDetails.pack.is_limited && selectedPackDetails.pack.remaining_quantity !== undefined && (
                     <Typography variant="body2" color="text.secondary">
                       Осталось: {selectedPackDetails.pack.remaining_quantity} из {selectedPackDetails.pack.max_quantity}
                     </Typography>
@@ -527,10 +544,11 @@ const InventoryPackPage = () => {
           <Button
             variant="contained"
             onClick={async () => {
+              if (!confirmPack) return;
               const res = await fetch(`/api/inventory/packs/${confirmPack.id}/buy`, { method: 'POST', credentials: 'include' });
               const data = await res.json();
               if (data.success) {
-                setOpenedPack({ ...confirmPack, purchase_id: data.purchase_id });
+                setOpenedPack({ ...confirmPack, purchase_id: data.purchase_id } as PackWithPurchaseId);
               } else {
                 alert(data.message || 'Ошибка покупки');
               }
