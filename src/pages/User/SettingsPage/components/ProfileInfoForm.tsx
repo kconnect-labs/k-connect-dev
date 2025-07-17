@@ -1,6 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Grid, Button, CircularProgress } from '@mui/material';
+import { Box, Typography, TextField, Grid, Button, CircularProgress, Switch, Paper } from '@mui/material';
 import { Save as SaveIcon, Check as CheckIcon } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
+
+// IOS Switch стиль
+const IOSSwitch = styled(Switch)(({ theme }) => ({
+  width: 42,
+  height: 26,
+  padding: 0,
+  '& .MuiSwitch-switchBase': {
+    padding: 0,
+    margin: 2,
+    transitionDuration: '300ms',
+    '&.Mui-checked': {
+      transform: 'translateX(16px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        backgroundColor: '#D0BCFF',
+        opacity: 1,
+        border: 0,
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5,
+      },
+    },
+    '&.Mui-focusVisible .MuiSwitch-thumb': {
+      color: '#D0BCFF',
+      border: '6px solid #fff',
+    },
+    '&.Mui-disabled .MuiSwitch-thumb': {
+      color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+    },
+    '&.Mui-disabled + .MuiSwitch-track': {
+      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
+    width: 22,
+    height: 22,
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 26 / 2,
+    backgroundColor: theme.palette.mode === 'light' ? '#555' : '#39393D',
+    opacity: 1,
+    transition: theme.transitions.create(['background-color'], {
+      duration: 500,
+    }),
+  },
+}));
 
 interface ProfileInfo {
   name: string;
@@ -13,6 +61,8 @@ interface ProfileInfoFormProps {
   onSave?: (info: ProfileInfo) => Promise<void>;
   loading?: boolean;
   onSuccess?: () => void;
+  subscription?: any;
+  onError?: (message: string) => void;
 }
 
 const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
@@ -20,6 +70,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   onSave,
   loading = false,
   onSuccess,
+  subscription,
+  onError,
 }) => {
   const defaultProfileInfo: ProfileInfo = {
     name: '',
@@ -30,6 +82,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [formData, setFormData] = useState<ProfileInfo>(profileInfo || defaultProfileInfo);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isCustomProfileActive, setIsCustomProfileActive] = useState(false);
+  const [updatingProfileStyle, setUpdatingProfileStyle] = useState(false);
 
   // Обновляем форму при изменении profileInfo
   useEffect(() => {
@@ -37,6 +91,29 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       setFormData(profileInfo);
     }
   }, [profileInfo]);
+
+  // Получаем текущее состояние стиля профиля
+  useEffect(() => {
+    const fetchProfileStyle = async () => {
+      if (!subscription || subscription.type !== 'ultimate') {
+        setIsCustomProfileActive(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/profile/' + (profileInfo?.username || ''));
+        const data = await response.json();
+        if (data.user && data.user.profile_id) {
+          setIsCustomProfileActive(data.user.profile_id === 2);
+        }
+      } catch (error) {
+        console.error('Error fetching profile style:', error);
+        setIsCustomProfileActive(false);
+      }
+    };
+
+    fetchProfileStyle();
+  }, [subscription, profileInfo?.username]);
 
   const handleChange = (field: keyof ProfileInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: event.target.value }));
@@ -59,6 +136,46 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       // Ошибка обрабатывается в родительском компоненте
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleProfileStyleToggle = async () => {
+    if (!subscription || subscription.type !== 'ultimate') return;
+    
+    setUpdatingProfileStyle(true);
+    try {
+      const newProfileId = isCustomProfileActive ? 1 : 2;
+      const response = await fetch('/api/user/profile-style', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ profile_id: newProfileId })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setIsCustomProfileActive(!isCustomProfileActive);
+        if (onSuccess) {
+          onSuccess();
+        }
+        // Показываем уведомление об успехе
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        console.error('Error updating profile style:', data.error);
+        if (onError) {
+          onError(data.error || 'Не удалось обновить стиль профиля');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating profile style:', error);
+      if (onError) {
+        onError('Ошибка при обновлении стиля профиля');
+      }
+    } finally {
+      setUpdatingProfileStyle(false);
     }
   };
 
@@ -132,6 +249,34 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           />
         </Grid>
       </Grid>
+
+      {/* Profile style toggle - only for Ultimate subscription */}
+      {subscription?.type === 'ultimate' && (
+        <Box sx={{ mt: 4, mb: 2 }}>
+          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box>
+                <Typography variant="subtitle1" fontWeight={600}>
+                  Новый вид профиля
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Изменить внешний вид профиля
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {updatingProfileStyle && (
+                  <CircularProgress size={16} />
+                )}
+                <IOSSwitch 
+                  checked={isCustomProfileActive}
+                  onChange={handleProfileStyleToggle}
+                  disabled={updatingProfileStyle}
+                />
+              </Box>
+            </Box>
+          </Paper>
+        </Box>
+      )}
       
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button

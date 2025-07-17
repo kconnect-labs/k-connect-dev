@@ -80,6 +80,7 @@ interface SettingsModalProps {
   subscription?: any;
   onStatusUpdate?: (statusData: any) => void;
   onSuccess?: () => void;
+  onError?: (message: string) => void;
 }
 
 type Section = 'main' | 'avatar' | 'info' | 'profile' | 'notifications' | 'appearance' | 'security' | 'status' | 'socials' | 'experimental' | 'customization' | 'sessions' | 'linked' | 'badges' | 'usernames';
@@ -99,6 +100,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   subscription,
   onStatusUpdate,
   onSuccess,
+  onError,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -165,6 +167,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               onSave={onSaveProfileInfo}
               loading={loading}
               onSuccess={onSuccess}
+              subscription={subscription}
+              onError={onError}
             />
           </Suspense>
         );

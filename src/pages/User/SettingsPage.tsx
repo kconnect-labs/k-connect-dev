@@ -176,6 +176,11 @@ const SettingsPage = () => {
     }
   };
 
+  const handleError = (message: string) => {
+    console.error('Settings error:', message);
+    // Можно добавить показ ошибки пользователю
+  };
+
   const settingsSections = [
     {
       id: 'profile',
@@ -447,6 +452,7 @@ const SettingsPage = () => {
           subscription={subscription}
           onStatusUpdate={handleStatusUpdate}
           onSuccess={showSuccess}
+          onError={handleError}
         />
 
         <ConnectionsModal
