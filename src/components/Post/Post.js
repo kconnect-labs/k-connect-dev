@@ -68,6 +68,7 @@ import ChannelTag from './ChannelTag';
 import ShowMoreButton from './ShowMoreButton';
 import MarkdownContent from './MarkdownContent';
 import BlurredMenu from './BlurredMenu';
+import MetaWarningBanner from './MetaWarningBanner';
 
 const ReportDialog = lazy(() => import('./ReportDialog'));
 const FactModal = lazy(() => import('./FactModal'));
@@ -1750,6 +1751,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                 Свернуть
               </Button>
             )}
+            
+            {/* Баннер предупреждения о Meta */}
+            <MetaWarningBanner content={post?.content || ''} />
           </Box>
           
           {/* Отображение репоста (пост внутри поста) */}
@@ -2035,6 +2039,9 @@ const Post = ({ post, onDelete, onOpenLightbox, isPinned: isPinnedPost, statusCo
                     </Typography>
                   </Box>
                 )}
+                
+                {/* Баннер предупреждения о Meta для репоста */}
+                <MetaWarningBanner content={post.original_post?.content || ''} />
                 
                 {/* Статистика оригинального поста */}
                 <Box sx={{ 

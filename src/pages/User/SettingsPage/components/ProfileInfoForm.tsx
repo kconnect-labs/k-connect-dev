@@ -95,8 +95,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
             fullWidth
             margin="normal"
             variant="outlined"
-            helperText={`${formData.name?.length || 0}/15 символов`}
-            inputProps={{ maxLength: 15 }}
+            helperText={`${formData.name?.length || 0}/16 символов`}
+            inputProps={{ maxLength: 16 }}
             FormHelperTextProps={{ sx: { ml: 0 } }}
             disabled={loading || saving}
           />
