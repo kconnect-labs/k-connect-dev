@@ -78,6 +78,7 @@ interface SettingsModalProps {
   profileInfo?: any;
   loading?: boolean;
   subscription?: any;
+  settings?: any;
   onStatusUpdate?: (statusData: any) => void;
   onSuccess?: () => void;
   onError?: (message: string) => void;
@@ -98,6 +99,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   profileInfo,
   loading,
   subscription,
+  settings,
   onStatusUpdate,
   onSuccess,
   onError,
@@ -168,6 +170,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               loading={loading}
               onSuccess={onSuccess}
               subscription={subscription}
+              settings={settings}
               onError={onError}
             />
           </Suspense>

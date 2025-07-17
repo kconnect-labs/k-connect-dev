@@ -74,11 +74,15 @@ const SettingsPage = () => {
     fetchSubscription,
   } = useSubscription();
 
+  const [settings, setSettings] = useState<any>(null);
+  const [settingsLoading, setSettingsLoading] = useState(true);
+
   useEffect(() => {
     console.log('SettingsPage useEffect - isAuthenticated:', isAuthenticated, 'user:', user, 'localUser:', localUser, 'profileData:', profileData);
     const currentUser = user || localUser;
     if (currentUser && currentUser.username) {
       fetchProfile(currentUser.username);
+      fetchSettings();
     }
   }, [isAuthenticated, user?.username, localUser?.username, fetchProfile]);
 
@@ -179,6 +183,20 @@ const SettingsPage = () => {
   const handleError = (message: string) => {
     console.error('Settings error:', message);
     // Можно добавить показ ошибки пользователю
+  };
+
+  const fetchSettings = async () => {
+    try {
+      setSettingsLoading(true);
+      const response = await fetch('/api/profile/settings');
+      const data = await response.json();
+      if (data.success) {
+        setSettings(data.settings);
+      }
+    } catch (error) {
+    } finally {
+      setSettingsLoading(false);
+    }
   };
 
   const settingsSections = [
@@ -448,8 +466,9 @@ const SettingsPage = () => {
           onBannerDelete={handleBannerDelete}
           onSaveProfileInfo={handleSaveProfileInfo}
           profileInfo={profileInfo}
-          loading={loading || profileInfoLoading || subscriptionLoading}
+          loading={loading || profileInfoLoading || subscriptionLoading || settingsLoading}
           subscription={subscription}
+          settings={settings}
           onStatusUpdate={handleStatusUpdate}
           onSuccess={showSuccess}
           onError={handleError}

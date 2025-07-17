@@ -63,6 +63,7 @@ interface ProfileInfoFormProps {
   onSuccess?: () => void;
   subscription?: any;
   onError?: (message: string) => void;
+  settings?: any;
 }
 
 const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
@@ -72,6 +73,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   onSuccess,
   subscription,
   onError,
+  settings,
 }) => {
   const defaultProfileInfo: ProfileInfo = {
     name: '',
@@ -84,6 +86,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [success, setSuccess] = useState(false);
   const [isCustomProfileActive, setIsCustomProfileActive] = useState(false);
   const [updatingProfileStyle, setUpdatingProfileStyle] = useState(false);
+  const [isPrivateUsername, setIsPrivateUsername] = useState(false);
+  const [updatingPrivateUsername, setUpdatingPrivateUsername] = useState(false);
 
   // Обновляем форму при изменении profileInfo
   useEffect(() => {
@@ -114,6 +118,14 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
     fetchProfileStyle();
   }, [subscription, profileInfo?.username]);
+
+  // Инициализируем настройку приватности юзернеймов
+  useEffect(() => {
+    if (settings) {
+      const privateUsername = settings.private_username || false;
+      setIsPrivateUsername(privateUsername);
+    }
+  }, [settings]);
 
   const handleChange = (field: keyof ProfileInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, [field]: event.target.value }));
@@ -176,6 +188,39 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       }
     } finally {
       setUpdatingProfileStyle(false);
+    }
+  };
+
+  const handlePrivateUsernameToggle = async () => {
+    setUpdatingPrivateUsername(true);
+    try {
+      const response = await fetch('/api/user/settings/private-username', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ private_username: !isPrivateUsername })
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        setIsPrivateUsername(!isPrivateUsername);
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        console.error('Error updating private username setting:', data.error);
+        if (onError) {
+          onError(data.error || 'Не удалось обновить настройку приватности');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating private username setting:', error);
+      if (onError) {
+        onError('Ошибка при обновлении настройки приватности');
+      }
+    } finally {
+      setUpdatingPrivateUsername(false);
     }
   };
 
@@ -277,6 +322,32 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           </Paper>
         </Box>
       )}
+
+      {/* Private username toggle */}
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Скрыть купленные юзернеймы
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Скрыть список купленных юзернеймов от других пользователей
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {updatingPrivateUsername && (
+                <CircularProgress size={16} />
+              )}
+              <IOSSwitch 
+                checked={isPrivateUsername}
+                onChange={handlePrivateUsernameToggle}
+                disabled={updatingPrivateUsername}
+              />
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
       
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button
