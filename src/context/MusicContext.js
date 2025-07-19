@@ -135,9 +135,8 @@ export const MusicProvider = ({ children }) => {
     
     
     const fetchTracks = async () => {
-      // Защита от повторных запросов
+      // Защита от повторных запросов (только для обычной загрузки, не для forceLoadTracks)
       if (isLoadingRef.current) {
-        console.log('Запрос уже выполняется, пропускаем');
         return;
       }
       
@@ -2476,20 +2475,15 @@ export const MusicProvider = ({ children }) => {
   const forceLoadTracks = useCallback(async (section = null) => {
     const targetSection = section || currentSection;
     
-    // Общая защита от повторных запросов
-    if (isLoadingRef.current) {
-      console.log('Запрос уже выполняется, пропускаем forceLoadTracks');
-      return;
-    }
+
     
-    // Защита от повторных запросов для любимых треков
-    if (targetSection === 'liked' && isLoadingLikedTracksRef.current) {
-      console.log('Запрос любимых треков уже выполняется, пропускаем');
-      return;
-    }
+          // Защита от повторных запросов для любимых треков
+      if (targetSection === 'liked' && isLoadingLikedTracksRef.current) {
+        return;
+      }
     
-    // Сбрасываем состояние загрузки
-    isLoadingRef.current = false;
+    // Для принудительной загрузки игнорируем общую защиту от повторных запросов
+    // isLoadingRef.current = false;
     
     // Принудительно загружаем треки
     try {
@@ -2510,13 +2504,18 @@ export const MusicProvider = ({ children }) => {
         params.nocache = Math.random();
       }
       
+
+      
       setIsLoading(true);
       isLoadingRef.current = true;
       
       const response = await axios.get(url, { params });
       
+
+      
       if (response.data && response.data.tracks) {
         const receivedTracks = response.data.tracks;
+
         
         if (targetSection === 'all') {
           setTracks(receivedTracks);

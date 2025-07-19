@@ -122,35 +122,38 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
     forceLoadTracks,
   } = useMusic();
   
+
   
-  // Загружаем треки при открытии модалки, если они еще не загружены
+  
+  // Загружаем треки при открытии модалки
   useEffect(() => {
     if (open) {
-      console.log('Загружаем треки при открытии модалки выбора музыки');
-      
-      // Загружаем все треки, если их нет и не загружаются уже и еще не пытались загрузить
-      if (tracks.length === 0 && !isLoadingAllTracks && !hasTriedLoadAllTracks && forceLoadTracks) {
-        setIsLoadingAllTracks(true);
-        setHasTriedLoadAllTracks(true);
-        forceLoadTracks('all').finally(() => {
-          setIsLoadingAllTracks(false);
-        });
-      }
-      
-      // Загружаем любимые треки, если их нет и не загружаются уже и еще не пытались загрузить
-      if (likedTracks.length === 0 && !isLoadingLikedTracks && !hasTriedLoadLikedTracks && forceLoadTracks) {
-        setIsLoadingLikedTracks(true);
-        setHasTriedLoadLikedTracks(true);
-        forceLoadTracks('liked').finally(() => {
-          setIsLoadingLikedTracks(false);
-        });
+      // Загружаем треки только если их нет и еще не пытались загрузить
+      if (forceLoadTracks) {
+        // Загружаем все треки
+        if (tracks.length === 0 && !isLoadingAllTracks && !hasTriedLoadAllTracks) {
+          setIsLoadingAllTracks(true);
+          setHasTriedLoadAllTracks(true);
+          forceLoadTracks('all').finally(() => {
+            setIsLoadingAllTracks(false);
+          });
+        }
+        
+        // Загружаем любимые треки
+        if (likedTracks.length === 0 && !isLoadingLikedTracks && !hasTriedLoadLikedTracks) {
+          setIsLoadingLikedTracks(true);
+          setHasTriedLoadLikedTracks(true);
+          forceLoadTracks('liked').finally(() => {
+            setIsLoadingLikedTracks(false);
+          });
+        }
       }
     } else {
       // Сбрасываем флаги попыток загрузки при закрытии модалки
       setHasTriedLoadAllTracks(false);
       setHasTriedLoadLikedTracks(false);
     }
-  }, [open, tracks.length, likedTracks.length, isLoadingAllTracks, isLoadingLikedTracks]); // Убрал forceLoadTracks из зависимостей
+  }, [open, tracks.length, likedTracks.length, forceLoadTracks]);
   
   
   const stopAudio = () => {
@@ -353,6 +356,8 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
   const displayedTracks = searchQuery.trim()
     ? searchResults
     : tabValue === 0 ? tracks : likedTracks;
+    
+
   
   return (
     <StyledDialog
@@ -471,14 +476,14 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
                   ? (isLoadingAllTracks ? 'Загрузка треков...' : 'Нет доступных треков') 
                   : (isLoadingLikedTracks ? 'Загрузка любимых треков...' : 'У вас пока нет любимых треков')}
             </Typography>
-            {!searchQuery && tabValue === 0 && !isLoadingAllTracks && tracks.length === 0 && (
+            {!searchQuery && tabValue === 0 && !isLoadingAllTracks && tracks.length === 0 && !hasTriedLoadAllTracks && (
               <Button 
                 variant="outlined" 
                 size="small" 
                 onClick={() => {
-                  if (isLoadingAllTracks) return; // Защита от повторных кликов
+                  if (isLoadingAllTracks) return;
                   setIsLoadingAllTracks(true);
-                  setHasTriedLoadAllTracks(false); // Сбрасываем флаг для повторной попытки
+                  setHasTriedLoadAllTracks(true);
                   forceLoadTracks && forceLoadTracks('all').finally(() => {
                     setIsLoadingAllTracks(false);
                   });
@@ -489,14 +494,14 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
                 {isLoadingAllTracks ? 'Загрузка...' : 'Загрузить треки'}
               </Button>
             )}
-            {!searchQuery && tabValue === 1 && !isLoadingLikedTracks && likedTracks.length === 0 && (
+            {!searchQuery && tabValue === 1 && !isLoadingLikedTracks && likedTracks.length === 0 && !hasTriedLoadLikedTracks && (
               <Button 
                 variant="outlined" 
                 size="small" 
                 onClick={() => {
-                  if (isLoadingLikedTracks) return; // Защита от повторных кликов
+                  if (isLoadingLikedTracks) return;
                   setIsLoadingLikedTracks(true);
-                  setHasTriedLoadLikedTracks(false); // Сбрасываем флаг для повторной попытки
+                  setHasTriedLoadLikedTracks(true);
                   forceLoadTracks && forceLoadTracks('liked').finally(() => {
                     setIsLoadingLikedTracks(false);
                   });
