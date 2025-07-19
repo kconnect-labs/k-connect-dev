@@ -135,6 +135,12 @@ export const MusicProvider = ({ children }) => {
     
     
     const fetchTracks = async () => {
+      // Защита от повторных запросов
+      if (isLoadingRef.current) {
+        console.log('Запрос уже выполняется, пропускаем');
+        return;
+      }
+      
       const currentPath = window.location.pathname;
       const isMusicPage = currentPath.startsWith('/music');
       
@@ -388,7 +394,7 @@ export const MusicProvider = ({ children }) => {
     return () => {
       isMounted = false;
     };
-  }, [currentSection, tracks.length, likedTracks.length, popularTracks.length, newTracks.length, randomTracks.length]);
+  }, [currentSection]);
   
   
   useEffect(() => {
@@ -2468,9 +2474,19 @@ export const MusicProvider = ({ children }) => {
 
   // Функция для принудительной загрузки треков (для вызова при переходе на музыкальную страницу)
   const forceLoadTracks = useCallback(async (section = null) => {
-
-    
     const targetSection = section || currentSection;
+    
+    // Общая защита от повторных запросов
+    if (isLoadingRef.current) {
+      console.log('Запрос уже выполняется, пропускаем forceLoadTracks');
+      return;
+    }
+    
+    // Защита от повторных запросов для любимых треков
+    if (targetSection === 'liked' && isLoadingLikedTracksRef.current) {
+      console.log('Запрос любимых треков уже выполняется, пропускаем');
+      return;
+    }
     
     // Сбрасываем состояние загрузки
     isLoadingRef.current = false;
@@ -2482,7 +2498,7 @@ export const MusicProvider = ({ children }) => {
       
       if (targetSection === 'liked') {
         url = '/api/music/liked';
-        isLoadingLikedTracksRef.current = false; // Сбрасываем флаг
+        isLoadingLikedTracksRef.current = true; // Устанавливаем флаг
       } else if (targetSection === 'my-vibe') {
         url = '/api/music/my-vibe';
       } else if (targetSection === 'popular') {
@@ -2527,6 +2543,9 @@ export const MusicProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
       isLoadingRef.current = false;
+      if (targetSection === 'liked') {
+        isLoadingLikedTracksRef.current = false; // Сбрасываем флаг
+      }
     }
   }, [currentSection]);
   

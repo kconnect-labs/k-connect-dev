@@ -227,7 +227,13 @@ const MiniGamesPage = () => {
           <Grid item xs={12} sm={6} md={4} key={game.id}>
             <GameCard >
 
-              <CardContent sx={{ flexGrow: 1 }}>
+              <CardContent sx={{ 
+                flexGrow: 1, 
+                display: 'flex', 
+                flexDirection: 'column',
+                height: '100%',
+                position: 'relative'
+              }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}>
                   <Box sx={{ 
                     p: 1, 
@@ -253,11 +259,11 @@ const MiniGamesPage = () => {
                   </Box>
                 </Box>
                 
-                <Typography variant="body2" color="text.secondary" paragraph sx={{marginBottom: '50px'}}>
+                <Typography variant="body2" color="text.secondary" paragraph sx={{ flexGrow: 1 }}>
                   {game.description}
                 </Typography>
                 
-                <Box sx={{ display: 'flex', gap: 1, position: 'absolute', bottom: '10px', width: '90%'}}>
+                <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
                   <PlayButton
                     variant="contained"
                     fullWidth

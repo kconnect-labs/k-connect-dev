@@ -108,6 +108,8 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAllTracks, setIsLoadingAllTracks] = useState(false);
   const [isLoadingLikedTracks, setIsLoadingLikedTracks] = useState(false);
+  const [hasTriedLoadAllTracks, setHasTriedLoadAllTracks] = useState(false);
+  const [hasTriedLoadLikedTracks, setHasTriedLoadLikedTracks] = useState(false);
   const audioRef = React.useRef(new Audio());
   const lastSearchQuery = React.useRef('');
   
@@ -126,23 +128,29 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
     if (open) {
       console.log('Загружаем треки при открытии модалки выбора музыки');
       
-      // Загружаем все треки, если их нет
-      if (tracks.length === 0 && !isLoadingAllTracks && forceLoadTracks) {
+      // Загружаем все треки, если их нет и не загружаются уже и еще не пытались загрузить
+      if (tracks.length === 0 && !isLoadingAllTracks && !hasTriedLoadAllTracks && forceLoadTracks) {
         setIsLoadingAllTracks(true);
+        setHasTriedLoadAllTracks(true);
         forceLoadTracks('all').finally(() => {
           setIsLoadingAllTracks(false);
         });
       }
       
-      // Загружаем любимые треки, если их нет
-      if (likedTracks.length === 0 && !isLoadingLikedTracks && forceLoadTracks) {
+      // Загружаем любимые треки, если их нет и не загружаются уже и еще не пытались загрузить
+      if (likedTracks.length === 0 && !isLoadingLikedTracks && !hasTriedLoadLikedTracks && forceLoadTracks) {
         setIsLoadingLikedTracks(true);
+        setHasTriedLoadLikedTracks(true);
         forceLoadTracks('liked').finally(() => {
           setIsLoadingLikedTracks(false);
         });
       }
+    } else {
+      // Сбрасываем флаги попыток загрузки при закрытии модалки
+      setHasTriedLoadAllTracks(false);
+      setHasTriedLoadLikedTracks(false);
     }
-  }, [open, tracks.length, likedTracks.length, isLoadingAllTracks, isLoadingLikedTracks, forceLoadTracks]);
+  }, [open, tracks.length, likedTracks.length, isLoadingAllTracks, isLoadingLikedTracks]); // Убрал forceLoadTracks из зависимостей
   
   
   const stopAudio = () => {
@@ -468,14 +476,17 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
                 variant="outlined" 
                 size="small" 
                 onClick={() => {
+                  if (isLoadingAllTracks) return; // Защита от повторных кликов
                   setIsLoadingAllTracks(true);
+                  setHasTriedLoadAllTracks(false); // Сбрасываем флаг для повторной попытки
                   forceLoadTracks && forceLoadTracks('all').finally(() => {
                     setIsLoadingAllTracks(false);
                   });
                 }}
+                disabled={isLoadingAllTracks}
                 sx={{ mt: 2 }}
               >
-                Загрузить треки
+                {isLoadingAllTracks ? 'Загрузка...' : 'Загрузить треки'}
               </Button>
             )}
             {!searchQuery && tabValue === 1 && !isLoadingLikedTracks && likedTracks.length === 0 && (
@@ -483,14 +494,17 @@ const MusicSelectDialog = ({ open, onClose, onSelectTracks, maxTracks = 3 }) => 
                 variant="outlined" 
                 size="small" 
                 onClick={() => {
+                  if (isLoadingLikedTracks) return; // Защита от повторных кликов
                   setIsLoadingLikedTracks(true);
+                  setHasTriedLoadLikedTracks(false); // Сбрасываем флаг для повторной попытки
                   forceLoadTracks && forceLoadTracks('liked').finally(() => {
                     setIsLoadingLikedTracks(false);
                   });
                 }}
+                disabled={isLoadingLikedTracks}
                 sx={{ mt: 2 }}
               >
-                Загрузить любимые треки
+                {isLoadingLikedTracks ? 'Загрузка...' : 'Загрузить любимые треки'}
               </Button>
             )}
           </Box>
