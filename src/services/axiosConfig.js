@@ -120,10 +120,8 @@ axios.defaults.withCredentials = true;
 
 const STATE_CHANGING_PATTERNS = [
   { method: 'post', urlPattern: '/api/posts/create' },
-  { method: 'put', urlPattern: '/api/posts' },
-  { method: 'post', urlPattern: '/api/post/new' },
+  { method: 'post', urlPattern: '/api/posts' },
   { method: 'delete', urlPattern: '/api/posts/' },
-  { method: 'post', urlPattern: '/api/posts/delete/' },
   { method: 'post', urlPattern: '/api/posts/*/like' },
   { method: 'post', urlPattern: '/api/posts/*/dislike' },
   { method: 'post', urlPattern: '/api/comments/create' },

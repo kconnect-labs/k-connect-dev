@@ -329,7 +329,7 @@ const CreatePost = ({ onPostCreated, postType = 'post', recipientId = null }) =>
       }
       
       console.log("Sending post request to server...");
-      const response = await axios.post('/api/posts', formData, {
+      const response = await axios.post('/api/posts/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

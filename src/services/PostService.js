@@ -80,37 +80,7 @@ const PostService = {
         return response.data;
       } catch (postError) {
         console.error('POST method failed:', postError);
-        
-                try {
-
-          const putResponse = await axios.put('/api/posts', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            _invalidatesCache: true
-          });
-
-          
-          // axios.cache.clearPostsCache();
-          
-          return putResponse.data;
-        } catch (putError) {
-          console.error('PUT method failed:', putError);
-          
-
-          const finalResponse = await axios.post('/api/post/new', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-
-          
-
-          // axios.cache.clearPostsCache();
-          
-
-          return finalResponse.data;
-        }
+        throw postError; // Просто пробрасываем ошибку вместо попытки несуществующих эндпоинтов
       }
     } catch (error) {
       console.error('All post creation methods failed:', error);
@@ -157,78 +127,6 @@ const PostService = {
       return response.data;
     } catch (error) {
       console.error(`Error deleting post ${postId} with DELETE method:`, error);
-      
-            if (error.response?.status === 404 || error.response?.status === 405 || error.response?.status === 500) {
-        try {
-
-          
-                    const response = await axios.post(`/api/posts/${postId}/delete`, {
-            cascade: true,
-            full_delete: true
-          });
-
-          
-
-          axios.cache.clearPostsCache();
-          
-
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new CustomEvent('post-deleted', {
-              detail: { postId }
-            }));
-          }
-          
-          return response.data;
-        } catch (fallbackError) {
-          console.error(`Fallback deletion also failed for post ${postId}:`, fallbackError);
-          
-                    try {
-
-            const response = await axios.post(`/api/posts/delete/${postId}`, {
-              cascade: true,
-              full_delete: true
-            });
-
-            
-
-            axios.cache.clearPostsCache();
-            
-
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new CustomEvent('post-deleted', {
-                detail: { postId }
-              }));
-            }
-            
-            return response.data;
-          } catch (secondFallbackError) {
-                        try {
-
-              const response = await axios.get(`/api/posts/delete/${postId}/cascade`);
-
-              
-
-              axios.cache.clearPostsCache();
-              
-
-              if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('post-deleted', {
-                  detail: { postId }
-                }));
-              }
-              
-              return response.data;
-            } catch (finalError) {
-              console.error('All deletion methods failed:', finalError);
-              return { 
-                success: false, 
-                error: 'Не удалось удалить пост. Возможно, у вас нет прав на это действие или сервер временно недоступен.'
-              };
-            }
-          }
-        }
-      }
-      
       return { 
         success: false, 
         error: error.response?.data?.error || 'Не удалось удалить пост. Проверьте соединение и попробуйте снова.'
@@ -278,7 +176,7 @@ const PostService = {
         }
       }
       
-      const response = await axios.put(`/api/posts/${postId}`, formData, {
+      const response = await axios.post(`/api/posts/${postId}/edit`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },

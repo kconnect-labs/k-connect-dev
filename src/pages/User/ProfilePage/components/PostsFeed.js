@@ -50,11 +50,12 @@ const PostsFeed = ({ userId, statusColor }) => {
     }
     try {
       const response = await axios.get(`/api/profile/pinned_post/${username}`);
-      if (isMounted.current && response.data && response.data.id) {
-        setPinnedPost(response.data);
+      if (isMounted.current && response.data && response.data.success && response.data.post) {
+        setPinnedPost(response.data.post);
         checkedPinnedPostsRef.current.add(username);
-        return response.data;
+        return response.data.post;
       }
+      // Если нет закрепленного поста или пользователь не найден, просто возвращаем null
       setPinnedPost(null);
       checkedPinnedPostsRef.current.add(username);
       return null;

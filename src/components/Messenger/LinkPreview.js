@@ -20,8 +20,8 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
       try {
         setLoading(true);
         const response = await axios.post('/api/utils/link-preview', { url });
-        if (response.data) {
-          setPreview(response.data);
+        if (response.data && response.data.success && response.data.data) {
+          setPreview(response.data.data);
         } else {
           setError(true);
         }
