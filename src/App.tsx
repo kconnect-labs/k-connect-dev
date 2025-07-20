@@ -17,6 +17,7 @@ import { setSessionContext } from './services/ProfileService';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
+import { SessionProvider } from './context/SessionContext';
 
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
@@ -25,16 +26,6 @@ import { CommandPalleteModal } from './components/Layout/CommandPalette/CommandP
 import { LoadingIndicator } from './components/Loading/LoadingComponents';
 import { ErrorFallback } from './components/Error/ErrorComponents';
 import { DefaultSEO } from './components/SEO/SEOComponents';
-
-// Типы для контекста сессии
-interface SessionContextType {
-  sessionActive: boolean;
-  sessionExpired: boolean;
-  lastFetchTime: number | null;
-  broadcastUpdate: (type: string, data: any) => void;
-  checkSessionStatus: () => boolean;
-  refreshSession: () => void;
-}
 
 // Типы для настроек темы
 interface ThemeSettings {
@@ -61,20 +52,6 @@ interface ThemeSettingsContextType {
 interface RequireAuthProps {
   children: React.ReactNode;
 }
-
-// Типы для SessionProvider
-interface SessionProviderProps {
-  children: React.ReactNode;
-}
-
-export const SessionContext = React.createContext<SessionContextType>({
-  sessionActive: true,
-  sessionExpired: false,
-  lastFetchTime: null,
-  broadcastUpdate: () => {},
-  checkSessionStatus: () => true,
-  refreshSession: () => {}
-});
 
 export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
@@ -129,138 +106,7 @@ export const ThemeSettingsContext = React.createContext<ThemeSettingsContextType
   restoreUserBackground: () => {},
 });
 
-const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
-  const [sessionActive, setSessionActive] = useState(true);
-  const [sessionExpired, setSessionExpired] = useState(false);
-  const sessionStartTime = useRef(Date.now());
-  const lastFetchTime = useRef<number | null>(null);
-  const broadcastChannel = useRef<BroadcastChannel | null>(null);
-  const SESSION_TIMEOUT = 60 * 60 * 1000;
-  const MIN_UPDATE_INTERVAL = 15000;
 
-  useEffect(() => {
-    if (typeof BroadcastChannel !== 'undefined') {
-      try {
-        broadcastChannel.current = new BroadcastChannel('k_connect_app_channel');
-        
-        broadcastChannel.current.onmessage = (event) => {
-          const { type, data, timestamp } = event.data;
-          
-          if (type === 'session_refresh') {
-            sessionStartTime.current = timestamp;
-            setSessionActive(true);
-            setSessionExpired(false);
-          } else if (type === 'last_fetch_update' && timestamp > (lastFetchTime.current || 0)) {
-            lastFetchTime.current = timestamp;
-          }
-        };
-      } catch (error) {
-        console.error('BroadcastChannel initialization error:', error);
-      }
-    }    
-    return () => {
-      if (broadcastChannel.current) {
-        try {
-          broadcastChannel.current.close();
-        } catch (error) {
-          console.error('Error closing BroadcastChannel:', error);
-        }
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const checkSessionExpiration = () => {
-      const currentTime = Date.now();
-      const sessionDuration = currentTime - sessionStartTime.current;
-      
-      if (sessionDuration >= SESSION_TIMEOUT && !sessionExpired) {
-        setSessionExpired(true);
-        setSessionActive(false);
-      }
-    };    
-    const expirationInterval = setInterval(checkSessionExpiration, 60000);    
-    return () => clearInterval(expirationInterval);
-  }, [sessionExpired]);
-
-  const broadcastUpdate = (type: string, data: any) => {
-    if (broadcastChannel.current) {
-      try {
-        const message = {
-          type,
-          data,
-          timestamp: Date.now()
-        };
-        broadcastChannel.current.postMessage(message);
-      } catch (error) {
-        console.error('Error broadcasting update:', error);
-      }
-    }
-  };
-
-  const checkSessionStatus = (): boolean => {
-    if (sessionExpired) return false;
-    
-    const currentTime = Date.now();
-    if (lastFetchTime.current && (currentTime - lastFetchTime.current) < MIN_UPDATE_INTERVAL) {
-      return false;
-    }
-    
-    lastFetchTime.current = currentTime;
-    broadcastUpdate('last_fetch_update', null);
-    
-    return true;
-  };
-
-  const refreshSession = () => {
-    const currentTime = Date.now();
-    sessionStartTime.current = currentTime;
-    setSessionActive(true);
-    setSessionExpired(false);
-    broadcastUpdate('session_refresh', { newStartTime: currentTime });
-  };
-
-  const contextValue: SessionContextType = {
-    sessionActive,
-    sessionExpired,
-    lastFetchTime: lastFetchTime.current,
-    broadcastUpdate,
-    checkSessionStatus,
-    refreshSession
-  };
-
-  useEffect(() => {
-    setSessionContext({
-      checkSessionStatus,
-      sessionActive,
-      sessionExpired,
-      lastFetchTime: lastFetchTime.current,
-      refreshSession
-    });
-  }, [sessionActive, sessionExpired]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        const currentTime = Date.now();
-        lastFetchTime.current = currentTime;
-        broadcastUpdate('last_fetch_update', null);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
-
-  return (
-    <SessionContext.Provider value={contextValue}>
-      {children}
-    </SessionContext.Provider>
-  );
-};
 
 function App() {
   const [isPending, startTransition] = useTransition();

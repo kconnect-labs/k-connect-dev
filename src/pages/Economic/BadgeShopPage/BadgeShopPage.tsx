@@ -20,7 +20,7 @@ import { BadgeCard } from './components/BadgeCard';
 import { BadgeDialog } from './components/BadgeDialog';
 import { CreateDialog } from './components/CreateDialog';
 import { PurchaseDialog } from './components/PurchaseDialog';
-import BadgeShopBottomNavigation from '../../../components/BadgeShopBottomNavigation';
+
 
 const BadgeShopPage: React.FC = () => {
   const theme = useTheme();
@@ -306,11 +306,7 @@ const BadgeShopPage: React.FC = () => {
         onPurchase={handlePurchaseBadge}
       />
 
-      <BadgeShopBottomNavigation 
-        tabValue={tabValue}
-        onTabChange={handleTabChange}
-        isMobile={isMobile}
-      />
+
     </Container>
   );
 };

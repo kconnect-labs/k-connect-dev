@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, memo } from 'react';
+import React, { useState, useEffect, useContext, memo, ReactNode } from 'react';
 import { Box, styled, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
@@ -7,9 +7,45 @@ import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
 import { MobilePlayer, DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
-import LanguageSwitcher from '../LanguageSwitcher';
 import AppBottomNavigation from '../BottomNavigation';
 
+interface MainLayoutProps {
+  children: ReactNode;
+}
+
+interface ThemeSettings {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  textColor?: string;
+}
+
+interface MainLayoutUser {
+  ban?: number;
+  id?: number;
+  username?: string;
+  name?: string;
+  photo?: string;
+  account_type?: string;
+}
+
+interface AuthContextType {
+  user: MainLayoutUser | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  checkAuth: () => void;
+  login: () => void;
+  logout: () => void;
+  setUser: () => void;
+}
+
+interface ThemeSettingsContextType {
+  themeSettings: ThemeSettings | null;
+  profileBackground: string | null;
+}
+
+interface MusicContextType {
+  currentTrack: any;
+}
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -23,17 +59,13 @@ const MainContainer = styled(Box)(({ theme }) => ({
   overflow: 'auto'
 }));
 
-
-const ContentWrapper = styled(Box, {
-  shouldForwardProp: (prop) => !['isMusicPage', 'isMobile', 'isInMessengerChat'].includes(prop),
-})(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
+const ContentWrapper = styled(Box)<{ isMusicPage: boolean; isMobile: boolean; isInMessengerChat: boolean }>(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
   display: 'flex',
   flexGrow: 1,
   paddingTop: isMusicPage && isMobile ? 0 : (isInMessengerChat ? 0 : 40), 
 }));
 
-
-const SidebarContainer = styled(Box)(({ theme, open }) => ({
+const SidebarContainer = styled(Box)<{ open: boolean }>(({ theme, open }) => ({
   flexShrink: 0,
   marginLeft: 'auto', 
   '@media (max-width: 700px)': {
@@ -55,11 +87,11 @@ const ContentContainer = styled(Box)(({ theme }) => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  marginRight: { xs: 0, md: 0 },
+  marginRight: 0,
   maxWidth: '100%',
   color: theme.palette.text.primary,
   '@media (min-width: 700px)': {
-    maxWidth: '1050px', 
+    maxWidth: '1050px',
     paddingRight: '10px',
     paddingLeft: '10px',
     marginRight: 'auto',
@@ -68,7 +100,6 @@ const ContentContainer = styled(Box)(({ theme }) => ({
     padding: 0,
   },
 }));
-
 
 const Overlay = styled(Box)(({ theme }) => ({
   position: 'fixed',
@@ -85,30 +116,37 @@ const Overlay = styled(Box)(({ theme }) => ({
   },
 }));
 
+interface MemoizedHeaderProps {
+  toggleSidebar: () => void;
+  isMobile: boolean;
+}
 
-const MemoizedHeader = memo(({ toggleSidebar, isMobile }) => (
-  <Header toggleSidebar={toggleSidebar} isMobile={isMobile} />
+const MemoizedHeader = memo<MemoizedHeaderProps>(({ toggleSidebar, isMobile }) => (
+  <Header toggleSidebar={toggleSidebar} />
 ));
 
+interface MemoizedSidebarProps {
+  open: boolean;
+  onClose: () => void;
+  isMobile: boolean;
+}
 
-const MemoizedSidebar = memo(({ open, onClose, isMobile }) => {
-  // На мобильных устройствах сайдбар вообще не рендерится
+const MemoizedSidebar = memo<MemoizedSidebarProps>(({ open, onClose, isMobile }) => {
   if (isMobile) {
     return null;
   }
-  return <Sidebar open={open} onClose={onClose} />;
+  // @ts-ignore
+  return <Sidebar isMobile={isMobile} />;
 });
 
-const MainLayout = ({ children }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const theme = useTheme();
-  const { themeSettings, profileBackground } = useContext(ThemeSettingsContext);
-  const { user, isLoading } = useContext(AuthContext);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { themeSettings, profileBackground } = useContext(ThemeSettingsContext) as ThemeSettingsContextType;
+  const { user, loading } = useContext(AuthContext) as AuthContextType;
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const isMobile = useMediaQuery('(max-width:700px)');
   const location = useLocation();
-  const { currentTrack } = useMusic();
-  
-
+  const { currentTrack } = useMusic() as MusicContextType;
   
   const sidebarWidth = 280;
   
@@ -116,7 +154,7 @@ const MainLayout = ({ children }) => {
   const isOnBanPage = location.pathname === '/ban';
   
   const shouldShowFullLayout = !isBanned && !isOnBanPage;
-  const [isInMessengerChat, setIsInMessengerChat] = useState(false);
+  const [isInMessengerChat, setIsInMessengerChat] = useState<boolean>(false);
 
   useEffect(() => {
     if (isMobile) {
@@ -125,15 +163,15 @@ const MainLayout = ({ children }) => {
   }, [location, isMobile]);
 
   useEffect(() => {
-    const handleMessengerLayoutChange = (event) => {
+    const handleMessengerLayoutChange = (event: CustomEvent<{ isInChat: boolean }>) => {
       const { isInChat } = event.detail;
       setIsInMessengerChat(isInChat);
     };
     
-    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
+    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
     
     return () => {
-      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
+      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
     };
   }, []);
 
@@ -160,13 +198,11 @@ const MainLayout = ({ children }) => {
             : 'none'),
         color: themeSettings?.textColor || theme.palette.text.primary
       }}
-
     >
       <CssBaseline />
       {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
       
       <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile} isInMessengerChat={isInMessengerChat}>
-        {/* Overlay рендерится только на PC, так как сайдбар только там */}
         {!isMobile && (
           <Overlay 
             className={sidebarOpen ? 'active' : ''} 
@@ -174,7 +210,6 @@ const MainLayout = ({ children }) => {
           />
         )}
         
-        {/* Сайдбар рендерится только на PC */}
         {!isMobile && (
           <SidebarContainer 
             open={sidebarOpen} 
@@ -191,7 +226,6 @@ const MainLayout = ({ children }) => {
           sx={{ 
             color: themeSettings?.textColor || theme.palette.text.primary,
             width: { 
-              // На мобильных устройствах контент занимает всю ширину
               xs: '100%',
               sm: '100%',
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
@@ -207,13 +241,11 @@ const MainLayout = ({ children }) => {
         </ContentContainer>
       </ContentWrapper>
       
-      {/* Bottom navigation рендерится только на мобильных устройствах */}
-      {isMobile && <AppBottomNavigation user={user} isMobile={isMobile} />}
-      {isMobile && hasBottomPlayer && <MobilePlayer isMobile={isMobile} />}
-      {/* Desktop player рендерится только на PC */}
-      {!isMobile && hasDesktopPlayer && <DesktopPlayer isMobile={isMobile} />}
+      {isMobile && <AppBottomNavigation user={user as any} isMobile={isMobile} />}
+      {isMobile && hasBottomPlayer && <MobilePlayer />}
+      {!isMobile && hasDesktopPlayer && <DesktopPlayer />}
     </MainContainer>
   );
 };
 
-export default memo(MainLayout); 
+export default memo(MainLayout);

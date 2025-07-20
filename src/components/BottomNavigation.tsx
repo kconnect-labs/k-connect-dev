@@ -51,14 +51,12 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   }
   
 
-  console.log('📱 BottomNavigation: unreadCounts:', unreadCounts, 'totalUnread:', totalUnread);
   
   const isChannel = user?.account_type === 'channel';
   
   useEffect(() => {
     const handleMessengerLayoutChange = (event: CustomEvent) => {
       const { isInChat } = event.detail;
-      console.log('BottomNavigation: Received messenger-layout-change event, isInChat:', isInChat);
       setVisibleInMessenger(!isInChat);
     };
     
@@ -71,7 +69,6 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   
   const isInMessenger = location.pathname.startsWith('/messenger');
   if (isInMessenger && !visibleInMessenger) {
-    console.log('BottomNavigation: Hidden in messenger chat, visible state:', visibleInMessenger);
     return null;
   }
   
@@ -83,12 +80,11 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   
   const authPages = ['/login', '/register', '/register/profile', '/confirm-email'];
   const isAuthPage = authPages.some(path => location.pathname.startsWith(path));
-  const isBadgeShopPage = location.pathname.startsWith('/badge-shop');
   const isClickerPage = location.pathname.startsWith('/minigames/clicker');
   const isBlackjackPage = location.pathname.startsWith('/minigames/blackjack');
   const isCupsPage = location.pathname.startsWith('/minigames/cups');
   
-  if (isAuthPage || isBadgeShopPage || isClickerPage || isBlackjackPage || isCupsPage) {
+  if (isAuthPage || isClickerPage || isBlackjackPage || isCupsPage) {
     return null;
   }
 
@@ -102,7 +98,6 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
     return false;
   };
 
-  console.log("BottomNavigation rendering, user:", user, "pathname:", location.pathname);
   
   const handleNavigationChange = (newValue: number): void => {
     switch(newValue) {
