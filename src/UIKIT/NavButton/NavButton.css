@@ -147,10 +147,8 @@
 
 /* Вложенные кнопки */
 .nav-button--nested {
-  padding-left: 16px;
   border-radius: 10px;
   margin-bottom: 3px;
-  padding: 6px 12px 6px 16px;
 }
 
 /* Контейнер для endIcon */

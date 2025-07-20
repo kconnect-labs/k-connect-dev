@@ -316,7 +316,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                 ? [
                     {
                       id: 'admin',
-                      title: 'Админ панель',
+                      title: 'Админ',
                       subtitle: 'Управление системой',
                       icon: <AdminPanelSettings />,
                       color: 'rgb(244, 67, 54)',

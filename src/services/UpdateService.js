@@ -7,7 +7,7 @@ const updates = [
     version: '2.9.7',
     date: '20.07.2025',
     title: 'Обновление 2.9.7',
-    updates: ['Бедж-Шоп(TypeScript)', 'Новые Табы'],
+    updates: ['Бейдж-Шоп(TypeScript)', 'Новые Табы'],
     fixes: ['Исправлена ошибка при Регистрации'],
   },
   {
