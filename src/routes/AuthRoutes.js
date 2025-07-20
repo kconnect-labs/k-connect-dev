@@ -12,7 +12,7 @@ const RegisterChannel = React.lazy(() => import('../pages/Auth/RegisterChannel')
 const EmailConfirmation = React.lazy(() => import('../pages/Auth/EmailConfirmation'));
 const ForgotPassword = React.lazy(() => import('../pages/Auth/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('../pages/Auth/ResetPassword'));
-const ElementAuth = React.lazy(() => import('../pages/Auth/ElementAuth'));
+// const ElementAuth = React.lazy(() => import('../pages/Auth/ElementAuth'));
 
 const AuthRoutes = ({ setUser }) => {
   const theme = useTheme();
@@ -67,7 +67,7 @@ const AuthRoutes = ({ setUser }) => {
           <Route path="/confirm-email/:token" element={<EmailConfirmation />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/element-auth" element={<ElementAuth />} />
+          {/* <Route path="/element-auth" element={<ElementAuth />} /> */}
           <Route path="/auth_elem/:token" element={<ElementAuth />} />
           <Route path="/auth_elem/direct/:token" element={<ElementAuth />} />
           <Route path="*" element={<Navigate to="/login" replace />} />

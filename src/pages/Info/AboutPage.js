@@ -838,11 +838,11 @@ const AboutPage = () => {
         role: "Модератор",
         avatar: "/static/moderators/arb.jpg"
       },
-      {
-        name: "Liquides",
-        role: "Модератор",
-        avatar: "/static/moderators/lix.jpg"
-      },
+      // {
+      //   name: "Liquides",
+      //   role: "Модератор",
+      //   avatar: "/static/moderators/lix.jpg"
+      // },
       {
         name: "IMarandici",
         role: "Модератор",
