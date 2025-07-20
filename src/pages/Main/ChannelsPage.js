@@ -27,6 +27,7 @@ import {
   Skeleton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import StyledTabs from '../../UIKIT/StyledTabs';
 import { ThemeSettingsContext } from '../../App';
 import { AuthContext } from '../../context/AuthContext';
 import SearchIcon from '@mui/icons-material/Search';
@@ -227,21 +228,6 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.8rem',
     padding: '5px 10px',
-  }
-}));
-
-const StyledTabs = styled(Tabs, {
-  shouldForwardProp: (prop) => prop !== 'themecolor',
-})(({ theme, themecolor }) => ({
-  minHeight: '38px',
-  '& .MuiTabs-indicator': {
-    height: 3,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
-    backgroundColor: themecolor || theme.palette.primary.main,
-  },
-  '& .MuiTabs-flexContainer': {
-    gap: theme.spacing(1),
   }
 }));
 
@@ -739,15 +725,14 @@ const ChannelsPage = () => {
           <StyledTabs
             value={activeTab}
             onChange={handleTabChange}
-            aria-label="channel tabs"
-            variant="scrollable"
-            scrollButtons="auto"
-            themecolor={primaryColor}
-          >
-            <StyledTab label="Недавние" value="recent" />
-            <StyledTab label="Популярные" value="popular" />
-            {searchQuery && <StyledTab label={`Поиск: ${searchQuery}`} value="search" disabled />}
-          </StyledTabs>
+            tabs={[
+              { value: 'recent', label: 'Недавние' },
+              { value: 'popular', label: 'Популярные' },
+              ...(searchQuery ? [{ value: 'search', label: `Поиск: ${searchQuery}` }] : [])
+            ]}
+            fullWidth
+            customStyle
+          />
         </Box>
         
         

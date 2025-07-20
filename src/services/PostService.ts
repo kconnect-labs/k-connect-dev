@@ -1,81 +1,99 @@
 import axios from './axiosConfig';
 import AuthService from './AuthService';
 
+interface PostData {
+  content?: string;
+  images?: File[];
+  image?: File;
+  video?: File;
+  music?: any[];
+  deleteImages?: boolean;
+  deleteVideo?: boolean;
+  deleteMusic?: boolean;
+}
+
+interface ApiResponse {
+  success: boolean;
+  error?: string;
+  data?: any;
+  post?: any;
+}
+
+interface FeedParams {
+  page?: number;
+  limit?: number;
+}
+
 const PostService = {
-    getFeed: async (page = 1, limit = 10) => {
+  getFeed: async (page: number = 1, limit: number = 10): Promise<ApiResponse> => {
     try {
       const response = await axios.get(`/api/posts/feed?page=${page}&limit=${limit}`, {
         forceRefresh: true
       });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching feed:', error);
       return { success: false, error: error.response?.data?.error || 'Не удалось загрузить ленту постов' };
     }
   },
 
-    getPost: async (postId) => {
+  getPost: async (postId: string): Promise<ApiResponse> => {
     try {
       const response = await axios.get(`/api/posts/${postId}`, {
         forceRefresh: true
       });
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching post:', error);
       return { success: false, error: error.response?.data?.error || 'Не удалось загрузить пост' };
     }
   },
 
-    createPost: async (postData) => {
+  createPost: async (postData: PostData | FormData): Promise<ApiResponse> => {
     try {
-            const formData = postData instanceof FormData 
+      const formData = postData instanceof FormData 
         ? postData 
         : new FormData();
       
-            if (!(postData instanceof FormData) && typeof postData === 'object') {
+      if (!(postData instanceof FormData) && typeof postData === 'object') {
         if (postData.content) {
           formData.append('content', postData.content);
         }
         
-                if (Array.isArray(postData.images)) {
+        if (Array.isArray(postData.images)) {
           postData.images.forEach((image, index) => {
             formData.append(`images[${index}]`, image);
           });
         }
         
-                if (postData.image && postData.image instanceof File) {
+        if (postData.image && postData.image instanceof File) {
           formData.append('image', postData.image);
         }
         
-                if (postData.video && postData.video instanceof File) {
+        if (postData.video && postData.video instanceof File) {
           formData.append('video', postData.video);
         }
         
-                if (postData.music && Array.isArray(postData.music) && postData.music.length > 0) {
+        if (postData.music && Array.isArray(postData.music) && postData.music.length > 0) {
           formData.append('music', JSON.stringify(postData.music));
         }
       }
       
-
       for (let [key, value] of formData.entries()) {
         if (value instanceof File) {
-
+          // File handling logic
         } else {
-
+          // Non-file handling logic
         }
       }
       
-            try {
-
+      try {
         const response = await axios.post('/api/posts/create', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           },
           _invalidatesCache: true
         });
-
-        
-        // axios.cache.clearPostsCache();
         
         return response.data;
       } catch (postError) {
@@ -88,36 +106,32 @@ const PostService = {
     }
   },
 
-    likePost: async (postId) => {
+  likePost: async (postId: string): Promise<ApiResponse> => {
     try {
       const response = await axios.post(`/api/posts/${postId}/like`);
       
-
-      axios.cache.clearByUrlPrefix(`/api/posts/${postId}`);
+      // Clear cache for this specific post
+      (axios as any).cache?.clearByUrlPrefix(`/api/posts/${postId}`);
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error liking post:', error);
       return { success: false, error: error.response?.data?.error || 'Не удалось поставить лайк' };
     }
   },
 
-    deletePost: async (postId) => {
+  deletePost: async (postId: string): Promise<ApiResponse> => {
     try {
-
-      
-            const response = await axios.delete(`/api/posts/${postId}`, {
+      const response = await axios.delete(`/api/posts/${postId}`, {
         params: {
           cascade: true,
           full_delete: true
         }
       });
 
+      // Clear posts cache
+      (axios as any).cache?.clearPostsCache();
       
-
-      axios.cache.clearPostsCache();
-      
-
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('post-deleted', {
           detail: { postId }
@@ -125,7 +139,7 @@ const PostService = {
       }
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error deleting post ${postId} with DELETE method:`, error);
       return { 
         success: false, 
@@ -134,7 +148,7 @@ const PostService = {
     }
   },
 
-    editPost: async (postId, postData) => {
+  editPost: async (postId: string, postData: PostData | FormData): Promise<ApiResponse> => {
     try {
       const formData = postData instanceof FormData 
         ? postData 
@@ -184,7 +198,7 @@ const PostService = {
       });
       
       // Clear cache for posts and feed
-      axios.cache.clearPostsCache();
+      (axios as any).cache?.clearPostsCache();
       
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('post-updated', {
@@ -199,17 +213,15 @@ const PostService = {
     }
   },
 
-  refreshFeed: async () => {
+  refreshFeed: async (): Promise<ApiResponse> => {
     try {
-
-      axios.cache.clearPostsCache();
+      // Clear posts cache
+      (axios as any).cache?.clearPostsCache();
       
-
       const response = await axios.get('/api/posts/feed?page=1&limit=10', {
         forceRefresh: true
       });
       
-
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('feed-refreshed', {
           detail: { data: response.data }
@@ -217,7 +229,7 @@ const PostService = {
       }
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error refreshing feed:', error);
       return { 
         success: false, 
@@ -227,4 +239,4 @@ const PostService = {
   }
 };
 
-export default PostService;
+export default PostService; 

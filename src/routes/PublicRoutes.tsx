@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import MainLayout from '../components/Layout/MainLayout';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
+import { PublicRoutesProps } from '../types/routes';
 
 // Lazy imports
 const RulesPage = React.lazy(() => import('../pages/Info/RulesPage'));
@@ -11,7 +12,7 @@ const PrivacyPolicyPage = React.lazy(() => import('../pages/Info/PrivacyPolicyPa
 const TermsOfServicePage = React.lazy(() => import('../pages/Info/TermsOfServicePage'));
 const AboutPage = React.lazy(() => import('../pages/Info/AboutPage'));
 
-const PublicRoutes = () => {
+const PublicRoutes: React.FC<PublicRoutesProps> = () => {
   const { isAuthenticated } = useContext(AuthContext);
 
   const content = (

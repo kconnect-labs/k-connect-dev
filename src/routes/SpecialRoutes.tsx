@@ -2,12 +2,13 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
+import { SpecialRoutesProps } from '../types/routes';
 
 // Lazy imports
 const StreetBlacklistPage = React.lazy(() => import('../pages/Collab/StreetBlacklistPage'));
 const StreetBlacklistV1Page = React.lazy(() => import('../pages/Collab/StreetBlacklistV1Page'));
 
-const SpecialRoutes = () => {
+const SpecialRoutes: React.FC<SpecialRoutesProps> = () => {
   return (
     <Box sx={{ 
       display: 'flex', 

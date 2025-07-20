@@ -6,7 +6,7 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
 import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
-import { useBlurOptimization } from './hooks/useBlurOptimization.ts';
+import { useBlurOptimization } from './hooks/useBlurOptimization';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -22,11 +22,52 @@ import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
 import { CommandPalleteModal } from './components/Layout/CommandPalette/CommandPalleteModal.js';
 
-
 import { LoadingIndicator } from './components/Loading/LoadingComponents';
 import { ErrorFallback } from './components/Error/ErrorComponents';
 import { DefaultSEO } from './components/SEO/SEOComponents';
-export const SessionContext = React.createContext({
+
+// Типы для контекста сессии
+interface SessionContextType {
+  sessionActive: boolean;
+  sessionExpired: boolean;
+  lastFetchTime: number | null;
+  broadcastUpdate: (type: string, data: any) => void;
+  checkSessionStatus: () => boolean;
+  refreshSession: () => void;
+}
+
+// Типы для настроек темы
+interface ThemeSettings {
+  mode: string;
+  backgroundColor: string;
+  textColor: string;
+  primaryColor: string;
+}
+
+// Типы для контекста настроек темы
+interface ThemeSettingsContextType {
+  themeSettings: ThemeSettings;
+  updateThemeSettings: (newSettings: Partial<ThemeSettings>) => void;
+  setProfileBackground: (url: string | null) => void;
+  clearProfileBackground: () => void;
+  profileBackground: string | null;
+  globalProfileBackgroundEnabled: boolean;
+  setGlobalProfileBackgroundEnabled: (enabled: boolean) => void;
+  setUserBackground: (url: string | null) => void;
+  restoreUserBackground: () => void;
+}
+
+// Типы для RequireAuth
+interface RequireAuthProps {
+  children: React.ReactNode;
+}
+
+// Типы для SessionProvider
+interface SessionProviderProps {
+  children: React.ReactNode;
+}
+
+export const SessionContext = React.createContext<SessionContextType>({
   sessionActive: true,
   sessionExpired: false,
   lastFetchTime: null,
@@ -35,18 +76,16 @@ export const SessionContext = React.createContext({
   refreshSession: () => {}
 });
 
-export const RequireAuth = ({ children }) => {
+export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
   const location = useLocation();
-  
   
   if (loading) {
     return null;
   }
   
-  
   if (isAuthenticated) {
-    return children;
+    return <>{children}</>;
   }
   
   // Сохраняем deeplink trackId в localStorage перед редиректом на логин
@@ -67,18 +106,18 @@ export const RequireAuth = ({ children }) => {
   );
 };
 
-
 // Import route components
 import AuthRoutes from './routes/AuthRoutes';
 import MainRoutes from './routes/MainRoutes';
 import PublicRoutes from './routes/PublicRoutes';
 import SpecialRoutes from './routes/SpecialRoutes';
 
-export const ThemeSettingsContext = React.createContext({
+export const ThemeSettingsContext = React.createContext<ThemeSettingsContextType>({
   themeSettings: {
     mode: 'dark',
     primaryColor: '#D0BCFF',
-    secondaryColor: '#f28c9a'
+    backgroundColor: '#151515',
+    textColor: '#FFFFFF'
   },
   updateThemeSettings: () => {},
   setProfileBackground: () => {},
@@ -89,12 +128,13 @@ export const ThemeSettingsContext = React.createContext({
   setUserBackground: () => {},
   restoreUserBackground: () => {},
 });
-const SessionProvider = ({ children }) => {
+
+const SessionProvider: React.FC<SessionProviderProps> = ({ children }) => {
   const [sessionActive, setSessionActive] = useState(true);
   const [sessionExpired, setSessionExpired] = useState(false);
   const sessionStartTime = useRef(Date.now());
-  const lastFetchTime = useRef(null);
-  const broadcastChannel = useRef(null);
+  const lastFetchTime = useRef<number | null>(null);
+  const broadcastChannel = useRef<BroadcastChannel | null>(null);
   const SESSION_TIMEOUT = 60 * 60 * 1000;
   const MIN_UPDATE_INTERVAL = 15000;
 
@@ -143,7 +183,7 @@ const SessionProvider = ({ children }) => {
     return () => clearInterval(expirationInterval);
   }, [sessionExpired]);
 
-  const broadcastUpdate = (type, data) => {
+  const broadcastUpdate = (type: string, data: any) => {
     if (broadcastChannel.current) {
       try {
         const message = {
@@ -157,7 +197,8 @@ const SessionProvider = ({ children }) => {
       }
     }
   };
-  const checkSessionStatus = () => {
+
+  const checkSessionStatus = (): boolean => {
     if (sessionExpired) return false;
     
     const currentTime = Date.now();
@@ -179,7 +220,7 @@ const SessionProvider = ({ children }) => {
     broadcastUpdate('session_refresh', { newStartTime: currentTime });
   };
 
-  const contextValue = {
+  const contextValue: SessionContextType = {
     sessionActive,
     sessionExpired,
     lastFetchTime: lastFetchTime.current,
@@ -221,7 +262,6 @@ const SessionProvider = ({ children }) => {
   );
 };
 
-
 function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -229,16 +269,16 @@ function App() {
   // Глобальный хук оптимизации блюра
   const blurOptimization = useBlurOptimization();
   
-  const [themeSettings, setThemeSettings] = useState(() => {
+  const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
     const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
     const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
     
     // Настройки для темной темы
-    const getThemeColors = (mode) => {
-          return {
+    const getThemeColors = (mode: string) => {
+      return {
         backgroundColor: '#151515',
-            textColor: '#FFFFFF'
-          };
+        textColor: '#FFFFFF'
+      };
     };
     
     const colors = getThemeColors(savedThemeMode);
@@ -252,24 +292,24 @@ function App() {
   });
   
   // Система обоев сайта
-  const [profileBackground, setProfileBackgroundState] = useState(null);
+  const [profileBackground, setProfileBackgroundState] = useState<string | null>(null);
   const [globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabledState] = useState(false);
-  const [userBackgroundUrl, setUserBackgroundUrl] = useState(null);
+  const [userBackgroundUrl, setUserBackgroundUrl] = useState<string | null>(null);
   
-  const setProfileBackground = (url) => {
+  const setProfileBackground = (url: string | null) => {
     setProfileBackgroundState(url);
   };
+
   const clearProfileBackground = () => {
     setProfileBackgroundState(null);
   };
   
   // Сохраняем обои пользователя в localStorage
-  const saveUserBackground = (url) => {
+  const saveUserBackground = (url: string | null) => {
     if (url) {
       localStorage.setItem('myProfileBackgroundUrl', url);
       // Также сохраняем в куки для совместимости
       document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(url)};path=/;max-age=31536000`;
-
     } else {
       localStorage.removeItem('myProfileBackgroundUrl');
       document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
@@ -302,7 +342,7 @@ function App() {
   };
   
   // Устанавливаем обои другого пользователя
-  const setUserBackground = (url) => {
+  const setUserBackground = (url: string | null) => {
     if (url) {
       setProfileBackground(url);
     } else {
@@ -310,7 +350,7 @@ function App() {
     }
   };
   
-  const setGlobalProfileBackgroundEnabled = (enabled) => {
+  const setGlobalProfileBackgroundEnabled = (enabled: boolean) => {
     if (globalProfileBackgroundEnabled !== enabled) {
       setGlobalProfileBackgroundEnabledState(enabled);
       
@@ -329,12 +369,11 @@ function App() {
     }
   };
   
-  
-  const updateThemeSettings = (newSettings) => {
+  const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
     setThemeSettings(prev => {
       // Проверяем, действительно ли изменились настройки
       const hasChanges = Object.keys(newSettings).some(key => 
-        prev[key] !== newSettings[key]
+        prev[key as keyof ThemeSettings] !== newSettings[key as keyof ThemeSettings]
       );
       
       if (!hasChanges) {
@@ -358,22 +397,22 @@ function App() {
     });
   };
   
-  
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loading, currentUser } = authContext || {};
+  const { isAuthenticated, loading, user: currentUser } = authContext || {};
   
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {
     if (isAuthenticated && !loading) {
-
+      // Логика для авторизованного пользователя
     }
   }, [isAuthenticated, loading]);
-  const prevAuthState = useRef({ isAuthenticated: null, loading: null });
+
+  const prevAuthState = useRef({ isAuthenticated: false, loading: false });
   
   useEffect(() => {
     const currentAuthState = {
       isAuthenticated: isAuthenticated,
-      loading: false
+      loading: loading
     };
     
     // Проверяем, действительно ли изменилось состояние
@@ -384,8 +423,7 @@ function App() {
       // Обновляем предыдущее состояние
       prevAuthState.current = currentAuthState;
     }
-  }, [isAuthenticated]);
-  
+  }, [isAuthenticated, loading]);
   
   const theme = useMemo(() => {
     const themeObj = createTheme({
@@ -454,25 +492,21 @@ function App() {
     return themeObj;
   }, [themeSettings]);
 
-  
   const location = useLocation();
   const currentPath = location.pathname;
 
-  
   const isInitialized = useRef(false);
   
   useEffect(() => {
     localStorage.setItem('themeMode', themeSettings.mode);
   }, [themeSettings.mode]);
 
-  
   useEffect(() => {
     if (isInitialized.current) return; // Предотвращаем повторное выполнение
     
     const savedThemeMode = localStorage.getItem('themeMode');
     
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
-
       updateThemeSettings({ mode: savedThemeMode });
     }
     
@@ -480,23 +514,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleStorageChange = (event) => {
+    const handleStorageChange = (event: StorageEvent) => {
       if (event.key && (
           event.key === 'backgroundColor' ||
           event.key === 'textColor' ||
           event.key === 'primaryColor'
         )) {
-
         
         // Проверяем, действительно ли изменилось значение
-        const currentValue = themeSettings[event.key];
+        const currentValue = themeSettings[event.key as keyof ThemeSettings];
         
         if (currentValue === event.newValue) {
           return; // Значение не изменилось, пропускаем обновление
         }
         
-        const settingUpdate = {};
-          settingUpdate[event.key] = event.newValue;
+        const settingUpdate: Partial<ThemeSettings> = {};
+        settingUpdate[event.key as keyof ThemeSettings] = event.newValue as string;
         
         updateThemeSettings(settingUpdate);
       }
@@ -529,15 +562,12 @@ function App() {
           localStorage.setItem('primaryColor', data.settings.primary_color || '#D0BCFF');
           localStorage.setItem('theme', 'dark');
           console.log('🎨 ATTENTION: Применены настройки темы пользователя');
-
         }
       } catch (e) {
         console.error('🎨 ATTENTION: Ошибка загрузки настроек:', e);
         // fallback: дефолт
         setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
       }
-      
-
       
       // Загружаем настройки глобального фона профиля
       try {
@@ -596,12 +626,12 @@ function App() {
       }
 
       // Если пользователь авторизован в AuthContext, используем его данные
-      if (currentUser && currentUser.username) {
-        await loadUserBackgroundFromUsername(currentUser.username);
+      if (currentUser && typeof currentUser === 'object' && 'username' in currentUser) {
+        await loadUserBackgroundFromUsername((currentUser as any).username);
       }
     };
 
-    const loadUserBackgroundFromUsername = async (username) => {
+    const loadUserBackgroundFromUsername = async (username: string) => {
       try {
         // Получаем данные профиля текущего пользователя
         const response = await axios.get(`/api/profile/${username}`);
@@ -611,14 +641,14 @@ function App() {
           
           // Сохраняем обои только если глобальные обои включены
           if (globalProfileBackgroundEnabled) {
-          const savedBg = localStorage.getItem('myProfileBackgroundUrl');
-          if (!savedBg) {
-            saveUserBackground(userBg);
-          }
-          
+            const savedBg = localStorage.getItem('myProfileBackgroundUrl');
+            if (!savedBg) {
+              saveUserBackground(userBg);
+            }
+            
             // Если обои еще не применены, применяем их
             if (!profileBackground) {
-            setProfileBackground(userBg);
+              setProfileBackground(userBg);
             }
           } else {
             // Если глобальные обои выключены, удаляем из localStorage если там есть
@@ -655,18 +685,14 @@ function App() {
   useEffect(() => {
     // Применяем оптимизацию блюра при загрузке приложения
     if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-
       // Хук автоматически применит оптимизацию при изменении isEnabled
     }
   }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
-
-
 
   // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
   useEffect(() => {
     // Применяем оптимизацию блюра при переходе между страницами
     if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-
       // Небольшая задержка для применения эффектов после рендера новой страницы
       const timer = setTimeout(() => {
         if (blurOptimization.isEnabled) {
@@ -687,7 +713,7 @@ function App() {
     if (!isProfilePage) {
       // Если мы не на странице профиля и глобальные обои включены, восстанавливаем свои обои
       if (globalProfileBackgroundEnabled) {
-      restoreUserBackground();
+        restoreUserBackground();
       } else {
         // Если глобальные обои выключены, очищаем фон
         clearProfileBackground();
@@ -704,7 +730,6 @@ function App() {
     }
   }, [isAuthenticated, loading]);
 
-
   // Определяем тип роута
   const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password', '/element-auth', '/auth_elem'].some(
     path => currentPath.startsWith(path)
@@ -716,7 +741,7 @@ function App() {
     path => currentPath.startsWith(path)
   );
 
-  const themeContextValue = useMemo(() => {
+  const themeContextValue = useMemo<ThemeSettingsContextType>(() => {
     return {
       themeSettings,
       updateThemeSettings,
@@ -739,13 +764,13 @@ function App() {
               <CssBaseline />
               <SessionProvider>
                 <MessengerProvider>
-                      <LanguageProvider>
-                        <MusicProvider>
-                          <PostDetailProvider>
-                            <CommandPaletteProvider>
-                                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                                  <Suspense fallback={<LoadingIndicator />}>
-                                    <DefaultSEO />
+                  <LanguageProvider>
+                    <MusicProvider>
+                      <PostDetailProvider>
+                        <CommandPaletteProvider>
+                          <ErrorBoundary FallbackComponent={ErrorFallback}>
+                            <Suspense fallback={<LoadingIndicator />}>
+                              <DefaultSEO />
                               {isAuthPage ? (
                                 <AuthRoutes setUser={authContext?.setUser} />
                               ) : isPublicPage ? (
@@ -755,14 +780,14 @@ function App() {
                               ) : (
                                 <MainRoutes setUser={authContext?.setUser} background={location.state?.background} />
                               )}
-                                    <MusicPlayerCore />
-                                    <CommandPalleteModal />
-                                  </Suspense>
-                                </ErrorBoundary>
-                            </CommandPaletteProvider>
-                          </PostDetailProvider>
-                        </MusicProvider>
-                      </LanguageProvider>
+                              <MusicPlayerCore />
+                              <CommandPalleteModal />
+                            </Suspense>
+                          </ErrorBoundary>
+                        </CommandPaletteProvider>
+                      </PostDetailProvider>
+                    </MusicProvider>
+                  </LanguageProvider>
                 </MessengerProvider>
               </SessionProvider>
             </DefaultPropsProvider>
@@ -773,4 +798,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

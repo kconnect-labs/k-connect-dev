@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
+import { AuthRoutesProps, User } from '../types/routes';
 
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Auth/Login'));
@@ -14,12 +15,12 @@ const ForgotPassword = React.lazy(() => import('../pages/Auth/ForgotPassword'));
 const ResetPassword = React.lazy(() => import('../pages/Auth/ResetPassword'));
 // const ElementAuth = React.lazy(() => import('../pages/Auth/ElementAuth'));
 
-const AuthRoutes = ({ setUser }) => {
+const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
   const theme = useTheme();
   const { isAuthenticated, user, loading } = useAuth();
 
-  const hasProfile = () => {
-    return user && user.username && user.id;
+  const hasProfile = (): boolean => {
+    return user ? !!(user.username && user.id) : false;
   };
 
   return (
@@ -68,8 +69,8 @@ const AuthRoutes = ({ setUser }) => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           {/* <Route path="/element-auth" element={<ElementAuth />} /> */}
-          <Route path="/auth_elem/:token" element={<ElementAuth />} />
-          <Route path="/auth_elem/direct/:token" element={<ElementAuth />} />
+          {/* <Route path="/auth_elem/:token" element={<ElementAuth />} />
+          <Route path="/auth_elem/direct/:token" element={<ElementAuth />} /> */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </React.Suspense>

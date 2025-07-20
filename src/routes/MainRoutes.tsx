@@ -5,6 +5,25 @@ import MainLayout from '../components/Layout/MainLayout';
 import { RequireAuth } from '../App';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
 
+interface User {
+  id: number;
+  username: string;
+  [key: string]: any;
+}
+
+interface MainRoutesProps {
+  setUser: (user: User | null) => void;
+  background?: any;
+}
+
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+interface ProfileRequiredRouteProps {
+  children: React.ReactNode;
+}
+
 // Lazy imports
 const ProfilePage = React.lazy(() => import('../pages/User/ProfilePage'));
 const MainPage = React.lazy(() => import('../pages/Main/MainPage'));
@@ -15,7 +34,7 @@ const SearchPage = React.lazy(() => import('../pages/Main/SearchPage'));
 const MusicPage = React.lazy(() => import('../pages/MusicPage/MusicPage.js'));
 const ArtistPage = React.lazy(() => import('../pages/Main/ArtistPage'));
 const MessengerPage = React.lazy(() => import('../pages/Messenger/MessengerPage'));
-const SubscriptionsPage = React.lazy(() => import('../pages/Economic/SubscriptionsPage'));
+const SubscriptionsPage = React.lazy(() => import('../pages/Economic/SubscriptionsPage')) as React.LazyExoticComponent<React.ComponentType<{ tabIndex?: number }>>;
 const BugReportPage = React.lazy(() => import('../pages/BugPages/BugReportPage'));
 const LeaderboardPage = React.lazy(() => import('../pages/Main/LeaderboardPage'));
 const RulesPage = React.lazy(() => import('../pages/Info/RulesPage'));
@@ -52,17 +71,17 @@ const ItemRedirectPage = React.lazy(() => import('../components/Redirects/ItemRe
 const FriendsRedirect = React.lazy(() => import('../components/Redirects/FriendsRedirect').then(module => ({ default: module.FriendsRedirect })));
 const ReferralPage = React.lazy(() => import('../pages/ReferralPage'));
 
-const MainRoutes = ({ setUser, background }) => {
+const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
   const { isAuthenticated, loading, user } = useAuth();
   const location = useLocation();
 
   // Вспомогательная функция для проверки профиля
-  const hasProfile = () => {
-    return user && user.username && user.id;
+  const hasProfile = (): boolean => {
+    return user ? !!((user as User).username && (user as User).id) : false;
   };
 
   // Компонент для защищенных роутов с проверкой профиля
-  const ProtectedRoute = ({ children }) => {
+  const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     if (loading) {
       return <LoadingIndicator />;
     }
@@ -76,11 +95,11 @@ const MainRoutes = ({ setUser, background }) => {
       return <Navigate to="/register/profile" replace />;
     }
     
-    return children;
+    return <>{children}</>;
   };
 
   // Компонент для роутов, которые требуют профиль
-  const ProfileRequiredRoute = ({ children }) => {
+  const ProfileRequiredRoute: React.FC<ProfileRequiredRouteProps> = ({ children }) => {
     if (loading) {
       return <LoadingIndicator />;
     }
@@ -93,7 +112,7 @@ const MainRoutes = ({ setUser, background }) => {
       return <Navigate to="/register/profile" replace />;
     }
     
-    return children;
+    return <>{children}</>;
   };
 
   return (
@@ -121,7 +140,7 @@ const MainRoutes = ({ setUser, background }) => {
           <Route path="/profile/:username" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           <Route path="/profile/:username/followers" element={<ProtectedRoute><SubscriptionsPage tabIndex={0} /></ProtectedRoute>} />
           <Route path="/profile/:username/following" element={<ProtectedRoute><SubscriptionsPage tabIndex={1} /></ProtectedRoute>} />
-          <Route path="/subscriptions" element={<ProtectedRoute><SubscriptionsPage /></ProtectedRoute>} />
+          <Route path="/subscriptions" element={<ProtectedRoute><SubscriptionsPage tabIndex={0} /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
           <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />

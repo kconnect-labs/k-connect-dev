@@ -1,21 +1,23 @@
 @import '../../uikit.module.css';
 
-/* StyledTabs - Оптимизированные стили без Material UI */
+/* StyledTabs - Точные стили панели рекомендаций из MainPage */
 
 .styled-tabs-container {
-  border-radius: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   z-index: 2;
   box-sizing: border-box;
   contain: layout style paint;
+  margin-bottom: 0;
 }
 
 .styled-tabs--default {
-  background: rgba(26, 26, 26, 0.03);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .styled-tabs--custom {
@@ -27,21 +29,21 @@
   min-height: 48px;
   position: relative;
   z-index: 2;
+  padding: 4px;
 }
 
 .styled-tab {
   flex: 1;
-  background: rgba(26, 26, 26, 0.03);
-  backdrop-filter: blur(20px);
+  background: transparent;
   border: none;
   outline: none;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 1rem;
+  font-weight: 500;
+  font-size: 0.875rem;
   text-transform: none;
-  border-radius: 0;
-  min-height: 48px;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 8px;
+  min-height: 40px;
+  transition: all 0.2s ease;
   color: rgba(255, 255, 255, 0.7);
   position: relative;
   display: flex;
@@ -49,16 +51,22 @@
   justify-content: center;
   padding: 0 16px;
   box-sizing: border-box;
+  margin: 0 2px;
+  font-family: inherit;
 }
 
 .styled-tab:hover {
   color: rgba(255, 255, 255, 0.9);
-  background-color: rgba(26, 26, 26, 0.05);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .styled-tab--active {
-  color: #D0BCFF;
-  background-color: rgba(26, 26, 26, 0.1);
+  color: #1a1a1a;
+  background-color: #D0BCFF;
+}
+
+.styled-tab--active:hover {
+  background-color: #c0a8ff;
 }
 
 .styled-tab-content {
@@ -66,6 +74,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  width: 100%;
 }
 
 .styled-tab-icon {
@@ -77,6 +86,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .styled-tab-indicator {
@@ -98,9 +109,10 @@
   }
   
   .styled-tab {
-    font-size: 0.9rem;
-    min-height: 44px;
+    font-size: 0.85rem;
+    min-height: 36px;
     padding: 0 12px;
+    margin: 0 1px;
   }
   
   .styled-tab-content {
@@ -112,7 +124,6 @@
     font-size: 1.1em;
   }
 }
-
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {

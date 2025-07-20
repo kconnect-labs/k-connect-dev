@@ -6,24 +6,24 @@
  * The formatters in this file provide better timezone handling and should be preferred.
  */
 
-export const getLocalTimezoneOffset = () => {
+export const getLocalTimezoneOffset = (): number => {
   return new Date().getTimezoneOffset();
 };
 
-export const getMoscowTimezoneOffset = () => {
+export const getMoscowTimezoneOffset = (): number => {
   return -180; 
 };
 
-export const getUserTimezoneName = () => {
+export const getUserTimezoneName = (): string => {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 };
 
 /**
  * Parses a date string consistently handling UTC and timezones
- * @param {string} dateString - The date string to parse
- * @returns {Date} - A properly parsed Date object
+ * @param dateString - The date string to parse
+ * @returns A properly parsed Date object
  */
-export const parseDate = (dateString) => {
+export const parseDate = (dateString: string): Date => {
   if (!dateString) return new Date();
   
   if (dateString.endsWith('Z')) {
@@ -37,12 +37,26 @@ export const parseDate = (dateString) => {
   }
 };
 
+interface DebugDateResult {
+  originalString: string;
+  standardParseResult: string;
+  standardParseISO: string;
+  utcParseResult: string;
+  utcParseISO: string;
+  currentTime: string;
+  currentTimeISO: string;
+  diffStandard: string;
+  diffUTC: string;
+  userTimezone: string;
+  timezoneOffset: string;
+}
+
 /**
  * Утилита для отладки парсинга даты
- * @param {string} dateString - Строка даты для проверки
- * @returns {Object} - Информация о том, как парсится дата
+ * @param dateString - Строка даты для проверки
+ * @returns Информация о том, как парсится дата
  */
-export const debugDate = (dateString) => {
+export const debugDate = (dateString: string): DebugDateResult => {
   const standardParse = new Date(dateString);
   const utcParse = new Date(dateString + 'Z');
   const now = new Date();
@@ -55,15 +69,17 @@ export const debugDate = (dateString) => {
     utcParseISO: utcParse.toISOString(),
     currentTime: now.toString(),
     currentTimeISO: now.toISOString(),
-    diffStandard: Math.floor((now - standardParse) / 1000) + ' seconds',
-    diffUTC: Math.floor((now - utcParse) / 1000) + ' seconds',
+    diffStandard: Math.floor((now.getTime() - standardParse.getTime()) / 1000) + ' seconds',
+    diffUTC: Math.floor((now.getTime() - utcParse.getTime()) / 1000) + ' seconds',
     userTimezone: getUserTimezoneName(),
     timezoneOffset: getLocalTimezoneOffset() + ' minutes'
   };
 };
 
+type TranslationFunction = (key: string) => string;
+
 // Pure function for formatting time differences
-export const formatTimeAgoDiff = (diffInSeconds, t) => {
+export const formatTimeAgoDiff = (diffInSeconds: number, t?: TranslationFunction): string => {
   if (diffInSeconds < 0) {
     return t ? t('post.time.just_now') : 'только что';
   } else if (diffInSeconds < 60) {
@@ -126,7 +142,7 @@ export const formatTimeAgoDiff = (diffInSeconds, t) => {
 };
 
 // Pure function that doesn't use hooks
-export const formatTimeAgo = (dateString) => {
+export const formatTimeAgo = (dateString: string): string => {
   if (!dateString) return '';
   
   const date = parseDate(dateString);
@@ -137,7 +153,7 @@ export const formatTimeAgo = (dateString) => {
   return formatTimeAgoDiff(diffInSeconds);
 };
 
-export const formatDate = (dateString) => {
+export const formatDate = (dateString: string): string => {
   if (!dateString) return '';
   
   const date = parseDate(dateString);
@@ -152,7 +168,7 @@ export const formatDate = (dateString) => {
   }).format(date);
 };
 
-export const formatDateTimeShort = (dateString) => {
+export const formatDateTimeShort = (dateString: string): string => {
   if (!dateString) return '';
   
   const date = parseDate(dateString);
@@ -166,7 +182,7 @@ export const formatDateTimeShort = (dateString) => {
   }).format(date);
 };
 
-export const getRussianWordForm = (number, forms) => {
+export const getRussianWordForm = (number: number, forms: [string, string, string]): string => {
   const cases = [2, 0, 1, 1, 1, 2];
   const mod100 = number % 100;
   const mod10 = number % 10;

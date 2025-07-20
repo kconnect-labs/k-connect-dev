@@ -1,20 +1,28 @@
 import React from 'react';
 import './StyledTabs.css';
 
+interface Tab {
+  value: string | number;
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+}
+
+interface StyledTabsProps {
+  value: string | number;
+  onChange: (event: React.SyntheticEvent | null, newValue: string | number) => void;
+  tabs: Tab[];
+  variant?: 'standard' | 'fullWidth';
+  centered?: boolean;
+  fullWidth?: boolean;
+  customStyle?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 /**
- * StyledTabs - оптимизированная версия без Material UI
- * @param {Object} props
- * @param {string|number} props.value - Активная вкладка
- * @param {Function} props.onChange - Обработчик изменения вкладки
- * @param {Array} props.tabs - Массив вкладок [{value, label, icon?}]
- * @param {string} props.variant - 'standard' | 'fullWidth'
- * @param {boolean} props.centered - Центрировать вкладки
- * @param {boolean} props.fullWidth - Полная ширина контейнера
- * @param {boolean} props.customStyle - Использовать кастомный стиль
- * @param {string} props.className - Дополнительные CSS классы
- * @param {Object} props.style - Дополнительные стили
+ * StyledTabs - стилизованные табы в точном соответствии с панелью рекомендаций из MainPage
  */
-const StyledTabs = ({ 
+const StyledTabs: React.FC<StyledTabsProps> = ({ 
   value, 
   onChange, 
   tabs, 
@@ -26,32 +34,33 @@ const StyledTabs = ({
   style = {},
   ...props 
 }) => {
-  const handleTabClick = (tabValue) => {
+  const handleTabClick = (tabValue: string | number) => {
     if (onChange) {
       onChange(null, tabValue);
     }
   };
 
-  const containerStyles = {
+  const containerStyles: React.CSSProperties = {
     width: fullWidth ? '100%' : 'auto',
     maxWidth: fullWidth ? 'none' : 750,
     minWidth: 320,
-    margin: '0 auto 8px auto',
+    margin: '0',
     ...style,
   };
 
-  const tabsContainerStyles = {
+  const tabsContainerStyles: React.CSSProperties = {
     display: 'flex',
-    justifyContent: centered ? 'center' : 'flex-start',
+    justifyContent: centered ? 'center' : 'space-between',
     minHeight: 48,
+    padding: '4px',
   };
 
   return (
     <div 
       className={`styled-tabs-container ${customStyle ? 'styled-tabs--custom' : 'styled-tabs--default'} ${className}`}
       style={containerStyles}
-        {...props}
-      >
+      {...props}
+    >
       <div className="styled-tabs" style={tabsContainerStyles}>
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
@@ -70,7 +79,6 @@ const StyledTabs = ({
                 )}
                 <span className="styled-tab-label">{tab.label}</span>
               </div>
-              {isActive && <div className="styled-tab-indicator" />}
             </button>
           );
         })}

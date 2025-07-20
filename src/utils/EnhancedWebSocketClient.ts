@@ -1,4 +1,4 @@
-// EnhancedWebSocketClient.js
+// EnhancedWebSocketClient.ts
 // Синглтон-совместимый WebSocket-клиент, перенесённый из MessengerContext для повторного использования
 
 // Константы по умолчанию для работы клиента
@@ -12,23 +12,70 @@ const WEBSOCKET_CONFIG = {
   HEALTH_CHECK_INTERVAL: 60000,
 };
 
+interface WebSocketConfig {
+  wsUrl?: string;
+  sessionKey?: string;
+  deviceId?: string;
+  autoReconnect?: boolean;
+  maxReconnectAttempts?: number;
+  reconnectDelay?: number;
+  pingInterval?: number;
+  pongTimeout?: number;
+  debug?: boolean;
+}
+
+interface WebSocketStats {
+  messagesReceived: number;
+  messagesSent: number;
+  pingsSent: number;
+  pongsReceived: number;
+  reconnectCount: number;
+  connectTime: Date | null;
+  lastActivity: Date | null;
+}
+
+interface ClientInfo {
+  userAgent: string;
+  timestamp: string;
+  version: string;
+}
+
+interface WebSocketMessage {
+  type: string;
+  [key: string]: any;
+}
+
 // Основная реализация клиента
 export default class EnhancedWebSocketClient {
-  constructor(config = {}) {
+  private config: Required<WebSocketConfig>;
+  private ws: WebSocket | null;
+  private isConnected: boolean;
+  private isConnecting: boolean;
+  private reconnectAttempts: number;
+  private reconnectTimer: NodeJS.Timeout | null;
+  private pingTimer: NodeJS.Timeout | null;
+  private pongTimer: NodeJS.Timeout | null;
+  private lastPingId: string | null;
+  private messageQueue: WebSocketMessage[];
+  private eventHandlers: { [key: string]: Function[] };
+  private stats: WebSocketStats;
+  private clientInfo: ClientInfo;
+  private lastPong: number;
+
+  constructor(config: WebSocketConfig = {}) {
     // Configuration
     this.config = {
       wsUrl:
         config.wsUrl ||
         `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/messenger`,
-      sessionKey: config.sessionKey,
+      sessionKey: config.sessionKey || '',
       deviceId: config.deviceId || this.generateDeviceId(),
       autoReconnect: config.autoReconnect !== false,
       maxReconnectAttempts: config.maxReconnectAttempts || 10,
       reconnectDelay: config.reconnectDelay || 1000,
       pingInterval: config.pingInterval || WEBSOCKET_CONFIG.PING_INTERVAL,
       pongTimeout: config.pongTimeout || WEBSOCKET_CONFIG.PONG_TIMEOUT,
-      debug: true,
-      ...config,
+      debug: config.debug !== false,
     };
 
     // State
@@ -63,7 +110,7 @@ export default class EnhancedWebSocketClient {
   }
 
   // ---------- internal helpers ----------
-  generateDeviceId() {
+  private generateDeviceId(): string {
     const existing = localStorage.getItem('k-connect-device-id');
     if (existing) return existing;
 
@@ -72,14 +119,14 @@ export default class EnhancedWebSocketClient {
     return deviceId;
   }
 
-  log(...args) {
+  private log(...args: any[]): void {
     if (this.config.debug) {
       // eslint-disable-next-line no-console
       console.log('[Enhanced WebSocket]', ...args);
     }
   }
 
-  emit(event, data) {
+  private emit(event: string, data: any): void {
     if (!this.eventHandlers[event]) return;
     this.eventHandlers[event].forEach((handler) => {
       try {
@@ -90,20 +137,20 @@ export default class EnhancedWebSocketClient {
     });
   }
 
-  on(event, handler) {
+  on(event: string, handler: Function): void {
     if (!this.eventHandlers[event]) {
       this.eventHandlers[event] = [];
     }
     this.eventHandlers[event].push(handler);
   }
 
-  off(event, handler) {
+  off(event: string, handler: Function): void {
     if (!this.eventHandlers[event]) return;
     const i = this.eventHandlers[event].indexOf(handler);
     if (i > -1) this.eventHandlers[event].splice(i, 1);
   }
 
-  handleError(message, error, data = null) {
+  private handleError(message: string, error: any, data: any = null): void {
     const info = {
       message,
       error: error ? error.message || error : 'Unknown error',
@@ -115,7 +162,7 @@ export default class EnhancedWebSocketClient {
   }
 
   // ---------- connection management ----------
-  async connect() {
+  async connect(): Promise<void> {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.log('WebSocket already connected');
       return;
@@ -156,7 +203,7 @@ export default class EnhancedWebSocketClient {
     }
   }
 
-  disconnect() {
+  disconnect(): void {
     this.log('Disconnect');
     this.config.autoReconnect = false;
     this.stopPingLoop();
@@ -168,26 +215,26 @@ export default class EnhancedWebSocketClient {
   }
 
   // ---------- authentication ----------
-  sendAuth() {
+  private sendAuth(): void {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
     const auth = { type: 'auth', session_key: this.config.sessionKey, device_id: this.config.deviceId };
     this.ws.send(JSON.stringify(auth));
   }
 
   // ---------- ping / pong ----------
-  startPingLoop() {
+  private startPingLoop(): void {
     if (this.pingTimer) clearInterval(this.pingTimer);
     this.pingTimer = setInterval(() => {
       if (this.isConnected) this.sendPing();
     }, this.config.pingInterval);
   }
 
-  stopPingLoop() {
+  private stopPingLoop(): void {
     if (this.pingTimer) clearInterval(this.pingTimer);
     if (this.pongTimer) clearTimeout(this.pongTimer);
   }
 
-  sendPing() {
+  private sendPing(): void {
     this.lastPingId = this.generateId();
     this.stats.pingsSent++;
     this.sendMessage({ type: 'ping', timestamp: Date.now(), ping_id: this.lastPingId, device_id: this.config.deviceId });
@@ -200,7 +247,7 @@ export default class EnhancedWebSocketClient {
     }, this.config.pongTimeout);
   }
 
-  handlePong(data) {
+  private handlePong(data: any): void {
     this.stats.pongsReceived++;
     if (this.lastPingId === data.ping_id && this.pongTimer) {
       clearTimeout(this.pongTimer);
@@ -209,7 +256,7 @@ export default class EnhancedWebSocketClient {
   }
 
   // ---------- reconnection ----------
-  scheduleReconnect() {
+  private scheduleReconnect(): void {
     if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.reconnectAttempts++;
     this.stats.reconnectCount++;
@@ -222,7 +269,7 @@ export default class EnhancedWebSocketClient {
   }
 
   // ---------- messaging ----------
-  sendMessage(message) {
+  sendMessage(message: WebSocketMessage): boolean {
     if (!message.device_id) message.device_id = this.config.deviceId;
     if (!this.isConnected) {
       if (this.config.autoReconnect) {
@@ -233,7 +280,7 @@ export default class EnhancedWebSocketClient {
       return false;
     }
     try {
-      this.ws.send(JSON.stringify(message));
+      this.ws!.send(JSON.stringify(message));
       this.stats.messagesSent++;
       this.stats.lastActivity = new Date();
       return true;
@@ -243,102 +290,95 @@ export default class EnhancedWebSocketClient {
     }
   }
 
-  processMessageQueue() {
+  private processMessageQueue(): void {
     if (!this.messageQueue.length) return;
     const queued = [...this.messageQueue];
     this.messageQueue = [];
     queued.forEach((m) => this.sendMessage(m));
   }
 
-  // ---------- utilities ----------
-  generateId() {
-    return Math.random().toString(36).substr(2, 16) + Date.now().toString(36);
+  private generateId(): string {
+    return Math.random().toString(36).substr(2, 9);
   }
 
-  // ---------- high-level helpers ----------
-  sendChatMessage(chatId, text, replyToId = null, tempId = null) {
-    return this.sendMessage({ type: 'send_message', chatId, text, replyToId, tempId });
+  sendChatMessage(chatId: string, text: string, replyToId: string | null = null, tempId: string | null = null): boolean {
+    return this.sendMessage({ type: 'chat_message', chat_id: chatId, text, reply_to_id: replyToId, temp_id: tempId });
   }
-  sendTypingStart(chatId) {
-    return this.sendMessage({ type: 'typing_start', chatId });
+
+  sendTypingStart(chatId: string): boolean {
+    return this.sendMessage({ type: 'typing_start', chat_id: chatId });
   }
-  sendTypingEnd(chatId) {
-    return this.sendMessage({ type: 'typing_end', chatId });
+
+  sendTypingEnd(chatId: string): boolean {
+    return this.sendMessage({ type: 'typing_end', chat_id: chatId });
   }
-  sendReadReceipt(messageId, chatId) {
-    return this.sendMessage({ type: 'read_receipt', messageId, chatId, message_id: messageId, chat_id: chatId });
+
+  sendReadReceipt(messageId: string, chatId: string): boolean {
+    return this.sendMessage({ type: 'read_receipt', message_id: messageId, chat_id: chatId });
   }
-  sendMessageDeleted(messageId, chatId) {
-    return this.sendMessage({ type: 'message_deleted', messageId, chatId });
+
+  sendMessageDeleted(messageId: string, chatId: string): boolean {
+    return this.sendMessage({ type: 'message_deleted', message_id: messageId, chat_id: chatId });
   }
-  getChats() {
+
+  getChats(): boolean {
     return this.sendMessage({ type: 'get_chats' });
   }
-  getMessages(chatId, limit = 30, beforeId = null, forceRefresh = false) {
+
+  getMessages(chatId: string, limit: number = 30, beforeId: string | null = null, forceRefresh: boolean = false): boolean {
     return this.sendMessage({ type: 'get_messages', chat_id: chatId, limit, before_id: beforeId, force_refresh: forceRefresh });
   }
 
-  // ---------- server message handler ----------
-  handleMessage(event) {
-    this.stats.messagesReceived++;
-    this.stats.lastActivity = new Date();
-    let data;
+  private handleMessage(event: MessageEvent): void {
     try {
-      data = JSON.parse(event.data);
-    } catch (e) {
-      this.handleError('Failed to parse message', e, event.data);
-      return;
-    }
+      const data = JSON.parse(event.data);
+      this.stats.messagesReceived++;
+      this.stats.lastActivity = new Date();
 
-    switch (data.type) {
-      case 'ping':
-        this.sendMessage({ type: 'pong', timestamp: data.timestamp, ping_id: data.ping_id, device_id: this.config.deviceId });
-        break;
-      case 'pong':
-        this.handlePong(data);
-        break;
-      case 'connected':
-        this.handleConnected(data);
-        break;
-      case 'error':
-        this.handleError('Server error', new Error(data.message || 'Unknown'), data);
-        break;
-      default:
-        this.emit(data.type, data);
+      switch (data.type) {
+        case 'pong':
+          this.handlePong(data);
+          break;
+        case 'connected':
+          this.handleConnected(data);
+          break;
+        case 'chat_message':
+        case 'typing_start':
+        case 'typing_end':
+        case 'read_receipt':
+        case 'message_deleted':
+        case 'chat_list':
+        case 'message_list':
+        case 'error':
+          this.emit(data.type, data);
+          break;
+        default:
+          this.log('Unknown message type:', data.type);
+      }
+    } catch (error) {
+      this.handleError('Failed to parse message', error, event.data);
     }
   }
 
-  handleConnected(data) {
-    this.isConnected = true;
-    this.reconnectAttempts = 0;
+  private handleConnected(data: any): void {
     this.stats.connectTime = new Date();
-    this.startPingLoop();
     this.processMessageQueue();
     this.emit('connected', data);
   }
 
-  getStats() {
-    return {
-      ...this.stats,
-      isConnected: this.isConnected,
-      isConnecting: this.isConnecting,
-      reconnectAttempts: this.reconnectAttempts,
-      deviceId: this.config.deviceId,
-      queuedMessages: this.messageQueue.length,
-      uptime: this.stats.connectTime ? Date.now() - this.stats.connectTime.getTime() : 0
-    };
+  getStats(): WebSocketStats {
+    return { ...this.stats };
   }
 
-  handleClose(event) {
-    this.log('WebSocket closed', event.code, event.reason);
+  private handleClose(event: CloseEvent): void {
     this.isConnected = false;
     this.isConnecting = false;
     this.stopPingLoop();
-    const shouldReconnect =
-      this.config.autoReconnect &&
-      ![1000, 1001].includes(event.code) &&
-      this.reconnectAttempts < this.config.maxReconnectAttempts;
-    this.emit('disconnected', { code: event.code, reason: event.reason, willReconnect: shouldReconnect });
-    if (shouldReconnect) this.scheduleReconnect();
+    
+    if (this.config.autoReconnect && event.code !== 1000) {
+      this.scheduleReconnect();
+    }
+    
+    this.emit('disconnected', { code: event.code, reason: event.reason });
   }
-}
+} 

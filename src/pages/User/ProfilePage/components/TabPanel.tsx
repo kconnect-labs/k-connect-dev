@@ -2,7 +2,14 @@ import React from 'react';
 import { Box } from '@mui/material';
 import TabContentLoader from '../../../../components/UI/TabContentLoader';
 
-const TabPanel = ({ children, value, index, ...other }) => {
+interface TabPanelProps {
+  children: React.ReactNode;
+  value: number;
+  index: number;
+  [key: string]: any;
+}
+
+const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
   return (
     <div
       role="tabpanel"

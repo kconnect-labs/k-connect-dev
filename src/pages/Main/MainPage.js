@@ -20,6 +20,7 @@ import {
   Alert,
   Dialog,
 } from '@mui/material';
+import StyledTabs from '../../UIKIT/StyledTabs';
 import './MainPage.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -803,38 +804,17 @@ const MainPage = React.memo(() => {
           <CreatePost onPostCreated={handlePostCreated} postType="post" />
           
           
-          <Paper sx={{ 
-            p: 1, 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            mb: 0,
-            borderRadius: '12px',
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            <Button 
-              variant={feedType === 'all' ? 'contained' : 'text'} 
-              onClick={() => setFeedType('all')}
-              sx={{ flex: 1, mx: 0.5 }}
-            >
-              {t('main_page.feed.tabs.all')}
-            </Button>
-            <Button 
-              variant={feedType === 'following' ? 'contained' : 'text'} 
-              onClick={() => setFeedType('following')}
-              sx={{ flex: 1, mx: 0.5 }}
-            >
-              {t('main_page.feed.tabs.following')}
-            </Button>
-            <Button 
-              variant={feedType === 'recommended' ? 'contained' : 'text'} 
-              onClick={() => setFeedType('recommended')}
-              sx={{ flex: 1, mx: 0.5 }}
-            >
-              {t('main_page.feed.tabs.recommended')}
-            </Button>
-          </Paper>
+          <StyledTabs
+            value={feedType}
+            onChange={(event, newValue) => setFeedType(newValue)}
+            tabs={[
+              { value: 'all', label: t('main_page.feed.tabs.all') },
+              { value: 'following', label: t('main_page.feed.tabs.following') },
+              { value: 'recommended', label: t('main_page.feed.tabs.recommended') }
+            ]}
+            fullWidth
+            customStyle
+          />
           
           
           <Box sx={{ mt: 0 }}>
