@@ -3,13 +3,13 @@
 // Throttle функция для ограничения частоты выполнения
 export const throttle = (func, limit) => {
   let inThrottle;
-  return function() {
+  return function () {
     const args = arguments;
     const context = this;
     if (!inThrottle) {
       func.apply(context, args);
       inThrottle = true;
-      setTimeout(() => inThrottle = false, limit);
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 };
@@ -20,7 +20,7 @@ export const debounce = (func, wait, immediate) => {
   return function executedFunction() {
     const context = this;
     const args = arguments;
-    const later = function() {
+    const later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
@@ -34,10 +34,10 @@ export const debounce = (func, wait, immediate) => {
 // Оптимизированный обработчик скролла
 export const createOptimizedScrollHandler = (handler, options = {}) => {
   const { throttleMs = 16, passive = true } = options;
-  
+
   const throttledHandler = throttle(handler, throttleMs);
-  
-  return (event) => {
+
+  return event => {
     // Используем requestAnimationFrame для синхронизации с браузером
     requestAnimationFrame(() => {
       throttledHandler(event);
@@ -48,18 +48,18 @@ export const createOptimizedScrollHandler = (handler, options = {}) => {
 // Оптимизированный обработчик ресайза
 export const createOptimizedResizeHandler = (handler, options = {}) => {
   const { debounceMs = 250 } = options;
-  
+
   return debounce(handler, debounceMs);
 };
 
 // Оптимизированный обработчик клика
 export const createOptimizedClickHandler = (handler, options = {}) => {
   const { preventDefault = false, stopPropagation = false } = options;
-  
-  return (event) => {
+
+  return event => {
     if (preventDefault) event.preventDefault();
     if (stopPropagation) event.stopPropagation();
-    
+
     // Используем setTimeout для предотвращения блокировки UI
     setTimeout(() => {
       handler(event);
@@ -70,11 +70,11 @@ export const createOptimizedClickHandler = (handler, options = {}) => {
 // Оптимизированный обработчик touch событий
 export const createOptimizedTouchHandler = (handler, options = {}) => {
   const { passive = true } = options;
-  
-  return (event) => {
+
+  return event => {
     // Предотвращаем двойное срабатывание на мобильных
     if (event.touches && event.touches.length > 1) return;
-    
+
     requestAnimationFrame(() => {
       handler(event);
     });
@@ -84,45 +84,58 @@ export const createOptimizedTouchHandler = (handler, options = {}) => {
 // Оптимизированный обработчик клавиатуры
 export const createOptimizedKeyboardHandler = (handler, options = {}) => {
   const { preventDefault = false, stopPropagation = false } = options;
-  
-  return (event) => {
+
+  return event => {
     if (preventDefault) event.preventDefault();
     if (stopPropagation) event.stopPropagation();
-    
+
     // Обрабатываем только определенные клавиши
-    const allowedKeys = ['Enter', 'Space', 'Escape', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    const allowedKeys = [
+      'Enter',
+      'Space',
+      'Escape',
+      'Tab',
+      'ArrowUp',
+      'ArrowDown',
+      'ArrowLeft',
+      'ArrowRight',
+    ];
     if (!allowedKeys.includes(event.key)) return;
-    
+
     handler(event);
   };
 };
 
 // Оптимизированный обработчик фокуса
-export const createOptimizedFocusHandler = (handler) => {
+export const createOptimizedFocusHandler = handler => {
   return debounce(handler, 100);
 };
 
 // Оптимизированный обработчик изменения размера окна
-export const createOptimizedWindowResizeHandler = (handler) => {
+export const createOptimizedWindowResizeHandler = handler => {
   return debounce(handler, 100);
 };
 
 // Оптимизированный обработчик видимости страницы
-export const createOptimizedVisibilityHandler = (handler) => {
-  return (event) => {
+export const createOptimizedVisibilityHandler = handler => {
+  return event => {
     // Обрабатываем только изменения видимости
-    if (event.target.visibilityState !== 'hidden' && event.target.visibilityState !== 'visible') return;
-    
+    if (
+      event.target.visibilityState !== 'hidden' &&
+      event.target.visibilityState !== 'visible'
+    )
+      return;
+
     handler(event);
   };
 };
 
 // Оптимизированный обработчик сетевых событий
-export const createOptimizedNetworkHandler = (handler) => {
-  return (event) => {
+export const createOptimizedNetworkHandler = handler => {
+  return event => {
     // Обрабатываем только изменения состояния сети
     if (event.type === 'online' || event.type === 'offline') {
       handler(event);
     }
   };
-}; 
+};

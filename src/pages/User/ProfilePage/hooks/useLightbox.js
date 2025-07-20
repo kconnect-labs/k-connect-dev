@@ -4,7 +4,7 @@ export const useLightbox = () => {
   const [lightboxIsOpen, setLightboxIsOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState('');
 
-  const openLightbox = (imageUrl) => {
+  const openLightbox = imageUrl => {
     setCurrentImage(imageUrl);
     setLightboxIsOpen(true);
   };
@@ -18,6 +18,6 @@ export const useLightbox = () => {
     lightboxIsOpen,
     currentImage,
     openLightbox,
-    closeLightbox
+    closeLightbox,
   };
-}; 
+};

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
 const MarkdownContent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isExpanded'
+  shouldForwardProp: prop => prop !== 'isExpanded',
 })(({ theme, isExpanded }) => ({
   '& p': {
     margin: theme.spacing(0.5, 0),
@@ -53,4 +53,4 @@ const MarkdownContent = styled(Box, {
   transition: 'max-height 0.3s ease',
 }));
 
-export default MarkdownContent; 
+export default MarkdownContent;

@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Box, Typography, TextField, Button, Grid, 
-  Alert, Snackbar, CircularProgress 
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Alert,
+  Snackbar,
+  CircularProgress,
 } from '@mui/material';
 import { Icon } from '@iconify/react';
 import LockIcon from '@mui/icons-material/Lock';
 
-
-import { SettingsCard, SettingsCardContent, SectionTitle } from '../pages/User/SettingsPage';
+import {
+  SettingsCard,
+  SettingsCardContent,
+  SectionTitle,
+} from '../pages/User/SettingsPage';
 
 const LoginSettingsTab = () => {
   const [username, setUsername] = useState('');
@@ -22,11 +31,10 @@ const LoginSettingsTab = () => {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'info'
+    severity: 'info',
   });
 
   useEffect(() => {
-    
     const checkCredentials = async () => {
       try {
         const response = await fetch('/api/user/has-credentials', {
@@ -34,9 +42,9 @@ const LoginSettingsTab = () => {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           setHasCredentials(data.hasCredentials);
@@ -47,15 +55,13 @@ const LoginSettingsTab = () => {
         console.error('Ошибка при проверке учетных данных:', error);
       }
     };
-    
+
     checkCredentials();
   }, []);
 
-  
   const validateForm = () => {
     let isValid = true;
-    
-    
+
     if (!username) {
       setUsernameError('Имя пользователя обязательно');
       isValid = false;
@@ -65,8 +71,7 @@ const LoginSettingsTab = () => {
     } else {
       setUsernameError('');
     }
-    
-    
+
     if (!email) {
       setEmailError('Email обязателен');
       isValid = false;
@@ -76,8 +81,7 @@ const LoginSettingsTab = () => {
     } else {
       setEmailError('');
     }
-    
-    
+
     if (!password) {
       setPasswordError('Пароль обязателен');
       isValid = false;
@@ -90,7 +94,7 @@ const LoginSettingsTab = () => {
     } else {
       setPasswordError('');
     }
-    
+
     return isValid;
   };
 
@@ -98,27 +102,26 @@ const LoginSettingsTab = () => {
     setSnackbar({
       open: true,
       message,
-      severity
+      severity,
     });
   };
 
   const handleCloseSnackbar = () => {
     setSnackbar({
       ...snackbar,
-      open: false
+      open: false,
     });
   };
 
-  
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     try {
       const response = await fetch('/api/auth/setup-credentials', {
         method: 'POST',
@@ -129,20 +132,23 @@ const LoginSettingsTab = () => {
         body: JSON.stringify({
           username,
           email,
-          password
-        })
+          password,
+        }),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         showNotification('success', 'Учетные данные успешно сохранены');
         setHasCredentials(true);
-        
+
         setPassword('');
         setConfirmPassword('');
       } else {
-        showNotification('error', data.error || 'Ошибка при сохранении учетных данных');
+        showNotification(
+          'error',
+          data.error || 'Ошибка при сохранении учетных данных'
+        );
       }
     } catch (error) {
       console.error('Ошибка при сохранении учетных данных:', error);
@@ -155,83 +161,89 @@ const LoginSettingsTab = () => {
   return (
     <SettingsCard>
       <SettingsCardContent>
-        <SectionTitle variant="h5">
-          <Icon icon="solar:lock-bold" width="24" height="24" />
+        <SectionTitle variant='h5'>
+          <Icon icon='solar:lock-bold' width='24' height='24' />
           Настройки входа по логину и паролю
         </SectionTitle>
-        
+
         {hasCredentials ? (
-          <Alert severity="info" sx={{ mb: 3 }}>
-            У вас уже настроены учетные данные для входа. Вы можете обновить их при необходимости.
+          <Alert severity='info' sx={{ mb: 3 }}>
+            У вас уже настроены учетные данные для входа. Вы можете обновить их
+            при необходимости.
           </Alert>
         ) : (
-          <Alert severity="info" sx={{ mb: 3 }}>
-            Настройте учетные данные, чтобы иметь возможность входить по логину и паролю.
+          <Alert severity='info' sx={{ mb: 3 }}>
+            Настройте учетные данные, чтобы иметь возможность входить по логину
+            и паролю.
           </Alert>
         )}
-        
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Имя пользователя"
+                label='Имя пользователя'
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={e => setUsername(e.target.value)}
                 error={!!usernameError}
                 helperText={usernameError}
-                variant="outlined"
-                margin="normal"
+                variant='outlined'
+                margin='normal'
               />
             </Grid>
-            
+
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Email"
-                type="email"
+                label='Email'
+                type='email'
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 error={!!emailError}
                 helperText={emailError}
-                variant="outlined"
-                margin="normal"
+                variant='outlined'
+                margin='normal'
               />
             </Grid>
-            
+
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="Пароль"
-                type="password"
+                label='Пароль'
+                type='password'
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 error={!!passwordError}
                 helperText={passwordError}
-                variant="outlined"
-                margin="normal"
+                variant='outlined'
+                margin='normal'
               />
             </Grid>
-            
+
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="Подтвердите пароль"
-                type="password"
+                label='Подтвердите пароль'
+                type='password'
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 error={password !== confirmPassword && confirmPassword !== ''}
-                helperText={password !== confirmPassword && confirmPassword !== '' ? 'Пароли не совпадают' : ''}
-                variant="outlined"
-                margin="normal"
+                helperText={
+                  password !== confirmPassword && confirmPassword !== ''
+                    ? 'Пароли не совпадают'
+                    : ''
+                }
+                variant='outlined'
+                margin='normal'
               />
             </Grid>
-            
+
             <Grid item xs={12}>
               <Button
-                type="submit"
-                variant="contained"
-                color="primary"
+                type='submit'
+                variant='contained'
+                color='primary'
                 disabled={isLoading}
                 sx={{ mt: 2 }}
               >
@@ -240,7 +252,7 @@ const LoginSettingsTab = () => {
             </Grid>
           </Grid>
         </form>
-        
+
         <Snackbar
           open={snackbar.open}
           autoHideDuration={6000}
@@ -255,4 +267,4 @@ const LoginSettingsTab = () => {
   );
 };
 
-export default LoginSettingsTab; 
+export default LoginSettingsTab;

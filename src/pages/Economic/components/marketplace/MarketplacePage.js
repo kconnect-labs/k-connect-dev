@@ -1,5 +1,16 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { Box, Grid, Typography, Select, MenuItem, FormControl, InputLabel, Slider, IconButton, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Slider,
+  IconButton,
+  CircularProgress,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { motion } from 'framer-motion';
@@ -44,7 +55,7 @@ const MarketplacePage = () => {
     minPrice: 0,
     maxPrice: 10000,
     sortBy: 'listed_at',
-    sortOrder: 'desc'
+    sortOrder: 'desc',
   });
   const [filterTimeout, setFilterTimeout] = useState(null);
   const [error, setError] = useState(null);
@@ -55,7 +66,9 @@ const MarketplacePage = () => {
   // Открываем модальное окно если пришли из профиля с ID предмета
   useEffect(() => {
     if (location.state?.openItemId && listings.length > 0) {
-      const itemToOpen = listings.find(listing => listing.id === location.state.openItemId);
+      const itemToOpen = listings.find(
+        listing => listing.id === location.state.openItemId
+      );
       if (itemToOpen) {
         setSelectedItem(itemToOpen);
       }
@@ -63,47 +76,57 @@ const MarketplacePage = () => {
   }, [location.state, listings]);
 
   // Функция для загрузки листингов
-  const fetchListings = useCallback(async (currentFilters) => {
-    setLoading(true);
-    const queryParams = new URLSearchParams();
-    
-    if (currentFilters.packId) {
-      queryParams.append('pack_id', currentFilters.packId);
-    }
-    if (currentFilters.rarity) {
-      queryParams.append('rarity', currentFilters.rarity);
-    }
-    if (currentFilters.minPrice > 0) {
-      queryParams.append('min_price', currentFilters.minPrice);
-    }
-    if (currentFilters.maxPrice < 10000) {
-      queryParams.append('max_price', currentFilters.maxPrice);
-    }
-    queryParams.append('sort_by', currentFilters.sortBy);
-    queryParams.append('sort_order', currentFilters.sortOrder);
+  const fetchListings = useCallback(
+    async currentFilters => {
+      setLoading(true);
+      const queryParams = new URLSearchParams();
 
-    try {
-      const response = await axios.get(`/api/marketplace/listings?${queryParams.toString()}`);
-      if (response.data.success) {
-        setListings(response.data.listings);
-        
-        // Предзагружаем изображения для всех листингов
-        if (response.data.listings && response.data.listings.length > 0) {
-          const imageItems = response.data.listings.map(listing => ({
-            item_id: listing.item.id
-          }));
-          await inventoryImageService.checkImagesBatch(imageItems);
-        }
-      } else {
-        enqueueSnackbar(response.data.message || 'Failed to load marketplace items', { variant: 'error' });
+      if (currentFilters.packId) {
+        queryParams.append('pack_id', currentFilters.packId);
       }
-    } catch (err) {
-      console.error('Error fetching marketplace listings:', err);
-      enqueueSnackbar('Failed to load marketplace items', { variant: 'error' });
-    } finally {
-      setLoading(false);
-    }
-  }, [enqueueSnackbar]);
+      if (currentFilters.rarity) {
+        queryParams.append('rarity', currentFilters.rarity);
+      }
+      if (currentFilters.minPrice > 0) {
+        queryParams.append('min_price', currentFilters.minPrice);
+      }
+      if (currentFilters.maxPrice < 10000) {
+        queryParams.append('max_price', currentFilters.maxPrice);
+      }
+      queryParams.append('sort_by', currentFilters.sortBy);
+      queryParams.append('sort_order', currentFilters.sortOrder);
+
+      try {
+        const response = await axios.get(
+          `/api/marketplace/listings?${queryParams.toString()}`
+        );
+        if (response.data.success) {
+          setListings(response.data.listings);
+
+          // Предзагружаем изображения для всех листингов
+          if (response.data.listings && response.data.listings.length > 0) {
+            const imageItems = response.data.listings.map(listing => ({
+              item_id: listing.item.id,
+            }));
+            await inventoryImageService.checkImagesBatch(imageItems);
+          }
+        } else {
+          enqueueSnackbar(
+            response.data.message || 'Failed to load marketplace items',
+            { variant: 'error' }
+          );
+        }
+      } catch (err) {
+        console.error('Error fetching marketplace listings:', err);
+        enqueueSnackbar('Failed to load marketplace items', {
+          variant: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [enqueueSnackbar]
+  );
 
   // Fetch available packs for filter
   const fetchPacks = async () => {
@@ -149,10 +172,10 @@ const MarketplacePage = () => {
     };
   }, [filters, fetchListings]);
 
-  const handleFilterChange = (field) => (event) => {
+  const handleFilterChange = field => event => {
     setFilters(prev => ({
       ...prev,
-      [field]: event.target.value
+      [field]: event.target.value,
     }));
   };
 
@@ -160,11 +183,11 @@ const MarketplacePage = () => {
     setFilters(prev => ({
       ...prev,
       minPrice: newValue[0],
-      maxPrice: newValue[1]
+      maxPrice: newValue[1],
     }));
   };
 
-  const handleItemClick = (item) => {
+  const handleItemClick = item => {
     setSelectedItem(item);
   };
 
@@ -172,7 +195,7 @@ const MarketplacePage = () => {
     setSelectedItem(null);
   };
 
-  const handlePurchaseSuccess = (item) => {
+  const handlePurchaseSuccess = item => {
     // Запускаем фейерверк
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
@@ -182,7 +205,7 @@ const MarketplacePage = () => {
       return Math.random() * (max - min) + min;
     }
 
-    const interval = setInterval(function() {
+    const interval = setInterval(function () {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
@@ -190,31 +213,31 @@ const MarketplacePage = () => {
       }
 
       const particleCount = 50 * (timeLeft / duration);
-      
+
       // Запускаем частицы с разных сторон
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
       });
       confetti({
         ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
 
     // Показываем уведомление
     enqueueSnackbar(
       <Box>
-        <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+        <Typography variant='subtitle2' sx={{ fontWeight: 'bold', mb: 0.5 }}>
           Поздравляем с покупкой!
         </Typography>
-        <Typography variant="body2">
+        <Typography variant='body2'>
           Вы приобрели предмет "{item.item.item_name}" за {item.price} KBalls
         </Typography>
       </Box>,
-      { 
+      {
         variant: 'success',
         autoHideDuration: 5000,
         anchorOrigin: {
@@ -238,37 +261,39 @@ const MarketplacePage = () => {
   return (
     <StyledContainer>
       <InfoBlock
-        title="Маркетплейс"
-        description="Торговая площадка для покупки и продажи коллекционных предметов между людьми"
-        styleVariant="dark"
-        sx={{ 
+        title='Маркетплейс'
+        description='Торговая площадка для покупки и продажи коллекционных предметов между людьми'
+        styleVariant='dark'
+        sx={{
           textAlign: 'center',
           mb: 1,
           '& .MuiTypography-h5': {
             textAlign: 'center',
-            fontWeight: 600
+            fontWeight: 600,
           },
           '& .MuiTypography-body2': {
             textAlign: 'center',
-            opacity: 0.8
-          }
+            opacity: 0.8,
+          },
         }}
       />
 
       {/* Filters */}
       <StyledBox>
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2} alignItems='center'>
           <Grid item xs={12} sm={6} md={3}>
             <FormControl fullWidth>
               <InputLabel>Пак</InputLabel>
               <Select
                 value={filters.packId}
                 onChange={handleFilterChange('packId')}
-                label="Пак"
+                label='Пак'
               >
-                <MenuItem value="">Все Пачки</MenuItem>
+                <MenuItem value=''>Все Пачки</MenuItem>
                 {packs.map(pack => (
-                  <MenuItem key={pack.id} value={pack.id}>{pack.display_name}</MenuItem>
+                  <MenuItem key={pack.id} value={pack.id}>
+                    {pack.display_name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -280,13 +305,13 @@ const MarketplacePage = () => {
               <Select
                 value={filters.rarity}
                 onChange={handleFilterChange('rarity')}
-                label="Редкость"
+                label='Редкость'
               >
-                <MenuItem value="">Все редкости</MenuItem>
-                <MenuItem value="common">Обычный</MenuItem>
-                <MenuItem value="rare">Редкий</MenuItem>
-                <MenuItem value="epic">Эпический</MenuItem>
-                <MenuItem value="legendary">Легендарный</MenuItem>
+                <MenuItem value=''>Все редкости</MenuItem>
+                <MenuItem value='common'>Обычный</MenuItem>
+                <MenuItem value='rare'>Редкий</MenuItem>
+                <MenuItem value='epic'>Эпический</MenuItem>
+                <MenuItem value='legendary'>Легендарный</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -297,11 +322,11 @@ const MarketplacePage = () => {
               <Select
                 value={filters.sortBy}
                 onChange={handleFilterChange('sortBy')}
-                label="Сортировка"
+                label='Сортировка'
                 startAdornment={<Sort />}
               >
-                <MenuItem value="listed_at">Последние</MenuItem>
-                <MenuItem value="price">Цена</MenuItem>
+                <MenuItem value='listed_at'>Последние</MenuItem>
+                <MenuItem value='price'>Цена</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -312,10 +337,10 @@ const MarketplacePage = () => {
               <Select
                 value={filters.sortOrder}
                 onChange={handleFilterChange('sortOrder')}
-                label="Порядок"
+                label='Порядок'
               >
-                <MenuItem value="desc">По убыванию</MenuItem>
-                <MenuItem value="asc">По возрастанию</MenuItem>
+                <MenuItem value='desc'>По убыванию</MenuItem>
+                <MenuItem value='asc'>По возрастанию</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -325,7 +350,7 @@ const MarketplacePage = () => {
             <Slider
               value={[filters.minPrice, filters.maxPrice]}
               onChange={handlePriceChange}
-              valueLabelDisplay="auto"
+              valueLabelDisplay='auto'
               min={0}
               max={10000}
               sx={{ width: '100%' }}
@@ -335,40 +360,49 @@ const MarketplacePage = () => {
       </StyledBox>
 
       {/* Items Grid */}
-      <Grid container spacing={0.5} sx={{ 
-        display: 'flex',
-        flexWrap: 'wrap',
-        px: 0.3,
-        '& .MuiGrid-item': {
-          flex: '0 0 calc(25% - 5px)',
-          maxWidth: 'calc(25% - 5px)',
-          minWidth: 'calc(25% - 5px)',
-          margin: '2.5px !important',
-          '@media (max-width: 768px)': {
-            flex: '0 0 calc(50% - 5px)',
-            maxWidth: 'calc(50% - 5px)',
-            minWidth: 'calc(50% - 5px)',
-          }
-        }
-      }}>
+      <Grid
+        container
+        spacing={0.5}
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          px: 0.3,
+          '& .MuiGrid-item': {
+            flex: '0 0 calc(25% - 5px)',
+            maxWidth: 'calc(25% - 5px)',
+            minWidth: 'calc(25% - 5px)',
+            margin: '2.5px !important',
+            '@media (max-width: 768px)': {
+              flex: '0 0 calc(50% - 5px)',
+              maxWidth: 'calc(50% - 5px)',
+              minWidth: 'calc(50% - 5px)',
+            },
+          },
+        }}
+      >
         {loading ? (
           <Grid item xs={12}>
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
-              <CircularProgress 
-                size={60} 
+            <Box
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+              minHeight='50vh'
+            >
+              <CircularProgress
+                size={60}
                 sx={{
                   color: 'primary.main',
                   '& .MuiCircularProgress-circle': {
                     strokeLinecap: 'round',
-                  }
+                  },
                 }}
               />
             </Box>
           </Grid>
         ) : listings.length === 0 ? (
           <Grid item xs={12}>
-            <Box textAlign="center" py={8}>
-              <Typography variant="h6" mb={2}>
+            <Box textAlign='center' py={8}>
+              <Typography variant='h6' mb={2}>
                 Предметы не найдены
               </Typography>
             </Box>
@@ -382,9 +416,23 @@ const MarketplacePage = () => {
                 transition={{ duration: 0.5 }}
               >
                 <Box onClick={() => handleItemClick(listing)}>
-                  <InventoryItemCard item={{ ...listing.item, marketplace: { price: listing.price } }} />
-                  <Typography variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 0.5, opacity: 0.8 }}>
-                    @{listing.seller_name || listing.seller_username || 'seller'}
+                  <InventoryItemCard
+                    item={{
+                      ...listing.item,
+                      marketplace: { price: listing.price },
+                    }}
+                  />
+                  <Typography
+                    variant='caption'
+                    sx={{
+                      display: 'block',
+                      textAlign: 'center',
+                      mt: 0.5,
+                      opacity: 0.8,
+                    }}
+                  >
+                    @
+                    {listing.seller_name || listing.seller_username || 'seller'}
                   </Typography>
                 </Box>
               </motion.div>
@@ -406,4 +454,4 @@ const MarketplacePage = () => {
   );
 };
 
-export default MarketplacePage; 
+export default MarketplacePage;

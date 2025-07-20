@@ -15,14 +15,14 @@ import './Badge.css';
  * @param {boolean} props.showTooltip - Показывать ли тултип
  * @param {string} props.tooltipText - Текст тултипа
  */
-const Badge = ({ 
-  achievement, 
-  size = 'medium', 
-  className = '', 
+const Badge = ({
+  achievement,
+  size = 'medium',
+  className = '',
   onError,
   showTooltip = false,
   tooltipText,
-  ...props 
+  ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -34,26 +34,38 @@ const Badge = ({
   // Мемоизируем размеры для оптимизации
   const badgeSize = useMemo(() => {
     switch (size) {
-      case 'post': return { height: 24 };
-      case 'small': return { height: 16 };
-      case 'large': return { height: 32 };
-      case 'shop': return { height: 150 };
-      default: return { height: 24 };
+      case 'post':
+        return { height: 24 };
+      case 'small':
+        return { height: 16 };
+      case 'large':
+        return { height: 32 };
+      case 'shop':
+        return { height: 150 };
+      default:
+        return { height: 24 };
     }
   }, [size]);
 
   // Мемоизируем классы для оптимизации
   const badgeClasses = useMemo(() => {
     const classes = ['badge', `badge--${size}`];
-    
+
     if (className) classes.push(className);
     if (imageLoaded) classes.push('badge--loaded');
     if (imageError) classes.push('badge--error');
     if (achievement?.upgrade) classes.push('badge--upgraded');
     if (isHovered) classes.push('badge--hovered');
-    
+
     return classes.join(' ');
-  }, [size, className, imageLoaded, imageError, achievement?.upgrade, isHovered]);
+  }, [
+    size,
+    className,
+    imageLoaded,
+    imageError,
+    achievement?.upgrade,
+    isHovered,
+  ]);
 
   // Загружаем SVG содержимое изображения
   useEffect(() => {
@@ -61,7 +73,9 @@ const Badge = ({
 
     const loadSvgContent = async () => {
       try {
-        const response = await fetch(`/static/images/bages/${achievement.image_path}`);
+        const response = await fetch(
+          `/static/images/bages/${achievement.image_path}`
+        );
         if (response.ok) {
           const svgText = await response.text();
           setSvgContent(svgText);
@@ -84,15 +98,15 @@ const Badge = ({
   };
 
   // Обработчик ошибки изображения
-  const handleImageError = (e) => {
+  const handleImageError = e => {
     setImageError(true);
     setImageLoaded(false);
-    
+
     // Скрываем изображение при ошибке
     if (e.target) {
       e.target.style.display = 'none';
     }
-    
+
     // Вызываем пользовательский обработчик
     if (onError) {
       onError(e);
@@ -106,7 +120,9 @@ const Badge = ({
     const container = containerRef.current;
     const particles = [];
     const particleCount = 6; // Уменьшено с 8 до 6 (на 30%)
-    const colors = achievement.color_upgrade ? [achievement.color_upgrade] : ['#FFD700', '#FFA500', '#FF6B35'];
+    const colors = achievement.color_upgrade
+      ? [achievement.color_upgrade]
+      : ['#FFD700', '#FFA500', '#FF6B35'];
 
     // Настройки для разных размеров
     const isPostSize = size === 'post';
@@ -119,22 +135,25 @@ const Badge = ({
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
       particle.className = 'badge-particle';
-      
+
       // Случайный цвет из палитры
       const color = colors[Math.floor(Math.random() * colors.length)];
       particle.style.setProperty('--particle-color', color);
-      
+
       // Случайная позиция вокруг бейджика (еще больше уменьшена)
       const angle = (i / particleCount) * 2 * Math.PI;
       const distance = baseDistance + Math.random() * distanceVariation;
       const x = Math.cos(angle) * distance;
       const y = Math.sin(angle) * distance;
-      
+
       particle.style.setProperty('--particle-x', `${x}px`);
       particle.style.setProperty('--particle-y', `${y}px`);
       particle.style.setProperty('--particle-delay', `${i * 0.15}s`);
-      particle.style.setProperty('--particle-rotation', `${Math.random() * 360}deg`);
-      
+      particle.style.setProperty(
+        '--particle-rotation',
+        `${Math.random() * 360}deg`
+      );
+
       // Если есть SVG содержимое, используем его для частиц
       if (svgContent) {
         particle.innerHTML = svgContent;
@@ -148,7 +167,7 @@ const Badge = ({
         `;
         particle.style.setProperty('--particle-size', `${particleSize}px`);
       }
-      
+
       container.appendChild(particle);
       particles.push(particle);
     }
@@ -161,44 +180,48 @@ const Badge = ({
         }
       });
     };
-  }, [achievement?.upgrade, achievement?.color_upgrade, imageLoaded, svgContent, size]);
+  }, [
+    achievement?.upgrade,
+    achievement?.color_upgrade,
+    imageLoaded,
+    svgContent,
+    size,
+  ]);
 
   // Если нет достижения, не рендерим ничего
   if (!achievement) return null;
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={badgeClasses}
-      style={{ 
+      style={{
         height: badgeSize.height,
         minHeight: badgeSize.height,
         maxHeight: badgeSize.height,
         '--badge-size': `${badgeSize.height}px`,
-        '--upgrade-color': achievement.color_upgrade || '#FFD700'
+        '--upgrade-color': achievement.color_upgrade || '#FFD700',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      title={showTooltip ? (tooltipText || achievement.bage) : undefined}
+      title={showTooltip ? tooltipText || achievement.bage : undefined}
       {...props}
     >
       <img
         ref={imageRef}
         src={`/static/images/bages/${achievement.image_path}`}
         alt={achievement.bage}
-        className="badge__image"
+        className='badge__image'
         onLoad={handleImageLoad}
         onError={handleImageError}
         style={{
           minHeight: badgeSize.height,
           maxHeight: badgeSize.height,
-          objectFit: 'contain'
+          objectFit: 'contain',
         }}
       />
-      
-
     </div>
   );
 };
 
-export default Badge; 
+export default Badge;

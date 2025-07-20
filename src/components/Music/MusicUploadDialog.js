@@ -28,7 +28,7 @@ import {
   Divider,
   Paper,
   Tabs,
-  Tab
+  Tab,
 } from '@mui/material';
 import {
   CloudUpload,
@@ -40,18 +40,22 @@ import {
   AudiotrackOutlined,
   Delete,
   Add,
-  Album
+  Album,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 
-
 const GENRES = [
-  'рэп', 'бодрое', 'грустное', 'весёлое', 'спокойное', 'поп', 'электроника'
+  'рэп',
+  'бодрое',
+  'грустное',
+  'весёлое',
+  'спокойное',
+  'поп',
+  'электроника',
 ];
 
-
-const formatFileSize = (bytes) => {
+const formatFileSize = bytes => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -97,7 +101,6 @@ const StyledListItem = styled(ListItem)(({ theme, selected }) => ({
 }));
 
 const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
-  
   const [tracks, setTracks] = useState([]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -120,7 +123,6 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     setUploadProgress(0);
   };
 
-  
   const createEmptyTrack = () => ({
     file: null,
     coverFile: null,
@@ -136,29 +138,28 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
       sampleRate: 0,
       bitDepth: 0,
       channels: 0,
-      fileSize: 0
-    }
+      fileSize: 0,
+    },
   });
 
-  
-  const handleFileChange = async (event) => {
+  const handleFileChange = async event => {
     const selectedFiles = Array.from(event.target.files);
     if (!selectedFiles.length) return;
 
-    
     const filesToProcess = selectedFiles.slice(0, 10);
-    
+
     if (selectedFiles.length > 10) {
-      setError('Максимальное количество треков для загрузки: 10. Первые 10 файлов были выбраны.');
+      setError(
+        'Максимальное количество треков для загрузки: 10. Первые 10 файлов были выбраны.'
+      );
     } else {
       setError('');
     }
 
     setLoadingMetadata(true);
 
-    
     const newTracks = [];
-    
+
     for (const file of filesToProcess) {
       if (!file.type.startsWith('audio/')) {
         console.warn(`Файл ${file.name} не является аудио и будет пропущен`);
@@ -169,7 +170,6 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
       track.file = file;
 
       try {
-        
         const metadata = await extractMetadata(file);
         if (metadata) {
           track.title = metadata.title || '';
@@ -182,10 +182,9 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             sampleRate: metadata.sample_rate || 0,
             bitDepth: metadata.bit_depth || 0,
             channels: metadata.channels || 0,
-            fileSize: metadata.file_size || 0
+            fileSize: metadata.file_size || 0,
           };
 
-          
           if (metadata.cover_data) {
             track.coverPreview = metadata.cover_data;
             try {
@@ -193,7 +192,10 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
               const blob = await base64Response.blob();
               const coverFile = new File(
                 [blob],
-                'cover.' + (metadata.cover_mime ? metadata.cover_mime.split('/')[1] : 'jpg'),
+                'cover.' +
+                  (metadata.cover_mime
+                    ? metadata.cover_mime.split('/')[1]
+                    : 'jpg'),
                 { type: metadata.cover_mime || 'image/jpeg' }
               );
               track.coverFile = coverFile;
@@ -202,21 +204,19 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             }
           }
         } else {
-          
-          const fileName = file.name.replace(/\.[^/.]+$/, "");
-          if (fileName.includes(" - ")) {
-            const parts = fileName.split(" - ");
+          const fileName = file.name.replace(/\.[^/.]+$/, '');
+          if (fileName.includes(' - ')) {
+            const parts = fileName.split(' - ');
             track.artist = parts[0].trim();
             track.title = parts[1].trim();
           } else {
             track.title = fileName;
           }
 
-          
           try {
             const objectUrl = URL.createObjectURL(file);
             const audioElement = new Audio();
-            await new Promise((resolve) => {
+            await new Promise(resolve => {
               audioElement.onloadedmetadata = () => {
                 track.duration = Math.round(audioElement.duration);
                 URL.revokeObjectURL(objectUrl);
@@ -247,16 +247,15 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     setLoadingMetadata(false);
   };
 
-  
-  const extractMetadata = async (file) => {
+  const extractMetadata = async file => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
       const response = await axios.post('/api/music/metadata', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       if (response.data.success) {
@@ -268,8 +267,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     return null;
   };
 
-  
-  const handleCoverChange = (event) => {
+  const handleCoverChange = event => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
 
@@ -280,40 +278,38 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
 
     const updatedTracks = [...tracks];
     updatedTracks[currentTrackIndex].coverFile = selectedFile;
-    updatedTracks[currentTrackIndex].coverPreview = URL.createObjectURL(selectedFile);
+    updatedTracks[currentTrackIndex].coverPreview =
+      URL.createObjectURL(selectedFile);
     setTracks(updatedTracks);
     setError('');
   };
 
-  
   const handleTrackChange = (field, value) => {
     const updatedTracks = [...tracks];
     updatedTracks[currentTrackIndex][field] = value;
     setTracks(updatedTracks);
   };
 
-  
-  const handleRemoveTrack = (index) => {
+  const handleRemoveTrack = index => {
     const updatedTracks = [...tracks];
     updatedTracks.splice(index, 1);
     setTracks(updatedTracks);
-    
-    
+
     if (currentTrackIndex >= updatedTracks.length) {
       setCurrentTrackIndex(Math.max(0, updatedTracks.length - 1));
     }
   };
 
-  
   const handleSubmit = async () => {
-    
     const invalidTrackIndex = tracks.findIndex(track => {
       return !track.file || !track.title || !track.artist || !track.coverFile;
     });
 
     if (invalidTrackIndex !== -1) {
       setCurrentTrackIndex(invalidTrackIndex);
-      setError('Заполните все обязательные поля для всех треков (файл, название, исполнитель, обложка)');
+      setError(
+        'Заполните все обязательные поля для всех треков (файл, название, исполнитель, обложка)'
+      );
       return;
     }
 
@@ -323,10 +319,8 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     setUploadProgress(0);
 
     try {
-      
       const formData = new FormData();
-      
-      
+
       tracks.forEach((track, index) => {
         formData.append(`file[${index}]`, track.file);
         formData.append(`cover[${index}]`, track.coverFile);
@@ -338,30 +332,31 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
         formData.append(`duration[${index}]`, track.duration || 0);
       });
 
-      
-      const uploadProgressCallback = (progressEvent) => {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+      const uploadProgressCallback = progressEvent => {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
         setUploadProgress(percentCompleted);
       };
 
-      
       const response = await axios.post('/api/music/upload', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
         },
-        onUploadProgress: uploadProgressCallback
+        onUploadProgress: uploadProgressCallback,
       });
 
-      
       if (response.data.success) {
         const uploadedTracks = response.data.tracks || [response.data.track];
         setSuccess(true);
-        
-        
+
         if (response.data.errors && response.data.errors.length > 0) {
-          setError('Некоторые треки не были загружены: ' + response.data.errors.join(', '));
+          setError(
+            'Некоторые треки не были загружены: ' +
+              response.data.errors.join(', ')
+          );
         }
-        
+
         setTimeout(() => {
           onSuccess && onSuccess(uploadedTracks);
           onClose();
@@ -378,33 +373,39 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     }
   };
 
-  
   const renderSelectFilesButton = () => (
     <Box sx={{ textAlign: 'center', py: 2 }}>
       <Button
-        variant="outlined"
-        component="label"
-        htmlFor="audio-upload-multi"
+        variant='outlined'
+        component='label'
+        htmlFor='audio-upload-multi'
         startIcon={<Add />}
         sx={{ mb: 2 }}
         disabled={loadingMetadata}
       >
         Выбрать треки (до 10)
         <input
-          id="audio-upload-multi"
-          type="file"
-          accept="audio/*"
+          id='audio-upload-multi'
+          type='file'
+          accept='audio/*'
           multiple
           hidden
           onChange={handleFileChange}
           disabled={loadingMetadata}
         />
       </Button>
-      
+
       {loadingMetadata && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            mt: 2,
+          }}
+        >
           <CircularProgress size={24} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
+          <Typography variant='body2' sx={{ ml: 2 }}>
             Извлечение метаданных...
           </Typography>
         </Box>
@@ -412,47 +413,49 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     </Box>
   );
 
-  
   const renderTrackList = () => (
-    <Paper variant="outlined" sx={{ height: '100%', overflow: 'auto' }}>
+    <Paper variant='outlined' sx={{ height: '100%', overflow: 'auto' }}>
       <List dense sx={{ p: 0 }}>
         {tracks.map((track, index) => (
-          <ListItem 
+          <ListItem
             key={index}
             selected={index === currentTrackIndex}
             button
             onClick={() => setCurrentTrackIndex(index)}
-            sx={{ 
-              borderLeft: index === currentTrackIndex ? '3px solid' : '3px solid transparent',
+            sx={{
+              borderLeft:
+                index === currentTrackIndex
+                  ? '3px solid'
+                  : '3px solid transparent',
               borderLeftColor: 'primary.main',
-              '&:hover': { bgcolor: 'action.hover' }
+              '&:hover': { bgcolor: 'action.hover' },
             }}
           >
             <ListItemAvatar>
               {track.coverPreview ? (
-                <Avatar variant="rounded" src={track.coverPreview} />
+                <Avatar variant='rounded' src={track.coverPreview} />
               ) : (
-                <Avatar variant="rounded">
+                <Avatar variant='rounded'>
                   <AudioFile />
                 </Avatar>
               )}
             </ListItemAvatar>
-            <ListItemText 
-              primary={track.title || 'Без названия'} 
+            <ListItemText
+              primary={track.title || 'Без названия'}
               secondary={track.artist || 'Неизвестный исполнитель'}
               primaryTypographyProps={{ noWrap: true }}
               secondaryTypographyProps={{ noWrap: true }}
             />
             <ListItemSecondaryAction>
-              <IconButton 
-                edge="end" 
-                size="small"
-                onClick={(e) => {
+              <IconButton
+                edge='end'
+                size='small'
+                onClick={e => {
                   e.stopPropagation();
                   handleRemoveTrack(index);
                 }}
               >
-                <Delete fontSize="small" />
+                <Delete fontSize='small' />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
@@ -461,16 +464,33 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
     </Paper>
   );
 
-  
   const renderTrackForm = () => {
-    if (!tracks.length || currentTrackIndex < 0 || currentTrackIndex >= tracks.length) {
+    if (
+      !tracks.length ||
+      currentTrackIndex < 0 ||
+      currentTrackIndex >= tracks.length
+    ) {
       return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', p: 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            p: 3,
+          }}
+        >
           <Album sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="body1" color="text.secondary" textAlign="center">
+          <Typography variant='body1' color='text.secondary' textAlign='center'>
             Выберите музыкальные файлы для загрузки
           </Typography>
-          <Typography variant="body2" color="text.secondary" textAlign="center" sx={{ mt: 1 }}>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            textAlign='center'
+            sx={{ mt: 1 }}
+          >
             Поддерживаются форматы MP3, FLAC, WAV, OGG и другие аудио форматы
           </Typography>
         </Box>
@@ -483,50 +503,50 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField
-            label="Название трека"
+            label='Название трека'
             fullWidth
             required
             value={track.title}
-            onChange={(e) => handleTrackChange('title', e.target.value)}
+            onChange={e => handleTrackChange('title', e.target.value)}
             disabled={loading}
           />
         </Grid>
-        
+
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Исполнитель"
+            label='Исполнитель'
             fullWidth
             required
             value={track.artist}
-            onChange={(e) => handleTrackChange('artist', e.target.value)}
+            onChange={e => handleTrackChange('artist', e.target.value)}
             disabled={loading}
           />
         </Grid>
-        
+
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Альбом"
+            label='Альбом'
             fullWidth
             value={track.album}
-            onChange={(e) => handleTrackChange('album', e.target.value)}
+            onChange={e => handleTrackChange('album', e.target.value)}
             disabled={loading}
           />
         </Grid>
-        
+
         <Grid item xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="genre-label">Жанр</InputLabel>
+            <InputLabel id='genre-label'>Жанр</InputLabel>
             <Select
-              labelId="genre-label"
+              labelId='genre-label'
               value={track.genre}
-              label="Жанр"
-              onChange={(e) => handleTrackChange('genre', e.target.value)}
+              label='Жанр'
+              onChange={e => handleTrackChange('genre', e.target.value)}
               disabled={loading}
             >
-              <MenuItem value="">
+              <MenuItem value=''>
                 <em>Не выбрано</em>
               </MenuItem>
-              {GENRES.map((g) => (
+              {GENRES.map(g => (
                 <MenuItem key={g} value={g}>
                   {g}
                 </MenuItem>
@@ -534,25 +554,25 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             </Select>
           </FormControl>
         </Grid>
-        
+
         <Grid item xs={12}>
           <TextField
-            label="Описание"
+            label='Описание'
             fullWidth
             multiline
             rows={3}
             value={track.description}
-            onChange={(e) => handleTrackChange('description', e.target.value)}
+            onChange={e => handleTrackChange('description', e.target.value)}
             disabled={loading}
           />
         </Grid>
-        
+
         <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" gutterBottom>
+          <Typography variant='subtitle2' gutterBottom>
             Обложка
           </Typography>
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               border: '1px dashed',
               borderColor: 'divider',
               borderRadius: 1,
@@ -566,101 +586,108 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
               alignItems: 'center',
               cursor: 'pointer',
               position: 'relative',
-              backgroundImage: track.coverPreview ? `url(${track.coverPreview})` : 'none',
+              backgroundImage: track.coverPreview
+                ? `url(${track.coverPreview})`
+                : 'none',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               '&:hover': {
                 borderColor: 'primary.main',
-                bgcolor: track.coverPreview ? 'unset' : 'rgba(208, 188, 255, 0.04)'
-              }
+                bgcolor: track.coverPreview
+                  ? 'unset'
+                  : 'rgba(208, 188, 255, 0.04)',
+              },
             }}
-            component="label"
+            component='label'
             htmlFor={`cover-upload-${currentTrackIndex}`}
           >
             {!track.coverPreview && (
               <>
                 <Image sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   Выберите изображение для обложки
                 </Typography>
               </>
             )}
             <input
               id={`cover-upload-${currentTrackIndex}`}
-              type="file"
-              accept="image/*"
+              type='file'
+              accept='image/*'
               hidden
               onChange={handleCoverChange}
               disabled={loading}
             />
           </Box>
         </Grid>
-        
+
         <Grid item xs={12} md={6}>
-          <Box sx={{ 
-            p: 1.5, 
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 1,
-            height: '100%'
-          }}>
+          <Box
+            sx={{
+              p: 1.5,
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: 1,
+              height: '100%',
+            }}
+          >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
               <MusicNote sx={{ color: 'primary.main', mr: 1 }} />
-              <Typography variant="body2" fontWeight="medium">
+              <Typography variant='body2' fontWeight='medium'>
                 Информация о треке
               </Typography>
             </Box>
-            
+
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Typography variant="body2">
-                  Длительность: {Math.floor(track.duration / 60)}:{String(track.duration % 60).padStart(2, '0')}
+                <Typography variant='body2'>
+                  Длительность: {Math.floor(track.duration / 60)}:
+                  {String(track.duration % 60).padStart(2, '0')}
                 </Typography>
               </Grid>
-              
+
               {track.file && (
                 <>
                   <Grid item xs={12}>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       Файл: {track.file.name}
                     </Typography>
                   </Grid>
-                  
+
                   {track.metadata.fileFormat && (
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Формат: {track.metadata.fileFormat}
                       </Typography>
                     </Grid>
                   )}
-                  
+
                   {track.metadata.fileSize > 0 && (
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Размер: {formatFileSize(track.metadata.fileSize)}
                       </Typography>
                     </Grid>
                   )}
-                  
+
                   {track.metadata.sampleRate > 0 && (
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Частота: {track.metadata.sampleRate} Гц
                       </Typography>
                     </Grid>
                   )}
-                  
+
                   {track.metadata.bitDepth > 0 && (
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Бит: {track.metadata.bitDepth} бит
                       </Typography>
                     </Grid>
                   )}
-                  
+
                   {track.metadata.channels > 0 && (
                     <Grid item xs={12} sm={6}>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Каналы: {track.metadata.channels}
                       </Typography>
                     </Grid>
@@ -668,15 +695,15 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
                 </>
               )}
             </Grid>
-            
+
             {track.metadata.fileFormat && (
               <Box sx={{ mt: 1 }}>
-                <Chip 
-                  size="small" 
-                  label={track.metadata.fileFormat} 
-                  color="primary" 
-                  variant="outlined"
-                  icon={<AudiotrackOutlined fontSize="small" />} 
+                <Chip
+                  size='small'
+                  label={track.metadata.fileFormat}
+                  color='primary'
+                  variant='outlined'
+                  icon={<AudiotrackOutlined fontSize='small' />}
                 />
               </Box>
             )}
@@ -687,10 +714,10 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={loading ? null : onClose}
-      maxWidth="lg" 
+      maxWidth='lg'
       fullWidth
       PaperProps={{
         sx: {
@@ -706,35 +733,52 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             maxWidth: '100%',
             margin: 0,
             borderRadius: 0,
-          }
-        }
+          },
+        },
       }}
     >
-      <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', borderRadius: '16px 16px 0 0', px: 3, py: 2 }}>
-        <Typography variant="h6" fontWeight={700}>
-          {tracks.length > 0 
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          background: 'rgba(255,255,255,0.03)',
+          borderBottom: '1px solid rgba(255,255,255,0.07)',
+          borderRadius: '16px 16px 0 0',
+          px: 3,
+          py: 2,
+        }}
+      >
+        <Typography variant='h6' fontWeight={700}>
+          {tracks.length > 0
             ? `Загрузка треков (${tracks.length})`
-            : 'Загрузка треков'
-          }
+            : 'Загрузка треков'}
         </Typography>
         {!loading && (
-          <IconButton onClick={onClose} size="small" sx={{ color: 'text.secondary', background: 'rgba(255,255,255,0.07)', '&:hover': { background: 'rgba(255,255,255,0.15)' } }}>
+          <IconButton
+            onClick={onClose}
+            size='small'
+            sx={{
+              color: 'text.secondary',
+              background: 'rgba(255,255,255,0.07)',
+              '&:hover': { background: 'rgba(255,255,255,0.15)' },
+            }}
+          >
             <Close />
           </IconButton>
         )}
       </DialogTitle>
       <StyledDialogContent>
         {error && (
-          <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+          <Alert severity='error' sx={{ mb: 2, borderRadius: 2 }}>
             {error}
           </Alert>
         )}
         {success && (
-          <Alert severity="success" sx={{ mb: 2, borderRadius: 2 }}>
+          <Alert severity='success' sx={{ mb: 2, borderRadius: 2 }}>
             {tracks.length > 1
               ? `${tracks.length} треков успешно загружено!`
-              : 'Трек успешно загружен!'
-            }
+              : 'Трек успешно загружен!'}
           </Alert>
         )}
         {tracks.length === 0 ? (
@@ -742,10 +786,13 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
         ) : (
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
-              <StyledPaper variant="outlined" sx={{ height: '100%', overflow: 'auto', p: 1 }}>
+              <StyledPaper
+                variant='outlined'
+                sx={{ height: '100%', overflow: 'auto', p: 1 }}
+              >
                 <List dense sx={{ p: 0 }}>
                   {tracks.map((track, index) => (
-                    <StyledListItem 
+                    <StyledListItem
                       key={index}
                       selected={index === currentTrackIndex}
                       button
@@ -753,73 +800,114 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
                     >
                       <ListItemAvatar>
                         {track.coverPreview ? (
-                          <Avatar variant="rounded" src={track.coverPreview} sx={{ width: 44, height: 44, borderRadius: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} />
+                          <Avatar
+                            variant='rounded'
+                            src={track.coverPreview}
+                            sx={{
+                              width: 44,
+                              height: 44,
+                              borderRadius: 2,
+                              boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                            }}
+                          />
                         ) : (
-                          <Avatar variant="rounded" sx={{ width: 44, height: 44, borderRadius: 2, background: 'rgba(255,255,255,0.08)' }}>
+                          <Avatar
+                            variant='rounded'
+                            sx={{
+                              width: 44,
+                              height: 44,
+                              borderRadius: 2,
+                              background: 'rgba(255,255,255,0.08)',
+                            }}
+                          >
                             <AudioFile />
                           </Avatar>
                         )}
                       </ListItemAvatar>
                       <ListItemText
-                        primary={<Typography variant="body2" fontWeight={600} noWrap>{track.title || 'Без названия'}</Typography>}
-                        secondary={<Typography variant="caption" color="text.secondary" noWrap>{track.artist || 'Неизвестный исполнитель'}</Typography>}
+                        primary={
+                          <Typography variant='body2' fontWeight={600} noWrap>
+                            {track.title || 'Без названия'}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography
+                            variant='caption'
+                            color='text.secondary'
+                            noWrap
+                          >
+                            {track.artist || 'Неизвестный исполнитель'}
+                          </Typography>
+                        }
                       />
                     </StyledListItem>
                   ))}
                 </List>
                 <Box sx={{ mt: 2, textAlign: 'center' }}>
                   <Button
-                    variant="outlined"
-                    component="label"
-                    htmlFor="audio-upload-multi-add"
+                    variant='outlined'
+                    component='label'
+                    htmlFor='audio-upload-multi-add'
                     startIcon={<Add />}
                     fullWidth
-                    size="small"
+                    size='small'
                     disabled={loading || loadingMetadata || tracks.length >= 10}
                     sx={{ borderRadius: 2 }}
                   >
                     Добавить еще
                     <input
-                      id="audio-upload-multi-add"
-                      type="file"
-                      accept="audio/*"
+                      id='audio-upload-multi-add'
+                      type='file'
+                      accept='audio/*'
                       multiple
                       hidden
                       onChange={handleFileChange}
-                      disabled={loading || loadingMetadata || tracks.length >= 10}
+                      disabled={
+                        loading || loadingMetadata || tracks.length >= 10
+                      }
                     />
                   </Button>
                 </Box>
               </StyledPaper>
             </Grid>
             <Grid item xs={12} md={9}>
-              <StyledPaper variant="outlined" sx={{ p: 3, minHeight: 320 }}>
+              <StyledPaper variant='outlined' sx={{ p: 3, minHeight: 320 }}>
                 {renderTrackForm()}
               </StyledPaper>
             </Grid>
           </Grid>
         )}
       </StyledDialogContent>
-      <DialogActions sx={{ p: 2, pt: 0, background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.07)', borderRadius: '0 0 16px 16px' }}>
-        <Button 
-          onClick={onClose} 
+      <DialogActions
+        sx={{
+          p: 2,
+          pt: 0,
+          background: 'rgba(255,255,255,0.03)',
+          borderTop: '1px solid rgba(255,255,255,0.07)',
+          borderRadius: '0 0 16px 16px',
+        }}
+      >
+        <Button
+          onClick={onClose}
           disabled={loading}
-          color="inherit"
+          color='inherit'
           sx={{ borderRadius: 2, px: 3 }}
         >
           Отмена
         </Button>
-        <Button 
-          onClick={handleSubmit} 
-          variant="contained" 
+        <Button
+          onClick={handleSubmit}
+          variant='contained'
           disabled={loading || tracks.length === 0}
           startIcon={loading ? <CircularProgress size={20} /> : <CloudUpload />}
-          sx={{ borderRadius: 2, px: 3, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }}
+          sx={{
+            borderRadius: 2,
+            px: 3,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+          }}
         >
           {loading ? (
-            <>
-              Загрузка... {uploadProgress}%
-            </>
+            <>Загрузка... {uploadProgress}%</>
           ) : tracks.length > 1 ? (
             `Загрузить ${tracks.length} треков`
           ) : (
@@ -831,4 +919,4 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
   );
 };
 
-export default MusicUploadDialog; 
+export default MusicUploadDialog;

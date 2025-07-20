@@ -9,31 +9,31 @@ const useContextMenu = () => {
     show: false,
     x: 0,
     y: 0,
-    data: null
+    data: null,
   });
 
-    const handleContextMenu = useCallback((e, data = null) => {
-    e.preventDefault();     
+  const handleContextMenu = useCallback((e, data = null) => {
+    e.preventDefault();
     setContextMenuState({
       show: true,
       x: e.clientX,
       y: e.clientY,
-      data
+      data,
     });
   }, []);
 
-    const closeContextMenu = useCallback(() => {
+  const closeContextMenu = useCallback(() => {
     setContextMenuState(prev => ({
       ...prev,
-      show: false
+      show: false,
     }));
   }, []);
 
   return {
     contextMenuState,
     handleContextMenu,
-    closeContextMenu
+    closeContextMenu,
   };
 };
 
-export default useContextMenu; 
+export default useContextMenu;

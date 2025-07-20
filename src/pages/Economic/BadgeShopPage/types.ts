@@ -52,7 +52,12 @@ export interface UserSubscription {
   subscription_type: string;
 }
 
-export type SortOption = 'newest' | 'oldest' | 'popular' | 'price-low' | 'price-high';
+export type SortOption =
+  | 'newest'
+  | 'oldest'
+  | 'popular'
+  | 'price-low'
+  | 'price-high';
 
 export type TabValue = 0 | 1 | 2 | 3;
 
@@ -104,4 +109,6 @@ export interface BadgeShopActions {
   resetPurchaseState: () => void;
 }
 
-export interface BadgeShopContextType extends BadgeShopState, BadgeShopActions {} 
+export interface BadgeShopContextType
+  extends BadgeShopState,
+    BadgeShopActions {}

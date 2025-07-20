@@ -35,7 +35,7 @@ interface UseUsernamesReturn {
   limitReached: boolean;
   userSubscription: Subscription | null;
   isChangingActive: boolean;
-  
+
   // Действия
   setUsername: (username: string) => void;
   handleUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -57,7 +57,9 @@ export const useUsernames = (): UseUsernamesReturn => {
   const [userPoints, setUserPoints] = useState(0);
   const [usernameLimit, setUsernameLimit] = useState(3);
   const [limitReached, setLimitReached] = useState(false);
-  const [userSubscription, setUserSubscription] = useState<Subscription | null>(null);
+  const [userSubscription, setUserSubscription] = useState<Subscription | null>(
+    null
+  );
   const [isChangingActive, setIsChangingActive] = useState(false);
 
   // Расчет лимита юзернеймов на основе подписки
@@ -72,7 +74,7 @@ export const useUsernames = (): UseUsernamesReturn => {
   // Валидация юзернейма
   const validateUsername = useCallback((value: string): string => {
     if (!value) return '';
-    
+
     const isCyrillic = /[а-яА-ЯёЁ]/.test(value);
     const isLatin = /[a-zA-Z]/.test(value);
 
@@ -99,7 +101,7 @@ export const useUsernames = (): UseUsernamesReturn => {
     } else if (!isCyrillic && !isLatin) {
       return 'Юзернейм должен содержать хотя бы одну букву';
     }
-    
+
     return '';
   }, []);
 
@@ -109,7 +111,9 @@ export const useUsernames = (): UseUsernamesReturn => {
       const response = await axios.get('/api/user/subscription/status');
       if (response.data.active) {
         setUserSubscription(response.data);
-        const newLimit = calculateUsernameLimit(response.data.subscription_type);
+        const newLimit = calculateUsernameLimit(
+          response.data.subscription_type
+        );
         setUsernameLimit(newLimit);
       } else {
         setUserSubscription(null);
@@ -131,7 +135,9 @@ export const useUsernames = (): UseUsernamesReturn => {
         setPurchased(usernames);
         setLimitReached(usernames.length >= usernameLimit);
       } else {
-        setError(response.data.message || 'Failed to fetch purchased usernames');
+        setError(
+          response.data.message || 'Failed to fetch purchased usernames'
+        );
         setPurchased([]);
       }
     } catch (error: any) {
@@ -156,9 +162,11 @@ export const useUsernames = (): UseUsernamesReturn => {
     try {
       setLoading(true);
       setError('');
-      
-      const response = await axios.post('/api/username/calculate-price', { username: value });
-      
+
+      const response = await axios.post('/api/username/calculate-price', {
+        username: value,
+      });
+
       if (response.data.success) {
         setUsernameData(response.data);
       } else {
@@ -173,45 +181,54 @@ export const useUsernames = (): UseUsernamesReturn => {
   }, []);
 
   // Обработка изменения юзернейма
-  const handleUsernameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setUsername(value);
+  const handleUsernameChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setUsername(value);
 
-    if (!value) {
-      setUsernameData(null);
+      if (!value) {
+        setUsernameData(null);
+        setError('');
+        return;
+      }
+
+      const validationError = validateUsername(value);
+
+      if (validationError) {
+        setError(validationError);
+        setUsernameData(null);
+        return;
+      }
+
       setError('');
-      return;
-    }
 
-    const validationError = validateUsername(value);
-    
-    if (validationError) {
-      setError(validationError);
-      setUsernameData(null);
-      return;
-    }
+      const delayDebounceFn = setTimeout(() => {
+        calculateUsernamePrice(value.trim());
+      }, 500);
 
-    setError('');
-
-    const delayDebounceFn = setTimeout(() => {
-      calculateUsernamePrice(value.trim());
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [validateUsername, calculateUsernamePrice]);
+      return () => clearTimeout(delayDebounceFn);
+    },
+    [validateUsername, calculateUsernamePrice]
+  );
 
   // Покупка юзернейма
   const handlePurchase = useCallback(async () => {
-    if (!username || !usernameData || !usernameData.available || usernameData.owned || userPoints < usernameData.price) {
+    if (
+      !username ||
+      !usernameData ||
+      !usernameData.available ||
+      usernameData.owned ||
+      userPoints < usernameData.price
+    ) {
       return;
     }
 
     setPurchasing(true);
-    
+
     try {
       const response = await axios.post('/api/username/purchase', {
         username,
-        price: usernameData.price
+        price: usernameData.price,
       });
 
       if (response.data.success) {
@@ -229,36 +246,52 @@ export const useUsernames = (): UseUsernamesReturn => {
     } finally {
       setPurchasing(false);
     }
-  }, [username, usernameData, userPoints, fetchPurchasedUsernames, fetchUserPoints]);
+  }, [
+    username,
+    usernameData,
+    userPoints,
+    fetchPurchasedUsernames,
+    fetchUserPoints,
+  ]);
 
   // Установка активного юзернейма
-  const handleSetActive = useCallback(async (usernameObj: PurchasedUsername) => {
-    setIsChangingActive(true);
-    
-    try {
-      const response = await axios.post('/api/username/set-active', { username_id: usernameObj.id });
-      
-      if (response.data.success) {
-        // Обновляем локальное хранилище
-        try {
-          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-          userData.username = response.data.username;
-          localStorage.setItem('userData', JSON.stringify(userData));
-        } catch (e) {
-          console.error('Error updating username in localStorage:', e);
+  const handleSetActive = useCallback(
+    async (usernameObj: PurchasedUsername) => {
+      setIsChangingActive(true);
+
+      try {
+        const response = await axios.post('/api/username/set-active', {
+          username_id: usernameObj.id,
+        });
+
+        if (response.data.success) {
+          // Обновляем локальное хранилище
+          try {
+            const userData = JSON.parse(
+              localStorage.getItem('userData') || '{}'
+            );
+            userData.username = response.data.username;
+            localStorage.setItem('userData', JSON.stringify(userData));
+          } catch (e) {
+            console.error('Error updating username in localStorage:', e);
+          }
+
+          await fetchPurchasedUsernames();
+        } else {
+          setError(response.data.message || 'Failed to change username');
         }
-        
-        await fetchPurchasedUsernames();
-      } else {
-        setError(response.data.message || 'Failed to change username');
+      } catch (error: any) {
+        console.error('Error changing username:', error);
+        setError(
+          'Error changing username: ' +
+            (error.response?.data?.message || error.message)
+        );
+      } finally {
+        setIsChangingActive(false);
       }
-    } catch (error: any) {
-      console.error('Error changing username:', error);
-      setError('Error changing username: ' + (error.response?.data?.message || error.message));
-    } finally {
-      setIsChangingActive(false);
-    }
-  }, [fetchPurchasedUsernames]);
+    },
+    [fetchPurchasedUsernames]
+  );
 
   // Очистка ошибки
   const clearError = useCallback(() => {
@@ -290,7 +323,7 @@ export const useUsernames = (): UseUsernamesReturn => {
     limitReached,
     userSubscription,
     isChangingActive,
-    
+
     // Действия
     setUsername,
     handleUsernameChange,
@@ -301,4 +334,4 @@ export const useUsernames = (): UseUsernamesReturn => {
     fetchSubscriptionStatus,
     clearError,
   };
-}; 
+};

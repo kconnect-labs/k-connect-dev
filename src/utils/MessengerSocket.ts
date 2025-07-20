@@ -21,25 +21,31 @@ let instance: EnhancedWebSocketClient | null = null;
  * Получить (или создать) общий экземпляр WebSocket-клиента мессенджера.
  * Повторный вызов с другим sessionKey перезапустит клиент.
  */
-export const getMessengerSocket = (config?: MessengerConfig): EnhancedWebSocketClient => {
+export const getMessengerSocket = (
+  config?: MessengerConfig
+): EnhancedWebSocketClient => {
   // Если экземпляр не существует - создаем новый
   if (!instance) {
     instance = new EnhancedWebSocketClient(config);
     return instance;
   }
-  
+
   // Если sessionKey изменился - пересоздаем экземпляр
-  if (config && config.sessionKey && instance.config.sessionKey !== config.sessionKey) {
+  if (
+    config &&
+    config.sessionKey &&
+    instance.config.sessionKey !== config.sessionKey
+  ) {
     instance.disconnect();
     instance = new EnhancedWebSocketClient(config);
     return instance;
   }
-  
+
   // Если конфигурация передана, но экземпляр уже существует, обновляем только нужные поля
   if (config) {
     Object.assign(instance.config, config);
   }
-  
+
   // Если экземпляр существует и sessionKey не изменился - возвращаем существующий
   return instance;
 };
@@ -52,4 +58,4 @@ export const resetMessengerSocket = (): void => {
     } catch {}
     instance = null;
   }
-}; 
+};

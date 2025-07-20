@@ -54,14 +54,14 @@ const LoadingIndicator = () => {
     } else {
       setVisible(false);
     }
-    
+
     return () => {
       clearTimeout(timer);
     };
   }, [isLoading]);
-  
+
   if (!visible) return null;
-  
+
   return (
     <LoadingIndicatorContainer>
       <LoadingSpinner theme={theme} />
@@ -69,4 +69,4 @@ const LoadingIndicator = () => {
   );
 };
 
-export default LoadingIndicator; 
+export default LoadingIndicator;

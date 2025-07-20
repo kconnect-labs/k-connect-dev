@@ -1,1 +1,1 @@
-export { default as UltimateDecorationModal } from './UltimateDecorationModal'; 
+export { default as UltimateDecorationModal } from './UltimateDecorationModal';

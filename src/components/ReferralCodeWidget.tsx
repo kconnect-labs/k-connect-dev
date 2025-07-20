@@ -6,7 +6,9 @@ interface ReferralCodeWidgetProps {
   className?: string;
 }
 
-const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) => {
+const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
+  className,
+}) => {
   const [referralCode, setReferralCode] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,7 +22,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
     try {
       setLoading(true);
       const response = await axios.get('/api/referral/my-code');
-      
+
       if (response.data.success && response.data.stats?.current_code) {
         setReferralCode(response.data.stats.current_code);
       }
@@ -36,7 +38,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
       setLoading(true);
       setError(null);
       const response = await axios.post('/api/referral/create-code');
-      
+
       if (response.data.success) {
         setReferralCode(response.data.code);
       }
@@ -60,25 +62,30 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
 
   if (loading && !referralCode) {
     return (
-      <div className={className} style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
-        borderRadius: '12px',
-        padding: '16px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '60px'
-      }}>
-        <div style={{
-          width: '20px',
-          height: '20px',
-          border: '2px solid rgba(255, 255, 255, 0.1)',
-          borderTop: '2px solid #D0BCFF',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite'
-        }} />
+      <div
+        className={className}
+        style={{
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '12px',
+          padding: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60px',
+        }}
+      >
+        <div
+          style={{
+            width: '20px',
+            height: '20px',
+            border: '2px solid rgba(255, 255, 255, 0.1)',
+            borderTop: '2px solid #D0BCFF',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+          }}
+        />
         <style>{`
           @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -90,66 +97,81 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
   }
 
   return (
-    <div className={className} style={{
-      background: 'rgba(255, 255, 255, 0.03)',
-      backdropFilter: 'blur(20px)',
-      border: '1px solid rgba(255, 255, 255, 0.12)',
-      borderRadius: '12px',
-      padding: '16px'
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        marginBottom: '12px'
-      }}>
-        <div style={{
-          background: 'linear-gradient(135deg, #D0BCFF 0%, #b388ff 100%)',
-          borderRadius: '8px',
-          padding: '6px',
+    <div
+      className={className}
+      style={{
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
+        borderRadius: '12px',
+        padding: '16px',
+      }}
+    >
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <UserPlus size={16} color="#000000" />
+          gap: '12px',
+          marginBottom: '12px',
+        }}
+      >
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #D0BCFF 0%, #b388ff 100%)',
+            borderRadius: '8px',
+            padding: '6px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <UserPlus size={16} color='#000000' />
         </div>
-        <div style={{
-          fontSize: '14px',
-          fontWeight: '600',
-          color: '#FFFFFF'
-        }}>
+        <div
+          style={{
+            fontSize: '14px',
+            fontWeight: '600',
+            color: '#FFFFFF',
+          }}
+        >
           Реферальный код
         </div>
       </div>
 
       {error && (
-        <div style={{
-          fontSize: '12px',
-          color: '#f44336',
-          marginBottom: '8px'
-        }}>
+        <div
+          style={{
+            fontSize: '12px',
+            color: '#f44336',
+            marginBottom: '8px',
+          }}
+        >
           {error}
         </div>
       )}
 
       {referralCode ? (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: '8px',
-          padding: '12px',
-          border: '1px solid rgba(255, 255, 255, 0.1)'
-        }}>
-          <div style={{
-            fontSize: '14px',
-            fontWeight: '600',
-            color: '#D0BCFF',
-            fontFamily: 'monospace',
-            letterSpacing: '0.5px',
-            flex: 1
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '8px',
+            padding: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '14px',
+              fontWeight: '600',
+              color: '#D0BCFF',
+              fontFamily: 'monospace',
+              letterSpacing: '0.5px',
+              flex: 1,
+            }}
+          >
             {referralCode}
           </div>
           <button
@@ -163,27 +185,31 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
             }}
           >
             {copied ? (
-              <Check size={14} color="#FFFFFF" />
+              <Check size={14} color='#FFFFFF' />
             ) : (
-              <Copy size={14} color="#FFFFFF" />
+              <Copy size={14} color='#FFFFFF' />
             )}
           </button>
         </div>
       ) : (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
-          <div style={{
-            fontSize: '13px',
-            color: 'rgba(255, 255, 255, 0.7)',
-            flex: 1
-          }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '13px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              flex: 1,
+            }}
+          >
             Создайте код для приглашения друзей
           </div>
           <button
@@ -199,7 +225,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
               fontWeight: '600',
               cursor: loading ? 'not-allowed' : 'pointer',
               opacity: loading ? 0.6 : 1,
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
             }}
           >
             {loading ? 'Создание...' : 'Создать'}
@@ -210,4 +236,4 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({ className }) =>
   );
 };
 
-export default ReferralCodeWidget; 
+export default ReferralCodeWidget;

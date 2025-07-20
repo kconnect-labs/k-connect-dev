@@ -11,9 +11,9 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   Close as CloseIcon,
-  FiberManualRecord as DotIcon
+  FiberManualRecord as DotIcon,
 } from '@mui/icons-material';
 import { Pack, InventoryItem } from './types';
 
@@ -31,7 +31,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       margin: 0,
       maxHeight: '100vh',
       borderRadius: 0,
-    }
+    },
   },
 }));
 
@@ -80,13 +80,30 @@ const ItemImage = styled('img')({
 });
 
 const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
-  const colors: Record<string, { bg: string; color: string; border: string }> = {
-    common: { bg: 'rgba(156, 163, 175, 0.2)', color: '#9CA3AF', border: 'rgba(156, 163, 175, 0.3)' },
-    rare: { bg: 'rgba(59, 130, 246, 0.2)', color: '#3B82F6', border: 'rgba(59, 130, 246, 0.3)' },
-    epic: { bg: 'rgba(147, 51, 234, 0.2)', color: '#9333EA', border: 'rgba(147, 51, 234, 0.3)' },
-    legendary: { bg: 'rgba(245, 158, 11, 0.2)', color: '#F59E0B', border: 'rgba(245, 158, 11, 0.3)' },
-  };
-  
+  const colors: Record<string, { bg: string; color: string; border: string }> =
+    {
+      common: {
+        bg: 'rgba(156, 163, 175, 0.2)',
+        color: '#9CA3AF',
+        border: 'rgba(156, 163, 175, 0.3)',
+      },
+      rare: {
+        bg: 'rgba(59, 130, 246, 0.2)',
+        color: '#3B82F6',
+        border: 'rgba(59, 130, 246, 0.3)',
+      },
+      epic: {
+        bg: 'rgba(147, 51, 234, 0.2)',
+        color: '#9333EA',
+        border: 'rgba(147, 51, 234, 0.3)',
+      },
+      legendary: {
+        bg: 'rgba(245, 158, 11, 0.2)',
+        color: '#F59E0B',
+        border: 'rgba(245, 158, 11, 0.3)',
+      },
+    };
+
   return {
     background: colors[rarity || 'common']?.bg || colors.common.bg,
     color: colors[rarity || 'common']?.color || colors.common.color,
@@ -118,13 +135,13 @@ interface PackOpeningModalProps {
   onItemObtained?: (item: InventoryItem) => void;
 }
 
-const PackOpeningModal = ({ 
-  pack, 
-  onClose, 
-  hasMorePacks = false, 
-  onOpenAnother, 
-  onBalanceUpdate, 
-  onItemObtained 
+const PackOpeningModal = ({
+  pack,
+  onClose,
+  hasMorePacks = false,
+  onOpenAnother,
+  onBalanceUpdate,
+  onItemObtained,
 }: PackOpeningModalProps) => {
   const [opening, setOpening] = useState(true);
   const [obtainedItem, setObtainedItem] = useState<InventoryItem | null>(null);
@@ -138,22 +155,25 @@ const PackOpeningModal = ({
 
   const openPack = async () => {
     try {
-      const response = await fetch(`/api/inventory/packs/${pack.purchase_id}/open`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `/api/inventory/packs/${pack.purchase_id}/open`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
 
       const data = await response.json();
-      
+
       if (data.success) {
         // Имитируем задержку открытия
         setTimeout(() => {
           setObtainedItem(data.item);
           setOpening(false);
           setShowResult(true);
-          
+
           // Уведомляем о получении предмета
           if (onItemObtained) {
             onItemObtained(data.item);
@@ -196,41 +216,44 @@ const PackOpeningModal = ({
         setOpening(true);
         setShowResult(false);
         setObtainedItem(null);
-        
+
         // Покупаем новый пак того же типа
         const buyResponse = await fetch(`/api/inventory/packs/${pack.id}/buy`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include'
+          credentials: 'include',
         });
-        
+
         const buyData = await buyResponse.json();
-        
+
         if (buyData.success) {
           // Обновляем баланс пользователя
           if (onBalanceUpdate) {
             onBalanceUpdate(buyData.remaining_points);
           }
-          
+
           // Открываем новый пак
-          const openResponse = await fetch(`/api/inventory/packs/${buyData.purchase_id}/open`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
+          const openResponse = await fetch(
+            `/api/inventory/packs/${buyData.purchase_id}/open`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
           const openData = await openResponse.json();
-          
+
           if (openData.success) {
             // Имитируем задержку открытия
             setTimeout(() => {
               setObtainedItem(openData.item);
               setOpening(false);
               setShowResult(true);
-              
+
               // Уведомляем о получении предмета
               if (onItemObtained) {
                 onItemObtained(openData.item);
@@ -258,7 +281,7 @@ const PackOpeningModal = ({
     <StyledDialog
       open={true}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth='sm'
       fullWidth
       fullScreen={window.innerWidth <= 768}
       disableEscapeKeyDown={opening}
@@ -282,22 +305,22 @@ const PackOpeningModal = ({
             <CloseIcon />
           </IconButton>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode='wait'>
             {opening ? (
               <motion.div
-                key="opening"
+                key='opening'
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    fontWeight: 400, 
+                <Typography
+                  variant='h5'
+                  sx={{
+                    fontWeight: 400,
                     mb: 4,
                     color: 'rgba(255, 255, 255, 0.9)',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Открытие пака
@@ -305,21 +328,21 @@ const PackOpeningModal = ({
 
                 <PackContainer>
                   <motion.div
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.05, 1],
-                      opacity: [0.7, 1, 0.7]
+                      opacity: [0.7, 1, 0.7],
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 2,
                       repeat: Infinity,
-                      ease: "easeInOut"
+                      ease: 'easeInOut',
                     }}
                   >
-                    <Typography 
-                      sx={{ 
+                    <Typography
+                      sx={{
                         fontSize: '3rem',
                         color: 'rgba(255, 255, 255, 0.6)',
-                        fontWeight: 300
+                        fontWeight: 300,
                       }}
                     >
                       ?
@@ -328,34 +351,36 @@ const PackOpeningModal = ({
                 </PackContainer>
 
                 <LoadingDots>
-                  {[0, 1, 2].map((i) => (
+                  {[0, 1, 2].map(i => (
                     <motion.div
                       key={i}
                       animate={{
                         scale: [1, 1.2, 1],
-                        opacity: [0.5, 1, 0.5]
+                        opacity: [0.5, 1, 0.5],
                       }}
                       transition={{
                         duration: 1.5,
                         repeat: Infinity,
                         delay: i * 0.2,
-                        ease: "easeInOut"
+                        ease: 'easeInOut',
                       }}
                     >
-                      <DotIcon sx={{ 
-                        fontSize: 8, 
-                        color: 'rgba(255, 255, 255, 0.6)' 
-                      }} />
+                      <DotIcon
+                        sx={{
+                          fontSize: 8,
+                          color: 'rgba(255, 255, 255, 0.6)',
+                        }}
+                      />
                     </motion.div>
                   ))}
                 </LoadingDots>
-                
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
+
+                <Typography
+                  variant='body2'
+                  sx={{
                     color: 'rgba(255, 255, 255, 0.5)',
                     fontSize: '0.875rem',
-                    fontWeight: 300
+                    fontWeight: 300,
                   }}
                 >
                   Обработка...
@@ -363,18 +388,18 @@ const PackOpeningModal = ({
               </motion.div>
             ) : (
               <motion.div
-                key="result"
+                key='result'
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Typography 
-                  variant="h5" 
-                  sx={{ 
-                    fontWeight: 400, 
+                <Typography
+                  variant='h5'
+                  sx={{
+                    fontWeight: 400,
                     mb: 3,
                     color: 'rgba(255, 255, 255, 0.9)',
-                    letterSpacing: '0.5px'
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Получен предмет
@@ -383,26 +408,30 @@ const PackOpeningModal = ({
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ 
-                    type: "spring", 
-                    stiffness: 200, 
+                  transition={{
+                    type: 'spring',
+                    stiffness: 200,
                     damping: 20,
-                    delay: 0.2
+                    delay: 0.2,
                   }}
                 >
-                  <ItemContainer sx={{
-                    ...(obtainedItem?.background_url && {
-                      backgroundImage: `url(${obtainedItem.background_url})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                      backgroundRepeat: 'no-repeat',
-                    })
-                  }}>
-                    <ItemImage 
+                  <ItemContainer
+                    sx={{
+                      ...(obtainedItem?.background_url && {
+                        backgroundImage: `url(${obtainedItem.background_url})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                      }),
+                    }}
+                  >
+                    <ItemImage
                       src={`/inventory/${obtainedItem?.id}`}
                       alt={obtainedItem?.item_name || 'Предмет'}
-                      onError={(e) => {
-                        console.error(`Failed to load image: /inventory/${obtainedItem?.id}`);
+                      onError={e => {
+                        console.error(
+                          `Failed to load image: /inventory/${obtainedItem?.id}`
+                        );
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                       }}
@@ -415,13 +444,13 @@ const PackOpeningModal = ({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
-                      fontWeight: 500, 
+                  <Typography
+                    variant='h6'
+                    sx={{
+                      fontWeight: 500,
                       mb: 2,
                       color: 'rgba(255, 255, 255, 0.95)',
-                      fontSize: '1.25rem'
+                      fontSize: '1.25rem',
                     }}
                   >
                     {obtainedItem?.item_name}
@@ -434,21 +463,23 @@ const PackOpeningModal = ({
                     />
                   </Box>
 
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant='body2'
+                    sx={{
                       color: 'rgba(255, 255, 255, 0.6)',
                       mb: 4,
                       fontSize: '0.875rem',
-                      fontWeight: 300
+                      fontWeight: 300,
                     }}
                   >
                     Предмет добавлен в инвентарь
                   </Typography>
 
-                  <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+                  <Box
+                    sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}
+                  >
                     <Button
-                      variant="outlined"
+                      variant='outlined'
                       onClick={handleOpenAnother}
                       sx={{
                         borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -464,15 +495,15 @@ const PackOpeningModal = ({
                         '&:hover': {
                           borderColor: 'rgba(255, 255, 255, 0.5)',
                           background: 'rgba(255, 255, 255, 0.05)',
-                          transform: 'translateY(-1px)'
+                          transform: 'translateY(-1px)',
                         },
                       }}
                     >
                       Купить еще
                     </Button>
-                    
+
                     <Button
-                      variant="outlined"
+                      variant='outlined'
                       onClick={onClose}
                       sx={{
                         borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -488,7 +519,7 @@ const PackOpeningModal = ({
                         '&:hover': {
                           borderColor: 'rgba(255, 255, 255, 0.5)',
                           background: 'rgba(255, 255, 255, 0.05)',
-                          transform: 'translateY(-1px)'
+                          transform: 'translateY(-1px)',
                         },
                       }}
                     >
@@ -505,4 +536,4 @@ const PackOpeningModal = ({
   );
 };
 
-export default PackOpeningModal; 
+export default PackOpeningModal;

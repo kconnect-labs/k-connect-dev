@@ -38,15 +38,17 @@
 
 /* Индикатор активности (полоска слева) */
 .nav-button::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 25%;
   height: 50%;
   width: 0px;
-  background-color: var(--primary, #D0BCFF);
+  background-color: var(--primary, #d0bcff);
   border-radius: 0 3px 3px 0;
-  transition: width 0.3s ease, height 0.3s ease;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease;
   box-shadow: none;
 }
 
@@ -87,7 +89,7 @@
 }
 
 .nav-button--active .nav-button__icon {
-  color: var(--primary, #D0BCFF);
+  color: var(--primary, #d0bcff);
 }
 
 .nav-button--active .nav-button__icon svg {
@@ -108,7 +110,7 @@
 }
 
 .nav-button--active:hover .nav-button__icon {
-  color: var(--primary, #D0BCFF);
+  color: var(--primary, #d0bcff);
 }
 
 .nav-button--special:hover .nav-button__icon {
@@ -129,7 +131,7 @@
 
 .nav-button--active .nav-button__text {
   font-weight: 600;
-  color: var(--primary, #D0BCFF);
+  color: var(--primary, #d0bcff);
   letter-spacing: 0.4px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -187,7 +189,7 @@
 
 .more-button--active .more-button__arrow {
   transform: rotate(180deg);
-  color: var(--primary, #D0BCFF);
+  color: var(--primary, #d0bcff);
 }
 
 .more-button--special .more-button__arrow {
@@ -203,13 +205,12 @@
 }
 
 .more-button--active:hover .more-button__arrow {
-  color: var(--primary, #D0BCFF);
+  color: var(--primary, #d0bcff);
 }
 
 .more-button--special:hover .more-button__arrow {
   color: #f44336;
 }
-
 
 /* Адаптивность */
 @media (max-width: 1200px) {
@@ -217,20 +218,20 @@
     padding: 7px 12px 7px 0;
     margin-bottom: 3px;
   }
-  
+
   .nav-button__icon {
     min-width: 30px;
   }
-  
+
   .nav-button__icon svg {
     font-size: 1.15rem;
   }
-  
+
   .nav-button__text {
     font-size: 0.85rem;
     letter-spacing: 0.2px;
   }
-  
+
   .nav-button--active .nav-button__text {
     letter-spacing: 0.35px;
   }
@@ -241,15 +242,15 @@
     padding: 6px 11px;
     margin-bottom: 2px;
   }
-  
+
   .nav-button__icon {
     min-width: 28px;
   }
-  
+
   .nav-button__icon svg {
     font-size: 1.1rem;
   }
-  
+
   .nav-button__text {
     font-size: 0.8rem;
   }
@@ -266,15 +267,15 @@
   .more-button__arrow svg {
     transition: none;
   }
-  
+
   .nav-button:hover {
     transform: none;
   }
-  
+
   .nav-button:hover .nav-button__icon svg {
     transform: none;
   }
-  
+
   .more-button:hover .more-button__arrow svg {
     transform: none;
   }
@@ -296,4 +297,4 @@
 
 .more-button__arrow {
   will-change: transform, color;
-} 
+}

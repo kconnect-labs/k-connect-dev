@@ -8,112 +8,111 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 // Функция для форматирования времени последней активности
-const formatLastActive = (dateObject) => {
-  if (!dateObject) return "Не в сети";
-  
+const formatLastActive = dateObject => {
+  if (!dateObject) return 'Не в сети';
+
   try {
     // Проверяем, является ли dateObject уже объектом Date
     const date = dateObject instanceof Date ? dateObject : new Date(dateObject);
     if (isNaN(date.getTime())) {
       console.error('Неверный формат даты:', dateObject);
-      return "Не в сети";
+      return 'Не в сети';
     }
-    
+
     const now = new Date();
-    
+
     // Разница во времени в миллисекундах
     const diffMs = now - date;
-    
+
     // Преобразуем в минуты/часы/дни
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
-    
+
     // Определяем формат вывода в зависимости от прошедшего времени
     if (diffMins < 1) return 'В сети';
     if (diffMins < 60) return `${diffMins} мин. назад`;
     if (diffHours < 24) return `${diffHours} ч. назад`;
     if (diffDays < 7) return `${diffDays} дн. назад`;
-    
+
     // Для более давних дат показываем полную дату
-    const options = { 
-      month: 'short', 
+    const options = {
+      month: 'short',
       day: 'numeric',
-      hour: '2-digit', 
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     };
-    
+
     return date.toLocaleString('ru-RU', options);
   } catch (e) {
     console.error('Ошибка форматирования даты:', e, dateObject);
-    return "Не в сети";
+    return 'Не в сети';
   }
 };
 
 const MessengerContent = () => {
-  const { user, loading, activeChat, onlineUsers, isChannel, error } = useMessenger();
+  const { user, loading, activeChat, onlineUsers, isChannel, error } =
+    useMessenger();
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
   const [showSidebar, setShowSidebar] = useState(true);
-  
+
   // Отслеживание изменения размера окна
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobileView(mobile);
-      
+
       // На мобильных устройствах по умолчанию показываем список чатов,
       // если не выбран активный чат
       if (mobile && !activeChat) {
         setShowSidebar(true);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [activeChat]);
-  
+
   // Когда выбран чат, на мобильных устройствах скрываем список
   useEffect(() => {
     if (activeChat && isMobileView) {
       setShowSidebar(false);
     }
   }, [activeChat, isMobileView]);
-  
 
-  
   // Показать экран загрузки
   if (loading) {
     return (
-      <div className="messenger-loading">
-        <div className="loading-spinner"></div>
+      <div className='messenger-loading'>
+        <div className='loading-spinner'></div>
         <p>Загрузка мессенджера...</p>
       </div>
     );
   }
-  
+
   // На мобильных устройствах показываем либо список, либо чат
   const handleChatSelect = () => {
     if (isMobileView) {
       setShowSidebar(false);
     }
   };
-  
+
   const handleBackToList = () => {
     if (isMobileView) {
       setShowSidebar(true);
     }
   };
-  
+
   // Получаем данные о собеседнике в личном чате для хедера
   const getChatHeaderInfo = () => {
     if (!activeChat) return { title: 'Чат', avatar: null, status: null };
-    
+
     if (activeChat.is_group || activeChat.chat_type === 'group') {
-      return { 
+      return {
         title: activeChat.title || 'Групповой чат',
         avatar: activeChat.avatar,
-        status: null
+        status: null,
       };
     } else {
       // Для личного чата ищем собеседника (не текущего пользователя)
@@ -121,11 +120,11 @@ const MessengerContent = () => {
         const memberId = member.user_id || member.id;
         return memberId !== user?.id;
       });
-      
+
       let status = 'Не в сети';
       if (otherMember) {
         const userId = otherMember.user_id || otherMember.id;
-        
+
         // Проверяем онлайн статус
         if (onlineUsers[userId]) {
           status = 'В сети';
@@ -133,34 +132,42 @@ const MessengerContent = () => {
           status = formatLastActive(otherMember.last_active);
         }
       }
-      
+
       return {
         title: otherMember?.name || activeChat.title || 'Личная переписка',
         avatar: otherMember?.avatar || null,
-        status: status
+        status: status,
       };
     }
   };
-  
+
   const { title, avatar, status } = getChatHeaderInfo();
-  
+
   return (
-    <div className="messenger-container">
+    <div className='messenger-container'>
       {/* Боковая панель со списком чатов */}
-      <aside className={`messenger-sidebar ${isMobileView && !showSidebar ? 'hidden' : ''}`}>
-        <div className="sidebar-header">
-          <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', padding: '15px' }}>
+      <aside
+        className={`messenger-sidebar ${isMobileView && !showSidebar ? 'hidden' : ''}`}
+      >
+        <div className='sidebar-header'>
+          <Typography
+            variant='h6'
+            component='h2'
+            sx={{ fontWeight: 'bold', padding: '15px' }}
+          >
             Личные сообщения
           </Typography>
         </div>
         <ChatList onSelectChat={handleChatSelect} />
       </aside>
-      
+
       {/* Основная область с чатом */}
-      <main className={`messenger-main ${isMobileView && showSidebar ? 'hidden' : ''}`}>
+      <main
+        className={`messenger-main ${isMobileView && showSidebar ? 'hidden' : ''}`}
+      >
         {isMobileView && activeChat && (
-          <Box 
-            className="chat-header"
+          <Box
+            className='chat-header'
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -170,24 +177,24 @@ const MessengerContent = () => {
               position: 'sticky',
               top: 0,
               zIndex: 10,
-              height: '60px'
+              height: '60px',
             }}
           >
             <IconButton onClick={handleBackToList} sx={{ color: '#49A2F9' }}>
               <ArrowBackIcon />
             </IconButton>
-            
-            <Box 
-              sx={{ 
-                display: 'flex', 
+
+            <Box
+              sx={{
+                display: 'flex',
                 alignItems: 'center',
                 flex: 1,
-                overflow: 'hidden'
+                overflow: 'hidden',
               }}
             >
               {avatar ? (
-                <Box 
-                  component="img"
+                <Box
+                  component='img'
                   src={avatar}
                   alt={title}
                   sx={{
@@ -195,11 +202,11 @@ const MessengerContent = () => {
                     height: '40px',
                     borderRadius: '50%',
                     marginRight: '12px',
-                    objectFit: 'cover'
+                    objectFit: 'cover',
                   }}
                 />
               ) : (
-                <Box 
+                <Box
                   sx={{
                     width: '40px',
                     height: '40px',
@@ -210,36 +217,37 @@ const MessengerContent = () => {
                     justifyContent: 'center',
                     marginRight: '12px',
                     color: 'white',
-                    fontSize: '18px'
+                    fontSize: '18px',
                   }}
                 >
                   {title[0]?.toUpperCase() || '?'}
                 </Box>
               )}
-              
+
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography 
-                  variant="subtitle1" 
-                  component="span"
+                <Typography
+                  variant='subtitle1'
+                  component='span'
                   sx={{
                     fontWeight: 'bold',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
-                    fontSize: '16px'
+                    fontSize: '16px',
                   }}
                 >
                   {title}
                 </Typography>
                 <Typography
-                  variant="caption"
-                  component="span"
+                  variant='caption'
+                  component='span'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.6)',
-                    fontSize: '12px'
+                    fontSize: '12px',
                   }}
                 >
-                  {status || (activeChat?.is_online ? 'В сети' : 'Был(а) недавно')}
+                  {status ||
+                    (activeChat?.is_online ? 'В сети' : 'Был(а) недавно')}
                 </Typography>
               </Box>
             </Box>
@@ -251,4 +259,4 @@ const MessengerContent = () => {
   );
 };
 
-export default MessengerContent; 
+export default MessengerContent;

@@ -1,3 +1,3 @@
 import PlaylistViewModal from './PlaylistViewModal';
 
-export default PlaylistViewModal; 
+export default PlaylistViewModal;

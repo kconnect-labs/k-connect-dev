@@ -13,14 +13,14 @@ import {
   CircularProgress,
   Alert,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import {
   Close as CloseIcon,
   Add as AddIcon,
   Public as PublicIcon,
   EmojiEmotions as EmojiIcon,
-  Person as PersonIcon
+  Person as PersonIcon,
 } from '@mui/icons-material';
 import { useMessenger } from '../../contexts/MessengerContext';
 import axios from 'axios';
@@ -31,26 +31,26 @@ import pako from 'pako';
 const API_URL = 'https://k-connect.ru/apiMes';
 
 // Функция для определения типа стикера
-const getStickerType = (sticker) => {
+const getStickerType = sticker => {
   if (!sticker.url) return 'unknown';
-  
+
   // Сначала проверяем данные стикера, если есть
   if (sticker.mime_type) {
     if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
     if (sticker.mime_type === 'video/webm') return 'webm';
     return 'static';
   }
-  
+
   // Если данных нет, проверяем URL (менее надежно)
   const url = sticker.url.toLowerCase();
   if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
   if (url.includes('.webm')) return 'webm';
-  
+
   // Для API эндпоинтов делаем асинхронную проверку
   if (url.includes('/api/messenger/stickers/')) {
     return 'api_check_needed';
   }
-  
+
   return 'static'; // webp, png, jpeg
 };
 
@@ -65,25 +65,25 @@ const TGSSticker = ({ src, style, onClick }) => {
       try {
         setLoading(true);
         setError(false);
-        
+
         const response = await fetch(src);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
-        
+
         const contentType = response.headers.get('content-type');
-        
+
         // Проверяем, действительно ли это TGS файл
         if (contentType !== 'application/x-tgsticker') {
           console.log('Not a TGS file, falling back to image:', contentType);
           setError(true);
           return;
         }
-        
+
         const arrayBuffer = await response.arrayBuffer();
         let jsonData;
-        
+
         try {
           // Пробуем распаковать как gzip
           const decompressed = pako.inflate(arrayBuffer);
@@ -94,7 +94,7 @@ const TGSSticker = ({ src, style, onClick }) => {
           const textDecoder = new TextDecoder();
           jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
         }
-        
+
         setAnimationData(jsonData);
       } catch (error) {
         console.error('Error loading TGS:', error);
@@ -111,7 +111,14 @@ const TGSSticker = ({ src, style, onClick }) => {
 
   if (loading) {
     return (
-      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div
+        style={{
+          ...style,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <CircularProgress size={24} />
       </div>
     );
@@ -119,14 +126,7 @@ const TGSSticker = ({ src, style, onClick }) => {
 
   if (error || !animationData) {
     // Fallback to image if TGS loading failed
-    return (
-      <img
-        src={src}
-        style={style}
-        onClick={onClick}
-        alt="Стикер"
-      />
-    );
+    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
 
   return (
@@ -145,26 +145,26 @@ const TGSSticker = ({ src, style, onClick }) => {
 const AsyncStickerRenderer = ({ src, style, onClick }) => {
   const [stickerType, setStickerType] = useState('loading');
   const [animationData, setAnimationData] = useState(null);
-  
+
   useEffect(() => {
     const checkStickerType = async () => {
       try {
         // Сначала пробуем загрузить как TGS
         const response = await fetch(src);
-        
+
         if (!response.ok) {
           setStickerType('static');
           return;
         }
-        
+
         const contentType = response.headers.get('content-type');
-        
+
         if (contentType === 'application/x-tgsticker') {
           // Это TGS файл, пробуем его загрузить
           try {
             const arrayBuffer = await response.arrayBuffer();
             let jsonData;
-            
+
             try {
               // Пробуем распаковать как gzip
               const decompressed = pako.inflate(arrayBuffer);
@@ -175,7 +175,7 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
               const textDecoder = new TextDecoder();
               jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
             }
-            
+
             setAnimationData(jsonData);
             setStickerType('tgs');
           } catch (error) {
@@ -192,18 +192,25 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
         setStickerType('static');
       }
     };
-    
+
     checkStickerType();
   }, [src]);
-  
+
   if (stickerType === 'loading') {
     return (
-      <div style={{ ...style, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div
+        style={{
+          ...style,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <CircularProgress size={24} />
       </div>
     );
   }
-  
+
   if (stickerType === 'tgs' && animationData) {
     return (
       <div style={style} onClick={onClick}>
@@ -228,14 +235,7 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
       />
     );
   } else {
-    return (
-      <img
-        src={src}
-        style={style}
-        onClick={onClick}
-        alt="Стикер"
-      />
-    );
+    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
 };
 
@@ -245,7 +245,7 @@ const cardStyles = {
   backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: '8px',
-  color: 'inherit'
+  color: 'inherit',
 };
 
 const buttonStyles = {
@@ -256,14 +256,14 @@ const buttonStyles = {
   color: 'inherit',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.08)',
-  }
+  },
 };
 
 const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { sessionKey, isChannel } = useMessenger();
-  
+
   const [packData, setPackData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [installing, setInstalling] = useState(false);
@@ -274,28 +274,33 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
   // Загрузка данных о стикерпаке
   const loadPackData = async () => {
     if (!packId) return;
-    
+
     try {
       setLoading(true);
       setError('');
-      
+
       // Получаем детальную информацию о паке через новый API
-      const response = await axios.get(`${API_URL}/messenger/sticker-packs/${packId}/public`);
-      
+      const response = await axios.get(
+        `${API_URL}/messenger/sticker-packs/${packId}/public`
+      );
+
       if (response.data.success) {
         const pack = response.data.pack;
         setPackData(pack);
-        
+
         // Проверяем, установлен ли пак у пользователя
         if (sessionKey) {
           try {
-            const myPacksResponse = await axios.get(`${API_URL}/messenger/sticker-packs/my`, {
-              headers: {
-                'Authorization': `Bearer ${sessionKey}`,
-                'Content-Type': 'application/json'
+            const myPacksResponse = await axios.get(
+              `${API_URL}/messenger/sticker-packs/my`,
+              {
+                headers: {
+                  Authorization: `Bearer ${sessionKey}`,
+                  'Content-Type': 'application/json',
+                },
               }
-            });
-            
+            );
+
             if (myPacksResponse.data.success) {
               const installedPacks = myPacksResponse.data.packs || [];
               setIsInstalled(installedPacks.some(p => p.id === packId));
@@ -318,22 +323,26 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
   // Установка стикерпака
   const handleInstallPack = async () => {
     if (!sessionKey || !packData || isChannel) return;
-    
+
     try {
       setInstalling(true);
       setError('');
-      
-      const response = await axios.post(`${API_URL}/messenger/sticker-packs/${packData.id}/install`, {}, {
-        headers: {
-          'Authorization': `Bearer ${sessionKey}`,
-          'Content-Type': 'application/json'
+
+      const response = await axios.post(
+        `${API_URL}/messenger/sticker-packs/${packData.id}/install`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${sessionKey}`,
+            'Content-Type': 'application/json',
+          },
         }
-      });
-      
+      );
+
       if (response.data.success) {
         setSuccess('Стикерпак добавлен в вашу коллекцию!');
         setIsInstalled(true);
-        
+
         // Закрываем модалку через 1.5 секунды
         setTimeout(() => {
           onClose();
@@ -371,22 +380,26 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
     <Dialog
       open={open}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth='sm'
       fullWidth
       fullScreen={isMobile}
-      PaperProps={{ 
+      PaperProps={{
         sx: {
           ...cardStyles,
-          minHeight: isMobile ? '100vh' : '500px'
-        }
+          minHeight: isMobile ? '100vh' : '500px',
+        },
       }}
     >
       <DialogTitle>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6">
-            Стикерпак
-          </Typography>
-          <IconButton onClick={handleClose} size="small">
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='h6'>Стикерпак</Typography>
+          <IconButton onClick={handleClose} size='small'>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -398,41 +411,41 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
             <CircularProgress />
           </Box>
         ) : error ? (
-          <Alert severity="error" sx={cardStyles}>
+          <Alert severity='error' sx={cardStyles}>
             {error}
           </Alert>
         ) : packData ? (
           <Box>
             {/* Информация о стикерпаке */}
             <Box sx={{ mb: 3 }}>
-              <Typography variant="h5" gutterBottom>
+              <Typography variant='h5' gutterBottom>
                 {packData.name}
               </Typography>
-              
+
               {packData.description && (
-                <Typography variant="body2" color="text.secondary" gutterBottom>
+                <Typography variant='body2' color='text.secondary' gutterBottom>
                   {packData.description}
                 </Typography>
               )}
-              
+
               <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                 <Chip
-                  size="small"
+                  size='small'
                   icon={<PublicIcon />}
-                  label="Публичный"
-                  variant="outlined"
+                  label='Публичный'
+                  variant='outlined'
                 />
                 <Chip
-                  size="small"
+                  size='small'
                   label={`${packData.sticker_count || packData.stickers?.length || 0} стикеров`}
-                  variant="outlined"
+                  variant='outlined'
                 />
                 {packData.owner_name && (
                   <Chip
-                    size="small"
+                    size='small'
                     icon={<PersonIcon />}
                     label={packData.owner_name}
-                    variant="outlined"
+                    variant='outlined'
                   />
                 )}
               </Box>
@@ -440,13 +453,13 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
 
             {/* Алерты */}
             {success && (
-              <Alert severity="success" sx={{ mb: 2, ...cardStyles }}>
+              <Alert severity='success' sx={{ mb: 2, ...cardStyles }}>
                 {success}
               </Alert>
             )}
-            
+
             {error && (
-              <Alert severity="error" sx={{ mb: 2, ...cardStyles }}>
+              <Alert severity='error' sx={{ mb: 2, ...cardStyles }}>
                 {error}
               </Alert>
             )}
@@ -454,11 +467,11 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
             {/* Сетка стикеров */}
             {packData.stickers && packData.stickers.length > 0 ? (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant='h6' gutterBottom>
                   Стикеры в паке
                 </Typography>
                 <Grid container spacing={1}>
-                  {packData.stickers.map((sticker) => (
+                  {packData.stickers.map(sticker => (
                     <Grid item xs={4} sm={3} key={sticker.id}>
                       <Box
                         sx={{
@@ -470,10 +483,13 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
                           overflow: 'hidden',
                           cursor: 'pointer',
                           transition: 'transform 0.2s ease',
-                          border: sticker.id === stickerId ? '2px solid #2196F3' : cardStyles.border,
+                          border:
+                            sticker.id === stickerId
+                              ? '2px solid #2196F3'
+                              : cardStyles.border,
                           '&:hover': {
-                            transform: 'scale(1.05)'
-                          }
+                            transform: 'scale(1.05)',
+                          },
                         }}
                       >
                         {(() => {
@@ -481,7 +497,7 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
                           const commonStyle = {
                             width: '100%',
                             height: '100%',
-                            objectFit: 'contain'
+                            objectFit: 'contain',
                           };
 
                           const handleClick = () => onStickerSelect(sticker);
@@ -537,8 +553,10 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
               </Box>
             ) : (
               <Box sx={{ textAlign: 'center', py: 4 }}>
-                <EmojiIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-                <Typography variant="body1" color="text.secondary">
+                <EmojiIcon
+                  sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }}
+                />
+                <Typography variant='body1' color='text.secondary'>
                   В этом стикерпаке нет стикеров
                 </Typography>
               </Box>
@@ -551,29 +569,37 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
         <Button onClick={handleClose} sx={buttonStyles}>
           Закрыть
         </Button>
-        
+
         {packData && sessionKey && !isChannel && (
           <Button
             onClick={handleInstallPack}
-            variant="contained"
+            variant='contained'
             disabled={installing || isInstalled}
-            startIcon={installing ? <CircularProgress size={16} /> : <AddIcon />}
+            startIcon={
+              installing ? <CircularProgress size={16} /> : <AddIcon />
+            }
             sx={{
               ...buttonStyles,
-              ...(isInstalled ? {} : {
-                background: 'rgba(255, 255, 255, 0.03)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-              })
+              ...(isInstalled
+                ? {}
+                : {
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                  }),
             }}
           >
-            {installing ? 'Добавляется...' : isInstalled ? 'Уже добавлен' : 'Добавить стикерпак'}
+            {installing
+              ? 'Добавляется...'
+              : isInstalled
+                ? 'Уже добавлен'
+                : 'Добавить стикерпак'}
           </Button>
         )}
-        
+
         {!sessionKey && (
           <Button
-            onClick={() => window.location.href = '/login'}
-            variant="contained"
+            onClick={() => (window.location.href = '/login')}
+            variant='contained'
             sx={{
               ...buttonStyles,
               background: 'rgba(255, 255, 255, 0.03)',
@@ -588,4 +614,4 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
   );
 };
 
-export default StickerPackModal; 
+export default StickerPackModal;

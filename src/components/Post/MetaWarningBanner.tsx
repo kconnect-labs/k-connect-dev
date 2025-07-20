@@ -11,7 +11,7 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
     { name: 'Facebook', keywords: ['facebook', 'фейсбук'] },
     { name: 'Instagram', keywords: ['instagram', 'инстаграм', 'инста'] },
     { name: 'WhatsApp', keywords: ['whatsapp', 'вотсап', 'вайбер'] },
-    { name: 'Meta', keywords: ['meta', 'мета'] }
+    { name: 'Meta', keywords: ['meta', 'мета'] },
   ];
 
   // Проверяем, какие платформы упоминаются в контенте
@@ -51,7 +51,7 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
         borderRadius: '8px',
         mt: 1,
         mb: 1,
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       <Typography
@@ -60,7 +60,7 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
           lineHeight: 1.4,
           color: 'rgba(255, 255, 255, 0.8)',
           whiteSpace: 'pre-line',
-          p: 1.5
+          p: 1.5,
         }}
       >
         {getWarningText()}
@@ -69,4 +69,4 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
   );
 };
 
-export default MetaWarningBanner; 
+export default MetaWarningBanner;

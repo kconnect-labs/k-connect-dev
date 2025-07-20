@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Box, Container, Grid, CircularProgress, TextField, InputAdornment } from '@mui/material';
+import {
+  Box,
+  Container,
+  Grid,
+  CircularProgress,
+  TextField,
+  InputAdornment,
+} from '@mui/material';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import FriendsList from '../../UIKIT/FriendsList';
 import InfoBlock from '../../UIKIT/InfoBlock';
@@ -34,7 +41,9 @@ const FriendsPage = () => {
     if (!username) return;
     setLoading(true);
     try {
-      const res = await axios.get(`/api/profile/${username}/friends`, { params: { page: 1, per_page: 50 } });
+      const res = await axios.get(`/api/profile/${username}/friends`, {
+        params: { page: 1, per_page: 50 },
+      });
       setFriends(res.data.friends || []);
     } catch (e) {
       setFriends([]);
@@ -47,7 +56,9 @@ const FriendsPage = () => {
     if (!username) return;
     setLoading(true);
     try {
-      const res = await axios.get(`/api/users/${username}/followers`, { params: { page: 1, per_page: 50 } });
+      const res = await axios.get(`/api/users/${username}/followers`, {
+        params: { page: 1, per_page: 50 },
+      });
       // Только не-друзья
       setFollowers((res.data.followers || []).filter(f => !f.is_friend));
     } catch (e) {
@@ -61,7 +72,9 @@ const FriendsPage = () => {
     if (!username) return;
     setLoading(true);
     try {
-      const res = await axios.get(`/api/users/${username}/following`, { params: { page: 1, per_page: 50 } });
+      const res = await axios.get(`/api/users/${username}/following`, {
+        params: { page: 1, per_page: 50 },
+      });
       setFollowing(res.data.following || []);
     } catch (e) {
       setFollowing([]);
@@ -88,7 +101,7 @@ const FriendsPage = () => {
     }
   }, [followers, suggested.length]);
 
-  const handleUnfollow = async (userId) => {
+  const handleUnfollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
       await axios.post('/api/profile/unfollow', { unfollowed_id: userId });
@@ -99,7 +112,7 @@ const FriendsPage = () => {
     setLoadingIds(prev => ({ ...prev, [userId]: false }));
   };
 
-  const handleFollow = async (userId) => {
+  const handleFollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
       await axios.post('/api/profile/follow', { followed_id: userId });
@@ -110,24 +123,34 @@ const FriendsPage = () => {
     setLoadingIds(prev => ({ ...prev, [userId]: false }));
   };
 
-  const filterUsers = (arr) => {
+  const filterUsers = arr => {
     if (!search.trim()) return arr;
     const q = search.trim().toLowerCase();
-    return arr.filter(u =>
-      (u.username && u.username.toLowerCase().includes(q)) ||
-      (u.name && u.name.toLowerCase().includes(q))
+    return arr.filter(
+      u =>
+        (u.username && u.username.toLowerCase().includes(q)) ||
+        (u.name && u.name.toLowerCase().includes(q))
     );
   };
 
   const getList = () => {
     if (tab === 0) return filterUsers(friends);
-    if (tab === 1) return filterUsers(followers.filter(f => !friends.some(fr => fr.id === f.id)));
-    if (tab === 2) return filterUsers(following.filter(f => !friends.some(fr => fr.id === f.id)));
+    if (tab === 1)
+      return filterUsers(
+        followers.filter(f => !friends.some(fr => fr.id === f.id))
+      );
+    if (tab === 2)
+      return filterUsers(
+        following.filter(f => !friends.some(fr => fr.id === f.id))
+      );
     return [];
   };
 
   return (
-    <Container maxWidth="lg" sx={{ pt: '20px', px: { xs: '2.5px', sm: 2 }, mb: '60px' }}>
+    <Container
+      maxWidth='lg'
+      sx={{ pt: '20px', px: { xs: '2.5px', sm: 2 }, mb: '60px' }}
+    >
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           <StyledTabs
@@ -135,23 +158,23 @@ const FriendsPage = () => {
             onChange={(_, v) => setTab(v)}
             tabs={TABS}
             fullWidth
-            variant="fullWidth"
+            variant='fullWidth'
             customStyle
           />
           <TextField
             value={search}
             onChange={e => setSearch(e.target.value)}
-            placeholder="Поиск по пользователям"
-            size="small"
+            placeholder='Поиск по пользователям'
+            size='small'
             fullWidth
             sx={{ mb: 1.5, mt: 1 }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
+                <InputAdornment position='start'>
+                  <SearchIcon fontSize='small' />
                 </InputAdornment>
               ),
-              sx: { borderRadius: 2 }
+              sx: { borderRadius: 2 },
             }}
           />
           <Box sx={{ mt: '5px', minHeight: 300 }}>
@@ -161,7 +184,12 @@ const FriendsPage = () => {
               </Box>
             ) : (
               <FriendsList
-                users={getList().map(u => ({ ...u, onUnfollow: handleUnfollow, onFollow: handleFollow, loading: !!loadingIds[u.id] }))}
+                users={getList().map(u => ({
+                  ...u,
+                  onUnfollow: handleUnfollow,
+                  onFollow: handleFollow,
+                  loading: !!loadingIds[u.id],
+                }))}
                 cardSpacing={2}
                 cardRadius={12}
                 forceUnfollow={tab === 0}
@@ -177,23 +205,21 @@ const FriendsPage = () => {
                 tab === 0
                   ? 'Здесь отображаются пользователи, с которыми у вас взаимные подписки.'
                   : tab === 1
-                  ? 'Пользователи, которые подписаны на вас.'
-                  : 'Пользователи, на которых вы подписаны.'
+                    ? 'Пользователи, которые подписаны на вас.'
+                    : 'Пользователи, на которых вы подписаны.'
               }
               customStyle
             />
-            <InfoBlock
-              title="Возможно вам знакомы"
-              customStyle
-              sx={{ mt: 2 }}
-            >
+            <InfoBlock title='Возможно вам знакомы' customStyle sx={{ mt: 2 }}>
               {suggested.length === 0 ? (
-                <Box sx={{ color: 'text.secondary', fontSize: 14, py: 1 }}>Нет рекомендаций</Box>
+                <Box sx={{ color: 'text.secondary', fontSize: 14, py: 1 }}>
+                  Нет рекомендаций
+                </Box>
               ) : (
                 suggested.map(user => (
                   <Box
                     key={user.id}
-                    component="a"
+                    component='a'
                     href={`/profile/${user.username}`}
                     sx={{
                       display: 'flex',
@@ -210,14 +236,42 @@ const FriendsPage = () => {
                     }}
                   >
                     <Box
-                      component="img"
-                      src={user.photo && user.photo !== '' ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'}
+                      component='img'
+                      src={
+                        user.photo && user.photo !== ''
+                          ? `/static/uploads/avatar/${user.id}/${user.photo}`
+                          : '/static/uploads/avatar/system/avatar.png'
+                      }
                       alt={user.name || user.username}
-                      sx={{ width: 36, height: 36, borderRadius: '50%', mr: 1.5, objectFit: 'cover', border: '1.5px solid #D0BCFF' }}
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: '50%',
+                        mr: 1.5,
+                        objectFit: 'cover',
+                        border: '1.5px solid #D0BCFF',
+                      }}
                     />
                     <Box>
-                      <Box sx={{ fontWeight: 500, fontSize: 15, color: 'text.primary', lineHeight: 1 }}>{user.name || user.username}</Box>
-                      <Box sx={{ fontSize: 13, color: 'text.secondary', lineHeight: 1.2 }}>@{user.username}</Box>
+                      <Box
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: 15,
+                          color: 'text.primary',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {user.name || user.username}
+                      </Box>
+                      <Box
+                        sx={{
+                          fontSize: 13,
+                          color: 'text.secondary',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        @{user.username}
+                      </Box>
                     </Box>
                   </Box>
                 ))
@@ -230,4 +284,4 @@ const FriendsPage = () => {
   );
 };
 
-export default FriendsPage; 
+export default FriendsPage;

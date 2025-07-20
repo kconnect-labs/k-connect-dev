@@ -9,7 +9,10 @@ interface Tab {
 
 interface StyledTabsProps {
   value: string | number;
-  onChange: (event: React.SyntheticEvent | null, newValue: string | number) => void;
+  onChange: (
+    event: React.SyntheticEvent | null,
+    newValue: string | number
+  ) => void;
   tabs: Tab[];
   variant?: 'standard' | 'fullWidth';
   centered?: boolean;
@@ -22,17 +25,17 @@ interface StyledTabsProps {
 /**
  * StyledTabs - стилизованные табы в точном соответствии с панелью рекомендаций из MainPage
  */
-const StyledTabs: React.FC<StyledTabsProps> = ({ 
-  value, 
-  onChange, 
-  tabs, 
+const StyledTabs: React.FC<StyledTabsProps> = ({
+  value,
+  onChange,
+  tabs,
   variant = 'standard',
   centered = false,
   fullWidth = false,
   customStyle = false,
   className = '',
   style = {},
-  ...props 
+  ...props
 }) => {
   const handleTabClick = (tabValue: string | number) => {
     if (onChange) {
@@ -56,28 +59,26 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`styled-tabs-container ${customStyle ? 'styled-tabs--custom' : 'styled-tabs--default'} ${className}`}
       style={containerStyles}
       {...props}
     >
-      <div className="styled-tabs" style={tabsContainerStyles}>
-        {tabs.map((tab) => {
+      <div className='styled-tabs' style={tabsContainerStyles}>
+        {tabs.map(tab => {
           const IconComponent = tab.icon;
           const isActive = value === tab.value;
-          
+
           return (
             <button
               key={`${tab.value}-${tab.label}`}
               className={`styled-tab ${isActive ? 'styled-tab--active' : ''}`}
               onClick={() => handleTabClick(tab.value)}
-              type="button"
+              type='button'
             >
-              <div className="styled-tab-content">
-                {IconComponent && (
-                  <IconComponent className="styled-tab-icon" />
-                )}
-                <span className="styled-tab-label">{tab.label}</span>
+              <div className='styled-tab-content'>
+                {IconComponent && <IconComponent className='styled-tab-icon' />}
+                <span className='styled-tab-label'>{tab.label}</span>
               </div>
             </button>
           );
@@ -87,4 +88,4 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
   );
 };
 
-export default StyledTabs; 
+export default StyledTabs;

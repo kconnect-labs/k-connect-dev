@@ -1,14 +1,14 @@
-input[type="text"],
+input[type='text'],
 textarea {
-  font-size: 16px !important; 
-  max-height: 50vh; 
-  touch-action: manipulation; 
+  font-size: 16px !important;
+  max-height: 50vh;
+  touch-action: manipulation;
 }
 
 .messenger-container {
-  overscroll-behavior: contain; 
-  touch-action: pan-y; 
-  -webkit-overflow-scrolling: touch; 
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .message-list {
@@ -23,7 +23,7 @@ textarea {
 }
 
 .message-bubble {
-  max-width: 80%; 
+  max-width: 80%;
   word-break: break-word;
   hyphens: auto;
   transition: opacity 0.2s ease;
@@ -59,8 +59,14 @@ textarea {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-input-container {
@@ -160,7 +166,9 @@ textarea {
 }
 
 .fade-transition {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .fade-enter {
@@ -179,4 +187,4 @@ textarea {
 
 .fade-exit-active {
   opacity: 0;
-} 
+}

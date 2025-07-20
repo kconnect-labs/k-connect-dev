@@ -8,4 +8,4 @@ export * from './components/BadgeShopHeader';
 export * from './components/BadgeShopControls';
 export * from './components/BadgeDialog';
 export * from './components/CreateDialog';
-export * from './components/PurchaseDialog'; 
+export * from './components/PurchaseDialog';

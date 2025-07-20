@@ -12,20 +12,34 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
-const EmptyChannelsPlaceholder = ({ message = "Каналы не найдены" }) => {
+const EmptyChannelsPlaceholder = ({ message = 'Каналы не найдены' }) => {
   return (
     <StyledPaper>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
-        <TvOffIcon sx={{ fontSize: 70, color: 'rgba(255, 255, 255, 0.2)', mb: 2 }} />
-        <Typography variant="h6" color="text.secondary" gutterBottom>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          py: 4,
+        }}
+      >
+        <TvOffIcon
+          sx={{ fontSize: 70, color: 'rgba(255, 255, 255, 0.2)', mb: 2 }}
+        />
+        <Typography variant='h6' color='text.secondary' gutterBottom>
           {message}
         </Typography>
-        <Typography variant="body2" color="text.disabled" sx={{ maxWidth: 400 }}>
-          Попробуйте изменить параметры поиска или вернитесь позже, когда появятся новые каналы
+        <Typography
+          variant='body2'
+          color='text.disabled'
+          sx={{ maxWidth: 400 }}
+        >
+          Попробуйте изменить параметры поиска или вернитесь позже, когда
+          появятся новые каналы
         </Typography>
       </Box>
     </StyledPaper>
   );
 };
 
-export default EmptyChannelsPlaceholder; 
+export default EmptyChannelsPlaceholder;

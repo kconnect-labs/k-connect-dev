@@ -7,11 +7,11 @@ const UserScamBadge = ({ user }) => {
   const { t } = useLanguage();
   if (!user?.scam) return null;
   return (
-    <Tooltip title={t('profile.ban.scam')} arrow placement="top">
-      <Typography 
-        variant="caption" 
+    <Tooltip title={t('profile.ban.scam')} arrow placement='top'>
+      <Typography
+        variant='caption'
         sx={{
-          display: 'flex', 
+          display: 'flex',
           alignItems: 'center',
           color: '#fff',
           fontWeight: 500,
@@ -28,8 +28,8 @@ const UserScamBadge = ({ user }) => {
           '@keyframes pulse-red': {
             '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
             '70%': { boxShadow: '0 0 0 6px rgba(211, 47, 47, 0)' },
-            '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' }
-          }
+            '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' },
+          },
         }}
       >
         <WarningIcon sx={{ fontSize: 14, mr: 0.5, opacity: 0.9 }} />
@@ -39,4 +39,4 @@ const UserScamBadge = ({ user }) => {
   );
 };
 
-export default UserScamBadge; 
+export default UserScamBadge;

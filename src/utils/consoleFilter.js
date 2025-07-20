@@ -14,29 +14,29 @@ class ConsoleFilter {
       /Access to fetch at.*mc\.yandex\.ru/,
       /CORS policy.*mc\.yandex\.ru/,
       /Request header field.*is not allowed by Access-Control-Allow-Headers/,
-      
+
       // Google Analytics
       /googletagmanager\.com/,
       /google-analytics\.com/,
       /analytics\.google\.com/,
-      
+
       // Facebook Pixel
       /connect\.facebook\.net/,
       /facebook\.com/,
-      
+
       // VK
       /vk\.com/,
       /vk\.ru/,
-      
+
       // Telegram
       /telegram\.org/,
       /t\.me/,
-      
+
       // Общие CORS ошибки для внешних доменов
       /Access to fetch at.*has been blocked by CORS policy/,
       /Failed to fetch/,
       /net::ERR_FAILED/,
-      
+
       // Другие внешние сервисы
       /doubleclick\.net/,
       /googlesyndication\.com/,
@@ -45,11 +45,11 @@ class ConsoleFilter {
       /bing\.com/,
       /baidu\.com/,
       /yandex\.com/,
-      
+
       /ReactMarkdown.*defaultProps.*will be removed/,
       /Support for defaultProps will be removed from function components/,
     ];
-    
+
     this.init();
   }
 
@@ -74,7 +74,7 @@ class ConsoleFilter {
     };
 
     // Перехватываем необработанные ошибки
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       if (this.shouldFilter(event.message)) {
         event.preventDefault();
         return false;
@@ -82,7 +82,7 @@ class ConsoleFilter {
     });
 
     // Перехватываем необработанные промисы
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       const message = event.reason?.message || event.reason?.toString() || '';
       if (this.shouldFilter(message)) {
         event.preventDefault();
@@ -119,7 +119,9 @@ class ConsoleFilter {
     if (typeof pattern === 'string') {
       pattern = new RegExp(pattern, 'i');
     }
-    this.filteredPatterns = this.filteredPatterns.filter(p => p.toString() !== pattern.toString());
+    this.filteredPatterns = this.filteredPatterns.filter(
+      p => p.toString() !== pattern.toString()
+    );
   }
 
   /**
@@ -155,4 +157,4 @@ export default consoleFilter;
 // Также делаем доступным глобально для отладки
 if (typeof window !== 'undefined') {
   window.consoleFilter = consoleFilter;
-} 
+}

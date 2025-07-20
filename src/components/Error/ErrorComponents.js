@@ -4,7 +4,7 @@ import { Box, Typography, Button } from '@mui/material';
 export const ErrorFallback = ({ error, resetErrorBoundary }) => {
   useEffect(() => {
     if (
-      error?.message?.includes('Failed to fetch') || 
+      error?.message?.includes('Failed to fetch') ||
       error?.name === 'TypeError' ||
       error?.message?.includes('Failed to fetch dynamically imported module')
     ) {
@@ -14,66 +14,70 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
   }, [error]);
 
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      minHeight: '100vh',
-      textAlign: 'center',
-      p: 3
-    }}>
-      <Typography variant="h5" gutterBottom>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        textAlign: 'center',
+        p: 3,
+      }}
+    >
+      <Typography variant='h5' gutterBottom>
         Что-то пошло не так
       </Typography>
-      <Typography variant="body1" color="text.secondary" paragraph>
+      <Typography variant='body1' color='text.secondary' paragraph>
         Пожалуйста, попробуйте перезагрузить страницу
       </Typography>
-      <Box sx={{ 
-        mt: 2, 
-        p: 2, 
-        bgcolor: 'background.paper', 
-        borderRadius: 2,
-        maxWidth: '600px',
-        width: '100%',
-        textAlign: 'left'
-      }}>
-        <Typography variant="subtitle2" color="error" gutterBottom>
+      <Box
+        sx={{
+          mt: 2,
+          p: 2,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          maxWidth: '600px',
+          width: '100%',
+          textAlign: 'left',
+        }}
+      >
+        <Typography variant='subtitle2' color='error' gutterBottom>
           Детали ошибки:
         </Typography>
-        <Typography 
-          variant="body2" 
-          component="pre" 
-          sx={{ 
+        <Typography
+          variant='body2'
+          component='pre'
+          sx={{
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
             color: 'text.secondary',
             fontFamily: 'monospace',
-            fontSize: '0.875rem'
+            fontSize: '0.875rem',
           }}
         >
           {error?.message || 'Неизвестная ошибка'}
         </Typography>
         {error?.stack && (
-          <Typography 
-            variant="body2" 
-            component="pre" 
-            sx={{ 
+          <Typography
+            variant='body2'
+            component='pre'
+            sx={{
               mt: 1,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
               color: 'text.secondary',
               fontFamily: 'monospace',
               fontSize: '0.75rem',
-              opacity: 0.7
+              opacity: 0.7,
             }}
           >
             {error.stack}
           </Typography>
         )}
       </Box>
-      <Button 
-        variant="contained" 
+      <Button
+        variant='contained'
         onClick={resetErrorBoundary || (() => window.location.reload())}
         sx={{ mt: 3 }}
       >
@@ -81,4 +85,4 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
       </Button>
     </Box>
   );
-}; 
+};

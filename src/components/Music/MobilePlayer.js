@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo,
+} from 'react';
 import {
   Box,
   Typography,
@@ -8,7 +15,7 @@ import {
   styled,
   useTheme,
   Snackbar,
-  Alert
+  Alert,
 } from '@mui/material';
 import { PlayIcon, PauseIcon, ForwardIcon } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
@@ -16,21 +23,25 @@ import { formatDuration } from '../../utils/formatters';
 import { ThemeSettingsContext } from '../../App';
 import { useContext } from 'react';
 import FullScreenPlayer from './index.js';
-import { extractDominantColor, getCoverWithFallback } from '../../utils/imageUtils';
-
+import {
+  extractDominantColor,
+  getCoverWithFallback,
+} from '../../utils/imageUtils';
 
 const getColorFromImage = extractDominantColor;
 
 const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   position: 'fixed',
-  bottom:85, 
+  bottom: 85,
   left: 0,
   right: 0,
   zIndex: theme.zIndex.appBar - 1,
-  backgroundColor: covercolor ? `rgba(${covercolor}, 0.35)` : 'rgba(10, 10, 10, 0.6)', 
-  backdropFilter: 'blur(30px)', 
+  backgroundColor: covercolor
+    ? `rgba(${covercolor}, 0.35)`
+    : 'rgba(10, 10, 10, 0.6)',
+  backdropFilter: 'blur(30px)',
   boxShadow: '0 -2px 15px rgba(0, 0, 0, 0.25)',
-  padding: theme.spacing(0.5, 1, 0.5, 1), 
+  padding: theme.spacing(0.5, 1, 0.5, 1),
   display: 'flex',
   flexDirection: 'column',
   borderTopLeftRadius: 12,
@@ -42,7 +53,7 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
     display: 'none !important',
     opacity: 0,
     pointerEvents: 'none',
-    visibility: 'hidden'
+    visibility: 'hidden',
   },
   '&::before': {
     content: '""',
@@ -51,51 +62,54 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: covercolor ? 
-      `radial-gradient(ellipse at top, rgba(${covercolor}, 0.3) 0%, rgba(10, 10, 10, 0.1) 70%)` :
-      'none',
+    background: covercolor
+      ? `radial-gradient(ellipse at top, rgba(${covercolor}, 0.3) 0%, rgba(10, 10, 10, 0.1) 70%)`
+      : 'none',
     opacity: 0.6,
     pointerEvents: 'none',
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-  }
+  },
 }));
 
-
 const ProgressBar = styled(LinearProgress)(({ theme, covercolor }) => ({
-  height: 2, 
+  height: 2,
   borderRadius: 0,
   backgroundColor: 'rgba(255, 255, 255, 0.2)',
   '& .MuiLinearProgress-bar': {
     borderRadius: 0,
-    backgroundColor: covercolor ? `rgba(${covercolor}, 1)` : theme.palette.primary.main,
+    backgroundColor: covercolor
+      ? `rgba(${covercolor}, 1)`
+      : theme.palette.primary.main,
   },
 }));
 
-
 const TrackInfo = memo(({ title, artist, onClick }) => (
-  <Box sx={{ 
-    flexGrow: 1, 
-    display: 'flex', 
-    flexDirection: 'column', 
-    overflow: 'hidden',
-    cursor: 'pointer'
-  }} onClick={onClick}>
-    <Typography 
-      variant="body2" 
-      noWrap 
-      sx={{ 
+  <Box
+    sx={{
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      cursor: 'pointer',
+    }}
+    onClick={onClick}
+  >
+    <Typography
+      variant='body2'
+      noWrap
+      sx={{
         fontWeight: 'medium',
-        color: 'white'
+        color: 'white',
       }}
     >
       {title || 'Unknown Title'}
     </Typography>
-    <Typography 
-      variant="caption" 
-      noWrap 
-      sx={{ 
-        color: 'rgba(255, 255, 255, 0.7)' 
+    <Typography
+      variant='caption'
+      noWrap
+      sx={{
+        color: 'rgba(255, 255, 255, 0.7)',
       }}
     >
       {artist || 'Unknown Artist'}
@@ -110,11 +124,11 @@ const MobilePlayer = memo(({ isMobile }) => {
   }
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
-  const { 
-    currentTrack, 
-    isPlaying, 
-    togglePlay, 
-    nextTrack, 
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    nextTrack,
     prevTrack,
     likeTrack,
     currentTime,
@@ -125,110 +139,109 @@ const MobilePlayer = memo(({ isMobile }) => {
     audioRef,
     openFullScreenPlayer,
     closeFullScreenPlayer,
-    isFullScreenPlayerOpen
+    isFullScreenPlayerOpen,
   } = useMusic();
 
-  
   const progressRef = useRef(0);
   const [dominantColor, setDominantColor] = useState(null);
-  
+
   const [shareSnackbar, setShareSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'success'
+    severity: 'success',
   });
-  
-  
+
   const formattedCurrentTime = useMemo(() => {
     try {
-
-      const globalTimeElement = document.getElementById('global-player-current-time');
+      const globalTimeElement = document.getElementById(
+        'global-player-current-time'
+      );
       if (globalTimeElement && globalTimeElement.textContent) {
         return globalTimeElement.textContent;
       }
-      
 
       if (typeof getCurrentTimeRaw === 'function') {
         const time = getCurrentTimeRaw();
         return formatDuration(typeof time === 'number' ? time : 0);
       }
-      
 
       return '0:00';
     } catch (error) {
-      console.error("Error getting current time:", error);
+      console.error('Error getting current time:', error);
       return '0:00';
     }
   }, [getCurrentTimeRaw]);
-  
+
   const formattedDuration = useMemo(() => {
     try {
-
-      const globalDurationElement = document.getElementById('global-player-duration');
+      const globalDurationElement = document.getElementById(
+        'global-player-duration'
+      );
       if (globalDurationElement && globalDurationElement.textContent) {
         return globalDurationElement.textContent;
       }
-      
 
       if (typeof getDurationRaw === 'function') {
         const duration = getDurationRaw();
         return formatDuration(typeof duration === 'number' ? duration : 0);
       }
-      
 
       return '0:00';
     } catch (error) {
-      console.error("Error getting duration:", error);
+      console.error('Error getting duration:', error);
       return '0:00';
     }
   }, [getDurationRaw]);
-  
-  
-  useEffect(() => {
 
+  useEffect(() => {
     let isMounted = true;
-    
+
     const updateDisplays = () => {
       try {
-
         if (!isMounted) return;
-        
+
         const currentTimeEl = document.getElementById('mobile-current-time');
         const durationEl = document.getElementById('mobile-duration');
         const progressBar = document.getElementById('mobile-player-progress');
-        
 
-        if (currentTimeEl && window.audioTiming && window.audioTiming.formattedCurrentTime) {
+        if (
+          currentTimeEl &&
+          window.audioTiming &&
+          window.audioTiming.formattedCurrentTime
+        ) {
           currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
         }
-        
 
-        if (durationEl && window.audioTiming && window.audioTiming.formattedDuration) {
+        if (
+          durationEl &&
+          window.audioTiming &&
+          window.audioTiming.formattedDuration
+        ) {
           durationEl.textContent = window.audioTiming.formattedDuration;
         }
-        
 
-        if (progressBar && window.audioTiming && typeof window.audioTiming.progress === 'number') {
+        if (
+          progressBar &&
+          window.audioTiming &&
+          typeof window.audioTiming.progress === 'number'
+        ) {
           progressBar.style.width = `${window.audioTiming.progress}%`;
           progressRef.current = window.audioTiming.progress;
         }
-        
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
         }
       } catch (error) {
-        console.error("Error updating mobile player displays:", error);
+        console.error('Error updating mobile player displays:', error);
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
         }
       }
     };
-    
 
     const animationId = requestAnimationFrame(updateDisplays);
-    
 
     return () => {
       isMounted = false;
@@ -236,31 +249,25 @@ const MobilePlayer = memo(({ isMobile }) => {
     };
   }, []);
 
-  
-  useEffect(() => {
-    
-  }, []);
-  
-  
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (currentTrack?.cover_path) {
       getColorFromImage(
-        currentTrack.cover_path || '/static/uploads/system/album_placeholder.jpg',
-        (color) => {
+        currentTrack.cover_path ||
+          '/static/uploads/system/album_placeholder.jpg',
+        color => {
           setDominantColor(color);
         }
       );
     }
   }, [currentTrack?.cover_path]);
-  
-  
+
   useEffect(() => {
-    
-    
     if (audioRef?.current) {
       const currentTimeValue = audioRef.current.currentTime || 0;
       const durationValue = audioRef.current.duration || 0;
-      
+
       if (durationValue > 0) {
         progressRef.current = (currentTimeValue / durationValue) * 100;
         const progressBar = document.getElementById('mobile-player-progress');
@@ -270,66 +277,66 @@ const MobilePlayer = memo(({ isMobile }) => {
       }
     }
   }, [audioRef]);
-  
-  
-  
+
   useEffect(() => {
     if (duration > 0) {
       progressRef.current = (currentTime / duration) * 100;
     }
   }, [currentTime, duration]);
-  
+
   if (!currentTrack) {
     return null;
   }
 
-  const toggleLikeTrack = useCallback((e) => {
-    
-    if (e) {
-      e.stopPropagation();
-    }
-    
-    if (currentTrack?.id) {
-      try {
-        
-        const likeButton = e.currentTarget;
-        likeButton.style.transform = 'scale(1.3)';
-        setTimeout(() => {
-          likeButton.style.transform = 'scale(1)';
-        }, 150);
-        
-        likeTrack(currentTrack.id)
-          .then(result => {
-            console.log("Like result:", result);
-            
-          })
-          .catch(error => {
-            console.error("Error liking track:", error);
-          });
-      } catch (error) {
-        console.error("Error liking track:", error);
+  const toggleLikeTrack = useCallback(
+    e => {
+      if (e) {
+        e.stopPropagation();
       }
-    }
-  }, [currentTrack, likeTrack]);
-  
-  
-  const handleShare = useCallback((e) => {
-    e.stopPropagation();
-    if (!currentTrack) return;
-    
-    const trackLink = `${window.location.origin}/music/track/${currentTrack.id}`;
-    
-    
-    copyToClipboard(trackLink);
-  }, [currentTrack]);
-  
-  const copyToClipboard = useCallback((text) => {
-    navigator.clipboard.writeText(text)
+
+      if (currentTrack?.id) {
+        try {
+          const likeButton = e.currentTarget;
+          likeButton.style.transform = 'scale(1.3)';
+          setTimeout(() => {
+            likeButton.style.transform = 'scale(1)';
+          }, 150);
+
+          likeTrack(currentTrack.id)
+            .then(result => {
+              console.log('Like result:', result);
+            })
+            .catch(error => {
+              console.error('Error liking track:', error);
+            });
+        } catch (error) {
+          console.error('Error liking track:', error);
+        }
+      }
+    },
+    [currentTrack, likeTrack]
+  );
+
+  const handleShare = useCallback(
+    e => {
+      e.stopPropagation();
+      if (!currentTrack) return;
+
+      const trackLink = `${window.location.origin}/music/track/${currentTrack.id}`;
+
+      copyToClipboard(trackLink);
+    },
+    [currentTrack]
+  );
+
+  const copyToClipboard = useCallback(text => {
+    navigator.clipboard
+      .writeText(text)
       .then(() => {
         setShareSnackbar({
           open: true,
           message: 'Ссылка на трек скопирована в буфер обмена',
-          severity: 'success'
+          severity: 'success',
         });
       })
       .catch(err => {
@@ -337,17 +344,16 @@ const MobilePlayer = memo(({ isMobile }) => {
         setShareSnackbar({
           open: true,
           message: 'Не удалось скопировать ссылку',
-          severity: 'error'
+          severity: 'error',
         });
       });
   }, []);
-  
-  
+
   const handleCloseSnackbar = useCallback((event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    setShareSnackbar(prev => ({...prev, open: false}));
+    setShareSnackbar(prev => ({ ...prev, open: false }));
   }, []);
 
   const openFullScreen = useCallback(() => {
@@ -357,56 +363,65 @@ const MobilePlayer = memo(({ isMobile }) => {
   const closeFullScreen = useCallback(() => {
     closeFullScreenPlayer();
   }, [closeFullScreenPlayer]);
-  
+
   const handleControlClick = useCallback((e, callback) => {
     e.stopPropagation();
     try {
       callback();
     } catch (error) {
-      console.error("Error in control click:", error);
+      console.error('Error in control click:', error);
     }
   }, []);
-  
-  const handlePrevClick = useCallback((e) => handleControlClick(e, prevTrack), [handleControlClick, prevTrack]);
-  const handlePlayClick = useCallback((e) => handleControlClick(e, togglePlay), [handleControlClick, togglePlay]);
-  const handleNextClick = useCallback((e) => handleControlClick(e, nextTrack), [handleControlClick, nextTrack]);
-  
+
+  const handlePrevClick = useCallback(
+    e => handleControlClick(e, prevTrack),
+    [handleControlClick, prevTrack]
+  );
+  const handlePlayClick = useCallback(
+    e => handleControlClick(e, togglePlay),
+    [handleControlClick, togglePlay]
+  );
+  const handleNextClick = useCallback(
+    e => handleControlClick(e, nextTrack),
+    [handleControlClick, nextTrack]
+  );
+
   return (
     <React.Fragment>
-      <PlayerContainer 
-        elevation={0} 
-        covercolor={dominantColor} 
+      <PlayerContainer
+        elevation={0}
+        covercolor={dominantColor}
         sx={{ display: isFullScreenPlayerOpen ? 'none' : 'flex' }}
         className={isFullScreenPlayerOpen ? 'hidden' : ''}
       >
-        <Box 
+        <Box
           onClick={openFullScreen}
-          sx={{ 
-            display: 'flex', 
+          sx={{
+            display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
             position: 'relative',
             padding: '2px 0',
             width: '100%',
-            WebkitTapHighlightColor: 'transparent'
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <Box 
-            component="img"
-            src={getCoverWithFallback(currentTrack?.cover_path || '', "album")}
+          <Box
+            component='img'
+            src={getCoverWithFallback(currentTrack?.cover_path || '', 'album')}
             alt={currentTrack?.title || ''}
-            sx={{ 
-              width: 40, 
-              height: 40, 
+            sx={{
+              width: 40,
+              height: 40,
               borderRadius: 1,
               objectFit: 'cover',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               marginRight: 1.5,
             }}
           />
-          <Typography 
-            variant="subtitle1" 
-            noWrap 
+          <Typography
+            variant='subtitle1'
+            noWrap
             sx={{ fontWeight: 600, color: 'white', flexGrow: 1, fontSize: 16 }}
           >
             {currentTrack?.title || 'Unknown Title'}
@@ -414,7 +429,7 @@ const MobilePlayer = memo(({ isMobile }) => {
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 1 }}>
             <IconButton
               onClick={handlePlayClick}
-              size="large"
+              size='large'
               aria-label={isPlaying ? 'Pause' : 'Play'}
               sx={{ color: 'white', mx: 0.5 }}
             >
@@ -422,8 +437,8 @@ const MobilePlayer = memo(({ isMobile }) => {
             </IconButton>
             <IconButton
               onClick={handleNextClick}
-              size="large"
-              aria-label="Next"
+              size='large'
+              aria-label='Next'
               sx={{ color: 'white', mx: 0.5 }}
             >
               <ForwardIcon size={24} />
@@ -431,19 +446,17 @@ const MobilePlayer = memo(({ isMobile }) => {
           </Box>
         </Box>
       </PlayerContainer>
-      
 
-      
-      <Snackbar 
+      <Snackbar
         open={shareSnackbar.open && !isFullScreenPlayerOpen}
-        autoHideDuration={3000} 
+        autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        sx={{ bottom: 70 }} 
+        sx={{ bottom: 70 }}
       >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={shareSnackbar.severity} 
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={shareSnackbar.severity}
           sx={{ width: '100%' }}
         >
           {shareSnackbar.message}
@@ -453,4 +466,4 @@ const MobilePlayer = memo(({ isMobile }) => {
   );
 });
 
-export default MobilePlayer; 
+export default MobilePlayer;

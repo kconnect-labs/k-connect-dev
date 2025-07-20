@@ -59,7 +59,12 @@ export interface PackDetails {
   contents: PackContent[];
 }
 
-export type ItemAction = 'equip' | 'unequip' | 'upgrade' | 'marketplace_list' | 'marketplace_remove';
+export type ItemAction =
+  | 'equip'
+  | 'unequip'
+  | 'upgrade'
+  | 'marketplace_list'
+  | 'marketplace_remove';
 
 export interface ItemUpdateEvent {
   item: InventoryItem;
@@ -68,4 +73,4 @@ export interface ItemUpdateEvent {
 
 export interface ItemObtainedEvent {
   detail: InventoryItem;
-} 
+}

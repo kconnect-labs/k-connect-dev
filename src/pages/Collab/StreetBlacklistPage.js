@@ -12,7 +12,10 @@ const StreetBlacklistPage = () => {
       <Helmet>
         <title>К-Коннект × Street Blacklist</title>
         {/* Граффити-шрифт Rock Salt для Street Blacklist */}
-        <meta name="description" content="Скоро: секретные уличные гонки с дрифтерами CarX Street. Следите за новостями!" />
+        <meta
+          name='description'
+          content='Скоро: секретные уличные гонки с дрифтерами CarX Street. Следите за новостями!'
+        />
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
           .graffiti-font {
@@ -67,8 +70,8 @@ const StreetBlacklistPage = () => {
         />
 
         <Typography
-          variant="h1"
-          className="graffiti-font"
+          variant='h1'
+          className='graffiti-font'
           sx={{
             fontSize: { xs: '2.5rem', md: '4rem' },
             fontWeight: 900,
@@ -83,7 +86,7 @@ const StreetBlacklistPage = () => {
           Street Blacklist
         </Typography>
         <Typography
-          variant="h4"
+          variant='h4'
           sx={{
             fontWeight: 700,
             color: '#8aff8a',
@@ -91,10 +94,11 @@ const StreetBlacklistPage = () => {
             zIndex: 2,
           }}
         >
-          <span style={{ color: '#cfbcfb' }}>К-Коннект</span> × <span className="graffiti-font">Street Blacklist</span>
+          <span style={{ color: '#cfbcfb' }}>К-Коннект</span> ×{' '}
+          <span className='graffiti-font'>Street Blacklist</span>
         </Typography>
         <Typography
-          variant="h6"
+          variant='h6'
           sx={{
             maxWidth: 680,
             mb: 3,
@@ -102,16 +106,30 @@ const StreetBlacklistPage = () => {
             zIndex: 2,
           }}
         >
-          Скоро стартуют нелегальные гонки в CarX Street. Гонщики на своих лучших авто будут разогревать улицы ревом моторов и вниманием зевак.
-          Ходят слухи, что они хотят присоединиться к нам, и чтобы встретить их достойно, мы подготовим для них Blacklist.
+          Скоро стартуют нелегальные гонки в CarX Street. Гонщики на своих
+          лучших авто будут разогревать улицы ревом моторов и вниманием зевак.
+          Ходят слухи, что они хотят присоединиться к нам, и чтобы встретить их
+          достойно, мы подготовим для них Blacklist.
         </Typography>
-        <Typography variant="body1" sx={{ color: '#ffffffb0', maxWidth: 720, mb: 6, zIndex: 2 }}>
-          Держи двигатель горячим: улицы проснутся внезапно. Самые быстрые и отчаянные заберут место в Blacklist.
+        <Typography
+          variant='body1'
+          sx={{ color: '#ffffffb0', maxWidth: 720, mb: 6, zIndex: 2 }}
+        >
+          Держи двигатель горячим: улицы проснутся внезапно. Самые быстрые и
+          отчаянные заберут место в Blacklist.
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', zIndex: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            zIndex: 2,
+          }}
+        >
           <Button
-            href="/"
-            variant="contained"
+            href='/'
+            variant='contained'
             sx={{
               backgroundColor: '#8aff8a',
               color: '#000',
@@ -124,14 +142,14 @@ const StreetBlacklistPage = () => {
             Вернуться в К-Коннект
           </Button>
           <Button
-            href="/street/blacklist/v1"
-            variant="outlined"
+            href='/street/blacklist/v1'
+            variant='outlined'
             sx={{
               borderColor: '#ff4444',
               color: '#ff4444',
-              '&:hover': { 
+              '&:hover': {
                 borderColor: '#ff6666',
-                backgroundColor: 'rgba(255, 68, 68, 0.1)'
+                backgroundColor: 'rgba(255, 68, 68, 0.1)',
               },
               fontWeight: 700,
               px: 4,
@@ -146,4 +164,4 @@ const StreetBlacklistPage = () => {
   );
 };
 
-export default StreetBlacklistPage; 
+export default StreetBlacklistPage;

@@ -35,7 +35,7 @@ if (!document.getElementById('equipped-item-styles')) {
   document.head.appendChild(styleSheet);
 }
 
-const getContainerStyle = (index) => {
+const getContainerStyle = index => {
   const positions = [
     { top: '-15px', right: '0px', zIndex: 12 }, // Верхний-правый
     { top: '70px', right: '-20px', zIndex: 11 }, // Нижний-правый
@@ -63,7 +63,8 @@ const getParticleStyle = (color, delay, duration) => ({
   width: `${Math.random() * 12 + 6}px`, // Увеличили размер в 1.5 раза (было 4-12px, стало 6-18px)
   height: `${Math.random() * 12 + 6}px`, // Увеличили размер в 1.5 раза
   background: `radial-gradient(circle at center, ${color} 0%, ${color} 50%, transparent 100%)`,
-  clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+  clipPath:
+    'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
   animation: `particle ${duration}s ease-out infinite`,
   animationDelay: `${delay}s`,
   opacity: 0,
@@ -95,21 +96,24 @@ const getAverageColor = (imgElement, callback) => {
     return;
   }
 
-  let r = 0, g = 0, b = 0;
+  let r = 0,
+    g = 0,
+    b = 0;
   let count = 0;
 
   for (let i = 0; i < data.length; i += 4) {
-    if (data[i + 3] > 128) { // a(alpha) > 128 to ignore transparent pixels
+    if (data[i + 3] > 128) {
+      // a(alpha) > 128 to ignore transparent pixels
       r += data[i];
       g += data[i + 1];
       b += data[i + 2];
       count++;
     }
   }
-  
+
   if (count === 0) {
-      callback('rgba(208, 188, 255, 0.8)'); // fallback if all transparent
-      return;
+    callback('rgba(208, 188, 255, 0.8)'); // fallback if all transparent
+    return;
   }
 
   r = Math.floor(r / count);
@@ -120,22 +124,24 @@ const getAverageColor = (imgElement, callback) => {
 };
 
 const EquippedItem = ({ item, index = 0 }) => {
-  const [particleColor, setParticleColor] = useState('rgba(208, 188, 255, 0.8)');
+  const [particleColor, setParticleColor] = useState(
+    'rgba(208, 188, 255, 0.8)'
+  );
   const imgRef = useRef(null);
 
   useEffect(() => {
     if (item?.image_url) {
       const img = new Image();
-      img.crossOrigin = "Anonymous";
+      img.crossOrigin = 'Anonymous';
       img.src = item.image_url;
       img.onload = () => {
-        getAverageColor(img, (color) => {
+        getAverageColor(img, color => {
           setParticleColor(color);
         });
       };
       img.onerror = () => {
         setParticleColor('rgba(208, 188, 255, 0.8)');
-      }
+      };
     }
   }, [item?.image_url]);
 
@@ -145,33 +151,46 @@ const EquippedItem = ({ item, index = 0 }) => {
 
   const isUpgraded = item.upgrade_level === 1;
 
-  const particles = isUpgraded ? Array.from({ length: 10 }).map((_, i) => ( // Уменьшили количество частиц в 2 раза (с 20 до 10)
-    <div
-      key={i}
-      style={getParticleStyle(particleColor, Math.random() * 4, Math.random() * 3 + 3)}
-    />
-  )) : [];
+  const particles = isUpgraded
+    ? Array.from({ length: 10 }).map(
+        (
+          _,
+          i // Уменьшили количество частиц в 2 раза (с 20 до 10)
+        ) => (
+          <div
+            key={i}
+            style={getParticleStyle(
+              particleColor,
+              Math.random() * 4,
+              Math.random() * 3 + 3
+            )}
+          />
+        )
+      )
+    : [];
 
   return (
     <div style={getContainerStyle(index)}>
       {isUpgraded && (
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
-        }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 1,
+          }}
+        >
           {particles}
         </div>
       )}
-      <OptimizedImage 
-        src={`https://k-connect.ru${item.image_url}`} 
+      <OptimizedImage
+        src={`https://k-connect.ru${item.image_url}`}
         alt={item.item_name}
-        width="100%"  
-        height="100%"
-        fallbackText=""
+        width='100%'
+        height='100%'
+        fallbackText=''
         showSkeleton={false}
         skipExistenceCheck={true}
         style={{
@@ -181,9 +200,9 @@ const EquippedItem = ({ item, index = 0 }) => {
           position: 'relative',
           zIndex: 1,
         }}
-        onLoad={(e) => {
+        onLoad={e => {
           if (e && e.target && e.target.complete) {
-            getAverageColor(e.target, (color) => {
+            getAverageColor(e.target, color => {
               setParticleColor(color);
             });
           }
@@ -193,4 +212,4 @@ const EquippedItem = ({ item, index = 0 }) => {
   );
 };
 
-export default EquippedItem; 
+export default EquippedItem;

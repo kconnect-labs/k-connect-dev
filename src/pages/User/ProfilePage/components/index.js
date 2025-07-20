@@ -19,5 +19,4 @@ export { default as UserSubscriptionBadge } from './UserSubscriptionBadge';
 export { default as OwnedUsernames } from './OwnedUsernames';
 export { default as ProfileAbout } from './ProfileAbout';
 
-
-export * from './StyledComponents'; 
+export * from './StyledComponents';

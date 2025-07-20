@@ -20,14 +20,14 @@ import {
   useTheme,
   InputAdornment,
   Menu,
-  MenuItem
+  MenuItem,
 } from '@mui/material';
 import {
   Close as CloseIcon,
   Search as SearchIcon,
   Delete as DeleteIcon,
   MoreVert as MoreVertIcon,
-  Favorite as FavoriteIcon
+  Favorite as FavoriteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -54,17 +54,26 @@ interface Connection {
   confirmed_at?: string;
 }
 
-const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess }) => {
+const KonnectModal: React.FC<KonnectModalProps> = ({
+  open,
+  onClose,
+  onSuccess,
+}) => {
   const theme = useTheme();
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [connections, setConnections] = useState<Connection[]>([]);
-  const [pendingConnection, setPendingConnection] = useState<Connection | null>(null);
-  const [receivedConnection, setReceivedConnection] = useState<Connection | null>(null);
+  const [pendingConnection, setPendingConnection] = useState<Connection | null>(
+    null
+  );
+  const [receivedConnection, setReceivedConnection] =
+    useState<Connection | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<'search' | 'pending' | 'connected' | 'received'>('search');
+  const [view, setView] = useState<
+    'search' | 'pending' | 'connected' | 'received'
+  >('search');
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [menuUserId, setMenuUserId] = useState<number | null>(null);
 
@@ -96,21 +105,29 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       if (data.success) {
         const connectionsData: Connection[] = data.connections || [];
         setConnections(connectionsData);
-        
+
         // Находим ожидающий коннект (который мы отправили)
-        const pending = connectionsData.find((conn: Connection) => conn.connection_status === 'pending');
+        const pending = connectionsData.find(
+          (conn: Connection) => conn.connection_status === 'pending'
+        );
         setPendingConnection(pending || null);
-        
+
         // Находим полученный коннект (который нам отправили)
-        const received = connectionsData.find((conn: Connection) => conn.connection_status === 'received');
+        const received = connectionsData.find(
+          (conn: Connection) => conn.connection_status === 'received'
+        );
         setReceivedConnection(received || null);
-        
+
         // Определяем, какой вид показывать
         if (pending) {
           setView('pending');
         } else if (received) {
           setView('received');
-        } else if (connectionsData.some((conn: Connection) => conn.connection_status === 'confirmed')) {
+        } else if (
+          connectionsData.some(
+            (conn: Connection) => conn.connection_status === 'confirmed'
+          )
+        ) {
           setView('connected');
         } else {
           setView('search');
@@ -128,7 +145,9 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       return;
     }
     try {
-      const response = await axios.get(`/api/user/connections/search?query=${encodeURIComponent(query)}`);
+      const response = await axios.get(
+        `/api/user/connections/search?query=${encodeURIComponent(query)}`
+      );
       const data = response.data;
       if (data.results) {
         setSearchResults(data.results);
@@ -147,7 +166,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     try {
       const response = await axios.post('/api/user/connections/add', {
         username,
-        connection_type: 'love'
+        connection_type: 'love',
       });
       const data = response.data;
       if (data.success) {
@@ -171,7 +190,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     try {
       const response = await axios.post('/api/user/connections/remove', {
         username,
-        connection_type: 'love'
+        connection_type: 'love',
       });
       const data = response.data;
       if (data.success) {
@@ -193,7 +212,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     try {
       const response = await axios.post('/api/user/connections/accept', {
         username,
-        connection_type: 'love'
+        connection_type: 'love',
       });
       const data = response.data;
       if (data.success) {
@@ -203,7 +222,9 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
         setError(data.message || 'Ошибка при подтверждении коннекта');
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Ошибка при подтверждении коннекта');
+      setError(
+        err.response?.data?.message || 'Ошибка при подтверждении коннекта'
+      );
     } finally {
       setLoading(false);
     }
@@ -215,7 +236,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     try {
       const response = await axios.post('/api/user/connections/reject', {
         username,
-        connection_type: 'love'
+        connection_type: 'love',
       });
       const data = response.data;
       if (data.success) {
@@ -232,7 +253,10 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
   };
 
   // Функции для меню
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, userId: number) => {
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    userId: number
+  ) => {
     setAnchorEl(event.currentTarget);
     setMenuUserId(userId);
   };
@@ -247,35 +271,48 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     if (!dateStr) return null;
     const date = new Date(dateStr);
     const now = new Date();
-    const diff = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    const diff = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+    );
     return diff;
   };
 
   // Рендер ожидающего коннекта
   const renderPendingView = () => {
     if (!pendingConnection) return null;
-    
+
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+        <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
           Ожидание подтверждения
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-          <Avatar 
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 2,
+          }}
+        >
+          <Avatar
             src={`/static/uploads/avatar/${pendingConnection.id}/${pendingConnection.photo}`}
             alt={pendingConnection.username}
             sx={{ width: 64, height: 64, mr: 2 }}
           />
           <Box>
-            <Typography sx={{ color: '#fff' }}>{pendingConnection.username}</Typography>
-            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{pendingConnection.name}</Typography>
+            <Typography sx={{ color: '#fff' }}>
+              {pendingConnection.username}
+            </Typography>
+            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              {pendingConnection.name}
+            </Typography>
           </Box>
         </Box>
         <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
           Ожидаем подтверждения от пользователя
         </Typography>
         <Button
-          variant="outlined"
+          variant='outlined'
           onClick={() => removeConnection(pendingConnection.username)}
           disabled={loading}
           sx={{
@@ -296,21 +333,32 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
   // Рендер полученного коннекта
   const renderReceivedView = () => {
     if (!receivedConnection) return null;
-    
+
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+        <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
           Новый коннект
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-          <Avatar 
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mb: 2,
+          }}
+        >
+          <Avatar
             src={`/static/uploads/avatar/${receivedConnection.id}/${receivedConnection.photo}`}
             alt={receivedConnection.username}
             sx={{ width: 64, height: 64, mr: 2 }}
           />
           <Box>
-            <Typography sx={{ color: '#fff' }}>{receivedConnection.username}</Typography>
-            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{receivedConnection.name}</Typography>
+            <Typography sx={{ color: '#fff' }}>
+              {receivedConnection.username}
+            </Typography>
+            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              {receivedConnection.name}
+            </Typography>
           </Box>
         </Box>
         <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
@@ -318,7 +366,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={() => acceptConnection(receivedConnection.username)}
             disabled={loading}
             sx={{
@@ -333,7 +381,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
             Принять
           </Button>
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={() => rejectConnection(receivedConnection.username)}
             disabled={loading}
             sx={{
@@ -355,71 +403,83 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
   // Рендер подключенных коннектов
   const renderConnectedView = () => (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+      <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
         Ваши коннекты
       </Typography>
-      {connections.filter((conn: Connection) => conn.connection_status === 'confirmed').map((connection: Connection) => {
-        const daysSince = getDaysSince(connection.confirmed_at || '');
-        return (
-          <Box
-            key={connection.id}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: 2,
-              mb: 1,
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: 2,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar 
-                src={`/static/uploads/avatar/${connection.id}/${connection.photo}`}
-                alt={connection.username}
-                sx={{ mr: 2 }}
-              />
-              <Box>
-                <Typography sx={{ color: '#fff', fontWeight: 500 }}>
-                  {connection.username}
-                </Typography>
-                <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.875rem' }}>
-                  {connection.name}
-                </Typography>
-                {daysSince !== null && (
-                  <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>
-                    Коннект {daysSince} дней
+      {connections
+        .filter((conn: Connection) => conn.connection_status === 'confirmed')
+        .map((connection: Connection) => {
+          const daysSince = getDaysSince(connection.confirmed_at || '');
+          return (
+            <Box
+              key={connection.id}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p: 2,
+                mb: 1,
+                bgcolor: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: 2,
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Avatar
+                  src={`/static/uploads/avatar/${connection.id}/${connection.photo}`}
+                  alt={connection.username}
+                  sx={{ mr: 2 }}
+                />
+                <Box>
+                  <Typography sx={{ color: '#fff', fontWeight: 500 }}>
+                    {connection.username}
                   </Typography>
-                )}
+                  <Typography
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    {connection.name}
+                  </Typography>
+                  {daysSince !== null && (
+                    <Typography
+                      sx={{
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        fontSize: '0.75rem',
+                      }}
+                    >
+                      Коннект {daysSince} дней
+                    </Typography>
+                  )}
+                </Box>
               </Box>
-            </Box>
-            <IconButton
-              onClick={(e) => handleMenuOpen(e, connection.id)}
-              sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl) && menuUserId === connection.id}
-              onClose={handleMenuClose}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <MenuItem
-                onClick={() => {
-                  removeConnection(connection.username);
-                  handleMenuClose();
-                }}
-                sx={{ color: '#e57373' }}
+              <IconButton
+                onClick={e => handleMenuOpen(e, connection.id)}
+                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
               >
-                Убрать соединение
-              </MenuItem>
-            </Menu>
-          </Box>
-        );
-      })}
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl) && menuUserId === connection.id}
+                onClose={handleMenuClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    removeConnection(connection.username);
+                    handleMenuClose();
+                  }}
+                  sx={{ color: '#e57373' }}
+                >
+                  Убрать соединение
+                </MenuItem>
+              </Menu>
+            </Box>
+          );
+        })}
     </Box>
   );
 
@@ -428,9 +488,9 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
     <>
       <TextField
         fullWidth
-        placeholder="Поиск пользователей..."
+        placeholder='Поиск пользователей...'
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={e => setSearchQuery(e.target.value)}
         sx={{
           mb: 2,
           '& .MuiOutlinedInput-root': {
@@ -448,31 +508,33 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
         }}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position='start'>
               <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
             </InputAdornment>
           ),
         }}
       />
 
-      <Box sx={{ 
-        flex: 1, 
-        overflow: 'auto',
-        '&::-webkit-scrollbar': {
-          width: '8px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '4px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: 'rgba(255, 255, 255, 0.2)',
-          borderRadius: '4px',
-          '&:hover': {
-            background: 'rgba(255, 255, 255, 0.3)',
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
           },
-        },
-      }}>
+          '&::-webkit-scrollbar-track': {
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.3)',
+            },
+          },
+        }}
+      >
         {searchQuery && searchResults.length > 0 && (
           <List>
             {searchResults.map((user: User) => (
@@ -488,29 +550,33 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
                 }}
               >
                 <ListItemAvatar>
-                  <Avatar 
+                  <Avatar
                     src={`/static/uploads/avatar/${user.id}/${user.photo}`}
                     alt={user.username}
                   />
                 </ListItemAvatar>
-                <ListItemText 
+                <ListItemText
                   primary={user.username}
                   secondary={user.name}
-                  sx={{ 
+                  sx={{
                     color: '#fff',
                     '& .MuiListItemText-secondary': {
-                      color: 'rgba(255, 255, 255, 0.7)'
-                    }
+                      color: 'rgba(255, 255, 255, 0.7)',
+                    },
                   }}
                 />
                 <Button
-                  variant="contained"
+                  variant='contained'
                   onClick={() => addConnection(user.username)}
                   disabled={loading || user.is_connected}
                   startIcon={user.is_connected ? undefined : <FavoriteIcon />}
                   sx={{
-                    color: user.is_connected ? 'rgba(255, 255, 255, 0.7)' : '#D0BCFF',
-                    bgcolor: user.is_connected ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+                    color: user.is_connected
+                      ? 'rgba(255, 255, 255, 0.7)'
+                      : '#D0BCFF',
+                    bgcolor: user.is_connected
+                      ? 'rgba(255, 255, 255, 0.1)'
+                      : 'rgba(255, 255, 255, 0.1)',
                     '&:hover': {
                       bgcolor: 'rgba(255, 255, 255, 0.2)',
                     },
@@ -524,7 +590,13 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
         )}
 
         {searchQuery && searchResults.length === 0 && (
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', py: 2 }}>
+          <Typography
+            sx={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              textAlign: 'center',
+              py: 2,
+            }}
+          >
             Пользователи не найдены
           </Typography>
         )}
@@ -551,26 +623,34 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
           position: 'relative',
           overflow: 'hidden',
           zIndex: 1300,
-          backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
-          m: { xs: 0, sm: 2 }
-        }
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
+          m: { xs: 0, sm: 2 },
+        },
       }}
     >
-      <DialogTitle sx={{ 
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }}>
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+      <DialogTitle
+        sx={{
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant='h6' sx={{ color: 'white', fontWeight: 600 }}>
           Коннектики
         </Typography>
-        <IconButton onClick={onClose} sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <IconButton
+          onClick={onClose}
+          sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+        >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ p: 0, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <DialogContent
+        sx={{ p: 0, display: 'flex', flexDirection: 'column', height: '100%' }}
+      >
         {view === 'pending' && renderPendingView()}
         {view === 'received' && renderReceivedView()}
         {view === 'connected' && renderConnectedView()}
@@ -578,14 +658,14 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
       </DialogContent>
 
       {error && (
-        <Alert 
-          severity="error" 
+        <Alert
+          severity='error'
           onClose={() => setError(null)}
-          sx={{ 
+          sx={{
             m: 2,
             bgcolor: 'rgba(244, 67, 54, 0.1)',
             color: '#f44336',
-            border: '1px solid rgba(244, 67, 54, 0.3)'
+            border: '1px solid rgba(244, 67, 54, 0.3)',
           }}
         >
           {error}
@@ -595,4 +675,4 @@ const KonnectModal: React.FC<KonnectModalProps> = ({ open, onClose, onSuccess })
   );
 };
 
-export default KonnectModal; 
+export default KonnectModal;

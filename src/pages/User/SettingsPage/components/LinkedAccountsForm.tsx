@@ -11,12 +11,12 @@ import {
   IconButton,
   SvgIcon,
   alpha,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import {
   Check as CheckIcon,
   Close as CloseIcon,
-  Link as LinkIcon
+  Link as LinkIcon,
 } from '@mui/icons-material';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import axios from 'axios';
@@ -24,7 +24,7 @@ import axios from 'axios';
 // Element Icon component
 const ElementIcon = (props: any) => (
   <SvgIcon {...props}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.17 14.93l-4.11-4.11 1.41-1.41 2.7 2.7 5.88-5.88 1.41 1.41-7.29 7.29z" />
+    <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.17 14.93l-4.11-4.11 1.41-1.41 2.7 2.7 5.88-5.88 1.41 1.41-7.29 7.29z' />
   </SvgIcon>
 );
 
@@ -33,7 +33,10 @@ interface LinkedAccountsFormProps {
   profileData?: any;
 }
 
-const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, profileData }) => {
+const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
+  onSuccess,
+  profileData,
+}) => {
   const theme = useTheme();
   const [elementConnected, setElementConnected] = useState(false);
   const [elementLinking, setElementLinking] = useState(false);
@@ -47,13 +50,13 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
     try {
       setLoadingTelegramStatus(true);
       const response = await axios.get('/api/notifications/preferences');
-      
+
       if (response.data) {
         const telegramConnected = response.data.telegram_connected;
         setTelegramConnected(telegramConnected);
         console.log('Telegram status loaded:', telegramConnected);
       }
-      
+
       setLoadingTelegramStatus(false);
     } catch (error) {
       console.error('Ошибка загрузки настроек уведомлений:', error);
@@ -70,7 +73,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
         setElementConnected(!!profileData.user.elem_id);
       }
     }
-    
+
     // Загружаем статус Telegram отдельно
     loadNotificationPreferences();
   }, [profileData]);
@@ -81,10 +84,10 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
       if (!loadingElementStatus && elementConnected !== null) {
         return elementConnected;
       }
-      
+
       setLoadingElementStatus(true);
       const response = await axios.get('/api/profile/element/status');
-      
+
       const isConnected = response.data && response.data.connected;
       if (isConnected) {
         setElementConnected(true);
@@ -105,13 +108,13 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
   const generateElementToken = async () => {
     try {
       setElementLinking(true);
-      
-      const randomToken = Math.random().toString(36).substring(2, 15) + 
-                          Math.random().toString(36).substring(2, 15);
-      
+
+      const randomToken =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+
       setElementToken(randomToken);
       if (onSuccess) onSuccess();
-      
     } catch (error) {
       console.error('Ошибка при генерации токена Element:', error);
       setElementLinking(false);
@@ -121,7 +124,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
   // Обработчик подключения Element
   const handleLinkElement = () => {
     generateElementToken();
-    
+
     const checkInterval = setInterval(() => {
       checkElementStatus().then(isConnected => {
         if (isConnected) {
@@ -132,9 +135,9 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
         }
       });
     }, 2000);
-    
+
     localStorage.setItem('element_auth_pending', 'true');
-    
+
     setTimeout(() => {
       clearInterval(checkInterval);
       localStorage.removeItem('element_auth_pending');
@@ -154,7 +157,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
     background: 'rgba(255, 255, 255, 0.03)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     backdropFilter: 'blur(20px)',
-    mb: 3
+    mb: 3,
   };
 
   const listItemStyle = {
@@ -163,7 +166,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
     borderRadius: 2,
     bgcolor: alpha(theme.palette.background.default, 0.4),
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-    mb: 1
+    mb: 1,
   };
 
   const buttonStyle = {
@@ -175,7 +178,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
     px: 2,
     '&:hover': {
       bgcolor: 'rgba(208, 188, 255, 0.2)',
-    }
+    },
   };
 
   const connectedButtonStyle = {
@@ -189,34 +192,55 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
 
   return (
     <Box sx={containerStyle}>
-      <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <LinkIcon /> 
+      <Typography
+        variant='h6'
+        sx={{
+          mb: 3,
+          color: 'text.primary',
+          fontSize: '1.2rem',
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}
+      >
+        <LinkIcon />
         Связанные аккаунты
       </Typography>
-      
+
       <List disablePadding>
         {/* Telegram аккаунт */}
         <ListItem sx={listItemStyle}>
           <ListItemIcon sx={{ minWidth: 40 }}>
-            <TelegramIcon sx={{ color: telegramConnected ? '#D0BCFF' : '#777' }} />
+            <TelegramIcon
+              sx={{ color: telegramConnected ? '#D0BCFF' : '#777' }}
+            />
           </ListItemIcon>
-          <ListItemText 
-            primary="Telegram"
+          <ListItemText
+            primary='Telegram'
             primaryTypographyProps={{ fontWeight: 500 }}
-            secondary={loadingTelegramStatus ? "Проверка статуса..." : (telegramConnected ? "Подключен" : "Не подключен")}
+            secondary={
+              loadingTelegramStatus
+                ? 'Проверка статуса...'
+                : telegramConnected
+                  ? 'Подключен'
+                  : 'Не подключен'
+            }
           />
           {loadingTelegramStatus ? (
             <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
           ) : (
             <Button
-              variant="contained"
-              size="small"
+              variant='contained'
+              size='small'
               disabled={true} // Пока отключаем, так как нет диалога Telegram
               sx={telegramConnected ? connectedButtonStyle : buttonStyle}
             >
               {telegramConnected ? (
-                <CheckIcon fontSize="small" />
-              ) : 'Подключить'}
+                <CheckIcon fontSize='small' />
+              ) : (
+                'Подключить'
+              )}
             </Button>
           )}
         </ListItem>
@@ -224,47 +248,54 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({ onSuccess, prof
         {/* Element аккаунт */}
         <ListItem sx={listItemStyle}>
           <ListItemIcon sx={{ minWidth: 40 }}>
-            <ElementIcon sx={{ color: elementConnected ? '#D0BCFF' : '#777' }} />
+            <ElementIcon
+              sx={{ color: elementConnected ? '#D0BCFF' : '#777' }}
+            />
           </ListItemIcon>
-          <ListItemText 
-            primary="Element"
+          <ListItemText
+            primary='Element'
             primaryTypographyProps={{ fontWeight: 500 }}
-            secondary={loadingElementStatus ? "Проверка статуса..." : (elementConnected ? "Подключен" : "Не подключен")}
+            secondary={
+              loadingElementStatus
+                ? 'Проверка статуса...'
+                : elementConnected
+                  ? 'Подключен'
+                  : 'Не подключен'
+            }
           />
           {loadingElementStatus ? (
             <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
+          ) : elementLinking ? (
+            <IconButton
+              edge='end'
+              color='error'
+              onClick={handleCancelElementLinking}
+              size='small'
+            >
+              <CloseIcon fontSize='small' />
+            </IconButton>
           ) : (
-            elementLinking ? (
-              <IconButton 
-                edge="end" 
-                color="error" 
-                onClick={handleCancelElementLinking}
-                size="small"
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            ) : (
-              <Button
-                variant="contained"
-                size="small"
-                onClick={elementConnected ? undefined : handleLinkElement}
-                disabled={elementConnected}
-                sx={elementConnected ? connectedButtonStyle : buttonStyle}
-              >
-                {elementConnected ? (
-                  <CheckIcon fontSize="small" />
-                ) : 'Подключить'}
-              </Button>
-            )
+            <Button
+              variant='contained'
+              size='small'
+              onClick={elementConnected ? undefined : handleLinkElement}
+              disabled={elementConnected}
+              sx={elementConnected ? connectedButtonStyle : buttonStyle}
+            >
+              {elementConnected ? <CheckIcon fontSize='small' /> : 'Подключить'}
+            </Button>
           )}
         </ListItem>
       </List>
 
-      <Typography variant="body2" sx={{ color: 'text.secondary', mt: 2, fontSize: '0.875rem' }}>
+      <Typography
+        variant='body2'
+        sx={{ color: 'text.secondary', mt: 2, fontSize: '0.875rem' }}
+      >
         Подключите внешние аккаунты для расширенного функционала
       </Typography>
     </Box>
   );
 };
 
-export default LinkedAccountsForm; 
+export default LinkedAccountsForm;

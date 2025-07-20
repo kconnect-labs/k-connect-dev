@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { 
-  Box, 
-  Typography, 
-  Card, 
-  CardContent, 
-  Chip, 
-  Grid, 
-  List, 
-  ListItem, 
-  ListItemIcon, 
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
   ListItemText,
   Divider,
   Button,
-  alpha
+  alpha,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { 
+import {
   Diamond as DiamondIcon,
   Star as StarIcon,
   MonetizationOn as MonetizationIcon,
@@ -39,7 +39,7 @@ import {
   Pets as PetsIcon,
   AutoAwesome as CreativeIcon,
   Forum as CommunityIcon,
-  Send as SendIcon
+  Send as SendIcon,
 } from '@mui/icons-material';
 
 // TypeScript interfaces
@@ -143,7 +143,8 @@ const ApplyButton = styled(Button)(({ theme }) => ({
 }));
 
 const BonusCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.1) 0%, rgba(156, 100, 242, 0.1) 100%)',
+  background:
+    'linear-gradient(135deg, rgba(208, 188, 255, 0.1) 0%, rgba(156, 100, 242, 0.1) 100%)',
   backdropFilter: 'blur(10px)',
   border: '1px solid rgba(208, 188, 255, 0.3)',
   borderRadius: 16,
@@ -151,7 +152,8 @@ const BonusCard = styled(Card)(({ theme }) => ({
   textAlign: 'center',
   transition: 'all 0.3s ease',
   '&:hover': {
-    background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.15) 0%, rgba(156, 100, 242, 0.15) 100%)',
+    background:
+      'linear-gradient(135deg, rgba(208, 188, 255, 0.15) 0%, rgba(156, 100, 242, 0.15) 100%)',
     border: '1px solid rgba(208, 188, 255, 0.5)',
     transform: 'translateY(-2px)',
   },
@@ -207,33 +209,33 @@ const GrantsPage: React.FC = () => {
     {
       icon: <MonetizationIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Ежемесячные бонусы',
-      description: 'Регулярные выплаты за активность и качественный контент'
+      description: 'Регулярные выплаты за активность и качественный контент',
     },
     {
       icon: <TrendingIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Дополнительный функционал',
-      description: 'Расширенные возможности для создания уникального контента'
+      description: 'Расширенные возможности для создания уникального контента',
     },
     {
       icon: <PaletteIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Уникальные паки канала',
-      description: 'Эксклюзивные коллекции с получением дохода от продаж'
+      description: 'Эксклюзивные коллекции с получением дохода от продаж',
     },
     {
       icon: <SupportIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Прямолинейная поддержка',
-      description: 'Быстрая и эффективная помощь в любых вопросах'
+      description: 'Быстрая и эффективная помощь в любых вопросах',
     },
     {
       icon: <SecurityIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Дополнительные фичи',
-      description: 'Приоритетный доступ к новым функциям платформы'
+      description: 'Приоритетный доступ к новым функциям платформы',
     },
     {
       icon: <TrophyIcon sx={{ color: '#D0BCFF' }} />,
       title: 'Признание и награды',
-      description: 'Особые достижения и репутация в сообществе'
-    }
+      description: 'Особые достижения и репутация в сообществе',
+    },
   ];
 
   const topics: Topic[] = [
@@ -249,7 +251,7 @@ const GrantsPage: React.FC = () => {
     { icon: <TravelIcon />, label: 'Путешествия и туризм' },
     { icon: <PetsIcon />, label: 'Животные и природа' },
     { icon: <CreativeIcon />, label: 'Творчество и DIY' },
-    { icon: <CommunityIcon />, label: 'Сообщество и общение' }
+    { icon: <CommunityIcon />, label: 'Сообщество и общение' },
   ];
 
   const requirements: string[] = [
@@ -257,7 +259,7 @@ const GrantsPage: React.FC = () => {
     'Качественный и уникальный контент',
     'Соблюдение правил платформы',
     'Взаимодействие с аудиторией',
-    'Регулярное обновление контента'
+    'Регулярное обновление контента',
   ];
 
   const handleApplyClick = (): void => {
@@ -273,43 +275,43 @@ const GrantsPage: React.FC = () => {
       >
         <HeaderBlock>
           <Box sx={{ position: 'relative', zIndex: 3 }}>
-            <PageTitle variant="h3" gutterBottom>
+            <PageTitle variant='h3' gutterBottom>
               <Box
-                component="img"
-                src="/static/icons/KBalls.svg"
-                alt="KBalls"
-                sx={{ 
-                  width: 40, 
-                  height: 40, 
-                  mr: 2, 
+                component='img'
+                src='/static/icons/KBalls.svg'
+                alt='KBalls'
+                sx={{
+                  width: 40,
+                  height: 40,
+                  mr: 2,
                   verticalAlign: 'middle',
-                  display: 'inline-block'
+                  display: 'inline-block',
                 }}
               />
               Гранты для каналов
             </PageTitle>
-            
-            <Typography 
-              variant="h6" 
-              color="text.secondary" 
-              sx={{ 
+
+            <Typography
+              variant='h6'
+              color='text.secondary'
+              sx={{
                 mb: 0,
                 fontWeight: 500,
-                opacity: 0.8
+                opacity: 0.8,
               }}
             >
               Поддержка талантливых создателей контента
             </Typography>
           </Box>
         </HeaderBlock>
-        
+
         {/* Основные преимущества */}
         <Box sx={{ mb: 6 }}>
-          <SectionTitle variant="h5">
+          <SectionTitle variant='h5'>
             <StarIcon sx={{ color: '#D0BCFF' }} />
             Что вы получаете
           </SectionTitle>
-          
+
           <Grid container spacing={3}>
             {benefits.map((benefit: Benefit, index: number) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
@@ -321,11 +323,11 @@ const GrantsPage: React.FC = () => {
                   <BenefitCard>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       {benefit.icon}
-                      <Typography variant="h6" sx={{ ml: 1, fontWeight: 600 }}>
+                      <Typography variant='h6' sx={{ ml: 1, fontWeight: 600 }}>
                         {benefit.title}
                       </Typography>
                     </Box>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='body2' color='text.secondary'>
                       {benefit.description}
                     </Typography>
                   </BenefitCard>
@@ -337,11 +339,11 @@ const GrantsPage: React.FC = () => {
 
         {/* Требования */}
         <Box sx={{ mb: 6 }}>
-          <SectionTitle variant="h5">
+          <SectionTitle variant='h5'>
             <TrendingIcon sx={{ color: '#D0BCFF' }} />
             Требования к активности
           </SectionTitle>
-          
+
           <StyledCard>
             <CardContent>
               <List>
@@ -358,7 +360,7 @@ const GrantsPage: React.FC = () => {
                           }}
                         />
                       </ListItemIcon>
-                      <ListItemText 
+                      <ListItemText
                         primary={requirement}
                         primaryTypographyProps={{ variant: 'body1' }}
                       />
@@ -373,11 +375,11 @@ const GrantsPage: React.FC = () => {
 
         {/* Тематики */}
         <Box sx={{ mb: 6 }}>
-          <SectionTitle variant="h5">
+          <SectionTitle variant='h5'>
             <PaletteIcon sx={{ color: '#D0BCFF' }} />
             Популярные тематики
           </SectionTitle>
-          
+
           <StyledCard>
             <CardContent>
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -391,20 +393,20 @@ const GrantsPage: React.FC = () => {
                     <TopicChip
                       icon={topic.icon}
                       label={topic.label}
-                      variant="outlined"
+                      variant='outlined'
                     />
                   </motion.div>
                 ))}
               </Box>
-              
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  mt: 3, 
+
+              <Typography
+                variant='body1'
+                sx={{
+                  mt: 3,
                   textAlign: 'center',
                   fontStyle: 'italic',
                   color: '#D0BCFF',
-                  fontWeight: 500
+                  fontWeight: 500,
                 }}
               >
                 Можно любую тематику, главное что вам по душе ✨
@@ -417,16 +419,23 @@ const GrantsPage: React.FC = () => {
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <StyledCard>
             <CardContent sx={{ py: 4 }}>
-              <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>
+              <Typography variant='h4' sx={{ mb: 2, fontWeight: 700 }}>
                 Мы хотим видеть всё
               </Typography>
-              <Typography variant="h6" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography variant='h6' color='text.secondary' sx={{ mb: 3 }}>
                 От щитпоста до шедевра — каждый пост важен для нас
               </Typography>
-              
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
                 <FavoriteIcon sx={{ fontSize: 40, color: '#e74c3c' }} />
-                <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                <Typography variant='h5' sx={{ fontWeight: 600 }}>
                   Мы любим вас
                 </Typography>
                 <FavoriteIcon sx={{ fontSize: 40, color: '#e74c3c' }} />
@@ -443,22 +452,33 @@ const GrantsPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <BonusCard>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: 2,
+                }}
+              >
                 <Box
-                  component="img"
-                  src="/static/icons/KBalls.svg"
-                  alt="KBalls"
+                  component='img'
+                  src='/static/icons/KBalls.svg'
+                  alt='KBalls'
                   sx={{ width: 32, height: 32, mr: 1 }}
                 />
-                <Typography variant="h5" sx={{ fontWeight: 700, color: '#D0BCFF' }}>
+                <Typography
+                  variant='h5'
+                  sx={{ fontWeight: 700, color: '#D0BCFF' }}
+                >
                   500.000
                 </Typography>
               </Box>
-              <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
+              <Typography variant='h6' sx={{ mb: 1, fontWeight: 600 }}>
                 Баллов за активность!
               </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Каналы в течение месячной активности с грантом получат 500.000 баллов
+              <Typography variant='body1' color='text.secondary'>
+                Каналы в течение месячной активности с грантом получат 500.000
+                баллов
               </Typography>
             </BonusCard>
           </motion.div>
@@ -466,12 +486,12 @@ const GrantsPage: React.FC = () => {
 
         {/* Контактная информация */}
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
+          <Typography variant='h6' color='text.secondary' sx={{ mb: 2 }}>
             Готовы начать? Свяжитесь с нами
           </Typography>
           <ApplyButton
-            variant="contained"
-            size="large"
+            variant='contained'
+            size='large'
             startIcon={<SendIcon />}
             onClick={handleApplyClick}
           >
@@ -483,4 +503,4 @@ const GrantsPage: React.FC = () => {
   );
 };
 
-export default GrantsPage; 
+export default GrantsPage;

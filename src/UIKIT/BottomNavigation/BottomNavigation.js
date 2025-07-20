@@ -13,24 +13,25 @@ import './BottomNavigation.css';
  * @param {string} props.className - Дополнительные CSS классы
  * @param {boolean} props.isMobile - Рендерить только на мобильных
  */
-const UIBottomNavigation = ({ 
-  value, 
-  onChange, 
-  children, 
+const UIBottomNavigation = ({
+  value,
+  onChange,
+  children,
   id,
   style = {},
   className = '',
-  isMobile
+  isMobile,
 }) => {
   // UIBottomNavigation рендерится только на мобильных устройствах
   if (!isMobile) {
     return null;
   }
-  
+
   const { themeSettings } = useContext(ThemeSettingsContext);
 
   // Set background color from theme settings
-  const bottomNavColor = themeSettings.bottomNavColor || 'rgba(255, 255, 255, 0.95)';
+  const bottomNavColor =
+    themeSettings.bottomNavColor || 'rgba(255, 255, 255, 0.95)';
   const primaryColor = themeSettings.primaryColor || '#D0BCFF';
 
   const containerStyles = {
@@ -45,14 +46,14 @@ const UIBottomNavigation = ({
     ...style,
   };
 
-  const handleTabClick = (tabValue) => {
+  const handleTabClick = tabValue => {
     if (onChange) {
       onChange(null, tabValue);
     }
   };
 
   // Клонируем children и добавляем обработчики
-  const enhancedChildren = React.Children.map(children, (child) => {
+  const enhancedChildren = React.Children.map(children, child => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
         isActive: value === child.props.value,
@@ -64,14 +65,12 @@ const UIBottomNavigation = ({
   });
 
   return (
-    <div 
+    <div
       id={id}
       className={`bottom-navigation ${className}`}
       style={containerStyles}
     >
-      <div className="bottom-navigation__container">
-        {enhancedChildren}
-      </div>
+      <div className='bottom-navigation__container'>{enhancedChildren}</div>
     </div>
   );
 };
@@ -120,22 +119,16 @@ const BottomNavigationAction = ({
       className={`bottom-navigation-action ${isActive ? 'bottom-navigation-action--active' : ''} ${className}`}
       style={actionStyles}
       onClick={onClick}
-      type="button"
+      type='button'
       {...props}
     >
-      {icon && (
-        <div className="bottom-navigation-action__icon">
-          {icon}
-        </div>
-      )}
+      {icon && <div className='bottom-navigation-action__icon'>{icon}</div>}
       {label && (
-        <span className="bottom-navigation-action__label">
-          {label}
-        </span>
+        <span className='bottom-navigation-action__label'>{label}</span>
       )}
     </button>
   );
 };
 
 export { BottomNavigationAction };
-export default UIBottomNavigation; 
+export default UIBottomNavigation;

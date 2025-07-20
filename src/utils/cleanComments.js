@@ -3,11 +3,11 @@
  * Скрипт для удаления комментариев из JavaScript файлов
  * Удаляет:
  * 1. Комментарии в фигурных скобках { }
- * 2. Однострочные комментарии, начинающиеся с 
- * 
+ * 2. Однострочные комментарии, начинающиеся с
+ *
  * Использование:
  * node cleanComments.js [опции]
- * 
+ *
  * Опции:
  *   --dry-run       Только показать, какие файлы будут изменены, без реального изменения
  *   --path=<путь>   Указать конкретный путь для обработки (по умолчанию: ../src)
@@ -21,7 +21,7 @@ const options = {
   dryRun: args.includes('--dry-run'),
   backup: args.includes('--backup'),
   help: args.includes('--help'),
-  path: '../'
+  path: '../',
 };
 args.forEach(arg => {
   if (arg.startsWith('--path=')) {
@@ -51,7 +51,7 @@ const stats = {
   processed: 0,
   modified: 0,
   errors: 0,
-  bytesRemoved: 0
+  bytesRemoved: 0,
 };
 function walkDir(dir, callback) {
   const files = fs.readdirSync(dir);
@@ -71,7 +71,6 @@ function walkDir(dir, callback) {
   });
 }
 function removeComments(filePath) {
-
   stats.processed++;
   try {
     let content = fs.readFileSync(filePath, 'utf8');
@@ -88,15 +87,11 @@ function removeComments(filePath) {
       if (!options.dryRun) {
         if (options.backup) {
           fs.writeFileSync(`${filePath}.bak`, content, 'utf8');
-
         }
         fs.writeFileSync(filePath, noComments, 'utf8');
-
       } else {
-
       }
     } else {
-
     }
   } catch (err) {
     console.error(`Ошибка при обработке файла ${filePath}: ${err.message}`);
@@ -108,27 +103,24 @@ function removeStandardComments(content) {
 }
 function removeBraceComments(content) {
   return content.replace(/^\s*\{([^{}]*)\}\s*$/gm, (match, inside) => {
-    if (!/function|return|const|let|var|if|else|for|while|class|switch|case|break|import|export/.test(inside)) {
+    if (
+      !/function|return|const|let|var|if|else|for|while|class|switch|case|break|import|export/.test(
+        inside
+      )
+    ) {
       return '';
     }
     return match;
   });
 }
 function main() {
-
   if (options.dryRun) {
-
   }
-  walkDir(targetDir, (filePath) => {
+  walkDir(targetDir, filePath => {
     removeComments(filePath);
   });
 
-
-
-
-
   if (options.dryRun && stats.modified > 0) {
-
   }
 }
-main(); 
+main();

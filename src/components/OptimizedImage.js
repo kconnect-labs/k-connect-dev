@@ -34,18 +34,18 @@ const FallbackBox = styled(Box)(({ theme }) => ({
   fontWeight: 500,
 }));
 
-const OptimizedImage = ({ 
-  src, 
-  alt, 
-  width = '100%', 
-  height = '100%', 
+const OptimizedImage = ({
+  src,
+  alt,
+  width = '100%',
+  height = '100%',
   fallbackText = 'Изображение недоступно',
   showSkeleton = true,
   lazy = true,
   skipExistenceCheck = false,
   onLoad,
   onError,
-  ...props 
+  ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
@@ -76,12 +76,14 @@ const OptimizedImage = ({
       // Извлекаем информацию из URL
       const urlParts = src.split('/');
       const lastPart = urlParts[urlParts.length - 1];
-      
+
       if (src.includes('/inventory/') && !src.includes('/pack/')) {
         // URL вида /inventory/123
         const itemId = parseInt(lastPart);
         if (!isNaN(itemId)) {
-          const result = await inventoryImageService.checkImagesBatch([{ item_id: itemId }]);
+          const result = await inventoryImageService.checkImagesBatch([
+            { item_id: itemId },
+          ]);
           setImageExists(result[0]?.exists || false);
         }
       } else if (src.includes('/inventory/pack/')) {
@@ -89,10 +91,12 @@ const OptimizedImage = ({
         const packId = parseInt(urlParts[urlParts.length - 2]);
         const itemName = lastPart;
         if (!isNaN(packId) && itemName) {
-          const result = await inventoryImageService.checkImagesBatch([{ 
-            pack_id: packId, 
-            item_name: itemName 
-          }]);
+          const result = await inventoryImageService.checkImagesBatch([
+            {
+              pack_id: packId,
+              item_name: itemName,
+            },
+          ]);
           setImageExists(result[0]?.exists || false);
         }
       } else if (src.startsWith('/static/')) {
@@ -136,14 +140,14 @@ const OptimizedImage = ({
   if (skipExistenceCheck && !loaded && !error && showSkeleton) {
     return (
       <ImageContainer sx={{ width, height }}>
-        <Skeleton 
-          variant="rectangular" 
-          width="100%" 
-          height="100%" 
-          animation="wave"
-          sx={{ 
+        <Skeleton
+          variant='rectangular'
+          width='100%'
+          height='100%'
+          animation='wave'
+          sx={{
             borderRadius: 1,
-            background: 'rgba(255, 255, 255, 0.1)'
+            background: 'rgba(255, 255, 255, 0.1)',
           }}
         />
       </ImageContainer>
@@ -155,39 +159,41 @@ const OptimizedImage = ({
     alt,
     onLoad: handleLoad,
     onError: handleError,
-    ...props
+    ...props,
   });
 
   return (
     <ImageContainer sx={{ width, height }}>
-      {showSkeleton && !loaded && !error && imageExists !== false && imageExists !== null && !skipExistenceCheck && (
-        <Skeleton 
-          variant="rectangular" 
-          width="100%" 
-          height="100%" 
-          animation="wave"
-          sx={{ 
-            borderRadius: 1,
-            background: 'rgba(255, 255, 255, 0.1)'
-          }}
-        />
-      )}
-      
-      <StyledImage
-        ref={imgRef}
-        {...imageProps}
-        loaded={loaded}
-        error={error}
-      />
-      
+      {showSkeleton &&
+        !loaded &&
+        !error &&
+        imageExists !== false &&
+        imageExists !== null &&
+        !skipExistenceCheck && (
+          <Skeleton
+            variant='rectangular'
+            width='100%'
+            height='100%'
+            animation='wave'
+            sx={{
+              borderRadius: 1,
+              background: 'rgba(255, 255, 255, 0.1)',
+            }}
+          />
+        )}
+
+      <StyledImage ref={imgRef} {...imageProps} loaded={loaded} error={error} />
+
       {error && (
-        <FallbackBox sx={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%' 
-        }}>
+        <FallbackBox
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        >
           {fallbackText}
         </FallbackBox>
       )}
@@ -195,4 +201,4 @@ const OptimizedImage = ({
   );
 };
 
-export default OptimizedImage; 
+export default OptimizedImage;

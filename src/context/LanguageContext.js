@@ -19,43 +19,50 @@ export const LanguageProvider = ({ children }) => {
     const savedLanguage = localStorage.getItem('k-connect-language');
     return savedLanguage || 'RU';
   });
-  
+
   const translations = {
     RU,
 
     EN,
-    JP
+    JP,
   };
 
-  const t = useCallback((key, params = {}) => {
-    const keys = key.split('.');
-    let value = translations[currentLanguage];
-    
-    for (const k of keys) {
-      if (!value || !value[k]) {
-        console.warn(`Translation missing for key: ${key} in language: ${currentLanguage}`);
+  const t = useCallback(
+    (key, params = {}) => {
+      const keys = key.split('.');
+      let value = translations[currentLanguage];
+
+      for (const k of keys) {
+        if (!value || !value[k]) {
+          console.warn(
+            `Translation missing for key: ${key} in language: ${currentLanguage}`
+          );
+          return key;
+        }
+        value = value[k];
+      }
+
+      // Проверяем, что значение - строка
+      if (typeof value !== 'string') {
+        console.warn(
+          `Translation key ${key} refers to an object instead of a string`
+        );
         return key;
       }
-      value = value[k];
-    }
-    
-    // Проверяем, что значение - строка
-    if (typeof value !== 'string') {
-      console.warn(`Translation key ${key} refers to an object instead of a string`);
-      return key;
-    }
-    
-    // Если есть параметры, выполняем интерполяцию
-    if (Object.keys(params).length > 0) {
-      return value.replace(/\{(\w+)\}/g, (match, key) => {
-        return params[key] !== undefined ? params[key] : match;
-      });
-    }
-    
-    return value;
-  }, [currentLanguage]);
 
-  const changeLanguage = useCallback((lang) => {
+      // Если есть параметры, выполняем интерполяцию
+      if (Object.keys(params).length > 0) {
+        return value.replace(/\{(\w+)\}/g, (match, key) => {
+          return params[key] !== undefined ? params[key] : match;
+        });
+      }
+
+      return value;
+    },
+    [currentLanguage]
+  );
+
+  const changeLanguage = useCallback(lang => {
     if (translations[lang]) {
       setCurrentLanguage(lang);
       // Save language preference to localStorage
@@ -71,7 +78,10 @@ export const LanguageProvider = ({ children }) => {
 
   // Set initial language attribute
   React.useEffect(() => {
-    document.documentElement.setAttribute('lang', currentLanguage.toLowerCase());
+    document.documentElement.setAttribute(
+      'lang',
+      currentLanguage.toLowerCase()
+    );
   }, []);
 
   return (
@@ -79,4 +89,4 @@ export const LanguageProvider = ({ children }) => {
       {children}
     </LanguageContext.Provider>
   );
-}; 
+};

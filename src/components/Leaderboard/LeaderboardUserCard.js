@@ -7,7 +7,7 @@ import './LeaderboardUserCard.css';
 const API_URL = 'https://k-connect.ru';
 
 // Функция для проверки является ли цвет светлым
-const isLightColor = (color) => {
+const isLightColor = color => {
   if (!color || !color.startsWith('#')) {
     return false;
   }
@@ -20,34 +20,36 @@ const isLightColor = (color) => {
 };
 
 // Функция для парсинга настроек из строки пути
-const parseItemSettings = (itemPath) => {
+const parseItemSettings = itemPath => {
   if (!itemPath || !itemPath.includes(';')) {
     return {
       path: itemPath,
-      styles: {}
+      styles: {},
     };
   }
 
   const [path, ...stylesParts] = itemPath.split(';');
   const stylesString = stylesParts.join(';');
-  
+
   const styles = {};
   stylesString.split(';').forEach(style => {
     const [property, value] = style.split(':').map(s => s.trim());
     if (property && value) {
-      const camelProperty = property.replace(/-([a-z])/g, g => g[1].toUpperCase());
+      const camelProperty = property.replace(/-([a-z])/g, g =>
+        g[1].toUpperCase()
+      );
       styles[camelProperty] = value;
     }
   });
 
   return {
     path: path,
-    styles: styles
+    styles: styles,
   };
 };
 
 // Функция для сокращения чисел
-const formatCompactNumber = (number) => {
+const formatCompactNumber = number => {
   if (number < 1000) {
     return number.toString();
   }
@@ -63,7 +65,8 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   const isGradient = user.decoration?.background?.includes('linear-gradient');
   const isImage = user.decoration?.background?.includes('/');
   const isHexColor = user.decoration?.background?.startsWith('#');
-  const isLightBackground = isHexColor && isLightColor(user.decoration?.background);
+  const isLightBackground =
+    isHexColor && isLightColor(user.decoration?.background);
 
   // Определяем стили для декорации
   let decorationStyles = {};
@@ -76,9 +79,11 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
 
   // Стили для карточки
   const cardStyle = {
-    background: user.decoration?.background ? (
-      isImage ? `url(${API_URL}/${user.decoration.background})` : user.decoration.background
-    ) : 'var(--card-background)',
+    background: user.decoration?.background
+      ? isImage
+        ? `url(${API_URL}/${user.decoration.background})`
+        : user.decoration.background
+      : 'var(--card-background)',
     backgroundSize: isImage ? 'cover' : 'auto',
     backgroundPosition: isImage ? 'center' : 'auto',
     backgroundRepeat: isImage ? 'no-repeat' : 'auto',
@@ -100,16 +105,22 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
 
   // Стили для очков
   const scoreStyle = {
-    color: position <= 3 
-      ? '#fff' 
-      : (isLightBackground ? 'rgba(0, 0, 0, 0.87)' : 'var(--text-primary)'),
+    color:
+      position <= 3
+        ? '#fff'
+        : isLightBackground
+          ? 'rgba(0, 0, 0, 0.87)'
+          : 'var(--text-primary)',
   };
 
   // Стили для ранга
   const getRankBackground = () => {
-    if (position === 1) return 'linear-gradient(90deg, #FFFCA8 -0.05%, #FDB836 31.2%, #FDC966 75.92%, #F1DC83 100.02%)';
-    if (position === 2) return 'linear-gradient(90deg, #FFF8C1 -0.05%, #C2E8FD -0.04%, #919191 31.2%, #DDDDDD 75.92%, #E3E3E3 100.02%)';
-    if (position === 3) return 'linear-gradient(90.56deg, #9E8976 -0.5%, #7A5E50 -0.49%, #F6D0AB 31.04%, #9D774E 76.19%, #C99B70 100.51%)';
+    if (position === 1)
+      return 'linear-gradient(90deg, #FFFCA8 -0.05%, #FDB836 31.2%, #FDC966 75.92%, #F1DC83 100.02%)';
+    if (position === 2)
+      return 'linear-gradient(90deg, #FFF8C1 -0.05%, #C2E8FD -0.04%, #919191 31.2%, #DDDDDD 75.92%, #E3E3E3 100.02%)';
+    if (position === 3)
+      return 'linear-gradient(90.56deg, #9E8976 -0.5%, #7A5E50 -0.49%, #F6D0AB 31.04%, #9D774E 76.19%, #C99B70 100.51%)';
     return 'var(--rank-background)';
   };
 
@@ -129,9 +140,9 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       transition: {
         delay: index * 0.1,
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+        ease: 'easeOut',
+      },
+    },
   };
 
   return (
@@ -139,74 +150,67 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       className={`leaderboard-LEAD-user-card ${hasBottom0 ? 'has-bottom0' : ''}`}
       style={cardStyle}
       variants={cardVariants}
-      initial="hidden"
-      animate="visible"
+      initial='hidden'
+      animate='visible'
       onClick={onCardClick}
     >
       {/* Декорация */}
       {user.decoration?.item_path && (
         <img
           src={`${API_URL}/${parseItemSettings(user.decoration.item_path).path}`}
-          alt="decoration"
+          alt='decoration'
           style={decorationStyle}
           className={hasBottom0 ? 'decoration-bottom0' : ''}
         />
       )}
 
       {/* Основной контент */}
-      <div className="LEAD-user-card-content">
+      <div className='LEAD-user-card-content'>
         {/* Очки */}
-        <div className="score-display" style={scoreStyle}>
+        <div className='score-display' style={scoreStyle}>
           {formatCompactNumber(user.score)}
         </div>
 
         {/* Аватар */}
-        <div 
-          className="LEAD-user-avatar"
-          style={{ border: getAvatarBorder() }}
-        >
+        <div className='LEAD-user-avatar' style={{ border: getAvatarBorder() }}>
           {user.avatar_url ? (
-            <img 
-              src={`${API_URL}${user.avatar_url}`} 
+            <img
+              src={`${API_URL}${user.avatar_url}`}
               alt={user.name}
-              className="avatar-image"
+              className='avatar-image'
             />
           ) : (
-            <span className="avatar-fallback">{user.name.charAt(0)}</span>
+            <span className='avatar-fallback'>{user.name.charAt(0)}</span>
           )}
         </div>
 
         {/* Информация о пользователе */}
-        <div className="LEAD-user-info">
-          <div className="LEAD-user-name-section">
-            <Link 
-              to={`/profile/${user.username}`}
-              className="LEAD-user-name"
-            >
+        <div className='LEAD-user-info'>
+          <div className='LEAD-user-name-section'>
+            <Link to={`/profile/${user.username}`} className='LEAD-user-name'>
               {user.name}
             </Link>
-            
+
             {/* Верификация */}
             {user.verification && user.verification.status && (
               <VerificationBadge status={user.verification.status} />
             )}
-            
+
             {/* Достижение */}
             {user.achievement && (
-              <div className="achievement-badge" title={user.achievement.bage}>
+              <div className='achievement-badge' title={user.achievement.bage}>
                 <img
                   src={`/static/images/bages/${user.achievement.image_path}`}
                   alt={user.achievement.bage}
-                  className="achievement-image"
+                  className='achievement-image'
                 />
               </div>
             )}
           </div>
         </div>
-
       </div>
     </motion.div>
   );
 };
 
-export default LeaderboardUserCard; 
+export default LeaderboardUserCard;

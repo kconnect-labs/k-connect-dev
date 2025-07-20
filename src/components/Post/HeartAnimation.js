@@ -12,4 +12,4 @@ const HeartAnimation = styled(motion.div)(({ theme }) => ({
   pointerEvents: 'none',
 }));
 
-export default HeartAnimation; 
+export default HeartAnimation;

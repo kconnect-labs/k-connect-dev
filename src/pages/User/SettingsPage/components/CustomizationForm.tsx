@@ -19,7 +19,7 @@ import {
   ToggleButton,
   Badge,
   Tooltip,
-  Avatar
+  Avatar,
 } from '@mui/material';
 import {
   Wallpaper as WallpaperIcon,
@@ -31,7 +31,7 @@ import {
   Check as CheckIcon,
   CloudDownload as CloudDownloadIcon,
   PhotoCamera as PhotoCameraIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
@@ -39,19 +39,27 @@ import ProfileKonnectModal from './ProfileKonnectModal';
 import { ThemeSettingsContext } from '../../../../App';
 
 // Компонент для отображения декорации
-const DecorationItem = styled('img')(({ customStyles }: { customStyles?: any }) => ({
-  position: 'absolute',
-  right: 0,
-  height: 'max-content',
-  maxHeight: 60,
-  opacity: 1,
-  pointerEvents: 'none',
-  zIndex: 1,
-  ...customStyles
-}));
+const DecorationItem = styled('img')(
+  ({ customStyles }: { customStyles?: any }) => ({
+    position: 'absolute',
+    right: 0,
+    height: 'max-content',
+    maxHeight: 60,
+    opacity: 1,
+    pointerEvents: 'none',
+    zIndex: 1,
+    ...customStyles,
+  })
+);
 
 // Компонент для превью декорации
-const DecorationPreview = ({ decoration, children }: { decoration: any; children: React.ReactNode }) => {
+const DecorationPreview = ({
+  decoration,
+  children,
+}: {
+  decoration: any;
+  children: React.ReactNode;
+}) => {
   const isGradient = decoration?.background?.includes('linear-gradient');
   const isImage = decoration?.background?.includes('/');
   const isHexColor = decoration?.background?.startsWith('#');
@@ -65,25 +73,29 @@ const DecorationPreview = ({ decoration, children }: { decoration: any; children
         borderRadius: 1,
         overflow: 'hidden',
         bgcolor: 'background.default',
-        background: decoration?.background ? (
-          isImage ? 'none' : decoration.background
-        ) : 'background.default',
-        '&::before': isImage ? {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `url(${decoration.background})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          opacity: 0.75,
-          zIndex: 0,
-        } : {},
+        background: decoration?.background
+          ? isImage
+            ? 'none'
+            : decoration.background
+          : 'background.default',
+        '&::before': isImage
+          ? {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundImage: `url(${decoration.background})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: 0.75,
+              zIndex: 0,
+            }
+          : {},
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }}
     >
       {children}
@@ -110,15 +122,28 @@ interface Decoration {
   };
 }
 
-const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profileData, subscription }) => {
-  const { globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled } = useContext(ThemeSettingsContext);
+const CustomizationForm: React.FC<CustomizationFormProps> = ({
+  onSuccess,
+  profileData,
+  subscription,
+}) => {
+  const { globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabled } =
+    useContext(ThemeSettingsContext);
   const [loading, setLoading] = useState(false);
   const [userDecorations, setUserDecorations] = useState<Decoration[]>([]);
   const [loadingDecorations, setLoadingDecorations] = useState(false);
-  const [pendingAccentColor, setPendingAccentColor] = useState(() => localStorage.getItem('accentColorOverride') || '#d0bcff');
-  const [pendingTextColorMode, setPendingTextColorMode] = useState(() => localStorage.getItem('accentTextColorMode') || 'light');
-  const [appliedAccentColor, setAppliedAccentColor] = useState(() => localStorage.getItem('accentColorOverride') || '#d0bcff');
-  const [appliedTextColorMode, setAppliedTextColorMode] = useState(() => localStorage.getItem('accentTextColorMode') || 'light');
+  const [pendingAccentColor, setPendingAccentColor] = useState(
+    () => localStorage.getItem('accentColorOverride') || '#d0bcff'
+  );
+  const [pendingTextColorMode, setPendingTextColorMode] = useState(
+    () => localStorage.getItem('accentTextColorMode') || 'light'
+  );
+  const [appliedAccentColor, setAppliedAccentColor] = useState(
+    () => localStorage.getItem('accentColorOverride') || '#d0bcff'
+  );
+  const [appliedTextColorMode, setAppliedTextColorMode] = useState(
+    () => localStorage.getItem('accentTextColorMode') || 'light'
+  );
   const [isApplying, setIsApplying] = useState(false);
   const [colorPickerOpen, setColorPickerOpen] = useState(false);
   const [currentColor, setCurrentColor] = useState('#d0bcff');
@@ -126,7 +151,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
   const [green, setGreen] = useState(188);
   const [blue, setBlue] = useState(255);
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
-  const [profileBackgroundUrl, setProfileBackgroundUrl] = useState<string | null>(null);
+  const [profileBackgroundUrl, setProfileBackgroundUrl] = useState<
+    string | null
+  >(null);
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
@@ -134,12 +161,15 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     if (profileData?.user?.profile_background_url) {
       setProfileBackgroundUrl(profileData.user.profile_background_url);
     }
-    
+
     // Отладка данных
     console.log('CustomizationForm - profileData:', profileData);
     console.log('CustomizationForm - subscription:', subscription);
     console.log('CustomizationForm - subscription?.type:', subscription?.type);
-    console.log('CustomizationForm - subscription?.active:', subscription?.active);
+    console.log(
+      'CustomizationForm - subscription?.active:',
+      subscription?.active
+    );
   }, [profileData, subscription]);
 
   const fetchUserDecorations = async () => {
@@ -157,7 +187,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
   };
 
   // Переключение декораций
-  const handleToggleDecoration = async (decorationId: number, isActive: boolean) => {
+  const handleToggleDecoration = async (
+    decorationId: number,
+    isActive: boolean
+  ) => {
     try {
       const response = await fetch('/api/decorations/toggle', {
         method: 'POST',
@@ -166,8 +199,8 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
         },
         body: JSON.stringify({
           decoration_id: decorationId,
-          is_active: isActive
-        })
+          is_active: isActive,
+        }),
       });
 
       if (response.ok) {
@@ -180,7 +213,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
   };
 
   // Глобальные обои профиля
-  const handleGlobalProfileBackgroundToggle = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGlobalProfileBackgroundToggle = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const enabled = event.target.checked;
     try {
       await axios.post('/api/user/settings/global-profile-bg', { enabled });
@@ -192,18 +227,20 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
   };
 
   // Загрузка обоев профиля
-  const handleBackgroundUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBackgroundUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     const formData = new FormData();
     formData.append('background', file);
-    
+
     try {
       const response = await axios.post('/api/profile/background', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
+
       if (response.data?.background_url) {
         setProfileBackgroundUrl(response.data.background_url);
         if (onSuccess) onSuccess();
@@ -219,21 +256,24 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     try {
       await axios.delete('/api/profile/background');
       setProfileBackgroundUrl(null);
-      
+
       // Очищаем localStorage от сохраненных обоев
       localStorage.removeItem('myProfileBackgroundUrl');
-      document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      
+      document.cookie =
+        'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+
       // Если глобальные обои включены, выключаем их
       if (globalProfileBackgroundEnabled) {
         try {
-          await axios.post('/api/user/settings/global-profile-bg', { enabled: false });
+          await axios.post('/api/user/settings/global-profile-bg', {
+            enabled: false,
+          });
           setGlobalProfileBackgroundEnabled(false);
         } catch (error) {
           console.error('Error disabling global background:', error);
         }
       }
-      
+
       if (onSuccess) onSuccess();
     } catch (error: any) {
       console.error('Error deleting background:', error);
@@ -254,15 +294,15 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          primary_color: pendingAccentColor
-        })
+          primary_color: pendingAccentColor,
+        }),
       });
 
       const data = await response.json();
       if (data && data.success) {
         window.location.reload();
       }
-      
+
       setAppliedAccentColor(pendingAccentColor);
       setAppliedTextColorMode(pendingTextColorMode);
       if (onSuccess) onSuccess();
@@ -285,7 +325,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
 
   // Функции для ColorPicker
   const rgbToHex = (r: number, g: number, b: number) => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   };
 
   const updateColor = (r: number, g: number, b: number) => {
@@ -316,7 +356,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     const r = parseInt(presetColor.slice(1, 3), 16);
     const g = parseInt(presetColor.slice(3, 5), 16);
     const b = parseInt(presetColor.slice(5, 7), 16);
-    
+
     setCurrentColor(presetColor);
     setPendingAccentColor(presetColor);
     setRed(r);
@@ -324,7 +364,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     setBlue(b);
   };
 
-  const isChanged = pendingAccentColor !== appliedAccentColor || pendingTextColorMode !== appliedTextColorMode;
+  const isChanged =
+    pendingAccentColor !== appliedAccentColor ||
+    pendingTextColorMode !== appliedTextColorMode;
 
   const containerStyle = {
     p: 3,
@@ -332,7 +374,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     background: 'rgba(255, 255, 255, 0.03)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     backdropFilter: 'blur(20px)',
-    mb: 3
+    mb: 3,
   };
 
   const sectionStyle = {
@@ -340,42 +382,64 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
     borderRadius: 1.5,
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    mb: 2
+    mb: 2,
   };
 
   return (
-    <Box >
-      <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <BrushIcon /> 
+    <Box>
+      <Typography
+        variant='h6'
+        sx={{
+          mb: 3,
+          color: 'text.primary',
+          fontSize: '1.2rem',
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+        }}
+      >
+        <BrushIcon />
         Кастомизация
       </Typography>
 
-
       {/* Изменение цвета */}
       <Box sx={sectionStyle}>
-        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <PaletteIcon /> 
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <PaletteIcon />
           Цвет акцента
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Typography variant="body2" sx={{ minWidth: 120, color: 'text.secondary' }}>
+          <Typography
+            variant='body2'
+            sx={{ minWidth: 120, color: 'text.secondary' }}
+          >
             Цвет акцента
           </Typography>
-          <Tooltip title="Нажмите для выбора цвета">
-            <Badge 
-              overlap="circular"
+          <Tooltip title='Нажмите для выбора цвета'>
+            <Badge
+              overlap='circular'
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               badgeContent={
-                <Box 
-                  sx={{ 
-                    width: 16, 
-                    height: 16, 
-                    borderRadius: '50%', 
+                <Box
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: '50%',
                     bgcolor: 'background.paper',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                   }}
                 >
                   <ColorLensIcon sx={{ fontSize: 12, color: 'primary.main' }} />
@@ -391,7 +455,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
                   backgroundColor: pendingAccentColor,
                   cursor: 'pointer',
                   border: '2px solid rgba(255, 255, 255, 0.2)',
-                  boxShadow: `0 4px 12px ${pendingAccentColor}40`
+                  boxShadow: `0 4px 12px ${pendingAccentColor}40`,
                 }}
               />
             </Badge>
@@ -399,30 +463,32 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
         </Box>
 
         <Box sx={{ mb: 2 }}>
-          <Typography variant="body2" sx={{ mb: 1 }}>Цвет оформления</Typography>
+          <Typography variant='body2' sx={{ mb: 1 }}>
+            Цвет оформления
+          </Typography>
           <ToggleButtonGroup
             value={pendingTextColorMode}
             exclusive
             onChange={(_, val) => val && setPendingTextColorMode(val)}
-            size="small"
+            size='small'
           >
-            <ToggleButton value="light">Светлый текст</ToggleButton>
-            <ToggleButton value="dark">Тёмный текст</ToggleButton>
+            <ToggleButton value='light'>Светлый текст</ToggleButton>
+            <ToggleButton value='dark'>Тёмный текст</ToggleButton>
           </ToggleButtonGroup>
         </Box>
 
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Button
-            size="small"
-            variant="contained"
+            size='small'
+            variant='contained'
             onClick={handleApplyAccentColor}
             disabled={!isChanged || isApplying}
           >
             {isApplying ? <CircularProgress size={16} /> : 'Применить'}
           </Button>
-          <Button 
-            size="small" 
-            variant="outlined" 
+          <Button
+            size='small'
+            variant='outlined'
             onClick={handleResetAccentColor}
           >
             Сбросить
@@ -432,22 +498,31 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
 
       {/* Декорации */}
       <Box sx={sectionStyle}>
-        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <BrushIcon /> 
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <BrushIcon />
           Декорации профиля
         </Typography>
-        
+
         {loadingDecorations ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
             <CircularProgress />
           </Box>
         ) : userDecorations.length === 0 ? (
-          <Typography color="textSecondary">
+          <Typography color='textSecondary'>
             У вас пока нет декораций
           </Typography>
         ) : (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {userDecorations.map((item) => {
+            {userDecorations.map(item => {
               const decoration = item.decoration || item;
               return (
                 <Paper
@@ -456,38 +531,51 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
                     p: 2,
                     backgroundColor: 'background.paper',
                     borderRadius: 2,
-                    border: item.is_active ? '2px solid primary.main' : '1px solid rgba(255, 255, 255, 0.1)'
+                    border: item.is_active
+                      ? '2px solid primary.main'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
                   }}
                 >
                   <DecorationPreview decoration={decoration}>
-                    {decoration.item_path && (() => {
-                      const [path, ...styles] = decoration.item_path.split(';');
-                      const styleObj = styles.reduce((acc: any, style: string) => {
-                        const [key, value] = style.split(':').map(s => s.trim());
-                        return { ...acc, [key]: value };
-                      }, {});
-                      
-                      return (
-                        <DecorationItem
-                          src={path}
-                          alt=""
-                          customStyles={styleObj}
-                        />
-                      );
-                    })()}
+                    {decoration.item_path &&
+                      (() => {
+                        const [path, ...styles] =
+                          decoration.item_path.split(';');
+                        const styleObj = styles.reduce(
+                          (acc: any, style: string) => {
+                            const [key, value] = style
+                              .split(':')
+                              .map(s => s.trim());
+                            return { ...acc, [key]: value };
+                          },
+                          {}
+                        );
+
+                        return (
+                          <DecorationItem
+                            src={path}
+                            alt=''
+                            customStyles={styleObj}
+                          />
+                        );
+                      })()}
                   </DecorationPreview>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    mt: 1 
-                  }}>
-                    <Typography variant="subtitle1">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      mt: 1,
+                    }}
+                  >
+                    <Typography variant='subtitle1'>
                       {decoration.name}
                     </Typography>
                     <Switch
                       checked={item.is_active || false}
-                      onChange={(e) => handleToggleDecoration(decoration.id, e.target.checked)}
+                      onChange={e =>
+                        handleToggleDecoration(decoration.id, e.target.checked)
+                      }
                     />
                   </Box>
                 </Paper>
@@ -498,106 +586,128 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
       </Box>
 
       {subscription?.type === 'ultimate' && (
-    <Box sx={sectionStyle}>
-      <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-        <WallpaperIcon /> 
-        Фоновая картинка профиля
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        {profileBackgroundUrl ? (
-          <Box sx={{ position: 'relative' }}>
-            <Avatar
-              variant="rounded"
-              src={profileBackgroundUrl}
-              alt="Profile Background"
-              sx={{ width: 96, height: 96, borderRadius: 3, boxShadow: 2 }}
-            />
-            <IconButton
-              size="small"
-              color="error"
-              sx={{ 
-                position: 'absolute', 
-                top: 0, 
-                right: 0, 
-                bgcolor: 'rgba(0,0,0,0.5)',
-                '&:hover': {
-                  bgcolor: 'rgba(0,0,0,0.7)',
-                }
-              }}
-              onClick={handleDeleteBackground}
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Box>
-        ) : (
-          <Avatar
-            variant="rounded"
-            sx={{ 
-              width: 96, 
-              height: 96, 
-              borderRadius: 3, 
-              bgcolor: 'background.default', 
-              color: 'text.disabled', 
-              boxShadow: 1 
+        <Box sx={sectionStyle}>
+          <Typography
+            variant='subtitle1'
+            sx={{
+              mb: 2,
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
             }}
           >
-            <PhotoCameraIcon fontSize="large" />
-          </Avatar>
-        )}
-        <Box>
-          <Button
-            variant="contained"
-            component="label"
-            startIcon={<PhotoCameraIcon />}
-            sx={{ borderRadius: 2, fontWeight: 500 }}
-          >
-            Загрузить фон
-            <input
-              type="file"
-              accept="image/png, image/jpeg, image/jpg, image/gif"
-              hidden
-              onChange={handleBackgroundUpload}
-            />
-          </Button>
-          <Typography variant="caption" sx={{ display: 'block', mt: 1, color: 'text.secondary' }}>
-            Только для подписки Ultimate. PNG, JPG, GIF. До 5MB.
+            <WallpaperIcon />
+            Фоновая картинка профиля
           </Typography>
-        </Box>
-      </Box>
-      {/* Глобальные обои профиля */}
-      {profileBackgroundUrl && (
-        <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Switch
-            checked={globalProfileBackgroundEnabled}
-            onChange={handleGlobalProfileBackgroundToggle}
-          />
-          <Box>
-            <Typography variant="body2" fontWeight={500}>
-              Глобальные обои профиля
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              При включении ваша фоновая картинка будет использоваться по всему сайту
-            </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {profileBackgroundUrl ? (
+              <Box sx={{ position: 'relative' }}>
+                <Avatar
+                  variant='rounded'
+                  src={profileBackgroundUrl}
+                  alt='Profile Background'
+                  sx={{ width: 96, height: 96, borderRadius: 3, boxShadow: 2 }}
+                />
+                <IconButton
+                  size='small'
+                  color='error'
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bgcolor: 'rgba(0,0,0,0.5)',
+                    '&:hover': {
+                      bgcolor: 'rgba(0,0,0,0.7)',
+                    },
+                  }}
+                  onClick={handleDeleteBackground}
+                >
+                  <DeleteIcon fontSize='small' />
+                </IconButton>
+              </Box>
+            ) : (
+              <Avatar
+                variant='rounded'
+                sx={{
+                  width: 96,
+                  height: 96,
+                  borderRadius: 3,
+                  bgcolor: 'background.default',
+                  color: 'text.disabled',
+                  boxShadow: 1,
+                }}
+              >
+                <PhotoCameraIcon fontSize='large' />
+              </Avatar>
+            )}
+            <Box>
+              <Button
+                variant='contained'
+                component='label'
+                startIcon={<PhotoCameraIcon />}
+                sx={{ borderRadius: 2, fontWeight: 500 }}
+              >
+                Загрузить фон
+                <input
+                  type='file'
+                  accept='image/png, image/jpeg, image/jpg, image/gif'
+                  hidden
+                  onChange={handleBackgroundUpload}
+                />
+              </Button>
+              <Typography
+                variant='caption'
+                sx={{ display: 'block', mt: 1, color: 'text.secondary' }}
+              >
+                Только для подписки Ultimate. PNG, JPG, GIF. До 5MB.
+              </Typography>
+            </Box>
           </Box>
+          {/* Глобальные обои профиля */}
+          {profileBackgroundUrl && (
+            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Switch
+                checked={globalProfileBackgroundEnabled}
+                onChange={handleGlobalProfileBackgroundToggle}
+              />
+              <Box>
+                <Typography variant='body2' fontWeight={500}>
+                  Глобальные обои профиля
+                </Typography>
+                <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+                  При включении ваша фоновая картинка будет использоваться по
+                  всему сайту
+                </Typography>
+              </Box>
+            </Box>
+          )}
         </Box>
       )}
-    </Box>
-  )}
 
       {/* Экспорт / Импорт профиля */}
       <Box sx={sectionStyle}>
-        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <CloudDownloadIcon /> 
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <CloudDownloadIcon />
           Экспорт / Импорт профиля
         </Typography>
-        
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+
+        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
           Экспортируйте или импортируйте настройки профиля в формате .konnect
         </Typography>
-        
+
         <Button
-          variant="outlined"
-          color="primary"
+          variant='outlined'
+          color='primary'
           sx={{ borderRadius: 2, fontWeight: 500 }}
           onClick={() => setKonnectModalOpen(true)}
         >
@@ -606,41 +716,49 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
       </Box>
 
       {/* ColorPicker Dialog */}
-      <Dialog 
-        open={colorPickerOpen} 
+      <Dialog
+        open={colorPickerOpen}
         onClose={() => setColorPickerOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          pb: 2
-        }}>
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            pb: 2,
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <PaletteIcon fontSize="small" color="primary" />
-            <Typography variant="h6">Выберите цвет</Typography>
+            <PaletteIcon fontSize='small' color='primary' />
+            <Typography variant='h6'>Выберите цвет</Typography>
           </Box>
-          <IconButton size="small" onClick={() => setColorPickerOpen(false)} color="inherit">
-            <CloseIcon fontSize="small" />
+          <IconButton
+            size='small'
+            onClick={() => setColorPickerOpen(false)}
+            color='inherit'
+          >
+            <CloseIcon fontSize='small' />
           </IconButton>
         </DialogTitle>
-        
+
         <DialogContent sx={{ pt: 3 }}>
-          <Box sx={{ 
-            height: 100, 
-            width: '100%', 
-            backgroundColor: currentColor, 
-            borderRadius: 2, 
-            mb: 3,
-            boxShadow: `0 4px 20px ${currentColor}50`,
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }} />
-          
+          <Box
+            sx={{
+              height: 100,
+              width: '100%',
+              backgroundColor: currentColor,
+              borderRadius: 2,
+              mb: 3,
+              boxShadow: `0 4px 20px ${currentColor}50`,
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+            }}
+          />
+
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant='body2' color='text.secondary' gutterBottom>
               Красный ({red})
             </Typography>
             <Slider
@@ -648,7 +766,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
               onChange={handleRedChange}
               min={0}
               max={255}
-              sx={{ 
+              sx={{
                 color: '#f44336',
                 '& .MuiSlider-thumb': {
                   backgroundColor: '#f44336',
@@ -656,9 +774,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
               }}
             />
           </Box>
-          
+
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant='body2' color='text.secondary' gutterBottom>
               Зеленый ({green})
             </Typography>
             <Slider
@@ -666,7 +784,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
               onChange={handleGreenChange}
               min={0}
               max={255}
-              sx={{ 
+              sx={{
                 color: '#4caf50',
                 '& .MuiSlider-thumb': {
                   backgroundColor: '#4caf50',
@@ -674,9 +792,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
               }}
             />
           </Box>
-          
+
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant='body2' color='text.secondary' gutterBottom>
               Синий ({blue})
             </Typography>
             <Slider
@@ -684,7 +802,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
               onChange={handleBlueChange}
               min={0}
               max={255}
-              sx={{ 
+              sx={{
                 color: '#2196f3',
                 '& .MuiSlider-thumb': {
                   backgroundColor: '#2196f3',
@@ -694,11 +812,20 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
           </Box>
 
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
+            <Typography variant='body2' color='text.secondary' gutterBottom>
               Готовые цвета
             </Typography>
             <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              {['#d0bcff', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'].map((color) => (
+              {[
+                '#d0bcff',
+                '#ff6b6b',
+                '#4ecdc4',
+                '#45b7d1',
+                '#96ceb4',
+                '#feca57',
+                '#ff9ff3',
+                '#54a0ff',
+              ].map(color => (
                 <Box
                   key={color}
                   onClick={() => handlePresetColorClick(color)}
@@ -708,25 +835,28 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
                     borderRadius: '50%',
                     backgroundColor: color,
                     cursor: 'pointer',
-                    border: currentColor === color ? '2px solid white' : '1px solid rgba(255, 255, 255, 0.2)',
+                    border:
+                      currentColor === color
+                        ? '2px solid white'
+                        : '1px solid rgba(255, 255, 255, 0.2)',
                     '&:hover': {
                       transform: 'scale(1.1)',
-                    }
+                    },
                   }}
                 />
               ))}
             </Box>
           </Box>
         </DialogContent>
-        
+
         <DialogActions>
           <Button onClick={() => setColorPickerOpen(false)}>Отмена</Button>
-          <Button 
+          <Button
             onClick={() => {
               setPendingAccentColor(currentColor);
               setColorPickerOpen(false);
             }}
-            variant="contained"
+            variant='contained'
           >
             Применить
           </Button>
@@ -734,12 +864,12 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({ onSuccess, profil
       </Dialog>
 
       {/* ProfileKonnectModal */}
-      <ProfileKonnectModal 
-        open={konnectModalOpen} 
-        onClose={() => setKonnectModalOpen(false)} 
+      <ProfileKonnectModal
+        open={konnectModalOpen}
+        onClose={() => setKonnectModalOpen(false)}
       />
     </Box>
   );
 };
 
-export default CustomizationForm; 
+export default CustomizationForm;

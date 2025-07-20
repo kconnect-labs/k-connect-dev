@@ -5,7 +5,7 @@ import {
   AnimatedSparkle,
   AnimatedStar,
   EFFECTS_CONFIG,
-  useUpgradeEffects
+  useUpgradeEffects,
 } from '../../../Economic/components/inventoryPack/upgradeEffectsConfig';
 
 const UpgradeEffects = ({ item, children }) => {
@@ -41,4 +41,4 @@ const UpgradeEffects = ({ item, children }) => {
   );
 };
 
-export default UpgradeEffects; 
+export default UpgradeEffects;

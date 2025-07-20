@@ -23,33 +23,36 @@ export const StyledSelect = styled(TextField)(({ theme }) => ({
 
 export const PostInput = styled(TextField)(({ theme }) => ({
   '& .MuiInputBase-root': {
-    background: theme.palette.mode === 'dark' 
-      ? 'rgba(0, 0, 0, 0.2)'
-      : 'rgba(0, 0, 0, 0.03)',
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(0, 0, 0, 0.2)'
+        : 'rgba(0, 0, 0, 0.03)',
     backdropFilter: 'blur(5px)',
     borderRadius: '12px',
-    border: theme.palette.mode === 'dark'
-      ? '1px solid rgba(255, 255, 255, 0.05)'
-      : '1px solid rgba(0, 0, 0, 0.05)',
+    border:
+      theme.palette.mode === 'dark'
+        ? '1px solid rgba(255, 255, 255, 0.05)'
+        : '1px solid rgba(0, 0, 0, 0.05)',
     fontSize: '0.95rem',
     padding: theme.spacing(1, 1.5),
     color: theme.palette.text.primary,
     transition: 'all 0.3s ease',
     '&:hover': {
       borderColor: 'rgba(208, 188, 255, 0.3)',
-      background: theme.palette.mode === 'dark'
-        ? 'rgba(0, 0, 0, 0.25)'
-        : 'rgba(0, 0, 0, 0.05)',
+      background:
+        theme.palette.mode === 'dark'
+          ? 'rgba(0, 0, 0, 0.25)'
+          : 'rgba(0, 0, 0, 0.05)',
     },
     '&.Mui-focused': {
       borderColor: 'rgba(208, 188, 255, 0.5)',
-      boxShadow: '0 0 0 2px rgba(208, 188, 255, 0.1)'
-    }
+      boxShadow: '0 0 0 2px rgba(208, 188, 255, 0.1)',
+    },
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    border: 'none'
+    border: 'none',
   },
-  width: '100%'
+  width: '100%',
 }));
 
 export const PostActions = styled(Box)(({ theme }) => ({
@@ -57,7 +60,7 @@ export const PostActions = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: theme.spacing(1.5, 0, 0),
   borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-  marginTop: theme.spacing(1.5)
+  marginTop: theme.spacing(1.5),
 }));
 
 export const PublishButton = styled(Button)(({ theme }) => ({
@@ -67,19 +70,22 @@ export const PublishButton = styled(Button)(({ theme }) => ({
   fontWeight: 600,
   boxShadow: '0 2px 8px rgba(124, 77, 255, 0.25)',
   padding: theme.spacing(0.4, 1.5),
-  background: theme.palette.mode === 'dark'
-    ? 'linear-gradient(90deg, rgb(180 163 220) 0%, rgb(177 161 216) 100%)'
-    : 'linear-gradient(90deg, rgb(124 77 255) 0%, rgb(148 108 255) 100%)',
+  background:
+    theme.palette.mode === 'dark'
+      ? 'linear-gradient(90deg, rgb(180 163 220) 0%, rgb(177 161 216) 100%)'
+      : 'linear-gradient(90deg, rgb(124 77 255) 0%, rgb(148 108 255) 100%)',
   color: theme.palette.mode === 'dark' ? '#000' : '#fff',
   '&:hover': {
     boxShadow: '0 4px 12px rgba(124, 77, 255, 0.35)',
   },
   '&.Mui-disabled': {
-    background: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.05)'
-      : 'rgba(0, 0, 0, 0.05)',
-    color: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.3)'
-      : 'rgba(0, 0, 0, 0.3)'
-  }
-})); 
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.05)'
+        : 'rgba(0, 0, 0, 0.05)',
+    color:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.3)'
+        : 'rgba(0, 0, 0, 0.3)',
+  },
+}));

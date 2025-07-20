@@ -17,7 +17,7 @@ interface SuccessModalProps {
 const SuccessModal: React.FC<SuccessModalProps> = ({
   open,
   onClose,
-  message = 'Обновлено'
+  message = 'Обновлено',
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -58,7 +58,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           justifyContent: 'center',
           padding: '20px 24px',
           gap: 2,
-          background: 'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%)',
           borderBottom: '1px solid rgba(76, 175, 80, 0.2)',
         }}
       >
@@ -77,9 +78,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
         >
           <CheckIcon sx={{ color: 'white', fontSize: 24 }} />
         </Box>
-        
+
         <Typography
-          variant="h6"
+          variant='h6'
           sx={{
             color: 'white',
             fontWeight: 600,
@@ -95,4 +96,4 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   );
 };
 
-export default SuccessModal; 
+export default SuccessModal;

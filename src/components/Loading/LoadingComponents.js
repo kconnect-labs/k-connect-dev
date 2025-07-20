@@ -3,24 +3,24 @@ import { Box, CircularProgress, useTheme } from '@mui/material';
 
 export const SuspenseFallback = () => {
   const theme = useTheme();
-  
+
   return (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         height: '100vh',
-        backgroundColor: theme.palette.background.default
+        backgroundColor: theme.palette.background.default,
       }}
     >
-      <CircularProgress 
-        color="primary" 
-        size={40} 
-        thickness={4} 
-        sx={{ 
+      <CircularProgress
+        color='primary'
+        size={40}
+        thickness={4}
+        sx={{
           color: theme.palette.primary.main,
-          filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))'
+          filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))',
         }}
       />
     </Box>
@@ -29,13 +29,13 @@ export const SuspenseFallback = () => {
 
 export const LoadingIndicator = () => {
   const theme = useTheme();
-  
+
   return (
     <Box
-      sx={{ 
-        display: 'flex', 
+      sx={{
+        display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
         width: '100%',
@@ -44,7 +44,7 @@ export const LoadingIndicator = () => {
         left: 0,
         zIndex: 1000,
         backgroundColor: theme.palette.background.default,
-        background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`
+        background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
       }}
     >
       {/* Анимированный фон */}
@@ -60,53 +60,53 @@ export const LoadingIndicator = () => {
           background: `radial-gradient(circle, ${theme.palette.primary.main}15 0%, transparent 70%)`,
           animation: 'ripple 2s infinite ease-out',
           '@keyframes ripple': {
-            '0%': { 
+            '0%': {
               transform: 'translate(-50%, -50%) scale(0.8)',
-              opacity: 0.3
+              opacity: 0.3,
             },
-            '50%': { 
+            '50%': {
               transform: 'translate(-50%, -50%) scale(1.2)',
-              opacity: 0.1
+              opacity: 0.1,
             },
-            '100%': { 
+            '100%': {
               transform: 'translate(-50%, -50%) scale(1.6)',
-              opacity: 0
-            }
-          }
+              opacity: 0,
+            },
+          },
         }}
       />
-      
+
       {/* Основной логотип */}
-      <Box 
+      <Box
         sx={{
           position: 'relative',
           zIndex: 2,
           animation: 'float 3s ease-in-out infinite',
           '@keyframes float': {
-            '0%, 100%': { 
+            '0%, 100%': {
               transform: 'translateY(0px) rotate(0deg)',
-              filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))'
+              filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))',
             },
-            '50%': { 
+            '50%': {
               transform: 'translateY(-10px) rotate(5deg)',
-              filter: 'drop-shadow(0 0 15px rgba(208, 188, 255, 0.6))'
-            }
-          }
+              filter: 'drop-shadow(0 0 15px rgba(208, 188, 255, 0.6))',
+            },
+          },
         }}
       >
-        <Box 
-          component="img" 
-          src="/icon-512.png" 
-          alt="K-Connect"
-          sx={{ 
-            width: 80, 
+        <Box
+          component='img'
+          src='/icon-512.png'
+          alt='K-Connect'
+          sx={{
+            width: 80,
             height: 80,
             borderRadius: '16px',
-            filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))'
-          }} 
+            filter: 'drop-shadow(0 0 8px rgba(208, 188, 255, 0.4))',
+          }}
         />
       </Box>
-      
+
       {/* Точки загрузки */}
       <Box
         sx={{
@@ -114,10 +114,10 @@ export const LoadingIndicator = () => {
           gap: '8px',
           marginTop: '24px',
           position: 'relative',
-          zIndex: 2
+          zIndex: 2,
         }}
       >
-        {[0, 1, 2].map((index) => (
+        {[0, 1, 2].map(index => (
           <Box
             key={index}
             sx={{
@@ -130,18 +130,18 @@ export const LoadingIndicator = () => {
               '@keyframes bounce': {
                 '0%, 80%, 100%': {
                   transform: 'scale(0.8)',
-                  opacity: 0.5
+                  opacity: 0.5,
                 },
                 '40%': {
                   transform: 'scale(1)',
-                  opacity: 1
-                }
-              }
+                  opacity: 1,
+                },
+              },
             }}
           />
         ))}
       </Box>
-      
+
       {/* Текст загрузки */}
       <Box
         sx={{
@@ -153,12 +153,12 @@ export const LoadingIndicator = () => {
           animation: 'fadeInOut 2s ease-in-out infinite',
           '@keyframes fadeInOut': {
             '0%, 100%': { opacity: 0.6 },
-            '50%': { opacity: 1 }
-          }
+            '50%': { opacity: 1 },
+          },
         }}
       >
         Загрузка...
       </Box>
     </Box>
   );
-}; 
+};

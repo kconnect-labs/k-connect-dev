@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  Typography, 
-  Button, 
-  Box, 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
   Chip,
   CircularProgress,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
-import { 
+import {
   Diamond as DiamondIcon,
   Star as StarIcon,
   Lock as LockIcon,
-  Percent as PercentIcon
+  Percent as PercentIcon,
 } from '@mui/icons-material';
 import OptimizedImage from '../../../../components/OptimizedImage';
 import { Pack, PackContent } from './types';
@@ -40,13 +40,14 @@ const StyledCard = styled(Card)(({ theme }) => ({
     height: 420,
     minHeight: 420,
     maxHeight: 420,
-  }
+  },
 }));
 
 const PackImage = styled(Box)(({ theme }) => ({
   position: 'relative',
   height: 200,
-  background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%)',
+  background:
+    'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%)',
   borderRadius: '16px 16px 0 0',
   display: 'flex',
   alignItems: 'center',
@@ -59,7 +60,8 @@ const PackImage = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'radial-gradient(circle at center, rgba(208, 188, 255, 0.1) 0%, transparent 70%)',
+    background:
+      'radial-gradient(circle at center, rgba(208, 188, 255, 0.1) 0%, transparent 70%)',
     pointerEvents: 'none',
   },
 }));
@@ -179,7 +181,7 @@ const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
     epic: { bg: '#9b59b6', color: '#fff' },
     legendary: { bg: '#f39c12', color: '#fff' },
   };
-  
+
   return {
     background: colors[rarity || 'common']?.bg || colors.common.bg,
     color: colors[rarity || 'common']?.color || colors.common.color,
@@ -229,7 +231,13 @@ interface PackCardProps {
   onPackClick?: (pack: Pack, packContents: PackContent[]) => void;
 }
 
-const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardProps) => {
+const PackCard = ({
+  pack,
+  userPoints,
+  onBuy,
+  disabled,
+  onPackClick,
+}: PackCardProps) => {
   const [packContents, setPackContents] = useState<PackContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [showItems, setShowItems] = useState(false);
@@ -244,7 +252,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
     try {
       const response = await fetch(`/api/inventory/packs/${pack.id}`);
       const data = await response.json();
-      
+
       if (data.success && data.pack.contents) {
         setPackContents(data.pack.contents);
       }
@@ -256,7 +264,7 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
   const handleBuyClick = async (e: React.MouseEvent) => {
     e.stopPropagation(); // Предотвращаем всплытие события
     if (disabled) return;
-    
+
     setLoading(true);
     try {
       await onBuy();
@@ -328,7 +336,11 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
     return text.substring(0, maxLength).trim() + '...';
   };
 
-  const isSoldOut = pack.is_limited && pack.max_quantity && pack.sold_quantity && (pack.max_quantity - pack.sold_quantity <= 0);
+  const isSoldOut =
+    pack.is_limited &&
+    pack.max_quantity &&
+    pack.sold_quantity &&
+    pack.max_quantity - pack.sold_quantity <= 0;
 
   return (
     <motion.div
@@ -337,7 +349,15 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
       transition={{ duration: 0.3 }}
       whileHover={{ y: -5 }}
     >
-      <StyledCard onClick={handleViewDetails} sx={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <StyledCard
+        onClick={handleViewDetails}
+        sx={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+        }}
+      >
         {/* Все по 1000 */}
         {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
           <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
@@ -348,9 +368,9 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
             <OptimizedImage
               src={pack.image_path}
               alt={pack.display_name}
-              width="100%"
-              height="100%"
-              fallbackText="Пак"
+              width='100%'
+              height='100%'
+              fallbackText='Пак'
               onLoad={() => {}}
               onError={() => {}}
             />
@@ -358,8 +378,10 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
             <ItemContainer>
               {sideItems[0] && (
                 <SideItem>
-                  <Tooltip title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}>
-                    <ItemImage 
+                  <Tooltip
+                    title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}
+                  >
+                    <ItemImage
                       src={`/inventory/pack/${pack.id}/${sideItems[0].item_name}`}
                       alt={sideItems[0].item_name}
                     />
@@ -368,22 +390,26 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
               )}
               <MainItem>
                 {mainItem ? (
-                  <Tooltip title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}>
-                    <ItemImage 
+                  <Tooltip
+                    title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}
+                  >
+                    <ItemImage
                       src={`/inventory/pack/${pack.id}/${mainItem.item_name}`}
                       alt={mainItem.item_name}
                     />
                   </Tooltip>
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant='body2' color='text.secondary'>
                     ???
                   </Typography>
                 )}
               </MainItem>
               {sideItems[1] && (
                 <SideItem>
-                  <Tooltip title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}>
-                    <ItemImage 
+                  <Tooltip
+                    title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}
+                  >
+                    <ItemImage
                       src={`/inventory/pack/${pack.id}/${sideItems[1].item_name}`}
                       alt={sideItems[1].item_name}
                     />
@@ -392,54 +418,67 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
               )}
             </ItemContainer>
           )}
-          
+
           {/* Показываем предметы при наведении */}
           {showItems && packContents.length > 0 && (
             <ItemPreview>
-              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 0.5,
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
                 {packContents.slice(0, 6).map((item, index) => (
-                  <Box key={index} sx={{ 
-                    width: 37.5,
-                    height: 37.5,
-                    position: 'relative',
-                    borderRadius: 4,
-                    overflow: 'hidden',
-                    ...(item.background_url && {
-                      '&::before': {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundImage: `url(${item.background_url})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                        borderRadius: 'inherit',
-                        zIndex: 1,
-                      }
-                    })
-                  }}>
+                  <Box
+                    key={index}
+                    sx={{
+                      width: 37.5,
+                      height: 37.5,
+                      position: 'relative',
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      ...(item.background_url && {
+                        '&::before': {
+                          content: '""',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundImage: `url(${item.background_url})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat',
+                          borderRadius: 'inherit',
+                          zIndex: 1,
+                        },
+                      }),
+                    }}
+                  >
                     <OptimizedImage
                       src={`/inventory/pack/${pack.id}/${item.item_name}`}
                       alt={item.item_name}
-                      width="75%"
-                      height="75%"
-                      fallbackText=""
+                      width='75%'
+                      height='75%'
+                      fallbackText=''
                       showSkeleton={false}
                       onLoad={() => {}}
                       onError={() => {}}
                       style={{
                         position: 'relative',
                         zIndex: 2,
-                        objectFit: 'contain'
+                        objectFit: 'contain',
                       }}
                     />
                   </Box>
                 ))}
                 {packContents.length > 6 && (
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                  <Typography
+                    variant='caption'
+                    sx={{ color: 'text.secondary' }}
+                  >
                     +{packContents.length - 6}
                   </Typography>
                 )}
@@ -448,12 +487,21 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
           )}
         </PackImage>
 
-        <CardContent sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'stretch' }}>
-          <Typography 
-            variant="h6" 
-            component="h3" 
-            sx={{ 
-              fontWeight: 600, 
+        <CardContent
+          sx={{
+            p: 2,
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'stretch',
+          }}
+        >
+          <Typography
+            variant='h6'
+            component='h3'
+            sx={{
+              fontWeight: 600,
               mb: 1,
               textAlign: 'center',
               minHeight: 32,
@@ -468,11 +516,10 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
           >
             {pack.display_name}
           </Typography>
-
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: 'text.secondary', 
+          <Typography
+            variant='body2'
+            sx={{
+              color: 'text.secondary',
               mb: 2,
               textAlign: 'center',
               fontSize: '0.85rem',
@@ -489,14 +536,20 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
           >
             {truncateDescription(pack.description)}
           </Typography>
-
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2, gap: 1, flexWrap: 'wrap', minHeight: 36, maxHeight: 36 }}>
-            <PriceChip 
-              icon={<DiamondIcon />}
-              label={`${pack.price} баллов`}
-            />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mb: 2,
+              gap: 1,
+              flexWrap: 'wrap',
+              minHeight: 36,
+              maxHeight: 36,
+            }}
+          >
+            <PriceChip icon={<DiamondIcon />} label={`${pack.price} баллов`} />
             {pack.is_limited && (
-              <Chip 
+              <Chip
                 icon={<LockIcon />}
                 label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
                 sx={{
@@ -511,11 +564,9 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
               />
             )}
           </Box>
-
           <Box sx={{ flex: 1 }} /> {/* Spacer to push button down */}
-
           <Button
-            variant="outlined"
+            variant='outlined'
             fullWidth
             disabled={!!disabled || !!loading || !!isSoldOut}
             onClick={handleBuyClick}
@@ -556,4 +607,4 @@ const PackCard = ({ pack, userPoints, onBuy, disabled, onPackClick }: PackCardPr
   );
 };
 
-export default PackCard; 
+export default PackCard;

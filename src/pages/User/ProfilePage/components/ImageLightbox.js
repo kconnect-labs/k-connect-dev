@@ -6,7 +6,7 @@ const ImageLightbox = ({ isOpen, imageUrl, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       style={{
         position: 'fixed',
         top: 0,
@@ -17,19 +17,19 @@ const ImageLightbox = ({ isOpen, imageUrl, onClose }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 9999
+        zIndex: 9999,
       }}
       onClick={onClose}
     >
-      <img 
-        src={imageUrl} 
-        alt="Full size" 
-        style={{ 
-          maxWidth: '90%', 
-          maxHeight: '90%', 
-          objectFit: 'contain' 
-        }} 
-        onClick={(e) => e.stopPropagation()}
+      <img
+        src={imageUrl}
+        alt='Full size'
+        style={{
+          maxWidth: '90%',
+          maxHeight: '90%',
+          objectFit: 'contain',
+        }}
+        onClick={e => e.stopPropagation()}
       />
       <IconButton
         sx={{
@@ -40,7 +40,7 @@ const ImageLightbox = ({ isOpen, imageUrl, onClose }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          }
+          },
         }}
         onClick={onClose}
       >
@@ -50,4 +50,4 @@ const ImageLightbox = ({ isOpen, imageUrl, onClose }) => {
   );
 };
 
-export default ImageLightbox; 
+export default ImageLightbox;

@@ -7,11 +7,12 @@ import DynamicIslandNotification from './DynamicIslandNotification';
  */
 const NotificationManager = () => {
   const [notifications, setNotifications] = useState([]);
-  
+
   useEffect(() => {
     // Listen for auth error notifications
-    const handleAuthError = (event) => {
-      const { message, shortMessage, notificationType, animationType } = event.detail;
+    const handleAuthError = event => {
+      const { message, shortMessage, notificationType, animationType } =
+        event.detail;
       addNotification({
         id: Date.now(),
         message,
@@ -20,10 +21,11 @@ const NotificationManager = () => {
         animationType: animationType || 'pill',
       });
     };
-    
+
     // Listen for rate limit error notifications
-    const handleRateLimitError = (event) => {
-      const { message, shortMessage, notificationType, animationType } = event.detail;
+    const handleRateLimitError = event => {
+      const { message, shortMessage, notificationType, animationType } =
+        event.detail;
       addNotification({
         id: Date.now(),
         message,
@@ -32,10 +34,11 @@ const NotificationManager = () => {
         animationType: animationType || 'bounce',
       });
     };
-    
+
     // Listen for network error notifications
-    const handleNetworkError = (event) => {
-      const { message, shortMessage, notificationType, animationType } = event.detail;
+    const handleNetworkError = event => {
+      const { message, shortMessage, notificationType, animationType } =
+        event.detail;
       addNotification({
         id: Date.now(),
         message,
@@ -44,10 +47,16 @@ const NotificationManager = () => {
         animationType: animationType || 'drop',
       });
     };
-    
+
     // Listen for API retry notifications
-    const handleApiRetry = (event) => {
-      const { message, shortMessage, notificationType, animationType, attempt } = event.detail;
+    const handleApiRetry = event => {
+      const {
+        message,
+        shortMessage,
+        notificationType,
+        animationType,
+        attempt,
+      } = event.detail;
       addNotification({
         id: Date.now(),
         message: message || `Повторное подключение (${attempt})`,
@@ -56,10 +65,11 @@ const NotificationManager = () => {
         animationType: animationType || 'pulse',
       });
     };
-    
+
     // Listen for generic error notifications
-    const handleShowError = (event) => {
-      const { message, shortMessage, notificationType, animationType } = event.detail;
+    const handleShowError = event => {
+      const { message, shortMessage, notificationType, animationType } =
+        event.detail;
       addNotification({
         id: Date.now(),
         message,
@@ -68,14 +78,14 @@ const NotificationManager = () => {
         animationType: animationType || 'pill',
       });
     };
-    
+
     // Add event listeners
     window.addEventListener('auth-error', handleAuthError);
     window.addEventListener('rate-limit-error', handleRateLimitError);
     window.addEventListener('network-error', handleNetworkError);
     window.addEventListener('api-retry', handleApiRetry);
     window.addEventListener('show-error', handleShowError);
-    
+
     // Clean up event listeners
     return () => {
       window.removeEventListener('auth-error', handleAuthError);
@@ -85,23 +95,25 @@ const NotificationManager = () => {
       window.removeEventListener('show-error', handleShowError);
     };
   }, []);
-  
+
   // Add new notification to the queue
-  const addNotification = (notification) => {
+  const addNotification = notification => {
     // Only allow one notification at a time for Dynamic Island style
     setNotifications([notification]);
   };
-  
+
   // Remove notification from queue
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
+  const removeNotification = id => {
+    setNotifications(prev =>
+      prev.filter(notification => notification.id !== id)
+    );
   };
-  
+
   // No need to render anything if there are no notifications
   if (notifications.length === 0) {
     return null;
   }
-  
+
   return (
     <>
       {notifications.map(notification => (
@@ -120,4 +132,4 @@ const NotificationManager = () => {
   );
 };
 
-export default NotificationManager; 
+export default NotificationManager;

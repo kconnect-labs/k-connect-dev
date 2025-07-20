@@ -90,20 +90,22 @@ class InventoryImageService {
 
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
-          console.warn(`Batch request failed: ${errorData.message || response.statusText}`);
-          
+          console.warn(
+            `Batch request failed: ${errorData.message || response.statusText}`
+          );
+
           // Добавляем fallback результаты для этого батча
           const fallbackResults = batch.map(item => ({
             ...item,
             exists: false,
-            url: this.getUrlFromItem(item)
+            url: this.getUrlFromItem(item),
           }));
           allBatchResults.push(...fallbackResults);
           continue;
         }
 
         const data = await response.json();
-        
+
         if (data.success) {
           // Кешируем результаты
           for (const imageInfo of data.images) {
@@ -117,7 +119,7 @@ class InventoryImageService {
           const fallbackResults = batch.map(item => ({
             ...item,
             exists: false,
-            url: this.getUrlFromItem(item)
+            url: this.getUrlFromItem(item),
           }));
           allBatchResults.push(...fallbackResults);
         }
@@ -127,7 +129,7 @@ class InventoryImageService {
         const fallbackResults = batch.map(item => ({
           ...item,
           exists: false,
-          url: this.getUrlFromItem(item)
+          url: this.getUrlFromItem(item),
         }));
         allBatchResults.push(...fallbackResults);
       }
@@ -176,7 +178,7 @@ class InventoryImageService {
     }
 
     const batchItems = items.map(item => ({
-      item_id: item.id
+      item_id: item.id,
     }));
 
     await this.checkImagesBatch(batchItems);
@@ -195,7 +197,7 @@ class InventoryImageService {
 
     const batchItems = contents.map(content => ({
       pack_id: packId,
-      item_name: content.item_name
+      item_name: content.item_name,
     }));
 
     await this.checkImagesBatch(batchItems);
@@ -216,7 +218,7 @@ class InventoryImageService {
     return {
       size: this.imageCache.size,
       keys: Array.from(this.imageCache.keys()),
-      maxBatchSize: this.maxBatchSize
+      maxBatchSize: this.maxBatchSize,
     };
   }
 }
@@ -224,4 +226,4 @@ class InventoryImageService {
 // Создаем единственный экземпляр сервиса
 const inventoryImageService = new InventoryImageService();
 
-export default inventoryImageService; 
+export default inventoryImageService;

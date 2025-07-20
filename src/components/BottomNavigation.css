@@ -50,7 +50,7 @@
 }
 
 .bottom-nav-item.active {
-  color: var(--primary-main, #D0BCFF);
+  color: var(--primary-main, #d0bcff);
 }
 
 .bottom-nav-icon {
@@ -98,5 +98,5 @@
 
 /* CSS Variables */
 :root {
-  --primary-main: #D0BCFF;
-} 
+  --primary-main: #d0bcff;
+}

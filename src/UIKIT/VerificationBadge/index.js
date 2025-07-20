@@ -10,7 +10,7 @@ import { ReactComponent as ChannelPremSvg } from './badge/channelPREM.svg';
 
 /**
  * Modern verification badge component with different styles based on status
- * 
+ *
  * @param {Object} props - Component props
  * @param {string|number} props.status - Verification status code
  * @param {string} props.size - Size of the badge ('small' or default)
@@ -22,7 +22,7 @@ const VerifiedBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 19,
       height: props.size === 'small' ? 20 : 19,
       ml: '4px',
@@ -31,12 +31,16 @@ const VerifiedBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <MainSvg style={{ width: '100%', height: '100%' }} />
@@ -48,7 +52,7 @@ const OfficialBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 19,
       height: props.size === 'small' ? 20 : 19,
       ml: '4px',
@@ -57,12 +61,16 @@ const OfficialBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <VerifSvg style={{ width: '100%', height: '100%' }} />
@@ -74,7 +82,7 @@ const VIPBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 19,
       height: props.size === 'small' ? 20 : 19,
       ml: '4px',
@@ -83,12 +91,16 @@ const VIPBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <VipSvg style={{ width: '100%', height: '100%' }} />
@@ -100,7 +112,7 @@ const ModeratorBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 19,
       height: props.size === 'small' ? 20 : 19,
       ml: '4px',
@@ -109,12 +121,16 @@ const ModeratorBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <ModeSvg style={{ width: '100%', height: '100%' }} />
@@ -126,7 +142,7 @@ const SupportBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 19,
       height: props.size === 'small' ? 20 : 19,
       ml: '4px',
@@ -135,12 +151,16 @@ const SupportBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <SupSvg style={{ width: '100%', height: '100%' }} />
@@ -152,7 +172,7 @@ const ChannelVerifiedBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 20,
       height: props.size === 'small' ? 20 : 20,
       ml: '4px',
@@ -161,12 +181,16 @@ const ChannelVerifiedBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <ChannelVerifSvg style={{ width: '100%', height: '100%' }} />
@@ -178,7 +202,7 @@ const ChannelPremiumBadge = React.forwardRef((props, ref) => (
     ref={ref}
     onClick={props.onClick}
     onTouchStart={props.onTouchStart}
-    sx={{ 
+    sx={{
       width: props.size === 'small' ? 20 : 20,
       height: props.size === 'small' ? 20 : 20,
       ml: '4px',
@@ -187,12 +211,16 @@ const ChannelPremiumBadge = React.forwardRef((props, ref) => (
       justifyContent: 'center',
       cursor: props.onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
-      '&:hover': props.onClick ? {
-        transform: 'scale(1.1)',
-      } : {},
-      '&:active': props.onClick ? {
-        transform: 'scale(0.95)',
-      } : {},
+      '&:hover': props.onClick
+        ? {
+            transform: 'scale(1.1)',
+          }
+        : {},
+      '&:active': props.onClick
+        ? {
+            transform: 'scale(0.95)',
+          }
+        : {},
     }}
   >
     <ChannelPremSvg style={{ width: '100%', height: '100%' }} />
@@ -215,83 +243,88 @@ const CustomTooltip = styled(({ className, ...props }) => (
   },
   '& .MuiTooltip-arrow': {
     color: 'rgba(255, 255, 255, 0.03)',
-  }
+  },
 }));
 
 const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  
+
   if (!status) return null;
-  
-  const getColorAndTitle = (status) => {
+
+  const getColorAndTitle = status => {
     if (status === 'verified') {
-      return { 
-        color: '#D0BCFF', 
+      return {
+        color: '#D0BCFF',
         title: '✓ Верифицированный аккаунт',
-        description: 'Этот аккаунт прошел верификацию и подтвержден администрацией'
+        description:
+          'Этот аккаунт прошел верификацию и подтвержден администрацией',
       };
     }
-    
-    switch(Number(status)) {
+
+    switch (Number(status)) {
       case 1:
-        return { 
-          color: '#9e9e9e', 
+        return {
+          color: '#9e9e9e',
           title: '✓ Верифицированный аккаунт',
-          description: 'Этот аккаунт прошел верификацию.'
+          description: 'Этот аккаунт прошел верификацию.',
         };
       case 2:
-        return { 
-          color: '#d67270', 
+        return {
+          color: '#d67270',
           title: '🏛️ Официальный аккаунт',
-          description: 'Официальный аккаунт подтвержденный администрацией'
+          description: 'Официальный аккаунт подтвержденный администрацией',
         };
       case 3:
-        return { 
-          color: '#b39ddb', 
+        return {
+          color: '#b39ddb',
           title: '👑 VIP аккаунт',
-          description: 'Аккаунт друга проекта'
+          description: 'Аккаунт друга проекта',
         };
       case 4:
-        return { 
-          color: '#ff9800', 
+        return {
+          color: '#ff9800',
           title: '🛡️ Модератор',
-          description: 'Модератор платформы с правами управления контентом'
+          description: 'Модератор платформы с правами управления контентом',
         };
       case 5:
-        return { 
-          color: '#4caf50', 
+        return {
+          color: '#4caf50',
           title: '💬 Поддержка',
-          description: 'Представитель службы поддержки платформы'
+          description: 'Представитель службы поддержки платформы',
         };
       case 6:
-        return { 
-          color: '#1e88e5', 
+        return {
+          color: '#1e88e5',
           title: '📺 Канал (Верифицированный)',
-          description: 'Официальный верифицированный канал с подтвержденной подлинностью',
-          isChannelVerified: true 
+          description:
+            'Официальный верифицированный канал с подтвержденной подлинностью',
+          isChannelVerified: true,
         };
       case 7:
-        return { 
-          color: '#7c4dff', 
+        return {
+          color: '#7c4dff',
           title: '⭐ Канал (Премиум)',
-          description: 'Премиум канал с расширенными возможностями и привилегиями',
-          isChannelPremium: true 
+          description:
+            'Премиум канал с расширенными возможностями и привилегиями',
+          isChannelPremium: true,
         };
       default:
-        return { 
-          color: '#D0BCFF', 
+        return {
+          color: '#D0BCFF',
           title: '✓ Верифицированный аккаунт',
-          description: 'Этот аккаунт прошел верификацию и подтвержден администрацией'
+          description:
+            'Этот аккаунт прошел верификацию и подтвержден администрацией',
         };
     }
   };
-  
-  const { color, title, description, isChannelVerified, isChannelPremium } = getColorAndTitle(status);
 
-  const handleClick = (e) => {
+  const { color, title, description, isChannelVerified, isChannelPremium } =
+    getColorAndTitle(status);
+
+  const handleClick = e => {
     e.stopPropagation();
     e.preventDefault();
-    
+
     // Показываем тултип на мобильных устройствах при клике
     if (onClick) {
       onClick(status, title, description);
@@ -302,10 +335,10 @@ const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
     }
   };
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = e => {
     e.stopPropagation();
     e.preventDefault();
-    
+
     // Показываем тултип на мобильных устройствах при касании
     if (onClick) {
       onClick(status, title, description);
@@ -317,9 +350,7 @@ const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
 
   const tooltipContent = (
     <Box sx={{ textAlign: 'center', p: 0.5 }}>
-      <Box sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5 }}>
-        {title}
-      </Box>
+      <Box sx={{ fontWeight: 600, fontSize: '0.85rem', mb: 0.5 }}>{title}</Box>
       <Box sx={{ fontSize: '0.75rem', opacity: 0.8, maxWidth: 200 }}>
         {description}
       </Box>
@@ -327,9 +358,9 @@ const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
   );
 
   return (
-    <CustomTooltip 
+    <CustomTooltip
       title={tooltipContent}
-      placement="top" 
+      placement='top'
       arrow
       open={tooltipOpen}
       onClose={() => setTooltipOpen(false)}
@@ -339,23 +370,58 @@ const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
     >
       <span>
         {isChannelVerified ? (
-          <ChannelVerifiedBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <ChannelVerifiedBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : isChannelPremium ? (
-          <ChannelPremiumBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <ChannelPremiumBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : Number(status) === 2 ? (
-          <OfficialBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <OfficialBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : Number(status) === 3 ? (
-          <VIPBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <VIPBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : Number(status) === 4 ? (
-          <ModeratorBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <ModeratorBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : Number(status) === 5 ? (
-          <SupportBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <SupportBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         ) : (
-          <VerifiedBadge ref={ref} size={size} onClick={handleClick} onTouchStart={handleTouchStart} />
+          <VerifiedBadge
+            ref={ref}
+            size={size}
+            onClick={handleClick}
+            onTouchStart={handleTouchStart}
+          />
         )}
       </span>
     </CustomTooltip>
   );
 });
 
-export default VerificationBadge; 
+export default VerificationBadge;

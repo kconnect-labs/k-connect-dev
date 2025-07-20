@@ -86,7 +86,10 @@
     "build:stats": "echo '🚀 Начало сборки...' && time npm run build && echo '\\n📊 СТАТИСТИКА СБОРКИ' && echo '================' && echo '\\n📁 Самые большие файлы:' && du -sh build/assets/* | sort -hr | head -10 && echo '\\n📦 Общий размер сборки:' && du -sh build && echo '\\n⏱️ Сборка завершена успешно!'",
     "preview": "vite preview",
     "clean": "rm -rf node_modules/.vite dist && npm cache clean --force",
-    "optimize": "vite optimize && vite build"
+    "optimize": "vite optimize && vite build",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\" --ignore-unknown"
   },
   "browserslist": {
     "production": [
@@ -114,7 +117,10 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "cross-env": "^7.0.3",
     "cssnano": "^7.0.7",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
     "glob": "^11.0.1",
+    "prettier": "^3.6.2",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass-embedded": "^1.87.0",
     "terser": "^5.39.0",

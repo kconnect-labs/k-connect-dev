@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ThemeSettingsContext } from '../App';
@@ -8,7 +14,6 @@ import { addLazyLoadingToImages } from '../utils/imageUtils';
 import AuthService from '../services/AuthService';
 import ProfileService from '../services/ProfileService';
 
-
 export const AuthContext = createContext({
   user: null,
   isAuthenticated: false,
@@ -16,17 +21,19 @@ export const AuthContext = createContext({
   checkAuth: () => {},
   login: () => {},
   logout: () => {},
-  setUser: () => {}
+  setUser: () => {},
 });
-
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  
-  const savedAuthState = JSON.parse(localStorage.getItem('k-connect-auth-state') || 'null');
-  const savedUser = JSON.parse(localStorage.getItem('k-connect-user') || 'null');
-  
+  const savedAuthState = JSON.parse(
+    localStorage.getItem('k-connect-auth-state') || 'null'
+  );
+  const savedUser = JSON.parse(
+    localStorage.getItem('k-connect-user') || 'null'
+  );
+
   const [user, setUser] = useState(savedUser);
   const [isAuthenticated, setIsAuthenticated] = useState(!!savedAuthState);
   const [loading, setLoading] = useState(false);
@@ -34,16 +41,21 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const themeContext = useContext(ThemeSettingsContext) || {};
 
-  
   const persistAuthState = (authState, userData) => {
     if (authState) {
-      localStorage.setItem('k-connect-auth-state', JSON.stringify({
-        isAuthenticated: authState,
-        lastCheck: Date.now()
-      }));
-      
+      localStorage.setItem(
+        'k-connect-auth-state',
+        JSON.stringify({
+          isAuthenticated: authState,
+          lastCheck: Date.now(),
+        })
+      );
+
       if (userData) {
-        console.log('💾 Сохраняем данные пользователя в localStorage:', userData);
+        console.log(
+          '💾 Сохраняем данные пользователя в localStorage:',
+          userData
+        );
         localStorage.setItem('k-connect-user', JSON.stringify(userData));
       }
     } else {
@@ -52,13 +64,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  
   const checkAuth = useCallback(async (force = false) => {
     try {
       setLoading(true);
-      
+
       const response = await AuthService.checkAuth();
-      
+
       if (response && response.data) {
         if (response.data.isAuthenticated && response.data.user) {
           const userData = response.data.user;
@@ -66,7 +77,10 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(true);
           persistAuthState(true, userData);
           return userData;
-        } else if (response.data.needsProfileSetup || response.data.hasSession) {
+        } else if (
+          response.data.needsProfileSetup ||
+          response.data.hasSession
+        ) {
           setUser(null);
           setIsAuthenticated(true);
           persistAuthState(true, null);
@@ -94,126 +108,138 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  
-  const login = useCallback(async (credentials) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await AuthService.login(credentials);
-      
-      if (response.success) {
-        // Сначала устанавливаем аутентификацию с минимальными данными
-        setUser(response.user);
-        setIsAuthenticated(true);
-        persistAuthState(true, response.user);
-        // Делаем дополнительную проверку авторизации для получения полных данных пользователя
-        try {
-          // Проверяем, есть ли уже полные данные пользователя
-          const hasFullData = response.user && (
-            response.user.about !== undefined || 
-            response.user.avatar_url !== undefined || 
-            response.user.account_type !== undefined ||
-            response.user.hasCredentials !== undefined
-          );
-          
-          if (hasFullData) {
-          } else {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            
-            console.log('🔍 Выполняем проверку авторизации для получения полных данных пользователя...');
-            const authCheck = await checkAuth(true);
-            if (authCheck) {
-              console.log('✅ Получены полные данные пользователя:', authCheck);
-              setUser(authCheck);
-              persistAuthState(true, authCheck);
+  const login = useCallback(
+    async credentials => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await AuthService.login(credentials);
+
+        if (response.success) {
+          // Сначала устанавливаем аутентификацию с минимальными данными
+          setUser(response.user);
+          setIsAuthenticated(true);
+          persistAuthState(true, response.user);
+          // Делаем дополнительную проверку авторизации для получения полных данных пользователя
+          try {
+            // Проверяем, есть ли уже полные данные пользователя
+            const hasFullData =
+              response.user &&
+              (response.user.about !== undefined ||
+                response.user.avatar_url !== undefined ||
+                response.user.account_type !== undefined ||
+                response.user.hasCredentials !== undefined);
+
+            if (hasFullData) {
             } else {
-              console.log('⚠️ Проверка авторизации не вернула данные пользователя');
+              await new Promise(resolve => setTimeout(resolve, 100));
+
+              console.log(
+                '🔍 Выполняем проверку авторизации для получения полных данных пользователя...'
+              );
+              const authCheck = await checkAuth(true);
+              if (authCheck) {
+                console.log(
+                  '✅ Получены полные данные пользователя:',
+                  authCheck
+                );
+                setUser(authCheck);
+                persistAuthState(true, authCheck);
+              } else {
+                console.log(
+                  '⚠️ Проверка авторизации не вернула данные пользователя'
+                );
+              }
+            }
+          } catch (error) {
+            console.warn('❌ ошибка кароче:', error);
+          }
+
+          if (themeContext && themeContext.loadThemeSettings) {
+            themeContext.loadThemeSettings();
+          }
+
+          if (!credentials.preventRedirect) {
+            // Проверяем, есть ли у пользователя профиль
+            if (
+              !response.user ||
+              !response.user.username ||
+              !response.user.id
+            ) {
+              // У пользователя нет профиля - редирект на регистрацию профиля
+              navigate('/register/profile', { replace: true });
+            } else {
+              // У пользователя есть профиль - редирект на главную
+              const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
+              if (deeplinkTrackId) {
+                window.location.href = `/music/track/${deeplinkTrackId}`;
+              } else {
+                navigate('/', { replace: true });
+              }
             }
           }
-        } catch (error) {
-          console.warn('❌ ошибка кароче:', error);
+
+          return { success: true };
+        } else {
+          const errorMessage = response.error || 'Ошибка при входе в систему';
+          setError({ message: errorMessage });
+          return { success: false, error: errorMessage };
         }
-        
-        if (themeContext && themeContext.loadThemeSettings) {
-          themeContext.loadThemeSettings();
+      } catch (error) {
+        console.error('Login error:', error);
+
+        if (error.response?.data?.ban_info) {
+          const banInfo = error.response.data.ban_info;
+          setError({
+            message: 'Аккаунт заблокирован',
+            ban_info: banInfo,
+          });
+          return {
+            success: false,
+            error: 'Аккаунт заблокирован',
+            ban_info: banInfo,
+          };
         }
-        
-        if (!credentials.preventRedirect) {
-          // Проверяем, есть ли у пользователя профиль
-          if (!response.user || !response.user.username || !response.user.id) {
-            // У пользователя нет профиля - редирект на регистрацию профиля
-            navigate('/register/profile', { replace: true });
-          } else {
-            // У пользователя есть профиль - редирект на главную
-            const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
-            if (deeplinkTrackId) {
-              window.location.href = `/music/track/${deeplinkTrackId}`;
-            } else {
-              navigate('/', { replace: true });
-            }
-          }
-        }
-        
-        return { success: true };
-      } else {
-        const errorMessage = response.error || 'Ошибка при входе в систему';
+
+        const errorMessage =
+          error.response?.data?.message || 'Ошибка при входе в систему';
         setError({ message: errorMessage });
         return { success: false, error: errorMessage };
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      
-      if (error.response?.data?.ban_info) {
-        const banInfo = error.response.data.ban_info;
-        setError({ 
-          message: 'Аккаунт заблокирован', 
-          ban_info: banInfo 
-        });
-        return { 
-          success: false, 
-          error: 'Аккаунт заблокирован', 
-          ban_info: banInfo 
-        };
-      }
-      
-      const errorMessage = error.response?.data?.message || 'Ошибка при входе в систему';
-      setError({ message: errorMessage });
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  }, [navigate, themeContext, checkAuth]);
+    },
+    [navigate, themeContext, checkAuth]
+  );
 
-  
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       await AuthService.logout();
-      
+
       localStorage.removeItem('token');
       persistAuthState(false);
-      
+
       resetMessengerSocket();
-      
+
       setUser(null);
       setIsAuthenticated(false);
-      
+
       if (themeContext && themeContext.loadThemeSettings) {
         themeContext.loadThemeSettings(true);
       }
-      
+
       navigate('/login', { replace: true });
-      
     } catch (error) {
       console.error('Logout error:', error);
-      
+
       localStorage.removeItem('token');
       persistAuthState(false);
-      
+
       resetMessengerSocket();
-      
+
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -221,18 +247,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, [navigate, themeContext]);
 
-  
-  const registerProfile = async (profileData) => {
+  const registerProfile = async profileData => {
     try {
       setLoading(true);
       const response = await AuthService.registerProfile(profileData);
-      
+
       if (response.success && response.user) {
         // Обновляем данные пользователя
         setUser(response.user);
         setIsAuthenticated(true);
         persistAuthState(true, response.user);
-        
+
         // Делаем дополнительную проверку аутентификации для обновления сессии
         try {
           const authCheck = await checkAuth(true);
@@ -244,7 +269,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.warn('Auth check after profile registration failed:', error);
         }
-        
+
         // Редирект на главную
         navigate('/', { replace: true });
         return { success: true };
@@ -255,7 +280,8 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Profile registration error:', error);
-      const errorMessage = error.response?.data?.error || 'Ошибка при регистрации профиля';
+      const errorMessage =
+        error.response?.data?.error || 'Ошибка при регистрации профиля';
       setError({ message: errorMessage });
       return { success: false, error: errorMessage };
     } finally {
@@ -263,7 +289,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
@@ -273,11 +298,21 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setIsAuthenticated(false);
             persistAuthState(false);
-            
+
             const currentPath = window.location.pathname;
-            const publicPages = ['/login', '/register', '/rules', '/about', '/privacy-policy', '/terms-of-service', '/bugs'];
-            const isPublicPage = publicPages.some(page => currentPath.includes(page));
-            
+            const publicPages = [
+              '/login',
+              '/register',
+              '/rules',
+              '/about',
+              '/privacy-policy',
+              '/terms-of-service',
+              '/bugs',
+            ];
+            const isPublicPage = publicPages.some(page =>
+              currentPath.includes(page)
+            );
+
             if (!isPublicPage) {
               navigate('/login', { replace: true });
             }
@@ -286,7 +321,7 @@ export const AuthProvider = ({ children }) => {
         return Promise.reject(error);
       }
     );
-    
+
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
@@ -304,11 +339,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (user && typeof window !== 'undefined') {
       // Принудительно загружаем аватарки пользователя
-      addLazyLoadingToImages('.SIDEBAR-user-avatar, .user-avatar, .profile-avatar', true);
+      addLazyLoadingToImages(
+        '.SIDEBAR-user-avatar, .user-avatar, .profile-avatar',
+        true
+      );
     }
   }, [user]);
 
-  
   const contextValue = {
     user,
     isAuthenticated,
@@ -318,12 +355,10 @@ export const AuthProvider = ({ children }) => {
     logout,
     checkAuth,
     registerProfile,
-    setUser
+    setUser,
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
-}; 
+};

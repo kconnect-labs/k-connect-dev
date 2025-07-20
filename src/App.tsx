@@ -1,10 +1,32 @@
-import React, { useState, useEffect, useMemo, useContext, lazy, Suspense, useTransition, useRef, useCallback } from 'react';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useContext,
+  lazy,
+  Suspense,
+  useTransition,
+  useRef,
+  useCallback,
+} from 'react';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
-import { Box, CircularProgress, Typography, Button, Alert, GlobalStyles } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Button,
+  Alert,
+  GlobalStyles,
+} from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
 import { useBlurOptimization } from './hooks/useBlurOptimization';
 
@@ -56,15 +78,15 @@ interface RequireAuthProps {
 export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
   const location = useLocation();
-  
+
   if (loading) {
     return null;
   }
-  
+
   if (isAuthenticated) {
     return <>{children}</>;
   }
-  
+
   // Сохраняем deeplink trackId в localStorage перед редиректом на логин
   if (location.pathname.startsWith('/music/track/')) {
     const trackId = location.pathname.split('/music/track/')[1];
@@ -73,14 +95,8 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
       localStorage.setItem('deeplinkTrackId', trackId);
     }
   }
-  
-  return (
-    <Navigate 
-      to="/login" 
-      state={{ from: location.pathname }} 
-      replace 
-    />
-  );
+
+  return <Navigate to='/login' state={{ from: location.pathname }} replace />;
 };
 
 // Import route components
@@ -89,59 +105,68 @@ import MainRoutes from './routes/MainRoutes';
 import PublicRoutes from './routes/PublicRoutes';
 import SpecialRoutes from './routes/SpecialRoutes';
 
-export const ThemeSettingsContext = React.createContext<ThemeSettingsContextType>({
-  themeSettings: {
-    mode: 'dark',
-    primaryColor: '#D0BCFF',
-    backgroundColor: '#151515',
-    textColor: '#FFFFFF'
-  },
-  updateThemeSettings: () => {},
-  setProfileBackground: () => {},
-  clearProfileBackground: () => {},
-  profileBackground: null,
-  globalProfileBackgroundEnabled: false,
-  setGlobalProfileBackgroundEnabled: (enabled) => {},
-  setUserBackground: () => {},
-  restoreUserBackground: () => {},
-});
-
-
+export const ThemeSettingsContext =
+  React.createContext<ThemeSettingsContextType>({
+    themeSettings: {
+      mode: 'dark',
+      primaryColor: '#D0BCFF',
+      backgroundColor: '#151515',
+      textColor: '#FFFFFF',
+    },
+    updateThemeSettings: () => {},
+    setProfileBackground: () => {},
+    clearProfileBackground: () => {},
+    profileBackground: null,
+    globalProfileBackgroundEnabled: false,
+    setGlobalProfileBackgroundEnabled: enabled => {},
+    setUserBackground: () => {},
+    restoreUserBackground: () => {},
+  });
 
 function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
-  
+
   // Глобальный хук оптимизации блюра
   const blurOptimization = useBlurOptimization();
-  
+
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
-    const savedThemeMode = localStorage.getItem('theme') || localStorage.getItem('themeMode') || 'default';
+    const savedThemeMode =
+      localStorage.getItem('theme') ||
+      localStorage.getItem('themeMode') ||
+      'default';
     const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
-    
+
     // Настройки для темной темы
     const getThemeColors = (mode: string) => {
       return {
         backgroundColor: '#151515',
-        textColor: '#FFFFFF'
+        textColor: '#FFFFFF',
       };
     };
-    
+
     const colors = getThemeColors(savedThemeMode);
-    
+
     return {
       mode: savedThemeMode,
       backgroundColor: colors.backgroundColor,
       textColor: colors.textColor,
-      primaryColor: savedPrimaryColor
+      primaryColor: savedPrimaryColor,
     };
   });
-  
+
   // Система обоев сайта
-  const [profileBackground, setProfileBackgroundState] = useState<string | null>(null);
-  const [globalProfileBackgroundEnabled, setGlobalProfileBackgroundEnabledState] = useState(false);
-  const [userBackgroundUrl, setUserBackgroundUrl] = useState<string | null>(null);
-  
+  const [profileBackground, setProfileBackgroundState] = useState<
+    string | null
+  >(null);
+  const [
+    globalProfileBackgroundEnabled,
+    setGlobalProfileBackgroundEnabledState,
+  ] = useState(false);
+  const [userBackgroundUrl, setUserBackgroundUrl] = useState<string | null>(
+    null
+  );
+
   const setProfileBackground = (url: string | null) => {
     setProfileBackgroundState(url);
   };
@@ -149,7 +174,7 @@ function App() {
   const clearProfileBackground = () => {
     setProfileBackgroundState(null);
   };
-  
+
   // Сохраняем обои пользователя в localStorage
   const saveUserBackground = (url: string | null) => {
     if (url) {
@@ -158,26 +183,29 @@ function App() {
       document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(url)};path=/;max-age=31536000`;
     } else {
       localStorage.removeItem('myProfileBackgroundUrl');
-      document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      document.cookie =
+        'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
     }
     setUserBackgroundUrl(url);
   };
-  
+
   // Восстанавливаем обои пользователя из localStorage
   const restoreUserBackground = () => {
     // Сначала пробуем localStorage, потом куки
     let savedBg = localStorage.getItem('myProfileBackgroundUrl');
-    
+
     if (!savedBg) {
-      const match = document.cookie.match(/(?:^|; )myProfileBackgroundUrl=([^;]*)/);
-      
+      const match = document.cookie.match(
+        /(?:^|; )myProfileBackgroundUrl=([^;]*)/
+      );
+
       if (match) {
         savedBg = decodeURIComponent(match[1]);
         // Переносим из куки в localStorage
         localStorage.setItem('myProfileBackgroundUrl', savedBg);
       }
     }
-    
+
     if (savedBg) {
       // Если есть сохраненные обои, применяем их
       setProfileBackground(savedBg);
@@ -186,7 +214,7 @@ function App() {
       clearProfileBackground();
     }
   };
-  
+
   // Устанавливаем обои другого пользователя
   const setUserBackground = (url: string | null) => {
     if (url) {
@@ -195,11 +223,11 @@ function App() {
       restoreUserBackground();
     }
   };
-  
+
   const setGlobalProfileBackgroundEnabled = (enabled: boolean) => {
     if (globalProfileBackgroundEnabled !== enabled) {
       setGlobalProfileBackgroundEnabledState(enabled);
-      
+
       if (enabled) {
         // Если включаем глобальные обои, применяем сохраненные обои пользователя
         const savedBg = localStorage.getItem('myProfileBackgroundUrl');
@@ -210,24 +238,27 @@ function App() {
         // Если выключаем, убираем обои и очищаем localStorage
         clearProfileBackground();
         localStorage.removeItem('myProfileBackgroundUrl');
-        document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        document.cookie =
+          'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
       }
     }
   };
-  
+
   const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
     setThemeSettings(prev => {
       // Проверяем, действительно ли изменились настройки
-      const hasChanges = Object.keys(newSettings).some(key => 
-        prev[key as keyof ThemeSettings] !== newSettings[key as keyof ThemeSettings]
+      const hasChanges = Object.keys(newSettings).some(
+        key =>
+          prev[key as keyof ThemeSettings] !==
+          newSettings[key as keyof ThemeSettings]
       );
-      
+
       if (!hasChanges) {
         return prev; // Возвращаем предыдущее состояние без изменений
       }
-      
+
       const updated = { ...prev, ...newSettings };
-      
+
       // Сохраняем настройки
       if (newSettings.backgroundColor) {
         localStorage.setItem('backgroundColor', newSettings.backgroundColor);
@@ -238,14 +269,14 @@ function App() {
       if (newSettings.primaryColor) {
         localStorage.setItem('primaryColor', newSettings.primaryColor);
       }
-      
+
       return updated;
     });
   };
-  
+
   const authContext = useContext(AuthContext);
   const { isAuthenticated, loading, user: currentUser } = authContext || {};
-  
+
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {
     if (isAuthenticated && !loading) {
@@ -254,23 +285,24 @@ function App() {
   }, [isAuthenticated, loading]);
 
   const prevAuthState = useRef({ isAuthenticated: false, loading: false });
-  
+
   useEffect(() => {
     const currentAuthState = {
       isAuthenticated: isAuthenticated,
-      loading: loading
+      loading: loading,
     };
-    
+
     // Проверяем, действительно ли изменилось состояние
     if (
-      prevAuthState.current.isAuthenticated !== currentAuthState.isAuthenticated ||
+      prevAuthState.current.isAuthenticated !==
+        currentAuthState.isAuthenticated ||
       prevAuthState.current.loading !== currentAuthState.loading
     ) {
       // Обновляем предыдущее состояние
       prevAuthState.current = currentAuthState;
     }
   }, [isAuthenticated, loading]);
-  
+
   const theme = useMemo(() => {
     const themeObj = createTheme({
       palette: {
@@ -342,47 +374,48 @@ function App() {
   const currentPath = location.pathname;
 
   const isInitialized = useRef(false);
-  
+
   useEffect(() => {
     localStorage.setItem('themeMode', themeSettings.mode);
   }, [themeSettings.mode]);
 
   useEffect(() => {
     if (isInitialized.current) return; // Предотвращаем повторное выполнение
-    
+
     const savedThemeMode = localStorage.getItem('themeMode');
-    
+
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
       updateThemeSettings({ mode: savedThemeMode });
     }
-    
+
     isInitialized.current = true;
   }, []);
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key && (
-          event.key === 'backgroundColor' ||
+      if (
+        event.key &&
+        (event.key === 'backgroundColor' ||
           event.key === 'textColor' ||
-          event.key === 'primaryColor'
-        )) {
-        
+          event.key === 'primaryColor')
+      ) {
         // Проверяем, действительно ли изменилось значение
         const currentValue = themeSettings[event.key as keyof ThemeSettings];
-        
+
         if (currentValue === event.newValue) {
           return; // Значение не изменилось, пропускаем обновление
         }
-        
+
         const settingUpdate: Partial<ThemeSettings> = {};
-        settingUpdate[event.key as keyof ThemeSettings] = event.newValue as string;
-        
+        settingUpdate[event.key as keyof ThemeSettings] =
+          event.newValue as string;
+
         updateThemeSettings(settingUpdate);
       }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
@@ -392,12 +425,12 @@ function App() {
   useEffect(() => {
     const loadUserSettings = async () => {
       console.log('🎨 ATTENTION: Начинаем загрузку настроек пользователя');
-      
+
       try {
         const response = await fetch('/api/profile/settings');
         const data = await response.json();
         console.log('🎨 ATTENTION: Ответ API настроек:', data);
-        
+
         if (data && data.success && data.settings) {
           // Применяем настройки темы
           setThemeSettings(prev => ({
@@ -405,23 +438,32 @@ function App() {
             primaryColor: data.settings.primary_color || '#D0BCFF',
             mode: 'dark',
           }));
-          localStorage.setItem('primaryColor', data.settings.primary_color || '#D0BCFF');
+          localStorage.setItem(
+            'primaryColor',
+            data.settings.primary_color || '#D0BCFF'
+          );
           localStorage.setItem('theme', 'dark');
           console.log('🎨 ATTENTION: Применены настройки темы пользователя');
         }
       } catch (e) {
         console.error('🎨 ATTENTION: Ошибка загрузки настроек:', e);
         // fallback: дефолт
-        setThemeSettings(prev => ({ ...prev, primaryColor: '#D0BCFF', mode: 'dark' }));
+        setThemeSettings(prev => ({
+          ...prev,
+          primaryColor: '#D0BCFF',
+          mode: 'dark',
+        }));
       }
-      
+
       // Загружаем настройки глобального фона профиля
       try {
-        const bgResponse = await axios.get('/api/user/settings/global-profile-bg');
-        
+        const bgResponse = await axios.get(
+          '/api/user/settings/global-profile-bg'
+        );
+
         if (bgResponse.data && bgResponse.data.success) {
           setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
-          
+
           // Если есть background URL в ответе
           if (bgResponse.data.background_url) {
             if (bgResponse.data.enabled) {
@@ -433,7 +475,8 @@ function App() {
               const savedBg = localStorage.getItem('myProfileBackgroundUrl');
               if (savedBg) {
                 localStorage.removeItem('myProfileBackgroundUrl');
-                document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+                document.cookie =
+                  'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
               }
               clearProfileBackground();
             }
@@ -453,8 +496,9 @@ function App() {
     const loadUserBackground = async () => {
       // Проверяем, что пользователь авторизован
       // Также проверяем наличие токена в localStorage как fallback
-      const hasToken = localStorage.getItem('token') || document.cookie.includes('sessionid');
-      
+      const hasToken =
+        localStorage.getItem('token') || document.cookie.includes('sessionid');
+
       // Если пользователь не авторизован в AuthContext, но есть токен, пробуем получить данные
       if (!isAuthenticated || !currentUser) {
         if (hasToken) {
@@ -472,7 +516,11 @@ function App() {
       }
 
       // Если пользователь авторизован в AuthContext, используем его данные
-      if (currentUser && typeof currentUser === 'object' && 'username' in currentUser) {
+      if (
+        currentUser &&
+        typeof currentUser === 'object' &&
+        'username' in currentUser
+      ) {
         await loadUserBackgroundFromUsername((currentUser as any).username);
       }
     };
@@ -481,17 +529,21 @@ function App() {
       try {
         // Получаем данные профиля текущего пользователя
         const response = await axios.get(`/api/profile/${username}`);
-        
-        if (response.data && response.data.user && response.data.user.profile_background_url) {
+
+        if (
+          response.data &&
+          response.data.user &&
+          response.data.user.profile_background_url
+        ) {
           const userBg = response.data.user.profile_background_url;
-          
+
           // Сохраняем обои только если глобальные обои включены
           if (globalProfileBackgroundEnabled) {
             const savedBg = localStorage.getItem('myProfileBackgroundUrl');
             if (!savedBg) {
               saveUserBackground(userBg);
             }
-            
+
             // Если обои еще не применены, применяем их
             if (!profileBackground) {
               setProfileBackground(userBg);
@@ -501,7 +553,8 @@ function App() {
             const savedBg = localStorage.getItem('myProfileBackgroundUrl');
             if (savedBg) {
               localStorage.removeItem('myProfileBackgroundUrl');
-              document.cookie = 'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+              document.cookie =
+                'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
             }
             clearProfileBackground();
           }
@@ -546,16 +599,20 @@ function App() {
           blurOptimization.enableBlurOptimization();
         }
       }, 100);
-      
+
       return () => clearTimeout(timer);
     }
-  }, [location.pathname, blurOptimization.isEnabled, blurOptimization.isLoading]);
+  }, [
+    location.pathname,
+    blurOptimization.isEnabled,
+    blurOptimization.isLoading,
+  ]);
 
   // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при переходе на другие страницы ---
   useEffect(() => {
     // Проверяем, находимся ли мы на странице профиля
     const isProfilePage = location.pathname.match(/^\/profile\/([^\/]+)$/);
-    
+
     if (!isProfilePage) {
       // Если мы не на странице профиля и глобальные обои включены, восстанавливаем свои обои
       if (globalProfileBackgroundEnabled) {
@@ -577,14 +634,22 @@ function App() {
   }, [isAuthenticated, loading]);
 
   // Определяем тип роута
-  const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password', '/element-auth', '/auth_elem'].some(
-    path => currentPath.startsWith(path)
-  );
-  const isPublicPage = ['/rules', '/privacy-policy', '/terms-of-service', '/about'].some(
-    path => currentPath.startsWith(path)
-  );
-  const isSpecialPage = ['/street/blacklist'].some(
-    path => currentPath.startsWith(path)
+  const isAuthPage = [
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/element-auth',
+    '/auth_elem',
+  ].some(path => currentPath.startsWith(path));
+  const isPublicPage = [
+    '/rules',
+    '/privacy-policy',
+    '/terms-of-service',
+    '/about',
+  ].some(path => currentPath.startsWith(path));
+  const isSpecialPage = ['/street/blacklist'].some(path =>
+    currentPath.startsWith(path)
   );
 
   const themeContextValue = useMemo<ThemeSettingsContextType>(() => {
@@ -624,7 +689,10 @@ function App() {
                               ) : isSpecialPage ? (
                                 <SpecialRoutes />
                               ) : (
-                                <MainRoutes setUser={authContext?.setUser} background={location.state?.background} />
+                                <MainRoutes
+                                  setUser={authContext?.setUser}
+                                  background={location.state?.background}
+                                />
                               )}
                               <MusicPlayerCore />
                               <CommandPalleteModal />
@@ -644,4 +712,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

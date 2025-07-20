@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  CircularProgress, 
-  Alert, 
-  Container, 
-  Paper, 
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Alert,
+  Container,
+  Paper,
   Button,
-  Chip
+  Chip,
 } from '@mui/material';
 
 /**
@@ -25,93 +25,89 @@ const ElementAuth = () => {
   const [attemptCount, setAttemptCount] = useState(0);
 
   useEffect(() => {
-
     checkServiceStatus();
     const timeoutId = setTimeout(() => tryAuth(), 500);
     return () => clearTimeout(timeoutId);
   }, [token]);
 
-  
   const checkServiceStatus = async () => {
     try {
       const response = await fetch('/api/auth/status');
       const status = await response.json();
       setConnectionInfo(status);
 
-      
       if (!status.external_socket_connected) {
-        setStatus("Ожидание подключения к серверу Element...");
+        setStatus('Ожидание подключения к серверу Element...');
       }
     } catch (err) {
-      console.error("[BROWSER] Ошибка при проверке статуса:", err);
+      console.error('[BROWSER] Ошибка при проверке статуса:', err);
     }
   };
 
   const tryAuth = async () => {
     setAttemptCount(prev => prev + 1);
-    setStatus("Попытка авторизации...");
-
+    setStatus('Попытка авторизации...');
 
     try {
-      const response = await fetch(`/api/auth_elem/${token}`, {  
+      const response = await fetch(`/api/auth_elem/${token}`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ connect_key: token })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ connect_key: token }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`Ошибка сервера: ${response.status}`);
       }
-      
+
       const result = await response.json();
 
-      
-      if(result.status === "success" && result.redirect) {
-        setStatus("Авторизация успешна. Перенаправляем...");
+      if (result.status === 'success' && result.redirect) {
+        setStatus('Авторизация успешна. Перенаправляем...');
 
-        
         // Сохраняем session_key в localStorage
         if (result.session_key) {
           localStorage.setItem('session_key', result.session_key);
-
         } else {
-          console.warn("[BROWSER] Session key не получен от сервера");
+          console.warn('[BROWSER] Session key не получен от сервера');
         }
-        
+
         if (result.elem_connected) {
           localStorage.setItem('elem_connected', 'true');
-          
-          window.dispatchEvent(new StorageEvent('storage', {
-            key: 'elem_connected',
-            newValue: 'true'
-          }));
+
+          window.dispatchEvent(
+            new StorageEvent('storage', {
+              key: 'elem_connected',
+              newValue: 'true',
+            })
+          );
         }
-        
+
         navigate(result.redirect);
-      } else if (result.status === "error" && result.message.includes("недоступен")) {
-        
+      } else if (
+        result.status === 'error' &&
+        result.message.includes('недоступен')
+      ) {
         setError(result.message);
-        setStatus("Проблема с сервисом авторизации");
+        setStatus('Проблема с сервисом авторизации');
         setIsLoading(false);
-        
+
         await checkServiceStatus();
       } else {
-        console.error("[BROWSER] ❌ Ошибка авторизации:", result.message);
-        setError(result.message || "Неизвестная ошибка");
-        setStatus("Ошибка авторизации");
+        console.error('[BROWSER] ❌ Ошибка авторизации:', result.message);
+        setError(result.message || 'Неизвестная ошибка');
+        setStatus('Ошибка авторизации');
         setIsLoading(false);
       }
     } catch (err) {
-      console.error("[BROWSER] ❌ Ошибка связи с сервером:", err);
+      console.error('[BROWSER] ❌ Ошибка связи с сервером:', err);
       setError(`Ошибка связи: ${err.message}`);
-      setStatus("Ошибка авторизации");
+      setStatus('Ошибка авторизации');
       setIsLoading(false);
-      
+
       await checkServiceStatus();
     }
   };
 
-  
   const handleRetry = () => {
     setError('');
     setIsLoading(true);
@@ -119,48 +115,67 @@ const ElementAuth = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: 4, 
-          display: 'flex', 
-          flexDirection: 'column', 
+    <Container maxWidth='sm' sx={{ mt: 8 }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: 4,
+          display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           borderRadius: 2,
           background: 'rgba(30, 30, 30, 0.8)',
-          backdropFilter: 'blur(10px)'
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'primary.main' }}>
+        <Typography
+          variant='h4'
+          component='h1'
+          gutterBottom
+          sx={{ color: 'primary.main' }}
+        >
           Авторизация через Element
         </Typography>
-        
+
         {connectionInfo && (
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-            <Chip 
-              label={connectionInfo.external_socket_connected ? "Соединение активно" : "Соединение отсутствует"} 
-              color={connectionInfo.external_socket_connected ? "success" : "error"}
-              size="small"
+          <Box
+            sx={{
+              mb: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 1,
+            }}
+          >
+            <Chip
+              label={
+                connectionInfo.external_socket_connected
+                  ? 'Соединение активно'
+                  : 'Соединение отсутствует'
+              }
+              color={
+                connectionInfo.external_socket_connected ? 'success' : 'error'
+              }
+              size='small'
             />
             {connectionInfo.using_proxy && (
-              <Chip 
-                label={`${connectionInfo.proxy_type || ""} прокси`} 
-                color="info"
-                size="small"
+              <Chip
+                label={`${connectionInfo.proxy_type || ''} прокси`}
+                color='info'
+                size='small'
               />
             )}
           </Box>
         )}
-        
+
         {isLoading ? (
           <Box sx={{ textAlign: 'center', my: 4 }}>
             <CircularProgress size={60} thickness={4} sx={{ mb: 3 }} />
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               {status}
             </Typography>
             {attemptCount > 1 && (
-              <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+              <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
                 Попытка {attemptCount}...
               </Typography>
             )}
@@ -168,27 +183,24 @@ const ElementAuth = () => {
         ) : (
           <Box sx={{ width: '100%', mt: 2 }}>
             {error && (
-              <Alert 
-                severity="error" 
-                sx={{ mb: 3 }}
-              >
+              <Alert severity='error' sx={{ mb: 3 }}>
                 {error}
               </Alert>
             )}
-            
-            <Button 
-              variant="contained" 
-              color="primary" 
-              fullWidth 
+
+            <Button
+              variant='contained'
+              color='primary'
+              fullWidth
               onClick={handleRetry}
               sx={{ mt: 2 }}
             >
               Попробовать снова
             </Button>
-            
-            <Button 
-              variant="outlined" 
-              fullWidth 
+
+            <Button
+              variant='outlined'
+              fullWidth
               onClick={() => navigate('/login')}
               sx={{ mt: 2 }}
             >
@@ -201,4 +213,4 @@ const ElementAuth = () => {
   );
 };
 
-export default ElementAuth; 
+export default ElementAuth;

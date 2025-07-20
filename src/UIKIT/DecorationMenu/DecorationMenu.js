@@ -16,7 +16,7 @@ import {
   CircularProgress,
   Paper,
   Grid,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -29,9 +29,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   backgroundColor: theme.palette.background.paper,
   borderRadius: theme.shape.borderRadius,
-  backgroundImage:'unset',
+  backgroundImage: 'unset',
   border: '2px solid rgb(17, 17, 17)',
-
 }));
 
 const DecorationPreview = styled(Box)(({ theme, decoration }) => {
@@ -44,9 +43,11 @@ const DecorationPreview = styled(Box)(({ theme, decoration }) => {
     height: '80px',
     borderRadius: theme.shape.borderRadius,
     overflow: 'hidden',
-    background: decoration?.background ? (
-      isImage ? `url(${decoration.background})` : decoration.background
-    ) : theme.palette.background.paper,
+    background: decoration?.background
+      ? isImage
+        ? `url(${decoration.background})`
+        : decoration.background
+      : theme.palette.background.paper,
     backgroundSize: isImage ? 'cover' : 'auto',
     backgroundPosition: 'center',
     marginBottom: theme.spacing(1),
@@ -76,7 +77,7 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
     try {
       const [availableRes, userRes] = await Promise.all([
         fetch('/api/moderator/decorations'),
-        fetch(`/api/moderator/users/${userId}/decorations`)
+        fetch(`/api/moderator/users/${userId}/decorations`),
       ]);
 
       if (!availableRes.ok || !userRes.ok) {
@@ -87,11 +88,13 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
       const userData = await userRes.json();
 
       setAvailableDecorations(availableData.decorations || []);
-      setUserDecorations(userData.decorations.map(item => ({
-        ...item.decoration,
-        is_active: item.is_active,
-        user_decoration_id: item.id
-      })) || []);
+      setUserDecorations(
+        userData.decorations.map(item => ({
+          ...item.decoration,
+          is_active: item.is_active,
+          user_decoration_id: item.id,
+        })) || []
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -105,15 +108,18 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
     }
   }, [open, userId]);
 
-  const handleGrantDecoration = async (decorationId) => {
+  const handleGrantDecoration = async decorationId => {
     try {
-      const response = await fetch(`/api/moderator/users/${userId}/decorations`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ decoration_id: decorationId })
-      });
+      const response = await fetch(
+        `/api/moderator/users/${userId}/decorations`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ decoration_id: decorationId }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to grant decoration');
@@ -125,11 +131,14 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
     }
   };
 
-  const handleRevokeDecoration = async (decorationId) => {
+  const handleRevokeDecoration = async decorationId => {
     try {
-      const response = await fetch(`/api/moderator/users/${userId}/decorations/${decorationId}`, {
-        method: 'DELETE'
-      });
+      const response = await fetch(
+        `/api/moderator/users/${userId}/decorations/${decorationId}`,
+        {
+          method: 'DELETE',
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to revoke decoration');
@@ -142,47 +151,54 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
   };
 
   const renderDecorationItem = (decoration, isUserDecoration = false) => {
-    const userHasDecoration = userDecorations.some(ud => ud.id === decoration.id);
-    const userDecorationData = userDecorations.find(ud => ud.id === decoration.id);
-    
+    const userHasDecoration = userDecorations.some(
+      ud => ud.id === decoration.id
+    );
+    const userDecorationData = userDecorations.find(
+      ud => ud.id === decoration.id
+    );
+
     return (
       <StyledPaper key={decoration.id}>
         <DecorationPreview decoration={decoration}>
-          {decoration.item_path && (() => {
-            const [path, ...styles] = decoration.item_path.split(';');
-            const styleObj = styles.reduce((acc, style) => {
-              const [key, value] = style.split(':').map(s => s.trim());
-              return { ...acc, [key]: value };
-            }, {});
-            
-            return (
-              <DecorationItem
-                src={path}
-                style={styleObj}
-                alt=""
-              />
-            );
-          })()}
+          {decoration.item_path &&
+            (() => {
+              const [path, ...styles] = decoration.item_path.split(';');
+              const styleObj = styles.reduce((acc, style) => {
+                const [key, value] = style.split(':').map(s => s.trim());
+                return { ...acc, [key]: value };
+              }, {});
+
+              return <DecorationItem src={path} style={styleObj} alt='' />;
+            })()}
         </DecorationPreview>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="subtitle1">{decoration.name}</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='subtitle1'>{decoration.name}</Typography>
           {isUserDecoration ? (
-            <Tooltip title="Отозвать декорацию">
-              <IconButton 
+            <Tooltip title='Отозвать декорацию'>
+              <IconButton
                 onClick={() => handleRevokeDecoration(decoration.id)}
-                color="error"
-                size="small"
+                color='error'
+                size='small'
               >
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
           ) : (
-            <Tooltip title={userHasDecoration ? 'Уже выдано' : 'Выдать декорацию'}>
+            <Tooltip
+              title={userHasDecoration ? 'Уже выдано' : 'Выдать декорацию'}
+            >
               <span>
                 <IconButton
                   onClick={() => handleGrantDecoration(decoration.id)}
-                  color="primary"
-                  size="small"
+                  color='primary'
+                  size='small'
                   disabled={userHasDecoration}
                 >
                   {userHasDecoration ? <CheckCircleIcon /> : <AddIcon />}
@@ -196,10 +212,10 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth='md'
       fullWidth
       PaperProps={{
         style: {
@@ -207,40 +223,42 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
         },
       }}
     >
-      <DialogTitle>
-        Управление декорациями пользователя {username}
-      </DialogTitle>
+      <DialogTitle>Управление декорациями пользователя {username}</DialogTitle>
       <DialogContent>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
             <CircularProgress />
           </Box>
         ) : error ? (
-          <Typography color="error">{error}</Typography>
+          <Typography color='error'>{error}</Typography>
         ) : (
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Декорации пользователя
               </Typography>
-              {userDecorations.map(decoration => renderDecorationItem(decoration, true))}
+              {userDecorations.map(decoration =>
+                renderDecorationItem(decoration, true)
+              )}
               {userDecorations.length === 0 && (
-                <Typography color="textSecondary">
+                <Typography color='textSecondary'>
                   У пользователя нет декораций
                 </Typography>
               )}
             </Grid>
             <Grid item xs={12} md={6}>
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Доступные декорации
               </Typography>
-              {availableDecorations.map(decoration => renderDecorationItem(decoration))}
+              {availableDecorations.map(decoration =>
+                renderDecorationItem(decoration)
+              )}
             </Grid>
           </Grid>
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color='primary'>
           Закрыть
         </Button>
       </DialogActions>
@@ -248,4 +266,4 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
   );
 };
 
-export default DecorationMenu; 
+export default DecorationMenu;

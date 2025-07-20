@@ -39,7 +39,7 @@ const ChatPopup = ({ chatId, minimized, index }) => {
         display: 'flex',
         flexDirection: 'column',
         boxShadow: 3,
-        zIndex: 1400
+        zIndex: 1400,
       }}
     >
       {/* Header */}
@@ -51,22 +51,31 @@ const ChatPopup = ({ chatId, minimized, index }) => {
           justifyContent: 'space-between',
           px: 1,
           cursor: minimized ? 'pointer' : 'default',
-          background: 'rgba(255,255,255,0.05)'
+          background: 'rgba(255,255,255,0.05)',
         }}
         onDoubleClick={handleHeaderClick}
       >
-        <Typography variant="subtitle2" noWrap>{chat?.title || 'Чат'}</Typography>
+        <Typography variant='subtitle2' noWrap>
+          {chat?.title || 'Чат'}
+        </Typography>
         <Box>
-          <IconButton size="small" onClick={() => toggleMinimize(chatId)}>
-            <RemoveIcon fontSize="small" />
+          <IconButton size='small' onClick={() => toggleMinimize(chatId)}>
+            <RemoveIcon fontSize='small' />
           </IconButton>
-          <IconButton size="small" onClick={() => closePopup(chatId)}>
-            <CloseIcon fontSize="small" />
+          <IconButton size='small' onClick={() => closePopup(chatId)}>
+            <CloseIcon fontSize='small' />
           </IconButton>
         </Box>
       </Box>
       {!minimized && (
-        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+        <Box
+          sx={{
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <ChatWindow popupChatId={chatId} />
         </Box>
       )}
@@ -74,4 +83,4 @@ const ChatPopup = ({ chatId, minimized, index }) => {
   );
 };
 
-export default ChatPopup; 
+export default ChatPopup;

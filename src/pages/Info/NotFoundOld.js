@@ -49,17 +49,21 @@ const NotFound = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <ErrorCode variant="h1">404</ErrorCode>
-        
-        <Typography variant="h4" gutterBottom sx={{ color: 'white', mb: 3 }}>
+        <ErrorCode variant='h1'>404</ErrorCode>
+
+        <Typography variant='h4' gutterBottom sx={{ color: 'white', mb: 3 }}>
           Страница не найдена
         </Typography>
-        
-        <Typography variant="body1" sx={{ color: '#C2C2C2', maxWidth: 500, mx: 'auto' }}>
-          К сожалению, страница, которую вы искали, не существует или была перемещена.
+
+        <Typography
+          variant='body1'
+          sx={{ color: '#C2C2C2', maxWidth: 500, mx: 'auto' }}
+        >
+          К сожалению, страница, которую вы искали, не существует или была
+          перемещена.
         </Typography>
-        
-        <StyledButton component={Link} to="/" variant="contained">
+
+        <StyledButton component={Link} to='/' variant='contained'>
           Вернуться на главную
         </StyledButton>
       </motion.div>
@@ -67,4 +71,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound; 
+export default NotFound;

@@ -33,7 +33,7 @@ import {
   Button,
   GlobalStyles,
   Zoom,
-  Collapse
+  Collapse,
 } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -96,7 +96,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: theme.spacing(0, 1),
   height: 48,
   [theme.breakpoints.up('md')]: {
-    padding: theme.spacing(0, '15%'), 
+    padding: theme.spacing(0, '15%'),
     width: '100%',
     margin: '0 auto',
   },
@@ -143,7 +143,7 @@ const VolumeControl = styled(Box)(({ theme }) => ({
     width: 60,
     opacity: 1,
     marginLeft: theme.spacing(0.5),
-  }
+  },
 }));
 
 const VolumeSlider = styled('input')(({ theme }) => ({
@@ -197,7 +197,7 @@ const PointsIcon = styled(Box)(({ theme }) => ({
   '& svg': {
     width: '100%',
     height: '100%',
-  }
+  },
 }));
 
 const SearchInputWrapper = styled(Box)(({ theme, fullWidth }) => ({
@@ -218,7 +218,7 @@ const SearchInputWrapper = styled(Box)(({ theme, fullWidth }) => ({
     bottom: 0,
     height: '100vh',
     zIndex: 1300,
-  }
+  },
 }));
 
 const StyledSearchInput = styled(TextField)(({ theme }) => ({
@@ -237,7 +237,7 @@ const StyledSearchInput = styled(TextField)(({ theme }) => ({
   },
   '& .MuiInputBase-input': {
     padding: theme.spacing(1),
-  }
+  },
 }));
 
 const SearchResultsContainer = styled(Paper)(({ theme }) => ({
@@ -255,7 +255,8 @@ const SearchResultsContainer = styled(Paper)(({ theme }) => ({
   borderRadius: 12,
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
-  backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
+  backgroundImage:
+    'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
   '@media (max-width: 700px)': {
     position: 'fixed',
     top: '48px',
@@ -268,7 +269,7 @@ const SearchResultsContainer = styled(Paper)(({ theme }) => ({
     borderRadius: 0,
     border: 'none',
     boxShadow: 'none',
-  }
+  },
 }));
 
 const SearchResultTabs = styled(Tabs)(({ theme }) => ({
@@ -298,50 +299,55 @@ const Header = ({ toggleSidebar }) => {
   const [accounts, setAccounts] = useState({
     current_account: null,
     main_account: null,
-    channels: []
+    channels: [],
   });
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
-  
+
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState({ users: [], channels: [] });
+  const [searchResults, setSearchResults] = useState({
+    users: [],
+    channels: [],
+  });
   const [searchTab, setSearchTab] = useState(0);
   const [searchLoading, setSearchLoading] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const searchInputRef = useRef(null);
-  
+
   const [showMobilePlayer, setShowMobilePlayer] = useState(false);
-  
+
   const themeValues = useMemo(() => {
-    const headerTextColor = themeSettings.textColor || theme.palette.text.primary;
-    const primaryColor = themeSettings.primaryColor || theme.palette.primary.main;
+    const headerTextColor =
+      themeSettings.textColor || theme.palette.text.primary;
+    const primaryColor =
+      themeSettings.primaryColor || theme.palette.primary.main;
 
     const headerStyle = {
       background: 'rgba(255, 255, 255, 0.03)',
       color: headerTextColor,
       boxShadow: `0 4px 15px ${alpha('#000000', 0.07)}`,
-      borderColor: alpha(headerTextColor, 0.08)
+      borderColor: alpha(headerTextColor, 0.08),
     };
 
     return {
       primaryColor,
-      headerStyle
+      headerStyle,
     };
   }, [themeSettings, theme]);
-  
+
   const isMusicPage = location.pathname === '/music';
 
-  const { 
-    currentTrack, 
-    isPlaying, 
+  const {
+    currentTrack,
+    isPlaying,
     isMuted,
     volume,
-    togglePlay, 
+    togglePlay,
     nextTrack,
     prevTrack,
     toggleMute,
     setVolume,
-    openFullScreenPlayer
+    openFullScreenPlayer,
   } = useMusic();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -356,7 +362,7 @@ const Header = ({ toggleSidebar }) => {
 
   const [isInMessengerChat, setIsInMessengerChat] = useState(false);
 
-  const handleProfileMenuOpen = (event) => {
+  const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -364,7 +370,7 @@ const Header = ({ toggleSidebar }) => {
     setAnchorEl(null);
   };
 
-  const handleNavigate = (path) => {
+  const handleNavigate = path => {
     handleMenuClose();
     navigate(path);
   };
@@ -383,18 +389,18 @@ const Header = ({ toggleSidebar }) => {
     navigate('/register/channel');
   };
 
-  const handleSwitchAccount = async (accountId) => {
+  const handleSwitchAccount = async accountId => {
     try {
-      const response = await axios.post('/api/users/switch-account', { 
-        account_id: accountId 
+      const response = await axios.post('/api/users/switch-account', {
+        account_id: accountId,
       });
-      
+
       if (response.data.success) {
         setUser({
           ...response.data.account,
-          id: response.data.account.id
+          id: response.data.account.id,
         });
-        
+
         handleMenuClose();
         window.location.reload();
       }
@@ -435,9 +441,12 @@ const Header = ({ toggleSidebar }) => {
             setUnreadNotificationsCount(newCount);
 
             // Check for new notifications
-            if (response.data.notifications && response.data.notifications.length > 0) {
+            if (
+              response.data.notifications &&
+              response.data.notifications.length > 0
+            ) {
               const latestNotification = response.data.notifications[0];
-              
+
               // If this is a new notification (different ID than last one)
               if (latestNotification.id !== lastNotificationId.current) {
                 lastNotificationId.current = latestNotification.id;
@@ -462,11 +471,11 @@ const Header = ({ toggleSidebar }) => {
     }
   }, [user]);
 
-  const handleNewNotification = (notification) => {
+  const handleNewNotification = notification => {
     if (!notification.is_read) {
       setNewNotification(notification);
       setShowNewNotification(true);
-      
+
       // Hide notification after 5 seconds
       setTimeout(() => {
         setShowNewNotification(false);
@@ -474,10 +483,10 @@ const Header = ({ toggleSidebar }) => {
     }
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
-    
+
     if (query.trim().length >= 2) {
       performSearch(query);
       setShowSearchResults(true);
@@ -486,30 +495,30 @@ const Header = ({ toggleSidebar }) => {
       setShowSearchResults(false);
     }
   };
-  
-  const performSearch = async (query) => {
+
+  const performSearch = async query => {
     if (query.trim().length < 2) return;
-    
+
     setSearchLoading(true);
     try {
       const usersResponse = await axios.get('/api/search/', {
-        params: { 
+        params: {
           q: query,
           type: 'users',
-          per_page: 5 
-        }
+          per_page: 5,
+        },
       });
-      
+
       const channelsResponse = await axios.get('/api/search/channels', {
-        params: { 
+        params: {
           q: query,
-          per_page: 5 
-        }
+          per_page: 5,
+        },
       });
-      
+
       setSearchResults({
         users: usersResponse.data?.users || [],
-        channels: channelsResponse.data?.channels || []
+        channels: channelsResponse.data?.channels || [],
       });
     } catch (error) {
       console.error('Search error:', error);
@@ -517,15 +526,15 @@ const Header = ({ toggleSidebar }) => {
       setSearchLoading(false);
     }
   };
-  
+
   const handleSearchFocus = () => {
     setShowSearchResults(true);
   };
-  
+
   const handleClickAway = () => {
     setShowSearchResults(false);
   };
-  
+
   const toggleSearch = () => {
     setShowSearch(!showSearch);
     if (!showSearch) {
@@ -537,11 +546,11 @@ const Header = ({ toggleSidebar }) => {
       setShowSearchResults(false);
     }
   };
-  
+
   const handleSearchTabChange = (event, newValue) => {
     setSearchTab(newValue);
   };
-  
+
   const handleViewAll = () => {
     if (searchTab === 0) {
       navigate(`/search?q=${searchQuery}&type=users`);
@@ -551,26 +560,26 @@ const Header = ({ toggleSidebar }) => {
     setShowSearchResults(false);
     setShowSearch(false);
   };
-  
-  const handleSearchItemClick = (path) => {
+
+  const handleSearchItemClick = path => {
     navigate(path);
     setShowSearchResults(false);
     setShowSearch(false);
   };
-  
+
   useEffect(() => {
     const handler = setTimeout(() => {
       if (searchQuery.trim().length >= 2) {
         performSearch(searchQuery);
       }
     }, 300);
-    
+
     return () => {
       clearTimeout(handler);
     };
   }, [searchQuery]);
 
-  const handleLanguageMenuOpen = (event) => {
+  const handleLanguageMenuOpen = event => {
     setLanguageMenuAnchorEl(event.currentTarget);
     handleMenuClose(); // Close the profile menu
   };
@@ -579,7 +588,7 @@ const Header = ({ toggleSidebar }) => {
     setLanguageMenuAnchorEl(null);
   };
 
-  const handleLanguageChange = (newLang) => {
+  const handleLanguageChange = newLang => {
     changeLanguage(newLang);
     handleLanguageMenuClose();
   };
@@ -591,9 +600,9 @@ const Header = ({ toggleSidebar }) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
-      PaperProps={{ 
+      PaperProps={{
         elevation: 3,
-        sx: { 
+        sx: {
           minWidth: 280,
           mt: 0.5,
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
@@ -601,7 +610,7 @@ const Header = ({ toggleSidebar }) => {
           overflow: 'visible',
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
           backdropFilter: 'blur(10px)',
-          border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          border: theme => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           [theme.breakpoints.down('sm')]: {
             minWidth: '100vw',
             maxWidth: '100vw',
@@ -625,16 +634,16 @@ const Header = ({ toggleSidebar }) => {
             minHeight: '36px',
             transition: 'all 0.2s',
             '&:hover': {
-              backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
-            }
+              backgroundColor: theme => alpha(theme.palette.primary.main, 0.08),
+            },
           },
           '& .MuiDivider-root': {
             margin: '4px 0',
           },
           '& .MuiTypography-caption': {
             padding: '4px 12px',
-          }
-        }
+          },
+        },
       }}
     >
       {user && (
@@ -650,34 +659,38 @@ const Header = ({ toggleSidebar }) => {
                   color: 'text.secondary',
                   '&:hover': {
                     backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                  }
+                  },
                 }}
               >
                 <ClearIcon />
               </IconButton>
             )}
-            <Avatar 
-              src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png'} 
-              alt={user.name || user.username} 
-              sx={{ 
+            <Avatar
+              src={
+                user.photo
+                  ? `/static/uploads/avatar/${user.id}/${user.photo}`
+                  : '/static/uploads/avatar/system/avatar.png'
+              }
+              alt={user.name || user.username}
+              sx={{
                 width: 80,
                 height: 80,
                 mx: 'auto',
                 border: `2px solid ${themeValues.primaryColor}`,
-                boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
               }}
             />
-            <Typography variant="h6" sx={{ mt: 2, fontWeight: 600 }}>
+            <Typography variant='h6' sx={{ mt: 2, fontWeight: 600 }}>
               {user.name || user.username}
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mt: 0.5 }}>
+            <Typography variant='body1' color='text.secondary' sx={{ mt: 0.5 }}>
               @{user.username}
             </Typography>
             {user.account_type === 'channel' && (
-              <Chip 
-                size="small"
+              <Chip
+                size='small'
                 label={t('header.profile_menu.channel_label')}
-                color="primary"
+                color='primary'
                 sx={{ mt: 1, fontWeight: 500, px: 1 }}
               />
             )}
@@ -689,8 +702,14 @@ const Header = ({ toggleSidebar }) => {
               <Box sx={{ px: 2, py: 1, display: 'flex', gap: 1 }}>
                 <Button
                   component={Link}
-                  to="/balance"
-                  startIcon={<Icon icon="solar:wallet-money-bold" width="18" height="18" />}
+                  to='/balance'
+                  startIcon={
+                    <Icon
+                      icon='solar:wallet-money-bold'
+                      width='18'
+                      height='18'
+                    />
+                  }
                   sx={{
                     flex: 1,
                     borderRadius: 2,
@@ -699,15 +718,17 @@ const Header = ({ toggleSidebar }) => {
                     color: 'primary.main',
                     '&:hover': {
                       backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                    }
+                    },
                   }}
                 >
                   {t('header.profile_menu.wallet')}
                 </Button>
                 <Button
                   component={Link}
-                  to="/badge-shop"
-                  startIcon={<Icon icon="solar:shop-bold" width="18" height="18" />}
+                  to='/badge-shop'
+                  startIcon={
+                    <Icon icon='solar:shop-bold' width='18' height='18' />
+                  }
                   sx={{
                     flex: 1,
                     borderRadius: 2,
@@ -716,7 +737,7 @@ const Header = ({ toggleSidebar }) => {
                     color: 'primary.main',
                     '&:hover': {
                       backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                    }
+                    },
                   }}
                 >
                   {t('header.profile_menu.shop')}
@@ -727,17 +748,17 @@ const Header = ({ toggleSidebar }) => {
           )}
         </>
       )}
-      
+
       <MenuItem onClick={() => handleNavigate(`/profile/${user?.username}`)}>
         <ListItemIcon>
-          <AccountCircleIcon fontSize="small" color="primary" />
+          <AccountCircleIcon fontSize='small' color='primary' />
         </ListItemIcon>
         <ListItemText>{t('header.profile_menu.my_profile')}</ListItemText>
       </MenuItem>
 
       <MenuItem onClick={() => handleNavigate('/settings')}>
         <ListItemIcon>
-          <SettingsIcon fontSize="small" color="primary" />
+          <SettingsIcon fontSize='small' color='primary' />
         </ListItemIcon>
         <ListItemText>{t('header.profile_menu.settings')}</ListItemText>
       </MenuItem>
@@ -746,28 +767,34 @@ const Header = ({ toggleSidebar }) => {
         <>
           <MenuItem onClick={() => handleNavigate('/search')}>
             <ListItemIcon>
-              <Icon icon="solar:magnifer-bold" width="20" height="20" />
+              <Icon icon='solar:magnifer-bold' width='20' height='20' />
             </ListItemIcon>
             <ListItemText>{t('header.profile_menu.search')}</ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/subscriptions')}>
             <ListItemIcon>
-              <Icon icon="solar:users-group-rounded-bold" width="20" height="20" />
+              <Icon
+                icon='solar:users-group-rounded-bold'
+                width='20'
+                height='20'
+              />
             </ListItemIcon>
-            <ListItemText>{t('header.profile_menu.subscriptions')}</ListItemText>
+            <ListItemText>
+              {t('header.profile_menu.subscriptions')}
+            </ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/channels')}>
             <ListItemIcon>
-              <Icon icon="solar:play-stream-bold" width="20" height="20" />
+              <Icon icon='solar:play-stream-bold' width='20' height='20' />
             </ListItemIcon>
             <ListItemText>{t('header.profile_menu.channels')}</ListItemText>
           </MenuItem>
 
           <MenuItem onClick={() => handleNavigate('/leaderboard')}>
             <ListItemIcon>
-              <Icon icon="solar:chart-bold" width="20" height="20" />
+              <Icon icon='solar:chart-bold' width='20' height='20' />
             </ListItemIcon>
             <ListItemText>{t('header.profile_menu.rating')}</ListItemText>
           </MenuItem>
@@ -779,67 +806,65 @@ const Header = ({ toggleSidebar }) => {
       {accounts.channels.length < 3 && (
         <MenuItem onClick={handleCreateChannel}>
           <ListItemIcon>
-            <AddIcon fontSize="small" color="primary" />
+            <AddIcon fontSize='small' color='primary' />
           </ListItemIcon>
           <ListItemText>{t('header.profile_menu.create_channel')}</ListItemText>
         </MenuItem>
       )}
 
-      {accounts.main_account && accounts.current_account?.account_type === 'channel' && (
-        <>
-          <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-          <Typography
-            variant="caption"
-            sx={{
-              px: 3,
-              py: 0.5,
-              display: 'block',
-              color: 'text.secondary',
-              fontWeight: 500
-            }}
-          >
-            {t('header.profile_menu.main_account')}
-          </Typography>
-          <MenuItem 
-            key={accounts.main_account.id}
-            onClick={() => handleSwitchAccount(accounts.main_account.id)}
-          >
-            <ListItemIcon>
-              <Avatar
-                src={accounts.main_account.photo}
-                sx={{ width: 30, height: 30 }}
-              />
-            </ListItemIcon>
-            <ListItemText>{accounts.main_account.name}</ListItemText>
-          </MenuItem>
-        </>
-      )}
+      {accounts.main_account &&
+        accounts.current_account?.account_type === 'channel' && (
+          <>
+            <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+            <Typography
+              variant='caption'
+              sx={{
+                px: 3,
+                py: 0.5,
+                display: 'block',
+                color: 'text.secondary',
+                fontWeight: 500,
+              }}
+            >
+              {t('header.profile_menu.main_account')}
+            </Typography>
+            <MenuItem
+              key={accounts.main_account.id}
+              onClick={() => handleSwitchAccount(accounts.main_account.id)}
+            >
+              <ListItemIcon>
+                <Avatar
+                  src={accounts.main_account.photo}
+                  sx={{ width: 30, height: 30 }}
+                />
+              </ListItemIcon>
+              <ListItemText>{accounts.main_account.name}</ListItemText>
+            </MenuItem>
+          </>
+        )}
 
       {accounts.channels && accounts.channels.length > 0 && (
         <>
           <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
           <Typography
-            variant="caption"
+            variant='caption'
             sx={{
               px: 3,
               py: 0.5,
               display: 'block',
               color: 'text.secondary',
-              fontWeight: 500
+              fontWeight: 500,
             }}
           >
             {t('header.profile_menu.my_channels')}
           </Typography>
           {accounts.channels.map(channel => (
-            <MenuItem 
+            <MenuItem
               key={channel.id}
               onClick={() => handleSwitchAccount(channel.id)}
             >
               <ListItemIcon>
-                <Avatar
-                  src={channel.photo}
-                  sx={{ width: 30, height: 30 }}
-                />
+                <Avatar src={channel.photo} sx={{ width: 30, height: 30 }} />
               </ListItemIcon>
               <ListItemText>{channel.name}</ListItemText>
             </MenuItem>
@@ -851,22 +876,22 @@ const Header = ({ toggleSidebar }) => {
 
       <MenuItem onClick={handleLanguageMenuOpen}>
         <ListItemIcon>
-          <TranslateIcon fontSize="small" color="primary" />
+          <TranslateIcon fontSize='small' color='primary' />
         </ListItemIcon>
         <ListItemText>{t('header.profile_menu.language')}</ListItemText>
       </MenuItem>
 
-      <MenuItem 
+      <MenuItem
         onClick={handleLogout}
-        sx={{ 
+        sx={{
           color: theme => theme.palette.error.main,
           '&:hover': {
             backgroundColor: theme => alpha(theme.palette.error.main, 0.08),
-          }
+          },
         }}
       >
         <ListItemIcon>
-          <ExitToAppIcon fontSize="small" style={{ color: 'inherit' }} />
+          <ExitToAppIcon fontSize='small' style={{ color: 'inherit' }} />
         </ListItemIcon>
         <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
       </MenuItem>
@@ -880,9 +905,9 @@ const Header = ({ toggleSidebar }) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isLanguageMenuOpen}
       onClose={handleLanguageMenuClose}
-      PaperProps={{ 
+      PaperProps={{
         elevation: 3,
-        sx: { 
+        sx: {
           minWidth: 200,
           mt: 0.5,
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
@@ -890,7 +915,7 @@ const Header = ({ toggleSidebar }) => {
           overflow: 'visible',
           backgroundColor: 'rgba(0, 0, 0, 0.8)',
           backdropFilter: 'blur(10px)',
-          border: (theme) => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          border: theme => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           [theme.breakpoints.down('sm')]: {
             minWidth: '100vw',
             maxWidth: '100vw',
@@ -913,10 +938,10 @@ const Header = ({ toggleSidebar }) => {
             margin: '2px 8px',
             transition: 'all 0.2s',
             '&:hover': {
-              backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
-            }
+              backgroundColor: theme => alpha(theme.palette.primary.main, 0.08),
+            },
           },
-        }
+        },
       }}
     >
       <Box sx={{ px: 3, py: 2, textAlign: 'center' }}>
@@ -930,114 +955,138 @@ const Header = ({ toggleSidebar }) => {
               color: 'text.secondary',
               '&:hover': {
                 backgroundColor: alpha(theme.palette.primary.main, 0.08),
-              }
+              },
             }}
           >
             <ClearIcon />
           </IconButton>
         )}
         <TranslateIcon sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography variant='h6' sx={{ fontWeight: 600 }}>
           {t('header.profile_menu.select_language')}
         </Typography>
       </Box>
-      
+
       <Divider sx={{ opacity: 0.1, mx: 2, mb: 1 }} />
-      
-      <MenuItem 
+
+      <MenuItem
         onClick={() => handleLanguageChange('RU')}
         selected={language === 'RU'}
       >
         <ListItemIcon>
-          <img 
-            src="/static/flags/ru.svg" 
-            alt="Russian" 
+          <img
+            src='/static/flags/ru.svg'
+            alt='Russian'
             style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={(e) => {
+            onError={e => {
               e.target.onerror = null;
-              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_Russia_%28CMYK%29.png/120px-Flag_of_Russia_%28CMYK%29.png';
+              e.target.src =
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_Russia_%28CMYK%29.png/120px-Flag_of_Russia_%28CMYK%29.png';
             }}
           />
         </ListItemIcon>
-        <ListItemText primary="Русский" />
+        <ListItemText primary='Русский' />
         {language === 'RU' && (
-          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+          <Icon
+            icon='solar:check-circle-bold'
+            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
+          />
         )}
       </MenuItem>
-      
-      <MenuItem 
+
+      <MenuItem
         onClick={() => handleLanguageChange('EN')}
         selected={language === 'EN'}
       >
         <ListItemIcon>
-          <img 
-            src="/static/flags/en.svg" 
-            alt="English" 
+          <img
+            src='/static/flags/en.svg'
+            alt='English'
             style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={(e) => {
+            onError={e => {
               e.target.onerror = null;
-              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Great_Britain_%281707%E2%80%931800%29.svg/2560px-Flag_of_Great_Britain_%281707%E2%80%931800%29.svg.png';
+              e.target.src =
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Great_Britain_%281707%E2%80%931800%29.svg/2560px-Flag_of_Great_Britain_%281707%E2%80%931800%29.svg.png';
             }}
           />
         </ListItemIcon>
-        <ListItemText primary="English" />
+        <ListItemText primary='English' />
         {language === 'EN' && (
-          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+          <Icon
+            icon='solar:check-circle-bold'
+            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
+          />
         )}
       </MenuItem>
 
-      <MenuItem 
+      <MenuItem
         onClick={() => handleLanguageChange('JP')}
         selected={language === 'JP'}
       >
         <ListItemIcon>
-          <img 
-            src="/static/flags/jp.svg" 
-            alt="Japanese" 
+          <img
+            src='/static/flags/jp.svg'
+            alt='Japanese'
             style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={(e) => {
+            onError={e => {
               e.target.onerror = null;
-              e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/1200px-Flag_of_Japan.svg.png';
+              e.target.src =
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/1200px-Flag_of_Japan.svg.png';
             }}
           />
         </ListItemIcon>
-        <ListItemText primary="日本語" />
+        <ListItemText primary='日本語' />
         {language === 'JP' && (
-          <Icon icon="solar:check-circle-bold" style={{ color: theme.palette.primary.main, marginLeft: 8 }} />
+          <Icon
+            icon='solar:check-circle-bold'
+            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
+          />
         )}
       </MenuItem>
     </Menu>
   );
 
   useEffect(() => {
-    const handleMessengerLayoutChange = (event) => {
+    const handleMessengerLayoutChange = event => {
       const { isInChat } = event.detail;
-      console.log('Header: Received messenger-layout-change event, isInChat:', isInChat);
+      console.log(
+        'Header: Received messenger-layout-change event, isInChat:',
+        isInChat
+      );
       setIsInMessengerChat(isInChat);
     };
-    
-    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange);
-    
+
+    document.addEventListener(
+      'messenger-layout-change',
+      handleMessengerLayoutChange
+    );
+
     return () => {
-      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange);
+      document.removeEventListener(
+        'messenger-layout-change',
+        handleMessengerLayoutChange
+      );
     };
   }, []);
 
   return (
-    <StyledAppBar 
-      sx={{ 
-        display: (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',
+    <StyledAppBar
+      sx={{
+        display:
+          (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',
       }}
       style={themeValues.headerStyle}
     >
-      <GlobalStyles styles={{
-        '.MuiToolbar-root': {
-          minHeight: '48px !important',
-          height: '48px !important',
-          paddingTop: 0,
-          paddingBottom: 0,
-        }
-      }} />
+      <GlobalStyles
+        styles={{
+          '.MuiToolbar-root': {
+            minHeight: '48px !important',
+            height: '48px !important',
+            paddingTop: 0,
+            paddingBottom: 0,
+          },
+        }}
+      />
       <StyledToolbar>
         {/* Мобильный плеер рендерится только на мобильных устройствах */}
         {isMobile && currentTrack && (
@@ -1049,14 +1098,26 @@ const Header = ({ toggleSidebar }) => {
               opacity: 0.6,
               transition: 'all 0.2s',
               '&:hover': { opacity: 1 },
-              bgcolor: showMobilePlayer ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+              bgcolor: showMobilePlayer
+                ? alpha(theme.palette.primary.main, 0.08)
+                : 'transparent',
             }}
           >
-            <Icon icon="solar:music-note-2-bold" width="24" height="24" sx={{ color: theme.palette.primary.main }} />
+            <Icon
+              icon='solar:music-note-2-bold'
+              width='24'
+              height='24'
+              sx={{ color: theme.palette.primary.main }}
+            />
           </IconButton>
         )}
         {isMobile && (
-          <Collapse in={showMobilePlayer} timeout={300} unmountOnExit sx={{ width: '100%' }}>
+          <Collapse
+            in={showMobilePlayer}
+            timeout={300}
+            unmountOnExit
+            sx={{ width: '100%' }}
+          >
             <Box sx={{ width: '100%' }}>
               <HeaderPlayer
                 currentTrack={currentTrack}
@@ -1080,155 +1141,181 @@ const Header = ({ toggleSidebar }) => {
           <>
             {isMobile ? (
               !currentTrack && <HeaderLogo isMobile={isMobile} t={t} />
-        ) : (
-          <HeaderLogo isMobile={isMobile} t={t} />
-        )}
-        {showSearch ? (
-          isMobile ? (
-            <Box sx={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 2000, width: '100vw', height: 56, bgcolor: theme.palette.background.paper, display: 'flex', alignItems: 'center', px: 1, boxShadow: 3 }}>
-              <HeaderSearch
-                showSearch={showSearch}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                searchResults={searchResults}
-                searchTab={searchTab}
-                setSearchTab={setSearchTab}
-                searchLoading={searchLoading}
-                showSearchResults={showSearchResults}
-                setShowSearchResults={setShowSearchResults}
-                searchInputRef={searchInputRef}
-                t={t}
-                theme={theme}
-                handleSearchChange={handleSearchChange}
-                handleSearchFocus={handleSearchFocus}
-                handleClickAway={handleClickAway}
-                handleSearchTabChange={handleSearchTabChange}
-                handleViewAll={handleViewAll}
-                handleSearchItemClick={handleSearchItemClick}
-                toggleSearch={toggleSearch}
-                isMobile={true}
-              />
-            </Box>
-          ) : (
-            ReactDOM.createPortal(
-              <Box sx={{
-                position: 'fixed',
-                top: '10%',
-                left: 0,
-                right: 0,
-                mx: 'auto',
-                maxWidth: 520,
-                zIndex: 2000,
-                p: 2,
-                borderRadius: 1,
-                boxShadow: 8,
-                bgcolor: theme.palette.background.paper,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}>
-                <HeaderSearch
-                  showSearch={showSearch}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  searchResults={searchResults}
-                  searchTab={searchTab}
-                  setSearchTab={setSearchTab}
-                  searchLoading={searchLoading}
-                  showSearchResults={showSearchResults}
-                  setShowSearchResults={setShowSearchResults}
-                  searchInputRef={searchInputRef}
-                  t={t}
-                  theme={theme}
-                  handleSearchChange={handleSearchChange}
-                  handleSearchFocus={handleSearchFocus}
-                  handleClickAway={handleClickAway}
-                  handleSearchTabChange={handleSearchTabChange}
-                  handleViewAll={handleViewAll}
-                  handleSearchItemClick={handleSearchItemClick}
-                  toggleSearch={toggleSearch}
-                  isMobile={false}
-                />
-              </Box>,
-              document.body
-            )
-          )
-        ) : (
-          <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1, alignItems: 'center' }}>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <HeaderSearch
-                  showSearch={showSearch}
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
-                  searchResults={searchResults}
-                  searchTab={searchTab}
-                  setSearchTab={setSearchTab}
-                  searchLoading={searchLoading}
-                  showSearchResults={showSearchResults}
-                  setShowSearchResults={setShowSearchResults}
-                  searchInputRef={searchInputRef}
-                  t={t}
-                  theme={theme}
-                  handleSearchChange={handleSearchChange}
-                  handleSearchFocus={handleSearchFocus}
-                  handleClickAway={handleClickAway}
-                  handleSearchTabChange={handleSearchTabChange}
-                  handleViewAll={handleViewAll}
-                  handleSearchItemClick={handleSearchItemClick}
-                  toggleSearch={toggleSearch}
-                />
-                {/* Desktop плеер рендерится только на PC */}
-                {!showSearch && !isMobile && (
-                  <HeaderPlayer
-                    currentTrack={currentTrack}
-                    isPlaying={isPlaying}
-                    isMuted={isMuted}
-                    volume={volume}
-                    togglePlay={togglePlay}
-                    nextTrack={nextTrack}
-                    prevTrack={prevTrack}
-                    toggleMute={toggleMute}
-                    setVolume={setVolume}
+            ) : (
+              <HeaderLogo isMobile={isMobile} t={t} />
+            )}
+            {showSearch ? (
+              isMobile ? (
+                <Box
+                  sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 2000,
+                    width: '100vw',
+                    height: 56,
+                    bgcolor: theme.palette.background.paper,
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 1,
+                    boxShadow: 3,
+                  }}
+                >
+                  <HeaderSearch
+                    showSearch={showSearch}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    searchResults={searchResults}
+                    searchTab={searchTab}
+                    setSearchTab={setSearchTab}
+                    searchLoading={searchLoading}
+                    showSearchResults={showSearchResults}
+                    setShowSearchResults={setShowSearchResults}
+                    searchInputRef={searchInputRef}
+                    t={t}
                     theme={theme}
-                    truncateTitle={truncateTitle}
-                    onOpenFullscreen={openFullScreenPlayer}
-                    isMobile={isMobile}
+                    handleSearchChange={handleSearchChange}
+                    handleSearchFocus={handleSearchFocus}
+                    handleClickAway={handleClickAway}
+                    handleSearchTabChange={handleSearchTabChange}
+                    handleViewAll={handleViewAll}
+                    handleSearchItemClick={handleSearchItemClick}
+                    toggleSearch={toggleSearch}
+                    isMobile={true}
                   />
-                )}
-              </Box>
-            </Box>
-            <HeaderActions
-              user={user}
-              isMobile={isMobile}
-              t={t}
-              theme={theme}
-              navigate={navigate}
-              toggleSearch={toggleSearch}
-              showSearch={showSearch}
-              handleProfileMenuOpen={handleProfileMenuOpen}
-              NotificationList={NotificationList}
-              handleNewNotification={handleNewNotification}
-            />
+                </Box>
+              ) : (
+                ReactDOM.createPortal(
+                  <Box
+                    sx={{
+                      position: 'fixed',
+                      top: '10%',
+                      left: 0,
+                      right: 0,
+                      mx: 'auto',
+                      maxWidth: 520,
+                      zIndex: 2000,
+                      p: 2,
+                      borderRadius: 1,
+                      boxShadow: 8,
+                      bgcolor: theme.palette.background.paper,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <HeaderSearch
+                      showSearch={showSearch}
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
+                      searchResults={searchResults}
+                      searchTab={searchTab}
+                      setSearchTab={setSearchTab}
+                      searchLoading={searchLoading}
+                      showSearchResults={showSearchResults}
+                      setShowSearchResults={setShowSearchResults}
+                      searchInputRef={searchInputRef}
+                      t={t}
+                      theme={theme}
+                      handleSearchChange={handleSearchChange}
+                      handleSearchFocus={handleSearchFocus}
+                      handleClickAway={handleClickAway}
+                      handleSearchTabChange={handleSearchTabChange}
+                      handleViewAll={handleViewAll}
+                      handleSearchItemClick={handleSearchItemClick}
+                      toggleSearch={toggleSearch}
+                      isMobile={false}
+                    />
+                  </Box>,
+                  document.body
+                )
+              )
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexGrow: 1,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <HeaderSearch
+                      showSearch={showSearch}
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
+                      searchResults={searchResults}
+                      searchTab={searchTab}
+                      setSearchTab={setSearchTab}
+                      searchLoading={searchLoading}
+                      showSearchResults={showSearchResults}
+                      setShowSearchResults={setShowSearchResults}
+                      searchInputRef={searchInputRef}
+                      t={t}
+                      theme={theme}
+                      handleSearchChange={handleSearchChange}
+                      handleSearchFocus={handleSearchFocus}
+                      handleClickAway={handleClickAway}
+                      handleSearchTabChange={handleSearchTabChange}
+                      handleViewAll={handleViewAll}
+                      handleSearchItemClick={handleSearchItemClick}
+                      toggleSearch={toggleSearch}
+                    />
+                    {/* Desktop плеер рендерится только на PC */}
+                    {!showSearch && !isMobile && (
+                      <HeaderPlayer
+                        currentTrack={currentTrack}
+                        isPlaying={isPlaying}
+                        isMuted={isMuted}
+                        volume={volume}
+                        togglePlay={togglePlay}
+                        nextTrack={nextTrack}
+                        prevTrack={prevTrack}
+                        toggleMute={toggleMute}
+                        setVolume={setVolume}
+                        theme={theme}
+                        truncateTitle={truncateTitle}
+                        onOpenFullscreen={openFullScreenPlayer}
+                        isMobile={isMobile}
+                      />
+                    )}
+                  </Box>
+                </Box>
+                <HeaderActions
+                  user={user}
+                  isMobile={isMobile}
+                  t={t}
+                  theme={theme}
+                  navigate={navigate}
+                  toggleSearch={toggleSearch}
+                  showSearch={showSearch}
+                  handleProfileMenuOpen={handleProfileMenuOpen}
+                  NotificationList={NotificationList}
+                  handleNewNotification={handleNewNotification}
+                />
               </>
             )}
           </>
         )}
       </StyledToolbar>
-      
+
       {showNewNotification && newNotification && (
         <DynamicIslandNotification
           open={true}
           message={newNotification.message}
-          shortMessage={newNotification.sender_user?.name || t('header.notifications.new')}
-          notificationType="notification"
-          animationType="pill"
+          shortMessage={
+            newNotification.sender_user?.name || t('header.notifications.new')
+          }
+          notificationType='notification'
+          animationType='pill'
           autoHideDuration={5000}
           onClose={() => setShowNewNotification(false)}
           notificationData={newNotification}
         />
       )}
-      
+
       <HeaderProfileMenu
         user={user}
         isMobile={isMobile}
@@ -1254,4 +1341,4 @@ const Header = ({ toggleSidebar }) => {
   );
 };
 
-export default React.memo(Header); 
+export default React.memo(Header);

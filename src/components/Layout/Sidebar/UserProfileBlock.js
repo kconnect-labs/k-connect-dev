@@ -16,27 +16,33 @@ const areEqual = (prevProps, nextProps) => {
 const UserProfileBlock = ({ user }) => {
   const { t } = useLanguage();
   if (!user) return null;
-  
+
   return (
     <RouterLink
-      className="user-profile-wrapper"
+      className='user-profile-wrapper'
       to={`/profile/${user?.username || user?.id}`}
     >
-      <img 
-        className="SIDEBAR-user-avatar"
-        src={user?.photo ? (user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`) : undefined}
+      <img
+        className='SIDEBAR-user-avatar'
+        src={
+          user?.photo
+            ? user.photo.startsWith('/')
+              ? user.photo
+              : `/static/uploads/avatar/${user.id}/${user.photo}`
+            : undefined
+        }
         alt={user?.name || t('sidebar.profile.default_name')}
-        onError={(e) => {
+        onError={e => {
           console.error(`Failed to load avatar for ${user?.username}`);
-          e.target.onerror = null; 
+          e.target.onerror = null;
           e.target.src = `/static/uploads/avatar/system/avatar.png`;
         }}
       />
-      <div className="user-info-container">
-        <div className="user-name">
+      <div className='user-info-container'>
+        <div className='user-name'>
           {user?.name || t('sidebar.profile.default_name')}
         </div>
-        <div className="user-name-tag">
+        <div className='user-name-tag'>
           @{user?.username || t('sidebar.profile.default_username')}
         </div>
       </div>
@@ -44,4 +50,4 @@ const UserProfileBlock = ({ user }) => {
   );
 };
 
-export default memo(UserProfileBlock, areEqual); 
+export default memo(UserProfileBlock, areEqual);

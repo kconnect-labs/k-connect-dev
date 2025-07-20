@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Card, 
-  CardContent, 
-  Grid, 
-  Avatar, 
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Avatar,
   Chip,
   Dialog,
   DialogTitle,
@@ -17,15 +17,15 @@ import {
   Fab,
   Alert,
   CircularProgress,
-  Divider
+  Divider,
 } from '@mui/material';
-import { 
-  Add as AddIcon, 
-  Edit as EditIcon, 
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
   Delete as DeleteIcon,
   Settings as SettingsIcon,
   Speed as SpeedIcon,
-  EmojiEvents as TrophyIcon
+  EmojiEvents as TrophyIcon,
 } from '@mui/icons-material';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from '../../context/AuthContext';
@@ -49,12 +49,12 @@ const StreetBlacklistV1Page = () => {
     nickname: '',
     car_name: '',
     car_image: null,
-    tags: []
+    tags: [],
   });
   const [stats, setStats] = useState({
     total_participants: 0,
     total_wins: 0,
-    average_wins: 0
+    average_wins: 0,
   });
   const [participantsWithRank, setParticipantsWithRank] = useState([]);
   const [dominantColors, setDominantColors] = useState({});
@@ -73,18 +73,18 @@ const StreetBlacklistV1Page = () => {
       const response = await axios.get('/api/street_blacklist/participants');
       if (response.data.success) {
         const participants = response.data.participants;
-        
+
         // Сортируем по количеству побед и добавляем ранг
         const sortedParticipants = participants
           .sort((a, b) => b.wins - a.wins)
           .map((participant, index) => ({
             ...participant,
-            rank: index + 1
+            rank: index + 1,
           }));
-        
+
         setParticipants(sortedParticipants);
         setParticipantsWithRank(sortedParticipants);
-        
+
         // Анализируем цвета изображений
         analyzeImageColors(sortedParticipants);
       } else {
@@ -119,9 +119,13 @@ const StreetBlacklistV1Page = () => {
         formDataToSend.append('car_image', formData.car_image);
       }
 
-      const response = await axios.post('/api/street_blacklist/participants', formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await axios.post(
+        '/api/street_blacklist/participants',
+        formDataToSend,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      );
 
       if (response.data.success) {
         setAdminDialogOpen(false);
@@ -145,9 +149,13 @@ const StreetBlacklistV1Page = () => {
         formDataToSend.append('car_image', formData.car_image);
       }
 
-      const response = await axios.put(`/api/street_blacklist/participants/${editingParticipant.id}`, formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      const response = await axios.put(
+        `/api/street_blacklist/participants/${editingParticipant.id}`,
+        formDataToSend,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        }
+      );
 
       if (response.data.success) {
         setEditDialogOpen(false);
@@ -161,11 +169,13 @@ const StreetBlacklistV1Page = () => {
     }
   };
 
-  const handleDeleteParticipant = async (id) => {
+  const handleDeleteParticipant = async id => {
     if (!window.confirm('Удалить участника?')) return;
-    
+
     try {
-      const response = await axios.delete(`/api/street_blacklist/participants/${id}`);
+      const response = await axios.delete(
+        `/api/street_blacklist/participants/${id}`
+      );
       if (response.data.success) {
         fetchParticipants();
         fetchStats();
@@ -176,15 +186,19 @@ const StreetBlacklistV1Page = () => {
     }
   };
 
-  const handleAddWin = async (id) => {
+  const handleAddWin = async id => {
     try {
-      const response = await axios.post(`/api/street_blacklist/participants/${id}/wins`, {
-        wins: 1
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await axios.post(
+        `/api/street_blacklist/participants/${id}/wins`,
+        {
+          wins: 1,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      });
+      );
       if (response.data.success) {
         fetchParticipants();
         fetchStats();
@@ -195,13 +209,13 @@ const StreetBlacklistV1Page = () => {
     }
   };
 
-  const openEditDialog = (participant) => {
+  const openEditDialog = participant => {
     setEditingParticipant(participant);
     setFormData({
       nickname: participant.nickname,
       car_name: participant.car_name,
       car_image: null,
-      tags: participant.tags
+      tags: participant.tags,
     });
     setEditDialogOpen(true);
   };
@@ -212,8 +226,8 @@ const StreetBlacklistV1Page = () => {
   };
 
   // Функция для получения доминирующего цвета из изображения
-  const getDominantColor = (imageUrl) => {
-    return new Promise((resolve) => {
+  const getDominantColor = imageUrl => {
+    return new Promise(resolve => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
@@ -222,10 +236,10 @@ const StreetBlacklistV1Page = () => {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-        
+
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
-        
+
         // Простой алгоритм для нахождения доминирующего цвета
         const colorCounts = {};
         for (let i = 0; i < data.length; i += 4) {
@@ -235,7 +249,7 @@ const StreetBlacklistV1Page = () => {
           const color = `rgb(${r}, ${g}, ${b})`;
           colorCounts[color] = (colorCounts[color] || 0) + 1;
         }
-        
+
         // Найти самый частый цвет
         let maxCount = 0;
         let dominantColor = '#333';
@@ -245,7 +259,7 @@ const StreetBlacklistV1Page = () => {
             dominantColor = color;
           }
         }
-        
+
         resolve(dominantColor);
       };
       img.onerror = () => resolve('#333');
@@ -254,7 +268,7 @@ const StreetBlacklistV1Page = () => {
   };
 
   // Функция для анализа цветов всех изображений
-  const analyzeImageColors = async (participants) => {
+  const analyzeImageColors = async participants => {
     const colors = {};
     for (const participant of participants) {
       if (participant.car_image_path) {
@@ -274,10 +288,12 @@ const StreetBlacklistV1Page = () => {
   const getAverageDominantColor = () => {
     const colors = Object.values(dominantColors);
     if (colors.length === 0) return '#ff4444';
-    
-    let totalR = 0, totalG = 0, totalB = 0;
+
+    let totalR = 0,
+      totalG = 0,
+      totalB = 0;
     let count = 0;
-    
+
     colors.forEach(color => {
       if (color.startsWith('rgb')) {
         const rgb = color.match(/\d+/g);
@@ -295,20 +311,21 @@ const StreetBlacklistV1Page = () => {
         count++;
       }
     });
-    
+
     if (count === 0) return '#ff4444';
-    
+
     const avgR = Math.round(totalR / count);
     const avgG = Math.round(totalG / count);
     const avgB = Math.round(totalB / count);
-    
+
     return `rgb(${avgR}, ${avgG}, ${avgB})`;
   };
 
   // Функция для получения стилей карточки в зависимости от ранга
   const getCardStyles = (rank, participantId) => {
     const baseStyles = {
-      background: 'linear-gradient(135deg, rgba(255, 68, 68, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
+      background:
+        'linear-gradient(135deg, rgba(255, 68, 68, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
       backdropFilter: 'blur(20px)',
       borderRadius: 2,
       height: '100%',
@@ -320,16 +337,17 @@ const StreetBlacklistV1Page = () => {
         boxShadow: '0 12px 40px rgba(255, 68, 68, 0.3)',
         borderColor: 'rgba(255, 68, 68, 0.4)',
         '&::before': {
-          opacity: 1
-        }
-      }
+          opacity: 1,
+        },
+      },
     };
 
     switch (rank) {
       case 1: // Огонь - чемпион
         return {
           ...baseStyles,
-          background: 'linear-gradient(135deg, rgba(255, 69, 0, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(255, 69, 0, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
           border: '3px solid rgba(255, 69, 0, 0.6)',
           '&::before': {
             content: '""',
@@ -338,19 +356,21 @@ const StreetBlacklistV1Page = () => {
             left: 0,
             right: 0,
             height: '3px',
-            background: 'linear-gradient(90deg, transparent, #FF4500, transparent)',
-            opacity: 0.8
+            background:
+              'linear-gradient(90deg, transparent, #FF4500, transparent)',
+            opacity: 0.8,
           },
           '&:hover': {
             ...baseStyles['&:hover'],
             boxShadow: '0 12px 40px rgba(255, 69, 0, 0.4)',
-            borderColor: 'rgba(255, 69, 0, 0.8)'
-          }
+            borderColor: 'rgba(255, 69, 0, 0.8)',
+          },
         };
       case 2: // Молния - второй
         return {
           ...baseStyles,
-          background: 'linear-gradient(135deg, rgba(255, 255, 0, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(255, 255, 0, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
           border: '3px solid rgba(255, 255, 0, 0.6)',
           '&::before': {
             content: '""',
@@ -359,19 +379,21 @@ const StreetBlacklistV1Page = () => {
             left: 0,
             right: 0,
             height: '3px',
-            background: 'linear-gradient(90deg, transparent, #FFFF00, transparent)',
-            opacity: 0.8
+            background:
+              'linear-gradient(90deg, transparent, #FFFF00, transparent)',
+            opacity: 0.8,
           },
           '&:hover': {
             ...baseStyles['&:hover'],
             boxShadow: '0 12px 40px rgba(255, 255, 0, 0.4)',
-            borderColor: 'rgba(255, 255, 0, 0.8)'
-          }
+            borderColor: 'rgba(255, 255, 0, 0.8)',
+          },
         };
       case 3: // Череп - третий
         return {
           ...baseStyles,
-          background: 'linear-gradient(135deg, rgba(128, 128, 128, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
+          background:
+            'linear-gradient(135deg, rgba(128, 128, 128, 0.15) 0%, rgba(19, 19, 19, 0.95) 100%)',
           border: '3px solid rgba(128, 128, 128, 0.6)',
           '&::before': {
             content: '""',
@@ -380,14 +402,15 @@ const StreetBlacklistV1Page = () => {
             left: 0,
             right: 0,
             height: '3px',
-            background: 'linear-gradient(90deg, transparent, #808080, transparent)',
-            opacity: 0.8
+            background:
+              'linear-gradient(90deg, transparent, #808080, transparent)',
+            opacity: 0.8,
           },
           '&:hover': {
             ...baseStyles['&:hover'],
             boxShadow: '0 12px 40px rgba(128, 128, 128, 0.4)',
-            borderColor: 'rgba(128, 128, 128, 0.8)'
-          }
+            borderColor: 'rgba(128, 128, 128, 0.8)',
+          },
         };
       default: // Обычные участники
         const dominantColor = dominantColors[participantId] || '#ff4444';
@@ -399,7 +422,7 @@ const StreetBlacklistV1Page = () => {
             colorHex = `#${parseInt(rgb[0]).toString(16).padStart(2, '0')}${parseInt(rgb[1]).toString(16).padStart(2, '0')}${parseInt(rgb[2]).toString(16).padStart(2, '0')}`;
           }
         }
-        
+
         return {
           ...baseStyles,
           background: `linear-gradient(135deg, ${colorHex}15 0%, rgba(19, 19, 19, 0.95) 100%)`,
@@ -412,19 +435,19 @@ const StreetBlacklistV1Page = () => {
             right: 0,
             height: '2px',
             background: `linear-gradient(90deg, transparent, ${colorHex}, transparent)`,
-            opacity: 0.6
+            opacity: 0.6,
           },
           '&:hover': {
             ...baseStyles['&:hover'],
             boxShadow: `0 12px 40px ${colorHex}40`,
-            borderColor: `${colorHex}80`
-          }
+            borderColor: `${colorHex}80`,
+          },
         };
     }
   };
 
   // Функция для получения иконки ранга
-  const getRankIcon = (rank) => {
+  const getRankIcon = rank => {
     switch (rank) {
       case 1:
         return '🔥'; // Огонь для чемпиона
@@ -438,7 +461,7 @@ const StreetBlacklistV1Page = () => {
   };
 
   // Функция для получения цвета тега
-  const getTagColor = (tag) => {
+  const getTagColor = tag => {
     switch (tag) {
       case 'дрифт':
         return '#ff6b6b'; // Красный для дрифта
@@ -452,7 +475,7 @@ const StreetBlacklistV1Page = () => {
   };
 
   // Функция для получения иконки тега
-  const getTagIcon = (tag) => {
+  const getTagIcon = tag => {
     switch (tag) {
       case 'дрифт':
         return 'DR'; // Дрифт
@@ -466,12 +489,12 @@ const StreetBlacklistV1Page = () => {
   };
 
   // Функция для обработки изменения тегов
-  const handleTagChange = (tag) => {
+  const handleTagChange = tag => {
     setFormData(prev => ({
       ...prev,
       tags: prev.tags.includes(tag)
         ? prev.tags.filter(t => t !== tag)
-        : [...prev.tags, tag]
+        : [...prev.tags, tag],
     }));
   };
 
@@ -479,7 +502,10 @@ const StreetBlacklistV1Page = () => {
     <>
       <Helmet>
         <title>Street Blacklist v1 - Участники</title>
-        <meta name="description" content="Активные участники Street Blacklist - подземные гонки" />
+        <meta
+          name='description'
+          content='Активные участники Street Blacklist - подземные гонки'
+        />
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap');
           .graffiti-font {
@@ -505,7 +531,7 @@ const StreetBlacklistV1Page = () => {
           color: '#D0BCFF',
           position: 'relative',
           overflow: 'hidden',
-          pb: 4
+          pb: 4,
         }}
       >
         {/* Фоновые размазанные шарики */}
@@ -541,8 +567,8 @@ const StreetBlacklistV1Page = () => {
         {/* Заголовок */}
         <Box sx={{ position: 'relative', zIndex: 2, pt: 4, px: 2 }}>
           <Typography
-            variant="h2"
-            className="graffiti-font"
+            variant='h2'
+            className='graffiti-font'
             sx={{
               fontSize: { xs: '2rem', md: '3rem' },
               fontWeight: 900,
@@ -557,7 +583,7 @@ const StreetBlacklistV1Page = () => {
             Street Blacklist v1
           </Typography>
           <Typography
-            variant="h5"
+            variant='h5'
             sx={{
               fontWeight: 700,
               color: '#8aff8a',
@@ -565,98 +591,118 @@ const StreetBlacklistV1Page = () => {
               mb: 3,
             }}
           >
-            <span style={{ color: '#cfbcfb' }}>К-Коннект</span> × <span className="graffiti-font">Street Blacklist</span>
+            <span style={{ color: '#cfbcfb' }}>К-Коннект</span> ×{' '}
+            <span className='graffiti-font'>Street Blacklist</span>
           </Typography>
         </Box>
 
         {/* Статистика */}
         <Box sx={{ position: 'relative', zIndex: 2, px: 2, mb: 4 }}>
-          <Grid container spacing={2} justifyContent="center">
+          <Grid container spacing={2} justifyContent='center'>
             <Grid item xs={12} sm={4}>
-              <Card sx={{
-                background: 'linear-gradient(135deg, rgba(138, 255, 138, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '2px solid rgba(138, 255, 138, 0.2)',
-                borderRadius: 2,
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '2px',
-                  background: 'linear-gradient(90deg, transparent, #8aff8a, transparent)',
-                  opacity: 0.6
-                }
-              }}>
+              <Card
+                sx={{
+                  background:
+                    'linear-gradient(135deg, rgba(138, 255, 138, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '2px solid rgba(138, 255, 138, 0.2)',
+                  borderRadius: 2,
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    background:
+                      'linear-gradient(90deg, transparent, #8aff8a, transparent)',
+                    opacity: 0.6,
+                  },
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: '#8aff8a', fontWeight: 700 }}>
+                  <Typography
+                    variant='h4'
+                    sx={{ color: '#8aff8a', fontWeight: 700 }}
+                  >
                     {stats.total_participants}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#ffffffb0' }}>
+                  <Typography variant='body2' sx={{ color: '#ffffffb0' }}>
                     Участников
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Card sx={{
-                background: `linear-gradient(135deg, ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.05)')} 0%, rgba(19, 19, 19, 0.95) 100%)`,
-                backdropFilter: 'blur(20px)',
-                border: `2px solid ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.2)')}`,
-                borderRadius: 2,
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '2px',
-                  background: `linear-gradient(90deg, transparent, ${getAverageDominantColor()}, transparent)`,
-                  opacity: 0.6
-                }
-              }}>
+              <Card
+                sx={{
+                  background: `linear-gradient(135deg, ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.05)')} 0%, rgba(19, 19, 19, 0.95) 100%)`,
+                  backdropFilter: 'blur(20px)',
+                  border: `2px solid ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.2)')}`,
+                  borderRadius: 2,
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    background: `linear-gradient(90deg, transparent, ${getAverageDominantColor()}, transparent)`,
+                    opacity: 0.6,
+                  },
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: getAverageDominantColor(), fontWeight: 700 }}>
+                  <Typography
+                    variant='h4'
+                    sx={{ color: getAverageDominantColor(), fontWeight: 700 }}
+                  >
                     {stats.total_wins}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#ffffffb0' }}>
+                  <Typography variant='body2' sx={{ color: '#ffffffb0' }}>
                     Всего побед
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Card sx={{
-                background: 'linear-gradient(135deg, rgba(207, 188, 251, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '2px solid rgba(207, 188, 251, 0.2)',
-                borderRadius: 2,
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '2px',
-                  background: 'linear-gradient(90deg, transparent, #cfbcfb, transparent)',
-                  opacity: 0.6
-                }
-              }}>
+              <Card
+                sx={{
+                  background:
+                    'linear-gradient(135deg, rgba(207, 188, 251, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '2px solid rgba(207, 188, 251, 0.2)',
+                  borderRadius: 2,
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '2px',
+                    background:
+                      'linear-gradient(90deg, transparent, #cfbcfb, transparent)',
+                    opacity: 0.6,
+                  },
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h4" sx={{ color: '#cfbcfb', fontWeight: 700 }}>
+                  <Typography
+                    variant='h4'
+                    sx={{ color: '#cfbcfb', fontWeight: 700 }}
+                  >
                     {stats.average_wins ? stats.average_wins.toFixed(1) : '0.0'}
                   </Typography>
-                  <Typography variant="body2" sx={{ color: '#ffffffb0' }}>
+                  <Typography variant='body2' sx={{ color: '#ffffffb0' }}>
                     Среднее побед
                   </Typography>
                 </CardContent>
@@ -669,7 +715,7 @@ const StreetBlacklistV1Page = () => {
         {isAdmin && (
           <Box sx={{ position: 'fixed', top: 20, right: 20, zIndex: 10 }}>
             <Fab
-              color="primary"
+              color='primary'
               onClick={openAddDialog}
               sx={{
                 backgroundColor: '#8aff8a',
@@ -686,7 +732,7 @@ const StreetBlacklistV1Page = () => {
         {/* Список участников */}
         <Box sx={{ position: 'relative', zIndex: 2, px: 2 }}>
           {error && (
-            <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+            <Alert severity='error' sx={{ mb: 2, borderRadius: 2 }}>
               {error}
             </Alert>
           )}
@@ -697,26 +743,29 @@ const StreetBlacklistV1Page = () => {
             </Box>
           ) : (
             <Grid container spacing={2}>
-              {participants.map((participant) => (
+              {participants.map(participant => (
                 <Grid item xs={12} sm={6} md={4} key={participant.id}>
                   <Card sx={getCardStyles(participant.rank, participant.id)}>
                     <CardContent>
                       {/* Ранг участника */}
-                      <Box sx={{ 
-                        position: 'absolute', 
-                        top: 8, 
-                        right: 8, 
-                        zIndex: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 0.5
-                      }}>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            color: participant.rank <= 3 ? '#FFD700' : '#ffffffb0',
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          zIndex: 2,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.5,
+                        }}
+                      >
+                        <Typography
+                          variant='h6'
+                          sx={{
+                            color:
+                              participant.rank <= 3 ? '#FFD700' : '#ffffffb0',
                             fontWeight: 700,
-                            fontSize: participant.rank <= 3 ? '1.2rem' : '1rem'
+                            fontSize: participant.rank <= 3 ? '1.2rem' : '1rem',
                           }}
                         >
                           {getRankIcon(participant.rank)}
@@ -725,15 +774,17 @@ const StreetBlacklistV1Page = () => {
 
                       {/* Теги участника в правом верхнем углу */}
                       {participant.tags && participant.tags.length > 0 && (
-                        <Box sx={{ 
-                          position: 'absolute', 
-                          top: 8, 
-                          left: 8, 
-                          zIndex: 2,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 0.5
-                        }}>
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            left: 8,
+                            zIndex: 2,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 0.5,
+                          }}
+                        >
                           {participant.tags.map((tag, index) => (
                             <Box
                               key={index}
@@ -749,32 +800,35 @@ const StreetBlacklistV1Page = () => {
                                 textAlign: 'center',
                                 minWidth: '32px',
                                 backdropFilter: 'blur(10px)',
-                                boxShadow: `0 2px 8px ${getTagColor(tag)}30`
+                                boxShadow: `0 2px 8px ${getTagColor(tag)}30`,
                               }}
-                                                          >
-                                {getTagIcon(tag)}
-                              </Box>
+                            >
+                              {getTagIcon(tag)}
+                            </Box>
                           ))}
                         </Box>
                       )}
 
                       {/* Машина игрока */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        mb: 2,
-                        height: 120,
-                        position: 'relative'
-                      }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          mb: 2,
+                          height: 120,
+                          position: 'relative',
+                        }}
+                      >
                         {participant.car_image_url ? (
                           <Box
-                            component="img"
+                            component='img'
                             src={participant.car_image_url}
                             sx={{
                               maxWidth: '100%',
                               maxHeight: '100%',
                               objectFit: 'contain',
-                              filter: 'drop-shadow(0 0 10px rgba(255, 68, 68, 0.3))'
+                              filter:
+                                'drop-shadow(0 0 10px rgba(255, 68, 68, 0.3))',
                             }}
                             alt={participant.car_name}
                           />
@@ -788,34 +842,45 @@ const StreetBlacklistV1Page = () => {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              border: '2px dashed rgba(255, 255, 255, 0.3)'
+                              border: '2px dashed rgba(255, 255, 255, 0.3)',
                             }}
                           >
-                            <SpeedIcon sx={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: 40 }} />
+                            <SpeedIcon
+                              sx={{
+                                color: 'rgba(255, 255, 255, 0.5)',
+                                fontSize: 40,
+                              }}
+                            />
                           </Box>
                         )}
                       </Box>
 
                       {/* Информация об игроке */}
                       <Box sx={{ textAlign: 'center', mb: 2 }}>
-                        <Typography 
-                          variant="h5" 
-                          className="graffiti-font"
-                          sx={{ 
-                            color: participant.rank <= 3 ? '#ff4444' : dominantColors[participant.id] || '#ff4444', 
+                        <Typography
+                          variant='h5'
+                          className='graffiti-font'
+                          sx={{
+                            color:
+                              participant.rank <= 3
+                                ? '#ff4444'
+                                : dominantColors[participant.id] || '#ff4444',
                             fontWeight: 700,
                             textShadow: `0 0 10px ${participant.rank <= 3 ? 'rgba(255, 68, 68, 0.5)' : (dominantColors[participant.id] || '#ff4444').replace('rgb', 'rgba').replace(')', ', 0.5)')}`,
-                            mb: 1
+                            mb: 1,
                           }}
                         >
                           {participant.nickname}
                         </Typography>
-                        <Typography 
-                          variant="body1" 
-                          sx={{ 
-                            color: participant.rank <= 3 ? '#8aff8a' : dominantColors[participant.id] || '#8aff8a', 
+                        <Typography
+                          variant='body1'
+                          sx={{
+                            color:
+                              participant.rank <= 3
+                                ? '#8aff8a'
+                                : dominantColors[participant.id] || '#8aff8a',
                             fontWeight: 600,
-                            mb: 1
+                            mb: 1,
                           }}
                         >
                           {participant.car_name}
@@ -823,89 +888,131 @@ const StreetBlacklistV1Page = () => {
                       </Box>
 
                       {/* Статистика побед */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        mb: 2,
-                        p: 1,
-                        backgroundColor: participant.rank <= 3 
-                          ? `rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.15)`
-                          : `${dominantColors[participant.id] || '#ff4444'}`.replace('rgb', 'rgba').replace(')', ', 0.1)'),
-                        borderRadius: 1,
-                        border: `1px solid ${participant.rank <= 3 
-                          ? `rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.4)`
-                          : `${dominantColors[participant.id] || '#ff4444'}`.replace('rgb', 'rgba').replace(')', ', 0.4)')}`,
-                        position: 'relative',
-                        overflow: 'hidden',
-                        '&::before': participant.rank <= 3 ? {
-                          content: '""',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          background: `linear-gradient(45deg, transparent, rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.1), transparent)`,
-                          animation: 'shimmer 2s infinite'
-                        } : {}
-                      }}>
-                        <TrophyIcon sx={{ 
-                          color: participant.rank <= 3 
-                            ? participant.rank === 1 ? '#FF4500' : participant.rank === 2 ? '#FFFF00' : '#808080'
-                            : dominantColors[participant.id] || '#ff4444', 
-                          mr: 1, 
-                          fontSize: 20 
-                        }} />
-                        <Typography variant="h6" sx={{ 
-                          color: participant.rank <= 3 
-                            ? participant.rank === 1 ? '#FF4500' : participant.rank === 2 ? '#FFFF00' : '#808080'
-                            : dominantColors[participant.id] || '#ff4444', 
-                          fontWeight: 700 
-                        }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          mb: 2,
+                          p: 1,
+                          backgroundColor:
+                            participant.rank <= 3
+                              ? `rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.15)`
+                              : `${dominantColors[participant.id] || '#ff4444'}`
+                                  .replace('rgb', 'rgba')
+                                  .replace(')', ', 0.1)'),
+                          borderRadius: 1,
+                          border: `1px solid ${
+                            participant.rank <= 3
+                              ? `rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.4)`
+                              : `${dominantColors[participant.id] || '#ff4444'}`
+                                  .replace('rgb', 'rgba')
+                                  .replace(')', ', 0.4)')
+                          }`,
+                          position: 'relative',
+                          overflow: 'hidden',
+                          '&::before':
+                            participant.rank <= 3
+                              ? {
+                                  content: '""',
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  background: `linear-gradient(45deg, transparent, rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.1), transparent)`,
+                                  animation: 'shimmer 2s infinite',
+                                }
+                              : {},
+                        }}
+                      >
+                        <TrophyIcon
+                          sx={{
+                            color:
+                              participant.rank <= 3
+                                ? participant.rank === 1
+                                  ? '#FF4500'
+                                  : participant.rank === 2
+                                    ? '#FFFF00'
+                                    : '#808080'
+                                : dominantColors[participant.id] || '#ff4444',
+                            mr: 1,
+                            fontSize: 20,
+                          }}
+                        />
+                        <Typography
+                          variant='h6'
+                          sx={{
+                            color:
+                              participant.rank <= 3
+                                ? participant.rank === 1
+                                  ? '#FF4500'
+                                  : participant.rank === 2
+                                    ? '#FFFF00'
+                                    : '#808080'
+                                : dominantColors[participant.id] || '#ff4444',
+                            fontWeight: 700,
+                          }}
+                        >
                           {participant.wins}
                         </Typography>
-                        <Typography variant="body2" sx={{ color: '#ffffffb0', ml: 1 }}>
+                        <Typography
+                          variant='body2'
+                          sx={{ color: '#ffffffb0', ml: 1 }}
+                        >
                           побед
                         </Typography>
                       </Box>
 
                       {/* Кнопки управления */}
-                      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          gap: 1,
+                          justifyContent: 'center',
+                        }}
+                      >
                         {isAdmin && (
                           <>
                             <IconButton
-                              size="small"
+                              size='small'
                               onClick={() => openEditDialog(participant)}
-                              sx={{ 
+                              sx={{
                                 color: '#cfbcfb',
                                 backgroundColor: 'rgba(207, 188, 251, 0.1)',
-                                '&:hover': { backgroundColor: 'rgba(207, 188, 251, 0.2)' }
+                                '&:hover': {
+                                  backgroundColor: 'rgba(207, 188, 251, 0.2)',
+                                },
                               }}
                             >
                               <EditIcon />
                             </IconButton>
                             <IconButton
-                              size="small"
-                              onClick={() => handleDeleteParticipant(participant.id)}
-                              sx={{ 
+                              size='small'
+                              onClick={() =>
+                                handleDeleteParticipant(participant.id)
+                              }
+                              sx={{
                                 color: '#ff4444',
                                 backgroundColor: 'rgba(255, 68, 68, 0.1)',
-                                '&:hover': { backgroundColor: 'rgba(255, 68, 68, 0.2)' }
+                                '&:hover': {
+                                  backgroundColor: 'rgba(255, 68, 68, 0.2)',
+                                },
                               }}
                             >
                               <DeleteIcon />
                             </IconButton>
                             <Button
-                              size="small"
-                              variant="outlined"
+                              size='small'
+                              variant='outlined'
                               onClick={() => handleAddWin(participant.id)}
                               sx={{
                                 borderColor: '#8aff8a',
                                 color: '#8aff8a',
                                 backgroundColor: 'rgba(138, 255, 138, 0.1)',
-                                '&:hover': { 
-                                  borderColor: '#6be96b', 
-                                  backgroundColor: 'rgba(138, 255, 138, 0.2)' 
+                                '&:hover': {
+                                  borderColor: '#6be96b',
+                                  backgroundColor: 'rgba(138, 255, 138, 0.2)',
                                 },
                                 borderRadius: 1.5,
                               }}
@@ -924,10 +1031,10 @@ const StreetBlacklistV1Page = () => {
 
           {!loading && participants.length === 0 && (
             <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Typography variant="h6" sx={{ color: '#ffffffb0' }}>
+              <Typography variant='h6' sx={{ color: '#ffffffb0' }}>
                 Пока нет участников
               </Typography>
-              <Typography variant="body2" sx={{ color: '#ffffff80' }}>
+              <Typography variant='body2' sx={{ color: '#ffffff80' }}>
                 Будьте первым в Blacklist!
               </Typography>
             </Box>
@@ -935,10 +1042,12 @@ const StreetBlacklistV1Page = () => {
         </Box>
 
         {/* Кнопка возврата */}
-        <Box sx={{ position: 'relative', zIndex: 2, textAlign: 'center', mt: 4 }}>
+        <Box
+          sx={{ position: 'relative', zIndex: 2, textAlign: 'center', mt: 4 }}
+        >
           <Button
-            href="/street/blacklist"
-            variant="contained"
+            href='/street/blacklist'
+            variant='contained'
             sx={{
               backgroundColor: '#cfbcfb',
               color: '#000',
@@ -955,10 +1064,10 @@ const StreetBlacklistV1Page = () => {
       </Box>
 
       {/* Диалог добавления участника */}
-      <Dialog 
-        open={adminDialogOpen} 
+      <Dialog
+        open={adminDialogOpen}
         onClose={() => setAdminDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
         PaperProps={{
           sx: {
@@ -966,7 +1075,7 @@ const StreetBlacklistV1Page = () => {
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: 2,
-          }
+          },
         }}
       >
         <DialogTitle sx={{ color: '#8aff8a', fontWeight: 700 }}>
@@ -975,76 +1084,86 @@ const StreetBlacklistV1Page = () => {
         <DialogContent>
           <TextField
             fullWidth
-            label="Никнейм"
+            label='Никнейм'
             value={formData.nickname}
-            onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+            onChange={e =>
+              setFormData({ ...formData, nickname: e.target.value })
+            }
             sx={{ mb: 2, mt: 1 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 }
+              sx: { color: '#ffffff', borderRadius: 1.5 },
             }}
             InputLabelProps={{
-              sx: { color: '#ffffffb0' }
+              sx: { color: '#ffffffb0' },
             }}
           />
           <TextField
             fullWidth
-            label="Название машины"
+            label='Название машины'
             value={formData.car_name}
-            onChange={(e) => setFormData({ ...formData, car_name: e.target.value })}
+            onChange={e =>
+              setFormData({ ...formData, car_name: e.target.value })
+            }
             sx={{ mb: 2 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 }
+              sx: { color: '#ffffff', borderRadius: 1.5 },
             }}
             InputLabelProps={{
-              sx: { color: '#ffffffb0' }
+              sx: { color: '#ffffffb0' },
             }}
           />
-          
+
           {/* Выбор тегов */}
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" sx={{ color: '#ffffffb0', mb: 1 }}>
+            <Typography variant='body2' sx={{ color: '#ffffffb0', mb: 1 }}>
               Стиль вождения:
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {['дрифт', 'спринт', 'тоге'].map((tag) => (
+              {['дрифт', 'спринт', 'тоге'].map(tag => (
                 <Chip
                   key={tag}
                   label={`${getTagIcon(tag)} ${tag}`}
                   clickable
-                  variant={formData.tags.includes(tag) ? "filled" : "outlined"}
+                  variant={formData.tags.includes(tag) ? 'filled' : 'outlined'}
                   onClick={() => handleTagChange(tag)}
                   sx={{
-                    backgroundColor: formData.tags.includes(tag) ? `${getTagColor(tag)}20` : 'transparent',
-                    color: formData.tags.includes(tag) ? getTagColor(tag) : '#ffffffb0',
+                    backgroundColor: formData.tags.includes(tag)
+                      ? `${getTagColor(tag)}20`
+                      : 'transparent',
+                    color: formData.tags.includes(tag)
+                      ? getTagColor(tag)
+                      : '#ffffffb0',
                     border: `1px solid ${getTagColor(tag)}40`,
                     fontWeight: 600,
                     fontSize: '0.8rem',
                     '&:hover': {
                       backgroundColor: `${getTagColor(tag)}30`,
-                    }
+                    },
                   }}
                 />
               ))}
             </Box>
           </Box>
-          
+
           <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFormData({ ...formData, car_image: e.target.files[0] })}
+            type='file'
+            accept='image/*'
+            onChange={e =>
+              setFormData({ ...formData, car_image: e.target.files[0] })
+            }
             style={{ marginTop: 8 }}
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button 
+          <Button
             onClick={() => setAdminDialogOpen(false)}
             sx={{ color: '#ffffffb0' }}
           >
             Отмена
           </Button>
-          <Button 
+          <Button
             onClick={handleAddParticipant}
-            variant="contained"
+            variant='contained'
             sx={{
               backgroundColor: '#8aff8a',
               color: '#000',
@@ -1058,10 +1177,10 @@ const StreetBlacklistV1Page = () => {
       </Dialog>
 
       {/* Диалог редактирования участника */}
-      <Dialog 
-        open={editDialogOpen} 
+      <Dialog
+        open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
         PaperProps={{
           sx: {
@@ -1069,7 +1188,7 @@ const StreetBlacklistV1Page = () => {
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: 2,
-          }
+          },
         }}
       >
         <DialogTitle sx={{ color: '#8aff8a', fontWeight: 700 }}>
@@ -1078,76 +1197,86 @@ const StreetBlacklistV1Page = () => {
         <DialogContent>
           <TextField
             fullWidth
-            label="Никнейм"
+            label='Никнейм'
             value={formData.nickname}
-            onChange={(e) => setFormData({ ...formData, nickname: e.target.value })}
+            onChange={e =>
+              setFormData({ ...formData, nickname: e.target.value })
+            }
             sx={{ mb: 2, mt: 1 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 }
+              sx: { color: '#ffffff', borderRadius: 1.5 },
             }}
             InputLabelProps={{
-              sx: { color: '#ffffffb0' }
+              sx: { color: '#ffffffb0' },
             }}
           />
           <TextField
             fullWidth
-            label="Название машины"
+            label='Название машины'
             value={formData.car_name}
-            onChange={(e) => setFormData({ ...formData, car_name: e.target.value })}
+            onChange={e =>
+              setFormData({ ...formData, car_name: e.target.value })
+            }
             sx={{ mb: 2 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 }
+              sx: { color: '#ffffff', borderRadius: 1.5 },
             }}
             InputLabelProps={{
-              sx: { color: '#ffffffb0' }
+              sx: { color: '#ffffffb0' },
             }}
           />
-          
+
           {/* Выбор тегов */}
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" sx={{ color: '#ffffffb0', mb: 1 }}>
+            <Typography variant='body2' sx={{ color: '#ffffffb0', mb: 1 }}>
               Стиль вождения:
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {['дрифт', 'спринт', 'тоге'].map((tag) => (
+              {['дрифт', 'спринт', 'тоге'].map(tag => (
                 <Chip
                   key={tag}
                   label={`${getTagIcon(tag)} ${tag}`}
                   clickable
-                  variant={formData.tags.includes(tag) ? "filled" : "outlined"}
+                  variant={formData.tags.includes(tag) ? 'filled' : 'outlined'}
                   onClick={() => handleTagChange(tag)}
                   sx={{
-                    backgroundColor: formData.tags.includes(tag) ? `${getTagColor(tag)}20` : 'transparent',
-                    color: formData.tags.includes(tag) ? getTagColor(tag) : '#ffffffb0',
+                    backgroundColor: formData.tags.includes(tag)
+                      ? `${getTagColor(tag)}20`
+                      : 'transparent',
+                    color: formData.tags.includes(tag)
+                      ? getTagColor(tag)
+                      : '#ffffffb0',
                     border: `1px solid ${getTagColor(tag)}40`,
                     fontWeight: 600,
                     fontSize: '0.8rem',
                     '&:hover': {
                       backgroundColor: `${getTagColor(tag)}30`,
-                    }
+                    },
                   }}
                 />
               ))}
             </Box>
           </Box>
-          
+
           <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFormData({ ...formData, car_image: e.target.files[0] })}
+            type='file'
+            accept='image/*'
+            onChange={e =>
+              setFormData({ ...formData, car_image: e.target.files[0] })
+            }
             style={{ marginTop: 8 }}
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
-          <Button 
+          <Button
             onClick={() => setEditDialogOpen(false)}
             sx={{ color: '#ffffffb0' }}
           >
             Отмена
           </Button>
-          <Button 
+          <Button
             onClick={handleEditParticipant}
-            variant="contained"
+            variant='contained'
             sx={{
               backgroundColor: '#8aff8a',
               color: '#000',
@@ -1163,4 +1292,4 @@ const StreetBlacklistV1Page = () => {
   );
 };
 
-export default StreetBlacklistV1Page; 
+export default StreetBlacklistV1Page;

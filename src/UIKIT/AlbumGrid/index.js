@@ -1,3 +1,3 @@
 import AlbumGrid from './AlbumGrid';
 
-export default AlbumGrid; 
+export default AlbumGrid;

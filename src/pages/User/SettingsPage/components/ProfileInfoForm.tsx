@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, TextField, Grid, Button, CircularProgress, Switch, Paper } from '@mui/material';
+import {
+  Box,
+  Typography,
+  TextField,
+  Grid,
+  Button,
+  CircularProgress,
+  Switch,
+  Paper,
+} from '@mui/material';
 import { Save as SaveIcon, Check as CheckIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
@@ -29,7 +38,10 @@ const IOSSwitch = styled(Switch)(({ theme }) => ({
       border: '6px solid #fff',
     },
     '&.Mui-disabled .MuiSwitch-thumb': {
-      color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+      color:
+        theme.palette.mode === 'light'
+          ? theme.palette.grey[100]
+          : theme.palette.grey[600],
     },
     '&.Mui-disabled + .MuiSwitch-track': {
       opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
@@ -78,10 +90,12 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const defaultProfileInfo: ProfileInfo = {
     name: '',
     username: '',
-    about: ''
+    about: '',
   };
-  
-  const [formData, setFormData] = useState<ProfileInfo>(profileInfo || defaultProfileInfo);
+
+  const [formData, setFormData] = useState<ProfileInfo>(
+    profileInfo || defaultProfileInfo
+  );
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isCustomProfileActive, setIsCustomProfileActive] = useState(false);
@@ -103,9 +117,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         setIsCustomProfileActive(false);
         return;
       }
-      
+
       try {
-        const response = await fetch('/api/profile/' + (profileInfo?.username || ''));
+        const response = await fetch(
+          '/api/profile/' + (profileInfo?.username || '')
+        );
         const data = await response.json();
         if (data.user && data.user.profile_id) {
           setIsCustomProfileActive(data.user.profile_id === 2);
@@ -127,16 +143,18 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     }
   }, [settings]);
 
-  const handleChange = (field: keyof ProfileInfo) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [field]: event.target.value }));
-  };
+  const handleChange =
+    (field: keyof ProfileInfo) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({ ...prev, [field]: event.target.value }));
+    };
 
   const handleSave = async () => {
     if (!onSave) return;
-    
+
     setSaving(true);
     setSuccess(false);
-    
+
     try {
       await onSave(formData);
       setSuccess(true);
@@ -153,18 +171,18 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
   const handleProfileStyleToggle = async () => {
     if (!subscription || subscription.type !== 'ultimate') return;
-    
+
     setUpdatingProfileStyle(true);
     try {
       const newProfileId = isCustomProfileActive ? 1 : 2;
       const response = await fetch('/api/user/profile-style', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ profile_id: newProfileId })
+        body: JSON.stringify({ profile_id: newProfileId }),
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setIsCustomProfileActive(!isCustomProfileActive);
@@ -197,11 +215,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       const response = await fetch('/api/user/settings/private-username', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ private_username: !isPrivateUsername })
+        body: JSON.stringify({ private_username: !isPrivateUsername }),
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setIsPrivateUsername(!isPrivateUsername);
@@ -244,19 +262,27 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
   return (
     <Box sx={containerStyle}>
-      <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600 }}>
+      <Typography
+        variant='h6'
+        sx={{
+          mb: 3,
+          color: 'text.primary',
+          fontSize: '1.2rem',
+          fontWeight: 600,
+        }}
+      >
         Основная информация
       </Typography>
-      
+
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <TextField
-            label="Имя"
+            label='Имя'
             value={formData.name}
             onChange={handleChange('name')}
             fullWidth
-            margin="normal"
-            variant="outlined"
+            margin='normal'
+            variant='outlined'
             helperText={`${formData.name?.length || 0}/16 символов`}
             inputProps={{ maxLength: 16 }}
             FormHelperTextProps={{ sx: { ml: 0 } }}
@@ -265,12 +291,12 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
-            label="Имя пользователя"
+            label='Имя пользователя'
             value={formData.username}
             onChange={handleChange('username')}
             fullWidth
-            margin="normal"
-            variant="outlined"
+            margin='normal'
+            variant='outlined'
             helperText={`${formData.username?.length || 0}/16 символов, без пробелов`}
             inputProps={{ maxLength: 16 }}
             FormHelperTextProps={{ sx: { ml: 0 } }}
@@ -279,14 +305,14 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="О себе"
+            label='О себе'
             value={formData.about}
             onChange={handleChange('about')}
             fullWidth
             multiline
             rows={4}
-            margin="normal"
-            variant="outlined"
+            margin='normal'
+            variant='outlined'
             helperText={`${formData.about?.length || 0}/200 символов`}
             inputProps={{ maxLength: 200 }}
             FormHelperTextProps={{ sx: { ml: 0 } }}
@@ -298,21 +324,27 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       {/* Profile style toggle - only for Ultimate subscription */}
       {subscription?.type === 'ultimate' && (
         <Box sx={{ mt: 4, mb: 2 }}>
-          <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Paper
+            sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
               <Box>
-                <Typography variant="subtitle1" fontWeight={600}>
+                <Typography variant='subtitle1' fontWeight={600}>
                   Новый вид профиля
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   Изменить внешний вид профиля
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                {updatingProfileStyle && (
-                  <CircularProgress size={16} />
-                )}
-                <IOSSwitch 
+                {updatingProfileStyle && <CircularProgress size={16} />}
+                <IOSSwitch
                   checked={isCustomProfileActive}
                   onChange={handleProfileStyleToggle}
                   disabled={updatingProfileStyle}
@@ -326,20 +358,24 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       {/* Private username toggle */}
       <Box sx={{ mt: 2, mb: 2 }}>
         <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <Box>
-              <Typography variant="subtitle1" fontWeight={600}>
+              <Typography variant='subtitle1' fontWeight={600}>
                 Скрыть купленные юзернеймы
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 Скрыть список купленных юзернеймов от других пользователей
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {updatingPrivateUsername && (
-                <CircularProgress size={16} />
-              )}
-              <IOSSwitch 
+              {updatingPrivateUsername && <CircularProgress size={16} />}
+              <IOSSwitch
                 checked={isPrivateUsername}
                 onChange={handlePrivateUsernameToggle}
                 disabled={updatingPrivateUsername}
@@ -348,20 +384,24 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           </Box>
         </Paper>
       </Box>
-      
+
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           startIcon={
-            saving ? <CircularProgress size={20} /> : 
-            success ? <CheckIcon /> : 
-            <SaveIcon />
+            saving ? (
+              <CircularProgress size={20} />
+            ) : success ? (
+              <CheckIcon />
+            ) : (
+              <SaveIcon />
+            )
           }
           onClick={handleSave}
           disabled={saving || loading || !hasChanges()}
-          sx={{ 
-            borderRadius: '12px', 
+          sx={{
+            borderRadius: '12px',
             py: 1,
             px: 3,
             minWidth: 140,
@@ -374,4 +414,4 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   );
 };
 
-export default ProfileInfoForm; 
+export default ProfileInfoForm;

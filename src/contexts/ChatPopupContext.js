@@ -8,35 +8,41 @@ const ChatPopupContext = createContext({
   popups: [],
   openPopup: () => {},
   closePopup: () => {},
-  toggleMinimize: () => {}
+  toggleMinimize: () => {},
 });
 
 export const ChatPopupProvider = ({ children }) => {
   const [popups, setPopups] = useState([]); // [{chatId, minimized}]
 
-  const openPopup = useCallback((chatId) => {
-    setPopups((prev) => {
+  const openPopup = useCallback(chatId => {
+    setPopups(prev => {
       // Уже открыт
-      if (prev.some((p) => p.chatId === chatId)) return prev;
+      if (prev.some(p => p.chatId === chatId)) return prev;
       // Ограничиваем максимум до 4 окон – можно настроить
       const limited = prev.slice(-3);
       return [...limited, { chatId, minimized: false }];
     });
   }, []);
 
-  const closePopup = useCallback((chatId) => {
-    setPopups((prev) => prev.filter((p) => p.chatId !== chatId));
+  const closePopup = useCallback(chatId => {
+    setPopups(prev => prev.filter(p => p.chatId !== chatId));
   }, []);
 
-  const toggleMinimize = useCallback((chatId) => {
-    setPopups((prev) => prev.map((p) => p.chatId === chatId ? { ...p, minimized: !p.minimized } : p));
+  const toggleMinimize = useCallback(chatId => {
+    setPopups(prev =>
+      prev.map(p =>
+        p.chatId === chatId ? { ...p, minimized: !p.minimized } : p
+      )
+    );
   }, []);
 
   return (
-    <ChatPopupContext.Provider value={{ popups, openPopup, closePopup, toggleMinimize }}>
+    <ChatPopupContext.Provider
+      value={{ popups, openPopup, closePopup, toggleMinimize }}
+    >
       {children}
     </ChatPopupContext.Provider>
   );
 };
 
-export const useChatPopups = () => useContext(ChatPopupContext); 
+export const useChatPopups = () => useContext(ChatPopupContext);

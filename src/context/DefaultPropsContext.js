@@ -19,9 +19,11 @@ export const DefaultPropsProvider = ({ children }) => {
 export const useDefaultProps = () => {
   const context = useContext(DefaultPropsContext);
   if (!context) {
-    throw new Error('useDefaultProps must be used within a DefaultPropsProvider');
+    throw new Error(
+      'useDefaultProps must be used within a DefaultPropsProvider'
+    );
   }
   return context;
 };
 
-export default DefaultPropsContext; 
+export default DefaultPropsContext;

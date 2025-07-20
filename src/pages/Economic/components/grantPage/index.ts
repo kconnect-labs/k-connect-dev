@@ -1,1 +1,1 @@
-export { default as GrantsPage } from './GrantsPage'; 
+export { default as GrantsPage } from './GrantsPage';

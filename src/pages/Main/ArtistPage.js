@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Container, 
+import {
+  Box,
+  Typography,
+  Container,
   Grid,
   Avatar,
   IconButton,
@@ -24,11 +24,11 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  ListItemAvatar
+  ListItemAvatar,
 } from '@mui/material';
-import { 
-  PlayArrow, 
-  Pause, 
+import {
+  PlayArrow,
+  Pause,
   VerifiedUser,
   Twitter,
   Facebook,
@@ -42,7 +42,7 @@ import {
   Error as ErrorIcon,
   HelpOutline,
   MusicOff,
-  Album
+  Album,
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -54,7 +54,6 @@ import { useSnackbar } from 'notistack';
 import MobilePlayer from '../../components/Music/MobilePlayer';
 import DesktopPlayer from '../../components/Music/DesktopPlayer';
 
-
 const ArtistContainer = styled(Container)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(14),
@@ -62,13 +61,14 @@ const ArtistContainer = styled(Container)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     marginBottom: theme.spacing(16),
     padding: theme.spacing(0, 3),
-  }
+  },
 }));
 
 const ArtistHeaderCard = styled(Paper)(({ theme }) => ({
   borderRadius: '16px',
   overflow: 'hidden',
-  background: 'linear-gradient(135deg, rgba(30,30,30,0.7) 0%, rgba(10,10,10,0.7) 100%)',
+  background:
+    'linear-gradient(135deg, rgba(30,30,30,0.7) 0%, rgba(10,10,10,0.7) 100%)',
   backdropFilter: 'blur(10px)',
   boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
   border: '1px solid rgba(255,255,255,0.05)',
@@ -82,7 +82,9 @@ const ArtistHeaderBackground = styled(Box)(({ theme, image }) => ({
   left: 0,
   right: 0,
   height: '150px',
-  backgroundImage: image ? `linear-gradient(rgba(0,0,0,0.3), rgba(10,10,10,0.8)), url(${image})` : 'linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%)',
+  backgroundImage: image
+    ? `linear-gradient(rgba(0,0,0,0.3), rgba(10,10,10,0.8)), url(${image})`
+    : 'linear-gradient(45deg, #1a1a1a 0%, #0a0a0a 100%)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   opacity: 0.7,
@@ -115,8 +117,8 @@ const ArtistAvatar = styled(Avatar)(({ theme }) => ({
   },
   transition: 'transform 0.3s ease',
   '&:hover': {
-    transform: 'scale(1.05)'
-  }
+    transform: 'scale(1.05)',
+  },
 }));
 
 const TrackItem = styled(Box)(({ theme, active }) => ({
@@ -131,8 +133,8 @@ const TrackItem = styled(Box)(({ theme, active }) => ({
   '&:hover': {
     backgroundColor: 'rgba(255,255,255,0.05)',
     transform: 'translateY(-2px)',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-  }
+    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+  },
 }));
 
 const TrackCover = styled(Box)(({ theme }) => ({
@@ -146,8 +148,8 @@ const TrackCover = styled(Box)(({ theme }) => ({
   position: 'relative',
   transition: 'transform 0.3s ease',
   '&:hover': {
-    transform: 'scale(1.05)'
-  }
+    transform: 'scale(1.05)',
+  },
 }));
 
 const SocialButton = styled(IconButton)(({ theme }) => ({
@@ -157,7 +159,7 @@ const SocialButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: 'rgba(255,255,255,0.1)',
     transform: 'scale(1.1)',
   },
-  transition: 'transform 0.2s ease'
+  transition: 'transform 0.2s ease',
 }));
 
 const VerifiedBadge = styled(Chip)(({ theme }) => ({
@@ -168,7 +170,7 @@ const VerifiedBadge = styled(Chip)(({ theme }) => ({
   marginLeft: theme.spacing(1),
   '& .MuiChip-icon': {
     color: '#000',
-  }
+  },
 }));
 
 const TruncatedTypography = styled(Typography)(({ theme, lines = 1 }) => ({
@@ -178,7 +180,7 @@ const TruncatedTypography = styled(Typography)(({ theme, lines = 1 }) => ({
   WebkitLineClamp: lines,
   WebkitBoxOrient: 'vertical',
   wordBreak: 'break-word',
-  maxWidth: '100%'
+  maxWidth: '100%',
 }));
 
 const BiographyContainer = styled(Box)(({ theme }) => ({
@@ -192,8 +194,8 @@ const BiographyContainer = styled(Box)(({ theme }) => ({
     left: 0,
     width: '100%',
     height: '50px',
-    pointerEvents: 'none'
-  }
+    pointerEvents: 'none',
+  },
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
@@ -201,8 +203,8 @@ const ActionButton = styled(Button)(({ theme }) => ({
   padding: theme.spacing(0.5, 2),
   transition: 'transform 0.2s ease, background-color 0.2s ease',
   '&:hover': {
-    transform: 'scale(1.05)'
-  }
+    transform: 'scale(1.05)',
+  },
 }));
 
 const GenreChip = styled(Chip)(({ theme }) => ({
@@ -211,9 +213,9 @@ const GenreChip = styled(Chip)(({ theme }) => ({
   transition: 'all 0.2s ease',
   '&:hover': {
     backgroundColor: 'rgba(255,255,255,0.1)',
-    transform: 'translateY(-2px)'
+    transform: 'translateY(-2px)',
   },
-  maxWidth: 150
+  maxWidth: 150,
 }));
 
 const TrackInfoContainer = styled(Box)(({ theme }) => ({
@@ -227,16 +229,15 @@ const TrackNumber = styled(Typography)(({ theme }) => ({
   width: 30,
   textAlign: 'right',
   marginRight: theme.spacing(2),
-  flexShrink: 0
+  flexShrink: 0,
 }));
 
 const TrackActions = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   marginLeft: 'auto',
-  flexShrink: 0
+  flexShrink: 0,
 }));
-
 
 const NotFoundCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(4),
@@ -246,7 +247,7 @@ const NotFoundCard = styled(Card)(({ theme }) => ({
   backdropFilter: 'blur(10px)',
   boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
   border: '1px solid rgba(255,255,255,0.05)',
-  textAlign: 'center'
+  textAlign: 'center',
 }));
 
 const NotFoundIconContainer = styled(Box)(({ theme }) => ({
@@ -254,7 +255,7 @@ const NotFoundIconContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   marginBottom: theme.spacing(2),
-  marginTop: theme.spacing(2)
+  marginTop: theme.spacing(2),
 }));
 
 const NotFoundIcon = styled(Box)(({ theme }) => ({
@@ -264,7 +265,7 @@ const NotFoundIcon = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(255,255,255,0.05)',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center'
+  justifyContent: 'center',
 }));
 
 const ArtistPage = () => {
@@ -280,33 +281,35 @@ const ArtistPage = () => {
   const [loadingMoreTracks, setLoadingMoreTracks] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
-  const { 
-    currentTrack, 
-    isPlaying, 
-    playTrack, 
+  const {
+    currentTrack,
+    isPlaying,
+    playTrack,
     likeTrack,
     setCurrentSection,
     openFullScreenPlayer,
     closeFullScreenPlayer,
-    isFullScreenPlayerOpen
+    isFullScreenPlayerOpen,
   } = useMusic();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
   const tracksContainerRef = useRef(null);
   const lastTrackElementRef = useRef(null);
 
-
   const observer = useRef();
-  const lastTrackRef = useCallback((node) => {
-    if (loadingMoreTracks) return;
-    if (observer.current) observer.current.disconnect();
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMoreTracks) {
-        loadMoreTracks();
-      }
-    });
-    if (node) observer.current.observe(node);
-  }, [loadingMoreTracks, hasMoreTracks]);
+  const lastTrackRef = useCallback(
+    node => {
+      if (loadingMoreTracks) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && hasMoreTracks) {
+          loadMoreTracks();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loadingMoreTracks, hasMoreTracks]
+  );
 
   useEffect(() => {
     fetchArtistData();
@@ -314,7 +317,6 @@ const ArtistPage = () => {
 
   useEffect(() => {
     if (artistData) {
-
       prepareMostListenedTracks();
       prepareNewestTracks();
     }
@@ -327,20 +329,20 @@ const ArtistPage = () => {
       } else {
         setLoadingMoreTracks(true);
       }
-      
 
-      const response = await axios.get(`/api/music/artist?id=${artistParam}&page=${page}&per_page=40`);
-      
+      const response = await axios.get(
+        `/api/music/artist?id=${artistParam}&page=${page}&per_page=40`
+      );
+
       if (response.data.success) {
         const { artist } = response.data;
         setArtistData(artist);
-        
+
         if (append) {
           setTracks(prev => [...prev, ...artist.tracks]);
         } else {
           setTracks(artist.tracks);
         }
-        
 
         setHasMoreTracks(page < artist.tracks_pages);
         setCurrentPage(page);
@@ -364,15 +366,16 @@ const ArtistPage = () => {
   };
 
   const prepareMostListenedTracks = () => {
-
-    const sorted = [...tracks].sort((a, b) => b.plays_count - a.plays_count).slice(0, 5);
+    const sorted = [...tracks]
+      .sort((a, b) => b.plays_count - a.plays_count)
+      .slice(0, 5);
     setMostListenedTracks(sorted);
   };
 
   const prepareNewestTracks = () => {
-
-    const sorted = [...tracks].sort((a, b) => 
-      new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+    const sorted = [...tracks]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 5);
     setNewestTracks(sorted);
   };
 
@@ -382,28 +385,27 @@ const ArtistPage = () => {
 
   const handleCloseFullScreenPlayer = useCallback(() => {
     closeFullScreenPlayer();
-    
+
     document.body.style.overflow = '';
     document.body.style.touchAction = '';
   }, [closeFullScreenPlayer]);
 
-  const handleTrackClick = (track) => {
+  const handleTrackClick = track => {
     handlePlayTrack(track, 'artist');
   };
 
-  const handlePlayTrack = (track) => {
+  const handlePlayTrack = track => {
     playTrack(track, 'artist');
     if (isMobile) {
-
       handleOpenFullScreenPlayer();
     }
   };
 
-  const handleLikeTrack = async (trackId) => {
+  const handleLikeTrack = async trackId => {
     await likeTrack(trackId);
   };
 
-  const handleTogglePlay = (track) => {
+  const handleTogglePlay = track => {
     togglePlay(track);
   };
 
@@ -429,40 +431,44 @@ const ArtistPage = () => {
     const isCurrentlyPlaying = isCurrentTrack && isPlaying;
 
     return (
-      <ListItem 
+      <ListItem
         key={track.id}
         ref={isLast ? lastTrackRef : null}
-        onClick={() => isCurrentTrack ? handleTogglePlay(track) : handleTrackClick(track)}
-        sx={{ 
+        onClick={() =>
+          isCurrentTrack ? handleTogglePlay(track) : handleTrackClick(track)
+        }
+        sx={{
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
           transition: 'all 0.2s ease',
           '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            transform: 'translateY(-2px)'
+            transform: 'translateY(-2px)',
           },
-          backgroundColor: isCurrentTrack ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+          backgroundColor: isCurrentTrack
+            ? 'rgba(255, 255, 255, 0.1)'
+            : 'transparent',
           borderRadius: '8px',
           mb: 0.5,
           py: 1,
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
         button
       >
         <ListItemAvatar sx={{ minWidth: 70 }}>
-          <Box position="relative">
-            <Avatar 
-              variant="rounded" 
-              src={track.cover_path} 
-              sx={{ 
-                width: 56, 
+          <Box position='relative'>
+            <Avatar
+              variant='rounded'
+              src={track.cover_path}
+              sx={{
+                width: 56,
                 height: 56,
-                boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
+                boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
               }}
             >
               <Album />
             </Avatar>
             {isCurrentlyPlaying && (
-              <Box 
+              <Box
                 sx={{
                   position: 'absolute',
                   top: 0,
@@ -473,23 +479,23 @@ const ArtistPage = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: 'rgba(0,0,0,0.4)',
-                  borderRadius: 1
+                  borderRadius: 1,
                 }}
               >
-                <Pause fontSize="small" />
+                <Pause fontSize='small' />
               </Box>
             )}
           </Box>
         </ListItemAvatar>
-        
-        <ListItemText 
+
+        <ListItemText
           primary={
-            <Typography 
-              variant="subtitle1" 
-              sx={{ 
+            <Typography
+              variant='subtitle1'
+              sx={{
                 fontWeight: isCurrentTrack ? 600 : 400,
                 color: isCurrentTrack ? theme.palette.primary.main : 'inherit',
-                ml: 1
+                ml: 1,
               }}
             >
               {track.title}
@@ -498,25 +504,32 @@ const ArtistPage = () => {
           secondary={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, ml: 1 }}>
               {track.album && (
-                <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.8 }}>
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  sx={{ opacity: 0.8 }}
+                >
                   {track.album} •
                 </Typography>
               )}
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 {formatDuration(track.duration)}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 • {track.plays_count.toLocaleString()} прослушиваний
               </Typography>
             </Box>
           }
         />
-        <ListItemSecondaryAction onClick={(e) => e.stopPropagation()}>
-          <IconButton edge="end" onClick={(e) => {
-            e.stopPropagation();
-            handleLikeTrack(track.id);
-          }}>
-            {track.is_liked ? <Favorite color="primary" /> : <FavoriteBorder />}
+        <ListItemSecondaryAction onClick={e => e.stopPropagation()}>
+          <IconButton
+            edge='end'
+            onClick={e => {
+              e.stopPropagation();
+              handleLikeTrack(track.id);
+            }}
+          >
+            {track.is_liked ? <Favorite color='primary' /> : <FavoriteBorder />}
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
@@ -538,11 +551,13 @@ const ArtistPage = () => {
             },
             cursor: 'pointer',
           }}
-          onClick={() => isCurrentTrack ? handleTogglePlay(track) : handleTrackClick(track)}
+          onClick={() =>
+            isCurrentTrack ? handleTogglePlay(track) : handleTrackClick(track)
+          }
         >
-          <Box 
-            position="relative" 
-            sx={{ 
+          <Box
+            position='relative'
+            sx={{
               aspectRatio: '1/1',
               borderRadius: 2,
               overflow: 'hidden',
@@ -552,17 +567,20 @@ const ArtistPage = () => {
             }}
           >
             <img
-              src={track.cover_path || '/static/uploads/system/album_placeholder.jpg'}
+              src={
+                track.cover_path ||
+                '/static/uploads/system/album_placeholder.jpg'
+              }
               alt={track.title}
-              style={{ 
-                width: '100%', 
-                height: '100%', 
+              style={{
+                width: '100%',
+                height: '100%',
                 objectFit: 'cover',
-                display: 'block'
+                display: 'block',
               }}
             />
             {isCurrentlyPlaying && (
-              <Box 
+              <Box
                 sx={{
                   position: 'absolute',
                   top: 0,
@@ -579,7 +597,7 @@ const ArtistPage = () => {
               </Box>
             )}
             {!isCurrentlyPlaying && (
-              <Box 
+              <Box
                 sx={{
                   position: 'absolute',
                   top: 0,
@@ -608,22 +626,27 @@ const ArtistPage = () => {
                 right: 0,
                 m: 1,
                 p: 0.5,
-                backgroundColor: isCurrentTrack ? theme.palette.primary.main : 'rgba(0,0,0,0.7)',
+                backgroundColor: isCurrentTrack
+                  ? theme.palette.primary.main
+                  : 'rgba(0,0,0,0.7)',
                 borderRadius: 4,
                 display: 'flex',
                 alignItems: 'center',
               }}
             >
-              <Typography variant="caption" sx={{ color: isCurrentTrack ? '#000' : '#fff', px: 0.5 }}>
+              <Typography
+                variant='caption'
+                sx={{ color: isCurrentTrack ? '#000' : '#fff', px: 0.5 }}
+              >
                 {formatDuration(track.duration)}
               </Typography>
             </Box>
           </Box>
-          
+
           <Box sx={{ px: 0.5 }}>
-            <Typography 
-              variant="subtitle2" 
-              sx={{ 
+            <Typography
+              variant='subtitle2'
+              sx={{
                 fontWeight: isCurrentTrack ? 600 : 500,
                 color: isCurrentTrack ? theme.palette.primary.main : 'inherit',
                 overflow: 'hidden',
@@ -634,33 +657,43 @@ const ArtistPage = () => {
             >
               {track.title}
             </Typography>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
-              <Typography 
-                variant="caption" 
-                color="text.secondary"
-                sx={{ 
+
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mt: 0.5,
+              }}
+            >
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{
                   fontSize: '0.75rem',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 0.5
+                  gap: 0.5,
                 }}
               >
                 {track.plays_count.toLocaleString()}
               </Typography>
-              
-              <IconButton 
-                size="small" 
+
+              <IconButton
+                size='small'
                 sx={{ p: 0.5 }}
-                onClick={(e) => {
+                onClick={e => {
                   e.stopPropagation();
                   handleLikeTrack(track.id);
                 }}
               >
-                {track.is_liked ? 
-                  <Favorite color="primary" sx={{ fontSize: 16 }} /> : 
-                  <FavoriteBorder sx={{ fontSize: 16, color: 'text.secondary' }} />
-                }
+                {track.is_liked ? (
+                  <Favorite color='primary' sx={{ fontSize: 16 }} />
+                ) : (
+                  <FavoriteBorder
+                    sx={{ fontSize: 16, color: 'text.secondary' }}
+                  />
+                )}
               </IconButton>
             </Box>
           </Box>
@@ -671,21 +704,29 @@ const ArtistPage = () => {
 
   const renderTrackSection = (title, tracksArray, featured = false) => (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h6" gutterBottom sx={{ mb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}>
+      <Typography
+        variant='h6'
+        gutterBottom
+        sx={{ mb: 2, borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 1 }}
+      >
         {title}
       </Typography>
 
       {featured ? (
         <Grid container spacing={2}>
-          {tracksArray.map((track, index) => renderFeaturedTrackItem(track, index))}
+          {tracksArray.map((track, index) =>
+            renderFeaturedTrackItem(track, index)
+          )}
         </Grid>
       ) : (
-        <Paper sx={{ 
-          bgcolor: 'background.paper', 
-          borderRadius: 2,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          overflow: 'hidden'
-        }}>
+        <Paper
+          sx={{
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            overflow: 'hidden',
+          }}
+        >
           <List>
             {tracksArray.map((track, index) => renderTrackItem(track, index))}
           </List>
@@ -696,8 +737,13 @@ const ArtistPage = () => {
 
   if (isLoading && !artistData) {
     return (
-      <ArtistContainer maxWidth="lg">
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+      <ArtistContainer maxWidth='lg'>
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='60vh'
+        >
           <CircularProgress size={40} thickness={4} />
         </Box>
       </ArtistContainer>
@@ -706,15 +752,15 @@ const ArtistPage = () => {
 
   if (error || !artistData) {
     return (
-      <ArtistContainer maxWidth="lg">
-        <Box textAlign="center" p={3}>
-          <Typography variant="h5" gutterBottom>
+      <ArtistContainer maxWidth='lg'>
+        <Box textAlign='center' p={3}>
+          <Typography variant='h5' gutterBottom>
             {error || 'Исполнитель не найден'}
           </Typography>
-          <ActionButton 
-            variant="contained" 
-            color="primary" 
-            onClick={handleBackClick} 
+          <ActionButton
+            variant='contained'
+            color='primary'
+            onClick={handleBackClick}
             startIcon={<ArrowBack />}
           >
             Назад
@@ -724,35 +770,35 @@ const ArtistPage = () => {
     );
   }
 
-
-  const noTracksAndNotVerified = 
-    (!tracks || tracks.length === 0) && 
-    !artistData.verified;
+  const noTracksAndNotVerified =
+    (!tracks || tracks.length === 0) && !artistData.verified;
 
   return (
-    <ArtistContainer maxWidth="lg">
-      <SEO 
+    <ArtistContainer maxWidth='lg'>
+      <SEO
         title={`${artistData.name} - K-Connect Music`}
         description={`Слушайте треки ${artistData.name} на K-Connect Music`}
-        image={artistData.avatar_url || '/static/uploads/system/album_placeholder.jpg'}
+        image={
+          artistData.avatar_url ||
+          '/static/uploads/system/album_placeholder.jpg'
+        }
       />
-      
+
       {/* Back button */}
       <Box mb={2}>
-        <ActionButton 
-          startIcon={<ArrowBack />} 
+        <ActionButton
+          startIcon={<ArrowBack />}
           onClick={handleBackClick}
-          sx={{ 
+          sx={{
             color: theme.palette.text.secondary,
-            '&:hover': { color: theme.palette.text.primary }
+            '&:hover': { color: theme.palette.text.primary },
           }}
         >
           Назад
         </ActionButton>
       </Box>
-      
-      {noTracksAndNotVerified ? (
 
+      {noTracksAndNotVerified ? (
         <NotFoundCard>
           <CardContent>
             <NotFoundIconContainer>
@@ -760,23 +806,25 @@ const ArtistPage = () => {
                 <MusicOff sx={{ fontSize: 60, opacity: 0.6 }} />
               </NotFoundIcon>
             </NotFoundIconContainer>
-            
-            <Typography variant="h5" gutterBottom>
+
+            <Typography variant='h5' gutterBottom>
               Исполнитель не подтвержден
             </Typography>
-            
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              У нас нет информации о треках исполнителя «{artistData.name}». 
-              Возможно, это связано с проблемами в написании имени или исполнитель еще не добавлен в нашу базу данных.
+
+            <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
+              У нас нет информации о треках исполнителя «{artistData.name}».
+              Возможно, это связано с проблемами в написании имени или
+              исполнитель еще не добавлен в нашу базу данных.
             </Typography>
-            
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Попробуйте проверить написание имени исполнителя или вернитесь позже.
+
+            <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+              Попробуйте проверить написание имени исполнителя или вернитесь
+              позже.
             </Typography>
-            
+
             <ActionButton
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={() => navigate('/music')}
               sx={{ mt: 2, mb: 1 }}
             >
@@ -785,121 +833,156 @@ const ArtistPage = () => {
           </CardContent>
         </NotFoundCard>
       ) : (
-
         <>
           {/* Artist header */}
           <ArtistHeaderCard elevation={3}>
             <ArtistHeaderBackground image={artistData.avatar_url} />
             <ArtistContent>
-              <ArtistAvatar 
-                src={artistData.avatar_url || '/static/uploads/system/album_placeholder.jpg'} 
+              <ArtistAvatar
+                src={
+                  artistData.avatar_url ||
+                  '/static/uploads/system/album_placeholder.jpg'
+                }
                 alt={artistData.name}
               />
-              
-              <Box flex={1} overflow="hidden">
-                <Box display="flex" alignItems="center" mb={1} overflow="hidden">
+
+              <Box flex={1} overflow='hidden'>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  mb={1}
+                  overflow='hidden'
+                >
                   <Tooltip title={artistData.name}>
-                    <TruncatedTypography variant="h4" component="h1" sx={{ maxWidth: '70%' }}>
+                    <TruncatedTypography
+                      variant='h4'
+                      component='h1'
+                      sx={{ maxWidth: '70%' }}
+                    >
                       {artistData.name}
                     </TruncatedTypography>
                   </Tooltip>
-                  
+
                   {artistData.verified && (
                     <Fade in={true}>
-                      <VerifiedBadge 
-                        size="small" 
-                        icon={<VerifiedUser fontSize="small" />} 
-                        label="Проверено" 
+                      <VerifiedBadge
+                        size='small'
+                        icon={<VerifiedUser fontSize='small' />}
+                        label='Проверено'
                       />
                     </Fade>
                   )}
                 </Box>
-                
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                  {tracks.length} {tracks.length === 1 ? 'трек' : 
-                    tracks.length > 1 && tracks.length < 5 ? 'трека' : 'треков'}
+
+                <Typography variant='body2' color='text.secondary' gutterBottom>
+                  {tracks.length}{' '}
+                  {tracks.length === 1
+                    ? 'трек'
+                    : tracks.length > 1 && tracks.length < 5
+                      ? 'трека'
+                      : 'треков'}
                 </Typography>
-                
+
                 {artistData.genres && artistData.genres.length > 0 && (
-                  <Box display="flex" flexWrap="wrap" gap={1} mb={1} sx={{ maxWidth: '100%', overflow: 'hidden' }}>
+                  <Box
+                    display='flex'
+                    flexWrap='wrap'
+                    gap={1}
+                    mb={1}
+                    sx={{ maxWidth: '100%', overflow: 'hidden' }}
+                  >
                     {artistData.genres.slice(0, 3).map((genre, index) => (
                       <Tooltip key={index} title={genre}>
-                        <GenreChip 
-                          label={genre.length > 20 ? `${genre.slice(0, 17)}...` : genre} 
-                          size="small"
+                        <GenreChip
+                          label={
+                            genre.length > 20
+                              ? `${genre.slice(0, 17)}...`
+                              : genre
+                          }
+                          size='small'
                         />
                       </Tooltip>
                     ))}
                     {artistData.genres.length > 3 && (
-                      <Tooltip title={`Ещё ${artistData.genres.length - 3} жанров`}>
-                        <GenreChip 
+                      <Tooltip
+                        title={`Ещё ${artistData.genres.length - 3} жанров`}
+                      >
+                        <GenreChip
                           label={`+${artistData.genres.length - 3}`}
-                          size="small"
+                          size='small'
                         />
                       </Tooltip>
                     )}
                   </Box>
                 )}
-                
-                <Box mt={2} display="flex" alignItems="center" flexWrap="wrap" gap={1}>
+
+                <Box
+                  mt={2}
+                  display='flex'
+                  alignItems='center'
+                  flexWrap='wrap'
+                  gap={1}
+                >
                   {artistData.instagram && (
-                    <SocialButton 
-                      size="small" 
-                      aria-label="Instagram" 
-                      onClick={() => window.open(artistData.instagram, '_blank')}
+                    <SocialButton
+                      size='small'
+                      aria-label='Instagram'
+                      onClick={() =>
+                        window.open(artistData.instagram, '_blank')
+                      }
                     >
-                      <Instagram fontSize="small" />
+                      <Instagram fontSize='small' />
                     </SocialButton>
                   )}
-                  
+
                   {artistData.twitter && (
-                    <SocialButton 
-                      size="small" 
-                      aria-label="Twitter" 
+                    <SocialButton
+                      size='small'
+                      aria-label='Twitter'
                       onClick={() => window.open(artistData.twitter, '_blank')}
                     >
-                      <Twitter fontSize="small" />
+                      <Twitter fontSize='small' />
                     </SocialButton>
                   )}
-                  
+
                   {artistData.facebook && (
-                    <SocialButton 
-                      size="small" 
-                      aria-label="Facebook" 
+                    <SocialButton
+                      size='small'
+                      aria-label='Facebook'
                       onClick={() => window.open(artistData.facebook, '_blank')}
                     >
-                      <Facebook fontSize="small" />
+                      <Facebook fontSize='small' />
                     </SocialButton>
                   )}
-                  
+
                   {artistData.website && (
-                    <SocialButton 
-                      size="small" 
-                      aria-label="Веб-сайт" 
+                    <SocialButton
+                      size='small'
+                      aria-label='Веб-сайт'
                       onClick={() => window.open(artistData.website, '_blank')}
                     >
-                      <Language fontSize="small" />
+                      <Language fontSize='small' />
                     </SocialButton>
                   )}
-                  
+
                   <Box flexGrow={1} />
-                  
+
                   <ActionButton
-                    variant="contained"
-                    color="primary"
-                    size="small"
+                    variant='contained'
+                    color='primary'
+                    size='small'
                     startIcon={<Share />}
                     onClick={shareArtist}
                     sx={{ mr: 1 }}
                   >
                     Поделиться
                   </ActionButton>
-                  
+
                   {tracks && tracks.length > 0 && (
                     <ActionButton
-                      variant="contained"
-                      color="secondary"
-                      size="small"
+                      variant='contained'
+                      color='secondary'
+                      size='small'
                       startIcon={<PlayArrow />}
                       onClick={() => handleTrackClick(tracks[0])}
                     >
@@ -910,72 +993,76 @@ const ArtistPage = () => {
               </Box>
             </ArtistContent>
           </ArtistHeaderCard>
-          
+
           {/* Artist biography */}
           {artistData.bio && (
-            <Paper 
-              elevation={2} 
-              sx={{ 
-                p: 3, 
-                mb: 4, 
+            <Paper
+              elevation={2}
+              sx={{
+                p: 3,
+                mb: 4,
                 borderRadius: '16px',
                 bgcolor: '#121212',
               }}
             >
-              <Typography variant="h6" gutterBottom>
+              <Typography variant='h6' gutterBottom>
                 Биография
               </Typography>
-              
+
               <BiographyContainer>
-                <TruncatedTypography 
-                  variant="body2" 
-                  lines={isMobile ? 10 : 15} 
+                <TruncatedTypography
+                  variant='body2'
+                  lines={isMobile ? 10 : 15}
                   sx={{ whiteSpace: 'pre-line' }}
                 >
                   {artistData.bio}
                 </TruncatedTypography>
               </BiographyContainer>
-              
-              {artistData.bio && artistData.bio.length > 300 && (
-                <Box textAlign="center" mt={2}>
-                  <ActionButton 
-                    size="small" 
-                    color="primary"
-                    onClick={() => {
 
-                    }}
-                  >
+              {artistData.bio && artistData.bio.length > 300 && (
+                <Box textAlign='center' mt={2}>
+                  <ActionButton size='small' color='primary' onClick={() => {}}>
                     Читать полностью
                   </ActionButton>
                 </Box>
               )}
             </Paper>
           )}
-          
+
           {/* Most listened tracks */}
-          {mostListenedTracks && mostListenedTracks.length > 0 && renderTrackSection('Самые прослушиваемые треки', mostListenedTracks, true)}
-          
+          {mostListenedTracks &&
+            mostListenedTracks.length > 0 &&
+            renderTrackSection(
+              'Самые прослушиваемые треки',
+              mostListenedTracks,
+              true
+            )}
+
           {/* Newest tracks */}
-          {newestTracks && newestTracks.length > 0 && renderTrackSection('Новые треки', newestTracks, true)}
-          
+          {newestTracks &&
+            newestTracks.length > 0 &&
+            renderTrackSection('Новые треки', newestTracks, true)}
+
           {/* All tracks section */}
           <Box mb={4}>
-            <Typography variant="h5" gutterBottom>
+            <Typography variant='h5' gutterBottom>
               Все треки
             </Typography>
-            
+
             {tracks && tracks.length > 0 ? (
               <List disablePadding>
-                {tracks.map((track, index) => renderTrackItem(
-                  track, 
-                  index, 
-                  index === tracks.length - 1 && hasMoreTracks
-                ))}
-                
+                {tracks.map((track, index) =>
+                  renderTrackItem(
+                    track,
+                    index,
+                    index === tracks.length - 1 && hasMoreTracks
+                  )
+                )}
+
                 {/* Loading indicator and reference for infinite scrolling */}
                 <div ref={tracksContainerRef}>
                   {loadingMoreTracks && (
-                    <Box textAlign="center" py={2}>
+                    <Box textAlign='center' py={2}>
                       <CircularProgress size={24} />
                     </Box>
                   )}
@@ -988,12 +1075,10 @@ const ArtistPage = () => {
                   p: 3,
                   textAlign: 'center',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(18,18,18,0.4)'
+                  backgroundColor: 'rgba(18,18,18,0.4)',
                 }}
               >
-                <Typography color="text.secondary">
-                  Треки не найдены
-                </Typography>
+                <Typography color='text.secondary'>Треки не найдены</Typography>
               </Paper>
             )}
           </Box>
@@ -1014,15 +1099,11 @@ const ArtistPage = () => {
           <MobilePlayer onExpandClick={handleOpenFullScreenPlayer} />
         </Box>
       )}
-      
-      {/* Desktop Player */}
-      {!isMobile && currentTrack && (
-        <DesktopPlayer />
-      )}
-      
 
+      {/* Desktop Player */}
+      {!isMobile && currentTrack && <DesktopPlayer />}
     </ArtistContainer>
   );
 };
 
-export default ArtistPage; 
+export default ArtistPage;

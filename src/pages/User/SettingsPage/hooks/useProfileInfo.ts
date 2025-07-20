@@ -17,12 +17,16 @@ interface UseProfileInfoReturn {
   setProfileInfo: (info: ProfileInfo) => void;
 }
 
-export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn => {
-  const [profileInfo, setProfileInfo] = useState<ProfileInfo>(initialInfo || {
-    name: '',
-    username: '',
-    about: '',
-  });
+export const useProfileInfo = (
+  initialInfo?: ProfileInfo
+): UseProfileInfoReturn => {
+  const [profileInfo, setProfileInfo] = useState<ProfileInfo>(
+    initialInfo || {
+      name: '',
+      username: '',
+      about: '',
+    }
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,17 +35,19 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     const loadProfileInfo = async () => {
       try {
         // Получаем текущего пользователя из контекста или localStorage
-        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const currentUser = JSON.parse(
+          localStorage.getItem('currentUser') || '{}'
+        );
         const username = currentUser.username;
-        
+
         if (!username) {
           console.error('No username available for profile info');
           return;
         }
-        
+
         const response = await fetch(`/api/profile/${username}`);
         const data = await response.json();
-        
+
         if (response.ok && data.user) {
           setProfileInfo({
             name: data.user.name || '',
@@ -60,7 +66,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   const updateName = useCallback(async (name: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/profile/update-name', {
         method: 'POST',
@@ -68,7 +74,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: name
+          name: name,
         }),
       });
 
@@ -90,7 +96,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   const updateUsername = useCallback(async (username: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/profile/update-username', {
         method: 'POST',
@@ -98,7 +104,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: username
+          username: username,
         }),
       });
 
@@ -110,7 +116,11 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
         throw new Error(data.error || 'Не удалось обновить имя пользователя');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось обновить имя пользователя');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Не удалось обновить имя пользователя'
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -120,7 +130,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   const updateAbout = useCallback(async (about: string) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch('/api/profile/update-about', {
         method: 'POST',
@@ -128,7 +138,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          about: about || '' // Отправляем пустую строку если about пустой
+          about: about || '', // Отправляем пустую строку если about пустой
         }),
       });
 
@@ -140,7 +150,9 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
         throw new Error(data.error || 'Не удалось обновить описание');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось обновить описание');
+      setError(
+        err instanceof Error ? err.message : 'Не удалось обновить описание'
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -150,11 +162,11 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
   const updateProfileInfo = useCallback(async (info: Partial<ProfileInfo>) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Обновляем каждое поле отдельно, используя соответствующие эндпоинты
       const updatePromises = [];
-      
+
       if (info.name !== undefined) {
         updatePromises.push(
           fetch('/api/profile/update-name', {
@@ -164,7 +176,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           })
         );
       }
-      
+
       if (info.username !== undefined) {
         updatePromises.push(
           fetch('/api/profile/update-username', {
@@ -174,7 +186,7 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           })
         );
       }
-      
+
       if (info.about !== undefined) {
         updatePromises.push(
           fetch('/api/profile/update-about', {
@@ -184,14 +196,14 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           })
         );
       }
-      
+
       // Выполняем все запросы параллельно
       const responses = await Promise.all(updatePromises);
       const results = await Promise.all(responses.map(r => r.json()));
-      
+
       // Проверяем, что все запросы прошли успешно
       const allSuccessful = results.every(result => result.success);
-      
+
       if (allSuccessful) {
         setProfileInfo(prev => ({ ...prev, ...info }));
       } else {
@@ -199,10 +211,16 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
           .filter(result => !result.success)
           .map(result => result.error)
           .join(', ');
-        throw new Error(errorMessages || 'Не удалось обновить информацию профиля');
+        throw new Error(
+          errorMessages || 'Не удалось обновить информацию профиля'
+        );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось обновить информацию профиля');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Не удалось обновить информацию профиля'
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -219,4 +237,4 @@ export const useProfileInfo = (initialInfo?: ProfileInfo): UseProfileInfoReturn 
     updateProfileInfo,
     setProfileInfo,
   };
-}; 
+};

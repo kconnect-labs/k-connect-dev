@@ -4,23 +4,27 @@ import {
   Box,
   Typography,
   Button,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const DeleteDialog = ({ 
-  open, 
-  onClose, 
-  deleteDialog, 
-  setDeleteDialog, 
-  confirmDelete, 
-  t 
+const DeleteDialog = ({
+  open,
+  onClose,
+  deleteDialog,
+  setDeleteDialog,
+  confirmDelete,
+  t,
 }) => {
   return (
     <Dialog
       open={open}
-      onClose={() => !deleteDialog.deleting && !deleteDialog.deleted && setDeleteDialog({ ...deleteDialog, open: false })}
+      onClose={() =>
+        !deleteDialog.deleting &&
+        !deleteDialog.deleted &&
+        setDeleteDialog({ ...deleteDialog, open: false })
+      }
       PaperProps={{
         sx: {
           bgcolor: 'rgba(32, 32, 36, 0.8)',
@@ -38,11 +42,12 @@ const DeleteDialog = ({
             right: 0,
             bottom: 0,
             borderRadius: '16px',
-            background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
+            background:
+              'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
             backdropFilter: 'blur(30px)',
-            zIndex: -1
-          }
-        }
+            zIndex: -1,
+          },
+        },
       }}
     >
       <Box sx={{ p: 3 }}>
@@ -50,24 +55,27 @@ const DeleteDialog = ({
           <>
             <Box sx={{ textAlign: 'center', py: 2 }}>
               <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
-              <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
+              <Typography variant='h6' sx={{ mb: 1, color: 'white' }}>
                 {t('post.delete_dialog.success_title')}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+              >
                 {t('post.delete_dialog.success_message')}
               </Typography>
             </Box>
           </>
         ) : (
           <>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                mb: 2, 
+            <Typography
+              variant='h6'
+              sx={{
+                mb: 2,
                 color: '#f44336',
                 fontWeight: 'medium',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
               }}
             >
               <DeleteIcon sx={{ mr: 1 }} /> {t('post.delete_dialog.title')}
@@ -76,34 +84,42 @@ const DeleteDialog = ({
               {t('post.delete_dialog.confirmation')}
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-              <Button 
-                onClick={() => setDeleteDialog({ ...deleteDialog, open: false })}
+              <Button
+                onClick={() =>
+                  setDeleteDialog({ ...deleteDialog, open: false })
+                }
                 disabled={deleteDialog.deleting}
-                sx={{ 
+                sx={{
                   borderRadius: '10px',
                   color: 'rgba(255, 255, 255, 0.7)',
                   px: 2,
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.08)',
-                    color: 'rgba(255, 255, 255, 0.9)'
-                  }
+                    color: 'rgba(255, 255, 255, 0.9)',
+                  },
                 }}
               >
                 {t('post.delete_dialog.cancel')}
               </Button>
-              <Button 
+              <Button
                 onClick={confirmDelete}
                 disabled={deleteDialog.deleting}
-                variant="contained" 
-                color="error"
-                sx={{ 
+                variant='contained'
+                color='error'
+                sx={{
                   borderRadius: '10px',
                   boxShadow: 'none',
-                  px: 2
+                  px: 2,
                 }}
-                endIcon={deleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
+                endIcon={
+                  deleteDialog.deleting ? (
+                    <CircularProgress size={16} color='inherit' />
+                  ) : null
+                }
               >
-                {deleteDialog.deleting ? t('post.delete_dialog.deleting') : t('post.delete_dialog.delete')}
+                {deleteDialog.deleting
+                  ? t('post.delete_dialog.deleting')
+                  : t('post.delete_dialog.delete')}
               </Button>
             </Box>
           </>
@@ -113,4 +129,4 @@ const DeleteDialog = ({
   );
 };
 
-export default DeleteDialog; 
+export default DeleteDialog;

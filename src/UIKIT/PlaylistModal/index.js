@@ -1,3 +1,3 @@
 import PlaylistModal from './PlaylistModal';
 
-export default PlaylistModal; 
+export default PlaylistModal;

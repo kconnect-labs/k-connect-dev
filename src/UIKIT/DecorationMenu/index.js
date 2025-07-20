@@ -1,1 +1,1 @@
-export { default } from './DecorationMenu'; 
+export { default } from './DecorationMenu';

@@ -14,7 +14,7 @@ import {
   Avatar,
   InputAdornment,
   CircularProgress,
-  Snackbar
+  Snackbar,
 } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
 import {
@@ -29,7 +29,7 @@ import {
   Store as StoreIcon,
   RemoveShoppingCart as RemoveFromMarketIcon,
   ContentCopy as ContentCopyIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import {
@@ -39,7 +39,7 @@ import {
   EFFECTS_CONFIG,
   extractDominantColor,
   getFallbackColor,
-  useUpgradeEffects
+  useUpgradeEffects,
 } from './upgradeEffectsConfig';
 import { InventoryItem, ItemAction } from './types';
 
@@ -67,16 +67,10 @@ const UpgradeEffects = ({ item, children }: UpgradeEffectsProps) => {
       {children}
       <GlowEffect color={dominantColor} />
       {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
-        <AnimatedSparkle
-          key={idx}
-          sx={sparkle.position}
-        />
+        <AnimatedSparkle key={idx} sx={sparkle.position} />
       ))}
       {EFFECTS_CONFIG.stars.map((star, idx) => (
-        <AnimatedStar
-          key={idx}
-          sx={star.position}
-        />
+        <AnimatedStar key={idx} sx={star.position} />
       ))}
     </Box>
   );
@@ -98,8 +92,8 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       width: '100vw',
       height: '100vh',
       borderRadius: 0,
-    }
-  }
+    },
+  },
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
@@ -147,7 +141,7 @@ const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
     epic: { bg: '#9b59b6', color: '#fff' },
     legendary: { bg: '#f39c12', color: '#fff' },
   };
-  
+
   return {
     background: colors[rarity || 'common']?.bg || colors.common.bg,
     color: colors[rarity || 'common']?.color || colors.common.color,
@@ -174,8 +168,8 @@ const SuggestionItem = styled(Box)(() => ({
   alignItems: 'center',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: 'rgba(40, 40, 40, 0.4)'
-  }
+    backgroundColor: 'rgba(40, 40, 40, 0.4)',
+  },
 }));
 
 const UserAvatar = styled(Avatar)(() => ({
@@ -183,7 +177,7 @@ const UserAvatar = styled(Avatar)(() => ({
   height: 32,
   fontSize: 14,
   marginRight: 12,
-  backgroundColor: '#444444'
+  backgroundColor: '#444444',
 }));
 
 const MarketPriceChip = styled(Box)(({ theme }) => ({
@@ -223,13 +217,13 @@ interface ItemInfoModalProps {
   onTransferSuccess?: (itemId: number) => void;
 }
 
-const ItemInfoModal = ({ 
-  open, 
-  onClose, 
-  item, 
-  userPoints, 
+const ItemInfoModal = ({
+  open,
+  onClose,
+  item,
+  userPoints,
   onItemUpdate,
-  onTransferSuccess 
+  onTransferSuccess,
 }: ItemInfoModalProps) => {
   const [transferModalOpen, setTransferModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState('');
@@ -244,13 +238,15 @@ const ItemInfoModal = ({
   }>({
     loading: false,
     exists: false,
-    suggestions: []
+    suggestions: [],
   });
-  const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(null);
+  const [selectedRecipientId, setSelectedRecipientId] = useState<number | null>(
+    null
+  );
   const [notification, setNotification] = useState({
     open: false,
     message: '',
-    severity: 'success'
+    severity: 'success',
   });
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [marketplaceModalOpen, setMarketplaceModalOpen] = useState(false);
@@ -272,20 +268,29 @@ const ItemInfoModal = ({
 
   const getRarityIcon = (rarity: string) => {
     switch (rarity) {
-      case 'legendary': return <DiamondIcon />;
-      case 'epic': return <StarIcon />;
-      case 'rare': return <StarIcon />;
-      default: return null;
+      case 'legendary':
+        return <DiamondIcon />;
+      case 'epic':
+        return <StarIcon />;
+      case 'rare':
+        return <StarIcon />;
+      default:
+        return null;
     }
   };
 
   const getRarityLabel = (rarity: string) => {
     switch (rarity) {
-      case 'common': return 'Обычный';
-      case 'rare': return 'Редкий';
-      case 'epic': return 'Эпический';
-      case 'legendary': return 'Легендарный';
-      default: return 'Обычный';
+      case 'common':
+        return 'Обычный';
+      case 'rare':
+        return 'Редкий';
+      case 'epic':
+        return 'Эпический';
+      case 'legendary':
+        return 'Легендарный';
+      default:
+        return 'Обычный';
     }
   };
 
@@ -298,18 +303,18 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         showNotification(data.message);
-        
+
         // Создаем обновленный предмет
         const updatedItem: InventoryItem = {
           ...item,
-          is_equipped: true
+          is_equipped: true,
         };
-        
+
         // Вызываем onItemUpdate с обновленным предметом
         if (onItemUpdate) {
           onItemUpdate(updatedItem, 'equip');
@@ -331,18 +336,18 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         showNotification(data.message);
-        
+
         // Создаем обновленный предмет
         const updatedItem: InventoryItem = {
           ...item,
-          is_equipped: false
+          is_equipped: false,
         };
-        
+
         // Вызываем onItemUpdate с обновленным предметом
         if (onItemUpdate) {
           onItemUpdate(updatedItem, 'unequip');
@@ -372,13 +377,13 @@ const ItemInfoModal = ({
       const data = await response.json();
       if (data.success) {
         showNotification(data.message);
-        
+
         // Создаем обновленный предмет
         const updatedItem: InventoryItem = {
           ...item,
-          upgrade_level: data.upgrade_level
+          upgrade_level: data.upgrade_level,
         };
-        
+
         // Вызываем onItemUpdate с обновленным предметом
         if (onItemUpdate) {
           onItemUpdate(updatedItem, 'upgrade');
@@ -406,23 +411,28 @@ const ItemInfoModal = ({
     setUserSearch({
       loading: false,
       exists: false,
-      suggestions: []
+      suggestions: [],
     });
     setSelectedRecipientId(null);
   };
 
   const searchUser = (query: string) => {
-    setUserSearch(prev => ({...prev, loading: true}));
+    setUserSearch(prev => ({ ...prev, loading: true }));
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
     debounceTimerRef.current = setTimeout(() => {
       const url = `/api/search/recipients?query=${encodeURIComponent(query)}`;
-      axios.get(url)
+      axios
+        .get(url)
         .then(response => {
-          if (response.data && response.data.users && response.data.users.length > 0) {
-            const exactMatch = response.data.users.find((u: any) => 
-              u.username.toLowerCase() === query.toLowerCase()
+          if (
+            response.data &&
+            response.data.users &&
+            response.data.users.length > 0
+          ) {
+            const exactMatch = response.data.users.find(
+              (u: any) => u.username.toLowerCase() === query.toLowerCase()
             );
             if (exactMatch) {
               setSelectedRecipientId(exactMatch.id);
@@ -484,12 +494,17 @@ const ItemInfoModal = ({
       ...prev,
       loading: false,
       exists: true,
-      suggestions: []
+      suggestions: [],
     }));
   };
 
   const handleConfirmTransfer = async () => {
-    if (!item || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000) {
+    if (
+      !item ||
+      !recipientUsername.trim() ||
+      !selectedRecipientId ||
+      userPoints < 5000
+    ) {
       return;
     }
 
@@ -502,20 +517,20 @@ const ItemInfoModal = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          recipient_id: selectedRecipientId
-        })
+          recipient_id: selectedRecipientId,
+        }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         showNotification(data.message);
-        
+
         // Вызываем onTransferSuccess для мгновенного удаления предмета
         if (typeof onTransferSuccess === 'function') {
           onTransferSuccess(item.id);
         }
-        
+
         if (typeof onClose === 'function') onClose();
       } else {
         setTransferError(data.message || 'Ошибка передачи предмета');
@@ -527,11 +542,14 @@ const ItemInfoModal = ({
     }
   };
 
-  const showNotification = (message: string, severity: 'success' | 'error' | 'warning' | 'info' = 'success') => {
+  const showNotification = (
+    message: string,
+    severity: 'success' | 'error' | 'warning' | 'info' = 'success'
+  ) => {
     setNotification({
       open: true,
       message,
-      severity
+      severity,
     });
   };
 
@@ -544,32 +562,35 @@ const ItemInfoModal = ({
     try {
       setMarketplaceLoading(true);
       const response = await axios.post(`/api/marketplace/list/${item.id}`, {
-        price: parseInt(price)
+        price: parseInt(price),
       });
-      
+
       if (response.data.success) {
         showNotification('Предмет выставлен на маркетплейс', 'success');
-        
+
         // Создаем обновленный предмет
         const updatedItem: InventoryItem = {
           ...item,
           marketplace: {
             id: response.data.listing_id,
             status: 'active',
-            price: parseInt(price)
-          }
+            price: parseInt(price),
+          },
         };
-        
+
         // Вызываем onItemUpdate с обновленным предметом
         if (onItemUpdate) {
           onItemUpdate(updatedItem, 'marketplace_list');
         }
-        
+
         setMarketplaceModalOpen(false);
         setPrice('');
       }
     } catch (error: any) {
-      showNotification(error.response?.data?.message || 'Ошибка при выставлении предмета', 'error');
+      showNotification(
+        error.response?.data?.message || 'Ошибка при выставлении предмета',
+        'error'
+      );
     } finally {
       setMarketplaceLoading(false);
     }
@@ -579,24 +600,29 @@ const ItemInfoModal = ({
     if (!item?.marketplace) return;
     try {
       setMarketplaceLoading(true);
-      const response = await axios.post(`/api/marketplace/cancel/${item.marketplace.id}`);
-      
+      const response = await axios.post(
+        `/api/marketplace/cancel/${item.marketplace.id}`
+      );
+
       if (response.data.success) {
         showNotification('Предмет снят с маркетплейса', 'success');
-        
+
         // Создаем обновленный предмет
         const updatedItem: InventoryItem = {
           ...item,
-          marketplace: null
+          marketplace: null,
         };
-        
+
         // Вызываем onItemUpdate с обновленным предметом
         if (onItemUpdate) {
           onItemUpdate(updatedItem, 'marketplace_remove');
         }
       }
     } catch (error: any) {
-      showNotification(error.response?.data?.message || 'Ошибка при снятии предмета', 'error');
+      showNotification(
+        error.response?.data?.message || 'Ошибка при снятии предмета',
+        'error'
+      );
     } finally {
       setMarketplaceLoading(false);
     }
@@ -625,12 +651,12 @@ const ItemInfoModal = ({
       const data = await response.json();
       if (data.success) {
         showNotification(data.message);
-        
+
         // Вызываем onTransferSuccess для мгновенного удаления предмета
         if (typeof onTransferSuccess === 'function') {
           onTransferSuccess(item.id);
         }
-        
+
         if (typeof onClose === 'function') onClose();
       } else {
         showNotification(data.message, 'error');
@@ -646,20 +672,17 @@ const ItemInfoModal = ({
 
   return (
     <>
-      <StyledDialog
-        open={open}
-        onClose={onClose}
-        maxWidth="sm"
-        fullWidth
-      >
+      <StyledDialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
         <UpgradeEffects item={item}>
-          <DialogTitle sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            pb: 1
-          }}>
-            <Box component="div" sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
+          <DialogTitle
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              pb: 1,
+            }}
+          >
+            <Box component='div' sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
               Информация о предмете
             </Box>
             <IconButton
@@ -674,61 +697,94 @@ const ItemInfoModal = ({
               <CloseIcon />
             </IconButton>
           </DialogTitle>
-          
+
           <DialogContent sx={{ pt: 0 }}>
             <Box sx={{ mb: 3, textAlign: 'center' }}>
-              <Box position="relative">
-                <ItemImage sx={{
-                  ...(item?.background_url && {
-                    '&::before': {
-                      backgroundImage: `url(${item.background_url})`,
-                    }
-                  })
-                }}>
+              <Box position='relative'>
+                <ItemImage
+                  sx={{
+                    ...(item?.background_url && {
+                      '&::before': {
+                        backgroundImage: `url(${item.background_url})`,
+                      },
+                    }),
+                  }}
+                >
                   <img src={item?.image_url} alt={item?.item_name} />
                 </ItemImage>
                 {item?.marketplace?.status === 'active' && (
                   <MarketPriceChip>
-                    <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+                    <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
                     {item.marketplace.price}
                   </MarketPriceChip>
                 )}
               </Box>
-              
-              <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
+
+              <Typography
+                variant='h5'
+                sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}
+              >
                 {item.item_name}
               </Typography>
 
-              <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}>
-                <RarityChip 
-                  rarity={item.rarity} 
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: 2,
+                  mb: 3,
+                }}
+              >
+                <RarityChip
+                  rarity={item.rarity}
                   label={getRarityLabel(item.rarity)}
                   icon={getRarityIcon(item.rarity) || undefined}
                 />
                 {item.upgrade_level === 1 && (
-                  <Chip label="Улучшено" color="success" size="small" sx={{ ml: 1, fontWeight: 600 }} />
+                  <Chip
+                    label='Улучшено'
+                    color='success'
+                    size='small'
+                    sx={{ ml: 1, fontWeight: 600 }}
+                  />
                 )}
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'text.secondary', mb: 1 }}
+                >
                   Пак: {item.pack_name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'text.secondary', mb: 1 }}
+                >
                   Статус: {item.is_equipped ? 'Экипировано' : 'Не экипировано'}
                 </Typography>
                 {item.item_number && item.total_count && (
-                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'text.secondary', mb: 1 }}
+                  >
                     Экземпляр: {item.item_number} из {item.total_count}
                   </Typography>
                 )}
               </Box>
 
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 1 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 1,
+                }}
+              >
                 <Button
-                  size="small"
-                  variant="text"
-                  startIcon={<ContentCopyIcon fontSize="small" />}
+                  size='small'
+                  variant='text'
+                  startIcon={<ContentCopyIcon fontSize='small' />}
                   onClick={handleCopyLink}
                   sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
                 >
@@ -737,13 +793,23 @@ const ItemInfoModal = ({
               </Box>
             </Box>
           </DialogContent>
-          <DialogActions sx={{ flexWrap: 'wrap', gap: 1, justifyContent: 'center', pb: 3, px: 3 }}>
+          <DialogActions
+            sx={{
+              flexWrap: 'wrap',
+              gap: 1,
+              justifyContent: 'center',
+              pb: 3,
+              px: 3,
+            }}
+          >
             {!item.is_equipped ? (
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={handleEquipItem}
                 disabled={upgradeLoading}
-                startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
+                startIcon={
+                  upgradeLoading ? <CircularProgress size={16} /> : null
+                }
                 fullWidth
                 sx={{
                   borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -759,10 +825,12 @@ const ItemInfoModal = ({
               </Button>
             ) : (
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={handleUnequipItem}
                 disabled={upgradeLoading}
-                startIcon={upgradeLoading ? <CircularProgress size={16} /> : null}
+                startIcon={
+                  upgradeLoading ? <CircularProgress size={16} /> : null
+                }
                 fullWidth
                 sx={{
                   borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -779,10 +847,20 @@ const ItemInfoModal = ({
             )}
             {item.upgradeable && item.upgrade_level === 0 && (
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={() => setUpgradeConfirmOpen(true)}
-                disabled={upgradeLoading || userPoints < Math.floor(item.pack_price ? item.pack_price / 2 : 0)}
-                startIcon={upgradeLoading ? <CircularProgress size={16} /> : <UpgradeIcon />}
+                disabled={
+                  upgradeLoading ||
+                  userPoints <
+                    Math.floor(item.pack_price ? item.pack_price / 2 : 0)
+                }
+                startIcon={
+                  upgradeLoading ? (
+                    <CircularProgress size={16} />
+                  ) : (
+                    <UpgradeIcon />
+                  )
+                }
                 fullWidth
                 sx={{
                   borderColor: 'rgba(255, 152, 0, 0.3)',
@@ -794,11 +872,13 @@ const ItemInfoModal = ({
                   },
                 }}
               >
-                {upgradeLoading ? 'Улучшение...' : `Улучшить (${Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков)`}
+                {upgradeLoading
+                  ? 'Улучшение...'
+                  : `Улучшить (${Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков)`}
               </Button>
             )}
             <Button
-              variant="outlined"
+              variant='outlined'
               onClick={handleTransferItem}
               startIcon={<SendIcon />}
               fullWidth
@@ -818,37 +898,36 @@ const ItemInfoModal = ({
             >
               Передать (5000 баллов)
             </Button>
-            {!item?.is_equipped && (
-              item?.marketplace?.status === 'active' ? (
+            {!item?.is_equipped &&
+              (item?.marketplace?.status === 'active' ? (
                 <Button
-                  variant="outlined"
-                  color="error"
+                  variant='outlined'
+                  color='error'
                   startIcon={<RemoveFromMarketIcon />}
                   onClick={handleRemoveFromMarketplace}
                   disabled={marketplaceLoading}
                   fullWidth
                 >
                   {marketplaceLoading ? (
-                    <CircularProgress size={24} color="inherit" />
+                    <CircularProgress size={24} color='inherit' />
                   ) : (
                     'Снять с продажи'
                   )}
                 </Button>
               ) : (
                 <Button
-                  variant="outlined"
-                  color="primary"
+                  variant='outlined'
+                  color='primary'
                   startIcon={<StoreIcon />}
                   onClick={() => setMarketplaceModalOpen(true)}
                   fullWidth
                 >
                   Выставить на маркетплейс
                 </Button>
-              )
-            )}
+              ))}
             <Button
-              variant="outlined"
-              color="error"
+              variant='outlined'
+              color='error'
               startIcon={<DeleteIcon />}
               onClick={() => setRecycleConfirmOpen(true)}
               disabled={recycleLoading}
@@ -867,13 +946,13 @@ const ItemInfoModal = ({
             </Button>
           </DialogActions>
         </UpgradeEffects>
-        </StyledDialog>
+      </StyledDialog>
 
       {/* Модалка передачи предмета */}
       <Dialog
         open={transferModalOpen}
         onClose={handleCloseTransferModal}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
@@ -887,18 +966,20 @@ const ItemInfoModal = ({
               maxWidth: '100vw',
               maxHeight: '100vh',
               borderRadius: 0,
-            }
-          }
+            },
+          },
         }}
       >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          color: 'text.primary',
-          pb: 1
-        }}>
-          <Box component="div" sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'text.primary',
+            pb: 1,
+          }}
+        >
+          <Box component='div' sx={{ fontWeight: 600, fontSize: '1.25rem' }}>
             Передать предмет
           </Box>
           <IconButton
@@ -912,59 +993,61 @@ const ItemInfoModal = ({
           {item && (
             <>
               <Box sx={{ mb: 3, textAlign: 'center' }}>
-                <ItemImage sx={{ 
-                  width: 125,
-                  height: 125,
-                  mb: 2,
-                  ...(item?.background_url && {
-                    '&::before': {
-                      backgroundImage: `url(${item.background_url})`,
-                    }
-                  })
-                }}>
-                  <img 
+                <ItemImage
+                  sx={{
+                    width: 125,
+                    height: 125,
+                    mb: 2,
+                    ...(item?.background_url && {
+                      '&::before': {
+                        backgroundImage: `url(${item.background_url})`,
+                      },
+                    }),
+                  }}
+                >
+                  <img
                     src={item.image_url}
                     alt={item.item_name}
-                    onError={(e) => {
+                    onError={e => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
                     }}
                   />
                 </ItemImage>
-                <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography variant='h5' sx={{ fontWeight: 600, mb: 1 }}>
                   {item.item_name}
                 </Typography>
                 <RarityChip
                   rarity={item.rarity || 'common'}
                   label={getRarityLabel(item.rarity || 'common')}
                   icon={getRarityIcon(item.rarity || 'common') || undefined}
-                  size="small"
+                  size='small'
                 />
               </Box>
-              <Alert severity="info" sx={{ mb: 3 }}>
+              <Alert severity='info' sx={{ mb: 3 }}>
                 Стоимость передачи: 5000 баллов
               </Alert>
               {transferError && (
-                <Alert severity="error" sx={{ mb: 3 }}>
+                <Alert severity='error' sx={{ mb: 3 }}>
                   {transferError}
                 </Alert>
               )}
               <TextField
                 fullWidth
-                label="Имя пользователя получателя"
+                label='Имя пользователя получателя'
                 value={recipientUsername}
                 onChange={handleUsernameChange}
-                placeholder="Введите username получателя"
+                placeholder='Введите username получателя'
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">
+                    <InputAdornment position='end'>
                       {userSearch.loading ? (
                         <CircularProgress size={20} />
                       ) : (
                         <SearchIcon sx={{ color: 'text.secondary' }} />
                       )}
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
@@ -989,26 +1072,39 @@ const ItemInfoModal = ({
               {userSearch.suggestions.length > 0 && !userSearch.exists && (
                 <SuggestionsContainer>
                   <Box sx={{ p: 2, pb: 1 }}>
-                    <Typography variant="subtitle2" sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>
+                    <Typography
+                      variant='subtitle2'
+                      sx={{
+                        color: 'rgba(255,255,255,0.6)',
+                        fontSize: '0.85rem',
+                      }}
+                    >
                       Похожие пользователи:
                     </Typography>
                   </Box>
-                  {userSearch.suggestions.map((user) => (
+                  {userSearch.suggestions.map(user => (
                     <SuggestionItem
                       key={user.id}
                       onClick={() => selectSuggestion(user.username, user.id)}
                     >
-                      <UserAvatar 
-                        src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
+                      <UserAvatar
+                        src={
+                          user.photo
+                            ? `/static/uploads/avatar/${user.id}/${user.photo}`
+                            : undefined
+                        }
                         alt={user.username}
                       >
                         {user.username.charAt(0).toUpperCase()}
                       </UserAvatar>
                       <Box sx={{ flex: 1 }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        <Typography
+                          variant='subtitle1'
+                          sx={{ fontWeight: 'bold' }}
+                        >
                           {user.name}
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant='body2' color='text.secondary'>
                           @{user.username}
                         </Typography>
                       </Box>
@@ -1017,18 +1113,20 @@ const ItemInfoModal = ({
                 </SuggestionsContainer>
               )}
               {userSearch.exists && selectedRecipientId && (
-                <Box sx={{ 
-                  p: 2, 
-                  mb: 3, 
-                  bgcolor: 'rgba(40, 40, 40, 0.4)', 
-                  backdropFilter: 'blur(5px)',
-                  borderRadius: 2,
-                  border: '1px solid rgba(60, 60, 60, 0.4)',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
+                <Box
+                  sx={{
+                    p: 2,
+                    mb: 3,
+                    bgcolor: 'rgba(40, 40, 40, 0.4)',
+                    backdropFilter: 'blur(5px)',
+                    borderRadius: 2,
+                    border: '1px solid rgba(60, 60, 60, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
                   <CheckCircleIcon sx={{ color: '#4CAF50', mr: 1 }} />
-                  <Typography variant="body2">
+                  <Typography variant='body2'>
                     Получатель подтвержден: <strong>{recipientUsername}</strong>
                   </Typography>
                 </Box>
@@ -1052,9 +1150,16 @@ const ItemInfoModal = ({
           </Button>
           <Button
             onClick={handleConfirmTransfer}
-            disabled={transferLoading || !recipientUsername.trim() || !selectedRecipientId || userPoints < 5000}
-            variant="contained"
-            startIcon={transferLoading ? <CircularProgress size={16} /> : <SendIcon />}
+            disabled={
+              transferLoading ||
+              !recipientUsername.trim() ||
+              !selectedRecipientId ||
+              userPoints < 5000
+            }
+            variant='contained'
+            startIcon={
+              transferLoading ? <CircularProgress size={16} /> : <SendIcon />
+            }
             sx={{
               background: 'rgba(255, 255, 255, 0.1)',
               color: 'text.primary',
@@ -1077,22 +1182,45 @@ const ItemInfoModal = ({
       </Dialog>
 
       {/* Модалка подтверждения улучшения */}
-      <Dialog open={upgradeConfirmOpen} onClose={() => setUpgradeConfirmOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1 }}>Вы уверены?</DialogTitle>
+      <Dialog
+        open={upgradeConfirmOpen}
+        onClose={() => setUpgradeConfirmOpen(false)}
+        maxWidth='xs'
+        fullWidth
+      >
+        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1 }}>
+          Вы уверены?
+        </DialogTitle>
         <DialogContent sx={{ pb: 0 }}>
-          <Typography variant="body2">Потратить {Math.floor(item.pack_price ? item.pack_price / 2 : 0)} очков на улучшение этого предмета?</Typography>
+          <Typography variant='body2'>
+            Потратить {Math.floor(item.pack_price ? item.pack_price / 2 : 0)}{' '}
+            очков на улучшение этого предмета?
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setUpgradeConfirmOpen(false)} color="secondary" size="small">Нет</Button>
-          <Button onClick={handleUpgradeItem} color="primary" size="small" disabled={upgradeLoading}>{upgradeLoading ? <CircularProgress size={16} /> : 'Да'}</Button>
+          <Button
+            onClick={() => setUpgradeConfirmOpen(false)}
+            color='secondary'
+            size='small'
+          >
+            Нет
+          </Button>
+          <Button
+            onClick={handleUpgradeItem}
+            color='primary'
+            size='small'
+            disabled={upgradeLoading}
+          >
+            {upgradeLoading ? <CircularProgress size={16} /> : 'Да'}
+          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Модалка подтверждения утилизации */}
-      <Dialog 
-        open={recycleConfirmOpen} 
-        onClose={() => setRecycleConfirmOpen(false)} 
-        maxWidth="xs" 
+      <Dialog
+        open={recycleConfirmOpen}
+        onClose={() => setRecycleConfirmOpen(false)}
+        maxWidth='xs'
         fullWidth
         PaperProps={{
           sx: {
@@ -1100,34 +1228,45 @@ const ItemInfoModal = ({
             backdropFilter: 'blur(20px)',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
-          }
+          },
         }}
       >
-        <DialogTitle sx={{ fontSize: '1.1rem', fontWeight: 600, pb: 1, color: 'text.primary' }}>
+        <DialogTitle
+          sx={{
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            pb: 1,
+            color: 'text.primary',
+          }}
+        >
           Утилизировать предмет?
         </DialogTitle>
         <DialogContent sx={{ pb: 0 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Вы получите {Math.floor(item.pack_price ? item.pack_price * 0.05 : 0)} баллов (5% от стоимости пака)
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+            Вы получите{' '}
+            {Math.floor(item.pack_price ? item.pack_price * 0.05 : 0)} баллов
+            (5% от стоимости пака)
           </Typography>
-          <Typography variant="body2" color="error">
+          <Typography variant='body2' color='error'>
             Это действие нельзя отменить!
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button 
-            onClick={() => setRecycleConfirmOpen(false)} 
-            color="inherit"
+          <Button
+            onClick={() => setRecycleConfirmOpen(false)}
+            color='inherit'
             sx={{ color: 'text.secondary' }}
           >
             Отмена
           </Button>
-          <Button 
-            onClick={handleRecycleItem} 
-            color="error" 
-            variant="contained"
+          <Button
+            onClick={handleRecycleItem}
+            color='error'
+            variant='contained'
             disabled={recycleLoading}
-            startIcon={recycleLoading ? <CircularProgress size={16} /> : <DeleteIcon />}
+            startIcon={
+              recycleLoading ? <CircularProgress size={16} /> : <DeleteIcon />
+            }
           >
             {recycleLoading ? 'Утилизация...' : 'Утилизировать'}
           </Button>
@@ -1144,27 +1283,29 @@ const ItemInfoModal = ({
             backdropFilter: 'blur(20px)',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
-          }
+          },
         }}
       >
-        <DialogTitle>
-          Выставить на маркетплейс
-        </DialogTitle>
+        <DialogTitle>Выставить на маркетплейс</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" mb={2}>
+          <Typography variant='body2' color='text.secondary' mb={2}>
             Укажите цену, за которую хотите продать предмет
           </Typography>
           <TextField
             fullWidth
-            type="number"
-            label="Цена"
+            type='number'
+            label='Цена'
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={e => setPrice(e.target.value)}
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
+                <InputAdornment position='end'>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <img src="/static/icons/KBalls.svg" alt="KBalls" style={{ width: 16, height: 16 }} />
+                    <img
+                      src='/static/icons/KBalls.svg'
+                      alt='KBalls'
+                      style={{ width: 16, height: 16 }}
+                    />
                   </Box>
                 </InputAdornment>
               ),
@@ -1172,17 +1313,20 @@ const ItemInfoModal = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setMarketplaceModalOpen(false)} color="inherit">
+          <Button
+            onClick={() => setMarketplaceModalOpen(false)}
+            color='inherit'
+          >
             Отмена
           </Button>
           <Button
             onClick={handleListOnMarketplace}
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             disabled={!price || marketplaceLoading}
           >
             {marketplaceLoading ? (
-              <CircularProgress size={24} color="inherit" />
+              <CircularProgress size={24} color='inherit' />
             ) : (
               'Выставить'
             )}
@@ -1198,29 +1342,32 @@ const ItemInfoModal = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         sx={{
           '& .MuiSnackbarContent-root': {
-            background: notification.severity === 'error' 
-              ? 'rgba(244, 67, 54, 0.9)' 
-              : notification.severity === 'warning'
-              ? 'rgba(255, 152, 0, 0.9)'
-              : notification.severity === 'info'
-              ? 'rgba(33, 150, 243, 0.9)'
-              : 'rgba(76, 175, 80, 0.9)',
+            background:
+              notification.severity === 'error'
+                ? 'rgba(244, 67, 54, 0.9)'
+                : notification.severity === 'warning'
+                  ? 'rgba(255, 152, 0, 0.9)'
+                  : notification.severity === 'info'
+                    ? 'rgba(33, 150, 243, 0.9)'
+                    : 'rgba(76, 175, 80, 0.9)',
             backdropFilter: 'blur(10px)',
             borderRadius: 2,
             fontWeight: 500,
-          }
+          },
         }}
       >
-        <Alert 
-          onClose={handleCloseNotification} 
-          severity={notification.severity as 'success' | 'error' | 'warning' | 'info'}
-          sx={{ 
+        <Alert
+          onClose={handleCloseNotification}
+          severity={
+            notification.severity as 'success' | 'error' | 'warning' | 'info'
+          }
+          sx={{
             width: '100%',
             background: 'transparent',
             color: 'white',
             '& .MuiAlert-icon': {
-              color: 'white'
-            }
+              color: 'white',
+            },
           }}
         >
           {notification.message}
@@ -1230,4 +1377,4 @@ const ItemInfoModal = ({
   );
 };
 
-export default ItemInfoModal; 
+export default ItemInfoModal;

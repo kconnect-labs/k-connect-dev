@@ -34,27 +34,26 @@
   margin-left: 8px;
   display: flex;
   align-items: center;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .logo-text-content {
-  color: #FFFFFF;
+  color: #ffffff;
   opacity: 0.9;
   line-height: 1.2;
   font-weight: var(--font-weight-black);
 }
-
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .logo-link {
     transition: none;
   }
-  
+
   .logo-link:hover {
     transform: none;
   }
-  
+
   .logo-svg {
     transition: none;
   }
@@ -81,8 +80,8 @@
   .header-logo {
     color: black !important;
   }
-  
+
   .logo-text-content {
     color: black !important;
   }
-} 
+}

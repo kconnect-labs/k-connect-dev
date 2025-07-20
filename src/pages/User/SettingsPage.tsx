@@ -1,10 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Typography, Button, IconButton, GlobalStyles, Grid } from '@mui/material';
-import { 
-  Person, 
-  Notifications, 
-  Palette, 
-  Security, 
+import {
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  GlobalStyles,
+  Grid,
+} from '@mui/material';
+import {
+  Person,
+  Notifications,
+  Palette,
+  Security,
   PhotoCamera,
   Edit,
   Chat,
@@ -14,33 +21,40 @@ import {
   AccountCircle,
   EmojiEvents,
   AlternateEmail,
-  Favorite
+  Favorite,
 } from '@mui/icons-material';
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
 import ProfilePreview from './SettingsPage/components/ProfilePreview';
 import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
-import { useProfile, useProfileInfo, useSubscription } from './SettingsPage/hooks';
+import {
+  useProfile,
+  useProfileInfo,
+  useSubscription,
+} from './SettingsPage/hooks';
 import { useLocalUser } from './SettingsPage/hooks/useLocalUser';
 import { AuthContext } from '../../context/AuthContext';
 
 const SettingsPage = () => {
   const { user, isAuthenticated } = useContext<any>(AuthContext);
   console.log('SettingsPage - AuthContext data:', { user, isAuthenticated });
-  
+
   const localUser = useLocalUser();
   console.log('SettingsPage - LocalUser data:', localUser);
-  
+
   // Используем данные из AuthContext или localStorage как fallback
   const displayUser = user || localUser;
-  
+
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
-  const [successModal, setSuccessModal] = useState<{ open: boolean; message: string }>({
+  const [successModal, setSuccessModal] = useState<{
+    open: boolean;
+    message: string;
+  }>({
     open: false,
-    message: 'Обновлено'
+    message: 'Обновлено',
   });
 
   const {
@@ -54,7 +68,11 @@ const SettingsPage = () => {
     fetchProfile,
   } = useProfile();
 
-  console.log('SettingsPage - useProfile data:', { profileData, loading, error });
+  console.log('SettingsPage - useProfile data:', {
+    profileData,
+    loading,
+    error,
+  });
 
   const {
     profileInfo,
@@ -78,7 +96,16 @@ const SettingsPage = () => {
   const [settingsLoading, setSettingsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('SettingsPage useEffect - isAuthenticated:', isAuthenticated, 'user:', user, 'localUser:', localUser, 'profileData:', profileData);
+    console.log(
+      'SettingsPage useEffect - isAuthenticated:',
+      isAuthenticated,
+      'user:',
+      user,
+      'localUser:',
+      localUser,
+      'profileData:',
+      profileData
+    );
     const currentUser = user || localUser;
     if (currentUser && currentUser.username) {
       fetchProfile(currentUser.username);
@@ -89,14 +116,16 @@ const SettingsPage = () => {
   // Показываем загрузку если пользователь еще не загружен
   if (!isAuthenticated && !localUser) {
     return (
-      <Box sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: { xs: 1, sm: 2 }
-      }}>
-        <Typography variant="h6" sx={{ color: 'white' }}>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: { xs: 1, sm: 2 },
+        }}
+      >
+        <Typography variant='h6' sx={{ color: 'white' }}>
           Загрузка...
         </Typography>
       </Box>
@@ -161,7 +190,11 @@ const SettingsPage = () => {
     }
   };
 
-  const handleSaveProfileInfo = async (info: { name: string; username: string; about: string }) => {
+  const handleSaveProfileInfo = async (info: {
+    name: string;
+    username: string;
+    about: string;
+  }) => {
     try {
       await updateProfileInfo(info);
       await fetchProfile(); // Обновляем данные профиля
@@ -205,95 +238,92 @@ const SettingsPage = () => {
       title: 'Профиль',
       subtitle: 'Аватар, баннер',
       icon: <Person />,
-      color: 'rgba(99, 101, 241, 0.66)' // #6366f1 с прозрачностью
+      color: 'rgba(99, 101, 241, 0.66)', // #6366f1 с прозрачностью
     },
     {
       id: 'info',
       title: 'Основная информация',
       subtitle: 'Имя, юзернейм, описание',
       icon: <Edit />,
-      color: 'rgba(139, 92, 246, 0.66)' // #8b5cf6 с прозрачностью
+      color: 'rgba(139, 92, 246, 0.66)', // #8b5cf6 с прозрачностью
     },
     {
       id: 'status',
       title: 'Статусы',
       subtitle: 'Настройка статуса профиля',
       icon: <Chat />,
-      color: 'rgba(6, 182, 212, 0.66)' // #06b6d4 с прозрачностью
+      color: 'rgba(6, 182, 212, 0.66)', // #06b6d4 с прозрачностью
     },
     {
       id: 'customization',
       title: 'Кастомизация',
       subtitle: 'Обои, цвета, декорации',
       icon: <Brush />,
-      color: 'rgba(236, 72, 153, 0.66)' // #ec4899 с прозрачностью
+      color: 'rgba(236, 72, 153, 0.66)', // #ec4899 с прозрачностью
     },
     {
       id: 'badges',
       title: 'Бейджи',
       subtitle: 'Управление достижениями',
       icon: <EmojiEvents />,
-      color: 'rgba(255, 193, 7, 0.66)' // #ffc107 с прозрачностью
+      color: 'rgba(255, 193, 7, 0.66)', // #ffc107 с прозрачностью
     },
     {
       id: 'socials',
       title: 'Социальные сети',
       subtitle: 'Ссылки на социальные сети',
       icon: <Link />,
-      color: 'rgba(16, 185, 129, 0.66)' // #10b981 с прозрачностью
+      color: 'rgba(16, 185, 129, 0.66)', // #10b981 с прозрачностью
     },
     {
       id: 'notifications',
       title: 'Уведомления',
       subtitle: 'Настройки уведомлений и оповещений',
       icon: <Notifications />,
-      color: 'rgba(16, 185, 129, 0.66)' // #10b981 с прозрачностью
+      color: 'rgba(16, 185, 129, 0.66)', // #10b981 с прозрачностью
     },
     {
       id: 'security',
       title: 'Безопасность',
       subtitle: 'Данные входа и защита аккаунта',
       icon: <Security />,
-      color: 'rgba(239, 68, 68, 0.66)' // #ef4444 с прозрачностью
+      color: 'rgba(239, 68, 68, 0.66)', // #ef4444 с прозрачностью
     },
     {
       id: 'experimental',
       title: 'Экспериментальные функции',
       subtitle: 'Функции в разработке',
       icon: <Science />,
-      color: 'rgba(168, 85, 247, 0.66)' // #a855f7 с прозрачностью
+      color: 'rgba(168, 85, 247, 0.66)', // #a855f7 с прозрачностью
     },
     {
       id: 'connections',
       title: 'Коннектики',
       subtitle: 'Поиск и управление связями',
       icon: <Favorite />,
-      color: 'rgba(236, 72, 153, 0.66)' // #ec4899 с прозрачностью
+      color: 'rgba(236, 72, 153, 0.66)', // #ec4899 с прозрачностью
     },
     {
       id: 'linked',
       title: 'Связанные аккаунты',
       subtitle: 'Telegram, Element и другие',
       icon: <AccountCircle />,
-      color: 'rgba(59, 130, 246, 0.66)' // #3b82f6 с прозрачностью
+      color: 'rgba(59, 130, 246, 0.66)', // #3b82f6 с прозрачностью
     },
     {
       id: 'sessions',
       title: 'Сессии',
       subtitle: 'Управление сессиями',
       icon: <Security />,
-      color: 'rgba(245, 158, 11, 0.66)' // #f59e0b с прозрачностью
+      color: 'rgba(245, 158, 11, 0.66)', // #f59e0b с прозрачностью
     },
     {
       id: 'usernames',
       title: 'Магазин юзернеймов',
       subtitle: 'Покупка и управление юзернеймами',
       icon: <AlternateEmail />,
-      color: 'rgba(156, 39, 176, 0.66)' // #9c27b0 с прозрачностью
+      color: 'rgba(156, 39, 176, 0.66)', // #9c27b0 с прозрачностью
     },
-
-
-    
   ];
 
   return (
@@ -323,39 +353,42 @@ const SettingsPage = () => {
           padding: { xs: 1, sm: 2 },
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
-        <Typography variant="h6" sx={{ 
-          color: 'white', 
-          mb: 1,
-          mt: 1,
-          padding: '8px 12px',
-          width: '100%',
-          maxWidth: 1200,
-          background: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: 1,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-        }}>
+        <Typography
+          variant='h6'
+          sx={{
+            color: 'white',
+            mb: 1,
+            mt: 1,
+            padding: '8px 12px',
+            width: '100%',
+            maxWidth: 1200,
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 1,
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+          }}
+        >
           Настройки
         </Typography>
-        
-        <Grid 
-          container 
+
+        <Grid
+          container
           spacing={2}
           sx={{
             width: '100%',
             maxWidth: 1200,
             flexDirection: { xs: 'column', lg: 'row' },
-            flexWrap: { xs: 'nowrap', lg: 'nowrap' }
+            flexWrap: { xs: 'nowrap', lg: 'nowrap' },
           }}
         >
           {/* Левая колонка - список настроек */}
           <Grid item xs={12} lg={8} sx={{ order: { xs: 1, lg: 1 } }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {settingsSections.map((section) => (
+              {settingsSections.map(section => (
                 <Button
                   key={section.id}
                   onClick={() => handleOpenModal(section.id)}
@@ -375,11 +408,11 @@ const SettingsPage = () => {
                     '&:hover': {
                       background: 'rgba(255, 255, 255, 0.1)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
-                      transform: 'translateY(-1px)'
+                      transform: 'translateY(-1px)',
                     },
                     '&:active': {
-                      transform: 'translateY(0)'
-                    }
+                      transform: 'translateY(0)',
+                    },
                   }}
                 >
                   <Box
@@ -392,28 +425,28 @@ const SettingsPage = () => {
                       borderRadius: 1,
                       background: section.color,
                       marginRight: 2,
-                      flexShrink: 0
+                      flexShrink: 0,
                     }}
                   >
                     {section.icon}
                   </Box>
-                  
+
                   <Box sx={{ textAlign: 'left', flex: 1 }}>
                     <Typography
-                      variant="h6"
+                      variant='h6'
                       sx={{
                         fontSize: '1rem',
                         fontWeight: 600,
-                        marginBottom: 0.5
+                        marginBottom: 0.5,
                       }}
                     >
                       {section.title}
                     </Typography>
                     <Typography
-                      variant="body2"
+                      variant='body2'
                       sx={{
                         color: 'rgba(255, 255, 255, 0.7)',
-                        fontSize: '0.875rem'
+                        fontSize: '0.875rem',
                       }}
                     >
                       {section.subtitle}
@@ -429,10 +462,12 @@ const SettingsPage = () => {
                       height: 24,
                       borderRadius: 1,
                       background: 'rgba(255, 255, 255, 0.1)',
-                      marginLeft: 1
+                      marginLeft: 1,
                     }}
                   >
-                    <Edit sx={{ fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }} />
+                    <Edit
+                      sx={{ fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }}
+                    />
                   </Box>
                 </Button>
               ))}
@@ -440,16 +475,23 @@ const SettingsPage = () => {
           </Grid>
 
           {/* Правая колонка - превью профиля (только для десктопа) */}
-          <Grid item xs={12} lg={4} sx={{ 
-            order: { xs: 2, lg: 2 },
-            display: { xs: 'none', lg: 'block' }
-          }}>
-            <Box sx={{
-              position: 'sticky',
-              top: '80px',
-              height: 'fit-content',
-              zIndex: 2
-            }}>
+          <Grid
+            item
+            xs={12}
+            lg={4}
+            sx={{
+              order: { xs: 2, lg: 2 },
+              display: { xs: 'none', lg: 'block' },
+            }}
+          >
+            <Box
+              sx={{
+                position: 'sticky',
+                top: '80px',
+                height: 'fit-content',
+                zIndex: 2,
+              }}
+            >
               <ProfilePreview user={displayUser} profileData={profileData} />
             </Box>
           </Grid>
@@ -466,7 +508,12 @@ const SettingsPage = () => {
           onBannerDelete={handleBannerDelete}
           onSaveProfileInfo={handleSaveProfileInfo}
           profileInfo={profileInfo}
-          loading={loading || profileInfoLoading || subscriptionLoading || settingsLoading}
+          loading={
+            loading ||
+            profileInfoLoading ||
+            subscriptionLoading ||
+            settingsLoading
+          }
           subscription={subscription}
           settings={settings}
           onStatusUpdate={handleStatusUpdate}

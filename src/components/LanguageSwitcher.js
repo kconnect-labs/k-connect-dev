@@ -7,7 +7,7 @@ const LanguageSwitcher = () => {
   const { currentLanguage, changeLanguage } = useLanguage();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -15,7 +15,7 @@ const LanguageSwitcher = () => {
     setAnchorEl(null);
   };
 
-  const handleLanguageChange = (language) => {
+  const handleLanguageChange = language => {
     changeLanguage(language);
     handleClose();
   };
@@ -24,8 +24,8 @@ const LanguageSwitcher = () => {
     <>
       <IconButton
         onClick={handleClick}
-        color="inherit"
-        size="small"
+        color='inherit'
+        size='small'
         sx={{
           '&:hover': {
             backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -47,13 +47,13 @@ const LanguageSwitcher = () => {
           horizontal: 'right',
         }}
       >
-        <MenuItem 
+        <MenuItem
           onClick={() => handleLanguageChange('RU')}
           selected={currentLanguage === 'RU'}
         >
           Русский
         </MenuItem>
-        <MenuItem 
+        <MenuItem
           onClick={() => handleLanguageChange('EN')}
           selected={currentLanguage === 'EN'}
         >
@@ -64,4 +64,4 @@ const LanguageSwitcher = () => {
   );
 };
 
-export default LanguageSwitcher; 
+export default LanguageSwitcher;

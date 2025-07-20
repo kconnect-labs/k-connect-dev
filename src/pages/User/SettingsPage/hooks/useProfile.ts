@@ -46,56 +46,72 @@ export const useProfile = (): UseProfileReturn => {
 
   console.log('useProfile - AuthContext user:', user);
 
-  const fetchProfile = useCallback(async (username?: string) => {
-    console.log('fetchProfile called with username:', username, 'user?.username:', user?.username);
-    setLoading(true);
-    setError(null);
-    try {
-      const uname = username || user?.username;
-      console.log('fetchProfile - uname:', uname);
-      if (!uname) throw new Error('No username provided');
-      const response = await axios.get(`/api/profile/${uname}`);
-      console.log('API response for profile:', response.data);
-      console.log('Socials in API response:', response.data.socials);
-      
-      if (response.data) {
-        setProfileData({
-          avatar: response.data.user?.avatar_url,
-          banner: response.data.user?.banner_url,
-          username: response.data.user?.username,
-          name: response.data.user?.name,
-          about: response.data.user?.about,
-          status_text: response.data.status_text,
-          status_color: response.data.status_color,
-          socials: response.data.socials,
-          user: response.data.user,
-          main_account_subscription: response.data.main_account_subscription,
-        });
+  const fetchProfile = useCallback(
+    async (username?: string) => {
+      console.log(
+        'fetchProfile called with username:',
+        username,
+        'user?.username:',
+        user?.username
+      );
+      setLoading(true);
+      setError(null);
+      try {
+        const uname = username || user?.username;
+        console.log('fetchProfile - uname:', uname);
+        if (!uname) throw new Error('No username provided');
+        const response = await axios.get(`/api/profile/${uname}`);
+        console.log('API response for profile:', response.data);
+        console.log('Socials in API response:', response.data.socials);
+
+        if (response.data) {
+          setProfileData({
+            avatar: response.data.user?.avatar_url,
+            banner: response.data.user?.banner_url,
+            username: response.data.user?.username,
+            name: response.data.user?.name,
+            about: response.data.user?.about,
+            status_text: response.data.status_text,
+            status_color: response.data.status_color,
+            socials: response.data.socials,
+            user: response.data.user,
+            main_account_subscription: response.data.main_account_subscription,
+          });
+        }
+      } catch (err) {
+        console.error('fetchProfile error:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error('fetchProfile error:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error');
-    } finally {
-      setLoading(false);
-    }
-  }, [user?.username]); // Зависим только от username, а не от всего объекта user
+    },
+    [user?.username]
+  ); // Зависим только от username, а не от всего объекта user
 
   const updateAvatar = useCallback(async (file: File) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const formData = new FormData();
       formData.append('avatar', file);
 
-      const response = await axios.post('/api/profile/upload-avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        '/api/profile/upload-avatar',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
-      });
+      );
 
       if (response.data.success) {
-        setProfileData(prev => prev ? { ...prev, avatar: response.data.avatar_url } : { avatar: response.data.avatar_url });
+        setProfileData(prev =>
+          prev
+            ? { ...prev, avatar: response.data.avatar_url }
+            : { avatar: response.data.avatar_url }
+        );
       } else {
         throw new Error(response.data.error || 'Failed to update avatar');
       }
@@ -109,19 +125,27 @@ export const useProfile = (): UseProfileReturn => {
   const updateBanner = useCallback(async (file: File) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const formData = new FormData();
       formData.append('banner', file);
 
-      const response = await axios.post('/api/profile/upload-banner', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        '/api/profile/upload-banner',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
-      });
+      );
 
       if (response.data.success) {
-        setProfileData(prev => prev ? { ...prev, banner: response.data.banner_url } : { banner: response.data.banner_url });
+        setProfileData(prev =>
+          prev
+            ? { ...prev, banner: response.data.banner_url }
+            : { banner: response.data.banner_url }
+        );
       } else {
         throw new Error(response.data.error || 'Failed to update banner');
       }
@@ -135,11 +159,11 @@ export const useProfile = (): UseProfileReturn => {
   const deleteAvatar = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await axios.post('/api/profile/delete-avatar');
       if (response.data.success) {
-        setProfileData(prev => prev ? { ...prev, avatar: undefined } : null);
+        setProfileData(prev => (prev ? { ...prev, avatar: undefined } : null));
       } else {
         throw new Error(response.data.error || 'Failed to delete avatar');
       }
@@ -153,11 +177,11 @@ export const useProfile = (): UseProfileReturn => {
   const deleteBanner = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await axios.post('/api/profile/delete-banner');
       if (response.data.success) {
-        setProfileData(prev => prev ? { ...prev, banner: undefined } : null);
+        setProfileData(prev => (prev ? { ...prev, banner: undefined } : null));
       } else {
         throw new Error(response.data.error || 'Failed to delete banner');
       }
@@ -171,7 +195,7 @@ export const useProfile = (): UseProfileReturn => {
   const updateProfile = useCallback(async (data: Partial<ProfileData>) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
@@ -182,12 +206,12 @@ export const useProfile = (): UseProfileReturn => {
 
       const response = await axios.post('/api/profile/update', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       if (response.data.success) {
-        setProfileData(prev => prev ? { ...prev, ...data } : data);
+        setProfileData(prev => (prev ? { ...prev, ...data } : data));
       } else {
         throw new Error(response.data.error || 'Failed to update profile');
       }
@@ -209,4 +233,4 @@ export const useProfile = (): UseProfileReturn => {
     updateProfile,
     fetchProfile,
   };
-}; 
+};

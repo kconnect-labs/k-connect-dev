@@ -208,7 +208,7 @@
 }
 
 .subscriptionContainer::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -365,8 +365,8 @@
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .gridFullWidth {
     grid-column: 1 / -1;
   }
-} 
+}

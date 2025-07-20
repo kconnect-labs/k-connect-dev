@@ -44,19 +44,24 @@ const Star = styled('div')(({ size, top, left, delay, duration }) => ({
 
 const StarsContainer = () => {
   // Генерируем звезды с рандомными параметрами
-  const stars = React.useMemo(() => 
-    Array.from({ length: 20 }).map((_, i) => ({
-      id: i,
-      size: Math.random() * 2 + 1, // от 1 до 3px
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: Math.random() * 3 + 2, // от 2 до 5 секунд
-    })), []);
+  const stars = React.useMemo(
+    () =>
+      Array.from({ length: 20 }).map((_, i) => ({
+        id: i,
+        size: Math.random() * 2 + 1, // от 1 до 3px
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: Math.random() * 3 + 2, // от 2 до 5 секунд
+      })),
+    []
+  );
 
   return (
     <Box sx={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-      {stars.map(star => <Star key={star.id} {...star} />)}
+      {stars.map(star => (
+        <Star key={star.id} {...star} />
+      ))}
     </Box>
   );
 };
@@ -110,59 +115,57 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
   const { t } = useLanguage();
 
   return (
-		<div
-			className={`${styles.container} ${
-				showCurrentTrack ? styles.hasCurrentTrack : ''
-			}`}
-			onClick={onClick}
-		>
-			<StarsContainer />
-			<div className={styles.contentOverlay}>
-				<h2 className='font-bold text-lg'>
-					{t('music.my_vibe.title')}
-				</h2>
-				<Typography
-					variant='body2'
-					sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}
-				>
-					{t('music.my_vibe.description')}
-				</Typography>
-				<PlayButton sx={{ mt: 2 }}>
-					{isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
-				</PlayButton>
-			</div>
+    <div
+      className={`${styles.container} ${
+        showCurrentTrack ? styles.hasCurrentTrack : ''
+      }`}
+      onClick={onClick}
+    >
+      <StarsContainer />
+      <div className={styles.contentOverlay}>
+        <h2 className='font-bold text-lg'>{t('music.my_vibe.title')}</h2>
+        <Typography
+          variant='body2'
+          sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}
+        >
+          {t('music.my_vibe.description')}
+        </Typography>
+        <PlayButton sx={{ mt: 2 }}>
+          {isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
+        </PlayButton>
+      </div>
 
-			{showCurrentTrack && (
-				<CurrentTrackInfo>
-					<Typography
-						variant='caption'
-						sx={{
-							color: alpha('#FFFFFF', 0.7),
-							display: 'block',
-							fontSize: '0.7rem',
-							fontWeight: 500,
-							mb: 0.5,
-						}}
-					>
+      {showCurrentTrack && (
+        <CurrentTrackInfo>
+          <Typography
+            variant='caption'
+            sx={{
+              color: alpha('#FFFFFF', 0.7),
+              display: 'block',
+              fontSize: '0.7rem',
+              fontWeight: 500,
+              mb: 0.5,
+            }}
+          >
             {t('music.my_vibe.now_playing')}
-					</Typography>
-					<Typography
-						variant='body2'
-						sx={{
-							color: '#FFFFFF',
-							fontWeight: 600,
-							overflow: 'hidden',
-							textOverflow: 'ellipsis',
-							whiteSpace: 'nowrap',
-							fontSize: '0.85rem',
-						}}
-					>
-						{currentTrack.title} - {currentTrack.artist}
-					</Typography>
-				</CurrentTrackInfo>
-			)}
-		</div>
-	)
+          </Typography>
+          <Typography
+            variant='body2'
+            sx={{
+              color: '#FFFFFF',
+              fontWeight: 600,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              fontSize: '0.85rem',
+            }}
+          >
+            {currentTrack.title} - {currentTrack.artist}
+          </Typography>
+        </CurrentTrackInfo>
+      )}
+    </div>
+  );
 };
 
-export default MyVibeWidget; 
+export default MyVibeWidget;

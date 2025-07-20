@@ -11,7 +11,10 @@ const PreviewContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.spacing(1),
   overflow: 'hidden',
-  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.05)'
+      : 'rgba(0, 0, 0, 0.05)',
   width: '120px',
   height: '120px',
   display: 'flex',
@@ -89,7 +92,7 @@ const FileUploadPreview = ({ file, onRemove }) => {
     };
   }, [file]);
 
-  const formatFileSize = (size) => {
+  const formatFileSize = size => {
     if (size < 1024) {
       return `${size} B`;
     } else if (size < 1024 * 1024) {
@@ -99,7 +102,7 @@ const FileUploadPreview = ({ file, onRemove }) => {
     }
   };
 
-  const getFileName = (name) => {
+  const getFileName = name => {
     if (name.length > 20) {
       return name.substring(0, 17) + '...';
     }
@@ -117,7 +120,7 @@ const FileUploadPreview = ({ file, onRemove }) => {
       return (
         <FileTypeIcon>
           <VideoFileIcon />
-          <Typography variant="caption" noWrap>
+          <Typography variant='caption' noWrap>
             {getFileName(file.name)}
           </Typography>
         </FileTypeIcon>
@@ -126,7 +129,7 @@ const FileUploadPreview = ({ file, onRemove }) => {
       return (
         <FileTypeIcon>
           <AudioFileIcon />
-          <Typography variant="caption" noWrap>
+          <Typography variant='caption' noWrap>
             {getFileName(file.name)}
           </Typography>
         </FileTypeIcon>
@@ -135,7 +138,7 @@ const FileUploadPreview = ({ file, onRemove }) => {
       return (
         <FileTypeIcon>
           <InsertDriveFileIcon />
-          <Typography variant="caption" noWrap>
+          <Typography variant='caption' noWrap>
             {getFileName(file.name)}
           </Typography>
         </FileTypeIcon>
@@ -148,14 +151,12 @@ const FileUploadPreview = ({ file, onRemove }) => {
   return (
     <PreviewContainer>
       {renderPreview()}
-      <RemoveButton size="small" onClick={onRemove}>
-        <CloseIcon fontSize="small" />
+      <RemoveButton size='small' onClick={onRemove}>
+        <CloseIcon fontSize='small' />
       </RemoveButton>
-      <PreviewInfo>
-        {formatFileSize(file.size)}
-      </PreviewInfo>
+      <PreviewInfo>{formatFileSize(file.size)}</PreviewInfo>
     </PreviewContainer>
   );
 };
 
-export default FileUploadPreview; 
+export default FileUploadPreview;

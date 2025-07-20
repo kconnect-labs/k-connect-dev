@@ -15,7 +15,7 @@ export function useSafeState(initialValue) {
       mounted.current = false;
     };
   }, []);
-  const safeSetState = useCallback((value) => {
+  const safeSetState = useCallback(value => {
     if (mounted.current) {
       setState(value);
     }
@@ -24,34 +24,37 @@ export function useSafeState(initialValue) {
 }
 /**
  * Custom hook for managing async operations with loading and error states
- * 
+ *
  * @returns {Object} { loading, error, setError, withAsync }
  */
 export function useAsync() {
   const [loading, setLoading] = useSafeState(false);
   const [error, setError] = useSafeState(null);
-  const withAsync = useCallback(async (asyncFn) => {
-    let loadingTimer = null;
-    let isCompleted = false;
-    loadingTimer = setTimeout(() => {
-      if (!isCompleted) {
-        setLoading(true);
+  const withAsync = useCallback(
+    async asyncFn => {
+      let loadingTimer = null;
+      let isCompleted = false;
+      loadingTimer = setTimeout(() => {
+        if (!isCompleted) {
+          setLoading(true);
+        }
+      }, 750);
+      setError(null);
+      try {
+        const result = await asyncFn();
+        isCompleted = true;
+        clearTimeout(loadingTimer);
+        setLoading(false);
+        return result;
+      } catch (err) {
+        isCompleted = true;
+        clearTimeout(loadingTimer);
+        setError(err);
+        setLoading(false);
+        return null;
       }
-    }, 750); 
-    setError(null);
-    try {
-      const result = await asyncFn();
-      isCompleted = true;
-      clearTimeout(loadingTimer);
-      setLoading(false);
-      return result;
-    } catch (err) {
-      isCompleted = true;
-      clearTimeout(loadingTimer);
-      setError(err);
-      setLoading(false);
-      return null;
-    }
-  }, [setLoading, setError]);
+    },
+    [setLoading, setError]
+  );
   return { loading, error, setError, withAsync };
-} 
+}

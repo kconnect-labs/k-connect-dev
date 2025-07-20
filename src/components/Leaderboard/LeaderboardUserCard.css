@@ -7,7 +7,7 @@
   --rank-background: #424242;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --primary-color: #D0BCFF;
+  --primary-color: #d0bcff;
 }
 
 /* Основная карточка */
@@ -19,7 +19,9 @@
   margin-bottom: 5px;
   background-color: var(--card-background);
   box-shadow: var(--card-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
   cursor: pointer;
@@ -213,9 +215,8 @@
   }
 }
 
-
 /* Поддержка кастомных тем через CSS переменные */
-.leaderboard-LEAD-user-card[data-theme="light"] {
+.leaderboard-LEAD-user-card[data-theme='light'] {
   --card-background: #ffffff;
   --text-primary: rgba(0, 0, 0, 0.87);
   --text-secondary: rgba(0, 0, 0, 0.6);
@@ -223,10 +224,10 @@
   --rank-background: #757575;
 }
 
-.leaderboard-LEAD-user-card[data-theme="dark"] {
+.leaderboard-LEAD-user-card[data-theme='dark'] {
   --card-background: #1e1e1e;
   --text-primary: rgba(255, 255, 255, 0.87);
   --text-secondary: rgba(255, 255, 255, 0.6);
   --border-color: rgba(255, 255, 255, 0.12);
   --rank-background: #424242;
-} 
+}

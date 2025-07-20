@@ -4,11 +4,11 @@ import DynamicIslandNotification from './DynamicIslandNotification';
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      notifications: []
+      notifications: [],
     };
   }
 
@@ -42,74 +42,103 @@ class ErrorBoundary extends Component {
   }
 
   // Handle auth error event
-  handleAuthError = (event) => {
-    const { message, shortMessage = "Session expired", notificationType = "auth", animationType = "pill" } = event.detail;
-    
+  handleAuthError = event => {
+    const {
+      message,
+      shortMessage = 'Session expired',
+      notificationType = 'auth',
+      animationType = 'pill',
+    } = event.detail;
+
     this.addNotification({
       id: Date.now(),
       type: 'error',
-      message: message || "Session expired, please log in again",
+      message: message || 'Session expired, please log in again',
       shortMessage: shortMessage,
       notificationType: notificationType,
       animationType: animationType,
       action: 'redirect',
       actionLabel: 'Login',
-      actionUrl: '/login'
+      actionUrl: '/login',
     });
-  }
+  };
 
   // Handle network error event
-  handleNetworkError = (event) => {
-    const { message, shortMessage = "No network", notificationType = "error", animationType = "drop" } = event.detail;
-    
+  handleNetworkError = event => {
+    const {
+      message,
+      shortMessage = 'No network',
+      notificationType = 'error',
+      animationType = 'drop',
+    } = event.detail;
+
     this.addNotification({
       id: Date.now(),
       type: 'warning',
-      message: message || "Problem connecting to server",
+      message: message || 'Problem connecting to server',
       shortMessage: shortMessage,
       notificationType: notificationType,
       animationType: animationType,
       action: 'retry',
-      actionLabel: 'Retry'
+      actionLabel: 'Retry',
     });
-  }
+  };
 
   // Handle rate limit error event
-  handleRateLimitError = (event) => {
-    const { message, shortMessage = "Please wait", notificationType = "warning", animationType = "bounce", retryAfter } = event.detail;
-    
+  handleRateLimitError = event => {
+    const {
+      message,
+      shortMessage = 'Please wait',
+      notificationType = 'warning',
+      animationType = 'bounce',
+      retryAfter,
+    } = event.detail;
+
     this.addNotification({
       id: Date.now(),
       type: 'info',
-      message: message || "Too many requests, please wait",
+      message: message || 'Too many requests, please wait',
       shortMessage: shortMessage,
       notificationType: notificationType,
       animationType: animationType,
       autoHide: true,
-      hideAfter: 5000
+      hideAfter: 5000,
     });
-  }
+  };
 
   // Handle show error event
-  handleShowError = (event) => {
-    const { message, shortMessage = "Error", notificationType = "error", animationType = "pill" } = event.detail;
-    
+  handleShowError = event => {
+    const {
+      message,
+      shortMessage = 'Error',
+      notificationType = 'error',
+      animationType = 'pill',
+    } = event.detail;
+
     this.addNotification({
       id: Date.now(),
       type: 'error',
-      message: message || "An error occurred",
+      message: message || 'An error occurred',
       shortMessage: shortMessage,
       notificationType: notificationType,
       animationType: animationType,
       autoHide: true,
-      hideAfter: 5000
+      hideAfter: 5000,
     });
-  }
+  };
 
   // Handle API retry event
-  handleApiRetry = (event) => {
-    const { url, attempt, delay, message, shortMessage = `Attempt ${attempt || 1}`, notificationType = "info", animationType = "pulse" } = event.detail;
-    
+  handleApiRetry = event => {
+    const {
+      url,
+      attempt,
+      delay,
+      message,
+      shortMessage = `Attempt ${attempt || 1}`,
+      notificationType = 'info',
+      animationType = 'pulse',
+    } = event.detail;
+
     // Show dynamic notification for retry attempt
     this.addNotification({
       id: Date.now(),
@@ -119,14 +148,14 @@ class ErrorBoundary extends Component {
       notificationType: notificationType,
       animationType: animationType,
       autoHide: true,
-      hideAfter: 3000
+      hideAfter: 3000,
     });
-  }
+  };
 
   // Add notification to list
-  addNotification = (notification) => {
+  addNotification = notification => {
     this.setState(prevState => ({
-      notifications: [...prevState.notifications, notification]
+      notifications: [...prevState.notifications, notification],
     }));
 
     // If notification should auto-hide
@@ -135,17 +164,17 @@ class ErrorBoundary extends Component {
         this.removeNotification(notification.id);
       }, notification.hideAfter || 5000);
     }
-  }
+  };
 
   // Remove notification from list
-  removeNotification = (id) => {
+  removeNotification = id => {
     this.setState(prevState => ({
-      notifications: prevState.notifications.filter(n => n.id !== id)
+      notifications: prevState.notifications.filter(n => n.id !== id),
     }));
-  }
+  };
 
   // Handle notification action
-  handleNotificationAction = (notification) => {
+  handleNotificationAction = notification => {
     if (notification.action === 'redirect' && notification.actionUrl) {
       window.location.href = notification.actionUrl;
     } else if (notification.action === 'retry') {
@@ -153,9 +182,9 @@ class ErrorBoundary extends Component {
     } else if (notification.onAction) {
       notification.onAction();
     }
-    
+
     this.removeNotification(notification.id);
-  }
+  };
 
   render() {
     const { hasError, error, errorInfo, notifications } = this.state;
@@ -169,25 +198,25 @@ class ErrorBoundary extends Component {
     // If there's an error and no fallback UI, show default message
     if (hasError) {
       return (
-        <div className="error-boundary">
+        <div className='error-boundary'>
           <h2>Something went wrong :(</h2>
           <p>An error occurred while displaying this section.</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
-            className="error-boundary-button"
+            className='error-boundary-button'
           >
             Refresh page
           </button>
-          
+
           {/* Show error details in development mode */}
           {process.env.NODE_ENV === 'development' && (
-            <details className="error-details">
+            <details className='error-details'>
               <summary>Error details</summary>
               <pre>{error && error.toString()}</pre>
               <pre>{errorInfo && errorInfo.componentStack}</pre>
             </details>
           )}
-          
+
           <style jsx>{`
             .error-boundary {
               padding: 20px;
@@ -198,7 +227,7 @@ class ErrorBoundary extends Component {
               color: #721c24;
               text-align: center;
             }
-            
+
             .error-boundary-button {
               padding: 8px 16px;
               background-color: #dc3545;
@@ -208,7 +237,7 @@ class ErrorBoundary extends Component {
               cursor: pointer;
               margin-top: 10px;
             }
-            
+
             .error-details {
               margin-top: 20px;
               text-align: left;
@@ -216,7 +245,7 @@ class ErrorBoundary extends Component {
               padding: 10px;
               border-radius: 4px;
             }
-            
+
             .error-details pre {
               overflow: auto;
               margin: 10px 0;
@@ -234,7 +263,7 @@ class ErrorBoundary extends Component {
     return (
       <>
         {children}
-        
+
         {/* Show dynamic iOS notifications */}
         {notifications.length > 0 && (
           <>
@@ -265,4 +294,4 @@ class ErrorBoundary extends Component {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

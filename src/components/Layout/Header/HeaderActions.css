@@ -55,7 +55,7 @@
 
 .action-button--active {
   background-color: rgba(208, 188, 255, 0.1);
-  color: var(--primary-color, #D0BCFF);
+  color: var(--primary-color, #d0bcff);
 }
 
 .action-button--active:hover {
@@ -92,22 +92,20 @@
   box-shadow: 0 2px 8px rgba(208, 188, 255, 0.2);
 }
 
-
-
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .action-button {
     transition: none;
   }
-  
+
   .action-button:hover {
     transform: none;
   }
-  
+
   .notification-container {
     transition: none;
   }
-  
+
   .profile-avatar {
     transition: none;
   }
@@ -138,4 +136,4 @@
   .header-actions {
     display: none !important;
   }
-} 
+}

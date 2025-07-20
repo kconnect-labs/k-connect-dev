@@ -1,5 +1,14 @@
 import React from 'react';
-import { Box, Typography, IconButton, Avatar, Grid, keyframes, useTheme, alpha } from '@mui/material';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Avatar,
+  Grid,
+  keyframes,
+  useTheme,
+  alpha,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -15,9 +24,10 @@ const TrackItemContainer = styled(Box)(({ theme, isPlaying }) => ({
   alignItems: 'center',
   padding: theme.spacing(1, 1.5),
   borderRadius: '12px',
-  transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease',
-  backgroundColor: isPlaying 
-    ? alpha(theme.palette.primary.main, 0.15) 
+  transition:
+    'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease',
+  backgroundColor: isPlaying
+    ? alpha(theme.palette.primary.main, 0.15)
     : 'transparent',
   border: '1px solid transparent',
   '&:hover': {
@@ -75,13 +85,13 @@ const PlayingIndicator = styled(GraphicEqIcon)(({ theme }) => ({
   animation: `${pulseAnimation} 1.2s infinite ease-in-out`,
 }));
 
-const formatDuration = (seconds) => {
-    if (isNaN(seconds) || seconds < 0) {
-      return '0:00';
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+const formatDuration = seconds => {
+  if (isNaN(seconds) || seconds < 0) {
+    return '0:00';
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
 const TrackItem = ({ track, index, isPlaying, onPlay }) => {
@@ -90,54 +100,86 @@ const TrackItem = ({ track, index, isPlaying, onPlay }) => {
 
   return (
     <TrackItemContainer isPlaying={isPlaying}>
-      <Grid container alignItems="center" spacing={2}>
-
-        <Grid item xs={10} md={6} sx={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-          <Typography 
-            sx={{ 
-              width: '24px', 
-              textAlign: 'center', 
+      <Grid container alignItems='center' spacing={2}>
+        <Grid
+          item
+          xs={10}
+          md={6}
+          sx={{ display: 'flex', alignItems: 'center', overflow: 'hidden' }}
+        >
+          <Typography
+            sx={{
+              width: '24px',
+              textAlign: 'center',
               color: 'text.secondary',
-              display: { xs: 'none', sm: 'block' } 
+              display: { xs: 'none', sm: 'block' },
             }}
           >
-            {isPlaying ? <PlayingIndicator fontSize="small" /> : <span className="track-number">{index + 1}</span>}
+            {isPlaying ? (
+              <PlayingIndicator fontSize='small' />
+            ) : (
+              <span className='track-number'>{index + 1}</span>
+            )}
           </Typography>
 
           <CoverArtWrapper>
             <CoverArt src={cover_path} alt={title} />
-            <PlayButtonContainer className="play-button-container">
-              <IconButton onClick={() => onPlay(track)} size="large" sx={{ color: 'white' }}>
-                {isPlaying ? <PauseIcon fontSize="inherit" /> : <PlayArrowIcon fontSize="inherit" />}
+            <PlayButtonContainer className='play-button-container'>
+              <IconButton
+                onClick={() => onPlay(track)}
+                size='large'
+                sx={{ color: 'white' }}
+              >
+                {isPlaying ? (
+                  <PauseIcon fontSize='inherit' />
+                ) : (
+                  <PlayArrowIcon fontSize='inherit' />
+                )}
               </IconButton>
             </PlayButtonContainer>
           </CoverArtWrapper>
 
           <TrackInfo>
-            <Typography variant="subtitle1" noWrap sx={{ fontWeight: 500, color: isPlaying ? theme.palette.primary.main : 'text.primary' }}>
+            <Typography
+              variant='subtitle1'
+              noWrap
+              sx={{
+                fontWeight: 500,
+                color: isPlaying ? theme.palette.primary.main : 'text.primary',
+              }}
+            >
               {title}
             </Typography>
-            <Typography variant="body2" color="text.secondary" noWrap>
+            <Typography variant='body2' color='text.secondary' noWrap>
               {artist}
             </Typography>
           </TrackInfo>
         </Grid>
 
-        <Grid item md={4} sx={{ display: { xs: 'none', md: 'block' }, overflow: 'hidden' }}>
-          <Typography variant="body2" color="text.secondary" noWrap>
+        <Grid
+          item
+          md={4}
+          sx={{ display: { xs: 'none', md: 'block' }, overflow: 'hidden' }}
+        >
+          <Typography variant='body2' color='text.secondary' noWrap>
             {album || 'Без альбома'}
           </Typography>
         </Grid>
 
-        <Grid item xs={2} container justifyContent="flex-end" alignItems="center">
-          <Typography variant="body2" color="text.secondary">
+        <Grid
+          item
+          xs={2}
+          container
+          justifyContent='flex-end'
+          alignItems='center'
+        >
+          <Typography variant='body2' color='text.secondary'>
             {formatDuration(duration)}
           </Typography>
         </Grid>
-
       </Grid>
     </TrackItemContainer>
   );
 };
 
-export default TrackItem; 
+export default TrackItem;

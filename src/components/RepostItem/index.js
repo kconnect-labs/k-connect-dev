@@ -1,2 +1,2 @@
 import RepostItem from './RepostItem';
-export default RepostItem; 
+export default RepostItem;

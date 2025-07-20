@@ -6,7 +6,8 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: 'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.8) 30%, rgba(26,26,26,1) 100%)',
+  background:
+    'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.8) 30%, rgba(26,26,26,1) 100%)',
   color: theme.palette.primary.main,
   borderRadius: '0 0 10px 10px',
   textTransform: 'none',
@@ -17,8 +18,9 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   bottom: 0,
   left: 0,
   '&:hover': {
-    background: 'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.9) 30%, rgba(26,26,26,1) 100%)',
-  }
+    background:
+      'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.9) 30%, rgba(26,26,26,1) 100%)',
+  },
 }));
 
-export default ShowMoreButton; 
+export default ShowMoreButton;

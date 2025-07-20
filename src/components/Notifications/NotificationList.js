@@ -18,7 +18,7 @@ import {
   Zoom,
   Chip,
   Collapse,
-  ListItemButton
+  ListItemButton,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -58,7 +58,8 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     backdropFilter: 'blur(10px)',
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
     overflow: 'visible',
-    backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
+    backgroundImage:
+      'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
     [theme.breakpoints.down('sm')]: {
       minWidth: '100vw',
       maxWidth: '100vw',
@@ -80,10 +81,11 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
       borderRadius: '8px',
       margin: '2px 8px',
       transition: 'all 0.2s',
-      backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
+      backgroundImage:
+        'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
       '&:hover': {
-        backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.08),
-      }
+        backgroundColor: theme => alpha(theme.palette.primary.main, 0.08),
+      },
     },
   },
 }));
@@ -101,11 +103,15 @@ const StyledNotificationItem = styled(ListItem)(({ theme, unread }) => ({
   transition: 'all 0.2s ease',
   borderRadius: 8,
   margin: theme.spacing(0.5, 0),
-  backgroundColor: unread ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+  backgroundColor: unread
+    ? alpha(theme.palette.primary.main, 0.08)
+    : 'transparent',
   position: 'relative',
   overflow: 'hidden',
   '&:hover': {
-    backgroundColor: unread ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.action.hover, 0.5),
+    backgroundColor: unread
+      ? alpha(theme.palette.primary.main, 0.12)
+      : alpha(theme.palette.action.hover, 0.5),
   },
   '& .notification-bg-icon': {
     position: 'absolute',
@@ -119,8 +125,8 @@ const StyledNotificationItem = styled(ListItem)(({ theme, unread }) => ({
     filter: 'blur(2px)',
     '& svg': {
       filter: `drop-shadow(0 0 8px ${alpha(theme.palette.primary.main, 0.6)})`,
-    }
-  }
+    },
+  },
 }));
 
 const NotificationIcon = styled(Box)(({ theme, type = 'default' }) => {
@@ -184,11 +190,15 @@ const GroupedNotificationItem = styled(ListItemButton)(({ theme, unread }) => ({
   transition: 'all 0.2s ease',
   borderRadius: 8,
   margin: theme.spacing(0.5, 0),
-  backgroundColor: unread ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+  backgroundColor: unread
+    ? alpha(theme.palette.primary.main, 0.08)
+    : 'transparent',
   position: 'relative',
   overflow: 'hidden',
   '&:hover': {
-    backgroundColor: unread ? alpha(theme.palette.primary.main, 0.12) : alpha(theme.palette.action.hover, 0.5),
+    backgroundColor: unread
+      ? alpha(theme.palette.primary.main, 0.12)
+      : alpha(theme.palette.action.hover, 0.5),
   },
   '& .group-count': {
     position: 'absolute',
@@ -213,10 +223,10 @@ const GroupedNotificationItem = styled(ListItemButton)(({ theme, unread }) => ({
     top: '50%',
     transform: 'translateY(-50%)',
     transition: 'transform 0.2s ease',
-  }
+  },
 }));
 
-const getNotificationIcon = (type) => {
+const getNotificationIcon = type => {
   switch (type) {
     case 'comment_like':
     case 'reply_like':
@@ -232,7 +242,7 @@ const getNotificationIcon = (type) => {
     case 'wall_post':
       return <PostAddIcon sx={{ fontSize: '3rem' }} />;
     case 'points_transfer':
-      return <Icon icon={walletMoneyIcon} width="3rem" height="3rem" />;
+      return <Icon icon={walletMoneyIcon} width='3rem' height='3rem' />;
     case 'badge_purchase':
     case 'username_auction_bid':
     case 'username_bid_accepted':
@@ -260,7 +270,7 @@ const getNotificationIcon = (type) => {
   }
 };
 
-const getNotificationColor = (type) => {
+const getNotificationColor = type => {
   switch (type) {
     case 'comment_like':
     case 'reply_like':
@@ -294,41 +304,41 @@ const getNotificationColor = (type) => {
   }
 };
 
-const formatRelativeTime = (dateString) => {
+const formatRelativeTime = dateString => {
   const { t } = useLanguage();
   if (!dateString) return t('notifications.time.just_now');
-  
+
   try {
     const date = new Date(dateString);
-    
+
     if (isNaN(date.getTime())) {
       console.error('Invalid date string:', dateString);
       return t('notifications.time.recently');
     }
-    
+
     const now = new Date();
     const diffMs = now - date;
     const seconds = Math.floor(diffMs / 1000);
-    
+
     if (seconds < 60) {
       return t('notifications.time.just_now');
     }
-    
+
     const minutes = Math.floor(seconds / 60);
     if (minutes < 60) {
       return `${minutes} ${getMinutesString(minutes)} ${t('notifications.time.ago')}`;
     }
-    
+
     const hours = Math.floor(minutes / 60);
     if (hours < 24) {
       return `${hours} ${getHoursString(hours)} ${t('notifications.time.ago')}`;
     }
-    
+
     const days = Math.floor(hours / 24);
     if (days < 7) {
       return `${days} ${getDaysString(days)} ${t('notifications.time.ago')}`;
     }
-    
+
     return formatDateTimeShort(dateString);
   } catch (error) {
     console.error('Error formatting relative time:', error);
@@ -336,86 +346,91 @@ const formatRelativeTime = (dateString) => {
   }
 };
 
-const getMinutesString = (minutes) => {
+const getMinutesString = minutes => {
   const { t } = useLanguage();
   if (minutes % 10 === 1 && minutes % 100 !== 11) {
     return t('notifications.time.minute');
-  } else if ([2, 3, 4].includes(minutes % 10) && ![12, 13, 14].includes(minutes % 100)) {
+  } else if (
+    [2, 3, 4].includes(minutes % 10) &&
+    ![12, 13, 14].includes(minutes % 100)
+  ) {
     return t('notifications.time.minutes');
   } else {
     return t('notifications.time.minutes_many');
   }
 };
 
-const getHoursString = (hours) => {
+const getHoursString = hours => {
   const { t } = useLanguage();
   if (hours % 10 === 1 && hours % 100 !== 11) {
     return t('notifications.time.hour');
-  } else if ([2, 3, 4].includes(hours % 10) && ![12, 13, 14].includes(hours % 100)) {
+  } else if (
+    [2, 3, 4].includes(hours % 10) &&
+    ![12, 13, 14].includes(hours % 100)
+  ) {
     return t('notifications.time.hours');
   } else {
     return t('notifications.time.hours_many');
   }
 };
 
-const getDaysString = (days) => {
+const getDaysString = days => {
   const { t } = useLanguage();
   if (days % 10 === 1 && days % 100 !== 11) {
     return t('notifications.time.day');
-  } else if ([2, 3, 4].includes(days % 10) && ![12, 13, 14].includes(days % 100)) {
+  } else if (
+    [2, 3, 4].includes(days % 10) &&
+    ![12, 13, 14].includes(days % 100)
+  ) {
     return t('notifications.time.days');
   } else {
     return t('notifications.time.days_many');
   }
 };
 
-const parseNotificationLink = (link) => {
+const parseNotificationLink = link => {
   if (!link) return { type: 'unknown' };
-  
-  
+
   if (link.startsWith('/profile/')) {
     return {
       type: 'profile',
-      username: link.split('/profile/')[1]
+      username: link.split('/profile/')[1],
     };
   }
-  
-  
+
   if (link.includes('?comment=') && link.includes('&reply=')) {
     const postId = link.split('/post/')[1].split('?')[0];
     const commentId = link.split('comment=')[1].split('&')[0];
     const replyId = link.split('reply=')[1];
-    
+
     return {
       type: 'reply',
       postId,
       commentId,
-      replyId
+      replyId,
     };
   }
-  
-  
+
   if (link.includes('?comment=')) {
     const postId = link.split('/post/')[1].split('?')[0];
     const commentId = link.split('comment=')[1];
-    
+
     return {
       type: 'comment',
       postId,
-      commentId
+      commentId,
     };
   }
-  
-  
+
   if (link.startsWith('/post/')) {
     const postId = link.split('/post/')[1];
-    
+
     return {
       type: 'post',
-      postId
+      postId,
     };
   }
-  
+
   return { type: 'unknown' };
 };
 
@@ -424,35 +439,37 @@ const truncateText = (text, maxLength) => {
   return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 };
 
-const getContextIcon = (link) => {
+const getContextIcon = link => {
   if (!link) return null;
-  
+
   const linkInfo = parseNotificationLink(link);
-  
+
   switch (linkInfo.type) {
     case 'post':
-      return <ArticleIcon fontSize="small" sx={{ opacity: 0.7 }} />;
+      return <ArticleIcon fontSize='small' sx={{ opacity: 0.7 }} />;
     case 'comment':
     case 'reply':
-      return <ForumIcon fontSize="small" sx={{ opacity: 0.7 }} />;
+      return <ForumIcon fontSize='small' sx={{ opacity: 0.7 }} />;
     case 'profile':
-      return <PersonIcon fontSize="small" sx={{ opacity: 0.7 }} />;
+      return <PersonIcon fontSize='small' sx={{ opacity: 0.7 }} />;
     default:
       return null;
   }
 };
 
-const getAvatarUrl = (user) => {
+const getAvatarUrl = user => {
   if (!user) return '/static/uploads/avatar/system/avatar.png';
-  return user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : '/static/uploads/avatar/system/avatar.png';
+  return user.photo
+    ? `/static/uploads/avatar/${user.id}/${user.photo}`
+    : '/static/uploads/avatar/system/avatar.png';
 };
 
-const getContextText = (notification) => {
+const getContextText = notification => {
   const { t } = useLanguage();
   if (!notification || !notification.link) return '';
-  
+
   const linkInfo = parseNotificationLink(notification.link);
-  
+
   switch (linkInfo.type) {
     case 'post':
       if (notification.post_data) {
@@ -465,7 +482,7 @@ const getContextText = (notification) => {
         }
       }
       return t('notifications.context.default_post');
-      
+
     case 'comment':
       if (notification.comment_data) {
         if (notification.comment_data.preview) {
@@ -477,7 +494,7 @@ const getContextText = (notification) => {
         }
       }
       return t('notifications.context.default_comment');
-      
+
     case 'reply':
       if (notification.reply_data) {
         if (notification.reply_data.preview) {
@@ -489,21 +506,21 @@ const getContextText = (notification) => {
         }
       }
       return t('notifications.context.default_reply');
-      
+
     case 'profile':
       return t('notifications.context.default_profile');
-      
+
     default:
       return '';
   }
 };
 
-const getContextTitle = (notification) => {
+const getContextTitle = notification => {
   const { t } = useLanguage();
   if (!notification || !notification.link) return '';
-  
+
   const linkInfo = parseNotificationLink(notification.link);
-  
+
   switch (linkInfo.type) {
     case 'post':
       return t('notifications.context.post');
@@ -518,7 +535,7 @@ const getContextTitle = (notification) => {
   }
 };
 
-const formatNumber = (num) => {
+const formatNumber = num => {
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
   }
@@ -550,23 +567,32 @@ const getNotificationMessage = (notification, t) => {
     case 'post_repost':
       return t('notifications.messages.post_repost');
     case 'points_transfer':
-      return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
+      return points
+        ? t('notifications.messages.points_transfer', { points })
+        : notification.message;
     case 'badge_purchase':
-      return badgeName && price && royalty 
-        ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
+      return badgeName && price && royalty
+        ? t('notifications.messages.badge_purchase', {
+            badge: badgeName,
+            price,
+            royalty,
+          })
         : notification.message;
     case 'wall_post':
       return t('notifications.messages.wall_post');
     case 'comment_reply':
-      return t('notifications.messages.comment_reply', { username: notification.sender_user?.name || t('notifications.user.default') });
+      return t('notifications.messages.comment_reply', {
+        username:
+          notification.sender_user?.name || t('notifications.user.default'),
+      });
     default:
       return notification.message;
   }
 };
 
-const groupNotificationsByUser = (notifications) => {
+const groupNotificationsByUser = notifications => {
   const groups = {};
-  
+
   notifications.forEach(notification => {
     const userId = notification.sender_user?.id;
     if (!userId) {
@@ -577,27 +603,30 @@ const groupNotificationsByUser = (notifications) => {
       groups['no-user'].push(notification);
       return;
     }
-    
+
     if (!groups[userId]) {
       groups[userId] = [];
     }
     groups[userId].push(notification);
   });
-  
+
   // Преобразуем группы в массив
   return Object.entries(groups).map(([userId, notifications]) => ({
     userId,
     user: userId === 'no-user' ? null : notifications[0]?.sender_user,
-    notifications: notifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+    notifications: notifications.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at)
+    ),
     unreadCount: notifications.filter(n => !n.is_read).length,
-    latestNotification: notifications[0]
+    latestNotification: notifications[0],
   }));
 };
 
 const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   const theme = useTheme();
   const { t } = useLanguage();
-  const senderName = notification.sender_user?.name || t('notifications.user.default');
+  const senderName =
+    notification.sender_user?.name || t('notifications.user.default');
   const avatar = getAvatarUrl(notification.sender_user);
   const notificationColor = getNotificationColor(notification.type);
 
@@ -628,7 +657,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
     return (
       <Box sx={{ mt: 1 }}>
         {showMessage && message && (
-          <Typography variant="body2" color="text.primary">
+          <Typography variant='body2' color='text.primary'>
             {message}
           </Typography>
         )}
@@ -636,26 +665,30 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
             {points && (
               <StyledChip
-                size="small"
-                avatar={<PointsIcon src="/static/icons/KBalls.svg" alt="points" />}
-                label={t('notifications.points.label', { count: formatNumber(parseInt(points)) })}
-                variant="outlined"
+                size='small'
+                avatar={
+                  <PointsIcon src='/static/icons/KBalls.svg' alt='points' />
+                }
+                label={t('notifications.points.label', {
+                  count: formatNumber(parseInt(points)),
+                })}
+                variant='outlined'
               />
             )}
             {badgeName && (
               <StyledChip
-                size="small"
+                size='small'
                 icon={<EmojiEventsIcon />}
                 label={badgeName}
-                variant="outlined"
+                variant='outlined'
               />
             )}
             {username && (
               <StyledChip
-                size="small"
+                size='small'
                 icon={<PersonAddIcon />}
                 label={username}
-                variant="outlined"
+                variant='outlined'
               />
             )}
           </Box>
@@ -665,209 +698,292 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   }, [notification, t]);
 
   return (
-    <StyledNotificationItem 
-      button 
+    <StyledNotificationItem
+      button
       unread={!notification.is_read ? 1 : 0}
       onClick={() => onClick(notification)}
-      sx={{ 
+      sx={{
         borderLeft: `2px solid ${!notification.is_read ? theme.palette[notificationColor].main : 'transparent'}`,
         mb: 1,
         borderRadius: 1,
         '&:hover': {
           backgroundColor: alpha(theme.palette[notificationColor].main, 0.08),
-        }
+        },
       }}
     >
       <ListItemAvatar>
-        <Avatar 
-          src={avatar} 
+        <Avatar
+          src={avatar}
           alt={senderName}
-          sx={{ 
-            width: 40, 
+          sx={{
+            width: 40,
             height: 40,
-            border: !notification.is_read ? `2px solid ${theme.palette[notificationColor].main}` : 'none',
+            border: !notification.is_read
+              ? `2px solid ${theme.palette[notificationColor].main}`
+              : 'none',
           }}
-          onError={(e) => {
+          onError={e => {
             if (e.currentTarget && e.currentTarget.setAttribute) {
-              e.currentTarget.setAttribute('src', '/static/uploads/avatar/system/avatar.png');
+              e.currentTarget.setAttribute(
+                'src',
+                '/static/uploads/avatar/system/avatar.png'
+              );
             }
           }}
         />
       </ListItemAvatar>
       <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-          <Typography component="span" variant="body2" fontWeight={!notification.is_read ? 600 : 400} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 'calc(100% - 80px)' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            component='span'
+            variant='body2'
+            fontWeight={!notification.is_read ? 600 : 400}
+            sx={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: 'calc(100% - 80px)',
+            }}
+          >
             {senderName}
           </Typography>
-          <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1, whiteSpace: 'nowrap', flexShrink: 0, fontSize: '0.65rem' }}>
+          <Typography
+            component='span'
+            variant='caption'
+            color='text.secondary'
+            sx={{
+              ml: 1,
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+              fontSize: '0.65rem',
+            }}
+          >
             {formatRelativeTime(notification.created_at)}
           </Typography>
         </Box>
         <Box>{renderNotificationContent()}</Box>
       </Box>
-      <Box className="notification-bg-icon">
+      <Box className='notification-bg-icon'>
         {getNotificationIcon(notification.type || 'default')}
       </Box>
     </StyledNotificationItem>
   );
 });
 
-const GroupedNotificationComponent = React.memo(({ group, onClick, onMarkGroupAsRead, isExpanded, onToggleExpanded, onUpdateUnreadCount }) => {
-  const theme = useTheme();
-  const { t } = useLanguage();
-  
-  const userName = group.user?.name || t('notifications.user.default');
-  const avatar = getAvatarUrl(group.user);
-  const notificationColor = getNotificationColor(group.latestNotification.type);
-  
-  const handleToggle = (e) => {
-    e.stopPropagation();
-    onToggleExpanded(group.userId);
-    
-    // Если группа раскрывается и есть непрочитанные уведомления, отмечаем их как прочитанные
-    // но не обновляем состояние списка, чтобы группа не перемещалась
-    if (!isExpanded && group.unreadCount > 0) {
-      const unreadNotifications = group.notifications.filter(n => !n.is_read);
-      if (unreadNotifications.length > 0) {
-        // Отправляем запросы на сервер без обновления локального состояния
-        unreadNotifications.forEach(notification => {
-          axios.post(`/api/notifications/${notification.id}/read`).catch(error => {
-            console.error('Error marking notification as read:', error);
+const GroupedNotificationComponent = React.memo(
+  ({
+    group,
+    onClick,
+    onMarkGroupAsRead,
+    isExpanded,
+    onToggleExpanded,
+    onUpdateUnreadCount,
+  }) => {
+    const theme = useTheme();
+    const { t } = useLanguage();
+
+    const userName = group.user?.name || t('notifications.user.default');
+    const avatar = getAvatarUrl(group.user);
+    const notificationColor = getNotificationColor(
+      group.latestNotification.type
+    );
+
+    const handleToggle = e => {
+      e.stopPropagation();
+      onToggleExpanded(group.userId);
+
+      // Если группа раскрывается и есть непрочитанные уведомления, отмечаем их как прочитанные
+      // но не обновляем состояние списка, чтобы группа не перемещалась
+      if (!isExpanded && group.unreadCount > 0) {
+        const unreadNotifications = group.notifications.filter(n => !n.is_read);
+        if (unreadNotifications.length > 0) {
+          // Отправляем запросы на сервер без обновления локального состояния
+          unreadNotifications.forEach(notification => {
+            axios
+              .post(`/api/notifications/${notification.id}/read`)
+              .catch(error => {
+                console.error('Error marking notification as read:', error);
+              });
           });
-        });
-        
-        // Обновляем только счетчик непрочитанных уведомлений
-        onUpdateUnreadCount(prev => Math.max(0, prev - unreadNotifications.length));
+
+          // Обновляем только счетчик непрочитанных уведомлений
+          onUpdateUnreadCount(prev =>
+            Math.max(0, prev - unreadNotifications.length)
+          );
+        }
       }
-    }
-  };
-  
-  const handleGroupClick = () => {
-    // При клике на группу переходим к самому новому уведомлению
-    if (group.latestNotification && onClick) {
-      onClick(group.latestNotification);
-    }
-  };
-  
-  const getGroupSummary = () => {
-    const types = [...new Set(group.notifications.map(n => n.type))];
-    const count = group.notifications.length;
-    
-    if (count === 1) {
-      return getNotificationMessage(group.latestNotification, t);
-    }
-    
-    // Создаем краткое описание группы
-    const typeCounts = {};
-    group.notifications.forEach(n => {
-      typeCounts[n.type] = (typeCounts[n.type] || 0) + 1;
-    });
-    
-    const typeNames = Object.entries(typeCounts).map(([type, count]) => {
-      switch (type) {
-        case 'post_like':
-          return `${count} ${count === 1 ? t('notifications.types.like') : t('notifications.types.likes')}`;
-        case 'comment':
-          return `${count} ${count === 1 ? t('notifications.types.comment') : t('notifications.types.comments')}`;
-        case 'follow':
-          return `${count} ${count === 1 ? t('notifications.types.follow') : t('notifications.types.follows')}`;
-        case 'points_transfer':
-          return `${count} ${count === 1 ? t('notifications.types.transfer') : t('notifications.types.transfers')}`;
-        default:
-          return `${count} ${t('notifications.types.notifications')}`;
+    };
+
+    const handleGroupClick = () => {
+      // При клике на группу переходим к самому новому уведомлению
+      if (group.latestNotification && onClick) {
+        onClick(group.latestNotification);
       }
-    });
-    
-    return typeNames.join(', ');
-  };
-  
-  return (
-    <Box>
-      <GroupedNotificationItem
-        unread={group.unreadCount > 0 ? 1 : 0}
-        onClick={handleGroupClick}
-        sx={{ 
-          borderLeft: `2px solid ${group.unreadCount > 0 ? theme.palette[notificationColor].main : 'transparent'}`,
-          mb: 1,
-          borderRadius: 1,
-          '&:hover': {
-            backgroundColor: alpha(theme.palette[notificationColor].main, 0.08),
-          }
-        }}
-      >
-        <ListItemAvatar>
-          <Avatar 
-            src={avatar} 
-            alt={userName}
-            sx={{ 
-              width: 40, 
-              height: 40,
-              border: group.unreadCount > 0 ? `2px solid ${theme.palette[notificationColor].main}` : 'none',
-            }}
-            onError={(e) => {
-              if (e.currentTarget && e.currentTarget.setAttribute) {
-                e.currentTarget.setAttribute('src', '/static/uploads/avatar/system/avatar.png');
-              }
-            }}
-          />
-        </ListItemAvatar>
-        
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography component="span" variant="body2" fontWeight={group.unreadCount > 0 ? 600 : 400} sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 'calc(100% - 120px)' }}>
-              {userName}
-            </Typography>
-            <Typography component="span" variant="caption" color="text.secondary" sx={{ whiteSpace: 'nowrap', flexShrink: 0, fontSize: '0.65rem' }}>
-              {formatRelativeTime(group.latestNotification.created_at)}
+    };
+
+    const getGroupSummary = () => {
+      const types = [...new Set(group.notifications.map(n => n.type))];
+      const count = group.notifications.length;
+
+      if (count === 1) {
+        return getNotificationMessage(group.latestNotification, t);
+      }
+
+      // Создаем краткое описание группы
+      const typeCounts = {};
+      group.notifications.forEach(n => {
+        typeCounts[n.type] = (typeCounts[n.type] || 0) + 1;
+      });
+
+      const typeNames = Object.entries(typeCounts).map(([type, count]) => {
+        switch (type) {
+          case 'post_like':
+            return `${count} ${count === 1 ? t('notifications.types.like') : t('notifications.types.likes')}`;
+          case 'comment':
+            return `${count} ${count === 1 ? t('notifications.types.comment') : t('notifications.types.comments')}`;
+          case 'follow':
+            return `${count} ${count === 1 ? t('notifications.types.follow') : t('notifications.types.follows')}`;
+          case 'points_transfer':
+            return `${count} ${count === 1 ? t('notifications.types.transfer') : t('notifications.types.transfers')}`;
+          default:
+            return `${count} ${t('notifications.types.notifications')}`;
+        }
+      });
+
+      return typeNames.join(', ');
+    };
+
+    return (
+      <Box>
+        <GroupedNotificationItem
+          unread={group.unreadCount > 0 ? 1 : 0}
+          onClick={handleGroupClick}
+          sx={{
+            borderLeft: `2px solid ${group.unreadCount > 0 ? theme.palette[notificationColor].main : 'transparent'}`,
+            mb: 1,
+            borderRadius: 1,
+            '&:hover': {
+              backgroundColor: alpha(
+                theme.palette[notificationColor].main,
+                0.08
+              ),
+            },
+          }}
+        >
+          <ListItemAvatar>
+            <Avatar
+              src={avatar}
+              alt={userName}
+              sx={{
+                width: 40,
+                height: 40,
+                border:
+                  group.unreadCount > 0
+                    ? `2px solid ${theme.palette[notificationColor].main}`
+                    : 'none',
+              }}
+              onError={e => {
+                if (e.currentTarget && e.currentTarget.setAttribute) {
+                  e.currentTarget.setAttribute(
+                    'src',
+                    '/static/uploads/avatar/system/avatar.png'
+                  );
+                }
+              }}
+            />
+          </ListItemAvatar>
+
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography
+                component='span'
+                variant='body2'
+                fontWeight={group.unreadCount > 0 ? 600 : 400}
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: 'calc(100% - 120px)',
+                }}
+              >
+                {userName}
+              </Typography>
+              <Typography
+                component='span'
+                variant='caption'
+                color='text.secondary'
+                sx={{
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  fontSize: '0.65rem',
+                }}
+              >
+                {formatRelativeTime(group.latestNotification.created_at)}
+              </Typography>
+            </Box>
+            <Typography
+              component='span'
+              variant='body2'
+              color='text.primary'
+              sx={{ display: 'block', mt: 1 }}
+            >
+              {getGroupSummary()}
             </Typography>
           </Box>
-          <Typography component="span" variant="body2" color="text.primary" sx={{ display: 'block', mt: 1 }}>
-            {getGroupSummary()}
-          </Typography>
-        </Box>
-        
-        {/* Счетчик уведомлений в группе */}
+
+          {/* Счетчик уведомлений в группе */}
+          {group.notifications.length > 1 && (
+            <Box className='group-count'>{group.notifications.length}</Box>
+          )}
+
+          {/* Иконка раскрытия */}
+          {group.notifications.length > 1 && (
+            <IconButton
+              size='small'
+              onClick={handleToggle}
+              className='expand-icon'
+              sx={{
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </IconButton>
+          )}
+        </GroupedNotificationItem>
+
+        {/* Раскрытый список уведомлений */}
         {group.notifications.length > 1 && (
-          <Box className="group-count">
-            {group.notifications.length}
-          </Box>
+          <Collapse in={isExpanded}>
+            <List sx={{ width: '100%', p: 0 }}>
+              {group.notifications.map(notification => (
+                <NotificationItemComponent
+                  key={notification.id}
+                  notification={notification}
+                  onClick={onClick}
+                />
+              ))}
+            </List>
+          </Collapse>
         )}
-        
-        {/* Иконка раскрытия */}
-        {group.notifications.length > 1 && (
-          <IconButton
-            size="small"
-            onClick={handleToggle}
-            className="expand-icon"
-            sx={{ 
-              color: 'text.secondary',
-              '&:hover': {
-                color: 'primary.main'
-              }
-            }}
-          >
-            {isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </IconButton>
-        )}
-      </GroupedNotificationItem>
-      
-      {/* Раскрытый список уведомлений */}
-      {group.notifications.length > 1 && (
-        <Collapse in={isExpanded}>
-          <List sx={{ width: '100%', p: 0 }}>
-            {group.notifications.map((notification) => (
-              <NotificationItemComponent
-                key={notification.id} 
-                notification={notification}
-                onClick={onClick}
-              />
-            ))}
-          </List>
-        </Collapse>
-      )}
-    </Box>
-  );
-});
+      </Box>
+    );
+  }
+);
 
 const NotificationList = ({ onNewNotification }) => {
   const { t } = useLanguage();
@@ -905,12 +1021,12 @@ const NotificationList = ({ onNewNotification }) => {
 
   const fetchNotifications = useCallback(async () => {
     if (loading) return;
-  
+
     try {
       setLoading(true);
       setError(null);
       const response = await axios.get('/api/notifications');
-      
+
       if (response.data && response.data.success) {
         const newNotifications = response.data.notifications || [];
         setNotifications(newNotifications);
@@ -922,7 +1038,7 @@ const NotificationList = ({ onNewNotification }) => {
           const now = new Date();
           const notificationTime = new Date(latestNotification.created_at);
           const timeDiff = now - notificationTime;
-          
+
           // If notification is less than 1 minute old, show popup
           if (timeDiff <= 60000 && onNewNotification) {
             onNewNotification(latestNotification);
@@ -941,15 +1057,13 @@ const NotificationList = ({ onNewNotification }) => {
       setLoading(false);
     }
   }, [loading, onNewNotification]);
-  
+
   const markAllAsRead = useCallback(async () => {
     try {
       const response = await axios.post('/api/notifications/mark-all-read');
-      
+
       if (response.data && response.data.success) {
-        setNotifications(prev => 
-          prev.map(n => ({ ...n, is_read: true }))
-        );
+        setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
         setUnreadCount(0);
       }
     } catch (error) {
@@ -957,60 +1071,68 @@ const NotificationList = ({ onNewNotification }) => {
     }
   }, []);
 
-  const markGroupAsRead = useCallback(async (group) => {
+  const markGroupAsRead = useCallback(async group => {
     try {
       const unreadNotifications = group.notifications.filter(n => !n.is_read);
       if (unreadNotifications.length === 0) return;
-      
+
       // Отмечаем все уведомления в группе как прочитанные
       await Promise.all(
         unreadNotifications.map(notification =>
           axios.post(`/api/notifications/${notification.id}/read`)
         )
       );
-      
+
       // Обновляем состояние
-      setNotifications(prev => 
-        prev.map(n => 
-          group.notifications.some(groupN => groupN.id === n.id) 
+      setNotifications(prev =>
+        prev.map(n =>
+          group.notifications.some(groupN => groupN.id === n.id)
             ? { ...n, is_read: true }
             : n
         )
       );
-      
+
       setUnreadCount(prev => Math.max(0, prev - unreadNotifications.length));
     } catch (error) {
       console.error('Error marking group as read:', error);
     }
   }, []);
 
-  const handleNotificationClick = useCallback(async (notification) => {
-    if (!notification || !notification.id) return;
-    
-    try {
-      await axios.post(`/api/notifications/${notification.id}/read`);
-      
-      setNotifications(prev => 
-        prev.map(n => n.id === notification.id ? { ...n, is_read: true } : n)
-      );
-      
-      if (!notification.is_read) {
-        setUnreadCount(prev => Math.max(0, prev - 1));
-      }
-      
-      if (notification.link) {
-        navigate(notification.link);
-        handleMenuClose();
-      }
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  }, [navigate]);
+  const handleNotificationClick = useCallback(
+    async notification => {
+      if (!notification || !notification.id) return;
 
-  const handleMenuOpen = useCallback((event) => {
-    setAnchorEl(event.currentTarget);
-    fetchNotifications();
-  }, [fetchNotifications]);
+      try {
+        await axios.post(`/api/notifications/${notification.id}/read`);
+
+        setNotifications(prev =>
+          prev.map(n =>
+            n.id === notification.id ? { ...n, is_read: true } : n
+          )
+        );
+
+        if (!notification.is_read) {
+          setUnreadCount(prev => Math.max(0, prev - 1));
+        }
+
+        if (notification.link) {
+          navigate(notification.link);
+          handleMenuClose();
+        }
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
+    },
+    [navigate]
+  );
+
+  const handleMenuOpen = useCallback(
+    event => {
+      setAnchorEl(event.currentTarget);
+      fetchNotifications();
+    },
+    [fetchNotifications]
+  );
 
   const handleMenuClose = useCallback(() => {
     // Очищаем состояние раскрытых групп
@@ -1030,7 +1152,7 @@ const NotificationList = ({ onNewNotification }) => {
     }
   }, []);
 
-  const handleToggleExpanded = useCallback((userId) => {
+  const handleToggleExpanded = useCallback(userId => {
     setExpandedGroups(prev => {
       const newSet = new Set(prev);
       if (newSet.has(userId)) {
@@ -1049,24 +1171,31 @@ const NotificationList = ({ onNewNotification }) => {
       if (a.unreadCount > 0 && b.unreadCount === 0) return -1;
       if (a.unreadCount === 0 && b.unreadCount > 0) return 1;
       // Затем по времени последнего уведомления
-      return new Date(b.latestNotification.created_at) - new Date(a.latestNotification.created_at);
+      return (
+        new Date(b.latestNotification.created_at) -
+        new Date(a.latestNotification.created_at)
+      );
     });
   }, [notifications]);
 
   return (
     <>
-      <Tooltip title={t('notifications.tooltips.notifications')} arrow TransitionComponent={Zoom}>
-        <IconButton 
+      <Tooltip
+        title={t('notifications.tooltips.notifications')}
+        arrow
+        TransitionComponent={Zoom}
+      >
+        <IconButton
           onClick={handleMenuOpen}
-          sx={{ 
+          sx={{
             position: 'relative',
             color: Boolean(anchorEl) ? 'primary.main' : 'inherit',
           }}
         >
-          <Badge 
-            badgeContent={unreadCount} 
-            color="primary" 
-            overlap="circular"
+          <Badge
+            badgeContent={unreadCount}
+            color='primary'
+            overlap='circular'
             max={99}
             sx={{
               '& .MuiBadge-badge': {
@@ -1074,14 +1203,14 @@ const NotificationList = ({ onNewNotification }) => {
                 height: 16,
                 minWidth: 16,
                 padding: '0 4px',
-              }
+              },
             }}
           >
             <NotificationsIcon />
           </Badge>
         </IconButton>
       </Tooltip>
-      
+
       <StyledMenu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -1090,12 +1219,12 @@ const NotificationList = ({ onNewNotification }) => {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <NotificationHeader>
-          <Typography component="div" variant="subtitle1" fontWeight="bold">
+          <Typography component='div' variant='subtitle1' fontWeight='bold'>
             {t('notifications.title')}
             {unreadCount > 0 && (
-              <Badge 
-                badgeContent={unreadCount} 
-                color="primary" 
+              <Badge
+                badgeContent={unreadCount}
+                color='primary'
                 sx={{ ml: 2 }}
               />
             )}
@@ -1103,58 +1232,60 @@ const NotificationList = ({ onNewNotification }) => {
           <Box>
             {notifications.length > 0 && (
               <Tooltip title={t('notifications.tooltips.clear_all')}>
-                <IconButton 
-                  size="small" 
+                <IconButton
+                  size='small'
                   onClick={clearAllNotifications}
                   disabled={notifications.length === 0}
-                  sx={{ 
+                  sx={{
                     opacity: notifications.length > 0 ? 1 : 0.5,
-                    mr: 1
+                    mr: 1,
                   }}
                 >
-                  <ClearAllIcon fontSize="small" />
+                  <ClearAllIcon fontSize='small' />
                 </IconButton>
               </Tooltip>
             )}
             {unreadCount > 0 && (
               <Tooltip title={t('notifications.tooltips.mark_all_read')} arrow>
-                <IconButton size="small" onClick={markAllAsRead} sx={{ mr: 1 }}>
-                  <DoneAllIcon fontSize="small" />
+                <IconButton size='small' onClick={markAllAsRead} sx={{ mr: 1 }}>
+                  <DoneAllIcon fontSize='small' />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title={t('notifications.tooltips.close')} arrow>
-              <IconButton size="small" onClick={handleMenuClose}>
-                <CloseIcon fontSize="small" />
+              <IconButton size='small' onClick={handleMenuClose}>
+                <CloseIcon fontSize='small' />
               </IconButton>
             </Tooltip>
           </Box>
         </NotificationHeader>
-        
-        <Box sx={{ 
-          maxHeight: 'calc(100vh - 200px)',
-          overflowY: 'auto',
-          px: 1,
-          [theme.breakpoints.down('sm')]: {
-            maxHeight: 'calc(100vh - 120px)',
-            height: 'calc(100vh - 120px)'
-          }
-        }}>
+
+        <Box
+          sx={{
+            maxHeight: 'calc(100vh - 200px)',
+            overflowY: 'auto',
+            px: 1,
+            [theme.breakpoints.down('sm')]: {
+              maxHeight: 'calc(100vh - 120px)',
+              height: 'calc(100vh - 120px)',
+            },
+          }}
+        >
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
-              <CircularProgress size={30} color="primary" />
+              <CircularProgress size={30} color='primary' />
             </Box>
           ) : error ? (
             <EmptyNotifications>
-              <Typography component="div" variant="body2" color="error">
+              <Typography component='div' variant='body2' color='error'>
                 {t('notifications.error.load_failed')}
               </Typography>
             </EmptyNotifications>
           ) : groupedNotifications.length > 0 ? (
             <List sx={{ width: '100%', p: 0 }}>
-              {groupedNotifications.map((group) => (
+              {groupedNotifications.map(group => (
                 <GroupedNotificationComponent
-                  key={group.userId} 
+                  key={group.userId}
                   group={group}
                   onClick={handleNotificationClick}
                   onMarkGroupAsRead={markGroupAsRead}
@@ -1167,8 +1298,14 @@ const NotificationList = ({ onNewNotification }) => {
           ) : (
             <EmptyNotifications>
               <NotificationsIcon sx={{ fontSize: 40, opacity: 0.5, mb: 2 }} />
-              <Typography component="div" variant="body1">{t('notifications.empty.no_notifications')}</Typography>
-              <Typography component="div" variant="body2" color="text.secondary">
+              <Typography component='div' variant='body1'>
+                {t('notifications.empty.no_notifications')}
+              </Typography>
+              <Typography
+                component='div'
+                variant='body2'
+                color='text.secondary'
+              >
                 {t('notifications.empty.description')}
               </Typography>
             </EmptyNotifications>
@@ -1179,4 +1316,4 @@ const NotificationList = ({ onNewNotification }) => {
   );
 };
 
-export default React.memo(NotificationList); 
+export default React.memo(NotificationList);

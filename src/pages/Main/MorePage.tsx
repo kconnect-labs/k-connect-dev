@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, GlobalStyles, Grid } from '@mui/material';
-import { 
+import {
   AccountCircle,
   Settings,
   ShoppingCart,
@@ -23,7 +23,7 @@ import {
   Logout,
   Wallet,
   Favorite,
-  VerifiedUser
+  VerifiedUser,
 } from '@mui/icons-material';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -62,11 +62,11 @@ declare global {
 const formatNumber = (num: number): string => {
   if (num === null || num === undefined) return '0';
   if (num < 1000) return num.toString();
-  
+
   const units = ['', 'k', 'M', 'B'];
   const unit = Math.floor((num.toFixed(0).length - 1) / 3);
   const value = (num / Math.pow(1000, unit)).toFixed(1);
-  
+
   return `${parseFloat(value)}${units[unit]}`;
 };
 
@@ -77,7 +77,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
   const [userPoints, setUserPoints] = useState(0);
   const [isModeratorUser, setIsModeratorUser] = useState(false);
   const [lastModeratorCheck, setLastModeratorCheck] = useState(0);
-  
+
   const isAdmin = user?.id === 3;
   const isChannel = user?.account_type === 'channel';
 
@@ -93,21 +93,21 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
       if (window._moderatorCheckInProgress) {
         return;
       }
-      
+
       const now = Date.now();
       if (now - lastModeratorCheck < 15 * 60 * 1000) {
         return;
       }
-      
+
       window._moderatorCheckInProgress = true;
-      
+
       const response = await axios.get('/api/moderator/status');
       if (response.data && response.data.is_moderator) {
         setIsModeratorUser(true);
       } else {
         setIsModeratorUser(false);
       }
-      
+
       setLastModeratorCheck(now);
     } catch (error) {
       console.error('Error checking moderator status:', error);
@@ -116,7 +116,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
       window._moderatorCheckInProgress = false;
     }
   };
-  
+
   const fetchUserPoints = async () => {
     try {
       const response = await axios.get('/api/user/points');
@@ -126,7 +126,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
       setUserPoints(0);
     }
   };
-  
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -135,7 +135,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
     }
   };
 
-  const balanceTitle = userPoints > 9999 ? formatNumber(userPoints) : `${formatNumber(userPoints)} баллов`;
+  const balanceTitle =
+    userPoints > 9999
+      ? formatNumber(userPoints)
+      : `${formatNumber(userPoints)} баллов`;
 
   const sections: Section[] = [
     {
@@ -149,7 +152,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Wallet />,
           color: 'rgb(77, 214, 81)',
           link: '/balance',
-          highlighted: true
+          highlighted: true,
         },
         {
           id: 'shop',
@@ -157,7 +160,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Покупка и просмотр бейджей',
           icon: <ShoppingCart />,
           color: 'rgb(255, 193, 7)',
-          link: '/badge-shop'
+          link: '/badge-shop',
         },
         {
           id: 'settings',
@@ -165,9 +168,9 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Управление профилем',
           icon: <Settings />,
           color: 'rgb(99, 102, 241)',
-          link: '/settings'
-        }
-      ]
+          link: '/settings',
+        },
+      ],
     },
     {
       id: 'social',
@@ -179,7 +182,8 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Друзья и подписчики',
           icon: <Group />,
           color: 'rgb(33, 150, 243)',
-          link: user && user.username ? `/friends/${user.username}` : '/friends'
+          link:
+            user && user.username ? `/friends/${user.username}` : '/friends',
         },
         {
           id: 'channels',
@@ -187,7 +191,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Просмотр каналов',
           icon: <PlayCircle />,
           color: 'rgb(156, 39, 176)',
-          link: '/channels'
+          link: '/channels',
         },
         {
           id: 'leaderboard',
@@ -195,9 +199,9 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Таблица лидеров',
           icon: <TrendingUp />,
           color: 'rgb(255, 87, 34)',
-          link: '/leaderboard'
-        }
-      ]
+          link: '/leaderboard',
+        },
+      ],
     },
     {
       id: 'entertainment',
@@ -209,7 +213,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Пачки с Айтемами',
           icon: <Inventory />,
           color: 'rgb(139, 195, 74)',
-          link: '/economic/packs'
+          link: '/economic/packs',
         },
         {
           id: 'inventory',
@@ -217,7 +221,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Ваши Айтемы',
           icon: <Inventory />,
           color: 'rgb(121, 85, 72)',
-          link: '/economic/inventory'
+          link: '/economic/inventory',
         },
         {
           id: 'marketplace',
@@ -225,16 +229,20 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Покупка и продажа Айтемов',
           icon: <Store />,
           color: 'rgb(0, 150, 136)',
-          link: '/marketplace'
+          link: '/marketplace',
         },
-        ...(!isChannel ? [{
-          id: 'stickers',
-          title: 'Управление стикерами',
-          subtitle: 'Создание и редактирование',
-          icon: <EmojiEmotions />,
-          color: 'rgb(233, 30, 99)',
-          link: '/inform/sticker'
-        }] : []),
+        ...(!isChannel
+          ? [
+              {
+                id: 'stickers',
+                title: 'Управление стикерами',
+                subtitle: 'Создание и редактирование',
+                icon: <EmojiEmotions />,
+                color: 'rgb(233, 30, 99)',
+                link: '/inform/sticker',
+              },
+            ]
+          : []),
         {
           id: 'grants',
           title: 'Гранты каналам',
@@ -242,7 +250,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Star />,
           color: 'rgb(255, 193, 7)',
           link: '/grant',
-          highlighted: true
+          highlighted: true,
         },
         {
           id: 'referral',
@@ -251,7 +259,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <People />,
           color: 'rgb(76, 175, 80)',
           link: '/referral',
-          highlighted: true
+          highlighted: true,
         },
         {
           id: 'minigames',
@@ -260,7 +268,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Casino />,
           color: 'rgb(156, 39, 176)',
           link: '/minigames',
-          highlighted: true
+          highlighted: true,
         },
         {
           id: 'username-auction',
@@ -269,53 +277,73 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Gavel />,
           color: 'rgb(255, 87, 34)',
           link: '/username-auction',
-          highlighted: true
+          highlighted: true,
         },
-        ...(!isChannel ? [{
-          id: 'sub-planes',
-          title: 'Планы подписок',
-          subtitle: 'Управление подписками',
-          icon: <Star />,
-          color: 'rgb(255, 193, 7)',
-          link: '/sub-planes'
-        }] : [])
-      ]
+        ...(!isChannel
+          ? [
+              {
+                id: 'sub-planes',
+                title: 'Планы подписок',
+                subtitle: 'Управление подписками',
+                icon: <Star />,
+                color: 'rgb(255, 193, 7)',
+                link: '/sub-planes',
+              },
+            ]
+          : []),
+      ],
     },
-    ...((isAdmin || isModeratorUser) ? [{
-      id: 'administration',
-      title: 'Администрирование',
-      items: [
-        ...(isModeratorUser ? [{
-          id: 'moderator',
-          title: 'Модерация',
-          subtitle: 'Управление контентом',
-          icon: <Security />,
-          color: 'rgb(255, 193, 7)',
-          link: '/moderator',
-          highlighted: true
-        }] : []),
-        ...(isAdmin ? [{
-          id: 'admin',
-          title: 'Админ панель',
-          subtitle: 'Управление системой',
-          icon: <AdminPanelSettings />,
-          color: 'rgb(244, 67, 54)',
-          link: '/admin'
-        }] : [])
-      ]
-    }] : []),
+    ...(isAdmin || isModeratorUser
+      ? [
+          {
+            id: 'administration',
+            title: 'Администрирование',
+            items: [
+              ...(isModeratorUser
+                ? [
+                    {
+                      id: 'moderator',
+                      title: 'Модерация',
+                      subtitle: 'Управление контентом',
+                      icon: <Security />,
+                      color: 'rgb(255, 193, 7)',
+                      link: '/moderator',
+                      highlighted: true,
+                    },
+                  ]
+                : []),
+              ...(isAdmin
+                ? [
+                    {
+                      id: 'admin',
+                      title: 'Админ панель',
+                      subtitle: 'Управление системой',
+                      icon: <AdminPanelSettings />,
+                      color: 'rgb(244, 67, 54)',
+                      link: '/admin',
+                    },
+                  ]
+                : []),
+            ],
+          },
+        ]
+      : []),
     {
       id: 'platform',
       title: 'Платформа',
       items: [
-        ...(!isChannel ? [{
-          id: 'bugs',
-          title: 'Сообщить об ошибке',
-          subtitle: 'Помогите улучшить платформу',
-          icon: <BugReport />,
-          color: 'rgb(244, 67, 54)',
-          link: '/bugs'
-        }] : []),
+        ...(!isChannel
+          ? [
+              {
+                id: 'bugs',
+                title: 'Сообщить об ошибке',
+                subtitle: 'Помогите улучшить платформу',
+                icon: <BugReport />,
+                color: 'rgb(244, 67, 54)',
+                link: '/bugs',
+              },
+            ]
+          : []),
         {
           id: 'about',
           title: 'О платформе',
@@ -323,7 +351,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Info />,
           color: 'rgb(33, 150, 243)',
           link: '/about',
-          external: true
+          external: true,
         },
         {
           id: 'rules',
@@ -331,7 +359,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           subtitle: 'Правила использования',
           icon: <Description />,
           color: 'rgb(158, 158, 158)',
-          link: '/rules'
+          link: '/rules',
         },
         {
           id: 'logout',
@@ -340,10 +368,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           icon: <Logout />,
           color: 'rgb(244, 67, 54)',
           action: handleLogout,
-          highlighted: true
-        }
-      ]
-    }
+          highlighted: true,
+        },
+      ],
+    },
   ];
 
   // Выделяем важные кнопки
@@ -370,22 +398,21 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           },
         }}
       />
-      
-             <Box
-         sx={{
-           mt: 2,
-           minHeight: '100vh',
-           mb: 2,
-           padding: { xs: 0.5, sm: 1 },
-           display: 'flex',
-           flexDirection: 'column',
-           alignItems: 'center'
-         }}
-       >
- 
-  
-          {/* Profile Banner */}
-          <Box sx={{
+
+      <Box
+        sx={{
+          mt: 2,
+          minHeight: '100vh',
+          mb: 2,
+          padding: { xs: 0.5, sm: 1 },
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        {/* Profile Banner */}
+        <Box
+          sx={{
             width: '100%',
             maxWidth: 800,
             mb: 1.5,
@@ -397,45 +424,59 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
             WebkitBackdropFilter: 'blur(20px)',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px'
-          }}>
-            <Box sx={{
+            gap: '12px',
+          }}
+        >
+          <Box
+            sx={{
               width: '40px',
               height: '40px',
               borderRadius: '50%',
               overflow: 'hidden',
-              flexShrink: 0
-            }}>
-              <img
-                src={user?.avatar_url || (user?.photo && `/static/uploads/avatar/${user.id}/${user.photo}`)}
-                alt={user?.name}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-                onError={(e) => {
-                  e.currentTarget.src = '/static/uploads/avatar/system/avatar.png';
-                }}
-              />
-            </Box>
-            
-            <Box sx={{ flex: 1 }}>
-              <Box sx={{
+              flexShrink: 0,
+            }}
+          >
+            <img
+              src={
+                user?.avatar_url ||
+                (user?.photo &&
+                  `/static/uploads/avatar/${user.id}/${user.photo}`)
+              }
+              alt={user?.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+              onError={e => {
+                e.currentTarget.src =
+                  '/static/uploads/avatar/system/avatar.png';
+              }}
+            />
+          </Box>
+
+          <Box sx={{ flex: 1 }}>
+            <Box
+              sx={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 0.5,
-                mb: 0.25
-              }}>
-                <Typography variant="h6" sx={{
+                mb: 0.25,
+              }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
                   color: 'white',
                   fontWeight: 600,
-                  fontSize: '1rem'
-                }}>
-                  {user?.name || t('more_page.default_user')}
-                </Typography>
-                {user?.verification && user.verification.status > 0 && (
-                  <Box sx={{
+                  fontSize: '1rem',
+                }}
+              >
+                {user?.name || t('more_page.default_user')}
+              </Typography>
+              {user?.verification && user.verification.status > 0 && (
+                <Box
+                  sx={{
                     width: 16,
                     height: 16,
                     borderRadius: '50%',
@@ -443,65 +484,72 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    ml: 0.5
-                  }}>
-                    <VerifiedUser sx={{ fontSize: 12, color: 'white' }} />
-                  </Box>
-                )}
-              </Box>
-              <Typography variant="body2" sx={{
-                color: 'rgba(255, 255, 255, 0.7)',
-                fontSize: '0.8rem'
-              }}>
-                @{user?.username || t('more_page.default_username')}
-              </Typography>
+                    ml: 0.5,
+                  }}
+                >
+                  <VerifiedUser sx={{ fontSize: 12, color: 'white' }} />
+                </Box>
+              )}
             </Box>
+            <Typography
+              variant='body2'
+              sx={{
+                color: 'rgba(255, 255, 255, 0.7)',
+                fontSize: '0.8rem',
+              }}
+            >
+              @{user?.username || t('more_page.default_username')}
+            </Typography>
           </Box>
+        </Box>
 
-          {/* Primary Actions Block */}
-          <Box sx={{
+        {/* Primary Actions Block */}
+        <Box
+          sx={{
             width: '100%',
             display: 'flex',
             gap: 1,
             mb: 2,
             flexWrap: { xs: 'wrap', sm: 'nowrap' },
             justifyContent: { xs: 'center', sm: 'flex-start' },
-          }}>
-            {primaryActions.map((item) => (
-              <Button
-                key={item.id}
-                component={item.link ? Link : 'button'}
-                to={item.link}
-                onClick={item.action || (() => {})}
+          }}
+        >
+          {primaryActions.map(item => (
+            <Button
+              key={item.id}
+              component={item.link ? Link : 'button'}
+              to={item.link}
+              onClick={item.action || (() => {})}
+              sx={{
+                flex: 1,
+                minWidth: 0,
+                minHeight: 36,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.13)',
+                borderRadius: '10px',
+                color: 'white',
+                fontWeight: 600,
+                fontSize: '0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 1,
+                px: 1.2,
+                py: 0.7,
+                boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
+                transition: 'all 0.18s',
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.12)',
+                  border: '1px solid rgba(255,255,255,0.22)',
+                  transform: 'translateY(-1px) scale(1.03)',
+                },
+                '&:active': {
+                  transform: 'scale(0.98)',
+                },
+              }}
+            >
+              <Box
                 sx={{
-                  flex: 1,
-                  minWidth: 0,
-                  minHeight: 36,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.13)',
-                  borderRadius: '10px',
-                  color: 'white',
-                  fontWeight: 600,
-                  fontSize: '0.95rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 1,
-                  px: 1.2,
-                  py: 0.7,
-                  boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
-                  transition: 'all 0.18s',
-                  '&:hover': {
-                    background: 'rgba(255,255,255,0.12)',
-                    border: '1px solid rgba(255,255,255,0.22)',
-                    transform: 'translateY(-1px) scale(1.03)'
-                  },
-                  '&:active': {
-                    transform: 'scale(0.98)'
-                  }
-                }}
-              >
-                <Box sx={{
                   width: 20,
                   height: 20,
                   borderRadius: '5px',
@@ -509,127 +557,169 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mr: 1
-                }}>
-                  {React.cloneElement(item.icon, { sx: { fontSize: 16 } })}
-                </Box>
-                <Typography sx={{ color: 'white', fontWeight: 200, fontSize: '0.80rem', lineHeight: 1 }}>{item.title}</Typography>
-              </Button>
-            ))}
-          </Box>
+                  mr: 1,
+                }}
+              >
+                {React.cloneElement(item.icon, { sx: { fontSize: 16 } })}
+              </Box>
+              <Typography
+                sx={{
+                  color: 'white',
+                  fontWeight: 200,
+                  fontSize: '0.80rem',
+                  lineHeight: 1,
+                }}
+              >
+                {item.title}
+              </Typography>
+            </Button>
+          ))}
+        </Box>
 
-          {/* Остальные секции */}
-          <Box sx={{ width: '100%', maxWidth: 800, display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {otherSections.map((section) => (
-              <Box key={section.id}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5, ml: 0.5 }}>
-                  <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{section.title}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
-                  {section.items.map((item) => (
-                    <Button
-                      key={item.id}
-                      onClick={item.action || (() => {})}
-                      component={item.link ? Link : 'button'}
-                      to={item.link}
-                      target={item.external ? '_blank' : undefined}
-                      rel={item.external ? 'noopener noreferrer' : undefined}
+        {/* Остальные секции */}
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 800,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+          }}
+        >
+          {otherSections.map(section => (
+            <Box key={section.id}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  mb: 0.5,
+                  ml: 0.5,
+                }}
+              >
+                <Typography
+                  variant='h6'
+                  sx={{
+                    color: 'rgba(255,255,255,0.8)',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  {section.title}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+                {section.items.map(item => (
+                  <Button
+                    key={item.id}
+                    onClick={item.action || (() => {})}
+                    component={item.link ? Link : 'button'}
+                    to={item.link}
+                    target={item.external ? '_blank' : undefined}
+                    rel={item.external ? 'noopener noreferrer' : undefined}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      padding: '4px 12px',
+                      background: item.highlighted
+                        ? 'rgba(255, 255, 255, 0.08)'
+                        : 'rgba(255, 255, 255, 0.03)',
+                      border: item.highlighted
+                        ? '1px solid rgba(255, 255, 255, 0.2)'
+                        : '1px solid rgba(255, 255, 255, 0.12)',
+                      borderRadius: '8px',
+                      color: 'white',
+                      textTransform: 'none',
+                      transition: 'all 0.2s ease',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      minHeight: '30px',
+                      '&:hover': {
+                        background: item.highlighted
+                          ? 'rgba(255, 255, 255, 0.12)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                        border: item.highlighted
+                          ? '1px solid rgba(255, 255, 255, 0.3)'
+                          : '1px solid rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-1px)',
+                      },
+                      '&:active': {
+                        transform: 'translateY(0)',
+                      },
+                    }}
+                  >
+                    <Box
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        padding: '4px 12px',
-                        background: item.highlighted 
-                          ? 'rgba(255, 255, 255, 0.08)' 
-                          : 'rgba(255, 255, 255, 0.03)',
-                        border: item.highlighted 
-                          ? '1px solid rgba(255, 255, 255, 0.2)' 
-                          : '1px solid rgba(255, 255, 255, 0.12)',
-                        borderRadius: '8px',
-                        color: 'white',
-                        textTransform: 'none',
-                        transition: 'all 0.2s ease',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        minHeight: '30px',
-                        '&:hover': {
-                          background: item.highlighted 
-                            ? 'rgba(255, 255, 255, 0.12)' 
-                            : 'rgba(255, 255, 255, 0.08)',
-                          border: item.highlighted 
-                            ? '1px solid rgba(255, 255, 255, 0.3)' 
-                            : '1px solid rgba(255, 255, 255, 0.2)',
-                          transform: 'translateY(-1px)'
-                        },
-                        '&:active': {
-                          transform: 'translateY(0)'
-                        }
+                        justifyContent: 'center',
+                        width: 24,
+                        height: 24,
+                        borderRadius: '3px',
+                        background: 'transparent',
+                        marginRight: 1.5,
+                        flexShrink: 0,
                       }}
                     >
-                      <Box
+                      {React.cloneElement(item.icon, { sx: { fontSize: 16 } })}
+                    </Box>
+
+                    <Box sx={{ textAlign: 'left', flex: 1 }}>
+                      <Typography
+                        variant='body1'
                         sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 24,
-                          height: 24,
-                          borderRadius: '3px',
-                          background: 'transparent',
-                          marginRight: 1.5,
-                          flexShrink: 0
+                          fontSize: '0.85rem',
+                          fontWeight: 500,
+                          marginBottom: 0.25,
+                          color: 'white',
                         }}
                       >
-                        {React.cloneElement(item.icon, { sx: { fontSize: 16 } })}
-                      </Box>
-                      
-                      <Box sx={{ textAlign: 'left', flex: 1 }}>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            fontSize: '0.85rem',
-                            fontWeight: 500,
-                            marginBottom: 0.25,
-                            color: 'white'
-                          }}
-                        >
-                          {item.title}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            color: 'rgba(255, 255, 255, 0.6)',
-                            fontSize: '0.7rem',
-                            lineHeight: 1.2
-                          }}
-                        >
-                          {item.subtitle}
-                        </Typography>
-                      </Box>
-                    </Button>
-                  ))}
-                </Box>
+                        {item.title}
+                      </Typography>
+                      <Typography
+                        variant='body2'
+                        sx={{
+                          color: 'rgba(255, 255, 255, 0.6)',
+                          fontSize: '0.7rem',
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {item.subtitle}
+                      </Typography>
+                    </Box>
+                  </Button>
+                ))}
               </Box>
-            ))}
-          </Box>
+            </Box>
+          ))}
+        </Box>
 
-          {/* Footer */}
-          <Box sx={{
+        {/* Footer */}
+        <Box
+          sx={{
             width: '100%',
             maxWidth: 800,
             mt: 2,
             padding: '12px',
-            textAlign: 'center'
-          }}>
-            <Typography variant="body2" sx={{
+            textAlign: 'center',
+          }}
+        >
+          <Typography
+            variant='body2'
+            sx={{
               color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: '0.7rem'
-            }}>
-              {t('more_page.footer.version')} • {t('more_page.footer.email')}
-            </Typography>
-          </Box>
+              fontSize: '0.7rem',
+            }}
+          >
+            {t('more_page.footer.version')} • {t('more_page.footer.email')}
+          </Typography>
         </Box>
+      </Box>
     </>
   );
 };
 
-export default MorePage; 
+export default MorePage;

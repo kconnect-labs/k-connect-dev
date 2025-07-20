@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useMemo,
+} from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import styles from '../../uikit.module.css';
@@ -13,14 +19,14 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import PendingIcon from '@mui/icons-material/Pending';
 
-const formatDate = (dateString) => {
+const formatDate = dateString => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('ru-RU', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     hour: 'numeric',
-    minute: 'numeric'
+    minute: 'numeric',
   }).format(date);
 };
 
@@ -33,7 +39,7 @@ const StatusBadge = React.memo(({ status }) => {
       </span>
     );
   }
-  
+
   if (status === 'Решено') {
     return (
       <span className={`${styles.chip} ${styles['chip-success']}`}>
@@ -56,7 +62,7 @@ const StatusBadge = React.memo(({ status }) => {
       </span>
     );
   }
-  
+
   return (
     <span className={`${styles.chip} ${styles['chip-error']}`}>
       <PendingIcon style={{ fontSize: 16 }} />
@@ -76,7 +82,7 @@ const BugReportPage = () => {
   const [newBug, setNewBug] = useState({
     subject: '',
     text: '',
-    site_link: 'k-connect.ru'
+    site_link: 'k-connect.ru',
   });
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState('');
@@ -98,7 +104,7 @@ const BugReportPage = () => {
     }
   }, []);
 
-  const handleBugClick = useCallback(async (bugId) => {
+  const handleBugClick = useCallback(async bugId => {
     try {
       const response = await axios.get(`/api/bugs/${bugId}`);
       setSelectedBug(response.data.bug);
@@ -107,12 +113,12 @@ const BugReportPage = () => {
     }
   }, []);
 
-  const handleInputChange = useCallback((e) => {
+  const handleInputChange = useCallback(e => {
     const { name, value } = e.target;
     setNewBug(prev => ({ ...prev, [name]: value }));
   }, []);
 
-  const handleImageChange = useCallback((e) => {
+  const handleImageChange = useCallback(e => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
@@ -126,57 +132,65 @@ const BugReportPage = () => {
     }
   }, []);
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    setSubmitLoading(true);
-    setError('');
+  const handleSubmit = useCallback(
+    async e => {
+      e.preventDefault();
+      setSubmitLoading(true);
+      setError('');
 
-    try {
-      const formData = new FormData();
-      formData.append('subject', newBug.subject);
-      formData.append('text', newBug.text);
-      formData.append('site_link', newBug.site_link);
-      
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
+      try {
+        const formData = new FormData();
+        formData.append('subject', newBug.subject);
+        formData.append('text', newBug.text);
+        formData.append('site_link', newBug.site_link);
 
-      const response = await axios.post('/api/bugs', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+        if (imageFile) {
+          formData.append('image', imageFile);
         }
-      });
 
-      if (response.data.success) {
-        setNewBug({
-          subject: '',
-          text: '',
-          site_link: 'k-connect.ru'
+        const response = await axios.post('/api/bugs', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
-        setImageFile(null);
-        setImagePreview('');
-        loadBugs();
+
+        if (response.data.success) {
+          setNewBug({
+            subject: '',
+            text: '',
+            site_link: 'k-connect.ru',
+          });
+          setImageFile(null);
+          setImagePreview('');
+          loadBugs();
+        }
+      } catch (err) {
+        console.error('Error submitting bug:', err);
+        setError(
+          err.response?.data?.error || 'Ошибка при отправке баг-репорта'
+        );
+      } finally {
+        setSubmitLoading(false);
       }
-    } catch (err) {
-      console.error('Error submitting bug:', err);
-      setError(err.response?.data?.error || 'Ошибка при отправке баг-репорта');
-    } finally {
-      setSubmitLoading(false);
-    }
-  }, [newBug, imageFile, loadBugs]);
+    },
+    [newBug, imageFile, loadBugs]
+  );
 
   const handleCommentSubmit = useCallback(async () => {
     if (!commentText.trim()) return;
-    
+
     try {
-      const response = await axios.post(`/api/bugs/${selectedBug.id}/comments`, {
-        comment_text: commentText
-      });
-      
+      const response = await axios.post(
+        `/api/bugs/${selectedBug.id}/comments`,
+        {
+          comment_text: commentText,
+        }
+      );
+
       if (response.data.success) {
         setSelectedBug(prev => ({
           ...prev,
-          comments: [...prev.comments, response.data.comment]
+          comments: [...prev.comments, response.data.comment],
         }));
         setCommentText('');
       }
@@ -185,241 +199,332 @@ const BugReportPage = () => {
     }
   }, [commentText, selectedBug?.id]);
 
-  const handleToggleLike = useCallback(async (bugId) => {
-    if (!isAuthenticated) return;
-    
-    try {
-      const response = await axios.post(`/api/bugs/${bugId}/reaction`);
-      
-      if (response.data.success) {
-        setBugs(prev => prev.map(bug => {
-          if (bug.id === bugId) {
-            return {
-              ...bug,
+  const handleToggleLike = useCallback(
+    async bugId => {
+      if (!isAuthenticated) return;
+
+      try {
+        const response = await axios.post(`/api/bugs/${bugId}/reaction`);
+
+        if (response.data.success) {
+          setBugs(prev =>
+            prev.map(bug => {
+              if (bug.id === bugId) {
+                return {
+                  ...bug,
+                  is_liked_by_user: response.data.reaction === 'added',
+                  likes_count:
+                    response.data.reaction === 'added'
+                      ? bug.likes_count + 1
+                      : bug.likes_count - 1,
+                };
+              }
+              return bug;
+            })
+          );
+
+          if (selectedBug && selectedBug.id === bugId) {
+            setSelectedBug(prev => ({
+              ...prev,
               is_liked_by_user: response.data.reaction === 'added',
-              likes_count: response.data.reaction === 'added' 
-                ? bug.likes_count + 1 
-                : bug.likes_count - 1
-            };
+              likes_count:
+                response.data.reaction === 'added'
+                  ? prev.likes_count + 1
+                  : prev.likes_count - 1,
+            }));
           }
-          return bug;
-        }));
-        
-        if (selectedBug && selectedBug.id === bugId) {
+        }
+      } catch (err) {
+        console.error('Error toggling reaction:', err);
+      }
+    },
+    [isAuthenticated, selectedBug?.id]
+  );
+
+  const handleChangeStatus = useCallback(
+    async (bugId, newStatus) => {
+      if (!isAuthenticated || ![3, 54, 57].includes(user?.id)) return;
+
+      try {
+        const response = await axios.post(`/api/bugs/${bugId}/status`, {
+          status: newStatus,
+        });
+
+        if (response.data.success) {
           setSelectedBug(prev => ({
             ...prev,
-            is_liked_by_user: response.data.reaction === 'added',
-            likes_count: response.data.reaction === 'added' 
-              ? prev.likes_count + 1 
-              : prev.likes_count - 1
+            status: response.data.status,
           }));
+
+          setBugs(prev =>
+            prev.map(bug => {
+              if (bug.id === bugId) {
+                return { ...bug, status: response.data.status };
+              }
+              return bug;
+            })
+          );
         }
+      } catch (err) {
+        console.error('Error changing status:', err);
       }
-    } catch (err) {
-      console.error('Error toggling reaction:', err);
-    }
-  }, [isAuthenticated, selectedBug?.id]);
+    },
+    [isAuthenticated, user?.id]
+  );
 
-  const handleChangeStatus = useCallback(async (bugId, newStatus) => {
-    if (!isAuthenticated || ![3, 54, 57].includes(user?.id)) return;
-    
-    try {
-      const response = await axios.post(`/api/bugs/${bugId}/status`, {
-        status: newStatus
-      });
-      
-      if (response.data.success) {
-        setSelectedBug(prev => ({
-          ...prev,
-          status: response.data.status
-        }));
-        
-        setBugs(prev => prev.map(bug => {
-          if (bug.id === bugId) {
-            return { ...bug, status: response.data.status };
-          }
-          return bug;
-        }));
-      }
-    } catch (err) {
-      console.error('Error changing status:', err);
-    }
-  }, [isAuthenticated, user?.id]);
-
-  const isAdmin = useMemo(() => isAuthenticated && user && [3, 54, 57].includes(user.id), [isAuthenticated, user]);
+  const isAdmin = useMemo(
+    () => isAuthenticated && user && [3, 54, 57].includes(user.id),
+    [isAuthenticated, user]
+  );
 
   // Мемоизированные компоненты для предотвращения ререндеров
-  const BugForm = useMemo(() => (
-    <div className={`${styles.card} ${styles['mb-8']}`}>
-      <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
-        Сообщить о проблеме
-      </h2>
-      <form onSubmit={handleSubmit}>
-        <div className={styles['mb-5']}>
-          <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
-            Заголовок
-          </label>
-          <input
-            type="text"
-            name="subject"
-            className={styles.input}
-            required
-            value={newBug.subject}
-            onChange={handleInputChange}
-            maxLength={40}
-            placeholder="Краткое описание проблемы"
-          />
-          <small className={styles['text-secondary']} style={{ fontSize: '12px' }}>
-            До 40 символов
-          </small>
-        </div>
-
-        <div className={styles['mb-5']}>
-          <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
-            Описание
-          </label>
-          <textarea
-            name="text"
-            className={`${styles.input} ${styles.textarea}`}
-            required
-            value={newBug.text}
-            onChange={handleInputChange}
-            maxLength={700}
-            placeholder="Подробное описание проблемы"
-          />
-          <small className={styles['text-secondary']} style={{ fontSize: '12px' }}>
-            До 700 символов
-          </small>
-        </div>
-
-        <div className={`${styles.flex} ${styles['gap-4']} ${styles['mb-5']}`}>
-          <div style={{ flex: 1 }}>
-            <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
-              Сайт
-            </label>
-            <select
-              name="site_link"
-              className={styles.input}
-              value={newBug.site_link}
-              onChange={handleInputChange}
-            >
-              <option value="k-connect.ru">К-Коннект</option>
-              <option value="elemsocial.com">Элемент</option>
-              <option value="clientelement.sault">Клиент Элемента</option>
-            </select>
-          </div>
-          <div style={{ flex: 1 }}>
-            <label className={styles.block} style={{ marginBottom: '8px', fontSize: '14px' }}>
-              Фото
-            </label>
-            <label className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']} ${styles['gap-2']}`} style={{ cursor: 'pointer' }}>
-              <PhotoCamera style={{ fontSize: 20 }} />
-              Загрузить фото
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </label>
-          </div>
-        </div>
-
-        {imagePreview && (
+  const BugForm = useMemo(
+    () => (
+      <div className={`${styles.card} ${styles['mb-8']}`}>
+        <h2
+          className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}
+        >
+          Сообщить о проблеме
+        </h2>
+        <form onSubmit={handleSubmit}>
           <div className={styles['mb-5']}>
-            <img src={imagePreview} alt="Preview" className={styles['img-preview']} />
+            <label
+              className={styles.block}
+              style={{ marginBottom: '8px', fontSize: '14px' }}
+            >
+              Заголовок
+            </label>
+            <input
+              type='text'
+              name='subject'
+              className={styles.input}
+              required
+              value={newBug.subject}
+              onChange={handleInputChange}
+              maxLength={40}
+              placeholder='Краткое описание проблемы'
+            />
+            <small
+              className={styles['text-secondary']}
+              style={{ fontSize: '12px' }}
+            >
+              До 40 символов
+            </small>
           </div>
-        )}
 
-        {error && (
-          <div className={`${styles['mb-5']} ${styles['text-error']}`}>
-            {error}
+          <div className={styles['mb-5']}>
+            <label
+              className={styles.block}
+              style={{ marginBottom: '8px', fontSize: '14px' }}
+            >
+              Описание
+            </label>
+            <textarea
+              name='text'
+              className={`${styles.input} ${styles.textarea}`}
+              required
+              value={newBug.text}
+              onChange={handleInputChange}
+              maxLength={700}
+              placeholder='Подробное описание проблемы'
+            />
+            <small
+              className={styles['text-secondary']}
+              style={{ fontSize: '12px' }}
+            >
+              До 700 символов
+            </small>
           </div>
-        )}
 
-        <button
-          type="submit"
-          className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
-          disabled={submitLoading}
-        >
-          {submitLoading ? (
-            <div className={styles.spinner}></div>
-          ) : (
-            <SendIcon style={{ fontSize: 20 }} />
-          )}
-          Отправить
-        </button>
-      </form>
-    </div>
-  ), [newBug, imagePreview, error, submitLoading, handleSubmit, handleInputChange, handleImageChange]);
-
-  const BugList = useMemo(() => (
-    <div>
-      {bugs.map((bug, index) => (
-        <div 
-          key={bug.id} 
-          className={`${styles.card} ${styles.pointer} ${styles['mb-4']}`}
-          style={{ marginBottom: index === bugs.length - 1 ? '0' : '16px' }}
-          onClick={() => handleBugClick(bug.id)}
-        >
-          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-3']}`}>
-            <h3 className={`${styles['text-base']} ${styles['font-bold']}`} style={{ margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {bug.subject}
-            </h3>
-            <StatusBadge status={bug.status} />
-          </div>
-          
-          <p className={`${styles['text-secondary']} ${styles['mb-3']}`} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {bug.text}
-          </p>
-          
-          <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
-            <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
-              <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
-                {bug.user_name || 'Гость'} • {formatDate(bug.date)}
-              </span>
-              <span className={`${styles.chip} ${styles['chip-primary']}`} style={{ fontSize: '10px' }}>
-                {bug.site_link}
-              </span>
+          <div
+            className={`${styles.flex} ${styles['gap-4']} ${styles['mb-5']}`}
+          >
+            <div style={{ flex: 1 }}>
+              <label
+                className={styles.block}
+                style={{ marginBottom: '8px', fontSize: '14px' }}
+              >
+                Сайт
+              </label>
+              <select
+                name='site_link'
+                className={styles.input}
+                value={newBug.site_link}
+                onChange={handleInputChange}
+              >
+                <option value='k-connect.ru'>К-Коннект</option>
+                <option value='elemsocial.com'>Элемент</option>
+                <option value='clientelement.sault'>Клиент Элемента</option>
+              </select>
             </div>
-            
-            <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
-              <button
-                className={`${styles.btn} ${styles['bg-transparent']}`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleToggleLike(bug.id);
-                }}
-                disabled={!isAuthenticated}
-                style={{ 
-                  color: bug.is_liked_by_user ? '#2196f3' : 'inherit',
-                  padding: '4px'
+            <div style={{ flex: 1 }}>
+              <label
+                className={styles.block}
+                style={{ marginBottom: '8px', fontSize: '14px' }}
+              >
+                Фото
+              </label>
+              <label
+                className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']} ${styles['gap-2']}`}
+                style={{ cursor: 'pointer' }}
+              >
+                <PhotoCamera style={{ fontSize: 20 }} />
+                Загрузить фото
+                <input
+                  type='file'
+                  hidden
+                  accept='image/*'
+                  onChange={handleImageChange}
+                />
+              </label>
+            </div>
+          </div>
+
+          {imagePreview && (
+            <div className={styles['mb-5']}>
+              <img
+                src={imagePreview}
+                alt='Preview'
+                className={styles['img-preview']}
+              />
+            </div>
+          )}
+
+          {error && (
+            <div className={`${styles['mb-5']} ${styles['text-error']}`}>
+              {error}
+            </div>
+          )}
+
+          <button
+            type='submit'
+            className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+            disabled={submitLoading}
+          >
+            {submitLoading ? (
+              <div className={styles.spinner}></div>
+            ) : (
+              <SendIcon style={{ fontSize: 20 }} />
+            )}
+            Отправить
+          </button>
+        </form>
+      </div>
+    ),
+    [
+      newBug,
+      imagePreview,
+      error,
+      submitLoading,
+      handleSubmit,
+      handleInputChange,
+      handleImageChange,
+    ]
+  );
+
+  const BugList = useMemo(
+    () => (
+      <div>
+        {bugs.map((bug, index) => (
+          <div
+            key={bug.id}
+            className={`${styles.card} ${styles.pointer} ${styles['mb-4']}`}
+            style={{ marginBottom: index === bugs.length - 1 ? '0' : '16px' }}
+            onClick={() => handleBugClick(bug.id)}
+          >
+            <div
+              className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-3']}`}
+            >
+              <h3
+                className={`${styles['text-base']} ${styles['font-bold']}`}
+                style={{
+                  margin: 0,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
-                {bug.is_liked_by_user ? 
-                  <ThumbUpIcon style={{ fontSize: 20 }} /> : 
-                  <ThumbUpOutlinedIcon style={{ fontSize: 20 }} />
-                }
-              </button>
-              <span style={{ fontSize: '14px' }}>
-                {bug.likes_count || 0}
-              </span>
+                {bug.subject}
+              </h3>
+              <StatusBadge status={bug.status} />
+            </div>
+
+            <p
+              className={`${styles['text-secondary']} ${styles['mb-3']}`}
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {bug.text}
+            </p>
+
+            <div
+              className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}
+            >
+              <div
+                className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+              >
+                <span
+                  className={styles['text-secondary']}
+                  style={{ fontSize: '12px' }}
+                >
+                  {bug.user_name || 'Гость'} • {formatDate(bug.date)}
+                </span>
+                <span
+                  className={`${styles.chip} ${styles['chip-primary']}`}
+                  style={{ fontSize: '10px' }}
+                >
+                  {bug.site_link}
+                </span>
+              </div>
+
+              <div
+                className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+              >
+                <button
+                  className={`${styles.btn} ${styles['bg-transparent']}`}
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleToggleLike(bug.id);
+                  }}
+                  disabled={!isAuthenticated}
+                  style={{
+                    color: bug.is_liked_by_user ? '#2196f3' : 'inherit',
+                    padding: '4px',
+                  }}
+                >
+                  {bug.is_liked_by_user ? (
+                    <ThumbUpIcon style={{ fontSize: 20 }} />
+                  ) : (
+                    <ThumbUpOutlinedIcon style={{ fontSize: 20 }} />
+                  )}
+                </button>
+                <span style={{ fontSize: '14px' }}>{bug.likes_count || 0}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-    </div>
-  ), [bugs, handleBugClick, handleToggleLike, isAuthenticated]);
+        ))}
+      </div>
+    ),
+    [bugs, handleBugClick, handleToggleLike, isAuthenticated]
+  );
 
   // Список баг-репортов
   if (!selectedBug) {
     return (
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
         <div className={`${styles.card} ${styles['mb-8']}`}>
-          <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-4']}`}>
+          <div
+            className={`${styles.flex} ${styles['items-center']} ${styles['gap-4']}`}
+          >
             <BugReportIcon style={{ fontSize: 48, color: '#f44336' }} />
             <div>
-              <h1 className={`${styles['text-lg']} ${styles['font-bold']} ${styles['mb-2']}`} style={{ margin: '0 0 8px 0' }}>
+              <h1
+                className={`${styles['text-lg']} ${styles['font-bold']} ${styles['mb-2']}`}
+                style={{ margin: '0 0 8px 0' }}
+              >
                 Баг-репорты
               </h1>
               <p className={styles['text-secondary']} style={{ margin: 0 }}>
@@ -432,16 +537,21 @@ const BugReportPage = () => {
         {BugForm}
 
         {/* Список баг-репортов */}
-        <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
+        <h2
+          className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}
+        >
           Список проблем
         </h2>
-        
+
         {loading ? (
           <div className={styles.loading}>
             <div className={styles.spinner}></div>
           </div>
         ) : bugs.length === 0 ? (
-          <div className={`${styles['text-center']} ${styles['text-secondary']}`} style={{ padding: '48px 0' }}>
+          <div
+            className={`${styles['text-center']} ${styles['text-secondary']}`}
+            style={{ padding: '48px 0' }}
+          >
             Баг-репортов пока нет
           </div>
         ) : (
@@ -454,7 +564,7 @@ const BugReportPage = () => {
   // Детальный вид баг-репорта
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
-      <button 
+      <button
         className={`${styles.btn} ${styles['btn-outline']} ${styles['mb-5']}`}
         onClick={() => setSelectedBug(null)}
       >
@@ -462,47 +572,61 @@ const BugReportPage = () => {
       </button>
 
       <div className={`${styles.card} ${styles['mb-8']}`}>
-        <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-5']}`}>
-          <h1 className={`${styles['text-lg']} ${styles['font-bold']}`} style={{ margin: 0 }}>
+        <div
+          className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-5']}`}
+        >
+          <h1
+            className={`${styles['text-lg']} ${styles['font-bold']}`}
+            style={{ margin: 0 }}
+          >
             {selectedBug.subject}
           </h1>
           <StatusBadge status={selectedBug.status} />
         </div>
-        
+
         <p className={`${styles['mb-5']}`} style={{ lineHeight: '1.6' }}>
           {selectedBug.text}
         </p>
-        
+
         {selectedBug.image_url && (
           <div className={styles['mb-5']}>
             <img
               src={`https://${window.location.hostname}${selectedBug.image_url}`}
-              alt="Bug report"
+              alt='Bug report'
               className={styles['img-detail']}
-              onClick={() => window.open(`https://${window.location.hostname}${selectedBug.image_url}`, '_blank')}
+              onClick={() =>
+                window.open(
+                  `https://${window.location.hostname}${selectedBug.image_url}`,
+                  '_blank'
+                )
+              }
             />
           </div>
         )}
-        
-        <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+
+        <div
+          className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}
+        >
           <div>
-            <div className={`${styles.flex} ${styles['items-center']} ${styles['mb-2']}`}>
+            <div
+              className={`${styles.flex} ${styles['items-center']} ${styles['mb-2']}`}
+            >
               <img
                 src={selectedBug.user_avatar}
                 alt={selectedBug.user_name || 'Гость'}
                 className={`${styles.avatar} ${styles['avatar-small']} ${styles['mr-2']}`}
-                onError={(e) => {
+                onError={e => {
                   e.target.style.display = 'none';
                   e.target.nextSibling.style.display = 'flex';
                 }}
               />
-              <div 
+              <div
                 className={`${styles.avatar} ${styles['avatar-small']} ${styles['mr-2']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
-                style={{ 
-                  background: '#2196f3', 
-                  color: 'white', 
+                style={{
+                  background: '#2196f3',
+                  color: 'white',
                   fontSize: '12px',
-                  display: 'none'
+                  display: 'none',
                 }}
               >
                 {selectedBug.user_name ? selectedBug.user_name[0] : 'G'}
@@ -511,51 +635,59 @@ const BugReportPage = () => {
                 {selectedBug.user_name || 'Гость'}
               </span>
             </div>
-            <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+            <span
+              className={styles['text-secondary']}
+              style={{ fontSize: '12px' }}
+            >
               {formatDate(selectedBug.date)}
             </span>
           </div>
-          
-          <div className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}>
+
+          <div
+            className={`${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
+          >
             <button
               className={`${styles.btn} ${styles['bg-transparent']}`}
               onClick={() => handleToggleLike(selectedBug.id)}
               disabled={!isAuthenticated}
-              style={{ 
+              style={{
                 color: selectedBug.is_liked_by_user ? '#2196f3' : 'inherit',
-                padding: '4px'
+                padding: '4px',
               }}
             >
-              {selectedBug.is_liked_by_user ? 
-                <ThumbUpIcon style={{ fontSize: 20 }} /> : 
+              {selectedBug.is_liked_by_user ? (
+                <ThumbUpIcon style={{ fontSize: 20 }} />
+              ) : (
                 <ThumbUpOutlinedIcon style={{ fontSize: 20 }} />
-              }
+              )}
             </button>
             <span style={{ fontSize: '14px' }}>
               {selectedBug.likes_count || 0}
             </span>
           </div>
         </div>
-        
+
         {isAdmin && (
           <>
             <div className={styles.divider}></div>
             <div className={`${styles.flex} ${styles['gap-2']}`}>
-              <button 
+              <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
                 style={{ color: '#4caf50', borderColor: '#4caf50' }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Решено')}
               >
                 Решено
               </button>
-              <button 
+              <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
                 style={{ color: '#2196f3', borderColor: '#2196f3' }}
-                onClick={() => handleChangeStatus(selectedBug.id, 'В обработке')}
+                onClick={() =>
+                  handleChangeStatus(selectedBug.id, 'В обработке')
+                }
               >
                 В обработке
               </button>
-              <button 
+              <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
                 style={{ color: '#f44336', borderColor: '#f44336' }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Открыт')}
@@ -567,46 +699,61 @@ const BugReportPage = () => {
         )}
       </div>
 
-      <h2 className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}>
+      <h2
+        className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}
+      >
         Комментарии ({selectedBug.comments?.length || 0})
       </h2>
-      
+
       {/* Список комментариев */}
       {selectedBug.comments?.length > 0 ? (
         <div>
           {selectedBug.comments.map((comment, index) => (
-            <div 
-              key={comment.id} 
+            <div
+              key={comment.id}
               className={`${styles['comment-card']} ${styles['mb-3']}`}
-              style={{ marginBottom: index === selectedBug.comments.length - 1 ? '0' : '12px' }}
+              style={{
+                marginBottom:
+                  index === selectedBug.comments.length - 1 ? '0' : '12px',
+              }}
             >
-              <div className={`${styles.flex} ${styles['items-start']} ${styles['gap-3']}`}>
+              <div
+                className={`${styles.flex} ${styles['items-start']} ${styles['gap-3']}`}
+              >
                 <img
                   src={comment.user_avatar}
                   alt={comment.user_name || 'Гость'}
                   className={`${styles.avatar} ${styles['avatar-medium']}`}
-                  onError={(e) => {
+                  onError={e => {
                     e.target.style.display = 'none';
                     e.target.nextSibling.style.display = 'flex';
                   }}
                 />
-                <div 
+                <div
                   className={`${styles.avatar} ${styles['avatar-medium']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
-                  style={{ 
-                    background: '#2196f3', 
-                    color: 'white', 
+                  style={{
+                    background: '#2196f3',
+                    color: 'white',
                     fontSize: '14px',
-                    display: 'none'
+                    display: 'none',
                   }}
                 >
                   {comment.user_name ? comment.user_name[0] : 'G'}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div className={`${styles.flex} ${styles['justify-between']} ${styles['mb-2']}`}>
-                    <span className={styles['font-medium']} style={{ fontSize: '14px' }}>
+                  <div
+                    className={`${styles.flex} ${styles['justify-between']} ${styles['mb-2']}`}
+                  >
+                    <span
+                      className={styles['font-medium']}
+                      style={{ fontSize: '14px' }}
+                    >
                       {comment.user_name || 'Гость'}
                     </span>
-                    <span className={styles['text-secondary']} style={{ fontSize: '12px' }}>
+                    <span
+                      className={styles['text-secondary']}
+                      style={{ fontSize: '12px' }}
+                    >
                       {formatDate(comment.timestamp)}
                     </span>
                   </div>
@@ -619,22 +766,27 @@ const BugReportPage = () => {
           ))}
         </div>
       ) : (
-        <div className={`${styles['text-center']} ${styles['text-secondary']}`} style={{ padding: '24px 0' }}>
+        <div
+          className={`${styles['text-center']} ${styles['text-secondary']}`}
+          style={{ padding: '24px 0' }}
+        >
           Комментариев пока нет
         </div>
       )}
-      
+
       {/* Форма добавления комментария */}
       <div className={`${styles.card} ${styles['mt-4']}`}>
         <textarea
           className={`${styles.input} ${styles.textarea}`}
-          placeholder="Добавить комментарий..."
+          placeholder='Добавить комментарий...'
           value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
+          onChange={e => setCommentText(e.target.value)}
           maxLength={500}
           rows={2}
         />
-        <div className={`${styles.flex} ${styles['justify-end']} ${styles['mt-2']}`}>
+        <div
+          className={`${styles.flex} ${styles['justify-end']} ${styles['mt-2']}`}
+        >
           <button
             className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
             onClick={handleCommentSubmit}
@@ -649,4 +801,4 @@ const BugReportPage = () => {
   );
 };
 
-export default BugReportPage; 
+export default BugReportPage;

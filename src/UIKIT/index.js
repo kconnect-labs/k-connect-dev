@@ -12,7 +12,6 @@ import TransferMenu from './TransferMenu';
 import InventoryItemCard from './InventoryItemCard';
 import Badge from './Badge';
 
-
 export {
   ContextMenu,
   useContextMenu,
@@ -29,5 +28,5 @@ export {
   CommentSystem,
   TransferMenu,
   InventoryItemCard,
-  Badge
+  Badge,
 };

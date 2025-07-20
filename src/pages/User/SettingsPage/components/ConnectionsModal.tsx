@@ -16,20 +16,26 @@ import {
   TextField,
   Alert,
   alpha,
-  useTheme
+  useTheme,
 } from '@mui/material';
 import {
   Telegram as TelegramIcon,
   Close as CloseIcon,
   Check as CheckIcon,
-  Favorite as FavoriteIcon
+  Favorite as FavoriteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 
 // Иконка для Element
 const ElementIcon = (props: any) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+  <svg
+    width='24'
+    height='24'
+    viewBox='0 0 24 24'
+    fill='currentColor'
+    {...props}
+  >
+    <path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' />
   </svg>
 );
 
@@ -39,24 +45,29 @@ interface ConnectionsModalProps {
   onSuccess: (message: string) => void;
 }
 
-const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSuccess }) => {
+const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
+  open,
+  onClose,
+  onSuccess,
+}) => {
   const theme = useTheme();
-  
+
   // Состояние для Telegram
   const [telegramConnected, setTelegramConnected] = useState(false);
   const [telegramDialogOpen, setTelegramDialogOpen] = useState(false);
   const [telegramIdInput, setTelegramIdInput] = useState('');
   const [telegramIdError, setTelegramIdError] = useState('');
   const [savingTelegramId, setSavingTelegramId] = useState(false);
-  
+
   // Состояние для Element
   const [elementConnected, setElementConnected] = useState(false);
   const [elementLinking, setElementLinking] = useState(false);
   const [elementToken, setElementToken] = useState('');
   const [loadingElementStatus, setLoadingElementStatus] = useState(false);
-  
+
   // Состояние для уведомлений
-  const [telegramNotificationsEnabled, setTelegramNotificationsEnabled] = useState(false);
+  const [telegramNotificationsEnabled, setTelegramNotificationsEnabled] =
+    useState(false);
   const [savingNotificationPrefs, setSavingNotificationPrefs] = useState(false);
 
   // Загрузка данных при открытии модала
@@ -72,7 +83,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
     try {
       // Загружаем статус Element
       await checkElementStatus();
-      
+
       // Загружаем статус Telegram
       const response = await axios.get('/api/notifications/preferences');
       if (response.data && response.data.telegram_connected !== undefined) {
@@ -88,7 +99,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
     try {
       const response = await axios.get('/api/notifications/preferences');
       if (response.data) {
-        setTelegramNotificationsEnabled(response.data.telegram_notifications_enabled || false);
+        setTelegramNotificationsEnabled(
+          response.data.telegram_notifications_enabled || false
+        );
       }
     } catch (error) {
       console.error('Ошибка загрузки настроек уведомлений:', error);
@@ -116,8 +129,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
   const generateElementToken = async () => {
     try {
       setElementLinking(true);
-      const randomToken = Math.random().toString(36).substring(2, 15) + 
-                          Math.random().toString(36).substring(2, 15);
+      const randomToken =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
       setElementToken(randomToken);
       onSuccess('Перейдите по ссылке, чтобы привязать Element аккаунт');
     } catch (error) {
@@ -130,7 +144,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
   // Подключение Element
   const handleLinkElement = () => {
     generateElementToken();
-    
+
     const checkInterval = setInterval(() => {
       checkElementStatus().then(isConnected => {
         if (isConnected) {
@@ -141,9 +155,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
         }
       });
     }, 2000);
-    
+
     localStorage.setItem('element_auth_pending', 'true');
-    
+
     setTimeout(() => {
       clearInterval(checkInterval);
       localStorage.removeItem('element_auth_pending');
@@ -162,32 +176,38 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
     try {
       setTelegramIdError('');
       setSavingTelegramId(true);
-      
+
       if (!telegramIdInput.trim()) {
         setTelegramIdError('Telegram ID не может быть пустым');
         return;
       }
-      
+
       if (!/^\d+$/.test(telegramIdInput.trim())) {
         setTelegramIdError('Telegram ID должен быть числом');
         return;
       }
-      
+
       const response = await axios.post('/api/profile/telegram-connect', {
-        telegram_id: telegramIdInput.trim()
+        telegram_id: telegramIdInput.trim(),
       });
-      
+
       if (response.data && response.data.success) {
         setTelegramConnected(true);
         onSuccess('Telegram аккаунт успешно привязан');
         setTelegramDialogOpen(false);
         setTelegramIdInput('');
       } else {
-        throw new Error(response.data?.error || 'Не удалось привязать Telegram ID');
+        throw new Error(
+          response.data?.error || 'Не удалось привязать Telegram ID'
+        );
       }
     } catch (error: any) {
       console.error('Ошибка при привязке Telegram ID:', error);
-      setTelegramIdError(error.response?.data?.error || error.message || 'Произошла ошибка при привязке Telegram ID');
+      setTelegramIdError(
+        error.response?.data?.error ||
+          error.message ||
+          'Произошла ошибка при привязке Telegram ID'
+      );
     } finally {
       setSavingTelegramId(false);
     }
@@ -200,25 +220,29 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
         onSuccess('Для получения уведомлений сначала подключите Telegram');
         return;
       }
-      
+
       setSavingNotificationPrefs(true);
       const newTelegramEnabled = !telegramNotificationsEnabled;
-      
+
       const response = await axios.post('/api/notifications/preferences', {
-        telegram_notifications_enabled: newTelegramEnabled
+        telegram_notifications_enabled: newTelegramEnabled,
       });
-      
+
       if (response.data && response.data.success) {
         setTelegramNotificationsEnabled(newTelegramEnabled);
-        onSuccess(newTelegramEnabled ? 
-          'Telegram-уведомления включены' : 
-          'Telegram-уведомления отключены');
+        onSuccess(
+          newTelegramEnabled
+            ? 'Telegram-уведомления включены'
+            : 'Telegram-уведомления отключены'
+        );
       } else {
         throw new Error(response.data?.error || 'Ошибка сохранения настроек');
       }
     } catch (error: any) {
       console.error('Ошибка при переключении Telegram-уведомлений:', error);
-      onSuccess(error.message || 'Не удалось изменить настройки Telegram-уведомлений');
+      onSuccess(
+        error.message || 'Не удалось изменить настройки Telegram-уведомлений'
+      );
     } finally {
       setSavingNotificationPrefs(false);
     }
@@ -242,20 +266,25 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
             maxWidth: { xs: '100%', sm: 550 },
             minHeight: { xs: '100vh', sm: 'auto' },
             maxHeight: { xs: '100vh', sm: '90vh' },
-            m: { xs: 0, sm: 2 }
-          }
+            m: { xs: 0, sm: 2 },
+          },
         }}
       >
-        <DialogTitle sx={{ 
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+        <DialogTitle
+          sx={{
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography variant='h6' sx={{ color: 'white', fontWeight: 600 }}>
             Связанные аккаунты
           </Typography>
-          <IconButton onClick={onClose} sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <IconButton
+            onClick={onClose}
+            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+          >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -263,143 +292,171 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
         <DialogContent sx={{ p: 3 }}>
           <List disablePadding>
             {/* Telegram аккаунт */}
-            <ListItem 
-              sx={{ 
-                py: 2, 
+            <ListItem
+              sx={{
+                py: 2,
                 px: 2,
                 borderRadius: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                mb: 2
+                mb: 2,
               }}
             >
               <ListItemIcon sx={{ minWidth: 40 }}>
-                <TelegramIcon sx={{ color: telegramConnected ? '#D0BCFF' : '#777' }} />
+                <TelegramIcon
+                  sx={{ color: telegramConnected ? '#D0BCFF' : '#777' }}
+                />
               </ListItemIcon>
-              <ListItemText 
-                primary="Telegram"
+              <ListItemText
+                primary='Telegram'
                 primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
-                secondary={telegramConnected ? "Подключен" : "Не подключен"}
+                secondary={telegramConnected ? 'Подключен' : 'Не подключен'}
                 secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
               />
               <Button
-                variant="contained"
-                size="small"
+                variant='contained'
+                size='small'
                 onClick={() => setTelegramDialogOpen(true)}
                 sx={{
-                  bgcolor: telegramConnected ? 'transparent' : 'rgba(208, 188, 255, 0.1)',
+                  bgcolor: telegramConnected
+                    ? 'transparent'
+                    : 'rgba(208, 188, 255, 0.1)',
                   color: telegramConnected ? 'success.main' : '#D0BCFF',
-                  border: telegramConnected ? 'none' : '1px solid rgba(208, 188, 255, 0.3)',
+                  border: telegramConnected
+                    ? 'none'
+                    : '1px solid rgba(208, 188, 255, 0.3)',
                   boxShadow: 'none',
                   minWidth: 'auto',
                   px: 2,
                   '&:hover': {
                     bgcolor: 'rgba(208, 188, 255, 0.2)',
-                  }
+                  },
                 }}
               >
                 {telegramConnected ? (
-                  <CheckIcon fontSize="small" />
-                ) : 'Подключить'}
+                  <CheckIcon fontSize='small' />
+                ) : (
+                  'Подключить'
+                )}
               </Button>
             </ListItem>
 
             {/* Element аккаунт */}
-            <ListItem 
-              sx={{ 
-                py: 2, 
+            <ListItem
+              sx={{
+                py: 2,
                 px: 2,
                 borderRadius: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                mb: 2
+                mb: 2,
               }}
             >
               <ListItemIcon sx={{ minWidth: 40 }}>
-                <ElementIcon sx={{ color: elementConnected ? '#D0BCFF' : '#777' }} />
+                <ElementIcon
+                  sx={{ color: elementConnected ? '#D0BCFF' : '#777' }}
+                />
               </ListItemIcon>
-              <ListItemText 
-                primary="Element"
+              <ListItemText
+                primary='Element'
                 primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
-                secondary={loadingElementStatus ? "Проверка статуса..." : (elementConnected ? "Подключен" : "Не подключен")}
+                secondary={
+                  loadingElementStatus
+                    ? 'Проверка статуса...'
+                    : elementConnected
+                      ? 'Подключен'
+                      : 'Не подключен'
+                }
                 secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
               />
               {loadingElementStatus ? (
                 <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
+              ) : elementLinking ? (
+                <IconButton
+                  edge='end'
+                  color='error'
+                  onClick={handleCancelElementLinking}
+                  size='small'
+                >
+                  <CloseIcon fontSize='small' />
+                </IconButton>
               ) : (
-                elementLinking ? (
-                  <IconButton 
-                    edge="end" 
-                    color="error" 
-                    onClick={handleCancelElementLinking}
-                    size="small"
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                ) : (
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={elementConnected ? undefined : handleLinkElement}
-                    disabled={elementConnected}
-                    sx={{
-                      bgcolor: elementConnected ? 'transparent' : 'rgba(208, 188, 255, 0.1)',
-                      color: elementConnected ? 'success.main' : '#D0BCFF',
-                      border: elementConnected ? 'none' : '1px solid rgba(208, 188, 255, 0.3)',
-                      boxShadow: 'none',
-                      minWidth: 'auto',
-                      px: 2,
-                      '&:hover': {
-                        bgcolor: 'rgba(208, 188, 255, 0.2)',
-                      }
-                    }}
-                  >
-                    {elementConnected ? (
-                      <CheckIcon fontSize="small" />
-                    ) : 'Подключить'}
-                  </Button>
-                )
+                <Button
+                  variant='contained'
+                  size='small'
+                  onClick={elementConnected ? undefined : handleLinkElement}
+                  disabled={elementConnected}
+                  sx={{
+                    bgcolor: elementConnected
+                      ? 'transparent'
+                      : 'rgba(208, 188, 255, 0.1)',
+                    color: elementConnected ? 'success.main' : '#D0BCFF',
+                    border: elementConnected
+                      ? 'none'
+                      : '1px solid rgba(208, 188, 255, 0.3)',
+                    boxShadow: 'none',
+                    minWidth: 'auto',
+                    px: 2,
+                    '&:hover': {
+                      bgcolor: 'rgba(208, 188, 255, 0.2)',
+                    },
+                  }}
+                >
+                  {elementConnected ? (
+                    <CheckIcon fontSize='small' />
+                  ) : (
+                    'Подключить'
+                  )}
+                </Button>
               )}
             </ListItem>
 
             {/* Telegram уведомления */}
             {telegramConnected && (
-              <ListItem 
-                sx={{ 
-                  py: 2, 
+              <ListItem
+                sx={{
+                  py: 2,
                   px: 2,
                   borderRadius: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  mb: 2
+                  mb: 2,
                 }}
               >
                 <ListItemIcon sx={{ minWidth: 40 }}>
-                  <TelegramIcon color={telegramNotificationsEnabled ? "success" : "action"} />
+                  <TelegramIcon
+                    color={telegramNotificationsEnabled ? 'success' : 'action'}
+                  />
                 </ListItemIcon>
-                <ListItemText 
-                  primary="Telegram-уведомления" 
+                <ListItemText
+                  primary='Telegram-уведомления'
                   primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
-                  secondary="Получать уведомления в Telegram"
-                  secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                  secondary='Получать уведомления в Telegram'
+                  secondaryTypographyProps={{
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  }}
                 />
                 {savingNotificationPrefs ? (
                   <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
                 ) : (
                   <Button
-                    variant="contained"
-                    size="small"
+                    variant='contained'
+                    size='small'
                     onClick={handleToggleTelegramNotifications}
                     sx={{
-                      bgcolor: telegramNotificationsEnabled ? 'rgba(76, 175, 80, 0.1)' : 'rgba(208, 188, 255, 0.1)',
-                      color: telegramNotificationsEnabled ? 'success.main' : '#D0BCFF',
+                      bgcolor: telegramNotificationsEnabled
+                        ? 'rgba(76, 175, 80, 0.1)'
+                        : 'rgba(208, 188, 255, 0.1)',
+                      color: telegramNotificationsEnabled
+                        ? 'success.main'
+                        : '#D0BCFF',
                       border: '1px solid rgba(208, 188, 255, 0.3)',
                       boxShadow: 'none',
                       minWidth: 'auto',
                       px: 2,
                       '&:hover': {
                         bgcolor: 'rgba(208, 188, 255, 0.2)',
-                      }
+                      },
                     }}
                   >
                     {telegramNotificationsEnabled ? 'Включены' : 'Выключены'}
@@ -410,8 +467,11 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
           </List>
 
           {elementToken && (
-            <Alert severity="info" sx={{ mt: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', color: 'white' }}>
-              <Typography variant="body2">
+            <Alert
+              severity='info'
+              sx={{ mt: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', color: 'white' }}
+            >
+              <Typography variant='body2'>
                 Токен для подключения: <strong>{elementToken}</strong>
               </Typography>
             </Alert>
@@ -425,35 +485,40 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
         onClose={() => setTelegramDialogOpen(false)}
         maxWidth={false}
         fullWidth
-              PaperProps={{
-        sx: {
-          bgcolor: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: { xs: 0, sm: 2 },
-          m: { xs: 0, sm: 2 },
-          width: { xs: '100%', sm: '100%' },
-          height: { xs: '100vh', sm: 'auto' },
-          maxWidth: { xs: '100%', sm: 550 },
-          maxHeight: { xs: '100vh', sm: '90vh' }
-        }
-      }}
+        PaperProps={{
+          sx: {
+            bgcolor: 'rgba(255, 255, 255, 0.03)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: { xs: 0, sm: 2 },
+            m: { xs: 0, sm: 2 },
+            width: { xs: '100%', sm: '100%' },
+            height: { xs: '100vh', sm: 'auto' },
+            maxWidth: { xs: '100%', sm: 550 },
+            maxHeight: { xs: '100vh', sm: '90vh' },
+          },
+        }}
       >
-        <DialogTitle sx={{ 
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          color: 'white'
-        }}>
+        <DialogTitle
+          sx={{
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            color: 'white',
+          }}
+        >
           Подключение Telegram
         </DialogTitle>
         <DialogContent sx={{ p: 3 }}>
-          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+          <Typography
+            variant='body2'
+            sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}
+          >
             Введите ваш Telegram ID для подключения аккаунта
           </Typography>
           <TextField
             fullWidth
-            label="Telegram ID"
+            label='Telegram ID'
             value={telegramIdInput}
-            onChange={(e) => setTelegramIdInput(e.target.value)}
+            onChange={e => setTelegramIdInput(e.target.value)}
             error={!!telegramIdError}
             helperText={telegramIdError}
             sx={{
@@ -476,24 +541,30 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
           />
         </DialogContent>
         <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button 
+          <Button
             onClick={() => setTelegramDialogOpen(false)}
             sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
           >
             Отмена
           </Button>
-          <Button 
+          <Button
             onClick={handleSaveTelegramId}
-            variant="contained"
+            variant='contained'
             disabled={savingTelegramId || !telegramIdInput.trim()}
-            startIcon={savingTelegramId ? <CircularProgress size={16} /> : <TelegramIcon />}
+            startIcon={
+              savingTelegramId ? (
+                <CircularProgress size={16} />
+              ) : (
+                <TelegramIcon />
+              )
+            }
             sx={{
               bgcolor: 'rgba(208, 188, 255, 0.1)',
               color: '#D0BCFF',
               border: '1px solid rgba(208, 188, 255, 0.3)',
               '&:hover': {
                 bgcolor: 'rgba(208, 188, 255, 0.2)',
-              }
+              },
             }}
           >
             {savingTelegramId ? 'Подключение...' : 'Подключить'}
@@ -504,4 +575,4 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({ open, onClose, onSu
   );
 };
 
-export default ConnectionsModal; 
+export default ConnectionsModal;

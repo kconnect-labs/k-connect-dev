@@ -14,7 +14,7 @@ const TrackList = ({ tracks, loading, onPlay, playingTrackId }) => {
   if (!tracks || tracks.length === 0) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-        <Typography color="text.secondary">Здесь пока ничего нет.</Typography>
+        <Typography color='text.secondary'>Здесь пока ничего нет.</Typography>
       </Box>
     );
   }
@@ -34,4 +34,4 @@ const TrackList = ({ tracks, loading, onPlay, playingTrackId }) => {
   );
 };
 
-export default TrackList; 
+export default TrackList;

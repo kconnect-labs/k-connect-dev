@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Container, 
-  CircularProgress, 
-  Alert, 
-  IconButton, 
+import {
+  Box,
+  Typography,
+  Container,
+  CircularProgress,
+  Alert,
+  IconButton,
   Tooltip,
   Card,
   CardContent,
@@ -16,7 +16,7 @@ import {
   ListItemSecondaryAction,
   Avatar,
   Chip,
-  Divider
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMusic } from '../../../context/MusicContext';
@@ -49,7 +49,9 @@ const HeaderCard = styled(Card)(({ theme }) => ({
 
 const TrackListItem = styled(ListItem)(({ theme, isActive }) => ({
   borderRadius: 12,
-  background: isActive ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+  background: isActive
+    ? 'rgba(255, 255, 255, 0.05)'
+    : 'rgba(255, 255, 255, 0.02)',
   backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25), // 2px отступ между треками
@@ -129,15 +131,18 @@ const LikedTracksPage = ({ onBack }) => {
     }
   };
 
-  const handlePlayTrack = useCallback((track) => {
-    if (isPlaying && currentTrack?.id === track.id) {
-      togglePlay();
-    } else {
-      playTrack(track, 'liked');
-    }
-  }, [isPlaying, currentTrack, playTrack, togglePlay]);
+  const handlePlayTrack = useCallback(
+    track => {
+      if (isPlaying && currentTrack?.id === track.id) {
+        togglePlay();
+      } else {
+        playTrack(track, 'liked');
+      }
+    },
+    [isPlaying, currentTrack, playTrack, togglePlay]
+  );
 
-  const handleLikeTrack = async (trackId) => {
+  const handleLikeTrack = async trackId => {
     try {
       const response = await apiClient.post(`/api/music/${trackId}/like`);
       if (response.data.success) {
@@ -146,9 +151,13 @@ const LikedTracksPage = ({ onBack }) => {
           if (track && track.is_liked) {
             return prevTracks.filter(t => t.id !== trackId);
           } else {
-            return prevTracks.map(track => 
-              track.id === trackId 
-                ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
+            return prevTracks.map(track =>
+              track.id === trackId
+                ? {
+                    ...track,
+                    is_liked: !track.is_liked,
+                    likes_count: response.data.likes_count,
+                  }
                 : track
             );
           }
@@ -159,7 +168,7 @@ const LikedTracksPage = ({ onBack }) => {
     }
   };
 
-  const formatDuration = (seconds) => {
+  const formatDuration = seconds => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
@@ -181,40 +190,60 @@ const LikedTracksPage = ({ onBack }) => {
 
   if (loading) {
     return (
-      <PageContainer maxWidth="xl" disableGutters sx={{ pb: 10 }}>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-          <CircularProgress color="primary" />
+      <PageContainer maxWidth='xl' disableGutters sx={{ pb: 10 }}>
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='60vh'
+        >
+          <CircularProgress color='primary' />
         </Box>
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer maxWidth="xl" disableGutters sx={{ pb: 10 }}>
-      <HeaderCard sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <CardContent sx={{ display: 'flex', alignItems: 'center', width: '100%', p: 2, pb: '16px !important' }}>
-          <IconButton 
-            onClick={onBack} 
-            sx={{ 
-              mr: 2, 
+    <PageContainer maxWidth='xl' disableGutters sx={{ pb: 10 }}>
+      <HeaderCard
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 2,
+        }}
+      >
+        <CardContent
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            p: 2,
+            pb: '16px !important',
+          }}
+        >
+          <IconButton
+            onClick={onBack}
+            sx={{
+              mr: 2,
               color: 'text.primary',
               backgroundColor: 'rgba(255, 255, 255, 0.05)',
               '&:hover': {
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              }
+              },
             }}
           >
             <ArrowBackIcon />
           </IconButton>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h4" fontWeight={700} sx={{ mb: 0.5 }}>
+            <Typography variant='h4' fontWeight={700} sx={{ mb: 0.5 }}>
               Мои любимые
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               {tracks.length} треков в вашей коллекции
             </Typography>
           </Box>
-          <Tooltip title="Загрузить трек">
+          <Tooltip title='Загрузить трек'>
             <IconButton
               onClick={handleOpenUploadDialog}
               sx={{
@@ -228,32 +257,36 @@ const LikedTracksPage = ({ onBack }) => {
                 transition: 'background 0.2s',
                 '&:hover': {
                   background: 'rgba(255,255,255,0.08)',
-                }
+                },
               }}
-              size="large"
+              size='large'
             >
-              <UploadIcon fontSize="medium" />
+              <UploadIcon fontSize='medium' />
             </IconButton>
           </Tooltip>
         </CardContent>
       </HeaderCard>
 
-      <MusicUploadDialog open={uploadDialogOpen} onClose={handleCloseUploadDialog} onSuccess={fetchLikedTracks} />
+      <MusicUploadDialog
+        open={uploadDialogOpen}
+        onClose={handleCloseUploadDialog}
+        onSuccess={fetchLikedTracks}
+      />
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3, borderRadius: 12 }}>
+        <Alert severity='error' sx={{ mb: 3, borderRadius: 12 }}>
           {error}
         </Alert>
       )}
 
       {tracks.length === 0 ? (
-        <Box 
-          display="flex" 
-          flexDirection="column" 
-          alignItems="center" 
-          justifyContent="center" 
-          minHeight="40vh"
-          sx={{ 
+        <Box
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          minHeight='40vh'
+          sx={{
             borderRadius: 12,
             background: 'rgba(255, 255, 255, 0.02)',
             backdropFilter: 'blur(20px)',
@@ -261,10 +294,10 @@ const LikedTracksPage = ({ onBack }) => {
           }}
         >
           <FavoriteIcon sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+          <Typography variant='h6' color='text.secondary' sx={{ mb: 1 }}>
             У вас пока нет любимых треков
           </Typography>
-          <Typography variant="body2" color="text.secondary" textAlign="center">
+          <Typography variant='body2' color='text.secondary' textAlign='center'>
             Лайкайте треки, которые вам нравятся, и они появятся здесь
           </Typography>
         </Box>
@@ -276,32 +309,33 @@ const LikedTracksPage = ({ onBack }) => {
 
             return (
               <React.Fragment key={track.id}>
-                <TrackListItem 
+                <TrackListItem
                   isActive={isCurrentTrack}
                   onClick={() => handlePlayTrack(track)}
-                  onContextMenu={(e) => {
+                  onContextMenu={e => {
                     e.preventDefault();
                     handleOpenMenu(e, track);
                   }}
                 >
                   <ListItemAvatar>
-                    <TrackAvatar
-                      src={track.cover_path}
-                      alt={track.title}
-                    />
+                    <TrackAvatar src={track.cover_path} alt={track.title} />
                   </ListItemAvatar>
-                  
+
                   <ListItemText
                     primary={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography 
-                          variant="body1" 
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                      >
+                        <Typography
+                          variant='body1'
                           fontWeight={isCurrentTrack ? 600 : 500}
-                          sx={{ 
-                            color: isCurrentTrack ? 'primary.main' : 'text.primary',
+                          sx={{
+                            color: isCurrentTrack
+                              ? 'primary.main'
+                              : 'text.primary',
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {track.title}
@@ -310,35 +344,49 @@ const LikedTracksPage = ({ onBack }) => {
                     }
                     secondary={
                       <Box>
-                        <Typography 
-                          variant="body2" 
-                          color="text.secondary"
-                          sx={{ 
+                        <Typography
+                          variant='body2'
+                          color='text.secondary'
+                          sx={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {track.artist}
                         </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                          <AccessTimeIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                          <Typography variant="caption" color="text.secondary">
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            mt: 0.5,
+                          }}
+                        >
+                          <AccessTimeIcon
+                            sx={{ fontSize: 14, color: 'text.secondary' }}
+                          />
+                          <Typography variant='caption' color='text.secondary'>
                             {formatDuration(track.duration)}
                           </Typography>
                           {track.genre && (
                             <>
-                              <Typography variant="caption" color="text.secondary">•</Typography>
-                              <Chip 
-                                label={track.genre} 
-                                size="small" 
-                                sx={{ 
+                              <Typography
+                                variant='caption'
+                                color='text.secondary'
+                              >
+                                •
+                              </Typography>
+                              <Chip
+                                label={track.genre}
+                                size='small'
+                                sx={{
                                   height: 20,
                                   fontSize: '0.7rem',
                                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                                   color: 'text.secondary',
                                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                                }} 
+                                }}
                               />
                             </>
                           )}
@@ -346,30 +394,36 @@ const LikedTracksPage = ({ onBack }) => {
                       </Box>
                     }
                   />
-                  
+
                   <ListItemSecondaryAction>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <ActionButton
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           handleLikeTrack(track.id);
                         }}
                       >
-                        {track.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                        {track.is_liked ? (
+                          <FavoriteIcon />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
                       </ActionButton>
                       <ActionButton
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           handlePlayTrack(track);
                         }}
-                        sx={{ 
-                          color: isCurrentTrack ? 'primary.main' : 'text.secondary',
+                        sx={{
+                          color: isCurrentTrack
+                            ? 'primary.main'
+                            : 'text.secondary',
                         }}
                       >
                         {isTrackPlaying ? <PauseIcon /> : <PlayArrowIcon />}
                       </ActionButton>
                       <ActionButton
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           handleOpenMenu(e, track);
                         }}
@@ -380,11 +434,13 @@ const LikedTracksPage = ({ onBack }) => {
                   </ListItemSecondaryAction>
                 </TrackListItem>
                 {index < tracks.length - 1 && (
-                  <Divider sx={{ 
-                    mx: 2, 
-                    borderColor: 'rgba(255, 255, 255, 0.05)',
-                    opacity: 0.5 
-                  }} />
+                  <Divider
+                    sx={{
+                      mx: 2,
+                      borderColor: 'rgba(255, 255, 255, 0.05)',
+                      opacity: 0.5,
+                    }}
+                  />
                 )}
               </React.Fragment>
             );
@@ -404,17 +460,30 @@ const LikedTracksPage = ({ onBack }) => {
             border: '1px solid rgba(255,255,255,0.05)',
             borderRadius: 2,
             boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-          }
+          },
         }}
       >
         {selectedTrack && (
-          <MenuItem onClick={() => { handlePlayTrack(selectedTrack); handleCloseMenu(); }}>
-            <PlayArrowIcon fontSize="small" sx={{ mr: 1 }} /> Воспроизвести
+          <MenuItem
+            onClick={() => {
+              handlePlayTrack(selectedTrack);
+              handleCloseMenu();
+            }}
+          >
+            <PlayArrowIcon fontSize='small' sx={{ mr: 1 }} /> Воспроизвести
           </MenuItem>
         )}
         {selectedTrack && (
-          <MenuItem onClick={() => { navigator.clipboard.writeText(window.location.origin + '/music/' + selectedTrack.id); handleCloseMenu(); }}>
-            <FavoriteBorderIcon fontSize="small" sx={{ mr: 1 }} /> Копировать ссылку
+          <MenuItem
+            onClick={() => {
+              navigator.clipboard.writeText(
+                window.location.origin + '/music/' + selectedTrack.id
+              );
+              handleCloseMenu();
+            }}
+          >
+            <FavoriteBorderIcon fontSize='small' sx={{ mr: 1 }} /> Копировать
+            ссылку
           </MenuItem>
         )}
         {/* Добавьте другие пункты меню по необходимости */}
@@ -423,4 +492,4 @@ const LikedTracksPage = ({ onBack }) => {
   );
 };
 
-export default LikedTracksPage; 
+export default LikedTracksPage;

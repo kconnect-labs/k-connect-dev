@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext, memo, ReactNode } from 'react';
-import { Box, styled, useMediaQuery, useTheme, CssBaseline } from '@mui/material';
+import {
+  Box,
+  styled,
+  useMediaQuery,
+  useTheme,
+  CssBaseline,
+} from '@mui/material';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
 import { Navigate, useLocation } from 'react-router-dom';
@@ -56,24 +62,28 @@ const MainContainer = styled(Box)(({ theme }) => ({
   backgroundPosition: 'center',
   backgroundAttachment: 'fixed',
   color: theme.palette.text.primary,
-  overflow: 'auto'
+  overflow: 'auto',
 }));
 
-const ContentWrapper = styled(Box)<{ isMusicPage: boolean; isMobile: boolean; isInMessengerChat: boolean }>(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
+const ContentWrapper = styled(Box)<{
+  isMusicPage: boolean;
+  isMobile: boolean;
+  isInMessengerChat: boolean;
+}>(({ theme, isMusicPage, isMobile, isInMessengerChat }) => ({
   display: 'flex',
   flexGrow: 1,
-  paddingTop: isMusicPage && isMobile ? 0 : (isInMessengerChat ? 0 : 40), 
+  paddingTop: isMusicPage && isMobile ? 0 : isInMessengerChat ? 0 : 40,
 }));
 
 const SidebarContainer = styled(Box)<{ open: boolean }>(({ theme, open }) => ({
   flexShrink: 0,
-  marginLeft: 'auto', 
+  marginLeft: 'auto',
   '@media (max-width: 700px)': {
     position: 'fixed',
     zIndex: theme.zIndex.drawer,
-    right: open ? 0 : -280, 
-    left: 'auto', 
-    transition: theme.transitions.create('right', { 
+    right: open ? 0 : -280,
+    left: 'auto',
+    transition: theme.transitions.create('right', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -121,9 +131,9 @@ interface MemoizedHeaderProps {
   isMobile: boolean;
 }
 
-const MemoizedHeader = memo<MemoizedHeaderProps>(({ toggleSidebar, isMobile }) => (
-  <Header toggleSidebar={toggleSidebar} />
-));
+const MemoizedHeader = memo<MemoizedHeaderProps>(
+  ({ toggleSidebar, isMobile }) => <Header toggleSidebar={toggleSidebar} />
+);
 
 interface MemoizedSidebarProps {
   open: boolean;
@@ -131,28 +141,32 @@ interface MemoizedSidebarProps {
   isMobile: boolean;
 }
 
-const MemoizedSidebar = memo<MemoizedSidebarProps>(({ open, onClose, isMobile }) => {
-  if (isMobile) {
-    return null;
+const MemoizedSidebar = memo<MemoizedSidebarProps>(
+  ({ open, onClose, isMobile }) => {
+    if (isMobile) {
+      return null;
+    }
+    // @ts-ignore
+    return <Sidebar isMobile={isMobile} />;
   }
-  // @ts-ignore
-  return <Sidebar isMobile={isMobile} />;
-});
+);
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const theme = useTheme();
-  const { themeSettings, profileBackground } = useContext(ThemeSettingsContext) as ThemeSettingsContextType;
+  const { themeSettings, profileBackground } = useContext(
+    ThemeSettingsContext
+  ) as ThemeSettingsContextType;
   const { user, loading } = useContext(AuthContext) as AuthContextType;
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const isMobile = useMediaQuery('(max-width:700px)');
   const location = useLocation();
   const { currentTrack } = useMusic() as MusicContextType;
-  
+
   const sidebarWidth = 280;
-  
+
   const isBanned = user && user.ban === 1;
   const isOnBanPage = location.pathname === '/ban';
-  
+
   const shouldShowFullLayout = !isBanned && !isOnBanPage;
   const [isInMessengerChat, setIsInMessengerChat] = useState<boolean>(false);
 
@@ -163,15 +177,23 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }, [location, isMobile]);
 
   useEffect(() => {
-    const handleMessengerLayoutChange = (event: CustomEvent<{ isInChat: boolean }>) => {
+    const handleMessengerLayoutChange = (
+      event: CustomEvent<{ isInChat: boolean }>
+    ) => {
       const { isInChat } = event.detail;
       setIsInMessengerChat(isInChat);
     };
-    
-    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
-    
+
+    document.addEventListener(
+      'messenger-layout-change',
+      handleMessengerLayoutChange as EventListener
+    );
+
     return () => {
-      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
+      document.removeEventListener(
+        'messenger-layout-change',
+        handleMessengerLayoutChange as EventListener
+      );
     };
   }, []);
 
@@ -182,66 +204,79 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
-  
+
   const isMusicPage = location.pathname.startsWith('/music');
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
 
   return (
-    <MainContainer 
+    <MainContainer
       sx={{
-        backgroundColor: themeSettings?.backgroundColor || theme.palette.background.default,
+        backgroundColor:
+          themeSettings?.backgroundColor || theme.palette.background.default,
         backgroundImage: profileBackground
           ? `url(${profileBackground})`
-          : (themeSettings?.backgroundImage 
-            ? `url(${themeSettings.backgroundImage})` 
-            : 'none'),
-        color: themeSettings?.textColor || theme.palette.text.primary
+          : themeSettings?.backgroundImage
+            ? `url(${themeSettings.backgroundImage})`
+            : 'none',
+        color: themeSettings?.textColor || theme.palette.text.primary,
       }}
     >
       <CssBaseline />
-      {shouldShowFullLayout && <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />}
-      
-      <ContentWrapper isMusicPage={isMusicPage} isMobile={isMobile} isInMessengerChat={isInMessengerChat}>
+      {shouldShowFullLayout && (
+        <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />
+      )}
+
+      <ContentWrapper
+        isMusicPage={isMusicPage}
+        isMobile={isMobile}
+        isInMessengerChat={isInMessengerChat}
+      >
         {!isMobile && (
-          <Overlay 
-            className={sidebarOpen ? 'active' : ''} 
+          <Overlay
+            className={sidebarOpen ? 'active' : ''}
             onClick={closeSidebar}
           />
         )}
-        
+
         {!isMobile && (
-          <SidebarContainer 
-            open={sidebarOpen} 
-            sx={{ 
+          <SidebarContainer
+            open={sidebarOpen}
+            sx={{
               width: sidebarWidth,
-              display: isInMessengerChat ? 'none' : 'block'
+              display: isInMessengerChat ? 'none' : 'block',
             }}
           >
-            <MemoizedSidebar open={sidebarOpen} onClose={closeSidebar} isMobile={isMobile} />
+            <MemoizedSidebar
+              open={sidebarOpen}
+              onClose={closeSidebar}
+              isMobile={isMobile}
+            />
           </SidebarContainer>
         )}
-        
-        <ContentContainer 
-          sx={{ 
+
+        <ContentContainer
+          sx={{
             color: themeSettings?.textColor || theme.palette.text.primary,
-            width: { 
+            width: {
               xs: '100%',
               sm: '100%',
-              md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)` 
+              md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)`,
             },
             paddingBottom: {
               xs: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
               sm: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
-              md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2)
-            }
+              md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2),
+            },
           }}
         >
           {children}
         </ContentContainer>
       </ContentWrapper>
-      
-      {isMobile && <AppBottomNavigation user={user as any} isMobile={isMobile} />}
+
+      {isMobile && (
+        <AppBottomNavigation user={user as any} isMobile={isMobile} />
+      )}
       {isMobile && hasBottomPlayer && <MobilePlayer />}
       {!isMobile && hasDesktopPlayer && <DesktopPlayer />}
     </MainContainer>

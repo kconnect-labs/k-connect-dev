@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo,
+} from 'react';
 import {
   Box,
   Typography,
@@ -8,7 +15,7 @@ import {
   styled,
   useTheme,
   Snackbar,
-  Alert
+  Alert,
 } from '@mui/material';
 import {
   PlayIcon,
@@ -18,7 +25,7 @@ import {
   ShuffleIcon,
   RepeatIcon,
   VolumeUpIcon,
-  VolumeDownIcon
+  VolumeDownIcon,
 } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
@@ -26,7 +33,6 @@ import { ThemeSettingsContext } from '../../App';
 import { useContext } from 'react';
 import FullScreenPlayer from './index.js';
 import { extractDominantColor } from '../../utils/imageUtils';
-
 
 const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   position: 'fixed',
@@ -37,7 +43,9 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   maxWidth: 1000,
   minWidth: 580,
   zIndex: theme.zIndex.appBar - 1,
-  backgroundColor: covercolor ? `rgba(${covercolor}, 0.22)` : 'rgba(10, 10, 10, 0.3)',
+  backgroundColor: covercolor
+    ? `rgba(${covercolor}, 0.22)`
+    : 'rgba(10, 10, 10, 0.3)',
   backdropFilter: 'blur(35px)',
   boxShadow: '0 4px 25px rgba(0, 0, 0, 0.2)',
   borderRadius: 16,
@@ -50,7 +58,7 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
     display: 'none !important',
     opacity: 0,
     pointerEvents: 'none',
-    visibility: 'hidden'
+    visibility: 'hidden',
   },
   '&::before': {
     content: '""',
@@ -59,9 +67,9 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: covercolor ? 
-      `radial-gradient(circle at center, rgba(${covercolor}, 0.3) 0%, rgba(10, 10, 10, 0.1) 70%)` :
-      'none',
+    background: covercolor
+      ? `radial-gradient(circle at center, rgba(${covercolor}, 0.3) 0%, rgba(10, 10, 10, 0.1) 70%)`
+      : 'none',
     opacity: 0.6,
     pointerEvents: 'none',
   },
@@ -71,9 +79,8 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   },
 }));
 
-
 const MarqueeText = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'isactive'
+  shouldForwardProp: prop => prop !== 'isactive',
 })(({ isactive }) => ({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
@@ -96,7 +103,7 @@ const MarqueeText = styled(Typography, {
     whiteSpace: 'nowrap',
     left: '100%',
     paddingLeft: '20px',
-  }
+  },
 }));
 
 const TrackSlider = styled(Slider)(({ theme, covercolor }) => ({
@@ -119,7 +126,7 @@ const TrackSlider = styled(Slider)(({ theme, covercolor }) => ({
   },
   '& .MuiSlider-track': {
     height: 3,
-  }
+  },
 }));
 
 const VolumeSlider = styled(Slider)(({ theme, covercolor }) => ({
@@ -138,254 +145,302 @@ const VolumeSlider = styled(Slider)(({ theme, covercolor }) => ({
   },
 }));
 
-
-const ControlButton = memo(({ icon, onClick, ariaLabel, color = 'white', active = false, activeColor = null }) => (
-  <IconButton
-    onClick={onClick}
-    aria-label={ariaLabel}
-    sx={{
-      color: active ? (activeColor || 'primary.main') : color,
-      '&:hover': {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      }
-    }}
-  >
-    {icon}
-  </IconButton>
-), (prevProps, nextProps) => {
-  // Кастомное сравнение для кнопок
-  return (
-    prevProps.active === nextProps.active &&
-    prevProps.color === nextProps.color &&
-    prevProps.activeColor === nextProps.activeColor &&
-    prevProps.onClick === nextProps.onClick &&
-    prevProps.ariaLabel === nextProps.ariaLabel &&
-    React.isValidElement(prevProps.icon) && React.isValidElement(nextProps.icon) &&
-    prevProps.icon.type === nextProps.icon.type
-  );
-});
-
+const ControlButton = memo(
+  ({
+    icon,
+    onClick,
+    ariaLabel,
+    color = 'white',
+    active = false,
+    activeColor = null,
+  }) => (
+    <IconButton
+      onClick={onClick}
+      aria-label={ariaLabel}
+      sx={{
+        color: active ? activeColor || 'primary.main' : color,
+        '&:hover': {
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        },
+      }}
+    >
+      {icon}
+    </IconButton>
+  ),
+  (prevProps, nextProps) => {
+    // Кастомное сравнение для кнопок
+    return (
+      prevProps.active === nextProps.active &&
+      prevProps.color === nextProps.color &&
+      prevProps.activeColor === nextProps.activeColor &&
+      prevProps.onClick === nextProps.onClick &&
+      prevProps.ariaLabel === nextProps.ariaLabel &&
+      React.isValidElement(prevProps.icon) &&
+      React.isValidElement(nextProps.icon) &&
+      prevProps.icon.type === nextProps.icon.type
+    );
+  }
+);
 
 const getColorFromImage = extractDominantColor;
 
 // Мемоизированная информация о треке
-const TrackInfoSection = memo(({ currentTrack, titleOverflowing, artistOverflowing, isPlayerHovered, onFullScreenOpen, titleRef, artistRef }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      width: '25%',
-      cursor: 'pointer',
-    }}
-    onClick={onFullScreenOpen}
-  >
+const TrackInfoSection = memo(
+  ({
+    currentTrack,
+    titleOverflowing,
+    artistOverflowing,
+    isPlayerHovered,
+    onFullScreenOpen,
+    titleRef,
+    artistRef,
+  }) => (
     <Box
-      component="img"
-      src={currentTrack?.cover_path || '/static/uploads/system/album_placeholder.jpg'}
-      alt={currentTrack?.title || ''}
       sx={{
-        width: 52,
-        height: 52,
-        borderRadius: 1.5,
-        objectFit: 'cover',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        marginRight: 1.5,
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)',
-        },
+        display: 'flex',
+        alignItems: 'center',
+        width: '25%',
+        cursor: 'pointer',
       }}
-    />
-    
-    <Box sx={{ overflow: 'hidden', maxWidth: '70%' }}>
-      <MarqueeText
-        variant="body1"
-        ref={titleRef}
-        fontWeight="medium"
-        isactive={titleOverflowing && isPlayerHovered ? 'true' : 'false'}
-        data-text={currentTrack?.title || 'Unknown Title'}
-        sx={{ 
-          fontSize: '0.95rem',
-          color: 'white'
+      onClick={onFullScreenOpen}
+    >
+      <Box
+        component='img'
+        src={
+          currentTrack?.cover_path ||
+          '/static/uploads/system/album_placeholder.jpg'
+        }
+        alt={currentTrack?.title || ''}
+        sx={{
+          width: 52,
+          height: 52,
+          borderRadius: 1.5,
+          objectFit: 'cover',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          marginRight: 1.5,
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)',
+          },
         }}
-      >
-        {currentTrack?.title || 'Unknown Title'}
-      </MarqueeText>
-      
-      <MarqueeText
-        variant="body2"
-        ref={artistRef}
-        isactive={artistOverflowing && isPlayerHovered ? 'true' : 'false'}
-        data-text={currentTrack?.artist || 'Unknown Artist'}
-        sx={{ 
-          fontSize: '0.8rem',
-          opacity: 0.7,
-          color: 'white'
-        }}
-      >
-        {currentTrack?.artist || 'Unknown Artist'}
-      </MarqueeText>
+      />
+
+      <Box sx={{ overflow: 'hidden', maxWidth: '70%' }}>
+        <MarqueeText
+          variant='body1'
+          ref={titleRef}
+          fontWeight='medium'
+          isactive={titleOverflowing && isPlayerHovered ? 'true' : 'false'}
+          data-text={currentTrack?.title || 'Unknown Title'}
+          sx={{
+            fontSize: '0.95rem',
+            color: 'white',
+          }}
+        >
+          {currentTrack?.title || 'Unknown Title'}
+        </MarqueeText>
+
+        <MarqueeText
+          variant='body2'
+          ref={artistRef}
+          isactive={artistOverflowing && isPlayerHovered ? 'true' : 'false'}
+          data-text={currentTrack?.artist || 'Unknown Artist'}
+          sx={{
+            fontSize: '0.8rem',
+            opacity: 0.7,
+            color: 'white',
+          }}
+        >
+          {currentTrack?.artist || 'Unknown Artist'}
+        </MarqueeText>
+      </Box>
     </Box>
-  </Box>
-), (prevProps, nextProps) => {
-  // Простое сравнение для секции трека
-  return (
-    prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
-    prevProps.currentTrack?.title === nextProps.currentTrack?.title &&
-    prevProps.currentTrack?.artist === nextProps.currentTrack?.artist &&
-    prevProps.currentTrack?.cover_path === nextProps.currentTrack?.cover_path &&
-    prevProps.titleOverflowing === nextProps.titleOverflowing &&
-    prevProps.artistOverflowing === nextProps.artistOverflowing &&
-    prevProps.isPlayerHovered === nextProps.isPlayerHovered &&
-    prevProps.onFullScreenOpen === nextProps.onFullScreenOpen
-  );
-});
+  ),
+  (prevProps, nextProps) => {
+    // Простое сравнение для секции трека
+    return (
+      prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
+      prevProps.currentTrack?.title === nextProps.currentTrack?.title &&
+      prevProps.currentTrack?.artist === nextProps.currentTrack?.artist &&
+      prevProps.currentTrack?.cover_path ===
+        nextProps.currentTrack?.cover_path &&
+      prevProps.titleOverflowing === nextProps.titleOverflowing &&
+      prevProps.artistOverflowing === nextProps.artistOverflowing &&
+      prevProps.isPlayerHovered === nextProps.isPlayerHovered &&
+      prevProps.onFullScreenOpen === nextProps.onFullScreenOpen
+    );
+  }
+);
 
 // Мемоизированная секция контролов и прогресса
-const ControlsSection = memo(({ 
-  shuffleMode, 
-  handleShuffleClick, 
-  prevTrack, 
-  isPlaying, 
-  togglePlay, 
-  nextTrack, 
-  repeatMode, 
-  handleRepeatClick,
-  dominantColor,
-  formattedCurrentTime,
-  formattedDuration,
-  seekValue,
-  handleSeekChange,
-  handleSeekStart,
-  handleSeekEnd,
-  handleClickProgress,
-  progressRef
-}) => (
-  <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, mx: 2 }}>
-    {/* Кнопки */}
-    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0.8 }}>
-      <ControlButton
-        icon={<ShuffleIcon size={20} />}
-        onClick={handleShuffleClick}
-        ariaLabel="Toggle shuffle"
-        active={shuffleMode}
-      />
-      
-      <ControlButton
-        icon={<BackwardIcon size={20} />}
-        onClick={prevTrack}
-        ariaLabel="Previous track"
-      />
-      
-      <ControlButton
-        icon={isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
-        onClick={togglePlay}
-        ariaLabel={isPlaying ? "Pause" : "Play"}
-        active={true}
-        activeColor={dominantColor ? `rgba(${dominantColor}, 1)` : null}
-      />
-      
-      <ControlButton
-        icon={<ForwardIcon size={20} />}
-        onClick={nextTrack}
-        ariaLabel="Next track"
-      />
-      
-      <ControlButton
-        icon={<RepeatIcon size={20} />}
-        onClick={handleRepeatClick}
-        ariaLabel="Toggle repeat mode"
-        active={repeatMode !== 'off'}
-      />
-    </Box>
-    
-    {/* Прогресс */}
-    <Box sx={{ display: 'flex', alignItems: 'center', px: 1 }}>
-      <Typography 
-        id="desktop-current-time"
-        variant="caption" 
-        sx={{ color: 'rgba(255, 255, 255, 0.7)', mr: 1, minWidth: 35, textAlign: 'center' }}
-      >
-        {formattedCurrentTime}
-      </Typography>
-      
-      <Box
-        ref={progressRef}
-        onClick={handleClickProgress}
-        sx={{ flexGrow: 1 }}
-      >
-        <TrackSlider
-          covercolor={dominantColor}
-          value={seekValue}
-          onChange={handleSeekChange}
-          onMouseDown={handleSeekStart}
-          onChangeCommitted={handleSeekEnd}
-          onTouchStart={handleSeekStart}
-          aria-labelledby="track-progress-slider"
-          step={0.01}
+const ControlsSection = memo(
+  ({
+    shuffleMode,
+    handleShuffleClick,
+    prevTrack,
+    isPlaying,
+    togglePlay,
+    nextTrack,
+    repeatMode,
+    handleRepeatClick,
+    dominantColor,
+    formattedCurrentTime,
+    formattedDuration,
+    seekValue,
+    handleSeekChange,
+    handleSeekStart,
+    handleSeekEnd,
+    handleClickProgress,
+    progressRef,
+  }) => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, mx: 2 }}>
+      {/* Кнопки */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0.8 }}>
+        <ControlButton
+          icon={<ShuffleIcon size={20} />}
+          onClick={handleShuffleClick}
+          ariaLabel='Toggle shuffle'
+          active={shuffleMode}
+        />
+
+        <ControlButton
+          icon={<BackwardIcon size={20} />}
+          onClick={prevTrack}
+          ariaLabel='Previous track'
+        />
+
+        <ControlButton
+          icon={isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
+          onClick={togglePlay}
+          ariaLabel={isPlaying ? 'Pause' : 'Play'}
+          active={true}
+          activeColor={dominantColor ? `rgba(${dominantColor}, 1)` : null}
+        />
+
+        <ControlButton
+          icon={<ForwardIcon size={20} />}
+          onClick={nextTrack}
+          ariaLabel='Next track'
+        />
+
+        <ControlButton
+          icon={<RepeatIcon size={20} />}
+          onClick={handleRepeatClick}
+          ariaLabel='Toggle repeat mode'
+          active={repeatMode !== 'off'}
         />
       </Box>
-      
-      <Typography 
-        id="desktop-duration"
-        variant="caption" 
-        sx={{ color: 'rgba(255, 255, 255, 0.7)', ml: 1, minWidth: 35, textAlign: 'center' }}
-      >
-        {formattedDuration}
-      </Typography>
+
+      {/* Прогресс */}
+      <Box sx={{ display: 'flex', alignItems: 'center', px: 1 }}>
+        <Typography
+          id='desktop-current-time'
+          variant='caption'
+          sx={{
+            color: 'rgba(255, 255, 255, 0.7)',
+            mr: 1,
+            minWidth: 35,
+            textAlign: 'center',
+          }}
+        >
+          {formattedCurrentTime}
+        </Typography>
+
+        <Box
+          ref={progressRef}
+          onClick={handleClickProgress}
+          sx={{ flexGrow: 1 }}
+        >
+          <TrackSlider
+            covercolor={dominantColor}
+            value={seekValue}
+            onChange={handleSeekChange}
+            onMouseDown={handleSeekStart}
+            onChangeCommitted={handleSeekEnd}
+            onTouchStart={handleSeekStart}
+            aria-labelledby='track-progress-slider'
+            step={0.01}
+          />
+        </Box>
+
+        <Typography
+          id='desktop-duration'
+          variant='caption'
+          sx={{
+            color: 'rgba(255, 255, 255, 0.7)',
+            ml: 1,
+            minWidth: 35,
+            textAlign: 'center',
+          }}
+        >
+          {formattedDuration}
+        </Typography>
+      </Box>
     </Box>
-  </Box>
-), (prevProps, nextProps) => {
-  // Сравнение для контролов - обновляем только при значимых изменениях
-  return (
-    prevProps.shuffleMode === nextProps.shuffleMode &&
-    prevProps.isPlaying === nextProps.isPlaying &&
-    prevProps.repeatMode === nextProps.repeatMode &&
-    prevProps.dominantColor === nextProps.dominantColor &&
-    prevProps.formattedCurrentTime === nextProps.formattedCurrentTime &&
-    prevProps.formattedDuration === nextProps.formattedDuration &&
-    Math.floor(prevProps.seekValue) === Math.floor(nextProps.seekValue) && // Округляем для уменьшения обновлений
-    prevProps.handleShuffleClick === nextProps.handleShuffleClick &&
-    prevProps.handleRepeatClick === nextProps.handleRepeatClick &&
-    prevProps.togglePlay === nextProps.togglePlay &&
-    prevProps.prevTrack === nextProps.prevTrack &&
-    prevProps.nextTrack === nextProps.nextTrack
-  );
-});
+  ),
+  (prevProps, nextProps) => {
+    // Сравнение для контролов - обновляем только при значимых изменениях
+    return (
+      prevProps.shuffleMode === nextProps.shuffleMode &&
+      prevProps.isPlaying === nextProps.isPlaying &&
+      prevProps.repeatMode === nextProps.repeatMode &&
+      prevProps.dominantColor === nextProps.dominantColor &&
+      prevProps.formattedCurrentTime === nextProps.formattedCurrentTime &&
+      prevProps.formattedDuration === nextProps.formattedDuration &&
+      Math.floor(prevProps.seekValue) === Math.floor(nextProps.seekValue) && // Округляем для уменьшения обновлений
+      prevProps.handleShuffleClick === nextProps.handleShuffleClick &&
+      prevProps.handleRepeatClick === nextProps.handleRepeatClick &&
+      prevProps.togglePlay === nextProps.togglePlay &&
+      prevProps.prevTrack === nextProps.prevTrack &&
+      prevProps.nextTrack === nextProps.nextTrack
+    );
+  }
+);
 
 // Мемоизированная секция громкости
-const VolumeSection = memo(({ 
-  volume, 
-  isMuted, 
-  toggleMute, 
-  handleVolumeChange, 
-  dominantColor 
-}) => (
-  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '25%' }}>
-    <ControlButton
-      icon={volume < 0.5 ? <VolumeDownIcon size={20} /> : <VolumeUpIcon size={20} />}
-      onClick={toggleMute}
-      ariaLabel="Toggle mute"
-    />
-    
-    <VolumeSlider
-      covercolor={dominantColor}
-      value={isMuted ? 0 : volume * 100}
-      onChange={handleVolumeChange}
-      aria-labelledby="volume-slider"
-      sx={{ mx: 1 }}
-    />
-  </Box>
-), (prevProps, nextProps) => {
-  // Сравнение для громкости - округляем до процентов
-  return (
-    prevProps.isMuted === nextProps.isMuted &&
-    Math.round(prevProps.volume * 100) === Math.round(nextProps.volume * 100) &&
-    prevProps.dominantColor === nextProps.dominantColor &&
-    prevProps.toggleMute === nextProps.toggleMute &&
-    prevProps.handleVolumeChange === nextProps.handleVolumeChange
-  );
-});
+const VolumeSection = memo(
+  ({ volume, isMuted, toggleMute, handleVolumeChange, dominantColor }) => (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        width: '25%',
+      }}
+    >
+      <ControlButton
+        icon={
+          volume < 0.5 ? (
+            <VolumeDownIcon size={20} />
+          ) : (
+            <VolumeUpIcon size={20} />
+          )
+        }
+        onClick={toggleMute}
+        ariaLabel='Toggle mute'
+      />
+
+      <VolumeSlider
+        covercolor={dominantColor}
+        value={isMuted ? 0 : volume * 100}
+        onChange={handleVolumeChange}
+        aria-labelledby='volume-slider'
+        sx={{ mx: 1 }}
+      />
+    </Box>
+  ),
+  (prevProps, nextProps) => {
+    // Сравнение для громкости - округляем до процентов
+    return (
+      prevProps.isMuted === nextProps.isMuted &&
+      Math.round(prevProps.volume * 100) ===
+        Math.round(nextProps.volume * 100) &&
+      prevProps.dominantColor === nextProps.dominantColor &&
+      prevProps.toggleMute === nextProps.toggleMute &&
+      prevProps.handleVolumeChange === nextProps.handleVolumeChange
+    );
+  }
+);
 
 const DesktopPlayer = memo(({ isMobile }) => {
   // DesktopPlayer рендерится только на PC
@@ -394,11 +449,11 @@ const DesktopPlayer = memo(({ isMobile }) => {
   }
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
-  const { 
-    currentTrack, 
-    isPlaying, 
-    togglePlay, 
-    nextTrack, 
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    nextTrack,
     prevTrack,
     likeTrack,
     currentTime,
@@ -413,121 +468,121 @@ const DesktopPlayer = memo(({ isMobile }) => {
     audioRef,
     openFullScreenPlayer,
     closeFullScreenPlayer,
-    isFullScreenPlayerOpen
+    isFullScreenPlayerOpen,
   } = useMusic();
 
   const [seekValue, setSeekValue] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [repeatMode, setRepeatMode] = useState('off'); 
+  const [repeatMode, setRepeatMode] = useState('off');
   const [shuffleMode, setShuffleMode] = useState(false);
   const [dominantColor, setDominantColor] = useState(null);
   const [isPlayerHovered, setIsPlayerHovered] = useState(false);
-  
-  
+
   const [titleOverflowing, setTitleOverflowing] = useState(false);
   const [artistOverflowing, setArtistOverflowing] = useState(false);
-  
+
   const [shareSnackbar, setShareSnackbar] = useState({
     open: false,
     message: '',
-    severity: 'success'
+    severity: 'success',
   });
-  
+
   const progressRef = useRef(null);
   const titleRef = useRef(null);
   const artistRef = useRef(null);
   const lastUpdateRef = useRef(0);
   const currentSeekValueRef = useRef(0);
-  
+
   const formattedCurrentTime = useMemo(() => {
     try {
-
-      const globalTimeElement = document.getElementById('global-player-current-time');
+      const globalTimeElement = document.getElementById(
+        'global-player-current-time'
+      );
       if (globalTimeElement && globalTimeElement.textContent) {
         return globalTimeElement.textContent;
       }
-      
 
       if (typeof getCurrentTimeRaw === 'function') {
         const time = getCurrentTimeRaw();
         return formatDuration(typeof time === 'number' ? time : 0);
       }
-      
 
       return '0:00';
     } catch (error) {
-      console.error("Error getting current time:", error);
+      console.error('Error getting current time:', error);
       return '0:00';
     }
   }, [getCurrentTimeRaw]);
-  
+
   const formattedDuration = useMemo(() => {
     try {
-
-      const globalDurationElement = document.getElementById('global-player-duration');
+      const globalDurationElement = document.getElementById(
+        'global-player-duration'
+      );
       if (globalDurationElement && globalDurationElement.textContent) {
         return globalDurationElement.textContent;
       }
-      
 
       if (typeof getDurationRaw === 'function') {
         const duration = getDurationRaw();
         return formatDuration(typeof duration === 'number' ? duration : 0);
       }
-      
 
       return '0:00';
     } catch (error) {
-      console.error("Error getting duration:", error);
+      console.error('Error getting duration:', error);
       return '0:00';
     }
   }, [getDurationRaw]);
 
-  
   useEffect(() => {
-
     let isMounted = true;
-    
 
     const updateDisplays = () => {
       try {
-
         if (!isMounted) return;
-        
+
         const currentTimeEl = document.getElementById('desktop-current-time');
         const durationEl = document.getElementById('desktop-duration');
-        
 
-        if (currentTimeEl && window.audioTiming && window.audioTiming.formattedCurrentTime) {
+        if (
+          currentTimeEl &&
+          window.audioTiming &&
+          window.audioTiming.formattedCurrentTime
+        ) {
           currentTimeEl.textContent = window.audioTiming.formattedCurrentTime;
         }
-        
-        if (durationEl && window.audioTiming && window.audioTiming.formattedDuration) {
+
+        if (
+          durationEl &&
+          window.audioTiming &&
+          window.audioTiming.formattedDuration
+        ) {
           durationEl.textContent = window.audioTiming.formattedDuration;
         }
-        
 
-        if (!isSeeking && window.audioTiming && typeof window.audioTiming.progress === 'number') {
+        if (
+          !isSeeking &&
+          window.audioTiming &&
+          typeof window.audioTiming.progress === 'number'
+        ) {
           setSeekValue(window.audioTiming.progress);
           currentSeekValueRef.current = window.audioTiming.progress;
         }
-        
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
         }
       } catch (error) {
-        console.error("Error updating player displays:", error);
+        console.error('Error updating player displays:', error);
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
         }
       }
     };
-    
 
     const animationId = requestAnimationFrame(updateDisplays);
-    
 
     return () => {
       isMounted = false;
@@ -535,102 +590,70 @@ const DesktopPlayer = memo(({ isMobile }) => {
     };
   }, [isSeeking]);
 
-  
-  useEffect(() => {
-    
-  }, []);
-  
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (titleRef.current) {
-      setTitleOverflowing(titleRef.current.scrollWidth > titleRef.current.clientWidth);
+      setTitleOverflowing(
+        titleRef.current.scrollWidth > titleRef.current.clientWidth
+      );
     }
     if (artistRef.current) {
-      setArtistOverflowing(artistRef.current.scrollWidth > artistRef.current.clientWidth);
+      setArtistOverflowing(
+        artistRef.current.scrollWidth > artistRef.current.clientWidth
+      );
     }
   }, [currentTrack]);
-  
+
   useEffect(() => {
     if (currentTrack?.cover_path) {
       getColorFromImage(
-        currentTrack.cover_path || '/static/uploads/system/album_placeholder.jpg',
-        (color) => {
+        currentTrack.cover_path ||
+          '/static/uploads/system/album_placeholder.jpg',
+        color => {
           setDominantColor(color);
         }
       );
     }
   }, [currentTrack?.cover_path]);
-  
+
   useEffect(() => {
-    
-    const handleProgressUpdate = (event) => {
+    const handleProgressUpdate = event => {
       if (!isSeeking && event.detail && event.detail.progressPercent) {
         setSeekValue(event.detail.progressPercent);
         currentSeekValueRef.current = event.detail.progressPercent;
       }
     };
-    
+
     document.addEventListener('audioProgressUpdate', handleProgressUpdate);
-    
-    
+
     if (window.currentAudioProgress !== undefined && !isSeeking) {
       setSeekValue(window.currentAudioProgress);
       currentSeekValueRef.current = window.currentAudioProgress;
     }
-    
+
     return () => {
       document.removeEventListener('audioProgressUpdate', handleProgressUpdate);
     };
   }, [isSeeking]);
-  
+
   if (!currentTrack) {
     return null;
   }
-  
+
   const handleSeekStart = useCallback(() => {
     setIsSeeking(true);
   }, []);
-  
+
   const handleSeekChange = useCallback((_, newValue) => {
     setSeekValue(newValue);
   }, []);
-  
-  const handleSeekEnd = useCallback((_, newValue) => {
-    try {
-      let durationValue = 0;
-      
 
-      if (typeof getDurationRaw === 'function') {
-        const rawDuration = getDurationRaw();
-        if (typeof rawDuration === 'number' && rawDuration > 0) {
-          durationValue = rawDuration;
-        } else if (typeof duration === 'number' && duration > 0) {
-          durationValue = duration;
-        }
-      } else if (typeof duration === 'number' && duration > 0) {
-        durationValue = duration;
-      } else if (audioRef && audioRef.current && audioRef.current.duration) {
-
-        durationValue = audioRef.current.duration;
-      }
-      
-
-      if (durationValue > 0) {
-        seekTo((newValue * durationValue) / 100);
-      }
-      
-      setIsSeeking(false);
-    } catch (error) {
-      console.error("Error in handleSeekEnd:", error);
-      setIsSeeking(false);
-    }
-  }, [seekTo, getDurationRaw, duration, audioRef]);
-
-  const handleClickProgress = useCallback((event) => {
-    try {
-      if (progressRef.current) {
-
+  const handleSeekEnd = useCallback(
+    (_, newValue) => {
+      try {
         let durationValue = 0;
-        
+
         if (typeof getDurationRaw === 'function') {
           const rawDuration = getDurationRaw();
           if (typeof rawDuration === 'number' && rawDuration > 0) {
@@ -643,65 +666,103 @@ const DesktopPlayer = memo(({ isMobile }) => {
         } else if (audioRef && audioRef.current && audioRef.current.duration) {
           durationValue = audioRef.current.duration;
         }
-        
 
         if (durationValue > 0) {
-          const rect = progressRef.current.getBoundingClientRect();
-          const position = ((event.clientX - rect.left) / rect.width) * 100;
-          const clampedPosition = Math.min(Math.max(position, 0), 100);
-          setSeekValue(clampedPosition);
-          seekTo((clampedPosition * durationValue) / 100);
+          seekTo((newValue * durationValue) / 100);
+        }
+
+        setIsSeeking(false);
+      } catch (error) {
+        console.error('Error in handleSeekEnd:', error);
+        setIsSeeking(false);
+      }
+    },
+    [seekTo, getDurationRaw, duration, audioRef]
+  );
+
+  const handleClickProgress = useCallback(
+    event => {
+      try {
+        if (progressRef.current) {
+          let durationValue = 0;
+
+          if (typeof getDurationRaw === 'function') {
+            const rawDuration = getDurationRaw();
+            if (typeof rawDuration === 'number' && rawDuration > 0) {
+              durationValue = rawDuration;
+            } else if (typeof duration === 'number' && duration > 0) {
+              durationValue = duration;
+            }
+          } else if (typeof duration === 'number' && duration > 0) {
+            durationValue = duration;
+          } else if (
+            audioRef &&
+            audioRef.current &&
+            audioRef.current.duration
+          ) {
+            durationValue = audioRef.current.duration;
+          }
+
+          if (durationValue > 0) {
+            const rect = progressRef.current.getBoundingClientRect();
+            const position = ((event.clientX - rect.left) / rect.width) * 100;
+            const clampedPosition = Math.min(Math.max(position, 0), 100);
+            setSeekValue(clampedPosition);
+            seekTo((clampedPosition * durationValue) / 100);
+          }
+        }
+      } catch (error) {
+        console.error('Error in handleClickProgress:', error);
+      }
+    },
+    [progressRef, seekTo, getDurationRaw, duration, audioRef]
+  );
+
+  const toggleLikeTrack = useCallback(
+    e => {
+      if (e) {
+        e.stopPropagation();
+      }
+
+      if (currentTrack?.id) {
+        try {
+          const likeButton = e.currentTarget;
+          likeButton.style.transform = 'scale(1.3)';
+          setTimeout(() => {
+            likeButton.style.transform = 'scale(1)';
+          }, 150);
+
+          likeTrack(currentTrack.id)
+            .then(result => {
+              console.log('Like result:', result);
+            })
+            .catch(error => {
+              console.error('Error liking track:', error);
+            });
+        } catch (error) {
+          console.error('Error liking track:', error);
         }
       }
-    } catch (error) {
-      console.error("Error in handleClickProgress:", error);
-    }
-  }, [progressRef, seekTo, getDurationRaw, duration, audioRef]);
-
-  const toggleLikeTrack = useCallback((e) => {
-    
-    if (e) {
-      e.stopPropagation();
-    }
-    
-    if (currentTrack?.id) {
-      try {
-        
-        const likeButton = e.currentTarget;
-        likeButton.style.transform = 'scale(1.3)';
-        setTimeout(() => {
-          likeButton.style.transform = 'scale(1)';
-        }, 150);
-        
-        likeTrack(currentTrack.id)
-          .then(result => {
-            console.log("Like result:", result);
-            
-          })
-          .catch(error => {
-            console.error("Error liking track:", error);
-          });
-      } catch (error) {
-        console.error("Error liking track:", error);
-      }
-    }
-  }, [currentTrack, likeTrack]);
+    },
+    [currentTrack, likeTrack]
+  );
 
   const handleShare = useCallback(() => {
     if (!currentTrack) return;
-    
+
     const trackLink = `${window.location.origin}/music/track/${currentTrack.id}`;
-    
+
     copyToClipboard(trackLink);
   }, [currentTrack]);
-  
-  const copyToClipboard = useCallback((text) => {
-    navigator.clipboard.writeText(text)
+
+  const copyToClipboard = useCallback(text => {
+    navigator.clipboard
+      .writeText(text)
       .then(() => {
         setShareSnackbar({
           open: true,
           message: 'Ссылка на трек скопирована в буфер обмена',
-          severity: 'success'
+          severity: 'success',
         });
       })
       .catch(err => {
@@ -709,58 +770,60 @@ const DesktopPlayer = memo(({ isMobile }) => {
         setShareSnackbar({
           open: true,
           message: 'Не удалось скопировать ссылку',
-          severity: 'error'
+          severity: 'error',
         });
       });
   }, []);
-  
+
   const handleCloseSnackbar = useCallback((event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
     setShareSnackbar(prev => ({ ...prev, open: false }));
   }, []);
-  
-  const handleVolumeChange = useCallback((_, newValue) => {
-    setVolume(newValue / 100);
-  }, [setVolume]);
-  
+
+  const handleVolumeChange = useCallback(
+    (_, newValue) => {
+      setVolume(newValue / 100);
+    },
+    [setVolume]
+  );
+
   const handleRepeatClick = useCallback(() => {
-    
     setRepeatMode(prev => {
       if (prev === 'off') return 'all';
       if (prev === 'all') return 'one';
       return 'off';
     });
   }, []);
-  
+
   const handleShuffleClick = useCallback(() => {
     setShuffleMode(prev => !prev);
   }, []);
-  
+
   const openFullScreen = useCallback(() => {
     openFullScreenPlayer();
   }, [openFullScreenPlayer]);
-  
+
   const closeFullScreen = useCallback(() => {
     closeFullScreenPlayer();
   }, [closeFullScreenPlayer]);
-  
+
   const getVolumeIcon = useMemo(() => {
     if (isMuted || volume === 0) return <VolumeDownIcon size={20} />;
     if (volume < 0.5) return <VolumeDownIcon size={20} />;
     return <VolumeUpIcon size={20} />;
   }, [isMuted, volume]);
-  
+
   const getRepeatIcon = useMemo(() => {
     if (repeatMode === 'one') return <RepeatIcon size={20} />;
     return <RepeatIcon size={20} />;
   }, [repeatMode]);
-  
+
   return (
     <React.Fragment>
-      <PlayerContainer 
-        elevation={0} 
+      <PlayerContainer
+        elevation={0}
         covercolor={dominantColor}
         onMouseEnter={() => setIsPlayerHovered(true)}
         onMouseLeave={() => setIsPlayerHovered(false)}
@@ -777,7 +840,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
           titleRef={titleRef}
           artistRef={artistRef}
         />
-        
+
         {/* Кнопки управления и прогресс */}
         <ControlsSection
           shuffleMode={shuffleMode}
@@ -798,7 +861,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
           handleClickProgress={handleClickProgress}
           progressRef={progressRef}
         />
-        
+
         {/* Дополнительные кнопки */}
         <VolumeSection
           volume={volume}
@@ -808,9 +871,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
           dominantColor={dominantColor}
         />
       </PlayerContainer>
-      
 
-      
       <Snackbar
         open={shareSnackbar.open && !isFullScreenPlayerOpen}
         autoHideDuration={3000}
@@ -829,4 +890,4 @@ const DesktopPlayer = memo(({ isMobile }) => {
   );
 });
 
-export default DesktopPlayer; 
+export default DesktopPlayer;

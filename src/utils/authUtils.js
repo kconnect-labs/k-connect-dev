@@ -17,5 +17,5 @@ export const useAuthCheck = (user, isAuthenticated) => {
 
 export default {
   requireAuth,
-  useAuthCheck
-}; 
+  useAuthCheck,
+};

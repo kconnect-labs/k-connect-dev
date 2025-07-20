@@ -12,13 +12,13 @@ const areEqual = (prevProps, nextProps) => {
   );
 };
 
-const NavButton = ({ 
-  text, 
-  icon, 
-  path, 
-  active = false, 
-  isSpecial = false, 
-  themeColor, 
+const NavButton = ({
+  text,
+  icon,
+  path,
+  active = false,
+  isSpecial = false,
+  themeColor,
   onClick,
   endIcon,
   endIconActive,
@@ -26,63 +26,50 @@ const NavButton = ({
   nested = false,
   target,
   rel,
-  ...rest 
+  ...rest
 }) => {
   const buttonClasses = [
     'nav-button',
     active ? 'nav-button--active' : '',
     isSpecial ? 'nav-button--special' : '',
-    nested ? 'nav-button--nested' : ''
-  ].filter(Boolean).join(' ');
+    nested ? 'nav-button--nested' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  const componentProps = path ? 
-    (path.startsWith('http') ? {
-      href: path,
-      target,
-      rel
-    } : {
-      to: path,
-      target,
-      rel
-    }) : {
-      onClick
-    };
+  const componentProps = path
+    ? path.startsWith('http')
+      ? {
+          href: path,
+          target,
+          rel,
+        }
+      : {
+          to: path,
+          target,
+          rel,
+        }
+    : {
+        onClick,
+      };
 
-  const Tag = path ? 
-    (path.startsWith('http') ? 'a' : RouterLink) : 
-    'button';
+  const Tag = path ? (path.startsWith('http') ? 'a' : RouterLink) : 'button';
 
   return (
-    <Tag
-      className={buttonClasses}
-      {...componentProps}
-      {...rest}
-    >
+    <Tag className={buttonClasses} {...componentProps} {...rest}>
       {/* Если есть endIcon и нужно отображать его не в конце кнопки */}
       {endIcon && !endIconActive ? (
-        <div className="nav-button__content">
-          <div className="nav-button__left-content">
-            {icon && (
-              <div className="nav-button__icon">
-                {icon}
-              </div>
-            )}
-            <div className="nav-button__text">
-              {text}
-            </div>
+        <div className='nav-button__content'>
+          <div className='nav-button__left-content'>
+            {icon && <div className='nav-button__icon'>{icon}</div>}
+            <div className='nav-button__text'>{text}</div>
           </div>
           {endIcon}
         </div>
       ) : (
         <>
-          {icon && (
-            <div className="nav-button__icon">
-              {icon}
-            </div>
-          )}
-          <div className="nav-button__text">
-            {text}
-          </div>
+          {icon && <div className='nav-button__icon'>{icon}</div>}
+          <div className='nav-button__text'>{text}</div>
           {endIcon && endIconActive}
         </>
       )}
@@ -90,4 +77,4 @@ const NavButton = ({
   );
 };
 
-export default memo(NavButton, areEqual); 
+export default memo(NavButton, areEqual);

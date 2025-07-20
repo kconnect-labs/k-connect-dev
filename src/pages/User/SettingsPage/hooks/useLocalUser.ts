@@ -22,7 +22,10 @@ export const useLocalUser = () => {
       const userData = localStorage.getItem('k-connect-user');
       if (userData) {
         const parsedUser = JSON.parse(userData);
-        console.log('useLocalUser - parsed user from localStorage:', parsedUser);
+        console.log(
+          'useLocalUser - parsed user from localStorage:',
+          parsedUser
+        );
         setLocalUser(parsedUser);
       }
     } catch (error) {
@@ -31,4 +34,4 @@ export const useLocalUser = () => {
   }, []);
 
   return localUser;
-}; 
+};

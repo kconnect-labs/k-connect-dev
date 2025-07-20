@@ -29,7 +29,7 @@ const BackgroundImage = styled('div')({
   backgroundPosition: 'center',
   filter: 'blur(12px)',
   opacity: 0.5,
-  transform: 'scale(1.2)', 
+  transform: 'scale(1.2)',
 });
 
 const Image = styled('img')(({ isCenter }) => ({
@@ -79,57 +79,61 @@ const RepostImageGrid = ({ images, onImageClick }) => {
     return null;
   }
 
-  
   const validImages = images.filter(Boolean);
-  
+
   if (validImages.length === 0) {
     return null;
   }
 
-  
   const displayImages = validImages.slice(0, 3);
   const remainingCount = validImages.length - 3;
   const hasMoreImages = remainingCount > 0;
 
-  
   if (displayImages.length === 1) {
     return (
-      <Box sx={{ position: 'relative', width: '100%', height: '250px', borderRadius: '8px', overflow: 'hidden' }}>
-        <ImageContainer 
+      <Box
+        sx={{
+          position: 'relative',
+          width: '100%',
+          height: '250px',
+          borderRadius: '8px',
+          overflow: 'hidden',
+        }}
+      >
+        <ImageContainer
           onClick={() => onImageClick && onImageClick(0)}
           sx={{ height: '250px' }}
         >
-          <BackgroundImage style={{ backgroundImage: `url(${displayImages[0]})` }} />
-          <Image 
-            src={displayImages[0]} 
-            alt="Repost image"
-            isCenter={true}
+          <BackgroundImage
+            style={{ backgroundImage: `url(${displayImages[0]})` }}
           />
+          <Image src={displayImages[0]} alt='Repost image' isCenter={true} />
         </ImageContainer>
       </Box>
     );
   }
 
-  
   if (displayImages.length === 2) {
     return (
-      <Box sx={{ 
-        display: 'grid', 
-        gridTemplateColumns: '1fr 1fr', 
-        gap: 1, 
-        width: '100%', 
-        height: '200px',
-        borderRadius: '8px',
-        overflow: 'hidden'
-      }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 1,
+          width: '100%',
+          height: '200px',
+          borderRadius: '8px',
+          overflow: 'hidden',
+        }}
+      >
         {displayImages.map((image, index) => (
-          <ImageContainer 
+          <ImageContainer
             key={`repost-img-${index}`}
             onClick={() => onImageClick && onImageClick(index)}
           >
             <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
-            <Image 
-              src={image} 
+            <Image
+              src={image}
               alt={`Repost image ${index + 1}`}
               isCenter={true}
             />
@@ -139,17 +143,18 @@ const RepostImageGrid = ({ images, onImageClick }) => {
     );
   }
 
-  
   return (
-    <Box sx={{ 
-      display: 'grid', 
-      gridTemplateColumns: '2fr 1fr', 
-      gridTemplateRows: '100px 100px',
-      gridTemplateAreas: '"img1 img2" "img1 img3"',
-      gap: 1, 
-      width: '100%', 
-      height: '200px'
-    }}>
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: '2fr 1fr',
+        gridTemplateRows: '100px 100px',
+        gridTemplateAreas: '"img1 img2" "img1 img3"',
+        gap: 1,
+        width: '100%',
+        height: '200px',
+      }}
+    >
       {displayImages.map((image, index) => (
         <Box
           key={`repost-img-${index}`}
@@ -162,19 +167,17 @@ const RepostImageGrid = ({ images, onImageClick }) => {
         >
           <ImageContainer onClick={() => onImageClick && onImageClick(index)}>
             <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
-            <Image 
-              src={image} 
+            <Image
+              src={image}
               alt={`Repost image ${index + 1}`}
               isCenter={true}
             />
-            
+
             {/* Show +N on the last visible image if there are more */}
             {index === 2 && hasMoreImages && (
               <>
                 <LastImageOverlay />
-                <MoreImagesOverlay>
-                  +{remainingCount}
-                </MoreImagesOverlay>
+                <MoreImagesOverlay>+{remainingCount}</MoreImagesOverlay>
               </>
             )}
           </ImageContainer>
@@ -184,4 +187,4 @@ const RepostImageGrid = ({ images, onImageClick }) => {
   );
 };
 
-export default RepostImageGrid; 
+export default RepostImageGrid;

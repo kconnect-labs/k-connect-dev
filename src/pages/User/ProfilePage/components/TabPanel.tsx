@@ -9,10 +9,15 @@ interface TabPanelProps {
   [key: string]: any;
 }
 
-const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other }) => {
+const TabPanel: React.FC<TabPanelProps> = ({
+  children,
+  value,
+  index,
+  ...other
+}) => {
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -20,13 +25,11 @@ const TabPanel: React.FC<TabPanelProps> = ({ children, value, index, ...other })
     >
       {value === index && (
         <TabContentLoader tabIndex={index}>
-          <Box sx={{ pt: 0 }}>
-            {children}
-          </Box>
+          <Box sx={{ pt: 0 }}>{children}</Box>
         </TabContentLoader>
       )}
     </div>
   );
 };
 
-export default TabPanel; 
+export default TabPanel;

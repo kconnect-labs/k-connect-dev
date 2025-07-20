@@ -13,32 +13,32 @@ import {
   IconButton,
   Divider,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import {
   Close as CloseIcon,
   FactCheck as FactCheckIcon,
   Edit as EditIcon,
   Add as AddIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
 } from '@mui/icons-material';
 
-const FactModal = ({ 
-  open, 
-  onClose, 
-  onSubmit, 
-  onDelete, 
-  loading, 
-  error, 
-  existingFact, 
-  postId 
+const FactModal = ({
+  open,
+  onClose,
+  onSubmit,
+  onDelete,
+  loading,
+  error,
+  existingFact,
+  postId,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [formData, setFormData] = useState({
     who_provided: '',
-    explanation_text: ''
+    explanation_text: '',
   });
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -48,22 +48,22 @@ const FactModal = ({
       if (existingFact) {
         setFormData({
           who_provided: existingFact.who_provided || '',
-          explanation_text: existingFact.explanation_text || ''
+          explanation_text: existingFact.explanation_text || '',
         });
       } else {
         setFormData({
           who_provided: '',
-          explanation_text: ''
+          explanation_text: '',
         });
       }
       setShowDeleteConfirm(false);
     }
   }, [open, existingFact]);
 
-  const handleInputChange = (field) => (event) => {
+  const handleInputChange = field => event => {
     setFormData(prev => ({
       ...prev,
-      [field]: event.target.value
+      [field]: event.target.value,
     }));
   };
 
@@ -82,13 +82,14 @@ const FactModal = ({
     }
   };
 
-  const isFormValid = formData.who_provided.trim() && formData.explanation_text.trim();
+  const isFormValid =
+    formData.who_provided.trim() && formData.explanation_text.trim();
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth={isMobile ? false : "md"}
+      maxWidth={isMobile ? false : 'md'}
       fullWidth={!isMobile}
       fullScreen={isMobile}
       PaperProps={{
@@ -108,13 +109,13 @@ const FactModal = ({
             left: 0,
             right: 0,
             bottom: 0,
-            background: isMobile 
+            background: isMobile
               ? 'linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(20, 20, 20, 0.9) 100%)'
               : 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%)',
             borderRadius: isMobile ? 0 : '16px',
-            zIndex: -1
-          }
-        }
+            zIndex: -1,
+          },
+        },
       }}
     >
       <DialogTitle
@@ -126,16 +127,18 @@ const FactModal = ({
           pt: isMobile ? 2 : 'auto',
           px: isMobile ? 2 : 3,
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          background: isMobile ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.05)',
+          background: isMobile
+            ? 'rgba(0, 0, 0, 0.3)'
+            : 'rgba(255, 255, 255, 0.05)',
           borderRadius: isMobile ? 0 : '16px 16px 0 0',
           position: isMobile ? 'sticky' : 'static',
           top: 0,
-          zIndex: 1
+          zIndex: 1,
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <FactCheckIcon sx={{ color: '#6e5a9d', fontSize: 28 }} />
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+          <Typography variant='h6' sx={{ color: 'white', fontWeight: 600 }}>
             {existingFact ? 'Редактировать факт' : 'Добавить факт'}
           </Typography>
         </Box>
@@ -145,60 +148,67 @@ const FactModal = ({
             color: 'rgba(255, 255, 255, 0.7)',
             '&:hover': {
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: 'white'
-            }
+              color: 'white',
+            },
           }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
 
-      <DialogContent sx={{ 
-        pt: 3, 
-        pb: 2,
-        px: isMobile ? 2 : 3,
-        flex: isMobile ? 1 : 'none',
-        overflow: isMobile ? 'auto' : 'visible'
-      }}>
+      <DialogContent
+        sx={{
+          pt: 3,
+          pb: 2,
+          px: isMobile ? 2 : 3,
+          flex: isMobile ? 1 : 'none',
+          overflow: isMobile ? 'auto' : 'visible',
+        }}
+      >
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
+          <Alert
+            severity='error'
+            sx={{
               mb: 2,
               backgroundColor: 'rgba(244, 67, 54, 0.1)',
               border: '1px solid rgba(244, 67, 54, 0.3)',
               color: 'white',
               '& .MuiAlert-icon': {
-                color: '#f44336'
-              }
+                color: '#f44336',
+              },
             }}
           >
             {error}
           </Alert>
         )}
 
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            mb: 3, 
+        <Typography
+          variant='body2'
+          sx={{
+            mb: 3,
             color: 'rgba(255, 255, 255, 0.8)',
             fontSize: '0.9rem',
-            lineHeight: 1.5
+            lineHeight: 1.5,
           }}
         >
-          {existingFact 
+          {existingFact
             ? 'Отредактируйте информацию о проверке фактов для этого поста.'
-            : 'Добавьте официальное разъяснение к этому посту для проверки фактов.'
-          }
+            : 'Добавьте официальное разъяснение к этому посту для проверки фактов.'}
         </Typography>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 2.5 : 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: isMobile ? 2.5 : 3,
+          }}
+        >
           <TextField
-            label="Кто предоставил разъяснение"
+            label='Кто предоставил разъяснение'
             value={formData.who_provided}
             onChange={handleInputChange('who_provided')}
             fullWidth
-            placeholder="например: Министерство здравоохранения РФ"
+            placeholder='например: Министерство здравоохранения РФ'
             disabled={loading}
             sx={{
               '& .MuiOutlinedInput-root': {
@@ -214,31 +224,31 @@ const FactModal = ({
                 },
                 '&.Mui-focused fieldset': {
                   borderColor: '#6e5a9d',
-                  borderWidth: '2px'
+                  borderWidth: '2px',
                 },
                 '& input': {
                   color: 'white',
-                  fontSize: isMobile ? '16px' : '14px'
-                }
+                  fontSize: isMobile ? '16px' : '14px',
+                },
               },
               '& .MuiInputLabel-root': {
                 color: 'rgba(255, 255, 255, 0.7)',
                 fontSize: isMobile ? '16px' : '14px',
                 '&.Mui-focused': {
-                  color: '#6e5a9d'
-                }
-              }
+                  color: '#6e5a9d',
+                },
+              },
             }}
           />
 
           <TextField
-            label="Текст разъяснения"
+            label='Текст разъяснения'
             value={formData.explanation_text}
             onChange={handleInputChange('explanation_text')}
             fullWidth
             multiline
             rows={isMobile ? 6 : 4}
-            placeholder="Введите подробное разъяснение или опровержение..."
+            placeholder='Введите подробное разъяснение или опровержение...'
             disabled={loading}
             sx={{
               '& .MuiOutlinedInput-root': {
@@ -253,20 +263,20 @@ const FactModal = ({
                 },
                 '&.Mui-focused fieldset': {
                   borderColor: '#6e5a9d',
-                  borderWidth: '2px'
+                  borderWidth: '2px',
                 },
                 '& textarea': {
                   color: 'white',
-                  fontSize: isMobile ? '16px' : '14px'
-                }
+                  fontSize: isMobile ? '16px' : '14px',
+                },
               },
               '& .MuiInputLabel-root': {
                 color: 'rgba(255, 255, 255, 0.7)',
                 fontSize: isMobile ? '16px' : '14px',
                 '&.Mui-focused': {
-                  color: '#6e5a9d'
-                }
-              }
+                  color: '#6e5a9d',
+                },
+              },
             }}
           />
         </Box>
@@ -274,71 +284,74 @@ const FactModal = ({
         {existingFact && (
           <>
             <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
-            
-            <Box 
-              sx={{ 
-                p: 2, 
+
+            <Box
+              sx={{
+                p: 2,
                 borderRadius: '12px',
                 backgroundColor: 'rgba(244, 67, 54, 0.1)',
-                border: '1px solid rgba(244, 67, 54, 0.3)'
+                border: '1px solid rgba(244, 67, 54, 0.3)',
               }}
             >
-              <Typography 
-                variant="subtitle2" 
-                sx={{ 
-                  color: '#f44336', 
+              <Typography
+                variant='subtitle2'
+                sx={{
+                  color: '#f44336',
                   mb: 1,
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 1
+                  gap: 1,
                 }}
               >
-                <DeleteIcon fontSize="small" />
+                <DeleteIcon fontSize='small' />
                 Удаление факта
               </Typography>
-              <Typography 
-                variant="body2" 
-                sx={{ 
+              <Typography
+                variant='body2'
+                sx={{
                   color: 'rgba(255, 255, 255, 0.8)',
                   mb: 2,
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
                 }}
               >
-                {showDeleteConfirm 
+                {showDeleteConfirm
                   ? 'Вы уверены, что хотите удалить этот факт? Это действие нельзя отменить.'
-                  : 'Удалить факт и все связанные с ним данные из этого поста.'
-                }
+                  : 'Удалить факт и все связанные с ним данные из этого поста.'}
               </Typography>
               <Button
-                variant="outlined"
-                color="error"
+                variant='outlined'
+                color='error'
                 onClick={handleDelete}
                 disabled={loading}
                 startIcon={showDeleteConfirm ? <DeleteIcon /> : <DeleteIcon />}
                 sx={{
                   borderRadius: '8px',
-                  borderColor: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.5)',
-                  color: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.8)',
+                  borderColor: showDeleteConfirm
+                    ? '#f44336'
+                    : 'rgba(244, 67, 54, 0.5)',
+                  color: showDeleteConfirm
+                    ? '#f44336'
+                    : 'rgba(244, 67, 54, 0.8)',
                   '&:hover': {
                     borderColor: '#f44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.1)',
-                    color: '#f44336'
-                  }
+                    color: '#f44336',
+                  },
                 }}
               >
                 {showDeleteConfirm ? 'Подтвердить удаление' : 'Удалить факт'}
               </Button>
               {showDeleteConfirm && (
                 <Button
-                  variant="text"
+                  variant='text'
                   onClick={() => setShowDeleteConfirm(false)}
-                  sx={{ 
+                  sx={{
                     ml: 1,
                     color: 'rgba(255, 255, 255, 0.6)',
                     '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)'
-                    }
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
                   }}
                 >
                   Отмена
@@ -349,18 +362,20 @@ const FactModal = ({
         )}
       </DialogContent>
 
-      <DialogActions 
-        sx={{ 
-          p: isMobile ? 2 : 3, 
+      <DialogActions
+        sx={{
+          p: isMobile ? 2 : 3,
           pt: 1,
           px: isMobile ? 2 : 3,
           borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          background: isMobile ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.05)',
+          background: isMobile
+            ? 'rgba(0, 0, 0, 0.3)'
+            : 'rgba(255, 255, 255, 0.05)',
           borderRadius: isMobile ? 0 : '0 0 16px 16px',
           position: isMobile ? 'sticky' : 'static',
           bottom: 0,
           zIndex: 1,
-          gap: isMobile ? 1 : 0
+          gap: isMobile ? 1 : 0,
         }}
       >
         <Button
@@ -374,19 +389,27 @@ const FactModal = ({
             flex: isMobile ? 1 : 'none',
             '&:hover': {
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              color: 'white'
-            }
+              color: 'white',
+            },
           }}
         >
           Отмена
         </Button>
-        
+
         <Button
           onClick={handleSubmit}
           disabled={loading || !isFormValid}
-          variant="contained"
+          variant='contained'
           fullWidth={isMobile}
-          startIcon={loading ? <CircularProgress size={16} color="inherit" /> : (existingFact ? <EditIcon /> : <AddIcon />)}
+          startIcon={
+            loading ? (
+              <CircularProgress size={16} color='inherit' />
+            ) : existingFact ? (
+              <EditIcon />
+            ) : (
+              <AddIcon />
+            )
+          }
           sx={{
             backgroundColor: '#6e5a9d',
             borderRadius: '10px',
@@ -394,22 +417,25 @@ const FactModal = ({
             fontWeight: 600,
             flex: isMobile ? 1 : 'none',
             '&:hover': {
-              backgroundColor: '#5d4a85'
+              backgroundColor: '#5d4a85',
             },
             '&:disabled': {
               backgroundColor: 'rgba(110, 90, 157, 0.3)',
-              color: 'rgba(255, 255, 255, 0.5)'
-            }
+              color: 'rgba(255, 255, 255, 0.5)',
+            },
           }}
         >
-          {loading 
-            ? (existingFact ? 'Сохранение...' : 'Создание...') 
-            : (existingFact ? 'Сохранить изменения' : 'Создать факт')
-          }
+          {loading
+            ? existingFact
+              ? 'Сохранение...'
+              : 'Создание...'
+            : existingFact
+              ? 'Сохранить изменения'
+              : 'Создать факт'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default FactModal; 
+export default FactModal;

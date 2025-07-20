@@ -4,7 +4,7 @@
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
   border-width: 1px;
   border-style: solid;
   border-color: rgba(255, 255, 255, 0.1);
@@ -39,7 +39,7 @@
   color: var(--text-secondary);
 }
 .SearchInput:focus {
-  box-shadow: 0 0 0 2px var(--primary-main)66;
+  box-shadow: 0 0 0 2px var(--primary-main) 66;
 }
 
 .contentLoading {

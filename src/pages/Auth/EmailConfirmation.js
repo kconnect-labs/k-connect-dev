@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  CircularProgress, 
-  Paper, 
+import {
+  Box,
+  Typography,
+  CircularProgress,
+  Paper,
   Button,
-  Alert
+  Alert,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -15,7 +15,7 @@ import axios from 'axios';
 const EmailConfirmation = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-  const [status, setStatus] = useState('loading'); 
+  const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
   const [chatId, setChatId] = useState('');
 
@@ -26,23 +26,22 @@ const EmailConfirmation = () => {
         if (response.data.success) {
           setStatus('success');
           setMessage(response.data.message);
-          
-          
+
           if (response.data.chat_id) {
             setChatId(response.data.chat_id);
-            
+
             localStorage.setItem('k-connect-chat-id', response.data.chat_id);
-            console.log('Сохранен chat_id в localStorage:', response.data.chat_id);
+            console.log(
+              'Сохранен chat_id в localStorage:',
+              response.data.chat_id
+            );
           }
-          
-          
+
           if (response.data.needs_profile_setup) {
-            
             setTimeout(() => {
               navigate('/register/profile', { replace: true });
             }, 2000);
           } else {
-            
             setTimeout(() => {
               navigate('/login', { replace: true });
             }, 2000);
@@ -50,7 +49,10 @@ const EmailConfirmation = () => {
         }
       } catch (error) {
         setStatus('error');
-        setMessage(error.response?.data?.error || 'Произошла ошибка при подтверждении email.');
+        setMessage(
+          error.response?.data?.error ||
+            'Произошла ошибка при подтверждении email.'
+        );
       }
     };
 
@@ -83,14 +85,14 @@ const EmailConfirmation = () => {
       >
         {status === 'loading' && (
           <>
-            <CircularProgress 
-              size={80} 
-              sx={{ color: 'var(--primary)', mb: 3 }} 
+            <CircularProgress
+              size={80}
+              sx={{ color: 'var(--primary)', mb: 3 }}
             />
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+            <Typography variant='h5' gutterBottom sx={{ fontWeight: 'bold' }}>
               Подтверждение Email
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               Пожалуйста, подождите, мы подтверждаем ваш Email...
             </Typography>
           </>
@@ -98,38 +100,41 @@ const EmailConfirmation = () => {
 
         {status === 'success' && (
           <>
-            <CheckCircleIcon 
-              sx={{ fontSize: 80, color: 'success.main', mb: 3 }} 
+            <CheckCircleIcon
+              sx={{ fontSize: 80, color: 'success.main', mb: 3 }}
             />
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+            <Typography variant='h5' gutterBottom sx={{ fontWeight: 'bold' }}>
               Email подтвержден!
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
               {message}
             </Typography>
-            <Alert severity="info" sx={{ mb: 3 }}>
+            <Alert severity='info' sx={{ mb: 3 }}>
               Вы будете перенаправлены автоматически через несколько секунд.
             </Alert>
-            <Button 
-              variant="contained" 
-              color="primary" 
+            <Button
+              variant='contained'
+              color='primary'
               onClick={() => {
-                if (status === 'success' && message.includes('создать профиль')) {
+                if (
+                  status === 'success' &&
+                  message.includes('создать профиль')
+                ) {
                   navigate('/register/profile');
                 } else {
                   navigate('/login');
                 }
               }}
-              sx={{ 
+              sx={{
                 borderRadius: '20px',
-                background: 'var(--primary)', 
-                '&:hover': { 
-                  background: 'var(--primary-dark)' 
-                }
+                background: 'var(--primary)',
+                '&:hover': {
+                  background: 'var(--primary-dark)',
+                },
               }}
             >
-              {status === 'success' && message.includes('создать профиль') 
-                ? 'Создать профиль' 
+              {status === 'success' && message.includes('создать профиль')
+                ? 'Создать профиль'
                 : 'Перейти на страницу входа'}
             </Button>
           </>
@@ -137,25 +142,23 @@ const EmailConfirmation = () => {
 
         {status === 'error' && (
           <>
-            <ErrorIcon 
-              sx={{ fontSize: 80, color: 'error.main', mb: 3 }} 
-            />
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
+            <ErrorIcon sx={{ fontSize: 80, color: 'error.main', mb: 3 }} />
+            <Typography variant='h5' gutterBottom sx={{ fontWeight: 'bold' }}>
               Ошибка подтверждения
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+            <Typography variant='body1' color='text.secondary' sx={{ mb: 3 }}>
               {message}
             </Typography>
-            <Button 
-              variant="contained" 
-              color="primary" 
+            <Button
+              variant='contained'
+              color='primary'
               onClick={() => navigate('/login')}
-              sx={{ 
+              sx={{
                 borderRadius: '20px',
-                background: 'var(--primary)', 
-                '&:hover': { 
-                  background: 'var(--primary-dark)' 
-                }
+                background: 'var(--primary)',
+                '&:hover': {
+                  background: 'var(--primary-dark)',
+                },
               }}
             >
               Вернуться на страницу входа
@@ -167,4 +170,4 @@ const EmailConfirmation = () => {
   );
 };
 
-export default EmailConfirmation; 
+export default EmailConfirmation;

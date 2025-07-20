@@ -57,9 +57,9 @@ const GlobalRouletteStyles = styled('div')`
     background-repeat: no-repeat !important;
     position: relative !important;
     overflow: hidden !important;
-    
+
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -68,13 +68,13 @@ const GlobalRouletteStyles = styled('div')`
       background: rgba(0, 0, 0, 0.3);
       z-index: 1;
     }
-    
+
     & > * {
       position: relative;
       z-index: 2;
     }
   }
-  
+
   .roulette-pro-regular-prize-item-wrapper {
     background: transparent !important;
     background-color: transparent !important;
@@ -86,7 +86,7 @@ const GlobalRouletteStyles = styled('div')`
     position: relative !important;
     z-index: 2 !important;
   }
-  
+
   .roulette-pro-regular-prize-item-image {
     margin: auto;
     margin-top: 20px;
@@ -99,7 +99,7 @@ const GlobalRouletteStyles = styled('div')`
     position: relative !important;
     z-index: 3 !important;
   }
-  
+
   .roulette-pro-prize-list.horizontal {
     gap: 4px !important;
   }
@@ -139,7 +139,7 @@ const ReelWrapper = styled(Box)(({ theme }) => ({
   background: alpha(theme.palette.background.paper, 0.7),
   borderRadius: 16,
   border: `2.5px solid ${alpha(theme.palette.primary.main, 0.18)}`,
-  boxShadow: `0 4px 24px ${alpha(theme.palette.primary.main, 0.10)}`,
+  boxShadow: `0 4px 24px ${alpha(theme.palette.primary.main, 0.1)}`,
 }));
 
 const Reel = styled(Box)(({ theme }) => ({
@@ -150,7 +150,7 @@ const Reel = styled(Box)(({ theme }) => ({
 }));
 
 const Item = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'iscenter' && prop !== 'bounce',
+  shouldForwardProp: prop => prop !== 'iscenter' && prop !== 'bounce',
 })(({ theme, iscenter, bounce }) => ({
   width: 120,
   minWidth: 120,
@@ -161,7 +161,9 @@ const Item = styled(Box, {
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 14,
-  background: iscenter ? alpha(theme.palette.primary.main, 0.13) : 'transparent',
+  background: iscenter
+    ? alpha(theme.palette.primary.main, 0.13)
+    : 'transparent',
   boxShadow: iscenter
     ? `0 0 0 3px ${theme.palette.primary.main}, 0 0 16px 2px ${alpha(theme.palette.primary.main, 0.18)}, 0 0 32px 8px ${alpha(theme.palette.primary.main, 0.13)}`
     : 'none',
@@ -178,7 +180,7 @@ const Item = styled(Box, {
     height: '80%',
     width: 1,
     background: alpha(theme.palette.divider, 0.2),
-  }
+  },
 }));
 
 const CenterLine = styled(Box)(({ theme }) => ({
@@ -223,7 +225,9 @@ const PrizeDisplay = styled(Box)(({ theme, win }) => ({
   color: '#ffffff',
   fontWeight: 700,
   fontSize: '1.2rem',
-  boxShadow: win ? '0 0 16px 2px rgba(22, 163, 74, 0.3)' : '0 0 16px 2px rgba(220, 38, 38, 0.3)',
+  boxShadow: win
+    ? '0 0 16px 2px rgba(22, 163, 74, 0.3)'
+    : '0 0 16px 2px rgba(220, 38, 38, 0.3)',
 }));
 
 const ITEM_WIDTH = 144;
@@ -273,11 +277,11 @@ const renderPrize = (prize, idx, { isActive }) => (
       backgroundRepeat: 'no-repeat',
       backdropFilter: 'blur(20px)',
       borderRadius: 8,
-      border: isActive 
-        ? '3px solid #D0BCFF' 
+      border: isActive
+        ? '3px solid #D0BCFF'
         : '1px solid rgba(255, 255, 255, 0.12)',
-      boxShadow: isActive 
-        ? '0 0 20px 4px rgba(208, 188, 255, 0.4)' 
+      boxShadow: isActive
+        ? '0 0 20px 4px rgba(208, 188, 255, 0.4)'
         : '0 2px 8px rgba(0,0,0,0.1)',
       p: 1.5,
       m: '0 2px',
@@ -299,7 +303,7 @@ const renderPrize = (prize, idx, { isActive }) => (
         borderRadius: 8,
       }}
     />
-    
+
     {/* Основной контент */}
     <Box
       sx={{
@@ -313,17 +317,15 @@ const renderPrize = (prize, idx, { isActive }) => (
       }}
     >
       <Box
-        component="img"
+        component='img'
         src={prize.type === 'balls' ? ICONS.balls : ICONS.noballs}
         alt={prize.type}
-        sx={{ 
-          width: 24, 
-          height: 24, 
+        sx={{
+          width: 24,
+          height: 24,
           mb: 1,
           opacity: 0.8,
-          filter: prize.type === 'noballs' 
-            ? 'grayscale(1)' 
-            : 'none',
+          filter: prize.type === 'noballs' ? 'grayscale(1)' : 'none',
           transition: 'all 0.3s ease',
         }}
       />
@@ -341,7 +343,7 @@ const renderPrize = (prize, idx, { isActive }) => (
         {prize.text}
       </Typography>
     </Box>
-    
+
     {isActive && (
       <Box
         sx={{
@@ -368,31 +370,31 @@ const renderPrize = (prize, idx, { isActive }) => (
 // Функция для создания данных рулетки (временная, до подключения бэка)
 function generateRouletteData(betAmount) {
   const baseItems = [];
-  
+
   // Создаем базовый набор из 20 элементов
   for (let i = 0; i < 20; i++) {
     // Примерно 1/3 выигрышных элементов
     const isWin = Math.random() < 0.33;
-    
+
     if (isWin) {
-      const multiplier = Math.random() < 0.7 ? 2 : (Math.random() < 0.8 ? 3 : 5);
+      const multiplier = Math.random() < 0.7 ? 2 : Math.random() < 0.8 ? 3 : 5;
       baseItems.push({
         id: i + 1,
         type: 'balls',
         text: `+${betAmount * multiplier}₽`,
         image: ICONS.balls,
-        multiplier
+        multiplier,
       });
     } else {
       baseItems.push({
         id: i + 1,
         type: 'noballs',
         text: 'Без выигрыша',
-        image: ICONS.noballs
+        image: ICONS.noballs,
       });
     }
   }
-  
+
   // Дублируем элементы для создания бесконечной ленты
   const items = [];
   for (let cycle = 0; cycle < 5; cycle++) {
@@ -403,7 +405,7 @@ function generateRouletteData(betAmount) {
       });
     });
   }
-  
+
   return items;
 }
 
@@ -425,37 +427,37 @@ const RouletteGame = () => {
 
   const handleSpin = async () => {
     if (isSpinning) return;
-    
+
     setIsSpinning(true);
     setPrize(null);
     setShowConfetti(false);
     setGameResult(null); // Очищаем предыдущий результат
-    
+
     try {
       // API вызов к бэкенду
       const response = await fetch('/api/minigames/roulette/spin', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
         },
         credentials: 'include',
-        body: JSON.stringify({ betAmount: betAmount })
+        body: JSON.stringify({ betAmount: betAmount }),
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Произошла ошибка при игре');
       }
-      
+
       // Обновляем данные рулетки новыми элементами с бэка
       setReelData(data.items);
-      
+
       // Небольшая задержка, чтобы данные успели обновиться
       setTimeout(() => {
         // Сохраняем результат игры
@@ -463,7 +465,6 @@ const RouletteGame = () => {
         // Устанавливаем правильный индекс выигрышного элемента
         setPrizeIndex(data.winningIndex);
       }, 100);
-      
     } catch (error) {
       console.error('Ошибка при запросе к серверу:', error);
       setIsSpinning(false);
@@ -471,7 +472,7 @@ const RouletteGame = () => {
       setPrize({
         type: 'error',
         amount: 0,
-        text: error.message || 'Произошла ошибка сервера'
+        text: error.message || 'Произошла ошибка сервера',
       });
     }
   };
@@ -481,50 +482,50 @@ const RouletteGame = () => {
       setIsSpinning(false);
       return;
     }
-    
+
     const { winningItem, totalWin, subscriptionReward } = gameResult;
-    
+
     // Используем данные с бэкенда напрямую
     let prizeData = {
       type: winningItem.type,
       amount: totalWin,
-      text: winningItem.text
+      text: winningItem.text,
     };
-    
+
     // Проверяем, есть ли выигрыш подписки
     if (subscriptionReward) {
       prizeData.isSubscription = true;
       prizeData.subscriptionType = subscriptionReward.type;
       prizeData.subscriptionDays = subscriptionReward.days;
     }
-    
+
     setPrize(prizeData);
-    
+
     // Показываем конфетти если есть выигрыш (баллы или подписка)
     if (totalWin > 0 || subscriptionReward) {
       setShowConfetti(true);
       // Убираем конфетти через 3 секунды
       setTimeout(() => setShowConfetti(false), 3000);
     }
-    
+
     setIsSpinning(false);
   };
 
   // Функция для обновления данных рулетки при изменении ставки
-  const updateRouletteData = async (newBetAmount) => {
+  const updateRouletteData = async newBetAmount => {
     if (isSpinning) return; // Не обновляем во время игры
-    
+
     try {
       const response = await fetch('/api/minigames/roulette/preview', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
         },
         credentials: 'include',
-        body: JSON.stringify({ betAmount: newBetAmount })
+        body: JSON.stringify({ betAmount: newBetAmount }),
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -557,18 +558,40 @@ const RouletteGame = () => {
   return (
     <GlobalRouletteStyles>
       <GameContainer sx={{ mt: 3 }}>
-        <Typography variant="h4" align="center" gutterBottom sx={{ fontWeight: 800, letterSpacing: 1, color: '#ffffff' }}>
+        <Typography
+          variant='h4'
+          align='center'
+          gutterBottom
+          sx={{ fontWeight: 800, letterSpacing: 1, color: '#ffffff' }}
+        >
           Рулетка удачи
         </Typography>
-        
+
         {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 200,
+            }}
+          >
             <CircularProgress sx={{ color: '#D0BCFF' }} />
-            <Typography sx={{ ml: 2, color: '#ffffff' }}>Загрузка...</Typography>
+            <Typography sx={{ ml: 2, color: '#ffffff' }}>
+              Загрузка...
+            </Typography>
           </Box>
         ) : (
           <>
-            <Box sx={{ position: 'relative', width: '100%', maxWidth: 900, mx: 'auto', my: 4 }}>
+            <Box
+              sx={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: 900,
+                mx: 'auto',
+                my: 4,
+              }}
+            >
               <RoulettePro
                 prizes={reelData}
                 prizeIndex={prizeIndex}
@@ -586,7 +609,7 @@ const RouletteGame = () => {
                   stopAtCenter: true,
                   infinite: false, // Убираем бесконечность для точной остановки
                 }}
-                style={{ 
+                style={{
                   height: 140,
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
@@ -595,7 +618,7 @@ const RouletteGame = () => {
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                 }}
               />
-              
+
               {/* Центральный указатель */}
               <Box
                 sx={{
@@ -639,7 +662,11 @@ const RouletteGame = () => {
             </Box>
 
             <BetAmount>
-              <Typography sx={{ fontWeight: 600, minWidth: 60, color: '#ffffff' }}>Ставка:</Typography>
+              <Typography
+                sx={{ fontWeight: 600, minWidth: 60, color: '#ffffff' }}
+              >
+                Ставка:
+              </Typography>
               <Slider
                 value={betAmount}
                 onChange={(e, v) => {
@@ -649,15 +676,20 @@ const RouletteGame = () => {
                 min={100}
                 max={50000}
                 step={100}
-                valueLabelDisplay="auto"
+                valueLabelDisplay='auto'
                 valueLabelFormat={v => (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <img src="http://k-connect.ru/static/icons/KBalls.svg" width="12" height="12" alt="" />
+                    <img
+                      src='http://k-connect.ru/static/icons/KBalls.svg'
+                      width='12'
+                      height='12'
+                      alt=''
+                    />
                     {v}
                   </Box>
                 )}
-                sx={{ 
-                  flex: 1, 
+                sx={{
+                  flex: 1,
                   mx: 3,
                   '& .MuiSlider-thumb': {
                     width: 20,
@@ -679,8 +711,21 @@ const RouletteGame = () => {
                 }}
                 disabled={isSpinning || isLoading}
               />
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, minWidth: 80, justifyContent: 'flex-end' }}>
-                <img src="http://k-connect.ru/static/icons/KBalls.svg" width="16" height="16" alt="" />
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  minWidth: 80,
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <img
+                  src='http://k-connect.ru/static/icons/KBalls.svg'
+                  width='16'
+                  height='16'
+                  alt=''
+                />
                 <Typography sx={{ fontWeight: 700, color: '#ffffff' }}>
                   {betAmount}
                 </Typography>
@@ -689,19 +734,25 @@ const RouletteGame = () => {
 
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <Button
-                variant="contained"
-                size="medium"
+                variant='contained'
+                size='medium'
                 onClick={handleSpin}
                 disabled={isSpinning || isLoading || reelData.length === 0}
-                startIcon={isSpinning ? <CircularProgress size={18} color="inherit" /> : <CasinoIcon />}
+                startIcon={
+                  isSpinning ? (
+                    <CircularProgress size={18} color='inherit' />
+                  ) : (
+                    <CasinoIcon />
+                  )
+                }
                 sx={{
                   minWidth: 180,
                   height: 44,
                   fontSize: '1rem',
                   borderRadius: 8,
                   fontWeight: 600,
-                  background: isSpinning 
-                    ? 'rgba(255, 255, 255, 0.1)' 
+                  background: isSpinning
+                    ? 'rgba(255, 255, 255, 0.1)'
                     : '#D0BCFF',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -711,11 +762,17 @@ const RouletteGame = () => {
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     transform: isSpinning ? 'none' : 'translateY(-2px)',
-                    background: isSpinning ? 'rgba(255, 255, 255, 0.1)' : '#C4A7FF',
-                    boxShadow: isSpinning ? undefined : '0 6px 16px rgba(196, 167, 255, 0.4)',
+                    background: isSpinning
+                      ? 'rgba(255, 255, 255, 0.1)'
+                      : '#C4A7FF',
+                    boxShadow: isSpinning
+                      ? undefined
+                      : '0 6px 16px rgba(196, 167, 255, 0.4)',
                   },
                   '&:active': {
-                    transform: isSpinning ? 'none' : 'translateY(0) scale(0.98)',
+                    transform: isSpinning
+                      ? 'none'
+                      : 'translateY(0) scale(0.98)',
                   },
                 }}
               >
@@ -725,29 +782,44 @@ const RouletteGame = () => {
 
             {prize && (
               <PrizeDisplay win={prize.amount > 0 || prize.isSubscription}>
-                {(prize.amount > 0 || prize.isSubscription) ? (
+                {prize.amount > 0 || prize.isSubscription ? (
                   prize.isSubscription ? (
                     <>
-                      🎉 Поздравляем! Вы выиграли подписку <strong>{prize.subscriptionType.toUpperCase()} на {prize.subscriptionDays} дня</strong> 🎉
+                      🎉 Поздравляем! Вы выиграли подписку{' '}
+                      <strong>
+                        {prize.subscriptionType.toUpperCase()} на{' '}
+                        {prize.subscriptionDays} дня
+                      </strong>{' '}
+                      🎉
                     </>
                   ) : (
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                      🎉 Поздравляем! Вы выиграли 
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <img src="http://k-connect.ru/static/icons/KBalls.svg" width="20" height="20" alt="" />
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                      }}
+                    >
+                      🎉 Поздравляем! Вы выиграли
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
+                        <img
+                          src='http://k-connect.ru/static/icons/KBalls.svg'
+                          width='20'
+                          height='20'
+                          alt=''
+                        />
                         <strong>{prize.amount}</strong>
                       </Box>
                       🎉
                     </Box>
                   )
                 ) : prize.type === 'error' ? (
-                  <>
-                    ❌ Ошибка: {prize.text}
-                  </>
+                  <>❌ Ошибка: {prize.text}</>
                 ) : (
-                  <>
-                    😔 Не повезло... Попробуйте еще раз!
-                  </>
+                  <>😔 Не повезло... Попробуйте еще раз!</>
                 )}
               </PrizeDisplay>
             )}
@@ -761,7 +833,15 @@ const RouletteGame = () => {
             recycle={false}
             numberOfPieces={200}
             gravity={0.25}
-            colors={['#D0BCFF', '#C4A7FF', '#B794F6', '#9F7AEA', '#805AD5', '#6B46C1', '#553C9A']}
+            colors={[
+              '#D0BCFF',
+              '#C4A7FF',
+              '#B794F6',
+              '#9F7AEA',
+              '#805AD5',
+              '#6B46C1',
+              '#553C9A',
+            ]}
           />
         )}
       </GameContainer>
@@ -769,4 +849,4 @@ const RouletteGame = () => {
   );
 };
 
-export default RouletteGame; 
+export default RouletteGame;

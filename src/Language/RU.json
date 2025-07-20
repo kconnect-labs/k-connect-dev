@@ -606,7 +606,7 @@
       "wall": "Стена",
       "media": "Медиа",
       "about": "Инфо",
-      "attachments": "Вложения" 
+      "attachments": "Вложения"
     },
     "create_post": {
       "placeholder": "Что у вас нового?",
@@ -980,7 +980,6 @@
       "version": "К-Коннект v2.9",
       "email": "verif@k-connect.ru"
     }
-
   },
   "commands": {
     "input_title": "Поиск команды",
@@ -1024,10 +1023,10 @@
       "title": "Лидерборд",
       "description": "Переход в лидерборд"
     },
-    "link_bages" :{
+    "link_bages": {
       "title": "Бейджики",
       "description": "Переход в магазин бейджиков"
-    }, 
+    },
     "link_marketplace": {
       "title": "Маркетплейс",
       "description": "Переход в маркетплейс"
@@ -1040,7 +1039,7 @@
       "title": "Пачки",
       "description": "Переход в магазин пачек"
     },
-    "link_bugs" : {
+    "link_bugs": {
       "title": "Баг-репорты",
       "description": "Переход в баг-репорты"
     },
@@ -1055,7 +1054,7 @@
     "link_about": {
       "title": "О платформе",
       "description": "Переход в раздел о платформе"
-    }, 
+    },
     "link_settings": {
       "title": "Настройки",
       "description": "Переход в настройки"
@@ -1067,12 +1066,11 @@
     "cmd_reload_posts": {
       "title": "Перезагрузить посты",
       "description": "Обновить ленту постов"
-    }, 
+    },
     "cmd_play_music": {
       "title": "Включить мою волну",
       "description": "Включить персональный плейлист 'Мой Вайб'"
     }
-    
   },
   "music": {
     "my_vibe": {
@@ -1102,5 +1100,4 @@
       "no_results": "Артисты не найдены"
     }
   }
-
 }

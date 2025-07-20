@@ -35,74 +35,80 @@ const getRarityLabel = (rarity = 'common') => {
  * InventoryItemCardPure – оптимизированная версия без Material UI.
  * Использует чистый CSS для лучшей производительности.
  */
-const InventoryItemCardPure = memo(({ item, onClick, className = '', style = {}, ...other }) => {
-  const rarityColor = useMemo(() => getRarityColor(item.rarity), [item.rarity]);
-  const rarityLabel = useMemo(() => getRarityLabel(item.rarity), [item.rarity]);
+const InventoryItemCardPure = memo(
+  ({ item, onClick, className = '', style = {}, ...other }) => {
+    const rarityColor = useMemo(
+      () => getRarityColor(item.rarity),
+      [item.rarity]
+    );
+    const rarityLabel = useMemo(
+      () => getRarityLabel(item.rarity),
+      [item.rarity]
+    );
 
-  const handleClick = useCallback(() => {
-    if (onClick) onClick(item);
-  }, [onClick, item]);
+    const handleClick = useCallback(() => {
+      if (onClick) onClick(item);
+    }, [onClick, item]);
 
-  return (
-    <div 
-      className={`inventory-item-card ${className}`}
-      onClick={handleClick}
-      style={style}
-      {...other}
-    >
-      <div 
-        className={`image-container ${item.background_url ? 'has-background' : ''}`}
-        style={{
-          '--background-url': item.background_url ? `url(${item.background_url})` : 'none'
-        }}
+    return (
+      <div
+        className={`inventory-item-card ${className}`}
+        onClick={handleClick}
+        style={style}
+        {...other}
       >
-        <OptimizedImage
-          src={item.image_url}
-          alt={item.item_name}
-          width="75%"
-          height="75%"
-          loading="lazy"
-          fallbackText="Предмет недоступен"
-          showSkeleton
-          style={{ position: 'relative', zIndex: 2, objectFit: 'contain' }}
-        />
-        {item.marketplace && (
-          <div className="marketplace-badge">
-            <img
-              src="/static/icons/KBalls.svg"
-              alt="KBalls"
-              className="kballs-icon"
-            />
-            <span className="price-text">
-              {item.marketplace.price}
-            </span>
-          </div>
-        )}
-        
-        {item.is_equipped && (
-          <div className="equipped-badge">
-            <span className="equipped-text">Надет</span>
-          </div>
-        )}
-      </div>
-
-      <div className="item-name">
-        {item.item_name}
-      </div>
-
-      <div className="rarity-container">
-        <span 
-          className="rarity-chip"
+        <div
+          className={`image-container ${item.background_url ? 'has-background' : ''}`}
           style={{
-            backgroundColor: `${rarityColor}20`,
-            color: rarityColor,
+            '--background-url': item.background_url
+              ? `url(${item.background_url})`
+              : 'none',
           }}
         >
-          {rarityLabel}
-        </span>
-      </div>
-    </div>
-  );
-});
+          <OptimizedImage
+            src={item.image_url}
+            alt={item.item_name}
+            width='75%'
+            height='75%'
+            loading='lazy'
+            fallbackText='Предмет недоступен'
+            showSkeleton
+            style={{ position: 'relative', zIndex: 2, objectFit: 'contain' }}
+          />
+          {item.marketplace && (
+            <div className='marketplace-badge'>
+              <img
+                src='/static/icons/KBalls.svg'
+                alt='KBalls'
+                className='kballs-icon'
+              />
+              <span className='price-text'>{item.marketplace.price}</span>
+            </div>
+          )}
 
-export default InventoryItemCardPure; 
+          {item.is_equipped && (
+            <div className='equipped-badge'>
+              <span className='equipped-text'>Надет</span>
+            </div>
+          )}
+        </div>
+
+        <div className='item-name'>{item.item_name}</div>
+
+        <div className='rarity-container'>
+          <span
+            className='rarity-chip'
+            style={{
+              backgroundColor: `${rarityColor}20`,
+              color: rarityColor,
+            }}
+          >
+            {rarityLabel}
+          </span>
+        </div>
+      </div>
+    );
+  }
+);
+
+export default InventoryItemCardPure;

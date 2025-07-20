@@ -14,8 +14,8 @@ const MusicTrackContainer = styled(Box)(({ theme }) => ({
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     transform: 'translateY(-2px)',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)'
-  }
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+  },
 }));
 
 const MusicTrack = ({ children, onClick, ...props }) => {
@@ -26,4 +26,4 @@ const MusicTrack = ({ children, onClick, ...props }) => {
   );
 };
 
-export default MusicTrack; 
+export default MusicTrack;

@@ -98,17 +98,17 @@
     padding: 10px;
     min-height: 50px;
   }
-  
+
   .online-user-avatar {
     width: 35px;
     height: 35px;
   }
-  
+
   .online-indicator {
     width: 10px;
     height: 10px;
   }
-  
+
   .online-count-badge {
     padding: 4px 8px;
     font-size: 11px;
@@ -120,9 +120,9 @@
     width: 30px;
     height: 30px;
   }
-  
+
   .online-indicator {
     width: 8px;
     height: 8px;
   }
-} 
+}

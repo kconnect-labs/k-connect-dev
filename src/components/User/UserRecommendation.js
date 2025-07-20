@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { Box, Card, CardContent, Avatar, Typography, Button, styled } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  Avatar,
+  Typography,
+  Button,
+  styled,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -14,45 +22,46 @@ const FollowButton = styled(Button)(({ theme, following }) => ({
   fontSize: '0.75rem',
   backgroundColor: following ? 'transparent' : theme.palette.primary.main,
   borderColor: following ? theme.palette.divider : theme.palette.primary.main,
-  color: following ? theme.palette.text.primary : theme.palette.primary.contrastText,
+  color: following
+    ? theme.palette.text.primary
+    : theme.palette.primary.contrastText,
   '&:hover': {
-    backgroundColor: following ? 'rgba(255, 255, 255, 0.05)' : theme.palette.primary.dark,
-  }
+    backgroundColor: following
+      ? 'rgba(255, 255, 255, 0.05)'
+      : theme.palette.primary.dark,
+  },
 }));
 
 const UserRecommendation = ({ user }) => {
   const [following, setFollowing] = useState(user.is_following || false);
   const navigate = useNavigate();
-  
-  const handleFollow = async (e) => {
+
+  const handleFollow = async e => {
     e.stopPropagation();
     try {
-      
       setFollowing(!following);
-      
+
       const response = await axios.post(`/api/profile/follow`, {
-        followed_id: user.id
+        followed_id: user.id,
       });
-      
-      
+
       if (response.data && response.data.success) {
         setFollowing(response.data.is_following);
       }
     } catch (error) {
-      
       setFollowing(following);
       console.error('Error toggling follow:', error);
     }
   };
-  
+
   const handleCardClick = () => {
     navigate(`/profile/${user.username}`);
   };
-  
+
   return (
-    <Card 
-      onClick={handleCardClick} 
-      sx={{ 
+    <Card
+      onClick={handleCardClick}
+      sx={{
         cursor: 'pointer',
         borderRadius: '12px',
         background: '#1d1d1d',
@@ -63,49 +72,75 @@ const UserRecommendation = ({ user }) => {
         '&:hover': {
           boxShadow: '0 3px 8px rgba(0, 0, 0, 0.15)',
           borderColor: 'rgba(255, 255, 255, 0.06)',
-          transform: 'translateY(-2px)'
-        }
+          transform: 'translateY(-2px)',
+        },
       }}
     >
       <CardContent sx={{ p: 1.5, '&:last-child': { pb: 1.5 } }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar 
-              src={user.avatar ? `/static/uploads/avatar/${user.id}/${user.avatar}` : '/static/uploads/avatar/system/avatar.png'}
+            <Avatar
+              src={
+                user.avatar
+                  ? `/static/uploads/avatar/${user.id}/${user.avatar}`
+                  : '/static/uploads/avatar/system/avatar.png'
+              }
               alt={user.username}
-              sx={{ 
-                width: 36, 
-                height: 36, 
+              sx={{
+                width: 36,
+                height: 36,
                 mr: 1.5,
-                border: '2px solid rgba(208, 188, 255, 0.2)'
+                border: '2px solid rgba(208, 188, 255, 0.2)',
               }}
             />
             <Box>
-              <Typography variant="body2" fontWeight="medium" noWrap sx={{ 
-                fontSize: '0.85rem',
-                letterSpacing: '0.2px'
-              }}>
+              <Typography
+                variant='body2'
+                fontWeight='medium'
+                noWrap
+                sx={{
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.2px',
+                }}
+              >
                 {user.display_name || user.username}
               </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap sx={{
-                fontSize: '0.75rem',
-                opacity: 0.7
-              }}>
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                noWrap
+                sx={{
+                  fontSize: '0.75rem',
+                  opacity: 0.7,
+                }}
+              >
                 @{user.username}
               </Typography>
             </Box>
           </Box>
-          
+
           <FollowButton
-            variant={following ? "outlined" : "contained"}
-            size="small"
+            variant={following ? 'outlined' : 'contained'}
+            size='small'
             following={following}
             onClick={handleFollow}
-            startIcon={following ? <PersonRemoveIcon fontSize="small" /> : <PersonAddIcon fontSize="small" />}
+            startIcon={
+              following ? (
+                <PersonRemoveIcon fontSize='small' />
+              ) : (
+                <PersonAddIcon fontSize='small' />
+              )
+            }
             sx={{
               px: 1.5,
               py: 0.5,
-              minWidth: following ? '100px' : '96px'
+              minWidth: following ? '100px' : '96px',
             }}
           >
             {following ? 'Отписаться' : 'Подписаться'}
@@ -116,4 +151,4 @@ const UserRecommendation = ({ user }) => {
   );
 };
 
-export default UserRecommendation; 
+export default UserRecommendation;

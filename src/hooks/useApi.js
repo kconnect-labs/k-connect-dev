@@ -31,24 +31,21 @@ export default function useApi(url, options = {}) {
     dependencies = [],
   } = options;
 
-  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [response, setResponse] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [fromCache, setFromCache] = useState(false);
 
-  
   const requestParamsRef = useRef({
     url,
     method,
     params,
     data,
     headers,
-    cache
+    cache,
   });
 
-  
   useEffect(() => {
     requestParamsRef.current = {
       url,
@@ -56,119 +53,113 @@ export default function useApi(url, options = {}) {
       params,
       data,
       headers,
-      cache
+      cache,
     };
-  }, [url, method, JSON.stringify(params), JSON.stringify(data), JSON.stringify(headers), cache]);
+  }, [
+    url,
+    method,
+    JSON.stringify(params),
+    JSON.stringify(data),
+    JSON.stringify(headers),
+    cache,
+  ]);
 
-  
-  const fetchData = useCallback(async (overrideParams = {}) => {
-    try {
-      
-      const currentParams = {
-        ...requestParamsRef.current,
-        ...overrideParams
-      };
+  const fetchData = useCallback(
+    async (overrideParams = {}) => {
+      try {
+        const currentParams = {
+          ...requestParamsRef.current,
+          ...overrideParams,
+        };
 
-      
-      setError(null);
-      setLoading(true);
-      setFromCache(false);
+        setError(null);
+        setLoading(true);
+        setFromCache(false);
 
-      
-      const config = {
-        url: currentParams.url,
-        method: currentParams.method,
-        params: currentParams.params,
-        data: currentParams.data,
-        headers: currentParams.headers,
-        cache: currentParams.cache
-      };
+        const config = {
+          url: currentParams.url,
+          method: currentParams.method,
+          params: currentParams.params,
+          data: currentParams.data,
+          headers: currentParams.headers,
+          cache: currentParams.cache,
+        };
 
-      if (cacheTTL) {
-        config.cacheTTL = cacheTTL;
-      }
-
-      
-      const result = await axios(config);
-
-      
-      const isFromCache = result.fromCache === true;
-      setFromCache(isFromCache);
-
-      
-      setResponse(result.data);
-      setLastUpdated(new Date());
-
-      
-      if (onSuccess) {
-        onSuccess(result.data, isFromCache);
-      }
-
-      return result.data;
-    } catch (err) {
-      
-      setError(err);
-      
-      
-      if (onError) {
-        onError(err);
-      }
-      
-      
-      if (!onError) {
-        let message = 'Произошла ошибка при загрузке данных';
-        
-        if (err.response) {
-          
-          const status = err.response.status;
-          if (status >= 400 && status < 500) {
-            message = 'Ошибка в запросе данных';
-          } else if (status >= 500) {
-            message = 'Ошибка сервера. Пожалуйста, попробуйте позже';
-          }
-        } else if (err.request) {
-          
-          message = 'Проблема с подключением к серверу';
+        if (cacheTTL) {
+          config.cacheTTL = cacheTTL;
         }
-        
-        
-        window.dispatchEvent(new CustomEvent('show-error', { 
-          detail: { message } 
-        }));
-      }
-      
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [onSuccess, onError, cacheTTL]);
 
-  
+        const result = await axios(config);
+
+        const isFromCache = result.fromCache === true;
+        setFromCache(isFromCache);
+
+        setResponse(result.data);
+        setLastUpdated(new Date());
+
+        if (onSuccess) {
+          onSuccess(result.data, isFromCache);
+        }
+
+        return result.data;
+      } catch (err) {
+        setError(err);
+
+        if (onError) {
+          onError(err);
+        }
+
+        if (!onError) {
+          let message = 'Произошла ошибка при загрузке данных';
+
+          if (err.response) {
+            const status = err.response.status;
+            if (status >= 400 && status < 500) {
+              message = 'Ошибка в запросе данных';
+            } else if (status >= 500) {
+              message = 'Ошибка сервера. Пожалуйста, попробуйте позже';
+            }
+          } else if (err.request) {
+            message = 'Проблема с подключением к серверу';
+          }
+
+          window.dispatchEvent(
+            new CustomEvent('show-error', {
+              detail: { message },
+            })
+          );
+        }
+
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [onSuccess, onError, cacheTTL]
+  );
+
   const clearCache = useCallback(() => {
     if (url) {
-      
       axios.cache.clearByUrlPrefix(url);
     }
   }, [url]);
 
-  
-  const refresh = useCallback(async (overrideParams = {}) => {
-    
-    return fetchData({ 
-      ...overrideParams, 
-      cache: false 
-    });
-  }, [fetchData]);
+  const refresh = useCallback(
+    async (overrideParams = {}) => {
+      return fetchData({
+        ...overrideParams,
+        cache: false,
+      });
+    },
+    [fetchData]
+  );
 
-  
   useEffect(() => {
     if (!lazy) {
       fetchData();
     }
-  
   }, [lazy, ...dependencies]);
 
-  
   return {
     data: response,
     loading,
@@ -177,7 +168,7 @@ export default function useApi(url, options = {}) {
     refresh,
     clearCache,
     lastUpdated,
-    fromCache
+    fromCache,
   };
 }
 
@@ -191,19 +182,19 @@ export function useInfiniteApi(url, options = {}) {
     limitParam = 'limit',
     startPage = 1,
     limit = 20,
-    dataExtractor = (res) => res.items || res.data || res,
-    hasMoreExtractor = (res) => {
+    dataExtractor = res => res.items || res.data || res,
+    hasMoreExtractor = res => {
       if (res.hasMore !== undefined) return res.hasMore;
       if (res.has_more !== undefined) return res.has_more;
-      if (res.pagination && res.pagination.hasMore !== undefined) return res.pagination.hasMore;
-      
+      if (res.pagination && res.pagination.hasMore !== undefined)
+        return res.pagination.hasMore;
+
       const items = dataExtractor(res);
       return Array.isArray(items) && items.length >= limit;
     },
     ...restOptions
   } = options;
 
-  
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(startPage);
@@ -211,51 +202,48 @@ export function useInfiniteApi(url, options = {}) {
   const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  
   const apiParams = {
     ...restOptions.params,
     [pageParam]: currentPage,
     [limitParam]: limit,
   };
 
-  const { 
-    fetch, 
+  const {
+    fetch,
     refresh: refreshData,
-    clearCache 
+    clearCache,
   } = useApi(url, {
     ...restOptions,
     params: apiParams,
     lazy: true,
-    onError: (err) => {
+    onError: err => {
       setError(err);
       setLoading(false);
       if (restOptions.onError) restOptions.onError(err);
-    }
+    },
   });
 
-  
   const loadNextPage = useCallback(async () => {
     if (loading || !hasMore) return;
-    
+
     try {
       setLoading(true);
-      
+
       const newData = await fetch({
         params: {
           ...restOptions.params,
           [pageParam]: currentPage,
           [limitParam]: limit,
-        }
+        },
       });
-      
+
       const newItems = dataExtractor(newData);
       setHasMore(hasMoreExtractor(newData));
-      
-      
+
       setItems(prev => [...prev, ...newItems]);
       setCurrentPage(prev => prev + 1);
       setLastUpdated(new Date());
-      
+
       return newItems;
     } catch (err) {
       setError(err);
@@ -263,37 +251,44 @@ export function useInfiniteApi(url, options = {}) {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, dataExtractor, fetch, hasMore, hasMoreExtractor, limit, loading, pageParam, restOptions.params]);
+  }, [
+    currentPage,
+    dataExtractor,
+    fetch,
+    hasMore,
+    hasMoreExtractor,
+    limit,
+    loading,
+    pageParam,
+    restOptions.params,
+  ]);
 
-  
   const refresh = useCallback(async () => {
     setItems([]);
     setCurrentPage(startPage);
     setHasMore(true);
     setError(null);
-    
-    
+
     clearCache();
-    
-    
+
     try {
       setLoading(true);
-      
+
       const newData = await fetch({
         params: {
           ...restOptions.params,
           [pageParam]: startPage,
           [limitParam]: limit,
         },
-        cache: false
+        cache: false,
       });
-      
+
       const newItems = dataExtractor(newData);
       setHasMore(hasMoreExtractor(newData));
       setItems(newItems);
       setCurrentPage(startPage + 1);
       setLastUpdated(new Date());
-      
+
       return newItems;
     } catch (err) {
       setError(err);
@@ -301,14 +296,21 @@ export function useInfiniteApi(url, options = {}) {
     } finally {
       setLoading(false);
     }
-  }, [fetch, clearCache, dataExtractor, hasMoreExtractor, limit, pageParam, restOptions.params, startPage]);
+  }, [
+    fetch,
+    clearCache,
+    dataExtractor,
+    hasMoreExtractor,
+    limit,
+    pageParam,
+    restOptions.params,
+    startPage,
+  ]);
 
-  
   useEffect(() => {
     if (!restOptions.lazy) {
       refresh();
     }
-  
   }, []);
 
   return {
@@ -320,7 +322,7 @@ export function useInfiniteApi(url, options = {}) {
     refresh,
     clearCache,
     currentPage,
-    lastUpdated
+    lastUpdated,
   };
 }
 
@@ -328,85 +330,79 @@ export function useInfiniteApi(url, options = {}) {
  * Хук для работы с мутациями данных (POST, PUT, DELETE)
  */
 export function useMutation(url, options = {}) {
-  const {
-    method = 'post',
-    onSuccess,
-    onError,
-    ...restOptions
-  } = options;
+  const { method = 'post', onSuccess, onError, ...restOptions } = options;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  
-  const mutate = useCallback(async (mutationData = {}, configOverrides = {}) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      
-      const config = {
-        url,
-        method,
-        ...restOptions,
-        ...configOverrides,
-        data: mutationData
-      };
-      
-      
-      const response = await axios(config);
-      
-      
-      setData(response.data);
-      
-      
-      if (onSuccess) {
-        onSuccess(response.data, mutationData);
-      }
-      
-      return response.data;
-    } catch (err) {
-      setError(err);
-      
-      
-      if (onError) {
-        onError(err, mutationData);
-      } else {
-        
-        let message = 'Произошла ошибка при выполнении операции';
-        
-        if (err.response) {
-          
-          const status = err.response.status;
-          if (status === 400) message = 'Неверные данные для операции';
-          else if (status === 401) message = 'Необходима авторизация';
-          else if (status === 403) message = 'Доступ запрещен';
-          else if (status === 404) message = 'Ресурс не найден';
-          else if (status === 409) message = 'Конфликт при выполнении операции';
-          else if (status >= 500) message = 'Ошибка сервера при выполнении операции';
-          
-          
-          if (err.response.data && (err.response.data.message || err.response.data.error)) {
-            message = err.response.data.message || err.response.data.error;
-          }
-        } else if (err.request) {
-          message = 'Отсутствует соединение с сервером';
-        }
-        
-        
-        window.dispatchEvent(new CustomEvent('show-error', { 
-          detail: { message } 
-        }));
-      }
-      
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [url, method, onSuccess, onError, restOptions]);
+  const mutate = useCallback(
+    async (mutationData = {}, configOverrides = {}) => {
+      try {
+        setLoading(true);
+        setError(null);
 
-  
+        const config = {
+          url,
+          method,
+          ...restOptions,
+          ...configOverrides,
+          data: mutationData,
+        };
+
+        const response = await axios(config);
+
+        setData(response.data);
+
+        if (onSuccess) {
+          onSuccess(response.data, mutationData);
+        }
+
+        return response.data;
+      } catch (err) {
+        setError(err);
+
+        if (onError) {
+          onError(err, mutationData);
+        } else {
+          let message = 'Произошла ошибка при выполнении операции';
+
+          if (err.response) {
+            const status = err.response.status;
+            if (status === 400) message = 'Неверные данные для операции';
+            else if (status === 401) message = 'Необходима авторизация';
+            else if (status === 403) message = 'Доступ запрещен';
+            else if (status === 404) message = 'Ресурс не найден';
+            else if (status === 409)
+              message = 'Конфликт при выполнении операции';
+            else if (status >= 500)
+              message = 'Ошибка сервера при выполнении операции';
+
+            if (
+              err.response.data &&
+              (err.response.data.message || err.response.data.error)
+            ) {
+              message = err.response.data.message || err.response.data.error;
+            }
+          } else if (err.request) {
+            message = 'Отсутствует соединение с сервером';
+          }
+
+          window.dispatchEvent(
+            new CustomEvent('show-error', {
+              detail: { message },
+            })
+          );
+        }
+
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [url, method, onSuccess, onError, restOptions]
+  );
+
   const reset = useCallback(() => {
     setLoading(false);
     setError(null);
@@ -418,7 +414,7 @@ export function useMutation(url, options = {}) {
     loading,
     error,
     data,
-    reset
+    reset,
   };
 }
 
@@ -430,17 +426,17 @@ export function useApiLoadingStatus() {
   const [activeRequests, setActiveRequests] = useState([]);
 
   useEffect(() => {
-    const handleLoadingChange = (e) => {
+    const handleLoadingChange = e => {
       setIsLoading(e.detail.isLoading);
       setActiveRequests(e.detail.activeRequests || []);
     };
 
     window.addEventListener('api-loading-changed', handleLoadingChange);
-    
+
     return () => {
       window.removeEventListener('api-loading-changed', handleLoadingChange);
     };
   }, []);
 
   return { isLoading, activeRequests };
-} 
+}

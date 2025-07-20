@@ -1,3 +1,3 @@
 import MusicPlayer from './MusicPlayer';
 
-export default MusicPlayer; 
+export default MusicPlayer;

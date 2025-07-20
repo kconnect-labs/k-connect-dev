@@ -1,3 +1,3 @@
 import PlaylistGrid from './PlaylistGrid';
 
-export default PlaylistGrid; 
+export default PlaylistGrid;

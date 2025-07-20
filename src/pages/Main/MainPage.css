@@ -159,7 +159,7 @@
   justify-content: center;
   width: 12px;
   height: 12px;
-  background-color: #8470FF;
+  background-color: #8470ff;
   border-radius: 50%;
   font-size: 0.6rem;
   color: white;
@@ -178,7 +178,7 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: #D0BCFF;
+  background-color: #d0bcff;
   color: #1a1a1a;
 }
 
@@ -203,11 +203,11 @@
   .content-container {
     flex-direction: row;
   }
-  
+
   .left-column {
     width: 62%;
   }
-  
+
   .right-column {
     width: 32%;
   }
@@ -217,12 +217,12 @@
   .content-container {
     gap: 8px;
   }
-  
+
   .left-column {
     gap: 5px;
   }
-  
+
   .right-column {
     gap: 8px;
   }
-} 
+}

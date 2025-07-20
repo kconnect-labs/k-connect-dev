@@ -6,7 +6,7 @@ let sessionContext = {
   lastFetchTime: null,
 };
 
-export const setSessionContext = (context) => {
+export const setSessionContext = context => {
   sessionContext = context;
 };
 
@@ -15,23 +15,25 @@ const shouldMakeRequest = () => {
 };
 
 const ProfileService = {
-    getProfile: async (username) => {
+  getProfile: async username => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       // Если username не передан, получаем его из localStorage
       let targetUsername = username;
       if (!targetUsername) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const currentUser = JSON.parse(
+          localStorage.getItem('currentUser') || '{}'
+        );
         targetUsername = currentUser.username;
       }
-      
+
       if (!targetUsername) {
         throw new Error('No username available for profile fetch');
       }
-      
+
       const endpoint = `/api/profile/${targetUsername}`;
       const response = await axios.get(endpoint);
       return response.data;
@@ -41,16 +43,16 @@ const ProfileService = {
     }
   },
 
-    updateSettings: async (settings) => {
+  updateSettings: async settings => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const response = await axios.post('/api/profile/settings', settings, {
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
       return response.data;
     } catch (error) {
@@ -59,18 +61,18 @@ const ProfileService = {
     }
   },
 
-    updateName: async (name) => {
+  updateName: async name => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('name', name);
       const response = await axios.post('/api/profile/update-name', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       return response.data;
     } catch (error) {
@@ -79,19 +81,23 @@ const ProfileService = {
     }
   },
 
-    updateUsername: async (username) => {
+  updateUsername: async username => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('username', username);
-      const response = await axios.post('/api/profile/update-username', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      const response = await axios.post(
+        '/api/profile/update-username',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
-      });
+      );
       return response.data;
     } catch (error) {
       console.error('Error updating username:', error);
@@ -99,18 +105,18 @@ const ProfileService = {
     }
   },
 
-    updateAbout: async (about) => {
+  updateAbout: async about => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
-            const formData = new FormData();
+      const formData = new FormData();
       formData.append('about', about);
       const response = await axios.post('/api/profile/update-about', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
       return response.data;
     } catch (error) {
@@ -119,21 +125,25 @@ const ProfileService = {
     }
   },
 
-    uploadAvatar: async (file) => {
+  uploadAvatar: async file => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('avatar', file);
-      
-      const response = await axios.post('/api/profile/upload-avatar', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+
+      const response = await axios.post(
+        '/api/profile/upload-avatar',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
-      });
-      
+      );
+
       return response.data;
     } catch (error) {
       console.error('Error uploading avatar:', error);
@@ -141,21 +151,25 @@ const ProfileService = {
     }
   },
 
-    uploadBanner: async (file) => {
+  uploadBanner: async file => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('banner', file);
-      
-      const response = await axios.post('/api/profile/upload-banner', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+
+      const response = await axios.post(
+        '/api/profile/upload-banner',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         }
-      });
-      
+      );
+
       return response.data;
     } catch (error) {
       console.error('Error uploading banner:', error);
@@ -163,11 +177,11 @@ const ProfileService = {
     }
   },
 
-    updateSocial: async (name, link) => {
+  updateSocial: async (name, link) => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('name', name);
@@ -180,11 +194,11 @@ const ProfileService = {
     }
   },
 
-    deleteSocial: async (name) => {
+  deleteSocial: async name => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('name', name);
@@ -196,11 +210,11 @@ const ProfileService = {
     }
   },
 
-    addSocial: async (name, link) => {
+  addSocial: async (name, link) => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const formData = new FormData();
       formData.append('name', name);
@@ -213,14 +227,14 @@ const ProfileService = {
     }
   },
 
-    followUser: async (userId) => {
+  followUser: async userId => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const response = await axios.post('/api/profile/follow', {
-        followed_id: userId
+        followed_id: userId,
       });
       return response.data;
     } catch (error) {
@@ -228,15 +242,15 @@ const ProfileService = {
       throw error;
     }
   },
-  
-    unfollowUser: async (userId) => {
+
+  unfollowUser: async userId => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
-                  const response = await axios.post('/api/profile/follow', {
-        followed_id: userId
+      const response = await axios.post('/api/profile/follow', {
+        followed_id: userId,
       });
       return response.data;
     } catch (error) {
@@ -244,12 +258,12 @@ const ProfileService = {
       throw error;
     }
   },
-  
-    checkFollowing: async (userId) => {
+
+  checkFollowing: async userId => {
     if (!shouldMakeRequest()) {
       return { success: false, message: 'Session expired' };
     }
-    
+
     try {
       const response = await axios.get(`/api/profile/${userId}`);
       return response.data.is_following;
@@ -257,7 +271,7 @@ const ProfileService = {
       console.error('Error checking follow status:', error);
       return false;
     }
-  }
+  },
 };
 
 export default ProfileService;

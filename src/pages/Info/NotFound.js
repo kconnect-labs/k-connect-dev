@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, Button, Grid, Container, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Container,
+  useMediaQuery,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -73,20 +80,23 @@ const NotFound = () => {
 
   return (
     <NotFoundContainer>
-      <Container maxWidth="lg">
-        <Grid container spacing={2} alignItems="center">
+      <Container maxWidth='lg'>
+        <Grid container spacing={2} alignItems='center'>
           {isMobile ? (
-            
             <>
-              <Grid item xs={12} component={motion.div}
+              <Grid
+                item
+                xs={12}
+                component={motion.div}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}>
+                transition={{ duration: 0.5 }}
+              >
                 <ImageContainer>
                   <Box
-                    component="img"
-                    src="/static/404/404.jpg"
-                    alt="404"
+                    component='img'
+                    src='/static/404/404.jpg'
+                    alt='404'
                     sx={{
                       maxWidth: '100%',
                       height: 'auto',
@@ -97,23 +107,30 @@ const NotFound = () => {
                   />
                 </ImageContainer>
               </Grid>
-              <Grid item xs={12} component={motion.div}
+              <Grid
+                item
+                xs={12}
+                component={motion.div}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}>
-                <Box textAlign="center">
-                  <ErrorText variant="h1">
-                    СТРАНИЦА<br />НЕ РАБОТАЕТ
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Box textAlign='center'>
+                  <ErrorText variant='h1'>
+                    СТРАНИЦА
+                    <br />
+                    НЕ РАБОТАЕТ
                   </ErrorText>
                   <SubText>
-                    Страница, которую вы ищете, не найдена или была удалена. Проверьте URL или вернитесь на главную.
+                    Страница, которую вы ищете, не найдена или была удалена.
+                    Проверьте URL или вернитесь на главную.
                   </SubText>
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
                   >
-                    <StyledButton component={Link} to="/" variant="contained">
+                    <StyledButton component={Link} to='/' variant='contained'>
                       Окак,на главную
                     </StyledButton>
                   </motion.div>
@@ -121,37 +138,49 @@ const NotFound = () => {
               </Grid>
             </>
           ) : (
-            
             <>
-              <Grid item xs={12} md={6} component={motion.div}
+              <Grid
+                item
+                xs={12}
+                md={6}
+                component={motion.div}
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}>
-                <ErrorText variant="h1">
-                  СТРАНИЦА<br />НЕ РАБОТАЕТ
+                transition={{ duration: 0.5 }}
+              >
+                <ErrorText variant='h1'>
+                  СТРАНИЦА
+                  <br />
+                  НЕ РАБОТАЕТ
                 </ErrorText>
                 <SubText>
-                  Страница, которую вы ищете, не найдена или была удалена. Проверьте URL или вернитесь на главную.
+                  Страница, которую вы ищете, не найдена или была удалена.
+                  Проверьте URL или вернитесь на главную.
                 </SubText>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <StyledButton component={Link} to="/" variant="contained">
+                  <StyledButton component={Link} to='/' variant='contained'>
                     Окак, на главную
                   </StyledButton>
                 </motion.div>
               </Grid>
-              <Grid item xs={12} md={6} component={motion.div}
+              <Grid
+                item
+                xs={12}
+                md={6}
+                component={motion.div}
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}>
+                transition={{ duration: 0.6 }}
+              >
                 <ImageContainer>
                   <Box
-                    component="img"
-                    src="/static/404/404.jpg"
-                    alt="404"
+                    component='img'
+                    src='/static/404/404.jpg'
+                    alt='404'
                     sx={{
                       maxWidth: '100%',
                       height: 'auto',
@@ -169,4 +198,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound; 
+export default NotFound;

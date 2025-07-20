@@ -1,7 +1,8 @@
 import React from 'react';
 import { ContextMenu, useContextMenu } from './index';
 const ContextMenuExample = () => {
-  const { contextMenuState, handleContextMenu, closeContextMenu } = useContextMenu();
+  const { contextMenuState, handleContextMenu, closeContextMenu } =
+    useContextMenu();
   const menuItems = [
     {
       id: 'edit',
@@ -31,18 +32,18 @@ const ContextMenuExample = () => {
   ];
   return (
     <div>
-      <div 
-        style={{ 
-          padding: '20px', 
-          border: '1px solid #ddd', 
+      <div
+        style={{
+          padding: '20px',
+          border: '1px solid #ddd',
           borderRadius: '8px',
-          cursor: 'context-menu'
+          cursor: 'context-menu',
         }}
-        onContextMenu={(e) => handleContextMenu(e, { type: 'example' })}
+        onContextMenu={e => handleContextMenu(e, { type: 'example' })}
       >
         Нажмите правую кнопку мыши, чтобы открыть контекстное меню
       </div>
-      <ContextMenu 
+      <ContextMenu
         items={menuItems}
         x={contextMenuState.x}
         y={contextMenuState.y}
@@ -52,4 +53,4 @@ const ContextMenuExample = () => {
     </div>
   );
 };
-export default ContextMenuExample; 
+export default ContextMenuExample;

@@ -5,19 +5,15 @@ import { Box } from '@mui/material';
  * ContentLoader component with no animations
  * Directly renders content without any transitions
  */
-const ContentLoader = ({ 
-  loading, 
-  children, 
+const ContentLoader = ({
+  loading,
+  children,
   skeletonCount = 1,
   height = '100px',
   sx = {},
-  showSkeleton = false
+  showSkeleton = false,
 }) => {
-  return (
-    <Box sx={{ position: 'relative', ...sx }}>
-      {children}
-    </Box>
-  );
+  return <Box sx={{ position: 'relative', ...sx }}>{children}</Box>;
 };
 
-export default ContentLoader; 
+export default ContentLoader;

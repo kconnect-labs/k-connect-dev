@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { imageCache } from '../utils/imageUtils';
 
 /**
- * @param {string} src 
+ * @param {string} src
  * @param {Object} options
  * @param {boolean} options.lazy
- * @param {number} options.threshold 
- * @param {string} options.rootMargin 
+ * @param {number} options.threshold
+ * @param {string} options.rootMargin
  * @returns {Object}
  */
 export const useLazyImage = (src, options = {}) => {
@@ -39,8 +39,8 @@ export const useLazyImage = (src, options = {}) => {
 
     if ('IntersectionObserver' in window) {
       observerRef.current = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
+        entries => {
+          entries.forEach(entry => {
             if (entry.isIntersecting) {
               setIsInView(true);
               setImageSrc(src);
@@ -88,7 +88,7 @@ export const useLazyImage = (src, options = {}) => {
     error,
     onLoad: handleLoad,
     onError: handleError,
-    ...otherOptions
+    ...otherOptions,
   };
 };
 
@@ -106,8 +106,8 @@ export const usePreloadImages = (urls = []) => {
     let mounted = true;
     let loaded = 0;
 
-    const preloadImage = (url) => {
-      return new Promise((resolve) => {
+    const preloadImage = url => {
+      return new Promise(resolve => {
         const img = new Image();
         img.onload = () => {
           if (mounted) {
@@ -139,6 +139,6 @@ export const usePreloadImages = (urls = []) => {
     loadedCount,
     totalCount,
     progress: totalCount > 0 ? loadedCount / totalCount : 0,
-    isComplete: loadedCount === totalCount
+    isComplete: loadedCount === totalCount,
   };
-}; 
+};

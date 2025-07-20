@@ -1,6 +1,13 @@
-import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
-import { 
-  Box, 
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
+import {
+  Box,
   Typography,
   Container,
   Card,
@@ -41,7 +48,6 @@ import { MusicContext } from '../../context/MusicContext';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-
 import TimerIcon from '@mui/icons-material/Timer';
 import UpdateInfo from '../../components/Updates/UpdateInfo';
 import UpdateService from '../../services/UpdateService';
@@ -56,26 +62,17 @@ import MarkdownContent from '../../components/Post/MarkdownContent';
 import CreatePost from '../../components/CreatePost/CreatePost';
 import { usePostActions } from '../User/ProfilePage/hooks/usePostActions';
 
-
-
-
-
-
-
-
-
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: theme.palette.mode === 'dark' 
-    ? '1px solid rgba(255, 255, 255, 0.1)' 
-    : '1px solid rgba(0, 0, 0, 0.1)'
+  border:
+    theme.palette.mode === 'dark'
+      ? '1px solid rgba(255, 255, 255, 0.1)'
+      : '1px solid rgba(0, 0, 0, 0.1)',
 }));
-
-
 
 const OnlineUsers = () => {
   const { t } = useLanguage();
@@ -83,13 +80,13 @@ const OnlineUsers = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const theme = useTheme();
-  
+
   useEffect(() => {
     const fetchOnlineUsers = async () => {
       try {
         setLoading(true);
         const response = await axios.get('/api/users/online?limit=1200');
-        
+
         if (Array.isArray(response.data)) {
           setOnlineUsers(response.data);
         } else if (response.data && Array.isArray(response.data.users)) {
@@ -104,44 +101,57 @@ const OnlineUsers = () => {
         setLoading(false);
       }
     };
-    
+
     fetchOnlineUsers();
-    
-    
+
     const interval = setInterval(fetchOnlineUsers, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
-  
-  const handleUserClick = (username) => {
+
+  const handleUserClick = username => {
     navigate(`/profile/${username}`);
   };
-  
+
   if (loading) {
     return (
-      <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}>
+      <OnlineUsersCard
+        sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center' }}
+      >
         <CircularProgress size={18} sx={{ mr: 1 }} />
-        <Typography variant="body2" sx={{ fontSize: '0.95rem' }}>{t('main_page.loading')}</Typography>
+        <Typography variant='body2' sx={{ fontSize: '0.95rem' }}>
+          {t('main_page.loading')}
+        </Typography>
       </OnlineUsersCard>
     );
   }
-  
+
   if (onlineUsers.length === 0) {
     return null;
   }
-  
+
   return (
-    <OnlineUsersCard sx={{ p: 1, minHeight: 56, display: 'flex', alignItems: 'center', overflowX: 'auto' }}>
-      <Box sx={{
+    <OnlineUsersCard
+      sx={{
+        p: 1,
+        minHeight: 56,
         display: 'flex',
-        flexWrap: 'nowrap',
-        gap: 1,
+        alignItems: 'center',
         overflowX: 'auto',
-        pb: 0,
-        '&::-webkit-scrollbar': { height: '0px', display: 'none' },
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none',
-      }}>
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'nowrap',
+          gap: 1,
+          overflowX: 'auto',
+          pb: 0,
+          '&::-webkit-scrollbar': { height: '0px', display: 'none' },
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -154,7 +164,7 @@ const OnlineUsers = () => {
             border: '1px solid rgba(76, 175, 80, 0.2)',
             minWidth: 'fit-content',
             height: 36,
-            mr: 0.5
+            mr: 0.5,
           }}
         >
           <Box
@@ -163,15 +173,15 @@ const OnlineUsers = () => {
               height: 8,
               borderRadius: '50%',
               backgroundColor: '#4caf50',
-              boxShadow: '0 0 8px rgba(76, 175, 80, 0.5)'
+              boxShadow: '0 0 8px rgba(76, 175, 80, 0.5)',
             }}
           />
           <Typography
-            variant="body2"
+            variant='body2'
             sx={{
               fontSize: '0.75rem',
               fontWeight: 500,
-              color: '#4caf50'
+              color: '#4caf50',
             }}
           >
             {t('main_page.online_count', { count: onlineUsers.length })}
@@ -220,16 +230,16 @@ const UserRecommendation = ({ user }) => {
   const [following, setFollowing] = useState(user.is_following || false);
   const { user: currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  
-  const handleFollow = async (e) => {
+
+  const handleFollow = async e => {
     e.stopPropagation();
     try {
       setFollowing(!following);
-      
+
       const response = await axios.post(`/api/profile/follow`, {
-        followed_id: user.id
+        followed_id: user.id,
       });
-      
+
       if (response.data && response.data.success) {
         setFollowing(response.data.is_following);
       }
@@ -238,58 +248,50 @@ const UserRecommendation = ({ user }) => {
       console.error('Error toggling follow:', error);
     }
   };
-  
+
   const handleCardClick = () => {
     navigate(`/profile/${user.username}`);
   };
 
   const getAvatarSrc = () => {
     if (!user?.photo) return '/static/uploads/system/avatar.png';
-    
+
     if (user.photo.startsWith('/') || user.photo.startsWith('http')) {
       return user.photo;
     }
-    
+
     return `/static/uploads/avatar/${user.id}/${user.photo}`;
   };
-  
-  const isChannelAccount = currentUser && currentUser.account_type === 'channel';
-  
+
+  const isChannelAccount =
+    currentUser && currentUser.account_type === 'channel';
+
   return (
-    <div 
-      className="user-recommendation"
-      onClick={handleCardClick} 
-    >
-      <div className="user-recommendation-content">
-        <div className="user-info">
-          <img 
+    <div className='user-recommendation' onClick={handleCardClick}>
+      <div className='user-recommendation-content'>
+        <div className='user-info'>
+          <img
             src={getAvatarSrc()}
             alt={user.name || user.username}
-            className="user-avatar-large"
+            className='user-avatar-large'
             onError={safeImageError}
           />
-          <div className="user-details">
-            <div className="user-name">
-              {user.name || user.username}
-            </div>
-            <div className="user-username">
-              <span className="username-text">
-                @{user.username}
-              </span>
-              {user.is_verified && (
-                <span className="verified-badge">
-                  ✓
-                </span>
-              )}
+          <div className='user-details'>
+            <div className='user-name'>{user.name || user.username}</div>
+            <div className='user-username'>
+              <span className='username-text'>@{user.username}</span>
+              {user.is_verified && <span className='verified-badge'>✓</span>}
             </div>
           </div>
-          
+
           {!isChannelAccount && (
             <button
               className={`follow-button ${following ? 'following' : ''}`}
               onClick={handleFollow}
             >
-              {following ? t('main_page.follow.unfollow') : t('main_page.follow.follow')}
+              {following
+                ? t('main_page.follow.unfollow')
+                : t('main_page.follow.follow')}
             </button>
           )}
         </div>
@@ -297,7 +299,6 @@ const UserRecommendation = ({ user }) => {
     </div>
   );
 };
-
 
 const MainPage = React.memo(() => {
   const { user } = useContext(AuthContext);
@@ -309,102 +310,108 @@ const MainPage = React.memo(() => {
   const [trendingBadges, setTrendingBadges] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [feedType, setFeedType] = useState('all'); 
-  const [requestId, setRequestId] = useState(0); 
-  const isFirstRender = useRef(true); 
-  const feedTypeChanged = useRef(false); 
-  const navigate = useNavigate(); 
-  const loadingMoreRef = useRef(false); 
-  const loaderRef = useRef(null); 
-  
+  const [feedType, setFeedType] = useState('all');
+  const [requestId, setRequestId] = useState(0);
+  const isFirstRender = useRef(true);
+  const feedTypeChanged = useRef(false);
+  const navigate = useNavigate();
+  const loadingMoreRef = useRef(false);
+  const loaderRef = useRef(null);
+
   const { handlePostCreated } = usePostActions();
-  
-  
+
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxImages, setLightboxImages] = useState([]);
 
   const [latestUpdate, setLatestUpdate] = useState(null);
-  
+
   // Перемещаем usePageCommands в начало, сразу после всех useState
   usePageCommands([
-		{
-			id: 'cmd_reload_posts',
-			title: t(`commands.cmd_reload_posts.title`),
-			description: t(`commands.cmd_reload_posts.description`),
-			action: async () => {
-					console.log(`FEED TYPE CHANGED TO: ${feedType} - LOADING NEW POSTS`)
-					try {
-						setLoading(true)
-						setPosts([])
+    {
+      id: 'cmd_reload_posts',
+      title: t(`commands.cmd_reload_posts.title`),
+      description: t(`commands.cmd_reload_posts.description`),
+      action: async () => {
+        console.log(`FEED TYPE CHANGED TO: ${feedType} - LOADING NEW POSTS`);
+        try {
+          setLoading(true);
+          setPosts([]);
 
-						const params = {
-							page: 1,
-							per_page: 20,
-							sort: feedType,
-							include_all: feedType === 'all',
-						}
+          const params = {
+            page: 1,
+            per_page: 20,
+            sort: feedType,
+            include_all: feedType === 'all',
+          };
 
-						const currentRequestId = requestId + 1
-						setRequestId(currentRequestId)
+          const currentRequestId = requestId + 1;
+          setRequestId(currentRequestId);
 
-						let response
-						try {
-							response = await axios.get('/api/posts/feed', { params })
-						} catch (apiError) {
-							console.error(`Error in API call for ${feedType} feed:`, apiError)
+          let response;
+          try {
+            response = await axios.get('/api/posts/feed', { params });
+          } catch (apiError) {
+            console.error(`Error in API call for ${feedType} feed:`, apiError);
 
-							if (feedType === 'recommended') {
-								setHasMore(false)
-								setPosts([])
-								setLoading(false)
-								feedTypeChanged.current = false
-								return
-							}
+            if (feedType === 'recommended') {
+              setHasMore(false);
+              setPosts([]);
+              setLoading(false);
+              feedTypeChanged.current = false;
+              return;
+            }
 
-							throw apiError
-						}
+            throw apiError;
+          }
 
-						if (requestId !== currentRequestId - 1) return
+          if (requestId !== currentRequestId - 1) return;
 
-						if (response.data && Array.isArray(response.data.posts)) {
-							// Дедупликация постов по ID
-							const uniquePosts = response.data.posts.filter((post, index, self) => 
-								index === self.findIndex(p => p.id === post.id)
-							);
-							setPosts(uniquePosts)
-							setHasMore(response.data.has_next === true)
-							setPage(2)
-						} else {
-							setPosts([])
-							setHasMore(false)
-						}
-					} catch (error) {
-						console.error(`Error loading ${feedType} posts:`, error)
-						setPosts([])
-						setHasMore(false)
-					} finally {
-						setLoading(false)
-						feedTypeChanged.current = false
-					}
-				},
-      
-			keywords: ['посты', 'обновить', 'лайк', 'коменты'],
-			group: 'global',
-		},
-	])
-  
+          if (response.data && Array.isArray(response.data.posts)) {
+            // Дедупликация постов по ID
+            const uniquePosts = response.data.posts.filter(
+              (post, index, self) =>
+                index === self.findIndex(p => p.id === post.id)
+            );
+            setPosts(uniquePosts);
+            setHasMore(response.data.has_next === true);
+            setPage(2);
+          } else {
+            setPosts([]);
+            setHasMore(false);
+          }
+        } catch (error) {
+          console.error(`Error loading ${feedType} posts:`, error);
+          setPosts([]);
+          setHasMore(false);
+        } finally {
+          setLoading(false);
+          feedTypeChanged.current = false;
+        }
+      },
+
+      keywords: ['посты', 'обновить', 'лайк', 'коменты'],
+      group: 'global',
+    },
+  ]);
+
   useEffect(() => {
     const options = {
-      root: null, 
+      root: null,
       rootMargin: '0px',
-      threshold: 0.1 
+      threshold: 0.1,
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(entries => {
       const [entry] = entries;
-      if (entry.isIntersecting && hasMore && !loading && !loadingMoreRef.current && !feedTypeChanged.current) {
+      if (
+        entry.isIntersecting &&
+        hasMore &&
+        !loading &&
+        !loadingMoreRef.current &&
+        !feedTypeChanged.current
+      ) {
         loadMorePosts();
       }
     }, options);
@@ -419,36 +426,35 @@ const MainPage = React.memo(() => {
       }
     };
   }, [hasMore, loading, posts.length, feedType]);
-  
+
   useEffect(() => {
-    if (!isFirstRender.current) return; 
-    
+    if (!isFirstRender.current) return;
+
     const initialLoad = async () => {
-      console.log("INITIAL MOUNT - ONE TIME LOAD");
+      console.log('INITIAL MOUNT - ONE TIME LOAD');
       try {
         setLoading(true);
         setPosts([]);
-        
+
         const params = {
           page: 1,
           per_page: 20,
           sort: feedType,
-          include_all: feedType === 'all'
+          include_all: feedType === 'all',
         };
-        
-        
+
         const currentRequestId = requestId + 1;
         setRequestId(currentRequestId);
-        
+
         const response = await axios.get('/api/posts/feed', { params });
-        
-        
+
         if (requestId !== currentRequestId - 1) return;
-        
+
         if (response.data && Array.isArray(response.data.posts)) {
           // Дедупликация постов по ID
-          const uniquePosts = response.data.posts.filter((post, index, self) => 
-            index === self.findIndex(p => p.id === post.id)
+          const uniquePosts = response.data.posts.filter(
+            (post, index, self) =>
+              index === self.findIndex(p => p.id === post.id)
           );
           setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
@@ -463,68 +469,58 @@ const MainPage = React.memo(() => {
         setHasMore(false);
       } finally {
         setLoading(false);
-        isFirstRender.current = false; 
+        isFirstRender.current = false;
       }
     };
-    
+
     initialLoad();
-    
-    
   }, []);
-  
-  
+
   useEffect(() => {
-    
     if (isFirstRender.current) return;
-    
-    
+
     feedTypeChanged.current = true;
-    
+
     const loadFeedPosts = async () => {
       console.log(`FEED TYPE CHANGED TO: ${feedType} - LOADING NEW POSTS`);
       try {
         setLoading(true);
         setPosts([]);
-        
+
         const params = {
           page: 1,
           per_page: 20,
           sort: feedType,
-          include_all: feedType === 'all'
+          include_all: feedType === 'all',
         };
-        
-        
+
         const currentRequestId = requestId + 1;
         setRequestId(currentRequestId);
-        
-        
+
         let response;
         try {
           response = await axios.get('/api/posts/feed', { params });
         } catch (apiError) {
           console.error(`Error in API call for ${feedType} feed:`, apiError);
-          
-          
+
           if (feedType === 'recommended') {
-            
             setHasMore(false);
             setPosts([]);
             setLoading(false);
             feedTypeChanged.current = false;
             return;
           }
-          
-          
+
           throw apiError;
         }
-        
-        
+
         if (requestId !== currentRequestId - 1) return;
-        
+
         if (response.data && Array.isArray(response.data.posts)) {
           // Дедупликация постов по ID
-          const uniquePosts = response.data.posts.filter((post, index, self) => 
-            index === self.findIndex(p => p.id === post.id)
+          const uniquePosts = response.data.posts.filter(
+            (post, index, self) =>
+              index === self.findIndex(p => p.id === post.id)
           );
           setPosts(uniquePosts);
           setHasMore(response.data.has_next === true);
@@ -539,43 +535,38 @@ const MainPage = React.memo(() => {
         setHasMore(false);
       } finally {
         setLoading(false);
-        feedTypeChanged.current = false; 
+        feedTypeChanged.current = false;
       }
     };
-    
+
     loadFeedPosts();
-    
-    
   }, [feedType]);
-  
-  
+
   useEffect(() => {
-    
     if (!isFirstRender.current) return;
-    
+
     const fetchRecommendations = async () => {
       try {
         setLoadingRecommendations(true);
-        
-        
+
         if (recommendations.length > 0) {
           setLoadingRecommendations(false);
           return;
         }
-        
-        
+
         try {
-          const response = await axios.get('/api/users/recent-channels', { timeout: 5000 });
+          const response = await axios.get('/api/users/recent-channels', {
+            timeout: 5000,
+          });
           if (Array.isArray(response.data)) {
             setRecommendations(response.data || []);
           } else {
-            
             console.log('Unexpected response format:', response.data);
             setRecommendations([]);
           }
         } catch (error) {
           console.error('Error fetching recent channels:', error);
-          
+
           setRecommendations([]);
         }
       } finally {
@@ -584,43 +575,50 @@ const MainPage = React.memo(() => {
     };
 
     fetchRecommendations();
-    
   }, []);
 
-
-  
   const loadMorePosts = async () => {
-    if (loading || !hasMore || feedTypeChanged.current || loadingMoreRef.current) return;
-    
+    if (
+      loading ||
+      !hasMore ||
+      feedTypeChanged.current ||
+      loadingMoreRef.current
+    )
+      return;
+
     try {
       loadingMoreRef.current = true;
       setLoading(true);
-      
+
       const currentPage = page;
-      
+
       const params = {
         page: currentPage,
-        per_page: 10, 
+        per_page: 10,
         sort: feedType,
-        include_all: feedType === 'all'
+        include_all: feedType === 'all',
       };
-      
+
       const currentRequestId = requestId + 1;
       setRequestId(currentRequestId);
-      
+
       setPage(currentPage + 1);
-      
+
       const response = await axios.get('/api/posts/feed', { params });
-      
+
       if (requestId !== currentRequestId - 1) return;
-      
+
       if (response.data && Array.isArray(response.data.posts)) {
         setPosts(prev => {
           const existingPostIds = new Set(prev.map(p => p.id));
-          const newPosts = response.data.posts.filter(post => !existingPostIds.has(post.id));
+          const newPosts = response.data.posts.filter(
+            post => !existingPostIds.has(post.id)
+          );
           return [...prev, ...newPosts];
         });
-        setHasMore(response.data.has_next === true && response.data.posts.length > 0);
+        setHasMore(
+          response.data.has_next === true && response.data.posts.length > 0
+        );
       } else {
         setHasMore(false);
       }
@@ -632,23 +630,23 @@ const MainPage = React.memo(() => {
       loadingMoreRef.current = false;
     }
   };
-  
+
   const handlePostCreatedLocal = (newPost, deletedPostId = null) => {
     if (axios.cache) {
       axios.cache.clearPostsCache();
       axios.cache.clearByUrlPrefix('/api/posts/feed');
       axios.cache.clearByUrlPrefix('/api/profile/pinned_post');
     }
-    
+
     if (deletedPostId) {
       setPosts(prevPosts => prevPosts.filter(p => p.id !== deletedPostId));
       return;
     }
-    
+
     if (!newPost) {
-      setPosts([]); 
-      setPage(1); 
-      
+      setPosts([]);
+      setPage(1);
+
       const refreshFeed = async () => {
         try {
           setLoading(true);
@@ -656,23 +654,24 @@ const MainPage = React.memo(() => {
             page: 1,
             per_page: 20,
             sort: feedType,
-            include_all: feedType === 'all'
+            include_all: feedType === 'all',
           };
-          
+
           const currentRequestId = requestId + 1;
           setRequestId(currentRequestId);
-          
-          const response = await axios.get('/api/posts/feed', { 
+
+          const response = await axios.get('/api/posts/feed', {
             params,
-            forceRefresh: true
+            forceRefresh: true,
           });
-          
+
           if (requestId !== currentRequestId - 1) return;
-          
+
           if (response.data && Array.isArray(response.data.posts)) {
             // Дедупликация постов по ID
-            const uniquePosts = response.data.posts.filter((post, index, self) => 
-              index === self.findIndex(p => p.id === post.id)
+            const uniquePosts = response.data.posts.filter(
+              (post, index, self) =>
+                index === self.findIndex(p => p.id === post.id)
             );
             setPosts(uniquePosts);
             setHasMore(response.data.has_next === true);
@@ -689,68 +688,69 @@ const MainPage = React.memo(() => {
           setLoading(false);
         }
       };
-      
+
       refreshFeed();
       return;
     }
-    
+
     setPosts(prevPosts => [newPost, ...prevPosts]);
   };
 
   const handleDeletePost = (postId, updatedPost) => {
     if (updatedPost) {
-      setPosts(prevPosts => 
-        prevPosts.map(post => 
+      setPosts(prevPosts =>
+        prevPosts.map(post =>
           post.id.toString() === postId.toString() ? updatedPost : post
         )
       );
     } else {
-      setPosts(prevPosts => 
+      setPosts(prevPosts =>
         prevPosts.filter(post => post.id.toString() !== postId.toString())
       );
     }
   };
-  
+
   const handleFollow = async (userId, isFollowing) => {
     try {
       await axios.post('/api/profile/follow', { followed_id: userId });
     } catch (error) {
-      console.error("Error following user:", error);
-      setRecommendations(recommendations.map(rec => 
-        rec.id === userId 
-          ? { ...rec, isFollowing: !isFollowing } 
-          : rec
-      ));
+      console.error('Error following user:', error);
+      setRecommendations(
+        recommendations.map(rec =>
+          rec.id === userId ? { ...rec, isFollowing: !isFollowing } : rec
+        )
+      );
     }
   };
-  
+
   const handleOpenLightbox = (image, allImages, index) => {
     setCurrentImage(image);
     setLightboxImages(Array.isArray(allImages) ? allImages : [image]);
     setCurrentImageIndex(index || 0);
     setLightboxOpen(true);
   };
-  
+
   const handleCloseLightbox = () => {
     setLightboxOpen(false);
   };
-  
+
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => {
+    setCurrentImageIndex(prevIndex => {
       const nextIndex = (prevIndex + 1) % lightboxImages.length;
       setCurrentImage(lightboxImages[nextIndex]);
       return nextIndex;
     });
   };
-  
+
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => {
-      const nextIndex = (prevIndex - 1 + lightboxImages.length) % lightboxImages.length;
+    setCurrentImageIndex(prevIndex => {
+      const nextIndex =
+        (prevIndex - 1 + lightboxImages.length) % lightboxImages.length;
       setCurrentImage(lightboxImages[nextIndex]);
       return nextIndex;
     });
   };
-  
+
   useEffect(() => {
     const update = UpdateService.getLatestUpdate();
     setLatestUpdate(update);
@@ -758,15 +758,15 @@ const MainPage = React.memo(() => {
 
   // Обработчик глобального события удаления постов
   useEffect(() => {
-    const handleGlobalPostDeleted = (event) => {
+    const handleGlobalPostDeleted = event => {
       const { postId } = event.detail;
       if (postId) {
         setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
       }
     };
-    
+
     window.addEventListener('post-deleted', handleGlobalPostDeleted);
-    
+
     return () => {
       window.removeEventListener('post-deleted', handleGlobalPostDeleted);
     };
@@ -774,52 +774,55 @@ const MainPage = React.memo(() => {
 
   // Обработчик глобального события создания постов
   useEffect(() => {
-    const handleGlobalPostCreated = (event) => {
+    const handleGlobalPostCreated = event => {
       const newPost = event.detail;
       if (newPost && (!newPost.type || newPost.type === 'post')) {
         setPosts(prevPosts => [newPost, ...prevPosts]);
       }
     };
-    
+
     window.addEventListener('post_created', handleGlobalPostCreated);
-    
+
     return () => {
       window.removeEventListener('post_created', handleGlobalPostCreated);
     };
   }, []);
-  
+
   return (
-    <Container maxWidth="lg" sx={{ 
-      mt: 2, 
-      mb: 0,
-      px: { xs: 0.5, sm: 0 },
-      width: '100%',
-      maxWidth: '100%',
-      overflow: { xs: 'hidden', md: 'visible' },
-      pb: { xs: '100px', sm: 0 }
-    }}>
-      <div className="content-container">
-        <div className="left-column">
+    <Container
+      maxWidth='lg'
+      sx={{
+        mt: 2,
+        mb: 0,
+        px: { xs: 0.5, sm: 0 },
+        width: '100%',
+        maxWidth: '100%',
+        overflow: { xs: 'hidden', md: 'visible' },
+        pb: { xs: '100px', sm: 0 },
+      }}
+    >
+      <div className='content-container'>
+        <div className='left-column'>
           <OnlineUsers />
-          <CreatePost onPostCreated={handlePostCreated} postType="post" />
-          
-          
+          <CreatePost onPostCreated={handlePostCreated} postType='post' />
+
           <StyledTabs
             value={feedType}
             onChange={(event, newValue) => setFeedType(newValue)}
             tabs={[
               { value: 'all', label: t('main_page.feed.tabs.all') },
               { value: 'following', label: t('main_page.feed.tabs.following') },
-              { value: 'recommended', label: t('main_page.feed.tabs.recommended') }
+              {
+                value: 'recommended',
+                label: t('main_page.feed.tabs.recommended'),
+              },
             ]}
             fullWidth
             customStyle
           />
-          
-          
+
           <Box sx={{ mt: 0 }}>
             {loading && posts.length === 0 ? (
-              
               <>
                 {[...Array(5)].map((_, index) => (
                   <PostSkeleton key={index} />
@@ -827,141 +830,171 @@ const MainPage = React.memo(() => {
               </>
             ) : posts.length > 0 ? (
               <Box sx={{ mt: 0 }}>
-                {posts.map((post, index) => (
+                {posts.map((post, index) =>
                   post.is_repost ? (
                     <RepostItem key={`${post.id}-${index}`} post={post} />
                   ) : (
-                    <Post 
-                      key={`${post.id}-${index}`} 
-                      post={post} 
+                    <Post
+                      key={`${post.id}-${index}`}
+                      post={post}
                       showPostDetails={false}
                       onOpenLightbox={handleOpenLightbox}
                       onDelete={handleDeletePost}
                     />
                   )
-                ))}
-                
-                
+                )}
+
                 {hasMore && (
-                  <Box 
+                  <Box
                     ref={loaderRef}
-                    sx={{ 
-                      textAlign: 'center', 
-                      py: 2, 
+                    sx={{
+                      textAlign: 'center',
+                      py: 2,
                       opacity: loading ? 1 : 0,
-                      transition: 'opacity 0.3s ease'
+                      transition: 'opacity 0.3s ease',
                     }}
                   >
                     {loading && (
-                      <CircularProgress size={30} sx={{ color: 'primary.main' }} />
+                      <CircularProgress
+                        size={30}
+                        sx={{ color: 'primary.main' }}
+                      />
                     )}
                   </Box>
                 )}
-                
-                
+
                 {!hasMore && (
-                  <Box sx={{ 
-                    textAlign: 'center', 
-                    py: 3,
-                    opacity: 0.7
-                  }}>
-                    <Typography variant="body2" color="text.secondary">
+                  <Box
+                    sx={{
+                      textAlign: 'center',
+                      py: 3,
+                      opacity: 0.7,
+                    }}
+                  >
+                    <Typography variant='body2' color='text.secondary'>
                       {t('main_page.feed.end')}
                     </Typography>
                   </Box>
                 )}
               </Box>
             ) : (
-              <Box sx={{ 
-                textAlign: 'center', 
-                py: 4,
-                mt: 2
-              }}>
-                <Typography color="text.secondary">
+              <Box
+                sx={{
+                  textAlign: 'center',
+                  py: 4,
+                  mt: 2,
+                }}
+              >
+                <Typography color='text.secondary'>
                   {t('main_page.feed.empty')}
                 </Typography>
               </Box>
             )}
           </Box>
         </div>
-        
-        <div className="right-column">
-          
-          <Box 
-            component={Paper} 
-            sx={{ 
-              p: 0, 
-              borderRadius: '12px', 
+
+        <div className='right-column'>
+          <Box
+            component={Paper}
+            sx={{
+              p: 0,
+              borderRadius: '12px',
               mb: -0.625,
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
               overflow: 'hidden',
-              display: { xs: 'none', sm: 'block' } 
+              display: { xs: 'none', sm: 'block' },
             }}
           >
-
-            
             {loadingRecommendations ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', py: 3, px: 2 }}>
-                <Box sx={{ 
-                  width: '100%', 
-                  height: 170,
-                  '@keyframes pulse': {
-                    '0%': { opacity: 1 },
-                    '50%': { opacity: 0.5 },
-                    '100%': { opacity: 1 }
-                  }
-                }}>
-                  <Box sx={{ 
-                    width: '100%', 
-                    height: 50, 
-                    borderRadius: '8px',
-                    backgroundColor: '#292929',
-                    mb: 1,
-                    animation: 'pulse 2s infinite'
-                  }} />
-                  <Box sx={{ 
-                    width: '100%', 
-                    height: 50, 
-                    borderRadius: '8px',
-                    backgroundColor: '#292929',
-                    mb: 1,
-                    animation: 'pulse 2s infinite'
-                  }} />
-                  <Box sx={{ 
-                    width: '100%', 
-                    height: 50, 
-                    borderRadius: '8px',
-                    backgroundColor: '#292929',
-                    animation: 'pulse 2s infinite'
-                  }} />
+              <Box
+                sx={{ display: 'flex', justifyContent: 'center', py: 3, px: 2 }}
+              >
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: 170,
+                    '@keyframes pulse': {
+                      '0%': { opacity: 1 },
+                      '50%': { opacity: 0.5 },
+                      '100%': { opacity: 1 },
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: 50,
+                      borderRadius: '8px',
+                      backgroundColor: '#292929',
+                      mb: 1,
+                      animation: 'pulse 2s infinite',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: 50,
+                      borderRadius: '8px',
+                      backgroundColor: '#292929',
+                      mb: 1,
+                      animation: 'pulse 2s infinite',
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: 50,
+                      borderRadius: '8px',
+                      backgroundColor: '#292929',
+                      animation: 'pulse 2s infinite',
+                    }}
+                  />
                 </Box>
               </Box>
             ) : recommendations.length === 0 ? (
-              <Box sx={{ 
-                textAlign: 'center', 
-                py: 3, 
-                px: 2,
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.03))'
-              }}>
-                <Avatar 
-                  sx={{ 
-                    width: 50, 
-                    height: 50, 
-                    mx: 'auto', 
+              <Box
+                sx={{
+                  textAlign: 'center',
+                  py: 3,
+                  px: 2,
+                  background:
+                    'linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.03))',
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    mx: 'auto',
                     mb: 2,
                     bgcolor: 'rgba(208, 188, 255, 0.1)',
-                    border: '1px solid rgba(208, 188, 255, 0.25)'
+                    border: '1px solid rgba(208, 188, 255, 0.25)',
                   }}
                 >
                   <PersonAddIcon sx={{ color: '#D0BCFF', fontSize: 26 }} />
                 </Avatar>
-                <Typography variant="body2" sx={{ fontWeight: 500, color: theme => theme.palette.text.secondary }}>
+                <Typography
+                  variant='body2'
+                  sx={{
+                    fontWeight: 500,
+                    color: theme => theme.palette.text.secondary,
+                  }}
+                >
                   {t('main_page.recommendations.empty.title')}
                 </Typography>
-                <Typography variant="caption" sx={{ display: 'block', mt: 1, maxWidth: '80%', mx: 'auto', color: theme => theme.palette.text.disabled }}>
+                <Typography
+                  variant='caption'
+                  sx={{
+                    display: 'block',
+                    mt: 1,
+                    maxWidth: '80%',
+                    mx: 'auto',
+                    color: theme => theme.palette.text.disabled,
+                  }}
+                >
                   {t('main_page.recommendations.empty.description')}
                 </Typography>
               </Box>
@@ -980,18 +1013,18 @@ const MainPage = React.memo(() => {
           </Box>
 
           {latestUpdate && (
-            <Box 
-              sx={{ 
-                mb: 2, 
+            <Box
+              sx={{
+                mb: 2,
                 display: { xs: 'none', sm: 'block' },
                 '&:hover': {
                   '& > *': { transform: 'translateY(-2px)' },
-                  cursor: 'pointer'
-                }
+                  cursor: 'pointer',
+                },
               }}
               onClick={() => navigate('/updates')}
             >
-              <UpdateInfo 
+              <UpdateInfo
                 version={latestUpdate.version}
                 date={latestUpdate.date}
                 title={latestUpdate.title}
@@ -1003,9 +1036,8 @@ const MainPage = React.memo(() => {
           )}
         </div>
       </div>
-      
-      
-      <SimpleImageViewer 
+
+      <SimpleImageViewer
         isOpen={lightboxOpen}
         onClose={handleCloseLightbox}
         images={lightboxImages}
@@ -1015,4 +1047,4 @@ const MainPage = React.memo(() => {
   );
 });
 
-export default MainPage; 
+export default MainPage;

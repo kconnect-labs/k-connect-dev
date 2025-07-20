@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  Box, 
-  Typography, 
-  CircularProgress, 
+import {
+  Box,
+  Typography,
+  CircularProgress,
   Card,
   CardContent,
   List,
@@ -20,16 +20,16 @@ import {
   useMediaQuery,
   Grid,
   Paper,
-  Button
+  Button,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMusic } from '../../../context/MusicContext';
 import apiClient from '../../../services/axiosConfig';
-import { 
+import {
   PlayArrowRounded,
   PauseRounded,
   Favorite,
-  FavoriteBorder
+  FavoriteBorder,
 } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
@@ -103,7 +103,7 @@ const TrackCard = styled(Paper)(({ theme }) => ({
   marginBottom: '2px',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.15)',
-  }
+  },
 }));
 
 const TrackAvatar = styled(Avatar)(({ theme }) => ({
@@ -138,16 +138,16 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
 const AllTracksBlock = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { 
-    currentTrack, 
-    isPlaying, 
-    playTrack, 
+  const {
+    currentTrack,
+    isPlaying,
+    playTrack,
     pauseTrack,
     toggleLike,
     searchTracks,
     searchResults,
     isSearching,
-    forceLoadTracks
+    forceLoadTracks,
   } = useMusic();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -156,7 +156,7 @@ const AllTracksBlock = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  
+
   // Refs для управления поиском
   const searchTimeoutRef = useRef(null);
   const abortControllerRef = useRef(null);
@@ -168,10 +168,11 @@ const AllTracksBlock = () => {
       } else {
         setLoadingMore(true);
       }
-      
-      const response = await apiClient.get(`/api/music?page=${pageNum}&per_page=20`);
 
-      
+      const response = await apiClient.get(
+        `/api/music?page=${pageNum}&per_page=20`
+      );
+
       if (response.data && response.data.tracks) {
         const newTracks = response.data.tracks;
         if (append) {
@@ -194,34 +195,33 @@ const AllTracksBlock = () => {
   }, []);
 
   // Стабильная функция поиска
-  const performSearch = useCallback(async (query) => {
-    // Отменяем предыдущий запрос если он еще выполняется
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Проверяем минимальную длину запроса
-    if (!query.trim() || query.trim().length < 2) {
-
-      return;
-    }
-    
-
-    
-    // Создаем новый AbortController для этого запроса
-    abortControllerRef.current = new AbortController();
-    
-    try {
-      const results = await searchTracks(query);
-
-    } catch (error) {
-      if (error.name !== 'AbortError') {
-        console.error('[AllTracksBlock] Ошибка поиска:', error);
+  const performSearch = useCallback(
+    async query => {
+      // Отменяем предыдущий запрос если он еще выполняется
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
-    } finally {
-      abortControllerRef.current = null;
-    }
-  }, [searchTracks]);
+
+      // Проверяем минимальную длину запроса
+      if (!query.trim() || query.trim().length < 2) {
+        return;
+      }
+
+      // Создаем новый AbortController для этого запроса
+      abortControllerRef.current = new AbortController();
+
+      try {
+        const results = await searchTracks(query);
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('[AllTracksBlock] Ошибка поиска:', error);
+        }
+      } finally {
+        abortControllerRef.current = null;
+      }
+    },
+    [searchTracks]
+  );
 
   useEffect(() => {
     loadTracks();
@@ -234,7 +234,6 @@ const AllTracksBlock = () => {
   // Очистка при размонтировании компонента
   useEffect(() => {
     return () => {
-
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -252,26 +251,30 @@ const AllTracksBlock = () => {
     }
   }, [loadingMore, hasMore, page, loadTracks]);
 
-  const handlePlayTrack = useCallback((track) => {
-    playTrack(track, 'all');
-  }, [playTrack]);
+  const handlePlayTrack = useCallback(
+    track => {
+      playTrack(track, 'all');
+    },
+    [playTrack]
+  );
 
-  const handleLikeTrack = useCallback((trackId, event) => {
-    event.stopPropagation();
-    toggleLike(trackId);
-  }, [toggleLike]);
+  const handleLikeTrack = useCallback(
+    (trackId, event) => {
+      event.stopPropagation();
+      toggleLike(trackId);
+    },
+    [toggleLike]
+  );
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
-    
 
-    
     // Отменяем предыдущий таймер
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-    
+
     // Отменяем активный поиск если запрос слишком короткий
     if (query.trim().length < 2) {
       if (abortControllerRef.current) {
@@ -279,7 +282,7 @@ const AllTracksBlock = () => {
       }
       return;
     }
-    
+
     // Устанавливаем новый таймер для debounce
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(query.trim());
@@ -287,7 +290,6 @@ const AllTracksBlock = () => {
   };
 
   const clearSearch = () => {
-
     setSearchQuery('');
     // Отменяем активный поиск
     if (abortControllerRef.current) {
@@ -300,7 +302,7 @@ const AllTracksBlock = () => {
     }
   };
 
-  const formatDuration = (seconds) => {
+  const formatDuration = seconds => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
@@ -309,8 +311,13 @@ const AllTracksBlock = () => {
   if (loading) {
     return (
       <AllTracksContainer>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-          <CircularProgress color="primary" />
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='200px'
+        >
+          <CircularProgress color='primary' />
         </Box>
       </AllTracksContainer>
     );
@@ -319,14 +326,10 @@ const AllTracksBlock = () => {
   if (error) {
     return (
       <Box sx={{ textAlign: 'center', p: 4 }}>
-        <Typography variant="body1" color="error">
+        <Typography variant='body1' color='error'>
           {error}
         </Typography>
-        <Button 
-          onClick={() => loadTracks()} 
-          sx={{ mt: 2 }}
-          variant="contained"
-        >
+        <Button onClick={() => loadTracks()} sx={{ mt: 2 }} variant='contained'>
           Попробовать снова
         </Button>
       </Box>
@@ -339,33 +342,37 @@ const AllTracksBlock = () => {
         <CardContent>
           <AllTracksHeader>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <LibraryMusicIcon sx={{ fontSize: 24, color: 'primary.main', mr: 1 }} />
-              <Typography variant="h6" fontWeight={600}>
+              <LibraryMusicIcon
+                sx={{ fontSize: 24, color: 'primary.main', mr: 1 }}
+              />
+              <Typography variant='h6' fontWeight={600}>
                 {searchQuery.trim() ? 'Результаты поиска' : 'Все треки'}
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 1 }} />
-            <Typography variant="body2" color="text.secondary">
-              {searchQuery.trim() ? `${searchResults.length} найдено` : `${tracks.length} треков`}
+            <Typography variant='body2' color='text.secondary'>
+              {searchQuery.trim()
+                ? `${searchResults.length} найдено`
+                : `${tracks.length} треков`}
             </Typography>
           </AllTracksHeader>
 
           <SearchContainer>
             <StyledSearchField
               fullWidth
-              placeholder="Поиск трека или исполнителя..."
+              placeholder='Поиск трека или исполнителя...'
               value={searchQuery}
               onChange={handleSearchChange}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">
+                  <InputAdornment position='start'>
                     <SearchIcon />
                   </InputAdornment>
                 ),
                 endAdornment: searchQuery && (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
-                      size="small"
+                      size='small'
                       onClick={clearSearch}
                       sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                     >
@@ -376,62 +383,80 @@ const AllTracksBlock = () => {
               }}
             />
           </SearchContainer>
-          
-          <List sx={{ p: 0 }}>
-            {(searchQuery.trim() ? searchResults : tracks).map((track, index) => {
-              const isCurrentTrack = currentTrack?.id === track.id;
-              const isTrackPlaying = isPlaying && isCurrentTrack;
 
-              return (
-                <React.Fragment key={track.id}>
-                  <TrackCard onClick={() => handlePlayTrack(track)}>
-                    <Box
-                      component="img"
-                      src={track.cover_path || '/default-cover.jpg'}
-                      alt={track.title}
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: '8px',
-                        objectFit: 'cover'
-                      }}
-                    />
-                    <Box sx={{ flexGrow: 1, minWidth: 0, marginLeft: '8px' }}>
-                      <Typography variant="body2" noWrap>
-                        {track.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary" noWrap>
-                        {track.artist}
-                      </Typography>
-                    </Box>
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        isPlaying && currentTrack?.id === track.id ? pauseTrack() : handlePlayTrack(track);
-                      }}
-                      sx={{ color: '#fff' }}
-                    >
-                      {isPlaying && currentTrack?.id === track.id ? <PauseRounded /> : <PlayArrowRounded />}
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={(e) => handleLikeTrack(track.id, e)}
-                      sx={{ color: track.is_liked ? '#ff4081' : '#fff' }}
-                    >
-                      {track.is_liked ? <Favorite /> : <FavoriteBorder />}
-                    </IconButton>
-                  </TrackCard>
-                  {index < (searchQuery.trim() ? searchResults.length : tracks.length) - 1 && (
-                    <Divider sx={{ 
-                      mx: 2, 
-                      my: 0.5,
-                      borderColor: 'rgba(255, 255, 255, 0.05)'
-                    }} />
-                  )}
-                </React.Fragment>
-              );
-            })}
+          <List sx={{ p: 0 }}>
+            {(searchQuery.trim() ? searchResults : tracks).map(
+              (track, index) => {
+                const isCurrentTrack = currentTrack?.id === track.id;
+                const isTrackPlaying = isPlaying && isCurrentTrack;
+
+                return (
+                  <React.Fragment key={track.id}>
+                    <TrackCard onClick={() => handlePlayTrack(track)}>
+                      <Box
+                        component='img'
+                        src={track.cover_path || '/default-cover.jpg'}
+                        alt={track.title}
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: '8px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <Box sx={{ flexGrow: 1, minWidth: 0, marginLeft: '8px' }}>
+                        <Typography variant='body2' noWrap>
+                          {track.title}
+                        </Typography>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          noWrap
+                        >
+                          {track.artist}
+                        </Typography>
+                      </Box>
+                      <IconButton
+                        size='small'
+                        onClick={e => {
+                          e.stopPropagation();
+                          isPlaying && currentTrack?.id === track.id
+                            ? pauseTrack()
+                            : handlePlayTrack(track);
+                        }}
+                        sx={{ color: '#fff' }}
+                      >
+                        {isPlaying && currentTrack?.id === track.id ? (
+                          <PauseRounded />
+                        ) : (
+                          <PlayArrowRounded />
+                        )}
+                      </IconButton>
+                      <IconButton
+                        size='small'
+                        onClick={e => handleLikeTrack(track.id, e)}
+                        sx={{ color: track.is_liked ? '#ff4081' : '#fff' }}
+                      >
+                        {track.is_liked ? <Favorite /> : <FavoriteBorder />}
+                      </IconButton>
+                    </TrackCard>
+                    {index <
+                      (searchQuery.trim()
+                        ? searchResults.length
+                        : tracks.length) -
+                        1 && (
+                      <Divider
+                        sx={{
+                          mx: 2,
+                          my: 0.5,
+                          borderColor: 'rgba(255, 255, 255, 0.05)',
+                        }}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              }
+            )}
           </List>
 
           {searchQuery.trim() && isSearching && (
@@ -445,13 +470,13 @@ const AllTracksBlock = () => {
               <Button
                 onClick={handleLoadMore}
                 disabled={loadingMore}
-                variant="outlined"
-                sx={{ 
-                  color: '#fff', 
+                variant='outlined'
+                sx={{
+                  color: '#fff',
                   borderColor: 'rgba(255, 255, 255, 0.3)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.5)',
-                  }
+                  },
                 }}
               >
                 {loadingMore ? <CircularProgress size={20} /> : 'Загрузить еще'}
@@ -464,4 +489,4 @@ const AllTracksBlock = () => {
   );
 };
 
-export default AllTracksBlock; 
+export default AllTracksBlock;

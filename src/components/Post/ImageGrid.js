@@ -35,7 +35,7 @@ const BackgroundImage = styled('div')({
   backgroundPosition: 'center',
   filter: 'blur(10px)',
   opacity: 0.5,
-  transform: 'scale(1.1)', 
+  transform: 'scale(1.1)',
 });
 
 const Image = styled('img')(({ isSingle, isMobile }) => ({
@@ -73,30 +73,40 @@ const ImageOverlay = styled(Box)({
   },
   '&:hover::after': {
     transform: 'scale(1.0)',
-  }
+  },
 });
 
-const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, hideOverlay = false, miniMode = false, maxHeight = 620 }) => {
+const ImageGrid = ({
+  images,
+  selectedImage = null,
+  onImageClick,
+  onImageError,
+  hideOverlay = false,
+  miniMode = false,
+  maxHeight = 620,
+}) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [optimizedImages, setOptimizedImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorImages, setErrorImages] = useState({});
-  
+
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
-  
-  const imageArray = Array.isArray(images) 
-    ? images.filter(Boolean) 
-    : (typeof images === 'string' && images ? [images] : []);
-  
+
+  const imageArray = Array.isArray(images)
+    ? images.filter(Boolean)
+    : typeof images === 'string' && images
+      ? [images]
+      : [];
+
   const limitedImages = imageArray.slice(0, 9);
   const remainingCount = imageArray.length - 9;
-  
+
   if (limitedImages.length === 0) {
     return null;
   }
-  
+
   const getGridLayout = (count, isMobile = false) => {
     switch (count) {
       case 1:
@@ -104,62 +114,64 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
           gridTemplateColumns: '1fr',
           gridTemplateRows: 'auto',
           maxHeight: isMobile ? '620px' : '620px',
-          height: 'auto'
+          height: 'auto',
         };
       case 2:
         return {
           gridTemplateColumns: '1fr 1fr',
           gridTemplateRows: '350px',
-          maxHeight: '350px'
+          maxHeight: '350px',
         };
       case 3:
         return {
           gridTemplateColumns: '2fr 1fr',
           gridTemplateRows: '200px 200px',
           gridTemplateAreas: '"img1 img2" "img1 img3"',
-          maxHeight: '400px'
+          maxHeight: '400px',
         };
       case 4:
         return {
           gridTemplateColumns: 'repeat(2, 1fr)',
           gridTemplateRows: 'repeat(2, 200px)',
           gridTemplateAreas: '"img1 img2" "img3 img4"',
-          maxHeight: '400px'
+          maxHeight: '400px',
         };
       case 5:
         return {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: '200px 200px',
           gridTemplateAreas: '"img1 img1 img2" "img3 img4 img5"',
-          maxHeight: '400px'
+          maxHeight: '400px',
         };
       case 6:
         return {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: '180px 180px',
           gridTemplateAreas: '"img1 img2 img3" "img4 img5 img6"',
-          maxHeight: '360px'
+          maxHeight: '360px',
         };
       case 7:
         return {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 160px)',
-          gridTemplateAreas: '"img1 img1 img2" "img3 img4 img5" "img6 img7 img7"',
-          maxHeight: '480px'
+          gridTemplateAreas:
+            '"img1 img1 img2" "img3 img4 img5" "img6 img7 img7"',
+          maxHeight: '480px',
         };
       case 8:
         return {
           gridTemplateColumns: 'repeat(4, 1fr)',
           gridTemplateRows: 'repeat(2, 180px)',
           gridTemplateAreas: '"img1 img2 img3 img4" "img5 img6 img7 img8"',
-          maxHeight: '360px'
+          maxHeight: '360px',
         };
       case 9:
         return {
           gridTemplateColumns: 'repeat(3, 1fr)',
           gridTemplateRows: 'repeat(3, 140px)',
-          gridTemplateAreas: '"img1 img2 img3" "img4 img5 img6" "img7 img8 img9"',
-          maxHeight: '420px'
+          gridTemplateAreas:
+            '"img1 img2 img3" "img4 img5 img6" "img7 img8 img9"',
+          maxHeight: '420px',
         };
       default:
         if (count > 9) {
@@ -168,46 +180,47 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
           return {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
             gridTemplateRows: `repeat(${rows}, ${500 / rows}px)`,
-            maxHeight: `${rows * (500 / rows)}px`
+            maxHeight: `${rows * (500 / rows)}px`,
           };
         }
         return {
           gridTemplateColumns: '1fr',
           gridTemplateRows: '300px',
-          maxHeight: isMobile ? '600px' : '450px'
+          maxHeight: isMobile ? '600px' : '450px',
         };
     }
   };
 
-  const formatImageUrl = (url) => {
+  const formatImageUrl = url => {
     if (!url) return '';
-    
+
     if (url.startsWith('http') || url.startsWith('/')) {
       return url;
     }
-    
+
     if (url.includes('post/')) {
       return `/static/uploads/${url}`;
     }
-    
+
     return url;
   };
-  
+
   const supportsWebP = () => {
     try {
       return (
-        'imageRendering' in document.documentElement.style && 
-        !navigator.userAgent.includes('Safari') && 
-        !navigator.userAgent.includes('Edge/')
-      ) || 
-      document.createElement('canvas')
-        .toDataURL('image/webp')
-        .indexOf('data:image/webp') === 0;
+        ('imageRendering' in document.documentElement.style &&
+          !navigator.userAgent.includes('Safari') &&
+          !navigator.userAgent.includes('Edge/')) ||
+        document
+          .createElement('canvas')
+          .toDataURL('image/webp')
+          .indexOf('data:image/webp') === 0
+      );
     } catch (e) {
       return false;
     }
   };
-  
+
   const addFormatParam = (url, format = 'webp') => {
     if (!url || !url.startsWith('/')) return url;
     return `${url}${url.includes('?') ? '&' : '?'}format=${format}`;
@@ -220,14 +233,14 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         setLoading(false);
         return;
       }
-      
+
       setLoading(true);
-      
+
       try {
         const webpSupported = supportsWebP();
-        
+
         const optimizedResults = await Promise.all(
-          limitedImages.map(async (imageUrl) => {
+          limitedImages.map(async imageUrl => {
             let formattedUrl = formatImageUrl(imageUrl);
             // Проверяем кэш
             const cacheKey = `${formattedUrl}-optimized`;
@@ -238,121 +251,124 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
             if (webpSupported && formattedUrl.startsWith('/static/')) {
               formattedUrl = addFormatParam(formattedUrl, 'webp');
             }
-            
+
             const optimized = await optimizeImage(formattedUrl, {
               quality: 0.85,
               maxWidth: 1200,
               cacheResults: true,
-              preferWebP: webpSupported
+              preferWebP: webpSupported,
             });
-            
+
             const result = {
               ...optimized,
-              originalSrc: formatImageUrl(imageUrl)
+              originalSrc: formatImageUrl(imageUrl),
             };
             imageCache.set(cacheKey, result);
 
             return result;
           })
         );
-        
+
         setOptimizedImages(optimizedResults);
       } catch (error) {
         console.error('Error optimizing images:', error);
-        
-        setOptimizedImages(limitedImages.map(url => ({
-          src: formatImageUrl(url),
-          originalSrc: formatImageUrl(url)
-        })));
+
+        setOptimizedImages(
+          limitedImages.map(url => ({
+            src: formatImageUrl(url),
+            originalSrc: formatImageUrl(url),
+          }))
+        );
       } finally {
         setLoading(false);
       }
     };
-    
+
     loadOptimizedImages();
   }, [images]);
 
   const getOptimizedImageUrl = (url, isSingle = false) => {
     const width = isSingle ? 1200 : 600;
     const height = isSingle ? 900 : 600;
-    
+
     if (url.startsWith('http')) {
       return url;
     }
-    
+
     if (url.includes('/static/uploads/')) {
       return `${url}?width=${width}&height=${height}&optimize=true`;
     }
-    
+
     return url;
   };
 
   const openLightbox = (index, event) => {
-    
     if (event) {
       event.stopPropagation();
     }
-    
+
     setSelectedIndex(index);
     setLightboxOpen(true);
-    
+
     if (onImageClick && typeof onImageClick === 'function') {
       onImageClick(index);
     }
   };
-  
+
   const closeLightbox = () => {
     setLightboxOpen(false);
   };
 
   const getCellGridArea = (index, count) => {
     if (count === 1) return '';
-    
+
     if (count === 2) {
-      return index === 0 ? 'span 1 / span 1 / auto / auto' : 'span 1 / span 1 / auto / auto';
+      return index === 0
+        ? 'span 1 / span 1 / auto / auto'
+        : 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 3) {
       if (index === 0) return 'span 2 / span 1 / auto / auto';
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 4) {
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 5) {
       if (index === 0) return 'span 1 / span 2 / auto / auto';
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 6) {
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 7) {
       if (index === 0) return 'span 1 / span 2 / auto / auto';
       if (index === 6) return 'span 1 / span 2 / auto / auto';
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 8) {
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     if (count === 9) {
       return 'span 1 / span 1 / auto / auto';
     }
-    
+
     return '';
   };
 
   const handleImageError = (url, index) => {
     setErrorImages(prev => ({
       ...prev,
-      [url]: true
+      [url]: true,
     }));
-    
+
     if (onImageError && typeof onImageError === 'function') {
       onImageError(url, index);
     }
@@ -361,9 +377,9 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
   const renderImage = (image, index, isSingle) => {
     const imageUrl = formatImageUrl(image);
     const optimizedUrl = getOptimizedImageUrl(imageUrl, isSingle);
-    
+
     const hasError = errorImages[imageUrl];
-    
+
     if (hasError) {
       return (
         <Box
@@ -378,7 +394,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '0.8rem',
             padding: '10px',
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           Ошибка при загрузке изображения
@@ -390,19 +406,13 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
       alt: `Изображение ${index + 1}`,
       isSingle,
       isMobile,
-      onError: () => handleImageError(imageUrl, index)
+      onError: () => handleImageError(imageUrl, index),
     });
     return (
       <React.Fragment>
-        <BackgroundImage
-          style={{ backgroundImage: `url(${optimizedUrl})` }}
-        />
-        <Image
-          {...imageProps}
-        />
-        {!hideOverlay && (
-          <ImageOverlay />
-        )}
+        <BackgroundImage style={{ backgroundImage: `url(${optimizedUrl})` }} />
+        <Image {...imageProps} />
+        {!hideOverlay && <ImageOverlay />}
       </React.Fragment>
     );
   };
@@ -423,7 +433,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
             sx={{
               bgcolor: 'rgba(0, 0, 0, 0.1)',
               borderRadius: '12px',
-              gridArea: getCellGridArea(index, limitedImages.length)
+              gridArea: getCellGridArea(index, limitedImages.length),
             }}
           />
         ))}
@@ -434,9 +444,16 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
   if (limitedImages.length === 1) {
     const singleImage = limitedImages[0];
     return (
-      <Box sx={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', mb: 1 }}>
+      <Box
+        sx={{
+          position: 'relative',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          mb: 1,
+        }}
+      >
         <ImageContainer
-          onClick={(event) => openLightbox(0, event)}
+          onClick={event => openLightbox(0, event)}
           sx={{
             height: miniMode ? '150px' : 'auto',
             maxHeight: miniMode ? '150px' : '620px',
@@ -444,12 +461,12 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
         >
           {renderImage(singleImage, 0, true)}
         </ImageContainer>
-        
+
         {lightboxOpen && (
           <SimpleImageViewer
             src={formatImageUrl(limitedImages[selectedIndex])}
             onClose={closeLightbox}
-            alt="Полноразмерное изображение"
+            alt='Полноразмерное изображение'
           />
         )}
       </Box>
@@ -457,7 +474,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
   }
 
   const layoutProps = getGridLayout(limitedImages.length, isMobile);
-  
+
   return (
     <Box sx={{ mb: 1 }}>
       <Box
@@ -466,13 +483,13 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
           gap: '4px',
           ...layoutProps,
           borderRadius: '8px',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
         {limitedImages.map((image, index) => (
           <ImageContainer
             key={`image-${index}`}
-            onClick={(event) => openLightbox(index, event)}
+            onClick={event => openLightbox(index, event)}
             sx={{
               gridArea: getCellGridArea(index, limitedImages.length),
               cursor: 'pointer',
@@ -482,7 +499,7 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
             {renderImage(image, index, false)}
           </ImageContainer>
         ))}
-        
+
         {remainingCount > 0 && (
           <Box
             sx={{
@@ -501,12 +518,12 @@ const ImageGrid = ({ images, selectedImage = null, onImageClick, onImageError, h
           </Box>
         )}
       </Box>
-      
+
       {lightboxOpen && (
         <SimpleImageViewer
           src={formatImageUrl(limitedImages[selectedIndex])}
           onClose={closeLightbox}
-          alt="Полноразмерное изображение"
+          alt='Полноразмерное изображение'
         />
       )}
     </Box>

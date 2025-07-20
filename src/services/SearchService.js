@@ -16,8 +16,8 @@ const SearchService = {
         q: query,
         type: 'all',
         page,
-        per_page: perPage
-      }
+        per_page: perPage,
+      },
     });
   },
   /**
@@ -33,8 +33,8 @@ const SearchService = {
         q: query,
         type: 'users',
         page,
-        per_page: perPage
-      }
+        per_page: perPage,
+      },
     });
   },
   /**
@@ -50,9 +50,9 @@ const SearchService = {
         q: query,
         type: 'posts',
         page,
-        per_page: perPage
-      }
+        per_page: perPage,
+      },
     });
-  }
+  },
 };
-export default SearchService; 
+export default SearchService;

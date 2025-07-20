@@ -9,47 +9,39 @@ const areEqual = (prevProps, nextProps) => {
   );
 };
 
-const MoreButton = ({ 
-  text, 
-  icon, 
-  active = false, 
-  themeColor, 
+const MoreButton = ({
+  text,
+  icon,
+  active = false,
+  themeColor,
   onClick,
-  arrowIcon, 
-  arrowUpIcon, 
+  arrowIcon,
+  arrowUpIcon,
   arrowDownIcon,
-  ...rest 
+  ...rest
 }) => {
-  const ArrowIcon = active ? 
-    (arrowUpIcon || arrowIcon) : 
-    (arrowDownIcon || arrowIcon);
+  const ArrowIcon = active
+    ? arrowUpIcon || arrowIcon
+    : arrowDownIcon || arrowIcon;
 
   const buttonClasses = [
     'nav-button',
     'more-button',
     active ? 'more-button--active' : '',
-    rest.isSpecial ? 'more-button--special' : ''
-  ].filter(Boolean).join(' ');
+    rest.isSpecial ? 'more-button--special' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <button
-      className={buttonClasses}
-      onClick={onClick}
-      {...rest}
-    >
-      <div className="nav-button__left-content">
-        <div className="nav-button__icon">
-          {icon}
-        </div>
-        <div className="nav-button__text">
-          {text}
-        </div>
+    <button className={buttonClasses} onClick={onClick} {...rest}>
+      <div className='nav-button__left-content'>
+        <div className='nav-button__icon'>{icon}</div>
+        <div className='nav-button__text'>{text}</div>
       </div>
-      <div className="more-button__arrow">
-        {ArrowIcon}
-      </div>
+      <div className='more-button__arrow'>{ArrowIcon}</div>
     </button>
   );
 };
 
-export default memo(MoreButton, areEqual); 
+export default memo(MoreButton, areEqual);

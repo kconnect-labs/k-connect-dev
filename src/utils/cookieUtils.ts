@@ -1,5 +1,9 @@
 // Утилиты для работы с cookie
-export const setCookie = (name: string, value: string, days: number = 365): void => {
+export const setCookie = (
+  name: string,
+  value: string,
+  days: number = 365
+): void => {
   try {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
@@ -11,7 +15,7 @@ export const setCookie = (name: string, value: string, days: number = 365): void
 
 export const getCookie = (name: string): string | null => {
   try {
-    const nameEQ = name + "=";
+    const nameEQ = name + '=';
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
@@ -22,4 +26,4 @@ export const getCookie = (name: string): string | null => {
     console.error(`Ошибка при получении cookie ${name}:`, error);
   }
   return null;
-}; 
+};

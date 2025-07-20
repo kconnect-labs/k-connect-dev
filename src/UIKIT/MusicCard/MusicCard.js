@@ -1,15 +1,15 @@
 import React, { memo, useContext } from 'react';
-import { 
-  Box, 
-  Typography, 
-  styled, 
-  Card, 
-  CardMedia, 
-  CardContent, 
-  IconButton, 
+import {
+  Box,
+  Typography,
+  styled,
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
   Skeleton,
   useTheme,
-  alpha
+  alpha,
 } from '@mui/material';
 import { ThemeSettingsContext } from '../../App';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -23,30 +23,33 @@ const StyledCard = styled(Card)(({ theme, compact }) => ({
   borderRadius: compact ? theme.spacing(1.2) : theme.spacing(2),
   overflow: 'hidden',
   transition: 'all 0.3s ease',
-  backgroundColor: theme.palette.mode === 'light'
-    ? alpha(theme.palette.background.paper, 0.9)
-    : theme.palette.mode === 'contrast'
-      ? alpha(theme.palette.background.paper, 0.05)
-      : alpha(theme.palette.common.white, 0.05),
+  backgroundColor:
+    theme.palette.mode === 'light'
+      ? alpha(theme.palette.background.paper, 0.9)
+      : theme.palette.mode === 'contrast'
+        ? alpha(theme.palette.background.paper, 0.05)
+        : alpha(theme.palette.common.white, 0.05),
   '&:hover': {
     transform: 'translateY(-4px)',
-    boxShadow: theme.palette.mode === 'light'
-      ? '0 6px 16px rgba(0, 0, 0, 0.1)'
-      : theme.palette.mode === 'contrast'
-        ? '0 6px 16px rgba(0, 0, 0, 0.5)'
-        : '0 6px 16px rgba(0, 0, 0, 0.4)',
+    boxShadow:
+      theme.palette.mode === 'light'
+        ? '0 6px 16px rgba(0, 0, 0, 0.1)'
+        : theme.palette.mode === 'contrast'
+          ? '0 6px 16px rgba(0, 0, 0, 0.5)'
+          : '0 6px 16px rgba(0, 0, 0, 0.4)',
     '& .MusicCard-hoverControls': {
       opacity: 1,
     },
     '& .MusicCard-media': {
       filter: 'brightness(0.85)',
-    }
+    },
   },
   width: compact ? 160 : 200,
   maxWidth: '100%',
-  border: theme.palette.mode === 'light'
-    ? '1px solid rgba(0, 0, 0, 0.08)'
-    : '1px solid rgba(255, 255, 255, 0.05)',
+  border:
+    theme.palette.mode === 'light'
+      ? '1px solid rgba(0, 0, 0, 0.08)'
+      : '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
 const MediaWrapper = styled(Box)(({ theme }) => ({
@@ -75,16 +78,18 @@ const HoverControls = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   opacity: 0,
   transition: 'all 0.3s ease',
-  background: 'linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)',
+  background:
+    'linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)',
 }));
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  color: theme.palette.mode === 'light' 
-    ? theme.palette.primary.main 
-    : theme.palette.mode === 'contrast'
-      ? '#000'
-      : '#000',
+  color:
+    theme.palette.mode === 'light'
+      ? theme.palette.primary.main
+      : theme.palette.mode === 'contrast'
+        ? '#000'
+        : '#000',
   '&:hover': {
     backgroundColor: '#fff',
     transform: 'scale(1.05)',
@@ -118,11 +123,12 @@ const Title = styled(Typography)(({ theme, compact }) => ({
 
 const Subtitle = styled(Typography)(({ theme, compact }) => ({
   fontSize: compact ? '0.75rem' : '0.8rem',
-  color: theme.palette.mode === 'light' 
-    ? theme.palette.text.secondary
-    : theme.palette.mode === 'contrast'
-      ? alpha(theme.palette.common.white, 0.7)
-      : alpha(theme.palette.common.white, 0.6),
+  color:
+    theme.palette.mode === 'light'
+      ? theme.palette.text.secondary
+      : theme.palette.mode === 'contrast'
+        ? alpha(theme.palette.common.white, 0.7)
+        : alpha(theme.palette.common.white, 0.6),
   lineHeight: 1.3,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -148,38 +154,37 @@ const MoreButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-
 const MusicCardSkeleton = ({ compact }) => (
   <StyledCard compact={compact}>
     <Box sx={{ p: compact ? 1 : 1.5 }}>
       <MediaWrapper>
-        <Skeleton 
-          variant="rectangular" 
-          width="100%" 
-          height="100%" 
-          animation="wave"
-          sx={{ 
-            borderRadius: (theme) => theme.spacing(1),
-            aspectRatio: '1/1'
+        <Skeleton
+          variant='rectangular'
+          width='100%'
+          height='100%'
+          animation='wave'
+          sx={{
+            borderRadius: theme => theme.spacing(1),
+            aspectRatio: '1/1',
           }}
         />
       </MediaWrapper>
       <Box sx={{ pt: 1.5 }}>
-        <Skeleton width="80%" height={24} animation="wave" />
-        <Skeleton width="60%" height={20} animation="wave" />
+        <Skeleton width='80%' height={24} animation='wave' />
+        <Skeleton width='60%' height={20} animation='wave' />
       </Box>
     </Box>
   </StyledCard>
 );
 
-const MusicCard = ({ 
-  image, 
-  title, 
-  artist, 
-  isPlaying = false, 
+const MusicCard = ({
+  image,
+  title,
+  artist,
+  isPlaying = false,
   isFavorite = false,
-  onPlay, 
-  onPause, 
+  onPlay,
+  onPause,
   onToggleFavorite,
   onMoreClick,
   compact = false,
@@ -188,74 +193,71 @@ const MusicCard = ({
 }) => {
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
-  
+
   if (loading) {
     return <MusicCardSkeleton compact={compact} />;
   }
 
   return (
-    <StyledCard compact={compact} className="MusicCard-root" {...rest}>
+    <StyledCard compact={compact} className='MusicCard-root' {...rest}>
       <Box sx={{ p: compact ? 1 : 1.5 }}>
         <MediaWrapper>
           <StyledMedia
-            className="MusicCard-media"
+            className='MusicCard-media'
             image={image}
             title={title}
           />
-          <HoverControls className="MusicCard-hoverControls">
-            <PlayButton 
-              aria-label={isPlaying ? "pause" : "play"} 
+          <HoverControls className='MusicCard-hoverControls'>
+            <PlayButton
+              aria-label={isPlaying ? 'pause' : 'play'}
               onClick={isPlaying ? onPause : onPlay}
-              size="medium"
+              size='medium'
             >
               {isPlaying ? (
-                <PauseRoundedIcon fontSize={compact ? "small" : "medium"} />
+                <PauseRoundedIcon fontSize={compact ? 'small' : 'medium'} />
               ) : (
-                <PlayArrowRoundedIcon fontSize={compact ? "small" : "medium"} />
+                <PlayArrowRoundedIcon fontSize={compact ? 'small' : 'medium'} />
               )}
             </PlayButton>
           </HoverControls>
-          
-          <MoreButton 
-            size="small" 
-            aria-label="more" 
+
+          <MoreButton
+            size='small'
+            aria-label='more'
             onClick={onMoreClick}
             sx={{ opacity: 0 }}
           >
-            <MoreVertRoundedIcon fontSize="small" />
+            <MoreVertRoundedIcon fontSize='small' />
           </MoreButton>
-          
-          <Box 
-            sx={{ 
-              position: 'absolute', 
-              bottom: 8, 
-              right: 8, 
-              borderRadius: '50%', 
+
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 8,
+              right: 8,
+              borderRadius: '50%',
               opacity: 0,
               transition: 'all 0.2s ease',
               '.MusicCard-root:hover &': {
                 opacity: 1,
-              }
+              },
             }}
           >
-            <ActionButton 
-              size="small" 
-              onClick={onToggleFavorite}
-            >
+            <ActionButton size='small' onClick={onToggleFavorite}>
               {isFavorite ? (
-                <FavoriteRoundedIcon fontSize="small" color="error" />
+                <FavoriteRoundedIcon fontSize='small' color='error' />
               ) : (
-                <FavoriteBorderRoundedIcon fontSize="small" />
+                <FavoriteBorderRoundedIcon fontSize='small' />
               )}
             </ActionButton>
           </Box>
         </MediaWrapper>
-        
+
         <Box sx={{ pt: 1 }}>
-          <Title variant="subtitle1" compact={compact ? 1 : 0}>
+          <Title variant='subtitle1' compact={compact ? 1 : 0}>
             {title}
           </Title>
-          <Subtitle variant="body2" compact={compact ? 1 : 0}>
+          <Subtitle variant='body2' compact={compact ? 1 : 0}>
             {artist}
           </Subtitle>
         </Box>
@@ -265,4 +267,4 @@ const MusicCard = ({
 };
 
 export { MusicCardSkeleton };
-export default memo(MusicCard); 
+export default memo(MusicCard);

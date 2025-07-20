@@ -18,7 +18,6 @@ const WallFeed = ({ userId }) => {
   const isMounted = useRef(true);
   const loadingRef = useRef(false);
 
-  
   useEffect(() => {
     isMounted.current = true;
     return () => {
@@ -26,69 +25,69 @@ const WallFeed = ({ userId }) => {
     };
   }, []);
 
-  
-  const fetchWallPosts = useCallback(async (pageNumber = 1) => {
-    
-    if (loadingRef.current) return;
-    
-    try {
-      loadingRef.current = true;
-      
-      if (pageNumber === 1) {
-        setLoading(true);
-      } else {
-        setIsLoadingMore(true);
-      }
+  const fetchWallPosts = useCallback(
+    async (pageNumber = 1) => {
+      if (loadingRef.current) return;
 
-      
-      const response = await axios.get(`/api/profile/${userId}/wall`, {
-        params: {
-          page: pageNumber,
-          per_page: 10 
-        }
-      });
+      try {
+        loadingRef.current = true;
 
-      
-      if (!isMounted.current) return;
-
-      
-      if (response.data.posts && Array.isArray(response.data.posts)) {
-        // Дедупликация постов по ID
-        const uniqueNewPosts = response.data.posts.filter((post, index, self) => 
-          index === self.findIndex(p => p.id === post.id)
-        );
-        
         if (pageNumber === 1) {
-          setWallPosts(uniqueNewPosts);
+          setLoading(true);
         } else {
-          setWallPosts(prev => {
-            const existingPostIds = new Set(prev.map(p => p.id));
-            const filteredNewPosts = uniqueNewPosts.filter(post => !existingPostIds.has(post.id));
-            return [...prev, ...filteredNewPosts];
-          });
+          setIsLoadingMore(true);
         }
-        
-        setHasMore(response.data.has_next);
-      } else {
-        if (pageNumber === 1) setWallPosts([]);
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error('Ошибка при загрузке записей стены:', error);
-      if (isMounted.current) {
-        if (pageNumber === 1) setWallPosts([]);
-        setError('Произошла ошибка при загрузке записей стены');
-      }
-    } finally {
-      if (isMounted.current) {
-        setLoading(false);
-        setIsLoadingMore(false);
-        loadingRef.current = false;
-      }
-    }
-  }, [userId]);
 
-  
+        const response = await axios.get(`/api/profile/${userId}/wall`, {
+          params: {
+            page: pageNumber,
+            per_page: 10,
+          },
+        });
+
+        if (!isMounted.current) return;
+
+        if (response.data.posts && Array.isArray(response.data.posts)) {
+          // Дедупликация постов по ID
+          const uniqueNewPosts = response.data.posts.filter(
+            (post, index, self) =>
+              index === self.findIndex(p => p.id === post.id)
+          );
+
+          if (pageNumber === 1) {
+            setWallPosts(uniqueNewPosts);
+          } else {
+            setWallPosts(prev => {
+              const existingPostIds = new Set(prev.map(p => p.id));
+              const filteredNewPosts = uniqueNewPosts.filter(
+                post => !existingPostIds.has(post.id)
+              );
+              return [...prev, ...filteredNewPosts];
+            });
+          }
+
+          setHasMore(response.data.has_next);
+        } else {
+          if (pageNumber === 1) setWallPosts([]);
+          setHasMore(false);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке записей стены:', error);
+        if (isMounted.current) {
+          if (pageNumber === 1) setWallPosts([]);
+          setError('Произошла ошибка при загрузке записей стены');
+        }
+      } finally {
+        if (isMounted.current) {
+          setLoading(false);
+          setIsLoadingMore(false);
+          loadingRef.current = false;
+        }
+      }
+    },
+    [userId]
+  );
+
   useEffect(() => {
     if (userId) {
       setPage(1);
@@ -96,7 +95,7 @@ const WallFeed = ({ userId }) => {
       setHasMore(true);
       fetchWallPosts(1);
     }
-    
+
     return () => {
       if (observer.current) {
         observer.current.disconnect();
@@ -104,62 +103,64 @@ const WallFeed = ({ userId }) => {
     };
   }, [userId, fetchWallPosts]);
 
-  
-  const lastPostElementRef = useCallback(node => {
-    if (loading || isLoadingMore || !hasMore) return;
-    
-    if (observer.current) observer.current.disconnect();
-    
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore && !loadingRef.current) {
-        setPage(prevPage => prevPage + 1);
-      }
-    }, { threshold: 0.5 });
-    
-    if (node) observer.current.observe(node);
-  }, [loading, isLoadingMore, hasMore]);
+  const lastPostElementRef = useCallback(
+    node => {
+      if (loading || isLoadingMore || !hasMore) return;
 
-  
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting && hasMore && !loadingRef.current) {
+            setPage(prevPage => prevPage + 1);
+          }
+        },
+        { threshold: 0.5 }
+      );
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, isLoadingMore, hasMore]
+  );
+
   useEffect(() => {
     if (page > 1) {
       fetchWallPosts(page);
     }
   }, [page, fetchWallPosts]);
 
-  
   const handleDeletePost = (postId, updatedPost) => {
     if (updatedPost) {
-      setWallPosts(prevPosts => 
-        prevPosts.map(post => 
+      setWallPosts(prevPosts =>
+        prevPosts.map(post =>
           post.id.toString() === postId.toString() ? updatedPost : post
         )
       );
     } else {
-      setWallPosts(prevPosts => 
-        prevPosts.filter(post => 
-          post.id.toString() !== postId.toString()
-        )
+      setWallPosts(prevPosts =>
+        prevPosts.filter(post => post.id.toString() !== postId.toString())
       );
     }
   };
 
-  
   useEffect(() => {
-    const handleGlobalPostCreated = (event) => {
+    const handleGlobalPostCreated = event => {
       const newPost = event.detail;
-      
+
       // Добавляем пост в стену если:
       // 1. Это пост стены (type === 'stena')
       // 2. Получатель совпадает с userId (стена этого пользователя)
-      if (newPost && 
-          newPost.type === 'stena' && 
-          newPost.recipient_id === parseInt(userId)) {
+      if (
+        newPost &&
+        newPost.type === 'stena' &&
+        newPost.recipient_id === parseInt(userId)
+      ) {
         setWallPosts(prevPosts => [newPost, ...prevPosts]);
       }
     };
-    
+
     window.addEventListener('post_created', handleGlobalPostCreated);
-    
+
     return () => {
       window.removeEventListener('post_created', handleGlobalPostCreated);
     };
@@ -177,16 +178,34 @@ const WallFeed = ({ userId }) => {
 
   if (error) {
     return (
-      <Box sx={{ textAlign: 'center', py: 3, bgcolor: 'background.paper', borderRadius: 2, mt: 2 }}>
-        <Typography color="error">{t('profile.feed.wall.loading_error')}</Typography>
+      <Box
+        sx={{
+          textAlign: 'center',
+          py: 3,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          mt: 2,
+        }}
+      >
+        <Typography color='error'>
+          {t('profile.feed.wall.loading_error')}
+        </Typography>
       </Box>
     );
   }
 
   if (wallPosts.length === 0 && !loading) {
     return (
-      <Box sx={{ textAlign: 'center', py: 6, bgcolor: 'background.paper', borderRadius: 2, mt: 2 }}>
-        <Typography variant="h6" color="text.secondary">
+      <Box
+        sx={{
+          textAlign: 'center',
+          py: 6,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          mt: 2,
+        }}
+      >
+        <Typography variant='h6' color='text.secondary'>
           {t('profile.feed.wall.empty')}
         </Typography>
       </Box>
@@ -194,42 +213,37 @@ const WallFeed = ({ userId }) => {
   }
 
   return (
-    <Box sx={{ mt:0.5 }}>
+    <Box sx={{ mt: 0.5 }}>
       {wallPosts.map((post, index) => {
-        
         if (wallPosts.length === index + 1) {
           return (
             <Box ref={lastPostElementRef} key={`${post.id}-${index}`}>
-              <Post 
-                post={post} 
-                onDelete={handleDeletePost}
-                showActions
-              />
+              <Post post={post} onDelete={handleDeletePost} showActions />
             </Box>
           );
         } else {
           return (
-            <Post 
-              key={`${post.id}-${index}`} 
-              post={post} 
+            <Post
+              key={`${post.id}-${index}`}
+              post={post}
               onDelete={handleDeletePost}
               showActions
             />
           );
         }
       })}
-      
+
       {/* Индикатор загрузки */}
       {isLoadingMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
           <CircularProgress size={24} />
         </Box>
       )}
-      
+
       {/* Сообщение, когда постов больше нет */}
       {!hasMore && wallPosts.length > 5 && (
         <Box sx={{ textAlign: 'center', py: 2, mt: 2 }}>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             {t('profile.feed.wall.all_loaded')}
           </Typography>
         </Box>
@@ -238,4 +252,4 @@ const WallFeed = ({ userId }) => {
   );
 };
 
-export default WallFeed; 
+export default WallFeed;

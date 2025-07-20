@@ -25,12 +25,15 @@ interface MessengerContextType {
   unreadCounts: UnreadCounts;
 }
 
-const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }) => {
+const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
+  user,
+  isMobile,
+}) => {
   // AppBottomNavigation рендерится только на мобильных устройствах
   if (!isMobile) {
     return null;
   }
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState<boolean>(true);
@@ -38,52 +41,65 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   let messengerContext: MessengerContextType | null = null;
   let unreadCounts: UnreadCounts = {};
   let totalUnread = 0;
-  
+
   try {
     messengerContext = useMessenger() as MessengerContextType;
     unreadCounts = messengerContext?.unreadCounts || {};
-    totalUnread = Object.values(unreadCounts).filter((c: number) => c > 0).length;
+    totalUnread = Object.values(unreadCounts).filter(
+      (c: number) => c > 0
+    ).length;
   } catch (error) {
     // MessengerProvider может быть недоступен во время инициализации
     console.warn('MessengerContext недоступен в BottomNavigation:', error);
     unreadCounts = {};
     totalUnread = 0;
   }
-  
 
-  
   const isChannel = user?.account_type === 'channel';
-  
+
   useEffect(() => {
     const handleMessengerLayoutChange = (event: CustomEvent) => {
       const { isInChat } = event.detail;
       setVisibleInMessenger(!isInChat);
     };
-    
-    document.addEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
-    
+
+    document.addEventListener(
+      'messenger-layout-change',
+      handleMessengerLayoutChange as EventListener
+    );
+
     return () => {
-      document.removeEventListener('messenger-layout-change', handleMessengerLayoutChange as EventListener);
+      document.removeEventListener(
+        'messenger-layout-change',
+        handleMessengerLayoutChange as EventListener
+      );
     };
   }, []);
-  
+
   const isInMessenger = location.pathname.startsWith('/messenger');
   if (isInMessenger && !visibleInMessenger) {
     return null;
   }
-  
+
   // Проверяем, есть ли активный полный экран плеер
-  const isFullscreenPlayerActive = document.body.classList.contains('fullscreen-player-active');
+  const isFullscreenPlayerActive = document.body.classList.contains(
+    'fullscreen-player-active'
+  );
   if (isFullscreenPlayerActive) {
     return null;
   }
-  
-  const authPages = ['/login', '/register', '/register/profile', '/confirm-email'];
+
+  const authPages = [
+    '/login',
+    '/register',
+    '/register/profile',
+    '/confirm-email',
+  ];
   const isAuthPage = authPages.some(path => location.pathname.startsWith(path));
   const isClickerPage = location.pathname.startsWith('/minigames/clicker');
   const isBlackjackPage = location.pathname.startsWith('/minigames/blackjack');
   const isCupsPage = location.pathname.startsWith('/minigames/cups');
-  
+
   if (isAuthPage || isClickerPage || isBlackjackPage || isCupsPage) {
     return null;
   }
@@ -98,9 +114,8 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
     return false;
   };
 
-  
   const handleNavigationChange = (newValue: number): void => {
-    switch(newValue) {
+    switch (newValue) {
       case 0:
         navigate('/');
         break;
@@ -124,72 +139,73 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({ user, isMobile }
   const currentValue = getCurrentValue();
 
   return (
-    <div 
-      id={BOTTOM_NAV_ID}
-      className="bottom-navigation"
-    >
-      <div className="bottom-nav-container">
-        <button 
+    <div id={BOTTOM_NAV_ID} className='bottom-navigation'>
+      <div className='bottom-nav-container'>
+        <button
           className={`bottom-nav-item ${currentValue === 0 ? 'active' : ''}`}
           onClick={() => handleNavigationChange(0)}
         >
-          <div className="bottom-nav-icon">
-            <Icon icon="solar:home-bold" width="28" height="28" />
+          <div className='bottom-nav-icon'>
+            <Icon icon='solar:home-bold' width='28' height='28' />
           </div>
-          <span className="bottom-nav-label">Лента</span>
+          <span className='bottom-nav-label'>Лента</span>
         </button>
-        
-        <button 
+
+        <button
           className={`bottom-nav-item ${currentValue === 1 ? 'active' : ''}`}
           onClick={() => handleNavigationChange(1)}
         >
-          <div className="bottom-nav-icon">
-            <Icon icon="solar:music-notes-bold" width="28" height="28" />
+          <div className='bottom-nav-icon'>
+            <Icon icon='solar:music-notes-bold' width='28' height='28' />
           </div>
-          <span className="bottom-nav-label">Музыка</span>
+          <span className='bottom-nav-label'>Музыка</span>
         </button>
-        
-        <button 
+
+        <button
           className={`bottom-nav-item ${currentValue === 2 ? 'active' : ''}`}
           onClick={() => handleNavigationChange(2)}
         >
-          <div className="bottom-nav-icon">
+          <div className='bottom-nav-icon'>
             {totalUnread > 0 ? (
-              <div className="badge">
-                <Icon icon="solar:chat-round-dots-bold" width="28" height="28" />
-                <div className="badge-content">
+              <div className='badge'>
+                <Icon
+                  icon='solar:chat-round-dots-bold'
+                  width='28'
+                  height='28'
+                />
+                <div className='badge-content'>
                   {totalUnread > 99 ? '99+' : totalUnread}
                 </div>
               </div>
             ) : (
-              <Icon icon="solar:chat-round-dots-bold" width="28" height="28" />
+              <Icon icon='solar:chat-round-dots-bold' width='28' height='28' />
             )}
           </div>
-          <span className="bottom-nav-label">Мессенджер</span>
+          <span className='bottom-nav-label'>Мессенджер</span>
         </button>
-        
-        <button 
+
+        <button
           className={`bottom-nav-item ${currentValue === 3 ? 'active' : ''}`}
           onClick={() => handleNavigationChange(3)}
         >
-          <div className="bottom-nav-icon">
-            <Icon icon="solar:user-bold" width="28" height="28" />
+          <div className='bottom-nav-icon'>
+            <Icon icon='solar:user-bold' width='28' height='28' />
           </div>
-          <span className="bottom-nav-label">Профиль</span>
+          <span className='bottom-nav-label'>Профиль</span>
         </button>
-        
-        <button 
+
+        <button
           className={`bottom-nav-item ${currentValue === 4 ? 'active' : ''}`}
           onClick={() => handleNavigationChange(4)}
         >
-          <div className="bottom-nav-icon">
-            <Icon icon="solar:widget-2-bold" width="28" height="28" />
+          <div className='bottom-nav-icon'>
+            <Icon icon='solar:widget-2-bold' width='28' height='28' />
           </div>
-          <span className="bottom-nav-label">Еще</span>
+          <span className='bottom-nav-label'>Еще</span>
         </button>
       </div>
     </div>
   );
 };
 
-export default AppBottomNavigation; 
+export default AppBottomNavigation;

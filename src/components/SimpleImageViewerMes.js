@@ -15,83 +15,83 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  
+
   // Закрытие на Escape
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = e => {
       if (e.key === 'Escape') {
         onClose();
       }
     };
-    
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
-  
+
   // Обработчики для зума и поворота
   const zoomIn = () => setScale(prev => Math.min(prev + 0.25, 3));
   const zoomOut = () => setScale(prev => Math.max(prev - 0.25, 0.5));
   const rotateLeft = () => setRotation(prev => prev - 90);
   const rotateRight = () => setRotation(prev => prev + 90);
-  
+
   // Обработчики для перетаскивания изображения
-  const handleMouseDown = (e) => {
+  const handleMouseDown = e => {
     if (scale <= 1) return;
-    
+
     setIsDragging(true);
     setDragStart({
       x: e.clientX - position.x,
-      y: e.clientY - position.y
+      y: e.clientY - position.y,
     });
   };
-  
-  const handleMouseMove = (e) => {
+
+  const handleMouseMove = e => {
     if (!isDragging) return;
-    
+
     setPosition({
       x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y
+      y: e.clientY - dragStart.y,
     });
   };
-  
+
   const handleMouseUp = () => {
     setIsDragging(false);
   };
-  
+
   // Обработчики для сенсорных экранов
-  const handleTouchStart = (e) => {
+  const handleTouchStart = e => {
     if (scale <= 1) return;
-    
+
     setIsDragging(true);
     setDragStart({
       x: e.touches[0].clientX - position.x,
-      y: e.touches[0].clientY - position.y
+      y: e.touches[0].clientY - position.y,
     });
   };
-  
-  const handleTouchMove = (e) => {
+
+  const handleTouchMove = e => {
     if (!isDragging) return;
-    
+
     setPosition({
       x: e.touches[0].clientX - dragStart.x,
-      y: e.touches[0].clientY - dragStart.y
+      y: e.touches[0].clientY - dragStart.y,
     });
   };
-  
+
   const handleTouchEnd = () => {
     setIsDragging(false);
   };
-  
+
   // Сбрасываем зум и вращение по двойному клику/тапу
   const handleDoubleClick = () => {
     setScale(1);
     setRotation(0);
     setPosition({ x: 0, y: 0 });
   };
-  
+
   return (
-    <div 
-      className="simple-image-viewer-overlay"
+    <div
+      className='simple-image-viewer-overlay'
       onClick={onClose}
       style={{
         position: 'fixed',
@@ -104,12 +104,12 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 10000,
-        cursor: isDragging ? 'grabbing' : 'grab'
+        cursor: isDragging ? 'grabbing' : 'grab',
       }}
     >
-      <img 
-        src={src} 
-        alt="Просмотр" 
+      <img
+        src={src}
+        alt='Просмотр'
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -118,21 +118,21 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         onDoubleClick={handleDoubleClick}
-        onClick={(e) => e.stopPropagation()}
-        style={{ 
-          maxWidth: '90%', 
-          maxHeight: '90%', 
+        onClick={e => e.stopPropagation()}
+        style={{
+          maxWidth: '90%',
+          maxHeight: '90%',
           objectFit: 'contain',
           transform: `scale(${scale}) rotate(${rotation}deg) translate(${position.x / scale}px, ${position.y / scale}px)`,
           transition: isDragging ? 'none' : 'transform 0.2s ease',
-          cursor: isDragging ? 'grabbing' : 'grab'
-        }} 
+          cursor: isDragging ? 'grabbing' : 'grab',
+        }}
       />
-      
+
       {/* Кнопки управления */}
-      <div 
-        className="image-viewer-controls"
-        onClick={(e) => e.stopPropagation()}
+      <div
+        className='image-viewer-controls'
+        onClick={e => e.stopPropagation()}
         style={{
           position: 'absolute',
           bottom: '20px',
@@ -141,23 +141,23 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
           background: 'rgba(0, 0, 0, 0.6)',
           padding: '8px',
           borderRadius: '24px',
-          backdropFilter: 'blur(8px)'
+          backdropFilter: 'blur(8px)',
         }}
       >
-        <IconButton onClick={zoomIn} size="small" sx={{ color: 'white' }}>
+        <IconButton onClick={zoomIn} size='small' sx={{ color: 'white' }}>
           <ZoomInIcon />
         </IconButton>
-        <IconButton onClick={zoomOut} size="small" sx={{ color: 'white' }}>
+        <IconButton onClick={zoomOut} size='small' sx={{ color: 'white' }}>
           <ZoomOutIcon />
         </IconButton>
-        <IconButton onClick={rotateLeft} size="small" sx={{ color: 'white' }}>
+        <IconButton onClick={rotateLeft} size='small' sx={{ color: 'white' }}>
           <RotateLeftIcon />
         </IconButton>
-        <IconButton onClick={rotateRight} size="small" sx={{ color: 'white' }}>
+        <IconButton onClick={rotateRight} size='small' sx={{ color: 'white' }}>
           <RotateRightIcon />
         </IconButton>
       </div>
-      
+
       {/* Кнопка закрытия */}
       <IconButton
         sx={{
@@ -168,7 +168,7 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           '&:hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          }
+          },
         }}
         onClick={onClose}
       >
@@ -178,4 +178,4 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
   );
 };
 
-export default SimpleImageViewerMes; 
+export default SimpleImageViewerMes;

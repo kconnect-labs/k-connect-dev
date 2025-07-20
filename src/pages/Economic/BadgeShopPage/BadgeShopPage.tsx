@@ -13,14 +13,17 @@ import { AuthContext } from '../../../context/AuthContext';
 import { AuthUser } from '../../../types/auth';
 import { useBadgeShop } from './hooks/useBadgeShop';
 import { useBadgeShopAPI } from './hooks/useBadgeShopAPI';
-import { getSortedBadges, filterBadgesByTab, validateImageFile } from './utils/badgeUtils';
+import {
+  getSortedBadges,
+  filterBadgesByTab,
+  validateImageFile,
+} from './utils/badgeUtils';
 import { BadgeShopHeader } from './components/BadgeShopHeader';
 import { BadgeShopControls } from './components/BadgeShopControls';
 import { BadgeCard } from './components/BadgeCard';
 import { BadgeDialog } from './components/BadgeDialog';
 import { CreateDialog } from './components/CreateDialog';
 import { PurchaseDialog } from './components/PurchaseDialog';
-
 
 const BadgeShopPage: React.FC = () => {
   const theme = useTheme();
@@ -98,9 +101,11 @@ const BadgeShopPage: React.FC = () => {
 
   // Обновление лимитов при изменении подписки
   useEffect(() => {
-    const isUltimate = userSubscription && userSubscription.subscription_type &&
+    const isUltimate =
+      userSubscription &&
+      userSubscription.subscription_type &&
       (userSubscription.subscription_type.toLowerCase() === 'ultimate' ||
-       userSubscription.subscription_type.toLowerCase().includes('ultimate'));
+        userSubscription.subscription_type.toLowerCase().includes('ultimate'));
 
     if (isUltimate) {
       setBadgeLimitReached(false);
@@ -117,7 +122,9 @@ const BadgeShopPage: React.FC = () => {
   // Открытие бейджика по openBadgeId из state
   useEffect(() => {
     if (location.state && location.state.openBadgeId && badges.length > 0) {
-      const badgeToOpen = badges.find(b => String(b.id) === String(location.state.openBadgeId));
+      const badgeToOpen = badges.find(
+        b => String(b.id) === String(location.state.openBadgeId)
+      );
       if (badgeToOpen) {
         setSelectedBadge(badgeToOpen);
         setOpenBadgeDialog(true);
@@ -135,7 +142,10 @@ const BadgeShopPage: React.FC = () => {
     };
   }, [previewUrl]);
 
-  const handleTabChange = (event: React.SyntheticEvent | null, newValue: number) => {
+  const handleTabChange = (
+    event: React.SyntheticEvent | null,
+    newValue: number
+  ) => {
     setTabValue(newValue as any);
   };
 
@@ -227,14 +237,22 @@ const BadgeShopPage: React.FC = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        minHeight='80vh'
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: isMobile ? 2 : 4, pb: isMobile ? 12 : 4 }}>
+    <Container
+      maxWidth='lg'
+      sx={{ py: isMobile ? 2 : 4, pb: isMobile ? 12 : 4 }}
+    >
       <BadgeShopHeader
         userPoints={userPoints}
         onCreateClick={handleCreateClick}
@@ -242,7 +260,7 @@ const BadgeShopPage: React.FC = () => {
       />
 
       {error && (
-        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setError('')}>
+        <Alert severity='error' sx={{ mb: 1 }} onClose={() => setError('')}>
           {error}
         </Alert>
       )}
@@ -256,7 +274,7 @@ const BadgeShopPage: React.FC = () => {
       />
 
       <Grid container spacing={isMobile ? 1 : 2}>
-        {processedBadges().map((badge) => (
+        {processedBadges().map(badge => (
           <Grid item xs={6} sm={4} md={3} key={badge.id}>
             <BadgeCard
               badge={badge}
@@ -305,10 +323,8 @@ const BadgeShopPage: React.FC = () => {
         onClose={() => setOpenPurchaseDialog(false)}
         onPurchase={handlePurchaseBadge}
       />
-
-
     </Container>
   );
 };
 
-export default BadgeShopPage; 
+export default BadgeShopPage;

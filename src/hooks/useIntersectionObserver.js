@@ -10,7 +10,7 @@ const useIntersectionObserver = ({
   threshold = 0.1, // порог видимости (0-1)
   rootMargin = '0px', // отступы от root элемента
   enabled = true, // включен ли observer
-  debounceTime = 300  // Добавляем параметр для дебаунса
+  debounceTime = 300, // Добавляем параметр для дебаунса
 }) => {
   // Сохраняем таймер дебаунса
   const debounceRef = useRef(null);
@@ -19,17 +19,17 @@ const useIntersectionObserver = ({
     if (!enabled || !target.current) {
       return;
     }
-    
+
     // Функция-обработчик с дебаунсом
-    const handleIntersect = (entries) => {
+    const handleIntersect = entries => {
       const [entry] = entries;
-      
+
       if (entry.isIntersecting) {
         // Очищаем существующий таймер если есть
         if (debounceRef.current) {
           clearTimeout(debounceRef.current);
         }
-        
+
         // Устанавливаем новый таймер
         debounceRef.current = setTimeout(() => {
           onIntersect();
@@ -37,14 +37,14 @@ const useIntersectionObserver = ({
         }, debounceTime);
       }
     };
-    
+
     const observer = new IntersectionObserver(handleIntersect, {
       threshold,
       rootMargin,
     });
-    
+
     observer.observe(target.current);
-    
+
     return () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
@@ -54,4 +54,4 @@ const useIntersectionObserver = ({
   }, [target, enabled, threshold, rootMargin, onIntersect, debounceTime]);
 };
 
-export default useIntersectionObserver; 
+export default useIntersectionObserver;

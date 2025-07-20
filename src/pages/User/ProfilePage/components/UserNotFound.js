@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 
 const UserNotFound = () => {
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth='lg'>
       <Box sx={{ textAlign: 'center', mt: 5 }}>
-        <Typography variant="h5">Пользователь не найден</Typography>
-        <Button 
-          component={Link} 
-          to="/" 
-          variant="contained" 
-          color="primary" 
+        <Typography variant='h5'>Пользователь не найден</Typography>
+        <Button
+          component={Link}
+          to='/'
+          variant='contained'
+          color='primary'
           sx={{ mt: 2, borderRadius: 20, textTransform: 'none' }}
         >
           Вернуться на главную
@@ -21,4 +21,4 @@ const UserNotFound = () => {
   );
 };
 
-export default UserNotFound; 
+export default UserNotFound;

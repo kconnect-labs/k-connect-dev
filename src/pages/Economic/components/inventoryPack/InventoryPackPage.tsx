@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Card, CardContent, Chip, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, Alert, DialogActions } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Alert,
+  DialogActions,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Close as CloseIcon, Diamond as DiamondIcon, Star as StarIcon, Lock as LockIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  Diamond as DiamondIcon,
+  Star as StarIcon,
+  Lock as LockIcon,
+} from '@mui/icons-material';
 import PackCard from './PackCard';
 import PackOpeningModal from './PackOpeningModal';
 import { useAuth } from '../../../../context/AuthContext';
@@ -49,7 +68,8 @@ const InventoryPackPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPack, setSelectedPack] = useState<Pack | null>(null);
-  const [selectedPackDetails, setSelectedPackDetails] = useState<PackDetails | null>(null);
+  const [selectedPackDetails, setSelectedPackDetails] =
+    useState<PackDetails | null>(null);
   const [openingPack, setOpeningPack] = useState<Pack | null>(null);
   const [showPackDetails, setShowPackDetails] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
@@ -73,15 +93,17 @@ const InventoryPackPage = () => {
       const response = await axios.get('/api/inventory/packs');
       if (response.data.success) {
         setPacks(response.data.packs);
-        
+
         // Предзагружаем изображения для всех паков
-        const packContents = response.data.packs.flatMap((pack: Pack) => 
-          pack.contents ? pack.contents.map((content: PackContent) => ({
-            pack_id: pack.id,
-            item_name: content.item_name
-          })) : []
+        const packContents = response.data.packs.flatMap((pack: Pack) =>
+          pack.contents
+            ? pack.contents.map((content: PackContent) => ({
+                pack_id: pack.id,
+                item_name: content.item_name,
+              }))
+            : []
         );
-        
+
         if (packContents.length > 0) {
           await inventoryImageService.checkImagesBatch(packContents);
         }
@@ -127,9 +149,11 @@ const InventoryPackPage = () => {
   const handleItemObtained = (item: InventoryItem) => {
     // Отправляем глобальное событие для мгновенного добавления предмета в инвентарь
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('item_obtained', {
-        detail: item
-      }));
+      window.dispatchEvent(
+        new CustomEvent('item_obtained', {
+          detail: item,
+        })
+      );
     }
   };
 
@@ -182,10 +206,13 @@ const InventoryPackPage = () => {
     }
   };
 
-  const isSoldOut = selectedPackDetails?.pack.is_limited && 
-                    selectedPackDetails.pack.max_quantity && 
-                    selectedPackDetails.pack.sold_quantity &&
-                    (selectedPackDetails.pack.max_quantity - selectedPackDetails.pack.sold_quantity <= 0);
+  const isSoldOut =
+    selectedPackDetails?.pack.is_limited &&
+    selectedPackDetails.pack.max_quantity &&
+    selectedPackDetails.pack.sold_quantity &&
+    selectedPackDetails.pack.max_quantity -
+      selectedPackDetails.pack.sold_quantity <=
+      0;
 
   const fetchPackDetails = async (packId: number) => {
     try {
@@ -193,12 +220,15 @@ const InventoryPackPage = () => {
       if (response.data.success) {
         const packData = response.data.pack;
         setSelectedPackDetails(packData);
-        
+
         // Предзагружаем изображения содержимого пака
         if (packData.contents && packData.contents.length > 0) {
-          await inventoryImageService.preloadPackImages(packData.contents, packId);
+          await inventoryImageService.preloadPackImages(
+            packData.contents,
+            packId
+          );
         }
-        
+
         setShowPackDetails(true);
       }
     } catch (error) {
@@ -210,7 +240,12 @@ const InventoryPackPage = () => {
   if (loading) {
     return (
       <StyledContainer>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='50vh'
+        >
           <CircularProgress size={60} />
         </Box>
       </StyledContainer>
@@ -222,12 +257,12 @@ const InventoryPackPage = () => {
       <StyledContainer>
         <StyledCard>
           <CardContent>
-            <Typography color="error" textAlign="center">
+            <Typography color='error' textAlign='center'>
               {error}
             </Typography>
-            <Button 
-              onClick={fetchPacks} 
-              variant="contained" 
+            <Button
+              onClick={fetchPacks}
+              variant='contained'
               sx={{ mt: 2, display: 'block', mx: 'auto' }}
             >
               Попробовать снова
@@ -241,10 +276,10 @@ const InventoryPackPage = () => {
   return (
     <StyledContainer>
       <InfoBlock
-        title="Пачки"
-        description="Откройте Пачки, чтобы получить уникальные предметы для вашей коллекции"
-        styleVariant="dark"
-        style={{ 
+        title='Пачки'
+        description='Откройте Пачки, чтобы получить уникальные предметы для вашей коллекции'
+        styleVariant='dark'
+        style={{
           textAlign: 'center',
           marginBottom: '24px',
         }}
@@ -252,21 +287,23 @@ const InventoryPackPage = () => {
         titleStyle={{}}
         descriptionStyle={{}}
         customStyle={false}
-        className=""
+        className=''
       />
 
-      <Box sx={{ 
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '12px',
-        justifyContent: 'center',
-        minHeight: '400px',
-        '@media (max-width: 768px)': {
-          gap: '8px',
-          minHeight: '300px',
-        }
-      }}>
-        {packs.map((pack) => (
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '12px',
+          justifyContent: 'center',
+          minHeight: '400px',
+          '@media (max-width: 768px)': {
+            gap: '8px',
+            minHeight: '300px',
+          },
+        }}
+      >
+        {packs.map(pack => (
           <Box
             key={pack.id}
             sx={{
@@ -287,7 +324,7 @@ const InventoryPackPage = () => {
                 xs: 'none',
                 sm: '300px',
                 md: '350px',
-              }
+              },
             }}
           >
             <motion.div
@@ -295,7 +332,7 @@ const InventoryPackPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <PackCard 
+              <PackCard
                 pack={pack}
                 userPoints={userPoints}
                 onBuy={async () => await handleBuyPack(pack)}
@@ -323,7 +360,7 @@ const InventoryPackPage = () => {
       <Dialog
         open={showPackDetails}
         onClose={handleClosePackDetails}
-        maxWidth="md"
+        maxWidth='md'
         fullWidth
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
@@ -337,21 +374,23 @@ const InventoryPackPage = () => {
               maxWidth: '100vw',
               maxHeight: '100vh',
               borderRadius: 0,
-            }
-          }
+            },
+          },
         }}
       >
-        <DialogTitle sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          color: 'text.primary',
-          pb: 1,
-          '@media (max-width: 768px)': {
-            padding: '16px',
-          }
-        }}>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            color: 'text.primary',
+            pb: 1,
+            '@media (max-width: 768px)': {
+              padding: '16px',
+            },
+          }}
+        >
+          <Typography variant='h5' sx={{ fontWeight: 600 }}>
             {selectedPackDetails?.pack?.display_name}
           </Typography>
           <IconButton
@@ -361,29 +400,36 @@ const InventoryPackPage = () => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ 
-          p: 3,
-          '@media (max-width: 768px)': {
-            padding: '0 16px 16px 16px',
-          }
-        }}>
+        <DialogContent
+          sx={{
+            p: 3,
+            '@media (max-width: 768px)': {
+              padding: '0 16px 16px 16px',
+            },
+          }}
+        >
           {selectedPackDetails && (
             <>
-              <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary' }}>
+              <Typography
+                variant='body1'
+                sx={{ mb: 3, color: 'text.secondary' }}
+              >
                 {selectedPackDetails.pack.description}
               </Typography>
 
               <Box sx={{ mb: 3 }}>
-                <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+                <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
                   Возможные предметы:
                 </Typography>
-                
-                <Box sx={{ 
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: window.innerWidth <= 768 ? '5px' : '16px',
-                  justifyContent: 'center'
-                }}>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: window.innerWidth <= 768 ? '5px' : '16px',
+                    justifyContent: 'center',
+                  }}
+                >
                   {selectedPackDetails.contents.map((item, index) => (
                     <Box
                       key={index}
@@ -398,35 +444,39 @@ const InventoryPackPage = () => {
                           xs: '120px',
                           sm: '150px',
                           md: '180px',
-                        }
+                        },
                       }}
                     >
-                      <Card sx={{
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: 2,
-                        p: 2,
-                        textAlign: 'center',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        '@media (max-width: 768px)': {
-                          padding: '8px',
-                          minHeight: '120px',
-                        }
-                      }}>
-                        <Box sx={{
-                          width: '100%',
-                          height: window.innerWidth <= 768 ? '60px' : '80px',
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          borderRadius: 2,
+                          p: 2,
+                          textAlign: 'center',
+                          height: '100%',
                           display: 'flex',
-                          alignItems: 'center',
+                          flexDirection: 'column',
                           justifyContent: 'center',
-                          mb: 1,
                           '@media (max-width: 768px)': {
-                            marginBottom: '4px',
-                          }
-                        }}>
+                            padding: '8px',
+                            minHeight: '120px',
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: '100%',
+                            height: window.innerWidth <= 768 ? '60px' : '80px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            mb: 1,
+                            '@media (max-width: 768px)': {
+                              marginBottom: '4px',
+                            },
+                          }}
+                        >
                           <img
                             src={`/inventory/pack/${selectedPackDetails.pack.id}/${item.item_name}`}
                             alt={item.item_name}
@@ -435,21 +485,27 @@ const InventoryPackPage = () => {
                               maxHeight: '100%',
                               objectFit: 'contain',
                             }}
-                                                         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                               const target = e.target as HTMLImageElement;
-                               target.style.display = 'none';
-                             }}
+                            onError={(
+                              e: React.SyntheticEvent<HTMLImageElement, Event>
+                            ) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
                           />
                         </Box>
-                        
-                        <Typography variant="body2" sx={{ 
-                          fontWeight: 500, 
-                          mb: 1,
-                          fontSize: window.innerWidth <= 768 ? '0.75rem' : '0.875rem',
-                        }}>
+
+                        <Typography
+                          variant='body2'
+                          sx={{
+                            fontWeight: 500,
+                            mb: 1,
+                            fontSize:
+                              window.innerWidth <= 768 ? '0.75rem' : '0.875rem',
+                          }}
+                        >
                           {item.item_name}
                         </Typography>
-                        
+
                         <Chip
                           label={getRarityLabel(item.rarity)}
                           size={window.innerWidth <= 768 ? 'small' : 'medium'}
@@ -457,7 +513,8 @@ const InventoryPackPage = () => {
                             backgroundColor: getRarityColor(item.rarity),
                             color: 'white',
                             fontWeight: 600,
-                            fontSize: window.innerWidth <= 768 ? '0.7rem' : '0.75rem',
+                            fontSize:
+                              window.innerWidth <= 768 ? '0.7rem' : '0.75rem',
                             height: window.innerWidth <= 768 ? '20px' : '24px',
                           }}
                         />
@@ -467,31 +524,40 @@ const InventoryPackPage = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 2,
-                '@media (max-width: 768px)': {
-                  flexDirection: 'column',
-                  alignItems: 'stretch',
-                }
-              }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: 2,
+                  '@media (max-width: 768px)': {
+                    flexDirection: 'column',
+                    alignItems: 'stretch',
+                  },
+                }}
+              >
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography variant='h6' sx={{ fontWeight: 600, mb: 1 }}>
                     Цена: {selectedPackDetails.pack.price} баллов
                   </Typography>
-                  {selectedPackDetails.pack.is_limited && selectedPackDetails.pack.remaining_quantity !== undefined && (
-                    <Typography variant="body2" color="text.secondary">
-                      Осталось: {selectedPackDetails.pack.remaining_quantity} из {selectedPackDetails.pack.max_quantity}
-                    </Typography>
-                  )}
+                  {selectedPackDetails.pack.is_limited &&
+                    selectedPackDetails.pack.remaining_quantity !==
+                      undefined && (
+                      <Typography variant='body2' color='text.secondary'>
+                        Осталось: {selectedPackDetails.pack.remaining_quantity}{' '}
+                        из {selectedPackDetails.pack.max_quantity}
+                      </Typography>
+                    )}
                 </Box>
-                
+
                 <Button
-                  variant="outlined"
-                  disabled={!user || userPoints < selectedPackDetails.pack.price || isSoldOut}
+                  variant='outlined'
+                  disabled={
+                    !user ||
+                    userPoints < selectedPackDetails.pack.price ||
+                    isSoldOut
+                  }
                   onClick={() => {
                     handleClosePackDetails();
                     handleBuyPack(selectedPackDetails.pack);
@@ -510,11 +576,14 @@ const InventoryPackPage = () => {
                     },
                     '@media (max-width: 768px)': {
                       width: '100%',
-                    }
+                    },
                   }}
                 >
-                  {isSoldOut ? 'Закончился' : 
-                   userPoints < selectedPackDetails.pack.price ? 'Недостаточно баллов' : 'Купить'}
+                  {isSoldOut
+                    ? 'Закончился'
+                    : userPoints < selectedPackDetails.pack.price
+                      ? 'Недостаточно баллов'
+                      : 'Купить'}
                 </Button>
               </Box>
             </>
@@ -522,7 +591,9 @@ const InventoryPackPage = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!confirmPack} onClose={() => setConfirmPack(null)}
+      <Dialog
+        open={!!confirmPack}
+        onClose={() => setConfirmPack(null)}
         PaperProps={{
           sx: {
             background: 'rgba(255, 255, 255, 0.03)',
@@ -530,25 +601,32 @@ const InventoryPackPage = () => {
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '8px',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-          }
+          },
         }}
       >
         <DialogTitle>Подтверждение покупки</DialogTitle>
         <DialogContent>
           <Typography>
-            Купить пак <b>{confirmPack?.display_name}</b> за <b>{confirmPack?.price}</b> баллов?
+            Купить пак <b>{confirmPack?.display_name}</b> за{' '}
+            <b>{confirmPack?.price}</b> баллов?
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmPack(null)}>Отмена</Button>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={async () => {
               if (!confirmPack) return;
-              const res = await fetch(`/api/inventory/packs/${confirmPack.id}/buy`, { method: 'POST', credentials: 'include' });
+              const res = await fetch(
+                `/api/inventory/packs/${confirmPack.id}/buy`,
+                { method: 'POST', credentials: 'include' }
+              );
               const data = await res.json();
               if (data.success) {
-                setOpenedPack({ ...confirmPack, purchase_id: data.purchase_id } as PackWithPurchaseId);
+                setOpenedPack({
+                  ...confirmPack,
+                  purchase_id: data.purchase_id,
+                } as PackWithPurchaseId);
               } else {
                 alert(data.message || 'Ошибка покупки');
               }
@@ -563,4 +641,4 @@ const InventoryPackPage = () => {
   );
 };
 
-export default InventoryPackPage; 
+export default InventoryPackPage;

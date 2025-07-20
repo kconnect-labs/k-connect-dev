@@ -8,7 +8,7 @@ export const fetchStories = async () => {
 };
 
 // Опубликовать новую историю
-export const publishStory = async (file) => {
+export const publishStory = async file => {
   const formData = new FormData();
   formData.append('media', file);
   const response = await axios.post('/api/stories', formData, {
@@ -18,13 +18,13 @@ export const publishStory = async (file) => {
 };
 
 // Отметить историю как просмотренную
-export const viewStory = async (storyId) => {
+export const viewStory = async storyId => {
   if (!storyId) return;
   return axios.post(`/api/stories/${storyId}/view`);
 };
 
 // Удалить историю
-export const deleteStory = async (storyId) => {
+export const deleteStory = async storyId => {
   if (!storyId) return;
   return axios.delete(`/api/stories/${storyId}`);
 };
@@ -36,14 +36,16 @@ export const addStoryReaction = async (storyId, emoji) => {
 };
 
 // Получить список реакций с пользователями для истории
-export const getStoryReactionsWithUsers = async (storyId) => {
+export const getStoryReactionsWithUsers = async storyId => {
   if (!storyId) return [];
   const response = await axios.get(`/api/stories/${storyId}/reactions`);
-  return response.data && response.data.reactions ? response.data.reactions : [];
+  return response.data && response.data.reactions
+    ? response.data.reactions
+    : [];
 };
 
 // Получить истории конкретного пользователя
-export const fetchUserStories = async (userIdentifier) => {
+export const fetchUserStories = async userIdentifier => {
   const response = await axios.get(`/api/stories/user/${userIdentifier}`);
   return response.data && response.data.stories ? [response.data] : [];
 };
@@ -58,7 +60,7 @@ export function useStoriesFeed(userIdentifier = null) {
     setLoading(true);
     setError(null);
     try {
-      const data = userIdentifier 
+      const data = userIdentifier
         ? await fetchUserStories(userIdentifier)
         : await fetchStories();
       setStories(data);
@@ -77,7 +79,7 @@ export function useStoryActions() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState(null);
 
-  const publish = useCallback(async (file) => {
+  const publish = useCallback(async file => {
     setActionLoading(true);
     setActionError(null);
     try {
@@ -91,7 +93,7 @@ export function useStoryActions() {
     }
   }, []);
 
-  const view = useCallback(async (storyId) => {
+  const view = useCallback(async storyId => {
     try {
       await viewStory(storyId);
     } catch (e) {
@@ -100,7 +102,7 @@ export function useStoryActions() {
     }
   }, []);
 
-  const remove = useCallback(async (storyId) => {
+  const remove = useCallback(async storyId => {
     setActionLoading(true);
     setActionError(null);
     try {
@@ -114,4 +116,4 @@ export function useStoryActions() {
   }, []);
 
   return { publish, view, remove, actionLoading, actionError };
-} 
+}

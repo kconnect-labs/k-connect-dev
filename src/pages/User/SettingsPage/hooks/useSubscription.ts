@@ -24,15 +24,15 @@ export const useSubscription = (): UseSubscriptionReturn => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await axios.get('/api/user/subscription/status');
-      
+
       if (response.data && response.data.active) {
         setSubscription({
           active: true,
           type: response.data.subscription_type,
           expires_at: response.data.expiration_date,
-          features: response.data.features || []
+          features: response.data.features || [],
         });
       } else {
         setSubscription(null);
@@ -54,6 +54,6 @@ export const useSubscription = (): UseSubscriptionReturn => {
     subscription,
     loading,
     error,
-    fetchSubscription
+    fetchSubscription,
   };
-}; 
+};

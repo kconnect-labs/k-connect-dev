@@ -114,7 +114,8 @@ export default class EnhancedWebSocketClient {
     const existing = localStorage.getItem('k-connect-device-id');
     if (existing) return existing;
 
-    const deviceId = 'device_' + Math.random().toString(36).substr(2, 16) + '_' + Date.now();
+    const deviceId =
+      'device_' + Math.random().toString(36).substr(2, 16) + '_' + Date.now();
     localStorage.setItem('k-connect-device-id', deviceId);
     return deviceId;
   }
@@ -128,7 +129,7 @@ export default class EnhancedWebSocketClient {
 
   private emit(event: string, data: any): void {
     if (!this.eventHandlers[event]) return;
-    this.eventHandlers[event].forEach((handler) => {
+    this.eventHandlers[event].forEach(handler => {
       try {
         handler(data);
       } catch (error) {
@@ -190,9 +191,9 @@ export default class EnhancedWebSocketClient {
         this.emit('connected', {});
       };
 
-      this.ws.onmessage = (event) => this.handleMessage(event);
-      this.ws.onclose = (event) => this.handleClose(event);
-      this.ws.onerror = (error) => {
+      this.ws.onmessage = event => this.handleMessage(event);
+      this.ws.onclose = event => this.handleClose(event);
+      this.ws.onerror = error => {
         this.isConnecting = false;
         this.handleError('WebSocket error', error);
       };
@@ -217,7 +218,11 @@ export default class EnhancedWebSocketClient {
   // ---------- authentication ----------
   private sendAuth(): void {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN) return;
-    const auth = { type: 'auth', session_key: this.config.sessionKey, device_id: this.config.deviceId };
+    const auth = {
+      type: 'auth',
+      session_key: this.config.sessionKey,
+      device_id: this.config.deviceId,
+    };
     this.ws.send(JSON.stringify(auth));
   }
 
@@ -237,7 +242,12 @@ export default class EnhancedWebSocketClient {
   private sendPing(): void {
     this.lastPingId = this.generateId();
     this.stats.pingsSent++;
-    this.sendMessage({ type: 'ping', timestamp: Date.now(), ping_id: this.lastPingId, device_id: this.config.deviceId });
+    this.sendMessage({
+      type: 'ping',
+      timestamp: Date.now(),
+      ping_id: this.lastPingId,
+      device_id: this.config.deviceId,
+    });
     this.pongTimer = setTimeout(() => {
       this.handleError('Pong timeout', new Error('No pong response received'));
       if (this.config.autoReconnect) {
@@ -260,10 +270,12 @@ export default class EnhancedWebSocketClient {
     if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.reconnectAttempts++;
     this.stats.reconnectCount++;
-    const delay = Math.min(
-      this.config.reconnectDelay * 2 ** (this.reconnectAttempts - 1),
-      30000,
-    ) + Math.random() * 1000;
+    const delay =
+      Math.min(
+        this.config.reconnectDelay * 2 ** (this.reconnectAttempts - 1),
+        30000
+      ) +
+      Math.random() * 1000;
     this.log(`Scheduling reconnect in ${Math.round(delay)}ms`);
     this.reconnectTimer = setTimeout(() => this.connect(), delay);
   }
@@ -274,7 +286,8 @@ export default class EnhancedWebSocketClient {
     if (!this.isConnected) {
       if (this.config.autoReconnect) {
         // queue message
-        if (this.messageQueue.length < WEBSOCKET_CONFIG.QUEUE_MESSAGE_LIMIT) this.messageQueue.push(message);
+        if (this.messageQueue.length < WEBSOCKET_CONFIG.QUEUE_MESSAGE_LIMIT)
+          this.messageQueue.push(message);
         if (!this.isConnecting) this.connect();
       }
       return false;
@@ -294,15 +307,26 @@ export default class EnhancedWebSocketClient {
     if (!this.messageQueue.length) return;
     const queued = [...this.messageQueue];
     this.messageQueue = [];
-    queued.forEach((m) => this.sendMessage(m));
+    queued.forEach(m => this.sendMessage(m));
   }
 
   private generateId(): string {
     return Math.random().toString(36).substr(2, 9);
   }
 
-  sendChatMessage(chatId: string, text: string, replyToId: string | null = null, tempId: string | null = null): boolean {
-    return this.sendMessage({ type: 'chat_message', chat_id: chatId, text, reply_to_id: replyToId, temp_id: tempId });
+  sendChatMessage(
+    chatId: string,
+    text: string,
+    replyToId: string | null = null,
+    tempId: string | null = null
+  ): boolean {
+    return this.sendMessage({
+      type: 'chat_message',
+      chat_id: chatId,
+      text,
+      reply_to_id: replyToId,
+      temp_id: tempId,
+    });
   }
 
   sendTypingStart(chatId: string): boolean {
@@ -314,19 +338,38 @@ export default class EnhancedWebSocketClient {
   }
 
   sendReadReceipt(messageId: string, chatId: string): boolean {
-    return this.sendMessage({ type: 'read_receipt', message_id: messageId, chat_id: chatId });
+    return this.sendMessage({
+      type: 'read_receipt',
+      message_id: messageId,
+      chat_id: chatId,
+    });
   }
 
   sendMessageDeleted(messageId: string, chatId: string): boolean {
-    return this.sendMessage({ type: 'message_deleted', message_id: messageId, chat_id: chatId });
+    return this.sendMessage({
+      type: 'message_deleted',
+      message_id: messageId,
+      chat_id: chatId,
+    });
   }
 
   getChats(): boolean {
     return this.sendMessage({ type: 'get_chats' });
   }
 
-  getMessages(chatId: string, limit: number = 30, beforeId: string | null = null, forceRefresh: boolean = false): boolean {
-    return this.sendMessage({ type: 'get_messages', chat_id: chatId, limit, before_id: beforeId, force_refresh: forceRefresh });
+  getMessages(
+    chatId: string,
+    limit: number = 30,
+    beforeId: string | null = null,
+    forceRefresh: boolean = false
+  ): boolean {
+    return this.sendMessage({
+      type: 'get_messages',
+      chat_id: chatId,
+      limit,
+      before_id: beforeId,
+      force_refresh: forceRefresh,
+    });
   }
 
   private handleMessage(event: MessageEvent): void {
@@ -374,11 +417,11 @@ export default class EnhancedWebSocketClient {
     this.isConnected = false;
     this.isConnecting = false;
     this.stopPingLoop();
-    
+
     if (this.config.autoReconnect && event.code !== 1000) {
       this.scheduleReconnect();
     }
-    
+
     this.emit('disconnected', { code: event.code, reason: event.reason });
   }
-} 
+}

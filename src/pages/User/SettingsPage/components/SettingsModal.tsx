@@ -15,7 +15,10 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material';
-import { Close as CloseIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  ArrowBack as ArrowBackIcon,
+} from '@mui/icons-material';
 
 // Ленивая загрузка компонентов с мемоизацией
 const ProfileUploader = lazy(() => import('./ProfileUploader'));
@@ -23,7 +26,9 @@ const ProfileInfoForm = lazy(() => import('./ProfileInfoForm'));
 const StatusForm = lazy(() => import('./StatusForm'));
 const NotificationsForm = lazy(() => import('./NotificationsForm'));
 const SocialLinksForm = lazy(() => import('./SocialLinksForm'));
-const ExperimentalFeaturesForm = lazy(() => import('./ExperimentalFeaturesForm'));
+const ExperimentalFeaturesForm = lazy(
+  () => import('./ExperimentalFeaturesForm')
+);
 const CustomizationForm = lazy(() => import('./CustomizationForm'));
 const SessionsForm = lazy(() => import('./SessionsForm'));
 const LinkedAccountsForm = lazy(() => import('./LinkedAccountsForm'));
@@ -33,13 +38,15 @@ const UsernamesForm = lazy(() => import('./UsernamesForm'));
 
 // Компонент загрузки
 const LoadingFallback = () => (
-  <Box sx={{ 
-    display: 'flex', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    minHeight: 200,
-    p: 3
-  }}>
+  <Box
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 200,
+      p: 3,
+    }}
+  >
     <CircularProgress size={40} />
   </Box>
 );
@@ -47,19 +54,21 @@ const LoadingFallback = () => (
 // Компонент статистики загрузки (только в режиме разработки)
 const LoadingStats = () => {
   if (process.env.NODE_ENV !== 'development') return null;
-  
+
   return (
-    <Box sx={{ 
-      position: 'fixed', 
-      bottom: 16, 
-      right: 16, 
-      background: 'rgba(0, 0, 0, 0.8)', 
-      color: 'white', 
-      padding: 1, 
-      borderRadius: 1, 
-      fontSize: '12px',
-      zIndex: 9999
-    }}>
+    <Box
+      sx={{
+        position: 'fixed',
+        bottom: 16,
+        right: 16,
+        background: 'rgba(0, 0, 0, 0.8)',
+        color: 'white',
+        padding: 1,
+        borderRadius: 1,
+        fontSize: '12px',
+        zIndex: 9999,
+      }}
+    >
       ⚡ Ленивая загрузка активна
     </Box>
   );
@@ -84,7 +93,22 @@ interface SettingsModalProps {
   onError?: (message: string) => void;
 }
 
-type Section = 'main' | 'avatar' | 'info' | 'profile' | 'notifications' | 'appearance' | 'security' | 'status' | 'socials' | 'experimental' | 'customization' | 'sessions' | 'linked' | 'badges' | 'usernames';
+type Section =
+  | 'main'
+  | 'avatar'
+  | 'info'
+  | 'profile'
+  | 'notifications'
+  | 'appearance'
+  | 'security'
+  | 'status'
+  | 'socials'
+  | 'experimental'
+  | 'customization'
+  | 'sessions'
+  | 'linked'
+  | 'badges'
+  | 'usernames';
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   open,
@@ -112,9 +136,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   useEffect(() => {
     if (activeSection) {
       setCurrentSection(activeSection as Section);
-      
-      if (activeSection === 'profile' || activeSection === 'info') {
 
+      if (activeSection === 'profile' || activeSection === 'info') {
       }
     }
   }, [activeSection]);
@@ -157,7 +180,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               onBannerChange={onBannerChange}
               onAvatarDelete={onAvatarDelete}
               onBannerDelete={onBannerDelete}
-
             />
           </Suspense>
         );
@@ -190,61 +212,50 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       case 'socials':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <SocialLinksForm 
-              profileData={profileData}
-              onSuccess={onSuccess} 
-            />
+            <SocialLinksForm profileData={profileData} onSuccess={onSuccess} />
           </Suspense>
         );
       case 'experimental':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <ExperimentalFeaturesForm 
-              onSuccess={onSuccess} 
-            />
+            <ExperimentalFeaturesForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'customization':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <CustomizationForm 
+            <CustomizationForm
               profileData={profileData}
               subscription={subscription}
-              onSuccess={onSuccess} 
+              onSuccess={onSuccess}
             />
           </Suspense>
         );
       case 'sessions':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <SessionsForm 
-              onSuccess={onSuccess} 
-            />
+            <SessionsForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'linked':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <LinkedAccountsForm 
+            <LinkedAccountsForm
               profileData={profileData}
-              onSuccess={onSuccess} 
+              onSuccess={onSuccess}
             />
           </Suspense>
         );
       case 'badges':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <BadgesForm 
-              onSuccess={onSuccess} 
-            />
+            <BadgesForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'usernames':
         return (
           <Suspense fallback={<LoadingFallback />}>
-            <UsernamesForm 
-              onSuccess={onSuccess} 
-            />
+            <UsernamesForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'notifications':
@@ -256,10 +267,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       case 'appearance':
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
+            <Typography variant='h6' sx={{ mb: 2, color: 'text.primary' }}>
               Настройки внешнего вида
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
               Раздел внешнего вида находится в разработке
             </Typography>
           </Box>
@@ -327,11 +338,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         ) : (
           <Box sx={{ width: 40 }} />
         )}
-        
-        <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+
+        <Typography
+          variant='h6'
+          sx={{ fontWeight: 600, color: 'text.primary' }}
+        >
           {getSectionTitle()}
         </Typography>
-        
+
         <IconButton onClick={handleClose} sx={{ color: 'text.primary' }}>
           <CloseIcon />
         </IconButton>
@@ -345,4 +359,4 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   );
 };
 
-export default SettingsModal; 
+export default SettingsModal;

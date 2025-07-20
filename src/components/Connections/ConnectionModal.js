@@ -16,7 +16,7 @@ import {
   alpha,
   useTheme,
   Modal,
-  InputAdornment
+  InputAdornment,
 } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CloseIcon from '@mui/icons-material/Close';
@@ -45,21 +45,27 @@ const ConnectionModal = ({ open, onClose }) => {
       const data = await response.json();
       if (data.success) {
         setConnections(data.connections || []);
-        
+
         // Находим ожидающий коннект (который мы отправили)
-        const pending = data.connections.find(conn => conn.connection_status === 'pending');
+        const pending = data.connections.find(
+          conn => conn.connection_status === 'pending'
+        );
         setPendingConnection(pending);
-        
+
         // Находим полученный коннект (который нам отправили)
-        const received = data.connections.find(conn => conn.connection_status === 'received');
+        const received = data.connections.find(
+          conn => conn.connection_status === 'received'
+        );
         setReceivedConnection(received);
-        
+
         // Определяем, какой вид показывать
         if (pending) {
           setView('pending');
         } else if (received) {
           setView('received');
-        } else if (data.connections.some(conn => conn.connection_status === 'confirmed')) {
+        } else if (
+          data.connections.some(conn => conn.connection_status === 'confirmed')
+        ) {
           setView('connected');
         } else {
           setView('search');
@@ -70,13 +76,15 @@ const ConnectionModal = ({ open, onClose }) => {
     }
   };
 
-  const searchUsers = async (query) => {
+  const searchUsers = async query => {
     if (!query) {
       setSearchResults([]);
       return;
     }
     try {
-      const response = await fetch(`/api/user/connections/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(
+        `/api/user/connections/search?query=${encodeURIComponent(query)}`
+      );
       const data = await response.json();
       if (data.results) {
         setSearchResults(data.results);
@@ -89,7 +97,7 @@ const ConnectionModal = ({ open, onClose }) => {
     }
   };
 
-  const addConnection = async (username) => {
+  const addConnection = async username => {
     setLoading(true);
     try {
       const response = await fetch('/api/user/connections/add', {
@@ -99,7 +107,7 @@ const ConnectionModal = ({ open, onClose }) => {
         },
         body: JSON.stringify({
           username,
-          connection_type: 'love'
+          connection_type: 'love',
         }),
       });
       const data = await response.json();
@@ -117,7 +125,7 @@ const ConnectionModal = ({ open, onClose }) => {
     }
   };
 
-  const removeConnection = async (username) => {
+  const removeConnection = async username => {
     setLoading(true);
     try {
       const response = await fetch('/api/user/connections/remove', {
@@ -127,7 +135,7 @@ const ConnectionModal = ({ open, onClose }) => {
         },
         body: JSON.stringify({
           username,
-          connection_type: 'love'
+          connection_type: 'love',
         }),
       });
       const data = await response.json();
@@ -170,7 +178,7 @@ const ConnectionModal = ({ open, onClose }) => {
   };
 
   // Функция для вычисления дней с confirmed_at
-  const getDaysSince = (dateStr) => {
+  const getDaysSince = dateStr => {
     if (!dateStr) return null;
     const date = new Date(dateStr);
     const now = new Date();
@@ -180,25 +188,36 @@ const ConnectionModal = ({ open, onClose }) => {
 
   const renderPendingView = () => (
     <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+      <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
         Ожидание подтверждения
       </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <Avatar 
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 2,
+        }}
+      >
+        <Avatar
           src={`/static/uploads/avatar/${pendingConnection.id}/${pendingConnection.photo}`}
           alt={pendingConnection.username}
           sx={{ width: 64, height: 64, mr: 2 }}
         />
         <Box>
-          <Typography sx={{ color: '#fff' }}>{pendingConnection.username}</Typography>
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{pendingConnection.name}</Typography>
+          <Typography sx={{ color: '#fff' }}>
+            {pendingConnection.username}
+          </Typography>
+          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            {pendingConnection.name}
+          </Typography>
         </Box>
       </Box>
       <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
         Ожидаем подтверждения от пользователя
       </Typography>
       <Button
-        variant="contained"
+        variant='contained'
         onClick={() => removeConnection(pendingConnection.username)}
         disabled={loading}
         sx={{
@@ -216,23 +235,34 @@ const ConnectionModal = ({ open, onClose }) => {
 
   const renderReceivedView = () => (
     <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+      <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
         Запрос на связь
       </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-        <Avatar 
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 2,
+        }}
+      >
+        <Avatar
           src={`/static/uploads/avatar/${receivedConnection.id}/${receivedConnection.photo}`}
           alt={receivedConnection.username}
           sx={{ width: 64, height: 64, mr: 2 }}
         />
         <Box>
-          <Typography sx={{ color: '#fff' }}>{receivedConnection.username}</Typography>
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{receivedConnection.name}</Typography>
+          <Typography sx={{ color: '#fff' }}>
+            {receivedConnection.username}
+          </Typography>
+          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            {receivedConnection.name}
+          </Typography>
         </Box>
       </Box>
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
         <Button
-          variant="contained"
+          variant='contained'
           onClick={() => addConnection(receivedConnection.username)}
           disabled={loading}
           sx={{
@@ -246,7 +276,7 @@ const ConnectionModal = ({ open, onClose }) => {
           Принять
         </Button>
         <Button
-          variant="contained"
+          variant='contained'
           onClick={() => removeConnection(receivedConnection.username)}
           disabled={loading}
           sx={{
@@ -265,10 +295,10 @@ const ConnectionModal = ({ open, onClose }) => {
 
   const renderConnectedView = () => (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2, color: '#fff' }}>
+      <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
         Ваша любовная связь
       </Typography>
-      {connections.map((connection) => {
+      {connections.map(connection => {
         const days = getDaysSince(connection.confirmed_at);
         return (
           <Box
@@ -288,18 +318,25 @@ const ConnectionModal = ({ open, onClose }) => {
               sx={{ width: 44, height: 44, mr: 2 }}
             />
             <Box sx={{ flex: 1 }}>
-              <Typography sx={{ color: '#fff' }}>{connection.username}</Typography>
-              <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>{connection.name}</Typography>
+              <Typography sx={{ color: '#fff' }}>
+                {connection.username}
+              </Typography>
+              <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                {connection.name}
+              </Typography>
               {connection.is_confirmed && days !== null && (
-                <Typography sx={{ color: '#D0BCFF', fontSize: '0.85rem', mt: 0.5 }}>
-                  Вместе {days} {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}
+                <Typography
+                  sx={{ color: '#D0BCFF', fontSize: '0.85rem', mt: 0.5 }}
+                >
+                  Вместе {days}{' '}
+                  {days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'}
                 </Typography>
               )}
             </Box>
             {connection.is_confirmed ? (
               <>
                 <IconButton
-                  onClick={(e) => handleMenuOpen(e, connection.id)}
+                  onClick={e => handleMenuOpen(e, connection.id)}
                   sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
                   <MoreVertIcon />
@@ -326,8 +363,8 @@ const ConnectionModal = ({ open, onClose }) => {
               <Button
                 onClick={() => removeConnection(connection.username)}
                 disabled={loading}
-                variant="outlined"
-                color="error"
+                variant='outlined'
+                color='error'
                 sx={{ ml: 2, minWidth: 120 }}
               >
                 Убрать соединение
@@ -343,9 +380,9 @@ const ConnectionModal = ({ open, onClose }) => {
     <>
       <TextField
         fullWidth
-        placeholder="Поиск пользователей..."
+        placeholder='Поиск пользователей...'
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={e => setSearchQuery(e.target.value)}
         sx={{
           mb: 2,
           '& .MuiOutlinedInput-root': {
@@ -356,34 +393,36 @@ const ConnectionModal = ({ open, onClose }) => {
         }}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position='start'>
               <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
             </InputAdornment>
           ),
         }}
       />
 
-      <Box sx={{ 
-        flex: 1, 
-        overflow: 'auto',
-        '&::-webkit-scrollbar': {
-          width: '8px',
-        },
-        '&::-webkit-scrollbar-track': {
-          background: 'rgba(255, 255, 255, 0.1)',
-          borderRadius: '4px',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          background: 'rgba(255, 255, 255, 0.2)',
-          borderRadius: '4px',
-          '&:hover': {
-            background: 'rgba(255, 255, 255, 0.3)',
+      <Box
+        sx={{
+          flex: 1,
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
           },
-        },
-      }}>
+          '&::-webkit-scrollbar-track': {
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.3)',
+            },
+          },
+        }}
+      >
         {searchQuery && searchResults.length > 0 && (
           <List>
-            {searchResults.map((user) => (
+            {searchResults.map(user => (
               <ListItem
                 key={user.id}
                 sx={{
@@ -396,23 +435,23 @@ const ConnectionModal = ({ open, onClose }) => {
                 }}
               >
                 <ListItemAvatar>
-                  <Avatar 
+                  <Avatar
                     src={`/static/uploads/avatar/${user.id}/${user.photo}`}
                     alt={user.username}
                   />
                 </ListItemAvatar>
-                <ListItemText 
+                <ListItemText
                   primary={user.username}
                   secondary={user.name}
-                  sx={{ 
+                  sx={{
                     color: '#fff',
                     '& .MuiListItemText-secondary': {
-                      color: 'rgba(255, 255, 255, 0.7)'
-                    }
+                      color: 'rgba(255, 255, 255, 0.7)',
+                    },
                   }}
                 />
                 <Button
-                  variant="contained"
+                  variant='contained'
                   onClick={() => addConnection(user.username)}
                   disabled={loading || user.is_connected}
                   sx={{
@@ -431,7 +470,13 @@ const ConnectionModal = ({ open, onClose }) => {
         )}
 
         {searchQuery && searchResults.length === 0 && (
-          <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center', py: 2 }}>
+          <Typography
+            sx={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              textAlign: 'center',
+              py: 2,
+            }}
+          >
             Пользователи не найдены
           </Typography>
         )}
@@ -446,7 +491,7 @@ const ConnectionModal = ({ open, onClose }) => {
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="connection-modal"
+      aria-labelledby='connection-modal'
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -466,7 +511,8 @@ const ConnectionModal = ({ open, onClose }) => {
           position: 'relative',
           overflow: 'hidden',
           zIndex: 1300,
-          backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
         }}
       >
         <IconButton
@@ -492,7 +538,11 @@ const ConnectionModal = ({ open, onClose }) => {
           onClose={() => setError(null)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         >
-          <Alert onClose={() => setError(null)} severity="error" sx={{ width: '100%' }}>
+          <Alert
+            onClose={() => setError(null)}
+            severity='error'
+            sx={{ width: '100%' }}
+          >
             {error}
           </Alert>
         </Snackbar>
@@ -501,4 +551,4 @@ const ConnectionModal = ({ open, onClose }) => {
   );
 };
 
-export default ConnectionModal; 
+export default ConnectionModal;

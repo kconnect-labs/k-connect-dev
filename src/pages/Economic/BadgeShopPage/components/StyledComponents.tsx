@@ -37,13 +37,13 @@ export const StyledCard = styled(Card)(({ theme }) => ({
     },
     '& .badge-overlay': {
       opacity: 1,
-    }
+    },
   },
   [theme.breakpoints.down('sm')]: {
     '& .MuiCardMedia-root': {
       height: '150px',
-    }
-  }
+    },
+  },
 }));
 
 export const BadgeCardHeader = styled(Box)(({ theme }) => ({
@@ -71,7 +71,7 @@ export const BadgeCardContent = styled(CardContent)(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1),
-  }
+  },
 }));
 
 // Typography Components
@@ -83,7 +83,7 @@ export const BadgeTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(0.5),
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.85rem',
-  }
+  },
 }));
 
 export const BadgeDescription = styled(Typography)(({ theme }) => ({
@@ -99,7 +99,7 @@ export const BadgeDescription = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.75rem',
     marginBottom: theme.spacing(1),
-  }
+  },
 }));
 
 export const BadgeCreatorName = styled(Typography)(({ theme }) => ({
@@ -107,7 +107,7 @@ export const BadgeCreatorName = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.7rem',
-  }
+  },
 }));
 
 export const BadgePriceText = styled(Typography)(({ theme }) => ({
@@ -116,7 +116,7 @@ export const BadgePriceText = styled(Typography)(({ theme }) => ({
   fontSize: '0.9rem',
   [theme.breakpoints.down('sm')]: {
     fontSize: '0.8rem',
-  }
+  },
 }));
 
 // Layout Components
@@ -128,7 +128,7 @@ export const BadgeCreator = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1.5),
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(1),
-  }
+  },
 }));
 
 export const BadgeFooter = styled(Box)(({ theme }) => ({
@@ -140,7 +140,7 @@ export const BadgeFooter = styled(Box)(({ theme }) => ({
   borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   [theme.breakpoints.down('sm')]: {
     paddingTop: theme.spacing(0.5),
-  }
+  },
 }));
 
 export const BadgePrice = styled(Box)(({ theme }) => ({
@@ -149,7 +149,7 @@ export const BadgePrice = styled(Box)(({ theme }) => ({
   gap: theme.spacing(0.5),
   [theme.breakpoints.down('sm')]: {
     gap: theme.spacing(0.25),
-  }
+  },
 }));
 
 // Avatar Components
@@ -160,7 +160,7 @@ export const BadgeCreatorAvatar = styled(Avatar)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     width: 20,
     height: 20,
-  }
+  },
 }));
 
 // Button Components
@@ -185,7 +185,7 @@ export const BadgeBuyButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     padding: '2px 8px',
     fontSize: '0.7rem',
-  }
+  },
 }));
 
 export const StyledButton = styled(Button)(({ theme }) => ({
@@ -240,7 +240,7 @@ export const StyledTabButton = styled(Button)(({ theme }) => ({
     minHeight: 36,
     padding: '0 12px',
     margin: '0 1px',
-  }
+  },
 }));
 
 export const StyledBalanceChip = styled(Box)(({ theme }) => ({
@@ -272,7 +272,7 @@ export const StyledBalanceChip = styled(Box)(({ theme }) => ({
     minHeight: 36,
     padding: '6px 12px',
     margin: '0 1px',
-  }
+  },
 }));
 
 export const StyledInfoBlock = styled(Box)(({ theme }) => ({
@@ -296,7 +296,7 @@ export const StyledInfoBlock = styled(Box)(({ theme }) => ({
     minHeight: 44,
     flexDirection: 'row',
     gap: theme.spacing(1.5),
-  }
+  },
 }));
 
 // Chip Components
@@ -330,38 +330,46 @@ export const BalanceChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-export const CopiesChip = styled(Chip)<{ issoldout?: string }>(({ theme, issoldout }) => ({
-  position: 'absolute',
-  top: 8,
-  right: 8,
-  height: 24,
-  borderRadius: 12,
-  fontWeight: 500,
-  backgroundColor: issoldout === 'true' 
-    ? alpha(theme.palette.error.main, 0.1)
-    : alpha(theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee', 0.1),
-  color: issoldout === 'true'
-    ? theme.palette.error.main
-    : theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee',
-  border: `1px solid ${issoldout === 'true' 
-    ? alpha(theme.palette.error.main, 0.2) 
-    : alpha(theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee', 0.2)}`,
-  backdropFilter: 'blur(4px)',
-  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-  '& .MuiChip-label': {
-    fontSize: '0.7rem',
-    padding: '0 8px',
-    letterSpacing: '0.02em',
-  },
-  [theme.breakpoints.down('sm')]: {
-    height: 20,
-    top: 6,
-    right: 6,
+export const CopiesChip = styled(Chip)<{ issoldout?: string }>(
+  ({ theme, issoldout }) => ({
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    height: 24,
+    borderRadius: 12,
+    fontWeight: 500,
+    backgroundColor:
+      issoldout === 'true'
+        ? alpha(theme.palette.error.main, 0.1)
+        : alpha(theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee', 0.1),
+    color:
+      issoldout === 'true'
+        ? theme.palette.error.main
+        : theme.palette.mode === 'dark'
+          ? '#d0bcff'
+          : '#6200ee',
+    border: `1px solid ${
+      issoldout === 'true'
+        ? alpha(theme.palette.error.main, 0.2)
+        : alpha(theme.palette.mode === 'dark' ? '#d0bcff' : '#6200ee', 0.2)
+    }`,
+    backdropFilter: 'blur(4px)',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
     '& .MuiChip-label': {
-      fontSize: '0.65rem',
-    }
-  }
-}));
+      fontSize: '0.7rem',
+      padding: '0 8px',
+      letterSpacing: '0.02em',
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: 20,
+      top: 6,
+      right: 6,
+      '& .MuiChip-label': {
+        fontSize: '0.65rem',
+      },
+    },
+  })
+);
 
 // Dialog Components
 export const BadgeDialog = styled(Dialog)(({ theme }) => ({
@@ -384,27 +392,29 @@ export const BadgeDialog = styled(Dialog)(({ theme }) => ({
     background: 'rgba(18, 18, 18, 0.8)',
     backdropFilter: 'blur(10px)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(255, 255, 255, 0.1)'
+    border: '1px solid rgba(255, 255, 255, 0.1)',
   },
   '& .MuiBackdrop-root': {
-    zIndex: 999999
-  }
+    zIndex: 999999,
+  },
 }));
 
 export const StyledDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialog-container": {
-    zIndex: 999999999999
+  '& .MuiDialog-container': {
+    zIndex: 999999999999,
   },
-  "& .MuiDialog-paper": {
+  '& .MuiDialog-paper': {
     borderRadius: 16,
-    background: theme.palette.mode === 'dark' 
-      ? 'rgba(18, 18, 18, 0.8)' 
-      : 'rgba(255, 255, 255, 0.8)',
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(18, 18, 18, 0.8)'
+        : 'rgba(255, 255, 255, 0.8)',
     backdropFilter: 'blur(10px)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-    border: theme.palette.mode === 'dark' 
-      ? '1px solid rgba(255, 255, 255, 0.1)'
-      : '1px solid rgba(208, 188, 255, 0.3)',
+    border:
+      theme.palette.mode === 'dark'
+        ? '1px solid rgba(255, 255, 255, 0.1)'
+        : '1px solid rgba(208, 188, 255, 0.3)',
     overflow: 'hidden',
     maxWidth: '450px',
     width: '100%',
@@ -416,10 +426,10 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
       borderRadius: 0,
     },
   },
-  "& .MuiDialogTitle-root": {
+  '& .MuiDialogTitle-root': {
     fontSize: '1.2rem',
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 }));
 
 // Form Components
@@ -445,7 +455,7 @@ export const BadgeGrid = styled(Grid)(({ theme }) => ({
   padding: theme.spacing(2),
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1),
-  }
+  },
 }));
 
 export const PageContainer = styled(Container)(({ theme }) => ({
@@ -454,7 +464,7 @@ export const PageContainer = styled(Container)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(8),
-  }
+  },
 }));
 
 // Image Components
@@ -478,7 +488,8 @@ export const BadgeOverlay = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-  background: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%)',
+  background:
+    'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%)',
   display: 'flex',
   alignItems: 'flex-end',
   justifyContent: 'center',
@@ -496,5 +507,5 @@ export const BadgeDialogImage = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   [theme.breakpoints.down('sm')]: {
     maxHeight: '150px',
-  }
-})); 
+  },
+}));

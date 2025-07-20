@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { 
-  Box, 
+import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -27,7 +27,7 @@ import {
   Skeleton,
   Snackbar,
   Alert,
-  alpha
+  alpha,
 } from '@mui/material';
 import { ThemeSettingsContext } from '../../App';
 import CloseIcon from '@mui/icons-material/Close';
@@ -40,7 +40,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-
 
 const FullScreenDialog = styled(Dialog)(({ theme }) => ({
   '&&': {
@@ -66,8 +65,8 @@ const FullScreenDialog = styled(Dialog)(({ theme }) => ({
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
       border: '1px solid rgba(255, 255, 255, 0.1) !important',
-    }
-  }
+    },
+  },
 }));
 
 const DialogHeader = styled(DialogTitle)(({ theme }) => ({
@@ -92,17 +91,19 @@ const CoverUploadBox = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
-  backgroundColor: theme.palette.mode === 'light'
-    ? alpha(theme.palette.grey[300], 0.3)
-    : theme.palette.mode === 'contrast'
-      ? 'rgba(0, 0, 0, 0.4)'
-      : 'rgba(0, 0, 0, 0.3)',
-  '&:hover': {
-    backgroundColor: theme.palette.mode === 'light'
-      ? alpha(theme.palette.grey[300], 0.5)
+  backgroundColor:
+    theme.palette.mode === 'light'
+      ? alpha(theme.palette.grey[300], 0.3)
       : theme.palette.mode === 'contrast'
-        ? 'rgba(0, 0, 0, 0.6)'
-        : 'rgba(0, 0, 0, 0.5)',
+        ? 'rgba(0, 0, 0, 0.4)'
+        : 'rgba(0, 0, 0, 0.3)',
+  '&:hover': {
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.grey[300], 0.5)
+        : theme.palette.mode === 'contrast'
+          ? 'rgba(0, 0, 0, 0.6)'
+          : 'rgba(0, 0, 0, 0.5)',
     borderColor: theme.palette.primary.main,
   },
 }));
@@ -120,11 +121,12 @@ const TrackSearchInput = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   '& .MuiOutlinedInput-root': {
     borderRadius: theme.spacing(3),
-    backgroundColor: theme.palette.mode === 'light'
-      ? alpha(theme.palette.grey[300], 0.2)
-      : theme.palette.mode === 'contrast'
-        ? 'rgba(255, 255, 255, 0.03)'
-        : 'rgba(255, 255, 255, 0.05)',
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.grey[300], 0.2)
+        : theme.palette.mode === 'contrast'
+          ? 'rgba(255, 255, 255, 0.03)'
+          : 'rgba(255, 255, 255, 0.05)',
   },
 }));
 
@@ -133,14 +135,23 @@ const TrackItem = styled(ListItem)(({ theme, selected, isPlaying }) => ({
   marginBottom: theme.spacing(0.5),
   padding: theme.spacing(1, 1.5),
   backgroundColor: isPlaying
-    ? alpha(theme.palette.primary.main, theme.palette.mode === 'light' ? 0.15 : 0.25)
-    : selected 
-      ? alpha(theme.palette.primary.main, theme.palette.mode === 'light' ? 0.08 : 0.16)
+    ? alpha(
+        theme.palette.primary.main,
+        theme.palette.mode === 'light' ? 0.15 : 0.25
+      )
+    : selected
+      ? alpha(
+          theme.palette.primary.main,
+          theme.palette.mode === 'light' ? 0.08 : 0.16
+        )
       : 'transparent',
   '&:hover': {
     backgroundColor: isPlaying
-      ? alpha(theme.palette.primary.main, theme.palette.mode === 'light' ? 0.2 : 0.3)
-      : theme.palette.mode === 'light' 
+      ? alpha(
+          theme.palette.primary.main,
+          theme.palette.mode === 'light' ? 0.2 : 0.3
+        )
+      : theme.palette.mode === 'light'
         ? alpha(theme.palette.grey[300], 0.3)
         : alpha(theme.palette.common.white, 0.08),
   },
@@ -160,15 +171,17 @@ const ScrollableContent = styled(Box)(({ theme }) => ({
     width: '6px',
   },
   '&::-webkit-scrollbar-track': {
-    backgroundColor: theme.palette.mode === 'light' 
-      ? alpha(theme.palette.grey[300], 0.3)
-      : alpha(theme.palette.common.white, 0.05),
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.grey[300], 0.3)
+        : alpha(theme.palette.common.white, 0.05),
     borderRadius: '3px',
   },
   '&::-webkit-scrollbar-thumb': {
-    backgroundColor: theme.palette.mode === 'light' 
-      ? alpha(theme.palette.grey[500], 0.4)
-      : alpha(theme.palette.common.white, 0.2),
+    backgroundColor:
+      theme.palette.mode === 'light'
+        ? alpha(theme.palette.grey[500], 0.4)
+        : alpha(theme.palette.common.white, 0.2),
     borderRadius: '3px',
   },
 }));
@@ -190,20 +203,20 @@ const PlayingIndicator = styled(Box)(({ theme }) => ({
   '@keyframes pulse': {
     '0%': { opacity: 0.6 },
     '50%': { opacity: 1 },
-    '100%': { opacity: 0.6 }
-  }
+    '100%': { opacity: 0.6 },
+  },
 }));
 
-const PlaylistModal = ({ 
-  open, 
-  onClose, 
-  playlist = null, 
+const PlaylistModal = ({
+  open,
+  onClose,
+  playlist = null,
   onSave,
   onAddTracks,
   onRemoveTrack,
   onDelete,
   isLoading = false,
-  nowPlaying = null
+  nowPlaying = null,
 }) => {
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
@@ -220,15 +233,16 @@ const PlaylistModal = ({
   const [searchResults, setSearchResults] = useState([]);
   const [playlistTracks, setPlaylistTracks] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [notification, setNotification] = useState({ open: false, message: '', severity: 'success' });
-  
-  
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
+
   const isEditing = !!playlist;
 
-  
   useEffect(() => {
     if (open && playlist) {
-      
       setName(playlist.name || '');
       setDescription(playlist.description || '');
       setIsPublic(playlist.is_public !== false);
@@ -236,7 +250,6 @@ const PlaylistModal = ({
       setPlaylistTracks(playlist.tracks || []);
       setSelectedTracks([]);
     } else if (open) {
-      
       setName('');
       setDescription('');
       setIsPublic(true);
@@ -248,8 +261,7 @@ const PlaylistModal = ({
     setActiveTab(0);
   }, [open, playlist]);
 
-  
-  const handleCoverSelect = (event) => {
+  const handleCoverSelect = event => {
     const file = event.target.files[0];
     if (file) {
       setCoverFile(file);
@@ -261,8 +273,7 @@ const PlaylistModal = ({
     }
   };
 
-  
-  const searchTracks = useCallback(async (query) => {
+  const searchTracks = useCallback(async query => {
     if (!query || query.length < 2) {
       setSearchResults([]);
       return;
@@ -270,7 +281,9 @@ const PlaylistModal = ({
 
     setIsSearching(true);
     try {
-      const response = await fetch(`/api/music/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(
+        `/api/music/search?query=${encodeURIComponent(query)}`
+      );
       const data = await response.json();
       setSearchResults(data || []);
     } catch (error) {
@@ -278,14 +291,13 @@ const PlaylistModal = ({
       setNotification({
         open: true,
         message: 'Ошибка при поиске треков',
-        severity: 'error'
+        severity: 'error',
       });
     } finally {
       setIsSearching(false);
     }
   }, []);
 
-  
   useEffect(() => {
     const timer = setTimeout(() => {
       searchTracks(searchQuery);
@@ -293,8 +305,7 @@ const PlaylistModal = ({
     return () => clearTimeout(timer);
   }, [searchQuery, searchTracks]);
 
-  
-  const toggleTrackSelection = (track) => {
+  const toggleTrackSelection = track => {
     setSelectedTracks(prev => {
       const isSelected = prev.some(t => t.id === track.id);
       if (isSelected) {
@@ -305,13 +316,12 @@ const PlaylistModal = ({
     });
   };
 
-  
   const handleSave = async () => {
     if (!name.trim()) {
       setNotification({
         open: true,
         message: 'Название плейлиста обязательно',
-        severity: 'error'
+        severity: 'error',
       });
       return;
     }
@@ -320,13 +330,12 @@ const PlaylistModal = ({
     formData.append('name', name);
     formData.append('description', description);
     formData.append('is_public', isPublic.toString());
-    
+
     if (coverFile) {
       formData.append('cover', coverFile);
     }
 
     if (!isEditing) {
-      
       const trackIds = selectedTracks.map(track => track.id);
       formData.append('track_ids', JSON.stringify(trackIds));
     }
@@ -336,19 +345,18 @@ const PlaylistModal = ({
       description,
       isPublic,
       hasCover: !!coverFile,
-      trackCount: !isEditing ? selectedTracks.length : null
+      trackCount: !isEditing ? selectedTracks.length : null,
     });
 
     onSave(formData, isEditing ? playlist.id : null);
   };
 
-  
   const handleAddTracks = () => {
     if (selectedTracks.length === 0) {
       setNotification({
         open: true,
         message: 'Выберите треки для добавления',
-        severity: 'info'
+        severity: 'info',
       });
       return;
     }
@@ -356,26 +364,22 @@ const PlaylistModal = ({
     const trackIds = selectedTracks.map(track => track.id);
     onAddTracks(playlist.id, trackIds);
     setSelectedTracks([]);
-    setActiveTab(0); 
+    setActiveTab(0);
   };
 
-  
-  const handleRemoveTrack = (trackId) => {
+  const handleRemoveTrack = trackId => {
     onRemoveTrack(playlist.id, trackId);
   };
 
-  
   const handleCloseNotification = () => {
     setNotification({ ...notification, open: false });
   };
 
-  
-  const isTrackInPlaylist = (trackId) => {
+  const isTrackInPlaylist = trackId => {
     return playlistTracks.some(track => track.id === trackId);
   };
 
-  
-  const isTrackPlaying = (track) => {
+  const isTrackPlaying = track => {
     return nowPlaying && nowPlaying.id === track.id;
   };
 
@@ -388,30 +392,42 @@ const PlaylistModal = ({
       fullWidth={false}
     >
       <DialogHeader>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
+        <Typography variant='h6' sx={{ fontWeight: 600 }}>
           {isEditing ? 'Редактировать плейлист' : 'Создать плейлист'}
         </Typography>
-        <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
+        <IconButton
+          edge='end'
+          color='inherit'
+          onClick={onClose}
+          aria-label='close'
+        >
           <CloseIcon />
         </IconButton>
       </DialogHeader>
 
       {isEditing && (
-        <Tabs 
-          value={activeTab} 
+        <Tabs
+          value={activeTab}
           onChange={(_, newValue) => setActiveTab(newValue)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
+          indicatorColor='primary'
+          textColor='primary'
+          variant='fullWidth'
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
-          <Tab label="Плейлист" />
-          <Tab label="Добавить треки" />
+          <Tab label='Плейлист' />
+          <Tab label='Добавить треки' />
         </Tabs>
       )}
 
       {isLoading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '400px',
+          }}
+        >
           <CircularProgress />
         </Box>
       ) : (
@@ -419,55 +435,69 @@ const PlaylistModal = ({
           {/* Playlist Info Tab */}
           {(!isEditing || activeTab === 0) && (
             <Box sx={{ mt: 2 }}>
-              <Box sx={{ 
-                display: 'flex', 
-                flexDirection: isMobile ? 'column' : 'row', 
-                gap: 3,
-                alignItems: 'flex-start'
-              }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : 'row',
+                  gap: 3,
+                  alignItems: 'flex-start',
+                }}
+              >
                 {/* Cover Upload */}
-                <Box sx={{ 
-                  width: isMobile ? '100%' : '200px', 
-                  flexShrink: 0,
-                  position: 'relative'
-                }}>
+                <Box
+                  sx={{
+                    width: isMobile ? '100%' : '200px',
+                    flexShrink: 0,
+                    position: 'relative',
+                  }}
+                >
                   {coverPreview ? (
                     <CoverPreview>
-                      <img 
-                        src={coverPreview} 
-                        alt="Playlist cover" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      <img
+                        src={coverPreview}
+                        alt='Playlist cover'
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
                       />
-                      <IconButton 
-                        sx={{ 
-                          position: 'absolute', 
-                          bottom: 8, 
+                      <IconButton
+                        sx={{
+                          position: 'absolute',
+                          bottom: 8,
                           right: 8,
                           backgroundColor: 'rgba(0,0,0,0.5)',
                           color: '#fff',
-                          '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' }
+                          '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' },
                         }}
-                        component="label"
+                        component='label'
                       >
                         <input
-                          type="file"
+                          type='file'
                           hidden
-                          accept="image/*"
+                          accept='image/*'
                           onChange={handleCoverSelect}
                         />
                         <AddPhotoAlternateOutlinedIcon />
                       </IconButton>
                     </CoverPreview>
                   ) : (
-                    <CoverUploadBox component="label">
+                    <CoverUploadBox component='label'>
                       <input
-                        type="file"
+                        type='file'
                         hidden
-                        accept="image/*"
+                        accept='image/*'
                         onChange={handleCoverSelect}
                       />
-                      <AddPhotoAlternateOutlinedIcon sx={{ fontSize: 40, color: theme.palette.primary.main, mb: 1 }} />
-                      <Typography variant="body2" align="center">
+                      <AddPhotoAlternateOutlinedIcon
+                        sx={{
+                          fontSize: 40,
+                          color: theme.palette.primary.main,
+                          mb: 1,
+                        }}
+                      />
+                      <Typography variant='body2' align='center'>
                         Выберите обложку для плейлиста
                       </Typography>
                     </CoverUploadBox>
@@ -478,34 +508,34 @@ const PlaylistModal = ({
                 <Box sx={{ flex: 1 }}>
                   <TextField
                     fullWidth
-                    label="Название плейлиста"
-                    variant="outlined"
+                    label='Название плейлиста'
+                    variant='outlined'
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    margin="normal"
+                    onChange={e => setName(e.target.value)}
+                    margin='normal'
                     required
                     sx={{ mb: 2 }}
                   />
                   <TextField
                     fullWidth
-                    label="Описание"
-                    variant="outlined"
+                    label='Описание'
+                    variant='outlined'
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    margin="normal"
+                    onChange={e => setDescription(e.target.value)}
+                    margin='normal'
                     multiline
                     rows={3}
                     sx={{ mb: 2 }}
                   />
                   <FormControlLabel
                     control={
-                      <Switch 
-                        checked={isPublic} 
-                        onChange={(e) => setIsPublic(e.target.checked)} 
-                        color="primary"
+                      <Switch
+                        checked={isPublic}
+                        onChange={e => setIsPublic(e.target.checked)}
+                        color='primary'
                       />
                     }
-                    label="Публичный плейлист"
+                    label='Публичный плейлист'
                     sx={{ mt: 1 }}
                   />
                 </Box>
@@ -514,76 +544,152 @@ const PlaylistModal = ({
               {/* Current Playlist Tracks */}
               {isEditing && playlistTracks.length > 0 && (
                 <Box sx={{ mt: 4 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                  <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
                     Треки в плейлисте ({playlistTracks.length})
                   </Typography>
-                  <Paper 
-                    variant="outlined" 
-                    sx={{ 
-                      borderRadius: theme => theme.breakpoints.down('sm') ? theme.spacing(1) : theme.spacing(2), 
+                  <Paper
+                    variant='outlined'
+                    sx={{
+                      borderRadius: theme =>
+                        theme.breakpoints.down('sm')
+                          ? theme.spacing(1)
+                          : theme.spacing(2),
                       overflow: 'hidden',
                       maxHeight: '400px',
-                      mx: 1
+                      mx: 1,
                     }}
                   >
                     <List sx={{ overflow: 'auto', maxHeight: '100%' }}>
                       {playlistTracks.map((track, index) => {
                         const playing = isTrackPlaying(track);
                         return (
-                          <TrackItem 
-                            key={track.id} 
+                          <TrackItem
+                            key={track.id}
                             divider={index !== playlistTracks.length - 1}
                             isPlaying={playing}
                             sx={{
                               '&:hover': {
                                 backgroundColor: playing
-                                  ? (theme.palette.mode === 'dark' ? 'rgba(208, 188, 255, 0.2)' : 'rgba(208, 188, 255, 0.3)')
-                                  : theme.palette.mode === 'dark' 
-                                    ? 'rgba(255, 255, 255, 0.05)' 
-                                    : 'rgba(0, 0, 0, 0.03)'
-                              }
+                                  ? theme.palette.mode === 'dark'
+                                    ? 'rgba(208, 188, 255, 0.2)'
+                                    : 'rgba(208, 188, 255, 0.3)'
+                                  : theme.palette.mode === 'dark'
+                                    ? 'rgba(255, 255, 255, 0.05)'
+                                    : 'rgba(0, 0, 0, 0.03)',
+                              },
                             }}
                           >
-                            <Box sx={{ display: 'flex', alignItems: 'center', width: '24px', mr: 1, flexShrink: 0 }}>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                width: '24px',
+                                mr: 1,
+                                flexShrink: 0,
+                              }}
+                            >
                               {playing ? (
                                 <PlayingIndicator>
-                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                    <rect x="4" y="4" width="3" height="16" rx="1.5">
-                                      <animate attributeName="height" from="16" to="6" dur="0.6s" begin="0s" repeatCount="indefinite" values="16;6;16" keyTimes="0;0.5;1" />
+                                  <svg
+                                    width='16'
+                                    height='16'
+                                    viewBox='0 0 24 24'
+                                    fill='currentColor'
+                                  >
+                                    <rect
+                                      x='4'
+                                      y='4'
+                                      width='3'
+                                      height='16'
+                                      rx='1.5'
+                                    >
+                                      <animate
+                                        attributeName='height'
+                                        from='16'
+                                        to='6'
+                                        dur='0.6s'
+                                        begin='0s'
+                                        repeatCount='indefinite'
+                                        values='16;6;16'
+                                        keyTimes='0;0.5;1'
+                                      />
                                     </rect>
-                                    <rect x="10.5" y="4" width="3" height="16" rx="1.5">
-                                      <animate attributeName="height" from="6" to="16" dur="0.6s" begin="0.1s" repeatCount="indefinite" values="6;16;6" keyTimes="0;0.5;1" />
+                                    <rect
+                                      x='10.5'
+                                      y='4'
+                                      width='3'
+                                      height='16'
+                                      rx='1.5'
+                                    >
+                                      <animate
+                                        attributeName='height'
+                                        from='6'
+                                        to='16'
+                                        dur='0.6s'
+                                        begin='0.1s'
+                                        repeatCount='indefinite'
+                                        values='6;16;6'
+                                        keyTimes='0;0.5;1'
+                                      />
                                     </rect>
-                                    <rect x="17" y="4" width="3" height="16" rx="1.5">
-                                      <animate attributeName="height" from="16" to="6" dur="0.6s" begin="0.2s" repeatCount="indefinite" values="16;6;16" keyTimes="0;0.5;1" />
+                                    <rect
+                                      x='17'
+                                      y='4'
+                                      width='3'
+                                      height='16'
+                                      rx='1.5'
+                                    >
+                                      <animate
+                                        attributeName='height'
+                                        from='16'
+                                        to='6'
+                                        dur='0.6s'
+                                        begin='0.2s'
+                                        repeatCount='indefinite'
+                                        values='16;6;16'
+                                        keyTimes='0;0.5;1'
+                                      />
                                     </rect>
                                   </svg>
                                 </PlayingIndicator>
                               ) : (
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography
+                                  variant='body2'
+                                  color='text.secondary'
+                                >
                                   {index + 1}
                                 </Typography>
                               )}
                             </Box>
                             <ListItemAvatar sx={{ minWidth: 50 }}>
-                              <TrackAvatar src={track.cover_path} alt={track.title}>
+                              <TrackAvatar
+                                src={track.cover_path}
+                                alt={track.title}
+                              >
                                 <MusicNoteOutlinedIcon />
                               </TrackAvatar>
                             </ListItemAvatar>
                             <ListItemText
                               primary={track.title}
                               secondary={track.artist}
-                              primaryTypographyProps={{ 
-                                noWrap: true, 
-                                fontWeight: 500, 
+                              primaryTypographyProps={{
+                                noWrap: true,
+                                fontWeight: 500,
                                 title: track.title,
-                                color: playing ? 'primary' : 'inherit'
+                                color: playing ? 'primary' : 'inherit',
                               }}
-                              secondaryTypographyProps={{ noWrap: true, title: track.artist }}
+                              secondaryTypographyProps={{
+                                noWrap: true,
+                                title: track.artist,
+                              }}
                               sx={{ mr: 1 }}
                             />
                             <ListItemSecondaryAction>
-                              <IconButton edge="end" size="small" onClick={() => handleRemoveTrack(track.id)}>
+                              <IconButton
+                                edge='end'
+                                size='small'
+                                onClick={() => handleRemoveTrack(track.id)}
+                              >
                                 <RemoveCircleOutlineIcon />
                               </IconButton>
                             </ListItemSecondaryAction>
@@ -598,31 +704,53 @@ const PlaylistModal = ({
               {/* Selected Tracks (for new playlist) */}
               {!isEditing && selectedTracks.length > 0 && (
                 <Box sx={{ mt: 3 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography
+                    variant='subtitle1'
+                    sx={{ fontWeight: 600, mb: 1 }}
+                  >
                     Выбранные треки ({selectedTracks.length})
                   </Typography>
-                  <Paper variant="outlined" sx={{ 
-                    borderRadius: theme => theme.breakpoints.down('sm') ? theme.spacing(1) : theme.spacing(2), 
-                    overflow: 'hidden',
-                    mx: 1
-                  }}>
+                  <Paper
+                    variant='outlined'
+                    sx={{
+                      borderRadius: theme =>
+                        theme.breakpoints.down('sm')
+                          ? theme.spacing(1)
+                          : theme.spacing(2),
+                      overflow: 'hidden',
+                      mx: 1,
+                    }}
+                  >
                     <List sx={{ maxHeight: '200px', overflow: 'auto' }}>
-                      {selectedTracks.map((track) => (
+                      {selectedTracks.map(track => (
                         <TrackItem key={track.id} divider>
                           <ListItemAvatar sx={{ minWidth: 50 }}>
-                            <TrackAvatar src={track.cover_path} alt={track.title}>
+                            <TrackAvatar
+                              src={track.cover_path}
+                              alt={track.title}
+                            >
                               <MusicNoteOutlinedIcon />
                             </TrackAvatar>
                           </ListItemAvatar>
                           <ListItemText
                             primary={track.title}
                             secondary={track.artist}
-                            primaryTypographyProps={{ noWrap: true, title: track.title }}
-                            secondaryTypographyProps={{ noWrap: true, title: track.artist }}
+                            primaryTypographyProps={{
+                              noWrap: true,
+                              title: track.title,
+                            }}
+                            secondaryTypographyProps={{
+                              noWrap: true,
+                              title: track.artist,
+                            }}
                             sx={{ mr: 1 }}
                           />
                           <ListItemSecondaryAction>
-                            <IconButton edge="end" size="small" onClick={() => toggleTrackSelection(track)}>
+                            <IconButton
+                              edge='end'
+                              size='small'
+                              onClick={() => toggleTrackSelection(track)}
+                            >
                               <RemoveCircleOutlineIcon />
                             </IconButton>
                           </ListItemSecondaryAction>
@@ -636,52 +764,73 @@ const PlaylistModal = ({
               {/* Track Search for new playlist */}
               {!isEditing && (
                 <Box sx={{ mt: 3 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography
+                    variant='subtitle1'
+                    sx={{ fontWeight: 600, mb: 1 }}
+                  >
                     Добавить треки
                   </Typography>
                   <TrackSearchInput
                     fullWidth
-                    placeholder="Поиск треков..."
+                    placeholder='Поиск треков...'
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                     InputProps={{
-                      startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />,
+                      startAdornment: (
+                        <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                      ),
                     }}
                   />
-                  <Paper variant="outlined" sx={{ 
-                    borderRadius: theme => theme.breakpoints.down('sm') ? theme.spacing(1) : theme.spacing(2), 
-                    overflow: 'hidden',
-                    mx: 1
-                  }}>
+                  <Paper
+                    variant='outlined'
+                    sx={{
+                      borderRadius: theme =>
+                        theme.breakpoints.down('sm')
+                          ? theme.spacing(1)
+                          : theme.spacing(2),
+                      overflow: 'hidden',
+                      mx: 1,
+                    }}
+                  >
                     {isSearching ? (
                       <List>
                         {[1, 2, 3].map((_, index) => (
                           <ListItem key={index} divider>
                             <ListItemAvatar>
-                              <Skeleton variant="rectangular" width={42} height={42} sx={{ borderRadius: 1 }} />
+                              <Skeleton
+                                variant='rectangular'
+                                width={42}
+                                height={42}
+                                sx={{ borderRadius: 1 }}
+                              />
                             </ListItemAvatar>
                             <ListItemText
-                              primary={<Skeleton width="70%" />}
-                              secondary={<Skeleton width="40%" />}
+                              primary={<Skeleton width='70%' />}
+                              secondary={<Skeleton width='40%' />}
                             />
                           </ListItem>
                         ))}
                       </List>
                     ) : searchResults.length > 0 ? (
                       <List sx={{ maxHeight: '300px', overflow: 'auto' }}>
-                        {searchResults.map((track) => {
-                          const isSelected = selectedTracks.some(t => t.id === track.id);
-                          
+                        {searchResults.map(track => {
+                          const isSelected = selectedTracks.some(
+                            t => t.id === track.id
+                          );
+
                           return (
-                            <TrackItem 
-                              key={track.id} 
+                            <TrackItem
+                              key={track.id}
                               divider
                               selected={isSelected}
                               onClick={() => toggleTrackSelection(track)}
                               sx={{ cursor: 'pointer' }}
                             >
                               <ListItemAvatar>
-                                <TrackAvatar src={track.cover_path} alt={track.title}>
+                                <TrackAvatar
+                                  src={track.cover_path}
+                                  alt={track.title}
+                                >
                                   <MusicNoteOutlinedIcon />
                                 </TrackAvatar>
                               </ListItemAvatar>
@@ -692,7 +841,10 @@ const PlaylistModal = ({
                                 secondaryTypographyProps={{ noWrap: true }}
                               />
                               {isSelected && (
-                                <CheckCircleIcon color="primary" sx={{ mr: 2 }} />
+                                <CheckCircleIcon
+                                  color='primary'
+                                  sx={{ mr: 2 }}
+                                />
                               )}
                             </TrackItem>
                           );
@@ -700,11 +852,13 @@ const PlaylistModal = ({
                       </List>
                     ) : searchQuery.length > 0 ? (
                       <Box sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography color="text.secondary">Ничего не найдено</Typography>
+                        <Typography color='text.secondary'>
+                          Ничего не найдено
+                        </Typography>
                       </Box>
                     ) : (
                       <Box sx={{ p: 3, textAlign: 'center' }}>
-                        <Typography color="text.secondary">
+                        <Typography color='text.secondary'>
                           Введите запрос для поиска треков
                         </Typography>
                       </Box>
@@ -715,40 +869,60 @@ const PlaylistModal = ({
 
               {/* Bottom Actions */}
               {activeTab === 0 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    mt: 2,
+                  }}
+                >
                   {isEditing && (
                     <ActionButton
-                      variant="outlined"
-                      color="error"
+                      variant='outlined'
+                      color='error'
                       onClick={() => {
-                        if (window.confirm('Вы уверены, что хотите удалить этот плейлист?')) {
+                        if (
+                          window.confirm(
+                            'Вы уверены, что хотите удалить этот плейлист?'
+                          )
+                        ) {
                           onDelete(playlist.id);
                         }
                       }}
                       startIcon={<DeleteIcon />}
                       fullWidth={isMobile}
                     >
-                      {isMobile ? (isVeryNarrow ? '' : 'Удал.') : 'Удалить плейлист'}
+                      {isMobile
+                        ? isVeryNarrow
+                          ? ''
+                          : 'Удал.'
+                        : 'Удалить плейлист'}
                     </ActionButton>
                   )}
-                  
+
                   <Box sx={{ ml: 'auto', display: 'flex', gap: 2 }}>
-                    <ActionButton
-                      variant="outlined"
-                      onClick={onClose}
-                    >
+                    <ActionButton variant='outlined' onClick={onClose}>
                       {isMobile ? (isVeryNarrow ? '' : 'Отм.') : 'Отмена'}
                     </ActionButton>
                     <ActionButton
-                      variant="contained"
-                      color="primary"
+                      variant='contained'
+                      color='primary'
                       onClick={handleSave}
                       startIcon={<SaveIcon />}
                       disabled={!name.trim()}
                     >
-                      {isEditing ? 
-                        (isMobile ? (isVeryNarrow ? '' : 'Сохр.') : 'Сохранить') : 
-                        (isMobile ? (isVeryNarrow ? '' : 'Созд.') : 'Создать')}
+                      {isEditing
+                        ? isMobile
+                          ? isVeryNarrow
+                            ? ''
+                            : 'Сохр.'
+                          : 'Сохранить'
+                        : isMobile
+                          ? isVeryNarrow
+                            ? ''
+                            : 'Созд.'
+                          : 'Создать'}
                     </ActionButton>
                   </Box>
                 </Box>
@@ -761,53 +935,73 @@ const PlaylistModal = ({
             <Box sx={{ mt: 2 }}>
               <TrackSearchInput
                 fullWidth
-                placeholder="Поиск треков для добавления..."
+                placeholder='Поиск треков для добавления...'
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 InputProps={{
-                  startAdornment: <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />,
+                  startAdornment: (
+                    <SearchIcon sx={{ color: 'text.secondary', mr: 1 }} />
+                  ),
                 }}
               />
 
               {/* Search Results */}
-              <Paper variant="outlined" sx={{ 
-                borderRadius: theme => theme.breakpoints.down('sm') ? theme.spacing(1) : theme.spacing(2), 
-                overflow: 'hidden',
-                mx: 1
-              }}>
+              <Paper
+                variant='outlined'
+                sx={{
+                  borderRadius: theme =>
+                    theme.breakpoints.down('sm')
+                      ? theme.spacing(1)
+                      : theme.spacing(2),
+                  overflow: 'hidden',
+                  mx: 1,
+                }}
+              >
                 {isSearching ? (
                   <List>
                     {[1, 2, 3].map((_, index) => (
                       <ListItem key={index} divider>
                         <ListItemAvatar>
-                          <Skeleton variant="rectangular" width={42} height={42} sx={{ borderRadius: 1 }} />
+                          <Skeleton
+                            variant='rectangular'
+                            width={42}
+                            height={42}
+                            sx={{ borderRadius: 1 }}
+                          />
                         </ListItemAvatar>
                         <ListItemText
-                          primary={<Skeleton width="70%" />}
-                          secondary={<Skeleton width="40%" />}
+                          primary={<Skeleton width='70%' />}
+                          secondary={<Skeleton width='40%' />}
                         />
                       </ListItem>
                     ))}
                   </List>
                 ) : searchResults.length > 0 ? (
                   <List sx={{ maxHeight: '400px', overflow: 'auto' }}>
-                    {searchResults.map((track) => {
-                      const isSelected = selectedTracks.some(t => t.id === track.id);
+                    {searchResults.map(track => {
+                      const isSelected = selectedTracks.some(
+                        t => t.id === track.id
+                      );
                       const inPlaylist = isTrackInPlaylist(track.id);
-                      
+
                       return (
-                        <TrackItem 
-                          key={track.id} 
+                        <TrackItem
+                          key={track.id}
                           divider
                           selected={isSelected}
-                          onClick={() => !inPlaylist && toggleTrackSelection(track)}
-                          sx={{ 
+                          onClick={() =>
+                            !inPlaylist && toggleTrackSelection(track)
+                          }
+                          sx={{
                             cursor: inPlaylist ? 'default' : 'pointer',
-                            opacity: inPlaylist ? 0.6 : 1
+                            opacity: inPlaylist ? 0.6 : 1,
                           }}
                         >
                           <ListItemAvatar>
-                            <TrackAvatar src={track.cover_path} alt={track.title}>
+                            <TrackAvatar
+                              src={track.cover_path}
+                              alt={track.title}
+                            >
                               <MusicNoteOutlinedIcon />
                             </TrackAvatar>
                           </ListItemAvatar>
@@ -818,11 +1012,17 @@ const PlaylistModal = ({
                             secondaryTypographyProps={{ noWrap: true }}
                           />
                           {inPlaylist ? (
-                            <Typography variant="caption" color="text.secondary" sx={{ mr: 2 }}>
+                            <Typography
+                              variant='caption'
+                              color='text.secondary'
+                              sx={{ mr: 2 }}
+                            >
                               Уже в плейлисте
                             </Typography>
-                          ) : isSelected && (
-                            <CheckCircleIcon color="primary" sx={{ mr: 2 }} />
+                          ) : (
+                            isSelected && (
+                              <CheckCircleIcon color='primary' sx={{ mr: 2 }} />
+                            )
                           )}
                         </TrackItem>
                       );
@@ -830,11 +1030,13 @@ const PlaylistModal = ({
                   </List>
                 ) : searchQuery.length > 0 ? (
                   <Box sx={{ p: 3, textAlign: 'center' }}>
-                    <Typography color="text.secondary">Ничего не найдено</Typography>
+                    <Typography color='text.secondary'>
+                      Ничего не найдено
+                    </Typography>
                   </Box>
                 ) : (
                   <Box sx={{ p: 3, textAlign: 'center' }}>
-                    <Typography color="text.secondary">
+                    <Typography color='text.secondary'>
                       Введите запрос для поиска треков
                     </Typography>
                   </Box>
@@ -843,7 +1045,7 @@ const PlaylistModal = ({
 
               {/* Selected tracks count */}
               {selectedTracks.length > 0 && (
-                <Typography variant="body2" color="primary" sx={{ mb: 2 }}>
+                <Typography variant='body2' color='primary' sx={{ mb: 2 }}>
                   Выбрано треков: {selectedTracks.length}
                 </Typography>
               )}
@@ -851,7 +1053,7 @@ const PlaylistModal = ({
               {/* Actions */}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
                 <ActionButton
-                  variant="outlined"
+                  variant='outlined'
                   onClick={() => {
                     setActiveTab(0);
                     setSelectedTracks([]);
@@ -860,13 +1062,17 @@ const PlaylistModal = ({
                   {isMobile ? (isVeryNarrow ? '' : 'Отм.') : 'Отмена'}
                 </ActionButton>
                 <ActionButton
-                  variant="contained"
-                  color="primary"
+                  variant='contained'
+                  color='primary'
                   onClick={handleAddTracks}
                   startIcon={<PlaylistAddIcon />}
                   disabled={selectedTracks.length === 0}
                 >
-                  {isMobile ? (isVeryNarrow ? '' : 'Добав.') : 'Добавить выбранные треки'}
+                  {isMobile
+                    ? isVeryNarrow
+                      ? ''
+                      : 'Добав.'
+                    : 'Добавить выбранные треки'}
                 </ActionButton>
               </Box>
             </Box>
@@ -881,10 +1087,10 @@ const PlaylistModal = ({
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert 
-          onClose={handleCloseNotification} 
-          severity={notification.severity} 
-          variant="filled" 
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          variant='filled'
           sx={{ width: '100%' }}
         >
           {notification.message}
@@ -894,4 +1100,4 @@ const PlaylistModal = ({
   );
 };
 
-export default PlaylistModal; 
+export default PlaylistModal;

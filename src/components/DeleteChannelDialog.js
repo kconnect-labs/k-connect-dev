@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
   Box,
-  Alert
+  Alert,
 } from '@mui/material';
 
 const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
@@ -16,7 +16,7 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
   const [error, setError] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleConfirmationChange = (e) => {
+  const handleConfirmationChange = e => {
     setConfirmationText(e.target.value);
     setError('');
   };
@@ -38,7 +38,7 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         onDelete(data);
         onClose();
@@ -53,17 +53,17 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
       <DialogTitle>Удаление канала</DialogTitle>
       <DialogContent>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant='body1' gutterBottom>
           Вы собираетесь удалить канал. Это действие нельзя отменить.
         </Typography>
-        <Typography variant="body2" color="error" gutterBottom>
+        <Typography variant='body2' color='error' gutterBottom>
           Все данные канала будут сохранены в архиве перед удалением.
         </Typography>
         <Box mt={2}>
-          <Typography variant="body2" gutterBottom>
+          <Typography variant='body2' gutterBottom>
             Для подтверждения введите слово "ПОДТВЕРЖДЕНИЕ" заглавными буквами:
           </Typography>
           <TextField
@@ -72,11 +72,11 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
             onChange={handleConfirmationChange}
             error={!!error}
             helperText={error}
-            margin="normal"
+            margin='normal'
           />
         </Box>
         {error && (
-          <Alert severity="error" sx={{ mt: 2 }}>
+          <Alert severity='error' sx={{ mt: 2 }}>
             {error}
           </Alert>
         )}
@@ -87,7 +87,7 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
         </Button>
         <Button
           onClick={handleDelete}
-          color="error"
+          color='error'
           disabled={confirmationText !== 'ПОДТВЕРЖДЕНИЕ' || isDeleting}
         >
           {isDeleting ? 'Удаление...' : 'Удалить канал'}
@@ -97,4 +97,4 @@ const DeleteChannelDialog = ({ open, onClose, channelId, onDelete }) => {
   );
 };
 
-export default DeleteChannelDialog; 
+export default DeleteChannelDialog;

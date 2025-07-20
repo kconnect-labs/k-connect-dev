@@ -31,23 +31,29 @@ const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
   },
   [theme.breakpoints.down('lg')]: {
     padding: theme.spacing(1.5, 1, 1),
-  }
+  },
 }));
 
 // Enhanced typography with better styling
 const FooterTypography = styled(Typography)(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+  color:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.7)'
+      : 'rgba(0, 0, 0, 0.7)',
   fontSize: {
     xs: '0.65rem',
     sm: '0.7rem',
-    md: '0.75rem'
+    md: '0.75rem',
   },
   fontWeight: 400,
   letterSpacing: '0.3px',
   transition: 'color 0.2s ease-in-out',
   '&:hover': {
-    color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)',
-  }
+    color:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.9)'
+        : 'rgba(0, 0, 0, 0.9)',
+  },
 }));
 
 // Version chip with enhanced styling
@@ -72,7 +78,10 @@ const VersionChip = styled(Chip)(({ theme, themecolor }) => ({
 // Enhanced title typography
 const FooterTitle = styled(Typography)(({ theme, themecolor }) => ({
   fontWeight: 600,
-  color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(0, 0, 0, 0.95)',
+  color:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.95)'
+      : 'rgba(0, 0, 0, 0.95)',
   marginBottom: theme.spacing(1),
   letterSpacing: '0.5px',
   fontSize: {
@@ -80,9 +89,10 @@ const FooterTitle = styled(Typography)(({ theme, themecolor }) => ({
     sm: '0.8rem',
     md: '0.85rem',
   },
-  textShadow: theme.palette.mode === 'dark' 
-    ? `0 1px 2px ${themecolor || theme.palette.primary.main}20`
-    : 'none',
+  textShadow:
+    theme.palette.mode === 'dark'
+      ? `0 1px 2px ${themecolor || theme.palette.primary.main}20`
+      : 'none',
 }));
 
 // Contact info container
@@ -102,26 +112,26 @@ const areEqual = (prevProps, nextProps) => {
 const SidebarFooter = ({ primaryColor }) => {
   const theme = useTheme();
   const { t } = useLanguage();
-  
+
   return (
     <FooterContainer themecolor={primaryColor}>
       <Box sx={{ position: 'relative', zIndex: 1 }}>
-        <FooterTitle variant="subtitle2" themecolor={primaryColor}>
+        <FooterTitle variant='subtitle2' themecolor={primaryColor}>
           {t('sidebar.footer.version')}
         </FooterTitle>
-        
-        <VersionChip 
-          label="v2.9" 
-          size="small" 
+
+        <VersionChip
+          label='v2.9'
+          size='small'
           themecolor={primaryColor}
-          icon={<Icon icon="solar:star-bold" width="12" height="12" />}
+          icon={<Icon icon='solar:star-bold' width='12' height='12' />}
         />
-        
+
         <ContactInfo>
-          <FooterTypography variant="caption" display="block">
+          <FooterTypography variant='caption' display='block'>
             {t('sidebar.footer.copyright')}
           </FooterTypography>
-          <FooterTypography variant="caption" display="block">
+          <FooterTypography variant='caption' display='block'>
             {t('sidebar.footer.email')}
           </FooterTypography>
         </ContactInfo>
@@ -130,4 +140,4 @@ const SidebarFooter = ({ primaryColor }) => {
   );
 };
 
-export default memo(SidebarFooter, areEqual); 
+export default memo(SidebarFooter, areEqual);

@@ -10,18 +10,16 @@ import { Box, Typography } from '@mui/material';
  */
 const ProfileBadge = ({ badgeData, gradientColors, textColor = '#ffffff' }) => {
   if (!badgeData || !badgeData.show) return null;
-  
-  
+
   const position = badgeData.position || { top: 10, right: 10 };
-  
-  
+
   let background;
   if (Array.isArray(gradientColors) && gradientColors.length >= 2) {
     background = `linear-gradient(45deg, ${gradientColors.join(', ')})`;
   } else {
     background = gradientColors || '#8e44ad';
   }
-  
+
   return (
     <Box
       sx={{
@@ -41,29 +39,31 @@ const ProfileBadge = ({ badgeData, gradientColors, textColor = '#ffffff' }) => {
         animation: 'glow 3s infinite alternate',
         '@keyframes glow': {
           '0%': { boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)' },
-          '100%': { boxShadow: `0 2px 15px ${Array.isArray(gradientColors) ? gradientColors[0] : gradientColors}` }
-        }
+          '100%': {
+            boxShadow: `0 2px 15px ${Array.isArray(gradientColors) ? gradientColors[0] : gradientColors}`,
+          },
+        },
       }}
     >
       {badgeData.emoji && (
-        <Typography 
-          sx={{ 
-            fontSize: '16px', 
+        <Typography
+          sx={{
+            fontSize: '16px',
             lineHeight: 1,
-            filter: 'drop-shadow(0 0 2px rgba(0, 0, 0, 0.5))'
+            filter: 'drop-shadow(0 0 2px rgba(0, 0, 0, 0.5))',
           }}
         >
           {badgeData.emoji}
         </Typography>
       )}
-      
+
       {badgeData.text && (
-        <Typography 
-          sx={{ 
-            fontSize: '14px', 
+        <Typography
+          sx={{
+            fontSize: '14px',
             fontWeight: 'bold',
             color: textColor,
-            textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
+            textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
           }}
         >
           {badgeData.text}
@@ -73,4 +73,4 @@ const ProfileBadge = ({ badgeData, gradientColors, textColor = '#ffffff' }) => {
   );
 };
 
-export default ProfileBadge; 
+export default ProfileBadge;

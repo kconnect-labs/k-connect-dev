@@ -1,21 +1,27 @@
-import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Tabs, 
-  Tab, 
-  Avatar, 
-  Button, 
-  Paper, 
+import {
+  Box,
+  Container,
+  Typography,
+  Tabs,
+  Tab,
+  Avatar,
+  Button,
+  Paper,
   CircularProgress,
   IconButton,
   Skeleton,
   styled,
   useTheme,
   useMediaQuery,
-  Tooltip
+  Tooltip,
 } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
@@ -24,7 +30,6 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { motion } from 'framer-motion';
-
 
 const ProfileCard = styled(Paper)(({ theme }) => ({
   display: 'flex',
@@ -38,7 +43,7 @@ const ProfileCard = styled(Paper)(({ theme }) => ({
   '&:hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
-  }
+  },
 }));
 
 const LoadingContainer = styled(Box)(({ theme }) => ({
@@ -46,7 +51,7 @@ const LoadingContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   padding: theme.spacing(4),
-  height: 100
+  height: 100,
 }));
 
 const EmptyStateContainer = styled(Box)(({ theme }) => ({
@@ -56,22 +61,25 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(4),
   textAlign: 'center',
-  minHeight: 150
+  minHeight: 150,
 }));
 
+const TruncatedText = styled(
+  ({ text, maxLength, variant, component, ...props }) => {
+    const needsTruncation = text && text.length > maxLength;
+    const displayText = needsTruncation
+      ? `${text.substring(0, maxLength)}...`
+      : text;
 
-const TruncatedText = styled(({ text, maxLength, variant, component, ...props }) => {
-  const needsTruncation = text && text.length > maxLength;
-  const displayText = needsTruncation ? `${text.substring(0, maxLength)}...` : text;
-
-  return (
-    <Tooltip title={needsTruncation ? text : ''} arrow placement="top">
-      <Typography variant={variant} component={component} {...props}>
-        {displayText || 'Нет описания'}
-      </Typography>
-    </Tooltip>
-  );
-})(({ theme }) => ({
+    return (
+      <Tooltip title={needsTruncation ? text : ''} arrow placement='top'>
+        <Typography variant={variant} component={component} {...props}>
+          {displayText || 'Нет описания'}
+        </Typography>
+      </Tooltip>
+    );
+  }
+)(({ theme }) => ({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -87,27 +95,26 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [value, setValue] = useState(tabIndex);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [friends, setFriends] = useState([]);
-  
+
   const [isLoadingFollowers, setIsLoadingFollowers] = useState(false);
   const [isLoadingFollowing, setIsLoadingFollowing] = useState(false);
   const [isLoadingFriends, setIsLoadingFriends] = useState(false);
-  
+
   const [pageFollowers, setPageFollowers] = useState(1);
   const [pageFollowing, setPageFollowing] = useState(1);
   const [pageFriends, setPageFriends] = useState(1);
-  
+
   const [hasMoreFollowers, setHasMoreFollowers] = useState(true);
   const [hasMoreFollowing, setHasMoreFollowing] = useState(true);
   const [hasMoreFriends, setHasMoreFriends] = useState(true);
-  
+
   const [profileUser, setProfileUser] = useState(null);
   const [loadingFollow, setLoadingFollow] = useState({});
-  
 
   const [requestState, setRequestState] = useState({
     followersInProgress: false,
@@ -115,7 +122,6 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
     friendsInProgress: false,
     profileInProgress: false,
   });
-  
 
   const responseCache = useRef({
     followers: {},
@@ -123,9 +129,8 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
     friends: {},
     profile: {},
   });
-  
+
   const loaderRef = useRef(null);
-  
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -134,27 +139,24 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setProfileUser(currentUser);
         return;
       }
-      
+
       if (currentUser && targetUsername === currentUser.username) {
         setProfileUser(currentUser);
         return;
       }
-      
 
       if (responseCache.current.profile[targetUsername]) {
         setProfileUser(responseCache.current.profile[targetUsername]);
         return;
       }
-      
+
       if (requestState.profileInProgress) {
         return;
       }
-      
 
       setRequestState(prev => ({ ...prev, profileInProgress: true }));
-      
+
       const response = await axios.get(`/api/users/${targetUsername}`);
-      
 
       responseCache.current.profile[targetUsername] = response.data;
       setProfileUser(response.data);
@@ -164,50 +166,51 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setRequestState(prev => ({ ...prev, profileInProgress: false }));
     }
   }, [username, currentUser]);
-  
 
   const fetchFollowers = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
+
       if (!targetUsername) {
         return;
       }
-      
 
       if (requestState.followersInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_1`;
       if (responseCache.current.followers[cacheKey]) {
         const cachedData = responseCache.current.followers[cacheKey];
-        
 
         const followersList = cachedData.followers || [];
-        const filteredFollowers = followersList.filter(follower => !follower.is_friend);
-        
+        const filteredFollowers = followersList.filter(
+          follower => !follower.is_friend
+        );
+
         setFollowers(filteredFollowers);
         setHasMoreFollowers(cachedData.has_next || false);
         setPageFollowers(2);
         return;
       }
-      
+
       setIsLoadingFollowers(true);
       setRequestState(prev => ({ ...prev, followersInProgress: true }));
-      
-      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
-        params: { page: 1, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/users/${targetUsername}/followers`,
+        {
+          params: { page: 1, per_page: 20 },
+        }
+      );
 
       responseCache.current.followers[cacheKey] = response.data;
-      
 
       const followersList = response.data.followers || [];
-      const filteredFollowers = followersList.filter(follower => !follower.is_friend);
-      
+      const filteredFollowers = followersList.filter(
+        follower => !follower.is_friend
+      );
+
       setFollowers(filteredFollowers);
       setHasMoreFollowers(response.data.has_next || false);
       setPageFollowers(2);
@@ -218,21 +221,18 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setRequestState(prev => ({ ...prev, followersInProgress: false }));
     }
   }, [username, currentUser]);
-  
 
   const fetchFollowing = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
+
       if (!targetUsername) {
         return;
       }
-      
 
       if (requestState.followingInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_1`;
       if (responseCache.current.following[cacheKey]) {
@@ -242,17 +242,19 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setPageFollowing(2);
         return;
       }
-      
+
       setIsLoadingFollowing(true);
       setRequestState(prev => ({ ...prev, followingInProgress: true }));
-      
-      const response = await axios.get(`/api/users/${targetUsername}/following`, {
-        params: { page: 1, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/users/${targetUsername}/following`,
+        {
+          params: { page: 1, per_page: 20 },
+        }
+      );
 
       responseCache.current.following[cacheKey] = response.data;
-      
+
       setFollowing(response.data.following || []);
       setHasMoreFollowing(response.data.has_next || false);
       setPageFollowing(2);
@@ -263,21 +265,18 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setRequestState(prev => ({ ...prev, followingInProgress: false }));
     }
   }, [username, currentUser]);
-  
 
   const fetchFriends = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
+
       if (!targetUsername) {
         return;
       }
-      
 
       if (requestState.friendsInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_1`;
       if (responseCache.current.friends[cacheKey]) {
@@ -287,17 +286,19 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setPageFriends(2);
         return;
       }
-      
+
       setIsLoadingFriends(true);
       setRequestState(prev => ({ ...prev, friendsInProgress: true }));
-      
-      const response = await axios.get(`/api/profile/${targetUsername}/friends`, {
-        params: { page: 1, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/profile/${targetUsername}/friends`,
+        {
+          params: { page: 1, per_page: 20 },
+        }
+      );
 
       responseCache.current.friends[cacheKey] = response.data;
-      
+
       setFriends(response.data.friends || []);
       setHasMoreFriends(response.data.has_next || false);
       setPageFriends(2);
@@ -308,46 +309,47 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setRequestState(prev => ({ ...prev, friendsInProgress: false }));
     }
   }, [username, currentUser]);
-  
 
   const loadMoreFollowers = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
 
       if (isLoadingFollowers || requestState.followersInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_${pageFollowers}`;
       if (responseCache.current.followers[cacheKey]) {
         const cachedData = responseCache.current.followers[cacheKey];
-        
 
         const followersList = cachedData.followers || [];
-        const filteredFollowers = followersList.filter(follower => !follower.is_friend);
-        
+        const filteredFollowers = followersList.filter(
+          follower => !follower.is_friend
+        );
+
         setFollowers(prev => [...prev, ...filteredFollowers]);
         setHasMoreFollowers(cachedData.has_next || false);
         setPageFollowers(prev => prev + 1);
         return;
       }
-      
+
       setIsLoadingFollowers(true);
       setRequestState(prev => ({ ...prev, followersInProgress: true }));
-      
-      const response = await axios.get(`/api/users/${targetUsername}/followers`, {
-        params: { page: pageFollowers, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/users/${targetUsername}/followers`,
+        {
+          params: { page: pageFollowers, per_page: 20 },
+        }
+      );
 
       responseCache.current.followers[cacheKey] = response.data;
-      
 
       const followersList = response.data.followers || [];
-      const filteredFollowers = followersList.filter(follower => !follower.is_friend);
-      
+      const filteredFollowers = followersList.filter(
+        follower => !follower.is_friend
+      );
+
       setFollowers(prev => [...prev, ...filteredFollowers]);
       setHasMoreFollowers(response.data.has_next || false);
       setPageFollowers(prev => prev + 1);
@@ -357,18 +359,21 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setIsLoadingFollowers(false);
       setRequestState(prev => ({ ...prev, followersInProgress: false }));
     }
-  }, [username, currentUser, pageFollowers, isLoadingFollowers, requestState.followersInProgress]);
-  
+  }, [
+    username,
+    currentUser,
+    pageFollowers,
+    isLoadingFollowers,
+    requestState.followersInProgress,
+  ]);
 
   const loadMoreFollowing = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
 
       if (isLoadingFollowing || requestState.followingInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_${pageFollowing}`;
       if (responseCache.current.following[cacheKey]) {
@@ -378,17 +383,19 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setPageFollowing(prev => prev + 1);
         return;
       }
-      
+
       setIsLoadingFollowing(true);
       setRequestState(prev => ({ ...prev, followingInProgress: true }));
-      
-      const response = await axios.get(`/api/users/${targetUsername}/following`, {
-        params: { page: pageFollowing, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/users/${targetUsername}/following`,
+        {
+          params: { page: pageFollowing, per_page: 20 },
+        }
+      );
 
       responseCache.current.following[cacheKey] = response.data;
-      
+
       setFollowing(prev => [...prev, ...(response.data.following || [])]);
       setHasMoreFollowing(response.data.has_next || false);
       setPageFollowing(prev => prev + 1);
@@ -398,18 +405,21 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setIsLoadingFollowing(false);
       setRequestState(prev => ({ ...prev, followingInProgress: false }));
     }
-  }, [username, currentUser, pageFollowing, isLoadingFollowing, requestState.followingInProgress]);
-  
+  }, [
+    username,
+    currentUser,
+    pageFollowing,
+    isLoadingFollowing,
+    requestState.followingInProgress,
+  ]);
 
   const loadMoreFriends = useCallback(async () => {
     try {
       const targetUsername = username || currentUser?.username;
-      
 
       if (isLoadingFriends || requestState.friendsInProgress) {
         return;
       }
-      
 
       const cacheKey = `${targetUsername}_${pageFriends}`;
       if (responseCache.current.friends[cacheKey]) {
@@ -419,17 +429,19 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         setPageFriends(prev => prev + 1);
         return;
       }
-      
+
       setIsLoadingFriends(true);
       setRequestState(prev => ({ ...prev, friendsInProgress: true }));
-      
-      const response = await axios.get(`/api/profile/${targetUsername}/friends`, {
-        params: { page: pageFriends, per_page: 20 }
-      });
-      
+
+      const response = await axios.get(
+        `/api/profile/${targetUsername}/friends`,
+        {
+          params: { page: pageFriends, per_page: 20 },
+        }
+      );
 
       responseCache.current.friends[cacheKey] = response.data;
-      
+
       setFriends(prev => [...prev, ...(response.data.friends || [])]);
       setHasMoreFriends(response.data.has_next || false);
       setPageFriends(prev => prev + 1);
@@ -439,44 +451,82 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setIsLoadingFriends(false);
       setRequestState(prev => ({ ...prev, friendsInProgress: false }));
     }
-  }, [username, currentUser, pageFriends, isLoadingFriends, requestState.friendsInProgress]);
-  
+  }, [
+    username,
+    currentUser,
+    pageFriends,
+    isLoadingFriends,
+    requestState.friendsInProgress,
+  ]);
 
   useEffect(() => {
     fetchUserData();
   }, [username, currentUser, fetchUserData]);
-  
 
   useEffect(() => {
-    if (value === 0 && friends.length === 0 && !requestState.friendsInProgress) {
+    if (
+      value === 0 &&
+      friends.length === 0 &&
+      !requestState.friendsInProgress
+    ) {
       fetchFriends();
-    } else if (value === 1 && followers.length === 0 && !requestState.followersInProgress) {
+    } else if (
+      value === 1 &&
+      followers.length === 0 &&
+      !requestState.followersInProgress
+    ) {
       fetchFollowers();
-    } else if (value === 2 && following.length === 0 && !requestState.followingInProgress) {
+    } else if (
+      value === 2 &&
+      following.length === 0 &&
+      !requestState.followingInProgress
+    ) {
       fetchFollowing();
     }
-  }, [value, username, followers.length, following.length, friends.length, 
-      fetchFollowers, fetchFollowing, fetchFriends, requestState]);
-  
+  }, [
+    value,
+    username,
+    followers.length,
+    following.length,
+    friends.length,
+    fetchFollowers,
+    fetchFollowing,
+    fetchFriends,
+    requestState,
+  ]);
 
   useEffect(() => {
     let timeoutId = null;
-    
+
     const observer = new IntersectionObserver(
       entries => {
         const first = entries[0];
         if (first.isIntersecting) {
-
           if (timeoutId) {
             clearTimeout(timeoutId);
           }
-          
+
           timeoutId = setTimeout(() => {
-            if (value === 0 && hasMoreFriends && !isLoadingFriends && !requestState.friendsInProgress) {
+            if (
+              value === 0 &&
+              hasMoreFriends &&
+              !isLoadingFriends &&
+              !requestState.friendsInProgress
+            ) {
               loadMoreFriends();
-            } else if (value === 1 && hasMoreFollowers && !isLoadingFollowers && !requestState.followersInProgress) {
+            } else if (
+              value === 1 &&
+              hasMoreFollowers &&
+              !isLoadingFollowers &&
+              !requestState.followersInProgress
+            ) {
               loadMoreFollowers();
-            } else if (value === 2 && hasMoreFollowing && !isLoadingFollowing && !requestState.followingInProgress) {
+            } else if (
+              value === 2 &&
+              hasMoreFollowing &&
+              !isLoadingFollowing &&
+              !requestState.followingInProgress
+            ) {
               loadMoreFollowing();
             }
           }, 300);
@@ -484,12 +534,12 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       },
       { threshold: 0.5 }
     );
-    
+
     const currentLoader = loaderRef.current;
     if (currentLoader) {
       observer.observe(currentLoader);
     }
-    
+
     return () => {
       if (currentLoader) {
         observer.unobserve(currentLoader);
@@ -498,41 +548,56 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         clearTimeout(timeoutId);
       }
     };
-  }, [value, hasMoreFollowers, hasMoreFollowing, hasMoreFriends, 
-      isLoadingFollowers, isLoadingFollowing, isLoadingFriends,
-      loadMoreFollowers, loadMoreFollowing, loadMoreFriends, requestState]);
-  
+  }, [
+    value,
+    hasMoreFollowers,
+    hasMoreFollowing,
+    hasMoreFriends,
+    isLoadingFollowers,
+    isLoadingFollowing,
+    isLoadingFriends,
+    loadMoreFollowers,
+    loadMoreFollowing,
+    loadMoreFriends,
+    requestState,
+  ]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
 
   const clearUserCache = () => {
     responseCache.current.followers = {};
     responseCache.current.following = {};
     responseCache.current.friends = {};
   };
-  
-  const handleFollow = async (userId) => {
+
+  const handleFollow = async userId => {
     try {
       setLoadingFollow(prev => ({ ...prev, [userId]: true }));
       const response = await axios.post(`/api/profile/follow`, {
-        followed_id: userId
+        followed_id: userId,
       });
-      
+
       if (response.data.success) {
-        setFollowers(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: true } : user
-        ));
-        
-        setFollowing(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: true } : user
-        ));
-        
-        setFriends(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: true } : user
-        ));
-        
+        setFollowers(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: true } : user
+          )
+        );
+
+        setFollowing(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: true } : user
+          )
+        );
+
+        setFriends(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: true } : user
+          )
+        );
+
         clearUserCache();
       }
     } catch (error) {
@@ -541,27 +606,33 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setLoadingFollow(prev => ({ ...prev, [userId]: false }));
     }
   };
-  
-  const handleUnfollow = async (userId) => {
+
+  const handleUnfollow = async userId => {
     try {
       setLoadingFollow(prev => ({ ...prev, [userId]: true }));
       const response = await axios.post(`/api/profile/unfollow`, {
-        unfollowed_id: userId
+        unfollowed_id: userId,
       });
-      
+
       if (response.data.success) {
-        setFollowers(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: false } : user
-        ));
-        
-        setFollowing(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: false } : user
-        ));
-        
-        setFriends(prev => prev.map(user => 
-          user.id === userId ? { ...user, is_following: false } : user
-        ));
-        
+        setFollowers(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: false } : user
+          )
+        );
+
+        setFollowing(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: false } : user
+          )
+        );
+
+        setFriends(prev =>
+          prev.map(user =>
+            user.id === userId ? { ...user, is_following: false } : user
+          )
+        );
+
         clearUserCache();
       }
     } catch (error) {
@@ -570,17 +641,21 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       setLoadingFollow(prev => ({ ...prev, [userId]: false }));
     }
   };
-  
-  const renderProfileCard = (user) => {
+
+  const renderProfileCard = user => {
     const isFollowing = user.is_following;
     const isCurrentUser = currentUser && user.id === currentUser.id;
     const isChannel = user.account_type === 'channel';
-    
+
     let avatarUrl = user.photo;
-    if (avatarUrl && !avatarUrl.startsWith('http') && !avatarUrl.startsWith('/')) {
+    if (
+      avatarUrl &&
+      !avatarUrl.startsWith('http') &&
+      !avatarUrl.startsWith('/')
+    ) {
       avatarUrl = `/static/uploads/avatar/${user.id}/${avatarUrl}`;
     }
-    
+
     return (
       <motion.div
         key={user.id}
@@ -589,115 +664,140 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         transition={{ duration: 0.3 }}
       >
         <ProfileCard>
-          <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1, minWidth: 0, flexShrink: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flexGrow: 1,
+              minWidth: 0,
+              flexShrink: 1,
+            }}
+          >
             <Avatar
               src={avatarUrl || '/static/uploads/avatar/system/avatar.png'}
               alt={user.name || user.username}
-              sx={{ 
-                width: 50, 
+              sx={{
+                width: 50,
                 height: 50,
                 minWidth: 50,
                 marginRight: 2,
                 border: '2px solid',
-                borderColor: 'primary.main'
+                borderColor: 'primary.main',
               }}
             />
             <Box sx={{ minWidth: 0, flex: 1, flexShrink: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <TruncatedText 
+                <TruncatedText
                   text={user.name || user.username}
                   maxLength={15}
-                  variant="subtitle1" 
-                  component="a" 
+                  variant='subtitle1'
+                  component='a'
                   href={`/profile/${user.username}`}
-                  sx={{ 
+                  sx={{
                     color: 'text.primary',
-                    textDecoration: 'none', 
+                    textDecoration: 'none',
                     '&:hover': {
-                      color: 'primary.main'
+                      color: 'primary.main',
                     },
                     flexShrink: 1,
-                    minWidth: 0
+                    minWidth: 0,
                   }}
                 />
                 {user.is_verified && (
-                  <CheckCircleIcon 
-                    sx={{ 
+                  <CheckCircleIcon
+                    sx={{
                       ml: 0.5,
-                      fontSize: 16, 
+                      fontSize: 16,
                       color: 'primary.main',
-                      flexShrink: 0
-                    }} 
+                      flexShrink: 0,
+                    }}
                   />
                 )}
               </Box>
-              <TruncatedText 
-                text={user.about} 
+              <TruncatedText
+                text={user.about}
                 maxLength={25}
-                variant="body2" 
-                component="div"
+                variant='body2'
+                component='div'
                 sx={{ color: 'text.secondary', flexShrink: 1, minWidth: 0 }}
               />
             </Box>
           </Box>
-          
-          {!isCurrentUser && currentUser && currentUser.account_type !== 'channel' && (
-            <Box sx={{ ml: 2, flexShrink: 0 }}>
-              {isFollowing ? (
-                <IconButton
-                  onClick={() => handleUnfollow(user.id)}
-                  disabled={loadingFollow[user.id]}
-                  color="primary"
-                  size="small"
-                >
-                  {loadingFollow[user.id] ? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    <PersonRemoveIcon />
-                  )}
-                </IconButton>
-              ) : (
-                <IconButton
-                  onClick={() => handleFollow(user.id)}
-                  disabled={loadingFollow[user.id]}
-                  color="primary"
-                  size="small"
-                >
-                  {loadingFollow[user.id] ? (
-                    <CircularProgress size={24} />
-                  ) : (
-                    <PersonAddIcon />
-                  )}
-                </IconButton>
-              )}
-            </Box>
-          )}
+
+          {!isCurrentUser &&
+            currentUser &&
+            currentUser.account_type !== 'channel' && (
+              <Box sx={{ ml: 2, flexShrink: 0 }}>
+                {isFollowing ? (
+                  <IconButton
+                    onClick={() => handleUnfollow(user.id)}
+                    disabled={loadingFollow[user.id]}
+                    color='primary'
+                    size='small'
+                  >
+                    {loadingFollow[user.id] ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      <PersonRemoveIcon />
+                    )}
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    onClick={() => handleFollow(user.id)}
+                    disabled={loadingFollow[user.id]}
+                    color='primary'
+                    size='small'
+                  >
+                    {loadingFollow[user.id] ? (
+                      <CircularProgress size={24} />
+                    ) : (
+                      <PersonAddIcon />
+                    )}
+                  </IconButton>
+                )}
+              </Box>
+            )}
         </ProfileCard>
       </motion.div>
     );
   };
-  
+
   const renderSkeletonCards = () => {
-    return Array(3).fill(0).map((_, index) => (
-      <ProfileCard key={index}>
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Skeleton variant="circular" width={50} height={50} sx={{ mr: 2, flexShrink: 0 }} />
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Skeleton variant="text" width={120} />
-            <Skeleton variant="text" width={200} />
+    return Array(3)
+      .fill(0)
+      .map((_, index) => (
+        <ProfileCard key={index}>
+          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+            <Skeleton
+              variant='circular'
+              width={50}
+              height={50}
+              sx={{ mr: 2, flexShrink: 0 }}
+            />
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Skeleton variant='text' width={120} />
+              <Skeleton variant='text' width={200} />
+            </Box>
+            <Skeleton
+              variant='circular'
+              width={40}
+              height={40}
+              sx={{ flexShrink: 0 }}
+            />
           </Box>
-          <Skeleton variant="circular" width={40} height={40} sx={{ flexShrink: 0 }} />
-        </Box>
-      </ProfileCard>
-    ));
+        </ProfileCard>
+      ));
   };
-  
-  const renderEmptyState = (type) => {
+
+  const renderEmptyState = type => {
     let message = '';
-    
-    switch(type) {
+
+    switch (type) {
       case 'followers':
-        message = profileUser?.account_type === 'channel' ? 'Нет подписчиков' : 'Нет подписчиков';
+        message =
+          profileUser?.account_type === 'channel'
+            ? 'Нет подписчиков'
+            : 'Нет подписчиков';
         break;
       case 'friends':
         message = 'Нет друзей';
@@ -708,26 +808,29 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
       default:
         message = 'Ничего не найдено';
     }
-    
+
     return (
       <EmptyStateContainer>
-        <Typography variant="body1" color="text.secondary">
+        <Typography variant='body1' color='text.secondary'>
           {message}
         </Typography>
         {type === 'friends' && (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, maxWidth: 300 }}>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ mt: 1, maxWidth: 300 }}
+          >
             Друзья — это пользователи, с которыми у вас взаимные подписки
           </Typography>
         )}
       </EmptyStateContainer>
     );
   };
-  
 
-  const getTabLabel = (type) => {
+  const getTabLabel = type => {
     const isChannel = profileUser?.account_type === 'channel';
-    
-    switch(type) {
+
+    switch (type) {
       case 'followers':
         return isChannel ? 'Подписчики' : 'Подписчики';
       case 'friends':
@@ -738,38 +841,35 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
         return '';
     }
   };
-  
+
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Container maxWidth='md' sx={{ py: 4 }}>
       <Box sx={{ mb: 4, display: 'flex', alignItems: 'center' }}>
-        <IconButton 
-          onClick={() => navigate(-1)}
-          sx={{ mr: 2 }}
-          color="primary"
-        >
+        <IconButton onClick={() => navigate(-1)} sx={{ mr: 2 }} color='primary'>
           <ArrowBackIcon />
         </IconButton>
-        <Typography variant="h5" component="h1">
-          {profileUser 
+        <Typography variant='h5' component='h1'>
+          {profileUser
             ? `${profileUser.username} · ${profileUser.account_type === 'channel' ? 'Подписчики' : 'Социальные связи'}`
-            : 'Подписки и подписчики'
-          }
+            : 'Подписки и подписчики'}
         </Typography>
       </Box>
-      
-      <Box sx={{ 
-        borderBottom: 1, 
-        borderColor: 'divider', 
-        mb: 3,
-        '& .MuiTabs-flexContainer': {
-          justifyContent: isMobile ? 'space-between' : 'flex-start' 
-        }
-      }}>
-        <Tabs 
-          value={value} 
-          onChange={handleChange} 
-          variant={isMobile ? "fullWidth" : "standard"}
-          sx={{ 
+
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          mb: 3,
+          '& .MuiTabs-flexContainer': {
+            justifyContent: isMobile ? 'space-between' : 'flex-start',
+          },
+        }}
+      >
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant={isMobile ? 'fullWidth' : 'standard'}
+          sx={{
             '& .MuiTab-root': {
               color: 'text.secondary',
               '&.Mui-selected': {
@@ -793,54 +893,48 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
           <Tab label={getTabLabel('following')} />
         </Tabs>
       </Box>
-      
+
       {/* Friends Tab */}
-      <Box role="tabpanel" hidden={value !== 0}>
+      <Box role='tabpanel' hidden={value !== 0}>
         {value === 0 && (
           <>
-            {isLoadingFriends && friends.length === 0 ? (
-              renderSkeletonCards()
-            ) : friends.length > 0 ? (
-              friends.map(user => renderProfileCard(user))
-            ) : (
-              renderEmptyState('friends')
-            )}
+            {isLoadingFriends && friends.length === 0
+              ? renderSkeletonCards()
+              : friends.length > 0
+                ? friends.map(user => renderProfileCard(user))
+                : renderEmptyState('friends')}
           </>
         )}
       </Box>
-      
+
       {/* Followers Tab */}
-      <Box role="tabpanel" hidden={value !== 1}>
+      <Box role='tabpanel' hidden={value !== 1}>
         {value === 1 && (
           <>
-            {isLoadingFollowers && followers.length === 0 ? (
-              renderSkeletonCards()
-            ) : followers.length > 0 ? (
-              followers.map(user => renderProfileCard(user))
-            ) : (
-              renderEmptyState('followers')
-            )}
+            {isLoadingFollowers && followers.length === 0
+              ? renderSkeletonCards()
+              : followers.length > 0
+                ? followers.map(user => renderProfileCard(user))
+                : renderEmptyState('followers')}
           </>
         )}
       </Box>
-      
+
       {/* Following Tab */}
-      <Box role="tabpanel" hidden={value !== 2}>
+      <Box role='tabpanel' hidden={value !== 2}>
         {value === 2 && (
           <>
-            {isLoadingFollowing && following.length === 0 ? (
-              renderSkeletonCards()
-            ) : following.length > 0 ? (
-              following.map(user => renderProfileCard(user))
-            ) : (
-              renderEmptyState('following')
-            )}
+            {isLoadingFollowing && following.length === 0
+              ? renderSkeletonCards()
+              : following.length > 0
+                ? following.map(user => renderProfileCard(user))
+                : renderEmptyState('following')}
           </>
         )}
       </Box>
-      
+
       {/* Loading indicator for infinite scroll */}
-      {((value === 0 && hasMoreFriends) || 
+      {((value === 0 && hasMoreFriends) ||
         (value === 1 && hasMoreFollowers) ||
         (value === 2 && hasMoreFollowing)) && (
         <LoadingContainer ref={loaderRef}>
@@ -851,4 +945,4 @@ const SubscriptionsPage = ({ tabIndex = 0 }) => {
   );
 };
 
-export default SubscriptionsPage; 
+export default SubscriptionsPage;

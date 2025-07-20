@@ -1,14 +1,14 @@
 import React from 'react';
 function ensureCreateSvgIcon() {
   if (typeof window !== 'undefined') {
-    window.createSvgIcon = function(Component, displayName) {
+    window.createSvgIcon = function (Component, displayName) {
       if (typeof Component === 'string') {
         const SvgIcon = React.forwardRef((props, ref) => {
           return React.createElement('img', {
             src: Component,
             alt: displayName || 'Icon',
             ref: ref,
-            ...props
+            ...props,
           });
         });
         SvgIcon.displayName = displayName || 'SvgIcon';
@@ -18,14 +18,15 @@ function ensureCreateSvgIcon() {
         if (!Component) return null;
         return React.createElement(Component, {
           ...props,
-          ref: ref
+          ref: ref,
         });
       });
-      SvgIcon.displayName = displayName || (Component && Component.displayName) || 'SvgIcon';
+      SvgIcon.displayName =
+        displayName || (Component && Component.displayName) || 'SvgIcon';
       return SvgIcon;
     };
     console.log('createSvgIcon function installed (React version)');
   }
 }
 ensureCreateSvgIcon();
-export default ensureCreateSvgIcon; 
+export default ensureCreateSvgIcon;

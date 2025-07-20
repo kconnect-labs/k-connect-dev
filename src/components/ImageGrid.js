@@ -5,12 +5,10 @@ import { Box } from '@mui/material';
  * Component for displaying multiple images in a grid layout
  */
 const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
-  
   const normalizedImages = images.filter(Boolean).slice(0, maxImages);
   const totalImages = images.length;
   const hasMoreImages = totalImages > maxImages;
 
-  
   const getGridConfig = () => {
     switch (normalizedImages.length) {
       case 1:
@@ -18,7 +16,11 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
       case 2:
         return { columns: '1fr 1fr', rows: '1fr' };
       case 3:
-        return { columns: '1fr 1fr', rows: '1fr 1fr', areas: ['one one', 'two three'] };
+        return {
+          columns: '1fr 1fr',
+          rows: '1fr 1fr',
+          areas: ['one one', 'two three'],
+        };
       default:
         return { columns: '1fr 1fr', rows: '1fr 1fr' };
     }
@@ -26,14 +28,13 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
 
   const gridConfig = getGridConfig();
 
-  
   if (normalizedImages.length === 1) {
     return (
-      <Box 
+      <Box
         onClick={() => onImageClick && onImageClick(0)}
-        sx={{ 
-          width: '100%', 
-          height: 'auto', 
+        sx={{
+          width: '100%',
+          height: 'auto',
           maxHeight: '500px',
           display: 'flex',
           justifyContent: 'center',
@@ -43,20 +44,19 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
           cursor: 'pointer',
         }}
       >
-        <img 
-          src={normalizedImages[0]} 
-          alt="Post"
-          style={{ 
-            maxWidth: '100%', 
+        <img
+          src={normalizedImages[0]}
+          alt='Post'
+          style={{
+            maxWidth: '100%',
             maxHeight: '500px',
             objectFit: 'contain',
-          }} 
+          }}
         />
       </Box>
     );
   }
 
-  
   return (
     <Box
       sx={{
@@ -78,9 +78,14 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
             borderRadius: '8px',
             position: 'relative',
             cursor: 'pointer',
-            gridArea: normalizedImages.length === 3 && index === 0 ? 'one' : 
-                     normalizedImages.length === 3 && index === 1 ? 'two' : 
-                     normalizedImages.length === 3 && index === 2 ? 'three' : 'auto',
+            gridArea:
+              normalizedImages.length === 3 && index === 0
+                ? 'one'
+                : normalizedImages.length === 3 && index === 1
+                  ? 'two'
+                  : normalizedImages.length === 3 && index === 2
+                    ? 'three'
+                    : 'auto',
           }}
         >
           <img
@@ -91,22 +96,23 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
               height: '100%',
               objectFit: 'cover',
             }}
-            loading="lazy"
+            loading='lazy'
           />
-          
-          
+
           {index === normalizedImages.length - 1 && hasMoreImages && (
-            <Box sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
-              color: 'white',
-              padding: '2px 8px',
-              borderRadius: '4px',
-              fontSize: '0.75rem',
-              fontWeight: 'bold',
-            }}>
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                color: 'white',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                fontWeight: 'bold',
+              }}
+            >
               +{totalImages - maxImages + 1}
             </Box>
           )}
@@ -116,4 +122,4 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
   );
 };
 
-export default ImageGrid; 
+export default ImageGrid;

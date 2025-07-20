@@ -19,14 +19,18 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   currentAvatar,
   currentBanner,
 }) => {
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(currentAvatar || null);
-  const [bannerPreview, setBannerPreview] = useState<string | null>(currentBanner || null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    currentAvatar || null
+  );
+  const [bannerPreview, setBannerPreview] = useState<string | null>(
+    currentBanner || null
+  );
 
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         setAvatarPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
@@ -38,7 +42,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         setBannerPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
@@ -75,20 +79,31 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600 }}>
+      <Typography
+        variant='h6'
+        sx={{
+          mb: 3,
+          color: 'text.primary',
+          fontSize: '1.2rem',
+          fontWeight: 600,
+        }}
+      >
         Фото профиля
       </Typography>
-      
+
       {/* Avatar Section */}
       <Box sx={sectionStyle}>
-        <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.primary', fontWeight: 500 }}>
+        <Typography
+          variant='subtitle1'
+          sx={{ mb: 2, color: 'text.primary', fontWeight: 500 }}
+        >
           Аватар профиля
         </Typography>
-        
-        <Grid container spacing={2} alignItems="center">
+
+        <Grid container spacing={2} alignItems='center'>
           <Grid item>
             <Box
-              component="label"
+              component='label'
               sx={{
                 position: 'relative',
                 cursor: 'pointer',
@@ -96,17 +111,19 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               }}
             >
               <input
-                type="file"
-                accept="image/*"
+                type='file'
+                accept='image/*'
                 onChange={handleAvatarUpload}
                 style={{ display: 'none' }}
               />
               <Avatar
                 src={avatarPreview || undefined}
-                sx={{ 
-                  width: 80, 
+                sx={{
+                  width: 80,
                   height: 80,
-                  background: avatarPreview ? 'transparent' : 'rgba(255, 255, 255, 0.1)',
+                  background: avatarPreview
+                    ? 'transparent'
+                    : 'rgba(255, 255, 255, 0.1)',
                   border: '2px solid rgba(255, 255, 255, 0.2)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
@@ -134,21 +151,21 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               </Box>
             </Box>
           </Grid>
-          
+
           <Grid item xs>
             <Box>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
                 Рекомендуемый размер: 200x200 пикселей
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
                 Форматы: JPG, PNG, GIF
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 Максимальный размер: 5 МБ
               </Typography>
             </Box>
           </Grid>
-          
+
           {avatarPreview && (
             <Grid item>
               <IconButton
@@ -170,13 +187,16 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
 
       {/* Banner Section */}
       <Box sx={sectionStyle}>
-        <Typography variant="subtitle1" sx={{ mb: 2, color: 'text.primary', fontWeight: 500 }}>
+        <Typography
+          variant='subtitle1'
+          sx={{ mb: 2, color: 'text.primary', fontWeight: 500 }}
+        >
           Обложка профиля
         </Typography>
-        
+
         <Box sx={{ position: 'relative' }}>
           <Box
-            component="label"
+            component='label'
             sx={{
               position: 'relative',
               cursor: 'pointer',
@@ -185,36 +205,42 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               height: '120px',
               borderRadius: '8px',
               overflow: 'hidden',
-              background: bannerPreview 
+              background: bannerPreview
                 ? `url(${bannerPreview}) center/cover`
                 : 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
-              border: bannerPreview ? 'none' : '2px dashed rgba(255, 255, 255, 0.2)',
+              border: bannerPreview
+                ? 'none'
+                : '2px dashed rgba(255, 255, 255, 0.2)',
               transition: 'all 0.3s ease',
               '&:hover': {
-                background: bannerPreview 
+                background: bannerPreview
                   ? `url(${bannerPreview}) center/cover`
                   : 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%)',
-                border: bannerPreview ? 'none' : '2px dashed rgba(255, 255, 255, 0.4)',
+                border: bannerPreview
+                  ? 'none'
+                  : '2px dashed rgba(255, 255, 255, 0.4)',
               },
             }}
           >
             <input
-              type="file"
-              accept="image/*"
+              type='file'
+              accept='image/*'
               onChange={handleBannerUpload}
               style={{ display: 'none' }}
             />
             {!bannerPreview && (
-              <Box sx={{ 
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-                color: 'text.secondary'
-              }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  textAlign: 'center',
+                  color: 'text.secondary',
+                }}
+              >
                 <PhotoCamera sx={{ fontSize: 32, mb: 1 }} />
-                <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
+                <Typography variant='body2' sx={{ fontSize: '0.875rem' }}>
                   Загрузить обложку
                 </Typography>
               </Box>
@@ -243,23 +269,27 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         </Box>
 
         <Box sx={{ mt: 2 }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
             Рекомендуемый размер: 1200x300 пикселей
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
             Форматы: JPG, PNG, GIF
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             Максимальный размер: 10 МБ
           </Typography>
         </Box>
       </Box>
 
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center', fontSize: '0.8rem' }}>
+      <Typography
+        variant='body2'
+        color='text.secondary'
+        sx={{ mt: 2, textAlign: 'center', fontSize: '0.8rem' }}
+      >
         Кликните на аватар или обложку для загрузки
       </Typography>
     </Box>
   );
 };
 
-export default ProfileUploader; 
+export default ProfileUploader;

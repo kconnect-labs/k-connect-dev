@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  Box, 
-  Typography, 
-  Grid, 
-  Paper, 
-  IconButton, 
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  IconButton,
   Button,
   CircularProgress,
   Snackbar,
-  Alert
+  Alert,
 } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
-import { 
+import {
   Search,
   PlayArrowRounded,
   PauseRounded,
   ArrowBack,
-  NewReleases
+  NewReleases,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useMusic } from '../../context/MusicContext';
@@ -31,9 +31,13 @@ const SearchContainer = styled(Box)(({ theme, open }) => ({
   width: '100%',
   padding: open ? theme.spacing(2, 1) : theme.spacing(2, 2, 1),
   backdropFilter: 'blur(10px)',
-  backgroundColor: open 
-    ? theme.palette.mode === 'dark' ? 'rgba(18,18,18,0.9)' : 'rgba(250,250,250,0.9)'  
-    : theme.palette.mode === 'dark' ? 'rgba(18,18,18,0.6)' : 'rgba(250,250,250,0.6)',
+  backgroundColor: open
+    ? theme.palette.mode === 'dark'
+      ? 'rgba(18,18,18,0.9)'
+      : 'rgba(250,250,250,0.9)'
+    : theme.palette.mode === 'dark'
+      ? 'rgba(18,18,18,0.6)'
+      : 'rgba(250,250,250,0.6)',
   transition: 'all 0.3s ease',
   borderRadius: open ? 0 : '0 0 16px 16px',
   boxShadow: open ? 'none' : '0 4px 20px rgba(0,0,0,0.1)',
@@ -44,9 +48,13 @@ const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
   alignItems: 'center',
   width: '100%',
   borderRadius: 24,
-  backgroundColor: focused 
-    ? theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)' 
-    : theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+  backgroundColor: focused
+    ? theme.palette.mode === 'dark'
+      ? 'rgba(255,255,255,0.15)'
+      : 'rgba(0,0,0,0.15)'
+    : theme.palette.mode === 'dark'
+      ? 'rgba(255,255,255,0.1)'
+      : 'rgba(0,0,0,0.1)',
   padding: theme.spacing(1, 2),
   transition: 'all 0.3s ease',
   boxShadow: focused ? `0 0 0 2px ${theme.palette.primary.main}66` : 'none',
@@ -59,20 +67,20 @@ const StyledSearchInput = styled(Box)(({ theme, focused }) => ({
     fontSize: '16px',
     '&::placeholder': {
       color: theme.palette.text.secondary,
-    }
-  }
+    },
+  },
 }));
 
 const NewTracksPage = () => {
   const navigate = useNavigate();
-  const { 
-    currentTrack, 
-    isPlaying, 
-    playTrack, 
+  const {
+    currentTrack,
+    isPlaying,
+    playTrack,
     pauseTrack,
     searchTracks,
     searchResults,
-    isSearching
+    isSearching,
   } = useMusic();
 
   // Состояние для поиска
@@ -85,57 +93,62 @@ const NewTracksPage = () => {
   const searchTimeoutRef = useRef(null);
 
   // Состояние для уведомлений
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   // Стабильная функция поиска с использованием useRef
-  const performSearch = useCallback(async (query) => {
-    // Отменяем предыдущий запрос если он еще выполняется
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Проверяем минимальную длину запроса
-    if (!query.trim() || query.trim().length < 2) {
-
-      return;
-    }
-    
-
-    setSearchLoading(true);
-    
-    // Создаем новый AbortController для этого запроса
-    abortControllerRef.current = new AbortController();
-    
-    try {
-      const results = await searchTracks(query);
-
-      
-      if (results.length === 0) {
-
+  const performSearch = useCallback(
+    async query => {
+      // Отменяем предыдущий запрос если он еще выполняется
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
-    } catch (error) {
-      if (error.name !== 'AbortError') {
-        console.error('[NewTracksPage] Ошибка поиска:', error);
-        setSnackbar({ open: true, message: 'Ошибка поиска', severity: 'error' });
+
+      // Проверяем минимальную длину запроса
+      if (!query.trim() || query.trim().length < 2) {
+        return;
       }
-    } finally {
-      setSearchLoading(false);
-      abortControllerRef.current = null;
-    }
-  }, [searchTracks]);
+
+      setSearchLoading(true);
+
+      // Создаем новый AbortController для этого запроса
+      abortControllerRef.current = new AbortController();
+
+      try {
+        const results = await searchTracks(query);
+
+        if (results.length === 0) {
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('[NewTracksPage] Ошибка поиска:', error);
+          setSnackbar({
+            open: true,
+            message: 'Ошибка поиска',
+            severity: 'error',
+          });
+        }
+      } finally {
+        setSearchLoading(false);
+        abortControllerRef.current = null;
+      }
+    },
+    [searchTracks]
+  );
 
   // Обработчики поиска
-  const handleSearchChange = (e) => {
+  const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
-    
 
-    
     // Отменяем предыдущий таймер
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-    
+
     // Отменяем активный поиск если запрос слишком короткий
     if (query.trim().length < 2) {
       if (abortControllerRef.current) {
@@ -144,7 +157,7 @@ const NewTracksPage = () => {
       }
       return;
     }
-    
+
     // Устанавливаем новый таймер для debounce
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(query.trim());
@@ -160,7 +173,6 @@ const NewTracksPage = () => {
   };
 
   const clearSearch = () => {
-
     setSearchQuery('');
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
@@ -200,7 +212,6 @@ const NewTracksPage = () => {
   // Очистка при размонтировании компонента
   useEffect(() => {
     return () => {
-
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -215,25 +226,27 @@ const NewTracksPage = () => {
     return (
       <Box sx={{ p: 2 }}>
         <SearchContainer open={true}>
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            mb: 1
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 1,
+            }}
+          >
             <StyledSearchInput focused={isSearchFocused}>
               <Search sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
               <input
                 ref={searchInputRef}
-                placeholder="Поиск трека или исполнителя (мин. 2 символа)"
+                placeholder='Поиск трека или исполнителя (мин. 2 символа)'
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
               />
               {searchQuery && (
-                <IconButton 
-                  size="small" 
+                <IconButton
+                  size='small'
                   onClick={clearSearch}
                   sx={{ color: 'rgba(255, 255, 255, 0.7)', p: 0.5 }}
                 >
@@ -241,13 +254,13 @@ const NewTracksPage = () => {
                 </IconButton>
               )}
             </StyledSearchInput>
-            
-            <Button 
+
+            <Button
               onClick={handleToggleSearch}
-              sx={{ 
+              sx={{
                 ml: 1,
                 textTransform: 'none',
-                minWidth: 'auto'
+                minWidth: 'auto',
               }}
             >
               Отмена
@@ -263,7 +276,7 @@ const NewTracksPage = () => {
             </Box>
           ) : searchQuery.trim() && searchQuery.trim().length < 2 ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-              <Typography variant="body1" color="text.secondary">
+              <Typography variant='body1' color='text.secondary'>
                 Введите минимум 2 символа для поиска
               </Typography>
             </Box>
@@ -285,48 +298,69 @@ const NewTracksPage = () => {
                       transition: 'all 0.3s ease',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 0.15)',
-                      }
+                      },
                     }}
                     onClick={() => playTrack(track, 'search')}
                   >
                     <Box
-                      component="img"
+                      component='img'
                       src={track.cover_path || '/default-cover.jpg'}
                       alt={track.title}
                       sx={{
                         width: 40,
                         height: 40,
                         borderRadius: '8px',
-                        objectFit: 'cover'
+                        objectFit: 'cover',
                       }}
                     />
                     <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                      <Typography variant="body2" noWrap>
+                      <Typography variant='body2' noWrap>
                         {track.title}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary" noWrap>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        noWrap
+                      >
                         {track.artist}
                       </Typography>
                     </Box>
                     <IconButton
-                      size="small"
-                      onClick={(e) => {
+                      size='small'
+                      onClick={e => {
                         e.stopPropagation();
-                        isPlaying && currentTrack?.id === track.id ? pauseTrack() : playTrack(track, 'search');
+                        isPlaying && currentTrack?.id === track.id
+                          ? pauseTrack()
+                          : playTrack(track, 'search');
                       }}
                     >
-                      {isPlaying && currentTrack?.id === track.id ? <PauseRounded /> : <PlayArrowRounded />}
+                      {isPlaying && currentTrack?.id === track.id ? (
+                        <PauseRounded />
+                      ) : (
+                        <PlayArrowRounded />
+                      )}
                     </IconButton>
                   </Paper>
                 </Grid>
               ))}
             </Grid>
           ) : searchQuery.trim().length >= 2 ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 4 }}>
-              <Typography variant="body1" sx={{ textAlign: 'center', mb: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                p: 4,
+              }}
+            >
+              <Typography variant='body1' sx={{ textAlign: 'center', mb: 1 }}>
                 Ничего не найдено по запросу "{searchQuery}"
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+              <Typography
+                variant='body2'
+                color='text.secondary'
+                sx={{ textAlign: 'center' }}
+              >
                 Попробуйте изменить поисковый запрос
               </Typography>
             </Box>
@@ -350,46 +384,48 @@ const NewTracksPage = () => {
     <Box sx={{ p: 2 }}>
       {/* Поиск сверху */}
       <SearchContainer open={showSearchBar}>
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          mb: showSearchBar ? 0 : 1
-        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: showSearchBar ? 0 : 1,
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconButton 
-              color="inherit" 
+            <IconButton
+              color='inherit'
               onClick={() => navigate('/music')}
               sx={{ mr: 1 }}
             >
               <ArrowBack />
             </IconButton>
-            <Typography 
-              variant="h6" 
-              fontWeight="600"
-              sx={{ 
+            <Typography
+              variant='h6'
+              fontWeight='600'
+              sx={{
                 display: { xs: showSearchBar ? 'none' : 'block', sm: 'block' },
-                fontSize: { xs: '1.1rem', sm: '1.25rem' }
+                fontSize: { xs: '1.1rem', sm: '1.25rem' },
               }}
             >
               Новые треки
             </Typography>
           </Box>
-          
+
           {showSearchBar ? (
             <StyledSearchInput focused={isSearchFocused}>
               <Search sx={{ fontSize: 20, mr: 1, color: 'text.secondary' }} />
               <input
                 ref={searchInputRef}
-                placeholder="Поиск трека или исполнителя (мин. 2 символа)"
+                placeholder='Поиск трека или исполнителя (мин. 2 символа)'
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
               />
               {searchQuery && (
-                <IconButton 
-                  size="small" 
+                <IconButton
+                  size='small'
                   onClick={clearSearch}
                   sx={{ color: 'rgba(255, 255, 255, 0.7)', p: 0.5 }}
                 >
@@ -398,22 +434,22 @@ const NewTracksPage = () => {
               )}
             </StyledSearchInput>
           ) : (
-            <IconButton 
-              color="inherit" 
+            <IconButton
+              color='inherit'
               onClick={handleToggleSearch}
               sx={{ mr: 0.5 }}
             >
               <Search />
             </IconButton>
           )}
-          
+
           {showSearchBar && (
-            <Button 
+            <Button
               onClick={handleToggleSearch}
-              sx={{ 
+              sx={{
                 ml: 1,
                 textTransform: 'none',
-                minWidth: 'auto'
+                minWidth: 'auto',
               }}
             >
               Отмена
@@ -424,10 +460,10 @@ const NewTracksPage = () => {
 
       {/* Контент */}
       <Box sx={{ mt: 2 }}>
-        <Typography variant="h5" sx={{ mb: 2, fontWeight: 600, color: '#fff' }}>
+        <Typography variant='h5' sx={{ mb: 2, fontWeight: 600, color: '#fff' }}>
           Новые треки Connect
         </Typography>
-        
+
         <NewTracksBlock />
       </Box>
 
@@ -444,4 +480,4 @@ const NewTracksPage = () => {
   );
 };
 
-export default NewTracksPage; 
+export default NewTracksPage;

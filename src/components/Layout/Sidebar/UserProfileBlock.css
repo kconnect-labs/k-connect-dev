@@ -47,7 +47,7 @@
 .user-name {
   font-weight: 600;
   font-size: 0.95rem;
-  color: #FFFFFF;
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -68,15 +68,15 @@
   .user-profile-wrapper {
     transition: none;
   }
-  
+
   .user-profile-wrapper:hover {
     transform: none;
   }
-  
+
   .SIDEBAR-user-avatar {
     transition: none;
   }
-  
+
   .SIDEBAR-user-avatar:hover {
     transform: none;
   }
@@ -106,17 +106,17 @@
     box-shadow: none !important;
     transform: none !important;
   }
-  
+
   .SIDEBAR-user-avatar {
     border: 1px solid #ccc !important;
     box-shadow: none !important;
   }
-  
+
   .user-name {
     color: black !important;
   }
-  
+
   .user-name-tag {
     color: #666 !important;
   }
-} 
+}

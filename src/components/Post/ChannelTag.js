@@ -11,7 +11,7 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   border: '1px solid rgba(255, 255, 255, 0.1)',
   '& .MuiChip-label': {
     padding: '0 8px',
-  }
+  },
 }));
 
-export default ChannelTag; 
+export default ChannelTag;

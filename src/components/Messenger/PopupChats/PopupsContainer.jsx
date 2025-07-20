@@ -15,10 +15,15 @@ const PopupsContainer = () => {
     <>
       <PopupDock />
       {popups.map((p, idx) => (
-        <ChatPopup key={p.chatId} chatId={p.chatId} minimized={p.minimized} index={idx} />
+        <ChatPopup
+          key={p.chatId}
+          chatId={p.chatId}
+          minimized={p.minimized}
+          index={idx}
+        />
       ))}
     </>
   );
 };
 
-export default PopupsContainer; 
+export default PopupsContainer;

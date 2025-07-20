@@ -69,9 +69,10 @@ const InfoBlock = ({
         width: '100%',
         margin: '0 auto 8px auto',
         ...getGradientBorder(styleVariant),
-        background: styleVariant === 'dark' 
-          ? 'rgba(26,26,26, 0.03)' 
-          : 'rgba(255,255,255,0.03)',
+        background:
+          styleVariant === 'dark'
+            ? 'rgba(26,26,26, 0.03)'
+            : 'rgba(255,255,255,0.03)',
         backdropFilter: 'blur(20px)',
         color: styleVariant === 'dark' ? 'white' : 'inherit',
         textAlign: 'left',
@@ -92,7 +93,8 @@ const InfoBlock = ({
   };
 
   const descriptionStyles = {
-    color: styleVariant === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
+    color:
+      styleVariant === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
     fontSize: '0.875rem',
     lineHeight: 1.5,
     marginTop: 8,
@@ -100,19 +102,19 @@ const InfoBlock = ({
   };
 
   return (
-    <div 
+    <div
       className={`info-block info-block--${styleVariant} ${className}`}
       style={containerStyles}
       {...props}
     >
       {title && (
-        <div className="info-block__title" style={titleStyles}>
-            {title}
+        <div className='info-block__title' style={titleStyles}>
+          {title}
         </div>
       )}
       {description && (
-        <div className="info-block__description" style={descriptionStyles}>
-            {description}
+        <div className='info-block__description' style={descriptionStyles}>
+          {description}
         </div>
       )}
       {children}

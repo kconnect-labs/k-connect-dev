@@ -34,11 +34,11 @@
     padding: 12px;
     margin-bottom: 6px;
   }
-  
+
   .info-block__title {
     font-size: 1.25rem !important;
   }
-  
+
   .info-block__description {
     font-size: 0.8rem !important;
   }
@@ -50,7 +50,7 @@
     background: rgba(255, 255, 255, 0.02) !important;
     color: rgba(255, 255, 255, 0.9) !important;
   }
-  
+
   .info-block--default .info-block__description {
     color: rgba(255, 255, 255, 0.6) !important;
   }
@@ -76,4 +76,4 @@
     color: black !important;
     border: 1px solid #ccc !important;
   }
-} 
+}

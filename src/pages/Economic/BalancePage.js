@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, useCallback, useRef, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+  useRef,
+  useMemo,
+} from 'react';
 import {
   Container,
   Typography,
@@ -35,7 +42,7 @@ import {
   InputAdornment,
   useMediaQuery,
   TableRow,
-  TableCell
+  TableCell,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
@@ -77,8 +84,6 @@ import InfoBlock from '../../UIKIT/InfoBlock';
 import { UltimateDecorationModal } from '../../components/UltimateDecorationModal';
 import { useLanguage } from '@/context/LanguageContext';
 
-
-
 const BalanceAmount = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
   fontWeight: '700',
@@ -103,12 +108,12 @@ const TransactionAmount = styled(Typography)(({ theme, type }) => ({
   fontSize: '0.9rem',
   padding: '4px 8px',
   borderRadius: '8px',
-  backgroundColor: type === 'positive' 
-    ? alpha(theme.palette.success.main, 0.1)
-    : alpha(theme.palette.error.main, 0.1),
-  color: type === 'positive' 
-    ? theme.palette.success.main 
-    : theme.palette.error.main,
+  backgroundColor:
+    type === 'positive'
+      ? alpha(theme.palette.success.main, 0.1)
+      : alpha(theme.palette.error.main, 0.1),
+  color:
+    type === 'positive' ? theme.palette.success.main : theme.palette.error.main,
 }));
 
 const BadgeImage = styled('img')({
@@ -126,7 +131,7 @@ const PointsIcon = styled(Box)(({ theme }) => ({
     width: '100%',
     height: '100%',
     filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2))',
-  }
+  },
 }));
 
 const CreatedBadgeImage = styled('img')({
@@ -140,7 +145,7 @@ const ActionButtonsContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
   justifyContent: 'space-between',
   gap: theme.spacing(2),
-  marginTop: theme.spacing(2)
+  marginTop: theme.spacing(2),
 }));
 
 const ActionButtonItem = styled(Box)(({ theme }) => ({
@@ -165,7 +170,7 @@ const ActionCircleIcon = styled(Box)(({ theme }) => ({
   width: 44,
   height: 44,
   borderRadius: '50%',
-  backgroundColor: '#614C93', 
+  backgroundColor: '#614C93',
   marginBottom: theme.spacing(0.8),
   '& svg': {
     color: '#fff',
@@ -184,37 +189,33 @@ const ActionButtonText = styled(Typography)(({ theme }) => ({
 
 const TabPanel = ({ children, value, index, ...other }) => (
   <div
-    role="tabpanel"
+    role='tabpanel'
     hidden={value !== index}
     id={`tabpanel-${index}`}
     aria-labelledby={`tab-${index}`}
     {...other}
     style={{ marginTop: '8px' }}
   >
-    {value === index && (
-      <Box>
-        {children}
-      </Box>
-    )}
+    {value === index && <Box>{children}</Box>}
   </div>
 );
 
-
-
 const StyledDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialog-container": {
-    zIndex: 999999999999
+  '& .MuiDialog-container': {
+    zIndex: 999999999999,
   },
-  "& .MuiDialog-paper": {
+  '& .MuiDialog-paper': {
     borderRadius: 16,
-    background: theme.palette.mode === 'dark' 
-      ? 'rgba(18, 18, 18, 0.8)' 
-      : 'rgba(255, 255, 255, 0.8)',
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(18, 18, 18, 0.8)'
+        : 'rgba(255, 255, 255, 0.8)',
     backdropFilter: 'blur(10px)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-    border: theme.palette.mode === 'dark' 
-      ? '1px solid rgba(255, 255, 255, 0.1)'
-      : '1px solid rgba(208, 188, 255, 0.3)',
+    border:
+      theme.palette.mode === 'dark'
+        ? '1px solid rgba(255, 255, 255, 0.1)'
+        : '1px solid rgba(208, 188, 255, 0.3)',
     overflow: 'hidden',
     maxWidth: '450px',
     width: '100%',
@@ -226,22 +227,25 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       borderRadius: 0,
     },
   },
-  "& .MuiDialogTitle-root": {
+  '& .MuiDialogTitle-root': {
     fontSize: '1.2rem',
-    fontWeight: 500
-  }
+    fontWeight: 500,
+  },
 }));
 
 const DialogHeader = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   padding: theme.spacing(2),
-  borderBottom: `1px solid ${theme.palette.mode === 'dark' 
-    ? 'rgba(255, 255, 255, 0.1)'
-    : 'rgba(208, 188, 255, 0.2)'}`,
-  background: theme.palette.mode === 'dark'
-    ? 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%)'
-    : 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
+  borderBottom: `1px solid ${
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgba(208, 188, 255, 0.2)'
+  }`,
+  background:
+    theme.palette.mode === 'dark'
+      ? 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%)'
+      : 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
 }));
 
 const HeaderGlow = styled(Box)(({ theme }) => ({
@@ -251,15 +255,16 @@ const HeaderGlow = styled(Box)(({ theme }) => ({
   width: 150,
   height: 150,
   borderRadius: '50%',
-  background: 'radial-gradient(circle, rgba(208, 188, 255, 0.3) 0%, rgba(208, 188, 255, 0) 70%)',
-  zIndex: 0
+  background:
+    'radial-gradient(circle, rgba(208, 188, 255, 0.3) 0%, rgba(208, 188, 255, 0) 70%)',
+  zIndex: 0,
 }));
 
 const DialogHeaderContent = styled(Box)(({ theme }) => ({
   position: 'relative',
   zIndex: 1,
   display: 'flex',
-  alignItems: 'center'
+  alignItems: 'center',
 }));
 
 const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
@@ -267,32 +272,39 @@ const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   justifyContent: 'space-between',
-  backgroundColor: theme.palette.mode === 'dark'
-    ? 'rgba(0, 0, 0, 0.4)'
-    : 'rgba(255, 255, 255, 0.6)',
-  borderTop: `1px solid ${theme.palette.mode === 'dark' 
-    ? 'rgba(255, 255, 255, 0.1)'
-    : 'rgba(208, 188, 255, 0.2)'}`,
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? 'rgba(0, 0, 0, 0.4)'
+      : 'rgba(255, 255, 255, 0.6)',
+  borderTop: `1px solid ${
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.1)'
+      : 'rgba(208, 188, 255, 0.2)'
+  }`,
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
   borderRadius: 12,
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
-  borderColor: theme.palette.mode === 'dark'
-    ? 'rgba(255, 255, 255, 0.2)'
-    : 'rgba(0, 0, 0, 0.2)',
-  color: theme.palette.mode === 'dark'
-    ? 'rgba(255, 255, 255, 0.7)'
-    : 'rgba(0, 0, 0, 0.7)',
+  borderColor:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.2)'
+      : 'rgba(0, 0, 0, 0.2)',
+  color:
+    theme.palette.mode === 'dark'
+      ? 'rgba(255, 255, 255, 0.7)'
+      : 'rgba(0, 0, 0, 0.7)',
   '&:hover': {
-    borderColor: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.4)'
-      : 'rgba(0, 0, 0, 0.4)',
-    background: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.05)'
-      : 'rgba(0, 0, 0, 0.05)'
-  }
+    borderColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.4)'
+        : 'rgba(0, 0, 0, 0.4)',
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.05)'
+        : 'rgba(0, 0, 0, 0.05)',
+  },
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
@@ -306,52 +318,57 @@ const ActionButton = styled(Button)(({ theme }) => ({
   color: '#fff',
   '&:hover': {
     boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)',
-  }
+  },
 }));
 
 const ContentBox = styled(Box)(({ theme }) => ({
   position: 'relative',
   padding: theme.spacing(2.5),
   borderRadius: 8,
-  backgroundColor: theme.palette.mode === 'dark'
-    ? 'rgba(208, 188, 255, 0.05)'
-    : 'rgba(208, 188, 255, 0.1)',
-  border: `1px solid ${theme.palette.mode === 'dark' 
-    ? 'rgba(208, 188, 255, 0.2)'
-    : 'rgba(208, 188, 255, 0.3)'}`,
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? 'rgba(208, 188, 255, 0.05)'
+      : 'rgba(208, 188, 255, 0.1)',
+  border: `1px solid ${
+    theme.palette.mode === 'dark'
+      ? 'rgba(208, 188, 255, 0.2)'
+      : 'rgba(208, 188, 255, 0.3)'
+  }`,
   marginBottom: theme.spacing(2),
 }));
 
 const KeyTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(0, 0, 0, 0.3)' 
-      : 'rgba(255, 255, 255, 0.8)',
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(0, 0, 0, 0.3)'
+        : 'rgba(255, 255, 255, 0.8)',
     '&:hover': {
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.main,
-      }
+      },
     },
     '&.Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.main,
         borderWidth: 2,
-      }
-    }
+      },
+    },
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.2)' 
-      : 'rgba(0, 0, 0, 0.1)',
+    borderColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.2)'
+        : 'rgba(0, 0, 0, 0.1)',
   },
   '& .MuiInputLabel-root': {
-    color: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.7)' 
-      : 'rgba(0, 0, 0, 0.7)',
-  }
+    color:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.7)'
+        : 'rgba(0, 0, 0, 0.7)',
+  },
 }));
-
 
 const DialogAvatar = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -365,7 +382,7 @@ const DialogAvatar = styled(Box)(({ theme }) => ({
   '& svg': {
     color: '#9c64f2',
     fontSize: 28,
-  }
+  },
 }));
 
 const InputContainer = styled(Box)(({ theme }) => ({
@@ -375,31 +392,34 @@ const InputContainer = styled(Box)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
-    backgroundColor: theme.palette.mode === 'dark' 
-      ? 'rgba(0, 0, 0, 0.3)' 
-      : 'rgba(255, 255, 255, 0.8)',
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(0, 0, 0, 0.3)'
+        : 'rgba(255, 255, 255, 0.8)',
     '&:hover': {
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.main,
-      }
+      },
     },
     '&.Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.primary.main,
         borderWidth: 2,
-      }
-    }
+      },
+    },
   },
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.2)' 
-      : 'rgba(0, 0, 0, 0.1)',
+    borderColor:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.2)'
+        : 'rgba(0, 0, 0, 0.1)',
   },
   '& .MuiInputLabel-root': {
-    color: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.7)' 
-      : 'rgba(0, 0, 0, 0.7)',
-  }
+    color:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.7)'
+        : 'rgba(0, 0, 0, 0.7)',
+  },
 }));
 
 const SuggestionsContainer = styled(Box)(({ theme }) => ({
@@ -420,7 +440,7 @@ const SuggestionItem = styled(Box)(({ theme }) => ({
   transition: 'background-color 0.2s',
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  }
+  },
 }));
 
 const UserAvatar = styled(Avatar)(({ theme }) => ({
@@ -442,15 +462,16 @@ const GradientButton = styled(Button)(({ theme }) => ({
     boxShadow: '0 6px 12px rgba(98, 0, 238, 0.4)',
   },
   '&:disabled': {
-    background: theme.palette.mode === 'dark' 
-      ? 'rgba(255, 255, 255, 0.12)' 
-      : 'rgba(0, 0, 0, 0.12)',
-    color: theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.3)'
-      : 'rgba(0, 0, 0, 0.26)',
-  }
+    background:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.12)'
+        : 'rgba(0, 0, 0, 0.12)',
+    color:
+      theme.palette.mode === 'dark'
+        ? 'rgba(255, 255, 255, 0.3)'
+        : 'rgba(0, 0, 0, 0.26)',
+  },
 }));
-
 
 const ReceiptIconButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -461,7 +482,7 @@ const ReceiptIconButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   '&:hover': {
     backgroundColor: alpha(theme.palette.primary.main, 0.2),
-  }
+  },
 }));
 
 const SuccessIconWrapper = styled(Box)(({ theme }) => ({
@@ -476,30 +497,33 @@ const SuccessIconWrapper = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-
-const generateReceiptForTransaction = async (transaction) => {
+const generateReceiptForTransaction = async transaction => {
   try {
-    
     const transactionId = `TR-${transaction.id || Date.now().toString().slice(-8)}`;
-    
-    
+
     const response = await axios.post('/api/user/generate-receipt', {
       transaction_data: {
         transactionId: transactionId,
         amount: Math.abs(transaction.amount),
-        recipientUsername: transaction.type === 'transfer' ? 
-          (transaction.amount < 0 ? transaction.recipient_username : transaction.sender_username) : '',
-        senderUsername: transaction.type === 'transfer' ? 
-          (transaction.amount < 0 ? transaction.sender_username : transaction.recipient_username) : '',
+        recipientUsername:
+          transaction.type === 'transfer'
+            ? transaction.amount < 0
+              ? transaction.recipient_username
+              : transaction.sender_username
+            : '',
+        senderUsername:
+          transaction.type === 'transfer'
+            ? transaction.amount < 0
+              ? transaction.sender_username
+              : transaction.recipient_username
+            : '',
         date: transaction.date,
-      }
+      },
     });
-    
+
     if (response.data && response.data.success) {
-      
       const pdfDataUrl = `data:application/pdf;base64,${response.data.pdf_data}`;
-      
-      
+
       downloadPdfReceipt(pdfDataUrl, transactionId, response.data.file_path);
     } else {
       throw new Error(t('balance.errors.receipt_generation'));
@@ -509,13 +533,13 @@ const generateReceiptForTransaction = async (transaction) => {
   }
 };
 
-
 const TransactionDetailDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     borderRadius: 20,
-    background: theme.palette.mode === 'dark' ? 
-      'linear-gradient(135deg, rgba(35, 35, 40, 0.95) 0%, rgba(20, 20, 25, 0.95) 100%)' : 
-      'linear-gradient(135deg, rgba(250, 250, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%)',
+    background:
+      theme.palette.mode === 'dark'
+        ? 'linear-gradient(135deg, rgba(35, 35, 40, 0.95) 0%, rgba(20, 20, 25, 0.95) 100%)'
+        : 'linear-gradient(135deg, rgba(250, 250, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%)',
     backdropFilter: 'blur(20px)',
     boxShadow: '0 20px 80px rgba(0, 0, 0, 0.2)',
     overflow: 'hidden',
@@ -525,15 +549,16 @@ const TransactionDetailDialog = styled(Dialog)(({ theme }) => ({
       maxWidth: '100%',
       margin: 0,
       borderRadius: 0,
-    }
-  }
+    },
+  },
 }));
 
 const TransactionDetailHeader = styled(Box)(({ theme, type }) => ({
   padding: theme.spacing(3, 3, 3.5, 3),
-  background: type === 'income' ?
-    'linear-gradient(135deg, rgba(46, 125, 50, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%)' :
-    'linear-gradient(135deg, rgba(211, 47, 47, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%)',
+  background:
+    type === 'income'
+      ? 'linear-gradient(135deg, rgba(46, 125, 50, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%)'
+      : 'linear-gradient(135deg, rgba(211, 47, 47, 0.1) 0%, rgba(244, 67, 54, 0.2) 100%)',
   borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   position: 'relative',
   overflow: 'hidden',
@@ -543,7 +568,8 @@ const TransactionDetailAmount = styled(Typography)(({ theme, type }) => ({
   fontWeight: 700,
   fontSize: '2.2rem',
   lineHeight: 1.2,
-  color: type === 'income' ? theme.palette.success.main : theme.palette.error.main,
+  color:
+    type === 'income' ? theme.palette.success.main : theme.palette.error.main,
   marginTop: theme.spacing(1),
   marginBottom: theme.spacing(0.5),
 }));
@@ -553,15 +579,19 @@ const TransactionStatusChip = styled(Chip)(({ theme, status }) => ({
   height: 24,
   fontSize: '0.7rem',
   fontWeight: 600,
-  backgroundColor: status === 'completed' ? 
-    alpha(theme.palette.success.main, 0.1) : 
-    alpha(theme.palette.grey[500], 0.1),
-  color: status === 'completed' ? 
-    theme.palette.success.main : 
-    theme.palette.grey[500],
-  border: `1px solid ${status === 'completed' ? 
-    alpha(theme.palette.success.main, 0.3) : 
-    alpha(theme.palette.grey[500], 0.3)}`,
+  backgroundColor:
+    status === 'completed'
+      ? alpha(theme.palette.success.main, 0.1)
+      : alpha(theme.palette.grey[500], 0.1),
+  color:
+    status === 'completed'
+      ? theme.palette.success.main
+      : theme.palette.grey[500],
+  border: `1px solid ${
+    status === 'completed'
+      ? alpha(theme.palette.success.main, 0.3)
+      : alpha(theme.palette.grey[500], 0.3)
+  }`,
   margin: theme.spacing(0, 0.5),
 }));
 
@@ -573,7 +603,7 @@ const DetailRow = styled(Box)(({ theme }) => ({
   borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   '&:last-child': {
     borderBottom: 'none',
-  }
+  },
 }));
 
 const DetailLabel = styled(Typography)(({ theme }) => ({
@@ -592,21 +622,24 @@ const DetailValue = styled(Typography)(({ theme }) => ({
 }));
 
 const TransactionAvatar = styled(Avatar, {
-  shouldForwardProp: (prop) => prop !== 'transactionType',
+  shouldForwardProp: prop => prop !== 'transactionType',
 })(({ theme, transactionType }) => ({
   width: 46,
   height: 46,
   borderRadius: 14,
-  backgroundColor: transactionType === 'positive' ? 
-    alpha(theme.palette.success.main, 0.15) : 
-    alpha(theme.palette.error.main, 0.15),
-  border: `1px solid ${transactionType === 'positive' ? 
-    alpha(theme.palette.success.main, 0.3) : 
-    alpha(theme.palette.error.main, 0.3)}`,
+  backgroundColor:
+    transactionType === 'positive'
+      ? alpha(theme.palette.success.main, 0.15)
+      : alpha(theme.palette.error.main, 0.15),
+  border: `1px solid ${
+    transactionType === 'positive'
+      ? alpha(theme.palette.success.main, 0.3)
+      : alpha(theme.palette.error.main, 0.3)
+  }`,
   padding: theme.spacing(0.7),
   '& .MuiSvgIcon-root': {
     fontSize: '1.4rem',
-  }
+  },
 }));
 
 const BankStyleTransactionItem = styled(Box)(({ theme }) => ({
@@ -618,7 +651,7 @@ const BankStyleTransactionItem = styled(Box)(({ theme }) => ({
   transition: 'all 0.2s ease',
   '&:hover': {
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  }
+  },
 }));
 
 const TransactionInfo = styled(Box)(({ theme }) => ({
@@ -652,18 +685,18 @@ const TransactionDetailContent = styled(DialogContent)(({ theme }) => ({
 
 // Add styled component for expandable content
 const ExpandableContent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'expanded',
+  shouldForwardProp: prop => prop !== 'expanded',
 })(({ theme, expanded }) => ({
   maxHeight: expanded ? '1000px' : '0',
   overflow: 'hidden',
   opacity: expanded ? 1 : 0,
   transition: theme.transitions.create(['opacity', 'max-height'], {
-    duration: theme.transitions.duration.standard
-  })
+    duration: theme.transitions.duration.standard,
+  }),
 }));
 
 const ExpandIcon = styled(ExpandMoreIcon, {
-  shouldForwardProp: (prop) => prop !== 'expanded',
+  shouldForwardProp: prop => prop !== 'expanded',
 })(({ theme, expanded }) => ({
   transition: theme.transitions.create('transform', {
     duration: theme.transitions.duration.shortest,
@@ -690,14 +723,23 @@ const BalancePage = () => {
   const [tabValue, setTabValue] = useState(0);
   const [transferDialogOpen, setTransferDialogOpen] = useState(false);
   const [newTransferMenuOpen, setNewTransferMenuOpen] = useState(false);
-  const [transferData, setTransferData] = useState({ username: '', amount: '', message: '', recipient_id: null });
+  const [transferData, setTransferData] = useState({
+    username: '',
+    amount: '',
+    message: '',
+    recipient_id: null,
+  });
   const [transferErrors, setTransferErrors] = useState({});
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'info' });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info',
+  });
   const [userSearch, setUserSearch] = useState({
     loading: false,
     exists: false,
     suggestions: [],
-    timer: null
+    timer: null,
   });
   const [openKeyDialog, setOpenKeyDialog] = useState(false);
   const [keyValue, setKeyValue] = useState('');
@@ -709,26 +751,25 @@ const BalancePage = () => {
   const [receiptData, setReceiptData] = useState(null);
   const [subscription, setSubscription] = useState(null);
   const [isTransferring, setIsTransferring] = useState(false);
-  
+
   // Состояние для проверки декорации
   const [isCheckingDecoration, setIsCheckingDecoration] = useState(false);
   const [decorationCheckError, setDecorationCheckError] = useState('');
-  
+
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [gameTransactions, setGameTransactions] = useState([]);
-  
+
   // Состояние для модалки выбора декорации Ultimate
   const [decorationModalOpen, setDecorationModalOpen] = useState(false);
   const [availableDecorations, setAvailableDecorations] = useState([]);
-  
+
   const debounceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
   const [isPointsInfoExpanded, setIsPointsInfoExpanded] = useState(false);
   const { language } = useLanguage();
 
-  
   const allTransactions = React.useMemo(() => {
     const purchases = purchaseHistory.map(purchase => ({
       ...purchase,
@@ -737,7 +778,7 @@ const BalancePage = () => {
       amount: -purchase.price_paid,
       title: t('balance.transactions.badge_purchase'),
       description: `"${purchase.badge.name}"`,
-      icon: <ShoppingCartIcon sx={{ color: 'error.main' }} />
+      icon: <ShoppingCartIcon sx={{ color: 'error.main' }} />,
     }));
 
     const royalties = royaltyHistory.map(royalty => ({
@@ -749,35 +790,49 @@ const BalancePage = () => {
       description: `${royalty.buyer.name}`,
       buyer_name: royalty.buyer.name,
       badge_name: royalty.badge_name,
-      icon: <MonetizationOnIcon sx={{ color: 'success.main' }} />
+      icon: <MonetizationOnIcon sx={{ color: 'success.main' }} />,
     }));
 
     const transfers = transferHistory.map(transfer => {
       const senderId = parseInt(transfer.sender_id, 10);
       const userId = parseInt(user.id, 10);
       const is_sender = senderId === userId;
-      
-      const isClickerWithdrawal = transfer.sender_id === transfer.recipient_id && 
-                               transfer.message === t('balance.transactions.clicker_withdrawal_message');
-      
-      let title = isClickerWithdrawal ? t('balance.transactions.clicker_withdrawal') : 
-                 (is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'));
-      let description = isClickerWithdrawal ? t('balance.transactions.clicker_points') : 
-                       (is_sender ? transfer.recipient_username : transfer.sender_username);
-      
+
+      const isClickerWithdrawal =
+        transfer.sender_id === transfer.recipient_id &&
+        transfer.message ===
+          t('balance.transactions.clicker_withdrawal_message');
+
+      let title = isClickerWithdrawal
+        ? t('balance.transactions.clicker_withdrawal')
+        : is_sender
+          ? t('balance.transactions.transfer')
+          : t('balance.transactions.deposit');
+      let description = isClickerWithdrawal
+        ? t('balance.transactions.clicker_points')
+        : is_sender
+          ? transfer.recipient_username
+          : transfer.sender_username;
+
       return {
         ...transfer,
         type: 'transfer',
         date: new Date(transfer.date),
-        amount: isClickerWithdrawal ? transfer.amount : (is_sender ? -transfer.amount : transfer.amount),
+        amount: isClickerWithdrawal
+          ? transfer.amount
+          : is_sender
+            ? -transfer.amount
+            : transfer.amount,
         title: title,
         description: description,
         is_sender: isClickerWithdrawal ? false : is_sender,
-        icon: isClickerWithdrawal 
-          ? <TouchAppIcon sx={{ color: 'success.main' }} />
-          : (is_sender 
-              ? <SendIcon sx={{ color: 'error.main' }} />
-              : <AccountBalanceWalletIcon sx={{ color: 'success.main' }} />)
+        icon: isClickerWithdrawal ? (
+          <TouchAppIcon sx={{ color: 'success.main' }} />
+        ) : is_sender ? (
+          <SendIcon sx={{ color: 'error.main' }} />
+        ) : (
+          <AccountBalanceWalletIcon sx={{ color: 'success.main' }} />
+        ),
       };
     });
 
@@ -788,7 +843,7 @@ const BalancePage = () => {
       amount: -purchase.price_paid,
       title: t('balance.transactions.username_purchase'),
       description: `@${purchase.username}`,
-      icon: <AccountCircleIcon sx={{ color: 'error.main' }} />
+      icon: <AccountCircleIcon sx={{ color: 'error.main' }} />,
     }));
 
     const weeklyActivities = gameTransactions
@@ -799,19 +854,21 @@ const BalancePage = () => {
           type: 'weekly_activity',
           date: new Date(transaction.date || transaction.created_at),
           title: t('balance.transactions.weekly_points'),
-          description: transaction.description || t('balance.transactions.activity_reward'),
-          icon: <TrendingUpIcon sx={{ color: 'success.main' }} />
+          description:
+            transaction.description ||
+            t('balance.transactions.activity_reward'),
+          icon: <TrendingUpIcon sx={{ color: 'success.main' }} />,
         };
       });
-    
 
     const otherGameTransactions = gameTransactions
       .filter(transaction => transaction.transaction_type !== 'weekly_activity')
       .map(transaction => {
         let icon = null;
-        let title = transaction.description || t('balance.transactions.transaction');
+        let title =
+          transaction.description || t('balance.transactions.transaction');
         let type = transaction.transaction_type || 'unknown';
-        
+
         // Игровые транзакции (Blackjack)
         if (type.includes('blackjack')) {
           if (type === 'blackjack_win' || type === 'blackjack_win_21') {
@@ -820,7 +877,10 @@ const BalancePage = () => {
           } else if (type === 'blackjack_tie') {
             icon = <CasinoIcon sx={{ color: 'info.main' }} />;
             title = t('balance.transactions.blackjack_tie');
-          } else if (type === 'blackjack_lose' || type === 'blackjack_lose_bust') {
+          } else if (
+            type === 'blackjack_lose' ||
+            type === 'blackjack_lose_bust'
+          ) {
             icon = <CasinoIcon sx={{ color: 'error.main' }} />;
             title = t('balance.transactions.blackjack_lose');
           } else if (type === 'blackjack_bet') {
@@ -849,11 +909,17 @@ const BalancePage = () => {
           title = t('balance.transactions.minigame_bet');
         }
         // Аукционы
-        else if (type.includes('auction') && !type.includes('username_auction')) {
+        else if (
+          type.includes('auction') &&
+          !type.includes('username_auction')
+        ) {
           if (type === 'auction_bid' || type === 'auction_bid_increase') {
             icon = <TagIcon sx={{ color: 'error.main' }} />;
             title = t('balance.transactions.auction_bid');
-          } else if (type === 'auction_bid_refund' || type === 'auction_refund') {
+          } else if (
+            type === 'auction_bid_refund' ||
+            type === 'auction_refund'
+          ) {
             icon = <TagIcon sx={{ color: 'success.main' }} />;
             title = t('balance.transactions.auction_refund');
           } else if (type === 'auction_sale') {
@@ -869,13 +935,19 @@ const BalancePage = () => {
           } else if (type === 'username_auction_refund') {
             icon = <AccountCircleIcon sx={{ color: 'success.main' }} />;
             title = t('balance.transactions.username_auction_refund');
-          } else if (type === 'username_auction_sale' || type === 'username_bid_accepted_sale') {
+          } else if (
+            type === 'username_auction_sale' ||
+            type === 'username_bid_accepted_sale'
+          ) {
             icon = <AccountCircleIcon sx={{ color: 'success.main' }} />;
             title = t('balance.transactions.username_auction_sale');
           }
         }
         // Покупки юзернеймов
-        else if (type === 'username_immediate_purchase' || type === 'username_purchase') {
+        else if (
+          type === 'username_immediate_purchase' ||
+          type === 'username_purchase'
+        ) {
           icon = <AccountCircleIcon sx={{ color: 'error.main' }} />;
           title = t('balance.transactions.username_purchase');
         }
@@ -931,27 +1003,47 @@ const BalancePage = () => {
         }
         // По умолчанию
         else {
-          icon = <SportsEsportsIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />;
-          title = transaction.description || t('balance.transactions.transaction');
+          icon = (
+            <SportsEsportsIcon
+              sx={{
+                color: transaction.amount > 0 ? 'success.main' : 'error.main',
+              }}
+            />
+          );
+          title =
+            transaction.description || t('balance.transactions.transaction');
         }
-        
+
         return {
-          ...transaction, 
+          ...transaction,
           type: 'game',
           date: new Date(transaction.date),
           title: title,
           description: transaction.transaction_type.replace(/_/g, ' '),
-          icon: icon
+          icon: icon,
         };
       });
-    
-    return [...purchases, ...royalties, ...transfers, ...usernames, ...weeklyActivities, ...otherGameTransactions]
-      .sort((a, b) => b.date - a.date);
-  }, [purchaseHistory, royaltyHistory, transferHistory, usernamePurchases, gameTransactions, user?.id, t]);
+
+    return [
+      ...purchases,
+      ...royalties,
+      ...transfers,
+      ...usernames,
+      ...weeklyActivities,
+      ...otherGameTransactions,
+    ].sort((a, b) => b.date - a.date);
+  }, [
+    purchaseHistory,
+    royaltyHistory,
+    transferHistory,
+    usernamePurchases,
+    gameTransactions,
+    user?.id,
+    t,
+  ]);
 
   useEffect(() => {
     if (user) {
-      
       fetchUserPoints();
       fetchWeeklyEstimate();
       fetchPurchaseHistory();
@@ -964,12 +1056,10 @@ const BalancePage = () => {
     }
   }, [user]);
 
-  
   useEffect(() => {
     console.log('Subscription state changed:', subscription);
   }, [subscription]);
 
-  
   const fetchUserPoints = async () => {
     try {
       const response = await axios.get('/api/user/points');
@@ -980,11 +1070,11 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchWeeklyEstimate = async () => {
     try {
-      
-      const response = await axios.get('/api/leaderboard/user/' + user.id + '?period=week');
+      const response = await axios.get(
+        '/api/leaderboard/user/' + user.id + '?period=week'
+      );
       setWeeklyEstimate(response.data.score || 0);
     } catch (error) {
       console.error('Ошибка при загрузке прогноза:', error);
@@ -992,13 +1082,12 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchPurchaseHistory = async () => {
     try {
       const response = await axios.get('/api/badges/purchases');
-      
-      const sortedPurchases = response.data.purchases.sort((a, b) => 
-        new Date(b.purchase_date) - new Date(a.purchase_date)
+
+      const sortedPurchases = response.data.purchases.sort(
+        (a, b) => new Date(b.purchase_date) - new Date(a.purchase_date)
       );
       setPurchaseHistory(sortedPurchases);
     } catch (error) {
@@ -1009,11 +1098,10 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchRoyaltyHistory = async () => {
     try {
       const response = await axios.get('/api/badges/royalties');
-      
+
       console.log('Received royalty data:', response.data);
       setRoyaltyHistory(response.data.royalties || []);
     } catch (error) {
@@ -1022,7 +1110,6 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchCreatedBadges = async () => {
     try {
       const response = await axios.get('/api/badges/created');
@@ -1034,7 +1121,6 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchTransferHistory = async () => {
     try {
       const response = await axios.get('/api/user/transfer-history');
@@ -1043,11 +1129,9 @@ const BalancePage = () => {
       }
     } catch (error) {
       console.error('Ошибка при получении истории переводов:', error);
-      
     }
   };
 
-  
   const fetchUsernamePurchases = async () => {
     try {
       const response = await axios.get('/api/user/username-purchases');
@@ -1056,17 +1140,15 @@ const BalancePage = () => {
       }
     } catch (error) {
       console.error('Ошибка при получении истории покупок юзернеймов:', error);
-      
     }
   };
 
-  
-  const searchUser = useCallback((username) => {
+  const searchUser = useCallback(username => {
     // Always clear previous timer first to reset the debounce
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current);
     }
-    
+
     // If username is empty, just reset everything
     if (!username) {
       setUserSearch(prev => ({
@@ -1075,30 +1157,34 @@ const BalancePage = () => {
         exists: false,
         suggestions: [],
       }));
-      setTransferData(prev => ({...prev, recipient_id: null}));
+      setTransferData(prev => ({ ...prev, recipient_id: null }));
       return;
     }
-    
+
     // Set new timer
     debounceTimerRef.current = setTimeout(() => {
       // Only show loading and make the API call after timeout
       setUserSearch(prev => ({ ...prev, loading: true }));
-      
-      axios.get(`/api/user/search-recipients?query=${username}`)
+
+      axios
+        .get(`/api/user/search-recipients?query=${username}`)
         .then(response => {
           if (response.data && response.data.users) {
             // Find exact match
             const exactMatch = response.data.users.find(
               user => user.username.toLowerCase() === username.toLowerCase()
             );
-            
+
             // Update recipient ID if exact match found
             if (exactMatch) {
-              setTransferData(prev => ({...prev, recipient_id: exactMatch.id}));
+              setTransferData(prev => ({
+                ...prev,
+                recipient_id: exactMatch.id,
+              }));
             } else {
-              setTransferData(prev => ({...prev, recipient_id: null}));
+              setTransferData(prev => ({ ...prev, recipient_id: null }));
             }
-            
+
             // Update search results
             setUserSearch(prev => ({
               ...prev,
@@ -1113,7 +1199,7 @@ const BalancePage = () => {
               exists: false,
               suggestions: [],
             }));
-            setTransferData(prev => ({...prev, recipient_id: null}));
+            setTransferData(prev => ({ ...prev, recipient_id: null }));
           }
         })
         .catch(error => {
@@ -1124,16 +1210,15 @@ const BalancePage = () => {
             exists: false,
             suggestions: [],
           }));
-          setTransferData(prev => ({...prev, recipient_id: null}));
+          setTransferData(prev => ({ ...prev, recipient_id: null }));
         });
     }, 1000); // 1 second delay
   }, []);
-  
-  
-  const handleUsernameChange = (e) => {
+
+  const handleUsernameChange = e => {
     const username = e.target.value;
-    setTransferData(prev => ({...prev, username}));
-    
+    setTransferData(prev => ({ ...prev, username }));
+
     // Simple pass to searchUser, which now handles proper debouncing
     if (username.trim()) {
       searchUser(username.trim());
@@ -1149,29 +1234,32 @@ const BalancePage = () => {
         exists: false,
         suggestions: [],
       }));
-      setTransferData(prev => ({...prev, recipient_id: null}));
+      setTransferData(prev => ({ ...prev, recipient_id: null }));
     }
   };
-  
-  
+
   const selectSuggestion = (username, userId) => {
-    setTransferData(prev => ({...prev, username, recipient_id: userId}));
+    setTransferData(prev => ({ ...prev, username, recipient_id: userId }));
     setUserSearch(prev => ({
       ...prev,
       loading: false,
       exists: true,
-      suggestions: []
+      suggestions: [],
     }));
   };
 
-  
   const handleTransferPoints = async () => {
     const errors = {};
-    if (!transferData.username) errors.username = t('balance.transfer.errors.enter_username');
-    if (!transferData.recipient_id) errors.username = t('balance.transfer.errors.user_not_found');
+    if (!transferData.username)
+      errors.username = t('balance.transfer.errors.enter_username');
+    if (!transferData.recipient_id)
+      errors.username = t('balance.transfer.errors.user_not_found');
     if (!transferData.amount) {
       errors.amount = t('balance.transfer.errors.enter_amount');
-    } else if (isNaN(transferData.amount) || parseInt(transferData.amount) <= 0) {
+    } else if (
+      isNaN(transferData.amount) ||
+      parseInt(transferData.amount) <= 0
+    ) {
       errors.amount = t('balance.transfer.errors.positive_amount');
     } else if (parseInt(transferData.amount) > userPoints) {
       errors.amount = t('balance.transfer.errors.insufficient_points');
@@ -1182,33 +1270,27 @@ const BalancePage = () => {
       return;
     }
 
-
     if (isTransferring) return;
 
     setTransferErrors({});
     setIsTransferring(true);
-    
+
     try {
-      
       const response = await axios.post('/api/user/transfer-points', {
         recipient_username: transferData.username,
         recipient_id: transferData.recipient_id,
         amount: parseInt(transferData.amount),
-        message: transferData.message
+        message: transferData.message,
       });
-      
-      
+
       fetchUserPoints();
-      
-      
+
       setTransferDialogOpen(false);
-      
-      
+
       try {
         const now = new Date();
         const transactionId = `TR-${Date.now().toString().slice(-8)}`;
-        
-        
+
         const response = await axios.post('/api/user/generate-receipt', {
           transaction_data: {
             transactionId: transactionId,
@@ -1216,16 +1298,15 @@ const BalancePage = () => {
             recipientUsername: transferData.username,
             senderUsername: user.username,
             date: now.toISOString(),
-          }
+          },
         });
-        
+
         if (response.data && response.data.success) {
-          
           const receiptData = {
             dataUrl: `data:application/pdf;base64,${response.data.pdf_data}`,
-            filePath: response.data.file_path
+            filePath: response.data.file_path,
           };
-          
+
           setReceiptData(receiptData);
           setTransferSuccess(true);
         } else {
@@ -1234,69 +1315,72 @@ const BalancePage = () => {
       } catch (error) {
         console.error('Ошибка при создании чека:', error);
       }
-      
-      
+
       fetchTransferHistory();
-      
-      
-      setTransferData({ username: '', amount: '', message: '', recipient_id: null });
+
+      setTransferData({
+        username: '',
+        amount: '',
+        message: '',
+        recipient_id: null,
+      });
     } catch (error) {
       console.error('Ошибка при переводе баллов:', error);
       setSnackbar({
         open: true,
         message: error.response?.data?.error || 'Ошибка при переводе баллов',
-        severity: 'error'
+        severity: 'error',
       });
     } finally {
       setIsTransferring(false);
     }
   };
 
-  
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     const date = new Date(dateString);
-    
-    
+
     const userTimezoneOffset = date.getTimezoneOffset();
-    
-    
-    const userDate = new Date(date.getTime() - (userTimezoneOffset * 60000));
-    
-    
+
+    const userDate = new Date(date.getTime() - userTimezoneOffset * 60000);
+
     const formattedDate = userDate.toLocaleString('ru-RU', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false, 
-      timeZoneName: 'short' 
+      hour12: false,
+      timeZoneName: 'short',
     });
-    
+
     return formattedDate;
   };
 
-  
   const getCurrentWeekRange = () => {
     const now = new Date();
-    const dayOfWeek = now.getDay(); 
-    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; 
-    
+    const dayOfWeek = now.getDay();
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+
     const monday = new Date(now);
     monday.setDate(now.getDate() + mondayOffset);
     monday.setHours(0, 0, 0, 0);
-    
+
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
     sunday.setHours(23, 50, 0, 0);
-    
+
     return {
-      start: monday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'long' }),
-      end: sunday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', { day: 'numeric', month: 'long' })
+      start: monday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', {
+        day: 'numeric',
+        month: 'long',
+      }),
+      end: sunday.toLocaleDateString(language === 'EN' ? 'en-US' : 'ru-RU', {
+        day: 'numeric',
+        month: 'long',
+      }),
     };
   };
 
-  
   const weekRange = useMemo(() => getCurrentWeekRange(), [language]);
 
   const handleTabChange = (event, newValue) => {
@@ -1307,44 +1391,37 @@ const BalancePage = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
-  
-  const formatKeyInput = (input) => {
-    
+  const formatKeyInput = input => {
     const cleaned = input.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-    
-    
+
     let formatted = '';
     for (let i = 0; i < cleaned.length; i++) {
       if (i > 0 && i % 4 === 0 && i < 16) {
         formatted += '-';
       }
-      if (i < 16) { 
+      if (i < 16) {
         formatted += cleaned[i];
       }
     }
-    
+
     return formatted;
   };
-  
-  
-  const handleKeyChange = (e) => {
+
+  const handleKeyChange = e => {
     const formattedKey = formatKeyInput(e.target.value);
     setKeyValue(formattedKey);
     setKeyError('');
   };
-  
-  
-  const isValidKeyFormat = (key) => {
-    
+
+  const isValidKeyFormat = key => {
     return /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(key);
   };
-  
-  
+
   const handleRedeemKey = async () => {
     setKeyError('');
     setKeySuccess(null);
     setIsSubmittingKey(true);
-    
+
     try {
       const response = await fetch('/api/user/redeem-key', {
         method: 'POST',
@@ -1353,13 +1430,17 @@ const BalancePage = () => {
         },
         body: JSON.stringify({ key: keyValue }),
       });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
 
-        if (data.error && data.error.includes('Невозможно активировать подписку') && 
-            data.error.includes('так как у вас уже есть подписка более высокого уровня')) {
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (
+          data.error &&
+          data.error.includes('Невозможно активировать подписку') &&
+          data.error.includes(
+            'так как у вас уже есть подписка более высокого уровня'
+          )
+        ) {
           setKeyError(data.error);
         } else {
           setKeyError(data.error || 'Ошибка при активации ключа');
@@ -1367,35 +1448,35 @@ const BalancePage = () => {
         setIsSubmittingKey(false);
         return;
       }
-      
+
       if (data.type === 'points') {
-        
         setKeySuccess({
           message: data.message,
           type: 'points',
-          newBalance: data.new_balance
+          newBalance: data.new_balance,
         });
-        
+
         setUserPoints(data.new_balance);
-      } else       if (data.type === 'subscription') {
-        
+      } else if (data.type === 'subscription') {
         setKeySuccess({
           message: data.message,
           type: 'subscription',
           subscriptionType: data.subscription_type,
           expiresAt: data.expires_at,
-          duration_days: data.duration_days
+          duration_days: data.duration_days,
         });
-        
+
         fetchSubscriptionStatus();
-        
+
         // Проверяем, нужно ли показать модалку выбора декорации
-        if (data.subscription_type === 'ultimate' && data.needs_decoration_selection) {
+        if (
+          data.subscription_type === 'ultimate' &&
+          data.needs_decoration_selection
+        ) {
           setAvailableDecorations(data.available_decorations || []);
           setDecorationModalOpen(true);
         }
       }
-      
     } catch (error) {
       console.error('Ошибка при активации ключа:', error);
       setKeyError('Произошла ошибка при активации ключа');
@@ -1404,26 +1485,23 @@ const BalancePage = () => {
     }
   };
 
-  
   const fetchSubscriptionStatus = async () => {
     try {
       console.log('Fetching subscription status...');
       const response = await axios.get('/api/user/subscription/status');
-      
+
       if (response.data) {
         console.log('Received subscription data:', response.data);
-        
-        
+
         if (response.data.active && response.data.subscription_type) {
           setSubscription({
             active: true,
             type: response.data.subscription_type,
             expires_at: response.data.expiration_date,
-            
-            features: response.data.features || []
+
+            features: response.data.features || [],
           });
         } else {
-          
           setSubscription(null);
         }
       } else {
@@ -1436,45 +1514,40 @@ const BalancePage = () => {
     }
   };
 
-  
-  const handleOpenTransactionDetails = (transaction) => {
+  const handleOpenTransactionDetails = transaction => {
     setSelectedTransaction(transaction);
     setDetailDialogOpen(true);
   };
 
-  
   const handleCloseTransactionDetails = () => {
     setDetailDialogOpen(false);
     setSelectedTransaction(null);
   };
 
-  
-  const formatCurrency = (amount) => {
+  const formatCurrency = amount => {
     const absAmount = Math.abs(amount);
     return `${amount < 0 ? '-' : '+'}${formatNumberWithSpaces(absAmount)}`;
   };
 
-  
-  const formatNumberWithSpaces = (number) => {
+  const formatNumberWithSpaces = number => {
     if (number === null || number === undefined) return '0';
-    
+
     // Safari-совместимый способ разделения чисел пробелами
     // Используем простую логику без lookahead/lookbehind
     const str = number.toString();
     const parts = [];
     let i = str.length;
-    
+
     while (i > 0) {
       const start = Math.max(0, i - 3);
       parts.unshift(str.slice(start, i));
       i = start;
     }
-    
+
     return parts.join(' ');
   };
 
-  
-  const getTransactionId = (transaction) => {
+  const getTransactionId = transaction => {
     return `TR-${transaction.id || new Date(transaction.date).getTime().toString().slice(-8)}`;
   };
 
@@ -1495,7 +1568,7 @@ const BalancePage = () => {
     if (userSearch.loading) {
       setUserSearch(prev => ({
         ...prev,
-        loading: false
+        loading: false,
       }));
     }
   }, [transferData.username]);
@@ -1507,10 +1580,15 @@ const BalancePage = () => {
       clearTimeout(debounceTimerRef.current);
       debounceTimerRef.current = null;
     }
-    
+
     // Reset all state
     setTransferDialogOpen(false);
-    setTransferData({ username: '', amount: '', message: '', recipient_id: null });
+    setTransferData({
+      username: '',
+      amount: '',
+      message: '',
+      recipient_id: null,
+    });
     setTransferErrors({});
     setUserSearch({
       loading: false,
@@ -1539,22 +1617,22 @@ const BalancePage = () => {
   }, []);
 
   // Add handler for the new transfer menu
-  const handleNewTransferSuccess = (receiptData) => {
+  const handleNewTransferSuccess = receiptData => {
     // Don't set transferSuccess to true, as the new component has its own success UI
     // Just update the balance and history
     fetchUserPoints();
     fetchTransferHistory();
   };
 
-  const handleDecorationSelectionSuccess = (selectedDecoration) => {
+  const handleDecorationSelectionSuccess = selectedDecoration => {
     // Обновляем статус подписки после выбора декорации
     fetchSubscriptionStatus();
-    
+
     // Показываем уведомление об успешном выборе
     setSnackbar({
       open: true,
       message: `Декорация "${selectedDecoration.name}" успешно применена!`,
-      severity: 'success'
+      severity: 'success',
     });
   };
 
@@ -1564,7 +1642,7 @@ const BalancePage = () => {
 
     try {
       const response = await axios.get('/api/ultimate/decorations/check');
-      
+
       if (response.data.success) {
         if (response.data.needs_selection) {
           // Показываем модалку выбора декорации
@@ -1575,21 +1653,25 @@ const BalancePage = () => {
           setSnackbar({
             open: true,
             message: 'У вас уже есть декорация профиля',
-            severity: 'info'
+            severity: 'info',
           });
         }
       } else {
-        setDecorationCheckError(response.data.error || 'Ошибка при проверке декорации');
+        setDecorationCheckError(
+          response.data.error || 'Ошибка при проверке декорации'
+        );
       }
     } catch (error) {
       console.error('Ошибка при проверке декорации:', error);
-      setDecorationCheckError(error.response?.data?.error || 'Произошла ошибка при проверке декорации');
+      setDecorationCheckError(
+        error.response?.data?.error || 'Произошла ошибка при проверке декорации'
+      );
     } finally {
       setIsCheckingDecoration(false);
     }
   };
 
-  const getTransactionDescription = (transaction) => {
+  const getTransactionDescription = transaction => {
     switch (transaction.transaction_type) {
       case 'weekly_activity':
         return 'Еженедельное начисление баллов за активность';
@@ -1671,12 +1753,12 @@ const BalancePage = () => {
     }
   };
 
-  const renderTransactionRow = (transaction) => {
+  const renderTransactionRow = transaction => {
     const positiveTypes = [
-      'weekly_activity', 
+      'weekly_activity',
       'custom_period_activity',
-      'top_prize', 
-      'royalty', 
+      'top_prize',
+      'royalty',
       'key_redeem',
       'compensation',
       'conversion_deposit',
@@ -1690,33 +1772,34 @@ const BalancePage = () => {
       'username_auction_refund',
       'username_auction_sale',
       'username_bid_accepted_sale',
-      'marketplace_sell'
+      'marketplace_sell',
     ];
     const isPositive = positiveTypes.includes(transaction.transaction_type);
     const amount = transaction.amount || 0;
-    
+
     return (
-      <TableRow 
+      <TableRow
         key={getTransactionId(transaction)}
         hover
         onClick={() => handleOpenTransactionDetails(transaction)}
         sx={{ cursor: 'pointer' }}
       >
         <TableCell>
-          <Typography variant="body2">
+          <Typography variant='body2'>
             {getTransactionDescription(transaction)}
           </Typography>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant='caption' color='textSecondary'>
             {formatDate(transaction.created_at)}
           </Typography>
         </TableCell>
-        <TableCell align="right">
+        <TableCell align='right'>
           <Typography
-            variant="body2"
+            variant='body2'
             color={isPositive ? 'success.main' : 'error.main'}
             sx={{ fontWeight: 'bold' }}
           >
-            {isPositive ? '+' : '-'}{formatCurrency(amount)}
+            {isPositive ? '+' : '-'}
+            {formatCurrency(amount)}
           </Typography>
         </TableCell>
       </TableRow>
@@ -1737,24 +1820,29 @@ const BalancePage = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        minHeight='80vh'
+      >
         <CircularProgress />
       </Box>
     );
   }
 
   return (
-    <Container 
-      maxWidth="md" 
-      sx={{ 
-        py: 4, 
-        pb: 12.5, 
+    <Container
+      maxWidth='md'
+      sx={{
+        py: 4,
+        pb: 12.5,
         paddingTop: 2,
-        [theme.breakpoints.down('sm')]: { pl: 1, pr: 1 }
+        [theme.breakpoints.down('sm')]: { pl: 1, pr: 1 },
       }}
     >
       <InfoBlock
-        styleVariant="dark"
+        styleVariant='dark'
         sx={{
           '&::before': {
             bottom: 0,
@@ -1763,69 +1851,92 @@ const BalancePage = () => {
           '&::after': {
             bottom: 0,
             transform: 'rotate(12deg)',
-          }
+          },
         }}
         title={
           <Box sx={{ textAlign: 'center' }}>
             <PointsIcon>
               <BallsSVG />
             </PointsIcon>
-            <Typography 
-              variant="subtitle1" 
-              sx={{ 
+            <Typography
+              variant='subtitle1'
+              sx={{
                 color: 'rgba(255,255,255,0.8)',
-                marginBottom: 1
+                marginBottom: 1,
               }}
             >
               {t('balance.current_balance.title')}
             </Typography>
-            <BalanceAmount>
-              {formatNumberWithSpaces(userPoints)}
-            </BalanceAmount>
+            <BalanceAmount>{formatNumberWithSpaces(userPoints)}</BalanceAmount>
           </Box>
         }
         description={
           <ActionButtonsContainer>
-            <ActionButtonItem key="action-pay" onClick={() => navigate('/badge-shop')}>
+            <ActionButtonItem
+              key='action-pay'
+              onClick={() => navigate('/badge-shop')}
+            >
               <ActionCircleIcon>
                 <PaymentIcon />
               </ActionCircleIcon>
               <ActionButtonText>{t('balance.actions.pay')}</ActionButtonText>
             </ActionButtonItem>
-            
-            <ActionButtonItem key="action-topup" onClick={() => setOpenKeyDialog(true)}>
+
+            <ActionButtonItem
+              key='action-topup'
+              onClick={() => setOpenKeyDialog(true)}
+            >
               <ActionCircleIcon>
                 <AddIcon />
               </ActionCircleIcon>
               <ActionButtonText>{t('balance.actions.topup')}</ActionButtonText>
             </ActionButtonItem>
 
-            <ActionButtonItem key="action-transfer" onClick={() => setNewTransferMenuOpen(true)}>
+            <ActionButtonItem
+              key='action-transfer'
+              onClick={() => setNewTransferMenuOpen(true)}
+            >
               <ActionCircleIcon>
                 <SendIcon />
               </ActionCircleIcon>
-              <ActionButtonText>{t('balance.actions.transfer')}</ActionButtonText>
+              <ActionButtonText>
+                {t('balance.actions.transfer')}
+              </ActionButtonText>
             </ActionButtonItem>
           </ActionButtonsContainer>
         }
       />
 
       <InfoBlock
-        styleVariant="dark"
+        styleVariant='dark'
         description={
           <>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <CalendarTodayIcon sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }} />
-              <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+              <CalendarTodayIcon
+                sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }}
+              />
+              <Typography
+                component='div'
+                variant='body2'
+                sx={{ color: 'rgba(255,255,255,0.7)' }}
+              >
                 {`${weekRange.start} — ${weekRange.end}`}
               </Typography>
             </Box>
 
-            <Typography component="div" variant="h4" sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}>
+            <Typography
+              component='div'
+              variant='h4'
+              sx={{ fontWeight: 'bold', color: '#4caf50', mb: 2 }}
+            >
               {`+${formatNumberWithSpaces(weeklyEstimate)} ${t('balance.current_balance.points_suffix')}`}
             </Typography>
 
-            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+            <Typography
+              component='div'
+              variant='body2'
+              sx={{ color: 'rgba(255,255,255,0.7)' }}
+            >
               {t('balance.weekly_forecast.description')}
             </Typography>
           </>
@@ -1833,41 +1944,38 @@ const BalancePage = () => {
       />
 
       <InfoBlock
-        styleVariant="dark"
+        styleVariant='dark'
         title={
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               width: '100%',
               cursor: 'pointer',
-              marginBottom: 0
+              marginBottom: 0,
             }}
             onClick={() => setIsPointsInfoExpanded(!isPointsInfoExpanded)}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <InfoIcon sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }} />
-              <Typography variant="h6" sx={{ color: 'white' }}>
+              <Typography variant='h6' sx={{ color: 'white' }}>
                 {t('balance.weekly_forecast.how_to_earn.title')}
               </Typography>
-              <ExpandIcon 
-                expanded={isPointsInfoExpanded} 
-                sx={{ ml: 1 }}
-              />
+              <ExpandIcon expanded={isPointsInfoExpanded} sx={{ ml: 1 }} />
             </Box>
-            <Box onClick={(e) => e.stopPropagation()}>
+            <Box onClick={e => e.stopPropagation()}>
               <Tooltip title={t('balance.weekly_forecast.how_to_earn.tooltip')}>
-                <IconButton 
-                  size="small"
+                <IconButton
+                  size='small'
                   component={Link}
-                  to="/leaderboard"
-                  sx={{ 
+                  to='/leaderboard'
+                  sx={{
                     color: 'rgba(255,255,255,0.7)',
                     '&:hover': {
                       color: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)'
-                    }
+                      backgroundColor: 'rgba(255,255,255,0.1)',
+                    },
                   }}
                 >
                   <TimelineIcon />
@@ -1878,88 +1986,106 @@ const BalancePage = () => {
         }
         description={
           <ExpandableContent expanded={isPointsInfoExpanded}>
-            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+            <Typography
+              component='div'
+              variant='body2'
+              sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}
+            >
               {t('balance.weekly_forecast.how_to_earn.description')}
             </Typography>
-            <Box component="ul" sx={{ 
-              color: 'rgba(255,255,255,0.7)', 
-              mt: 1, 
-              pl: 2,
-              '& li': { mb: 1 }
-            }}>
-              <Typography component="div" variant="subtitle2" gutterBottom>
+            <Box
+              component='ul'
+              sx={{
+                color: 'rgba(255,255,255,0.7)',
+                mt: 1,
+                pl: 2,
+                '& li': { mb: 1 },
+              }}
+            >
+              <Typography component='div' variant='subtitle2' gutterBottom>
                 {t('balance.points.earning_methods.title')}
               </Typography>
-              <li key="points-posts">{t('balance.points.earning_methods.posts')}</li>
-              <li key="points-likes">{t('balance.points.earning_methods.likes')}</li>
-              <li key="points-replies">{t('balance.points.earning_methods.replies')}</li>
-              <li key="points-reposts">{t('balance.points.earning_methods.reposts')}</li>
-              <li key="points-reactions">{t('balance.points.earning_methods.reactions')}</li>
+              <li key='points-posts'>
+                {t('balance.points.earning_methods.posts')}
+              </li>
+              <li key='points-likes'>
+                {t('balance.points.earning_methods.likes')}
+              </li>
+              <li key='points-replies'>
+                {t('balance.points.earning_methods.replies')}
+              </li>
+              <li key='points-reposts'>
+                {t('balance.points.earning_methods.reposts')}
+              </li>
+              <li key='points-reactions'>
+                {t('balance.points.earning_methods.reactions')}
+              </li>
             </Box>
-            <Typography component="div" variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}>
+            <Typography
+              component='div'
+              variant='body2'
+              sx={{ color: 'rgba(255,255,255,0.7)', mt: 2 }}
+            >
               {t('balance.weekly_forecast.how_to_earn.details')}
             </Typography>
           </ExpandableContent>
         }
       />
 
-      
       <StyledTabs
         value={tabValue}
         onChange={handleTabChange}
-        variant="fullWidth"
+        variant='fullWidth'
         fullWidth={true}
         tabs={[
           {
             label: t('balance.tabs.history'),
             value: 0,
             icon: ReceiptLongIcon,
-            iconPosition: "start"
+            iconPosition: 'start',
           },
           {
             label: t('balance.tabs.assets'),
             value: 1,
             icon: DiamondIcon,
-            iconPosition: "start"
+            iconPosition: 'start',
           },
           {
             label: t('balance.tabs.subscription'),
             value: 2,
             icon: FlashOnIcon,
-            iconPosition: "start",
-            key: "subscription-tab"
-          }
+            iconPosition: 'start',
+            key: 'subscription-tab',
+          },
         ]}
       />
 
-      
       <TabPanel value={tabValue} index={0}>
         <InfoBlock
-          styleVariant="dark"
-
+          styleVariant='dark'
           description={null}
-          sx={{ 
+          sx={{
             pt: 0,
             padding: '2.5px',
             '&::before': {
               top: 0,
               transform: 'rotate(-12deg)',
-              height: '90px'
+              height: '90px',
             },
             '&::after': {
               top: 0,
               transform: 'rotate(12deg)',
-              height: '90px'
-            }
+              height: '90px',
+            },
           }}
         >
           {loading ? (
-            <Box display="flex" justifyContent="center" my={4}>
+            <Box display='flex' justifyContent='center' my={4}>
               <CircularProgress size={30} />
             </Box>
           ) : allTransactions.length === 0 ? (
             <Box sx={{ textAlign: 'center', py: 3 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant='body2' color='text.secondary'>
                 {t('balance.transactions.no_history')}
               </Typography>
             </Box>
@@ -1967,35 +2093,52 @@ const BalancePage = () => {
             <>
               <List sx={{ width: '100%' }}>
                 {paginatedTransactions.map((transaction, index) => (
-                  <TransactionItem 
+                  <TransactionItem
                     key={`${transaction.type}-${transaction.id || index}`}
                     onClick={() => handleOpenTransactionDetails(transaction)}
                   >
                     <BankStyleTransactionItem>
-                      <TransactionAvatar 
-                        transactionType={transaction.amount > 0 ? 'positive' : 'negative'}
+                      <TransactionAvatar
+                        transactionType={
+                          transaction.amount > 0 ? 'positive' : 'negative'
+                        }
                       >
                         {transaction.type === 'purchase' ? (
-                          <BadgeImage 
+                          <BadgeImage
                             src={`/static/images/bages/shop/${transaction.badge.image_path}`}
                             alt={transaction.badge.name}
                           />
-                        ) : transaction.icon}
+                        ) : (
+                          transaction.icon
+                        )}
                       </TransactionAvatar>
                       <TransactionInfo>
-                        <TransactionTitle>
-                          {transaction.title}
-                        </TransactionTitle>
+                        <TransactionTitle>{transaction.title}</TransactionTitle>
                         <TransactionDate>
                           {formatDate(transaction.date)}
                         </TransactionDate>
                       </TransactionInfo>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                        <TransactionAmount type={transaction.amount > 0 ? 'positive' : 'negative'}>
-                          {transaction.amount > 0 ? '+' : ''}{formatNumberWithSpaces(transaction.amount)}
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'flex-end',
+                        }}
+                      >
+                        <TransactionAmount
+                          type={
+                            transaction.amount > 0 ? 'positive' : 'negative'
+                          }
+                        >
+                          {transaction.amount > 0 ? '+' : ''}
+                          {formatNumberWithSpaces(transaction.amount)}
                         </TransactionAmount>
-                        <Typography variant="caption" sx={{ mt: 0.5, fontWeight: 500, opacity: 0.7 }}>
-                          {transaction.description && transaction.description.length > 18
+                        <Typography
+                          variant='caption'
+                          sx={{ mt: 0.5, fontWeight: 500, opacity: 0.7 }}
+                        >
+                          {transaction.description &&
+                          transaction.description.length > 18
                             ? transaction.description.slice(0, 18) + '...'
                             : transaction.description}
                         </Typography>
@@ -2005,9 +2148,9 @@ const BalancePage = () => {
                 ))}
               </List>
               {hasNextPage && (
-                <Box display="flex" justifyContent="center" mt={2} mb={1}>
+                <Box display='flex' justifyContent='center' mt={2} mb={1}>
                   <Button
-                    variant="outlined"
+                    variant='outlined'
                     onClick={handleNextPage}
                     endIcon={<ArrowForwardIcon />}
                   >
@@ -2020,24 +2163,34 @@ const BalancePage = () => {
         </InfoBlock>
       </TabPanel>
 
-      
       <TransactionDetailDialog
         open={detailDialogOpen}
         onClose={handleCloseTransactionDetails}
         fullWidth
-        maxWidth="sm"
+        maxWidth='sm'
         fullScreen={isMobile}
       >
         {selectedTransaction && (
           <>
-            <TransactionDetailHeader type={selectedTransaction.amount > 0 ? 'income' : 'expense'}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <TransactionDetailHeader
+              type={selectedTransaction.amount > 0 ? 'income' : 'expense'}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  {selectedTransaction.type === 'transfer' && 
-                   selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                   selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ? (
+                  {selectedTransaction.type === 'transfer' &&
+                  selectedTransaction.sender_id ===
+                    selectedTransaction.recipient_id &&
+                  selectedTransaction.message ===
+                    t('balance.transactions.clicker_withdrawal_message') ? (
                     <TouchAppIcon sx={{ mr: 1, color: 'success.main' }} />
-                  ) : selectedTransaction.type === 'transfer' && selectedTransaction.is_sender ? (
+                  ) : selectedTransaction.type === 'transfer' &&
+                    selectedTransaction.is_sender ? (
                     <CallMadeIcon sx={{ mr: 1, color: 'error.main' }} />
                   ) : selectedTransaction.type === 'transfer' ? (
                     <CallReceivedIcon sx={{ mr: 1, color: 'success.main' }} />
@@ -2048,218 +2201,322 @@ const BalancePage = () => {
                   ) : selectedTransaction.type === 'weekly_activity' ? (
                     <TrendingUpIcon sx={{ mr: 1, color: 'success.main' }} />
                   ) : selectedTransaction.type === 'game' ? (
-                    <CasinoIcon sx={{ mr: 1, color: selectedTransaction.amount > 0 ? 'success.main' : 'error.main' }} />
+                    <CasinoIcon
+                      sx={{
+                        mr: 1,
+                        color:
+                          selectedTransaction.amount > 0
+                            ? 'success.main'
+                            : 'error.main',
+                      }}
+                    />
                   ) : (
                     <DiamondIcon sx={{ mr: 1, color: 'success.main' }} />
                   )}
-                  <Typography variant="subtitle1" fontWeight={600} color="text.primary">
-                    {selectedTransaction.type === 'transfer' ? 
-                      (selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                      selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ?
-                      t('balance.transactions.clicker_withdrawal') :
-                      (selectedTransaction.is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'))) :
-                      selectedTransaction.type === 'purchase' ? t('balance.transactions.badge_purchase') :
-                      selectedTransaction.type === 'royalty' ? t('balance.transactions.royalty_from_purchase') :
-                      selectedTransaction.type === 'weekly_activity' ? t('balance.transactions.weekly_points') :
-                      selectedTransaction.type === 'custom_period_activity' ? t('balance.transactions.custom_period_activity') :
-                      selectedTransaction.type === 'username' ? t('balance.transactions.username_purchase') :
-                      selectedTransaction.type === 'game' ? getTransactionDescription(selectedTransaction) :
-                      selectedTransaction.type === 'compensation' ? t('balance.transactions.compensation') :
-                      selectedTransaction.type === 'conversion_deposit' ? t('balance.transactions.conversion_deposit') :
-                      selectedTransaction.type === 'conversion_withdrawal' ? t('balance.transactions.conversion_withdrawal') :
-                      selectedTransaction.type === 'top_prize' ? t('balance.transactions.top_prize') :
-                      getTransactionDescription(selectedTransaction)
-                    }
+                  <Typography
+                    variant='subtitle1'
+                    fontWeight={600}
+                    color='text.primary'
+                  >
+                    {selectedTransaction.type === 'transfer'
+                      ? selectedTransaction.sender_id ===
+                          selectedTransaction.recipient_id &&
+                        selectedTransaction.message ===
+                          t('balance.transactions.clicker_withdrawal_message')
+                        ? t('balance.transactions.clicker_withdrawal')
+                        : selectedTransaction.is_sender
+                          ? t('balance.transactions.transfer')
+                          : t('balance.transactions.deposit')
+                      : selectedTransaction.type === 'purchase'
+                        ? t('balance.transactions.badge_purchase')
+                        : selectedTransaction.type === 'royalty'
+                          ? t('balance.transactions.royalty_from_purchase')
+                          : selectedTransaction.type === 'weekly_activity'
+                            ? t('balance.transactions.weekly_points')
+                            : selectedTransaction.type ===
+                                'custom_period_activity'
+                              ? t('balance.transactions.custom_period_activity')
+                              : selectedTransaction.type === 'username'
+                                ? t('balance.transactions.username_purchase')
+                                : selectedTransaction.type === 'game'
+                                  ? getTransactionDescription(
+                                      selectedTransaction
+                                    )
+                                  : selectedTransaction.type === 'compensation'
+                                    ? t('balance.transactions.compensation')
+                                    : selectedTransaction.type ===
+                                        'conversion_deposit'
+                                      ? t(
+                                          'balance.transactions.conversion_deposit'
+                                        )
+                                      : selectedTransaction.type ===
+                                          'conversion_withdrawal'
+                                        ? t(
+                                            'balance.transactions.conversion_withdrawal'
+                                          )
+                                        : selectedTransaction.type ===
+                                            'top_prize'
+                                          ? t('balance.transactions.top_prize')
+                                          : getTransactionDescription(
+                                              selectedTransaction
+                                            )}
                   </Typography>
                 </Box>
-                <TransactionStatusChip label="Выполнен" status="completed" />
+                <TransactionStatusChip label='Выполнен' status='completed' />
               </Box>
-              
-              <TransactionDetailAmount type={selectedTransaction.amount > 0 ? 'income' : 'expense'}>
+
+              <TransactionDetailAmount
+                type={selectedTransaction.amount > 0 ? 'income' : 'expense'}
+              >
                 {formatCurrency(selectedTransaction.amount)}
               </TransactionDetailAmount>
-              
-              <Typography variant="caption" color="text.secondary">
+
+              <Typography variant='caption' color='text.secondary'>
                 {formatDate(selectedTransaction.date)}
               </Typography>
             </TransactionDetailHeader>
-            
+
             <TransactionDetailContent>
-              <DetailRow key="transaction-id">
+              <DetailRow key='transaction-id'>
                 <DetailLabel>ID транзакции</DetailLabel>
-                <DetailValue>{getTransactionId(selectedTransaction)}</DetailValue>
+                <DetailValue>
+                  {getTransactionId(selectedTransaction)}
+                </DetailValue>
               </DetailRow>
-              
+
               {selectedTransaction.type === 'transfer' && (
                 <>
-                  <DetailRow key="transfer-type">
+                  <DetailRow key='transfer-type'>
                     <DetailLabel>Тип</DetailLabel>
                     <DetailValue>
-                      {selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                       selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') ?
-                       t('balance.transactions.clicker_withdrawal') :
-                       (selectedTransaction.is_sender ? t('balance.transactions.transfer') : t('balance.transactions.deposit'))}
+                      {selectedTransaction.sender_id ===
+                        selectedTransaction.recipient_id &&
+                      selectedTransaction.message ===
+                        t('balance.transactions.clicker_withdrawal_message')
+                        ? t('balance.transactions.clicker_withdrawal')
+                        : selectedTransaction.is_sender
+                          ? t('balance.transactions.transfer')
+                          : t('balance.transactions.deposit')}
                     </DetailValue>
                   </DetailRow>
-                  
-                  {(selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                   selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message')) ? (
+
+                  {selectedTransaction.sender_id ===
+                    selectedTransaction.recipient_id &&
+                  selectedTransaction.message ===
+                    t('balance.transactions.clicker_withdrawal_message') ? (
                     <>
-                      <DetailRow key="transfer-source">
+                      <DetailRow key='transfer-source'>
                         <DetailLabel>Источник</DetailLabel>
                         <DetailValue>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <TouchAppIcon sx={{ fontSize: '1rem', mr: 0.5, color: 'success.main' }} />
-                            <span>{t('balance.transactions.clicker_points')}</span>
+                            <TouchAppIcon
+                              sx={{
+                                fontSize: '1rem',
+                                mr: 0.5,
+                                color: 'success.main',
+                              }}
+                            />
+                            <span>
+                              {t('balance.transactions.clicker_points')}
+                            </span>
                           </Box>
                         </DetailValue>
                       </DetailRow>
-                      <DetailRow key="transfer-operation-type">
+                      <DetailRow key='transfer-operation-type'>
                         <DetailLabel>Тип операции</DetailLabel>
-                        <DetailValue>{t('balance.transactions.withdrawal')}</DetailValue>
+                        <DetailValue>
+                          {t('balance.transactions.withdrawal')}
+                        </DetailValue>
                       </DetailRow>
                     </>
                   ) : (
                     <>
-                      <DetailRow key="transfer-sender">
+                      <DetailRow key='transfer-sender'>
                         <DetailLabel>Отправитель</DetailLabel>
-                        <DetailValue>{selectedTransaction.sender_username}</DetailValue>
+                        <DetailValue>
+                          {selectedTransaction.sender_username}
+                        </DetailValue>
                       </DetailRow>
-                      <DetailRow key="transfer-recipient">
+                      <DetailRow key='transfer-recipient'>
                         <DetailLabel>Получатель</DetailLabel>
-                        <DetailValue>{selectedTransaction.recipient_username}</DetailValue>
+                        <DetailValue>
+                          {selectedTransaction.recipient_username}
+                        </DetailValue>
                       </DetailRow>
                     </>
                   )}
-                  
+
                   {selectedTransaction.message && (
-                    <DetailRow key="transfer-message">
+                    <DetailRow key='transfer-message'>
                       <DetailLabel>Сообщение</DetailLabel>
                       <DetailValue>{selectedTransaction.message}</DetailValue>
                     </DetailRow>
                   )}
                 </>
               )}
-              
+
               {selectedTransaction.type === 'purchase' && (
                 <>
-                  <DetailRow key="purchase-badge-name">
+                  <DetailRow key='purchase-badge-name'>
                     <DetailLabel>Название бейджика</DetailLabel>
                     <DetailValue>{selectedTransaction.badge.name}</DetailValue>
                   </DetailRow>
                   {selectedTransaction.badge.description && (
-                    <DetailRow key="purchase-badge-description">
+                    <DetailRow key='purchase-badge-description'>
                       <DetailLabel>Описание</DetailLabel>
-                      <DetailValue>{selectedTransaction.badge.description}</DetailValue>
+                      <DetailValue>
+                        {selectedTransaction.badge.description}
+                      </DetailValue>
                     </DetailRow>
                   )}
                 </>
               )}
-              
+
               {selectedTransaction.type === 'royalty' && (
                 <>
-                  <DetailRow key="royalty-badge-name">
+                  <DetailRow key='royalty-badge-name'>
                     <DetailLabel>Название бейджика</DetailLabel>
                     <DetailValue>{selectedTransaction.badge_name}</DetailValue>
                   </DetailRow>
-                  <DetailRow key="royalty-buyer">
+                  <DetailRow key='royalty-buyer'>
                     <DetailLabel>Покупатель</DetailLabel>
                     <DetailValue>{selectedTransaction.buyer_name}</DetailValue>
                   </DetailRow>
                 </>
               )}
-              
+
               {selectedTransaction.type === 'username' && (
-                <DetailRow key="username-value">
-                  <DetailLabel>{t('balance.transaction_details.username.label')}</DetailLabel>
-                  <DetailValue>{t('balance.transaction_details.username.prefix')}{selectedTransaction.username}</DetailValue>
+                <DetailRow key='username-value'>
+                  <DetailLabel>
+                    {t('balance.transaction_details.username.label')}
+                  </DetailLabel>
+                  <DetailValue>
+                    {t('balance.transaction_details.username.prefix')}
+                    {selectedTransaction.username}
+                  </DetailValue>
                 </DetailRow>
               )}
-              
+
               {selectedTransaction.type === 'weekly_activity' && (
                 <>
-                  <DetailRow key="weekly-activity-type">
-                    <DetailLabel>{t('balance.transaction_details.operation.type')}</DetailLabel>
+                  <DetailRow key='weekly-activity-type'>
+                    <DetailLabel>
+                      {t('balance.transaction_details.operation.type')}
+                    </DetailLabel>
                     <DetailValue>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <TrendingUpIcon sx={{ fontSize: '1rem', mr: 0.5, color: 'success.main' }} />
+                        <TrendingUpIcon
+                          sx={{
+                            fontSize: '1rem',
+                            mr: 0.5,
+                            color: 'success.main',
+                          }}
+                        />
                         <span>{t('balance.transactions.weekly_points')}</span>
                       </Box>
                     </DetailValue>
                   </DetailRow>
-                  
-                  <DetailRow key="weekly-activity-description">
-                    <DetailLabel>{t('balance.transaction_details.operation.description')}</DetailLabel>
+
+                  <DetailRow key='weekly-activity-description'>
+                    <DetailLabel>
+                      {t('balance.transaction_details.operation.description')}
+                    </DetailLabel>
                     <DetailValue>{selectedTransaction.description}</DetailValue>
                   </DetailRow>
-                  
-                  <DetailRow key="weekly-activity-date">
-                    <DetailLabel>{t('balance.transaction_details.operation.date')}</DetailLabel>
-                    <DetailValue>{formatDate(selectedTransaction.date)}</DetailValue>
+
+                  <DetailRow key='weekly-activity-date'>
+                    <DetailLabel>
+                      {t('balance.transaction_details.operation.date')}
+                    </DetailLabel>
+                    <DetailValue>
+                      {formatDate(selectedTransaction.date)}
+                    </DetailValue>
                   </DetailRow>
                 </>
               )}
-              
+
               {selectedTransaction.type === 'game' && (
                 <>
-                  <DetailRow key="game-operation-type">
-                    <DetailLabel>{t('balance.transaction_details.operation.type')}</DetailLabel>
-                    <DetailValue>
-                      {selectedTransaction.description}
-                    </DetailValue>
+                  <DetailRow key='game-operation-type'>
+                    <DetailLabel>
+                      {t('balance.transaction_details.operation.type')}
+                    </DetailLabel>
+                    <DetailValue>{selectedTransaction.description}</DetailValue>
                   </DetailRow>
-                  <DetailRow key="game-description">
-                    <DetailLabel>{t('balance.transaction_details.operation.description')}</DetailLabel>
-                    <DetailValue>
-                      {selectedTransaction.title}
-                    </DetailValue>
+                  <DetailRow key='game-description'>
+                    <DetailLabel>
+                      {t('balance.transaction_details.operation.description')}
+                    </DetailLabel>
+                    <DetailValue>{selectedTransaction.title}</DetailValue>
                   </DetailRow>
                 </>
               )}
-              
-              <DetailRow key="transaction-amount">
-                <DetailLabel>{t('balance.transaction_details.operation.amount')}</DetailLabel>
-                <DetailValue sx={{ 
-                  color: selectedTransaction.amount > 0 ? 'success.main' : 'error.main',
-                  fontWeight: 700
-                }}>
+
+              <DetailRow key='transaction-amount'>
+                <DetailLabel>
+                  {t('balance.transaction_details.operation.amount')}
+                </DetailLabel>
+                <DetailValue
+                  sx={{
+                    color:
+                      selectedTransaction.amount > 0
+                        ? 'success.main'
+                        : 'error.main',
+                    fontWeight: 700,
+                  }}
+                >
                   {formatCurrency(selectedTransaction.amount)}
                 </DetailValue>
               </DetailRow>
-              
+
               {selectedTransaction.type === 'transfer' && (
                 <Button
                   startIcon={<PictureAsPdfIcon />}
-                  variant="outlined"
-                  onClick={() => generateReceiptForTransaction(selectedTransaction)}
+                  variant='outlined'
+                  onClick={() =>
+                    generateReceiptForTransaction(selectedTransaction)
+                  }
                   sx={{ borderRadius: 2 }}
                 >
                   {t('balance.transaction_details.receipt.download')}
                 </Button>
               )}
-              
+
               {selectedTransaction.type === 'weekly_activity' && (
-                <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 2 }}>
-                  <Typography variant="body2" color="success.main">
-                    {t('balance.transaction_details.weekly_activity.description')}
+                <Box
+                  sx={{
+                    mt: 2,
+                    p: 2,
+                    bgcolor: 'rgba(76, 175, 80, 0.1)',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Typography variant='body2' color='success.main'>
+                    {t(
+                      'balance.transaction_details.weekly_activity.description'
+                    )}
                   </Typography>
                 </Box>
               )}
-              
+
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                {selectedTransaction.sender_id === selectedTransaction.recipient_id && 
-                 selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message') && (
-                  <Button
-                    startIcon={<TouchAppIcon />}
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => generateReceiptForTransaction(selectedTransaction)}
-                    sx={{ ml: 2, borderRadius: 2 }}
-                  >
-                    {t('balance.transaction_details.receipt.payment')}
-                  </Button>
-                )}
-                <Button 
+                {selectedTransaction.sender_id ===
+                  selectedTransaction.recipient_id &&
+                  selectedTransaction.message ===
+                    t('balance.transactions.clicker_withdrawal_message') && (
+                    <Button
+                      startIcon={<TouchAppIcon />}
+                      variant='outlined'
+                      color='secondary'
+                      onClick={() =>
+                        generateReceiptForTransaction(selectedTransaction)
+                      }
+                      sx={{ ml: 2, borderRadius: 2 }}
+                    >
+                      {t('balance.transaction_details.receipt.payment')}
+                    </Button>
+                  )}
+                <Button
                   onClick={handleCloseTransactionDetails}
                   sx={{ ml: 2, borderRadius: 2 }}
                 >
@@ -2271,74 +2528,98 @@ const BalancePage = () => {
         )}
       </TransactionDetailDialog>
 
-      
       <TabPanel value={tabValue} index={1}>
         <InfoBlock
-          styleVariant="dark"
-
+          styleVariant='dark'
           description={null}
-          sx={{ 
+          sx={{
             pt: 0,
             padding: '2.5px',
             '&::before': {
               top: 0,
               transform: 'rotate(-12deg)',
-              height: '90px'
+              height: '90px',
             },
             '&::after': {
               top: 0,
               transform: 'rotate(12deg)',
-              height: '90px'
-            }
+              height: '90px',
+            },
           }}
         >
           {createdBadges.length > 0 || usernamePurchases.length > 0 ? (
             <List sx={{ width: '100%' }}>
-              {createdBadges.map((badge) => (
-                <Accordion 
+              {createdBadges.map(badge => (
+                <Accordion
                   key={badge.id}
-                  sx={{ 
-                    mb: 2, 
+                  sx={{
+                    mb: 2,
                     borderRadius: '12px',
                     overflow: 'hidden',
                     '&:before': { display: 'none' },
                     boxShadow: 'none',
-                    background: alpha(theme.palette.background.paper, 0.4)
+                    background: alpha(theme.palette.background.paper, 0.4),
                   }}
                 >
-                  <AccordionSummary 
+                  <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ borderRadius: '12px' }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                      <Avatar 
-                        variant="rounded" 
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        width: '100%',
+                      }}
+                    >
+                      <Avatar
+                        variant='rounded'
                         sx={{ mr: 2, bgcolor: 'background.paper', p: 0.5 }}
                       >
-                        <CreatedBadgeImage 
+                        <CreatedBadgeImage
                           src={`/static/images/bages/shop/${badge.image_path}`}
                           alt={badge.name}
                         />
                       </Avatar>
                       <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="subtitle1">{badge.name}</Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
-                          <Chip 
-                            size="small" 
-                            label={t('balance.assets.badges.points_cost', { amount: badge.price })} 
+                        <Typography variant='subtitle1'>
+                          {badge.name}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            mt: 0.5,
+                          }}
+                        >
+                          <Chip
+                            size='small'
+                            label={t('balance.assets.badges.points_cost', {
+                              amount: badge.price,
+                            })}
                             sx={{ mr: 1, fontSize: '0.7rem' }}
                           />
-                          <Badge 
-                            badgeContent={badge.purchases.length} 
-                            color="primary"
+                          <Badge
+                            badgeContent={badge.purchases.length}
+                            color='primary'
                             sx={{ mr: 1 }}
                           >
-                            <PeopleIcon fontSize="small" />
+                            <PeopleIcon fontSize='small' />
                           </Badge>
                           {badge.total_royalty_earned > 0 && (
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <MonetizationOnIcon sx={{ color: 'success.main', fontSize: '1rem', mr: 0.5 }} />
-                              <Typography variant="caption" color="success.main" fontWeight="bold">
+                              <MonetizationOnIcon
+                                sx={{
+                                  color: 'success.main',
+                                  fontSize: '1rem',
+                                  mr: 0.5,
+                                }}
+                              />
+                              <Typography
+                                variant='caption'
+                                color='success.main'
+                                fontWeight='bold'
+                              >
                                 +{badge.total_royalty_earned}
                               </Typography>
                             </Box>
@@ -2348,38 +2629,81 @@ const BalancePage = () => {
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      {badge.description || t('balance.assets.badges.no_description')}
+                    <Typography
+                      variant='body2'
+                      color='text.secondary'
+                      paragraph
+                    >
+                      {badge.description ||
+                        t('balance.assets.badges.no_description')}
                     </Typography>
-                    
+
                     {badge.purchases.length > 0 ? (
                       <>
-                        <Typography variant="subtitle2" gutterBottom>
-                          {t('balance.assets.badges.purchases.title', { count: badge.purchases.length })}
+                        <Typography variant='subtitle2' gutterBottom>
+                          {t('balance.assets.badges.purchases.title', {
+                            count: badge.purchases.length,
+                          })}
                         </Typography>
-                        <List dense sx={{ bgcolor: alpha(theme.palette.background.paper, 0.3), borderRadius: 2, mb: 1 }}>
+                        <List
+                          dense
+                          sx={{
+                            bgcolor: alpha(theme.palette.background.paper, 0.3),
+                            borderRadius: 2,
+                            mb: 1,
+                          }}
+                        >
                           {badge.purchases.map((purchase, index) => (
                             <ListItem key={purchase.id || `purchase-${index}`}>
                               <ListItemAvatar>
-                                <Avatar 
-                                  src={purchase.buyer.avatar_url} 
+                                <Avatar
+                                  src={purchase.buyer.avatar_url}
                                   alt={purchase.buyer.name}
                                   sx={{ width: 32, height: 32 }}
                                 />
                               </ListItemAvatar>
-                              <ListItemText 
+                              <ListItemText
                                 primary={purchase.buyer.name}
                                 secondary={
-                                  <Box component="span" sx={{ display: 'flex', flexDirection: 'column', mt: 0.5 }}>
-                                    <Typography variant="caption" color="text.secondary">
-                                      {t('balance.assets.badges.purchases.date', { date: formatDate(purchase.purchase_date) })}
+                                  <Box
+                                    component='span'
+                                    sx={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      mt: 0.5,
+                                    }}
+                                  >
+                                    <Typography
+                                      variant='caption'
+                                      color='text.secondary'
+                                    >
+                                      {t(
+                                        'balance.assets.badges.purchases.date',
+                                        {
+                                          date: formatDate(
+                                            purchase.purchase_date
+                                          ),
+                                        }
+                                      )}
                                     </Typography>
                                   </Box>
                                 }
                               />
-                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <MonetizationOnIcon sx={{ color: 'success.main', fontSize: '1rem', mr: 0.5 }} />
-                                <Typography variant="caption" color="success.main" fontWeight="bold">
+                              <Box
+                                sx={{ display: 'flex', alignItems: 'center' }}
+                              >
+                                <MonetizationOnIcon
+                                  sx={{
+                                    color: 'success.main',
+                                    fontSize: '1rem',
+                                    mr: 0.5,
+                                  }}
+                                />
+                                <Typography
+                                  variant='caption'
+                                  color='success.main'
+                                  fontWeight='bold'
+                                >
                                   +{purchase.royalty_amount}
                                 </Typography>
                               </Box>
@@ -2388,7 +2712,7 @@ const BalancePage = () => {
                         </List>
                       </>
                     ) : (
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant='body2' color='text.secondary'>
                         {t('balance.assets.badges.purchases.none')}
                       </Typography>
                     )}
@@ -2397,38 +2721,40 @@ const BalancePage = () => {
               ))}
 
               {createdBadges.length > 0 && usernamePurchases.length > 0 && (
-                <Typography 
-                  variant="subtitle1" 
-                  sx={{ 
-                    px: 2, 
-                    py: 1, 
+                <Typography
+                  variant='subtitle1'
+                  sx={{
+                    px: 2,
+                    py: 1,
                     color: 'text.secondary',
-                    fontWeight: 500
+                    fontWeight: 500,
                   }}
                 >
                   {t('balance.assets.usernames.section_title')}
                 </Typography>
               )}
 
-              {usernamePurchases.map((purchase) => (
-                <ListItem 
+              {usernamePurchases.map(purchase => (
+                <ListItem
                   key={purchase.id}
-                  sx={{ 
+                  sx={{
                     borderRadius: '12px',
                     mb: 2,
                     background: alpha(theme.palette.background.paper, 0.4),
                     padding: '12px 16px',
                     '&:hover': {
-                      background: alpha(theme.palette.background.paper, 0.6)
-                    }
+                      background: alpha(theme.palette.background.paper, 0.6),
+                    },
                   }}
                 >
                   <ListItemAvatar>
-                    <Avatar 
-                      sx={{ 
-                        bgcolor: purchase.is_active ? 'success.main' : 'action.disabled',
-                        width: 40, 
-                        height: 40
+                    <Avatar
+                      sx={{
+                        bgcolor: purchase.is_active
+                          ? 'success.main'
+                          : 'action.disabled',
+                        width: 40,
+                        height: 40,
                       }}
                     >
                       <TagIcon />
@@ -2437,34 +2763,57 @@ const BalancePage = () => {
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                        <Typography
+                          variant='subtitle1'
+                          sx={{ fontWeight: 600 }}
+                        >
                           @{purchase.username}
                         </Typography>
                         {purchase.is_active && (
                           <Chip
-                            size="small"
+                            size='small'
                             label={t('balance.assets.usernames.active')}
-                            color="success"
-                            sx={{ ml: 1, height: 20, '& .MuiChip-label': { px: 1, py: 0.2 } }}
+                            color='success'
+                            sx={{
+                              ml: 1,
+                              height: 20,
+                              '& .MuiChip-label': { px: 1, py: 0.2 },
+                            }}
                           />
                         )}
                       </Box>
                     }
                     secondary={
-                      <Box component="span" sx={{ display: 'flex', flexDirection: 'column', mt: 0.5 }}>
-                        <Typography variant="caption" color="text.secondary">
-                          {t('balance.assets.usernames.purchased_on')}: {formatDate(purchase.purchase_date)}
+                      <Box
+                        component='span'
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          mt: 0.5,
+                        }}
+                      >
+                        <Typography variant='caption' color='text.secondary'>
+                          {t('balance.assets.usernames.purchased_on')}:{' '}
+                          {formatDate(purchase.purchase_date)}
                         </Typography>
-
                       </Box>
                     }
                   />
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', ml: 1 }}>
-                    <MonetizationOnIcon sx={{ color: 'error.main', fontSize: '1rem', mr: 0.5 }} />
-                    <Typography 
-                      variant="subtitle2" 
-                      fontWeight="bold"
-                      color="error.main"
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'flex-end',
+                      ml: 1,
+                    }}
+                  >
+                    <MonetizationOnIcon
+                      sx={{ color: 'error.main', fontSize: '1rem', mr: 0.5 }}
+                    />
+                    <Typography
+                      variant='subtitle2'
+                      fontWeight='bold'
+                      color='error.main'
                     >
                       -{purchase.price_paid}
                     </Typography>
@@ -2473,26 +2822,46 @@ const BalancePage = () => {
               ))}
             </List>
           ) : (
-            <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
-              <AccountBalanceWalletIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
-              <Typography component="div" variant="h6" gutterBottom>
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 5,
+                px: 3,
+                bgcolor: alpha(theme.palette.background.paper, 0.4),
+                borderRadius: 4,
+              }}
+            >
+              <AccountBalanceWalletIcon
+                sx={{
+                  fontSize: 60,
+                  color: 'primary.main',
+                  opacity: 0.7,
+                  mb: 2,
+                }}
+              />
+              <Typography component='div' variant='h6' gutterBottom>
                 {t('balance.assets.empty.title')}
               </Typography>
-              <Typography component="div" variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Typography
+                component='div'
+                variant='body2'
+                color='text.secondary'
+                sx={{ mb: 3 }}
+              >
                 {t('balance.assets.empty.description')}
               </Typography>
-              <Button 
-                variant="contained" 
-                color="primary"
+              <Button
+                variant='contained'
+                color='primary'
                 onClick={() => navigate('/username-auction')}
                 startIcon={<AccountCircleIcon />}
                 sx={{ mr: 2, mb: { xs: 2, sm: 0 } }}
               >
                 {t('balance.assets.empty.username_auction')}
               </Button>
-              <Button 
-                variant="outlined" 
-                color="primary"
+              <Button
+                variant='outlined'
+                color='primary'
                 onClick={() => navigate('/badge-shop')}
                 startIcon={<ShoppingCartIcon />}
               >
@@ -2503,77 +2872,190 @@ const BalancePage = () => {
         </InfoBlock>
       </TabPanel>
 
-      
       <TabPanel value={tabValue} index={2}>
         <InfoBlock
-          styleVariant="dark"
+          styleVariant='dark'
           description={null}
-          sx={{ 
+          sx={{
             pt: 0,
-            padding: '2.5px'
+            padding: '2.5px',
           }}
         >
           {subscription && subscription.active ? (
-            <Card elevation={3} sx={{ 
-              backgroundImage: `unset`,
-            }}>
+            <Card
+              elevation={3}
+              sx={{
+                backgroundImage: `unset`,
+              }}
+            >
               <CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography component="div" variant="h6" fontWeight="bold">
+                  <Typography component='div' variant='h6' fontWeight='bold'>
                     {t('balance.subscription.active.title')}
                   </Typography>
                 </Box>
-                
+
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography component="div" variant="body1">
-                    {t('balance.subscription.active.type')}: <Chip 
-                      label={subscription.type === 'basic' ? t('balance.subscription.types.basic') : 
-                            subscription.type === 'premium' ? t('balance.subscription.types.premium') : 
-                            subscription.type === 'ultimate' ? t('balance.subscription.types.ultimate') : 
-                            subscription.type}
-                      color={subscription.type === 'premium' ? 'secondary' : subscription.type === 'ultimate' ? 'primary' : 'default'}
-                      size="small"
+                  <Typography component='div' variant='body1'>
+                    {t('balance.subscription.active.type')}:{' '}
+                    <Chip
+                      label={
+                        subscription.type === 'basic'
+                          ? t('balance.subscription.types.basic')
+                          : subscription.type === 'premium'
+                            ? t('balance.subscription.types.premium')
+                            : subscription.type === 'ultimate'
+                              ? t('balance.subscription.types.ultimate')
+                              : subscription.type
+                      }
+                      color={
+                        subscription.type === 'premium'
+                          ? 'secondary'
+                          : subscription.type === 'ultimate'
+                            ? 'primary'
+                            : 'default'
+                      }
+                      size='small'
                       sx={{ fontWeight: 'bold', ml: 1 }}
                     />
                   </Typography>
-                  
-                  <Typography component="div" variant="body2">
-                    {t('balance.subscription.active.expires')}: {new Date(subscription.expires_at).toLocaleDateString()} 
-                    <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-                      {t('balance.subscription.active.days_left', { days: Math.ceil((new Date(subscription.expires_at) - new Date()) / (1000 * 60 * 60 * 24)) })}
+
+                  <Typography component='div' variant='body2'>
+                    {t('balance.subscription.active.expires')}:{' '}
+                    {new Date(subscription.expires_at).toLocaleDateString()}
+                    <Typography
+                      component='span'
+                      variant='caption'
+                      color='text.secondary'
+                      sx={{ ml: 1 }}
+                    >
+                      {t('balance.subscription.active.days_left', {
+                        days: Math.ceil(
+                          (new Date(subscription.expires_at) - new Date()) /
+                            (1000 * 60 * 60 * 24)
+                        ),
+                      })}
                     </Typography>
                   </Typography>
-                  
+
                   <Box sx={{ mt: 1 }}>
-                    <Typography component="div" variant="body2" fontWeight="medium">
+                    <Typography
+                      component='div'
+                      variant='body2'
+                      fontWeight='medium'
+                    >
                       {t('balance.subscription.active.features.title')}:
                     </Typography>
                     <List dense sx={{ pl: 2 }}>
                       {subscription.type === 'basic' && (
-                        <Box key="basic-features">
-                          <ListItem key="basic-monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.monthly_points')} /></ListItem>
-                          <ListItem key="basic-no-ads" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.no_ads')} /></ListItem>
-                          <ListItem key="basic-badge-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.badge_limit')} /></ListItem>
-                          <ListItem key="basic-username-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.basic.username_limit')} /></ListItem>
+                        <Box key='basic-features'>
+                          <ListItem key='basic-monthly-points' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.basic.monthly_points'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='basic-no-ads' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.basic.no_ads'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='basic-badge-limit' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.basic.badge_limit'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='basic-username-limit' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.basic.username_limit'
+                              )}
+                            />
+                          </ListItem>
                         </Box>
                       )}
                       {subscription.type === 'premium' && (
-                        <Box key="premium-features">
-                          <ListItem key="premium-monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.monthly_points')} /></ListItem>
-                          <ListItem key="premium-features" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.features')} /></ListItem>
-                          <ListItem key="premium-support" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.support')} /></ListItem>
-                          <ListItem key="premium-badge-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.badge_limit')} /></ListItem>
-                          <ListItem key="premium-username-limit" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.premium.username_limit')} /></ListItem>
+                        <Box key='premium-features'>
+                          <ListItem key='premium-monthly-points' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.premium.monthly_points'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='premium-features' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.premium.features'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='premium-support' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.premium.support'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='premium-badge-limit' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.premium.badge_limit'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='premium-username-limit' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.premium.username_limit'
+                              )}
+                            />
+                          </ListItem>
                         </Box>
                       )}
                       {subscription.type === 'ultimate' && (
-                        <Box key="ultimate-features">
-                          <ListItem key="premium-benefits" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.premium_benefits')} /></ListItem>
-                                                      <ListItem key="monthly-points" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.monthly_points')} /></ListItem>
-                            <ListItem key="animated-badges" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.animated_badges')} /></ListItem>
-                              <ListItem key="unlimited-badges" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.unlimited_badges')} /></ListItem>
-                            <ListItem key="unlimited-usernames" sx={{ py: 0 }}><ListItemText primary={t('balance.subscription.active.features.ultimate.unlimited_usernames')} /></ListItem>
+                        <Box key='ultimate-features'>
+                          <ListItem key='premium-benefits' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.ultimate.premium_benefits'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='monthly-points' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.ultimate.monthly_points'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='animated-badges' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.ultimate.animated_badges'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='unlimited-badges' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.ultimate.unlimited_badges'
+                              )}
+                            />
+                          </ListItem>
+                          <ListItem key='unlimited-usernames' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary={t(
+                                'balance.subscription.active.features.ultimate.unlimited_usernames'
+                              )}
+                            />
+                          </ListItem>
                         </Box>
                       )}
                     </List>
@@ -2582,17 +3064,38 @@ const BalancePage = () => {
               </CardContent>
             </Card>
           ) : (
-            <Box sx={{ textAlign: 'center', py: 5, px: 3, bgcolor: alpha(theme.palette.background.paper, 0.4), borderRadius: 4 }}>
-              <FlashOnIcon sx={{ fontSize: 60, color: 'primary.main', opacity: 0.7, mb: 2 }} />
-              <Typography component="div" variant="h6" gutterBottom>
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 5,
+                px: 3,
+                bgcolor: alpha(theme.palette.background.paper, 0.4),
+                borderRadius: 4,
+              }}
+            >
+              <FlashOnIcon
+                sx={{
+                  fontSize: 60,
+                  color: 'primary.main',
+                  opacity: 0.7,
+                  mb: 2,
+                }}
+              />
+              <Typography component='div' variant='h6' gutterBottom>
                 У вас нет активной подписки
               </Typography>
-              <Typography component="div" variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Активируйте подписку, чтобы получить доступ к расширенным возможностям платформы
+              <Typography
+                component='div'
+                variant='body2'
+                color='text.secondary'
+                sx={{ mb: 3 }}
+              >
+                Активируйте подписку, чтобы получить доступ к расширенным
+                возможностям платформы
               </Typography>
-              <Button 
-                variant="contained" 
-                color="primary"
+              <Button
+                variant='contained'
+                color='primary'
                 onClick={() => setOpenKeyDialog(true)}
                 startIcon={<AddIcon />}
               >
@@ -2603,9 +3106,6 @@ const BalancePage = () => {
         </InfoBlock>
       </TabPanel>
 
-      
-
-      
       <StyledDialog
         open={openKeyDialog}
         onClose={() => {
@@ -2623,14 +3123,22 @@ const BalancePage = () => {
         <DialogHeader>
           <HeaderGlow />
           <DialogHeaderContent>
-            <MonetizationOnIcon color="primary" sx={{ mr: 1.5, fontSize: 24 }} />
-            <Typography component="div" variant="h6" fontWeight="bold" color="primary.light">
+            <MonetizationOnIcon
+              color='primary'
+              sx={{ mr: 1.5, fontSize: 24 }}
+            />
+            <Typography
+              component='div'
+              variant='h6'
+              fontWeight='bold'
+              color='primary.light'
+            >
               Пополнение баланса
             </Typography>
           </DialogHeaderContent>
           {!isSubmittingKey && (
             <IconButton
-              aria-label="close"
+              aria-label='close'
               onClick={() => setOpenKeyDialog(false)}
               sx={{ position: 'absolute', right: 8, top: 8 }}
             >
@@ -2638,10 +3146,10 @@ const BalancePage = () => {
             </IconButton>
           )}
         </DialogHeader>
-        
+
         <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
-          <Tabs 
-            value={activeTopupTab} 
+          <Tabs
+            value={activeTopupTab}
             onChange={(e, newValue) => {
               setActiveTopupTab(newValue);
               // Сбрасываем ошибки при смене вкладок
@@ -2652,19 +3160,19 @@ const BalancePage = () => {
           >
             <Tab label={t('balance.topup.tabs.key')} />
             <Tab label={t('balance.topup.tabs.donate')} />
-            <Tab label="Проверить декорацию" />
+            <Tab label='Проверить декорацию' />
           </Tabs>
-          
+
           {activeTopupTab === 0 && !keySuccess ? (
             <ContentBox>
-              <Typography component="div" variant="body1" gutterBottom>
+              <Typography component='div' variant='body1' gutterBottom>
                 {t('balance.topup.key.enter')}
               </Typography>
-              
+
               <KeyTextField
                 fullWidth
                 label={t('balance.topup.key.label')}
-                variant="outlined"
+                variant='outlined'
                 placeholder={t('balance.topup.key.placeholder')}
                 value={keyValue}
                 onChange={handleKeyChange}
@@ -2674,36 +3182,46 @@ const BalancePage = () => {
                 sx={{ mt: 2, mb: 2 }}
                 InputProps={{
                   endAdornment: keyValue && (
-                    <InputAdornment position="end">
-                      <IconButton 
-                        onClick={() => setKeyValue('')}
-                        edge="end"
-                      >
-                        <CloseIcon fontSize="small" />
+                    <InputAdornment position='end'>
+                      <IconButton onClick={() => setKeyValue('')} edge='end'>
+                        <CloseIcon fontSize='small' />
                       </IconButton>
                     </InputAdornment>
-                  )
+                  ),
                 }}
               />
-              
-              <Typography component="div" variant="caption" color="text.secondary">
+
+              <Typography
+                component='div'
+                variant='caption'
+                color='text.secondary'
+              >
                 {t('balance.topup.key.hint')}
               </Typography>
             </ContentBox>
           ) : activeTopupTab === 1 ? (
             <ContentBox>
-              <Typography component="div" variant="subtitle1" fontWeight="bold" gutterBottom>
+              <Typography
+                component='div'
+                variant='subtitle1'
+                fontWeight='bold'
+                gutterBottom
+              >
                 {t('balance.topup.donate.title')}
               </Typography>
-              <Typography component="div" variant="body2" paragraph>
+              <Typography component='div' variant='body2' paragraph>
                 {t('balance.topup.donate.description')}
               </Typography>
-              <Typography component="div" variant="body2" sx={{ fontWeight: 'bold', mb: 2 }}>
+              <Typography
+                component='div'
+                variant='body2'
+                sx={{ fontWeight: 'bold', mb: 2 }}
+              >
                 {t('balance.topup.donate.rate')}
               </Typography>
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 startIcon={<MonetizationOnIcon />}
                 fullWidth
                 onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
@@ -2713,23 +3231,28 @@ const BalancePage = () => {
             </ContentBox>
           ) : activeTopupTab === 2 ? (
             <ContentBox>
-              <Typography component="div" variant="subtitle1" fontWeight="bold" gutterBottom>
+              <Typography
+                component='div'
+                variant='subtitle1'
+                fontWeight='bold'
+                gutterBottom
+              >
                 Проверить доступность декорации
               </Typography>
-              <Typography component="div" variant="body2" paragraph>
-                Если у вас есть Ultimate подписка и еще нет декорации профиля, 
+              <Typography component='div' variant='body2' paragraph>
+                Если у вас есть Ultimate подписка и еще нет декорации профиля,
                 вы можете получить одну декорацию бесплатно.
               </Typography>
-              
+
               {decorationCheckError && (
-                <Alert severity="error" sx={{ mb: 2 }}>
+                <Alert severity='error' sx={{ mb: 2 }}>
                   {decorationCheckError}
                 </Alert>
               )}
-              
+
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 startIcon={<DiamondIcon />}
                 fullWidth
                 onClick={handleCheckDecoration}
@@ -2738,7 +3261,11 @@ const BalancePage = () => {
               >
                 {isCheckingDecoration ? (
                   <>
-                    <CircularProgress size={16} color="inherit" sx={{ mr: 1 }} />
+                    <CircularProgress
+                      size={16}
+                      color='inherit'
+                      sx={{ mr: 1 }}
+                    />
                     Проверяем...
                   </>
                 ) : (
@@ -2747,90 +3274,150 @@ const BalancePage = () => {
               </Button>
             </ContentBox>
           ) : (
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              py: 4,
-              position: 'relative',
-              overflow: 'hidden'
-            }}>
-              <Box sx={{
-                animation: 'pop-in 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards',
-                '@keyframes pop-in': {
-                  '0%': { transform: 'scale(0)', opacity: 0 },
-                  '80%': { transform: 'scale(1.1)', opacity: 1 },
-                  '100%': { transform: 'scale(1)', opacity: 1 }
-                },
+            <Box
+              sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                zIndex: 2
-              }}>
-                <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
-                <Typography component="div" variant="h6" gutterBottom align="center">
+                justifyContent: 'center',
+                py: 4,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <Box
+                sx={{
+                  animation:
+                    'pop-in 0.5s cubic-bezier(0.19, 1, 0.22, 1) forwards',
+                  '@keyframes pop-in': {
+                    '0%': { transform: 'scale(0)', opacity: 0 },
+                    '80%': { transform: 'scale(1.1)', opacity: 1 },
+                    '100%': { transform: 'scale(1)', opacity: 1 },
+                  },
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  zIndex: 2,
+                }}
+              >
+                <CheckCircleIcon color='success' sx={{ fontSize: 80, mb: 2 }} />
+                <Typography
+                  component='div'
+                  variant='h6'
+                  gutterBottom
+                  align='center'
+                >
                   {t('balance.topup.key.success.title')}
                 </Typography>
-                <Typography component="div" variant="body1" align="center">
+                <Typography component='div' variant='body1' align='center'>
                   {keySuccess.message}
                 </Typography>
-                
+
                 {keySuccess.type === 'points' ? (
-                  
-                  <Box sx={{ 
-                    mt: 3,
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: 'background.paper',
-                    boxShadow: 1,
-                    width: '100%',
-                    maxWidth: 250,
-                    animation: 'fade-in 1s ease-in-out forwards',
-                    '@keyframes fade-in': {
-                      from: { opacity: 0, transform: 'translateY(20px)' },
-                      to: { opacity: 1, transform: 'translateY(0)' }
-                    }
-                  }}>
-                    <Typography component="div" variant="subtitle2" color="text.secondary" gutterBottom align="center">
+                  <Box
+                    sx={{
+                      mt: 3,
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: 'background.paper',
+                      boxShadow: 1,
+                      width: '100%',
+                      maxWidth: 250,
+                      animation: 'fade-in 1s ease-in-out forwards',
+                      '@keyframes fade-in': {
+                        from: { opacity: 0, transform: 'translateY(20px)' },
+                        to: { opacity: 1, transform: 'translateY(0)' },
+                      },
+                    }}
+                  >
+                    <Typography
+                      component='div'
+                      variant='subtitle2'
+                      color='text.secondary'
+                      gutterBottom
+                      align='center'
+                    >
                       {t('balance.topup.key.success.new_balance')}
                     </Typography>
-                    <Typography component="div" variant="h6" color="primary" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Typography
+                      component='div'
+                      variant='h6'
+                      color='primary'
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
                       <AccountBalanceWalletIcon sx={{ mr: 1 }} />
-                      {keySuccess.newBalance} {t('balance.topup.key.success.points')}
+                      {keySuccess.newBalance}{' '}
+                      {t('balance.topup.key.success.points')}
                     </Typography>
                   </Box>
                 ) : (
-                  
-                  <Box sx={{ 
-                    mt: 3,
-                    p: 2,
-                    borderRadius: 2,
-                    bgcolor: 'background.paper',
-                    boxShadow: 1,
-                    width: '100%',
-                    maxWidth: 300,
-                    animation: 'fade-in 1s ease-in-out forwards',
-                    '@keyframes fade-in': {
-                      from: { opacity: 0, transform: 'translateY(20px)' },
-                      to: { opacity: 1, transform: 'translateY(0)' }
-                    }
-                  }}>
-                    <Typography component="div" variant="subtitle2" color="text.secondary" gutterBottom align="center">
+                  <Box
+                    sx={{
+                      mt: 3,
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: 'background.paper',
+                      boxShadow: 1,
+                      width: '100%',
+                      maxWidth: 300,
+                      animation: 'fade-in 1s ease-in-out forwards',
+                      '@keyframes fade-in': {
+                        from: { opacity: 0, transform: 'translateY(20px)' },
+                        to: { opacity: 1, transform: 'translateY(0)' },
+                      },
+                    }}
+                  >
+                    <Typography
+                      component='div'
+                      variant='subtitle2'
+                      color='text.secondary'
+                      gutterBottom
+                      align='center'
+                    >
                       {t('balance.topup.key.success.subscription_activated')}
                     </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mb: 2,
+                      }}
+                    >
                       <Chip
-                        label={t(`balance.subscription.types.${keySuccess.subscriptionType}`)}
-                        color="secondary"
+                        label={t(
+                          `balance.subscription.types.${keySuccess.subscriptionType}`
+                        )}
+                        color='secondary'
                         sx={{ fontSize: '1rem', py: 2, px: 1 }}
                       />
                     </Box>
-                    <Typography component="div" variant="body2" color="text.secondary" align="center">
-                      {t('balance.topup.key.success.expires_at', { date: keySuccess.expiresAt ? new Date(keySuccess.expiresAt).toLocaleDateString() : t('balance.subscription.duration.unlimited') })}
+                    <Typography
+                      component='div'
+                      variant='body2'
+                      color='text.secondary'
+                      align='center'
+                    >
+                      {t('balance.topup.key.success.expires_at', {
+                        date: keySuccess.expiresAt
+                          ? new Date(keySuccess.expiresAt).toLocaleDateString()
+                          : t('balance.subscription.duration.unlimited'),
+                      })}
                     </Typography>
-                    <Typography component="div" variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
-                      {t('balance.topup.key.success.duration', { days: keySuccess.duration_days })}
+                    <Typography
+                      component='div'
+                      variant='body2'
+                      color='text.secondary'
+                      align='center'
+                      sx={{ mt: 1 }}
+                    >
+                      {t('balance.topup.key.success.duration', {
+                        days: keySuccess.duration_days,
+                      })}
                     </Typography>
                   </Box>
                 )}
@@ -2838,23 +3425,29 @@ const BalancePage = () => {
             </Box>
           )}
         </DialogContent>
-        
+
         <DialogActions>
           {!keySuccess ? (
             <>
-              <CancelButton 
-                onClick={() => setOpenKeyDialog(false)} 
-                variant="outlined"
+              <CancelButton
+                onClick={() => setOpenKeyDialog(false)}
+                variant='outlined'
                 disabled={isSubmittingKey}
               >
                 {t('balance.common.cancel')}
               </CancelButton>
               <ActionButton
                 onClick={handleRedeemKey}
-                disabled={!keyValue || isSubmittingKey || keyValue.length < 19} 
-                startIcon={isSubmittingKey ? <CircularProgress size={16} color="inherit" /> : null}
+                disabled={!keyValue || isSubmittingKey || keyValue.length < 19}
+                startIcon={
+                  isSubmittingKey ? (
+                    <CircularProgress size={16} color='inherit' />
+                  ) : null
+                }
               >
-                {isSubmittingKey ? t('balance.topup.key.process') : t('balance.topup.key.activate')}
+                {isSubmittingKey
+                  ? t('balance.topup.key.process')
+                  : t('balance.topup.key.activate')}
               </ActionButton>
             </>
           ) : (
@@ -2872,66 +3465,87 @@ const BalancePage = () => {
         </DialogActions>
       </StyledDialog>
 
-      
       <StyledDialog
         open={transferSuccess}
         onClose={() => setTransferSuccess(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
       >
         <DialogHeader>
           <HeaderGlow />
           <DialogHeaderContent>
-            <CheckCircleIcon color="success" sx={{ mr: 1.5, fontSize: 24 }} />
-            <Typography component="div" variant="h6" fontWeight="bold" color="success.main">
+            <CheckCircleIcon color='success' sx={{ mr: 1.5, fontSize: 24 }} />
+            <Typography
+              component='div'
+              variant='h6'
+              fontWeight='bold'
+              color='success.main'
+            >
               {t('balance.transactions.success.title')}
             </Typography>
           </DialogHeaderContent>
           <IconButton
-            aria-label="close"
+            aria-label='close'
             onClick={() => setTransferSuccess(false)}
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
             <CloseIcon />
           </IconButton>
         </DialogHeader>
-        
+
         <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
-          <Box sx={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 2,
-            textAlign: 'center'
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              py: 2,
+              textAlign: 'center',
+            }}
+          >
             <SuccessIconWrapper>
-              <CheckCircleIcon color="success" sx={{ fontSize: 50 }} />
+              <CheckCircleIcon color='success' sx={{ fontSize: 50 }} />
             </SuccessIconWrapper>
-            
-            <Typography component="div" variant="h5" gutterBottom>
+
+            <Typography component='div' variant='h5' gutterBottom>
               {t('balance.transactions.success.title')}
             </Typography>
-            
-            <Typography component="div" variant="body1" color="text.secondary" paragraph>
-              {t('balance.transactions.success.amount_sent', { amount: transferData.amount, username: transferData.username })}
+
+            <Typography
+              component='div'
+              variant='body1'
+              color='text.secondary'
+              paragraph
+            >
+              {t('balance.transactions.success.amount_sent', {
+                amount: transferData.amount,
+                username: transferData.username,
+              })}
             </Typography>
-            
-            <Typography component="div" variant="subtitle2" sx={{ mb: 2 }}>
+
+            <Typography component='div' variant='subtitle2' sx={{ mb: 2 }}>
               {t('balance.transactions.success.receipt_info')}
             </Typography>
-            
+
             <ReceiptIconButton
               onClick={() => {
                 if (receiptData) {
                   try {
-                    downloadPdfReceipt(receiptData.dataUrl, `TR-${Date.now().toString().slice(-8)}`, receiptData.filePath);
+                    downloadPdfReceipt(
+                      receiptData.dataUrl,
+                      `TR-${Date.now().toString().slice(-8)}`,
+                      receiptData.filePath
+                    );
                   } catch (error) {
-                    console.error(t('balance.transactions.success.receipt_error'), error);
+                    console.error(
+                      t('balance.transactions.success.receipt_error'),
+                      error
+                    );
                     setSnackbar({
                       open: true,
                       message: t('balance.transactions.success.receipt_error'),
-                      severity: 'error'
+                      severity: 'error',
                     });
                   }
                 }
@@ -2944,15 +3558,17 @@ const BalancePage = () => {
             </ReceiptIconButton>
           </Box>
         </DialogContent>
-        
+
         <DialogActions>
-          <ActionButton onClick={() => setTransferSuccess(false)} sx={{ mx: 'auto' }}>
+          <ActionButton
+            onClick={() => setTransferSuccess(false)}
+            sx={{ mx: 'auto' }}
+          >
             {t('balance.common.close')}
           </ActionButton>
         </DialogActions>
       </StyledDialog>
 
-      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -2961,7 +3577,7 @@ const BalancePage = () => {
       />
 
       {/* New Transfer Menu Component */}
-      <TransferMenu 
+      <TransferMenu
         open={newTransferMenuOpen}
         onClose={() => setNewTransferMenuOpen(false)}
         userPoints={userPoints}
@@ -2979,5 +3595,4 @@ const BalancePage = () => {
   );
 };
 
-
-export default BalancePage; 
+export default BalancePage;

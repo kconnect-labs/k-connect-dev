@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Box, 
+import {
+  Box,
   Typography,
   Dialog,
   DialogActions,
@@ -8,7 +8,7 @@ import {
   DialogTitle,
   Button,
   CircularProgress,
-  Divider
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -32,8 +32,8 @@ const CommentSectionHeader = styled(Typography)(({ theme }) => ({
   fontSize: '1.25rem',
   [theme.breakpoints.down('sm')]: {
     marginBottom: theme.spacing(1.5),
-    fontSize: '1rem'
-  }
+    fontSize: '1rem',
+  },
 }));
 
 const EmptyCommentsContainer = styled(Box)(({ theme }) => ({
@@ -43,8 +43,8 @@ const EmptyCommentsContainer = styled(Box)(({ theme }) => ({
   borderRadius: '16px',
   border: '1px dashed rgba(255, 255, 255, 0.1)',
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2)
-  }
+    padding: theme.spacing(2),
+  },
 }));
 
 const CommentsContainer = styled(Box)(({ theme }) => ({
@@ -52,8 +52,8 @@ const CommentsContainer = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   gap: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
-    gap: theme.spacing(1.5)
-  }
+    gap: theme.spacing(1.5),
+  },
 }));
 
 const RepliesContainer = styled(Box)(({ theme }) => ({
@@ -65,8 +65,8 @@ const RepliesContainer = styled(Box)(({ theme }) => ({
   paddingBottom: theme.spacing(1),
   [theme.breakpoints.down('sm')]: {
     marginLeft: theme.spacing(0.5),
-    paddingLeft: theme.spacing(0.5)
-  }
+    paddingLeft: theme.spacing(0.5),
+  },
 }));
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -86,16 +86,17 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       right: 0,
       bottom: 0,
       borderRadius: '16px',
-      background: 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
+      background:
+        'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
       backdropFilter: 'blur(30px)',
-      zIndex: -1
-    }
-  }
+      zIndex: -1,
+    },
+  },
 }));
 
-const CommentSystem = ({ 
-  comments = [], 
-  user, 
+const CommentSystem = ({
+  comments = [],
+  user,
   postId,
   onLikeComment = () => {},
   onLikeReply = () => {},
@@ -116,7 +117,7 @@ const CommentSystem = ({
   waitUntil = 0,
   onViewImage,
   useParentDialogs = false,
-  sanitizeImagePath = (imagePath) => imagePath
+  sanitizeImagePath = imagePath => imagePath,
 }) => {
   const { t } = useLanguage();
   const [replyText, setReplyText] = useState('');
@@ -128,24 +129,23 @@ const CommentSystem = ({
   const [replyFileInputRef, setReplyFileInputRef] = useState(React.createRef());
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentLightboxImage, setCurrentLightboxImage] = useState('');
-  
-  
+
   const [commentDeleteDialog, setCommentDeleteDialog] = useState({
     open: false,
     deleting: false,
     deleted: false,
-    commentId: null
+    commentId: null,
   });
-  
+
   const [replyDeleteDialog, setReplyDeleteDialog] = useState({
     open: false,
     deleting: false,
     deleted: false,
     commentId: null,
-    replyId: null
+    replyId: null,
   });
 
-  const handleReplyImageChange = (event) => {
+  const handleReplyImageChange = event => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       setReplyImage(file);
@@ -167,13 +167,16 @@ const CommentSystem = ({
     }
   };
 
-  const handleImageChange = (event) => {
+  const handleImageChange = event => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       if (typeof setCommentImage === 'function') setCommentImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        if (typeof reader.result === 'string' && typeof setImagePreview === 'function') {
+        if (
+          typeof reader.result === 'string' &&
+          typeof setImagePreview === 'function'
+        ) {
           setImagePreview(reader.result);
         }
       };
@@ -203,7 +206,7 @@ const CommentSystem = ({
     setReplyImagePreview('');
   };
 
-  const handleDeleteComment = (commentId) => {
+  const handleDeleteComment = commentId => {
     if (useParentDialogs) {
       if (typeof onDeleteComment === 'function') onDeleteComment(commentId);
     } else {
@@ -211,32 +214,35 @@ const CommentSystem = ({
         open: true,
         deleting: false,
         deleted: false,
-        commentId
+        commentId,
       });
     }
   };
 
   const confirmDeleteComment = () => {
-    if (typeof onDeleteComment === 'function') onDeleteComment(commentDeleteDialog.commentId);
+    if (typeof onDeleteComment === 'function')
+      onDeleteComment(commentDeleteDialog.commentId);
     setCommentDeleteDialog(prev => ({ ...prev, deleting: true }));
   };
 
   const handleDeleteReply = (commentId, replyId) => {
     if (useParentDialogs) {
-      if (typeof onDeleteReply === 'function') onDeleteReply(commentId, replyId);
+      if (typeof onDeleteReply === 'function')
+        onDeleteReply(commentId, replyId);
     } else {
       setReplyDeleteDialog({
         open: true,
         deleting: false,
         deleted: false,
         commentId,
-        replyId
+        replyId,
       });
     }
   };
 
   const confirmDeleteReply = () => {
-    if (typeof onDeleteReply === 'function') onDeleteReply(replyDeleteDialog.commentId, replyDeleteDialog.replyId);
+    if (typeof onDeleteReply === 'function')
+      onDeleteReply(replyDeleteDialog.commentId, replyDeleteDialog.replyId);
     setReplyDeleteDialog(prev => ({ ...prev, deleting: true }));
   };
 
@@ -246,7 +252,7 @@ const CommentSystem = ({
 
       {/* Comment form */}
       <Box sx={{ mb: 3 }}>
-        <CommentForm 
+        <CommentForm
           commentText={commentText}
           setCommentText={setCommentText}
           commentImage={commentImage}
@@ -260,16 +266,16 @@ const CommentSystem = ({
           error={commentError}
         />
       </Box>
-      
+
       <Divider sx={{ mb: 3, opacity: 0.1 }} />
-      
+
       {/* Comments section header */}
       <CommentSectionHeader>
         <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 20, sm: 24 } }} />
         {t('comment.section.title')}
-        <Box 
-          component="span" 
-          sx={{ 
+        <Box
+          component='span'
+          sx={{
             display: 'inline-flex',
             backgroundColor: 'rgba(140, 82, 255, 0.15)',
             color: 'primary.main',
@@ -277,19 +283,20 @@ const CommentSystem = ({
             padding: '2px 8px',
             fontSize: '0.75rem',
             fontWeight: 'bold',
-            ml: 1
+            ml: 1,
           }}
         >
           {comments.length}
         </Box>
       </CommentSectionHeader>
-      
+
       {/* Comments list */}
       {comments.length > 0 ? (
         <CommentsContainer>
           {comments.map(comment => {
-            const isCommentOwner = user && (comment.user_id === user.id || user.is_admin);
-            
+            const isCommentOwner =
+              user && (comment.user_id === user.id || user.is_admin);
+
             return (
               <Box key={comment.id}>
                 {/* Main comment */}
@@ -309,38 +316,40 @@ const CommentSystem = ({
                   onViewImage={onViewImage}
                   sanitizeImagePath={sanitizeImagePath}
                 />
-                
+
                 {/* Replies to this comment */}
                 {comment.replies && comment.replies.length > 0 && (
                   <RepliesContainer>
                     {[...comment.replies]
                       .sort((a, b) => {
                         try {
-                          
-                          const getDate = (obj) => {
+                          const getDate = obj => {
                             if (obj.created_at) return new Date(obj.created_at);
                             if (obj.timestamp) return new Date(obj.timestamp);
                             if (obj.date) return new Date(obj.date);
                             if (obj.time) return new Date(obj.time);
                             if (obj.created) return new Date(obj.created);
-                            
+
                             return new Date(0);
                           };
-                          
+
                           const dateA = getDate(a);
                           const dateB = getDate(b);
                           return dateA.getTime() - dateB.getTime();
                         } catch (error) {
                           console.error('Error sorting replies:', error);
-                          return 0; 
+                          return 0;
                         }
                       })
                       .map(reply => {
-                        const isReplyOwner = user && (reply.user_id === user.id || user.is_admin);
-                        const parentReply = reply.parent_reply_id 
-                          ? comment.replies.find(r => r.id === reply.parent_reply_id) 
+                        const isReplyOwner =
+                          user && (reply.user_id === user.id || user.is_admin);
+                        const parentReply = reply.parent_reply_id
+                          ? comment.replies.find(
+                              r => r.id === reply.parent_reply_id
+                            )
                           : null;
-                        
+
                         return (
                           <ReplyItem
                             key={reply.id}
@@ -348,13 +357,15 @@ const CommentSystem = ({
                             comment={comment}
                             parentReply={parentReply}
                             onLike={() => onLikeReply(reply.id)}
-                            onReply={(replyObj) => {
+                            onReply={replyObj => {
                               setReplyingToReply(replyObj);
                               setReplyFormOpen(true);
                               setActiveComment(comment);
                               setReplyText('');
                             }}
-                            onDelete={() => handleDeleteReply(comment.id, reply.id)}
+                            onDelete={() =>
+                              handleDeleteReply(comment.id, reply.id)
+                            }
                             setLightboxOpen={setLightboxOpen}
                             setCurrentLightboxImage={setCurrentLightboxImage}
                             isReplyOwner={isReplyOwner}
@@ -362,11 +373,10 @@ const CommentSystem = ({
                             sanitizeImagePath={sanitizeImagePath}
                           />
                         );
-                      })
-                    }
+                      })}
                   </RepliesContainer>
                 )}
-                
+
                 {/* Reply form for this comment */}
                 {replyFormOpen && activeComment?.id === comment.id && (
                   <ReplyForm
@@ -381,8 +391,14 @@ const CommentSystem = ({
                       setReplyImage(null);
                       setReplyImagePreview('');
                     }}
-                    targetUser={replyingToReply ? replyingToReply.user : comment.user}
-                    targetContent={replyingToReply ? replyingToReply.content : comment.content}
+                    targetUser={
+                      replyingToReply ? replyingToReply.user : comment.user
+                    }
+                    targetContent={
+                      replyingToReply
+                        ? replyingToReply.content
+                        : comment.content
+                    }
                     isSubmitting={isSubmittingComment}
                     disabled={Date.now() < waitUntil}
                     replyFileInputRef={replyFileInputRef}
@@ -399,42 +415,61 @@ const CommentSystem = ({
         </CommentsContainer>
       ) : (
         <EmptyCommentsContainer>
-          <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 32, sm: 40 }, color: 'text.secondary', mb: { xs: 1, sm: 2 }, opacity: 0.6 }} />
-          <Typography variant="body1" color="text.secondary" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+          <ChatBubbleOutlineIcon
+            sx={{
+              fontSize: { xs: 32, sm: 40 },
+              color: 'text.secondary',
+              mb: { xs: 1, sm: 2 },
+              opacity: 0.6,
+            }}
+          />
+          <Typography
+            variant='body1'
+            color='text.secondary'
+            sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}
+          >
             {t('comment.section.empty')}
           </Typography>
         </EmptyCommentsContainer>
       )}
-      
+
       {/* Comment delete confirmation dialog */}
       <StyledDialog
         open={commentDeleteDialog.open}
-        onClose={() => !commentDeleteDialog.deleting && !commentDeleteDialog.deleted && 
-                     setCommentDeleteDialog(prev => ({ ...prev, open: false }))}
+        onClose={() =>
+          !commentDeleteDialog.deleting &&
+          !commentDeleteDialog.deleted &&
+          setCommentDeleteDialog(prev => ({ ...prev, open: false }))
+        }
       >
         <Box sx={{ p: 3 }}>
           {commentDeleteDialog.deleted ? (
             <>
               <Box sx={{ textAlign: 'center', py: 2 }}>
-                <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
-                <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
+                <CheckCircleIcon
+                  sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }}
+                />
+                <Typography variant='h6' sx={{ mb: 1, color: 'white' }}>
                   Комментарий удален
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                >
                   Комментарий был успешно удален
                 </Typography>
               </Box>
             </>
           ) : (
             <>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mb: 2, 
+              <Typography
+                variant='h6'
+                sx={{
+                  mb: 2,
                   color: '#f44336',
                   fontWeight: 'medium',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 <DeleteIcon sx={{ mr: 1 }} /> {t('comment.dialog.delete.title')}
@@ -443,27 +478,29 @@ const CommentSystem = ({
                 {t('comment.dialog.delete.message')}
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button 
-                  onClick={() => setCommentDeleteDialog(prev => ({ ...prev, open: false }))}
+                <Button
+                  onClick={() =>
+                    setCommentDeleteDialog(prev => ({ ...prev, open: false }))
+                  }
                   disabled={commentDeleteDialog.deleting}
-                  sx={{ 
+                  sx={{
                     borderRadius: '10px',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
                       bgcolor: 'rgba(255, 255, 255, 0.08)',
-                      color: 'rgba(255, 255, 255, 0.9)'
-                    }
+                      color: 'rgba(255, 255, 255, 0.9)',
+                    },
                   }}
                 >
                   {t('comment.dialog.delete.cancel')}
                 </Button>
-                <Button 
+                <Button
                   onClick={confirmDeleteComment}
                   disabled={commentDeleteDialog.deleting}
-                  variant="contained" 
-                  color="error"
-                  sx={{ 
+                  variant='contained'
+                  color='error'
+                  sx={{
                     borderRadius: '10px',
                     boxShadow: 'none',
                   }}
@@ -475,70 +512,85 @@ const CommentSystem = ({
           )}
         </Box>
       </StyledDialog>
-      
+
       {/* Reply delete confirmation dialog */}
       <StyledDialog
         open={replyDeleteDialog.open}
-        onClose={() => !replyDeleteDialog.deleting && !replyDeleteDialog.deleted && 
-                     setReplyDeleteDialog(prev => ({ ...prev, open: false }))}
+        onClose={() =>
+          !replyDeleteDialog.deleting &&
+          !replyDeleteDialog.deleted &&
+          setReplyDeleteDialog(prev => ({ ...prev, open: false }))
+        }
       >
         <Box sx={{ p: 3 }}>
           {replyDeleteDialog.deleted ? (
             <>
               <Box sx={{ textAlign: 'center', py: 2 }}>
-                <CheckCircleIcon sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }} />
-                <Typography variant="h6" sx={{ mb: 1, color: 'white' }}>
+                <CheckCircleIcon
+                  sx={{ fontSize: 56, color: '#4CAF50', mb: 2 }}
+                />
+                <Typography variant='h6' sx={{ mb: 1, color: 'white' }}>
                   Ответ удален
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                >
                   Ответ был успешно удален
                 </Typography>
               </Box>
             </>
           ) : (
             <>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mb: 2, 
+              <Typography
+                variant='h6'
+                sx={{
+                  mb: 2,
                   color: '#f44336',
                   fontWeight: 'medium',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
               >
                 <DeleteIcon sx={{ mr: 1 }} /> Удаление ответа
               </Typography>
               <Typography sx={{ mb: 3, color: 'rgba(255, 255, 255, 0.7)' }}>
-                Вы уверены, что хотите удалить этот ответ? Это действие нельзя отменить.
+                Вы уверены, что хотите удалить этот ответ? Это действие нельзя
+                отменить.
               </Typography>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                <Button 
-                  onClick={() => setReplyDeleteDialog(prev => ({ ...prev, open: false }))}
+                <Button
+                  onClick={() =>
+                    setReplyDeleteDialog(prev => ({ ...prev, open: false }))
+                  }
                   disabled={replyDeleteDialog.deleting}
-                  sx={{ 
+                  sx={{
                     borderRadius: '10px',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
                       bgcolor: 'rgba(255, 255, 255, 0.08)',
-                      color: 'rgba(255, 255, 255, 0.9)'
-                    }
+                      color: 'rgba(255, 255, 255, 0.9)',
+                    },
                   }}
                 >
                   Отмена
                 </Button>
-                <Button 
+                <Button
                   onClick={confirmDeleteReply}
                   disabled={replyDeleteDialog.deleting}
-                  variant="contained" 
-                  color="error"
-                  sx={{ 
+                  variant='contained'
+                  color='error'
+                  sx={{
                     borderRadius: '10px',
                     boxShadow: 'none',
-                    px: 2
+                    px: 2,
                   }}
-                  endIcon={replyDeleteDialog.deleting ? <CircularProgress size={16} color="inherit" /> : null}
+                  endIcon={
+                    replyDeleteDialog.deleting ? (
+                      <CircularProgress size={16} color='inherit' />
+                    ) : null
+                  }
                 >
                   {replyDeleteDialog.deleting ? 'Удаление...' : 'Удалить'}
                 </Button>
@@ -547,9 +599,8 @@ const CommentSystem = ({
           )}
         </Box>
       </StyledDialog>
-      
     </Box>
   );
 };
 
-export default CommentSystem; 
+export default CommentSystem;

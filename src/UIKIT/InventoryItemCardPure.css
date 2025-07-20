@@ -4,7 +4,9 @@
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  transition: transform 0.3s ease, background 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
   cursor: pointer;
   overflow: hidden;
 }
@@ -28,7 +30,7 @@
 }
 
 .image-container.has-background::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -134,4 +136,4 @@
 
 .equipped-item-compact .image-container {
   margin-bottom: 0;
-} 
+}

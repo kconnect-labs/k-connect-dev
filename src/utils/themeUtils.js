@@ -1,8 +1,8 @@
 // Утилиты для работы с темами
-export const getThemeColors = (mode) => {
+export const getThemeColors = mode => {
   return {
     backgroundColor: '#151515',
-    textColor: '#FFFFFF'
+    textColor: '#FFFFFF',
   };
 };
 
@@ -21,4 +21,4 @@ export const getThemeSetting = (key, defaultValue = null) => {
     console.error(`Ошибка при получении настройки темы ${key}:`, error);
     return defaultValue;
   }
-}; 
+};

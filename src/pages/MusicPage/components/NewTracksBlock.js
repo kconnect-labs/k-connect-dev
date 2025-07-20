@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Box, 
-  Typography, 
-  CircularProgress, 
+import {
+  Box,
+  Typography,
+  CircularProgress,
   Card,
   CardContent,
   List,
@@ -13,7 +13,7 @@ import {
   Avatar,
   IconButton,
   Divider,
-  Chip
+  Chip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMusic } from '../../../context/MusicContext';
@@ -50,7 +50,9 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
 
 const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
   borderRadius: 12,
-  background: isActive ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+  background: isActive
+    ? 'rgba(255, 255, 255, 0.05)'
+    : 'rgba(255, 255, 255, 0.02)',
   backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25),
@@ -110,7 +112,9 @@ const NewTracksBlock = () => {
   const fetchNewTracks = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await apiClient.get('/api/music/tracks?type=new&limit=10');
+      const response = await apiClient.get(
+        '/api/music/tracks?type=new&limit=10'
+      );
       if (response.data.success) {
         setTracks(response.data.tracks);
       } else {
@@ -124,22 +128,29 @@ const NewTracksBlock = () => {
     }
   }, []);
 
-  const handlePlayTrack = useCallback((track) => {
-    if (isPlaying && currentTrack?.id === track.id) {
-      togglePlay();
-    } else {
-      playTrack(track, 'new');
-    }
-  }, [isPlaying, currentTrack, playTrack, togglePlay]);
+  const handlePlayTrack = useCallback(
+    track => {
+      if (isPlaying && currentTrack?.id === track.id) {
+        togglePlay();
+      } else {
+        playTrack(track, 'new');
+      }
+    },
+    [isPlaying, currentTrack, playTrack, togglePlay]
+  );
 
-  const handleLikeTrack = async (trackId) => {
+  const handleLikeTrack = async trackId => {
     try {
       const response = await apiClient.post(`/api/music/${trackId}/like`);
       if (response.data.success) {
-        setTracks(prevTracks => 
-          prevTracks.map(track => 
-            track.id === trackId 
-              ? { ...track, is_liked: !track.is_liked, likes_count: response.data.likes_count }
+        setTracks(prevTracks =>
+          prevTracks.map(track =>
+            track.id === trackId
+              ? {
+                  ...track,
+                  is_liked: !track.is_liked,
+                  likes_count: response.data.likes_count,
+                }
               : track
           )
         );
@@ -149,7 +160,7 @@ const NewTracksBlock = () => {
     }
   };
 
-  const formatDuration = (seconds) => {
+  const formatDuration = seconds => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
@@ -158,8 +169,13 @@ const NewTracksBlock = () => {
   if (loading) {
     return (
       <NewTracksContainer>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
-          <CircularProgress color="primary" />
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='200px'
+        >
+          <CircularProgress color='primary' />
         </Box>
       </NewTracksContainer>
     );
@@ -175,11 +191,11 @@ const NewTracksBlock = () => {
         <CardContent>
           <NewTracksHeader>
             <NewReleasesIcon sx={{ fontSize: 24, color: 'primary.main' }} />
-            <Typography variant="h6" fontWeight={600} sx={{ ml: 1 }}>
+            <Typography variant='h6' fontWeight={600} sx={{ ml: 1 }}>
               Новые треки коннекта
             </Typography>
           </NewTracksHeader>
-          
+
           <List sx={{ p: 0 }}>
             {tracks.slice(0, 5).map((track, index) => {
               const isCurrentTrack = currentTrack?.id === track.id;
@@ -187,28 +203,29 @@ const NewTracksBlock = () => {
 
               return (
                 <React.Fragment key={track.id}>
-                  <TrackItem 
+                  <TrackItem
                     isActive={isCurrentTrack}
                     onClick={() => handlePlayTrack(track)}
                   >
                     <ListItemAvatar>
-                      <TrackAvatar
-                        src={track.cover_path}
-                        alt={track.title}
-                      />
+                      <TrackAvatar src={track.cover_path} alt={track.title} />
                     </ListItemAvatar>
-                    
+
                     <ListItemText
                       primary={
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <Typography 
-                            variant="body1" 
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          <Typography
+                            variant='body1'
                             fontWeight={isCurrentTrack ? 600 : 500}
-                            sx={{ 
-                              color: isCurrentTrack ? 'primary.main' : 'text.primary',
+                            sx={{
+                              color: isCurrentTrack
+                                ? 'primary.main'
+                                : 'text.primary',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
+                              whiteSpace: 'nowrap',
                             }}
                           >
                             {track.title}
@@ -217,35 +234,54 @@ const NewTracksBlock = () => {
                       }
                       secondary={
                         <Box>
-                          <Typography 
-                            variant="body2" 
-                            color="text.secondary"
-                            sx={{ 
+                          <Typography
+                            variant='body2'
+                            color='text.secondary'
+                            sx={{
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap'
+                              whiteSpace: 'nowrap',
                             }}
                           >
                             {track.artist}
                           </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                            <AccessTimeIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                            <Typography variant="caption" color="text.secondary">
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              mt: 0.5,
+                            }}
+                          >
+                            <AccessTimeIcon
+                              sx={{ fontSize: 14, color: 'text.secondary' }}
+                            />
+                            <Typography
+                              variant='caption'
+                              color='text.secondary'
+                            >
                               {formatDuration(track.duration)}
                             </Typography>
                             {track.genre && (
                               <>
-                                <Typography variant="caption" color="text.secondary">•</Typography>
-                                <Chip 
-                                  label={track.genre} 
-                                  size="small" 
-                                  sx={{ 
+                                <Typography
+                                  variant='caption'
+                                  color='text.secondary'
+                                >
+                                  •
+                                </Typography>
+                                <Chip
+                                  label={track.genre}
+                                  size='small'
+                                  sx={{
                                     height: 20,
                                     fontSize: '0.7rem',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                    backgroundColor:
+                                      'rgba(255, 255, 255, 0.05)',
                                     color: 'text.secondary',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                  }} 
+                                    border:
+                                      '1px solid rgba(255, 255, 255, 0.1)',
+                                  }}
                                 />
                               </>
                             )}
@@ -253,25 +289,31 @@ const NewTracksBlock = () => {
                         </Box>
                       }
                     />
-                    
+
                     <ListItemSecondaryAction>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ActionButton
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation();
                             handleLikeTrack(track.id);
                           }}
                         >
-                          {track.is_liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                          {track.is_liked ? (
+                            <FavoriteIcon />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
                         </ActionButton>
-                        
+
                         <ActionButton
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation();
                             handlePlayTrack(track);
                           }}
-                          sx={{ 
-                            color: isCurrentTrack ? 'primary.main' : 'text.secondary',
+                          sx={{
+                            color: isCurrentTrack
+                              ? 'primary.main'
+                              : 'text.secondary',
                           }}
                         >
                           {isTrackPlaying ? <PauseIcon /> : <PlayArrowIcon />}
@@ -280,11 +322,13 @@ const NewTracksBlock = () => {
                     </ListItemSecondaryAction>
                   </TrackItem>
                   {index < Math.min(tracks.length, 5) - 1 && (
-                    <Divider sx={{ 
-                      mx: 2, 
-                      borderColor: 'rgba(255, 255, 255, 0.05)',
-                      opacity: 0.5 
-                    }} />
+                    <Divider
+                      sx={{
+                        mx: 2,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                        opacity: 0.5,
+                      }}
+                    />
                   )}
                 </React.Fragment>
               );
@@ -296,4 +340,4 @@ const NewTracksBlock = () => {
   );
 };
 
-export default NewTracksBlock; 
+export default NewTracksBlock;

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-  Container, 
-  Box, 
-  Paper, 
-  Typography, 
-  TextField, 
-  Button, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
+import {
+  Container,
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
   TableRow,
   Tab,
   Tabs,
@@ -41,7 +41,7 @@ import {
   FormControlLabel,
   Checkbox,
   Switch,
-  Pagination
+  Pagination,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -79,7 +79,6 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
-
 const PageHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -114,8 +113,7 @@ const AdminPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userPosts, setUserPosts] = useState([]);
   const [userTracks, setUserTracks] = useState([]);
-  
-  
+
   const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
   const [badgeDialogOpen, setBadgeDialogOpen] = useState(false);
   const [banDialogOpen, setBanDialogOpen] = useState(false);
@@ -123,15 +121,13 @@ const AdminPage = () => {
   const [deleteTrackDialogOpen, setDeleteTrackDialogOpen] = useState(false);
   const [viewUserDialogOpen, setViewUserDialogOpen] = useState(false);
   const [moderatorDialogOpen, setModeratorDialogOpen] = useState(false);
-  
-  
+
   const [verificationLevel, setVerificationLevel] = useState(1);
   const [selectedBadge, setSelectedBadge] = useState('');
   const [selectedPost, setSelectedPost] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState(null);
   const [banReason, setBanReason] = useState('');
-  
-  
+
   const [selectedPermissions, setSelectedPermissions] = useState({
     delete_music: false,
     delete_posts: false,
@@ -140,23 +136,20 @@ const AdminPage = () => {
     change_user_name: false,
     change_username: false,
     manage_bug_reports: false,
-    delete_bug_reports: false
+    delete_bug_reports: false,
   });
   const [moderators, setModerators] = useState([]);
   const [bugReports, setBugReports] = useState([]);
-  
-  
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  
-  
+
   const [notification, setNotification] = useState({
     open: false,
     message: '',
-    severity: 'success'
+    severity: 'success',
   });
-  
-  
+
   const [openKeyGenerationDialog, setOpenKeyGenerationDialog] = useState(false);
   const [generatedKeys, setGeneratedKeys] = useState([]);
   const [keyGenerationParams, setKeyGenerationParams] = useState({
@@ -167,7 +160,7 @@ const AdminPage = () => {
     max_uses: 1,
     count: 1,
     description: '',
-    expires_days: 30
+    expires_days: 30,
   });
   const [isGeneratingKeys, setIsGeneratingKeys] = useState(false);
   const [redemptionKeys, setRedemptionKeys] = useState([]);
@@ -176,37 +169,34 @@ const AdminPage = () => {
     page: 1,
     per_page: 10,
     total: 0,
-    pages: 0
+    pages: 0,
   });
-  
-  
+
   if (!user || user.id !== 3) {
-    return <Navigate to="/" />;
+    return <Navigate to='/' />;
   }
-  
+
   useEffect(() => {
     fetchUsers();
     fetchAllAchievements();
     fetchModerators();
     fetchBugReports();
   }, []);
-  
+
   useEffect(() => {
-    
     if (tabValue === 1) {
       fetchAllPosts();
     } else if (tabValue === 2) {
       fetchAllTracks();
-    } else if (tabValue === 6) { 
+    } else if (tabValue === 6) {
       fetchRedemptionKeys();
     }
   }, [tabValue]);
-  
-  
+
   const fetchAllPosts = async () => {
     try {
       setLoading(true);
-      
+
       const response = await axios.get('/api/posts/feed?limit=50');
       if (response.data && response.data.posts) {
         setUserPosts(response.data.posts);
@@ -218,12 +208,11 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const fetchAllTracks = async () => {
     try {
       setLoading(true);
-      
+
       const response = await axios.get('/api/music');
       if (response.data && response.data.tracks) {
         setUserTracks(response.data.tracks);
@@ -235,8 +224,7 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -244,7 +232,7 @@ const AdminPage = () => {
       if (searchQuery) {
         url += `?search=${searchQuery}`;
       }
-      
+
       const response = await axios.get(url);
       setUsers(response.data.users || []);
     } catch (error) {
@@ -254,8 +242,7 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const fetchAllAchievements = async () => {
     try {
       const response = await axios.get('/api/admin/badge-types');
@@ -265,9 +252,8 @@ const AdminPage = () => {
       showNotification('error', 'Не удалось загрузить доступные значки');
     }
   };
-  
-  
-  const fetchUserPosts = async (userId) => {
+
+  const fetchUserPosts = async userId => {
     try {
       const response = await axios.get(`/api/admin/users/${userId}/posts`);
       setUserPosts(response.data.posts || []);
@@ -276,9 +262,8 @@ const AdminPage = () => {
       showNotification('error', 'Не удалось загрузить посты пользователя');
     }
   };
-  
-  
-  const fetchUserTracks = async (userId) => {
+
+  const fetchUserTracks = async userId => {
     try {
       const response = await axios.get(`/api/admin/users/${userId}/tracks`);
       setUserTracks(response.data.tracks || []);
@@ -287,8 +272,7 @@ const AdminPage = () => {
       showNotification('error', 'Не удалось загрузить треки пользователя');
     }
   };
-  
-  
+
   const fetchModerators = async () => {
     try {
       setLoading(true);
@@ -301,8 +285,7 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const fetchBugReports = async () => {
     try {
       setLoading(true);
@@ -315,42 +298,47 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const showNotification = (severity, message) => {
     setNotification({
       open: true,
       message,
-      severity: severity
+      severity: severity,
     });
   };
-  
-  
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  
-  
+
   const handleSearch = () => {
     fetchUsers();
   };
-  
-  
+
   const handleVerifyUser = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`/api/admin/users/${selectedUser.id}/verify`, {
-        verification_level: verificationLevel
-      });
-      
+      const response = await axios.post(
+        `/api/admin/users/${selectedUser.id}/verify`,
+        {
+          verification_level: verificationLevel,
+        }
+      );
+
       if (response.data.success) {
         showNotification('success', 'Статус верификации пользователя обновлен');
-        
-        setUsers(users.map(u => 
-          u.id === selectedUser.id 
-            ? { ...u, verification_status: response.data.verification_status, verification_level: verificationLevel } 
-            : u
-        ));
+
+        setUsers(
+          users.map(u =>
+            u.id === selectedUser.id
+              ? {
+                  ...u,
+                  verification_status: response.data.verification_status,
+                  verification_level: verificationLevel,
+                }
+              : u
+          )
+        );
       } else {
         throw new Error(response.data.error || 'Failed to verify user');
       }
@@ -362,18 +350,20 @@ const AdminPage = () => {
       setVerifyDialogOpen(false);
     }
   };
-  
-  
+
   const handleGiveBadge = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`/api/admin/users/${selectedUser.id}/give-achievement`, {
-        badge_type_id: selectedBadge
-      });
-      
+      const response = await axios.post(
+        `/api/admin/users/${selectedUser.id}/give-achievement`,
+        {
+          badge_type_id: selectedBadge,
+        }
+      );
+
       if (response.data.success) {
         showNotification('success', 'Достижение успешно выдано пользователю');
-        
+
         fetchUsers();
       } else {
         throw new Error(response.data.error || 'Failed to give achievement');
@@ -386,24 +376,31 @@ const AdminPage = () => {
       setBadgeDialogOpen(false);
     }
   };
-  
-  
+
   const handleBanUser = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(`/api/admin/users/${selectedUser.id}/ban`, {
-        reason: banReason,
-        is_banned: !selectedUser.is_banned 
-      });
-      
+      const response = await axios.post(
+        `/api/admin/users/${selectedUser.id}/ban`,
+        {
+          reason: banReason,
+          is_banned: !selectedUser.is_banned,
+        }
+      );
+
       if (response.data.success) {
-        showNotification('success', selectedUser.is_banned ? 'Пользователь разблокирован' : 'Пользователь заблокирован');
-        
-        setUsers(users.map(u => 
-          u.id === selectedUser.id 
-            ? { ...u, is_banned: !u.is_banned } 
-            : u
-        ));
+        showNotification(
+          'success',
+          selectedUser.is_banned
+            ? 'Пользователь разблокирован'
+            : 'Пользователь заблокирован'
+        );
+
+        setUsers(
+          users.map(u =>
+            u.id === selectedUser.id ? { ...u, is_banned: !u.is_banned } : u
+          )
+        );
       } else {
         throw new Error(response.data.error || 'Failed to update ban status');
       }
@@ -415,16 +412,17 @@ const AdminPage = () => {
       setBanDialogOpen(false);
     }
   };
-  
-  
+
   const handleDeletePost = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`/api/admin/posts/${selectedPost.id}`);
-      
+      const response = await axios.delete(
+        `/api/admin/posts/${selectedPost.id}`
+      );
+
       if (response.data.success) {
         showNotification('success', 'Пост успешно удален');
-        
+
         setUserPosts(userPosts.filter(p => p.id !== selectedPost.id));
       } else {
         throw new Error(response.data.error || 'Failed to delete post');
@@ -437,50 +435,45 @@ const AdminPage = () => {
       setDeletePostDialogOpen(false);
     }
   };
-  
-  const handleViewUser = (user) => {
+
+  const handleViewUser = user => {
     setSelectedUser(user);
     fetchUserPosts(user.id);
     fetchUserTracks(user.id);
     setViewUserDialogOpen(true);
   };
-  
-  
-  const openVerifyDialog = (user) => {
+
+  const openVerifyDialog = user => {
     setSelectedUser(user);
     setVerificationLevel(user.verification_level || 1);
     setVerifyDialogOpen(true);
   };
-  
-  
-  const openBadgeDialog = (user) => {
+
+  const openBadgeDialog = user => {
     setSelectedUser(user);
     setSelectedBadge('');
     setBadgeDialogOpen(true);
   };
-  
-  
-  const openBanDialog = (user) => {
+
+  const openBanDialog = user => {
     setSelectedUser(user);
     setBanReason('');
     setBanDialogOpen(true);
   };
-  
-  
-  const openDeletePostDialog = (post) => {
+
+  const openDeletePostDialog = post => {
     setSelectedPost(post);
     setDeletePostDialogOpen(true);
   };
-  
-  
-  const handleDeleteTrack = async (trackId) => {
+
+  const handleDeleteTrack = async trackId => {
     try {
       setLoading(true);
       const response = await axios.delete(`/api/admin/tracks/${trackId}`);
-      
+
       if (response.data.success) {
         showNotification('success', 'Трек успешно удален');
-        
+
         setUserTracks(userTracks.filter(track => track.id !== trackId));
       } else {
         throw new Error(response.data.error || 'Не удалось удалить трек');
@@ -492,51 +485,53 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
-  const openDeleteTrackDialog = (track) => {
+
+  const openDeleteTrackDialog = track => {
     setSelectedTrack(track);
     setDeleteTrackDialogOpen(true);
   };
-  
-  
+
   const confirmDeleteTrack = () => {
     if (selectedTrack) {
       handleDeleteTrack(selectedTrack.id);
       setDeleteTrackDialogOpen(false);
     }
   };
-  
-  
+
   const handleToggleModeratorStatus = async () => {
     try {
       setLoading(true);
       const isCurrentlyModerator = isModerator(selectedUser.id);
-      
+
       let response;
       if (isCurrentlyModerator) {
-        
-        response = await axios.delete(`/api/admin/moderators/${selectedUser.id}`);
+        response = await axios.delete(
+          `/api/admin/moderators/${selectedUser.id}`
+        );
         if (response.data.success) {
           showNotification('success', 'Модераторские права отозваны');
-          setModerators(moderators.filter(mod => mod.user_id !== selectedUser.id));
+          setModerators(
+            moderators.filter(mod => mod.user_id !== selectedUser.id)
+          );
         }
       } else {
-        
         response = await axios.post('/api/admin/moderators', {
           user_id: selectedUser.id,
-          permissions: selectedPermissions
+          permissions: selectedPermissions,
         });
-        
+
         if (response.data.success) {
           showNotification('success', 'Пользователь назначен модератором');
-          
-          setModerators([...moderators, {
-            user_id: selectedUser.id,
-            user_name: selectedUser.name,
-            user_username: selectedUser.username,
-            permissions: selectedPermissions
-          }]);
+
+          setModerators([
+            ...moderators,
+            {
+              user_id: selectedUser.id,
+              user_name: selectedUser.name,
+              user_username: selectedUser.username,
+              permissions: selectedPermissions,
+            },
+          ]);
         }
       }
     } catch (error) {
@@ -547,23 +542,27 @@ const AdminPage = () => {
       setModeratorDialogOpen(false);
     }
   };
-  
-  
+
   const handleUpdateModeratorPermissions = async () => {
     try {
       setLoading(true);
-      const response = await axios.put(`/api/admin/moderators/${selectedUser.id}`, {
-        permissions: selectedPermissions
-      });
-      
+      const response = await axios.put(
+        `/api/admin/moderators/${selectedUser.id}`,
+        {
+          permissions: selectedPermissions,
+        }
+      );
+
       if (response.data.success) {
         showNotification('success', 'Права модератора обновлены');
-        
-        setModerators(moderators.map(mod => 
-          mod.user_id === selectedUser.id 
-            ? { ...mod, permissions: selectedPermissions } 
-            : mod
-        ));
+
+        setModerators(
+          moderators.map(mod =>
+            mod.user_id === selectedUser.id
+              ? { ...mod, permissions: selectedPermissions }
+              : mod
+          )
+        );
       }
     } catch (error) {
       console.error('Error updating moderator permissions:', error);
@@ -573,19 +572,15 @@ const AdminPage = () => {
       setModeratorDialogOpen(false);
     }
   };
-  
-  
-  const openModeratorDialog = (user) => {
+
+  const openModeratorDialog = user => {
     setSelectedUser(user);
-    
-    
+
     const existingModerator = moderators.find(mod => mod.user_id === user.id);
-    
+
     if (existingModerator) {
-      
       setSelectedPermissions(existingModerator.permissions);
     } else {
-      
       setSelectedPermissions({
         delete_music: false,
         delete_posts: false,
@@ -594,36 +589,36 @@ const AdminPage = () => {
         change_user_name: false,
         change_username: false,
         manage_bug_reports: false,
-        delete_bug_reports: false
+        delete_bug_reports: false,
       });
     }
-    
+
     setModeratorDialogOpen(true);
   };
-  
-  
-  const isModerator = (userId) => {
+
+  const isModerator = userId => {
     return moderators.some(mod => mod.user_id === userId);
   };
-  
-  
+
   const handleUpdateBugReportStatus = async (reportId, status) => {
     try {
       setLoading(true);
       const response = await axios.put(`/api/admin/bug-reports/${reportId}`, {
-        status
+        status,
       });
-      
+
       if (response.data.success) {
         showNotification('success', 'Статус баг-репорта обновлен');
-        
-        setBugReports(bugReports.map(report => 
-          report.id === reportId 
-            ? { ...report, status } 
-            : report
-        ));
+
+        setBugReports(
+          bugReports.map(report =>
+            report.id === reportId ? { ...report, status } : report
+          )
+        );
       } else {
-        throw new Error(response.data.error || 'Failed to update bug report status');
+        throw new Error(
+          response.data.error || 'Failed to update bug report status'
+        );
       }
     } catch (error) {
       console.error('Error updating bug report status:', error);
@@ -632,16 +627,15 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
-  const handleDeleteBugReport = async (reportId) => {
+
+  const handleDeleteBugReport = async reportId => {
     try {
       setLoading(true);
       const response = await axios.delete(`/api/admin/bug-reports/${reportId}`);
-      
+
       if (response.data.success) {
         showNotification('success', 'Баг-репорт успешно удален');
-        
+
         setBugReports(bugReports.filter(report => report.id !== reportId));
       } else {
         throw new Error(response.data.error || 'Failed to delete bug report');
@@ -653,13 +647,11 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const handleAddModerator = async () => {
     setLoading(true);
-    
+
     try {
-      
       const response = await fetch('/api/admin/moderators', {
         method: 'POST',
         headers: {
@@ -682,33 +674,28 @@ const AdminPage = () => {
       });
 
       const data = await response.json();
-      
+
       if (!response.ok) {
         console.error('Ошибка при добавлении модератора:', data);
-        
-        
+
         let errorMessage = data.error || 'Неизвестная ошибка';
-        
-        
+
         if (data.debug_info) {
           errorMessage += '\n\nДетали ошибки:\n';
           Object.entries(data.debug_info).forEach(([key, value]) => {
             if (value) errorMessage += `${key}: ${value}\n`;
           });
         }
-        
+
         showNotification('error', errorMessage);
         setLoading(false);
         return;
       }
 
-      
       showNotification('success', data.message || 'Модератор успешно добавлен');
-      
-      
+
       fetchModerators();
-      
-      
+
       handleCloseModeratorDialog();
     } catch (error) {
       console.error('Ошибка при отправке запроса:', error);
@@ -717,8 +704,7 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
-  
-  
+
   const renderUsersTable = () => {
     return (
       <TableContainer>
@@ -733,99 +719,154 @@ const AdminPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Avatar 
-                      src={user.photo ? (user.photo.startsWith('/') ? user.photo : `/static/uploads/avatar/${user.id}/${user.photo}`) : undefined} 
-                      sx={{ mr: 1 }}
-                      onError={(e) => {
-                        console.error(`Failed to load avatar for ${user.username}`);
-                        e.target.onerror = null; 
-                        e.target.src = `/static/uploads/avatar/system/avatar.png`;
-                      }}
-                    />
-                    <Box>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-                        {user.name}
-                        {user.verification_status === 'verified' && (
-                          <CheckCircleIcon 
-                            sx={{ 
-                              fontSize: 16, 
-                              ml: 0.5, 
-                              color: user.verification_level === 1 ? '#9e9e9e' : 
-                                     user.verification_level === 2 ? '#d67270' : 
-                                     user.verification_level === 3 ? '#b39ddb' : 
-                                     user.verification_level === 4 ? '#ff9800' : 
-                                     user.verification_level === 5 ? '#4caf50' :
-                                     user.verification_level === 6 ? '#1e88e5' :
-                                     user.verification_level === 7 ? '#7c4dff' :
-                                     '#D0BCFF'
-                            }} 
-                          />
-                        )}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">@{user.username}</Typography>
+            {users
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map(user => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Avatar
+                        src={
+                          user.photo
+                            ? user.photo.startsWith('/')
+                              ? user.photo
+                              : `/static/uploads/avatar/${user.id}/${user.photo}`
+                            : undefined
+                        }
+                        sx={{ mr: 1 }}
+                        onError={e => {
+                          console.error(
+                            `Failed to load avatar for ${user.username}`
+                          );
+                          e.target.onerror = null;
+                          e.target.src = `/static/uploads/avatar/system/avatar.png`;
+                        }}
+                      />
+                      <Box>
+                        <Typography
+                          variant='subtitle2'
+                          sx={{
+                            fontWeight: 'bold',
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {user.name}
+                          {user.verification_status === 'verified' && (
+                            <CheckCircleIcon
+                              sx={{
+                                fontSize: 16,
+                                ml: 0.5,
+                                color:
+                                  user.verification_level === 1
+                                    ? '#9e9e9e'
+                                    : user.verification_level === 2
+                                      ? '#d67270'
+                                      : user.verification_level === 3
+                                        ? '#b39ddb'
+                                        : user.verification_level === 4
+                                          ? '#ff9800'
+                                          : user.verification_level === 5
+                                            ? '#4caf50'
+                                            : user.verification_level === 6
+                                              ? '#1e88e5'
+                                              : user.verification_level === 7
+                                                ? '#7c4dff'
+                                                : '#D0BCFF',
+                              }}
+                            />
+                          )}
+                        </Typography>
+                        <Typography variant='caption' color='text.secondary'>
+                          @{user.username}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  <Box>
-                    {user.email ? (
-                      <Typography variant="body2">{user.email}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Box>
+                      {user.email ? (
+                        <Typography variant='body2'>{user.email}</Typography>
+                      ) : (
+                        <Typography variant='body2' color='text.secondary'>
+                          Нет email
+                        </Typography>
+                      )}
+                      {user.telegram_id && (
+                        <Typography variant='caption' color='text.secondary'>
+                          Telegram ID: {user.telegram_id}
+                        </Typography>
+                      )}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    {user.is_banned ? (
+                      <Chip
+                        size='small'
+                        label='Заблокирован'
+                        color='error'
+                        variant='outlined'
+                      />
                     ) : (
-                      <Typography variant="body2" color="text.secondary">Нет email</Typography>
+                      <Chip
+                        size='small'
+                        label='Активен'
+                        color='success'
+                        variant='outlined'
+                      />
                     )}
-                    {user.telegram_id && (
-                      <Typography variant="caption" color="text.secondary">
-                        Telegram ID: {user.telegram_id}
-                      </Typography>
-                    )}
-                  </Box>
-                </TableCell>
-                <TableCell>
-                  {user.is_banned ? (
-                    <Chip size="small" label="Заблокирован" color="error" variant="outlined" />
-                  ) : (
-                    <Chip size="small" label="Активен" color="success" variant="outlined" />
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton size="small" color="primary" onClick={() => handleViewUser(user)}>
-                      <VisibilityIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" color="primary" onClick={() => openVerifyDialog(user)}>
-                      <VerifiedUserIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" color="secondary" onClick={() => openBadgeDialog(user)}>
-                      <EmojiEventsIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" color={user.is_banned ? "success" : "error"} onClick={() => openBanDialog(user)}>
-                      <BlockIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton 
-                      color={isModerator(user.id) ? "success" : "default"} 
-                      onClick={() => openModeratorDialog(user)}
-                    >
-                      <SecurityIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <IconButton
+                        size='small'
+                        color='primary'
+                        onClick={() => handleViewUser(user)}
+                      >
+                        <VisibilityIcon fontSize='small' />
+                      </IconButton>
+                      <IconButton
+                        size='small'
+                        color='primary'
+                        onClick={() => openVerifyDialog(user)}
+                      >
+                        <VerifiedUserIcon fontSize='small' />
+                      </IconButton>
+                      <IconButton
+                        size='small'
+                        color='secondary'
+                        onClick={() => openBadgeDialog(user)}
+                      >
+                        <EmojiEventsIcon fontSize='small' />
+                      </IconButton>
+                      <IconButton
+                        size='small'
+                        color={user.is_banned ? 'success' : 'error'}
+                        onClick={() => openBanDialog(user)}
+                      >
+                        <BlockIcon fontSize='small' />
+                      </IconButton>
+                      <IconButton
+                        color={isModerator(user.id) ? 'success' : 'default'}
+                        onClick={() => openModeratorDialog(user)}
+                      >
+                        <SecurityIcon fontSize='small' />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+          component='div'
           count={users.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(event, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(event) => {
+          onRowsPerPageChange={event => {
             setRowsPerPage(parseInt(event.target.value, 10));
             setPage(0);
           }}
@@ -833,16 +874,18 @@ const AdminPage = () => {
       </TableContainer>
     );
   };
-  
-  
+
   const renderModeratorsTable = () => {
-  return (
+    return (
       <ContentPaper>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+        <Typography
+          variant='h6'
+          sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+        >
           <SecurityIcon sx={{ mr: 1 }} />
           Управление модераторами
         </Typography>
-        
+
         <TableContainer component={Paper} sx={{ mb: 3 }}>
           <Table>
             <TableHead>
@@ -855,7 +898,7 @@ const AdminPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {moderators.map((moderator) => (
+              {moderators.map(moderator => (
                 <TableRow key={moderator.user_id}>
                   <TableCell>{moderator.user_id}</TableCell>
                   <TableCell>{moderator.user_name}</TableCell>
@@ -863,53 +906,89 @@ const AdminPage = () => {
                   <TableCell>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                       {moderator.permissions.delete_music && (
-                        <Chip label="Удаление музыки" size="small" color="info" />
+                        <Chip
+                          label='Удаление музыки'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.delete_posts && (
-                        <Chip label="Удаление постов" size="small" color="info" />
+                        <Chip
+                          label='Удаление постов'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.delete_avatar && (
-                        <Chip label="Удаление аватаров" size="small" color="info" />
+                        <Chip
+                          label='Удаление аватаров'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.delete_comments && (
-                        <Chip label="Удаление комментариев" size="small" color="info" />
+                        <Chip
+                          label='Удаление комментариев'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.change_user_name && (
-                        <Chip label="Изменение имени" size="small" color="info" />
+                        <Chip
+                          label='Изменение имени'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.change_username && (
-                        <Chip label="Изменение username" size="small" color="info" />
+                        <Chip
+                          label='Изменение username'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.manage_bug_reports && (
-                        <Chip label="Управление баг-репортами" size="small" color="info" />
+                        <Chip
+                          label='Управление баг-репортами'
+                          size='small'
+                          color='info'
+                        />
                       )}
                       {moderator.permissions.delete_bug_reports && (
-                        <Chip label="Удаление баг-репортов" size="small" color="info" />
+                        <Chip
+                          label='Удаление баг-репортов'
+                          size='small'
+                          color='info'
+                        />
                       )}
                     </Box>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex' }}>
-                      <IconButton 
-                        color="primary" 
+                      <IconButton
+                        color='primary'
                         onClick={() => {
-                          const user = users.find(u => u.id === moderator.user_id) || {
+                          const user = users.find(
+                            u => u.id === moderator.user_id
+                          ) || {
                             id: moderator.user_id,
                             name: moderator.user_name,
-                            username: moderator.user_username
+                            username: moderator.user_username,
                           };
                           openModeratorDialog(user);
                         }}
                       >
                         <ModeEditIcon />
                       </IconButton>
-                      <IconButton 
-                        color="error" 
+                      <IconButton
+                        color='error'
                         onClick={() => {
-                          const user = users.find(u => u.id === moderator.user_id) || {
+                          const user = users.find(
+                            u => u.id === moderator.user_id
+                          ) || {
                             id: moderator.user_id,
                             name: moderator.user_name,
-                            username: moderator.user_username
+                            username: moderator.user_username,
                           };
                           setSelectedUser(user);
                           handleToggleModeratorStatus();
@@ -923,7 +1002,7 @@ const AdminPage = () => {
               ))}
               {moderators.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} align="center">
+                  <TableCell colSpan={5} align='center'>
                     Нет модераторов
                   </TableCell>
                 </TableRow>
@@ -931,23 +1010,27 @@ const AdminPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          Для назначения пользователя модератором, найдите его в списке пользователей и нажмите иконку <SecurityIcon fontSize="small" sx={{ verticalAlign: 'middle' }} />
+
+        <Typography variant='body1' sx={{ mb: 2 }}>
+          Для назначения пользователя модератором, найдите его в списке
+          пользователей и нажмите иконку{' '}
+          <SecurityIcon fontSize='small' sx={{ verticalAlign: 'middle' }} />
         </Typography>
       </ContentPaper>
     );
   };
-  
-  
+
   const renderBugReportsTable = () => {
     return (
       <ContentPaper>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+        <Typography
+          variant='h6'
+          sx={{ mb: 2, display: 'flex', alignItems: 'center' }}
+        >
           <BugReportIcon sx={{ mr: 1 }} />
           Управление баг-репортами
         </Typography>
-        
+
         <TableContainer component={Paper} sx={{ mb: 3 }}>
           <Table>
             <TableHead>
@@ -962,81 +1045,105 @@ const AdminPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bugReports.map((report) => (
+              {bugReports.map(report => (
                 <TableRow key={report.id}>
                   <TableCell>{report.id}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Avatar 
-                        src={report.user_photo ? 
-                          (report.user_photo.startsWith('/') ? report.user_photo : `/static/uploads/avatar/${report.user_id}/${report.user_photo}`) 
-                          : undefined} 
+                      <Avatar
+                        src={
+                          report.user_photo
+                            ? report.user_photo.startsWith('/')
+                              ? report.user_photo
+                              : `/static/uploads/avatar/${report.user_id}/${report.user_photo}`
+                            : undefined
+                        }
                         sx={{ mr: 1, width: 24, height: 24 }}
                       />
-                      <Typography variant="body2">{report.user_name}</Typography>
+                      <Typography variant='body2'>
+                        {report.user_name}
+                      </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">{report.title}</Typography>
+                    <Typography variant='body2'>{report.title}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        maxWidth: 200, 
-                        overflow: 'hidden', 
-                        textOverflow: 'ellipsis', 
-                        whiteSpace: 'nowrap' 
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        maxWidth: 200,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {report.description}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip 
+                    <Chip
                       label={
-                        report.status === 'new' ? 'Новый' :
-                        report.status === 'in_progress' ? 'В работе' :
-                        report.status === 'fixed' ? 'Исправлен' :
-                        report.status === 'wont_fix' ? 'Не будет исправлен' :
-                        'Неизвестно'
+                        report.status === 'new'
+                          ? 'Новый'
+                          : report.status === 'in_progress'
+                            ? 'В работе'
+                            : report.status === 'fixed'
+                              ? 'Исправлен'
+                              : report.status === 'wont_fix'
+                                ? 'Не будет исправлен'
+                                : 'Неизвестно'
                       }
                       color={
-                        report.status === 'new' ? 'info' :
-                        report.status === 'in_progress' ? 'warning' :
-                        report.status === 'fixed' ? 'success' :
-                        report.status === 'wont_fix' ? 'error' :
-                        'default'
+                        report.status === 'new'
+                          ? 'info'
+                          : report.status === 'in_progress'
+                            ? 'warning'
+                            : report.status === 'fixed'
+                              ? 'success'
+                              : report.status === 'wont_fix'
+                                ? 'error'
+                                : 'default'
                       }
-                      size="small"
+                      size='small'
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
+                    <Typography variant='body2'>
                       {new Date(report.created_at).toLocaleDateString()}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex' }}>
-                      <FormControl variant="standard" sx={{ minWidth: 120, mr: 1 }}>
+                      <FormControl
+                        variant='standard'
+                        sx={{ minWidth: 120, mr: 1 }}
+                      >
                         <Select
                           value={report.status}
-                          onChange={(e) => handleUpdateBugReportStatus(report.id, e.target.value)}
-                          size="small"
+                          onChange={e =>
+                            handleUpdateBugReportStatus(
+                              report.id,
+                              e.target.value
+                            )
+                          }
+                          size='small'
                         >
-                          <MenuItem value="new">Новый</MenuItem>
-                          <MenuItem value="in_progress">В работе</MenuItem>
-                          <MenuItem value="fixed">Исправлен</MenuItem>
-                          <MenuItem value="wont_fix">Не будет исправлен</MenuItem>
+                          <MenuItem value='new'>Новый</MenuItem>
+                          <MenuItem value='in_progress'>В работе</MenuItem>
+                          <MenuItem value='fixed'>Исправлен</MenuItem>
+                          <MenuItem value='wont_fix'>
+                            Не будет исправлен
+                          </MenuItem>
                         </Select>
                       </FormControl>
-                      
-                      <IconButton 
-                        color="error" 
+
+                      <IconButton
+                        color='error'
                         onClick={() => handleDeleteBugReport(report.id)}
-                        size="small"
+                        size='small'
                       >
-                        <DeleteIcon fontSize="small" />
+                        <DeleteIcon fontSize='small' />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -1048,53 +1155,70 @@ const AdminPage = () => {
       </ContentPaper>
     );
   };
-  
-  
+
   const handleGenerateKeys = async () => {
     try {
       setIsGeneratingKeys(true);
-      
+
       // Проверка параметров в зависимости от типа ключа
       if (keyGenerationParams.type === 'points') {
         if (keyGenerationParams.points <= 0) {
-          showNotification('error', 'Количество баллов должно быть больше нуля');
+          showNotification(
+            'error',
+            'Количество баллов должно быть больше нуля'
+          );
           return;
         }
       } else if (keyGenerationParams.type === 'subscription') {
         if (keyGenerationParams.subscription_duration_days <= 0) {
-          showNotification('error', 'Срок действия подписки должен быть больше нуля');
+          showNotification(
+            'error',
+            'Срок действия подписки должен быть больше нуля'
+          );
           return;
         }
       }
 
       // Добавляем логирование параметров
       console.log('Отправляемые параметры:', keyGenerationParams);
-      
-      const response = await axios.post(`/api/admin/users/${user.id}/generate-keys`, keyGenerationParams);
-      
+
+      const response = await axios.post(
+        `/api/admin/users/${user.id}/generate-keys`,
+        keyGenerationParams
+      );
+
       // Логируем ответ от сервера
       console.log('Ответ сервера:', response.data);
-      
+
       if (response.data.success) {
         setGeneratedKeys(response.data.keys);
-        showNotification('success', `Успешно сгенерировано ${response.data.keys.length} ключей`);
-        fetchRedemptionKeys(); 
+        showNotification(
+          'success',
+          `Успешно сгенерировано ${response.data.keys.length} ключей`
+        );
+        fetchRedemptionKeys();
       } else {
-        showNotification('error', response.data.error || 'Ошибка при генерации ключей');
+        showNotification(
+          'error',
+          response.data.error || 'Ошибка при генерации ключей'
+        );
       }
     } catch (error) {
       console.error('Error generating keys:', error);
-      showNotification('error', error.response?.data?.error || 'Произошла ошибка при генерации ключей');
+      showNotification(
+        'error',
+        error.response?.data?.error || 'Произошла ошибка при генерации ключей'
+      );
     } finally {
       setIsGeneratingKeys(false);
     }
   };
-  
-  
+
   const copyKeysToClipboard = () => {
     if (generatedKeys.length > 0) {
       const keyText = generatedKeys.join('\n');
-      navigator.clipboard.writeText(keyText)
+      navigator.clipboard
+        .writeText(keyText)
         .then(() => {
           showNotification('success', 'Ключи скопированы в буфер обмена');
         })
@@ -1104,20 +1228,21 @@ const AdminPage = () => {
         });
     }
   };
-  
-  
+
   const fetchRedemptionKeys = async (page = 1) => {
     try {
       setKeysLoading(true);
-      
-      const response = await axios.get(`/api/admin/users/${user.id}/keys?page=${page}&per_page=10&_nocache=${Date.now()}`);
-      
+
+      const response = await axios.get(
+        `/api/admin/users/${user.id}/keys?page=${page}&per_page=10&_nocache=${Date.now()}`
+      );
+
       setRedemptionKeys(response.data.keys || []);
       setKeysPagination({
         page: response.data.page,
         per_page: response.data.per_page,
         total: response.data.total,
-        pages: response.data.pages
+        pages: response.data.pages,
       });
     } catch (error) {
       console.error('Error fetching redemption keys:', error);
@@ -1126,31 +1251,38 @@ const AdminPage = () => {
       setKeysLoading(false);
     }
   };
-  
-  
+
   const renderKeysTab = () => {
-  return (
+    return (
       <Box sx={{ mt: 2 }}>
         <Paper sx={{ mb: 3, p: 0, overflow: 'hidden' }}>
-          <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}>
-            <Typography variant="h6" component="h2">
+          <Box
+            sx={{
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+            }}
+          >
+            <Typography variant='h6' component='h2'>
               Управление ключами активации
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Button
-                variant="outlined"
-                color="primary"
+                variant='outlined'
+                color='primary'
                 startIcon={<MonetizationOnIcon />}
-                component="a"
-                href="https://www.donationalerts.com/r/qsoul"
-                target="_blank"
-                rel="noopener noreferrer"
+                component='a'
+                href='https://www.donationalerts.com/r/qsoul'
+                target='_blank'
+                rel='noopener noreferrer'
               >
                 Открыть Donation Alerts
               </Button>
               <Button
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 startIcon={<VpnKeyIcon />}
                 onClick={() => setOpenKeyGenerationDialog(true)}
               >
@@ -1158,7 +1290,7 @@ const AdminPage = () => {
               </Button>
             </Box>
           </Box>
-          
+
           {keysLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
               <CircularProgress />
@@ -1178,56 +1310,79 @@ const AdminPage = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {redemptionKeys.map((key) => (
+                    {redemptionKeys.map(key => (
                       <TableRow key={key.id}>
                         <TableCell>{key.key}</TableCell>
-                        <TableCell align="center">
+                        <TableCell align='center'>
                           {key.key_type === 'points' ? (
                             <Chip
-                              icon={<MonetizationOnIcon style={{ color: '#7c4dff' }} />}
+                              icon={
+                                <MonetizationOnIcon
+                                  style={{ color: '#7c4dff' }}
+                                />
+                              }
                               label={`${key.points_value} баллов`}
-                              color="primary"
-                              variant="outlined"
-                              sx={{ fontWeight: 'bold', fontSize: 15, px: 1.5, bgcolor: 'rgba(124,77,255,0.08)' }}
+                              color='primary'
+                              variant='outlined'
+                              sx={{
+                                fontWeight: 'bold',
+                                fontSize: 15,
+                                px: 1.5,
+                                bgcolor: 'rgba(124,77,255,0.08)',
+                              }}
                             />
                           ) : key.key_type === 'subscription' ? (
                             <Chip
-                              icon={<VerifiedUserIcon style={{ color: '#4caf50' }} />}
-                              label={
-                                key.subscription_type === 'basic' ? 'Базовая' :
-                                key.subscription_type === 'premium' ? 'Премиум' :
-                                key.subscription_type === 'ultimate' ? 'Ультимейт' :
-                                key.subscription_type
+                              icon={
+                                <VerifiedUserIcon
+                                  style={{ color: '#4caf50' }}
+                                />
                               }
-                              color="success"
-                              variant="outlined"
-                              sx={{ fontWeight: 'bold', fontSize: 15, px: 1.5, bgcolor: 'rgba(76,175,80,0.08)' }}
+                              label={
+                                key.subscription_type === 'basic'
+                                  ? 'Базовая'
+                                  : key.subscription_type === 'premium'
+                                    ? 'Премиум'
+                                    : key.subscription_type === 'ultimate'
+                                      ? 'Ультимейт'
+                                      : key.subscription_type
+                              }
+                              color='success'
+                              variant='outlined'
+                              sx={{
+                                fontWeight: 'bold',
+                                fontSize: 15,
+                                px: 1.5,
+                                bgcolor: 'rgba(76,175,80,0.08)',
+                              }}
                             />
                           ) : (
                             '-'
                           )}
                         </TableCell>
-                        <TableCell>{key.current_uses}/{key.max_uses}</TableCell>
+                        <TableCell>
+                          {key.current_uses}/{key.max_uses}
+                        </TableCell>
                         <TableCell>
                           {key.is_valid ? (
-                            <Chip 
-                              label="Активен" 
-                              color="success" 
-                              size="small"
+                            <Chip
+                              label='Активен'
+                              color='success'
+                              size='small'
                             />
                           ) : (
-                            <Chip 
-                              label="Использован" 
-                              color="error" 
-                              size="small"
+                            <Chip
+                              label='Использован'
+                              color='error'
+                              size='small'
                             />
                           )}
                         </TableCell>
                         <TableCell>
-                          <IconButton 
-                            size="small" 
+                          <IconButton
+                            size='small'
                             onClick={() => handleDeleteKey(key.id)}
-                            color="error"
+                            color='error'
                           >
                             <DeleteIcon />
                           </IconButton>
@@ -1237,14 +1392,14 @@ const AdminPage = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              
+
               {keysPagination.pages > 1 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
                   <Pagination
                     count={keysPagination.pages}
                     page={keysPagination.page}
                     onChange={(e, page) => fetchRedemptionKeys(page)}
-                    color="primary"
+                    color='primary'
                   />
                 </Box>
               )}
@@ -1254,20 +1409,19 @@ const AdminPage = () => {
       </Box>
     );
   };
-  
-  
+
   const keyGenerationDialog = (
     <Dialog
       open={openKeyGenerationDialog}
       onClose={() => !isGeneratingKeys && setOpenKeyGenerationDialog(false)}
       fullWidth
-      maxWidth="sm"
+      maxWidth='sm'
     >
       <DialogTitle>
         Генерация ключей активации
         {!isGeneratingKeys && (
           <IconButton
-            aria-label="close"
+            aria-label='close'
             onClick={() => setOpenKeyGenerationDialog(false)}
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
@@ -1275,53 +1429,55 @@ const AdminPage = () => {
           </IconButton>
         )}
       </DialogTitle>
-      
+
       <DialogContent>
         <Box sx={{ mt: 1 }}>
           {generatedKeys.length > 0 ? (
             <Box sx={{ mb: 2 }}>
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                mb: 1
-              }}>
-                <Typography variant="subtitle1" fontWeight="bold">
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 1,
+                }}
+              >
+                <Typography variant='subtitle1' fontWeight='bold'>
                   Сгенерированные ключи:
                 </Typography>
                 <Button
-                  size="small"
+                  size='small'
                   startIcon={<ContentCopyIcon />}
                   onClick={copyKeysToClipboard}
                 >
                   Копировать все
                 </Button>
               </Box>
-              
-              <Paper 
-                variant="outlined" 
-                sx={{ 
-                  p: 2, 
-                  maxHeight: 200, 
+
+              <Paper
+                variant='outlined'
+                sx={{
+                  p: 2,
+                  maxHeight: 200,
                   overflow: 'auto',
-                  bgcolor: 'rgba(0, 0, 0, 0.03)'
+                  bgcolor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
                 {generatedKeys.map((key, index) => (
                   <Typography
                     key={index}
-                    variant="body2"
-                    fontFamily="monospace"
+                    variant='body2'
+                    fontFamily='monospace'
                     sx={{ mb: 0.5 }}
                   >
                     {key}
                   </Typography>
                 ))}
               </Paper>
-              
+
               <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   onClick={() => {
                     setGeneratedKeys([]);
                   }}
@@ -1337,36 +1493,40 @@ const AdminPage = () => {
                   <InputLabel>Тип ключа</InputLabel>
                   <Select
                     value={keyGenerationParams.type}
-                    label="Тип ключа"
-                    onChange={(e) => {
+                    label='Тип ключа'
+                    onChange={e => {
                       const newType = e.target.value;
                       setKeyGenerationParams({
                         ...keyGenerationParams,
                         type: newType,
                         // Сбрасываем значения в зависимости от типа
                         points: newType === 'points' ? 1000 : 0,
-                        subscription_type: newType === 'subscription' ? 'basic' : 'basic',
-                        subscription_duration_days: newType === 'subscription' ? 30 : 0
+                        subscription_type:
+                          newType === 'subscription' ? 'basic' : 'basic',
+                        subscription_duration_days:
+                          newType === 'subscription' ? 30 : 0,
                       });
                     }}
                   >
-                    <MenuItem value="points">Баллы</MenuItem>
-                    <MenuItem value="subscription">Подписка</MenuItem>
+                    <MenuItem value='points'>Баллы</MenuItem>
+                    <MenuItem value='subscription'>Подписка</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              
+
               {keyGenerationParams.type === 'points' ? (
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    label="Количество баллов"
-                    type="number"
+                    label='Количество баллов'
+                    type='number'
                     fullWidth
                     value={keyGenerationParams.points}
-                    onChange={(e) => setKeyGenerationParams({
-                      ...keyGenerationParams,
-                      points: parseInt(e.target.value) || 0
-                    })}
+                    onChange={e =>
+                      setKeyGenerationParams({
+                        ...keyGenerationParams,
+                        points: parseInt(e.target.value) || 0,
+                      })
+                    }
                     InputProps={{ inputProps: { min: 1 } }}
                   />
                 </Grid>
@@ -1377,119 +1537,134 @@ const AdminPage = () => {
                       <InputLabel>Тип подписки</InputLabel>
                       <Select
                         value={keyGenerationParams.subscription_type}
-                        label="Тип подписки"
-                        onChange={(e) => setKeyGenerationParams({
-                          ...keyGenerationParams,
-                          subscription_type: e.target.value
-                        })}
+                        label='Тип подписки'
+                        onChange={e =>
+                          setKeyGenerationParams({
+                            ...keyGenerationParams,
+                            subscription_type: e.target.value,
+                          })
+                        }
                       >
-                        <MenuItem value="basic">Базовая</MenuItem>
-                        <MenuItem value="premium">Премиум</MenuItem>
-                        <MenuItem value="ultimate">Ультимейт</MenuItem>
+                        <MenuItem value='basic'>Базовая</MenuItem>
+                        <MenuItem value='premium'>Премиум</MenuItem>
+                        <MenuItem value='ultimate'>Ультимейт</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      label="Срок действия подписки (дней)"
-                      type="number"
+                      label='Срок действия подписки (дней)'
+                      type='number'
                       fullWidth
                       value={keyGenerationParams.subscription_duration_days}
-                      onChange={(e) => setKeyGenerationParams({
-                        ...keyGenerationParams,
-                        subscription_duration_days: parseInt(e.target.value) || 30
-                      })}
+                      onChange={e =>
+                        setKeyGenerationParams({
+                          ...keyGenerationParams,
+                          subscription_duration_days:
+                            parseInt(e.target.value) || 30,
+                        })
+                      }
                       InputProps={{ inputProps: { min: 1 } }}
                     />
                   </Grid>
                 </>
               )}
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Макс. число использований"
-                  type="number"
+                  label='Макс. число использований'
+                  type='number'
                   fullWidth
                   value={keyGenerationParams.max_uses}
-                  onChange={(e) => setKeyGenerationParams({
-                    ...keyGenerationParams,
-                    max_uses: parseInt(e.target.value) || 1
-                  })}
+                  onChange={e =>
+                    setKeyGenerationParams({
+                      ...keyGenerationParams,
+                      max_uses: parseInt(e.target.value) || 1,
+                    })
+                  }
                   InputProps={{ inputProps: { min: 1 } }}
-                  helperText="Сколько раз можно использовать каждый ключ"
+                  helperText='Сколько раз можно использовать каждый ключ'
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Количество ключей"
-                  type="number"
+                  label='Количество ключей'
+                  type='number'
                   fullWidth
                   value={keyGenerationParams.count}
-                  onChange={(e) => setKeyGenerationParams({
-                    ...keyGenerationParams,
-                    count: parseInt(e.target.value) || 1
-                  })}
+                  onChange={e =>
+                    setKeyGenerationParams({
+                      ...keyGenerationParams,
+                      count: parseInt(e.target.value) || 1,
+                    })
+                  }
                   InputProps={{ inputProps: { min: 1, max: 100 } }}
-                  helperText="От 1 до 100 ключей"
+                  helperText='От 1 до 100 ключей'
                 />
               </Grid>
-              
+
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Срок действия (дней)"
-                  type="number"
+                  label='Срок действия (дней)'
+                  type='number'
                   fullWidth
                   value={keyGenerationParams.expires_days}
-                  onChange={(e) => setKeyGenerationParams({
-                    ...keyGenerationParams,
-                    expires_days: parseInt(e.target.value) || 0
-                  })}
+                  onChange={e =>
+                    setKeyGenerationParams({
+                      ...keyGenerationParams,
+                      expires_days: parseInt(e.target.value) || 0,
+                    })
+                  }
                   InputProps={{ inputProps: { min: 0 } }}
-                  helperText="0 = бессрочно"
+                  helperText='0 = бессрочно'
                 />
               </Grid>
-              
+
               <Grid item xs={12}>
                 <TextField
-                  label="Описание"
+                  label='Описание'
                   fullWidth
                   multiline
                   rows={2}
                   value={keyGenerationParams.description}
-                  onChange={(e) => setKeyGenerationParams({
-                    ...keyGenerationParams,
-                    description: e.target.value
-                  })}
-                  helperText="Необязательное описание для администраторов"
+                  onChange={e =>
+                    setKeyGenerationParams({
+                      ...keyGenerationParams,
+                      description: e.target.value,
+                    })
+                  }
+                  helperText='Необязательное описание для администраторов'
                 />
               </Grid>
             </Grid>
           )}
         </Box>
       </DialogContent>
-      
+
       <DialogActions>
         {generatedKeys.length === 0 && (
           <>
-            <Button 
-              onClick={() => setOpenKeyGenerationDialog(false)} 
+            <Button
+              onClick={() => setOpenKeyGenerationDialog(false)}
               disabled={isGeneratingKeys}
             >
               Отмена
             </Button>
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               onClick={handleGenerateKeys}
               disabled={isGeneratingKeys}
-              startIcon={isGeneratingKeys ? <CircularProgress size={20} /> : null}
+              startIcon={
+                isGeneratingKeys ? <CircularProgress size={20} /> : null
+              }
             >
               {isGeneratingKeys ? 'Генерация...' : 'Сгенерировать'}
             </Button>
           </>
         )}
-        
+
         {generatedKeys.length > 0 && (
           <Button
             onClick={() => {
@@ -1503,57 +1678,94 @@ const AdminPage = () => {
       </DialogActions>
     </Dialog>
   );
-  
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth='lg' sx={{ py: 4 }}>
       <PageHeader>
-        <AdminPanelSettingsIcon sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
-        <Typography variant="h4" component="h1">
+        <AdminPanelSettingsIcon
+          sx={{ fontSize: 40, mr: 2, color: 'primary.main' }}
+        />
+        <Typography variant='h4' component='h1'>
           Панель администратора
         </Typography>
       </PageHeader>
-      
+
       <Box sx={{ mb: 3 }}>
-        <Tabs 
-          value={tabValue} 
-          onChange={handleTabChange} 
-          variant="scrollable"
-          scrollButtons="auto"
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          variant='scrollable'
+          scrollButtons='auto'
           sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
         >
-          <Tab icon={<PeopleIcon />} label="Пользователи" id="tab-0" aria-controls="tabpanel-0" />
-          <Tab icon={<PostAddIcon />} label="Посты" id="tab-1" aria-controls="tabpanel-1" />
-          <Tab icon={<MusicNoteIcon />} label="Музыка" id="tab-2" aria-controls="tabpanel-2" />
-          <Tab icon={<SecurityIcon />} label="Модераторы" id="tab-3" aria-controls="tabpanel-3" />
-          <Tab icon={<BugReportIcon />} label="Баг-репорты" id="tab-4" aria-controls="tabpanel-4" />
-          <Tab icon={<AccountCircleIcon />} label="Аккаунты" id="tab-5" aria-controls="tabpanel-5" disabled />
-          <Tab icon={<KeyIcon />} label="Ключи" id="tab-6" aria-controls="tabpanel-6" />
+          <Tab
+            icon={<PeopleIcon />}
+            label='Пользователи'
+            id='tab-0'
+            aria-controls='tabpanel-0'
+          />
+          <Tab
+            icon={<PostAddIcon />}
+            label='Посты'
+            id='tab-1'
+            aria-controls='tabpanel-1'
+          />
+          <Tab
+            icon={<MusicNoteIcon />}
+            label='Музыка'
+            id='tab-2'
+            aria-controls='tabpanel-2'
+          />
+          <Tab
+            icon={<SecurityIcon />}
+            label='Модераторы'
+            id='tab-3'
+            aria-controls='tabpanel-3'
+          />
+          <Tab
+            icon={<BugReportIcon />}
+            label='Баг-репорты'
+            id='tab-4'
+            aria-controls='tabpanel-4'
+          />
+          <Tab
+            icon={<AccountCircleIcon />}
+            label='Аккаунты'
+            id='tab-5'
+            aria-controls='tabpanel-5'
+            disabled
+          />
+          <Tab
+            icon={<KeyIcon />}
+            label='Ключи'
+            id='tab-6'
+            aria-controls='tabpanel-6'
+          />
         </Tabs>
       </Box>
-        
-      
-        {tabValue === 0 && (
-          <>
+
+      {tabValue === 0 && (
+        <>
           <ContentPaper>
             <SearchContainer>
               <TextField
-                label="Поиск пользователя"
-                variant="outlined"
+                label='Поиск пользователя'
+                variant='outlined'
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 fullWidth
-                size="small"
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                size='small'
+                onKeyPress={e => e.key === 'Enter' && handleSearch()}
                 InputProps={{
                   endAdornment: (
-                    <IconButton size="small" onClick={handleSearch}>
+                    <IconButton size='small' onClick={handleSearch}>
                       <SearchIcon />
                     </IconButton>
                   ),
                 }}
               />
             </SearchContainer>
-            
+
             {loading ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
                 <CircularProgress />
@@ -1562,136 +1774,225 @@ const AdminPage = () => {
               renderUsersTable()
             )}
           </ContentPaper>
-          </>
-        )}
-        
-      
-        {tabValue === 1 && (
+        </>
+      )}
+
+      {tabValue === 1 && (
         <ContentPaper>
-            {loading ? (
+          {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-                <CircularProgress />
-              </Box>
-            ) : (
+              <CircularProgress />
+            </Box>
+          ) : (
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Последние посты</Typography>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Последние посты
+              </Typography>
               {userPosts.length > 0 ? (
                 userPosts.map((post, index) => (
-                  <Paper key={`${post.id}-${index}`} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <Avatar src={post.author_avatar ? (post.author_avatar.startsWith('/') ? post.author_avatar : `/static/uploads/avatar/${post.author_id}/${post.author_avatar}`) : undefined} sx={{ mr: 1 }} />
+                  <Paper
+                    key={`${post.id}-${index}`}
+                    sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                      >
+                        <Avatar
+                          src={
+                            post.author_avatar
+                              ? post.author_avatar.startsWith('/')
+                                ? post.author_avatar
+                                : `/static/uploads/avatar/${post.author_id}/${post.author_avatar}`
+                              : undefined
+                          }
+                          sx={{ mr: 1 }}
+                        />
                         <Box>
-                          <Typography variant="subtitle2">{post.author_name}</Typography>
-                          <Typography variant="caption" color="text.secondary">@{post.author_username}</Typography>
+                          <Typography variant='subtitle2'>
+                            {post.author_name}
+                          </Typography>
+                          <Typography variant='caption' color='text.secondary'>
+                            @{post.author_username}
+                          </Typography>
                         </Box>
                       </Box>
-                      <IconButton color="error" onClick={() => openDeletePostDialog(post)}>
-                          <DeleteIcon />
-                        </IconButton>
-                          </Box>
-                    
-                    <Typography variant="body1" sx={{ mb: 2, whiteSpace: 'pre-wrap' }}>
+                      <IconButton
+                        color='error'
+                        onClick={() => openDeletePostDialog(post)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+
+                    <Typography
+                      variant='body1'
+                      sx={{ mb: 2, whiteSpace: 'pre-wrap' }}
+                    >
                       {post.content}
                     </Typography>
-                    
+
                     {post.image && (
-                      <Box sx={{ mb: 2, maxWidth: '100%', maxHeight: 300, overflow: 'hidden' }}>
-                        <img 
-                          src={post.image.startsWith('/') ? post.image : `/static/uploads/posts/${post.id}/${post.image}`} 
-                          alt="Post attachment" 
-                          style={{ width: '100%', height: 'auto', borderRadius: '8px' }} 
+                      <Box
+                        sx={{
+                          mb: 2,
+                          maxWidth: '100%',
+                          maxHeight: 300,
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <img
+                          src={
+                            post.image.startsWith('/')
+                              ? post.image
+                              : `/static/uploads/posts/${post.id}/${post.image}`
+                          }
+                          alt='Post attachment'
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                            borderRadius: '8px',
+                          }}
                         />
                       </Box>
                     )}
-                    
-                    <Typography variant="caption" color="text.secondary">
-                      {new Date(post.created_at).toLocaleString()} • {post.comments_count} комментариев • {post.likes_count} лайков
+
+                    <Typography variant='caption' color='text.secondary'>
+                      {new Date(post.created_at).toLocaleString()} •{' '}
+                      {post.comments_count} комментариев • {post.likes_count}{' '}
+                      лайков
                     </Typography>
                   </Paper>
                 ))
               ) : (
                 <Typography>Нет постов для отображения</Typography>
-            )}
-          </Box>
+              )}
+            </Box>
           )}
         </ContentPaper>
-        )}
-        
-      
-        {tabValue === 2 && (
+      )}
+
+      {tabValue === 2 && (
         <ContentPaper>
-            {loading ? (
+          {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
-                <CircularProgress />
-              </Box>
-            ) : (
+              <CircularProgress />
+            </Box>
+          ) : (
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Музыкальные треки</Typography>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Музыкальные треки
+              </Typography>
               {userTracks.length > 0 ? (
                 userTracks.map((track, index) => (
-                  <Paper key={`${track.id}-${index}`} sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <Avatar src={track.cover ? `/static/uploads/tracks/${track.id}/${track.cover}` : undefined} sx={{ mr: 1, width: 50, height: 50 }} />
+                  <Paper
+                    key={`${track.id}-${index}`}
+                    sx={{ p: 2, mb: 2, bgcolor: 'background.default' }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                      }}
+                    >
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                      >
+                        <Avatar
+                          src={
+                            track.cover
+                              ? `/static/uploads/tracks/${track.id}/${track.cover}`
+                              : undefined
+                          }
+                          sx={{ mr: 1, width: 50, height: 50 }}
+                        />
                         <Box>
-                          <Typography variant="subtitle1">{track.title}</Typography>
-                          <Typography variant="subtitle2">{track.artist}</Typography>
-                          <Typography variant="caption" color="text.secondary">{track.album || 'Без альбома'}</Typography>
+                          <Typography variant='subtitle1'>
+                            {track.title}
+                          </Typography>
+                          <Typography variant='subtitle2'>
+                            {track.artist}
+                          </Typography>
+                          <Typography variant='caption' color='text.secondary'>
+                            {track.album || 'Без альбома'}
+                          </Typography>
                         </Box>
                       </Box>
-                      <IconButton color="error" onClick={() => openDeleteTrackDialog(track)}>
-                          <DeleteIcon />
-                        </IconButton>
-                          </Box>
-                    
-                    <Typography variant="caption" color="text.secondary">
-                      Загружен: {new Date(track.created_at).toLocaleString()} • {track.duration ? `${Math.floor(track.duration / 60)}:${String(track.duration % 60).padStart(2, '0')}` : 'Неизвестно'} • {track.play_count || 0} прослушиваний
+                      <IconButton
+                        color='error'
+                        onClick={() => openDeleteTrackDialog(track)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Box>
+
+                    <Typography variant='caption' color='text.secondary'>
+                      Загружен: {new Date(track.created_at).toLocaleString()} •{' '}
+                      {track.duration
+                        ? `${Math.floor(track.duration / 60)}:${String(track.duration % 60).padStart(2, '0')}`
+                        : 'Неизвестно'}{' '}
+                      • {track.play_count || 0} прослушиваний
                     </Typography>
                   </Paper>
                 ))
               ) : (
                 <Typography>Нет треков для отображения</Typography>
-            )}
-          </Box>
-        )}
-      </ContentPaper>
+              )}
+            </Box>
+          )}
+        </ContentPaper>
       )}
-      
-      
+
       {tabValue === 3 && renderModeratorsTable()}
-      
-      
+
       {tabValue === 4 && renderBugReportsTable()}
-      
-      
+
       {tabValue === 5 && (
         <ContentPaper>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 4 }}>
-            <AccountCircleIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary">
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              py: 4,
+            }}
+          >
+            <AccountCircleIcon
+              sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }}
+            />
+            <Typography variant='h6' color='text.secondary'>
               Управление аккаунтами в разработке
             </Typography>
           </Box>
         </ContentPaper>
       )}
-    
-      
+
       {tabValue === 6 && renderKeysTab()}
-      
-      
-      <Dialog open={verifyDialogOpen} onClose={() => setVerifyDialogOpen(false)}>
+
+      <Dialog
+        open={verifyDialogOpen}
+        onClose={() => setVerifyDialogOpen(false)}
+      >
         <DialogTitle>Верификация пользователя</DialogTitle>
         <DialogContent>
           <Box sx={{ py: 2 }}>
             <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel id="verification-level-label">Уровень верификации</InputLabel>
+              <InputLabel id='verification-level-label'>
+                Уровень верификации
+              </InputLabel>
               <Select
-                labelId="verification-level-label"
-                id="verification-level"
+                labelId='verification-level-label'
+                id='verification-level'
                 value={verificationLevel}
-                onChange={(e) => setVerificationLevel(e.target.value)}
-                label="Уровень верификации"
+                onChange={e => setVerificationLevel(e.target.value)}
+                label='Уровень верификации'
               >
                 <MenuItem value={0}>
                   <em>Нет верификации</em>
@@ -1728,81 +2029,98 @@ const AdminPage = () => {
                 </MenuItem>
                 <MenuItem value={6}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon 
-                      icon="material-symbols:verified-rounded" 
-                      style={{ 
-                        fontSize: '24px', 
+                    <Icon
+                      icon='material-symbols:verified-rounded'
+                      style={{
+                        fontSize: '24px',
                         color: '#1e88e5',
-                        marginRight: '8px'
-                      }} 
+                        marginRight: '8px',
+                      }}
                     />
                     Канал (Верифицированный)
                   </Box>
                 </MenuItem>
                 <MenuItem value={7}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon 
-                      icon="material-symbols:verified-user-rounded" 
-                      style={{ 
-                        fontSize: '24px', 
+                    <Icon
+                      icon='material-symbols:verified-user-rounded'
+                      style={{
+                        fontSize: '24px',
                         color: '#7c4dff',
-                        marginRight: '8px'
-                      }} 
+                        marginRight: '8px',
+                      }}
                     />
                     Канал (Премиум)
                   </Box>
                 </MenuItem>
               </Select>
             </FormControl>
-            <Typography variant="caption" color="text.secondary">
-              Верификация подтверждает, что данный аккаунт является официальным или имеет особый статус
+            <Typography variant='caption' color='text.secondary'>
+              Верификация подтверждает, что данный аккаунт является официальным
+              или имеет особый статус
             </Typography>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setVerifyDialogOpen(false)} color="inherit">Отмена</Button>
-          <Button onClick={handleVerifyUser} color="primary" variant="contained" disabled={loading}>
+          <Button onClick={() => setVerifyDialogOpen(false)} color='inherit'>
+            Отмена
+          </Button>
+          <Button
+            onClick={handleVerifyUser}
+            color='primary'
+            variant='contained'
+            disabled={loading}
+          >
             {loading ? <CircularProgress size={24} /> : 'Сохранить'}
           </Button>
         </DialogActions>
       </Dialog>
-      
-      
-      <Dialog open={badgeDialogOpen} onClose={() => setBadgeDialogOpen(false)} maxWidth="md" fullWidth>
+
+      <Dialog
+        open={badgeDialogOpen}
+        onClose={() => setBadgeDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Выдать значок достижения</DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            <Typography variant='subtitle1' sx={{ mb: 2 }}>
               Пользователь: {selectedUser?.name} (@{selectedUser?.username})
             </Typography>
-            
+
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel>Выберите значок</InputLabel>
               <Select
                 value={selectedBadge}
-                onChange={(e) => setSelectedBadge(e.target.value)}
-                label="Выберите значок"
+                onChange={e => setSelectedBadge(e.target.value)}
+                label='Выберите значок'
               >
-                {achievements.map((badge) => (
+                {achievements.map(badge => (
                   <MenuItem key={badge.id} value={badge.id}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Box 
-                        component="img" 
-                        src={badge.image_path} 
+                      <Box
+                        component='img'
+                        src={badge.image_path}
                         alt={badge.name}
-                        sx={{ width: 30, height: 30, mr: 2, borderRadius: '50%' }}
-                        onError={(e) => {
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          mr: 2,
+                          borderRadius: '50%',
+                        }}
+                        onError={e => {
                           e.target.src = '/static/img/default-badge.png';
                         }}
                       />
                       <Typography>{badge.display_name}</Typography>
                       {badge.users_count > 0 && (
-                        <Chip 
-                          size="small" 
-                          label={`${badge.users_count} пользователей`} 
-                          color="primary" 
-                          variant="outlined" 
-                          sx={{ ml: 2 }} 
+                        <Chip
+                          size='small'
+                          label={`${badge.users_count} пользователей`}
+                          color='primary'
+                          variant='outlined'
+                          sx={{ ml: 2 }}
                         />
                       )}
                     </Box>
@@ -1813,49 +2131,54 @@ const AdminPage = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setBadgeDialogOpen(false)} color="inherit">Отмена</Button>
-          <Button 
-            onClick={handleGiveBadge} 
-            color="primary" 
-            variant="contained" 
+          <Button onClick={() => setBadgeDialogOpen(false)} color='inherit'>
+            Отмена
+          </Button>
+          <Button
+            onClick={handleGiveBadge}
+            color='primary'
+            variant='contained'
             disabled={loading || !selectedBadge}
           >
             {loading ? <CircularProgress size={24} /> : 'Выдать значок'}
           </Button>
         </DialogActions>
       </Dialog>
-      
-      
+
       <Dialog open={banDialogOpen} onClose={() => setBanDialogOpen(false)}>
         <DialogTitle>
-          {selectedUser?.is_banned ? 'Разблокировать пользователя' : 'Заблокировать пользователя'}
+          {selectedUser?.is_banned
+            ? 'Разблокировать пользователя'
+            : 'Заблокировать пользователя'}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            <Typography variant='subtitle1' sx={{ mb: 2 }}>
               Пользователь: {selectedUser?.name} ({selectedUser?.username})
             </Typography>
-            
+
             {!selectedUser?.is_banned && (
               <TextField
                 fullWidth
-                label="Причина блокировки"
+                label='Причина блокировки'
                 multiline
                 rows={4}
                 value={banReason}
-                onChange={(e) => setBanReason(e.target.value)}
-                variant="outlined"
+                onChange={e => setBanReason(e.target.value)}
+                variant='outlined'
                 sx={{ mt: 2 }}
               />
             )}
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setBanDialogOpen(false)} color="inherit">Отмена</Button>
-          <Button 
-            onClick={handleBanUser} 
-            color={selectedUser?.is_banned ? "success" : "error"} 
-            variant="contained" 
+          <Button onClick={() => setBanDialogOpen(false)} color='inherit'>
+            Отмена
+          </Button>
+          <Button
+            onClick={handleBanUser}
+            color={selectedUser?.is_banned ? 'success' : 'error'}
+            variant='contained'
             disabled={loading || (!selectedUser?.is_banned && !banReason)}
           >
             {loading ? (
@@ -1868,81 +2191,118 @@ const AdminPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      
-      
-      <Dialog open={deletePostDialogOpen} onClose={() => setDeletePostDialogOpen(false)}>
+
+      <Dialog
+        open={deletePostDialogOpen}
+        onClose={() => setDeletePostDialogOpen(false)}
+      >
         <DialogTitle>Удалить пост</DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle1">
+            <Typography variant='subtitle1'>
               Вы действительно хотите удалить этот пост?
             </Typography>
             {selectedPost && (
               <Paper sx={{ p: 2, mt: 2, bgcolor: 'background.default' }}>
-                <Typography variant="body2">{selectedPost.content}</Typography>
+                <Typography variant='body2'>{selectedPost.content}</Typography>
               </Paper>
             )}
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeletePostDialogOpen(false)} color="inherit">Отмена</Button>
-          <Button onClick={handleDeletePost} color="error" variant="contained" disabled={loading}>
+          <Button
+            onClick={() => setDeletePostDialogOpen(false)}
+            color='inherit'
+          >
+            Отмена
+          </Button>
+          <Button
+            onClick={handleDeletePost}
+            color='error'
+            variant='contained'
+            disabled={loading}
+          >
             {loading ? <CircularProgress size={24} /> : 'Удалить'}
           </Button>
         </DialogActions>
       </Dialog>
-      
-      
-      <Dialog open={viewUserDialogOpen} onClose={() => setViewUserDialogOpen(false)} maxWidth="md" fullWidth>
+
+      <Dialog
+        open={viewUserDialogOpen}
+        onClose={() => setViewUserDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar 
-              src={selectedUser?.photo ? `/static/uploads/avatar/${selectedUser?.id}/${selectedUser?.photo}` : undefined} 
+            <Avatar
+              src={
+                selectedUser?.photo
+                  ? `/static/uploads/avatar/${selectedUser?.id}/${selectedUser?.photo}`
+                  : undefined
+              }
               sx={{ mr: 2 }}
             />
             <Box>
-              <Typography variant="h6">
+              <Typography variant='h6'>
                 {selectedUser?.name}
                 {selectedUser?.verification_status === 'verified' && (
-                  <CheckCircleIcon 
-                    sx={{ 
-                      fontSize: 16, 
-                      ml: 0.5, 
-                      color: selectedUser?.verification_level === 1 ? '#9e9e9e' : 
-                             selectedUser?.verification_level === 2 ? '#d67270' : 
-                             selectedUser?.verification_level === 3 ? '#b39ddb' : 
-                             selectedUser?.verification_level === 4 ? '#ff9800' : 
-                             selectedUser?.verification_level === 5 ? '#4caf50' :
-                             selectedUser?.verification_level === 6 ? '#1e88e5' :
-                             selectedUser?.verification_level === 7 ? '#7c4dff' :
-                             '#D0BCFF'
-                    }} 
+                  <CheckCircleIcon
+                    sx={{
+                      fontSize: 16,
+                      ml: 0.5,
+                      color:
+                        selectedUser?.verification_level === 1
+                          ? '#9e9e9e'
+                          : selectedUser?.verification_level === 2
+                            ? '#d67270'
+                            : selectedUser?.verification_level === 3
+                              ? '#b39ddb'
+                              : selectedUser?.verification_level === 4
+                                ? '#ff9800'
+                                : selectedUser?.verification_level === 5
+                                  ? '#4caf50'
+                                  : selectedUser?.verification_level === 6
+                                    ? '#1e88e5'
+                                    : selectedUser?.verification_level === 7
+                                      ? '#7c4dff'
+                                      : '#D0BCFF',
+                    }}
                   />
                 )}
               </Typography>
-              <Typography variant="caption" color="text.secondary">@{selectedUser?.username}</Typography>
+              <Typography variant='caption' color='text.secondary'>
+                @{selectedUser?.username}
+              </Typography>
             </Box>
           </Box>
         </DialogTitle>
         <DialogContent>
           <Tabs value={tabValue} onChange={handleTabChange} sx={{ mb: 2 }}>
-            <Tab label="Посты" />
-            <Tab label="Треки" />
-            <Tab label="Общая информация" />
+            <Tab label='Посты' />
+            <Tab label='Треки' />
+            <Tab label='Общая информация' />
           </Tabs>
-          
+
           {tabValue === 0 && (
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Посты пользователя</Typography>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Посты пользователя
+              </Typography>
               {userPosts.length === 0 ? (
-                <Typography variant="body1">У пользователя нет постов</Typography>
+                <Typography variant='body1'>
+                  У пользователя нет постов
+                </Typography>
               ) : (
                 <List>
                   {userPosts.map((post, index) => (
                     <React.Fragment key={`${post.id}-${index}`}>
                       <ListItem
                         secondaryAction={
-                          <IconButton edge="end" onClick={() => openDeletePostDialog(post)}>
+                          <IconButton
+                            edge='end'
+                            onClick={() => openDeletePostDialog(post)}
+                          >
                             <DeleteIcon />
                           </IconButton>
                         }
@@ -1959,12 +2319,16 @@ const AdminPage = () => {
               )}
             </Box>
           )}
-          
+
           {tabValue === 1 && (
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>Загруженные треки</Typography>
+              <Typography variant='h6' sx={{ mb: 2 }}>
+                Загруженные треки
+              </Typography>
               {userTracks.length === 0 ? (
-                <Typography variant="body1">У пользователя нет загруженных треков</Typography>
+                <Typography variant='body1'>
+                  У пользователя нет загруженных треков
+                </Typography>
               ) : (
                 <List>
                   {userTracks.map((track, index) => (
@@ -1987,25 +2351,36 @@ const AdminPage = () => {
               )}
             </Box>
           )}
-          
+
           {tabValue === 2 && (
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Card>
-                  <CardHeader title="Основная информация" />
+                  <CardHeader title='Основная информация' />
                   <CardContent>
-                    <Typography><strong>ID:</strong> {selectedUser?.id}</Typography>
-                    <Typography><strong>Email:</strong> {selectedUser?.email || 'Не указан'}</Typography>
-                    {selectedUser?.telegram_id && (
-                      <Typography><strong>Telegram ID:</strong> {selectedUser?.telegram_id}</Typography>
-                    )}
-                    <Typography><strong>Дата регистрации:</strong> {new Date(selectedUser?.created_at).toLocaleString()}</Typography>
                     <Typography>
-                      <strong>Статус:</strong> {' '}
+                      <strong>ID:</strong> {selectedUser?.id}
+                    </Typography>
+                    <Typography>
+                      <strong>Email:</strong>{' '}
+                      {selectedUser?.email || 'Не указан'}
+                    </Typography>
+                    {selectedUser?.telegram_id && (
+                      <Typography>
+                        <strong>Telegram ID:</strong>{' '}
+                        {selectedUser?.telegram_id}
+                      </Typography>
+                    )}
+                    <Typography>
+                      <strong>Дата регистрации:</strong>{' '}
+                      {new Date(selectedUser?.created_at).toLocaleString()}
+                    </Typography>
+                    <Typography>
+                      <strong>Статус:</strong>{' '}
                       {selectedUser?.is_banned ? (
-                        <Chip size="small" label="Заблокирован" color="error" />
+                        <Chip size='small' label='Заблокирован' color='error' />
                       ) : (
-                        <Chip size="small" label="Активен" color="success" />
+                        <Chip size='small' label='Активен' color='success' />
                       )}
                     </Typography>
                   </CardContent>
@@ -2013,12 +2388,22 @@ const AdminPage = () => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <Card>
-                  <CardHeader title="Статистика" />
+                  <CardHeader title='Статистика' />
                   <CardContent>
-                    <Typography><strong>Подписчиков:</strong> {selectedUser?.followers_count || 0}</Typography>
-                    <Typography><strong>Подписок:</strong> {selectedUser?.following_count || 0}</Typography>
-                    <Typography><strong>Постов:</strong> {userPosts.length}</Typography>
-                    <Typography><strong>Треков:</strong> {userTracks.length}</Typography>
+                    <Typography>
+                      <strong>Подписчиков:</strong>{' '}
+                      {selectedUser?.followers_count || 0}
+                    </Typography>
+                    <Typography>
+                      <strong>Подписок:</strong>{' '}
+                      {selectedUser?.following_count || 0}
+                    </Typography>
+                    <Typography>
+                      <strong>Постов:</strong> {userPosts.length}
+                    </Typography>
+                    <Typography>
+                      <strong>Треков:</strong> {userTracks.length}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -2029,204 +2414,248 @@ const AdminPage = () => {
           <Button onClick={() => setViewUserDialogOpen(false)}>Закрыть</Button>
         </DialogActions>
       </Dialog>
-      
-      
-      <Dialog open={deleteTrackDialogOpen} onClose={() => setDeleteTrackDialogOpen(false)}>
+
+      <Dialog
+        open={deleteTrackDialogOpen}
+        onClose={() => setDeleteTrackDialogOpen(false)}
+      >
         <DialogTitle>Удалить трек</DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle1">
+            <Typography variant='subtitle1'>
               Вы действительно хотите удалить этот трек?
             </Typography>
             {selectedTrack && (
               <Paper sx={{ p: 2, mt: 2, bgcolor: 'background.default' }}>
-                <Typography variant="body1" fontWeight="bold">{selectedTrack.title}</Typography>
-                <Typography variant="body2">Артист: {selectedTrack.artist}</Typography>
-                <Typography variant="body2">Альбом: {selectedTrack.album || 'Нет данных'}</Typography>
+                <Typography variant='body1' fontWeight='bold'>
+                  {selectedTrack.title}
+                </Typography>
+                <Typography variant='body2'>
+                  Артист: {selectedTrack.artist}
+                </Typography>
+                <Typography variant='body2'>
+                  Альбом: {selectedTrack.album || 'Нет данных'}
+                </Typography>
               </Paper>
             )}
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTrackDialogOpen(false)} color="inherit">Отмена</Button>
-          <Button onClick={confirmDeleteTrack} color="error" variant="contained" disabled={loading}>
+          <Button
+            onClick={() => setDeleteTrackDialogOpen(false)}
+            color='inherit'
+          >
+            Отмена
+          </Button>
+          <Button
+            onClick={confirmDeleteTrack}
+            color='error'
+            variant='contained'
+            disabled={loading}
+          >
             {loading ? <CircularProgress size={24} /> : 'Удалить'}
           </Button>
         </DialogActions>
       </Dialog>
-      
-      
-      <Dialog open={moderatorDialogOpen} onClose={() => setModeratorDialogOpen(false)} maxWidth="md" fullWidth>
+
+      <Dialog
+        open={moderatorDialogOpen}
+        onClose={() => setModeratorDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>
-          {isModerator(selectedUser?.id) 
-            ? 'Редактирование прав модератора' 
+          {isModerator(selectedUser?.id)
+            ? 'Редактирование прав модератора'
             : 'Назначить модератором'}
         </DialogTitle>
         <DialogContent>
           <Box sx={{ my: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+            <Typography variant='subtitle1' sx={{ mb: 2 }}>
               Пользователь: {selectedUser?.name} (@{selectedUser?.username})
             </Typography>
-            
-            <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
+
+            <Typography variant='h6' sx={{ mt: 3, mb: 2 }}>
               <ListAltIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
               Выберите права доступа
             </Typography>
-            
+
             <Grid container spacing={3}>
               <Grid item xs={12} md={6}>
-                <FormControl component="fieldset">
-                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                <FormControl component='fieldset'>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ fontWeight: 'bold', mb: 1 }}
+                  >
                     Управление контентом
                   </Typography>
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.delete_posts}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          delete_posts: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            delete_posts: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
+                        <DeleteIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Удаление постов</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.delete_music}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          delete_music: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            delete_music: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <MusicNoteIcon fontSize="small" sx={{ mr: 1 }} />
+                        <MusicNoteIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Удаление музыки</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.delete_comments}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          delete_comments: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            delete_comments: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <CommentIcon fontSize="small" sx={{ mr: 1 }} />
+                        <CommentIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Удаление комментариев</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.delete_avatar}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          delete_avatar: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            delete_avatar: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <PhotoIcon fontSize="small" sx={{ mr: 1 }} />
+                        <PhotoIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Удаление аватаров</Typography>
                       </Box>
                     }
                   />
                 </FormControl>
               </Grid>
-              
+
               <Grid item xs={12} md={6}>
-                <FormControl component="fieldset">
-                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                <FormControl component='fieldset'>
+                  <Typography
+                    variant='subtitle2'
+                    sx={{ fontWeight: 'bold', mb: 1 }}
+                  >
                     Управление пользователями и баг-репортами
                   </Typography>
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.change_user_name}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          change_user_name: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            change_user_name: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <BadgeIcon fontSize="small" sx={{ mr: 1 }} />
+                        <BadgeIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Изменение имени пользователя</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.change_username}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          change_username: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            change_username: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <AccountCircleIcon fontSize="small" sx={{ mr: 1 }} />
+                        <AccountCircleIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Изменение username</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.manage_bug_reports}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          manage_bug_reports: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            manage_bug_reports: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <DoneIcon fontSize="small" sx={{ mr: 1 }} />
+                        <DoneIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Изменение статуса баг-репорта</Typography>
                       </Box>
                     }
                   />
-                  
-                  <FormControlLabel 
+
+                  <FormControlLabel
                     control={
                       <Checkbox
                         checked={selectedPermissions.delete_bug_reports}
-                        onChange={(e) => setSelectedPermissions({
-                          ...selectedPermissions,
-                          delete_bug_reports: e.target.checked
-                        })}
+                        onChange={e =>
+                          setSelectedPermissions({
+                            ...selectedPermissions,
+                            delete_bug_reports: e.target.checked,
+                          })
+                        }
                       />
                     }
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <ErrorIcon fontSize="small" sx={{ mr: 1 }} />
+                        <ErrorIcon fontSize='small' sx={{ mr: 1 }} />
                         <Typography>Удаление баг-репортов</Typography>
                       </Box>
                     }
@@ -2237,59 +2666,63 @@ const AdminPage = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setModeratorDialogOpen(false)} color="inherit">Отмена</Button>
+          <Button onClick={() => setModeratorDialogOpen(false)} color='inherit'>
+            Отмена
+          </Button>
           {isModerator(selectedUser?.id) ? (
             <>
-              <Button 
-                onClick={handleUpdateModeratorPermissions} 
-                color="primary" 
-                variant="contained" 
+              <Button
+                onClick={handleUpdateModeratorPermissions}
+                color='primary'
+                variant='contained'
                 disabled={loading}
               >
                 {loading ? <CircularProgress size={24} /> : 'Обновить права'}
               </Button>
-              <Button 
-                onClick={handleToggleModeratorStatus} 
-                color="error" 
-                variant="outlined" 
+              <Button
+                onClick={handleToggleModeratorStatus}
+                color='error'
+                variant='outlined'
                 disabled={loading}
               >
                 {loading ? <CircularProgress size={24} /> : 'Снять модератора'}
               </Button>
             </>
           ) : (
-            <Button 
-              onClick={handleToggleModeratorStatus} 
-              color="primary" 
-              variant="contained" 
+            <Button
+              onClick={handleToggleModeratorStatus}
+              color='primary'
+              variant='contained'
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Назначить модератором'}
+              {loading ? (
+                <CircularProgress size={24} />
+              ) : (
+                'Назначить модератором'
+              )}
             </Button>
           )}
         </DialogActions>
       </Dialog>
-      
-      
+
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
         onClose={() => setNotification(prev => ({ ...prev, open: false }))}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={() => setNotification(prev => ({ ...prev, open: false }))} 
+        <Alert
+          onClose={() => setNotification(prev => ({ ...prev, open: false }))}
           severity={notification.severity}
           sx={{ width: '100%' }}
         >
           {notification.message}
         </Alert>
       </Snackbar>
-    
-    
-    {keyGenerationDialog}
+
+      {keyGenerationDialog}
     </Container>
   );
 };
 
-export default AdminPage; 
+export default AdminPage;

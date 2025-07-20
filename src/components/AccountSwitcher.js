@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { 
-  Button, 
-  Menu, 
-  MenuItem, 
-  Typography, 
-  Avatar, 
-  Box, 
-  Divider, 
-  CircularProgress, 
-  Badge
+import {
+  Button,
+  Menu,
+  MenuItem,
+  Typography,
+  Avatar,
+  Box,
+  Divider,
+  CircularProgress,
+  Badge,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -23,20 +23,19 @@ const AccountSwitcher = () => {
   const [accounts, setAccounts] = useState({
     current_account: null,
     main_account: null,
-    channels: []
+    channels: [],
   });
   const [loading, setLoading] = useState(false);
-  
+
   const open = Boolean(anchorEl);
-  
+
   useEffect(() => {
-    
     const fetchAccounts = async () => {
       try {
         const response = await fetch('/api/users/my-channels', {
-          credentials: 'include'
+          credentials: 'include',
         });
-        
+
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
@@ -47,42 +46,40 @@ const AccountSwitcher = () => {
         console.error('Ошибка при загрузке аккаунтов:', error);
       }
     };
-    
+
     if (user) {
       fetchAccounts();
     }
   }, [user]);
-  
-  const handleClick = (event) => {
+
+  const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
-  
+
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
-  const handleSwitchAccount = async (accountId) => {
+
+  const handleSwitchAccount = async accountId => {
     setLoading(true);
     try {
       const response = await fetch('/api/users/switch-account', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ account_id: accountId }),
-        credentials: 'include'
+        credentials: 'include',
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          
           setUser({
             ...data.account,
-            id: data.account.id
+            id: data.account.id,
           });
-          
-          
+
           window.location.reload();
         }
       }
@@ -93,49 +90,45 @@ const AccountSwitcher = () => {
       handleClose();
     }
   };
-  
+
   const handleCreateChannel = () => {
     navigate('/register/channel');
     handleClose();
   };
-  
-  
+
   if (!user) return null;
-  
+
   return (
     <>
       <Button
-        id="account-switcher-button"
+        id='account-switcher-button'
         aria-controls={open ? 'account-switcher-menu' : undefined}
-        aria-haspopup="true"
+        aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
-        sx={{ 
+        sx={{
           color: 'text.primary',
           textTransform: 'none',
           display: 'flex',
           alignItems: 'center',
-          gap: 1
+          gap: 1,
         }}
       >
-        <Avatar 
-          src={user.avatar_url}
-          sx={{ width: 28, height: 28 }}
-        />
+        <Avatar src={user.avatar_url} sx={{ width: 28, height: 28 }} />
         {user.name}
         {user.account_type === 'channel' && (
           <Badge
-            color="primary"
-            badgeContent=""
-            variant="dot"
-            overlap="circular"
+            color='primary'
+            badgeContent=''
+            variant='dot'
+            overlap='circular'
             sx={{ ml: 0.5 }}
           />
         )}
       </Button>
       <Menu
-        id="account-switcher-menu"
+        id='account-switcher-menu'
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -148,8 +141,8 @@ const AccountSwitcher = () => {
             width: 240,
             bgcolor: 'background.paper',
             boxShadow: 5,
-            borderRadius: 2
-          }
+            borderRadius: 2,
+          },
         }}
       >
         {loading ? (
@@ -158,97 +151,105 @@ const AccountSwitcher = () => {
           </Box>
         ) : (
           <>
-            
             {accounts.current_account && (
               <Box sx={{ p: 1.5 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  {accounts.current_account.account_type === 'channel' ? 'Канал' : 'Ваш аккаунт'}
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  sx={{ mb: 1 }}
+                >
+                  {accounts.current_account.account_type === 'channel'
+                    ? 'Канал'
+                    : 'Ваш аккаунт'}
                 </Typography>
-                <MenuItem 
+                <MenuItem
                   selected
-                  sx={{ 
+                  sx={{
                     borderRadius: 1.5,
-                    mb: 1 
+                    mb: 1,
                   }}
                 >
-                  <Avatar 
+                  <Avatar
                     src={accounts.current_account.photo}
                     sx={{ width: 32, height: 32, mr: 1.5 }}
                   />
-                  <Typography variant="body1" noWrap>
+                  <Typography variant='body1' noWrap>
                     {accounts.current_account.name}
                   </Typography>
                 </MenuItem>
               </Box>
             )}
-            
+
             <Divider sx={{ my: 0.5 }} />
-            
-            
+
             {accounts.main_account && (
               <Box sx={{ p: 1.5 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  sx={{ mb: 1 }}
+                >
                   Основной аккаунт
                 </Typography>
-                <MenuItem 
+                <MenuItem
                   onClick={() => handleSwitchAccount(accounts.main_account.id)}
-                  sx={{ 
+                  sx={{
                     borderRadius: 1.5,
-                    mb: 1
+                    mb: 1,
                   }}
                 >
-                  <Avatar 
+                  <Avatar
                     src={accounts.main_account.photo}
                     sx={{ width: 32, height: 32, mr: 1.5 }}
                   />
-                  <Typography variant="body1" noWrap>
+                  <Typography variant='body1' noWrap>
                     {accounts.main_account.name}
                   </Typography>
                 </MenuItem>
               </Box>
             )}
-            
-            
+
             {accounts.channels && accounts.channels.length > 0 && (
               <Box sx={{ p: 1.5 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  sx={{ mb: 1 }}
+                >
                   Ваши каналы
                 </Typography>
                 {accounts.channels.map(channel => (
-                  <MenuItem 
+                  <MenuItem
                     key={channel.id}
                     onClick={() => handleSwitchAccount(channel.id)}
-                    sx={{ 
+                    sx={{
                       borderRadius: 1.5,
-                      mb: 0.5
+                      mb: 0.5,
                     }}
                   >
-                    <Avatar 
+                    <Avatar
                       src={channel.photo}
                       sx={{ width: 32, height: 32, mr: 1.5 }}
                     />
-                    <Typography variant="body1" noWrap>
+                    <Typography variant='body1' noWrap>
                       {channel.name}
                     </Typography>
                   </MenuItem>
                 ))}
               </Box>
             )}
-            
+
             <Divider sx={{ my: 0.5 }} />
-            
-            
+
             <Box sx={{ p: 1.5 }}>
-              <MenuItem 
+              <MenuItem
                 onClick={handleCreateChannel}
-                sx={{ 
-                  borderRadius: 1.5
+                sx={{
+                  borderRadius: 1.5,
                 }}
               >
                 <AddIcon sx={{ mr: 1.5 }} />
-                <Typography variant="body1">
-                  Создать канал
-                </Typography>
+                <Typography variant='body1'>Создать канал</Typography>
               </MenuItem>
             </Box>
           </>
@@ -258,4 +259,4 @@ const AccountSwitcher = () => {
   );
 };
 
-export default AccountSwitcher; 
+export default AccountSwitcher;

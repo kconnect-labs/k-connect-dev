@@ -35,8 +35,6 @@
   }
 }
 
-
-
 /* Оптимизации для производительности */
 .bottom-navigation {
   will-change: transform;
@@ -88,4 +86,4 @@
   .bottom-navigation {
     display: none !important;
   }
-} 
+}

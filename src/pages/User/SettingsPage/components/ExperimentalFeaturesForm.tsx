@@ -5,7 +5,7 @@ import {
   Switch,
   FormControlLabel,
   Alert,
-  CircularProgress
+  CircularProgress,
 } from '@mui/material';
 import { BlurOff as BlurOffIcon } from '@mui/icons-material';
 import { useBlurOptimization } from '../../../../hooks/useBlurOptimization';
@@ -14,11 +14,13 @@ interface ExperimentalFeaturesFormProps {
   onSuccess?: () => void;
 }
 
-const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onSuccess }) => {
+const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
+  onSuccess,
+}) => {
   const {
     isEnabled: blurOptimizationEnabled,
     isLoading: blurOptimizationLoading,
-    toggleBlurOptimization
+    toggleBlurOptimization,
   } = useBlurOptimization();
 
   const containerStyle = {
@@ -27,7 +29,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
     background: 'rgba(255, 255, 255, 0.03)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     backdropFilter: 'blur(20px)',
-    mb: 3
+    mb: 3,
   };
 
   const featureItemStyle = {
@@ -41,7 +43,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
     mb: 2,
     '&:hover': {
       background: 'rgba(255, 255, 255, 0.05)',
-    }
+    },
   };
 
   const handleBlurToggle = async () => {
@@ -55,12 +57,21 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
 
   return (
     <Box sx={containerStyle}>
-      <Typography variant="h6" sx={{ mb: 3, color: 'text.primary', fontSize: '1.2rem', fontWeight: 600 }}>
+      <Typography
+        variant='h6'
+        sx={{
+          mb: 3,
+          color: 'text.primary',
+          fontSize: '1.2rem',
+          fontWeight: 600,
+        }}
+      >
         Экспериментальные функции
       </Typography>
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Эти функции находятся в разработке и могут работать нестабильно. Используйте на свой страх и риск.
+      <Alert severity='info' sx={{ mb: 3 }}>
+        Эти функции находятся в разработке и могут работать нестабильно.
+        Используйте на свой страх и риск.
       </Alert>
 
       {/* Оптимизация блюра */}
@@ -69,14 +80,15 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
           checked={blurOptimizationEnabled}
           onChange={handleBlurToggle}
           disabled={blurOptimizationLoading}
-          color="primary"
+          color='primary'
         />
         <Box sx={{ flex: 1 }}>
-          <Typography variant="body1" fontWeight={500} sx={{ mb: 0.5 }}>
+          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
             Оптимизация блюра
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Отключает blur эффекты для модалок и боксов, заменяя их на сплошной цвет. Улучшает производительность на слабых устройствах.
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Отключает blur эффекты для модалок и боксов, заменяя их на сплошной
+            цвет. Улучшает производительность на слабых устройствах.
           </Typography>
         </Box>
         {blurOptimizationLoading ? (
@@ -88,16 +100,19 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
 
       {/* Анимации (в разработке) */}
       <Box sx={featureItemStyle}>
-        <Switch
-          checked={false}
-          disabled={true}
-          color="primary"
-        />
+        <Switch checked={false} disabled={true} color='primary' />
         <Box sx={{ flex: 1 }}>
-          <Typography variant="body1" fontWeight={500} sx={{ mb: 0.5, opacity: 0.6 }}>
+          <Typography
+            variant='body1'
+            fontWeight={500}
+            sx={{ mb: 0.5, opacity: 0.6 }}
+          >
             Анимации (в разработке)
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', opacity: 0.6 }}>
+          <Typography
+            variant='body2'
+            sx={{ color: 'text.secondary', opacity: 0.6 }}
+          >
             Настройка интенсивности анимаций интерфейса
           </Typography>
         </Box>
@@ -106,4 +121,4 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({ onS
   );
 };
 
-export default ExperimentalFeaturesForm; 
+export default ExperimentalFeaturesForm;

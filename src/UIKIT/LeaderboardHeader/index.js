@@ -6,8 +6,8 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 
 const LeaderboardHeader = ({
-  title = "Рейтинг ТОП лидеров",
-  description = "20 пользователей, получивших наибольшее количество очков сообщества K-Коннект за совокупность активности: созданных постов и историй, полученных лайков, комментариев, ответов, репостов, просмотров и реакций на истории.",
+  title = 'Рейтинг ТОП лидеров',
+  description = '20 пользователей, получивших наибольшее количество очков сообщества K-Коннект за совокупность активности: созданных постов и историй, полученных лайков, комментариев, ответов, репостов, просмотров и реакций на истории.',
   tabs = [],
   selectedTab,
   onTabChange,
@@ -24,11 +24,11 @@ const LeaderboardHeader = ({
           value={selectedTab}
           onChange={onTabChange}
           tabs={tabs}
-          variant="fullWidth"
+          variant='fullWidth'
         />
       )}
     </Box>
   );
 };
 
-export default LeaderboardHeader; 
+export default LeaderboardHeader;

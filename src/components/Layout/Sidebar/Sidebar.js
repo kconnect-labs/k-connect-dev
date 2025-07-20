@@ -8,11 +8,9 @@ import UserProfileBlock from './UserProfileBlock';
 import SidebarFooter from './SidebarFooter';
 import './Sidebar.css';
 
-
 const areEqual = (prevProps, nextProps) => {
-  return true; 
+  return true;
 };
-
 
 const Sidebar = memo(({ isMobile }) => {
   // На мобильных устройствах сайдбар вообще не рендерится
@@ -23,7 +21,6 @@ const Sidebar = memo(({ isMobile }) => {
   const { themeSettings } = useContext(ThemeSettingsContext);
   const [isModeratorUser, setIsModeratorUser] = useState(false);
 
-  
   const themeValues = useMemo(() => {
     const sidebarBackgroundColor = 'rgba(255, 255, 255, 0.03)';
     const sidebarTextColor = themeSettings.textColor || 'inherit';
@@ -38,51 +35,44 @@ const Sidebar = memo(({ isMobile }) => {
 
     return {
       primaryColor,
-      sidebarStyle
+      sidebarStyle,
     };
   }, [themeSettings]);
 
-  
   const isAdmin = user?.id === 3;
-  
-  
+
   const isChannel = user?.account_type === 'channel';
-  
-  
+
   useEffect(() => {
     if (user) {
       checkModeratorStatus();
     }
   }, [user]);
 
-  
   const [lastModeratorCheck, setLastModeratorCheck] = useState(0);
 
   const checkModeratorStatus = async () => {
     try {
-      
       if (window._moderatorCheckInProgress) {
         console.log('Moderator check already in progress, skipping...');
         return;
       }
-      
-      
+
       const now = Date.now();
       if (now - lastModeratorCheck < 15 * 60 * 1000) {
         console.log('Using cached moderator status');
         return;
       }
-      
-      
+
       window._moderatorCheckInProgress = true;
-      
+
       const response = await axios.get('/api/moderator/quick-status');
       if (response.data && response.data.is_moderator) {
         setIsModeratorUser(true);
       } else {
         setIsModeratorUser(false);
       }
-      
+
       setLastModeratorCheck(now);
     } catch (error) {
       console.error('Error checking moderator status:', error);
@@ -91,30 +81,32 @@ const Sidebar = memo(({ isMobile }) => {
       window._moderatorCheckInProgress = false;
     }
   };
-  
-  
-  const userNavData = useMemo(() => ({
-    isAdmin,
-    isModeratorUser,
-    isChannel,
-    user
-  }), [isAdmin, isModeratorUser, isChannel, user]);
+
+  const userNavData = useMemo(
+    () => ({
+      isAdmin,
+      isModeratorUser,
+      isChannel,
+      user,
+    }),
+    [isAdmin, isModeratorUser, isChannel, user]
+  );
 
   return (
-    <div className="sidebar-container" style={themeValues.sidebarStyle}>
+    <div className='sidebar-container' style={themeValues.sidebarStyle}>
       <SidebarProvider>
-        <div className="sidebar-content">
-          <UserProfileBlock 
-            user={user} 
-            primaryColor={themeValues.primaryColor} 
+        <div className='sidebar-content'>
+          <UserProfileBlock
+            user={user}
+            primaryColor={themeValues.primaryColor}
           />
-          <SidebarNavigation 
+          <SidebarNavigation
             {...userNavData}
             primaryColor={themeValues.primaryColor}
           />
         </div>
       </SidebarProvider>
-      
+
       <SidebarFooter primaryColor={themeValues.primaryColor} />
     </div>
   );

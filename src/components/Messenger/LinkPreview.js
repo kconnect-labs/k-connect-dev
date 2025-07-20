@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Paper,
-  Typography,
-  Skeleton,
-  useTheme
-} from '@mui/material';
+import { Box, Paper, Typography, Skeleton, useTheme } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import axios from 'axios';
 
@@ -42,12 +36,12 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
     return null;
   }
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const getDomainName = (url) => {
+  const getDomainName = url => {
     try {
       const hostname = new URL(url).hostname;
       return hostname.replace('www.', '');
@@ -57,17 +51,19 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
   };
 
   // Цветовая схема в зависимости от отправителя
-  const colors = isCurrentUser ? {
-    background: 'rgba(158, 119, 237, 0.12)',
-    border: 'rgba(158, 119, 237, 0.2)',
-    accent: '#9E77ED',
-    hover: 'rgba(158, 119, 237, 0.18)'
-  } : {
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: 'rgba(255, 255, 255, 0.15)',
-    accent: '#9E77ED',
-    hover: 'rgba(255, 255, 255, 0.12)'
-  };
+  const colors = isCurrentUser
+    ? {
+        background: 'rgba(158, 119, 237, 0.12)',
+        border: 'rgba(158, 119, 237, 0.2)',
+        accent: '#9E77ED',
+        hover: 'rgba(158, 119, 237, 0.18)',
+      }
+    : {
+        background: 'rgba(255, 255, 255, 0.08)',
+        border: 'rgba(255, 255, 255, 0.15)',
+        accent: '#9E77ED',
+        hover: 'rgba(255, 255, 255, 0.12)',
+      };
 
   return (
     <Paper
@@ -92,7 +88,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         '&:hover': {
           backgroundColor: colors.hover,
           transform: 'translateY(-1px)',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
         },
         '&:before': {
           content: '""',
@@ -103,12 +99,14 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
           width: '3px',
           backgroundColor: colors.accent,
           borderRadius: '2px',
-        }
+        },
       }}
     >
       {loading ? (
-        <Box sx={{ p: 1.2, width: '100%', display: 'flex', alignItems: 'center' }}>
-          <Skeleton variant="text" width="70%" height={16} sx={{ mb: 0.5 }} />
+        <Box
+          sx={{ p: 1.2, width: '100%', display: 'flex', alignItems: 'center' }}
+        >
+          <Skeleton variant='text' width='70%' height={16} sx={{ mb: 0.5 }} />
         </Box>
       ) : (
         <>
@@ -119,37 +117,41 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
                 height: 80,
                 flexShrink: 0,
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
               }}
             >
               <Box
-                component="img"
+                component='img'
                 src={preview.image}
-                alt={preview.title || "Ссылка"}
+                alt={preview.title || 'Ссылка'}
                 sx={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
-                onError={(e) => {
+                onError={e => {
                   e.target.onerror = null;
                   e.target.style.display = 'none';
                 }}
               />
             </Box>
           )}
-          <Box sx={{ 
-            p: 1.2, 
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            borderLeft: preview?.image ? `1px solid ${colors.border}` : 'none',
-            backgroundColor: 'rgba(0, 0, 0, 0.02)'
-          }}>
-            <Typography 
-              variant="body2" 
-              sx={{ 
+          <Box
+            sx={{
+              p: 1.2,
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              borderLeft: preview?.image
+                ? `1px solid ${colors.border}`
+                : 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.02)',
+            }}
+          >
+            <Typography
+              variant='body2'
+              sx={{
                 margin: 0,
                 fontWeight: 500,
                 fontSize: '0.8rem',
@@ -161,13 +163,13 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
                 whiteSpace: 'nowrap',
               }}
             >
-              {(preview?.title || getDomainName(url)).length > 30 
-                ? `${(preview?.title || getDomainName(url)).substring(0, 30)}...` 
-                : (preview?.title || getDomainName(url))}
+              {(preview?.title || getDomainName(url)).length > 30
+                ? `${(preview?.title || getDomainName(url)).substring(0, 30)}...`
+                : preview?.title || getDomainName(url)}
             </Typography>
             {preview?.description && (
               <Typography
-                variant="caption"
+                variant='caption'
                 sx={{
                   margin: 0,
                   color: theme.palette.text.secondary,
@@ -178,28 +180,33 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
-                  mb: 0.3
+                  mb: 0.3,
                 }}
               >
-                {preview.description.length > 45 
-                  ? `${preview.description.substring(0, 45)}...` 
+                {preview.description.length > 45
+                  ? `${preview.description.substring(0, 45)}...`
                   : preview.description}
               </Typography>
             )}
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              backgroundColor: colors.accent + '15',
-              py: 0.2,
-              px: 0.6,
-              borderRadius: '6px',
-              width: 'fit-content',
-              maxWidth: '100%'
-            }}>
-              <LinkIcon fontSize="small" sx={{ color: colors.accent, mr: 0.4, fontSize: '0.7rem' }} />
-              <Typography 
-                variant="caption" 
-                sx={{ 
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: colors.accent + '15',
+                py: 0.2,
+                px: 0.6,
+                borderRadius: '6px',
+                width: 'fit-content',
+                maxWidth: '100%',
+              }}
+            >
+              <LinkIcon
+                fontSize='small'
+                sx={{ color: colors.accent, mr: 0.4, fontSize: '0.7rem' }}
+              />
+              <Typography
+                variant='caption'
+                sx={{
                   margin: 0,
                   color: theme.palette.text.secondary,
                   fontWeight: 500,
@@ -208,7 +215,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
-                }} 
+                }}
                 noWrap
               >
                 {getDomainName(url)}
@@ -221,4 +228,4 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
   );
 };
 
-export default LinkPreview; 
+export default LinkPreview;

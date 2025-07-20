@@ -42,18 +42,18 @@ body {
 }
 
 :root {
-  --primary: #D0BCFF;
-  --primary-light: #E9DDFF;
-  --primary-dark: #9A7ACE;
+  --primary: #d0bcff;
+  --primary-light: #e9ddff;
+  --primary-dark: #9a7ace;
   --background: #151515;
-  --background-secondary: #1C1C1C;
-  --surface: #1D1D1D;
-  --text-primary: #FFFFFF;
-  --text-secondary: #C2C2C2;
-  --error: #F28C9A;
-  --success: #6CD67D;
+  --background-secondary: #1c1c1c;
+  --surface: #1d1d1d;
+  --text-primary: #ffffff;
+  --text-secondary: #c2c2c2;
+  --error: #f28c9a;
+  --success: #6cd67d;
   --border-color: rgba(255, 255, 255, 0.1);
-  
+
   /* Font weights */
   --font-weight-medium: 500;
   --font-weight-bold: 700;
@@ -67,14 +67,25 @@ body {
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   overflow-x: hidden;
 }
 
 body {
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family:
+    'SF Pro Display',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -119,8 +130,8 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 a {
@@ -141,7 +152,9 @@ button {
   user-select: none;
 }
 
-input, textarea, select {
+input,
+textarea,
+select {
   font-family: 'SF Pro Display', sans-serif;
   /* Оптимизация инпутов */
   -webkit-appearance: none;
@@ -149,7 +162,6 @@ input, textarea, select {
   appearance: none;
   border-radius: 0;
 }
-
 
 .selectable {
   -webkit-user-select: text;
@@ -164,7 +176,6 @@ input, textarea, select {
   -ms-user-select: none;
   user-select: none;
 }
-
 
 ::-webkit-scrollbar {
   width: 1px;
@@ -199,12 +210,13 @@ input, textarea, select {
 
 /* Оптимизации для анимаций */
 @keyframes pulse {
-  0%, 100% { 
-    opacity: 0.7; 
+  0%,
+  100% {
+    opacity: 0.7;
     transform: scale(1);
   }
-  50% { 
-    opacity: 1; 
+  50% {
+    opacity: 1;
     transform: scale(1.2);
   }
 }
@@ -212,22 +224,27 @@ input, textarea, select {
 /* Оптимизация для старых браузеров - только для анимированных элементов */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   /* Chrome/Safari оптимизации */
-  .animated, .MuiCircularProgress-root, .MuiSkeleton-root {
+  .animated,
+  .MuiCircularProgress-root,
+  .MuiSkeleton-root {
     -webkit-transform: translate3d(0, 0, 0);
   }
 }
 
 /* Оптимизация для Firefox */
 @-moz-document url-prefix() {
-  .animated, .MuiCircularProgress-root, .MuiSkeleton-root {
+  .animated,
+  .MuiCircularProgress-root,
+  .MuiSkeleton-root {
     -moz-transform: translateZ(0);
   }
 }
 
 /* Оптимизация для IE/Edge */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-  .animated, .MuiCircularProgress-root, .MuiSkeleton-root {
+  .animated,
+  .MuiCircularProgress-root,
+  .MuiSkeleton-root {
     -ms-transform: translateZ(0);
   }
 }
-

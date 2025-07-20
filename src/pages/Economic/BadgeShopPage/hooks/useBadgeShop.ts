@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
-import { 
-  BadgeShopState, 
-  BadgeShopActions, 
+import {
+  BadgeShopState,
+  BadgeShopActions,
   BadgeShopContextType,
   TabValue,
   SortOption,
   Badge,
   NewBadge,
-  UserSubscription
+  UserSubscription,
 } from '../types';
 
 const initialNewBadge: NewBadge = {
@@ -18,7 +18,7 @@ const initialNewBadge: NewBadge = {
   max_copies: '',
   image: null,
   is_upgraded: false,
-  particle_color: '#FFD700'
+  particle_color: '#FFD700',
 };
 
 const initialState: BadgeShopState = {
@@ -115,9 +115,12 @@ export const useBadgeShop = (): BadgeShopContextType => {
     setState(prev => ({ ...prev, badgeLimit: limit }));
   }, []);
 
-  const setUserSubscription = useCallback((subscription: UserSubscription | null) => {
-    setState(prev => ({ ...prev, userSubscription: subscription }));
-  }, []);
+  const setUserSubscription = useCallback(
+    (subscription: UserSubscription | null) => {
+      setState(prev => ({ ...prev, userSubscription: subscription }));
+    },
+    []
+  );
 
   const setPreviewUrl = useCallback((url: string | null) => {
     setState(prev => ({ ...prev, previewUrl: url }));
@@ -132,12 +135,12 @@ export const useBadgeShop = (): BadgeShopContextType => {
   }, []);
 
   const resetPurchaseState = useCallback(() => {
-    setState(prev => ({ 
-      ...prev, 
-      purchaseStep: 0, 
-      purchaseSuccess: false, 
+    setState(prev => ({
+      ...prev,
+      purchaseStep: 0,
+      purchaseSuccess: false,
       showConfetti: false,
-      isPurchasing: false 
+      isPurchasing: false,
     }));
   }, []);
 
@@ -166,4 +169,4 @@ export const useBadgeShop = (): BadgeShopContextType => {
     resetNewBadge,
     resetPurchaseState,
   };
-}; 
+};

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { 
-  Box, 
-  Typography, 
+import {
+  Box,
+  Typography,
   Grid,
   Card,
   CardContent,
@@ -15,15 +15,15 @@ import {
   Tab,
   Divider,
   Avatar,
-  Chip
+  Chip,
 } from '@mui/material';
-import { 
+import {
   Add,
   PlayArrow,
   MoreVert,
   Person,
   Public,
-  MusicNote
+  MusicNote,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useMusic } from '../../context/MusicContext';
@@ -45,13 +45,13 @@ const PlaylistCard = styled(Card)(({ theme }) => ({
   },
   height: '100%',
   display: 'flex',
-  flexDirection: 'column'
+  flexDirection: 'column',
 }));
 
 const PlaylistsPage = () => {
   const navigate = useNavigate();
   const { playTrack, currentTrack } = useMusic();
-  
+
   // Состояние
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,84 +65,111 @@ const PlaylistsPage = () => {
   const fetchPlaylists = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       // Загружаем пользовательские плейлисты
       const userResponse = await axios.get('/api/music/playlists');
       let userPlaylists = [];
-      
+
       if (userResponse.data.success) {
-        userPlaylists = await Promise.all(userResponse.data.playlists.map(async playlist => {
-          let previewTracks = [];
-          try {
-            const detailResponse = await axios.get(`/api/music/playlists/${playlist.id}`);
-            if (detailResponse.data.success && detailResponse.data.playlist && detailResponse.data.playlist.tracks) {
-              previewTracks = detailResponse.data.playlist.tracks.slice(0, 3).map(track => ({
-                id: track.id,
-                title: track.title,
-                artist: track.artist,
-                cover_url: track.cover_url
-              }));
+        userPlaylists = await Promise.all(
+          userResponse.data.playlists.map(async playlist => {
+            let previewTracks = [];
+            try {
+              const detailResponse = await axios.get(
+                `/api/music/playlists/${playlist.id}`
+              );
+              if (
+                detailResponse.data.success &&
+                detailResponse.data.playlist &&
+                detailResponse.data.playlist.tracks
+              ) {
+                previewTracks = detailResponse.data.playlist.tracks
+                  .slice(0, 3)
+                  .map(track => ({
+                    id: track.id,
+                    title: track.title,
+                    artist: track.artist,
+                    cover_url: track.cover_url,
+                  }));
+              }
+            } catch (error) {
+              // Игнорируем ошибки загрузки preview треков
             }
-          } catch (error) {
-            // Игнорируем ошибки загрузки preview треков
-          }
-          
-          return {
-            id: playlist.id,
-            name: playlist.name,
-            description: playlist.description || '',
-            is_public: playlist.is_public,
-            cover_image: playlist.cover_url || "/static/uploads/system/playlist_placeholder.jpg",
-            tracks_count: playlist.track_count || 0,
-            created_at: playlist.created_at,
-            updated_at: playlist.updated_at,
-            is_owner: true,
-            preview_tracks: previewTracks
-          };
-        }));
+
+            return {
+              id: playlist.id,
+              name: playlist.name,
+              description: playlist.description || '',
+              is_public: playlist.is_public,
+              cover_image:
+                playlist.cover_url ||
+                '/static/uploads/system/playlist_placeholder.jpg',
+              tracks_count: playlist.track_count || 0,
+              created_at: playlist.created_at,
+              updated_at: playlist.updated_at,
+              is_owner: true,
+              preview_tracks: previewTracks,
+            };
+          })
+        );
       }
 
       // Загружаем публичные плейлисты
       const publicResponse = await axios.get('/api/music/playlists/public');
       let publicPlaylists = [];
-      
+
       if (publicResponse.data.success) {
-        publicPlaylists = await Promise.all(publicResponse.data.playlists.map(async playlist => {
-          let previewTracks = [];
-          try {
-            const detailResponse = await axios.get(`/api/music/playlists/${playlist.id}`);
-            if (detailResponse.data.success && detailResponse.data.playlist && detailResponse.data.playlist.tracks) {
-              previewTracks = detailResponse.data.playlist.tracks.slice(0, 3).map(track => ({
-                id: track.id,
-                title: track.title,
-                artist: track.artist,
-                cover_url: track.cover_url
-              }));
+        publicPlaylists = await Promise.all(
+          publicResponse.data.playlists.map(async playlist => {
+            let previewTracks = [];
+            try {
+              const detailResponse = await axios.get(
+                `/api/music/playlists/${playlist.id}`
+              );
+              if (
+                detailResponse.data.success &&
+                detailResponse.data.playlist &&
+                detailResponse.data.playlist.tracks
+              ) {
+                previewTracks = detailResponse.data.playlist.tracks
+                  .slice(0, 3)
+                  .map(track => ({
+                    id: track.id,
+                    title: track.title,
+                    artist: track.artist,
+                    cover_url: track.cover_url,
+                  }));
+              }
+            } catch (error) {
+              // Игнорируем ошибки загрузки preview треков
             }
-          } catch (error) {
-            // Игнорируем ошибки загрузки preview треков
-          }
-          
-          return {
-            id: playlist.id,
-            name: playlist.name,
-            description: playlist.description || '',
-            is_public: true,
-            cover_image: playlist.cover_url || playlist.cover_image || "/static/uploads/system/playlist_placeholder.jpg",
-            tracks_count: playlist.tracks_count || 0,
-            created_at: playlist.created_at,
-            updated_at: playlist.updated_at,
-            owner: playlist.owner,
-            is_owner: false,
-            preview_tracks: previewTracks
-          };
-        }));
+
+            return {
+              id: playlist.id,
+              name: playlist.name,
+              description: playlist.description || '',
+              is_public: true,
+              cover_image:
+                playlist.cover_url ||
+                playlist.cover_image ||
+                '/static/uploads/system/playlist_placeholder.jpg',
+              tracks_count: playlist.tracks_count || 0,
+              created_at: playlist.created_at,
+              updated_at: playlist.updated_at,
+              owner: playlist.owner,
+              is_owner: false,
+              preview_tracks: previewTracks,
+            };
+          })
+        );
       }
 
       // Убираем дубликаты
       const publicPlaylistIds = new Set(publicPlaylists.map(p => p.id));
-      const uniqueUserPlaylists = userPlaylists.filter(p => !publicPlaylistIds.has(p.id) || p.is_owner);
-      
+      const uniqueUserPlaylists = userPlaylists.filter(
+        p => !publicPlaylistIds.has(p.id) || p.is_owner
+      );
+
       const allPlaylists = [...uniqueUserPlaylists, ...publicPlaylists];
       setPlaylists(allPlaylists);
     } catch (error) {
@@ -163,19 +190,21 @@ const PlaylistsPage = () => {
     setPlaylistModalOpen(true);
   };
 
-  const handleEditPlaylist = (playlist) => {
+  const handleEditPlaylist = playlist => {
     setEditingPlaylist(playlist);
     setPlaylistModalOpen(true);
   };
 
-  const handleViewPlaylist = async (playlist) => {
+  const handleViewPlaylist = async playlist => {
     // Загружаем полный список треков для плейлиста
     try {
-      const detailResponse = await axios.get(`/api/music/playlists/${playlist.id}`);
+      const detailResponse = await axios.get(
+        `/api/music/playlists/${playlist.id}`
+      );
       if (detailResponse.data.success && detailResponse.data.playlist) {
         const fullPlaylist = {
           ...playlist,
-          tracks: detailResponse.data.playlist.tracks || []
+          tracks: detailResponse.data.playlist.tracks || [],
         };
         setViewingPlaylist(fullPlaylist);
         setPlaylistViewModalOpen(true);
@@ -189,7 +218,7 @@ const PlaylistsPage = () => {
     }
   };
 
-  const handlePlayPlaylist = (playlist) => {
+  const handlePlayPlaylist = playlist => {
     if (playlist.preview_tracks && playlist.preview_tracks.length > 0) {
       playTrack(playlist.preview_tracks[0], `playlist_${playlist.id}`);
     }
@@ -204,7 +233,7 @@ const PlaylistsPage = () => {
         // Создание
         await axios.post('/api/music/playlists', playlistData);
       }
-      
+
       setPlaylistModalOpen(false);
       fetchPlaylists(); // Перезагружаем список
     } catch (error) {
@@ -212,7 +241,7 @@ const PlaylistsPage = () => {
     }
   };
 
-  const handleDeletePlaylist = async (playlistId) => {
+  const handleDeletePlaylist = async playlistId => {
     try {
       await axios.delete(`/api/music/playlists/${playlistId}`);
       setPlaylistModalOpen(false);
@@ -225,8 +254,10 @@ const PlaylistsPage = () => {
   const handleAddTracks = async (playlistId, trackIds) => {
     try {
       await Promise.all(
-        trackIds.map(trackId => 
-          axios.post(`/api/music/playlists/${playlistId}/tracks`, { track_id: trackId })
+        trackIds.map(trackId =>
+          axios.post(`/api/music/playlists/${playlistId}/tracks`, {
+            track_id: trackId,
+          })
         )
       );
       // Обновляем плейлист в модалке
@@ -243,7 +274,9 @@ const PlaylistsPage = () => {
 
   const handleRemoveTrack = async (playlistId, trackId) => {
     try {
-      await axios.delete(`/api/music/playlists/${playlistId}/tracks/${trackId}`);
+      await axios.delete(
+        `/api/music/playlists/${playlistId}/tracks/${trackId}`
+      );
       // Обновляем плейлист в модалке
       if (editingPlaylist && editingPlaylist.id === playlistId) {
         const response = await axios.get(`/api/music/playlists/${playlistId}`);
@@ -266,43 +299,45 @@ const PlaylistsPage = () => {
   }, [fetchPlaylists]);
 
   return (
-    <Box sx={{ 
-      p: 1, 
-      paddingBottom: 10,
-      paddingTop: { xs: 7, md: 1 } // 40px на мобилках, 8px на десктопе
-    }}>
+    <Box
+      sx={{
+        p: 1,
+        paddingBottom: 10,
+        paddingTop: { xs: 7, md: 1 }, // 40px на мобилках, 8px на десктопе
+      }}
+    >
       {/* Заголовок */}
       <Box sx={{ mb: 2 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: '#fff', mb: 1 }}>
+        <Typography variant='h4' sx={{ fontWeight: 700, color: '#fff', mb: 1 }}>
           Плейлисты
         </Typography>
-        <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
           Управляйте своими плейлистами и открывайте новые
         </Typography>
       </Box>
 
       {/* Табы */}
       <Box sx={{ mb: 2 }}>
-        <Tabs 
-          value={activeTab} 
+        <Tabs
+          value={activeTab}
           onChange={handleTabChange}
           sx={{
             '& .MuiTab-root': {
               color: 'rgba(255, 255, 255, 0.7)',
               '&.Mui-selected': {
                 color: '#fff',
-              }
+              },
             },
             '& .MuiTabs-indicator': {
               backgroundColor: '#D0BCFF',
-            }
+            },
           }}
         >
           <Tab label={`Мои (${userPlaylists.length})`} />
           <Tab label={`Все (${publicPlaylists.length})`} />
-          <Tab 
-            label="Создать" 
-            onClick={(e) => {
+          <Tab
+            label='Создать'
+            onClick={e => {
               e.preventDefault();
               handleCreatePlaylist();
             }}
@@ -312,7 +347,7 @@ const PlaylistsPage = () => {
               marginLeft: 1,
               '&:hover': {
                 backgroundColor: 'rgba(208, 188, 255, 0.2)',
-              }
+              },
             }}
           />
         </Tabs>
@@ -329,45 +364,61 @@ const PlaylistsPage = () => {
             <Box>
               {/* Список пользовательских плейлистов */}
               {userPlaylists.length === 0 ? (
-                <Box sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  py: 6,
-                  textAlign: 'center'
-                }}>
-                  <MusicNote sx={{ fontSize: 64, color: 'rgba(255, 255, 255, 0.3)', mb: 2 }} />
-                  <Typography variant="h6" sx={{ color: '#fff', mb: 1 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    py: 6,
+                    textAlign: 'center',
+                  }}
+                >
+                  <MusicNote
+                    sx={{
+                      fontSize: 64,
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      mb: 2,
+                    }}
+                  />
+                  <Typography variant='h6' sx={{ color: '#fff', mb: 1 }}>
                     У вас пока нет плейлистов
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                    Нажмите на вкладку "Создать" чтобы создать свой первый плейлист
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                  >
+                    Нажмите на вкладку "Создать" чтобы создать свой первый
+                    плейлист
                   </Typography>
                 </Box>
               ) : (
                 <Grid container spacing={2}>
-                  {userPlaylists.map((playlist) => (
+                  {userPlaylists.map(playlist => (
                     <Grid item xs={6} sm={4} md={3} lg={2} key={playlist.id}>
-                      <PlaylistCard onClick={() => handleViewPlaylist(playlist)}>
+                      <PlaylistCard
+                        onClick={() => handleViewPlaylist(playlist)}
+                      >
                         <Box sx={{ position: 'relative' }}>
                           <CardMedia
-                            component="img"
-                            height="200"
+                            component='img'
+                            height='200'
                             image={playlist.cover_image}
                             alt={playlist.name}
                             sx={{ borderRadius: '16px 16px 0 0' }}
                           />
-                          <Box sx={{
-                            position: 'absolute',
-                            top: 8,
-                            right: 8,
-                            display: 'flex',
-                            gap: 0.5
-                          }}>
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              right: 8,
+                              display: 'flex',
+                              gap: 0.5,
+                            }}
+                          >
                             <IconButton
-                              size="small"
-                              onClick={(e) => {
+                              size='small'
+                              onClick={e => {
                                 e.stopPropagation();
                                 handlePlayPlaylist(playlist);
                               }}
@@ -376,14 +427,14 @@ const PlaylistsPage = () => {
                                 color: '#fff',
                                 '&:hover': {
                                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                }
+                                },
                               }}
                             >
                               <PlayArrow />
                             </IconButton>
                             <IconButton
-                              size="small"
-                              onClick={(e) => {
+                              size='small'
+                              onClick={e => {
                                 e.stopPropagation();
                                 handleEditPlaylist(playlist);
                               }}
@@ -392,7 +443,7 @@ const PlaylistsPage = () => {
                                 color: '#fff',
                                 '&:hover': {
                                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                }
+                                },
                               }}
                             >
                               <MoreVert />
@@ -400,36 +451,56 @@ const PlaylistsPage = () => {
                           </Box>
                         </Box>
                         <CardContent sx={{ p: 1.5, flexGrow: 1 }}>
-                          <Typography variant="h6" sx={{ 
-                            fontWeight: 600, 
-                            color: '#fff', 
-                            mb: 0.5,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <Typography
+                            variant='h6'
+                            sx={{
+                              fontWeight: 600,
+                              color: '#fff',
+                              mb: 0.5,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
                             {playlist.name}
                           </Typography>
-                          <Typography variant="body2" sx={{ 
-                            color: 'rgba(255, 255, 255, 0.7)', 
-                            mb: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <Typography
+                            variant='body2'
+                            sx={{
+                              color: 'rgba(255, 255, 255, 0.7)',
+                              mb: 1,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
                             {playlist.tracks_count} треков
                           </Typography>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
                             <Chip
-                              icon={playlist.is_public ? <Public /> : <Person />}
-                              label={playlist.is_public ? 'Публичный' : 'Приватный'}
-                              size="small"
+                              icon={
+                                playlist.is_public ? <Public /> : <Person />
+                              }
+                              label={
+                                playlist.is_public ? 'Публичный' : 'Приватный'
+                              }
+                              size='small'
                               sx={{
-                                backgroundColor: playlist.is_public ? 'rgba(76, 175, 80, 0.2)' : 'rgba(158, 158, 158, 0.2)',
-                                color: playlist.is_public ? '#4CAF50' : '#9E9E9E',
+                                backgroundColor: playlist.is_public
+                                  ? 'rgba(76, 175, 80, 0.2)'
+                                  : 'rgba(158, 158, 158, 0.2)',
+                                color: playlist.is_public
+                                  ? '#4CAF50'
+                                  : '#9E9E9E',
                                 '& .MuiChip-icon': {
-                                  color: 'inherit'
-                                }
+                                  color: 'inherit',
+                                },
                               }}
                             />
                           </Box>
@@ -445,43 +516,58 @@ const PlaylistsPage = () => {
           {activeTab === 1 && (
             <Box>
               {publicPlaylists.length === 0 ? (
-                <Box sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  py: 6,
-                  textAlign: 'center'
-                }}>
-                  <Public sx={{ fontSize: 64, color: 'rgba(255, 255, 255, 0.3)', mb: 2 }} />
-                  <Typography variant="h6" sx={{ color: '#fff', mb: 1 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    py: 6,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Public
+                    sx={{
+                      fontSize: 64,
+                      color: 'rgba(255, 255, 255, 0.3)',
+                      mb: 2,
+                    }}
+                  />
+                  <Typography variant='h6' sx={{ color: '#fff', mb: 1 }}>
                     Публичные плейлисты не найдены
                   </Typography>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                  >
                     Пока нет публичных плейлистов от других пользователей
                   </Typography>
                 </Box>
               ) : (
                 <Grid container spacing={2}>
-                  {publicPlaylists.map((playlist) => (
+                  {publicPlaylists.map(playlist => (
                     <Grid item xs={6} sm={4} md={3} lg={2} key={playlist.id}>
-                      <PlaylistCard onClick={() => handleViewPlaylist(playlist)}>
+                      <PlaylistCard
+                        onClick={() => handleViewPlaylist(playlist)}
+                      >
                         <Box sx={{ position: 'relative' }}>
                           <CardMedia
-                            component="img"
-                            height="200"
+                            component='img'
+                            height='200'
                             image={playlist.cover_image}
                             alt={playlist.name}
                             sx={{ borderRadius: '16px 16px 0 0' }}
                           />
-                          <Box sx={{
-                            position: 'absolute',
-                            top: 8,
-                            right: 8,
-                          }}>
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              right: 8,
+                            }}
+                          >
                             <IconButton
-                              size="small"
-                              onClick={(e) => {
+                              size='small'
+                              onClick={e => {
                                 e.stopPropagation();
                                 handlePlayPlaylist(playlist);
                               }}
@@ -490,7 +576,7 @@ const PlaylistsPage = () => {
                                 color: '#fff',
                                 '&:hover': {
                                   backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                }
+                                },
                               }}
                             >
                               <PlayArrow />
@@ -498,34 +584,49 @@ const PlaylistsPage = () => {
                           </Box>
                         </Box>
                         <CardContent sx={{ p: 1.5, flexGrow: 1 }}>
-                          <Typography variant="h6" sx={{ 
-                            fontWeight: 600, 
-                            color: '#fff', 
-                            mb: 0.5,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <Typography
+                            variant='h6'
+                            sx={{
+                              fontWeight: 600,
+                              color: '#fff',
+                              mb: 0.5,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
                             {playlist.name}
                           </Typography>
-                          <Typography variant="body2" sx={{ 
-                            color: 'rgba(255, 255, 255, 0.7)', 
-                            mb: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <Typography
+                            variant='body2'
+                            sx={{
+                              color: 'rgba(255, 255, 255, 0.7)',
+                              mb: 1,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
                             {playlist.tracks_count} треков
                           </Typography>
                           {playlist.owner && (
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Avatar 
-                                src={playlist.owner.avatar_url} 
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1,
+                              }}
+                            >
+                              <Avatar
+                                src={playlist.owner.avatar_url}
                                 sx={{ width: 20, height: 20 }}
                               >
                                 <Person sx={{ fontSize: 12 }} />
                               </Avatar>
-                              <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                              <Typography
+                                variant='caption'
+                                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                              >
                                 {playlist.owner.username}
                               </Typography>
                             </Box>
@@ -559,7 +660,7 @@ const PlaylistsPage = () => {
         onClose={() => setPlaylistViewModalOpen(false)}
         playlist={viewingPlaylist}
         onEdit={handleEditPlaylist}
-        onPlayTrack={(track) => {
+        onPlayTrack={track => {
           if (viewingPlaylist) {
             playTrack(track, `playlist_${viewingPlaylist.id}`);
           } else {
@@ -572,4 +673,4 @@ const PlaylistsPage = () => {
   );
 };
 
-export default PlaylistsPage; 
+export default PlaylistsPage;

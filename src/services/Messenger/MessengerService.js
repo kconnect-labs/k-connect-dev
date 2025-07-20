@@ -1,24 +1,27 @@
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import React from 'react';
-const API_URL = ''; 
+const API_URL = '';
 class MessengerService {
   constructor() {
     this.socket = null;
     this.eventListeners = {};
     this.connectionPromise = null;
-    this.joinedRooms = new Set(); 
-    this.pendingJoins = {}; 
-    this.joinThrottleTimers = {}; 
-    this.pendingRequests = {}; 
+    this.joinedRooms = new Set();
+    this.pendingJoins = {};
+    this.joinThrottleTimers = {};
+    this.pendingRequests = {};
     this.avatarCache = new Map();
     this.userProfileCache = new Map();
     this.userStatusCache = new Map();
-    this.cacheCleanupInterval = setInterval(() => this.cleanupCache(), 1000 * 60 * 30); 
+    this.cacheCleanupInterval = setInterval(
+      () => this.cleanupCache(),
+      1000 * 60 * 30
+    );
   }
   cleanupCache() {
     const now = Date.now();
-    const MAX_AGE = 1000 * 60 * 60; 
+    const MAX_AGE = 1000 * 60 * 60;
     this.avatarCache.forEach((entry, key) => {
       if (now - entry.timestamp > MAX_AGE) {
         this.avatarCache.delete(key);
@@ -34,29 +37,24 @@ class MessengerService {
         this.userStatusCache.delete(key);
       }
     });
-
   }
   initSocket(options = {}) {
     if (this.socket && this.socket.connected && !options.forceNew) {
-
       return Promise.resolve(this.socket);
     }
     if (options.forceNew && this.socket) {
-
       try {
         this.socket.disconnect();
       } catch (e) {
-        console.warn("Error during socket disconnect on force reconnect:", e);
+        console.warn('Error during socket disconnect on force reconnect:', e);
       }
       this.socket = null;
       this.connectionPromise = null;
     }
     if (this.connectionPromise && !options.forceNew) {
-
       return this.connectionPromise;
     }
     this.connectionPromise = new Promise((resolve, reject) => {
-
       const socketOptions = {
         path: '/socket.io',
         transports: ['websocket', 'polling'],
@@ -66,70 +64,72 @@ class MessengerService {
         reconnectionDelayMax: options.reconnectionDelayMax || 5000,
         timeout: options.timeout || 20000,
         autoConnect: true,
-        forceNew: options.forceNew || false
+        forceNew: options.forceNew || false,
       };
       if (this.socket) {
         if (!this.socket.connected) {
-
           this.socket.connect();
         }
       } else {
         this.socket = io(window.location.origin, socketOptions);
       }
       this.socket.on('connect', () => {
-
         this.connectionPromise = null;
         if (this.eventListeners['connect']) {
           this.eventListeners['connect'].forEach(callback => callback());
         }
         resolve(this.socket);
       });
-      this.socket.on('connect_error', (error) => {
+      this.socket.on('connect_error', error => {
         console.error('Socket.IO connection error:', error);
         if (this.eventListeners['connect_error']) {
-          this.eventListeners['connect_error'].forEach(callback => callback(error));
+          this.eventListeners['connect_error'].forEach(callback =>
+            callback(error)
+          );
         }
         if (this.connectionPromise) {
           this.connectionPromise = null;
           reject(error);
         }
       });
-      this.socket.on('disconnect', (reason) => {
-
+      this.socket.on('disconnect', reason => {
         if (reason === 'io server disconnect' || reason === 'transport close') {
-
           this.socket.connect();
         }
         if (this.eventListeners['disconnect']) {
-          this.eventListeners['disconnect'].forEach(callback => callback(reason));
+          this.eventListeners['disconnect'].forEach(callback =>
+            callback(reason)
+          );
         }
       });
-      this.socket.on('reconnect', (attemptNumber) => {
-
+      this.socket.on('reconnect', attemptNumber => {
         if (this.eventListeners['reconnect']) {
-          this.eventListeners['reconnect'].forEach(callback => callback(attemptNumber));
+          this.eventListeners['reconnect'].forEach(callback =>
+            callback(attemptNumber)
+          );
         }
       });
-      this.socket.on('reconnect_attempt', (attemptNumber) => {
-
+      this.socket.on('reconnect_attempt', attemptNumber => {
         if (this.eventListeners['reconnect_attempt']) {
-          this.eventListeners['reconnect_attempt'].forEach(callback => callback(attemptNumber));
+          this.eventListeners['reconnect_attempt'].forEach(callback =>
+            callback(attemptNumber)
+          );
         }
       });
-      this.socket.on('messenger_connected', (data) => {
+      this.socket.on('messenger_connected', data => {
         try {
-
           if (this.eventListeners['messenger_connected']) {
-            this.eventListeners['messenger_connected'].forEach(callback => callback(data));
+            this.eventListeners['messenger_connected'].forEach(callback =>
+              callback(data)
+            );
           }
           this.getContactsStatus();
         } catch (error) {
           console.error('Error processing messenger_connected event:', error);
         }
       });
-      this.socket.on('new_message', (message) => {
+      this.socket.on('new_message', message => {
         try {
-
           if (message && message.user_id) {
             const cachedAvatar = this.getAvatarFromCache(message.user_id);
             if (cachedAvatar) {
@@ -137,67 +137,78 @@ class MessengerService {
             }
           }
           if (this.eventListeners['new_message']) {
-            this.eventListeners['new_message'].forEach(callback => callback(message));
+            this.eventListeners['new_message'].forEach(callback =>
+              callback(message)
+            );
           }
         } catch (error) {
           console.error('Error processing new message:', error);
         }
       });
-      this.socket.on('new_message_notification', (notification) => {
+      this.socket.on('new_message_notification', notification => {
         try {
-
           if (notification && notification.sender_id) {
-            const cachedAvatar = this.getAvatarFromCache(notification.sender_id);
+            const cachedAvatar = this.getAvatarFromCache(
+              notification.sender_id
+            );
             if (cachedAvatar) {
               notification.sender_photo = cachedAvatar;
             }
           }
           if (this.eventListeners['new_message_notification']) {
-            this.eventListeners['new_message_notification'].forEach(callback => callback(notification));
+            this.eventListeners['new_message_notification'].forEach(callback =>
+              callback(notification)
+            );
           }
         } catch (error) {
           console.error('Error processing message notification:', error);
         }
       });
-      this.socket.on('user_status_changed', (statusData) => {
+      this.socket.on('user_status_changed', statusData => {
         try {
-
           if (statusData && statusData.user_id) {
             this.setUserStatusInCache(statusData.user_id, {
               is_online: statusData.is_online,
               last_active: statusData.last_active,
-              timestamp: Date.now()
+              timestamp: Date.now(),
             });
           }
           if (this.eventListeners['user_status_changed']) {
-            this.eventListeners['user_status_changed'].forEach(callback => callback(statusData));
+            this.eventListeners['user_status_changed'].forEach(callback =>
+              callback(statusData)
+            );
           }
         } catch (error) {
           console.error('Error processing user status update:', error);
         }
       });
-      this.socket.on('contacts_status', (statusData) => {
+      this.socket.on('contacts_status', statusData => {
         try {
-
-          if (statusData && statusData.contacts && Array.isArray(statusData.contacts)) {
+          if (
+            statusData &&
+            statusData.contacts &&
+            Array.isArray(statusData.contacts)
+          ) {
             statusData.contacts.forEach(contact => {
               if (contact && contact.user_id) {
                 this.setUserStatusInCache(contact.user_id, {
                   is_online: contact.is_online,
                   last_active: contact.last_active,
-                  timestamp: Date.now()
+                  timestamp: Date.now(),
                 });
               }
             });
           }
           if (this.eventListeners['contacts_status']) {
-            this.eventListeners['contacts_status'].forEach(callback => callback(statusData));
+            this.eventListeners['contacts_status'].forEach(callback =>
+              callback(statusData)
+            );
           }
         } catch (error) {
           console.error('Error processing contacts status data:', error);
         }
       });
-      this.socket.on('error', (error) => {
+      this.socket.on('error', error => {
         console.error('Socket error:', error);
         if (this.eventListeners['error']) {
           this.eventListeners['error'].forEach(callback => callback(error));
@@ -217,15 +228,12 @@ class MessengerService {
       console.warn('Cannot get contacts status: socket not connected');
       return Promise.reject(new Error('Socket not connected'));
     }
-    return new Promise((resolve) => {
-
+    return new Promise(resolve => {
       this.socket.emit('get_contacts_status');
-      resolve(); 
+      resolve();
     });
   }
-  sequentialRejoin(rooms, index) {
-
-  }
+  sequentialRejoin(rooms, index) {}
   on(event, callback) {
     if (!this.eventListeners[event]) {
       this.eventListeners[event] = [];
@@ -234,37 +242,32 @@ class MessengerService {
   }
   off(event, callback) {
     if (this.eventListeners[event]) {
-      this.eventListeners[event] = this.eventListeners[event].filter(cb => cb !== callback);
+      this.eventListeners[event] = this.eventListeners[event].filter(
+        cb => cb !== callback
+      );
     }
   }
   async joinChatRoom(chatId) {
-
     return true;
   }
   async leaveChatRoom(chatId) {
-
     return true;
   }
   disconnect() {
-
     try {
       this.joinedRooms.clear();
 
       Object.keys(this.pendingJoins).forEach(key => {
-
         delete this.pendingJoins[key];
       });
       Object.keys(this.joinThrottleTimers).forEach(key => {
-
         clearTimeout(this.joinThrottleTimers[key]);
         delete this.joinThrottleTimers[key];
       });
       Object.keys(this.pendingRequests).forEach(key => {
-
         delete this.pendingRequests[key];
       });
       if (this.socket) {
-
         this.socket.disconnect();
         this.socket = null;
       }
@@ -275,12 +278,12 @@ class MessengerService {
 
       return true;
     } catch (error) {
-      console.error("Error during socket disconnect:", error);
+      console.error('Error during socket disconnect:', error);
       if (this.socket) {
         try {
           this.socket.disconnect();
         } catch (e) {
-          console.error("Error during forced socket disconnect:", e);
+          console.error('Error during forced socket disconnect:', e);
         }
         this.socket = null;
       }
@@ -295,7 +298,7 @@ class MessengerService {
       cached.timestamp = Date.now();
       return {
         is_online: cached.is_online,
-        last_active: cached.last_active
+        last_active: cached.last_active,
       };
     }
     return null;
@@ -305,7 +308,7 @@ class MessengerService {
       this.userStatusCache.set(String(userId), {
         is_online: status.is_online,
         last_active: status.last_active,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     }
   }
@@ -314,51 +317,49 @@ class MessengerService {
     if (this.pendingRequests[requestKey]) {
       return this.pendingRequests[requestKey];
     }
-    this.pendingRequests[requestKey] = axios.get(`${API_URL}/api/messenger/chats`, {
-      params: { page, per_page: perPage }
-    })
-    .then(async response => {
-      if (response.data && response.data.chats) {
-        response.data.chats.forEach(chat => {
-          if (chat.user && chat.user.id) {
-            const cachedAvatar = this.getAvatarFromCache(chat.user.id);
-            if (cachedAvatar) {
-              chat.user.photo = cachedAvatar;
-            } else if (chat.user.photo) {
-              this.setAvatarInCache(chat.user.id, chat.user.photo);
+    this.pendingRequests[requestKey] = axios
+      .get(`${API_URL}/api/messenger/chats`, {
+        params: { page, per_page: perPage },
+      })
+      .then(async response => {
+        if (response.data && response.data.chats) {
+          response.data.chats.forEach(chat => {
+            if (chat.user && chat.user.id) {
+              const cachedAvatar = this.getAvatarFromCache(chat.user.id);
+              if (cachedAvatar) {
+                chat.user.photo = cachedAvatar;
+              } else if (chat.user.photo) {
+                this.setAvatarInCache(chat.user.id, chat.user.photo);
+              }
+              const userStatus = this.getUserStatusFromCache(chat.user.id);
+              if (userStatus) {
+                chat.user.is_online = userStatus.is_online;
+                chat.user.last_active = userStatus.last_active;
+              }
             }
-            const userStatus = this.getUserStatusFromCache(chat.user.id);
-            if (userStatus) {
-              chat.user.is_online = userStatus.is_online;
-              chat.user.last_active = userStatus.last_active;
-            }
+          });
+          try {
+            await this.initSocket();
+          } catch (error) {
+            console.warn('Failed to initialize socket for messenger:', error);
           }
-        });
-        try {
-          await this.initSocket();
-
-        } catch (error) {
-          console.warn("Failed to initialize socket for messenger:", error);
         }
-      }
-      return response.data;
-    })
-    .catch(error => {
-      console.error('Error fetching chats:', error);
-      return {
-        success: false,
-        error: error.response?.data?.message || 'Failed to load chat list',
-        chats: []
-      };
-    })
-    .finally(() => {
-      setTimeout(() => delete this.pendingRequests[requestKey], 2000);
-    });
+        return response.data;
+      })
+      .catch(error => {
+        console.error('Error fetching chats:', error);
+        return {
+          success: false,
+          error: error.response?.data?.message || 'Failed to load chat list',
+          chats: [],
+        };
+      })
+      .finally(() => {
+        setTimeout(() => delete this.pendingRequests[requestKey], 2000);
+      });
     return this.pendingRequests[requestKey];
   }
-  sequentialJoin(rooms, index) {
-
-  }
+  sequentialJoin(rooms, index) {}
   async getMessages(chatId, page = 1, perPage = 50) {
     try {
       const requestKey = `getMessages-${chatId}-${page}-${perPage}`;
@@ -368,45 +369,56 @@ class MessengerService {
 
       await this.initSocket();
       const url = `${API_URL}/api/messenger/chats/${chatId}/messages?page=${page}&per_page=${perPage}`;
-      this.pendingRequests[requestKey] = axios.get(url, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 10000
-      })
-      .then(response => {
-        if (response.data) {
-          if (response.data.messages && Array.isArray(response.data.messages)) {
-            response.data.messages = response.data.messages.map(message => {
-              if (message.user_id) {
-                const cachedAvatar = this.getAvatarFromCache(message.user_id);
-                if (cachedAvatar) {
-                  message.sender_photo = cachedAvatar;
-                } else if (message.sender_photo) {
-                  this.setAvatarInCache(message.user_id, message.sender_photo);
-                }
-              }
-              return this.normalizeMessage(message, chatId);
-            }).filter(Boolean); 
-          } else {
-            response.data.messages = [];
+      this.pendingRequests[requestKey] = axios
+        .get(url, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000,
+        })
+        .then(response => {
+          if (response.data) {
+            if (
+              response.data.messages &&
+              Array.isArray(response.data.messages)
+            ) {
+              response.data.messages = response.data.messages
+                .map(message => {
+                  if (message.user_id) {
+                    const cachedAvatar = this.getAvatarFromCache(
+                      message.user_id
+                    );
+                    if (cachedAvatar) {
+                      message.sender_photo = cachedAvatar;
+                    } else if (message.sender_photo) {
+                      this.setAvatarInCache(
+                        message.user_id,
+                        message.sender_photo
+                      );
+                    }
+                  }
+                  return this.normalizeMessage(message, chatId);
+                })
+                .filter(Boolean);
+            } else {
+              response.data.messages = [];
+            }
+            return response.data;
           }
-          return response.data;
-        }
-        throw new Error('Invalid response format');
-      })
-      .catch(error => {
-        console.error(`Error getting messages for chat ${chatId}:`, error);
-        return {
-          success: false,
-          error: error.message || 'Error fetching messages',
-          messages: [],
-          chat: { id: chatId, name: `Чат ${chatId}` }
-        };
-      })
-      .finally(() => {
-        setTimeout(() => delete this.pendingRequests[requestKey], 2000);
-      });
+          throw new Error('Invalid response format');
+        })
+        .catch(error => {
+          console.error(`Error getting messages for chat ${chatId}:`, error);
+          return {
+            success: false,
+            error: error.message || 'Error fetching messages',
+            messages: [],
+            chat: { id: chatId, name: `Чат ${chatId}` },
+          };
+        })
+        .finally(() => {
+          setTimeout(() => delete this.pendingRequests[requestKey], 2000);
+        });
       return this.pendingRequests[requestKey];
     } catch (error) {
       console.error(`Fatal error in getMessages for chat ${chatId}:`, error);
@@ -414,7 +426,7 @@ class MessengerService {
         success: false,
         error: 'Failed to load messages',
         messages: [],
-        chat: { id: chatId, name: `Чат ${chatId}` }
+        chat: { id: chatId, name: `Чат ${chatId}` },
       };
     }
   }
@@ -424,14 +436,14 @@ class MessengerService {
         return {
           success: false,
           error: 'Invalid chat ID',
-          message: null
+          message: null,
         };
       }
       if (content === '' && (!attachments || attachments.length === 0)) {
         return {
           success: false,
           error: 'Empty message without attachments',
-          message: null
+          message: null,
         };
       }
       let socketSuccess = false;
@@ -443,23 +455,26 @@ class MessengerService {
             return socketResult;
           }
         } catch (socketError) {
-          console.warn('Socket message failed, using HTTP fallback:', socketError);
+          console.warn(
+            'Socket message failed, using HTTP fallback:',
+            socketError
+          );
         }
       }
       if (socketSuccess) {
         return { success: true, message: null };
       }
       const payload = {
-        content: content || ''
+        content: content || '',
       };
       const response = await axios.post(
         `${API_URL}/api/messenger/chats/${chatId}/messages`,
         payload,
         {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          timeout: 15000
+          timeout: 15000,
         }
       );
       if (!response.data || !response.data.success) {
@@ -471,7 +486,12 @@ class MessengerService {
       const messageId = response.data.message.id;
       const attachmentIds = [];
       for (const file of attachments) {
-        if (file.url && !file.url.startsWith('blob:') && file.id && !file.id.startsWith('temp-')) {
+        if (
+          file.url &&
+          !file.url.startsWith('blob:') &&
+          file.id &&
+          !file.id.startsWith('temp-')
+        ) {
           attachmentIds.push(file.id);
           continue;
         }
@@ -481,7 +501,11 @@ class MessengerService {
         }
       }
       if (attachmentIds.length > 0) {
-        const updateResult = await this.updateMessageWithAttachments(chatId, messageId, attachmentIds);
+        const updateResult = await this.updateMessageWithAttachments(
+          chatId,
+          messageId,
+          attachmentIds
+        );
         if (updateResult.success && updateResult.message) {
           response.data.message = updateResult.message;
         }
@@ -492,20 +516,23 @@ class MessengerService {
       if (error.response) {
         return {
           success: false,
-          error: error.response.data?.message || error.response.data?.error || 'Server error',
-          message: null
+          error:
+            error.response.data?.message ||
+            error.response.data?.error ||
+            'Server error',
+          message: null,
         };
       } else if (error.request) {
         return {
           success: false,
           error: 'Network error - server did not respond',
-          message: null
+          message: null,
         };
       } else {
         return {
           success: false,
           error: error.message || 'Failed to send message',
-          message: null
+          message: null,
         };
       }
     }
@@ -522,7 +549,7 @@ class MessengerService {
     if (userId && url) {
       this.avatarCache.set(String(userId), {
         url: url,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
     }
   }
@@ -538,7 +565,7 @@ class MessengerService {
       if (response.data && response.data.success && response.data.user) {
         this.userProfileCache.set(String(userId), {
           profile: response.data.user,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
         if (response.data.user.photo) {
           this.setAvatarInCache(userId, response.data.user.photo);
@@ -564,12 +591,16 @@ class MessengerService {
       const messageId = message.id || `temp-${Date.now()}`;
       const userId = message.user_id;
       const chatIdValue = message.chat_id || chatId;
-      const content = typeof message.content === 'string' ? message.content : 
-                     (typeof message.content === 'object' ? JSON.stringify(message.content) : '');
+      const content =
+        typeof message.content === 'string'
+          ? message.content
+          : typeof message.content === 'object'
+            ? JSON.stringify(message.content)
+            : '';
       const createdAt = message.created_at || new Date().toISOString();
       const updatedAt = message.updated_at || createdAt;
       const senderName = message.sender_name || 'Unknown User';
-      let senderPhoto = '/static/img/avatar.png'; 
+      let senderPhoto = '/static/img/avatar.png';
       if (userId) {
         const cachedAvatar = this.getAvatarFromCache(userId);
         if (cachedAvatar) {
@@ -577,7 +608,10 @@ class MessengerService {
         } else if (message.sender_photo) {
           if (message.avatar_url) {
             senderPhoto = message.avatar_url;
-          } else if (message.sender_photo.startsWith('http') || message.sender_photo.startsWith('/')) {
+          } else if (
+            message.sender_photo.startsWith('http') ||
+            message.sender_photo.startsWith('/')
+          ) {
             senderPhoto = message.sender_photo;
           } else {
             senderPhoto = `/static/uploads/avatar/${userId}/${message.sender_photo}`;
@@ -587,26 +621,33 @@ class MessengerService {
       }
       let attachments = [];
       if (message.attachments && Array.isArray(message.attachments)) {
-        attachments = message.attachments.map(attachment => {
-          if (!attachment) return null;
-          let url = attachment.url || '';
-          if (url && !url.startsWith('http') && !url.startsWith('/')) {
-            url = `/${url}`;
-          } else if (!url && attachment.file_path) {
-            url = attachment.file_path.startsWith('/') ? attachment.file_path : `/${attachment.file_path}`;
-          }
-          return {
-            id: attachment.id || `temp-${Date.now()}`,
-            type: attachment.type || attachment.file_type || 'file',
-            name: attachment.name || attachment.file_name || 'File',
-            file_name: attachment.file_name || attachment.name || 'File',
-            file_size: attachment.file_size || attachment.size || 0,
-            file_type: attachment.file_type || attachment.type || 'application/octet-stream',
-            url: url,
-            file_path: attachment.file_path || '',
-            uploaded_at: attachment.uploaded_at || createdAt
-          };
-        }).filter(Boolean); 
+        attachments = message.attachments
+          .map(attachment => {
+            if (!attachment) return null;
+            let url = attachment.url || '';
+            if (url && !url.startsWith('http') && !url.startsWith('/')) {
+              url = `/${url}`;
+            } else if (!url && attachment.file_path) {
+              url = attachment.file_path.startsWith('/')
+                ? attachment.file_path
+                : `/${attachment.file_path}`;
+            }
+            return {
+              id: attachment.id || `temp-${Date.now()}`,
+              type: attachment.type || attachment.file_type || 'file',
+              name: attachment.name || attachment.file_name || 'File',
+              file_name: attachment.file_name || attachment.name || 'File',
+              file_size: attachment.file_size || attachment.size || 0,
+              file_type:
+                attachment.file_type ||
+                attachment.type ||
+                'application/octet-stream',
+              url: url,
+              file_path: attachment.file_path || '',
+              uploaded_at: attachment.uploaded_at || createdAt,
+            };
+          })
+          .filter(Boolean);
       }
       return {
         id: messageId,
@@ -618,13 +659,19 @@ class MessengerService {
         sender_name: senderName,
         sender_photo: senderPhoto,
         is_read: Boolean(message.is_read),
-        has_attachment: attachments.length > 0 || Boolean(message.has_attachment),
+        has_attachment:
+          attachments.length > 0 || Boolean(message.has_attachment),
         attachments: attachments,
         is_optimistic: Boolean(message.is_optimistic),
-        error: message.error || null
+        error: message.error || null,
       };
     } catch (error) {
-      console.error('Error normalizing message:', error, 'Raw message:', message);
+      console.error(
+        'Error normalizing message:',
+        error,
+        'Raw message:',
+        message
+      );
       return null;
     }
   }
@@ -643,8 +690,11 @@ class MessengerService {
               if (userData && userData.photo) {
                 this.setAvatarInCache(message.user_id, userData.photo);
                 if (this.eventListeners['avatar_updated']) {
-                  this.eventListeners['avatar_updated'].forEach(callback => 
-                    callback({user_id: message.user_id, avatar_url: userData.photo})
+                  this.eventListeners['avatar_updated'].forEach(callback =>
+                    callback({
+                      user_id: message.user_id,
+                      avatar_url: userData.photo,
+                    })
                   );
                 }
               }
@@ -656,7 +706,7 @@ class MessengerService {
       }
       return this.normalizeMessage(message);
     } catch (error) {
-      console.error("Error processing socket message:", error);
+      console.error('Error processing socket message:', error);
       return null;
     }
   }
@@ -668,15 +718,14 @@ class MessengerService {
         throw new Error('Socket.IO not connected');
       }
       return new Promise((resolve, reject) => {
-
         const messageData = {
           chat_id: chatId,
-          content
+          content,
         };
         if (attachmentId) {
           messageData.attachment_id = attachmentId;
         }
-        this.socket.emit('send_message', messageData, (response) => {
+        this.socket.emit('send_message', messageData, response => {
           if (response === true) {
             resolve({ success: true });
           } else {
@@ -685,7 +734,7 @@ class MessengerService {
         });
         setTimeout(() => {
           reject(new Error('Socket message send timeout'));
-        }, 8000); 
+        }, 8000);
       });
     } catch (error) {
       console.error('Error sending message via socket:', error);
@@ -694,7 +743,6 @@ class MessengerService {
   }
   async uploadAttachment(fileOrFormData, chatId = null, nocache = null) {
     try {
-
       let formData;
       if (fileOrFormData instanceof FormData) {
         formData = fileOrFormData;
@@ -704,7 +752,10 @@ class MessengerService {
         }
       } else {
         formData = new FormData();
-        const fileToUpload = fileOrFormData instanceof File ? fileOrFormData : (fileOrFormData.rawFile || fileOrFormData);
+        const fileToUpload =
+          fileOrFormData instanceof File
+            ? fileOrFormData
+            : fileOrFormData.rawFile || fileOrFormData;
 
         formData.append('file', fileToUpload);
         if (chatId) {
@@ -714,22 +765,17 @@ class MessengerService {
       formData.append('timestamp', Date.now().toString());
 
       for (let pair of formData.entries()) {
-
       }
-      const uploadUrl = nocache 
-        ? `${API_URL}/api/messenger/upload?_nocache=${nocache}` 
+      const uploadUrl = nocache
+        ? `${API_URL}/api/messenger/upload?_nocache=${nocache}`
         : `${API_URL}/api/messenger/upload`;
 
-      const response = await axios.post(
-        uploadUrl,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          timeout: 30000 
-        }
-      );
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 30000,
+      });
 
       return response.data;
     } catch (error) {
@@ -741,31 +787,39 @@ class MessengerService {
       }
       return {
         success: false,
-        error: error.response?.data?.message || error.message || 'Не удалось загрузить вложение'
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          'Не удалось загрузить вложение',
       };
     }
   }
   async markMessagesRead(chatId) {
     try {
-      const response = await axios.post(`${API_URL}/api/messenger/chats/${chatId}/read`);
+      const response = await axios.post(
+        `${API_URL}/api/messenger/chats/${chatId}/read`
+      );
       return response.data;
     } catch (error) {
       console.error('Error marking messages as read:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to mark messages as read'
+        error:
+          error.response?.data?.message || 'Failed to mark messages as read',
       };
     }
   }
   async deleteChat(chatId) {
     try {
-      const response = await axios.delete(`${API_URL}/api/messenger/chats/${chatId}`);
+      const response = await axios.delete(
+        `${API_URL}/api/messenger/chats/${chatId}`
+      );
       return response.data;
     } catch (error) {
       console.error('Error deleting chat:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to delete chat'
+        error: error.response?.data?.message || 'Failed to delete chat',
       };
     }
   }
@@ -777,9 +831,10 @@ class MessengerService {
       console.error('Error getting unread message count:', error);
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to get unread message count',
+        error:
+          error.response?.data?.message || 'Failed to get unread message count',
         total_unread: 0,
-        chats_unread: {}
+        chats_unread: {},
       };
     }
   }
@@ -792,20 +847,19 @@ class MessengerService {
       return {
         success: true,
         user: {
-          id: 1, 
-          name: 'Текущий пользователь', 
+          id: 1,
+          name: 'Текущий пользователь',
           username: 'current_user',
-          photo: '/static/img/avatar.png', 
-          is_online: true
-        }
+          photo: '/static/img/avatar.png',
+          is_online: true,
+        },
       };
     }
   }
   async updateMessageWithAttachments(chatId, messageId, attachmentIds) {
     try {
-
       const response = await axios.put(
-        `${API_URL}/api/messenger/chats/${chatId}/messages/${messageId}`,
+        `${API_URL}/api/messenger/chats/${chatId}/messages/${messageId}`
       );
 
       return response.data;
@@ -815,15 +869,17 @@ class MessengerService {
         console.error('Ответ сервера с ошибкой:', error.response.data);
         return {
           success: false,
-          error: error.response.data?.error || 'Ошибка сервера при обновлении сообщения'
+          error:
+            error.response.data?.error ||
+            'Ошибка сервера при обновлении сообщения',
         };
       }
       return {
         success: false,
-        error: error.message || 'Не удалось обновить сообщение с вложениями'
+        error: error.message || 'Не удалось обновить сообщение с вложениями',
       };
     }
   }
 }
 const messengerService = new MessengerService();
-export default messengerService; 
+export default messengerService;

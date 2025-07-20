@@ -10,4 +10,4 @@ export function FriendsRedirect() {
   // If not logged in, redirect to login or show error
   window.location.replace('/login');
   return null;
-} 
+}

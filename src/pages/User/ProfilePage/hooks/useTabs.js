@@ -10,6 +10,6 @@ export const useTabs = (initialValue = 0) => {
   return {
     tabValue,
     setTabValue,
-    handleTabChange
+    handleTabChange,
   };
-}; 
+};

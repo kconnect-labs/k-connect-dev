@@ -15,11 +15,12 @@ import { ThemeSettingsContext } from '../../App';
 const MenuContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
   zIndex: 1000,
-  backgroundColor: theme.palette.mode === 'light' 
-    ? 'rgba(255,255,255,0.03)'
-    : theme.palette.mode === 'contrast'
-      ? '#101010'
-      : 'rgba(255,255,255,0.03)',
+  backgroundColor:
+    theme.palette.mode === 'light'
+      ? 'rgba(255,255,255,0.03)'
+      : theme.palette.mode === 'contrast'
+        ? '#101010'
+        : 'rgba(255,255,255,0.03)',
   backdropFilter: 'blur(10px)',
   borderRadius: 8,
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
@@ -27,9 +28,10 @@ const MenuContainer = styled(Box)(({ theme }) => ({
   padding: '6px 0',
   overflow: 'hidden',
   animation: 'fadeIn 0.15s ease-out',
-  border: theme.palette.mode === 'light'
-    ? '1px solid rgba(0, 0, 0, 0.08)'
-    : '1px solid rgba(255, 255, 255, 0.1)',
+  border:
+    theme.palette.mode === 'light'
+      ? '1px solid rgba(0, 0, 0, 0.08)'
+      : '1px solid rgba(255, 255, 255, 0.1)',
   '@keyframes fadeIn': {
     from: {
       opacity: 0,
@@ -49,10 +51,13 @@ const MenuItem = styled(Box)(({ theme, disabled }) => ({
   cursor: disabled ? 'not-allowed' : 'pointer',
   transition: 'background-color 0.2s',
   userSelect: 'none',
-  color: theme.palette.mode === 'light' ? theme.palette.text.primary : '#E6E6E6',
+  color:
+    theme.palette.mode === 'light' ? theme.palette.text.primary : '#E6E6E6',
   opacity: disabled ? 0.5 : 1,
   '&:hover': {
-    backgroundColor: disabled ? 'transparent' : alpha(theme.palette.primary.main, 0.12),
+    backgroundColor: disabled
+      ? 'transparent'
+      : alpha(theme.palette.primary.main, 0.12),
   },
 }));
 
@@ -68,7 +73,8 @@ const MenuIcon = styled(Box)(({ theme }) => ({
 
 const MenuLabel = styled(Box)(({ theme }) => ({
   fontSize: 14,
-  color: theme.palette.mode === 'light' ? theme.palette.text.primary : '#E6E6E6',
+  color:
+    theme.palette.mode === 'light' ? theme.palette.text.primary : '#E6E6E6',
 }));
 
 const ContextMenu = ({ items, x, y, show, onClose }) => {
@@ -83,24 +89,24 @@ const ContextMenu = ({ items, x, y, show, onClose }) => {
       const rect = menu.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      
+
       let adjustedX = x - rect.width;
       let adjustedY = y;
-      
+
       if (adjustedX < 0) {
         adjustedX = 0;
       }
-      
+
       if (adjustedY + rect.height > viewportHeight) {
         adjustedY = viewportHeight - rect.height;
       }
-      
+
       setPosition({ x: adjustedX, y: adjustedY });
     }
   }, [show, x, y]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = event => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         onClose();
       }
@@ -109,14 +115,14 @@ const ContextMenu = ({ items, x, y, show, onClose }) => {
     if (show) {
       document.addEventListener('mousedown', handleClickOutside);
     }
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [show, onClose]);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = e => {
       if (e.key === 'Escape') {
         onClose();
       }
@@ -125,7 +131,7 @@ const ContextMenu = ({ items, x, y, show, onClose }) => {
     if (show) {
       document.addEventListener('keydown', handleEscape);
     }
-    
+
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
@@ -134,16 +140,16 @@ const ContextMenu = ({ items, x, y, show, onClose }) => {
   if (!show) return null;
 
   return (
-    <MenuContainer 
+    <MenuContainer
       ref={menuRef}
       sx={{
         left: `${position.x}px`,
-        top: `${position.y}px`
+        top: `${position.y}px`,
       }}
     >
-      {items.map((item) => (
-        <MenuItem 
-          key={item.id} 
+      {items.map(item => (
+        <MenuItem
+          key={item.id}
           disabled={item.disabled}
           onClick={() => {
             if (!item.disabled) {
@@ -160,4 +166,4 @@ const ContextMenu = ({ items, x, y, show, onClose }) => {
   );
 };
 
-export default ContextMenu; 
+export default ContextMenu;

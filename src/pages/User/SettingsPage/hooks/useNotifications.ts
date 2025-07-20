@@ -1,7 +1,10 @@
 import { useState, useCallback } from 'react';
 
 interface UseNotificationsReturn {
-  showNotification: (severity: 'success' | 'error' | 'warning' | 'info', message: string) => void;
+  showNotification: (
+    severity: 'success' | 'error' | 'warning' | 'info',
+    message: string
+  ) => void;
   closeNotification: () => void;
   notification: {
     open: boolean;
@@ -17,13 +20,16 @@ export const useNotifications = (): UseNotificationsReturn => {
     severity: 'success' as const,
   });
 
-  const showNotification = useCallback((severity: 'success' | 'error' | 'warning' | 'info', message: string) => {
-    setNotification({
-      open: true,
-      message,
-      severity,
-    });
-  }, []);
+  const showNotification = useCallback(
+    (severity: 'success' | 'error' | 'warning' | 'info', message: string) => {
+      setNotification({
+        open: true,
+        message,
+        severity,
+      });
+    },
+    []
+  );
 
   const closeNotification = useCallback(() => {
     setNotification(prev => ({
@@ -37,4 +43,4 @@ export const useNotifications = (): UseNotificationsReturn => {
     closeNotification,
     notification,
   };
-}; 
+};

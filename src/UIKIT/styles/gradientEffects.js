@@ -63,10 +63,15 @@ export const gradientEffects = {
   },
 };
 
-export const getGradientEffects = (theme, variant = 'dark', customColors, options = {}) => {
+export const getGradientEffects = (
+  theme,
+  variant = 'dark',
+  customColors,
+  options = {}
+) => {
   const colors = customColors || {
     start: '#B69DF8',
-    end: '#D0BCFF'
+    end: '#D0BCFF',
   };
   const position = options.position || 'center';
 
@@ -101,12 +106,11 @@ export const getGradientEffects = (theme, variant = 'dark', customColors, option
 
 export const gradientBorder = (theme, variant = 'dark') => ({
   border: `1px solid ${variant === 'dark' ? 'rgba(255, 255, 255, 0.1)' : alpha(theme.palette.primary.main, 0.2)}`,
-  background: variant === 'dark' 
-    ? '#1c1c1c' 
-    : alpha(theme.palette.background.paper, 0.8),
+  background:
+    variant === 'dark' ? '#1c1c1c' : alpha(theme.palette.background.paper, 0.8),
   backdropFilter: 'blur(10px)',
   borderRadius: '16px',
   position: 'relative',
   overflow: 'hidden',
   zIndex: 2,
-}); 
+});

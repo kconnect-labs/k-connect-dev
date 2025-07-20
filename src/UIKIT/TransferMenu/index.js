@@ -1,3 +1,3 @@
 import TransferMenu from './TransferMenu';
 
-export default TransferMenu; 
+export default TransferMenu;

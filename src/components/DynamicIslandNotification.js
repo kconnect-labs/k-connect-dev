@@ -57,21 +57,21 @@ const dropAnimation = keyframes`
 
 // Styled components for the notification
 const NotificationContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isVisible' && prop !== 'animationType'
+  shouldForwardProp: prop => prop !== 'isVisible' && prop !== 'animationType',
 })(({ theme, isVisible, animationType }) => {
-  const animation = isVisible 
+  const animation = isVisible
     ? `${pillExpand} 0.5s forwards`
     : `${pillContract} 0.5s forwards`;
-  
+
   const pulseAnim = `${pulseAnimation} 2s infinite`;
   const bounceAnim = `${bounceAnimation} 2s infinite`;
   const dropAnim = `${dropAnimation} 0.5s forwards`;
-  
+
   let additionalAnimation = '';
   if (animationType === 'pulse') additionalAnimation = pulseAnim;
   if (animationType === 'bounce') additionalAnimation = bounceAnim;
   if (animationType === 'drop') additionalAnimation = dropAnim;
-  
+
   return {
     position: 'fixed',
     top: 20,
@@ -110,22 +110,22 @@ const NotificationContainer = styled(Box, {
       filter: 'blur(2px)',
       '& svg': {
         filter: `drop-shadow(0 0 8px ${alpha(theme.palette.primary.main, 0.6)})`,
-      }
-    }
+      },
+    },
   };
 });
 
 const IconContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'notificationType',
+  shouldForwardProp: prop => prop !== 'notificationType',
 })(({ theme, notificationType }) => {
   const colors = {
     success: '#4caf50',
     error: '#ff5252',
     warning: '#fb8c00',
     info: '#2196f3',
-    notification: '#D0BCFF'
+    notification: '#D0BCFF',
   };
-  
+
   return {
     display: 'flex',
     alignItems: 'center',
@@ -133,8 +133,8 @@ const IconContainer = styled(Box, {
     marginRight: 12,
     color: colors[notificationType] || colors.info,
     '& svg': {
-      fontSize: 20
-    }
+      fontSize: 20,
+    },
   };
 });
 
@@ -146,7 +146,7 @@ const MessageContainer = styled(Box)({
   overflow: 'hidden',
 });
 
-const getNotificationIcon = (type) => {
+const getNotificationIcon = type => {
   switch (type) {
     case 'comment_like':
     case 'reply_like':
@@ -162,7 +162,7 @@ const getNotificationIcon = (type) => {
     case 'wall_post':
       return <PostAddIcon sx={{ fontSize: '3rem' }} />;
     case 'points_transfer':
-      return <Icon icon={walletMoneyIcon} width="3rem" height="3rem" />;
+      return <Icon icon={walletMoneyIcon} width='3rem' height='3rem' />;
     case 'badge_purchase':
     case 'username_auction_bid':
     case 'username_bid_accepted':
@@ -192,7 +192,8 @@ const getNotificationIcon = (type) => {
 
 const getNotificationMessage = (notification, t) => {
   // If t is not available (language context not ready), return the raw message
-  if (!t || !notification || !notification.message) return notification?.message || '';
+  if (!t || !notification || !notification.message)
+    return notification?.message || '';
 
   const pointsMatch = notification.message.match(/(\d+)\s+балл[а-я]*/);
   const points = pointsMatch ? pointsMatch[1] : null;
@@ -213,16 +214,23 @@ const getNotificationMessage = (notification, t) => {
     case 'post_repost':
       return t('notifications.messages.post_repost');
     case 'points_transfer':
-      return points ? t('notifications.messages.points_transfer', { points }) : notification.message;
+      return points
+        ? t('notifications.messages.points_transfer', { points })
+        : notification.message;
     case 'badge_purchase':
-      return badgeName && price && royalty 
-        ? t('notifications.messages.badge_purchase', { badge: badgeName, price, royalty })
+      return badgeName && price && royalty
+        ? t('notifications.messages.badge_purchase', {
+            badge: badgeName,
+            price,
+            royalty,
+          })
         : notification.message;
     case 'wall_post':
       return t('notifications.messages.wall_post');
     case 'comment_reply':
-      return t('notifications.messages.comment_reply', { 
-        username: notification.sender_user?.name || t('notifications.user.default')
+      return t('notifications.messages.comment_reply', {
+        username:
+          notification.sender_user?.name || t('notifications.user.default'),
       });
     default:
       return notification.message;
@@ -232,16 +240,16 @@ const getNotificationMessage = (notification, t) => {
 /**
  * Dynamic Island style notification component
  */
-const DynamicIslandNotification = ({ 
+const DynamicIslandNotification = ({
   open = false,
-  message = "",
-  shortMessage = "",
-  notificationType = "info",
-  animationType = "pill",
+  message = '',
+  shortMessage = '',
+  notificationType = 'info',
+  animationType = 'pill',
   autoHideDuration = 3000,
   onClose = () => {},
   icon = null,
-  notificationData = null
+  notificationData = null,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   let t;
@@ -253,30 +261,30 @@ const DynamicIslandNotification = ({
     // Language context not available, use a fallback
     t = null;
   }
-  
+
   // Handle visibility with animation timing
   useEffect(() => {
     if (open) {
       setIsVisible(true);
-      
+
       // Auto hide after duration
       const timer = setTimeout(() => {
         setIsVisible(false);
-        
+
         // Additional delay to allow exit animation to complete
         setTimeout(() => {
           onClose();
         }, 500);
       }, autoHideDuration);
-      
+
       return () => clearTimeout(timer);
     }
   }, [open, autoHideDuration, onClose]);
-  
+
   // Select the right icon based on notification type
   const getIcon = () => {
     if (icon) return icon;
-    
+
     switch (notificationType) {
       case 'success':
         return <CheckCircleIcon />;
@@ -293,45 +301,45 @@ const DynamicIslandNotification = ({
         return <InfoIcon />;
     }
   };
-  
+
   const getDisplayMessage = () => {
     if (notificationData) {
       return getNotificationMessage(notificationData, t);
     }
     return message;
   };
-  
+
   // Bail out if not open
   if (!open && !isVisible) return null;
-  
+
   return (
     <NotificationContainer isVisible={isVisible} animationType={animationType}>
-      <div className="animation-wrapper">
+      <div className='animation-wrapper'>
         <IconContainer notificationType={notificationType}>
           {getIcon()}
         </IconContainer>
-        
+
         {isVisible && (
           <MessageContainer>
-            <Typography 
-              variant="subtitle2" 
-              sx={{ 
+            <Typography
+              variant='subtitle2'
+              sx={{
                 fontWeight: 'bold',
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
-                textOverflow: 'ellipsis'
+                textOverflow: 'ellipsis',
               }}
             >
               {shortMessage || getDisplayMessage()}
             </Typography>
             {shortMessage && message && shortMessage !== message && (
-              <Typography 
-                variant="caption" 
-                sx={{ 
+              <Typography
+                variant='caption'
+                sx={{
                   opacity: 0.7,
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
                 }}
               >
                 {getDisplayMessage()}
@@ -340,11 +348,13 @@ const DynamicIslandNotification = ({
           </MessageContainer>
         )}
       </div>
-      <Box className="notification-bg-icon">
-        {notificationData ? getNotificationIcon(notificationData.type) : getNotificationIcon('default')}
+      <Box className='notification-bg-icon'>
+        {notificationData
+          ? getNotificationIcon(notificationData.type)
+          : getNotificationIcon('default')}
       </Box>
     </NotificationContainer>
   );
 };
 
-export default DynamicIslandNotification; 
+export default DynamicIslandNotification;
