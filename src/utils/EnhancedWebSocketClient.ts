@@ -60,7 +60,7 @@ export default class EnhancedWebSocketClient {
   private eventHandlers: { [key: string]: Function[] };
   private stats: WebSocketStats;
   private clientInfo: ClientInfo;
-  private lastPong: number;
+  private lastPong: number = 0;
 
   constructor(config: WebSocketConfig = {}) {
     // Configuration
@@ -321,11 +321,11 @@ export default class EnhancedWebSocketClient {
     tempId: string | null = null
   ): boolean {
     return this.sendMessage({
-      type: 'chat_message',
-      chat_id: chatId,
+      type: 'send_message',
+      chatId: chatId,
       text,
-      reply_to_id: replyToId,
-      temp_id: tempId,
+      replyToId: replyToId,
+      tempId: tempId,
     });
   }
 
@@ -385,13 +385,19 @@ export default class EnhancedWebSocketClient {
         case 'connected':
           this.handleConnected(data);
           break;
+        case 'message_sent':
+          this.emit('message_sent', data);
+          break;
+        case 'new_message':
+          this.emit('new_message', data);
+          break;
         case 'chat_message':
         case 'typing_start':
         case 'typing_end':
         case 'read_receipt':
         case 'message_deleted':
-        case 'chat_list':
-        case 'message_list':
+        case 'chats':
+        case 'messages':
         case 'error':
           this.emit(data.type, data);
           break;

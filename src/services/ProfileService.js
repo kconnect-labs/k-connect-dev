@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SessionContext } from '../App';
+import { SessionContext } from '../context/SessionContext';
 
 let sessionContext = {
   checkSessionStatus: () => true,

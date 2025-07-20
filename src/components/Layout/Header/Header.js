@@ -79,12 +79,18 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   position: 'fixed',
+  left: '50%',
+  transform: 'translateX(-50%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  borderRadius: '0 !important',
+  borderRadius: '12px',
+  width: '100%',
   zIndex: theme.zIndex.appBar,
-  [theme.breakpoints.up('md')]: {
-    width: '100%',
+  [theme.breakpoints.down('md')]: {
+    top: 4,
+    width: 'calc(100% - 5px)',
+    left: '2.5px',
+    transform: 'none',
   },
   height: 48,
 }));

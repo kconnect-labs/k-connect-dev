@@ -50,7 +50,7 @@
 /* Responsive breakpoints */
 @media (min-width: 1200px) {
   .sidebar-container {
-    width: 230px;
+    width: 220px;
     margin-right: 0;
     margin-left: auto;
   }

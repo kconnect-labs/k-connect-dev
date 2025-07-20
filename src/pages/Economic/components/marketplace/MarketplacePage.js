@@ -102,7 +102,6 @@ const MarketplacePage = () => {
         );
         if (response.data.success) {
           setListings(response.data.listings);
-
           // Предзагружаем изображения для всех листингов
           if (response.data.listings && response.data.listings.length > 0) {
             const imageItems = response.data.listings.map(listing => ({
@@ -188,6 +187,13 @@ const MarketplacePage = () => {
   };
 
   const handleItemClick = item => {
+    if (!item || !item.id || !item.item) {
+      console.error('Invalid marketplace item:', item);
+      enqueueSnackbar('Ошибка: не удалось открыть информацию о предмете', {
+        variant: 'error',
+      });
+      return;
+    }
     setSelectedItem(item);
   };
 

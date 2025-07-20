@@ -112,9 +112,6 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const [loading, setLoading] = useState(false);
   const { user: currentUser } = useContext(AuthContext);
   const [copyStatus, setCopyStatus] = useState('');
-
-  if (!listing) return null;
-
   const { item, price, seller_name, seller_id } = listing;
   const isOwner = currentUser?.id === seller_id;
 
@@ -149,6 +146,14 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const handlePurchase = async () => {
     try {
       setLoading(true);
+      
+      if (!listing || !listing.id) {
+        enqueueSnackbar('Ошибка: не удалось получить информацию о листинге', {
+          variant: 'error',
+        });
+        return;
+      }
+      
       const response = await fetch(`/api/marketplace/buy/${listing.id}`, {
         method: 'POST',
         credentials: 'include',
@@ -175,6 +180,14 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const handleRemoveFromMarketplace = async () => {
     try {
       setLoading(true);
+      
+      if (!listing || !listing.id) {
+        enqueueSnackbar('Ошибка: не удалось получить информацию о листинге', {
+          variant: 'error',
+        });
+        return;
+      }
+      
       const response = await fetch(`/api/marketplace/cancel/${listing.id}`, {
         method: 'POST',
         credentials: 'include',

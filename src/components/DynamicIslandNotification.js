@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, keyframes, alpha } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -20,149 +19,25 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { Icon } from '@iconify/react';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
 import { useLanguage } from '../context/LanguageContext';
-
-// Keyframes animations for different notification types
-const pillExpand = keyframes`
-  0% { width: 100px; border-radius: 50px; opacity: 0; transform: translateY(-20px) scale(0.8); }
-  20% { opacity: 1; transform: translateY(0) scale(1); }
-  80% { width: 300px; border-radius: 24px; }
-  100% { width: 300px; border-radius: 24px; }
-`;
-
-const pillContract = keyframes`
-  0% { width: 300px; border-radius: 24px; opacity: 1; }
-  20% { width: 250px; border-radius: 30px; opacity: 0.9; }
-  80% { width: 100px; border-radius: 50px; opacity: 0.3; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px) scale(0.8); }
-`;
-
-const pulseAnimation = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-`;
-
-const bounceAnimation = keyframes`
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
-`;
-
-const dropAnimation = keyframes`
-  0% { transform: translateY(-50px); opacity: 0; }
-  50% { transform: translateY(10px); opacity: 1; }
-  70% { transform: translateY(-5px); }
-  100% { transform: translateY(0); opacity: 1; }
-`;
-
-// Styled components for the notification
-const NotificationContainer = styled(Box, {
-  shouldForwardProp: prop => prop !== 'isVisible' && prop !== 'animationType',
-})(({ theme, isVisible, animationType }) => {
-  const animation = isVisible
-    ? `${pillExpand} 0.5s forwards`
-    : `${pillContract} 0.5s forwards`;
-
-  const pulseAnim = `${pulseAnimation} 2s infinite`;
-  const bounceAnim = `${bounceAnimation} 2s infinite`;
-  const dropAnim = `${dropAnimation} 0.5s forwards`;
-
-  let additionalAnimation = '';
-  if (animationType === 'pulse') additionalAnimation = pulseAnim;
-  if (animationType === 'bounce') additionalAnimation = bounceAnim;
-  if (animationType === 'drop') additionalAnimation = dropAnim;
-
-  return {
-    position: 'fixed',
-    top: 20,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    backgroundColor: 'rgba(20, 20, 22, 0.95)',
-    backdropFilter: 'blur(10px)',
-    color: 'white',
-    padding: '10px 16px',
-    borderRadius: '24px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 9999,
-    boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3)',
-    animation: animation,
-    overflow: 'hidden',
-    width: '300px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    '& .animation-wrapper': {
-      animation: additionalAnimation,
-      display: 'flex',
-      alignItems: 'center',
-      width: '100%',
-      minWidth: 0,
-    },
-    '& .notification-bg-icon': {
-      position: 'absolute',
-      right: 20,
-      top: '50%',
-      transform: 'translateY(-50%) rotate(-15deg)',
-      fontSize: '3rem',
-      opacity: 0.3,
-      color: theme.palette.primary.main,
-      pointerEvents: 'none',
-      filter: 'blur(2px)',
-      '& svg': {
-        filter: `drop-shadow(0 0 8px ${alpha(theme.palette.primary.main, 0.6)})`,
-      },
-    },
-  };
-});
-
-const IconContainer = styled(Box, {
-  shouldForwardProp: prop => prop !== 'notificationType',
-})(({ theme, notificationType }) => {
-  const colors = {
-    success: '#4caf50',
-    error: '#ff5252',
-    warning: '#fb8c00',
-    info: '#2196f3',
-    notification: '#D0BCFF',
-  };
-
-  return {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-    color: colors[notificationType] || colors.info,
-    '& svg': {
-      fontSize: 20,
-    },
-  };
-});
-
-const MessageContainer = styled(Box)({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  minWidth: 0,
-  overflow: 'hidden',
-});
+import { motion, AnimatePresence } from 'framer-motion';
 
 const getNotificationIcon = type => {
   switch (type) {
     case 'comment_like':
     case 'reply_like':
     case 'post_like':
-      return <FavoriteIcon sx={{ fontSize: '3rem' }} />;
+      return <FavoriteIcon />;
     case 'comment':
     case 'reply':
-      return <ChatBubbleIcon sx={{ fontSize: '3rem' }} />;
+      return <ChatBubbleIcon />;
     case 'follow':
-      return <PersonAddIcon sx={{ fontSize: '3rem' }} />;
+      return <PersonAddIcon />;
     case 'repost':
-      return <RepeatIcon sx={{ fontSize: '3rem' }} />;
+      return <RepeatIcon />;
     case 'wall_post':
-      return <PostAddIcon sx={{ fontSize: '3rem' }} />;
+      return <PostAddIcon />;
     case 'points_transfer':
-      return <Icon icon={walletMoneyIcon} width='3rem' height='3rem' />;
+      return <Icon icon={walletMoneyIcon} width='20' height='20' />;
     case 'badge_purchase':
     case 'username_auction_bid':
     case 'username_bid_accepted':
@@ -175,23 +50,22 @@ const getNotificationIcon = type => {
     case 'auction_sold':
     case 'auction_refund':
     case 'new_auction_bid':
-      return <MonetizationOnIcon sx={{ fontSize: '3rem' }} />;
+      return <MonetizationOnIcon />;
     case 'moderation':
     case 'ban':
     case 'unban':
     case 'warning':
-      return <GavelIcon sx={{ fontSize: '3rem' }} />;
+      return <GavelIcon />;
     case 'mention':
-      return <MessageIcon sx={{ fontSize: '3rem' }} />;
+      return <MessageIcon />;
     case 'medal':
-      return <EmojiEventsIcon sx={{ fontSize: '3rem' }} />;
+      return <EmojiEventsIcon />;
     default:
-      return <NotificationsIcon sx={{ fontSize: '3rem' }} />;
+      return <NotificationsIcon />;
   }
 };
 
 const getNotificationMessage = (notification, t) => {
-  // If t is not available (language context not ready), return the raw message
   if (!t || !notification || !notification.message)
     return notification?.message || '';
 
@@ -238,48 +112,25 @@ const getNotificationMessage = (notification, t) => {
 };
 
 /**
- * Dynamic Island style notification component
+ * iOS Dynamic Island style notification component with spring physics
  */
 const DynamicIslandNotification = ({
   open = false,
   message = '',
   shortMessage = '',
   notificationType = 'info',
-  animationType = 'pill',
   autoHideDuration = 3000,
   onClose = () => {},
   icon = null,
   notificationData = null,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
   let t;
   try {
-    // Try to use the language context, but don't fail if it's not available
     const langContext = useLanguage();
     t = langContext?.t;
   } catch (e) {
-    // Language context not available, use a fallback
     t = null;
   }
-
-  // Handle visibility with animation timing
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true);
-
-      // Auto hide after duration
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-
-        // Additional delay to allow exit animation to complete
-        setTimeout(() => {
-          onClose();
-        }, 500);
-      }, autoHideDuration);
-
-      return () => clearTimeout(timer);
-    }
-  }, [open, autoHideDuration, onClose]);
 
   // Select the right icon based on notification type
   const getIcon = () => {
@@ -309,22 +160,204 @@ const DynamicIslandNotification = ({
     return message;
   };
 
-  // Bail out if not open
-  if (!open && !isVisible) return null;
+  // iOS Dynamic Island spring animations
+  const islandVariants = {
+    hidden: {
+      scale: 0.8,
+      y: -20,
+      opacity: 0,
+      borderRadius: 25,
+      height: 40,
+    },
+    visible: {
+      scale: 1,
+      y: 0,
+      opacity: 1,
+      borderRadius: 25,
+      height: 60,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        mass: 0.8,
+      }
+    },
+    exit: {
+      scale: 0.8,
+      y: -20,
+      opacity: 0,
+      borderRadius: 25,
+      height: 40,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 20,
+        mass: 0.5,
+      }
+    }
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 25,
+        delay: 0.1,
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 20,
+      }
+    }
+  };
+
+  const iconVariants = {
+    hidden: { rotate: -180, scale: 0 },
+    visible: { 
+      rotate: 0, 
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 600,
+        damping: 20,
+        delay: 0.2,
+      }
+    },
+    exit: { 
+      rotate: 180, 
+      scale: 0,
+      transition: {
+        type: "spring",
+        stiffness: 500,
+        damping: 15,
+      }
+    }
+  };
+
+  const textVariants = {
+    hidden: { x: -20, opacity: 0 },
+    visible: { 
+      x: 0, 
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        delay: 0.3,
+      }
+    },
+    exit: { 
+      x: 20, 
+      opacity: 0,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 20,
+      }
+    }
+  };
+
+
 
   return (
-    <NotificationContainer isVisible={isVisible} animationType={animationType}>
-      <div className='animation-wrapper'>
-        <IconContainer notificationType={notificationType}>
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          style={{
+            position: 'fixed',
+            top: 20,
+            left: 0,
+            right: 0,
+            zIndex: 9999,
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <motion.div
+            variants={islandVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onAnimationComplete={(definition) => {
+              if (definition === "visible") {
+                // Auto hide after duration
+                setTimeout(() => {
+                  onClose();
+                }, autoHideDuration);
+              }
+            }}
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 16px',
+              position: 'relative',
+              overflow: 'hidden',
+              minWidth: '200px',
+              maxWidth: '400px',
+            }}
+          >
+            {/* Main content */}
+            <motion.div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+              }}
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {/* Icon */}
+              <motion.div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 12,
+                  color: '#D0BCFF',
+                }}
+                variants={iconVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
           {getIcon()}
-        </IconContainer>
+              </motion.div>
 
-        {isVisible && (
-          <MessageContainer>
+              {/* Text content */}
+              <motion.div
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  minWidth: 0,
+                }}
+                variants={textVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
             <Typography
-              variant='subtitle2'
-              sx={{
-                fontWeight: 'bold',
+                  variant="subtitle2"
+                  style={{
+                    color: 'white',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    lineHeight: 1.2,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -334,9 +367,11 @@ const DynamicIslandNotification = ({
             </Typography>
             {shortMessage && message && shortMessage !== message && (
               <Typography
-                variant='caption'
-                sx={{
-                  opacity: 0.7,
+                    variant="caption"
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '12px',
+                      lineHeight: 1.2,
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -345,15 +380,12 @@ const DynamicIslandNotification = ({
                 {getDisplayMessage()}
               </Typography>
             )}
-          </MessageContainer>
-        )}
-      </div>
-      <Box className='notification-bg-icon'>
-        {notificationData
-          ? getNotificationIcon(notificationData.type)
-          : getNotificationIcon('default')}
-      </Box>
-    </NotificationContainer>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
