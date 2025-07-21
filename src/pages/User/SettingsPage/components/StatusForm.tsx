@@ -165,13 +165,14 @@ const StatusForm: React.FC<StatusFormProps> = ({
           subscription &&
           (subscription.type === 'premium' ||
             subscription.type === 'ultimate' ||
+            subscription.type === 'max' ||
             subscription.type === 'pick-me') &&
           subscription.active;
 
         setIsPremium(hasValidSubscription);
         setIsUltimate(
           subscription &&
-            subscription.type === 'ultimate' &&
+            (subscription.type === 'ultimate' || subscription.type === 'max') &&
             subscription.active
         );
       }
@@ -188,19 +189,20 @@ const StatusForm: React.FC<StatusFormProps> = ({
               subscription.type === 'pick-me') &&
             subscription.active) ||
           (profileData.main_account_subscription &&
-            (profileData.main_account_subscription.type === 'premium' ||
-              profileData.main_account_subscription.type === 'ultimate' ||
-              profileData.main_account_subscription.type === 'pick-me') &&
+                      (profileData.main_account_subscription.type === 'premium' ||
+            profileData.main_account_subscription.type === 'ultimate' ||
+            profileData.main_account_subscription.type === 'max' ||
+            profileData.main_account_subscription.type === 'pick-me') &&
             profileData.main_account_subscription.active);
 
         setIsPremium(hasValidSubscription);
 
         const hasUltimateSubscription =
           (subscription &&
-            subscription.type === 'ultimate' &&
+            (subscription.type === 'ultimate' || subscription.type === 'max') &&
             subscription.active) ||
           (profileData.main_account_subscription &&
-            profileData.main_account_subscription.type === 'ultimate' &&
+            (profileData.main_account_subscription.type === 'ultimate' || profileData.main_account_subscription.type === 'max') &&
             profileData.main_account_subscription.active);
 
         setIsUltimate(hasUltimateSubscription);
@@ -309,11 +311,11 @@ const StatusForm: React.FC<StatusFormProps> = ({
       setHasError(true);
       if (isChannel) {
         setErrorMessage(
-          'Для установки статуса необходимо, чтобы основной аккаунт имел подписку Premium, Ultimate или Pick-me!'
+          'Для установки статуса необходимо, чтобы основной аккаунт имел подписку Premium, Ultimate, MAX или Pick-me!'
         );
       } else {
         setErrorMessage(
-          'Для установки статуса необходима подписка Premium, Ultimate или Pick-me!'
+          'Для установки статуса необходима подписка Premium, Ultimate, MAX или Pick-me!'
         );
       }
       return;
@@ -528,7 +530,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                 Функция доступна только для Premium-подписки
               </AlertTitle>
               Статус профиля доступен только пользователям с подписками{' '}
-              <strong>Premium</strong>, <strong>Ultimate</strong> или{' '}
+              <strong>Premium</strong>, <strong>Ultimate</strong>, <strong>MAX</strong> или{' '}
               <strong>Pick-me</strong>. Оформите подписку, чтобы установить свой
               уникальный статус и выделиться среди других пользователей.
             </Alert>
@@ -862,8 +864,8 @@ const StatusForm: React.FC<StatusFormProps> = ({
                 >
                   <InfoIcon fontSize='small' sx={{ mr: 1 }} />
                   {isUltimate
-                    ? 'С подпиской Ultimate вы можете выбрать любой цвет для вашего профиля!'
-                    : 'Оформите подписку Ultimate, чтобы выбрать любой цвет для вашего профиля!'}
+                    ? 'С подпиской Ultimate или MAX вы можете выбрать любой цвет для вашего профиля!'
+                    : 'Оформите подписку Ultimate или MAX, чтобы выбрать любой цвет для вашего профиля!'}
                 </Typography>
               </Box>
 

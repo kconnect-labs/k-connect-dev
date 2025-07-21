@@ -113,7 +113,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   // Получаем текущее состояние стиля профиля
   useEffect(() => {
     const fetchProfileStyle = async () => {
-      if (!subscription || subscription.type !== 'ultimate') {
+      if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) {
         setIsCustomProfileActive(false);
         return;
       }
@@ -170,7 +170,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   const handleProfileStyleToggle = async () => {
-    if (!subscription || subscription.type !== 'ultimate') return;
+    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
 
     setUpdatingProfileStyle(true);
     try {
@@ -321,8 +321,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </Grid>
       </Grid>
 
-      {/* Profile style toggle - only for Ultimate subscription */}
-      {subscription?.type === 'ultimate' && (
+      {/* Profile style toggle - only for Ultimate and MAX subscription */}
+      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
         <Box sx={{ mt: 4, mb: 2 }}>
           <Paper
             sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}

@@ -75,6 +75,7 @@ import { usePostDetail } from '../../context/PostDetailContext';
 import { ContextMenu, useContextMenu } from '../../UIKIT';
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
+import { MaxIcon } from '../icons/CustomIcons';
 
 // Ленивая загрузка тяжелых компонентов
 const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
@@ -1804,6 +1805,11 @@ const Post = ({
                         size='small'
                       />
                     ))}
+                  {(post.user?.subscription?.type === 'max' ||
+                    post.user?.subscription_type === 'max' ||
+                    post.user?.subscription?.subscription_type === 'max') && (
+                    <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                  )}
                   {post.user?.achievement && (
                     <Box sx={{ ml: 0.5 }}>
                       <Badge achievement={post.user.achievement} size='post' />
@@ -1978,6 +1984,11 @@ const Post = ({
                           size='small'
                         />
                       )}
+                    {(post.original_post.user?.subscription?.type === 'max' ||
+                      post.original_post.user?.subscription_type === 'max' ||
+                      post.original_post.user?.subscription?.subscription_type === 'max') && (
+                      <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                    )}
                     {post.original_post.user?.achievement && (
                       <Box sx={{ ml: 0.5 }}>
                         <Badge
@@ -2880,26 +2891,33 @@ const Post = ({
                   >
                     <Typography
                       sx={{
-                        fontSize: '0.8rem',
+                        fontSize: '0.9rem',
                         fontWeight: 600,
                         color: 'rgba(255, 255, 255, 0.9)',
                         textDecoration: 'none',
                         '&:hover': {
                           color: '#D0BCFF',
                         },
+                        display: 'flex',
+                        alignItems: 'center',
                       }}
                       component={Link}
                       to={`/profile/${lastComment.user?.username || 'unknown'}`}
                       onClick={e => e.stopPropagation()}
                     >
                       {lastComment.user?.name || 'Пользователь'}
-                      {lastComment.user?.achievement && (
-                        <Box sx={{ ml: 0.5, display: 'inline-flex' }}>
-                          <Badge
-                            achievement={lastComment.user.achievement}
-                            size='post'
+                      {(lastComment.user?.verification?.status > 0 || 
+                        lastComment.user?.verification_status === 'verified' ||
+                        lastComment.user?.verification_status > 0) && (
+                          <VerificationBadge
+                            status={lastComment.user?.verification?.status || lastComment.user?.verification_status}
+                            size='small'
                           />
-                        </Box>
+                        )}
+                      {(lastComment.user?.subscription?.type === 'max' || 
+                        lastComment.user?.subscription_type === 'max' ||
+                        lastComment.user?.subscription?.subscription_type === 'max') && (
+                        <MaxIcon size={20} color="#FF4D50" style={{ margin: '0 2px' }} />
                       )}
                     </Typography>
 

@@ -67,7 +67,7 @@ export const useUsernames = (): UseUsernamesReturn => {
     if (!subscriptionType) return 3;
     if (subscriptionType === 'basic') return 5;
     if (subscriptionType === 'premium') return 8;
-    if (subscriptionType === 'ultimate') return Infinity;
+    if (subscriptionType === 'ultimate' || subscriptionType === 'max') return Infinity;
     return 3;
   }, []);
 

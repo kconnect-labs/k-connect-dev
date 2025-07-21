@@ -22,6 +22,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { alpha } from '@mui/material/styles';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -717,6 +718,11 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                                 color: '#D0BCFF',
                               }}
                             />
+                          )}
+                          {(user.subscription?.type === 'max' || 
+                            user.subscription_type === 'max' ||
+                            user.subscription?.subscription_type === 'max') && (
+                            <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
                           )}
                         </Box>
                         <Typography variant='body2' color='text.secondary'>

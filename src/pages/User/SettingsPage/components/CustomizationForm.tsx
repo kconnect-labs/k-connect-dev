@@ -585,7 +585,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         )}
       </Box>
 
-      {subscription?.type === 'ultimate' && (
+      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
         <Box sx={sectionStyle}>
           <Typography
             variant='subtitle1'
@@ -660,7 +660,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                 variant='caption'
                 sx={{ display: 'block', mt: 1, color: 'text.secondary' }}
               >
-                Только для подписки Ultimate. PNG, JPG, GIF. До 5MB.
+                Только для подписки Ultimate или MAX. PNG, JPG, GIF. До 5MB.
               </Typography>
             </Box>
           </Box>

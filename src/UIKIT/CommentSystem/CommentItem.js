@@ -20,6 +20,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import { VerificationBadge } from '../../UIKIT';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import { formatTimeAgo } from '../../utils/dateUtils';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -210,28 +211,18 @@ const CommentItem = ({
                 }}
               >
                 {comment.user.name}
-                {comment.user.verification &&
-                  comment.user.verification.status > 0 && (
+                {(comment.user.verification?.status > 0 || 
+                  comment.user.verification_status === 'verified' ||
+                  comment.user.verification_status > 0) && (
                     <VerificationBadge
-                      status={comment.user.verification.status}
+                      status={comment.user.verification?.status || comment.user.verification_status}
                       size='small'
                     />
                   )}
-                {comment.user.achievement && (
-                  <Box
-                    component='img'
-                    sx={{
-                      width: { xs: 14, sm: 16 },
-                      height: { xs: 14, sm: 16 },
-                      ml: 0.5,
-                    }}
-                    src={`/static/images/bages/${comment.user.achievement.image_path}`}
-                    alt={comment.user.achievement.bage}
-                    onError={e => {
-                      console.error('Achievement badge failed to load:', e);
-                      e.target.style.display = 'none';
-                    }}
-                  />
+                {(comment.user.subscription?.type === 'max' || 
+                  comment.user.subscription_type === 'max' ||
+                  comment.user.subscription?.subscription_type === 'max') && (
+                  <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
                 )}
               </Typography>
               <Tooltip

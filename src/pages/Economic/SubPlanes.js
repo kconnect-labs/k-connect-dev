@@ -20,6 +20,7 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import StarIcon from '@mui/icons-material/Star';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import KeyIcon from '@mui/icons-material/Key';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -137,11 +138,13 @@ const SubPlanes = () => {
   const subscriptionPrices = {
     premium: '99₽',
     ultimate: '199₽',
+    max: '399₽',
   };
 
   const subscriptionDescriptions = {
     premium: 'Расширенный функционал',
     ultimate: 'Максимальные возможности',
+    max: 'Эксклюзивные возможности',
   };
 
   const subscriptionFeatures = {
@@ -166,6 +169,19 @@ const SubPlanes = () => {
       'Кастомные Темы',
       'Обои в профиле',
       'X8 к баллам активности',
+    ],
+    max: [
+      'Все преимущества Ultimate',
+      '🔥 Эксклюзивный MAX значок',
+      '🔒 Доступ к закрытым функциям',
+      '∞ Максимальные лимиты на все',
+      '🚀 Ранний доступ к новым функциям',
+      '✨ Специальные анимации профиля',
+      '🎨 Неограниченные возможности кастомизации',
+      '🔑 Безлимитное обращение к API',
+      '💬 Консультации с разработчиками',
+      '🎁 150,000 баллов в подарок',
+      'X12 к баллам активности',
     ],
   };
 
@@ -219,7 +235,9 @@ const SubPlanes = () => {
                   ? 'Premium'
                   : userSubscription.type === 'ultimate'
                     ? 'Ultimate'
-                    : 'Подписка'}
+                    : userSubscription.type === 'max'
+                      ? 'MAX'
+                      : 'Подписка'}
               </Typography>
               <Typography variant='body2' color='text.secondary'>
                 Активна до: {formatDate(userSubscription.expires_at)}
@@ -279,7 +297,7 @@ const SubPlanes = () => {
 
         <Grid container spacing={3} justifyContent='center'>
           {/* Premium */}
-          <Grid item xs={12} sm={6} md={5}>
+          <Grid item xs={12} sm={6} md={4}>
             <SubscriptionCard type='premium'>
               <Box
                 sx={{
@@ -353,7 +371,7 @@ const SubPlanes = () => {
           </Grid>
 
           {/* Ultimate */}
-          <Grid item xs={12} sm={6} md={5}>
+          <Grid item xs={12} sm={6} md={4}>
             <SubscriptionCard type='ultimate'>
               <PopularBadge label='Популярный' />
               <Box
@@ -417,6 +435,100 @@ const SubPlanes = () => {
                     color: '#fff',
                     '&:hover': {
                       backgroundColor: '#C0A8F0',
+                    },
+                  }}
+                >
+                  Поддержать
+                </Button>
+              </Box>
+            </SubscriptionCard>
+          </Grid>
+
+          {/* MAX */}
+          <Grid item xs={12} sm={12} md={4}>
+            <SubscriptionCard 
+              type='max' 
+              sx={{
+                '&::before': {
+                  background: '#FF4D50',
+                },
+                '&:hover': {
+                  borderColor: '#FF4D50',
+                  boxShadow: '0 8px 25px rgba(255, 77, 80, 0.2)',
+                },
+              }}
+            >
+              <PopularBadge 
+                label='Эксклюзив' 
+                sx={{
+                  backgroundColor: '#FF4D50',
+                  color: '#fff',
+                }}
+              />
+              <Box
+                sx={{
+                  p: 2.5,
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  pt: 4,
+                }}
+              >
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                    <MaxIcon size={32} color="#FF4D50" />
+                    <Typography
+                      variant='h5'
+                      component='h2'
+                      fontWeight='bold'
+                      sx={{ ml: 1, color: '#FF4D50' }}
+                    >
+                      MAX
+                    </Typography>
+                  </Box>
+                  <PriceText sx={{ color: '#FF4D50' }}>{subscriptionPrices.max}</PriceText>
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{ fontSize: '0.85rem' }}
+                  >
+                    {subscriptionDescriptions.max}
+                  </Typography>
+                </Box>
+                <Divider
+                  sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                />
+                <Box sx={{ flexGrow: 1, mb: 3 }}>
+                  <Grid container spacing={1}>
+                    {subscriptionFeatures.max.map((feature, index) => (
+                      <Grid item xs={12} key={index}>
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                        >
+                          <FeatureIcon sx={{ mr: 1.5, flexShrink: 0, color: '#FF4D50' }} />
+                          <Typography
+                            variant='body2'
+                            sx={{ fontSize: '0.85rem' }}
+                          >
+                            {feature}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+                <Button
+                  variant='contained'
+                  fullWidth
+                  onClick={handleNavigateToBalance}
+                  sx={{
+                    borderRadius: '12px',
+                    textTransform: 'none',
+                    py: 1.2,
+                    backgroundColor: '#FF4D50',
+                    color: '#fff',
+                    '&:hover': {
+                      backgroundColor: '#E63946',
                     },
                   }}
                 >

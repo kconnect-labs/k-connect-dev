@@ -363,7 +363,8 @@
     "subscription_types": {
       "basic": "Basic",
       "premium": "Premium",
-      "ultimate": "Ultimate"
+      "ultimate": "Ultimate",
+      "max": "MAX"
     },
     "common": {
       "loading": "Загрузка...",
@@ -662,13 +663,13 @@
     "ban": {
       "banned": "В бане",
       "scam": "SCAM",
-      "reason": "Причина: {{reason}}",
-      "ends": "До {{endDate}}",
-      "days_left": "осталось {{days}} дн.",
-      "auto_ban": "{{admin}}",
+      "reason": "Причина: {reason}",
+      "ends": "До {endDate}",
+      "days_left": "осталось {days} дн.",
+      "auto_ban": "{admin}",
       "admin": "Бан выдан администрацией",
-      "start": "Начало бана: {{startDate}}",
-      "details": "Детали: {{details}}"
+      "start": "Начало бана: {startDate}",
+      "details": "Детали: {details}"
     },
     "also_follows": "А также:",
     "and_more": "и ещё {count}",

@@ -27,6 +27,7 @@ import { AuthContext } from '../../context/AuthContext';
 import 'react-medium-image-zoom/dist/styles.css';
 import { ThemeSettingsContext } from '../../App';
 import { UsernameCard, VerificationBadge, Badge } from '../../UIKIT';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import InventoryItemCardPure from '../../UIKIT/InventoryItemCard';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
@@ -782,6 +783,10 @@ const ProfilePage = () => {
                       status={user?.verification_status}
                       size='small'
                     />
+
+                    {user?.subscription?.type === 'max' && (
+                      <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                    )}
 
                     {user?.achievement && (
                       <Badge

@@ -440,6 +440,12 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
                 color='success'
                 variant='outlined'
               />
+              <Chip
+                label='MAX: ∞ юзернеймов'
+                size='small'
+                color='error'
+                variant='outlined'
+              />
             </Box>
           </Grid>
         </Grid>

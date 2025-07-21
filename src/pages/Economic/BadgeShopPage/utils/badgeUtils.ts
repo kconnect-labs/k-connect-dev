@@ -41,8 +41,8 @@ export const filterBadgesByTab = (
     filtered = badges.filter(
       badge =>
         !(
-          (badge.max_copies === 1 && badge.copies_sold >= 1) ||
-          (badge.max_copies && badge.copies_sold >= badge.max_copies)
+          (badge.max_copies === 1 && (badge.copies_sold || 0) >= 1) ||
+          (badge.max_copies && (badge.copies_sold || 0) >= badge.max_copies)
         ) && !badge.purchases?.some(p => p.buyer_id === userId)
     );
   } else if (tabValue === 1) {
@@ -57,8 +57,8 @@ export const filterBadgesByTab = (
     // Скупленные - полностью распроданные
     filtered = badges.filter(
       badge =>
-        (badge.max_copies === 1 && badge.copies_sold >= 1) ||
-        (badge.max_copies && badge.copies_sold >= badge.max_copies)
+        (badge.max_copies === 1 && (badge.copies_sold || 0) >= 1) ||
+        (badge.max_copies && (badge.copies_sold || 0) >= badge.max_copies)
     );
   }
 
@@ -66,10 +66,16 @@ export const filterBadgesByTab = (
 };
 
 export const isBadgeSoldOut = (badge: Badge): boolean => {
-  return (
-    (badge.max_copies === 1 && badge.copies_sold >= 1) ||
-    (badge.max_copies && badge.copies_sold >= badge.max_copies)
-  );
+  const maxCopies = typeof badge.max_copies === 'number' ? badge.max_copies : undefined;
+  const copiesSold = typeof badge.copies_sold === 'number' ? badge.copies_sold : 0;
+
+  if (maxCopies === 1) {
+    return copiesSold >= 1;
+  }
+  if (typeof maxCopies === 'number') {
+    return copiesSold >= maxCopies;
+  }
+  return false;
 };
 
 export const isBadgePurchasedByUser = (
@@ -132,7 +138,7 @@ export const getBadgeLimitBySubscription = (
     return 5;
   } else if (subType === 'premium') {
     return 8;
-  } else if (subType === 'ultimate' || subType.includes('ultimate')) {
+  } else if (subType === 'ultimate' || subType.includes('ultimate') || subType === 'max' || subType.includes('max')) {
     return Infinity;
   } else {
     return 3;

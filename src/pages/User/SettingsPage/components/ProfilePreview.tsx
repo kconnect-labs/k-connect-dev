@@ -146,7 +146,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                   displayUser?.subscription
                     ? `3px solid ${displayUser.status_color}`
                     : displayUser?.subscription
-                      ? `3px solid ${displayUser.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : displayUser.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : displayUser.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}`
+                      ? `3px solid ${displayUser.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : displayUser.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : displayUser.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : displayUser.subscription.type === 'max' ? 'rgba(255, 77, 80)' : 'rgba(66, 165, 245)'}`
                       : theme =>
                           theme.palette.mode === 'dark'
                             ? '3px solid #121212'
@@ -163,7 +163,9 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                           ? '0 0 12px rgba(208, 188, 255, 0.5)'
                           : displayUser.subscription.type === 'ultimate'
                             ? '0 0 12px rgba(124, 77, 255, 0.5)'
-                            : '0 0 12px rgba(66, 165, 245, 0.5)'
+                            : displayUser.subscription.type === 'max'
+                              ? '0 0 12px rgba(255, 77, 80, 0.5)'
+                              : '0 0 12px rgba(66, 165, 245, 0.5)'
                       : '0 6px 16px rgba(0, 0, 0, 0.25)',
                 bgcolor: 'primary.dark',
                 transition: 'all 0.3s ease',

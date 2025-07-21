@@ -13,6 +13,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsOffIcon from '@mui/icons-material/NotificationsOff';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { motion } from 'framer-motion';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 
 const BannerImage = styled(Box)(({ theme }) => ({
   height: '180px',
@@ -169,6 +170,11 @@ const ProfileHeader = ({
               {name}
               {verification && verification.status > 0 && (
                 <VerifiedBadge fontSize='large' status={verification.status} />
+              )}
+              {(profile.subscription?.type === 'max' || 
+                profile.subscription_type === 'max' ||
+                profile.subscription?.subscription_type === 'max') && (
+                <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
               )}
               {achievement && (
                 <Box

@@ -64,7 +64,7 @@ interface Subscription {
   expires_at: string;
   subscription_date: string;
   total_duration_months: number;
-  type: 'basic' | 'premium' | 'ultimate' | 'pick-me' | 'channel';
+  type: 'basic' | 'premium' | 'ultimate' | 'max' | 'pick-me' | 'channel';
 }
 
 interface PurchasedUsername {
@@ -506,15 +506,22 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                   <div
                     className={`${styles.subscriptionTitle} ${getSubscriptionTitleClass()}`}
                   >
-                    {user.subscription.type === 'channel'
-                      ? t('profile.subscription.channel')
-                      : user.subscription.type === 'premium'
-                        ? t('balance.subscription_types.premium')
-                        : user.subscription.type === 'ultimate'
-                          ? t('balance.subscription_types.ultimate')
-                          : user.subscription.type === 'pick-me'
-                            ? t('profile.subscription.pick_me')
-                            : t('balance.subscription_types.basic')}
+                    {(() => {
+                      switch (user.subscription.type) {
+                        case 'channel':
+                          return t('profile.subscription.channel');
+                        case 'premium':
+                          return t('balance.subscription_types.premium');
+                        case 'ultimate':
+                          return t('balance.subscription_types.ultimate');
+                        case 'max':
+                          return t('balance.subscription_types.max');
+                        case 'pick-me':
+                          return t('profile.subscription.pick_me');
+                        default:
+                          return t('balance.subscription_types.basic');
+                      }
+                    })()}
                   </div>
                 </div>
 

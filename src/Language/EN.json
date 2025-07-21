@@ -312,7 +312,8 @@
     "subscription_types": {
       "basic": "Basic",
       "premium": "Premium",
-      "ultimate": "Ultimate"
+      "ultimate": "Ultimate",
+      "max": "MAX"
     },
     "common": {
       "loading": "Loading...",

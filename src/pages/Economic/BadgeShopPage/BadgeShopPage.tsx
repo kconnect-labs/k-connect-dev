@@ -101,13 +101,15 @@ const BadgeShopPage: React.FC = () => {
 
   // Обновление лимитов при изменении подписки
   useEffect(() => {
-    const isUltimate =
+    const isPremium =
       userSubscription &&
       userSubscription.subscription_type &&
       (userSubscription.subscription_type.toLowerCase() === 'ultimate' ||
-        userSubscription.subscription_type.toLowerCase().includes('ultimate'));
+        userSubscription.subscription_type.toLowerCase().includes('ultimate') ||
+        userSubscription.subscription_type.toLowerCase() === 'max' ||
+        userSubscription.subscription_type.toLowerCase().includes('max'));
 
-    if (isUltimate) {
+    if (isPremium) {
       setBadgeLimitReached(false);
     } else {
       setBadgeLimitReached(createdBadgesCount >= badgeLimit);

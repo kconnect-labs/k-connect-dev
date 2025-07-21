@@ -1548,6 +1548,7 @@ const AdminPage = () => {
                         <MenuItem value='basic'>Базовая</MenuItem>
                         <MenuItem value='premium'>Премиум</MenuItem>
                         <MenuItem value='ultimate'>Ультимейт</MenuItem>
+                        <MenuItem value='max'>MAX</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>

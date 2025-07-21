@@ -133,7 +133,8 @@
     "subscription_types": {
       "basic": "ベーシック",
       "premium": "プレミアム",
-      "ultimate": "アルティメット"
+      "ultimate": "アルティメット",
+      "max": "MAX"
     },
     "current_balance": {
       "title": "残高",

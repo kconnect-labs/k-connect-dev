@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import VerificationBadge from '../../UIKIT/VerificationBadge';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import './LeaderboardUserCard.css';
 
 const API_URL = 'https://k-connect.ru';
@@ -194,6 +195,13 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
             {/* Верификация */}
             {user.verification && user.verification.status && (
               <VerificationBadge status={user.verification.status} />
+            )}
+
+            {/* MAX подписка */}
+            {(user.subscription?.type === 'max' || 
+              user.subscription_type === 'max' ||
+              user.subscription?.subscription_type === 'max') && (
+              <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
             )}
 
             {/* Достижение */}

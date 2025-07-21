@@ -32,6 +32,7 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { ThemeSettingsContext } from '../../App';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import { AuthContext } from '../../context/AuthContext';
 import { searchService, profileService } from '../../services';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
@@ -202,6 +203,9 @@ const SearchPage = () => {
 
   const performSearch = async (query, type, page = 1, append = false) => {
     if (loading) return;
+    
+    // Предотвращаем поиск пустого запроса при инициализации
+    if (!query && !append) return;
 
     setLoading(true);
     try {
@@ -389,13 +393,13 @@ const SearchPage = () => {
     }
 
     setInitialLoad(false);
-  }, [location.search]);
+  }, [location.search, initialLoad]);
 
   useEffect(() => {
     if (initialLoad && !queryParam) {
       performSearch('', 1);
     }
-  }, []);
+  }, [initialLoad, queryParam]);
 
   const handleOpenPostImage = (image, allImages, index) => {
     setCurrentImage(image);
@@ -664,6 +668,11 @@ const SearchPage = () => {
                                         color: '#D0BCFF',
                                       }}
                                     />
+                                  )}
+                                  {(user.subscription?.type === 'max' || 
+                                    user.subscription_type === 'max' ||
+                                    user.subscription?.subscription_type === 'max') && (
+                                    <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
                                   )}
                                 </Box>
                                 <Typography

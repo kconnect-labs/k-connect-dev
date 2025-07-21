@@ -81,7 +81,7 @@ export const useBadgeShopAPI = ({
         setBadgeLimit(5);
       } else if (subType === 'premium') {
         setBadgeLimit(8);
-      } else if (subType === 'ultimate' || subType.includes('ultimate')) {
+      } else if (subType === 'ultimate' || subType.includes('ultimate') || subType === 'max') {
         setBadgeLimit(Infinity);
       } else {
         setBadgeLimit(3);
@@ -96,15 +96,19 @@ export const useBadgeShopAPI = ({
       if (response.data && response.data.total_badges !== undefined) {
         setCreatedBadgesCount(response.data.total_badges);
 
-        const isUltimate =
+        const isPremium =
           userSubscription &&
           userSubscription.subscription_type &&
           (userSubscription.subscription_type.toLowerCase() === 'ultimate' ||
             userSubscription.subscription_type
               .toLowerCase()
-              .includes('ultimate'));
+              .includes('ultimate') ||
+            userSubscription.subscription_type.toLowerCase() === 'max' ||
+            userSubscription.subscription_type
+              .toLowerCase()
+              .includes('max'));
 
-        if (isUltimate) {
+        if (isPremium) {
           setBadgeLimitReached(false);
         } else {
           setBadgeLimitReached(response.data.total_badges >= badgeLimit);

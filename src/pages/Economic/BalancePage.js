@@ -3019,7 +3019,7 @@ const BalancePage = () => {
                           </ListItem>
                         </Box>
                       )}
-                      {subscription.type === 'ultimate' && (
+                      {(subscription.type === 'ultimate' || subscription.type === 'max') && (
                         <Box key='ultimate-features'>
                           <ListItem key='premium-benefits' sx={{ py: 0 }}>
                             <ListItemText
@@ -3054,6 +3054,50 @@ const BalancePage = () => {
                               primary={t(
                                 'balance.subscription.active.features.ultimate.unlimited_usernames'
                               )}
+                            />
+                          </ListItem>
+                        </Box>
+                      )}
+                      {subscription.type === 'max' && (
+                        <Box key='max-features'>
+                          <ListItem key='max-exclusive' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="🔥 Эксклюзивный MAX значок"
+                            />
+                          </ListItem>
+                          <ListItem key='max-priority' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="⚡ Приоритет во всех очередях"
+                            />
+                          </ListItem>
+                          <ListItem key='max-manager' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="👑 Персональный менеджер"
+                            />
+                          </ListItem>
+                          <ListItem key='max-closed' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="🔒 Доступ к закрытым функциям"
+                            />
+                          </ListItem>
+                          <ListItem key='max-unlimited' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="∞ Максимальные лимиты на все"
+                            />
+                          </ListItem>
+                          <ListItem key='max-beta' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="🚀 Ранний доступ к новым функциям"
+                            />
+                          </ListItem>
+                          <ListItem key='max-animations' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="✨ Специальные анимации профиля"
+                            />
+                          </ListItem>
+                          <ListItem key='max-customization' sx={{ py: 0 }}>
+                            <ListItemText
+                              primary="🎨 Неограниченные возможности кастомизации"
                             />
                           </ListItem>
                         </Box>
