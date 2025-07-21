@@ -70,7 +70,6 @@ import DoneIcon from '@mui/icons-material/Done';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PaidIcon from '@mui/icons-material/Paid';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -106,6 +105,14 @@ import DecorationMenu from '../../UIKIT/DecorationMenu';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CheckIcon from '@mui/icons-material/Check';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-container': {
@@ -172,6 +179,8 @@ const ModeratorPage = () => {
   const [badges, setBadges] = useState([]);
   const [artists, setArtists] = useState([]);
   const [logs, setLogs] = useState([]);
+  const [statistics, setStatistics] = useState(null);
+  const [loadingStats, setLoadingStats] = useState(false);
 
   const [deletePostDialogOpen, setDeletePostDialogOpen] = useState(false);
   const [deleteTrackDialogOpen, setDeleteTrackDialogOpen] = useState(false);
@@ -896,6 +905,10 @@ const ModeratorPage = () => {
         setLogs([]);
         fetchLogs();
         break;
+      case 9:
+        setStatistics(null);
+        fetchStatistics();
+        break;
       default:
         break;
     }
@@ -1284,6 +1297,24 @@ const ModeratorPage = () => {
       showNotification('error', 'Ошибка при загрузке логов');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchStatistics = async () => {
+    try {
+      setLoadingStats(true);
+      const response = await axios.get('/api/stat/all');
+
+      if (response.data.success) {
+        setStatistics(response.data.data);
+      } else {
+        showNotification('error', 'Ошибка загрузки статистики');
+      }
+    } catch (error) {
+      console.error('Error fetching statistics:', error);
+      showNotification('error', 'Ошибка загрузки статистики');
+    } finally {
+      setLoadingStats(false);
     }
   };
 
@@ -5277,6 +5308,779 @@ const ModeratorPage = () => {
     return descriptions[actionType] || `Выполнено действие: ${actionType}`;
   };
 
+  const renderStatistics = () => {
+    return (
+      <>
+        <Box
+          sx={{
+            mb: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+            Статистика базы данных
+          </Typography>
+          <Button
+            variant='outlined'
+            onClick={fetchStatistics}
+            disabled={loadingStats}
+            startIcon={
+              loadingStats ? <CircularProgress size={20} /> : <BarChartIcon />
+            }
+            sx={{
+              borderRadius: 8,
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: 'rgba(255, 255, 255, 0.7)',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                background: 'rgba(255, 255, 255, 0.05)',
+              },
+            }}
+          >
+            Обновить
+          </Button>
+        </Box>
+
+        {loadingStats ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+            <CircularProgress size={40} />
+          </Box>
+        ) : !statistics ? (
+          <Box
+            sx={{
+              textAlign: 'center',
+              py: 2,
+              borderRadius: 2,
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+            }}
+          >
+            <BarChartIcon
+              sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.3)', mb: 2 }}
+            />
+            <Typography
+              variant='h6'
+              color='rgba(255, 255, 255, 0.5)'
+              gutterBottom
+            >
+              Статистика не загружена
+            </Typography>
+            <Typography variant='body2' color='rgba(255, 255, 255, 0.4)'>
+              Нажмите "Обновить" для загрузки статистики
+            </Typography>
+          </Box>
+        ) : (
+          <Grid container spacing={3}>
+            {/* Пользователи */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Пользователи"
+                  avatar={<PersonIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.users?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего зарегистрировано
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.users?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За час: {statistics.users?.last_hour || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 3 дня: {statistics.users?.last_3_days || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Верифицированы: {statistics.users?.verified || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Онлайн: {statistics.users?.online_now || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Забанены: {statistics.users?.banned || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Скам: {statistics.users?.scam || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Посты */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Посты"
+                  avatar={<PostAddIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.posts?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего постов
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.posts?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За час: {statistics.posts?.last_hour || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 3 дня: {statistics.posts?.last_3_days || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        С изображениями: {statistics.posts?.with_images || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        С видео: {statistics.posts?.with_videos || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Репосты: {statistics.posts?.reposts || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Комментарии */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Комментарии"
+                  avatar={<CommentIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.comments?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего комментариев
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.comments?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За час: {statistics.comments?.last_hour || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 3 дня: {statistics.comments?.last_3_days || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Ответы */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Ответы"
+                  avatar={<CommentIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.replies?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего ответов
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.replies?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За час: {statistics.replies?.last_hour || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 3 дня: {statistics.replies?.last_3_days || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Музыка */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Музыка"
+                  avatar={<MusicNoteIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.music?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего треков
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.music?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За час: {statistics.music?.last_hour || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 3 дня: {statistics.music?.last_3_days || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Баг-репорты */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Баг-репорты"
+                  avatar={<BugReportIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.bug_reports?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего репортов
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.bug_reports?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Открытые: {statistics.bug_reports?.open || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            {/* Уведомления */}
+            <Grid item xs={12} md={6} lg={4}>
+              <Card
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 2,
+                  transition: 'all 0.2s ease-in-out',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                }}
+              >
+                <CardHeader
+                  title="Уведомления"
+                  avatar={<NotificationsIcon sx={{ color: 'primary.main' }} />}
+                  sx={{
+                    color: 'rgba(255, 255, 255, 0.87)',
+                    '& .MuiCardHeader-title': {
+                      fontSize: '1.1rem',
+                      fontWeight: 600,
+                    },
+                  }}
+                />
+                <CardContent>
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                      {statistics.notifications?.total || 0}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                      Всего уведомлений
+                    </Typography>
+                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        За 24ч: {statistics.notifications?.last_24h || 0}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                        Непрочитанные: {statistics.notifications?.unread || 0}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+
+              </Card>
+            </Grid>
+                                                {/* Бейджи */}
+                                                <Grid item xs={12} md={6} lg={4}>
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                          },
+                        }}
+                      >
+                        <CardHeader
+                          title="Бейджи"
+                          avatar={<EmojiEventsIcon sx={{ color: 'primary.main' }} />}
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.87)',
+                            '& .MuiCardHeader-title': {
+                              fontSize: '1.1rem',
+                              fontWeight: 600,
+                            },
+                          }}
+                        />
+                        <CardContent>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                              {statistics.badges?.shop_total || 0}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                              Всего в магазине
+                            </Typography>
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Активные: {statistics.badges?.shop_active || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Покупок: {statistics.badges?.purchases_total || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За 24ч: {statistics.badges?.purchases_last_24h || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За час: {statistics.badges?.purchases_last_hour || 0}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    {/* Переводы баллов */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                          },
+                        }}
+                      >
+                        <CardHeader
+                          title="Переводы баллов"
+                          avatar={<AccountBalanceWalletIcon sx={{ color: 'primary.main' }} />}
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.87)',
+                            '& .MuiCardHeader-title': {
+                              fontSize: '1.1rem',
+                              fontWeight: 600,
+                            },
+                          }}
+                        />
+                        <CardContent>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                              {statistics.points_transfers?.total || 0}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                              Всего переводов
+                            </Typography>
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За 24ч: {statistics.points_transfers?.last_24h || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За час: {statistics.points_transfers?.last_hour || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Сумма: {statistics.points_transfers?.total_amount || 0}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    {/* Покупки юзернеймов */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                          },
+                        }}
+                      >
+                        <CardHeader
+                          title="Покупки юзернеймов"
+                          avatar={<CardGiftcardIcon sx={{ color: 'primary.main' }} />}
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.87)',
+                            '& .MuiCardHeader-title': {
+                              fontSize: '1.1rem',
+                              fontWeight: 600,
+                            },
+                          }}
+                        />
+                        <CardContent>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                              {statistics.purchased_usernames?.total || 0}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                              Всего покупок
+                            </Typography>
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Активные: {statistics.purchased_usernames?.active || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За 24ч: {statistics.purchased_usernames?.last_24h || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За час: {statistics.purchased_usernames?.last_hour || 0}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    {/* Ключи активации */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                          },
+                        }}
+                      >
+                        <CardHeader
+                          title="Ключи активации"
+                          avatar={<VpnKeyIcon sx={{ color: 'primary.main' }} />}
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.87)',
+                            '& .MuiCardHeader-title': {
+                              fontSize: '1.1rem',
+                              fontWeight: 600,
+                            },
+                          }}
+                        />
+                        <CardContent>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                              {statistics.redemption_keys?.total || 0}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                              Всего ключей
+                            </Typography>
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Активные: {statistics.redemption_keys?.active || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Истекшие: {statistics.redemption_keys?.expired || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Активаций: {statistics.redemption_keys?.redemptions_total || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                За 24ч: {statistics.redemption_keys?.redemptions_last_24h || 0}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+
+                    {/* Подписки */}
+                    <Grid item xs={12} md={6} lg={4}>
+                      <Card
+                        sx={{
+                          background: 'rgba(255, 255, 255, 0.03)',
+                          backdropFilter: 'blur(20px)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 2,
+                          transition: 'all 0.2s ease-in-out',
+                          '&:hover': {
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                          },
+                        }}
+                      >
+                        <CardHeader
+                          title="Подписки"
+                          avatar={<SubscriptionsIcon sx={{ color: 'primary.main' }} />}
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.87)',
+                            '& .MuiCardHeader-title': {
+                              fontSize: '1.1rem',
+                              fontWeight: 600,
+                            },
+                          }}
+                        />
+                        <CardContent>
+                          <Box sx={{ mb: 2 }}>
+                            <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                              {statistics.subscriptions?.total || 0}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                              Всего подписок
+                            </Typography>
+                          </Box>
+                          <Grid container spacing={1}>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Активные: {statistics.subscriptions?.active || 0}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                Истекшие: {statistics.subscriptions?.expired || 0}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+          </Grid>
+        )}
+      </>
+    );
+  };
+
   return (
     <Container maxWidth='xl' sx={{ mt: 4, mb: 4 }}>
       <Paper
@@ -5391,6 +6195,7 @@ const ModeratorPage = () => {
             }
           />
           <Tab icon={<ListAltIcon />} label='Логи' />
+          <Tab icon={<BarChartIcon />} label='Статистика' />
         </Tabs>
 
         <Box sx={{ mt: 2 }}>
@@ -5403,6 +6208,7 @@ const ModeratorPage = () => {
           {tabValue === 6 && renderBadges()}
           {tabValue === 7 && renderArtists()}
           {tabValue === 8 && renderLogs()}
+          {tabValue === 9 && renderStatistics()}
         </Box>
       </Paper>
 
