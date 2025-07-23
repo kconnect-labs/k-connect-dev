@@ -71,6 +71,8 @@ import {
 import inventoryImageService from '../../../../services/InventoryImageService';
 import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
 import { InventoryItem, EquippedItem, ItemAction } from './types';
+import { InventorySearch } from './InventorySearch';
+import { useInventorySearch } from './useInventorySearch';
 
 interface InventoryTabProps {
   userId?: number;
@@ -268,6 +270,18 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
+    // Хук для поиска и фильтрации
+    const {
+      query,
+      filters,
+      filteredItems: searchFilteredItems,
+      isLoading: searchLoading,
+      error: searchError,
+      updateQuery,
+      updateFilters,
+      resetSearch,
+    } = useInventorySearch(activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items);
+
     useEffect(() => {
       if (user) {
         fetchInventory();
@@ -276,6 +290,11 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
         fetchUpgradedItems();
       }
     }, [user]);
+
+    // Сброс поиска при смене вкладки
+    useEffect(() => {
+      resetSearch();
+    }, [activeTab, resetSearch]);
 
     // Обработчик глобального события получения предмета
     useEffect(() => {
@@ -677,8 +696,13 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
       image_url: equipped.background_url || equipped.image_url,
     }));
 
-    const filteredItems =
-      activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items;
+    // Определяем базовый список предметов в зависимости от активной вкладки
+    const baseItems = activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items;
+    
+    // Применяем поиск и фильтры к базовому списку
+    const filteredItems = query || Object.keys(filters).length > 0 ? searchFilteredItems : baseItems;
+
+    const isSearchActive = Boolean(query.trim()) || Object.keys(filters).length > 0;
 
     const tabs = [
       {
@@ -893,7 +917,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
           className=''
         />
 
-        <Box sx={{ mb: 1 }}>
+        <Box sx={{ mb: 0.5 }}>
           <StyledTabs
             value={activeTab}
             onChange={(e: any, newValue: any) => setActiveTab(newValue)}
@@ -907,31 +931,22 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
           />
         </Box>
 
+        {/* Компонент поиска */}
+        <Box>
+          <InventorySearch
+            onFiltersChange={updateFilters}
+            onQueryChange={updateQuery}
+            showFilters={true}
+            placeholder="Найти предметы в инвентаре..."
+            isLoading={searchLoading}
+            error={searchError}
+          />
+        </Box>
+
         {filteredItems.length === 0 && !loadingUpgraded ? (
           <Box textAlign='center' py={8}>
-            <Typography variant='h6' mb={2}>
-              {activeTab === 0
-                ? 'У вас пока нет предметов в инвентаре'
-                : 'У вас нет улучшенных предметов'}
-            </Typography>
-            {activeTab === 0 && (
-              <Button
-                variant='contained'
-                href='/economic/packs'
-                sx={{
-                  background:
-                    'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  color: '#fff',
-                  fontWeight: 600,
-                  '&:hover': {
-                    background:
-                      'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)',
-                  },
-                }}
-              >
-                Купить Пачки
-              </Button>
-            )}
+
+
           </Box>
         ) : (
           <>
@@ -973,7 +988,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
             </Grid>
 
             {/* Индикатор загрузки для пагинации */}
-            {loadingMore && (
+            {!isSearchActive && loadingMore && (
               <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
                 <CircularProgress size={40} />
               </Box>
@@ -987,7 +1002,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
             )}
 
             {/* Информация о загрузке */}
-            {!loadingMore && hasMore && (
+            {!isSearchActive && !loadingMore && hasMore && (
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <Typography variant='body2' color='text.secondary'>
                   Прокрутите вниз для загрузки еще предметов
@@ -996,7 +1011,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
             )}
 
             {/* Информация о конце списка */}
-            {!hasMore && items.length > 0 && (
+            {!isSearchActive && !hasMore && items.length > 0 && (
               <Box sx={{ textAlign: 'center', py: 2 }}>
                 <Typography variant='body2' color='text.secondary'>
                   Загружено {items.length} из {pagination.total} предметов

@@ -1,12 +1,20 @@
+// Типы для поиска в инвентаре
+
+export interface SearchFilters {
+  rarity?: 'common' | 'rare' | 'epic' | 'legendary';
+  is_equipped?: boolean;
+  pack_id?: number;
+}
+
 export interface InventoryItem {
   id: number;
   item_name: string;
+  pack_name: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   upgrade_level: number;
   is_equipped: boolean;
   image_url: string;
   background_url?: string;
-  pack_name: string;
   pack_price: number;
   upgradeable: boolean;
   item_number?: number;
@@ -73,4 +81,30 @@ export interface ItemUpdateEvent {
 
 export interface ItemObtainedEvent {
   detail: InventoryItem;
+}
+
+export interface SearchParams {
+  query: string;
+  category: 'inventory' | 'marketplace' | 'all';
+  page: number;
+  per_page: number;
+  filters: SearchFilters;
+}
+
+export interface SearchResult {
+  success: boolean;
+  items: InventoryItem[];
+  total: number;
+  has_next: boolean;
+}
+
+export interface SearchState {
+  query: string;
+  category: 'inventory' | 'marketplace' | 'all';
+  filters: SearchFilters;
+  isLoading: boolean;
+  results: InventoryItem[];
+  total: number;
+  hasNext: boolean;
+  error: string | null;
 }

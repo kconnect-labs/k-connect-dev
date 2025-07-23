@@ -907,14 +907,6 @@ const AboutPage = () => {
           'Отвечает за визуальную эстетику и пользовательский опыт К-Коннект.',
         username: '@yalinks',
       },
-      {
-        name: 'Rutrai 36',
-        role: 'Друг Проекта',
-        avatar: '/static/moderators/rutrai.jpg',
-        description:
-          'И огромное спасибо RUTRAI за то, что дал использовать свой концепт в рамках проекта.',
-        telegram: 'https://t.me/Rutrai36',
-      },
     ],
     moderators: [
       {
