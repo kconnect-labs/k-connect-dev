@@ -16,9 +16,11 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
 
   // Проверяем, какие платформы упоминаются в контенте
   const mentionedPlatforms = metaPlatforms.filter(platform =>
-    platform.keywords.some(keyword =>
-      content.toLowerCase().includes(keyword.toLowerCase())
-    )
+    platform.keywords.some(keyword => {
+      // Используем регулярное выражение с границами слов для точного поиска
+      const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+      return regex.test(content);
+    })
   );
 
   // Если нет упоминаний, не показываем баннер
