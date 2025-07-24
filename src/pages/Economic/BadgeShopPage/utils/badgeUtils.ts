@@ -37,14 +37,8 @@ export const filterBadgesByTab = (
   let filtered = badges;
 
   if (tabValue === 0) {
-    // Доступные - не купленные и не распроданные
-    filtered = badges.filter(
-      badge =>
-        !(
-          (badge.max_copies === 1 && (badge.copies_sold || 0) >= 1) ||
-          (badge.max_copies && (badge.copies_sold || 0) >= badge.max_copies)
-        ) && !badge.purchases?.some(p => p.buyer_id === userId)
-    );
+    // Все - показываем все бейджики без фильтрации
+    filtered = badges;
   } else if (tabValue === 1) {
     // Мои - созданные пользователем
     filtered = badges.filter(badge => badge.creator_id === userId);

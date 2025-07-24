@@ -30,15 +30,15 @@ export const BadgeShopControls: React.FC<BadgeShopControlsProps> = ({
         flexDirection: isMobile ? 'column' : 'row',
         alignItems: isMobile ? 'stretch' : 'center',
         justifyContent: 'space-between',
-        mb: 1,
-        gap: 0,
+        mb: isMobile ? 2 : 1,
+        gap: isMobile ? 2 : 0,
       }}
     >
       <StyledTabs
         value={tabValue}
         onChange={(event, newValue) => onTabChange(event, newValue as TabValue)}
         tabs={[
-          { value: 0, label: 'Доступные' },
+          { value: 0, label: 'Все' },
           { value: 1, label: 'Мои' },
           { value: 2, label: 'Купленные' },
           { value: 3, label: 'Скупленные' },
@@ -47,7 +47,6 @@ export const BadgeShopControls: React.FC<BadgeShopControlsProps> = ({
         customStyle
         style={{
           marginBottom: isMobile ? 0 : 0,
-          display: isMobile ? 'none' : 'block',
         }}
       />
 
