@@ -22,12 +22,14 @@ import {
   EmojiEvents,
   AlternateEmail,
   Favorite,
+  Storage,
 } from '@mui/icons-material';
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
 import ProfilePreview from './SettingsPage/components/ProfilePreview';
 import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
+import CacheManagementModal from './SettingsPage/components/CacheManagementModal';
 import {
   useProfile,
   useProfileInfo,
@@ -49,6 +51,7 @@ const SettingsPage = () => {
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
+  const [cacheModalOpen, setCacheModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState<{
     open: boolean;
     message: string;
@@ -137,6 +140,8 @@ const SettingsPage = () => {
       setKonnectModalOpen(true);
     } else if (section === 'linked') {
       setConnectionsModalOpen(true);
+    } else if (section === 'cache') {
+      setCacheModalOpen(true);
     } else {
       setOpenModal(section);
     }
@@ -283,6 +288,13 @@ const SettingsPage = () => {
       color: 'rgba(16, 185, 129, 0.66)', // #10b981 с прозрачностью
     },
     {
+      id: 'cache',
+      title: 'Управление кешем',
+      subtitle: 'Очистка и управление хранилищем',
+      icon: <Storage />,
+      color: 'rgba(76, 175, 80, 0.66)', // #4caf50 с прозрачностью
+    },
+    {
       id: 'security',
       title: 'Безопасность',
       subtitle: 'Данные входа и защита аккаунта',
@@ -324,6 +336,7 @@ const SettingsPage = () => {
       icon: <AlternateEmail />,
       color: 'rgba(156, 39, 176, 0.66)', // #9c27b0 с прозрачностью
     },
+
   ];
 
   return (
@@ -531,6 +544,11 @@ const SettingsPage = () => {
           open={konnectModalOpen}
           onClose={() => setKonnectModalOpen(false)}
           onSuccess={showSuccess}
+        />
+
+        <CacheManagementModal
+          open={cacheModalOpen}
+          onClose={() => setCacheModalOpen(false)}
         />
 
         <SuccessModal

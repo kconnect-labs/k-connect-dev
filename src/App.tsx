@@ -40,6 +40,7 @@ import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
+import { initMediaCache } from './services/mediaCache';
 
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
@@ -387,6 +388,11 @@ function App() {
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
       updateThemeSettings({ mode: savedThemeMode });
     }
+
+    // Инициализируем кеш медиа контента
+    initMediaCache().catch(error => {
+      console.warn('Failed to initialize media cache:', error);
+    });
 
     isInitialized.current = true;
   }, []);
