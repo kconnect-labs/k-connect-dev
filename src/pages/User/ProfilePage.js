@@ -70,6 +70,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [ownedUsernames, setOwnedUsernames] = useState([]);
   const [equippedItems, setEquippedItems] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [videos, setVideos] = useState([]);
   const { tabValue, setTabValue, handleTabChange } = useTabs();
@@ -508,6 +509,55 @@ const ProfilePage = () => {
     }
   };
 
+  // Функция для обработки обновления позиции айтема
+  const handleItemPositionUpdate = (itemId, newPosition) => {
+    setEquippedItems(prevItems => 
+      prevItems.map(item => 
+        item.id === itemId 
+          ? { ...item, profile_position_x: newPosition.x, profile_position_y: newPosition.y }
+          : item
+      )
+    );
+  };
+
+  // Функция для активации режима редактирования
+  const handleEditModeActivate = () => {
+    setIsEditMode(true);
+  };
+
+  // Функция для сохранения позиций всех айтемов
+  const handleSavePositions = async () => {
+    try {
+      // Сохраняем позиции всех айтемов
+      for (const item of equippedItems) {
+        if (item.profile_position_x !== null && item.profile_position_y !== null) {
+          await axios.post(`/api/inventory/item/${item.id}/position`, {
+            position_x: item.profile_position_x,
+            position_y: item.profile_position_y
+          });
+        }
+      }
+      setIsEditMode(false);
+    } catch (error) {
+      console.error('Error saving item positions:', error);
+    }
+  };
+
+  // Функция для отмены изменений
+  const handleCancelEdit = () => {
+    // Перезагружаем айтемы с сервера, чтобы сбросить изменения
+    refreshEquippedItems();
+    setIsEditMode(false);
+  };
+
+  // Проверяем, есть ли у пользователя настроенные айтемы
+  const hasConfiguredItems = equippedItems.some(item => 
+    item.profile_position_x !== null && item.profile_position_y !== null
+  );
+
+  // Проверяем, является ли текущий пользователь владельцем профиля
+  const isOwnProfile = currentUser && user && currentUser.id === user.id;
+
   const [searchParams] = useSearchParams();
   const itemIdToOpen = searchParams.get('item');
 
@@ -606,6 +656,30 @@ const ProfilePage = () => {
               zIndex: 2,
             }}
           >
+            {/* Контейнер для надетых айтемов на весь Paper */}
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'auto',
+                zIndex: 10,
+              }}
+              data-profile-container="true"
+            >
+              {equippedItems.map((item, index) => (
+                <EquippedItem 
+                  key={item.id} 
+                  item={item} 
+                  index={index} 
+                  onPositionUpdate={handleItemPositionUpdate}
+                  isEditMode={isOwnProfile && isEditMode}
+                  onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
+                />
+              ))}
+            </Box>
             {/* Banner section */}
             {user?.profile_id !== 2 ? (
               user?.banner_url ? (
@@ -703,9 +777,6 @@ const ProfilePage = () => {
                       }}
                     />
                   </Tooltip>
-                  {equippedItems.map((item, index) => (
-                    <EquippedItem key={item.id} item={item} index={index} />
-                  ))}
 
                   {isOnline && user?.subscription?.type !== 'channel' && (
                     <Box
@@ -1091,75 +1162,177 @@ const ProfilePage = () => {
                   )}
                 </Box>
 
-                {!isCurrentUser &&
-                  (!currentUser?.account_type ||
-                    currentUser.account_type !== 'channel') && (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 1,
-                        mt: 2,
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        startIcon={
-                          following ? <PersonRemoveIcon /> : <PersonAddIcon />
-                        }
-                        onClick={handleFollow}
-                        fullWidth
-                        sx={{
-                          borderRadius: 6,
-                          py: 0.7,
-                          fontWeight: 'bold',
-                          textTransform: 'none',
-                          boxShadow:
-                            user.status_color &&
-                            user.status_text &&
-                            user.subscription
-                              ? `0 2px 8px ${user.status_color}40`
-                              : '0 2px 8px rgba(208, 188, 255, 0.25)',
-                          backgroundColor: following
-                            ? 'rgba(255, 255, 255, 0.1)'
-                            : user.status_color &&
-                                user.status_text &&
-                                user.subscription
-                              ? user.status_color
-                              : 'primary.main',
-                          color: following ? 'text.primary' : '#fff',
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            backgroundColor: following
-                              ? 'rgba(255, 255, 255, 0.15)'
-                              : user.status_color &&
-                                  user.status_text &&
-                                  user.subscription
-                                ? `${user.status_color}E6`
-                                : 'primary.dark',
-                            transform: 'translateY(-2px)',
-                            boxShadow:
-                              user.status_color &&
-                              user.status_text &&
-                              user.subscription
-                                ? `0 4px 12px ${user.status_color}66`
-                                : '0 4px 12px rgba(208, 188, 255, 0.4)',
-                          },
-                          '&:active': {
-                            transform: 'translateY(0)',
-                          },
-                        }}
-                      >
-                        {following
-                          ? t('profile.actions.unfollow')
-                          : t('profile.actions.follow')}
-                      </Button>
-                    </Box>
-                  )}
+
               </Box>
             </Box>
           </Paper>
+          
+          {/* Информационный блок для владельца с не настроенными айтемами */}
+          {isOwnProfile && equippedItems.length > 0 && !hasConfiguredItems && !isEditMode && (
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                mb: 1,
+                textAlign: 'center',
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: 'primary.main',
+                  fontWeight: 'bold',
+                  mb: 1,
+                }}
+              >
+                🎨 Новое обновление: Настройка айтемов
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  mb: 2,
+                }}
+              >
+                Теперь вы можете настроить позиции айтемов в своем профиле!
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.875rem',
+                  lineHeight: 1.4,
+                }}
+              >
+                <strong>Как настроить:</strong><br />
+                • Трижды нажмите на любой айтем в профиле<br />
+                • Перетащите айтемы в нужные позиции<br />
+                • Нажмите "Сохранить" для закрепления
+              </Typography>
+            </Paper>
+          )}
+          
+          {/* Блок с кнопкой подписки */}
+          {!isCurrentUser &&
+            (!currentUser?.account_type ||
+              currentUser.account_type !== 'channel') && (
+            <Paper
+              sx={{
+                p: 1,
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Button
+                variant='contained'
+                color='primary'
+                startIcon={
+                  following ? <PersonRemoveIcon /> : <PersonAddIcon />
+                }
+                onClick={handleFollow}
+                fullWidth
+                sx={{
+                  borderRadius: '12px',
+                  py: 1.2,
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  boxShadow:
+                    user.status_color &&
+                    user.status_text &&
+                    user.subscription
+                      ? `0 2px 8px ${user.status_color}40`
+                      : '0 2px 8px rgba(208, 188, 255, 0.25)',
+                  backgroundColor: following
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : user.status_color &&
+                        user.status_text &&
+                        user.subscription
+                      ? user.status_color
+                      : 'primary.main',
+                  color: following ? 'text.primary' : '#fff',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: following
+                      ? 'rgba(255, 255, 255, 0.15)'
+                      : user.status_color &&
+                          user.status_text &&
+                          user.subscription
+                        ? `${user.status_color}E6`
+                        : 'primary.dark',
+                    transform: 'translateY(-2px)',
+                  },
+                  '&:active': {
+                    transform: 'translateY(0)',
+                  },
+                }}
+              >
+                {following
+                  ? t('profile.actions.unfollow')
+                  : t('profile.actions.follow')}
+              </Button>
+            </Paper>
+          )}
+          
+          {/* Блок с кнопками редактирования айтемов */}
+          {isEditMode && (
+            <Paper
+              sx={{
+                p: 1,
+                borderRadius: '12px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                mb: 1,
+                display: 'flex',
+                gap: 2,
+                justifyContent: 'center',
+              }}
+            >
+              <Button
+                variant="outlined"
+                onClick={handleCancelEdit}
+                sx={{
+                  borderRadius: '12px',
+
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'text.primary',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  },
+                }}
+              >
+                Отменить
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSavePositions}
+                sx={{
+                  borderRadius: '12px',
+
+                  backgroundColor: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                  },
+                }}
+              >
+                Сохранить
+              </Button>
+            </Paper>
+          )}
+          
           {user?.profile_id === 2 &&
             equippedItems &&
             equippedItems.length > 0 && (
