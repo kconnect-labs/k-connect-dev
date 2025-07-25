@@ -338,6 +338,14 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
       title: 'Информация',
       items: [
         {
+          id: 'bug-report',
+          title: 'Баг-репорт',
+          subtitle: 'Сообщить о проблеме',
+          icon: <BugReport />,
+          color: 'rgb(255, 7, 7)',
+          link: '/bugs',
+        },
+        {
           id: 'about',
           title: 'О платформе',
           subtitle: 'Информация о проекте',

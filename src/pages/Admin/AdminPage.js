@@ -1345,7 +1345,9 @@ const AdminPage = () => {
                                     ? 'Премиум'
                                     : key.subscription_type === 'ultimate'
                                       ? 'Ультимейт'
-                                      : key.subscription_type
+                                      : key.subscription_type === 'max'
+                                        ? 'MAX'
+                                        : key.subscription_type
                               }
                               color='success'
                               variant='outlined'
