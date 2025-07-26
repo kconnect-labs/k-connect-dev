@@ -17,7 +17,7 @@ import {
 } from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { AuthProvider, AuthContext } from './context/AuthContext';
+import { AuthProvider, AuthContext } from './context/AuthContext.js';
 import { MusicProvider } from './context/MusicContext';
 import {
   Box,
@@ -77,12 +77,8 @@ interface RequireAuthProps {
 }
 
 export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const location = useLocation();
-
-  if (loading) {
-    return null;
-  }
 
   if (isAuthenticated) {
     return <>{children}</>;
@@ -276,7 +272,7 @@ function App() {
   };
 
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loading, user: currentUser } = authContext || {};
+  const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
 
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {

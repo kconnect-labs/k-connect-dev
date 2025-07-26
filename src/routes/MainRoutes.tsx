@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.js';
 import MainLayout from '../components/Layout/MainLayout';
 import { RequireAuth } from '../App';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
@@ -141,7 +141,6 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
     if (loading) {
       return <LoadingIndicator />;
     }
-
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -161,7 +160,6 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
     if (loading) {
       return <LoadingIndicator />;
     }
-
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -186,15 +184,10 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
                 hasProfile() ? (
                   <MainPage />
                 ) : (
-                  // Если пользователь аутентифицирован, но у него нет профиля, перенаправляем на регистрацию
                   <Navigate to='/register/profile' replace />
                 )
               ) : (
-                <Navigate
-                  to='/login'
-                  replace
-                  state={{ from: location.pathname }}
-                />
+                <Navigate to='/login' replace state={{ from: location.pathname }} />
               )
             }
           />

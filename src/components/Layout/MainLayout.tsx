@@ -65,7 +65,9 @@ const MainContainer = styled(Box)(({ theme }) => ({
   overflow: 'auto',
 }));
 
-const ContentWrapper = styled(Box)<{
+const ContentWrapper = styled(Box, {
+  shouldForwardProp: (prop) => !['isMusicPage', 'isMobile', 'isInMessengerChat'].includes(prop as string),
+})<{
   isMusicPage: boolean;
   isMobile: boolean;
   isInMessengerChat: boolean;
@@ -75,7 +77,9 @@ const ContentWrapper = styled(Box)<{
   paddingTop: isMusicPage && isMobile ? 0 : isInMessengerChat ? 0 : 40,
 }));
 
-const SidebarContainer = styled(Box)<{ open: boolean }>(({ theme, open }) => ({
+const SidebarContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})<{ open: boolean }>(({ theme, open }) => ({
   flexShrink: 0,
   marginLeft: 'auto',
   '@media (max-width: 700px)': {

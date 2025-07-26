@@ -1686,10 +1686,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
   const handleCommentSubmit = async () => {
     if (!commentText.trim() && !commentImage) return;
 
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
-
     const now = Date.now();
     if (now < waitUntil) {
       const secondsRemaining = Math.ceil((waitUntil - now) / 1000);
@@ -1821,10 +1817,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
 
   const handleReplySubmit = async (commentId, parentReplyId = null) => {
     if (!replyText.trim() && !replyImage) return;
-
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
 
     const now = Date.now();
     if (now < waitUntil) {
@@ -1988,9 +1980,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
   };
 
   const handleLikeComment = async commentId => {
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
 
     try {
       setComments(prev =>
@@ -2028,9 +2017,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
   };
 
   const handleLikeReply = async replyId => {
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
 
     try {
       // Оптимистичное обновление UI
@@ -2100,9 +2086,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
   };
 
   const handleDeleteComment = commentId => {
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
 
     setCommentDeleteDialog({
       open: true,
@@ -2156,9 +2139,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
   };
 
   const handleDeleteReply = (commentId, replyId) => {
-    if (!requireAuth(user, isAuthenticated, navigate)) {
-      return;
-    }
 
     console.log(
       'Current comments structure:',

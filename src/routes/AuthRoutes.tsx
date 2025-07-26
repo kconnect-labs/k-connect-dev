@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box, useTheme } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.js';
 import { LoadingIndicator } from '../components/Loading/LoadingComponents';
-import { AuthRoutesProps, User } from '../types/routes';
+
+interface AuthRoutesProps {
+  setUser: (user: any) => void;
+}
 
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Auth/Login'));
@@ -26,7 +29,12 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
   const hasProfile = (): boolean => {
-    return user ? !!(user.username && user.id) : false;
+    if (!user || typeof user !== 'object') return false;
+    // Use optional chaining and type guards to avoid TS errors
+    return Boolean(
+      (user as { username?: string; id?: string | number }).username &&
+      (user as { username?: string; id?: string | number }).id
+    );
   };
 
   return (
@@ -57,9 +65,7 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
           <Route
             path='/register/profile'
             element={
-              loading ? (
-                <LoadingIndicator />
-              ) : isAuthenticated ? (
+              isAuthenticated ? (
                 hasProfile() ? (
                   // Если у пользователя уже есть профиль, перенаправляем на главную
                   <Navigate to='/' replace />
@@ -75,9 +81,7 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
           <Route
             path='/register/channel'
             element={
-              loading ? (
-                <LoadingIndicator />
-              ) : isAuthenticated ? (
+              isAuthenticated ? (
                 <RegisterChannel />
               ) : (
                 <Navigate to='/login' replace />
@@ -90,7 +94,6 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
           {/* <Route path="/element-auth" element={<ElementAuth />} /> */}
           {/* <Route path="/auth_elem/:token" element={<ElementAuth />} />
           <Route path="/auth_elem/direct/:token" element={<ElementAuth />} /> */}
-          <Route path='*' element={<Navigate to='/login' replace />} />
         </Routes>
       </React.Suspense>
     </Box>

@@ -41,12 +41,6 @@ const PostsFeed = ({ userId, statusColor }) => {
   const { isAuthenticated } = useContext(AuthContext);
   const isProfilePage = window.location.pathname.includes('/profile/');
 
-  console.log(
-    'PostsFeed: Component mounted with userId:',
-    userId,
-    'type:',
-    typeof userId
-  );
 
   // username вычисляем один раз
   const username = React.useMemo(() => {

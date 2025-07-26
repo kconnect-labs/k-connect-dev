@@ -118,9 +118,6 @@ const ProfilePage = () => {
   const { handlePostCreated } = usePostActions();
 
   const handleFollow = async () => {
-    if (!requireAuth(currentUser, isAuthenticated, navigate)) {
-      return;
-    }
 
     try {
       const response = await axios.post('/api/profile/follow', {
