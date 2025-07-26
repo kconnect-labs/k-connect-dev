@@ -11,8 +11,8 @@ export const DISABLE_LINK_PREVIEWS = false;
 export const URL_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
 
-// Регулярка для @упоминаний пользователей - Safari-совместимая версия
-export const USERNAME_MENTION_REGEX = /(^|[^a-zA-Z0-9_])@(\w+)/g;
+// Регулярка для @упоминаний пользователей - поддерживает кириллицу и латиницу
+export const USERNAME_MENTION_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])@([а-яА-Яa-zA-Z0-9_]+)/g;
 
 // Регулярка для #хештегов (поддерживает латиницу и кириллицу) - Safari-совместимая версия
 export const HASHTAG_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])#([а-яА-Яa-zA-Z0-9_]+)/g;

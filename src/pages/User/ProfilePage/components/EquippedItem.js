@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import OptimizedImage from '../../../../components/OptimizedImage';
 import axios from 'axios';
 
@@ -154,7 +154,7 @@ const getAverageColor = (imgElement, callback) => {
   callback(`rgba(${r}, ${g}, ${b}, 0.9)`);
 };
 
-const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditModeActivate }) => {
+const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode, onEditModeActivate }) => {
   const [particleColor, setParticleColor] = useState('rgba(208, 188, 255, 0.8)');
   const [isDragging, setIsDragging] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -346,8 +346,16 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
     });
   }, [isEditMode]);
 
+  // Throttling для лучшей производительности
+  const lastUpdateTime = useRef(0);
+  const THROTTLE_DELAY = 16; // ~60fps
+
   const handleMouseMove = useCallback((e) => {
     if (!isDragging || !isEditMode) return;
+    
+    const now = Date.now();
+    if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
+    lastUpdateTime.current = now;
     
     e.preventDefault();
     e.stopPropagation();
@@ -359,30 +367,12 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
     const profileRect = profileContainer.getBoundingClientRect();
     
     // Вычисляем позицию центра элемента в процентах относительно контейнера профиля
-    // e.clientX - это позиция курсора мыши, которая должна быть центром элемента
     const newX = ((e.clientX - profileRect.left) / profileRect.width) * 100;
     const newY = ((e.clientY - profileRect.top) / profileRect.height) * 100;
     
     // Ограничиваем позицию в пределах контейнера
-    // Делаем очень мягкие ограничения, чтобы можно было размещать айтемы практически в любом месте
-    const clampedX = Math.max(-5, Math.min(105, newX)); // Можно выходить за границы на 5%
-    const clampedY = Math.max(-5, Math.min(105, newY)); // Можно выходить за границы на 5%
-    
-    // Отладка вычисления позиции (раскомментировать для отладки)
-    // if (isDragging) {
-    //   console.log('Position calculation:', {
-    //     mouse_x: e.clientX,
-    //     mouse_y: e.clientY,
-    //     container_left: profileRect.left,
-    //     container_top: profileRect.top,
-    //     container_width: profileRect.width,
-    //     container_height: profileRect.height,
-    //     new_x: newX,
-    //     new_y: newY,
-    //     clamped_x: clampedX,
-    //     clamped_y: clampedY
-    //   });
-    // }
+    const clampedX = Math.max(-5, Math.min(105, newX));
+    const clampedY = Math.max(-5, Math.min(105, newY));
     
     const newPosition = { x: clampedX, y: clampedY };
     setPosition(newPosition);
@@ -395,6 +385,10 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
 
   const handleTouchMove = useCallback((e) => {
     if (!isDragging || !isEditMode) return;
+    
+    const now = Date.now();
+    if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
+    lastUpdateTime.current = now;
     
     e.preventDefault();
     e.stopPropagation();
@@ -476,18 +470,18 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
       ))
     : [];
 
-  const containerStyle = {
+  const containerStyle = useMemo(() => ({
     position: 'absolute',
-    left: `${position.x}%`, // Позиция центра элемента по X
-    top: `${position.y}%`,  // Позиция центра элемента по Y
-    transform: isDragging ? 'translate(-50%, -50%) scale(1.1)' : 'translate(-50%, -50%)', // Центрируем элемент относительно позиции
+    left: `${position.x}%`,
+    top: `${position.y}%`,
+    transform: isDragging ? 'translate(-50%, -50%) scale(1.1)' : 'translate(-50%, -50%)',
     width: '60px',
     height: '60px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: isEditMode ? 'grab' : 'pointer',
-    zIndex: 12 - index, // Убираем изменение z-index при активации режима редактирования
+    zIndex: 12 - index,
     userSelect: 'none',
     WebkitUserSelect: 'none',
     MozUserSelect: 'none',
@@ -496,15 +490,10 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
     touchAction: 'none',
     WebkitTouchCallout: 'none',
     WebkitTapHighlightColor: 'transparent',
-    ...(isEditMode && {
-      // Убираем анимацию и фильтр, которые могут влиять на позиционирование
-      // animation: 'dragPulse 2s infinite',
-      // filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))',
-    }),
     ...(isDragging && {
       cursor: 'grabbing',
     }),
-  };
+  }), [position.x, position.y, isDragging, isEditMode, index]);
 
   return (
     <div
@@ -552,7 +541,7 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
         fallbackText=''
         showSkeleton={false}
         skipExistenceCheck={true}
-        style={{
+        style={useMemo(() => ({
           width: '100%',
           height: '100%',
           objectFit: 'contain',
@@ -563,7 +552,7 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
           WebkitUserSelect: 'none',
           MozUserSelect: 'none',
           msUserSelect: 'none',
-        }}
+        }), [])}
         onLoad={e => {
           if (e && e.target && e.target.complete) {
             getAverageColor(e.target, color => {
@@ -574,6 +563,6 @@ const EquippedItem = ({ item, index = 0, onPositionUpdate, isEditMode, onEditMod
       />
     </div>
   );
-};
+});
 
 export default EquippedItem;

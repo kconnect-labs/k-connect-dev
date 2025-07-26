@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -510,7 +510,7 @@ const ProfilePage = () => {
   };
 
   // Функция для обработки обновления позиции айтема
-  const handleItemPositionUpdate = (itemId, newPosition) => {
+  const handleItemPositionUpdate = useCallback((itemId, newPosition) => {
     setEquippedItems(prevItems => 
       prevItems.map(item => 
         item.id === itemId 
@@ -518,15 +518,15 @@ const ProfilePage = () => {
           : item
       )
     );
-  };
+  }, []);
 
   // Функция для активации режима редактирования
-  const handleEditModeActivate = () => {
+  const handleEditModeActivate = useCallback(() => {
     setIsEditMode(true);
-  };
+  }, []);
 
   // Функция для сохранения позиций всех айтемов
-  const handleSavePositions = async () => {
+  const handleSavePositions = useCallback(async () => {
     try {
       // Сохраняем позиции всех айтемов
       for (const item of equippedItems) {
@@ -541,14 +541,14 @@ const ProfilePage = () => {
     } catch (error) {
       console.error('Error saving item positions:', error);
     }
-  };
+  }, [equippedItems]);
 
   // Функция для отмены изменений
-  const handleCancelEdit = () => {
+  const handleCancelEdit = useCallback(() => {
     // Перезагружаем айтемы с сервера, чтобы сбросить изменения
     refreshEquippedItems();
     setIsEditMode(false);
-  };
+  }, [refreshEquippedItems]);
 
   // Проверяем, есть ли у пользователя настроенные айтемы
   const hasConfiguredItems = equippedItems.some(item => 
@@ -1231,6 +1231,7 @@ const ProfilePage = () => {
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
+                marginBottom: '2px',
               }}
             >
               <Button
