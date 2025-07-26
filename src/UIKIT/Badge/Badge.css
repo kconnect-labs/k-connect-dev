@@ -5,7 +5,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   overflow: visible;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -15,36 +14,62 @@
   -ms-user-select: none;
 }
 
-/* Размеры бейджиков */
+/* CSS переменные для размеров и цветов */
+.badge {
+  --badge-size: 24px;
+  --upgrade-color: #FFD700;
+}
+
+/* Размеры бейджиков - обновлены для соответствия Material-UI */
 .badge--post {
+  width: 24px !important;
   height: 24px !important;
+  min-width: 24px !important;
   min-height: 24px !important;
-  margin-top: 9px !important;
+  max-width: 100px !important;
+  --badge-size: 24px;
 }
 
 .badge--small {
+  width: 16px !important;
   height: 16px !important;
+  min-width: 16px !important;
   min-height: 16px !important;
+  max-width: 100px !important;
+  --badge-size: 16px;
 }
 
 .badge--medium {
+  width: 24px !important;
   height: 24px !important;
+  min-width: 24px !important;
   min-height: 24px !important;
+  max-width: 100px !important;
+  --badge-size: 24px;
 }
 
 .badge--large {
+  width: 32px !important;
   height: 32px !important;
+  min-width: 32px !important;
   min-height: 32px !important;
+  max-width: 100px !important;
+  --badge-size: 32px;
 }
 
 .badge--shop {
+  width: 150px !important;
   height: 150px !important;
+  min-width: 150px !important;
   min-height: 150px !important;
+  max-width: 100px !important;
+  --badge-size: 150px;
 }
 
 /* Основное изображение бейджика */
 .badge__image {
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain;
   border-radius: inherit;
   transition: all 0.3s ease;
@@ -114,56 +139,57 @@
 
 /* Уменьшенное расстояние искр для постов */
 .badge--post .badge-sparkle:nth-child(1) {
-  transform: translate(-50%, -50%) rotate(0deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(0deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(2) {
-  transform: translate(-50%, -50%) rotate(60deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(60deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(3) {
-  transform: translate(-50%, -50%) rotate(120deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(120deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(4) {
-  transform: translate(-50%, -50%) rotate(180deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(180deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(5) {
-  transform: translate(-50%, -50%) rotate(240deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(240deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(6) {
-  transform: translate(-50%, -50%) rotate(300deg) translateY(-10px);
+  transform: translate(-50%, -50%) rotate(300deg) translateY(-8px);
 }
 
-/* ===== FLYING BADGE PARTICLES ===== */
-
-/* Летающие бейджики */
+/* Летающие частицы */
 .badge-particle {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--particle-size, 12px);
-  height: var(--particle-size, 12px);
+  width: var(--particle-size);
+  height: var(--particle-size);
+  color: var(--particle-color);
   pointer-events: none;
   z-index: 2;
-  animation: particle-float 6s ease-out infinite;
-  animation-delay: var(--particle-delay, 0s);
-  color: var(--particle-color, #ffd700);
-  filter: drop-shadow(0 0 6px var(--particle-color, #ffd700));
-  transform-origin: center;
+  animation: particle-float 2s ease-out forwards;
+  animation-delay: var(--particle-delay);
+  transform: translate(var(--particle-x), var(--particle-y)) rotate(var(--particle-rotation));
 }
 
 .badge-particle svg {
   width: 100%;
   height: 100%;
-  fill: currentColor;
-  animation: particle-rotate 3s linear infinite;
-  animation-delay: var(--particle-delay, 0s);
-  fill: currentColor;
-  opacity: 0.5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: particle-rotate 1s linear infinite;
 }
 
-/* ===== ANIMATIONS ===== */
-
-/* Вращение искр */
+/* Анимации */
 @keyframes sparkle-rotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes sparkle-rotate-svg {
   0% {
     transform: rotate(0deg);
   }
@@ -172,107 +198,65 @@
   }
 }
 
-/* Вращение SVG в искрах */
-@keyframes sparkle-rotate-svg {
-  0% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(180deg) scale(1.2);
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
-  }
-}
-
-/* Пульсация искр */
 @keyframes sparkle-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-20px) scale(0.8);
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.8);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-20px) scale(1.3);
+    transform: translate(-50%, -50%) scale(1.2);
   }
 }
 
-/* Уменьшенная пульсация искр для постов */
 @keyframes sparkle-pulse-post {
-  0%,
-  100% {
+  0%, 100% {
     opacity: 0.4;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-10px) scale(0.8);
+    transform: translate(-50%, -50%) scale(0.6);
   }
   50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-10px) scale(1.3);
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
-/* Увеличенная пульсация искр для магазина */
 @keyframes sparkle-pulse-shop {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-60px) scale(0.8);
+  0%, 100% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(1);
   }
   50% {
     opacity: 1;
-    transform: translate(-50%, -50%) rotate(var(--sparkle-angle, 0deg))
-      translateY(-60px) scale(1.3);
+    transform: translate(-50%, -50%) scale(1.4);
   }
 }
 
+/* Размеры искр для разных размеров бейджиков */
 .badge--post .badge-sparkle {
-  animation: sparkle-pulse-post 3s ease-in-out infinite;
+  width: 8px;
+  height: 8px;
 }
 
 .badge--shop .badge-sparkle {
-  animation: sparkle-pulse-shop 3s ease-in-out infinite;
+  width: 20px;
+  height: 20px;
 }
 
-/* Плавающие частицы-бейджики */
 @keyframes particle-float {
   0% {
-    opacity: 0;
-    transform: translate(-50%, -50%)
-      translate(var(--particle-x, 0), var(--particle-y, 0)) scale(0)
-      rotate(var(--particle-rotation, 0deg));
-  }
-  20% {
     opacity: 1;
-    transform: translate(-50%, -50%)
-      translate(var(--particle-x, 0), var(--particle-y, 0)) scale(1)
-      rotate(var(--particle-rotation, 0deg));
+    transform: translate(var(--particle-x), var(--particle-y)) scale(1) rotate(var(--particle-rotation));
   }
-  80% {
-    opacity: 1;
-    transform: translate(-50%, -50%)
-      translate(
-        calc(var(--particle-x, 0) * 1.1),
-        calc(var(--particle-y, 0) * 1.1)
-      )
-      scale(0.9) rotate(calc(var(--particle-rotation, 0deg) + 180deg));
+  50% {
+    opacity: 0.8;
+    transform: translate(calc(var(--particle-x) * 1.5), calc(var(--particle-y) * 1.5)) scale(1.2) rotate(calc(var(--particle-rotation) + 180deg));
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%)
-      translate(
-        calc(var(--particle-x, 0) * 1.2),
-        calc(var(--particle-y, 0) * 1.2)
-      )
-      scale(0) rotate(calc(var(--particle-rotation, 0deg) + 360deg));
+    transform: translate(calc(var(--particle-x) * 2), calc(var(--particle-y) * 2)) scale(0.5) rotate(calc(var(--particle-rotation) + 360deg));
   }
 }
 
-/* Вращение частиц */
 @keyframes particle-rotate {
   0% {
     transform: rotate(0deg);
@@ -282,74 +266,65 @@
   }
 }
 
-/* ===== UPGRADED BADGE SPECIFIC STYLES ===== */
-
+/* Upgrade эффекты */
 .badge--upgraded {
-  filter: drop-shadow(0 0 8px var(--upgrade-color, #ffd700));
+  position: relative;
 }
 
 .badge--upgraded .badge__image {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) brightness(1.1);
+  filter: drop-shadow(0 0 8px var(--upgrade-color));
 }
 
 .badge--upgraded.badge--hovered {
-  filter: drop-shadow(0 0 12px var(--upgrade-color, #ffd700));
   transform: scale(1.15);
+  filter: drop-shadow(0 0 12px var(--upgrade-color));
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
-
+/* Адаптивность */
 @media (max-width: 768px) {
   .badge--large {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    min-height: 28px;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
   }
 
   .badge-upgrade-effect {
-    width: calc(var(--badge-size) * 2.2);
-    height: calc(var(--badge-size) * 2.2);
+    width: calc(var(--badge-size) * 1.8);
+    height: calc(var(--badge-size) * 1.8);
   }
 
   .badge-particle {
-    width: 10px;
-    height: 10px;
+    --particle-size: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .badge--medium {
-    width: 20px;
-    height: 20px;
-    min-width: 20px;
-    min-height: 20px;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
   }
 
   .badge--large {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    min-height: 24px;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
   }
 
   .badge-particle {
-    width: 8px;
-    height: 8px;
+    --particle-size: 8px;
   }
 }
 
-/* ===== PERFORMANCE OPTIMIZATIONS ===== */
-
-/* Отключаем анимации для пользователей с предпочтением reduced motion */
+/* Доступность */
 @media (prefers-reduced-motion: reduce) {
   .badge,
   .badge__image,
-  .badge-sparkles,
-  .badge-sparkle,
-  .badge-sparkle-svg,
   .badge-particle,
-  .badge-particle svg {
+  .badge-sparkle {
     animation: none !important;
     transition: none !important;
   }
@@ -359,45 +334,32 @@
   }
 }
 
-/* Оптимизация для GPU */
+/* Фокус для доступности */
 .badge,
-.badge-upgrade-effect,
-.badge-sparkles,
-.badge-particle {
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-}
-
-/* ===== ACCESSIBILITY ===== */
-
-/* Фокус для клавиатурной навигации */
 .badge:focus {
-  outline: 2px solid var(--upgrade-color, #ffd700);
-  outline-offset: 2px;
+  outline: none;
 }
 
-/* Улучшенный контраст для скринридеров */
+.badge:focus {
+  box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.5);
+}
+
 .badge__image {
-  alt: attr(alt);
+  pointer-events: none;
 }
 
-/* ===== DARK MODE SUPPORT ===== */
-
+/* Темная тема */
 @media (prefers-color-scheme: dark) {
   .badge__image {
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   }
 
   .badge--hovered .badge__image {
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
   }
 }
 
-/* ===== SHOP BADGE SPECIFIC STYLES ===== */
-
+/* Специальные стили для магазина */
 .badge--shop .badge-sparkle {
-  width: 20px;
-  height: 20px;
+  animation: sparkle-pulse-shop 2s ease-in-out infinite;
 }

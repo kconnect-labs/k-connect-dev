@@ -1808,10 +1808,10 @@ const Post = ({
                   {(post.user?.subscription?.type === 'max' ||
                     post.user?.subscription_type === 'max' ||
                     post.user?.subscription?.subscription_type === 'max') && (
-                    <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                    <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
                   )}
                   {post.user?.achievement && (
-                    <Box sx={{ ml: 0.5 }}>
+                    <Box >
                       <Badge achievement={post.user.achievement} size='post' />
                     </Box>
                   )}
@@ -1987,7 +1987,7 @@ const Post = ({
                     {(post.original_post.user?.subscription?.type === 'max' ||
                       post.original_post.user?.subscription_type === 'max' ||
                       post.original_post.user?.subscription?.subscription_type === 'max') && (
-                      <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                      <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
                     )}
                     {post.original_post.user?.achievement && (
                       <Box sx={{ ml: 0.5 }}>
@@ -2917,7 +2917,7 @@ const Post = ({
                       {(lastComment.user?.subscription?.type === 'max' || 
                         lastComment.user?.subscription_type === 'max' ||
                         lastComment.user?.subscription?.subscription_type === 'max') && (
-                        <MaxIcon size={20} color="#FF4D50" style={{ margin: '0 2px' }} />
+                        <MaxIcon size={20} color="#FF4D50" style={{ marginLeft: '5px' }} />
                       )}
                     </Typography>
 

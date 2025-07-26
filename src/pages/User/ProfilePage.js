@@ -37,7 +37,6 @@ import { useLanguage } from '../../context/LanguageContext';
 import {
   CreatePost,
   TabPanel,
-  SubscriptionBadge,
   UpgradeEffects,
   UserStatus,
   InventoryTab,
@@ -46,7 +45,6 @@ import {
   EquippedItem,
 } from './ProfilePage/components';
 import { getLighterColor } from './ProfilePage/utils/colorUtils';
-import { requireAuth } from './ProfilePage/utils/authUtils';
 
 import { WallPostsTab, PostsTab } from './ProfilePage/components/TabComponents';
 import ImageLightbox from './ProfilePage/components/ImageLightbox';
@@ -853,7 +851,7 @@ const ProfilePage = () => {
                     />
 
                     {user?.subscription?.type === 'max' && (
-                      <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+                      <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
                     )}
 
                     {user?.achievement && (

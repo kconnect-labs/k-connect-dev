@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Box, Tooltip } from '@mui/material';
 import './Badge.css';
 
 /**
@@ -35,15 +36,15 @@ const Badge = ({
   const badgeSize = useMemo(() => {
     switch (size) {
       case 'post':
-        return { height: 24 };
+        return { width: 24, height: 24 };
       case 'small':
-        return { height: 16 };
+        return { width: 16, height: 16 };
       case 'large':
-        return { height: 32 };
+        return { width: 32, height: 32 };
       case 'shop':
-        return { height: 150 };
+        return { width: 150, height: 150 };
       default:
-        return { height: 24 };
+        return { width: 24, height: 24 };
     }
   }, [size]);
 
@@ -191,20 +192,28 @@ const Badge = ({
   // Если нет достижения, не рендерим ничего
   if (!achievement) return null;
 
-  return (
-    <div
+  const badgeContent = (
+    <Box
       ref={containerRef}
       className={badgeClasses}
-      style={{
+      sx={{
+        width: Math.min(badgeSize.width, 100), // Максимум 100px ширина
         height: badgeSize.height,
+        minWidth: badgeSize.width,
         minHeight: badgeSize.height,
+        maxWidth: 100,
         maxHeight: badgeSize.height,
-        '--badge-size': `${badgeSize.height}px`,
+        ml: '0px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'visible',
+        cursor: 'pointer',
         '--upgrade-color': achievement.color_upgrade || '#FFD700',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      title={showTooltip ? tooltipText || achievement.bage : undefined}
       {...props}
     >
       <img
@@ -215,13 +224,25 @@ const Badge = ({
         onLoad={handleImageLoad}
         onError={handleImageError}
         style={{
-          minHeight: badgeSize.height,
-          maxHeight: badgeSize.height,
+          width: '100%',
+          height: '100%',
           objectFit: 'contain',
+          borderRadius: 'inherit',
         }}
       />
-    </div>
+    </Box>
   );
+
+  // Оборачиваем в Tooltip если нужно
+  if (showTooltip) {
+    return (
+      <Tooltip title={tooltipText || achievement.bage}>
+        {badgeContent}
+      </Tooltip>
+    );
+  }
+
+  return badgeContent;
 };
 
 export default Badge;
