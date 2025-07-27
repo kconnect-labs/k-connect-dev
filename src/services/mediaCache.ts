@@ -23,6 +23,25 @@ class MediaCacheService {
   private maxAge = 7 * 24 * 60 * 60 * 1000;
   private isInitialized = false;
   
+  // Performance optimizations
+  private isIntercepting = false;
+  private pendingCacheOperations = new Set<string>();
+  private cacheQueue: Array<() => Promise<void>> = [];
+  private isProcessingQueue = false;
+  private maxConcurrentOperations = 3;
+  private activeOperations = 0;
+  
+  // Rate limiting
+  private lastCacheOperation = 0;
+  private minCacheInterval = 100; // ms between cache operations
+  private maxCacheOperationsPerSecond = 10;
+  private cacheOperationCount = 0;
+  private lastCacheReset = Date.now();
+  
+  // Cache control
+  private isCacheEnabled = true;
+  private performanceMode = false;
+  
 
   private imageCompressionSettings = {
     quality: 0.8,
@@ -36,6 +55,70 @@ class MediaCacheService {
     compressionTimeout: 5000,
     useWebWorkers: false
   };
+
+  // Rate limiting and queue management
+  private canPerformCacheOperation(): boolean {
+    // Check if cache is enabled
+    if (!this.isCacheEnabled) {
+      return false;
+    }
+    
+    const now = Date.now();
+    
+    // Reset counter every second
+    if (now - this.lastCacheReset > 1000) {
+      this.cacheOperationCount = 0;
+      this.lastCacheReset = now;
+    }
+    
+    // Check rate limits
+    if (this.cacheOperationCount >= this.maxCacheOperationsPerSecond) {
+      return false;
+    }
+    
+    // Check minimum interval
+    if (now - this.lastCacheOperation < this.minCacheInterval) {
+      return false;
+    }
+    
+    return true;
+  }
+
+  private async queueCacheOperation(operation: () => Promise<void>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.cacheQueue.push(async () => {
+        try {
+          await operation();
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
+      
+      this.processQueue();
+    });
+  }
+
+  private async processQueue(): Promise<void> {
+    if (this.isProcessingQueue || this.activeOperations >= this.maxConcurrentOperations) {
+      return;
+    }
+    
+    this.isProcessingQueue = true;
+    
+    while (this.cacheQueue.length > 0 && this.activeOperations < this.maxConcurrentOperations) {
+      const operation = this.cacheQueue.shift();
+      if (operation) {
+        this.activeOperations++;
+        operation().finally(() => {
+          this.activeOperations--;
+          this.processQueue();
+        });
+      }
+    }
+    
+    this.isProcessingQueue = false;
+  }
 
   async init(): Promise<void> {
     if (this.isInitialized) return;
@@ -71,64 +154,83 @@ class MediaCacheService {
   }
 
   private setupInterceptors(): void {
+    if (this.isIntercepting) return;
+    this.isIntercepting = true;
 
     const originalFetch = window.fetch;
     
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = typeof input === 'string' ? input : input.toString();
       
+      // Skip if not a media file or rate limited
+      if (!this.isMediaFile(url) || !this.canPerformCacheOperation()) {
+        return originalFetch(input, init);
+      }
 
       let normalizedUrl = url;
       
       try {
-
         if (url.startsWith('http')) {
           const urlObj = new URL(url);
           normalizedUrl = urlObj.pathname;
-        }
-
-        else if (url.startsWith('/')) {
+        } else if (url.startsWith('/')) {
           normalizedUrl = url;
         }
       } catch (error) {
-        console.warn('Failed to normalize URL:', url, error);
-        normalizedUrl = url;
+        return originalFetch(input, init);
       }
-      
 
-      if (this.isMediaFile(normalizedUrl)) {
-        try {
+      // Skip if already pending
+      if (this.pendingCacheOperations.has(normalizedUrl)) {
+        return originalFetch(input, init);
+      }
 
-          const cached = await this.get(normalizedUrl);
-          if (cached) {
-            return new Response(cached.blob, {
-              status: 200,
-              headers: {
-                'Content-Type': cached.type,
-                'X-Cache': 'HIT',
-                'Cache-Control': 'public, max-age=31536000',
-              },
-            });
-          }
-
-
-          const response = await originalFetch(input, init);
-          if (response.ok) {
-            const blob = await response.clone().blob();
-            await this.set(normalizedUrl, blob);
-          }
-          
-          return response;
-        } catch (error) {
-          console.warn('Media cache error:', error);
-          return originalFetch(input, init);
+      try {
+        // Check cache first
+        const cached = await this.get(normalizedUrl);
+        if (cached) {
+          this.cacheOperationCount++;
+          this.lastCacheOperation = Date.now();
+          return new Response(cached.blob, {
+            status: 200,
+            headers: {
+              'Content-Type': cached.type,
+              'X-Cache': 'HIT',
+              'Cache-Control': 'public, max-age=31536000',
+            },
+          });
         }
-      }
 
-      return originalFetch(input, init);
+        // Mark as pending
+        this.pendingCacheOperations.add(normalizedUrl);
+        
+        const response = await originalFetch(input, init);
+        
+        if (response.ok && this.canPerformCacheOperation()) {
+          // Queue cache operation instead of blocking
+          this.queueCacheOperation(async () => {
+            try {
+              const blob = await response.clone().blob();
+              await this.set(normalizedUrl, blob);
+            } catch (error) {
+              console.warn('Failed to cache media:', error);
+            } finally {
+              this.pendingCacheOperations.delete(normalizedUrl);
+            }
+          });
+        } else {
+          this.pendingCacheOperations.delete(normalizedUrl);
+        }
+        
+        return response;
+      } catch (error) {
+        this.pendingCacheOperations.delete(normalizedUrl);
+        return originalFetch(input, init);
+      }
     };
 
 
+    // Only intercept img elements and only for specific media files
     const originalCreateElement = document.createElement.bind(document);
     const self = this;
     document.createElement = function(tagName: string): HTMLElement {
@@ -137,29 +239,28 @@ class MediaCacheService {
       if (tagName.toLowerCase() === 'img') {
         const originalSetAttribute = element.setAttribute.bind(element);
         element.setAttribute = function(name: string, value: string) {
-          if (name === 'src') {
-
+          if (name === 'src' && self.canPerformCacheOperation()) {
             let normalizedValue = value;
             
             try {
-
               if (value.startsWith('http')) {
                 const urlObj = new URL(value);
                 normalizedValue = urlObj.pathname;
-              }
-
-              else if (value.startsWith('/')) {
+              } else if (value.startsWith('/')) {
                 normalizedValue = value;
               }
             } catch (error) {
-              console.warn('Failed to normalize img src URL:', value, error);
-              normalizedValue = value;
+              return originalSetAttribute(name, value);
             }
             
-            if (self.isMediaFile(normalizedValue)) {
-
+            // Only cache specific media types to reduce overhead
+            if (self.isPriorityMediaFile(normalizedValue)) {
               element.addEventListener('load', () => {
-                self.cacheImageFromElement(element as HTMLImageElement, normalizedValue);
+                if (self.canPerformCacheOperation()) {
+                  self.queueCacheOperation(async () => {
+                    await self.cacheImageFromElement(element as HTMLImageElement, normalizedValue);
+                  });
+                }
               });
             }
           }
@@ -180,10 +281,8 @@ class MediaCacheService {
     
     const lowerUrl = url.toLowerCase();
     
-
     const hasMediaExtension = mediaExtensions.some(ext => lowerUrl.includes(ext));
     
-
     const isInMediaFolder = lowerUrl.includes('/uploads/') ||
                            lowerUrl.includes('/images/') ||
                            lowerUrl.includes('/avatars/') ||
@@ -211,26 +310,37 @@ class MediaCacheService {
     return hasMediaExtension || isInMediaFolder;
   }
 
-  private async compressImage(blob: Blob, url: string): Promise<Blob> {
+  private isPriorityMediaFile(url: string): boolean {
+    const lowerUrl = url.toLowerCase();
+    
+    // Only cache high-priority media files to reduce overhead
+    const priorityExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    const hasPriorityExtension = priorityExtensions.some(ext => lowerUrl.includes(ext));
+    
+    // Only cache from specific high-priority folders
+    const isPriorityFolder = lowerUrl.includes('/uploads/avatar/') ||
+                            lowerUrl.includes('/uploads/post/') ||
+                            lowerUrl.includes('/uploads/prof_back/') ||
+                            lowerUrl.includes('/images/') ||
+                            lowerUrl.includes('/avatars/');
+    
+    return hasPriorityExtension && isPriorityFolder;
+  }
 
+  private async compressImage(blob: Blob, url: string): Promise<Blob> {
     if (!this.imageCompressionSettings.enableCompression || !this.isImageFile(url)) {
       return blob;
     }
 
-
     if (this.shouldSkipCompression(url)) {
-      console.log(`Skipping compression for special file type: ${url}`);
       return blob;
     }
 
-
     if (blob.size < this.imageCompressionSettings.minSizeToCompress) {
-      console.log(`Skipping compression for small file: ${this.formatBytes(blob.size)}`);
       return blob;
     }
 
     if (blob.size > this.imageCompressionSettings.maxSizeToCompress) {
-      console.log(`Skipping compression for large file: ${this.formatBytes(blob.size)}`);
       return blob;
     }
 
@@ -238,9 +348,7 @@ class MediaCacheService {
       return new Promise((resolve, reject) => {
         const img = new Image();
         
-
         const timeout = setTimeout(() => {
-          console.warn('Image compression timeout, using original');
           resolve(blob);
         }, this.imageCompressionSettings.compressionTimeout);
 
@@ -254,7 +362,6 @@ class MediaCacheService {
             return;
           }
 
-
           let { width, height } = img;
           const { maxWidth, maxHeight } = this.imageCompressionSettings;
 
@@ -266,21 +373,15 @@ class MediaCacheService {
 
           canvas.width = width;
           canvas.height = height;
-
-
           ctx.drawImage(img, 0, 0, width, height);
-
 
           canvas.toBlob(
             (compressedBlob) => {
               if (compressedBlob) {
-
                 const compressionRatio = compressedBlob.size / blob.size;
                 if (compressionRatio < 0.95) {
-                  console.log(`Image compressed: ${this.formatBytes(blob.size)} → ${this.formatBytes(compressedBlob.size)} (${Math.round((1 - compressionRatio) * 100)}% reduction)`);
                   resolve(compressedBlob);
                 } else {
-                  console.log(`Compression not effective, using original`);
                   resolve(blob);
                 }
               } else {
@@ -294,16 +395,35 @@ class MediaCacheService {
 
         img.onerror = () => {
           clearTimeout(timeout);
-          console.warn('Failed to load image for compression, using original');
           resolve(blob);
         };
         
         img.src = URL.createObjectURL(blob);
       });
     } catch (error) {
-      console.warn('Failed to compress image:', error);
       return blob;
     }
+  }
+
+  private async compressImageNonBlocking(blob: Blob, url: string): Promise<Blob> {
+    // For non-blocking compression, use requestIdleCallback or setTimeout
+    return new Promise((resolve) => {
+      const compress = async () => {
+        try {
+          const compressed = await this.compressImage(blob, url);
+          resolve(compressed);
+        } catch (error) {
+          resolve(blob);
+        }
+      };
+
+      // Use requestIdleCallback if available, otherwise setTimeout
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(compress, { timeout: 1000 });
+      } else {
+        setTimeout(compress, 0);
+      }
+    });
   }
 
   private isImageFile(url: string): boolean {
@@ -388,8 +508,8 @@ class MediaCacheService {
 
     const originalSize = blob.size;
     
-
-    const compressedBlob = await this.compressImage(blob, url);
+    // Use non-blocking compression
+    const compressedBlob = await this.compressImageNonBlocking(blob, url);
     
     const cachedMedia: CachedMedia = {
       url,
@@ -399,7 +519,6 @@ class MediaCacheService {
       type: compressedBlob.type,
       originalSize: originalSize !== compressedBlob.size ? originalSize : undefined,
     };
-
 
     await this.ensureCacheSize(compressedBlob.size);
 
@@ -619,6 +738,47 @@ class MediaCacheService {
     return { ...this.imageCompressionSettings };
   }
 
+  // Cache control methods
+  enableCache(): void {
+    this.isCacheEnabled = true;
+    console.log('✅ Media cache enabled');
+  }
+
+  disableCache(): void {
+    this.isCacheEnabled = false;
+    console.log('❌ Media cache disabled');
+  }
+
+  setPerformanceMode(enabled: boolean): void {
+    this.performanceMode = enabled;
+    if (enabled) {
+      this.maxCacheOperationsPerSecond = 5;
+      this.minCacheInterval = 200;
+      this.maxConcurrentOperations = 2;
+    } else {
+      this.maxCacheOperationsPerSecond = 10;
+      this.minCacheInterval = 100;
+      this.maxConcurrentOperations = 3;
+    }
+    console.log(`🎯 Performance mode ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  getCacheStatus(): {
+    enabled: boolean;
+    performanceMode: boolean;
+    queueLength: number;
+    activeOperations: number;
+    pendingOperations: number;
+  } {
+    return {
+      enabled: this.isCacheEnabled,
+      performanceMode: this.performanceMode,
+      queueLength: this.cacheQueue.length,
+      activeOperations: this.activeOperations,
+      pendingOperations: this.pendingCacheOperations.size,
+    };
+  }
+
 
   async recompressAllImages(): Promise<void> {
     const allMedia = await this.getAllCachedMedia();
@@ -657,6 +817,12 @@ export const getAllCachedMedia = () => mediaCacheService.getAllCachedMedia();
 export const updateImageCompressionSettings = (settings: any) => mediaCacheService.updateCompressionSettings(settings);
 export const getImageCompressionSettings = () => mediaCacheService.getCompressionSettings();
 export const recompressAllImages = () => mediaCacheService.recompressAllImages();
+
+// Cache control exports
+export const enableMediaCache = () => mediaCacheService.enableCache();
+export const disableMediaCache = () => mediaCacheService.disableCache();
+export const setMediaCachePerformanceMode = (enabled: boolean) => mediaCacheService.setPerformanceMode(enabled);
+export const getMediaCacheStatus = () => mediaCacheService.getCacheStatus();
 
 
 export default mediaCacheService; 

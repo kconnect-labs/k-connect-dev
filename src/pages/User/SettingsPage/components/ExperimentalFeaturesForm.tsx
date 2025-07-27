@@ -11,6 +11,12 @@ import {
 import { BlurOff as BlurOffIcon, Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useBlurOptimization } from '../../../../hooks/useBlurOptimization';
 import { useBlurOptimizationV2 } from '../../../../hooks/useBlurOptimizationV2';
+import { 
+  enableMediaCache, 
+  disableMediaCache, 
+  setMediaCachePerformanceMode,
+  getMediaCacheStatus 
+} from '../../../../services/mediaCache';
 
 interface ExperimentalFeaturesFormProps {
   onSuccess?: () => void;
@@ -20,6 +26,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
   onSuccess,
 }) => {
   const [showReloadButton, setShowReloadButton] = useState(false);
+  const [cacheStatus, setCacheStatus] = useState(() => getMediaCacheStatus());
   
   const {
     isEnabled: blurOptimizationEnabled,
@@ -82,6 +89,20 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
 
   const handleDismissReload = () => {
     setShowReloadButton(false);
+  };
+
+  const handleCacheToggle = () => {
+    if (cacheStatus.enabled) {
+      disableMediaCache();
+    } else {
+      enableMediaCache();
+    }
+    setCacheStatus(getMediaCacheStatus());
+  };
+
+  const handlePerformanceModeToggle = () => {
+    setMediaCachePerformanceMode(!cacheStatus.performanceMode);
+    setCacheStatus(getMediaCacheStatus());
   };
 
   // Автоматически скрываем кнопку перезагрузки через 30 секунд
@@ -159,6 +180,53 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
           <BlurOffIcon sx={{ color: 'text.secondary' }} />
         )}
       </Box>
+
+      {/* Управление кешем медиа */}
+      <Box sx={featureItemStyle}>
+        <Switch
+          checked={cacheStatus.enabled}
+          onChange={handleCacheToggle}
+          color='primary'
+        />
+        <Box sx={{ flex: 1 }}>
+          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
+            Кеш медиа-файлов
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Кеширование изображений и медиа для ускорения загрузки. 
+            {cacheStatus.enabled && (
+              <span style={{ color: '#ff9800' }}>
+                {' '}Активно: {cacheStatus.queueLength} в очереди, {cacheStatus.activeOperations} операций
+              </span>
+            )}
+          </Typography>
+        </Box>
+        {cacheStatus.enabled && (
+          <Switch
+            checked={cacheStatus.performanceMode}
+            onChange={handlePerformanceModeToggle}
+            size='small'
+            color='secondary'
+          />
+        )}
+      </Box>
+
+      {cacheStatus.enabled && (
+        <Box sx={{ 
+          mt: 1, 
+          p: 1.5, 
+          borderRadius: 1,
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          fontSize: '0.8rem',
+          color: 'text.secondary'
+        }}>
+          <Typography variant='body2'>
+            Режим производительности: {cacheStatus.performanceMode ? 'Включен' : 'Выключен'}
+            {cacheStatus.performanceMode && ' (ограниченная нагрузка на сеть)'}
+          </Typography>
+        </Box>
+      )}
 
       {/* Кнопка перезагрузки */}
       {showReloadButton && (
