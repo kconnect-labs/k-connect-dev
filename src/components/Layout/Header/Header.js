@@ -73,7 +73,7 @@ import HeaderActions from './HeaderActions';
 import HeaderProfileMenu from './HeaderProfileMenu';
 import ReactDOM from 'react-dom';
 
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
+const StyledAppBar = styled(AppBar)(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
   color: '#FFFFFF',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
@@ -83,14 +83,13 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   transform: 'translateX(-50%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
-  borderRadius: '12px',
   width: '100%',
   zIndex: theme.zIndex.appBar,
+  transition: 'transform 0.3s ease-in-out',
   [theme.breakpoints.down('md')]: {
-    top: 4,
     width: 'calc(100% - 5px)',
     left: '2.5px',
-    transform: 'none',
+    transform: isMobile && isHeaderHidden ? 'translateY(-100%)' : 'none',
   },
   height: 48,
 }));
@@ -108,190 +107,6 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-const LogoSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  marginRight: theme.spacing(1),
-}));
-
-const LogoText = styled(Typography)(({ theme }) => ({
-  fontWeight: 'bold',
-  fontSize: '1.2rem',
-  marginLeft: theme.spacing(1),
-  display: 'flex',
-  alignItems: 'center',
-  color: theme.palette.mode === 'dark' ? '#FFFFFF' : theme.palette.text.primary,
-}));
-
-const PlayerSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexGrow: 1,
-  maxWidth: 400,
-  '@media (max-width: 700px)': {
-    display: 'none',
-  },
-}));
-
-const PlayerControls = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: theme.spacing(0.5),
-}));
-
-const VolumeControl = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  position: 'relative',
-  '&:hover .volume-slider': {
-    width: 60,
-    opacity: 1,
-    marginLeft: theme.spacing(0.5),
-  },
-}));
-
-const VolumeSlider = styled('input')(({ theme }) => ({
-  width: 0,
-  height: 3,
-  borderRadius: 1.5,
-  backgroundColor: alpha(theme.palette.primary.main, 0.2),
-  appearance: 'none',
-  outline: 'none',
-  transition: 'all 0.2s ease',
-  opacity: 0,
-  '&::-webkit-slider-thumb': {
-    appearance: 'none',
-    width: 10,
-    height: 10,
-    borderRadius: '50%',
-    backgroundColor: theme.palette.primary.main,
-    cursor: 'pointer',
-  },
-  '&.volume-slider': {},
-}));
-
-const ActionsSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(0.5),
-}));
-
-const PointsChip = styled(Chip)(({ theme }) => ({
-  borderRadius: 20,
-  fontWeight: 'bold',
-  background: `linear-gradient(45deg, #d0bcff 30%, ${alpha('#d0bcff', 0.8)} 90%)`,
-  color: '#1a1a1a',
-  border: 'none',
-  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-  height: 32,
-  '& .MuiChip-icon': {
-    color: 'inherit',
-  },
-  '@media (max-width: 700px)': {
-    display: 'none',
-  },
-}));
-
-const PointsIcon = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: 20,
-  height: 20,
-  '& svg': {
-    width: '100%',
-    height: '100%',
-  },
-}));
-
-const SearchInputWrapper = styled(Box)(({ theme, fullWidth }) => ({
-  position: 'relative',
-  borderRadius: 16,
-  backgroundColor: '#151515',
-  width: fullWidth ? '100%' : 450,
-  display: 'flex',
-  transition: 'all 0.3s ease',
-  '@media (max-width: 700px)': {
-    width: '100vw',
-    margin: 0,
-    borderRadius: 0,
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: '100vh',
-    zIndex: 1300,
-  },
-}));
-
-const StyledSearchInput = styled(TextField)(({ theme }) => ({
-  width: '100%',
-  '& .MuiInputBase-root': {
-    color: theme.palette.common.white,
-    backgroundColor: '#151515',
-    borderRadius: 24,
-    padding: theme.spacing(0.5, 1),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.1),
-    },
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: alpha(theme.palette.common.white, 0.2),
-  },
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1),
-  },
-}));
-
-const SearchResultsContainer = styled(Paper)(({ theme }) => ({
-  position: 'absolute',
-  top: '100%',
-  left: 10,
-  right: 10,
-  zIndex: 1200,
-  maxHeight: 'calc(80vh - 70px)',
-  overflow: 'auto',
-  marginTop: theme.spacing(0.5),
-  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
-  borderRadius: 12,
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  backgroundImage:
-    'linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08))',
-  '@media (max-width: 700px)': {
-    position: 'fixed',
-    top: '48px',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    maxHeight: 'calc(100vh - 48px)',
-    height: 'calc(100vh - 48px)',
-    margin: 0,
-    borderRadius: 0,
-    border: 'none',
-    boxShadow: 'none',
-  },
-}));
-
-const SearchResultTabs = styled(Tabs)(({ theme }) => ({
-  minHeight: 40,
-  '& .MuiTabs-indicator': {
-    backgroundColor: '#D0BCFF',
-    height: 3,
-  },
-}));
-
-const SearchResultTab = styled(Tab)(({ theme }) => ({
-  minHeight: 40,
-  textTransform: 'none',
-  fontWeight: 500,
-  fontSize: '0.875rem',
-}));
 
 const Header = ({ toggleSidebar }) => {
   const { user, logout, setUser } = useContext(AuthContext);
@@ -367,6 +182,10 @@ const Header = ({ toggleSidebar }) => {
   const isLanguageMenuOpen = Boolean(languageMenuAnchorEl);
 
   const [isInMessengerChat, setIsInMessengerChat] = useState(false);
+  
+  // Состояние для скрытия/показа хедера на мобильных устройствах
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -599,310 +418,6 @@ const Header = ({ toggleSidebar }) => {
     handleLanguageMenuClose();
   };
 
-  const profileMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-      PaperProps={{
-        elevation: 3,
-        sx: {
-          minWidth: 280,
-          mt: 0.5,
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-          borderRadius: '14px',
-          overflow: 'visible',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(10px)',
-          border: theme => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-          [theme.breakpoints.down('sm')]: {
-            minWidth: '100vw',
-            maxWidth: '100vw',
-            width: '100vw',
-            margin: 0,
-            borderRadius: 0,
-            position: 'fixed',
-            top: '0 !important',
-            left: '0 !important',
-            right: '0 !important',
-            bottom: '0 !important',
-            height: '100vh',
-            maxHeight: '100vh',
-            border: 'none',
-            boxShadow: 'none',
-          },
-          '& .MuiMenuItem-root': {
-            padding: '8px 14px',
-            borderRadius: '8px',
-            margin: '1px 6px',
-            minHeight: '36px',
-            transition: 'all 0.2s',
-            '&:hover': {
-              backgroundColor: theme => alpha(theme.palette.primary.main, 0.08),
-            },
-          },
-          '& .MuiDivider-root': {
-            margin: '4px 0',
-          },
-          '& .MuiTypography-caption': {
-            padding: '4px 12px',
-          },
-        },
-      }}
-    >
-      {user && (
-        <>
-          <Box sx={{ px: 2, py: 2, textAlign: 'center', position: 'relative' }}>
-            {isMobile && (
-              <IconButton
-                onClick={handleMenuClose}
-                sx={{
-                  position: 'absolute',
-                  right: 8,
-                  top: 8,
-                  color: 'text.secondary',
-                  '&:hover': {
-                    backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                  },
-                }}
-              >
-                <ClearIcon />
-              </IconButton>
-            )}
-            <Avatar
-              src={
-                user.photo
-                  ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                  : '/static/uploads/avatar/system/avatar.png'
-              }
-              alt={user.name || user.username}
-              sx={{
-                width: 80,
-                height: 80,
-                mx: 'auto',
-                border: `2px solid ${themeValues.primaryColor}`,
-                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-              }}
-            />
-            <Typography variant='h6' sx={{ mt: 2, fontWeight: 600 }}>
-              {user.name || user.username}
-            </Typography>
-            <Typography variant='body1' color='text.secondary' sx={{ mt: 0.5 }}>
-              @{user.username}
-            </Typography>
-            {user.account_type === 'channel' && (
-              <Chip
-                size='small'
-                label={t('header.profile_menu.channel_label')}
-                color='primary'
-                sx={{ mt: 1, fontWeight: 500, px: 1 }}
-              />
-            )}
-          </Box>
-          <Divider sx={{ opacity: 0.1, mx: 2 }} />
-
-          {isMobile && (
-            <>
-              <Box sx={{ px: 2, py: 1, display: 'flex', gap: 1 }}>
-                <Button
-                  component={Link}
-                  to='/balance'
-                  startIcon={
-                    <Icon
-                      icon='solar:wallet-money-bold'
-                      width='18'
-                      height='18'
-                    />
-                  }
-                  sx={{
-                    flex: 1,
-                    borderRadius: 2,
-                    textTransform: 'none',
-                    backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                    color: 'primary.main',
-                    '&:hover': {
-                      backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                    },
-                  }}
-                >
-                  {t('header.profile_menu.wallet')}
-                </Button>
-                <Button
-                  component={Link}
-                  to='/badge-shop'
-                  startIcon={
-                    <Icon icon='solar:shop-bold' width='18' height='18' />
-                  }
-                  sx={{
-                    flex: 1,
-                    borderRadius: 2,
-                    textTransform: 'none',
-                    backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                    color: 'primary.main',
-                    '&:hover': {
-                      backgroundColor: alpha(theme.palette.primary.main, 0.12),
-                    },
-                  }}
-                >
-                  {t('header.profile_menu.shop')}
-                </Button>
-              </Box>
-              <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-            </>
-          )}
-        </>
-      )}
-
-      <MenuItem onClick={() => handleNavigate(`/profile/${user?.username}`)}>
-        <ListItemIcon>
-          <AccountCircleIcon fontSize='small' color='primary' />
-        </ListItemIcon>
-        <ListItemText>{t('header.profile_menu.my_profile')}</ListItemText>
-      </MenuItem>
-
-      <MenuItem onClick={() => handleNavigate('/settings')}>
-        <ListItemIcon>
-          <SettingsIcon fontSize='small' color='primary' />
-        </ListItemIcon>
-        <ListItemText>{t('header.profile_menu.settings')}</ListItemText>
-      </MenuItem>
-
-      {isMobile && (
-        <>
-          <MenuItem onClick={() => handleNavigate('/search')}>
-            <ListItemIcon>
-              <Icon icon='solar:magnifer-bold' width='20' height='20' />
-            </ListItemIcon>
-            <ListItemText>{t('header.profile_menu.search')}</ListItemText>
-          </MenuItem>
-
-          <MenuItem onClick={() => handleNavigate('/subscriptions')}>
-            <ListItemIcon>
-              <Icon
-                icon='solar:users-group-rounded-bold'
-                width='20'
-                height='20'
-              />
-            </ListItemIcon>
-            <ListItemText>
-              {t('header.profile_menu.subscriptions')}
-            </ListItemText>
-          </MenuItem>
-
-          <MenuItem onClick={() => handleNavigate('/channels')}>
-            <ListItemIcon>
-              <Icon icon='solar:play-stream-bold' width='20' height='20' />
-            </ListItemIcon>
-            <ListItemText>{t('header.profile_menu.channels')}</ListItemText>
-          </MenuItem>
-
-          <MenuItem onClick={() => handleNavigate('/leaderboard')}>
-            <ListItemIcon>
-              <Icon icon='solar:chart-bold' width='20' height='20' />
-            </ListItemIcon>
-            <ListItemText>{t('header.profile_menu.rating')}</ListItemText>
-          </MenuItem>
-        </>
-      )}
-
-      <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-
-      {accounts.channels.length < 3 && (
-        <MenuItem onClick={handleCreateChannel}>
-          <ListItemIcon>
-            <AddIcon fontSize='small' color='primary' />
-          </ListItemIcon>
-          <ListItemText>{t('header.profile_menu.create_channel')}</ListItemText>
-        </MenuItem>
-      )}
-
-      {accounts.main_account &&
-        accounts.current_account?.account_type === 'channel' && (
-          <>
-            <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-            <Typography
-              variant='caption'
-              sx={{
-                px: 3,
-                py: 0.5,
-                display: 'block',
-                color: 'text.secondary',
-                fontWeight: 500,
-              }}
-            >
-              {t('header.profile_menu.main_account')}
-            </Typography>
-            <MenuItem
-              key={accounts.main_account.id}
-              onClick={() => handleSwitchAccount(accounts.main_account.id)}
-            >
-              <ListItemIcon>
-                <Avatar
-                  src={accounts.main_account.photo}
-                  sx={{ width: 30, height: 30 }}
-                />
-              </ListItemIcon>
-              <ListItemText>{accounts.main_account.name}</ListItemText>
-            </MenuItem>
-          </>
-        )}
-
-      {accounts.channels && accounts.channels.length > 0 && (
-        <>
-          <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-          <Typography
-            variant='caption'
-            sx={{
-              px: 3,
-              py: 0.5,
-              display: 'block',
-              color: 'text.secondary',
-              fontWeight: 500,
-            }}
-          >
-            {t('header.profile_menu.my_channels')}
-          </Typography>
-          {accounts.channels.map(channel => (
-            <MenuItem
-              key={channel.id}
-              onClick={() => handleSwitchAccount(channel.id)}
-            >
-              <ListItemIcon>
-                <Avatar src={channel.photo} sx={{ width: 30, height: 30 }} />
-              </ListItemIcon>
-              <ListItemText>{channel.name}</ListItemText>
-            </MenuItem>
-          ))}
-        </>
-      )}
-
-      <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-
-      <MenuItem onClick={handleLanguageMenuOpen}>
-        <ListItemIcon>
-          <TranslateIcon fontSize='small' color='primary' />
-        </ListItemIcon>
-        <ListItemText>{t('header.profile_menu.language')}</ListItemText>
-      </MenuItem>
-
-      <MenuItem
-        onClick={handleLogout}
-        sx={{
-          color: theme => theme.palette.error.main,
-          '&:hover': {
-            backgroundColor: theme => alpha(theme.palette.error.main, 0.08),
-          },
-        }}
-      >
-        <ListItemIcon>
-          <ExitToAppIcon fontSize='small' style={{ color: 'inherit' }} />
-        </ListItemIcon>
-        <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
-      </MenuItem>
-    </Menu>
-  );
 
   const languageMenu = (
     <Menu
@@ -1075,8 +590,69 @@ const Header = ({ toggleSidebar }) => {
     };
   }, []);
 
+  // useEffect для отслеживания скролла на мобильных устройствах
+  useEffect(() => {
+    if (!isMobile) return; // Только для мобильных устройств
+
+    const handleScroll = () => {
+      // Ищем MainContainer по data-testid
+      const mainContainer = document.querySelector('[data-testid="main-container"]') || 
+                           document.querySelector('[style*="overflow: auto"]') || 
+                           document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
+                           document.body;
+      
+      const currentScrollY = mainContainer.scrollTop;
+      
+      // Определяем направление скролла
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Скролл вниз и мы уже проскроллили больше 100px - скрываем хедер
+        setIsHeaderHidden(true);
+      } else if (currentScrollY < lastScrollY) {
+        // Скролл вверх - показываем хедер
+        setIsHeaderHidden(false);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    // Добавляем throttling для оптимизации производительности
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Обработчик касания верхней части экрана для показа хедера
+    const handleTouchStart = (e) => {
+      if (e.touches[0].clientY < 50) { // Касание в верхних 50px экрана
+        setIsHeaderHidden(false);
+      }
+    };
+
+    // Ищем MainContainer и добавляем обработчик скролла к нему
+    const mainContainer = document.querySelector('[data-testid="main-container"]') || 
+                         document.querySelector('[style*="overflow: auto"]') || 
+                         document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
+                         document.body;
+    
+    mainContainer.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+
+    return () => {
+      mainContainer.removeEventListener('scroll', throttledHandleScroll);
+      document.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, [isMobile, lastScrollY]);
+
   return (
     <StyledAppBar
+      isHeaderHidden={isHeaderHidden}
+      isMobile={isMobile}
       sx={{
         display:
           (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',

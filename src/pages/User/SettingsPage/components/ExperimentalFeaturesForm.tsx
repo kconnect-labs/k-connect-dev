@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -6,9 +6,11 @@ import {
   FormControlLabel,
   Alert,
   CircularProgress,
+  Button,
 } from '@mui/material';
-import { BlurOff as BlurOffIcon } from '@mui/icons-material';
+import { BlurOff as BlurOffIcon, Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useBlurOptimization } from '../../../../hooks/useBlurOptimization';
+import { useBlurOptimizationV2 } from '../../../../hooks/useBlurOptimizationV2';
 
 interface ExperimentalFeaturesFormProps {
   onSuccess?: () => void;
@@ -17,11 +19,19 @@ interface ExperimentalFeaturesFormProps {
 const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
   onSuccess,
 }) => {
+  const [showReloadButton, setShowReloadButton] = useState(false);
+  
   const {
     isEnabled: blurOptimizationEnabled,
     isLoading: blurOptimizationLoading,
     toggleBlurOptimization,
   } = useBlurOptimization();
+
+  const {
+    isEnabled: blurOptimizationV2Enabled,
+    isLoading: blurOptimizationV2Loading,
+    toggleBlurOptimization: toggleV2,
+  } = useBlurOptimizationV2();
 
   const containerStyle = {
     p: 3,
@@ -49,11 +59,41 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
   const handleBlurToggle = async () => {
     try {
       await toggleBlurOptimization();
+      setShowReloadButton(true);
       onSuccess?.();
     } catch (error) {
       console.error('Error toggling blur optimization:', error);
     }
   };
+
+  const handleBlurV2Toggle = async () => {
+    try {
+      await toggleV2();
+      setShowReloadButton(true);
+      onSuccess?.();
+    } catch (error) {
+      console.error('Error toggling blur optimization V2:', error);
+    }
+  };
+
+  const handleReload = () => {
+    window.location.reload();
+  };
+
+  const handleDismissReload = () => {
+    setShowReloadButton(false);
+  };
+
+  // Автоматически скрываем кнопку перезагрузки через 30 секунд
+  useEffect(() => {
+    if (showReloadButton) {
+      const timer = setTimeout(() => {
+        setShowReloadButton(false);
+      }, 30000); // 30 секунд
+
+      return () => clearTimeout(timer);
+    }
+  }, [showReloadButton]);
 
   return (
     <Box sx={containerStyle}>
@@ -74,7 +114,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
         Используйте на свой страх и риск.
       </Alert>
 
-      {/* Оптимизация блюра */}
+      {/* Оптимизация блюра V1 */}
       <Box sx={featureItemStyle}>
         <Switch
           checked={blurOptimizationEnabled}
@@ -84,11 +124,10 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
         />
         <Box sx={{ flex: 1 }}>
           <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
-            Оптимизация блюра
+            Отключить блюр
           </Typography>
           <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-            Отключает blur эффекты для модалок и боксов, заменяя их на сплошной
-            цвет. Улучшает производительность на слабых устройствах.
+            Заменяет blur эффекты на сплошной тёмный фон. Улучшает производительность.
           </Typography>
         </Box>
         {blurOptimizationLoading ? (
@@ -97,6 +136,80 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
           <BlurOffIcon sx={{ color: 'text.secondary' }} />
         )}
       </Box>
+
+      {/* Оптимизация блюра V2 */}
+      <Box sx={featureItemStyle}>
+        <Switch
+          checked={blurOptimizationV2Enabled}
+          onChange={handleBlurV2Toggle}
+          disabled={blurOptimizationV2Loading}
+          color='primary'
+        />
+        <Box sx={{ flex: 1 }}>
+          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
+            Отключить блюр (Иная версия)
+          </Typography>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Альтернативная версия оптимизации блюра с улучшенной производительностью.
+          </Typography>
+        </Box>
+        {blurOptimizationV2Loading ? (
+          <CircularProgress size={20} />
+        ) : (
+          <BlurOffIcon sx={{ color: 'text.secondary' }} />
+        )}
+      </Box>
+
+      {/* Кнопка перезагрузки */}
+      {showReloadButton && (
+        <Box sx={{ 
+          mt: 2, 
+          p: 2, 
+          borderRadius: 1.5,
+          background: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          position: 'relative'
+        }}>
+          <Button
+            size='small'
+            onClick={handleDismissReload}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              minWidth: 'auto',
+              p: 0.5,
+              color: 'text.secondary',
+              '&:hover': {
+                color: 'text.primary',
+                background: 'rgba(255, 255, 255, 0.1)'
+              }
+            }}
+          >
+            <CloseIcon fontSize='small' />
+          </Button>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Alert severity='warning' sx={{ flex: 1, mb: 0 }}>
+              Для корректного применения настроек оптимизации блюра рекомендуется перезагрузить страницу.
+            </Alert>
+            <Button
+              variant='contained'
+              color='primary'
+              startIcon={<RefreshIcon />}
+              onClick={handleReload}
+              sx={{
+                borderRadius: '8px',
+                textTransform: 'none',
+                fontWeight: 500,
+                minWidth: '140px'
+              }}
+            >
+              Перезагрузить
+            </Button>
+          </Box>
+        </Box>
+      )}
 
       {/* Анимации (в разработке) */}
       <Box sx={featureItemStyle}>

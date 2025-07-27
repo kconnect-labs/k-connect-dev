@@ -239,7 +239,7 @@ const HeaderProfileMenu = ({
           },
         }}
       >
-        {user && (
+        {user ? (
           <>
             <Box
               sx={{ px: 2, py: 2, textAlign: 'center', position: 'relative' }}
@@ -396,12 +396,7 @@ const HeaderProfileMenu = ({
                     {t('header.profile_menu.channels')}
                   </ListItemText>
                 </MenuItem>
-                <MenuItem onClick={() => handleNavigate('/leaderboard')}>
-                  <ListItemIcon>
-                    <Icon icon='solar:chart-bold' width='20' height='20' />
-                  </ListItemIcon>
-                  <ListItemText>{t('header.profile_menu.rating')}</ListItemText>
-                </MenuItem>
+
               </>
             )}
             <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
@@ -479,29 +474,65 @@ const HeaderProfileMenu = ({
               </>
             )}
             <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+          </>
+        ) : (
+          // Для неавторизованных пользователей показываем только базовые опции
+          <>
+            <Box sx={{ px: 2, py: 2, textAlign: 'center' }}>
+              {isMobile && (
+                <IconButton
+                  onClick={handleMenuClose}
+                  sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: 'text.secondary',
+                    '&:hover': {
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                    },
+                  }}
+                >
+                  <ClearIcon />
+                </IconButton>
+              )}
+              <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                Гость
+              </Typography>
+              <Typography
+                variant='body1'
+                color='text.secondary'
+                sx={{ mt: 0.5 }}
+              >
+                Не авторизован
+              </Typography>
+            </Box>
+            <Divider sx={{ opacity: 0.1, mx: 2 }} />
             <MenuItem onClick={handleLanguageMenuOpen}>
               <ListItemIcon>
                 <TranslateIcon fontSize='small' color='primary' />
               </ListItemIcon>
               <ListItemText>{t('header.profile_menu.language')}</ListItemText>
             </MenuItem>
-            <MenuItem
-              onClick={handleLogout}
-              sx={{
-                color: theme => theme.palette.error.main,
-                '&:hover': {
-                  backgroundColor: theme =>
-                    alpha(theme.palette.error.main, 0.08),
-                },
-              }}
-            >
-              <ListItemIcon>
-                <ExitToAppIcon fontSize='small' style={{ color: 'inherit' }} />
-              </ListItemIcon>
-              <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
-            </MenuItem>
           </>
         )}
+        
+        {/* Кнопка "Выйти" показывается всегда */}
+        <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
+        <MenuItem
+          onClick={handleLogout}
+          sx={{
+            color: theme => theme.palette.error.main,
+            '&:hover': {
+              backgroundColor: theme =>
+                alpha(theme.palette.error.main, 0.08),
+            },
+          }}
+        >
+          <ListItemIcon>
+            <ExitToAppIcon fontSize='small' style={{ color: 'inherit' }} />
+          </ListItemIcon>
+          <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
+        </MenuItem>
       </Menu>
       {languageMenu}
     </>

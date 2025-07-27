@@ -29,6 +29,7 @@ import {
 } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
 import { useBlurOptimization } from './hooks/useBlurOptimization';
+import { useBlurOptimizationV2 } from './hooks/useBlurOptimizationV2';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -124,8 +125,9 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
 
-  // Глобальный хук оптимизации блюра
+  // Глобальные хуки оптимизации блюра
   const blurOptimization = useBlurOptimization();
+  const blurOptimizationV2 = useBlurOptimizationV2();
 
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
     const savedThemeMode =
@@ -590,6 +592,14 @@ function App() {
     }
   }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
 
+  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра V2 ---
+  useEffect(() => {
+    // Применяем оптимизацию блюра V2 при загрузке приложения
+    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
+      // Хук автоматически применит оптимизацию при изменении isEnabled
+    }
+  }, [blurOptimizationV2.isEnabled, blurOptimizationV2.isLoading]);
+
   // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
   useEffect(() => {
     // Применяем оптимизацию блюра при переходе между страницами
@@ -608,6 +618,26 @@ function App() {
     location.pathname,
     blurOptimization.isEnabled,
     blurOptimization.isLoading,
+  ]);
+
+  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации V2 при изменении маршрута ---
+  useEffect(() => {
+    // Применяем оптимизацию блюра V2 при переходе между страницами
+    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
+      // Небольшая задержка для применения эффектов после рендера новой страницы
+      const timer = setTimeout(() => {
+        if (blurOptimizationV2.isEnabled) {
+          // Принудительно применяем оптимизацию V2
+          blurOptimizationV2.enableBlurOptimizationV2();
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [
+    location.pathname,
+    blurOptimizationV2.isEnabled,
+    blurOptimizationV2.isLoading,
   ]);
 
   // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при переходе на другие страницы ---

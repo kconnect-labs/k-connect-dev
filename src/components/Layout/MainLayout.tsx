@@ -215,6 +215,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <MainContainer
+      data-testid="main-container"
       sx={{
         backgroundColor:
           themeSettings?.backgroundColor || theme.palette.background.default,

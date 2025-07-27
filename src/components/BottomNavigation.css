@@ -8,9 +8,7 @@
   display: block;
   z-index: 1000;
   border-top: 1px solid rgba(43, 43, 43, 0.606);
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgb(9, 9, 9);
 }
 
 @media (min-width: 700px) {

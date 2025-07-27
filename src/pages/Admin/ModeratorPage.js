@@ -1587,8 +1587,8 @@ const ModeratorPage = () => {
 
     try {
       setLoading(true);
-      const response = await axios.put(
-        `/api/moderator/bug-reports/${selectedBugReport.id}`,
+      const response = await axios.post(
+        `/api/bugs/${selectedBugReport.id}/status`,
         {
           status: bugReportStatus,
         }
@@ -7117,10 +7117,8 @@ const ModeratorPage = () => {
                       }}
                     >
                       <MenuItem value='Открыт'>Открыт</MenuItem>
-                      <MenuItem value='В работе'>В работе</MenuItem>
-                      <MenuItem value='Исправлен'>Исправлен</MenuItem>
-                      <MenuItem value='Закрыт'>Закрыт</MenuItem>
-                      <MenuItem value='Отклонён'>Отклонён</MenuItem>
+                      <MenuItem value='В обработке'>В обработке</MenuItem>
+                      <MenuItem value='Решено'>Решено</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

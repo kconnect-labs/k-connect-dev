@@ -82,7 +82,7 @@ const BugReportPage = () => {
   const [newBug, setNewBug] = useState({
     subject: '',
     text: '',
-    site_link: 'k-connect.ru',
+    solver_type: 'moderator',
   });
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState('');
@@ -142,7 +142,7 @@ const BugReportPage = () => {
         const formData = new FormData();
         formData.append('subject', newBug.subject);
         formData.append('text', newBug.text);
-        formData.append('site_link', newBug.site_link);
+        formData.append('solver_type', newBug.solver_type);
 
         if (imageFile) {
           formData.append('image', imageFile);
@@ -158,7 +158,7 @@ const BugReportPage = () => {
           setNewBug({
             subject: '',
             text: '',
-            site_link: 'k-connect.ru',
+            solver_type: 'moderator',
           });
           setImageFile(null);
           setImagePreview('');
@@ -344,17 +344,16 @@ const BugReportPage = () => {
                 className={styles.block}
                 style={{ marginBottom: '8px', fontSize: '14px' }}
               >
-                Сайт
+                Кто может решить проблему
               </label>
               <select
-                name='site_link'
+                name='solver_type'
                 className={styles.input}
-                value={newBug.site_link}
+                value={newBug.solver_type}
                 onChange={handleInputChange}
               >
-                <option value='k-connect.ru'>К-Коннект</option>
-                <option value='elemsocial.com'>Элемент</option>
-                <option value='clientelement.sault'>Клиент Элемента</option>
+                <option value='moderator'>Модератор</option>
+                <option value='developer'>Разработчик</option>
               </select>
             </div>
             <div style={{ flex: 1 }}>
@@ -476,7 +475,7 @@ const BugReportPage = () => {
                   className={`${styles.chip} ${styles['chip-primary']}`}
                   style={{ fontSize: '10px' }}
                 >
-                  {bug.site_link}
+                  {bug.solver_type === 'moderator' ? 'Модератор' : 'Разработчик'}
                 </span>
               </div>
 

@@ -6,7 +6,7 @@ interface BlurOptimizationState {
 }
 
 interface BlurOptimizationActions {
-  enableBlurOptimization: () => Promise<void>;
+  enableBlurOptimizationV2: () => Promise<void>;
   disableBlurOptimization: () => Promise<void>;
   toggleBlurOptimization: () => Promise<void>;
 }
@@ -22,8 +22,8 @@ const DB_VERSION = 1;
 const STORE_NAME = 'settings';
 
 // Data attributes for tracking processed elements
-const OPTIMIZED_ATTR = 'data-blur-optimized';
-const ORIGINAL_STYLES_ATTR = 'data-original-styles';
+const OPTIMIZED_ATTR = 'data-blur-optimized-v2';
+const ORIGINAL_STYLES_ATTR = 'data-original-styles-v2';
 
 // Performance optimization: batch DOM operations
 let optimizationQueue: HTMLElement[] = [];
@@ -74,28 +74,53 @@ const applyOptimizationToElement = (element: HTMLElement) => {
   
   element.setAttribute(ORIGINAL_STYLES_ATTR, JSON.stringify(originalStyles));
   
-  // Apply optimizations
+  // Apply optimizations - Enhanced V2 with darker colors and transparency
   if (element.style.backdropFilter && element.style.backdropFilter.includes('blur(20px)')) {
     element.style.backdropFilter = element.style.backdropFilter.replace(/blur\(20px\)/g, '');
-    element.style.backgroundColor = 'rgb(37 37 37)';
+    element.style.backgroundColor = 'rgba(15, 15, 15, 0.98)';
   }
   
   const webkitBackdropFilter = (element.style as any).webkitBackdropFilter;
   if (webkitBackdropFilter && webkitBackdropFilter.includes('blur(20px)')) {
     (element.style as any).webkitBackdropFilter = webkitBackdropFilter.replace(/blur\(20px\)/g, '');
-    element.style.backgroundColor = 'rgb(37 37 37)';
+    element.style.backgroundColor = 'rgba(15, 15, 15, 0.98)';
   }
   
   if (element.style.background && element.style.background.includes('rgba(255, 255, 255, 0.03)')) {
-    element.style.background = element.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37)');
+    element.style.background = element.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
   }
   
   if (element.style.backgroundColor && element.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')) {
-    element.style.backgroundColor = element.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37)');
+    element.style.backgroundColor = element.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
   }
   
   if (element.style.backgroundImage && element.style.backgroundImage.includes('rgba(255, 255, 255, 0.03)')) {
-    element.style.backgroundImage = element.style.backgroundImage.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgb(37 37 37)');
+    element.style.backgroundImage = element.style.backgroundImage.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  // Enhanced V2: Also optimize other semi-transparent backgrounds
+  if (element.style.background && element.style.background.includes('rgba(255, 255, 255, 0.05)')) {
+    element.style.background = element.style.background.replace(/rgba\(255, 255, 255, 0\.05\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  if (element.style.backgroundColor && element.style.backgroundColor.includes('rgba(255, 255, 255, 0.05)')) {
+    element.style.backgroundColor = element.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.05\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  if (element.style.background && element.style.background.includes('rgba(255, 255, 255, 0.08)')) {
+    element.style.background = element.style.background.replace(/rgba\(255, 255, 255, 0\.08\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  if (element.style.backgroundColor && element.style.backgroundColor.includes('rgba(255, 255, 255, 0.08)')) {
+    element.style.backgroundColor = element.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.08\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  if (element.style.background && element.style.background.includes('rgba(255, 255, 255, 0.12)')) {
+    element.style.background = element.style.background.replace(/rgba\(255, 255, 255, 0\.12\)/g, 'rgba(15, 15, 15, 0.98)');
+  }
+  
+  if (element.style.backgroundColor && element.style.backgroundColor.includes('rgba(255, 255, 255, 0.12)')) {
+    element.style.backgroundColor = element.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.12\)/g, 'rgba(15, 15, 15, 0.98)');
   }
   
   // Mark as processed
@@ -147,28 +172,28 @@ const setToIndexedDB = async (key: string, value: string): Promise<void> => {
   }
 };
 
-// Check if V2 optimization is enabled
-const isV2Enabled = async (): Promise<boolean> => {
+// Check if V1 optimization is enabled
+const isV1Enabled = async (): Promise<boolean> => {
   try {
-    const v2State = await getFromIndexedDB(BLUR_OPTIMIZATION_V2_KEY);
-    return v2State === 'true';
+    const v1State = await getFromIndexedDB(BLUR_OPTIMIZATION_KEY);
+    return v1State === 'true';
   } catch {
     return false;
   }
 };
 
-// Disable V2 optimization
-const disableV2Optimization = async (): Promise<void> => {
+// Disable V1 optimization
+const disableV1Optimization = async (): Promise<void> => {
   try {
-    await setToIndexedDB(BLUR_OPTIMIZATION_V2_KEY, 'false');
+    await setToIndexedDB(BLUR_OPTIMIZATION_KEY, 'false');
     
-    // Remove V2 optimized elements
-    const v2OptimizedElements = document.querySelectorAll('[data-blur-optimized-v2]');
-    v2OptimizedElements.forEach(element => {
+    // Remove V1 optimized elements
+    const v1OptimizedElements = document.querySelectorAll('[data-blur-optimized]');
+    v1OptimizedElements.forEach(element => {
       const el = element as HTMLElement;
       
       // Restore original styles
-      const originalStylesAttr = el.getAttribute('data-original-styles-v2');
+      const originalStylesAttr = el.getAttribute('data-original-styles');
       if (originalStylesAttr) {
         try {
           const originalStyles = JSON.parse(originalStylesAttr);
@@ -178,16 +203,16 @@ const disableV2Optimization = async (): Promise<void> => {
           el.style.backgroundColor = originalStyles.backgroundColor || '';
           el.style.backgroundImage = originalStyles.backgroundImage || '';
         } catch (e) {
-          console.warn('Failed to restore V2 original styles:', e);
+          console.warn('Failed to restore V1 original styles:', e);
         }
       }
 
-      // Remove V2 tracking attributes
-      el.removeAttribute('data-blur-optimized-v2');
-      el.removeAttribute('data-original-styles-v2');
+      // Remove V1 tracking attributes
+      el.removeAttribute('data-blur-optimized');
+      el.removeAttribute('data-original-styles');
     });
   } catch (error) {
-    console.warn('Failed to disable V2 optimization:', error);
+    console.warn('Failed to disable V1 optimization:', error);
   }
 };
 
@@ -275,7 +300,7 @@ const BUTTON_EXCLUDE_SELECTORS = [
   '[data-btn]',
 ].join(',');
 
-export const useBlurOptimization = (): BlurOptimizationReturn => {
+export const useBlurOptimizationV2 = (): BlurOptimizationReturn => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -316,9 +341,11 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
   }, []);
 
   const applyBlurOptimization = useCallback(() => {
+    console.log('V2 ApplyBlurOptimization - starting...');
     // Process existing elements
     const allElements = document.querySelectorAll('*');
     const elementsToOptimize = Array.from(allElements).filter(shouldOptimizeElement);
+    console.log('V2 ApplyBlurOptimization - elements to optimize:', elementsToOptimize.length);
 
     elementsToOptimize.forEach(element => {
       queueElementForOptimization(element as HTMLElement);
@@ -327,6 +354,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
     // Process CSS rules
     processCSSRules();
     processEmotionStyles();
+    console.log('V2 ApplyBlurOptimization - completed');
   }, [shouldOptimizeElement]);
 
   const processCSSRules = useCallback(() => {
@@ -339,9 +367,15 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
               (rule.style.backdropFilter &&
                 rule.style.backdropFilter.includes('blur(20px)')) ||
               (rule.style.background &&
-                rule.style.background.includes('rgba(255, 255, 255, 0.03)')) ||
+                (rule.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.05)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.08)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.12)'))) ||
               (rule.style.backgroundColor &&
-                rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)'));
+                (rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.05)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.08)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.12)')));
 
             if (
               selector &&
@@ -359,26 +393,32 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
                   /blur\(20px\)/g,
                   ''
                 );
-                rule.style.backgroundColor = 'rgb(37 37 37)';
+                rule.style.backgroundColor = 'rgba(15, 15, 15, 0.98)';
               }
 
               if (
                 rule.style.background &&
-                rule.style.background.includes('rgba(255, 255, 255, 0.03)')
+                (rule.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.05)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.08)') ||
+                 rule.style.background.includes('rgba(255, 255, 255, 0.12)'))
               ) {
                 rule.style.background = rule.style.background.replace(
-                  /rgba\(255, 255, 255, 0\.03\)/g,
-                  'rgb(37 37 37)'
+                  /rgba\(255, 255, 255, 0\.(03|05|08|12)\)/g,
+                  'rgba(15, 15, 15, 0.98)'
                 );
               }
 
               if (
                 rule.style.backgroundColor &&
-                rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')
+                (rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.05)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.08)') ||
+                 rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.12)'))
               ) {
                 rule.style.backgroundColor = rule.style.backgroundColor.replace(
-                  /rgba\(255, 255, 255, 0\.03\)/g,
-                  'rgb(37 37 37)'
+                  /rgba\(255, 255, 255, 0\.(03|05|08|12)\)/g,
+                  'rgba(15, 15, 15, 0.98)'
                 );
               }
             }
@@ -403,9 +443,15 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
                 (rule.style.backdropFilter &&
                   rule.style.backdropFilter.includes('blur(20px)')) ||
                 (rule.style.background &&
-                  rule.style.background.includes('rgba(255, 255, 255, 0.03)')) ||
+                  (rule.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.05)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.08)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.12)'))) ||
                 (rule.style.backgroundColor &&
-                  rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)'));
+                  (rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.05)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.08)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.12)')));
 
               if (hasTargetStyles) {
                 if (
@@ -416,26 +462,32 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
                     /blur\(20px\)/g,
                     ''
                   );
-                  rule.style.backgroundColor = 'rgb(37 37 37)';
+                  rule.style.backgroundColor = 'rgba(15, 15, 15, 0.98)';
                 }
 
                 if (
                   rule.style.background &&
-                  rule.style.background.includes('rgba(255, 255, 255, 0.03)')
+                  (rule.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.05)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.08)') ||
+                   rule.style.background.includes('rgba(255, 255, 255, 0.12)'))
                 ) {
                   rule.style.background = rule.style.background.replace(
-                    /rgba\(255, 255, 255, 0\.03\)/g,
-                    'rgb(37 37 37)'
+                    /rgba\(255, 255, 255, 0\.(03|05|08|12)\)/g,
+                    'rgba(15, 15, 15, 0.98)'
                   );
                 }
 
                 if (
                   rule.style.backgroundColor &&
-                  rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')
+                  (rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.05)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.08)') ||
+                   rule.style.backgroundColor.includes('rgba(255, 255, 255, 0.12)'))
                 ) {
                   rule.style.backgroundColor = rule.style.backgroundColor.replace(
-                    /rgba\(255, 255, 255, 0\.03\)/g,
-                    'rgb(37 37 37)'
+                    /rgba\(255, 255, 255, 0\.(03|05|08|12)\)/g,
+                    'rgba(15, 15, 15, 0.98)'
                   );
                 }
               }
@@ -504,20 +556,20 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
 
               if (
                 rule.style.background &&
-                rule.style.background.includes('rgb(37 37 37)')
+                rule.style.background.includes('rgba(15, 15, 15, 0.98)')
               ) {
                 rule.style.background = rule.style.background.replace(
-                  /rgb\(37 37 37\)/g,
+                  /rgba\(15, 15, 15, 0\.98\)/g,
                   'rgba(255, 255, 255, 0.03)'
                 );
               }
 
               if (
                 rule.style.backgroundColor &&
-                rule.style.backgroundColor.includes('rgb(37 37 37)')
+                rule.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)')
               ) {
                 rule.style.backgroundColor = rule.style.backgroundColor.replace(
-                  /rgb\(37 37 37\)/g,
+                  /rgba\(15, 15, 15, 0\.98\)/g,
                   'rgba(255, 255, 255, 0.03)'
                 );
               }
@@ -543,9 +595,9 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
                 (rule.style.backdropFilter &&
                   !rule.style.backdropFilter.includes('blur(20px)')) ||
                 (rule.style.background &&
-                  rule.style.background.includes('rgb(37 37 37)')) ||
+                  rule.style.background.includes('rgba(15, 15, 15, 0.98)')) ||
                 (rule.style.backgroundColor &&
-                  rule.style.backgroundColor.includes('rgb(37 37 37)'));
+                  rule.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)'));
 
               if (hasTargetStyles) {
                 if (
@@ -557,20 +609,20 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
 
                 if (
                   rule.style.background &&
-                  rule.style.background.includes('rgb(37 37 37)')
+                  rule.style.background.includes('rgba(15, 15, 15, 0.98)')
                 ) {
                   rule.style.background = rule.style.background.replace(
-                    /rgb\(37 37 37\)/g,
+                    /rgba\(15, 15, 15, 0\.98\)/g,
                     'rgba(255, 255, 255, 0.03)'
                   );
                 }
 
                 if (
                   rule.style.backgroundColor &&
-                  rule.style.backgroundColor.includes('rgb(37 37 37)')
+                  rule.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)')
                 ) {
                   rule.style.backgroundColor = rule.style.backgroundColor.replace(
-                    /rgb\(37 37 37\)/g,
+                    /rgba\(15, 15, 15, 0\.98\)/g,
                     'rgba(255, 255, 255, 0.03)'
                   );
                 }
@@ -587,8 +639,10 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
   useEffect(() => {
     const loadState = async () => {
       try {
-        const savedState = await getFromIndexedDB(BLUR_OPTIMIZATION_KEY);
+        const savedState = await getFromIndexedDB(BLUR_OPTIMIZATION_V2_KEY);
+        console.log('V2 LoadState - savedState:', savedState);
         const enabled = savedState === 'true';
+        console.log('V2 LoadState - enabled:', enabled);
         setIsEnabled(enabled);
 
         if (enabled) {
@@ -615,7 +669,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
           }
         }
       } catch (error) {
-        console.error('Error loading blur optimization state:', error);
+        console.error('Error loading blur optimization V2 state:', error);
       } finally {
         setIsLoading(false);
       }
@@ -624,21 +678,25 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
     loadState();
   }, [applyBlurOptimization]);
 
-  const enableBlurOptimization = async (): Promise<void> => {
-    // Check if V2 is enabled and disable it first
-    const v2Enabled = await isV2Enabled();
-    if (v2Enabled) {
-      await disableV2Optimization();
+  const enableBlurOptimizationV2 = async (): Promise<void> => {
+    console.log('V2 Enable - starting...');
+    // Check if V1 is enabled and disable it first
+    const v1Enabled = await isV1Enabled();
+    console.log('V2 Enable - V1 enabled:', v1Enabled);
+    if (v1Enabled) {
+      await disableV1Optimization();
+      console.log('V2 Enable - V1 disabled');
     }
     
     setIsEnabled(true);
-    await setToIndexedDB(BLUR_OPTIMIZATION_KEY, 'true');
+    await setToIndexedDB(BLUR_OPTIMIZATION_V2_KEY, 'true');
+    console.log('V2 Enable - state saved, applying optimization');
     applyBlurOptimization();
   };
 
   const disableBlurOptimization = async (): Promise<void> => {
     setIsEnabled(false);
-    await setToIndexedDB(BLUR_OPTIMIZATION_KEY, 'false');
+    await setToIndexedDB(BLUR_OPTIMIZATION_V2_KEY, 'false');
     removeBlurOptimization();
   };
 
@@ -646,7 +704,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
     if (isEnabled) {
       await disableBlurOptimization();
     } else {
-      await enableBlurOptimization();
+      await enableBlurOptimizationV2();
     }
   };
 
@@ -727,7 +785,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
   return {
     isEnabled,
     isLoading,
-    enableBlurOptimization,
+    enableBlurOptimizationV2,
     disableBlurOptimization,
     toggleBlurOptimization,
   };
