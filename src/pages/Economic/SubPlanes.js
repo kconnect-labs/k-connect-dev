@@ -32,8 +32,8 @@ const SubscriptionCard = styled(Paper)(({ theme, type }) => ({
   overflow: 'hidden',
   borderRadius: '12px',
   transition: 'all 0.3s ease',
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   '&:hover': {
     transform: 'translateY(-4px)',
@@ -208,8 +208,8 @@ const SubPlanes = () => {
             p: 3,
             mb: 4,
             borderRadius: '12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             position: 'relative',
             '&::before': {
@@ -360,7 +360,7 @@ const SubPlanes = () => {
                     color: '#D0BCFF',
                     '&:hover': {
                       borderColor: '#D0BCFF',
-                      backgroundColor: 'rgba(208, 188, 255, 0.1)',
+                      backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
                     },
                   }}
                 >
@@ -547,8 +547,8 @@ const SubPlanes = () => {
           mt: 4,
           p: 3,
           borderRadius: '12px',
-          backgroundColor: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           position: 'relative',
           '&::before': {

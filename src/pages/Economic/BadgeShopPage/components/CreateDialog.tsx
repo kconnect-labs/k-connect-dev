@@ -73,7 +73,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
 
   const modalStyle = {
     background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '600px',
@@ -88,8 +88,8 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
     justifyContent: 'space-between',
     padding: '16px 20px',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    background: 'rgba(255, 255, 255, 0.02)',
-    backdropFilter: 'blur(10px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   };
 
   return (
@@ -126,8 +126,8 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
       <DialogContent sx={{ p: isMobile ? 2 : 3, overflow: 'auto' }}>
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             padding: '20px',
             marginBottom: '20px',
@@ -155,7 +155,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
             sx={{
               mb: 2,
               p: 2,
-              bgcolor: 'rgba(255, 255, 255, 0.03)',
+              bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               borderRadius: 1,
             }}
           >
@@ -188,8 +188,8 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         {previewUrl && (
           <Box
             sx={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               border: '1px solid rgba(255, 255, 255, 0.12)',
               padding: '20px',
               marginBottom: '20px',
@@ -242,8 +242,8 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         {/* Форма создания */}
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             padding: '20px',
             marginBottom: '20px',
@@ -326,7 +326,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
               sx={{
                 mb: 2,
                 p: 2,
-                bgcolor: 'rgba(208, 188, 255, 0.1)',
+                bgcolor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
                 borderRadius: 1,
                 border: '1px solid rgba(208, 188, 255, 0.3)',
               }}
@@ -419,7 +419,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
                 sx={{
                   mt: 2,
                   p: 2,
-                  bgcolor: 'rgba(255, 255, 255, 0.03)',
+                  bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   borderRadius: 1,
                 }}
               >

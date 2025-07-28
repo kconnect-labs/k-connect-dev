@@ -24,13 +24,93 @@ const THEME_SETTINGS: ThemeSettings = {
   },
 };
 
-export const useThemeManager = () => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeType>(() => {
-    const saved = localStorage.getItem('theme-type');
-    return (saved as ThemeType) || 'default';
-  });
+// IndexedDB операции
+const DB_NAME = 'ThemeDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'theme';
 
+const openDB = (): Promise<IDBDatabase> => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+    
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
+    };
+  });
+};
+
+const saveThemeToIndexedDB = async (theme: ThemeType): Promise<void> => {
+  try {
+    const db = await openDB();
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    
+    await new Promise<void>((resolve, reject) => {
+      const request = store.put({ id: 'current-theme', theme });
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error('Error saving theme to IndexedDB:', error);
+  }
+};
+
+const getThemeFromIndexedDB = async (): Promise<ThemeType | null> => {
+  try {
+    const db = await openDB();
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    
+    return new Promise<ThemeType | null>((resolve, reject) => {
+      const request = store.get('current-theme');
+      request.onsuccess = () => {
+        const result = request.result;
+        resolve(result ? result.theme : null);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error('Error getting theme from IndexedDB:', error);
+    return null;
+  }
+};
+
+export const useThemeManager = () => {
+  const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
   const [isApplying, setIsApplying] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Инициализация темы при загрузке
+  useEffect(() => {
+    const initializeTheme = async () => {
+      try {
+        // Сначала пробуем получить из IndexedDB
+        const savedTheme = await getThemeFromIndexedDB();
+        
+        if (savedTheme) {
+          setCurrentTheme(savedTheme);
+          await applyTheme(savedTheme);
+        } else {
+          // Если в IndexedDB нет, применяем дефолтную тему
+          await applyTheme('default');
+        }
+      } catch (error) {
+        console.error('Error initializing theme:', error);
+        // В случае ошибки применяем дефолтную тему
+        await applyTheme('default');
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    initializeTheme();
+  }, []);
 
   // Применение темы к CSS переменным
   const applyTheme = useCallback(async (themeType: ThemeType) => {
@@ -52,8 +132,8 @@ export const useThemeManager = () => {
         root.setAttribute('data-theme', 'default');
       }
 
-      // Сохраняем в localStorage
-      localStorage.setItem('theme-type', themeType);
+      // Сохраняем в IndexedDB
+      await saveThemeToIndexedDB(themeType);
       setCurrentTheme(themeType);
 
       // Обновляем все элементы с классом theme-aware
@@ -99,29 +179,10 @@ export const useThemeManager = () => {
     await applyTheme(newTheme);
   }, [currentTheme, applyTheme]);
 
-  // Инициализация темы при загрузке
-  useEffect(() => {
-    applyTheme(currentTheme);
-  }, []);
-
-  // Слушатель изменений в localStorage
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme-type' && e.newValue) {
-        const newTheme = e.newValue as ThemeType;
-        if (newTheme !== currentTheme) {
-          applyTheme(newTheme);
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [currentTheme, applyTheme]);
-
   return {
     currentTheme,
     isApplying,
+    isInitialized,
     switchToDefaultTheme,
     switchToBlurTheme,
     toggleTheme,

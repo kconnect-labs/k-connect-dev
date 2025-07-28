@@ -21,8 +21,8 @@ import OptimizedImage from '../../../../components/OptimizedImage';
 import { Pack, PackContent } from './types';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: 20,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
@@ -47,7 +47,7 @@ const PackImage = styled(Box)(({ theme }) => ({
   position: 'relative',
   height: 200,
   background:
-    'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%)',
+    'var(--theme-background, linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(156, 100, 242, 0.2) 100%))',
   borderRadius: '16px 16px 0 0',
   display: 'flex',
   alignItems: 'center',
@@ -78,7 +78,7 @@ const MainItem = styled(Box)(({ theme }) => ({
   width: 100,
   height: 100,
   borderRadius: 12,
-  background: 'rgba(208, 188, 255, 0.1)',
+  background: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -119,7 +119,7 @@ const SideItem = styled(Box)(({ theme }) => ({
   width: 62.5,
   height: 62.5,
   borderRadius: 8,
-  background: 'rgba(208, 188, 255, 0.08)',
+  background: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -164,7 +164,7 @@ const ItemImage = styled('img')({
 });
 
 const PriceChip = styled(Chip)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.05)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
   color: 'text.primary',
   fontWeight: 500,
   fontSize: '0.8rem',
@@ -197,7 +197,7 @@ const DiscountChip = styled(Chip)(({ theme }) => ({
   position: 'absolute',
   top: 12,
   left: 12,
-  background: '#e74c3c',
+  background: 'var(--theme-background, #e74c3c)',
   color: '#fff',
   fontWeight: 700,
   fontSize: '0.85rem',
@@ -215,7 +215,7 @@ const ItemPreview = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-  background: 'rgba(0, 0, 0, 0.5)',
+  background: 'var(--theme-background, rgba(0, 0, 0, 0.5))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -553,7 +553,7 @@ const PackCard = ({
                 icon={<LockIcon />}
                 label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -580,7 +580,7 @@ const PackCard = ({
               textTransform: 'none',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               },
               '&:disabled': {
                 borderColor: 'rgba(255, 255, 255, 0.1)',

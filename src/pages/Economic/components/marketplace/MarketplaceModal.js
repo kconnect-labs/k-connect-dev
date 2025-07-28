@@ -25,8 +25,8 @@ import { AuthContext } from '../../../../context/AuthContext';
 
 const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     overflow: 'hidden',
@@ -47,7 +47,7 @@ const ItemImage = styled(Box)({
   width: 200,
   height: 200,
   borderRadius: 16,
-  background: 'rgba(255, 255, 255, 0.1)',
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -86,8 +86,8 @@ const MarketPriceChip = styled(Box)({
   position: 'absolute',
   top: 8,
   right: 8,
-  background: 'rgba(0, 0, 0, 0.7)',
-  backdropFilter: 'blur(5px)',
+          background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: '20px',
   padding: '6px 12px',
   display: 'flex',
@@ -240,7 +240,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
           sx={{
             color: 'text.secondary',
             '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
             },
           }}
         >
@@ -256,7 +256,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 width: 250,
                 height: 250,
                 borderRadius: 3,
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

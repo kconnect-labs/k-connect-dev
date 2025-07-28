@@ -50,8 +50,8 @@ const UpdateInfo = ({
       sx={{
         p: 0,
         borderRadius: '12px',
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         border: theme =>
           `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
         overflow: 'hidden',
@@ -93,7 +93,7 @@ const UpdateInfo = ({
             label={`v${version}`}
             size='small'
             sx={{
-              backgroundColor: 'rgba(208, 188, 255, 0.1)',
+              backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
               color: 'primary.main',
               fontWeight: 'medium',
               border: '1px solid rgba(208, 188, 255, 0.2)',
@@ -121,7 +121,7 @@ const UpdateInfo = ({
             icon={<UpdateIcon sx={{ fontSize: '16px !important' }} />}
             sx={{
               fontSize: '0.75rem',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
           />

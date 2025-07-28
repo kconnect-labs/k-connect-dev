@@ -58,33 +58,19 @@ interface UserSuggestion {
 const UpgradeEffects = ({ item, children }: UpgradeEffectsProps) => {
   const { dominantColor, isUpgraded } = useUpgradeEffects(item);
 
-  if (!isUpgraded) {
-    return <>{children}</>;
-  }
-
-  return (
-    <Box sx={{ position: 'relative' }}>
-      {children}
-      <GlowEffect color={dominantColor} />
-      {EFFECTS_CONFIG.sparkles.map((sparkle, idx) => (
-        <AnimatedSparkle key={idx} sx={sparkle.position} />
-      ))}
-      {EFFECTS_CONFIG.stars.map((star, idx) => (
-        <AnimatedStar key={idx} sx={star.position} />
-      ))}
-    </Box>
-  );
+  // Убираем эффекты для улучшенных предметов, чтобы не мешали скроллу
+  return <>{children}</>;
 };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
-    height: '90vh',
+    height: '80vh', // Уменьшил с 90vh до 80vh
     maxWidth: 'none',
     maxHeight: 'none',
     '@media (max-width: 768px)': {
@@ -97,16 +83,16 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const ItemImage = styled(Box)(({ theme }) => ({
-  width: 250,
-  height: 250,
-  borderRadius: 16,
-  background: 'rgba(255, 255, 255, 0.1)',
+  width: 200, // Уменьшил с 250 до 200
+  height: 200, // Уменьшил с 250 до 200
+  borderRadius: 12, // Уменьшил с 16 до 12
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   border: '2px solid rgba(255, 255, 255, 0.2)',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-  margin: '0 auto 24px',
+  margin: '0 auto 16px', // Уменьшил отступ с 24px до 16px
   overflow: 'hidden',
   position: 'relative',
   '& img': {
@@ -146,16 +132,20 @@ const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
     background: colors[rarity || 'common']?.bg || colors.common.bg,
     color: colors[rarity || 'common']?.color || colors.common.color,
     fontWeight: 600,
-    fontSize: '0.9rem',
+    fontSize: '0.75rem', // Уменьшил с 0.9rem до 0.75rem
+    height: '24px', // Добавил фиксированную высоту
     '& .MuiChip-label': {
-      padding: '4px 12px',
+      padding: '2px 8px', // Уменьшил отступы с 4px 12px до 2px 8px
+    },
+    '& .MuiChip-icon': {
+      fontSize: '0.875rem', // Уменьшил размер иконки
     },
   };
 });
 
 const SuggestionsContainer = styled(Box)(() => ({
-  backgroundColor: 'rgba(20, 20, 20, 0.4)',
-  backdropFilter: 'blur(5px)',
+  backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: 8,
   marginBottom: 16,
   maxHeight: 150,
@@ -168,7 +158,7 @@ const SuggestionItem = styled(Box)(() => ({
   alignItems: 'center',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: 'rgba(40, 40, 40, 0.4)',
+    backgroundColor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
   },
 }));
 
@@ -182,27 +172,27 @@ const UserAvatar = styled(Avatar)(() => ({
 
 const MarketPriceChip = styled(Box)(({ theme }) => ({
   position: 'absolute',
-  top: 8,
-  right: 8,
-  background: 'rgba(0, 0, 0, 0.7)',
-  backdropFilter: 'blur(5px)',
-  borderRadius: '20px',
-  padding: '6px 12px',
+  top: 6, // Уменьшил с 8 до 6
+  right: 6, // Уменьшил с 8 до 6
+  background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
+  borderRadius: '16px', // Уменьшил с 20px до 16px
+  padding: '4px 8px', // Уменьшил отступы с 6px 12px до 4px 8px
   display: 'flex',
   alignItems: 'center',
-  gap: '4px',
+  gap: '3px', // Уменьшил с 4px до 3px
   color: '#fff',
   fontWeight: 'bold',
-  fontSize: '0.9rem',
+  fontSize: '0.75rem', // Уменьшил с 0.9rem до 0.75rem
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   zIndex: 2,
 }));
 
 const KBallsIcon = styled('img')({
-  width: '16px',
-  height: '16px',
-  marginRight: '4px',
+  width: '12px', // Уменьшил с 16px до 12px
+  height: '12px', // Уменьшил с 16px до 12px
+  marginRight: '3px', // Уменьшил с 4px до 3px
 });
 
 interface ItemInfoModalProps {
@@ -269,11 +259,11 @@ const ItemInfoModal = ({
   const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return <DiamondIcon />;
+        return <DiamondIcon sx={{ fontSize: '0.875rem' }} />;
       case 'epic':
-        return <StarIcon />;
+        return <StarIcon sx={{ fontSize: '0.875rem' }} />;
       case 'rare':
-        return <StarIcon />;
+        return <StarIcon sx={{ fontSize: '0.875rem' }} />;
       default:
         return null;
     }
@@ -408,11 +398,11 @@ const ItemInfoModal = ({
     setTransferModalOpen(false);
     setRecipientUsername('');
     setTransferError('');
-    setUserSearch({
+    setUserSearch(prev => ({
       loading: false,
       exists: false,
       suggestions: [],
-    });
+    }));
     setSelectedRecipientId(null);
   };
 
@@ -690,7 +680,7 @@ const ItemInfoModal = ({
               sx={{
                 color: 'text.secondary',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 },
               }}
             >
@@ -698,8 +688,8 @@ const ItemInfoModal = ({
             </IconButton>
           </DialogTitle>
 
-          <DialogContent sx={{ pt: 0 }}>
-            <Box sx={{ mb: 3, textAlign: 'center' }}>
+          <DialogContent sx={{ pt: 0, overflow: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
+            <Box sx={{ mb: 2, textAlign: 'center' }}> {/* Уменьшил отступ с mb: 3 до mb: 2 */}
               <Box position='relative'>
                 <ItemImage
                   sx={{
@@ -721,8 +711,8 @@ const ItemInfoModal = ({
               </Box>
 
               <Typography
-                variant='h5'
-                sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}
+                variant='h6' // Уменьшил с h5 до h6
+                sx={{ fontWeight: 600, mb: 1, textAlign: 'center' }} // Уменьшил отступ с mb: 2 до mb: 1
               >
                 {item.item_name}
               </Typography>
@@ -731,8 +721,8 @@ const ItemInfoModal = ({
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  gap: 2,
-                  mb: 3,
+                  gap: 1, // Уменьшил с gap: 2 до gap: 1
+                  mb: 2, // Уменьшил с mb: 3 до mb: 2
                 }}
               >
                 <RarityChip
@@ -745,28 +735,33 @@ const ItemInfoModal = ({
                     label='Улучшено'
                     color='success'
                     size='small'
-                    sx={{ ml: 1, fontWeight: 600 }}
+                    sx={{ 
+                      ml: 0.5, // Уменьшил с ml: 1 до ml: 0.5
+                      fontWeight: 600,
+                      fontSize: '0.7rem', // Добавил уменьшенный размер шрифта
+                      height: '20px', // Добавил фиксированную высоту
+                    }}
                   />
                 )}
               </Box>
 
-              <Box sx={{ mb: 3 }}>
+              <Box sx={{ mb: 2 }}> {/* Уменьшил отступ с mb: 3 до mb: 2 */}
                 <Typography
                   variant='body2'
-                  sx={{ color: 'text.secondary', mb: 1 }}
+                  sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
                 >
                   Пак: {item.pack_name}
                 </Typography>
                 <Typography
                   variant='body2'
-                  sx={{ color: 'text.secondary', mb: 1 }}
+                  sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
                 >
                   Статус: {item.is_equipped ? 'Экипировано' : 'Не экипировано'}
                 </Typography>
                 {item.item_number && item.total_count && (
                   <Typography
                     variant='body2'
-                    sx={{ color: 'text.secondary', mb: 1 }}
+                    sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
                   >
                     Экземпляр: {item.item_number} из {item.total_count}
                   </Typography>
@@ -778,7 +773,7 @@ const ItemInfoModal = ({
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  mt: 1,
+                  mt: 0.5, // Уменьшил с mt: 1 до mt: 0.5
                 }}
               >
                 <Button
@@ -786,7 +781,7 @@ const ItemInfoModal = ({
                   variant='text'
                   startIcon={<ContentCopyIcon fontSize='small' />}
                   onClick={handleCopyLink}
-                  sx={{ minWidth: 0, px: 1, fontSize: '0.85rem' }}
+                  sx={{ minWidth: 0, px: 1, fontSize: '0.8rem' }} // Уменьшил шрифт с 0.85rem до 0.8rem
                 >
                   {copyStatus || 'Скопировать'}
                 </Button>
@@ -796,10 +791,17 @@ const ItemInfoModal = ({
           <DialogActions
             sx={{
               flexWrap: 'wrap',
-              gap: 1,
+              gap: 0.5,
               justifyContent: 'center',
-              pb: 3,
-              px: 3,
+              pb: 2,
+              px: 2,
+              '& .MuiButton-root': {
+                // Унифицированные стили для всех кнопок
+                minHeight: '40px',
+                fontSize: '0.875rem',
+                fontWeight: 500,
+                textTransform: 'none',
+              },
             }}
           >
             {!item.is_equipped ? (
@@ -817,7 +819,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.4)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
               >
@@ -838,7 +840,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.4)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
               >
@@ -868,7 +870,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 152, 0, 0.5)',
-                    backgroundColor: 'rgba(255, 152, 0, 0.05)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 152, 0, 0.05))',
                   },
                 }}
               >
@@ -888,7 +890,7 @@ const ItemInfoModal = ({
                 color: 'text.primary',
                 '&:hover': {
                   borderColor: 'rgba(255, 255, 255, 0.4)',
-                  background: 'rgba(255, 255, 255, 0.05)',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                 },
                 '&:disabled': {
                   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -907,9 +909,14 @@ const ItemInfoModal = ({
                   onClick={handleRemoveFromMarketplace}
                   disabled={marketplaceLoading}
                   fullWidth
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.05))',
+                    },
+                  }}
                 >
                   {marketplaceLoading ? (
-                    <CircularProgress size={24} color='inherit' />
+                    <CircularProgress size={16} color='inherit' />
                   ) : (
                     'Снять с продажи'
                   )}
@@ -921,6 +928,11 @@ const ItemInfoModal = ({
                   startIcon={<StoreIcon />}
                   onClick={() => setMarketplaceModalOpen(true)}
                   fullWidth
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'var(--theme-background, rgba(33, 150, 243, 0.05))',
+                    },
+                  }}
                 >
                   Выставить на маркетплейс
                 </Button>
@@ -938,11 +950,11 @@ const ItemInfoModal = ({
                 fontWeight: 500,
                 '&:hover': {
                   borderColor: 'rgba(244, 67, 54, 0.5)',
-                  backgroundColor: 'rgba(244, 67, 54, 0.05)',
+                  backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.05))',
                 },
               }}
             >
-              Утилизировать
+              {recycleLoading ? 'Утилизация...' : 'Утилизировать'}
             </Button>
           </DialogActions>
         </UpgradeEffects>
@@ -957,8 +969,8 @@ const ItemInfoModal = ({
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: window.innerWidth <= 768 ? 0 : 1,
             '@media (max-width: 768px)': {
@@ -1117,8 +1129,8 @@ const ItemInfoModal = ({
                   sx={{
                     p: 2,
                     mb: 3,
-                    bgcolor: 'rgba(40, 40, 40, 0.4)',
-                    backdropFilter: 'blur(5px)',
+                    bgcolor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
+                    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
                     borderRadius: 2,
                     border: '1px solid rgba(60, 60, 60, 0.4)',
                     display: 'flex',
@@ -1142,7 +1154,7 @@ const ItemInfoModal = ({
               borderColor: 'rgba(255, 255, 255, 0.2)',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               },
             }}
           >
@@ -1161,16 +1173,16 @@ const ItemInfoModal = ({
               transferLoading ? <CircularProgress size={16} /> : <SendIcon />
             }
             sx={{
-              background: 'rgba(255, 255, 255, 0.1)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
               color: 'text.primary',
               fontWeight: 500,
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '&:hover': {
-                background: 'rgba(255, 255, 255, 0.15)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               },
               '&:disabled': {
-                background: 'rgba(255, 255, 255, 0.05)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                 color: 'text.secondary',
                 borderColor: 'rgba(255, 255, 255, 0.1)',
               },
@@ -1224,8 +1236,8 @@ const ItemInfoModal = ({
         fullWidth
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
           },
@@ -1279,8 +1291,8 @@ const ItemInfoModal = ({
         onClose={() => setMarketplaceModalOpen(false)}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
           },

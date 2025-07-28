@@ -31,7 +31,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { currentTheme, isApplying, switchToDefaultTheme, switchToBlurTheme } = useThemeManager();
+  const { currentTheme, isApplying, isInitialized, switchToDefaultTheme, switchToBlurTheme } = useThemeManager();
 
   const handleClose = () => {
     onClose();
@@ -67,6 +67,30 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     background: 'rgba(255, 255, 255, 0.02)',
     backdropFilter: 'blur(10px)',
   };
+
+  // Показываем загрузку пока тема не инициализирована
+  if (!isInitialized) {
+    return (
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth={false}
+        PaperProps={{
+          sx: modalStyle,
+        }}
+        fullScreen={isMobile}
+      >
+        <Box sx={headerStyle}>
+          <Typography variant='h6' sx={{ fontWeight: 600, color: 'text.primary' }}>
+            Загрузка темы...
+          </Typography>
+        </Box>
+        <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+          <Typography>Инициализация темы...</Typography>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog

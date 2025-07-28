@@ -91,8 +91,8 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
@@ -170,8 +170,8 @@ const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
 });
 
 const SuggestionsContainer = styled(Box)(() => ({
-  backgroundColor: 'rgba(20, 20, 20, 0.4)',
-  backdropFilter: 'blur(5px)',
+  backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: 8,
   marginBottom: 24,
   maxHeight: 200,
@@ -184,7 +184,7 @@ const SuggestionItem = styled(Box)(() => ({
   alignItems: 'center',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: 'rgba(40, 40, 40, 0.4)',
+    backgroundColor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
   },
 }));
 
@@ -205,8 +205,8 @@ const PriceBadge = styled(Box)({
   fontSize: '0.875rem',
   fontWeight: 'bold',
   color: '#fff',
-  background: 'rgba(0, 0, 0, 0.7)',
-  backdropFilter: 'blur(5px)',
+  background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   display: 'flex',
   alignItems: 'center',
   gap: 4,

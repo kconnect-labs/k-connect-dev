@@ -377,7 +377,7 @@ const DialogAvatar = styled(Box)(({ theme }) => ({
   width: 48,
   height: 48,
   borderRadius: '50%',
-  backgroundColor: 'rgba(156, 100, 242, 0.2)',
+  backgroundColor: 'var(--theme-background, rgba(156, 100, 242, 0.2))',
   marginRight: theme.spacing(2),
   '& svg': {
     color: '#9c64f2',
@@ -426,7 +426,7 @@ const SuggestionsContainer = styled(Box)(({ theme }) => ({
   marginTop: -2,
   marginBottom: theme.spacing(3),
   borderRadius: '0 0 12px 12px',
-  backgroundColor: 'rgba(30, 30, 30, 0.95)',
+  backgroundColor: 'var(--theme-background, rgba(30, 30, 30, 0.95))',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderTop: 'none',
   overflow: 'hidden',
@@ -439,7 +439,7 @@ const SuggestionItem = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
   transition: 'background-color 0.2s',
   '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   },
 }));
 
@@ -650,7 +650,7 @@ const BankStyleTransactionItem = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
   transition: 'all 0.2s ease',
   '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
   },
 }));
 
@@ -1974,7 +1974,7 @@ const BalancePage = () => {
                     color: 'rgba(255,255,255,0.7)',
                     '&:hover': {
                       color: 'white',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      backgroundColor: 'var(--theme-background, rgba(255,255,255,0.1))',
                     },
                   }}
                 >

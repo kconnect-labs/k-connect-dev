@@ -42,7 +42,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
@@ -365,8 +365,8 @@ const InventoryPackPage = () => {
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: window.innerWidth <= 768 ? 0 : '8px',
             '@media (max-width: 768px)': {
@@ -449,7 +449,7 @@ const InventoryPackPage = () => {
                     >
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.05)',
+                          background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                           border: '1px solid rgba(255, 255, 255, 0.1)',
                           borderRadius: 2,
                           p: 2,
@@ -510,7 +510,7 @@ const InventoryPackPage = () => {
                           label={getRarityLabel(item.rarity)}
                           size={window.innerWidth <= 768 ? 'small' : 'medium'}
                           sx={{
-                            backgroundColor: getRarityColor(item.rarity),
+                            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                             color: 'white',
                             fontWeight: 600,
                             fontSize:
@@ -596,8 +596,8 @@ const InventoryPackPage = () => {
         onClose={() => setConfirmPack(null)}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '8px',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',

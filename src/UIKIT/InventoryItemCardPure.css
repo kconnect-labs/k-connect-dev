@@ -1,7 +1,7 @@
 .inventory-item-card {
   padding: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
   transition:
@@ -13,7 +13,7 @@
 
 .inventory-item-card:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--theme-background, rgba(255, 255, 255, 0.05));
 }
 
 .image-container {
@@ -50,8 +50,8 @@
   right: 4px;
   padding: 2px 6px;
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(5px);
+  background: var(--theme-background, rgba(0, 0, 0, 0.7));
+  backdrop-filter: var(--theme-backdrop-filter, blur(5px));
   display: flex;
   align-items: center;
   gap: 2px;
@@ -77,7 +77,7 @@
   padding: 2px 6px;
   border-radius: 8px;
   background: linear-gradient(135deg, #bb83e950, #ccade644);
-  backdrop-filter: blur(5px);
+  backdrop-filter: var(--theme-backdrop-filter, blur(5px));
   display: flex;
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.2);

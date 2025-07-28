@@ -104,8 +104,8 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
       sx={{
         p: 2,
 
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         border: '1px solid rgba(255, 255, 255, 0.12)',
         borderRadius: '12px',
       }}
@@ -179,7 +179,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
       {/* Расширенные фильтры */}
       {showFilters && (
         <Collapse in={showAdvancedFilters}>
-          <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+          <Divider sx={{ my: 2, borderColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))' }} />
           
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
             {/* Фильтр по редкости */}
@@ -192,7 +192,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
                     size="small"
                     onClick={() => handleRarityChange(filters.rarity === key ? null : key)}
                     sx={{
-                      backgroundColor: filters.rarity === key ? rarityColors[key as keyof typeof rarityColors] : 'rgba(255, 255, 255, 0.1)',
+                      backgroundColor: filters.rarity === key ? rarityColors[key as keyof typeof rarityColors] : 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                       color: filters.rarity === key ? 'white' : 'rgba(255, 255, 255, 0.8)',
                       '&:hover': {
                         backgroundColor: filters.rarity === key ? rarityColors[key as keyof typeof rarityColors] : 'rgba(255, 255, 255, 0.2)',
@@ -215,7 +215,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.3)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
                 variant="outlined"
@@ -229,7 +229,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
 
       {/* Отображение ошибки */}
       {error && (
-        <Box sx={{ mt: 1, p: 1, borderRadius: '8px', backgroundColor: 'rgba(244, 67, 54, 0.1)', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
+        <Box sx={{ mt: 1, p: 1, borderRadius: '8px', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
           <Typography variant="caption" sx={{ color: 'rgba(244, 67, 54, 0.9)' }}>
             Ошибка поиска: {error}
           </Typography>

@@ -19,30 +19,20 @@ import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext.js';
 import { MusicProvider } from './context/MusicContext';
-import {
-  Box,
-  CircularProgress,
-  Typography,
-  Button,
-  Alert,
-  GlobalStyles,
-} from '@mui/material';
-import { HelmetProvider } from 'react-helmet-async';
-import { useBlurOptimization } from './hooks/useBlurOptimization';
-import { useBlurOptimizationV2 } from './hooks/useBlurOptimizationV2';
 
-import SEO from './components/SEO';
+import { HelmetProvider } from 'react-helmet-async';
+
 import { PostDetailProvider } from './context/PostDetailContext';
 
 import { ErrorBoundary } from 'react-error-boundary';
 import MusicPlayerCore from './components/MusicPlayerCore';
-import { setSessionContext } from './services/ProfileService';
 import './styles/theme.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
 import { initMediaCache } from './services/mediaCache';
+import { useThemeManager } from './hooks/useThemeManager';
 
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
@@ -126,9 +116,16 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
 
-  // Глобальные хуки оптимизации блюра
-  const blurOptimization = useBlurOptimization();
-  const blurOptimizationV2 = useBlurOptimizationV2();
+  const { isInitialized: isThemeInitialized } = useThemeManager();
+
+  const authContext = useContext(AuthContext);
+  const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
+
+  useEffect(() => {
+    if (isThemeInitialized) {
+      setIsAppLoading(false);
+    }
+  }, [isThemeInitialized]);
 
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
     const savedThemeMode =
@@ -273,9 +270,6 @@ function App() {
       return updated;
     });
   };
-
-  const authContext = useContext(AuthContext);
-  const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
 
   // Логируем только важные изменения состояния авторизации
   useEffect(() => {
@@ -585,62 +579,6 @@ function App() {
     }
   }, [globalProfileBackgroundEnabled]);
 
-  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра при загрузке приложения
-    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-      // Хук автоматически применит оптимизацию при изменении isEnabled
-    }
-  }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
-
-  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра V2 ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра V2 при загрузке приложения
-    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
-      // Хук автоматически применит оптимизацию при изменении isEnabled
-    }
-  }, [blurOptimizationV2.isEnabled, blurOptimizationV2.isLoading]);
-
-  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра при переходе между страницами
-    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-      // Небольшая задержка для применения эффектов после рендера новой страницы
-      const timer = setTimeout(() => {
-        if (blurOptimization.isEnabled) {
-          // Принудительно применяем оптимизацию
-          blurOptimization.enableBlurOptimization();
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    location.pathname,
-    blurOptimization.isEnabled,
-    blurOptimization.isLoading,
-  ]);
-
-  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации V2 при изменении маршрута ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра V2 при переходе между страницами
-    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
-      // Небольшая задержка для применения эффектов после рендера новой страницы
-      const timer = setTimeout(() => {
-        if (blurOptimizationV2.isEnabled) {
-          // Принудительно применяем оптимизацию V2
-          blurOptimizationV2.enableBlurOptimizationV2();
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    location.pathname,
-    blurOptimizationV2.isEnabled,
-    blurOptimizationV2.isLoading,
-  ]);
-
   // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при переходе на другие страницы ---
   useEffect(() => {
     // Проверяем, находимся ли мы на странице профиля
@@ -714,21 +652,27 @@ function App() {
                         <CommandPaletteProvider>
                           <ErrorBoundary FallbackComponent={ErrorFallback}>
                             <Suspense fallback={<LoadingIndicator />}>
-                              <DefaultSEO />
-                              {isAuthPage ? (
-                                <AuthRoutes setUser={authContext?.setUser} />
-                              ) : isPublicPage ? (
-                                <PublicRoutes />
-                              ) : isSpecialPage ? (
-                                <SpecialRoutes />
+                              {isAppLoading ? (
+                                <LoadingIndicator />
                               ) : (
-                                <MainRoutes
-                                  setUser={authContext?.setUser}
-                                  background={location.state?.background}
-                                />
+                                <>
+                                  <DefaultSEO />
+                                  {isAuthPage ? (
+                                    <AuthRoutes setUser={authContext?.setUser} />
+                                  ) : isPublicPage ? (
+                                    <PublicRoutes />
+                                  ) : isSpecialPage ? (
+                                    <SpecialRoutes />
+                                  ) : (
+                                    <MainRoutes
+                                      setUser={authContext?.setUser}
+                                      background={location.state?.background}
+                                    />
+                                  )}
+                                  <MusicPlayerCore />
+                                  <CommandPalleteModal />
+                                </>
                               )}
-                              <MusicPlayerCore />
-                              <CommandPalleteModal />
                             </Suspense>
                           </ErrorBoundary>
                         </CommandPaletteProvider>

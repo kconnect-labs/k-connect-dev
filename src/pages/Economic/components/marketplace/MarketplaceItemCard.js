@@ -12,8 +12,8 @@ import { formatDistance } from 'date-fns';
 import Chip from '@mui/material/Chip';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   borderRadius: theme.spacing(2),
   transition: 'transform 0.2s ease-in-out',
   '&:hover': {
@@ -36,7 +36,7 @@ const PriceBadge = styled(Box)({
   fontSize: '0.875rem',
   fontWeight: 'bold',
   color: '#fff',
-  background: 'rgba(0, 0, 0, 0.7)',
+          background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
   display: 'flex',
   alignItems: 'center',
   gap: 4,
@@ -74,7 +74,7 @@ const MarketplaceItemCard = ({ listing, onClick }) => {
             justifyContent: 'center',
             overflow: 'hidden',
             borderRadius: 1,
-            background: 'rgba(255,255,255,0.04)',
+            background: 'var(--theme-background, rgba(255,255,255,0.04))',
             margin: 'auto',
             marginTop: '12px',
             ...(item.background_url && {

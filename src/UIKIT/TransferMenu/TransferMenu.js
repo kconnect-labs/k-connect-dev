@@ -46,7 +46,7 @@ const DialogHeader = styled(Box)(() => ({
 }));
 
 const DialogAvatar = styled(Avatar)(({ theme }) => ({
-  backgroundColor: 'rgba(255,255,255,0.1)',
+  backgroundColor: 'var(--theme-background, rgba(255,255,255,0.1))',
   color: '#fff',
   width: 46,
   height: 46,
@@ -112,7 +112,7 @@ const SuggestionItem = styled(Box)(() => ({
   alignItems: 'center',
   cursor: 'pointer',
   '&:hover': {
-    backgroundColor: 'rgba(40, 40, 40, 0.4)',
+    backgroundColor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
   },
 }));
 
@@ -129,13 +129,13 @@ const ButtonContainer = styled(Box)(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   borderTop: '1px solid rgba(54, 54, 54, 0.68)',
-  background: 'rgba(10, 10, 10, 0.8)',
+  background: 'var(--theme-background, rgba(10, 10, 10, 0.8))',
 }));
 
 const CancelButton = styled(Button)(() => ({
   color: 'rgba(255,255,255,0.7)',
   '&:hover': {
-    backgroundColor: 'rgba(40, 40, 40, 0.4)',
+    backgroundColor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
   },
 }));
 
@@ -591,7 +591,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
             </Typography>
           </DialogHeader>
 
-          <DialogContent sx={{ p: 3, bgcolor: 'rgba(10, 10, 10, 0.8)' }}>
+          <DialogContent sx={{ p: 3, bgcolor: 'var(--theme-background, rgba(10, 10, 10, 0.8))' }}>
             <Box
               sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}
             >
@@ -825,7 +825,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                   sx={{
                     mt: 2,
                     p: 2,
-                    bgcolor: 'rgba(0,0,0,0.2)',
+                    bgcolor: 'var(--theme-background, rgba(0,0,0,0.2))',
                     borderRadius: 1,
                   }}
                 >
@@ -1054,7 +1054,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
           <DialogHeader>
             <DialogAvatar
               sx={{
-                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                backgroundColor: 'var(--theme-background, rgba(76, 175, 80, 0.2))',
                 color: '#4CAF50',
                 width: 60,
                 height: 60,
@@ -1078,11 +1078,11 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
             </Typography>
           </DialogHeader>
 
-          <DialogContent sx={{ p: 3, bgcolor: 'rgba(10, 10, 10, 0.8)' }}>
+          <DialogContent sx={{ p: 3, bgcolor: 'var(--theme-background, rgba(10, 10, 10, 0.8))' }}>
             <Box
               sx={{
                 p: 3,
-                bgcolor: 'rgba(40, 40, 40, 0.4)',
+                bgcolor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
                 borderRadius: 2,
                 mb: 3,
                 border: '1px solid rgba(60, 60, 60, 0.4)',
@@ -1184,7 +1184,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                     color: 'white',
                     '&:hover': {
                       borderColor: 'rgba(255,255,255,0.4)',
-                      backgroundColor: 'rgba(255,255,255,0.05)',
+                      backgroundColor: 'var(--theme-background, rgba(255,255,255,0.05))',
                     },
                   }}
                 >
