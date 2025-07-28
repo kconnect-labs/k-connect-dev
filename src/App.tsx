@@ -423,12 +423,10 @@ function App() {
   // --- ДОБАВЛЯЕМ useEffect для загрузки темы пользователя ---
   useEffect(() => {
     const loadUserSettings = async () => {
-      console.log('🎨 ATTENTION: Начинаем загрузку настроек пользователя');
 
       try {
         const response = await fetch('/api/profile/settings');
         const data = await response.json();
-        console.log('🎨 ATTENTION: Ответ API настроек:', data);
 
         if (data && data.success && data.settings) {
           // Применяем настройки темы
@@ -442,10 +440,8 @@ function App() {
             data.settings.primary_color || '#D0BCFF'
           );
           localStorage.setItem('theme', 'dark');
-          console.log('🎨 ATTENTION: Применены настройки темы пользователя');
         }
       } catch (e) {
-        console.error('🎨 ATTENTION: Ошибка загрузки настроек:', e);
         // fallback: дефолт
         setThemeSettings(prev => ({
           ...prev,

@@ -507,7 +507,7 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
       onTouchEnd={handleTouch}
 
       onDragStart={(e) => e.preventDefault()}
-      onContextMenu={(e) => e.preventDefault()}
+
       onMouseEnter={(e) => e.preventDefault()}
       onMouseLeave={(e) => e.preventDefault()}
       onFocus={(e) => e.preventDefault()}

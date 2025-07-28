@@ -312,10 +312,7 @@ const LikedTracksPage = ({ onBack }) => {
                 <TrackListItem
                   isActive={isCurrentTrack}
                   onClick={() => handlePlayTrack(track)}
-                  onContextMenu={e => {
-                    e.preventDefault();
-                    handleOpenMenu(e, track);
-                  }}
+
                 >
                   <ListItemAvatar>
                     <TrackAvatar src={track.cover_path} alt={track.title} />

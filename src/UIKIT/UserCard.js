@@ -3,14 +3,13 @@ import {
   Box,
   Avatar,
   Typography,
+  IconButton,
   Paper,
   Link as MuiLink,
-  IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VerifiedIcon from '@mui/icons-material/CheckCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ContextMenu from './ContextMenu/ContextMenu';
 
 const UserCardContainer = styled(Paper, {
   shouldForwardProp: prop => prop !== 'cardRadius',
@@ -59,9 +58,6 @@ const UserCard = ({
   cardRadius,
   forceUnfollow,
 }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuPos, setMenuPos] = useState({ x: 0, y: 0 });
-
   let avatarUrl = photo;
   if (
     avatarUrl &&
@@ -71,30 +67,15 @@ const UserCard = ({
     avatarUrl = `/static/uploads/avatar/${id}/${avatarUrl}`;
   }
 
-  const handleMenuClick = e => {
+  const handleFollowClick = (e) => {
     e.preventDefault();
-    setMenuPos({ x: e.clientX, y: e.clientY });
-    setMenuOpen(true);
+    e.stopPropagation();
+    if (forceUnfollow || is_following) {
+      onUnfollow && onUnfollow(id);
+    } else {
+      onFollow && onFollow(id);
+    }
   };
-
-  const menuItems =
-    forceUnfollow || is_following
-      ? [
-          {
-            id: 'unfollow',
-            label: 'Отписаться',
-            icon: null,
-            onClick: () => onUnfollow && onUnfollow(id),
-          },
-        ]
-      : [
-          {
-            id: 'follow',
-            label: 'Добавить',
-            icon: null,
-            onClick: () => onFollow && onFollow(id),
-          },
-        ];
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -141,23 +122,13 @@ const UserCard = ({
           <IconButton
             size='small'
             sx={{ ml: 1, alignSelf: 'flex-start' }}
-            onClick={handleMenuClick}
-            aria-label='Меню'
+            onClick={handleFollowClick}
+            aria-label={forceUnfollow || is_following ? 'Отписаться' : 'Добавить'}
           >
             <MoreVertIcon />
           </IconButton>
         </UserCardContainer>
       </MuiLink>
-      {menuOpen && (
-        <ContextMenu
-          show={menuOpen}
-          x={menuPos.x}
-          y={menuPos.y}
-          onClose={() => setMenuOpen(false)}
-          items={menuItems}
-          sx={{ width: 'unset' }}
-        />
-      )}
     </Box>
   );
 };

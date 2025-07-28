@@ -1,4 +1,3 @@
-import { ContextMenu, useContextMenu } from './ContextMenu';
 import NavButton, { MoreButton } from './NavButton';
 import UsernameCard from './UsernameCard';
 import SessionManager from './SessionManager';
@@ -11,10 +10,10 @@ import CommentSystem from './CommentSystem';
 import TransferMenu from './TransferMenu';
 import InventoryItemCard from './InventoryItemCard';
 import Badge from './Badge';
+import StyledTabs from './StyledTabs';
+import InfoBlock from './InfoBlock';
 
 export {
-  ContextMenu,
-  useContextMenu,
   NavButton,
   MoreButton,
   UsernameCard,
@@ -29,4 +28,6 @@ export {
   TransferMenu,
   InventoryItemCard,
   Badge,
+  StyledTabs,
+  InfoBlock,
 };

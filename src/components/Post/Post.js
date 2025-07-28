@@ -72,7 +72,7 @@ import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
 
-import { ContextMenu, useContextMenu } from '../../UIKIT';
+
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
 import { MaxIcon } from '../icons/CustomIcons';
@@ -159,12 +159,7 @@ const Post = ({
   const { playTrack, currentTrack, isPlaying, togglePlay } =
     useContext(MusicContext);
   const { setPostDetail, openPostDetail } = usePostDetail();
-  const {
-    show: showContextMenu,
-    contextMenuState,
-    handleContextMenu,
-    closeContextMenu,
-  } = useContextMenu();
+
 
   // Функция для форматирования времени с переводами
   const formatTimeAgoWithTranslation = dateString => {
@@ -1222,66 +1217,9 @@ const Post = ({
     incrementViewCount();
   };
 
-  const handlePostContextMenu = e => {
-    e.stopPropagation();
 
-    handleContextMenu(e, { postId: post.id });
-  };
 
-  const getContextMenuItems = () => {
-    const items = [];
 
-    items.push({
-      id: 'share',
-      label: t('post.context_menu.copy_link'),
-      icon: <Link2 size={16} />,
-      onClick: handleCopyLink,
-    });
-
-    items.push({
-      id: 'comment',
-      label: t('post.context_menu.comment'),
-      icon: <MessageCircle size={16} />,
-      onClick: handleOpenPostFromMenu,
-    });
-
-    // Добавляем кнопку "Факты" для пользователя с ID 3
-    if (currentUser && currentUser.id === 3) {
-      items.push({
-        id: 'facts',
-        label: 'Факты',
-        icon: <FactCheckIcon fontSize='small' />,
-        onClick: handleFactsClick,
-      });
-    }
-
-    if (isCurrentUserPost) {
-      if (isPostEditable()) {
-        items.push({
-          id: 'edit',
-          label: t('post.context_menu.edit'),
-          icon: <EditIcon fontSize='small' />,
-          onClick: () => handleEdit(),
-        });
-      }
-
-      items.push({
-        id: 'delete',
-        label: t('post.context_menu.delete'),
-        icon: <DeleteIcon fontSize='small' />,
-        onClick: () => handleDelete(),
-      });
-    } else {
-      items.push({
-        id: 'report',
-        label: t('post.context_menu.report'),
-        icon: <FlagIcon fontSize='small' />,
-        onClick: () => handleReportClick(),
-      });
-    }
-
-    return items;
-  };
 
   const getRandomRotation = () => {
     const possibleAngles = [-60, -50, -45, -40, -35, 35, 40, 45, 50, 60];
@@ -1671,7 +1609,7 @@ const Post = ({
         isPinned={isPinned}
         statusColor={statusColor}
         onClick={handlePostClick}
-        onContextMenu={handlePostContextMenu}
+
         onDoubleClick={handleDoubleClick}
         onTouchStart={handleTouchStart}
         ref={postRef}
@@ -3217,15 +3155,7 @@ const Post = ({
         />
       </Suspense>
 
-      <ContextMenu
-        items={getContextMenuItems()}
-        x={contextMenuState.x}
-        y={contextMenuState.y}
-        show={
-          contextMenuState.show && contextMenuState.data?.postId === post.id
-        }
-        onClose={closeContextMenu}
-      />
+
     </>
   );
 };

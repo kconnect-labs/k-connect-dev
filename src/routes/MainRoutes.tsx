@@ -64,7 +64,7 @@ const BadgeShopPage = React.lazy(
 );
 const BalancePage = React.lazy(() => import('../pages/Economic/BalancePage'));
 const UsernameAuctionPage = React.lazy(
-  () => import('../pages/Economic/UsernameAuctionPage')
+  () => import('../pages/Economic/UsernameAuction/UsernameAuctionPage')
 );
 const InventoryPackPage = React.lazy(
   () => import('../pages/Economic/components/inventoryPack/InventoryPackPage')
