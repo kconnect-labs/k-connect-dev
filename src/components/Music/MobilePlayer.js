@@ -122,6 +122,7 @@ const MobilePlayer = memo(({ isMobile }) => {
   if (!isMobile) {
     return null;
   }
+  
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
   const {

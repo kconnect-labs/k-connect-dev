@@ -105,13 +105,14 @@ const formatTime = seconds => {
   const remainingSeconds = Math.floor(seconds % 60);
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
-
 // Стилизованные компоненты - оптимизированы для производительности
 const PlayerContainer = memo(
   styled(Box)(({ theme, dominantColor, coverPath }) => ({
     position: 'relative',
     width: '100%',
     height: '100vh',
+    minHeight: '100vh',
+    maxHeight: '100vh',
     background: dominantColor
       ? `linear-gradient(135deg, ${dominantColor}15 0%, ${dominantColor}08 50%, rgba(0,0,0,0.95) 100%)`
       : 'linear-gradient(135deg, rgba(140,82,255,0.1) 0%, rgba(0,0,0,0.95) 100%)',
@@ -120,6 +121,15 @@ const PlayerContainer = memo(
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+    // Адаптивность по высоте
+    '@media (max-height: 600px)': {
+      height: '100vh',
+      minHeight: '100vh',
+    },
+    '@media (max-height: 500px)': {
+      height: '100vh',
+      minHeight: '100vh',
+    },
     '&::before': {
       content: '""',
       position: 'absolute',
@@ -143,6 +153,16 @@ const HeaderSection = memo(
     padding: theme.spacing(3, 4),
     position: 'relative',
     zIndex: 2,
+    // Адаптивность по высоте
+    '@media (max-height: 700px)': {
+      padding: theme.spacing(2, 3),
+    },
+    '@media (max-height: 600px)': {
+      padding: theme.spacing(1.5, 2),
+    },
+    '@media (max-height: 500px)': {
+      padding: theme.spacing(1, 1.5),
+    },
   }))
 );
 
@@ -172,8 +192,8 @@ const AlbumArtContainer = memo(
 
 const AlbumArt = memo(
   styled.img(({ theme }) => ({
-    width: 'min(70vw, 350px)',
-    height: 'min(70vw, 350px)',
+    width: 'min(70vw, 24rem)',
+    height: 'min(70vw, 24rem)',
     borderRadius: '20px',
     boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
     objectFit: 'cover',
@@ -184,7 +204,32 @@ const AlbumArt = memo(
     animation: 'albumArtFadeIn 0.6s ease forwards',
     '&:hover': {
       transform: 'scale(1.02)',
-      boxShadow: '0 25px 50px rgba(0,0,0,0.4)',
+      boxShadow: '0 1.5rem 3rem rgba(0,0,0,0.4)',
+    },
+    // Адаптивность по высоте через rem (уменьшено на 25% и добавлены пороги 850 и 800)
+    '@media (max-height: 850px)': {
+      width: 'min(52.5vw, 16.5rem)',
+      height: 'min(52.5vw, 16.5rem)',
+    },
+    '@media (max-height: 800px)': {
+      width: 'min(48.75vw, 15.125rem)',
+      height: 'min(48.75vw, 15.125rem)',
+    },
+    '@media (max-height: 700px)': {
+      width: 'min(45vw, 13.125rem)',
+      height: 'min(45vw, 13.125rem)',
+    },
+    '@media (max-height: 600px)': {
+      width: 'min(37.5vw, 10.5rem)',
+      height: 'min(37.5vw, 10.5rem)',
+    },
+    '@media (max-height: 500px)': {
+      width: 'min(30vw, 8.25rem)',
+      height: 'min(30vw, 8.25rem)',
+    },
+    '@media (max-height: 400px)': {
+      width: 'min(26.25vw, 6.75rem)',
+      height: 'min(26.25vw, 6.75rem)',
     },
     '@keyframes albumArtFadeIn': {
       '0%': {
@@ -203,28 +248,60 @@ const TrackInfo = memo(
   styled(Box)(({ theme }) => ({
     textAlign: 'center',
     maxWidth: '600px',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1.5), // 2 * 0.75 = 1.5
+    // адаптивность по высоте
+    '@media (max-height: 850px)': {
+      marginBottom: theme.spacing(1.125), // 1.5 * 0.75 = 1.125
+    },
+    '@media (max-height: 800px)': {
+      marginBottom: theme.spacing(0.9375), // 1.25 * 0.75 = 0.9375
+    },
   }))
 );
 
 const TrackTitle = memo(
   styled(Typography)(({ theme }) => ({
-    fontSize: '2rem',
+    fontSize: '1.5rem', // 2rem * 0.75 = 1.5rem
     fontWeight: 700,
     color: 'white',
-    marginBottom: theme.spacing(1),
-    textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    marginBottom: theme.spacing(0.75), // 1 * 0.75 = 0.75
+    textShadow: '0 1.5px 3px rgba(0,0,0,0.3)', // 2px*0.75=1.5px, 4px*0.75=3px
     [theme.breakpoints.down('md')]: {
-      fontSize: '1.5rem',
+      fontSize: '1.125rem', // 1.5rem * 0.75 = 1.125rem
+    },
+    // Адаптивность по высоте
+    '@media (max-height: 850px)': {
+      fontSize: '1.35rem', // 1.8rem * 0.75 = 1.35rem
+      marginBottom: theme.spacing(0.375), // 0.5 * 0.75 = 0.375
+    },
+    '@media (max-height: 800px)': {
+      fontSize: '1.125rem', // 1.5rem * 0.75 = 1.125rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 700px)': {
+      fontSize: '1.35rem', // 1.8rem * 0.75 = 1.35rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 600px)': {
+      fontSize: '1.125rem', // 1.5rem * 0.75 = 1.125rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 500px)': {
+      fontSize: '0.9rem', // 1.2rem * 0.75 = 0.9rem
+      marginBottom: theme.spacing(0.1875), // 0.25 * 0.75 = 0.1875
+    },
+    '@media (max-height: 400px)': {
+      fontSize: '0.75rem', // 1rem * 0.75 = 0.75rem
+      marginBottom: theme.spacing(0.1875),
     },
   }))
 );
 
 const TrackArtist = memo(
   styled(Typography)(({ theme }) => ({
-    fontSize: '1.2rem',
+    fontSize: '0.9rem', // 1.2rem * 0.75 = 0.9rem
     color: 'rgba(255,255,255,0.8)',
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(0.75), // 1 * 0.75 = 0.75
     cursor: 'pointer',
     transition: 'color 0.2s ease',
     '&:hover': {
@@ -232,7 +309,32 @@ const TrackArtist = memo(
       textDecoration: 'underline',
     },
     [theme.breakpoints.down('md')]: {
-      fontSize: '1rem',
+      fontSize: '0.75rem', // 1rem * 0.75 = 0.75rem
+    },
+    // Адаптивность по высоте
+    '@media (max-height: 850px)': {
+      fontSize: '0.825rem', // 1.1rem * 0.75 = 0.825rem
+      marginBottom: theme.spacing(0.375), // 0.5 * 0.75 = 0.375
+    },
+    '@media (max-height: 800px)': {
+      fontSize: '0.75rem', // 1rem * 0.75 = 0.75rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 700px)': {
+      fontSize: '0.825rem', // 1.1rem * 0.75 = 0.825rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 600px)': {
+      fontSize: '0.75rem', // 1rem * 0.75 = 0.75rem
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 500px)': {
+      fontSize: '0.675rem', // 0.9rem * 0.75 = 0.675rem
+      marginBottom: theme.spacing(0.1875), // 0.25 * 0.75 = 0.1875
+    },
+    '@media (max-height: 400px)': {
+      fontSize: '0.6rem', // 0.8rem * 0.75 = 0.6rem
+      marginBottom: theme.spacing(0.1875),
     },
   }))
 );
@@ -240,10 +342,19 @@ const TrackArtist = memo(
 const ProgressContainer = memo(
   styled(Box)(({ theme }) => ({
     width: '100%',
-    maxWidth: '500px',
+    maxWidth: '375px', // 500px * 0.75 = 375px
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(0.75), // 1 * 0.75 = 0.75
+    // адаптивность по высоте
+    '@media (max-height: 850px)': {
+      maxWidth: '281.25px', // 375 * 0.75
+      gap: theme.spacing(0.5625), // 0.75 * 0.75
+    },
+    '@media (max-height: 800px)': {
+      maxWidth: '234.375px', // 312.5 * 0.75
+      gap: theme.spacing(0.421875), // 0.5625 * 0.75
+    },
   }))
 );
 
@@ -252,10 +363,35 @@ const TimeDisplay = memo(
     display: 'flex',
     justifyContent: 'space-between',
     color: 'rgba(255,255,255,0.5)',
-    fontSize: '0.75rem',
+    fontSize: '0.5625rem', // 0.75rem * 0.75 = 0.5625rem
     fontFamily: 'var(--FF_TITLE, inherit)',
-    margin: '5px',
+    margin: '3.75px', // 5px * 0.75 = 3.75px
     userSelect: 'none',
+    // Адаптивность по высоте
+    '@media (max-height: 850px)': {
+      fontSize: '0.525rem', // 0.7rem * 0.75 = 0.525rem
+      margin: '2.25px', // 3px * 0.75 = 2.25px
+    },
+    '@media (max-height: 800px)': {
+      fontSize: '0.4875rem', // 0.65rem * 0.75 = 0.4875rem
+      margin: '1.5px', // 2px * 0.75 = 1.5px
+    },
+    '@media (max-height: 700px)': {
+      fontSize: '0.525rem', // 0.7rem * 0.75 = 0.525rem
+      margin: '2.25px',
+    },
+    '@media (max-height: 600px)': {
+      fontSize: '0.4875rem', // 0.65rem * 0.75 = 0.4875rem
+      margin: '1.5px',
+    },
+    '@media (max-height: 500px)': {
+      fontSize: '0.45rem', // 0.6rem * 0.75 = 0.45rem
+      margin: '0.75px', // 1px * 0.75 = 0.75px
+    },
+    '@media (max-height: 400px)': {
+      fontSize: '0.45rem',
+      margin: '0.75px',
+    },
   }))
 );
 
@@ -263,11 +399,35 @@ const MainControls = memo(
   styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+    gap: theme.spacing(1.5), // 2 * 0.75 = 1.5
+    marginBottom: theme.spacing(1.5), // 2 * 0.75 = 1.5
+    // Адаптивность по высоте
+    '@media (max-height: 850px)': {
+      gap: theme.spacing(1.125), // 1.5 * 0.75 = 1.125
+      marginBottom: theme.spacing(1.125),
+    },
+    '@media (max-height: 800px)': {
+      gap: theme.spacing(0.75), // 1 * 0.75 = 0.75
+      marginBottom: theme.spacing(0.75),
+    },
+    '@media (max-height: 700px)': {
+      gap: theme.spacing(1.125), // 1.5 * 0.75 = 1.125
+      marginBottom: theme.spacing(1.125),
+    },
+    '@media (max-height: 600px)': {
+      gap: theme.spacing(0.75), // 1 * 0.75 = 0.75
+      marginBottom: theme.spacing(0.75),
+    },
+    '@media (max-height: 500px)': {
+      gap: theme.spacing(0.375), // 0.5 * 0.75 = 0.375
+      marginBottom: theme.spacing(0.375),
+    },
+    '@media (max-height: 400px)': {
+      gap: theme.spacing(0.1875), // 0.25 * 0.75 = 0.1875
+      marginBottom: theme.spacing(0.1875),
+    },
   }))
 );
-
 // Apple Music style control button (без фона, бордеров, теней) - оптимизирован
 const ControlButton = memo(
   styled(IconButton)(({ theme, active, play }) => ({

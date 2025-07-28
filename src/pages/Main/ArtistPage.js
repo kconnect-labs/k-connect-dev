@@ -1096,7 +1096,7 @@ const ArtistPage = () => {
             zIndex: 1100,
           }}
         >
-          <MobilePlayer onExpandClick={handleOpenFullScreenPlayer} />
+          <MobilePlayer isMobile={isMobile} onExpandClick={handleOpenFullScreenPlayer} />
         </Box>
       )}
 

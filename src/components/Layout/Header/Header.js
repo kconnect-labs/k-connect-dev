@@ -308,6 +308,10 @@ const Header = ({ toggleSidebar }) => {
     }
   };
 
+  const handleNotificationRead = notificationId => {
+    setUnreadNotificationsCount(prev => Math.max(0, prev - 1));
+  };
+
   const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -876,6 +880,7 @@ const Header = ({ toggleSidebar }) => {
                   handleProfileMenuOpen={handleProfileMenuOpen}
                   NotificationList={NotificationList}
                   handleNewNotification={handleNewNotification}
+                  handleNotificationRead={handleNotificationRead}
                 />
               </>
             )}
@@ -895,6 +900,7 @@ const Header = ({ toggleSidebar }) => {
           autoHideDuration={5000}
           onClose={() => setShowNewNotification(false)}
           notificationData={newNotification}
+          onNotificationRead={handleNotificationRead}
         />
       )}
 

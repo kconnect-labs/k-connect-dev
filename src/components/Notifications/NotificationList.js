@@ -265,6 +265,14 @@ const getNotificationIcon = type => {
       return <MessageIcon sx={{ fontSize: '3rem' }} />;
     case 'medal':
       return <EmojiEventsIcon sx={{ fontSize: '3rem' }} />;
+    case 'bug_comment':
+    case 'bug_status_change':
+      return <ArticleIcon sx={{ fontSize: '3rem' }} />;
+    case 'item_transfer':
+    case 'marketplace_sold':
+      return <MonetizationOnIcon sx={{ fontSize: '3rem' }} />;
+    case 'general':
+      return <NotificationsIcon sx={{ fontSize: '3rem' }} />;
     default:
       return <NotificationsIcon sx={{ fontSize: '3rem' }} />;
   }
@@ -291,6 +299,8 @@ const getNotificationColor = type => {
     case 'auction_sold':
     case 'auction_refund':
     case 'new_auction_bid':
+    case 'item_transfer':
+    case 'marketplace_sold':
       return 'primary';
     case 'moderation':
     case 'ban':
@@ -298,6 +308,11 @@ const getNotificationColor = type => {
     case 'warning':
       return 'primary';
     case 'medal':
+      return 'primary';
+    case 'bug_comment':
+    case 'bug_status_change':
+      return 'primary';
+    case 'general':
       return 'primary';
     default:
       return 'primary';
@@ -556,6 +571,12 @@ const getNotificationMessage = (notification, t) => {
   const price = priceMatch ? priceMatch[1] : null;
   const royaltyMatch = notification.message.match(/\+(\d+) балл/);
   const royalty = royaltyMatch ? royaltyMatch[1] : null;
+  const usernameMatch = notification.message.match(/юзернейм[^"]*"([^"]+)"/);
+  const username = usernameMatch ? usernameMatch[1] : null;
+  const itemMatch = notification.message.match(/"([^"]+)" вещь/);
+  const itemName = itemMatch ? itemMatch[1] : null;
+  const bugReportMatch = notification.message.match(/баг-репорт[^']*'([^']+)'/);
+  const bugReportName = bugReportMatch ? bugReportMatch[1] : null;
 
   switch (notification.type) {
     case 'post_like':
@@ -585,6 +606,80 @@ const getNotificationMessage = (notification, t) => {
         username:
           notification.sender_user?.name || t('notifications.user.default'),
       });
+    case 'auction_refund':
+      return username
+        ? t('notifications.messages.auction_refund', { username })
+        : notification.message;
+    case 'auction_sold':
+      return username && points
+        ? t('notifications.messages.auction_sold', { username, points })
+        : notification.message;
+    case 'auction_win':
+      return username && points
+        ? t('notifications.messages.auction_win', { username, points })
+        : notification.message;
+    case 'username_auction_bid':
+      return username && points
+        ? t('notifications.messages.username_auction_bid', { username, points })
+        : notification.message;
+    case 'username_auction_cancelled':
+      return username
+        ? t('notifications.messages.username_auction_cancelled', { username })
+        : notification.message;
+    case 'username_auction_outbid':
+      return username
+        ? t('notifications.messages.username_auction_outbid', { username })
+        : notification.message;
+    case 'username_auction_sold':
+      return username && points
+        ? t('notifications.messages.username_auction_sold', { username, points })
+        : notification.message;
+    case 'username_auction_won':
+      return username && points
+        ? t('notifications.messages.username_auction_won', { username, points })
+        : notification.message;
+    case 'username_bid_accepted':
+      return username && points
+        ? t('notifications.messages.username_bid_accepted', { username, points })
+        : notification.message;
+    case 'new_auction_bid':
+      return username && points
+        ? t('notifications.messages.new_auction_bid', { username, points })
+        : notification.message;
+    case 'ban':
+      return t('notifications.messages.ban');
+    case 'unban':
+      return t('notifications.messages.unban');
+    case 'warning':
+      return t('notifications.messages.warning');
+    case 'bug_comment':
+      return bugReportName
+        ? t('notifications.messages.bug_comment', { bugReport: bugReportName })
+        : notification.message;
+    case 'bug_status_change':
+      return bugReportName
+        ? t('notifications.messages.bug_status_change', { bugReport: bugReportName })
+        : notification.message;
+    case 'item_transfer':
+      return itemName
+        ? t('notifications.messages.item_transfer', { item: itemName })
+        : notification.message;
+    case 'marketplace_sold':
+      return itemName && points
+        ? t('notifications.messages.marketplace_sold', { item: itemName, points })
+        : notification.message;
+    case 'medal':
+      return t('notifications.messages.medal');
+    case 'mention':
+      return t('notifications.messages.mention');
+    case 'general':
+      return t('notifications.messages.general');
+    case 'reply_like':
+      return t('notifications.messages.comment_like');
+    case 'repost':
+      return t('notifications.messages.post_repost');
+    case 'follow':
+      return t('notifications.messages.follow');
     default:
       return notification.message;
   }
@@ -637,8 +732,12 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
     const points = pointsMatch ? pointsMatch[1] : null;
     const badgeMatch = notification.message.match(/бейджик «([^»]+)»/);
     const badgeName = badgeMatch ? badgeMatch[1] : null;
-    const usernameMatch = notification.message.match(/юзернейм "([^"]+)"/);
+    const usernameMatch = notification.message.match(/юзернейм[^"]*"([^"]+)"/);
     const username = usernameMatch ? usernameMatch[1] : null;
+    const itemMatch = notification.message.match(/"([^"]+)" вещь/);
+    const itemName = itemMatch ? itemMatch[1] : null;
+    const bugReportMatch = notification.message.match(/баг-репорт[^']*'([^']+)'/);
+    const bugReportName = bugReportMatch ? bugReportMatch[1] : null;
 
     let message = getNotificationMessage(notification, t);
     let showMessage = true;
@@ -661,7 +760,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
             {message}
           </Typography>
         )}
-        {(points || badgeName || username) && (
+        {(points || badgeName || username || itemName || bugReportName) && (
           <Box sx={{ display: 'flex', gap: 1, mt: 1, flexWrap: 'wrap' }}>
             {points && (
               <StyledChip
@@ -688,6 +787,22 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
                 size='small'
                 icon={<PersonAddIcon />}
                 label={username}
+                variant='outlined'
+              />
+            )}
+            {itemName && (
+              <StyledChip
+                size='small'
+                icon={<MonetizationOnIcon />}
+                label={itemName}
+                variant='outlined'
+              />
+            )}
+            {bugReportName && (
+              <StyledChip
+                size='small'
+                icon={<ArticleIcon />}
+                label={bugReportName}
                 variant='outlined'
               />
             )}
@@ -845,12 +960,50 @@ const GroupedNotificationComponent = React.memo(
         switch (type) {
           case 'post_like':
             return `${count} ${count === 1 ? t('notifications.types.like') : t('notifications.types.likes')}`;
+          case 'comment_like':
+          case 'reply_like':
+            return `${count} ${count === 1 ? t('notifications.types.like') : t('notifications.types.likes')}`;
           case 'comment':
+          case 'reply':
             return `${count} ${count === 1 ? t('notifications.types.comment') : t('notifications.types.comments')}`;
           case 'follow':
             return `${count} ${count === 1 ? t('notifications.types.follow') : t('notifications.types.follows')}`;
           case 'points_transfer':
             return `${count} ${count === 1 ? t('notifications.types.transfer') : t('notifications.types.transfers')}`;
+          case 'repost':
+            return `${count} ${count === 1 ? t('notifications.types.repost') : t('notifications.types.reposts')}`;
+          case 'wall_post':
+            return `${count} ${count === 1 ? t('notifications.types.wall_post') : t('notifications.types.wall_posts')}`;
+          case 'badge_purchase':
+            return `${count} ${count === 1 ? t('notifications.types.badge_purchase') : t('notifications.types.badge_purchases')}`;
+          case 'username_auction_bid':
+          case 'username_bid_accepted':
+          case 'username_auction_outbid':
+          case 'username_auction_sold':
+          case 'username_auction_won':
+          case 'username_auction_cancelled':
+          case 'auction_win':
+          case 'auction_sold':
+          case 'auction_refund':
+          case 'new_auction_bid':
+            return `${count} ${count === 1 ? t('notifications.types.auction') : t('notifications.types.auctions')}`;
+          case 'moderation':
+          case 'ban':
+          case 'unban':
+          case 'warning':
+            return `${count} ${count === 1 ? t('notifications.types.moderation') : t('notifications.types.moderation_actions')}`;
+          case 'mention':
+            return `${count} ${count === 1 ? t('notifications.types.mention') : t('notifications.types.mentions')}`;
+          case 'medal':
+            return `${count} ${count === 1 ? t('notifications.types.medal') : t('notifications.types.medals')}`;
+          case 'bug_comment':
+          case 'bug_status_change':
+            return `${count} ${count === 1 ? t('notifications.types.bug_report') : t('notifications.types.bug_reports')}`;
+          case 'item_transfer':
+          case 'marketplace_sold':
+            return `${count} ${count === 1 ? t('notifications.types.marketplace') : t('notifications.types.marketplace_items')}`;
+          case 'general':
+            return `${count} ${count === 1 ? t('notifications.types.notification') : t('notifications.types.notifications')}`;
           default:
             return `${count} ${t('notifications.types.notifications')}`;
         }
@@ -985,7 +1138,7 @@ const GroupedNotificationComponent = React.memo(
   }
 );
 
-const NotificationList = ({ onNewNotification }) => {
+const NotificationList = ({ onNewNotification, onNotificationRead }) => {
   const { t } = useLanguage();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -995,6 +1148,21 @@ const NotificationList = ({ onNewNotification }) => {
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const navigate = useNavigate();
   const theme = useTheme();
+
+  // Функция для обновления состояния уведомления при прочитывании через Dynamic Island
+  const handleNotificationRead = useCallback((notificationId) => {
+    setNotifications(prev =>
+      prev.map(n =>
+        n.id === notificationId ? { ...n, is_read: true } : n
+      )
+    );
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    
+    // Вызываем внешний callback для обновления состояния в Header
+    if (onNotificationRead) {
+      onNotificationRead(notificationId);
+    }
+  }, [onNotificationRead]);
 
   const fetchUnreadCount = useCallback(async () => {
     try {

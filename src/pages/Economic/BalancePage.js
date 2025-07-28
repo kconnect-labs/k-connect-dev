@@ -33,8 +33,6 @@ import {
   Button,
   Tabs,
   Tab,
-  Dialog,
-  DialogContent,
   DialogActions as MuiDialogActions,
   TextField,
   Snackbar,
@@ -81,6 +79,7 @@ import TransferMenu from '../../UIKIT/TransferMenu';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import InfoBlock from '../../UIKIT/InfoBlock';
+import UniversalModal from '../../UIKIT/UniversalModal';
 import { UltimateDecorationModal } from '../../components/UltimateDecorationModal';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -200,87 +199,13 @@ const TabPanel = ({ children, value, index, ...other }) => (
   </div>
 );
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialog-container': {
-    zIndex: 999999999999,
-  },
-  '& .MuiDialog-paper': {
-    borderRadius: 16,
-    background:
-      theme.palette.mode === 'dark'
-        ? 'rgba(18, 18, 18, 0.8)'
-        : 'rgba(255, 255, 255, 0.8)',
-    backdropFilter: 'blur(10px)',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-    border:
-      theme.palette.mode === 'dark'
-        ? '1px solid rgba(255, 255, 255, 0.1)'
-        : '1px solid rgba(208, 188, 255, 0.3)',
-    overflow: 'hidden',
-    maxWidth: '450px',
-    width: '100%',
-    margin: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      maxWidth: '100%',
-      margin: 0,
-      borderRadius: 0,
-    },
-  },
-  '& .MuiDialogTitle-root': {
-    fontSize: '1.2rem',
-    fontWeight: 500,
-  },
-}));
+// StyledDialog удален - теперь используется UniversalModal
 
-const DialogHeader = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
-  padding: theme.spacing(2),
-  borderBottom: `1px solid ${
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.1)'
-      : 'rgba(208, 188, 255, 0.2)'
-  }`,
-  background:
-    theme.palette.mode === 'dark'
-      ? 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(0, 0, 0, 0) 100%)'
-      : 'linear-gradient(90deg, rgba(208, 188, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%)',
-}));
-
-const HeaderGlow = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: -50,
-  right: -50,
-  width: 150,
-  height: 150,
-  borderRadius: '50%',
-  background:
-    'radial-gradient(circle, rgba(208, 188, 255, 0.3) 0%, rgba(208, 188, 255, 0) 70%)',
-  zIndex: 0,
-}));
-
-const DialogHeaderContent = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  zIndex: 1,
-  display: 'flex',
-  alignItems: 'center',
-}));
+// DialogHeader, HeaderGlow, DialogHeaderContent удалены - теперь используется UniversalModal
 
 const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
-  padding: theme.spacing(2),
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
+
   justifyContent: 'space-between',
-  backgroundColor:
-    theme.palette.mode === 'dark'
-      ? 'rgba(0, 0, 0, 0.4)'
-      : 'rgba(255, 255, 255, 0.6)',
-  borderTop: `1px solid ${
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.1)'
-      : 'rgba(208, 188, 255, 0.2)'
-  }`,
 }));
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -313,11 +238,16 @@ const ActionButton = styled(Button)(({ theme }) => ({
   paddingRight: theme.spacing(4),
   paddingTop: theme.spacing(0.75),
   paddingBottom: theme.spacing(0.75),
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-  background: 'linear-gradient(45deg, #6200ee 30%, #9c64f2 90%)',
-  color: '#fff',
+  borderColor: '#cfbcfb',
+  color: '#cfbcfb',
+  backgroundColor: 'transparent',
   '&:hover': {
-    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)',
+    backgroundColor: 'rgba(207, 188, 251, 0.1)',
+    borderColor: '#cfbcfb',
+  },
+  '&:disabled': {
+    borderColor: 'rgba(207, 188, 251, 0.3)',
+    color: 'rgba(207, 188, 251, 0.5)',
   },
 }));
 
@@ -533,25 +463,7 @@ const generateReceiptForTransaction = async transaction => {
   }
 };
 
-const TransactionDetailDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialog-paper': {
-    borderRadius: 20,
-    background:
-      theme.palette.mode === 'dark'
-        ? 'linear-gradient(135deg, rgba(35, 35, 40, 0.95) 0%, rgba(20, 20, 25, 0.95) 100%)'
-        : 'linear-gradient(135deg, rgba(250, 250, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%)',
-    backdropFilter: 'blur(20px)',
-    boxShadow: '0 20px 80px rgba(0, 0, 0, 0.2)',
-    overflow: 'hidden',
-    maxWidth: '500px',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      maxWidth: '100%',
-      margin: 0,
-      borderRadius: 0,
-    },
-  },
-}));
+// TransactionDetailDialog удален - теперь используется UniversalModal
 
 const TransactionDetailHeader = styled(Box)(({ theme, type }) => ({
   padding: theme.spacing(3, 3, 3.5, 3),
@@ -597,10 +509,12 @@ const TransactionStatusChip = styled(Chip)(({ theme, status }) => ({
 
 const DetailRow = styled(Box)(({ theme }) => ({
   display: 'flex',
+  flexDirection: { xs: 'column', sm: 'row' },
   justifyContent: 'space-between',
-  alignItems: 'center',
+  alignItems: { xs: 'flex-start', sm: 'center' },
   padding: theme.spacing(1.5, 0),
   borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+  gap: { xs: 0.5, sm: 0 },
   '&:last-child': {
     borderBottom: 'none',
   },
@@ -608,17 +522,19 @@ const DetailRow = styled(Box)(({ theme }) => ({
 
 const DetailLabel = styled(Typography)(({ theme }) => ({
   color: alpha(theme.palette.text.primary, 0.6),
-  fontSize: '0.85rem',
+  fontSize: { xs: '0.8rem', sm: '0.85rem' },
   fontWeight: 500,
+  marginBottom: { xs: 0.5, sm: 0 },
 }));
 
 const DetailValue = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.primary,
-  fontSize: '0.85rem',
+  fontSize: { xs: '0.8rem', sm: '0.85rem' },
   fontWeight: 600,
-  textAlign: 'right',
+  textAlign: { xs: 'left', sm: 'right' },
   wordBreak: 'break-word',
-  maxWidth: '50%',
+  maxWidth: { xs: '100%', sm: '50%' },
+  width: { xs: '100%', sm: 'auto' },
 }));
 
 const TransactionAvatar = styled(Avatar, {
@@ -679,9 +595,7 @@ const TransactionDate = styled(Typography)(({ theme }) => ({
   marginTop: 2,
 }));
 
-const TransactionDetailContent = styled(DialogContent)(({ theme }) => ({
-  padding: theme.spacing(3),
-}));
+// TransactionDetailContent удален - теперь используется Box
 
 // Add styled component for expandable content
 const ExpandableContent = styled(Box, {
@@ -2163,12 +2077,13 @@ const BalancePage = () => {
         </InfoBlock>
       </TabPanel>
 
-      <TransactionDetailDialog
+      <UniversalModal
         open={detailDialogOpen}
         onClose={handleCloseTransactionDetails}
+        title="Детали транзакции"
+        maxWidth="sm"
         fullWidth
-        maxWidth='sm'
-        fullScreen={isMobile}
+        disablePadding
       >
         {selectedTransaction && (
           <>
@@ -2276,7 +2191,7 @@ const BalancePage = () => {
               </Typography>
             </TransactionDetailHeader>
 
-            <TransactionDetailContent>
+            <Box sx={{ overflow: 'auto', px: 2 }}>
               <DetailRow key='transaction-id'>
                 <DetailLabel>ID транзакции</DetailLabel>
                 <DetailValue>
@@ -2469,18 +2384,7 @@ const BalancePage = () => {
                 </DetailValue>
               </DetailRow>
 
-              {selectedTransaction.type === 'transfer' && (
-                <Button
-                  startIcon={<PictureAsPdfIcon />}
-                  variant='outlined'
-                  onClick={() =>
-                    generateReceiptForTransaction(selectedTransaction)
-                  }
-                  sx={{ borderRadius: 2 }}
-                >
-                  {t('balance.transaction_details.receipt.download')}
-                </Button>
-              )}
+
 
               {selectedTransaction.type === 'weekly_activity' && (
                 <Box
@@ -2499,34 +2403,111 @@ const BalancePage = () => {
                 </Box>
               )}
 
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                {selectedTransaction.sender_id ===
-                  selectedTransaction.recipient_id &&
-                  selectedTransaction.message ===
-                    t('balance.transactions.clicker_withdrawal_message') && (
+              <Box sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                padding: '12px 16px',
+                borderTop: '1px solid rgba(207, 188, 251, 0.2)',
+                position: { xs: 'fixed', sm: 'sticky' },
+                bottom: { xs: 0, sm: 'auto' },
+                left: { xs: 0, sm: 'auto' },
+                right: { xs: 0, sm: 'auto' },
+                zIndex: { xs: 1000, sm: 'auto' },
+                marginTop: { xs: 'auto', sm: 'auto' },
+                gap: (selectedTransaction.type === 'transfer' || 
+                      (selectedTransaction.sender_id === selectedTransaction.recipient_id &&
+                       selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message'))) ? '12px' : 0
+              }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: '12px', 
+                  flex: (selectedTransaction.type === 'transfer' || 
+                        (selectedTransaction.sender_id === selectedTransaction.recipient_id &&
+                         selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message'))) ? 1 : 0
+                }}>
+                  {selectedTransaction.type === 'transfer' && (
                     <Button
-                      startIcon={<TouchAppIcon />}
+                      startIcon={<PictureAsPdfIcon />}
                       variant='outlined'
-                      color='secondary'
                       onClick={() =>
                         generateReceiptForTransaction(selectedTransaction)
                       }
-                      sx={{ ml: 2, borderRadius: 2 }}
+                      sx={{ 
+                        borderRadius: '12px',
+                        borderColor: '#cfbcfb',
+                        color: '#cfbcfb',
+                        padding: '6px 12px',
+                        fontSize: '0.875rem',
+                        minHeight: '36px',
+                        flex: 1,
+                        '&:hover': {
+                          borderColor: '#cfbcfb',
+                          backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                        },
+                      }}
+                    >
+                      {t('balance.transaction_details.receipt.download')}
+                    </Button>
+                  )}
+                  {selectedTransaction.sender_id ===
+                    selectedTransaction.recipient_id &&
+                    selectedTransaction.message ===
+                      t('balance.transactions.clicker_withdrawal_message') && (
+                    <Button
+                      startIcon={<TouchAppIcon />}
+                      variant='outlined'
+                      onClick={() =>
+                        generateReceiptForTransaction(selectedTransaction)
+                      }
+                      sx={{ 
+                        borderRadius: '12px',
+                        borderColor: '#cfbcfb',
+                        color: '#cfbcfb',
+                        padding: '6px 12px',
+                        fontSize: '0.875rem',
+                        minHeight: '36px',
+                        flex: 1,
+                        '&:hover': {
+                          borderColor: '#cfbcfb',
+                          backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                        },
+                      }}
                     >
                       {t('balance.transaction_details.receipt.payment')}
                     </Button>
                   )}
+                </Box>
                 <Button
+                  variant='outlined'
                   onClick={handleCloseTransactionDetails}
-                  sx={{ ml: 2, borderRadius: 2 }}
+                  sx={{ 
+                    borderRadius: '12px',
+                    border: '1px solid rgba(207, 188, 251, 0.5)',
+                    borderColor: '#cfbcfb',
+                    color: '#cfbcfb',
+                    padding: '6px 12px',
+                    fontSize: '0.875rem',
+                    minHeight: '36px',
+                    flex: (selectedTransaction.type === 'transfer' || 
+                          (selectedTransaction.sender_id === selectedTransaction.recipient_id &&
+                           selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message'))) ? 1 : 'none',
+                    width: (selectedTransaction.type === 'transfer' || 
+                           (selectedTransaction.sender_id === selectedTransaction.recipient_id &&
+                            selectedTransaction.message === t('balance.transactions.clicker_withdrawal_message'))) ? 'auto' : '100%',
+                    '&:hover': {
+                      borderColor: '#cfbcfb',
+                      backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                    },
+                  }}
                 >
                   {t('balance.transaction_details.receipt.close')}
                 </Button>
               </Box>
-            </TransactionDetailContent>
+            </Box>
           </>
         )}
-      </TransactionDetailDialog>
+      </UniversalModal>
 
       <TabPanel value={tabValue} index={1}>
         <InfoBlock
@@ -3150,7 +3131,7 @@ const BalancePage = () => {
         </InfoBlock>
       </TabPanel>
 
-      <StyledDialog
+      <UniversalModal
         open={openKeyDialog}
         onClose={() => {
           if (!isSubmittingKey && !isCheckingDecoration) {
@@ -3162,37 +3143,13 @@ const BalancePage = () => {
             setActiveTopupTab(0);
           }
         }}
+        title="Пополнение баланса"
+        maxWidth="md"
         fullWidth
+        addBottomPadding
       >
-        <DialogHeader>
-          <HeaderGlow />
-          <DialogHeaderContent>
-            <MonetizationOnIcon
-              color='primary'
-              sx={{ mr: 1.5, fontSize: 24 }}
-            />
-            <Typography
-              component='div'
-              variant='h6'
-              fontWeight='bold'
-              color='primary.light'
-            >
-              Пополнение баланса
-            </Typography>
-          </DialogHeaderContent>
-          {!isSubmittingKey && (
-            <IconButton
-              aria-label='close'
-              onClick={() => setOpenKeyDialog(false)}
-              sx={{ position: 'absolute', right: 8, top: 8 }}
-            >
-              <CloseIcon />
-            </IconButton>
-          )}
-        </DialogHeader>
-
-        <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
-          <Tabs
+        <Box sx={{ bgcolor: 'transparent' }}>
+          <StyledTabs
             value={activeTopupTab}
             onChange={(e, newValue) => {
               setActiveTopupTab(newValue);
@@ -3200,12 +3157,14 @@ const BalancePage = () => {
               setKeyError('');
               setDecorationCheckError('');
             }}
-            sx={{ mb: 3 }}
-          >
-            <Tab label={t('balance.topup.tabs.key')} />
-            <Tab label={t('balance.topup.tabs.donate')} />
-            <Tab label='Проверить декорацию' />
-          </Tabs>
+            tabs={[
+              { value: 0, label: t('balance.topup.tabs.key') },
+              { value: 1, label: t('balance.topup.tabs.donate') },
+              { value: 2, label: 'Проверить декорацию' }
+            ]}
+            fullWidth
+            style={{ marginBottom: '16px' }}
+          />
 
           {activeTopupTab === 0 && !keySuccess ? (
             <ContentBox>
@@ -3223,7 +3182,7 @@ const BalancePage = () => {
                 error={!!keyError}
                 helperText={keyError}
                 disabled={isSubmittingKey}
-                sx={{ mt: 2, mb: 2 }}
+                sx={{ mt: { xs: 1.5, sm: 2 }, mb: { xs: 1.5, sm: 2 } }}
                 InputProps={{
                   endAdornment: keyValue && (
                     <InputAdornment position='end'>
@@ -3264,11 +3223,21 @@ const BalancePage = () => {
                 {t('balance.topup.donate.rate')}
               </Typography>
               <Button
-                variant='contained'
+                variant='outlined'
                 color='primary'
                 startIcon={<MonetizationOnIcon />}
                 fullWidth
                 onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
+                sx={{ 
+                  mt: { xs: 1.5, sm: 2 },
+                  minHeight: { xs: '40px', sm: '48px' },
+                  borderColor: '#cfbcfb',
+                  color: '#cfbcfb',
+                  '&:hover': {
+                    borderColor: '#cfbcfb',
+                    backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                  },
+                }}
               >
                 {t('balance.topup.donate.button')}
               </Button>
@@ -3295,13 +3264,26 @@ const BalancePage = () => {
               )}
 
               <Button
-                variant='contained'
+                variant='outlined'
                 color='primary'
                 startIcon={<DiamondIcon />}
                 fullWidth
                 onClick={handleCheckDecoration}
                 disabled={isCheckingDecoration}
-                sx={{ mt: 2 }}
+                sx={{ 
+                  mt: { xs: 1.5, sm: 2 },
+                  minHeight: { xs: '40px', sm: '48px' },
+                  borderColor: '#cfbcfb',
+                  color: '#cfbcfb',
+                  '&:hover': {
+                    borderColor: '#cfbcfb',
+                    backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                  },
+                  '&:disabled': {
+                    borderColor: 'rgba(207, 188, 251, 0.3)',
+                    color: 'rgba(207, 188, 251, 0.5)',
+                  },
+                }}
               >
                 {isCheckingDecoration ? (
                   <>
@@ -3324,7 +3306,7 @@ const BalancePage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                py: 4,
+                py: { xs: 3, sm: 4 },
                 position: 'relative',
                 overflow: 'hidden',
               }}
@@ -3344,7 +3326,7 @@ const BalancePage = () => {
                   zIndex: 2,
                 }}
               >
-                <CheckCircleIcon color='success' sx={{ fontSize: 80, mb: 2 }} />
+                <CheckCircleIcon color='success' sx={{ fontSize: { xs: 60, sm: 80 }, mb: { xs: 1.5, sm: 2 } }} />
                 <Typography
                   component='div'
                   variant='h6'
@@ -3360,8 +3342,8 @@ const BalancePage = () => {
                 {keySuccess.type === 'points' ? (
                   <Box
                     sx={{
-                      mt: 3,
-                      p: 2,
+                      mt: { xs: 2, sm: 3 },
+                      p: { xs: 1.5, sm: 2 },
                       borderRadius: 2,
                       bgcolor: 'background.paper',
                       boxShadow: 1,
@@ -3401,8 +3383,8 @@ const BalancePage = () => {
                 ) : (
                   <Box
                     sx={{
-                      mt: 3,
-                      p: 2,
+                      mt: { xs: 2, sm: 3 },
+                      p: { xs: 1.5, sm: 2 },
                       borderRadius: 2,
                       bgcolor: 'background.paper',
                       boxShadow: 1,
@@ -3468,19 +3450,44 @@ const BalancePage = () => {
               </Box>
             </Box>
           )}
-        </DialogContent>
+        </Box>
 
-        <DialogActions>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          padding: '12px 16px',
+          borderTop: '1px solid rgba(207, 188, 251, 0.2)',
+          position: { xs: 'fixed', sm: 'sticky' },
+          bottom: { xs: 0, sm: 'auto' },
+          left: { xs: 0, sm: 'auto' },
+          right: { xs: 0, sm: 'auto' },
+          zIndex: { xs: 1000, sm: 'auto' },
+          marginTop: { xs: 'auto', sm: 'auto' },
+        }}>
           {!keySuccess ? (
             <>
               <CancelButton
                 onClick={() => setOpenKeyDialog(false)}
                 variant='outlined'
                 disabled={isSubmittingKey}
+                sx={{
+                  borderRadius: '12px',
+                  borderColor: '#cfbcfb',
+                  color: '#cfbcfb',
+                  padding: '6px 12px',
+                  fontSize: '0.875rem',
+                  minHeight: '36px',
+                  '&:hover': {
+                    borderColor: '#cfbcfb',
+                    backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                  },
+                }}
               >
                 {t('balance.common.cancel')}
               </CancelButton>
               <ActionButton
+                variant='outlined'
                 onClick={handleRedeemKey}
                 disabled={!keyValue || isSubmittingKey || keyValue.length < 19}
                 startIcon={
@@ -3488,6 +3495,18 @@ const BalancePage = () => {
                     <CircularProgress size={16} color='inherit' />
                   ) : null
                 }
+                sx={{
+                  borderRadius: '12px',
+                  borderColor: '#cfbcfb',
+                  color: '#cfbcfb',
+                  padding: '6px 12px',
+                  fontSize: '0.875rem',
+                  minHeight: '36px',
+                  '&:hover': {
+                    borderColor: '#cfbcfb',
+                    backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                  },
+                }}
               >
                 {isSubmittingKey
                   ? t('balance.topup.key.process')
@@ -3501,43 +3520,34 @@ const BalancePage = () => {
                 setKeySuccess(null);
                 setKeyValue('');
               }}
-              sx={{ mx: 'auto' }}
+              sx={{ 
+                mx: 'auto',
+                borderRadius: '12px',
+                borderColor: '#cfbcfb',
+                color: '#cfbcfb',
+                padding: '6px 12px',
+                fontSize: '0.875rem',
+                minHeight: '36px',
+                '&:hover': {
+                  borderColor: '#cfbcfb',
+                  backgroundColor: 'rgba(207, 188, 251, 0.1)',
+                },
+              }}
             >
               {t('balance.common.done')}
             </ActionButton>
           )}
-        </DialogActions>
-      </StyledDialog>
+        </Box>
+      </UniversalModal>
 
-      <StyledDialog
+      <UniversalModal
         open={transferSuccess}
         onClose={() => setTransferSuccess(false)}
-        maxWidth='sm'
+        title={t('balance.transactions.success.title')}
+        maxWidth="sm"
         fullWidth
       >
-        <DialogHeader>
-          <HeaderGlow />
-          <DialogHeaderContent>
-            <CheckCircleIcon color='success' sx={{ mr: 1.5, fontSize: 24 }} />
-            <Typography
-              component='div'
-              variant='h6'
-              fontWeight='bold'
-              color='success.main'
-            >
-              {t('balance.transactions.success.title')}
-            </Typography>
-          </DialogHeaderContent>
-          <IconButton
-            aria-label='close'
-            onClick={() => setTransferSuccess(false)}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogHeader>
-
-        <DialogContent sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
+        <Box sx={{ p: 3, pt: 2.5, bgcolor: 'transparent' }}>
           <Box
             sx={{
               display: 'flex',
@@ -3601,17 +3611,8 @@ const BalancePage = () => {
               {t('balance.transactions.success.open_receipt')}
             </ReceiptIconButton>
           </Box>
-        </DialogContent>
-
-        <DialogActions>
-          <ActionButton
-            onClick={() => setTransferSuccess(false)}
-            sx={{ mx: 'auto' }}
-          >
-            {t('balance.common.close')}
-          </ActionButton>
-        </DialogActions>
-      </StyledDialog>
+        </Box>
+      </UniversalModal>
 
       <Snackbar
         open={snackbar.open}

@@ -10,6 +10,8 @@ import {
   Button,
   Snackbar,
   Alert,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Favorite,
@@ -24,6 +26,7 @@ import { useMusic } from '../../context/MusicContext';
 import MyVibeWidget from './components/MyVibeWidget';
 import ChartsBlock from './components/ChartsBlock';
 import ArtistsBlock from './components/ArtistsBlock';
+import MobilePlayer from '../../components/Music/MobilePlayer';
 import apiClient from '../../services/axiosConfig';
 import {
   BlockContainer,
@@ -36,6 +39,8 @@ import { useLanguage } from '../../context/LanguageContext';
 const MusicPage = () => {
   const navigate = useNavigate();
   const { trackId } = useParams();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const {
     currentTrack,
     isPlaying,
@@ -188,6 +193,21 @@ const MusicPage = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      {/* Mobile Player */}
+      {isMobile && currentTrack && (
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1100,
+          }}
+        >
+          <MobilePlayer isMobile={isMobile} />
+        </Box>
+      )}
     </Box>
   );
 };

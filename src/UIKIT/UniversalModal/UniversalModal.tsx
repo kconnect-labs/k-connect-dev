@@ -25,6 +25,8 @@ interface UniversalModalProps {
   disableEscapeKeyDown?: boolean;
   className?: string;
   contentClassName?: string;
+  disablePadding?: boolean;
+  addBottomPadding?: boolean;
 }
 
 const UniversalModal: React.FC<UniversalModalProps> = ({
@@ -39,6 +41,8 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   disableEscapeKeyDown = false,
   className = '',
   contentClassName = '',
+  disablePadding = false,
+  addBottomPadding = false,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,20 +56,22 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
-    maxWidth: maxWidth === false ? 'none' : undefined,
+    maxWidth: maxWidth === false ? 'none' : '450px',
     width: fullWidth ? '100%' : 'auto',
     maxHeight: isMobile ? '100vh' : '90vh',
     margin: isMobile ? 0 : 'auto',
+    overflow: 'hidden',
   };
 
   const headerStyle = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '16px 20px',
+    padding: isMobile ? '12px 16px' : '16px 20px',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+    minHeight: isMobile ? '56px' : '64px',
   };
 
   return (
@@ -106,7 +112,25 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
       </Box>
 
       <DialogContent 
-        sx={{ p: isMobile ? 2 : 3, overflow: 'auto' }}
+        sx={{ 
+          p: disablePadding ? 0 : (isMobile ? '16px' : '24px'), 
+          pb: addBottomPadding && isMobile ? '120px' : undefined,
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '3px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '3px',
+            '&:hover': {
+              background: 'rgba(255, 255, 255, 0.3)',
+            },
+          },
+        }}
         className={contentClassName}
       >
         {children}

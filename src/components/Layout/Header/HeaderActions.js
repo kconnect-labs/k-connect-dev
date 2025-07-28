@@ -13,6 +13,7 @@ const HeaderActions = ({
   handleProfileMenuOpen,
   NotificationList,
   handleNewNotification,
+  handleNotificationRead,
 }) => {
   const actionsStyles = {
     '--primary-color': primaryColor,
@@ -43,7 +44,10 @@ const HeaderActions = ({
       {/* Уведомления рендерятся везде */}
       {user && (
         <div className='notification-container'>
-          <NotificationList onNewNotification={handleNewNotification} />
+          <NotificationList 
+            onNewNotification={handleNewNotification}
+            onNotificationRead={handleNotificationRead}
+          />
         </div>
       )}
 
