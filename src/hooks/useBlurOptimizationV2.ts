@@ -341,11 +341,9 @@ export const useBlurOptimizationV2 = (): BlurOptimizationReturn => {
   }, []);
 
   const applyBlurOptimization = useCallback(() => {
-    console.log('V2 ApplyBlurOptimization - starting...');
     // Process existing elements
     const allElements = document.querySelectorAll('*');
     const elementsToOptimize = Array.from(allElements).filter(shouldOptimizeElement);
-    console.log('V2 ApplyBlurOptimization - elements to optimize:', elementsToOptimize.length);
 
     elementsToOptimize.forEach(element => {
       queueElementForOptimization(element as HTMLElement);
@@ -354,7 +352,6 @@ export const useBlurOptimizationV2 = (): BlurOptimizationReturn => {
     // Process CSS rules
     processCSSRules();
     processEmotionStyles();
-    console.log('V2 ApplyBlurOptimization - completed');
   }, [shouldOptimizeElement]);
 
   const processCSSRules = useCallback(() => {

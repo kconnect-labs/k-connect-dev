@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -562,6 +562,8 @@ const ProfilePage = () => {
     }
   }, [itemIdToOpen]);
 
+  const equippedItemsPreview = useMemo(() => equippedItems.slice(0, 3), [equippedItems]);
+
   if (loading) {
     return <ProfileLoader />;
   }
@@ -659,7 +661,7 @@ const ProfilePage = () => {
                 left: 0,
                 width: '100%',
                 height: '100%',
-                pointerEvents: 'auto',
+                pointerEvents: isOwnProfile && isEditMode ? 'auto' : 'none',
                 zIndex: 10,
               }}
               data-profile-container="true"
@@ -1340,9 +1342,9 @@ const ProfilePage = () => {
                   width: '100%',
                 }}
               >
-                {equippedItems.slice(0, 3).map((item, index) => (
+                {equippedItemsPreview.map(item => (
                   <Box
-                    key={item.id || index}
+                    key={item.id}
                     sx={{
                       width: 'calc((100% - 8px) / 3)',
                       aspectRatio: '1',

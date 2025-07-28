@@ -31,6 +31,22 @@ const getRarityLabel = (rarity = 'common') => {
   }
 };
 
+function areEqual(prevProps, nextProps) {
+  const prev = prevProps.item;
+  const next = nextProps.item;
+  return (
+    prev.id === next.id &&
+    prev.image_url === next.image_url &&
+    prev.is_equipped === next.is_equipped &&
+    prev.background_url === next.background_url &&
+    prev.item_name === next.item_name &&
+    prev.rarity === next.rarity &&
+    JSON.stringify(prev.marketplace) === JSON.stringify(next.marketplace) &&
+    prevProps.className === nextProps.className &&
+    JSON.stringify(prevProps.style) === JSON.stringify(nextProps.style)
+  );
+}
+
 /**
  * InventoryItemCardPure – оптимизированная версия без Material UI.
  * Использует чистый CSS для лучшей производительности.
@@ -108,7 +124,8 @@ const InventoryItemCardPure = memo(
         </div>
       </div>
     );
-  }
+  },
+  areEqual
 );
 
 export default InventoryItemCardPure;
