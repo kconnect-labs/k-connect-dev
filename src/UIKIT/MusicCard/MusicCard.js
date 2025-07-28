@@ -83,7 +83,7 @@ const HoverControls = styled(Box)(({ theme }) => ({
 }));
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
   color:
     theme.palette.mode === 'light'
       ? theme.palette.primary.main
@@ -99,10 +99,10 @@ const PlayButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const ActionButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.5))',
   color: '#fff',
   '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
   },
   transition: 'all 0.2s ease',
   padding: 6,
@@ -142,11 +142,11 @@ const MoreButton = styled(IconButton)(({ theme }) => ({
   top: theme.spacing(0.5),
   right: theme.spacing(0.5),
   padding: 4,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.5))',
   color: '#fff',
   opacity: 0,
   '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
   },
   transition: 'all 0.2s ease',
   '.MusicCard-root:hover &': {

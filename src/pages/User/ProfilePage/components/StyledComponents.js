@@ -7,8 +7,8 @@ export const StyledSelect = styled(TextField)(({ theme }) => ({
     height: '31px !important',
   },
   '& .MuiMenu-paper': {
-    background: 'rgba(255, 255, 255, 0.03) !important',
-    backdropFilter: 'blur(10px) !important',
+      background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(10px)) !important',
     border: '1px solid rgba(255, 255, 255, 0.1) !important',
     '& .MuiMenuItem-root': {
       height: '20px !important',

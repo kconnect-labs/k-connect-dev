@@ -1,9 +1,9 @@
 .container {
   padding: 24px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -21,7 +21,7 @@
   margin-bottom: 16px;
   padding: 16px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: var(--theme-background, rgba(255, 255, 255, 0.03));
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -49,8 +49,8 @@
   line-height: 1.5;
   padding: 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(10px));
   border: 1px solid rgba(255, 255, 255, 0.05);
   overflow-wrap: break-word;
   word-break: break-word;

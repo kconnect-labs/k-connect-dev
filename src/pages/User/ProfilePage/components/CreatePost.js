@@ -37,7 +37,7 @@ const PostInput = styled(TextField)(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
-    backdropFilter: 'blur(5px)',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
     borderRadius: '12px',
     border:
       theme.palette.mode === 'dark'
@@ -514,9 +514,9 @@ const CreatePost = ({
       sx={{
         p: 2,
         borderRadius: 1,
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+                    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         position: 'relative',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -679,7 +679,7 @@ const CreatePost = ({
                     mt: 1,
                     p: 1.5,
                     borderRadius: '8px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
                   }}

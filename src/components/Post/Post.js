@@ -132,9 +132,9 @@ const PostCard = styled(Card, {
   borderRadius: theme.spacing(1),
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
   transition: 'box-shadow 0.3s ease-in-out',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: isPinned
     ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
     : '1px solid rgba(255, 255, 255, 0.1)',
@@ -2013,7 +2013,7 @@ const Post = ({
                     display: 'block',
                     cursor: 'pointer',
                     '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     },
                   }}
                 >
@@ -2149,8 +2149,8 @@ const Post = ({
                         mt: 1.5,
                         p: 1.5,
                         borderRadius: '8px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                        backdropFilter: 'blur(8px)',
+                        backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                        backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         position: 'relative',
                         '&::before': {
@@ -2556,7 +2556,7 @@ const Post = ({
                         py: 0.4,
                         px: 1,
                         borderRadius: '12px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         fontSize: '0.7rem',
                         ml: 1,

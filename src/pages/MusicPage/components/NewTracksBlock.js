@@ -31,8 +31,8 @@ const NewTracksContainer = styled(Box)(({ theme }) => ({
 
 const NewTracksCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  background: 'rgba(0, 0, 0, 0.03)', // Фон 003
-  backdropFilter: 'blur(20px)',
+      background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -43,24 +43,24 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
+      background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
 const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
   borderRadius: 12,
   background: isActive
-    ? 'rgba(255, 255, 255, 0.05)'
-    : 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
+    : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25),
   padding: theme.spacing(0.75, 2),
   transition: 'background 0.2s ease',
   cursor: 'pointer',
   '&:hover': {
-    background: 'rgba(255, 255, 255, 0.08)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
   },
   '&:last-child': {
     marginBottom: 0,
@@ -90,7 +90,7 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5),
   '&:hover': {
     color: 'text.primary',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   },
   [theme.breakpoints.down('sm')]: {
     width: 36,

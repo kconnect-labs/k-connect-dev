@@ -4,8 +4,8 @@
 
 .styled-tabs-container {
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
@@ -17,11 +17,11 @@
 }
 
 .styled-tabs--default {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
 }
 
 .styled-tabs--custom {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
 }
 
 .styled-tabs {

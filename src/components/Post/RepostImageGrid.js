@@ -66,7 +66,7 @@ const LastImageOverlay = styled(Box)({
   right: 0,
   bottom: 0,
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  backdropFilter: 'blur(2px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(2px))',
   zIndex: 2,
 });
 

@@ -38,8 +38,8 @@ const PostInput = styled(TextField)(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
-    backdropFilter: 'blur(5px)',
-    WebkitBackdropFilter: 'blur(0px)',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
+    WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
     borderRadius: '12px',
     border:
       theme.palette.mode === 'dark'
@@ -423,9 +423,9 @@ const CreatePost = ({
       sx={{
         p: 2,
         borderRadius: 1,
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(0px)',
+        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+        WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
         position: 'relative',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -488,7 +488,7 @@ const CreatePost = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                backgroundColor: 'rgba(26, 26, 26, 0.7)',
+                backgroundColor: 'var(--theme-background, rgba(26, 26, 26, 0.7))',
                 borderRadius: '12px',
                 zIndex: 10,
                 opacity: isDragging ? 1 : 0,
@@ -603,7 +603,7 @@ const CreatePost = ({
                     mt: 1,
                     p: 1.5,
                     borderRadius: '8px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
                   }}
@@ -614,7 +614,7 @@ const CreatePost = ({
                       position: 'absolute',
                       top: -8,
                       left: 8,
-                      backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                      backgroundColor: 'var(--theme-background, rgba(26, 26, 26, 0.9))',
                       px: 0.5,
                       color: 'rgba(255, 255, 255, 0.6)',
                       fontSize: '0.7rem',
@@ -822,7 +822,7 @@ const CreatePost = ({
                   borderRadius: '12px',
                   overflow: 'hidden',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 }}
               >
                 {mediaType === 'image' ? (
@@ -874,13 +874,13 @@ const CreatePost = ({
                             position: 'absolute',
                             top: 4,
                             right: 4,
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                            backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.6))',
                             color: 'white',
                             padding: '4px',
                             '&:hover': {
                               backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             },
-                            backdropFilter: 'blur(4px)',
+                            backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
                           }}
                         >
                           <CloseIcon fontSize='small' />
@@ -906,13 +906,13 @@ const CreatePost = ({
                       position: 'absolute',
                       top: 8,
                       right: 8,
-                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                      backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.6))',
                       color: 'white',
                       '&:hover': {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                       },
                       padding: '8px',
-                      backdropFilter: 'blur(4px)',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
                     }}
                   >
                     <CloseIcon fontSize='small' />
@@ -935,7 +935,7 @@ const CreatePost = ({
                     px: 1.5,
                     mb: 1,
                     borderRadius: '10px',
-                    bgcolor: 'rgba(255, 255, 255, 0.05)',
+                    bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     cursor: 'pointer',
@@ -1112,7 +1112,7 @@ const CreatePost = ({
                               : '1px solid rgba(0, 0, 0, 0.12)',
                     padding: '4px 10px',
                     '&:hover': {
-                      backgroundColor: 'rgba(208, 188, 255, 0.08)',
+                      backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
                       borderColor: 'rgba(208, 188, 255, 0.4)',
                     },
                   }}
@@ -1147,7 +1147,7 @@ const CreatePost = ({
                             : '1px solid rgba(0, 0, 0, 0.12)',
                   padding: '4px 10px',
                   '&:hover': {
-                    backgroundColor: 'rgba(208, 188, 255, 0.08)',
+                    backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
                     borderColor: 'rgba(208, 188, 255, 0.4)',
                   },
                 }}

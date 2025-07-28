@@ -413,8 +413,8 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           <Card
             sx={{
               mb: 1,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               borderRadius: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -488,7 +488,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                   to='/balance'
                   startIcon={<Wallet sx={{ fontSize: 18 }} />}
                   sx={{
-                    background: 'rgba(77, 214, 81, 0.15)',
+                    background: 'var(--theme-background, rgba(77, 214, 81, 0.15))',
                     border: '1px solid rgba(77, 214, 81, 0.25)',
                     borderRadius: '12px',
                     color: '#4CAF50',
@@ -499,7 +499,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                     textTransform: 'none',
                     minWidth: 'auto',
                     '&:hover': {
-                      background: 'rgba(77, 214, 81, 0.25)',
+                      background: 'var(--theme-background, rgba(77, 214, 81, 0.25))',
                       border: '1px solid rgba(77, 214, 81, 0.4)',
                       transform: 'translateY(-1px)',
                     },
@@ -517,8 +517,8 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                          <Card
                key={section.id}
                sx={{
-                 background: 'rgba(255, 255, 255, 0.03)',
-                 backdropFilter: 'blur(20px)',
+                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                  borderRadius: '16px',
                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                  border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -531,7 +531,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                    sx={{
                      px: 2,
                      py: 1.5,
-                     background: 'rgba(255, 255, 255, 0.05)',
+                     background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                      borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                    }}
                  >
@@ -572,10 +572,10 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                            borderRadius: 0,
                            border: 'none',
                            '&:hover': {
-                             background: 'rgba(255, 255, 255, 0.08)',
+                             background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
                            },
                            '&:active': {
-                             background: 'rgba(255, 255, 255, 0.12)',
+                             background: 'var(--theme-background, rgba(255, 255, 255, 0.12))',
                            },
                          }}
                       >

@@ -183,7 +183,7 @@ const ControlsContainer = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   padding: '4px 8px',
   borderRadius: '20px',
-  backdropFilter: 'blur(4px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   maxHeight: 'calc(100% - 32px)',
 }));
 
@@ -306,7 +306,7 @@ const ReactionUsersDialog = ({ open, onClose, storyId }) => {
       PaperProps={{
         sx: {
           background: 'rgba(24, 24, 28, 0.98)',
-          backdropFilter: 'blur(8px)',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
           boxShadow: '0 4px 32px rgba(0,0,0,0.25)',
         },
       }}

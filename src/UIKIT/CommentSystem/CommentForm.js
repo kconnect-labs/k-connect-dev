@@ -14,8 +14,8 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(32, 32, 36, 0.6)',
-    backdropFilter: 'blur(5px)',
+    backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.6))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
     borderRadius: '14px',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '& .MuiOutlinedInput-notchedOutline': {

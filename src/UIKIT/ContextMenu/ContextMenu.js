@@ -21,7 +21,7 @@ const MenuContainer = styled(Box)(({ theme }) => ({
       : theme.palette.mode === 'contrast'
         ? '#101010'
         : 'rgba(255,255,255,0.03)',
-  backdropFilter: 'blur(10px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderRadius: 8,
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
   // minWidth: 180,

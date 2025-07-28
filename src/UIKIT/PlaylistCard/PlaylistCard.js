@@ -80,7 +80,7 @@ const MediaOverlay = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.4))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -149,7 +149,7 @@ const VisibilityIcon = styled(Box)(({ theme, isPublic }) => ({
 }));
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
   color: theme.palette.mode === 'dark' ? '#000' : theme.palette.primary.main,
   '&:hover': {
     backgroundColor: '#fff',
@@ -192,11 +192,11 @@ const MoreButton = styled(IconButton)(({ theme }) => ({
   top: theme.spacing(0.5),
   right: theme.spacing(0.5),
   padding: 4,
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.5))',
   color: '#fff',
   opacity: 0,
   '&:hover': {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
   },
   transition: 'all 0.2s ease',
   '.PlaylistCard-root:hover &': {
@@ -225,7 +225,7 @@ const TracksCountChip = styled(Chip)(({ theme }) => ({
   position: 'absolute',
   top: theme.spacing(1),
   left: theme.spacing(1),
-  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.5))',
   color: '#fff',
   fontSize: '0.7rem',
   height: 24,

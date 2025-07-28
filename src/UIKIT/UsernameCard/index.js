@@ -35,7 +35,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? `linear-gradient(135deg, ${alpha('#121212', 0.9)} 0%, ${alpha('#1A1A1A', 0.85)} 100%)`
       : `linear-gradient(135deg, ${alpha('#f5f5f5', 0.9)} 0%, ${alpha('#FAFAFA', 0.85)} 100%)`,
-  backdropFilter: 'blur(10px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -45,7 +45,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? alpha('#121212', 0.9)
       : alpha('#FFFFFF', 0.9),
-  backdropFilter: 'blur(8px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
   '&::-webkit-scrollbar': {
     width: '4px',
   },
@@ -72,7 +72,7 @@ const HistoryItem = styled(Paper)(({ theme }) => ({
       ? alpha(theme.palette.background.paper, 0.4)
       : alpha(theme.palette.background.paper, 0.7),
   transition: 'transform 0.2s ease',
-  backdropFilter: 'blur(4px)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   '&:hover': {
     transform: 'translateY(-2px)',
     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
@@ -89,7 +89,7 @@ const OwnerBox = styled(Paper)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? alpha(theme.palette.primary.dark, 0.1)
       : alpha(theme.palette.primary.light, 0.1),
-  backdropFilter: 'blur(4px)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   border: `1px solid ${
     theme.palette.mode === 'dark'
       ? alpha(theme.palette.primary.main, 0.2)

@@ -60,8 +60,8 @@ const FullScreenDialog = styled(Dialog)(({ theme }) => ({
         height: '80vh !important',
         margin: '40px auto !important',
       },
-      backgroundColor: 'rgba(255, 255, 255, 0.03) !important',
-      backdropFilter: 'blur(20px) !important',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(20px)) !important',
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
       border: '1px solid rgba(255, 255, 255, 0.1) !important',
@@ -75,8 +75,8 @@ const DialogHeader = styled(DialogTitle)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
   borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   color: '#fff',
 }));
 
@@ -125,7 +125,7 @@ const TrackSearchInput = styled(TextField)(({ theme }) => ({
       theme.palette.mode === 'light'
         ? alpha(theme.palette.grey[300], 0.2)
         : theme.palette.mode === 'contrast'
-          ? 'rgba(255, 255, 255, 0.03)'
+          ? 'var(--theme-background, rgba(255, 255, 255, 0.03))'
           : 'rgba(255, 255, 255, 0.05)',
   },
 }));

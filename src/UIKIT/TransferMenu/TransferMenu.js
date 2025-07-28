@@ -26,8 +26,8 @@ import { MaxIcon } from '../../components/icons/CustomIcons';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    backgroundColor: 'rgba(12, 12, 14, 0.95)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: 'var(--theme-background, rgba(12, 12, 14, 0.95))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
     borderRadius: props => (props.fullScreen ? 0 : 12),
     overflow: 'hidden',
@@ -63,8 +63,8 @@ const InputContainer = styled(Box)(() => ({
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    backgroundColor: 'rgba(20, 20, 20, 0.4)',
-    backdropFilter: 'blur(5px)',
+    backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
     borderRadius: 8,
     '&:hover .MuiOutlinedInput-notchedOutline': {
       borderColor: 'rgba(255,255,255,0.2)',
@@ -98,8 +98,8 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const SuggestionsContainer = styled(Box)(() => ({
-  backgroundColor: 'rgba(20, 20, 20, 0.4)',
-  backdropFilter: 'blur(5px)',
+      backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: 8,
   marginBottom: 24,
   maxHeight: 200,
@@ -783,7 +783,7 @@ const TransferMenu = ({ open, onClose, userPoints, onSuccess }) => {
                     borderColor: 'rgba(255,255,255,0.3)',
                     '&:hover': {
                       borderColor: 'rgba(255,255,255,0.5)',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
+                      backgroundColor: 'var(--theme-background, rgba(255,255,255,0.1))',
                     },
                   }}
                 >

@@ -1,0 +1,158 @@
+/* CSS переменные для системы тем */
+
+:root {
+  /* Дефолтные значения */
+  --theme-background: rgba(15, 15, 15, 0.98);
+  --theme-backdrop-filter: none;
+  --theme-type: default;
+}
+
+/* Принудительные значения для тем */
+[data-theme="default"] {
+  --theme-background: rgba(15, 15, 15, 0.98);
+  --theme-backdrop-filter: none;
+}
+
+[data-theme="blur"] {
+  --theme-background: rgba(255, 255, 255, 0.03);
+  --theme-backdrop-filter: blur(20px);
+}
+
+/* Класс для элементов, которые должны реагировать на изменение темы */
+.theme-aware {
+  background: var(--theme-background) !important;
+  backdrop-filter: var(--theme-backdrop-filter) !important;
+  -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Утилитарные классы для быстрого применения тем */
+.theme-default {
+  background: rgba(15, 15, 15, 0.98) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-blur {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* Модификаторы для разных состояний */
+.theme-aware:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+}
+
+.theme-aware:focus {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+}
+
+/* Специальные классы для модальных окон */
+.theme-modal {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Классы для карточек */
+.theme-card {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.theme-card:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Классы для кнопок */
+.theme-button {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.theme-button:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Классы для сайдбара */
+.theme-sidebar {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Классы для хедера */
+.theme-header {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Классы для форм */
+.theme-form {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Классы для списков */
+.theme-list {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+}
+
+.theme-list-item {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.theme-list-item:hover {
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+  .theme-modal {
+    border-radius: 0;
+    margin: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  .theme-card {
+    border-radius: 8px;
+  }
+}
+
+/* Анимации для плавного перехода между темами */
+@keyframes themeTransition {
+  from {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.theme-transition {
+  animation: themeTransition 0.3s ease-out;
+} 

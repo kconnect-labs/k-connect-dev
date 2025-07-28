@@ -101,9 +101,9 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
   const containerStyle = {
     p: 3,
     borderRadius: 2,
-    background: 'rgba(255, 255, 255, 0.03)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
-    backdropFilter: 'blur(20px)',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 

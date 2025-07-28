@@ -35,9 +35,9 @@ const MarkdownContent = styled(Box, {
     fontSize: '0.85rem',
   },
   '& pre': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(50px)',
-    WebkitBackdropFilter: 'blur(50px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
+    WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadius,
     overflowX: 'auto',

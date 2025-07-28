@@ -30,7 +30,7 @@ const SearchContainer = styled(Box)(({ theme, open }) => ({
   zIndex: 5,
   width: '100%',
   padding: open ? theme.spacing(2, 1) : theme.spacing(2, 2, 1),
-  backdropFilter: 'blur(10px)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   backgroundColor: open
     ? theme.palette.mode === 'dark'
       ? 'rgba(18,18,18,0.9)'
@@ -288,8 +288,8 @@ const NewTracksPage = () => {
                     sx={{
                       p: 1,
                       borderRadius: '12px',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(20px)',
+                      background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                       border: '1px solid rgba(255, 255, 255, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
@@ -297,7 +297,7 @@ const NewTracksPage = () => {
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
                       },
                     }}
                     onClick={() => playTrack(track, 'search')}

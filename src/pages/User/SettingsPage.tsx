@@ -23,6 +23,7 @@ import {
   AlternateEmail,
   Favorite,
   Storage,
+  Style,
 } from '@mui/icons-material';
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
@@ -30,6 +31,7 @@ import ProfilePreview from './SettingsPage/components/ProfilePreview';
 import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
 import CacheManagementModal from './SettingsPage/components/CacheManagementModal';
+import ThemeSettingsModal from './SettingsPage/components/ThemeSettingsModal';
 import {
   useProfile,
   useProfileInfo,
@@ -52,6 +54,7 @@ const SettingsPage = () => {
   const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
   const [cacheModalOpen, setCacheModalOpen] = useState(false);
+  const [themeModalOpen, setThemeModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState<{
     open: boolean;
     message: string;
@@ -142,6 +145,8 @@ const SettingsPage = () => {
       setConnectionsModalOpen(true);
     } else if (section === 'cache') {
       setCacheModalOpen(true);
+    } else if (section === 'theme') {
+      setThemeModalOpen(true);
     } else {
       setOpenModal(section);
     }
@@ -267,6 +272,13 @@ const SettingsPage = () => {
       color: 'rgba(236, 72, 153, 0.66)', // #ec4899 с прозрачностью
     },
     {
+      id: 'theme',
+      title: 'Тема интерфейса',
+      subtitle: 'Blur Glass или дефолтная тема',
+      icon: <Style />,
+      color: 'rgba(168, 85, 247, 0.66)', // #a855f7 с прозрачностью
+    },
+    {
       id: 'badges',
       title: 'Бейджи',
       subtitle: 'Управление достижениями',
@@ -371,6 +383,7 @@ const SettingsPage = () => {
       >
         <Typography
           variant='h6'
+          className="theme-aware"
           sx={{
             color: 'white',
             mb: 1,
@@ -378,11 +391,8 @@ const SettingsPage = () => {
             padding: '8px 12px',
             width: '100%',
             maxWidth: 1200,
-            background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: 1,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
           }}
         >
           Настройки
@@ -405,21 +415,18 @@ const SettingsPage = () => {
                 <Button
                   key={section.id}
                   onClick={() => handleOpenModal(section.id)}
+                  className="theme-aware"
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                     padding: '12px 16px',
-                    background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: 1,
                     color: 'white',
                     textTransform: 'none',
                     transition: 'all 0.2s ease',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
                     '&:hover': {
-                      background: 'rgba(255, 255, 255, 0.1)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       transform: 'translateY(-1px)',
                     },
@@ -549,6 +556,12 @@ const SettingsPage = () => {
         <CacheManagementModal
           open={cacheModalOpen}
           onClose={() => setCacheModalOpen(false)}
+        />
+
+        <ThemeSettingsModal
+          open={themeModalOpen}
+          onClose={() => setThemeModalOpen(false)}
+          onSuccess={showSuccess}
         />
 
         <SuccessModal

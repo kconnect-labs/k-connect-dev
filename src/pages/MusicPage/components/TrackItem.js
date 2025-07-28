@@ -67,7 +67,7 @@ const PlayButtonContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'rgba(0,0,0,0.6)',
+  backgroundColor: 'var(--theme-background, rgba(0,0,0,0.6))',
   opacity: 0,
   transition: 'opacity 0.2s ease-in-out',
   borderRadius: '8px',

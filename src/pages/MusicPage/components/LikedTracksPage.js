@@ -41,8 +41,8 @@ const PageContainer = styled(Container)(({ theme }) => ({
 const HeaderCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -50,16 +50,16 @@ const HeaderCard = styled(Card)(({ theme }) => ({
 const TrackListItem = styled(ListItem)(({ theme, isActive }) => ({
   borderRadius: 12,
   background: isActive
-    ? 'rgba(255, 255, 255, 0.05)'
-    : 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
+    : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25), // 2px отступ между треками
   padding: theme.spacing(0.75, 2), // Еще меньше паддинг для компактности
   transition: 'background 0.2s ease',
   cursor: 'pointer',
   '&:hover': {
-    background: 'rgba(255, 255, 255, 0.08)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
   },
   '&:last-child': {
     marginBottom: 0,
@@ -91,7 +91,7 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5), // Добавляем отступ между кнопками
   '&:hover': {
     color: 'text.primary',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   },
   // Адаптивность для телефонов
   [theme.breakpoints.down('sm')]: {
@@ -288,8 +288,8 @@ const LikedTracksPage = ({ onBack }) => {
           minHeight='40vh'
           sx={{
             borderRadius: 12,
-            background: 'rgba(255, 255, 255, 0.02)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) ',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.05)',
           }}
         >

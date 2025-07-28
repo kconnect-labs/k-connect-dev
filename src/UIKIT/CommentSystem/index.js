@@ -39,7 +39,7 @@ const CommentSectionHeader = styled(Typography)(({ theme }) => ({
 const EmptyCommentsContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   textAlign: 'center',
-  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   borderRadius: '16px',
   border: '1px dashed rgba(255, 255, 255, 0.1)',
   [theme.breakpoints.down('sm')]: {
@@ -71,8 +71,8 @@ const RepliesContainer = styled(Box)(({ theme }) => ({
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    backgroundColor: 'rgba(32, 32, 36, 0.8)',
-    backdropFilter: 'blur(20px)',
+    backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.8))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
     width: '100%',
     maxWidth: '400px',
@@ -88,7 +88,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       borderRadius: '16px',
       background:
         'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-      backdropFilter: 'blur(30px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(30px))',
       zIndex: -1,
     },
   },

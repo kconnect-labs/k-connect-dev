@@ -32,7 +32,7 @@ const ReportDialog = ({
     PaperProps={{
       sx: {
         bgcolor: 'rgba(32, 32, 36, 0.8)',
-        backdropFilter: 'blur(20px)',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
         width: '100%',
         maxWidth: '450px',
@@ -48,7 +48,7 @@ const ReportDialog = ({
           borderRadius: '16px',
           background:
             'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-          backdropFilter: 'blur(30px)',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(30px))',
           zIndex: -1,
         },
       },

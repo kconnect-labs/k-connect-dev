@@ -5,7 +5,7 @@ const BlurredMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     background:
       'linear-gradient(135deg, rgb(19 19 19 / 51%) 0%, rgb(25 24 24 / 39%) 100%)',
-    backdropFilter: 'blur(10px)',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
     border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '12px',
     '& .MuiMenuItem-root': {

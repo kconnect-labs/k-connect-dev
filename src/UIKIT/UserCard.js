@@ -22,8 +22,8 @@ const UserCardContainer = styled(Paper, {
   borderRadius: cardRadius ?? 18,
   transition: 'all 0.18s cubic-bezier(.4,0,.2,1)',
   minHeight: 72,
-  background: 'rgba(255,255,255,0.03)',
-  backdropFilter: 'blur(10px)',
+  background: 'var(--theme-background, rgba(255,255,255,0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   boxShadow:
     theme.palette.mode === 'dark'
       ? '0 2px 8px rgba(0,0,0,0.18)'

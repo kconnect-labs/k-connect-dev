@@ -95,7 +95,7 @@ const FactModal = ({
       PaperProps={{
         sx: {
           background: 'rgba(0, 0, 0, 0.1)',
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           borderRadius: isMobile ? 0 : '16px',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',

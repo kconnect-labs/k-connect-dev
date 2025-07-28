@@ -13,9 +13,9 @@
   min-width: 0;
 }
 .chart-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.08);

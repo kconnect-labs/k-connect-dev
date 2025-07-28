@@ -22,13 +22,11 @@ const Sidebar = memo(({ isMobile }) => {
   const [isModeratorUser, setIsModeratorUser] = useState(false);
 
   const themeValues = useMemo(() => {
-    const sidebarBackgroundColor = 'rgba(255, 255, 255, 0.03)';
     const sidebarTextColor = themeSettings.textColor || 'inherit';
     const primaryColor = themeSettings.primaryColor || '#D0BCFF';
 
     const sidebarStyle = {
       color: sidebarTextColor,
-      backgroundColor: sidebarBackgroundColor,
       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.07)',
       borderColor: 'rgba(255, 255, 255, 0.08)',
     };
@@ -93,7 +91,7 @@ const Sidebar = memo(({ isMobile }) => {
   );
 
   return (
-    <div className='sidebar-container' style={themeValues.sidebarStyle}>
+    <div className='sidebar-container theme-aware' style={themeValues.sidebarStyle}>
       <SidebarProvider>
         <div className='sidebar-content'>
           <UserProfileBlock

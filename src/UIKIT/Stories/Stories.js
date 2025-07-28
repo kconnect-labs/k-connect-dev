@@ -37,9 +37,9 @@ const StoriesCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
+      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+    WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border:
     theme.palette.mode === 'dark'
       ? '1px solid rgba(255, 255, 255, 0.1)'

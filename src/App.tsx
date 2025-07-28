@@ -37,6 +37,7 @@ import { PostDetailProvider } from './context/PostDetailContext';
 import { ErrorBoundary } from 'react-error-boundary';
 import MusicPlayerCore from './components/MusicPlayerCore';
 import { setSessionContext } from './services/ProfileService';
+import './styles/theme.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';

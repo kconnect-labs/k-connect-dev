@@ -147,8 +147,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const modalStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '550px',
@@ -163,8 +163,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     justifyContent: 'space-between',
     padding: '16px 20px',
     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-    background: 'rgba(255, 255, 255, 0.02)',
-    backdropFilter: 'blur(10px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   };
 
   const renderContent = () => {

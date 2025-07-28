@@ -490,7 +490,7 @@ const SearchPage = () => {
               ),
               sx: {
                 borderRadius: 6,
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                 '& fieldset': {
                   borderColor: 'rgba(255, 255, 255, 0.1)',
                 },

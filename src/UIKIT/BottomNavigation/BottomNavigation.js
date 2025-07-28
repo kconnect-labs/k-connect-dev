@@ -42,7 +42,7 @@ const UIBottomNavigation = ({
     zIndex: 1000,
     borderTop: '1px solid rgba(255, 255, 255, 0.1)',
     backgroundColor: bottomNavColor,
-    backdropFilter: 'blur(10px)',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
     ...style,
   };
 

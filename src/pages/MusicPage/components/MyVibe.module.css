@@ -4,8 +4,8 @@
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  background: rgba(21, 4, 56, 0.11); /* Темный стеклянный фон для контраста */
-  backdrop-filter: blur(20px);
+  background: var(--theme-background, rgba(21, 4, 56, 0.11)); /* Темный стеклянный фон для контраста */
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }

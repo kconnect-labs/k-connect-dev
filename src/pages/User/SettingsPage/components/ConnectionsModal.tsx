@@ -258,8 +258,8 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: { xs: 0, sm: 2 },
             width: { xs: '100%', sm: '100%' },

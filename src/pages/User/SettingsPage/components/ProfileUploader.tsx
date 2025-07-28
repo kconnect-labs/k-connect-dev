@@ -61,8 +61,8 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   };
 
   const containerStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: '12px',
     padding: '20px',

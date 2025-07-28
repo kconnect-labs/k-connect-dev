@@ -42,8 +42,8 @@ const AllTracksContainer = styled(Box)(({ theme }) => ({
 
 const AllTracksCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  background: 'rgba(0, 0, 0, 0.03)', // Фон 003
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -54,8 +54,8 @@ const AllTracksHeader = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
@@ -66,8 +66,8 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 const StyledSearchField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
-    background: 'rgba(255, 255, 255, 0.02)',
-    backdropFilter: 'blur(20px)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '&:hover': {
       border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -92,8 +92,8 @@ const StyledSearchField = styled(TextField)(({ theme }) => ({
 const TrackCard = styled(Paper)(({ theme }) => ({
   borderRadius: '12px',
   padding: '8px',
-  background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   display: 'flex',
   alignItems: 'center',
@@ -102,7 +102,7 @@ const TrackCard = styled(Paper)(({ theme }) => ({
   transition: 'all 0.3s ease',
   marginBottom: '2px',
   '&:hover': {
-    background: 'rgba(255, 255, 255, 0.15)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
   },
 }));
 
@@ -126,7 +126,7 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(0.5),
   '&:hover': {
     color: 'text.primary',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   },
   [theme.breakpoints.down('sm')]: {
     width: 36,

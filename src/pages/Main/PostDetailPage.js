@@ -130,7 +130,7 @@ const CommentBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
 }));
 
 const ReplyBox = styled(Box)(({ theme }) => ({

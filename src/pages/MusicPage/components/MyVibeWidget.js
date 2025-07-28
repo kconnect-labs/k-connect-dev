@@ -24,8 +24,8 @@ const VibeWidgetContainer = styled(Paper)(({ theme, $hasCurrentTrack }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   cursor: 'pointer',
-  background: 'rgba(21, 4, 56, 0.11)', // Темный стеклянный фон для контраста
-  backdropFilter: 'blur(20px)',
+      background: 'var(--theme-background, rgba(21, 4, 56, 0.11))', // Темный стеклянный фон для контраста
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
   transition: 'all 0.3s ease',
 }));
@@ -86,8 +86,8 @@ const CurrentTrackInfo = styled(Box)({
   left: '16px',
   right: '16px',
   zIndex: 3,
-  background: 'rgba(0, 0, 0, 0.3)',
-  backdropFilter: 'blur(8px)',
+      background: 'var(--theme-background, rgba(0, 0, 0, 0.3))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
   borderRadius: '8px',
   padding: '8px 12px',
   border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -95,7 +95,7 @@ const CurrentTrackInfo = styled(Box)({
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: alpha(theme.palette.background.paper, 0.2),
-  backdropFilter: 'blur(12px)',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(12px))',
   border: `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
   width: 72,
   height: 72,

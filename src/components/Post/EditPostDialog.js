@@ -41,7 +41,7 @@ const EditPostDialog = ({
         sx: {
           borderRadius: '16px',
           bgcolor: 'rgba(32, 32, 36, 0.8)',
-          backdropFilter: 'blur(20px)',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
           width: '95%',
           maxWidth: '600px',
@@ -56,7 +56,7 @@ const EditPostDialog = ({
             borderRadius: '16px',
             background:
               'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
-            backdropFilter: 'blur(30px)',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(30px))',
             zIndex: -1,
           },
         },
@@ -113,7 +113,7 @@ const EditPostDialog = ({
           sx={{
             '& .MuiOutlinedInput-root': {
               bgcolor: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(10px)',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
               borderRadius: '12px',
               border: '1px solid rgba(255, 255, 255, 0.09)',
               transition: 'all 0.2s ease',

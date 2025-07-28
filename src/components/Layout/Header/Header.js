@@ -81,8 +81,6 @@ const StyledAppBar = styled(AppBar)(({ theme, isHeaderHidden, isMobile }) => ({
   position: 'fixed',
   left: '50%',
   transform: 'translateX(-50%)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
   width: '100%',
   zIndex: theme.zIndex.appBar,
   transition: 'transform 0.3s ease-in-out',
@@ -653,11 +651,11 @@ const Header = ({ toggleSidebar }) => {
     <StyledAppBar
       isHeaderHidden={isHeaderHidden}
       isMobile={isMobile}
+      className="theme-aware"
       sx={{
         display:
           (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',
       }}
-      style={themeValues.headerStyle}
     >
       <GlobalStyles
         styles={{

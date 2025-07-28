@@ -66,8 +66,8 @@ const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border:
     theme.palette.mode === 'dark'
       ? '1px solid rgba(255, 255, 255, 0.1)'
@@ -160,7 +160,7 @@ const OnlineUsers = () => {
             px: 1,
             py: 0.5,
             borderRadius: '12px',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+            backgroundColor: 'var(--theme-background, rgba(76, 175, 80, 0.1))',
             border: '1px solid rgba(76, 175, 80, 0.2)',
             minWidth: 'fit-content',
             height: 36,
@@ -900,8 +900,8 @@ const MainPage = React.memo(() => {
               p: 0,
               borderRadius: '12px',
               mb: -0.625,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
               overflow: 'hidden',
@@ -961,7 +961,7 @@ const MainPage = React.memo(() => {
                   py: 3,
                   px: 2,
                   background:
-                    'linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.03))',
+                    'linear-gradient(180deg, var(--theme-background, rgba(255, 255, 255, 0.01)), var(--theme-background, rgba(255, 255, 255, 0.03)))',
                 }}
               >
                 <Avatar

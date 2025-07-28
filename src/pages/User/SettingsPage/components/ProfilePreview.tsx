@@ -19,12 +19,11 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
     console.log('ProfilePreview: No user data');
     return (
       <Paper
+        className='theme-aware'
         sx={{
           p: 2,
           borderRadius: '16px',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+
           boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           position: 'relative',
@@ -62,13 +61,14 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
 
   return (
     <Paper
+      className='theme-aware'
       sx={{
         p: 0,
         borderRadius: '16px',
         background:
           displayUser?.profile_id === 2 && displayUser?.banner_url
-            ? `url(${displayUser.banner_url}), rgba(255, 255, 255, 0.03)`
-            : 'rgba(255, 255, 255, 0.03)',
+            ? `url(${displayUser.banner_url}), var(--theme-background, rgba(255, 255, 255, 0.03))`
+            : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backgroundSize:
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'cover'
@@ -77,8 +77,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'center'
             : undefined,
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+
         boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)',

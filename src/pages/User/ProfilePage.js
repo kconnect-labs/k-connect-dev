@@ -633,8 +633,8 @@ const ProfilePage = () => {
               borderRadius: '16px',
               background:
                 user?.profile_id === 2 && user?.banner_url
-                  ? `url(${user.banner_url}), rgba(255, 255, 255, 0.03)`
-                  : 'rgba(255, 255, 255, 0.03)',
+                  ? `url(${user.banner_url}), var(--theme-background, rgba(255, 255, 255, 0.03))`
+                  : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backgroundSize:
                 user?.profile_id === 2 && user?.banner_url
                   ? 'cover'
@@ -643,8 +643,8 @@ const ProfilePage = () => {
                 user?.profile_id === 2 && user?.banner_url
                   ? 'center'
                   : undefined,
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+              WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',
@@ -1170,9 +1170,9 @@ const ProfilePage = () => {
               sx={{
                 p: 2,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 mb: 1,
@@ -1222,9 +1222,9 @@ const ProfilePage = () => {
               sx={{
                 p: 1,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
@@ -1287,9 +1287,9 @@ const ProfilePage = () => {
               sx={{
                 p: 1,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 mb: 1,
@@ -1381,9 +1381,9 @@ const ProfilePage = () => {
           <Paper
             sx={{
               borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+              WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',

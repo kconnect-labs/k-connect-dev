@@ -25,8 +25,8 @@ import { formatTimeAgo } from '../../utils/dateUtils';
 import { useLanguage } from '../../context/LanguageContext';
 
 const StyledCommentCard = styled(Box)(({ theme }) => ({
-  backgroundColor: 'rgba(28, 28, 32, 0.4)',
-  backdropFilter: 'blur(10px)',
+      backgroundColor: 'var(--theme-background, rgba(28, 28, 32, 0.4))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderRadius: '16px',
   padding: theme.spacing(2),
   border: '1px solid rgba(255, 255, 255, 0.03)',
@@ -34,7 +34,7 @@ const StyledCommentCard = styled(Box)(({ theme }) => ({
   transition: 'all 0.2s ease-in-out',
   '&:hover': {
     boxShadow: '0 3px 12px rgba(0, 0, 0, 0.12)',
-    backgroundColor: 'rgba(30, 30, 36, 0.5)',
+    backgroundColor: 'var(--theme-background, rgba(30, 30, 36, 0.5))',
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1.5),
@@ -50,7 +50,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
   transition: 'all 0.2s ease',
   backgroundColor: active
     ? 'rgba(140, 82, 255, 0.08)'
-    : 'rgba(255, 255, 255, 0.03)',
+          : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   '&:hover': {
     backgroundColor: active
       ? 'rgba(140, 82, 255, 0.15)'
@@ -261,7 +261,7 @@ const CommentItem = ({
                   PaperProps={{
                     sx: {
                       bgcolor: 'rgba(28, 28, 32, 0.9)',
-                      backdropFilter: 'blur(10px)',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
                       borderRadius: '12px',
                       border: '1px solid rgba(255, 255, 255, 0.03)',

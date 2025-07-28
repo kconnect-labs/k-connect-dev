@@ -341,9 +341,9 @@ const PostsFeed = ({ userId, statusColor }) => {
       <Paper
         sx={{
           borderRadius: '12px',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+                      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
           overflow: 'hidden',
           mb: '5px',
