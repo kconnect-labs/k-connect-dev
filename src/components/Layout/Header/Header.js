@@ -73,7 +73,9 @@ import HeaderActions from './HeaderActions';
 import HeaderProfileMenu from './HeaderProfileMenu';
 import ReactDOM from 'react-dom';
 
-const StyledAppBar = styled(AppBar)(({ theme, isHeaderHidden, isMobile }) => ({
+const StyledAppBar = styled(AppBar, {
+  shouldForwardProp: (prop) => prop !== 'isHeaderHidden' && prop !== 'isMobile',
+})(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
   color: '#FFFFFF',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',

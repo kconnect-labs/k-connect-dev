@@ -125,6 +125,12 @@ function App() {
     if (isThemeInitialized) {
       setIsAppLoading(false);
     }
+    
+    const timeout = setTimeout(() => {
+      setIsAppLoading(false);
+    }, 3000);
+    
+    return () => clearTimeout(timeout);
   }, [isThemeInitialized]);
 
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {

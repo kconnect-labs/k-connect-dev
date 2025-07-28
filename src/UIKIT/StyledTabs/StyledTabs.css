@@ -32,8 +32,22 @@
   padding: 4px;
 }
 
+/* Режим прокрутки - скрываем скроллбар */
+.styled-tabs--scroll-mode {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.styled-tabs--scroll-mode::-webkit-scrollbar {
+  display: none;
+}
+
+/* Режим равномерного распределения */
+.styled-tabs--distribute-mode {
+  overflow: hidden;
+}
+
 .styled-tab {
-  flex: 1;
   background: transparent;
   border: none;
   outline: none;
@@ -53,6 +67,17 @@
   box-sizing: border-box;
   margin: 0 2px;
   font-family: inherit;
+  white-space: nowrap; /* Предотвращаем перенос текста */
+}
+
+/* Режим прокрутки - табы не растягиваются */
+.styled-tab--scroll-mode {
+  flex-shrink: 0;
+}
+
+/* Режим равномерного распределения - табы растягиваются */
+.styled-tab--distribute-mode {
+  flex: 1;
 }
 
 .styled-tab:hover {
@@ -80,6 +105,7 @@
 .styled-tab-icon {
   margin-right: 8px;
   font-size: 1.2em;
+  flex-shrink: 0; /* Предотвращаем сжатие иконки */
 }
 
 .styled-tab-label {
@@ -112,7 +138,7 @@
   .styled-tab {
     font-size: 0.8rem;
     min-height: 40px;
-    padding: 0 8px;
+    padding: 0 12px; /* Увеличиваем padding для лучшего touch target */
     margin: 0 1px;
   }
 
@@ -140,7 +166,7 @@
   .styled-tab {
     font-size: 0.75rem;
     min-height: 36px;
-    padding: 0 6px;
+    padding: 0 10px; /* Увеличиваем padding для лучшего touch target */
     margin: 0 1px;
   }
 

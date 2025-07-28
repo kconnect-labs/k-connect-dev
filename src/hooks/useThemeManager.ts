@@ -31,6 +31,7 @@ export const useThemeManager = () => {
   });
 
   const [isApplying, setIsApplying] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Применение темы к CSS переменным
   const applyTheme = useCallback(async (themeType: ThemeType) => {
@@ -101,8 +102,13 @@ export const useThemeManager = () => {
 
   // Инициализация темы при загрузке
   useEffect(() => {
-    applyTheme(currentTheme);
-  }, []);
+    const initializeTheme = async () => {
+      await applyTheme(currentTheme);
+      setIsInitialized(true);
+    };
+    
+    initializeTheme();
+  }, [applyTheme, currentTheme]);
 
   // Слушатель изменений в localStorage
   useEffect(() => {
@@ -122,6 +128,7 @@ export const useThemeManager = () => {
   return {
     currentTheme,
     isApplying,
+    isInitialized,
     switchToDefaultTheme,
     switchToBlurTheme,
     toggleTheme,

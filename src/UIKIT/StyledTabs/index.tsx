@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './StyledTabs.css';
 
 interface Tab {
@@ -37,11 +37,54 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
   style = {},
   ...props
 }) => {
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const activeTabRef = useRef<HTMLButtonElement>(null);
+  const [useScrollMode, setUseScrollMode] = useState(false);
+
   const handleTabClick = (tabValue: string | number) => {
     if (onChange) {
       onChange(null, tabValue);
     }
   };
+
+  // Проверяем, нужно ли использовать режим прокрутки
+  useEffect(() => {
+    const checkScrollMode = () => {
+      if (tabsContainerRef.current) {
+        const container = tabsContainerRef.current;
+        const containerWidth = container.clientWidth;
+        const scrollWidth = container.scrollWidth;
+        
+        // Если контент шире контейнера, включаем режим прокрутки
+        setUseScrollMode(scrollWidth > containerWidth);
+      }
+    };
+
+    checkScrollMode();
+    
+    // Проверяем при изменении размера окна
+    const handleResize = () => {
+      checkScrollMode();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [tabs]);
+
+  // Автоматическая прокрутка к активному табу
+  useEffect(() => {
+    if (activeTabRef.current && tabsContainerRef.current && useScrollMode) {
+      const container = tabsContainerRef.current;
+      const activeTab = activeTabRef.current;
+      
+      const scrollLeft = activeTab.offsetLeft - (container.clientWidth / 2) + (activeTab.clientWidth / 2);
+      
+      container.scrollTo({
+        left: scrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  }, [value, useScrollMode]);
 
   const containerStyles: React.CSSProperties = {
     width: fullWidth ? '100%' : 'auto',
@@ -53,18 +96,27 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
 
   const tabsContainerStyles: React.CSSProperties = {
     display: 'flex',
-    justifyContent: centered ? 'center' : 'space-between',
+    justifyContent: useScrollMode ? 'flex-start' : (centered ? 'center' : 'space-between'),
     minHeight: 48,
     padding: '4px',
+    overflowX: useScrollMode ? 'auto' : 'hidden',
+    overflowY: 'hidden',
+    scrollbarWidth: useScrollMode ? 'none' : 'auto',
+    msOverflowStyle: useScrollMode ? 'none' : 'auto',
+    WebkitOverflowScrolling: useScrollMode ? 'touch' : 'auto',
   };
 
   return (
     <div
-      className={`styled-tabs-container ${customStyle ? 'styled-tabs--custom' : 'styled-tabs--default'} ${className}`}
+      className={`styled-tabs-container ${customStyle ? 'styled-tabs--custom' : 'styled-tabs--default'} ${className} ${useScrollMode ? 'styled-tabs--scroll-mode' : 'styled-tabs--distribute-mode'}`}
       style={containerStyles}
       {...props}
     >
-      <div className='styled-tabs' style={tabsContainerStyles}>
+      <div 
+        className='styled-tabs' 
+        style={tabsContainerStyles}
+        ref={tabsContainerRef}
+      >
         {tabs.map(tab => {
           const IconComponent = tab.icon;
           const isActive = value === tab.value;
@@ -72,9 +124,10 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
           return (
             <button
               key={`${tab.value}-${tab.label}`}
-              className={`styled-tab ${isActive ? 'styled-tab--active' : ''}`}
+              className={`styled-tab ${isActive ? 'styled-tab--active' : ''} ${useScrollMode ? 'styled-tab--scroll-mode' : 'styled-tab--distribute-mode'}`}
               onClick={() => handleTabClick(tab.value)}
               type='button'
+              ref={isActive ? activeTabRef : null}
             >
               <div className='styled-tab-content'>
                 {IconComponent && <IconComponent className='styled-tab-icon' />}

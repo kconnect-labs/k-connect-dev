@@ -20,10 +20,14 @@ import InfoBlock from '../../../UIKIT/InfoBlock';
 import AuctionCard from './components/AuctionCard';
 import SearchBar from './components/SearchBar';
 import EmptyState from './components/EmptyState';
+import CreateAuctionModal from './components/CreateAuctionModal';
+import PlaceBidModal from './components/PlaceBidModal';
+import AuctionDetailModal from './components/AuctionDetailModal';
 import AddIcon from '@mui/icons-material/Add';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PersonIcon from '@mui/icons-material/Person';
 import HistoryIcon from '@mui/icons-material/History';
+import axios from 'axios';
 
 const PageHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -138,18 +142,8 @@ const UsernameAuctionPage: React.FC = () => {
     setTabValue(newValue);
   };
 
-  const handleCreateAuctionClick = async () => {
-    const result = await handleCreateAuction(newAuctionData);
-    if (result.success) {
-      setCreateDialogOpen(false);
-      setNewAuctionData({
-        username: '',
-        min_price: '',
-        duration_hours: 24,
-      });
-    } else if (result.errors) {
-      setErrors(result.errors);
-    }
+  const handleCreateAuctionClick = async (data: any) => {
+    return await handleCreateAuction(data);
   };
 
   const handleBidClick = (auction: any) => {
@@ -157,20 +151,35 @@ const UsernameAuctionPage: React.FC = () => {
     setBidDialogOpen(true);
   };
 
-  const handlePlaceBidClick = async () => {
-    if (!selectedAuction) return;
-    
-    const result = await handlePlaceBid(selectedAuction, bidAmount);
-    if (result.success) {
-      setBidDialogOpen(false);
-      setBidAmount('');
-      setSelectedAuction(null);
+  const handlePlaceBidClick = async (auction: any, amount: string) => {
+    return await handlePlaceBid(auction, amount);
+  };
+
+  const handleCardClick = async (auction: any) => {
+    setDetailAuction({ ...auction, bids: [] });
+    setDetailDialogOpen(true);
+    setDetailLoading(true);
+
+    try {
+      const response = await axios.get(`/api/username/auctions/${auction.id}`);
+      if (response.data.success) {
+        setDetailAuction(response.data.auction);
+      }
+    } catch (error) {
+      console.error('Error fetching auction details:', error);
+      setSnackbar({
+        open: true,
+        message: 'Не удалось загрузить детали аукциона',
+        severity: 'error',
+      });
+    } finally {
+      setDetailLoading(false);
     }
   };
 
-  const handleCardClick = (auction: any) => {
-    setDetailAuction(auction);
-    setDetailDialogOpen(true);
+  const handleCloseAuctionDetail = () => {
+    setDetailDialogOpen(false);
+    setTimeout(() => setDetailAuction(null), 300);
   };
 
   const handleCancelClick = async (auctionId: number) => {
@@ -179,6 +188,10 @@ const UsernameAuctionPage: React.FC = () => {
 
   const handleAcceptClick = async (auction: any) => {
     await handleAcceptBid(auction);
+  };
+
+  const handleBuyNowClick = async (auctionId: number) => {
+    await handleBuyNow(auctionId);
   };
 
   const tabs = [
@@ -206,8 +219,6 @@ const UsernameAuctionPage: React.FC = () => {
 
   return (
     <Container maxWidth='md' sx={{ py: 2, mb: 10 }}>
-
-
       <Box
         sx={{
           mb: 1,
@@ -223,7 +234,7 @@ const UsernameAuctionPage: React.FC = () => {
           startIcon={<AddIcon />}
           onClick={() => setCreateDialogOpen(true)}
           sx={{
-            borderRadius: '12px',
+            borderRadius: '8px',
             px: 2,
           }}
         >
@@ -272,8 +283,6 @@ const UsernameAuctionPage: React.FC = () => {
       {/* Tab contents */}
       <TabPanel value={tabValue} index={0}>
         <Box>
-
-
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
@@ -414,6 +423,36 @@ const UsernameAuctionPage: React.FC = () => {
           </Grid>
         )}
       </TabPanel>
+
+      {/* New Modals */}
+      <CreateAuctionModal
+        open={createDialogOpen}
+        onClose={() => setCreateDialogOpen(false)}
+        usernames={usernames}
+        onSubmit={handleCreateAuctionClick}
+        loading={loadingButtons.create}
+      />
+
+      <PlaceBidModal
+        open={bidDialogOpen}
+        onClose={() => setBidDialogOpen(false)}
+        auction={selectedAuction}
+        onSubmit={handlePlaceBidClick}
+        loading={loadingButtons.bid}
+      />
+
+      <AuctionDetailModal
+        open={detailDialogOpen}
+        onClose={handleCloseAuctionDetail}
+        auction={detailAuction}
+        loading={detailLoading}
+        user={user}
+        onBidClick={handleBidClick}
+        onBuyNow={handleBuyNowClick}
+        onAcceptBid={handleAcceptClick}
+        onCancelAuction={handleCancelClick}
+        loadingButtons={loadingButtons}
+      />
 
       {/* Snackbar for notifications */}
       <Snackbar
