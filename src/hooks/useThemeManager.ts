@@ -11,6 +11,7 @@ interface ThemeManagerActions {
   switchToDefaultTheme: () => Promise<void>;
   switchToBlurTheme: () => Promise<void>;
   toggleTheme: () => Promise<void>;
+  forceApplyTheme: () => Promise<void>;
   softReloadApp?: () => void;
 }
 
@@ -426,7 +427,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
     
     lastAppliedTheme.current = targetTheme;
     
-    console.log('🎨 Применяем тему ко всем элементам:', targetTheme);
     
     // Более агрессивная обработка - обрабатываем ВСЕ элементы с нужными стилями
     const allElements = document.querySelectorAll('*');
@@ -473,7 +473,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
       const hasButtonParent = el.closest(BUTTON_EXCLUDE_SELECTORS) !== null;
       
       if ((hasInlineTargetStyles || hasComputedTargetStyles) && !isButton && !hasButtonParent) {
-        console.log('🎨 Найден элемент для обработки:', el.tagName, el.className);
         applyThemeToElement(el, targetTheme);
       }
     });
@@ -481,7 +480,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
     // Дополнительно обрабатываем MainLayout элементы
     const mainContainer = document.querySelector('[data-testid="main-container"]');
     if (mainContainer) {
-      console.log('🎨 Обрабатываем MainLayout контейнер');
       applyThemeToElement(mainContainer as HTMLElement, targetTheme);
       
       // Обрабатываем ВСЕ дочерние элементы MainLayout принудительно
@@ -516,7 +514,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
         const hasButtonParent = el.closest(BUTTON_EXCLUDE_SELECTORS) !== null;
         
         if ((hasTargetStyles || hasComputedTargetStyles) && !isButton && !hasButtonParent && !el.hasAttribute(THEME_ATTR)) {
-          console.log('🎨 Обрабатываем элемент MainLayout:', el.tagName, el.className);
           applyThemeToElement(el, targetTheme);
         }
       });
@@ -756,22 +753,30 @@ export const useThemeManager = (): ThemeManagerReturn => {
         const theme = (savedTheme as ThemeMode);
         setCurrentTheme(theme);
         
-        // Применяем тему при загрузке и после полной загрузки DOM
+        // Применяем тему при загрузке и после полной загрузки DOM (как в blur оптимизации)
         const applyThemeImmediately = () => {
-          applyThemeToAllElements(theme);
+          setTimeout(() => applyThemeToAllElements(theme), 50);
         };
 
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', applyThemeImmediately, { once: true });
+          document.addEventListener(
+            'DOMContentLoaded',
+            applyThemeImmediately,
+            { once: true }
+          );
         } else {
-          applyThemeImmediately();
+          setTimeout(() => applyThemeToAllElements(theme), 100);
         }
 
         // Дополнительно применяем тему после полной загрузки страницы
         if (document.readyState !== 'complete') {
-          window.addEventListener('load', () => {
-            setTimeout(() => applyThemeToAllElements(theme), 200);
-          }, { once: true });
+          window.addEventListener(
+            'load',
+            () => {
+              setTimeout(() => applyThemeToAllElements(theme), 100);
+            },
+            { once: true }
+          );
         }
       } catch (error) {
         console.error('Error loading theme state:', error);
@@ -836,6 +841,13 @@ export const useThemeManager = (): ThemeManagerReturn => {
     }
   };
 
+  // Функция для принудительного применения текущей темы (как в blur оптимизации)
+  const forceApplyTheme = async (): Promise<void> => {
+    if (!isLoading && currentTheme) {
+      await applyThemeToAllElements(currentTheme);
+    }
+  };
+
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     let reapplyCount = 0;
@@ -890,7 +902,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
 
       if (shouldReapply) {
         reapplyCount++;
-        console.log(`🎨 MutationObserver: обнаружены новые элементы (попытка ${reapplyCount})`);
         
         // Дебаунсинг с увеличивающейся задержкой
         clearTimeout(timeoutId);
@@ -899,7 +910,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
         timeoutId = setTimeout(async () => {
           // Получаем актуальную тему из IndexedDB
           const actualTheme = await getFromIndexedDB(THEME_MODE_KEY) || 'default';
-          console.log(`🎨 MutationObserver: применяем тему к новым элементам (${addedElements.length} элементов):`, actualTheme);
           
           // Применяем тему ко всем новым элементам
           addedElements.forEach(element => {
@@ -925,7 +935,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
                   computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
               
               if (hasTargetStyles || hasComputedTargetStyles) {
-                console.log('🎨 Применяем тему к новому элементу:', el.tagName, el.className);
                 applyThemeToElement(el, actualTheme as ThemeMode);
               }
             }
@@ -954,7 +963,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
       if (!isSwitchingTheme.current && currentTheme) {
         const actualTheme = await getFromIndexedDB(THEME_MODE_KEY) || 'default';
         if (actualTheme === currentTheme) {
-          console.log('🎨 Периодическая проверка: применяем тему ко всем элементам');
           await applyThemeToAllElements(actualTheme as ThemeMode);
         }
       }
@@ -973,5 +981,6 @@ export const useThemeManager = (): ThemeManagerReturn => {
     switchToDefaultTheme,
     switchToBlurTheme,
     toggleTheme,
+    forceApplyTheme,
   };
 }; 

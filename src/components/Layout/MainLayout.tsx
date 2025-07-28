@@ -182,17 +182,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     }
   }, [location, isMobile]);
 
-  // Применяем тему к элементам MainLayout после рендера
+  // Применяем тему к элементам MainLayout после рендера (как в blur оптимизации)
   useEffect(() => {
     if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
       console.log('🎨 MainLayout применяет тему:', themeManager.currentTheme);
       
       // Применяем тему к элементам MainLayout после небольшой задержки
       setTimeout(() => {
-        if (themeManager.currentTheme === 'default') {
-          themeManager.switchToDefaultTheme();
-        } else {
-          themeManager.switchToBlurTheme();
+        if (themeManager && themeManager.currentTheme) {
+          // Принудительно применяем текущую тему (как в blur оптимизации)
+          themeManager.forceApplyTheme();
         }
       }, 50);
     }
