@@ -198,6 +198,130 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     }
   }, [themeManager?.currentTheme, themeManager?.isLoading]);
 
+  // Дополнительно применяем тему при изменении содержимого
+  useEffect(() => {
+    if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
+      // Применяем тему с большей задержкой для обработки всех дочерних элементов
+      const timer = setTimeout(() => {
+        console.log('🎨 MainLayout применяет тему к дочерним элементам:', themeManager.currentTheme);
+        
+        // Находим все элементы с нужными стилями внутри MainLayout
+        const mainContainer = document.querySelector('[data-testid="main-container"]');
+        if (mainContainer) {
+          const elementsWithStyles = mainContainer.querySelectorAll('*');
+          elementsWithStyles.forEach(element => {
+            const el = element as HTMLElement;
+            const computedStyle = window.getComputedStyle(el);
+            
+            const hasTargetStyles = 
+              (computedStyle.background && 
+               (computedStyle.background.includes('rgba(255, 255, 255, 0.03)') ||
+                computedStyle.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+              (computedStyle.backgroundColor && 
+               (computedStyle.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
+            
+            if (hasTargetStyles && !el.hasAttribute('data-theme-applied')) {
+              console.log('🎨 Применяем тему к элементу MainLayout:', el.tagName, el.className);
+              if (themeManager.currentTheme === 'default') {
+                // Применяем default тему
+                if (el.style.background && el.style.background.includes('rgba(255, 255, 255, 0.03)')) {
+                  el.style.background = el.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
+                }
+                if (el.style.backgroundColor && el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')) {
+                  el.style.backgroundColor = el.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
+                }
+                if (el.style.backdropFilter && el.style.backdropFilter.includes('blur(20px)')) {
+                  el.style.backdropFilter = el.style.backdropFilter.replace(/blur\(20px\)/g, '');
+                }
+              } else {
+                // Применяем blur тему
+                if (el.style.background && el.style.background.includes('rgba(15, 15, 15, 0.98)')) {
+                  el.style.background = el.style.background.replace(/rgba\(15, 15, 15, 0\.98\)/g, 'rgba(255, 255, 255, 0.03)');
+                  if (!el.style.backdropFilter || !el.style.backdropFilter.includes('blur(20px)')) {
+                    el.style.backdropFilter = (el.style.backdropFilter || '') + ' blur(20px)';
+                  }
+                }
+                if (el.style.backgroundColor && el.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)')) {
+                  el.style.backgroundColor = el.style.backgroundColor.replace(/rgba\(15, 15, 15, 0\.98\)/g, 'rgba(255, 255, 255, 0.03)');
+                  if (!el.style.backdropFilter || !el.style.backdropFilter.includes('blur(20px)')) {
+                    el.style.backdropFilter = (el.style.backdropFilter || '') + ' blur(20px)';
+                  }
+                }
+              }
+              el.setAttribute('data-theme-applied', 'true');
+            }
+          });
+        }
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [themeManager?.currentTheme, themeManager?.isLoading, location.pathname]);
+
+  // Периодическая проверка для обработки новых элементов в MainLayout
+  useEffect(() => {
+    if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
+      const intervalId = setInterval(() => {
+        console.log('🎨 MainLayout: периодическая проверка новых элементов');
+        
+        const mainContainer = document.querySelector('[data-testid="main-container"]');
+        if (mainContainer) {
+          const allElements = mainContainer.querySelectorAll('*');
+          let processedCount = 0;
+          
+          allElements.forEach(element => {
+            const el = element as HTMLElement;
+            const computedStyle = window.getComputedStyle(el);
+            
+            const hasTargetStyles = 
+              (computedStyle.background && 
+               (computedStyle.background.includes('rgba(255, 255, 255, 0.03)') ||
+                computedStyle.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+              (computedStyle.backgroundColor && 
+               (computedStyle.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
+            
+            if (hasTargetStyles && !el.hasAttribute('data-theme-applied')) {
+              processedCount++;
+              if (themeManager.currentTheme === 'default') {
+                if (el.style.background && el.style.background.includes('rgba(255, 255, 255, 0.03)')) {
+                  el.style.background = el.style.background.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
+                }
+                if (el.style.backgroundColor && el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)')) {
+                  el.style.backgroundColor = el.style.backgroundColor.replace(/rgba\(255, 255, 255, 0\.03\)/g, 'rgba(15, 15, 15, 0.98)');
+                }
+                if (el.style.backdropFilter && el.style.backdropFilter.includes('blur(20px)')) {
+                  el.style.backdropFilter = el.style.backdropFilter.replace(/blur\(20px\)/g, '');
+                }
+              } else {
+                if (el.style.background && el.style.background.includes('rgba(15, 15, 15, 0.98)')) {
+                  el.style.background = el.style.background.replace(/rgba\(15, 15, 15, 0\.98\)/g, 'rgba(255, 255, 255, 0.03)');
+                  if (!el.style.backdropFilter || !el.style.backdropFilter.includes('blur(20px)')) {
+                    el.style.backdropFilter = (el.style.backdropFilter || '') + ' blur(20px)';
+                  }
+                }
+                if (el.style.backgroundColor && el.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)')) {
+                  el.style.backgroundColor = el.style.backgroundColor.replace(/rgba\(15, 15, 15, 0\.98\)/g, 'rgba(255, 255, 255, 0.03)');
+                  if (!el.style.backdropFilter || !el.style.backdropFilter.includes('blur(20px)')) {
+                    el.style.backdropFilter = (el.style.backdropFilter || '') + ' blur(20px)';
+                  }
+                }
+              }
+              el.setAttribute('data-theme-applied', 'true');
+            }
+          });
+          
+          if (processedCount > 0) {
+            console.log(`🎨 MainLayout: обработано ${processedCount} новых элементов`);
+          }
+        }
+      }, 2000); // Проверяем каждые 2 секунды
+      
+      return () => clearInterval(intervalId);
+    }
+  }, [themeManager?.currentTheme, themeManager?.isLoading]);
+
   useEffect(() => {
     const handleMessengerLayoutChange = (
       event: CustomEvent<{ isInChat: boolean }>

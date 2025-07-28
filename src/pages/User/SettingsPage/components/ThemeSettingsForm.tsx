@@ -109,22 +109,9 @@ const ThemeSettingsForm: React.FC<ThemeSettingsFormProps> = ({
   };
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Typography
-        variant='h6'
-        sx={{
-          mb: 2,
-          color: 'text.primary',
-          fontSize: '1.1rem',
-          fontWeight: 600,
-        }}
-      >
-        Тема интерфейса
-      </Typography>
+    <Box sx={{  }}>
 
-      <Alert severity='info' sx={{ mb: 2, fontSize: '0.875rem' }}>
-        Выберите стиль интерфейса
-      </Alert>
+
 
       {/* Обычная тема */}
       <Box sx={{

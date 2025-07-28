@@ -426,13 +426,54 @@ export const useThemeManager = (): ThemeManagerReturn => {
     
     lastAppliedTheme.current = targetTheme;
     
-    // Process existing elements directly for better performance
+    console.log('🎨 Применяем тему ко всем элементам:', targetTheme);
+    
+    // Более агрессивная обработка - обрабатываем ВСЕ элементы с нужными стилями
     const allElements = document.querySelectorAll('*');
-    const elementsToProcess = Array.from(allElements).filter(shouldProcessElement);
-
-    elementsToProcess.forEach(element => {
+    
+    allElements.forEach(element => {
       const el = element as HTMLElement;
-      if (!el.hasAttribute(THEME_ATTR)) {
+      
+      // Пропускаем уже обработанные элементы
+      if (el.hasAttribute(THEME_ATTR)) {
+        return;
+      }
+      
+      // Проверяем inline стили
+      const hasInlineTargetStyles = 
+        (el.style.background && 
+         (el.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+          el.style.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (el.style.backgroundColor && 
+         (el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+          el.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (el.style.backgroundImage && 
+         (el.style.backgroundImage.includes('rgba(255, 255, 255, 0.03)') ||
+          el.style.backgroundImage.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (el.style.backdropFilter && el.style.backdropFilter.includes('blur(20px)')) ||
+        ((el.style as any).webkitBackdropFilter && (el.style as any).webkitBackdropFilter.includes('blur(20px)'));
+      
+      // Проверяем computed стили
+      const computedStyle = window.getComputedStyle(el);
+      const hasComputedTargetStyles = 
+        (computedStyle.background && 
+         (computedStyle.background.includes('rgba(255, 255, 255, 0.03)') ||
+          computedStyle.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (computedStyle.backgroundColor && 
+         (computedStyle.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+          computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (computedStyle.backgroundImage && 
+         (computedStyle.backgroundImage.includes('rgba(255, 255, 255, 0.03)') ||
+          computedStyle.backgroundImage.includes('rgba(15, 15, 15, 0.98)'))) ||
+        (computedStyle.backdropFilter && computedStyle.backdropFilter.includes('blur(20px)')) ||
+        ((computedStyle as any).webkitBackdropFilter && (computedStyle as any).webkitBackdropFilter.includes('blur(20px)'));
+      
+      // Проверяем, является ли элемент кнопкой (исключаем)
+      const isButton = el.matches(BUTTON_EXCLUDE_SELECTORS);
+      const hasButtonParent = el.closest(BUTTON_EXCLUDE_SELECTORS) !== null;
+      
+      if ((hasInlineTargetStyles || hasComputedTargetStyles) && !isButton && !hasButtonParent) {
+        console.log('🎨 Найден элемент для обработки:', el.tagName, el.className);
         applyThemeToElement(el, targetTheme);
       }
     });
@@ -440,13 +481,42 @@ export const useThemeManager = (): ThemeManagerReturn => {
     // Дополнительно обрабатываем MainLayout элементы
     const mainContainer = document.querySelector('[data-testid="main-container"]');
     if (mainContainer) {
+      console.log('🎨 Обрабатываем MainLayout контейнер');
       applyThemeToElement(mainContainer as HTMLElement, targetTheme);
       
-      // Обрабатываем все дочерние элементы MainLayout
+      // Обрабатываем ВСЕ дочерние элементы MainLayout принудительно
       const mainLayoutElements = mainContainer.querySelectorAll('*');
       mainLayoutElements.forEach(element => {
         const el = element as HTMLElement;
-        if (shouldProcessElement(el) && !el.hasAttribute(THEME_ATTR)) {
+        
+        // Проверяем, есть ли у элемента нужные стили
+        const hasTargetStyles = 
+          (el.style.background && 
+           (el.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+            el.style.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+          (el.style.backgroundColor && 
+           (el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+            el.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)'))) ||
+          (el.style.backgroundImage && 
+           (el.style.backgroundImage.includes('rgba(255, 255, 255, 0.03)') ||
+            el.style.backgroundImage.includes('rgba(15, 15, 15, 0.98)')));
+        
+        // Проверяем computed стили
+        const computedStyle = window.getComputedStyle(el);
+        const hasComputedTargetStyles = 
+          (computedStyle.background && 
+           (computedStyle.background.includes('rgba(255, 255, 255, 0.03)') ||
+            computedStyle.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+          (computedStyle.backgroundColor && 
+           (computedStyle.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+            computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
+        
+        // Проверяем, является ли элемент кнопкой
+        const isButton = el.matches(BUTTON_EXCLUDE_SELECTORS);
+        const hasButtonParent = el.closest(BUTTON_EXCLUDE_SELECTORS) !== null;
+        
+        if ((hasTargetStyles || hasComputedTargetStyles) && !isButton && !hasButtonParent && !el.hasAttribute(THEME_ATTR)) {
+          console.log('🎨 Обрабатываем элемент MainLayout:', el.tagName, el.className);
           applyThemeToElement(el, targetTheme);
         }
       });
@@ -768,6 +838,7 @@ export const useThemeManager = (): ThemeManagerReturn => {
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
+    let reapplyCount = 0;
     
     const observer = new MutationObserver(mutations => {
       // Не срабатываем во время переключения тем
@@ -776,20 +847,26 @@ export const useThemeManager = (): ThemeManagerReturn => {
       }
       
       let shouldReapply = false;
+      let addedElements: Element[] = [];
 
       mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
             if (node.nodeType === Node.ELEMENT_NODE) {
               const element = node as Element;
+              addedElements.push(element);
+              
+              // Проверяем сам элемент
               if (shouldProcessElement(element)) {
                 shouldReapply = true;
               }
 
+              // Проверяем все дочерние элементы
               const childElements = element.querySelectorAll
                 ? element.querySelectorAll('*')
                 : [];
               childElements.forEach(child => {
+                addedElements.push(child);
                 if (shouldProcessElement(child)) {
                   shouldReapply = true;
                 }
@@ -812,13 +889,56 @@ export const useThemeManager = (): ThemeManagerReturn => {
       });
 
       if (shouldReapply) {
-        // Дебаунсинг для предотвращения множественных вызовов
+        reapplyCount++;
+        console.log(`🎨 MutationObserver: обнаружены новые элементы (попытка ${reapplyCount})`);
+        
+        // Дебаунсинг с увеличивающейся задержкой
         clearTimeout(timeoutId);
+        const delay = Math.min(100 + (reapplyCount * 50), 500); // от 100ms до 500ms
+        
         timeoutId = setTimeout(async () => {
           // Получаем актуальную тему из IndexedDB
           const actualTheme = await getFromIndexedDB(THEME_MODE_KEY) || 'default';
+          console.log(`🎨 MutationObserver: применяем тему к новым элементам (${addedElements.length} элементов):`, actualTheme);
+          
+          // Применяем тему ко всем новым элементам
+          addedElements.forEach(element => {
+            const el = element as HTMLElement;
+            if (el && !el.hasAttribute(THEME_ATTR)) {
+              // Проверяем, есть ли у элемента нужные стили
+              const hasTargetStyles = 
+                (el.style.background && 
+                 (el.style.background.includes('rgba(255, 255, 255, 0.03)') ||
+                  el.style.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+                (el.style.backgroundColor && 
+                 (el.style.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                  el.style.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
+              
+              // Проверяем computed стили
+              const computedStyle = window.getComputedStyle(el);
+              const hasComputedTargetStyles = 
+                (computedStyle.background && 
+                 (computedStyle.background.includes('rgba(255, 255, 255, 0.03)') ||
+                  computedStyle.background.includes('rgba(15, 15, 15, 0.98)'))) ||
+                (computedStyle.backgroundColor && 
+                 (computedStyle.backgroundColor.includes('rgba(255, 255, 255, 0.03)') ||
+                  computedStyle.backgroundColor.includes('rgba(15, 15, 15, 0.98)')));
+              
+              if (hasTargetStyles || hasComputedTargetStyles) {
+                console.log('🎨 Применяем тему к новому элементу:', el.tagName, el.className);
+                applyThemeToElement(el, actualTheme as ThemeMode);
+              }
+            }
+          });
+          
+          // Также применяем тему ко всем элементам для надежности
           await applyThemeToAllElements(actualTheme as ThemeMode);
-        }, 100);
+          
+          // Сбрасываем счетчик через некоторое время
+          setTimeout(() => {
+            reapplyCount = 0;
+          }, 1000);
+        }, delay);
       }
     });
 
@@ -829,9 +949,21 @@ export const useThemeManager = (): ThemeManagerReturn => {
       attributeFilter: ['style', 'class'],
     });
 
+    // Периодическая проверка для обработки пропущенных элементов
+    const intervalId = setInterval(async () => {
+      if (!isSwitchingTheme.current && currentTheme) {
+        const actualTheme = await getFromIndexedDB(THEME_MODE_KEY) || 'default';
+        if (actualTheme === currentTheme) {
+          console.log('🎨 Периодическая проверка: применяем тему ко всем элементам');
+          await applyThemeToAllElements(actualTheme as ThemeMode);
+        }
+      }
+    }, 3000); // Проверяем каждые 3 секунды
+
     return () => {
       observer.disconnect();
       clearTimeout(timeoutId);
+      clearInterval(intervalId);
     };
   }, [currentTheme, shouldProcessElement, applyThemeToAllElements]);
 
