@@ -28,7 +28,6 @@ const DeleteDialog = ({
       PaperProps={{
         sx: {
           bgcolor: 'rgba(32, 32, 36, 0.8)',
-          backdropFilter: 'blur(20px)',
           boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
           width: '100%',
           maxWidth: '400px',

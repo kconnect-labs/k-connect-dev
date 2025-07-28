@@ -57,8 +57,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
   };
 
   const modalStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '550px',
@@ -116,7 +115,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
             justifyContent: 'center',
             mb: 3,
             p: 3,
-            bgcolor: 'rgba(255, 255, 255, 0.03)',
+            bgcolor: 'rgba(15, 15, 15, 0.98)',
             borderRadius: '12px',
             border: '1px solid rgba(255, 255, 255, 0.08)',
           }}
@@ -151,8 +150,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
 
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '12px',
             padding: '20px',

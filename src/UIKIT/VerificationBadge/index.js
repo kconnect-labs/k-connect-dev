@@ -231,7 +231,7 @@ const CustomTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   '& .MuiTooltip-tooltip': {
-    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    backgroundColor: 'rgba(15, 15, 15, 0.98)',
     backdropFilter: 'blur(40px)',
     fontSize: '0.75rem',
     maxWidth: 250,
@@ -242,7 +242,7 @@ const CustomTooltip = styled(({ className, ...props }) => (
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
   },
   '& .MuiTooltip-arrow': {
-    color: 'rgba(255, 255, 255, 0.03)',
+    color: 'rgba(15, 15, 15, 0.98)',
   },
 }));
 

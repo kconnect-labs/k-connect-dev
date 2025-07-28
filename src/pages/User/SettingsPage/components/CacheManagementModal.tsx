@@ -355,8 +355,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
         fullScreen={isMobile}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: isMobile ? 0 : 2,
           },
@@ -380,8 +379,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
       fullScreen={isMobile}
       PaperProps={{
         sx: {
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: isMobile ? 0 : 1,
           minHeight: isMobile ? '100vh' : 600,
@@ -478,7 +476,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                       mb: 1,
                       background: category.selected 
                         ? 'rgba(255, 255, 255, 0.08)' 
-                        : 'rgba(255, 255, 255, 0.03)',
+                        : 'rgba(15, 15, 15, 0.98)',
                       borderRadius: 1,
                       border: category.selected 
                         ? `1px solid ${category.color}40` 

@@ -84,9 +84,8 @@
 
 .support-block {
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(15, 15, 15, 0.98);
+  
   overflow: hidden;
   position: relative;
 }
@@ -99,7 +98,7 @@
 }
 
 .user-recommendation:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(15, 15, 15, 0.98);
 }
 
 .user-recommendation-content {

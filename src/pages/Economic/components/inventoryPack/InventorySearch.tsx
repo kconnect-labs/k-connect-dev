@@ -104,8 +104,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
       sx={{
         p: 2,
 
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'rgba(15, 15, 15, 0.98)',
         border: '1px solid rgba(255, 255, 255, 0.12)',
         borderRadius: '12px',
       }}

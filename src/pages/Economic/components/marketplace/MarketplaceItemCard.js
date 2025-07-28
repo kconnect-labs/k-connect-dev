@@ -12,8 +12,7 @@ import { formatDistance } from 'date-fns';
 import Chip from '@mui/material/Chip';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderRadius: theme.spacing(2),
   transition: 'transform 0.2s ease-in-out',
   '&:hover': {

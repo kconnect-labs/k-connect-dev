@@ -1,10 +1,8 @@
 .container {
   padding: 24px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background: rgba(15, 15, 15, 0.98);
+  
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -21,7 +19,7 @@
   margin-bottom: 16px;
   padding: 16px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(15, 15, 15, 0.98);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -49,7 +47,7 @@
   line-height: 1.5;
   padding: 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(15, 15, 15, 0.98);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   overflow-wrap: break-word;

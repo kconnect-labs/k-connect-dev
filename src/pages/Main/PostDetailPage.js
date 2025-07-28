@@ -130,7 +130,7 @@ const CommentBox = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  backgroundColor: 'rgba(15, 15, 15, 0.98)',
 }));
 
 const ReplyBox = styled(Box)(({ theme }) => ({
@@ -833,7 +833,7 @@ const Comment = ({
                       {reply.parent_reply_id && !reply.parent_reply && (
                         <Box
                           sx={{
-                            bgcolor: 'rgba(255, 255, 255, 0.03)',
+                            bgcolor: 'rgba(15, 15, 15, 0.98)',
                             borderRadius: '8px',
                             p: 1,
                             mb: 0.75,
@@ -907,7 +907,7 @@ const Comment = ({
                       {reply.parent_reply_id && reply.parent_reply && (
                         <Box
                           sx={{
-                            bgcolor: 'rgba(255, 255, 255, 0.03)',
+                            bgcolor: 'rgba(15, 15, 15, 0.98)',
                             borderRadius: '8px',
                             p: 1,
                             mb: 0.75,
@@ -2646,7 +2646,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
         PaperProps={{
           sx: {
             bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
             boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
             width: '100%',
             maxWidth: '400px',
@@ -2757,7 +2756,6 @@ const PostDetailPage = ({ isOverlay = false }) => {
         PaperProps={{
           sx: {
             bgcolor: 'rgba(32, 32, 36, 0.8)',
-            backdropFilter: 'blur(20px)',
             boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
             width: '100%',
             maxWidth: '400px',

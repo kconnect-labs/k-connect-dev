@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@iconify/react';
+import ThemeToggle from '../../ThemeToggle/ThemeToggle';
 import './HeaderActions.css';
 
 const HeaderActions = ({

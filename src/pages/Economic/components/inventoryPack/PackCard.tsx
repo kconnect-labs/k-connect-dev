@@ -21,8 +21,7 @@ import OptimizedImage from '../../../../components/OptimizedImage';
 import { Pack, PackContent } from './types';
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: 20,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',

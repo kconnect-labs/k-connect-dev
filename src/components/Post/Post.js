@@ -132,10 +132,8 @@ const PostCard = styled(Card, {
   borderRadius: theme.spacing(1),
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
   transition: 'box-shadow 0.3s ease-in-out',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  border: isPinned
+  background: 'rgba(15, 15, 15, 0.98)',
+  Webkitborder: isPinned
     ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
     : '1px solid rgba(255, 255, 255, 0.1)',
   '&:hover': {
@@ -1899,8 +1897,8 @@ const Post = ({
                     }`,
                   backgroundColor: theme =>
                     theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.03)'
-                      : 'rgba(0, 0, 0, 0.03)',
+                      ? 'rgba(15, 15, 15, 0.98)'
+                      : 'rgba(15, 15, 15, 0.98)',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: theme =>
@@ -2013,7 +2011,7 @@ const Post = ({
                     display: 'block',
                     cursor: 'pointer',
                     '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                      backgroundColor: 'rgba(15, 15, 15, 0.98)',
                     },
                   }}
                 >
@@ -2149,7 +2147,7 @@ const Post = ({
                         mt: 1.5,
                         p: 1.5,
                         borderRadius: '8px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                        backgroundColor: 'rgba(15, 15, 15, 0.98)',
                         backdropFilter: 'blur(8px)',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         position: 'relative',
@@ -2556,7 +2554,7 @@ const Post = ({
                         py: 0.4,
                         px: 1,
                         borderRadius: '12px',
-                        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                        backgroundColor: 'rgba(15, 15, 15, 0.98)',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         fontSize: '0.7rem',
                         ml: 1,
@@ -2851,7 +2849,7 @@ const Post = ({
               sx={{
                 padding: '12px',
                 borderRadius: '0 0 12px 12px',
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: 'rgba(15, 15, 15, 0.98)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 marginTop: '12px',
@@ -2985,8 +2983,7 @@ const Post = ({
                 mb: 1.5,
                 p: 1.5,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'rgba(15, 15, 15, 0.98)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
               }}
             >

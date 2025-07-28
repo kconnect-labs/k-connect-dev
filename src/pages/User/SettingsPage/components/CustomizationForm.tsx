@@ -371,9 +371,8 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const containerStyle = {
     p: 3,
     borderRadius: 2,
-    background: 'rgba(255, 255, 255, 0.03)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
-    backdropFilter: 'blur(20px)',
     mb: 3,
   };
 

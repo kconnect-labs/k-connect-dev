@@ -203,8 +203,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         <button
           onClick={onBack || (() => navigate(-1))}
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '8px',
             padding: '8px',
@@ -218,7 +217,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+            e.currentTarget.style.background = 'rgba(15, 15, 15, 0.98)';
           }}
         >
           <ArrowLeft size={20} color='#FFFFFF' />
@@ -264,8 +263,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         {/* Total Invited */}
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '8px',
             padding: '16px',
@@ -312,8 +310,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         {/* Current Level */}
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '8px',
             padding: '16px',
@@ -360,8 +357,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         {/* Total Earned Points */}
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '8px',
             padding: '16px',
@@ -408,8 +404,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
         {/* Total Earned Days */}
         <div
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '8px',
             padding: '16px',
@@ -457,8 +452,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
       {/* Referral Code Section */}
       <div
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '8px',
           padding: '16px',
@@ -569,8 +563,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
       {/* Level Rewards */}
       <div
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '8px',
           padding: '16px',
@@ -700,8 +693,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
       {/* Referred Users */}
       <div
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '8px',
           padding: '16px',

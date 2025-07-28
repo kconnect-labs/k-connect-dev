@@ -428,8 +428,7 @@ const MessengerPage = () => {
             mx: 'auto',
             mt: { xs: 0, md: 1 },
             overflow: 'hidden',
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             borderRadius: '8px',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             position: 'relative',
@@ -451,7 +450,7 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  backgroundColor: 'rgba(15, 15, 15, 0.98)',
                   color: '#fff',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '8px',
@@ -465,7 +464,7 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  backgroundColor: 'rgba(15, 15, 15, 0.98)',
                   color: '#fff',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '8px',
@@ -535,7 +534,7 @@ const MessengerPage = () => {
         fullWidth
         PaperProps={{
           sx: {
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
+            backgroundColor: 'rgba(15, 15, 15, 0.98)',
             color: '#fff',
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
             backdropFilter: 'blur(50px)',

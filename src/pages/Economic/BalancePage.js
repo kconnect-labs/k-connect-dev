@@ -540,7 +540,6 @@ const TransactionDetailDialog = styled(Dialog)(({ theme }) => ({
       theme.palette.mode === 'dark'
         ? 'linear-gradient(135deg, rgba(35, 35, 40, 0.95) 0%, rgba(20, 20, 25, 0.95) 100%)'
         : 'linear-gradient(135deg, rgba(250, 250, 255, 0.95) 0%, rgba(240, 240, 250, 0.95) 100%)',
-    backdropFilter: 'blur(20px)',
     boxShadow: '0 20px 80px rgba(0, 0, 0, 0.2)',
     overflow: 'hidden',
     maxWidth: '500px',

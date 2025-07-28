@@ -20,7 +20,6 @@ import { Pack, InventoryItem } from './types';
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'rgba(18, 18, 18, 0.95)',
-    backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: window.innerWidth <= 768 ? 0 : '16px',
     boxShadow: '0 20px 60px rgba(0, 0, 0, 0.4)',
@@ -47,7 +46,7 @@ const PackContainer = styled(Box)(({ theme }) => ({
   width: 140,
   height: 140,
   margin: '0 auto 32px',
-  background: 'rgba(255, 255, 255, 0.03)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderRadius: 16,
   display: 'flex',
   alignItems: 'center',

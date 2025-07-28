@@ -18,18 +18,6 @@ const twinkle = keyframes`
   }
 `;
 
-const VibeWidgetContainer = styled(Paper)(({ theme, $hasCurrentTrack }) => ({
-  position: 'relative',
-  height: $hasCurrentTrack ? '320px' : '240px',
-  borderRadius: '12px',
-  overflow: 'hidden',
-  cursor: 'pointer',
-  background: 'rgba(21, 4, 56, 0.11)', // Темный стеклянный фон для контраста
-  backdropFilter: 'blur(20px)',
-  border: `1px solid ${alpha(theme.palette.common.white, 0.1)}`,
-  transition: 'all 0.3s ease',
-}));
-
 const Star = styled('div')(({ size, top, left, delay, duration }) => ({
   position: 'absolute',
   width: `${size}px`,
@@ -66,19 +54,7 @@ const StarsContainer = () => {
   );
 };
 
-const ContentOverlay = styled(Box)({
-  position: 'absolute',
-  inset: 0,
-  zIndex: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  padding: '16px',
-  color: 'white',
-  textShadow: '0 2px 8px rgba(0,0,0,0.7)',
-});
+
 
 const CurrentTrackInfo = styled(Box)({
   position: 'absolute',

@@ -26,7 +26,7 @@ export const PostInput = styled(TextField)(({ theme }) => ({
     background:
       theme.palette.mode === 'dark'
         ? 'rgba(0, 0, 0, 0.2)'
-        : 'rgba(0, 0, 0, 0.03)',
+        : 'rgba(15, 15, 15, 0.98)',
     backdropFilter: 'blur(5px)',
     borderRadius: '12px',
     border:

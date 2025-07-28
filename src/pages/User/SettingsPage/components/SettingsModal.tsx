@@ -29,6 +29,7 @@ const SocialLinksForm = lazy(() => import('./SocialLinksForm'));
 const ExperimentalFeaturesForm = lazy(
   () => import('./ExperimentalFeaturesForm')
 );
+const ThemeSettingsForm = lazy(() => import('./ThemeSettingsForm'));
 const CustomizationForm = lazy(() => import('./CustomizationForm'));
 const SessionsForm = lazy(() => import('./SessionsForm'));
 const LinkedAccountsForm = lazy(() => import('./LinkedAccountsForm'));
@@ -103,6 +104,7 @@ type Section =
   | 'security'
   | 'status'
   | 'socials'
+  | 'themes'
   | 'experimental'
   | 'customization'
   | 'sessions'
@@ -147,8 +149,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   const modalStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '550px',
@@ -213,6 +214,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         return (
           <Suspense fallback={<LoadingFallback />}>
             <SocialLinksForm profileData={profileData} onSuccess={onSuccess} />
+          </Suspense>
+        );
+      case 'themes':
+        return (
+          <Suspense fallback={<LoadingFallback />}>
+            <ThemeSettingsForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'experimental':
@@ -297,6 +304,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         return 'Статусы';
       case 'socials':
         return 'Социальные сети';
+      case 'themes':
+        return 'Темы';
       case 'experimental':
         return 'Экспериментальные функции';
       case 'customization':

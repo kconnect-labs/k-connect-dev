@@ -41,7 +41,7 @@ const StyledReplyCard = styled(Box)(({ theme }) => ({
 }));
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+  backgroundColor: 'rgba(15, 15, 15, 0.98)',
   borderRadius: '8px',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),

@@ -125,8 +125,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
       PaperProps={{
         sx: {
           borderRadius: 2,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
         },

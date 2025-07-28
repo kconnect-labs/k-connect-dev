@@ -34,8 +34,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 
 const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderRadius: theme.spacing(2),
   marginBottom: theme.spacing(2),
   border: '1px solid rgba(255, 255, 255, 0.1)',

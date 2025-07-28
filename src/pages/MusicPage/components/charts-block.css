@@ -13,10 +13,8 @@
   min-width: 0;
 }
 .chart-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 12px;
+  background: rgba(15, 15, 15, 0.98);
+  
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0 0 4px 0;
@@ -54,7 +52,7 @@
   gap: 10px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(15, 15, 15, 0.98);
   margin: 0 8px 5px 8px;
   padding: 6px 6px 6px 6px;
   cursor: pointer;

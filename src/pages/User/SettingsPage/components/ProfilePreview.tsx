@@ -13,19 +13,15 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
   user,
   profileData,
 }) => {
-  console.log('ProfilePreview props:', { user, profileData });
 
   if (!user) {
-    console.log('ProfilePreview: No user data');
     return (
       <Paper
         sx={{
           p: 2,
           borderRadius: '16px',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+          background: 'rgba(15, 15, 15, 0.98)',
+          WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           position: 'relative',
           zIndex: 2,
@@ -58,7 +54,6 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
     profile_id: user?.profile_id,
   };
 
-  console.log('ProfilePreview displayUser:', displayUser);
 
   return (
     <Paper
@@ -68,7 +63,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
         background:
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? `url(${displayUser.banner_url}), rgba(255, 255, 255, 0.03)`
-            : 'rgba(255, 255, 255, 0.03)',
+            : 'rgba(15, 15, 15, 0.98)',
         backgroundSize:
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'cover'
@@ -77,9 +72,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'center'
             : undefined,
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+        WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         position: 'relative',
@@ -246,8 +239,8 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                     ? 'rgba(0,0,0,0.3)'
                     : theme =>
                         theme.palette.mode === 'dark'
-                          ? 'rgba(255,255,255,0.03)'
-                          : 'rgba(0,0,0,0.03)',
+                          ? 'rgba(15, 15, 15, 0.98)'
+                          : 'rgba(15, 15, 15, 0.98)',
                 px: 1,
                 py: 0.3,
                 borderRadius: 1,
@@ -296,8 +289,8 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                         displayUser?.profile_id === 2
                           ? 'rgba(0,0,0,0.3)'
                           : theme.palette.mode === 'dark'
-                            ? 'rgba(255,255,255,0.03)'
-                            : 'rgba(0,0,0,0.03)',
+                            ? 'rgba(15, 15, 15, 0.98)'
+                            : 'rgba(15, 15, 15, 0.98)',
                       px: 1,
                       py: 0.3,
                       borderRadius: 1,

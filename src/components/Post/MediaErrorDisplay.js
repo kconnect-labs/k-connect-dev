@@ -17,7 +17,6 @@ const MediaErrorContainer = props => (
       justifyContent: 'center',
       background:
         'linear-gradient(327deg, rgb(206 188 255 / 77%) 0%, rgb(97 76 147) 100%)',
-      backdropFilter: 'blur(20px)',
       boxShadow: 'inset 0 0 0 1px rgba(206, 188, 255, 0.2)',
       padding: 2,
       textAlign: 'center',

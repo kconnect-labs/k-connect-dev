@@ -42,8 +42,7 @@ const AllTracksContainer = styled(Box)(({ theme }) => ({
 
 const AllTracksCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  background: 'rgba(0, 0, 0, 0.03)', // Фон 003
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)', // Фон 003
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -55,7 +54,6 @@ const AllTracksHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   borderRadius: 12,
   background: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
@@ -67,7 +65,6 @@ const StyledSearchField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
     background: 'rgba(255, 255, 255, 0.02)',
-    backdropFilter: 'blur(20px)',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '&:hover': {
       border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -93,7 +90,6 @@ const TrackCard = styled(Paper)(({ theme }) => ({
   borderRadius: '12px',
   padding: '8px',
   background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   display: 'flex',
   alignItems: 'center',

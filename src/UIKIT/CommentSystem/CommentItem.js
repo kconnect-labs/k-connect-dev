@@ -50,7 +50,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
   transition: 'all 0.2s ease',
   backgroundColor: active
     ? 'rgba(140, 82, 255, 0.08)'
-    : 'rgba(255, 255, 255, 0.03)',
+    : 'rgba(15, 15, 15, 0.98)',
   '&:hover': {
     backgroundColor: active
       ? 'rgba(140, 82, 255, 0.15)'

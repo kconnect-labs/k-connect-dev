@@ -41,8 +41,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
@@ -365,8 +364,7 @@ const InventoryPackPage = () => {
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: window.innerWidth <= 768 ? 0 : '8px',
             '@media (max-width: 768px)': {
@@ -596,8 +594,7 @@ const InventoryPackPage = () => {
         onClose={() => setConfirmPack(null)}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '8px',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',

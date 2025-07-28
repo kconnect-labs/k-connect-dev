@@ -41,8 +41,7 @@ const PageContainer = styled(Container)(({ theme }) => ({
 const HeaderCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -52,7 +51,6 @@ const TrackListItem = styled(ListItem)(({ theme, isActive }) => ({
   background: isActive
     ? 'rgba(255, 255, 255, 0.05)'
     : 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25), // 2px отступ между треками
   padding: theme.spacing(0.75, 2), // Еще меньше паддинг для компактности
@@ -249,8 +247,7 @@ const LikedTracksPage = ({ onBack }) => {
               sx={{
                 ml: 2,
                 color: 'primary.main',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'rgba(15, 15, 15, 0.98)',
                 borderRadius: 2,
                 border: '1px solid rgba(255,255,255,0.1)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
@@ -289,7 +286,6 @@ const LikedTracksPage = ({ onBack }) => {
           sx={{
             borderRadius: 12,
             background: 'rgba(255, 255, 255, 0.02)',
-            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.05)',
           }}
         >

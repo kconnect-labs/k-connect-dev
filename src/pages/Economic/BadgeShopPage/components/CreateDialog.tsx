@@ -72,8 +72,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
   };
 
   const modalStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '600px',
@@ -126,8 +125,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
       <DialogContent sx={{ p: isMobile ? 2 : 3, overflow: 'auto' }}>
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             padding: '20px',
             marginBottom: '20px',
@@ -155,7 +153,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
             sx={{
               mb: 2,
               p: 2,
-              bgcolor: 'rgba(255, 255, 255, 0.03)',
+              bgcolor: 'rgba(15, 15, 15, 0.98)',
               borderRadius: 1,
             }}
           >
@@ -188,8 +186,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         {previewUrl && (
           <Box
             sx={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'rgba(15, 15, 15, 0.98)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
               padding: '20px',
               marginBottom: '20px',
@@ -242,8 +239,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
         {/* Форма создания */}
         <Box
           sx={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             padding: '20px',
             marginBottom: '20px',
@@ -419,7 +415,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
                 sx={{
                   mt: 2,
                   p: 2,
-                  bgcolor: 'rgba(255, 255, 255, 0.03)',
+                  bgcolor: 'rgba(15, 15, 15, 0.98)',
                   borderRadius: 1,
                 }}
               >

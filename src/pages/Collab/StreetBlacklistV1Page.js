@@ -326,7 +326,6 @@ const StreetBlacklistV1Page = () => {
     const baseStyles = {
       background:
         'linear-gradient(135deg, rgba(255, 68, 68, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
-      backdropFilter: 'blur(20px)',
       borderRadius: 2,
       height: '100%',
       transition: 'all 0.3s ease',
@@ -604,7 +603,6 @@ const StreetBlacklistV1Page = () => {
                 sx={{
                   background:
                     'linear-gradient(135deg, rgba(138, 255, 138, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
-                  backdropFilter: 'blur(20px)',
                   border: '2px solid rgba(138, 255, 138, 0.2)',
                   borderRadius: 2,
                   textAlign: 'center',
@@ -640,7 +638,6 @@ const StreetBlacklistV1Page = () => {
               <Card
                 sx={{
                   background: `linear-gradient(135deg, ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.05)')} 0%, rgba(19, 19, 19, 0.95) 100%)`,
-                  backdropFilter: 'blur(20px)',
                   border: `2px solid ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.2)')}`,
                   borderRadius: 2,
                   textAlign: 'center',
@@ -676,7 +673,6 @@ const StreetBlacklistV1Page = () => {
                 sx={{
                   background:
                     'linear-gradient(135deg, rgba(207, 188, 251, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
-                  backdropFilter: 'blur(20px)',
                   border: '2px solid rgba(207, 188, 251, 0.2)',
                   borderRadius: 2,
                   textAlign: 'center',
@@ -1072,7 +1068,6 @@ const StreetBlacklistV1Page = () => {
         PaperProps={{
           sx: {
             background: 'rgba(19, 19, 19, 0.95)',
-            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: 2,
           },
@@ -1185,7 +1180,6 @@ const StreetBlacklistV1Page = () => {
         PaperProps={{
           sx: {
             background: 'rgba(19, 19, 19, 0.95)',
-            backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: 2,
           },

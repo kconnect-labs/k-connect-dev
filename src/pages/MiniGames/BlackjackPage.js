@@ -408,8 +408,7 @@ const BlackjackPage = () => {
       <div
         className={`${styles.card} ${styles['mb-4']}`}
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '12px',
           padding: '16px',
@@ -444,8 +443,7 @@ const BlackjackPage = () => {
         <div
           className={`${styles.card} ${styles['p-6']}`}
           style={{
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '12px',
             display: 'flex',
@@ -535,8 +533,7 @@ const BlackjackPage = () => {
               <div
                 className={`${styles.card} ${styles['mb-4']}`}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: '12px',
                   padding: '16px',
@@ -566,8 +563,7 @@ const BlackjackPage = () => {
               <div
                 className={`${styles.card} ${styles['mb-4']}`}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: '12px',
                   padding: '16px',

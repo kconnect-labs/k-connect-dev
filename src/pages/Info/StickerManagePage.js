@@ -319,8 +319,7 @@ const StickerRenderer = ({ sticker, style, onClick }) => {
 
 // Стили для компонентов
 const cardStyles = {
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: '8px',
   color: 'inherit',
@@ -328,8 +327,7 @@ const cardStyles = {
 
 const buttonStyles = {
   borderRadius: '8px',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   color: 'inherit',
   '&:hover': {

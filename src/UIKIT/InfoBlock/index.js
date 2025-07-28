@@ -57,8 +57,7 @@ const InfoBlock = ({
     ? {
         width: '100%',
         margin: '0 auto 8px auto',
-        background: 'rgba(255,255,255,0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'rgba(15, 15, 15, 0.98)',
         color: 'inherit',
         textAlign: 'left',
         padding: 14,
@@ -72,8 +71,7 @@ const InfoBlock = ({
         background:
           styleVariant === 'dark'
             ? 'rgba(26,26,26, 0.03)'
-            : 'rgba(255,255,255,0.03)',
-        backdropFilter: 'blur(20px)',
+            : 'rgba(15, 15, 15, 0.98)',
         color: styleVariant === 'dark' ? 'white' : 'inherit',
         textAlign: 'left',
         padding: 14,

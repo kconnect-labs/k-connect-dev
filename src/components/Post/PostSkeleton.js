@@ -8,8 +8,7 @@ const PostCard = styled(Card)(({ theme }) => ({
   borderRadius: '10px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   [theme.breakpoints.down('sm')]: {
     boxShadow: 'none',
     marginBottom: 2,

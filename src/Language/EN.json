@@ -409,7 +409,8 @@
       "new": "New notification"
     },
     "tooltips": {
-      "wallet": "Wallet"
+      "wallet": "Wallet",
+      "theme": "Toggle theme"
     },
     "logo": {
       "text": "K-CONNECT"

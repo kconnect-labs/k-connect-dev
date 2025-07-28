@@ -73,7 +73,8 @@
       "new": "新しい通知"
     },
     "tooltips": {
-      "wallet": "ウォレット"
+      "wallet": "ウォレット",
+      "theme": "テーマ切り替え"
     },
     "logo": {
       "text": "き-接続"

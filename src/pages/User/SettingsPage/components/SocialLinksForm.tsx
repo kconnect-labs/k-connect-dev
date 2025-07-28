@@ -252,9 +252,8 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
   const containerStyle = {
     p: 3,
     borderRadius: 2,
-    background: 'rgba(255, 255, 255, 0.03)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
-    backdropFilter: 'blur(20px)',
     mb: 3,
   };
 
@@ -391,8 +390,7 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
         onClose={() => setDialogOpen(false)}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: 2,
           },

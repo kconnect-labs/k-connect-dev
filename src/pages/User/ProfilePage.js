@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
+import { useThemeManager } from '../../hooks/useThemeManager';
 import {
   Box,
   Typography,
@@ -65,6 +66,7 @@ const ProfilePage = () => {
   const { t } = useLanguage();
   const { username } = useParams();
   const { user: currentUser, isAuthenticated } = useContext(AuthContext);
+  const themeManager = useThemeManager();
   const [user, setUser] = useState(null);
   const [ownedUsernames, setOwnedUsernames] = useState([]);
   const [equippedItems, setEquippedItems] = useState([]);
@@ -562,6 +564,22 @@ const ProfilePage = () => {
     }
   }, [itemIdToOpen]);
 
+  // Применяем тему к элементам ProfilePage после рендера
+  useEffect(() => {
+    if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
+      console.log('🎨 ProfilePage применяет тему:', themeManager.currentTheme);
+      
+      // Применяем тему к элементам ProfilePage после небольшой задержки
+      setTimeout(() => {
+        if (themeManager.currentTheme === 'default') {
+          themeManager.switchToDefaultTheme();
+        } else {
+          themeManager.switchToBlurTheme();
+        }
+      }, 100);
+    }
+  }, [themeManager?.currentTheme, themeManager?.isLoading]);
+
   const equippedItemsPreview = useMemo(() => equippedItems.slice(0, 3), [equippedItems]);
 
   if (loading) {
@@ -589,7 +607,6 @@ const ProfilePage = () => {
         paddingLeft: '0',
         paddingRight: '0',
         minHeight: 'calc(100vh - 64px)',
-        // Переопределяем стили Material-UI для отключения паддингов на всех экранах
         '@media (min-width: 0px)': {
           paddingLeft: '0 !important',
           paddingRight: '0 !important',
@@ -634,7 +651,7 @@ const ProfilePage = () => {
               background:
                 user?.profile_id === 2 && user?.banner_url
                   ? `url(${user.banner_url}), rgba(255, 255, 255, 0.03)`
-                  : 'rgba(255, 255, 255, 0.03)',
+                  : 'rgba(15, 15, 15, 0.98)',
               backgroundSize:
                 user?.profile_id === 2 && user?.banner_url
                   ? 'cover'
@@ -643,9 +660,7 @@ const ProfilePage = () => {
                 user?.profile_id === 2 && user?.banner_url
                   ? 'center'
                   : undefined,
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+              WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',
               border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -900,8 +915,8 @@ const ProfilePage = () => {
                           ? 'rgba(0,0,0,0.3)'
                           : theme =>
                               theme.palette.mode === 'dark'
-                                ? 'rgba(255,255,255,0.03)'
-                                : 'rgba(0,0,0,0.03)',
+                                ? 'rgba(15, 15, 15, 0.98)'
+                                : 'rgba(15, 15, 15, 0.98)',
                       px: 1.2,
                       py: 0.4,
                       borderRadius: 1,
@@ -950,8 +965,8 @@ const ProfilePage = () => {
                             user?.profile_id === 2
                               ? 'rgba(0,0,0,0.3)'
                               : theme.palette.mode === 'dark'
-                                ? 'rgba(255,255,255,0.03)'
-                                : 'rgba(0,0,0,0.03)',
+                                ? 'rgba(15, 15, 15, 0.98)'
+                                : 'rgba(15, 15, 15, 0.98)',
                           px: 1.2,
                           py: 0.4,
                           borderRadius: 1,
@@ -1170,10 +1185,8 @@ const ProfilePage = () => {
               sx={{
                 p: 2,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                background: 'rgba(15, 15, 15, 0.98)',
+                WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 mb: 1,
                 textAlign: 'center',
@@ -1222,10 +1235,8 @@ const ProfilePage = () => {
               sx={{
                 p: 1,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                background: 'rgba(15, 15, 15, 0.98)',
+                Webkitborder: '1px solid rgba(255, 255, 255, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: '2px',
@@ -1287,10 +1298,8 @@ const ProfilePage = () => {
               sx={{
                 p: 1,
                 borderRadius: '12px',
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+                background: 'rgba(15, 15, 15, 0.98)',
+                WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 mb: 1,
                 display: 'flex',
@@ -1381,10 +1390,8 @@ const ProfilePage = () => {
           <Paper
             sx={{
               borderRadius: '12px',
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+              background: 'rgba(15, 15, 15, 0.98)',
+              WebkitboxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',
               border: '1px solid rgba(255, 255, 255, 0.1)',

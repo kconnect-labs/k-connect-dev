@@ -1133,7 +1133,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         fullWidth
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: 'rgba(15, 15, 15, 0.98)',
             color: '#fff',
             backdropFilter: 'blur(50px)',
             WebkitBackdropFilter: 'blur(50px)',
@@ -1273,7 +1273,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         onClose={handleCloseDeleteDialog}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: 'rgba(15, 15, 15, 0.98)',
             color: '#fff',
             backdropFilter: 'blur(50px)',
             WebkitBackdropFilter: 'blur(50px)',

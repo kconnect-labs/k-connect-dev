@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, memo, ReactNode } from 'react';
+import { useThemeManager } from '../../hooks/useThemeManager';
 import {
   Box,
   styled,
@@ -165,6 +166,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const isMobile = useMediaQuery('(max-width:700px)');
   const location = useLocation();
   const { currentTrack } = useMusic() as MusicContextType;
+  const themeManager = useThemeManager();
 
   const sidebarWidth = 280;
 
@@ -179,6 +181,22 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       setSidebarOpen(false);
     }
   }, [location, isMobile]);
+
+  // Применяем тему к элементам MainLayout после рендера
+  useEffect(() => {
+    if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
+      console.log('🎨 MainLayout применяет тему:', themeManager.currentTheme);
+      
+      // Применяем тему к элементам MainLayout после небольшой задержки
+      setTimeout(() => {
+        if (themeManager.currentTheme === 'default') {
+          themeManager.switchToDefaultTheme();
+        } else {
+          themeManager.switchToBlurTheme();
+        }
+      }, 50);
+    }
+  }, [themeManager?.currentTheme, themeManager?.isLoading]);
 
   useEffect(() => {
     const handleMessengerLayoutChange = (

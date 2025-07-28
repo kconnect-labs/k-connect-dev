@@ -66,8 +66,7 @@ const OnlineUsersCard = styled(Card)(({ theme }) => ({
   borderRadius: '12px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border:
     theme.palette.mode === 'dark'
       ? '1px solid rgba(255, 255, 255, 0.1)'
@@ -900,8 +899,7 @@ const MainPage = React.memo(() => {
               p: 0,
               borderRadius: '12px',
               mb: -0.625,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'rgba(15, 15, 15, 0.98)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
               border: '1px solid rgba(255, 255, 255, 0.05)',
               overflow: 'hidden',

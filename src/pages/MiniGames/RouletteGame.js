@@ -123,8 +123,7 @@ const GameContainer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   maxWidth: 900,
   margin: '0 auto',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: 8,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
@@ -219,8 +218,7 @@ const PrizeDisplay = styled(Box)(({ theme, win }) => ({
   marginTop: theme.spacing(3),
   padding: theme.spacing(2),
   borderRadius: 8,
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   border: win ? '2px solid #16a34a' : '2px solid #dc2626',
   color: '#ffffff',
   fontWeight: 700,
@@ -275,7 +273,6 @@ const renderPrize = (prize, idx, { isActive }) => (
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      backdropFilter: 'blur(20px)',
       borderRadius: 8,
       border: isActive
         ? '3px solid #D0BCFF'
@@ -611,8 +608,7 @@ const RouletteGame = () => {
                 }}
                 style={{
                   height: 140,
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   borderRadius: 8,
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
@@ -754,7 +750,6 @@ const RouletteGame = () => {
                   background: isSpinning
                     ? 'rgba(255, 255, 255, 0.1)'
                     : '#D0BCFF',
-                  backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   color: isSpinning ? '#ffffff' : '#000000',
                   boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',

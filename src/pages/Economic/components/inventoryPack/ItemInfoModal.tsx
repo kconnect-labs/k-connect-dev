@@ -78,8 +78,7 @@ const UpgradeEffects = ({ item, children }: UpgradeEffectsProps) => {
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     overflow: 'hidden',
@@ -957,8 +956,7 @@ const ItemInfoModal = ({
         fullScreen={window.innerWidth <= 768}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: window.innerWidth <= 768 ? 0 : 1,
             '@media (max-width: 768px)': {
@@ -1224,8 +1222,7 @@ const ItemInfoModal = ({
         fullWidth
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
           },
@@ -1279,8 +1276,7 @@ const ItemInfoModal = ({
         onClose={() => setMarketplaceModalOpen(false)}
         PaperProps={{
           sx: {
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'rgba(15, 15, 15, 0.98)',
             borderRadius: 2,
             border: '1px solid rgba(255, 255, 255, 0.1)',
           },

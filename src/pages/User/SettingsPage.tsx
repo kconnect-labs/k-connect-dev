@@ -40,10 +40,8 @@ import { AuthContext } from '../../context/AuthContext';
 
 const SettingsPage = () => {
   const { user, isAuthenticated } = useContext<any>(AuthContext);
-  console.log('SettingsPage - AuthContext data:', { user, isAuthenticated });
 
   const localUser = useLocalUser();
-  console.log('SettingsPage - LocalUser data:', localUser);
 
   // Используем данные из AuthContext или localStorage как fallback
   const displayUser = user || localUser;
@@ -71,11 +69,7 @@ const SettingsPage = () => {
     fetchProfile,
   } = useProfile();
 
-  console.log('SettingsPage - useProfile data:', {
-    profileData,
-    loading,
-    error,
-  });
+
 
   const {
     profileInfo,
@@ -99,16 +93,6 @@ const SettingsPage = () => {
   const [settingsLoading, setSettingsLoading] = useState(true);
 
   useEffect(() => {
-    console.log(
-      'SettingsPage useEffect - isAuthenticated:',
-      isAuthenticated,
-      'user:',
-      user,
-      'localUser:',
-      localUser,
-      'profileData:',
-      profileData
-    );
     const currentUser = user || localUser;
     if (currentUser && currentUser.username) {
       fetchProfile(currentUser.username);
@@ -302,11 +286,18 @@ const SettingsPage = () => {
       color: 'rgba(239, 68, 68, 0.66)', // #ef4444 с прозрачностью
     },
     {
+      id: 'themes',
+      title: 'Темы',
+      subtitle: 'Настройка внешнего вида',
+      icon: <Palette />,
+      color: 'rgba(168, 85, 247, 0.66)', // #a855f7 с прозрачностью
+    },
+    {
       id: 'experimental',
       title: 'Экспериментальные функции',
       subtitle: 'Функции в разработке',
       icon: <Science />,
-      color: 'rgba(168, 85, 247, 0.66)', // #a855f7 с прозрачностью
+      color: 'rgba(139, 69, 19, 0.66)', // #8b4513 с прозрачностью
     },
     {
       id: 'connections',
@@ -378,11 +369,9 @@ const SettingsPage = () => {
             padding: '8px 12px',
             width: '100%',
             maxWidth: 1200,
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'rgba(15, 15, 15, 0.98)',
+            border: '1px solid rgba(31, 31, 31, 0.9)',
             borderRadius: 1,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
           }}
         >
           Настройки
@@ -410,16 +399,14 @@ const SettingsPage = () => {
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                     padding: '12px 16px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    background: 'rgba(15, 15, 15, 0.98)',
+                    border: '1px solid rgba(31, 31, 31, 0.9)',
                     borderRadius: 1,
                     color: 'white',
                     textTransform: 'none',
                     transition: 'all 0.2s ease',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
                     '&:hover': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(31, 31, 31, 0.9)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       transform: 'translateY(-1px)',
                     },
@@ -474,7 +461,7 @@ const SettingsPage = () => {
                       width: 24,
                       height: 24,
                       borderRadius: 1,
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(31, 31, 31, 0.9)',
                       marginLeft: 1,
                     }}
                   >

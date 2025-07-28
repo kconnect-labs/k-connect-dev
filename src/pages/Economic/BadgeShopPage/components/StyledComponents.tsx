@@ -27,8 +27,7 @@ export const StyledCard = styled(Card)(({ theme }) => ({
   overflow: 'hidden',
   boxShadow: '0 2px 12px rgba(0, 0, 0, 0.08)',
   position: 'relative',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   '&:hover': {
     transform: 'translateY(-6px)',
     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
@@ -63,7 +62,7 @@ export const BadgeCardContent = styled(CardContent)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
-  background: 'rgba(255, 255, 255, 0.03)',
+  background: 'rgba(15, 15, 15, 0.98)',
   backdropFilter: 'blur(40px)',
   borderTop: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   '&:last-child': {
@@ -277,8 +276,7 @@ export const StyledBalanceChip = styled(Box)(({ theme }) => ({
 
 export const StyledInfoBlock = styled(Box)(({ theme }) => ({
   borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   padding: theme.spacing(2),

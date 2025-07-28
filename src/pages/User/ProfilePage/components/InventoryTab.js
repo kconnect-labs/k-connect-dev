@@ -349,7 +349,7 @@ const InventoryTab = forwardRef(
               sx={{
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
-                  background: 'rgba(255, 255, 255, 0.03)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -377,7 +377,7 @@ const InventoryTab = forwardRef(
               sx={{
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
-                  background: 'rgba(255, 255, 255, 0.03)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -406,7 +406,7 @@ const InventoryTab = forwardRef(
               sx={{
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
-                  background: 'rgba(255, 255, 255, 0.03)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -528,8 +528,7 @@ const InventoryTab = forwardRef(
               <Box
                 onClick={e => e.stopPropagation()}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 1,
                   p: 3,
@@ -766,8 +765,7 @@ const InventoryTab = forwardRef(
               <Box
                 onClick={e => e.stopPropagation()}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 2,
                   p: 3,

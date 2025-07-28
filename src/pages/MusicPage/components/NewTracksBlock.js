@@ -31,8 +31,7 @@ const NewTracksContainer = styled(Box)(({ theme }) => ({
 
 const NewTracksCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  background: 'rgba(0, 0, 0, 0.03)', // Фон 003
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)', // Фон 003
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
@@ -44,7 +43,6 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2),
   borderRadius: 12,
   background: 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
@@ -53,7 +51,6 @@ const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
   background: isActive
     ? 'rgba(255, 255, 255, 0.05)'
     : 'rgba(255, 255, 255, 0.02)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25),
   padding: theme.spacing(0.75, 2),

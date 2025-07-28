@@ -21,8 +21,7 @@ import apiClient from '../../../services/axiosConfig';
 
 const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: 16,
     overflow: 'hidden',

@@ -39,8 +39,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
       maxWidth={false}
       PaperProps={{
         sx: {
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: isMobile ? '12px' : '16px',
           maxWidth: '300px',

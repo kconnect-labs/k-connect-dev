@@ -65,8 +65,7 @@ const formatFileSize = bytes => {
 
 // Новый стиль для диалога и внутренних карточек
 const StyledDialogPaper = styled('div')(({ theme }) => ({
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
   border: '1px solid rgba(255,255,255,0.10)',
@@ -722,8 +721,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
       PaperProps={{
         sx: {
           minHeight: '70vh',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           borderRadius: '12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
           border: '1px solid rgba(255,255,255,0.10)',
@@ -742,7 +740,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(255,255,255,0.03)',
+          background: 'rgba(15, 15, 15, 0.98)',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
           borderRadius: '16px 16px 0 0',
           px: 3,
@@ -882,7 +880,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
         sx={{
           p: 2,
           pt: 0,
-          background: 'rgba(255,255,255,0.03)',
+          background: 'rgba(15, 15, 15, 0.98)',
           borderTop: '1px solid rgba(255,255,255,0.07)',
           borderRadius: '0 0 16px 16px',
         }}

@@ -71,7 +71,7 @@ const StyledTrack = styled(ListItem)(({ theme, selected }) => ({
   marginBottom: 8,
   backgroundColor: selected
     ? alpha(theme.palette.primary.main, 0.1)
-    : 'rgba(255, 255, 255, 0.03)',
+    : 'rgba(15, 15, 15, 0.98)',
   transition: 'all 0.2s ease',
   '&:hover': {
     backgroundColor: selected

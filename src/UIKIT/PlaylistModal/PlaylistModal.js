@@ -75,8 +75,7 @@ const DialogHeader = styled(DialogTitle)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
   borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backgroundColor: 'rgba(15, 15, 15, 0.98)',
   color: '#fff',
 }));
 
@@ -125,7 +124,7 @@ const TrackSearchInput = styled(TextField)(({ theme }) => ({
       theme.palette.mode === 'light'
         ? alpha(theme.palette.grey[300], 0.2)
         : theme.palette.mode === 'contrast'
-          ? 'rgba(255, 255, 255, 0.03)'
+          ? 'rgba(15, 15, 15, 0.98)'
           : 'rgba(255, 255, 255, 0.05)',
   },
 }));
@@ -575,7 +574,7 @@ const PlaylistModal = ({
                                     : 'rgba(208, 188, 255, 0.3)'
                                   : theme.palette.mode === 'dark'
                                     ? 'rgba(255, 255, 255, 0.05)'
-                                    : 'rgba(0, 0, 0, 0.03)',
+                                    : 'rgba(15, 15, 15, 0.98)',
                               },
                             }}
                           >

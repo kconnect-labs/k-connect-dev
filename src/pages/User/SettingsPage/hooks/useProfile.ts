@@ -44,25 +44,16 @@ export const useProfile = (): UseProfileReturn => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useContext<any>(AuthContext);
 
-  console.log('useProfile - AuthContext user:', user);
 
   const fetchProfile = useCallback(
     async (username?: string) => {
-      console.log(
-        'fetchProfile called with username:',
-        username,
-        'user?.username:',
-        user?.username
-      );
+
       setLoading(true);
       setError(null);
       try {
         const uname = username || user?.username;
-        console.log('fetchProfile - uname:', uname);
         if (!uname) throw new Error('No username provided');
         const response = await axios.get(`/api/profile/${uname}`);
-        console.log('API response for profile:', response.data);
-        console.log('Socials in API response:', response.data.socials);
 
         if (response.data) {
           setProfileData({

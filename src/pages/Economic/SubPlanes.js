@@ -32,8 +32,7 @@ const SubscriptionCard = styled(Paper)(({ theme, type }) => ({
   overflow: 'hidden',
   borderRadius: '12px',
   transition: 'all 0.3s ease',
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backgroundColor: 'rgba(15, 15, 15, 0.98)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   '&:hover': {
     transform: 'translateY(-4px)',
@@ -208,8 +207,7 @@ const SubPlanes = () => {
             p: 3,
             mb: 4,
             borderRadius: '12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            backgroundColor: 'rgba(15, 15, 15, 0.98)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             position: 'relative',
             '&::before': {
@@ -547,8 +545,7 @@ const SubPlanes = () => {
           mt: 4,
           p: 3,
           borderRadius: '12px',
-          backgroundColor: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          backgroundColor: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           position: 'relative',
           '&::before': {

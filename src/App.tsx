@@ -28,8 +28,7 @@ import {
   GlobalStyles,
 } from '@mui/material';
 import { HelmetProvider } from 'react-helmet-async';
-import { useBlurOptimization } from './hooks/useBlurOptimization';
-import { useBlurOptimizationV2 } from './hooks/useBlurOptimizationV2';
+import { useThemeManager } from './hooks/useThemeManager';
 
 import SEO from './components/SEO';
 import { PostDetailProvider } from './context/PostDetailContext';
@@ -89,7 +88,6 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   if (location.pathname.startsWith('/music/track/')) {
     const trackId = location.pathname.split('/music/track/')[1];
     if (trackId) {
-      console.log('Saving deeplink trackId before login redirect:', trackId);
       localStorage.setItem('deeplinkTrackId', trackId);
     }
   }
@@ -125,15 +123,12 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
 
-  // Глобальные хуки оптимизации блюра
-  const blurOptimization = useBlurOptimization();
-  const blurOptimizationV2 = useBlurOptimizationV2();
+  // Хук управления темами
+  const themeManager = useThemeManager();
 
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
-    const savedThemeMode =
-      localStorage.getItem('theme') ||
-      localStorage.getItem('themeMode') ||
-      'default';
+    // Используем только themeMode для новой системы тем
+    const savedThemeMode = localStorage.getItem('themeMode') || 'default';
     const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
 
     // Настройки для темной темы
@@ -375,17 +370,18 @@ function App() {
   const isInitialized = useRef(false);
 
   useEffect(() => {
-    localStorage.setItem('themeMode', themeSettings.mode);
+    // НЕ перезаписываем themeMode из старой системы настроек
+    // Теперь themeMode управляется только через useThemeManager
   }, [themeSettings.mode]);
 
   useEffect(() => {
     if (isInitialized.current) return; // Предотвращаем повторное выполнение
 
-    const savedThemeMode = localStorage.getItem('themeMode');
-
-    if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
-      updateThemeSettings({ mode: savedThemeMode });
-    }
+    // НЕ синхронизируем с themeSettings.mode - теперь тема управляется через useThemeManager
+    // const savedThemeMode = localStorage.getItem('themeMode');
+    // if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
+    //   updateThemeSettings({ mode: savedThemeMode });
+    // }
 
     // Инициализируем кеш медиа контента
     initMediaCache().catch(error => {
@@ -428,34 +424,30 @@ function App() {
   // --- ДОБАВЛЯЕМ useEffect для загрузки темы пользователя ---
   useEffect(() => {
     const loadUserSettings = async () => {
-      console.log('🎨 ATTENTION: Начинаем загрузку настроек пользователя');
 
       try {
         const response = await fetch('/api/profile/settings');
         const data = await response.json();
-        console.log('🎨 ATTENTION: Ответ API настроек:', data);
 
         if (data && data.success && data.settings) {
-          // Применяем настройки темы
+          // Применяем настройки темы (НЕ перезаписываем mode)
           setThemeSettings(prev => ({
             ...prev,
             primaryColor: data.settings.primary_color || '#D0BCFF',
-            mode: 'dark',
+            // НЕ изменяем mode - он управляется через useThemeManager
           }));
           localStorage.setItem(
             'primaryColor',
             data.settings.primary_color || '#D0BCFF'
           );
-          localStorage.setItem('theme', 'dark');
-          console.log('🎨 ATTENTION: Применены настройки темы пользователя');
         }
       } catch (e) {
         console.error('🎨 ATTENTION: Ошибка загрузки настроек:', e);
-        // fallback: дефолт
+        // fallback: дефолт (НЕ перезаписываем mode)
         setThemeSettings(prev => ({
           ...prev,
           primaryColor: '#D0BCFF',
-          mode: 'dark',
+          // НЕ изменяем mode - он управляется через useThemeManager
         }));
       }
 
@@ -584,61 +576,31 @@ function App() {
     }
   }, [globalProfileBackgroundEnabled]);
 
-  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра ---
+  // --- ДОБАВЛЯЕМ useEffect для инициализации темы при загрузке приложения ---
   useEffect(() => {
-    // Применяем оптимизацию блюра при загрузке приложения
-    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-      // Хук автоматически применит оптимизацию при изменении isEnabled
+    // Инициализируем тему при загрузке приложения
+    if (themeManager && !themeManager.isLoading) {
     }
-  }, [blurOptimization.isEnabled, blurOptimization.isLoading]);
+  }, [themeManager?.currentTheme, themeManager?.isLoading]);
 
-  // --- ДОБАВЛЯЕМ useEffect для автоматического применения оптимизации блюра V2 ---
+  // --- ДОБАВЛЯЕМ useEffect для применения темы при изменении маршрута ---
   useEffect(() => {
-    // Применяем оптимизацию блюра V2 при загрузке приложения
-    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
-      // Хук автоматически применит оптимизацию при изменении isEnabled
-    }
-  }, [blurOptimizationV2.isEnabled, blurOptimizationV2.isLoading]);
-
-  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации при изменении маршрута ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра при переходе между страницами
-    if (blurOptimization.isEnabled && !blurOptimization.isLoading) {
-      // Небольшая задержка для применения эффектов после рендера новой страницы
-      const timer = setTimeout(() => {
-        if (blurOptimization.isEnabled) {
-          // Принудительно применяем оптимизацию
-          blurOptimization.enableBlurOptimization();
+    // Применяем тему при переходе между страницами
+    if (themeManager && !themeManager.isLoading && themeManager.currentTheme) {
+      
+      // Дополнительно применяем тему к новым элементам после смены маршрута
+      setTimeout(() => {
+        if (themeManager.currentTheme === 'default') {
+          themeManager.switchToDefaultTheme();
+        } else {
+          themeManager.switchToBlurTheme();
         }
       }, 100);
-
-      return () => clearTimeout(timer);
     }
-  }, [
-    location.pathname,
-    blurOptimization.isEnabled,
-    blurOptimization.isLoading,
-  ]);
+  }, [location.pathname, themeManager?.currentTheme, themeManager?.isLoading]);
 
-  // --- ДОБАВЛЯЕМ useEffect для применения оптимизации V2 при изменении маршрута ---
-  useEffect(() => {
-    // Применяем оптимизацию блюра V2 при переходе между страницами
-    if (blurOptimizationV2.isEnabled && !blurOptimizationV2.isLoading) {
-      // Небольшая задержка для применения эффектов после рендера новой страницы
-      const timer = setTimeout(() => {
-        if (blurOptimizationV2.isEnabled) {
-          // Принудительно применяем оптимизацию V2
-          blurOptimizationV2.enableBlurOptimizationV2();
-        }
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [
-    location.pathname,
-    blurOptimizationV2.isEnabled,
-    blurOptimizationV2.isLoading,
-  ]);
+  // Убираем StorageEvent listener из App.tsx - он создает конфликт с useThemeManager
+  // Синхронизация теперь происходит только в useThemeManager
 
   // --- ДОБАВЛЯЕМ useEffect для восстановления обоев при переходе на другие страницы ---
   useEffect(() => {

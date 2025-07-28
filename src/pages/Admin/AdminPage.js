@@ -1462,7 +1462,7 @@ const AdminPage = () => {
                   p: 2,
                   maxHeight: 200,
                   overflow: 'auto',
-                  bgcolor: 'rgba(0, 0, 0, 0.03)',
+                  bgcolor: 'rgba(15, 15, 15, 0.98)',
                 }}
               >
                 {generatedKeys.map((key, index) => (

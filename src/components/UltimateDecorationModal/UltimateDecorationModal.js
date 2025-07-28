@@ -25,8 +25,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   },
   '& .MuiDialog-paper': {
     borderRadius: 12,
-    background: 'rgba(255, 255, 255, 0.03)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     overflow: 'hidden',
     maxWidth: '600px',
@@ -49,8 +48,7 @@ const DialogHeader = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   padding: theme.spacing(3),
   borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderRadius: '12px 12px 0 0',
   [theme.breakpoints.down('sm')]: {
     borderRadius: 0,
@@ -114,8 +112,7 @@ const DecorationCard = styled(motion.div)(({ theme, selected }) => ({
     ? '2px solid rgba(255, 255, 255, 0.3)'
     : '1px solid rgba(255, 255, 255, 0.12)',
   transition: 'all 0.3s ease',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   '&:hover': {
     transform: 'translateY(-2px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -169,8 +166,7 @@ const DecorationItem = styled('img')({
 
 const DecorationInfo = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1),
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'rgba(15, 15, 15, 0.98)',
   borderTop: '1px solid rgba(255, 255, 255, 0.12)',
 }));
 
@@ -181,7 +177,6 @@ const ActionButton = styled(Button)(({ theme }) => ({
   paddingTop: theme.spacing(1),
   paddingBottom: theme.spacing(1),
   background: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.2)',
   color: '#fff',
   fontWeight: 500,
@@ -201,7 +196,6 @@ const CancelButton = styled(Button)(({ theme }) => ({
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   background: 'rgba(255, 255, 255, 0.05)',
-  backdropFilter: 'blur(20px)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   color: 'rgba(255, 255, 255, 0.7)',
   '&:hover': {
@@ -437,8 +431,7 @@ const UltimateDecorationModal = ({
                 mt: 3,
                 p: 2,
                 borderRadius: 8,
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'rgba(15, 15, 15, 0.98)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 maxWidth: 300,
                 width: '100%',
@@ -556,8 +549,7 @@ const UltimateDecorationModal = ({
                   mt: 3,
                   p: 2,
                   borderRadius: '8px',
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'rgba(15, 15, 15, 0.98)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   [theme.breakpoints.down('sm')]: {
                     mt: 2,
@@ -596,8 +588,7 @@ const UltimateDecorationModal = ({
         sx={{
           p: 3,
           justifyContent: 'space-between',
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           borderTop: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '0 0 12px 12px',
           [theme.breakpoints.down('sm')]: {

@@ -64,8 +64,7 @@ const DialogHeader = styled(DialogTitle)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
   borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  backgroundColor: 'rgba(15, 15, 15, 0.98)',
   color: '#fff',
 }));
 

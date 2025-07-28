@@ -8,9 +8,7 @@ import {
   CircularProgress,
   Button,
 } from '@mui/material';
-import { BlurOff as BlurOffIcon, Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
-import { useBlurOptimization } from '../../../../hooks/useBlurOptimization';
-import { useBlurOptimizationV2 } from '../../../../hooks/useBlurOptimizationV2';
+import { Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
 import { 
   enableMediaCache, 
   disableMediaCache, 
@@ -27,25 +25,12 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
 }) => {
   const [showReloadButton, setShowReloadButton] = useState(false);
   const [cacheStatus, setCacheStatus] = useState(() => getMediaCacheStatus());
-  
-  const {
-    isEnabled: blurOptimizationEnabled,
-    isLoading: blurOptimizationLoading,
-    toggleBlurOptimization,
-  } = useBlurOptimization();
-
-  const {
-    isEnabled: blurOptimizationV2Enabled,
-    isLoading: blurOptimizationV2Loading,
-    toggleBlurOptimization: toggleV2,
-  } = useBlurOptimizationV2();
 
   const containerStyle = {
     p: 3,
     borderRadius: 2,
-    background: 'rgba(255, 255, 255, 0.03)',
+    background: 'rgba(15, 15, 15, 0.98)',
     border: '1px solid rgba(255, 255, 255, 0.12)',
-    backdropFilter: 'blur(20px)',
     mb: 3,
   };
 
@@ -63,25 +48,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
     },
   };
 
-  const handleBlurToggle = async () => {
-    try {
-      await toggleBlurOptimization();
-      setShowReloadButton(true);
-      onSuccess?.();
-    } catch (error) {
-      console.error('Error toggling blur optimization:', error);
-    }
-  };
 
-  const handleBlurV2Toggle = async () => {
-    try {
-      await toggleV2();
-      setShowReloadButton(true);
-      onSuccess?.();
-    } catch (error) {
-      console.error('Error toggling blur optimization V2:', error);
-    }
-  };
 
   const handleReload = () => {
     window.location.reload();
@@ -135,51 +102,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
         Используйте на свой страх и риск.
       </Alert>
 
-      {/* Оптимизация блюра V1 */}
-      <Box sx={featureItemStyle}>
-        <Switch
-          checked={blurOptimizationEnabled}
-          onChange={handleBlurToggle}
-          disabled={blurOptimizationLoading}
-          color='primary'
-        />
-        <Box sx={{ flex: 1 }}>
-          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
-            Отключить блюр
-          </Typography>
-          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-            Заменяет blur эффекты на сплошной тёмный фон. Улучшает производительность.
-          </Typography>
-        </Box>
-        {blurOptimizationLoading ? (
-          <CircularProgress size={20} />
-        ) : (
-          <BlurOffIcon sx={{ color: 'text.secondary' }} />
-        )}
-      </Box>
 
-      {/* Оптимизация блюра V2 */}
-      <Box sx={featureItemStyle}>
-        <Switch
-          checked={blurOptimizationV2Enabled}
-          onChange={handleBlurV2Toggle}
-          disabled={blurOptimizationV2Loading}
-          color='primary'
-        />
-        <Box sx={{ flex: 1 }}>
-          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
-            Отключить блюр (Иная версия)
-          </Typography>
-          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-            Альтернативная версия оптимизации блюра с улучшенной производительностью.
-          </Typography>
-        </Box>
-        {blurOptimizationV2Loading ? (
-          <CircularProgress size={20} />
-        ) : (
-          <BlurOffIcon sx={{ color: 'text.secondary' }} />
-        )}
-      </Box>
 
       {/* Управление кешем медиа */}
       <Box sx={featureItemStyle}>

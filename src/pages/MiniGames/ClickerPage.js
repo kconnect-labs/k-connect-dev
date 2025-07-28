@@ -135,7 +135,6 @@ const BalanceCard = styled(Card)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? alpha(theme.palette.background.paper, 0.95)
       : alpha(theme.palette.grey[50], 0.95),
-  backdropFilter: 'blur(20px)',
   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
   boxShadow: `0 8px 24px ${alpha(theme.palette.common.black, 0.1)}, 
               0 2px 8px ${alpha(theme.palette.common.black, 0.05)}`,

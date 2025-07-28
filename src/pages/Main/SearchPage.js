@@ -98,7 +98,7 @@ const UserCard = styled(motion.div)(({ theme, decoration }) => {
       ? isImage
         ? `url(${decoration.background})`
         : decoration.background
-      : 'rgba(255, 255, 255, 0.03)',
+      : 'rgba(15, 15, 15, 0.98)',
     backgroundSize: isImage ? 'cover' : 'auto',
     backgroundPosition: isImage ? 'center' : 'auto',
     color: isLightBackground

@@ -65,8 +65,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
       <div
         className={className}
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'rgba(15, 15, 15, 0.98)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           borderRadius: '12px',
           padding: '16px',
@@ -100,8 +99,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
     <div
       className={className}
       style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'rgba(15, 15, 15, 0.98)',
         border: '1px solid rgba(255, 255, 255, 0.12)',
         borderRadius: '12px',
         padding: '16px',

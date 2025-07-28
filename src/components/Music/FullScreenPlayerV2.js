@@ -115,9 +115,7 @@ const PlayerContainer = memo(
     background: dominantColor
       ? `linear-gradient(135deg, ${dominantColor}15 0%, ${dominantColor}08 50%, rgba(0,0,0,0.95) 100%)`
       : 'linear-gradient(135deg, rgba(140,82,255,0.1) 0%, rgba(0,0,0,0.95) 100%)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
-    overflow: 'hidden',
+    Webkitoverflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     '&::before': {
@@ -1224,7 +1222,6 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
               right: 0,
               height: '40%',
               backgroundColor: 'rgba(0,0,0,0.9)',
-              backdropFilter: 'blur(20px)',
               borderTop: '1px solid rgba(255,255,255,0.1)',
               padding: theme.spacing(3),
               overflow: 'auto',

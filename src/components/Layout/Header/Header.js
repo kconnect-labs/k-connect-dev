@@ -81,9 +81,7 @@ const StyledAppBar = styled(AppBar)(({ theme, isHeaderHidden, isMobile }) => ({
   position: 'fixed',
   left: '50%',
   transform: 'translateX(-50%)',
-  backdropFilter: 'blur(20px)',
-  WebkitBackdropFilter: 'blur(20px)',
-  width: '100%',
+  Webkitwidth: '100%',
   zIndex: theme.zIndex.appBar,
   transition: 'transform 0.3s ease-in-out',
   [theme.breakpoints.down('md')]: {
@@ -144,7 +142,7 @@ const Header = ({ toggleSidebar }) => {
       themeSettings.primaryColor || theme.palette.primary.main;
 
     const headerStyle = {
-      background: 'rgba(255, 255, 255, 0.03)',
+      background: 'rgba(15, 15, 15, 0.98)',
       color: headerTextColor,
       boxShadow: `0 4px 15px ${alpha('#000000', 0.07)}`,
       borderColor: alpha(headerTextColor, 0.08),
