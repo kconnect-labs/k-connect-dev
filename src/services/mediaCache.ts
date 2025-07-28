@@ -179,39 +179,39 @@ class MediaCacheService {
       } catch (error) {
         return originalFetch(input, init);
       }
-
+      
       // Skip if already pending
       if (this.pendingCacheOperations.has(normalizedUrl)) {
         return originalFetch(input, init);
       }
 
-      try {
+        try {
         // Check cache first
-        const cached = await this.get(normalizedUrl);
-        if (cached) {
+          const cached = await this.get(normalizedUrl);
+          if (cached) {
           this.cacheOperationCount++;
           this.lastCacheOperation = Date.now();
-          return new Response(cached.blob, {
-            status: 200,
-            headers: {
-              'Content-Type': cached.type,
-              'X-Cache': 'HIT',
-              'Cache-Control': 'public, max-age=31536000',
-            },
-          });
-        }
+            return new Response(cached.blob, {
+              status: 200,
+              headers: {
+                'Content-Type': cached.type,
+                'X-Cache': 'HIT',
+                'Cache-Control': 'public, max-age=31536000',
+              },
+            });
+          }
 
         // Mark as pending
         this.pendingCacheOperations.add(normalizedUrl);
-        
-        const response = await originalFetch(input, init);
+
+          const response = await originalFetch(input, init);
         
         if (response.ok && this.canPerformCacheOperation()) {
           // Queue cache operation instead of blocking
           this.queueCacheOperation(async () => {
             try {
-              const blob = await response.clone().blob();
-              await this.set(normalizedUrl, blob);
+            const blob = await response.clone().blob();
+            await this.set(normalizedUrl, blob);
             } catch (error) {
               console.warn('Failed to cache media:', error);
             } finally {
@@ -220,12 +220,12 @@ class MediaCacheService {
           });
         } else {
           this.pendingCacheOperations.delete(normalizedUrl);
-        }
-        
-        return response;
-      } catch (error) {
+          }
+          
+          return response;
+        } catch (error) {
         this.pendingCacheOperations.delete(normalizedUrl);
-        return originalFetch(input, init);
+          return originalFetch(input, init);
       }
     };
 
@@ -280,9 +280,9 @@ class MediaCacheService {
     ];
     
     const lowerUrl = url.toLowerCase();
-    
+
     const hasMediaExtension = mediaExtensions.some(ext => lowerUrl.includes(ext));
-    
+
     const isInMediaFolder = lowerUrl.includes('/uploads/') ||
                            lowerUrl.includes('/images/') ||
                            lowerUrl.includes('/avatars/') ||
@@ -347,7 +347,7 @@ class MediaCacheService {
     try {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        
+
         const timeout = setTimeout(() => {
           resolve(blob);
         }, this.imageCompressionSettings.compressionTimeout);

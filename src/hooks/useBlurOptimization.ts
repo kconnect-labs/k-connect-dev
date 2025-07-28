@@ -570,9 +570,9 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
                   rule.style.backgroundColor.includes('rgb(37 37 37)')
                 ) {
                   rule.style.backgroundColor = rule.style.backgroundColor.replace(
-                    /rgb\(37 37 37\)/g,
-                    'rgba(255, 255, 255, 0.03)'
-                  );
+                      /rgb\(37 37 37\)/g,
+                      'rgba(255, 255, 255, 0.03)'
+                    );
                 }
               }
             }
@@ -685,7 +685,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
             target.removeAttribute(OPTIMIZED_ATTR);
             target.removeAttribute(ORIGINAL_STYLES_ATTR);
             if (shouldOptimizeElement(target)) {
-              shouldReapply = true;
+            shouldReapply = true;
             }
           }
         }
@@ -710,7 +710,7 @@ export const useBlurOptimization = (): BlurOptimizationReturn => {
     const checkOptimization = () => {
       if (isEnabled) {
         requestAnimationFrame(() => {
-          applyBlurOptimization();
+        applyBlurOptimization();
         });
       }
       intervalId = setTimeout(checkOptimization, 5000); // Check every 5 seconds
