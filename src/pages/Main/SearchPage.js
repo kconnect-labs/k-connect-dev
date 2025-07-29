@@ -490,7 +490,7 @@ const SearchPage = () => {
               ),
               sx: {
                 borderRadius: 6,
-                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 '& fieldset': {
                   borderColor: 'rgba(255, 255, 255, 0.1)',
                 },
@@ -577,7 +577,7 @@ const SearchPage = () => {
                               navigate(`/profile/${user.username}`)
                             }
                           >
-                            {user.decoration?.item_path &&
+                            {user.decoration?.item_path && user.decoration.item_path.trim() !== '' &&
                               (() => {
                                 const [path, ...styles] =
                                   user.decoration.item_path.split(';');
@@ -1023,7 +1023,7 @@ const SearchPage = () => {
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                       onClick={() => navigate(`/profile/${user.username}`)}
                     >
-                      {user.decoration?.item_path &&
+                      {user.decoration?.item_path && user.decoration.item_path.trim() !== '' &&
                         (() => {
                           const [path, ...styles] =
                             user.decoration.item_path.split(';');

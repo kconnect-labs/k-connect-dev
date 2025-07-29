@@ -327,6 +327,7 @@ const ModeratorPage = () => {
   const [modKeysForm, setModKeysForm] = useState({
     type: 'points',
     points: 1000,
+    mcoin_amount: 100,
     subscription_type: 'basic',
     subscription_duration_days: 30,
     max_uses: 1,
@@ -417,6 +418,7 @@ const ModeratorPage = () => {
     setModKeysForm({
       type: 'points',
       points: 1000,
+      mcoin_amount: 100,
       subscription_type: 'basic',
       subscription_duration_days: 30,
       max_uses: 1,
@@ -446,6 +448,10 @@ const ModeratorPage = () => {
         points_value:
           modKeysForm.type === 'points'
             ? Number(modKeysForm.points)
+            : undefined,
+        mcoin_amount:
+          modKeysForm.type === 'mcoin'
+            ? Number(modKeysForm.mcoin_amount)
             : undefined,
         subscription_type:
           modKeysForm.type === 'subscription'
@@ -620,7 +626,7 @@ const ModeratorPage = () => {
                         variant='caption'
                         color='rgba(255, 255, 255, 0.6)'
                       >
-                        Тип: {key.key_type === 'points' ? 'Баллы' : 'Подписка'}
+                        Тип: {key.key_type === 'points' ? 'Баллы' : key.key_type === 'mcoin' ? 'MCoin' : 'Подписка'}
                       </Typography>
 
                       {key.key_type === 'points' && (
@@ -629,6 +635,15 @@ const ModeratorPage = () => {
                           color='rgba(255, 255, 255, 0.6)'
                         >
                           Баллы: {key.points_value}
+                        </Typography>
+                      )}
+
+                      {key.key_type === 'mcoin' && (
+                        <Typography
+                          variant='caption'
+                          color='rgba(255, 255, 255, 0.6)'
+                        >
+                          MCoin: {key.mcoin_amount}
                         </Typography>
                       )}
 
@@ -9046,6 +9061,7 @@ const ModeratorPage = () => {
                     sx={{ color: 'rgba(255,255,255,0.87)' }}
                   >
                     <MenuItem value='points'>Баллы</MenuItem>
+                    <MenuItem value='mcoin'>MCoin</MenuItem>
                     <MenuItem value='subscription'>Подписка</MenuItem>
                   </Select>
                 </FormControl>
@@ -9059,6 +9075,26 @@ const ModeratorPage = () => {
                     type='number'
                     fullWidth
                     value={modKeysForm.points}
+                    onChange={handleModKeysFormChange}
+                    InputProps={{ inputProps: { min: 1 } }}
+                    sx={{
+                      '& .MuiInputLabel-root': {
+                        color: 'rgba(255,255,255,0.7)',
+                      },
+                      '& .MuiInputBase-input': {
+                        color: 'rgba(255,255,255,0.87)',
+                      },
+                    }}
+                  />
+                </Grid>
+              ) : modKeysForm.type === 'mcoin' ? (
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name='mcoin_amount'
+                    label='Количество MCoin'
+                    type='number'
+                    fullWidth
+                    value={modKeysForm.mcoin_amount}
                     onChange={handleModKeysFormChange}
                     InputProps={{ inputProps: { min: 1 } }}
                     sx={{

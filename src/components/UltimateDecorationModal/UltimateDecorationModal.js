@@ -520,7 +520,7 @@ const UltimateDecorationModal = ({
                             : undefined
                         }
                       >
-                        {decoration.item_path &&
+                        {decoration.item_path && decoration.item_path.trim() !== '' &&
                           (() => {
                             const { path, styles } = parseItemSettings(
                               decoration.item_path

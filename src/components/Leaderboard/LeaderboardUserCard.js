@@ -72,7 +72,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   // Определяем стили для декорации
   let decorationStyles = {};
   let hasBottom0 = false;
-  if (user.decoration?.item_path) {
+  if (user.decoration?.item_path && user.decoration.item_path.trim() !== '') {
     const { styles } = parseItemSettings(user.decoration.item_path);
     decorationStyles = styles;
     hasBottom0 = styles && styles.bottom === '0';
@@ -156,7 +156,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       onClick={onCardClick}
     >
       {/* Декорация */}
-      {user.decoration?.item_path && (
+      {user.decoration?.item_path && user.decoration.item_path.trim() !== '' && (
         <img
           src={`${API_URL}/${parseItemSettings(user.decoration.item_path).path}`}
           alt='decoration'

@@ -59,10 +59,12 @@ import SendIcon from '@mui/icons-material/Send';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import DiamondIcon from '@mui/icons-material/Diamond';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as BallsSVG } from '../../assets/balls.svg';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
+import { MaxIcon } from '../../components/icons/CustomIcons';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TagIcon from '@mui/icons-material/Tag';
@@ -82,6 +84,15 @@ import InfoBlock from '../../UIKIT/InfoBlock';
 import UniversalModal from '../../UIKIT/UniversalModal';
 import { UltimateDecorationModal } from '../../components/UltimateDecorationModal';
 import { useLanguage } from '@/context/LanguageContext';
+import { 
+  getDecorationImagePath, 
+  getDecorationBackground, 
+  getBackgroundStyles, 
+  getBackgroundType, 
+  isLightBackground,
+  getDecorationStyles,
+  parseItemSettings
+} from '../../utils/decorationUtils';
 
 const BalanceAmount = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
@@ -186,6 +197,44 @@ const ActionButtonText = styled(Typography)(({ theme }) => ({
   textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
 }));
 
+const BalanceToggleContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: '8px 16px',
+  marginTop: '16px',
+  borderRadius: '12px',
+  background: 'rgba(255, 255, 255, 0.05)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'blur(10px)',
+}));
+
+const ToggleButton = styled(Box)(({ theme, active }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '8px 12px',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+  background: active ? 'rgba(207, 188, 251, 0.2)' : 'transparent',
+  border: active ? '1px solid rgba(207, 188, 251, 0.3)' : '1px solid transparent',
+  color: active ? '#cfbcfb' : 'rgba(255, 255, 255, 0.5)',
+  '&:hover': {
+    background: active ? 'rgba(207, 188, 251, 0.25)' : 'rgba(255, 255, 255, 0.1)',
+    color: active ? '#cfbcfb' : 'rgba(255, 255, 255, 0.7)',
+  },
+}));
+
+const ToggleIcon = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '20px',
+  height: '20px',
+  marginRight: '6px',
+}));
+
 const TabPanel = ({ children, value, index, ...other }) => (
   <div
     role='tabpanel'
@@ -253,7 +302,7 @@ const ActionButton = styled(Button)(({ theme }) => ({
 
 const ContentBox = styled(Box)(({ theme }) => ({
   position: 'relative',
-  padding: theme.spacing(2.5),
+  padding: theme.spacing(1),
   borderRadius: 8,
   backgroundColor:
     theme.palette.mode === 'dark'
@@ -624,9 +673,19 @@ const BalancePage = () => {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const navigate = useNavigate();
+  
+  // Проверка авторизации для обычных пользователей (не каналов)
+  useEffect(() => {
+    if (!user && !localStorage.getItem('channel_token')) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [userPoints, setUserPoints] = useState(0);
+  const [mcoinBalance, setMCoinBalance] = useState(0);
+  const [mcoinTransactions, setMCoinTransactions] = useState([]);
   const [weeklyEstimate, setWeeklyEstimate] = useState(0);
+  const [balanceType, setBalanceType] = useState('kballs'); // 'kballs' или 'mcoin'
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [royaltyHistory, setRoyaltyHistory] = useState([]);
   const [transferHistory, setTransferHistory] = useState([]);
@@ -676,7 +735,17 @@ const BalancePage = () => {
 
   // Состояние для модалки выбора декорации Ultimate
   const [decorationModalOpen, setDecorationModalOpen] = useState(false);
-  const [availableDecorations, setAvailableDecorations] = useState([]);
+  const [mcoinPurchaseModalOpen, setMcoinPurchaseModalOpen] = useState(false);
+  const [decorations, setDecorations] = useState([]);
+  const [selectedDecoration, setSelectedDecoration] = useState(null);
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+  const [subscriptionPlans, setSubscriptionPlans] = useState({});
+                  const [activeTab, setActiveTab] = useState(0); // 0 - подписки, 1 - декорации, 2 - конвертация, 3 - пополнение
+                  const [availableDecorations, setAvailableDecorations] = useState([]);
+                const [convertAmount, setConvertAmount] = useState(1);
+                const [convertLoading, setConvertLoading] = useState(false);
+                const [depositAmount, setDepositAmount] = useState(100);
+                const [depositLoading, setDepositLoading] = useState(false);
 
   const debounceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -938,27 +1007,121 @@ const BalancePage = () => {
         };
       });
 
-    return [
-      ...purchases,
-      ...royalties,
-      ...transfers,
-      ...usernames,
-      ...weeklyActivities,
-      ...otherGameTransactions,
-    ].sort((a, b) => b.date - a.date);
+    const mcoinTransactionsData = mcoinTransactions.map(transaction => ({
+      ...transaction,
+      type: 'mcoin',
+      date: new Date(transaction.created_at),
+      amount: transaction.amount,
+      title: (() => {
+        if (transaction.transaction_type.startsWith('key_redemption')) {
+          return 'Активация ключа MCoin';
+        }
+        if (transaction.transaction_type.startsWith('deposit')) {
+          return 'Пополнение MCoin';
+        }
+        if (transaction.transaction_type.startsWith('subscription_purchase')) {
+          return 'Покупка подписки';
+        }
+        if (transaction.transaction_type.startsWith('decoration_purchase')) {
+          return 'Покупка декорации';
+        }
+        if (transaction.transaction_type.startsWith('convert_to_points')) {
+          return 'Конвертация в баллы';
+        }
+        if (transaction.transaction_type.startsWith('payment_deposit')) {
+          return 'Пополнение через платеж';
+        }
+        return 'Операция MCoin';
+      })(),
+      description: (() => {
+        // Сначала проверяем transaction_type
+        if (transaction.transaction_type) {
+          if (transaction.transaction_type.startsWith('subscription_purchase_')) {
+            const subscriptionType = transaction.transaction_type.replace('subscription_purchase_', '');
+            const subscriptionNames = {
+              'premium': 'Premium',
+              'ultimate': 'Ultimate',
+              'max': 'MAX'
+            };
+            return subscriptionNames[subscriptionType] || 'Подписка';
+          }
+          if (transaction.transaction_type.startsWith('decoration_purchase_')) {
+            const decorationId = transaction.transaction_type.replace('decoration_purchase_', '');
+            return `Декорация #${decorationId}`;
+          }
+          if (transaction.transaction_type.startsWith('key_redemption_')) {
+            const keyInfo = transaction.transaction_type.replace('key_redemption_', '');
+            return `Ключ: ${keyInfo}`;
+          }
+          if (transaction.transaction_type.startsWith('convert_to_points_')) {
+            const amount = transaction.transaction_type.replace('convert_to_points_', '');
+            return `${amount} MCoin → ${amount * 250} баллов`;
+          }
+          if (transaction.transaction_type.startsWith('payment_deposit_')) {
+            const orderId = transaction.transaction_type.replace('payment_deposit_', '');
+            return `Платеж #${orderId}`;
+          }
+        }
+        
+        // Если есть description, используем его
+        if (transaction.description) {
+          if (transaction.description.startsWith('subscription_purchase_')) {
+            const subscriptionType = transaction.description.replace('subscription_purchase_', '');
+            const subscriptionNames = {
+              'premium': 'Premium',
+              'ultimate': 'Ultimate',
+              'max': 'MAX'
+            };
+            return subscriptionNames[subscriptionType] || 'Подписка';
+          }
+          if (transaction.description.startsWith('decoration_purchase_')) {
+            const decorationId = transaction.description.replace('decoration_purchase_', '');
+            return `Декорация #${decorationId}`;
+          }
+          if (transaction.description.startsWith('key_redemption_')) {
+            const keyInfo = transaction.description.replace('key_redemption_', '');
+            return `Ключ: ${keyInfo}`;
+          }
+          return transaction.description;
+        }
+        
+        return '';
+      })(),
+      icon: <CurrencyExchangeIcon sx={{ color: transaction.amount > 0 ? 'success.main' : 'error.main' }} />,
+    }));
+
+    // Фильтруем транзакции в зависимости от выбранного типа баланса
+    const transactionsToShow = balanceType === 'mcoin' 
+      ? mcoinTransactionsData 
+      : [
+          ...purchases,
+          ...royalties,
+          ...transfers,
+          ...usernames,
+          ...weeklyActivities,
+          ...otherGameTransactions,
+        ];
+
+    return transactionsToShow.sort((a, b) => b.date - a.date);
   }, [
     purchaseHistory,
     royaltyHistory,
     transferHistory,
     usernamePurchases,
     gameTransactions,
+    mcoinTransactions,
+    balanceType,
     user?.id,
     t,
   ]);
 
   useEffect(() => {
-    if (user) {
+    if (user || localStorage.getItem('channel_token')) {
       fetchUserPoints();
+      fetchMCoinBalance();
+    fetchMCoinTransactions();
+    fetchDecorations();
+    fetchSubscriptionPlans();
       fetchWeeklyEstimate();
       fetchPurchaseHistory();
       fetchRoyaltyHistory();
@@ -981,6 +1144,224 @@ const BalancePage = () => {
     } catch (error) {
       console.error('Ошибка при загрузке баллов:', error);
       setError(t('balance.errors.points_loading'));
+    }
+  };
+
+  const fetchMCoinBalance = async () => {
+    try {
+      const response = await axios.get('/api/mcoin/balance');
+      setMCoinBalance(response.data.balance);
+    } catch (error) {
+      console.error('Ошибка при загрузке баланса MCoin:', error);
+    }
+  };
+
+  const fetchMCoinTransactions = async () => {
+    try {
+      const response = await axios.get('/api/mcoin/transactions');
+      if (response.data.success) {
+        setMCoinTransactions(response.data.transactions || []);
+      }
+    } catch (error) {
+      console.error('Ошибка при загрузке транзакций MCoin:', error);
+    }
+  };
+
+  const fetchDecorations = async () => {
+    try {
+      const response = await axios.get('/api/mcoin/decorations');
+      if (response.data.success) {
+        setDecorations(response.data.decorations);
+      }
+    } catch (error) {
+      console.error('Error fetching decorations:', error);
+    }
+  };
+
+  const fetchSubscriptionPlans = async () => {
+    try {
+      const response = await axios.get('/api/mcoin/subscriptions');
+      if (response.data.success) {
+        setSubscriptionPlans(response.data.subscription_plans);
+      }
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+    }
+  };
+
+  // Функция для определения доступности подписки
+  const isSubscriptionAvailable = (subscriptionType) => {
+    const priorities = {
+      'premium': 1,
+      'ultimate': 2,
+      'max': 3
+    };
+    
+    // Находим максимальную активную подписку
+    let maxActivePriority = 0;
+    Object.entries(subscriptionPlans).forEach(([type, plan]) => {
+      if (plan.is_active) {
+        maxActivePriority = Math.max(maxActivePriority, priorities[type] || 0);
+      }
+    });
+    
+    const requestedPriority = priorities[subscriptionType] || 0;
+    return requestedPriority > maxActivePriority;
+  };
+
+  const handlePurchaseSubscription = async (subscriptionType) => {
+    setPurchaseLoading(true);
+    try {
+      const response = await axios.post('/api/mcoin/purchase-subscription', {
+        subscription_type: subscriptionType
+      });
+      
+      if (response.data.success) {
+        // Обновляем баланс MCoin
+        await fetchMCoinBalance();
+        // Обновляем планы подписок
+        await fetchSubscriptionPlans();
+        
+        // Показываем уведомление об успехе
+        setSnackbar({
+          open: true,
+          message: response.data.message,
+          severity: 'success'
+        });
+      }
+    } catch (error) {
+      console.error('Error purchasing subscription:', error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Ошибка при покупке подписки',
+        severity: 'error'
+      });
+    } finally {
+      setPurchaseLoading(false);
+    }
+  };
+
+  const handlePurchaseDecoration = async (decorationId) => {
+    setPurchaseLoading(true);
+    try {
+      const response = await axios.post('/api/mcoin/purchase-decoration', {
+        decoration_id: decorationId
+      });
+      
+      if (response.data.success) {
+        // Обновляем баланс MCoin
+        await fetchMCoinBalance();
+        // Обновляем список декораций
+        await fetchDecorations();
+        
+        // Показываем уведомление об успехе
+        setSnackbar({
+          open: true,
+          message: response.data.message,
+          severity: 'success'
+        });
+        
+        // Закрываем модалку
+        setMcoinPurchaseModalOpen(false);
+        setSelectedDecoration(null);
+      }
+    } catch (error) {
+      console.error('Error purchasing decoration:', error);
+      setSnackbar({
+        open: true,
+        message: error.response?.data?.error || 'Ошибка при покупке декорации',
+        severity: 'error'
+      });
+    } finally {
+      setPurchaseLoading(false);
+    }
+  };
+
+  const handleConvertMCoin = async () => {
+    if (convertLoading || convertAmount <= 0) return;
+    
+    try {
+      setConvertLoading(true);
+      
+      const response = await axios.post('/api/mcoin/convert', {
+        mcoin_amount: convertAmount
+      });
+      
+      if (response.data.success) {
+        // Обновляем балансы
+        setMCoinBalance(response.data.new_mcoin_balance);
+        setUserPoints(response.data.new_points_balance);
+        
+        // Обновляем транзакции
+        fetchMCoinTransactions();
+        
+        // Показываем уведомление
+        window.dispatchEvent(
+          new CustomEvent('show-error', {
+            detail: {
+              message: response.data.message,
+              shortMessage: 'Конвертация выполнена',
+              notificationType: 'success',
+              animationType: 'pill',
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Ошибка при конвертации:', error);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: error.response?.data?.error || 'Ошибка при конвертации',
+            shortMessage: 'Ошибка',
+            notificationType: 'error',
+          },
+        })
+      );
+    } finally {
+      setConvertLoading(false);
+    }
+  };
+
+  const handleCreateDeposit = async () => {
+    if (depositLoading || depositAmount < 10) return;
+    
+    try {
+      setDepositLoading(true);
+      
+      const response = await axios.post('/api/mcoin/create-payment', {
+        amount_rub: depositAmount
+      });
+      
+      if (response.data.success) {
+        // Открываем страницу оплаты в новом окне
+        window.open(response.data.payment_url, '_blank');
+        
+        // Показываем уведомление
+        window.dispatchEvent(
+          new CustomEvent('show-error', {
+            detail: {
+              message: `Платеж создан на сумму ${depositAmount} рублей. Откройте страницу оплаты для завершения.`,
+              shortMessage: 'Платеж создан',
+              notificationType: 'success',
+              animationType: 'pill',
+            },
+          })
+        );
+      }
+    } catch (error) {
+      console.error('Ошибка при создании платежа:', error);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: error.response?.data?.error || 'Ошибка при создании платежа',
+            shortMessage: 'Ошибка',
+            notificationType: 'error',
+          },
+        })
+      );
+    } finally {
+      setDepositLoading(false);
     }
   };
 
@@ -1371,6 +1752,19 @@ const BalancePage = () => {
         });
 
         setUserPoints(data.new_balance);
+      } else if (data.type === 'mcoin') {
+        setKeySuccess({
+          message: data.message,
+          type: 'mcoin',
+          mcoinAdded: data.mcoin_added,
+          oldBalance: data.old_balance,
+          newBalance: data.new_balance,
+        });
+
+        // Обновляем баланс MCoin если есть функция для этого
+        if (typeof setMCoinBalance === 'function') {
+          setMCoinBalance(data.new_balance);
+        }
       } else if (data.type === 'subscription') {
         setKeySuccess({
           message: data.message,
@@ -1770,7 +2164,11 @@ const BalancePage = () => {
         title={
           <Box sx={{ textAlign: 'center' }}>
             <PointsIcon>
-              <BallsSVG />
+              {balanceType === 'kballs' ? (
+                <BallsSVG />
+              ) : (
+                <MaxIcon size={32} color="#cfbcfb" />
+              )}
             </PointsIcon>
             <Typography
               variant='subtitle1'
@@ -1779,45 +2177,88 @@ const BalancePage = () => {
                 marginBottom: 1,
               }}
             >
-              {t('balance.current_balance.title')}
+              {balanceType === 'kballs' 
+                ? t('balance.current_balance.title')
+                : 'MCoin Баланс'
+              }
             </Typography>
-            <BalanceAmount>{formatNumberWithSpaces(userPoints)}</BalanceAmount>
+            <BalanceAmount>
+              {balanceType === 'kballs' 
+                ? formatNumberWithSpaces(userPoints)
+                : formatNumberWithSpaces(mcoinBalance)
+              }
+            </BalanceAmount>
           </Box>
         }
         description={
-          <ActionButtonsContainer>
-            <ActionButtonItem
-              key='action-pay'
-              onClick={() => navigate('/badge-shop')}
-            >
-              <ActionCircleIcon>
-                <PaymentIcon />
-              </ActionCircleIcon>
-              <ActionButtonText>{t('balance.actions.pay')}</ActionButtonText>
-            </ActionButtonItem>
+          <>
+            <ActionButtonsContainer>
+              <ActionButtonItem
+                key='action-pay'
+                onClick={() => {
+                  if (balanceType === 'mcoin') {
+                    fetchDecorations();
+                    setMcoinPurchaseModalOpen(true);
+                  } else {
+                    navigate('/badge-shop');
+                  }
+                }}
+              >
+                <ActionCircleIcon>
+                  <PaymentIcon />
+                </ActionCircleIcon>
+                <ActionButtonText>{t('balance.actions.pay')}</ActionButtonText>
+              </ActionButtonItem>
 
-            <ActionButtonItem
-              key='action-topup'
-              onClick={() => setOpenKeyDialog(true)}
-            >
-              <ActionCircleIcon>
-                <AddIcon />
-              </ActionCircleIcon>
-              <ActionButtonText>{t('balance.actions.topup')}</ActionButtonText>
-            </ActionButtonItem>
+              <ActionButtonItem
+                key='action-topup'
+                onClick={() => setOpenKeyDialog(true)}
+              >
+                <ActionCircleIcon>
+                  <AddIcon />
+                </ActionCircleIcon>
+                <ActionButtonText>{t('balance.actions.topup')}</ActionButtonText>
+              </ActionButtonItem>
 
-            <ActionButtonItem
-              key='action-transfer'
-              onClick={() => setNewTransferMenuOpen(true)}
-            >
-              <ActionCircleIcon>
-                <SendIcon />
-              </ActionCircleIcon>
-              <ActionButtonText>
-                {t('balance.actions.transfer')}
-              </ActionButtonText>
-            </ActionButtonItem>
-          </ActionButtonsContainer>
+              <ActionButtonItem
+                key='action-transfer'
+                onClick={() => setNewTransferMenuOpen(true)}
+              >
+                <ActionCircleIcon>
+                  <SendIcon />
+                </ActionCircleIcon>
+                <ActionButtonText>
+                  {t('balance.actions.transfer')}
+                </ActionButtonText>
+              </ActionButtonItem>
+            </ActionButtonsContainer>
+            
+            <BalanceToggleContainer>
+              <ToggleButton
+                active={balanceType === 'kballs'}
+                onClick={() => setBalanceType('kballs')}
+              >
+                <ToggleIcon>
+                  <BallsSVG />
+                </ToggleIcon>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  Kballs
+                </Typography>
+              </ToggleButton>
+              
+              <ToggleButton
+                active={balanceType === 'mcoin'}
+                onClick={() => setBalanceType('mcoin')}
+              >
+                <ToggleIcon>
+                  <MaxIcon size={16} color="currentColor" />
+                </ToggleIcon>
+                <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                  MCoin
+                </Typography>
+              </ToggleButton>
+            </BalanceToggleContainer>
+          </>
         }
       />
 
@@ -2046,6 +2487,7 @@ const BalancePage = () => {
                         >
                           {transaction.amount > 0 ? '+' : ''}
                           {formatNumberWithSpaces(transaction.amount)}
+                          {balanceType === 'mcoin' ? ' MCoin' : ''}
                         </TransactionAmount>
                         <Typography
                           variant='caption'
@@ -2115,6 +2557,16 @@ const BalancePage = () => {
                     <AccountCircleIcon sx={{ mr: 1, color: 'info.main' }} />
                   ) : selectedTransaction.type === 'weekly_activity' ? (
                     <TrendingUpIcon sx={{ mr: 1, color: 'success.main' }} />
+                  ) : selectedTransaction.type === 'mcoin' ? (
+                    <CurrencyExchangeIcon
+                      sx={{
+                        mr: 1,
+                        color:
+                          selectedTransaction.amount > 0
+                            ? 'success.main'
+                            : 'error.main',
+                      }}
+                    />
                   ) : selectedTransaction.type === 'game' ? (
                     <CasinoIcon
                       sx={{
@@ -2153,6 +2605,8 @@ const BalancePage = () => {
                               ? t('balance.transactions.custom_period_activity')
                               : selectedTransaction.type === 'username'
                                 ? t('balance.transactions.username_purchase')
+                                                              : selectedTransaction.type === 'mcoin'
+                                ? selectedTransaction.title
                                 : selectedTransaction.type === 'game'
                                   ? getTransactionDescription(
                                       selectedTransaction
@@ -2183,7 +2637,10 @@ const BalancePage = () => {
               <TransactionDetailAmount
                 type={selectedTransaction.amount > 0 ? 'income' : 'expense'}
               >
-                {formatCurrency(selectedTransaction.amount)}
+                {balanceType === 'mcoin' 
+                  ? `${formatNumberWithSpaces(selectedTransaction.amount)} MCoin`
+                  : formatCurrency(selectedTransaction.amount)
+                }
               </TransactionDetailAmount>
 
               <Typography variant='caption' color='text.secondary'>
@@ -2862,7 +3319,26 @@ const BalancePage = () => {
             padding: '2.5px',
           }}
         >
-          {subscription && subscription.active ? (
+          {user && (user.account_type === 'channel' || user.is_channel === true) ? (
+            <Card
+              elevation={3}
+              sx={{
+                backgroundImage: `unset`,
+              }}
+            >
+              <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
+                  <Typography component='div' variant='h6' fontWeight='bold'>
+                    Канал
+                  </Typography>
+                </Box>
+                <Typography component='div' variant='body2' color='text.secondary'>
+                  Это канал. Каналы имеют специкацию акканута. В дальнейшейм тут будет краткий дашборд с информацией о канале.
+                </Typography>
+              </CardContent>
+            </Card>
+          ) : subscription && subscription.active ? (
             <Card
               elevation={3}
               sx={{
@@ -3158,51 +3634,16 @@ const BalancePage = () => {
               setDecorationCheckError('');
             }}
             tabs={[
-              { value: 0, label: t('balance.topup.tabs.key') },
-              { value: 1, label: t('balance.topup.tabs.donate') },
-              { value: 2, label: 'Проверить декорацию' }
+              ...(user?.id === 3 ? [{ value: 0, label: 'Пополнить' }] : []),
+              { value: 1, label: t('balance.topup.tabs.key') },
+              { value: 2, label: t('balance.topup.tabs.donate') },
+              { value: 3, label: 'Проверить декорацию' },
             ]}
             fullWidth
             style={{ marginBottom: '16px' }}
           />
 
-          {activeTopupTab === 0 && !keySuccess ? (
-            <ContentBox>
-              <Typography component='div' variant='body1' gutterBottom>
-                {t('balance.topup.key.enter')}
-              </Typography>
-
-              <KeyTextField
-                fullWidth
-                label={t('balance.topup.key.label')}
-                variant='outlined'
-                placeholder={t('balance.topup.key.placeholder')}
-                value={keyValue}
-                onChange={handleKeyChange}
-                error={!!keyError}
-                helperText={keyError}
-                disabled={isSubmittingKey}
-                sx={{ mt: { xs: 1.5, sm: 2 }, mb: { xs: 1.5, sm: 2 } }}
-                InputProps={{
-                  endAdornment: keyValue && (
-                    <InputAdornment position='end'>
-                      <IconButton onClick={() => setKeyValue('')} edge='end'>
-                        <CloseIcon fontSize='small' />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-
-              <Typography
-                component='div'
-                variant='caption'
-                color='text.secondary'
-              >
-                {t('balance.topup.key.hint')}
-              </Typography>
-            </ContentBox>
-          ) : activeTopupTab === 1 ? (
+          {activeTopupTab === 0 && user?.id === 3 ? (
             <ContentBox>
               <Typography
                 component='div'
@@ -3210,23 +3651,177 @@ const BalancePage = () => {
                 fontWeight='bold'
                 gutterBottom
               >
-                {t('balance.topup.donate.title')}
+                Пополнение MCoin
               </Typography>
               <Typography component='div' variant='body2' paragraph>
-                {t('balance.topup.donate.description')}
+                Пополните баланс MCoin через платежную систему Rukassa.
+                Курс пополнения: 1 рубль = 1 MCoin
               </Typography>
-              <Typography
-                component='div'
-                variant='body2'
-                sx={{ fontWeight: 'bold', mb: 2 }}
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 3,
+                  p: 3,
+                  borderRadius: 2,
+                  mt: 2,
+                }}
               >
-                {t('balance.topup.donate.rate')}
-              </Typography>
-              <Button
-                variant='outlined'
-                color='primary'
-                startIcon={<MonetizationOnIcon />}
-                fullWidth
+                {/* Информация о курсе */}
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <Typography variant='h6' sx={{ color: '#cfbcfb', mb: 1 }}>
+                    Курс пополнения
+                  </Typography>
+                  <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    1 рубль = 1 MCoin
+                  </Typography>
+                </Box>
+
+                {/* Поле ввода */}
+                <Box sx={{ width: '100%', maxWidth: 300 }}>
+                  <TextField
+                    type="number"
+                    label="Сумма в рублях"
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(Math.max(10, parseInt(e.target.value) || 10))}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        color: 'rgba(255, 255, 255, 0.87)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.23)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.4)',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#cfbcfb',
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        '&.Mui-focused': {
+                          color: '#cfbcfb',
+                        },
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: { min: 10 }
+                    }}
+                  />
+                </Box>
+
+                {/* Результат пополнения */}
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant='body2' sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
+                    Получите:
+                  </Typography>
+                  <Typography variant='h5' sx={{ color: '#cfbcfb', fontWeight: 600 }}>
+                    {depositAmount} MCoin
+                  </Typography>
+                </Box>
+
+                {/* Кнопка пополнения */}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  disabled={depositLoading || depositAmount < 10}
+                  onClick={handleCreateDeposit}
+                  sx={{
+                    bgcolor: '#cfbcfb',
+                    color: 'white',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: '8px',
+                    '&:hover': {
+                      bgcolor: '#cfbcfb',
+                    },
+                    '&:disabled': {
+                      bgcolor: 'rgba(207, 188, 251, 0.3)',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                    },
+                  }}
+                >
+                  {depositLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    `Пополнить на ${depositAmount} ₽`
+                  )}
+                </Button>
+
+                {/* Информация о способах оплаты */}
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                  <Typography variant='caption' sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                    Доступные валюты пополнения: RUB, USD, EUR, KZT
+                  </Typography>
+                </Box>
+              </Box>
+            </ContentBox>
+                                  ) : activeTopupTab === 1 && !keySuccess ? (
+              <ContentBox>
+                <Typography component='div' variant='body1' gutterBottom>
+                  {t('balance.topup.key.enter')}
+                </Typography>
+
+                <KeyTextField
+                  fullWidth
+                  label={t('balance.topup.key.label')}
+                  variant='outlined'
+                  placeholder={t('balance.topup.key.placeholder')}
+                  value={keyValue}
+                  onChange={handleKeyChange}
+                  error={!!keyError}
+                  helperText={keyError}
+                  disabled={isSubmittingKey}
+                  sx={{ mt: { xs: 1.5, sm: 2 }, mb: { xs: 1.5, sm: 2 } }}
+                  InputProps={{
+                    endAdornment: keyValue && (
+                      <InputAdornment position='end'>
+                        <IconButton onClick={() => setKeyValue('')} edge='end'>
+                          <CloseIcon fontSize='small' />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+
+                <Typography
+                  component='div'
+                  variant='caption'
+                  color='text.secondary'
+                >
+                  {t('balance.topup.key.hint')}
+                </Typography>
+              </ContentBox>
+            ) : activeTopupTab === 2 ? (
+              <ContentBox>
+                <Typography
+                  component='div'
+                  variant='subtitle1'
+                  fontWeight='bold'
+                  gutterBottom
+                >
+                  {t('balance.topup.donate.title')}
+                </Typography>
+                <Typography component='div' variant='body2' paragraph>
+                  {t('balance.topup.donate.description')}
+                </Typography>
+                <Typography
+                  component='div'
+                  variant='body2'
+                  sx={{ fontWeight: 'bold', mb: 2 }}
+                >
+                  {t('balance.topup.donate.rate')}
+                </Typography>
+                <Button
+                  variant='outlined'
+                  color='primary'
+                  startIcon={<MonetizationOnIcon />}
+                  fullWidth
                 onClick={() => window.open('https://boosty.to/qsoul', '_blank')}
                 sx={{ 
                   mt: { xs: 1.5, sm: 2 },
@@ -3242,7 +3837,7 @@ const BalancePage = () => {
                 {t('balance.topup.donate.button')}
               </Button>
             </ContentBox>
-          ) : activeTopupTab === 2 ? (
+          ) : activeTopupTab === 3 ? (
             <ContentBox>
               <Typography
                 component='div'
@@ -3253,7 +3848,7 @@ const BalancePage = () => {
                 Проверить доступность декорации
               </Typography>
               <Typography component='div' variant='body2' paragraph>
-                Если у вас есть Ultimate подписка и еще нет декорации профиля,
+                Если у вас есть Ultimate/MAX подписка и еще нет декорации профиля,
                 вы можете получить одну декорацию бесплатно.
               </Typography>
 
@@ -3299,6 +3894,126 @@ const BalancePage = () => {
                 )}
               </Button>
             </ContentBox>
+          ) : activeTopupTab === 3 ? (
+            <ContentBox>
+              <Typography
+                component='div'
+                variant='subtitle1'
+                fontWeight='bold'
+                gutterBottom
+              >
+                Пополнение MCoin
+              </Typography>
+              <Typography component='div' variant='body2' paragraph>
+                Пополните баланс MCoin через платежную систему Rukassa.
+                Курс пополнения: 1 рубль = 1 MCoin
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 3,
+                  p: 3,
+                  borderRadius: 2,
+                  backgroundColor: '#1e1e1e',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  mt: 2,
+                }}
+              >
+                {/* Информация о курсе */}
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <Typography variant='h6' sx={{ color: '#cfbcfb', mb: 1 }}>
+                    Курс пополнения
+                  </Typography>
+                  <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    1 рубль = 1 MCoin
+                  </Typography>
+                </Box>
+
+                {/* Поле ввода */}
+                <Box sx={{ width: '100%', maxWidth: 300 }}>
+                  <TextField
+                    type="number"
+                    label="Сумма в рублях"
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(Math.max(10, parseInt(e.target.value) || 10))}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        color: 'rgba(255, 255, 255, 0.87)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.23)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.4)',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#cfbcfb',
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        '&.Mui-focused': {
+                          color: '#cfbcfb',
+                        },
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: { min: 10 }
+                    }}
+                  />
+                </Box>
+
+                {/* Результат пополнения */}
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant='body2' sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
+                    Получите:
+                  </Typography>
+                  <Typography variant='h5' sx={{ color: '#cfbcfb', fontWeight: 600 }}>
+                    {depositAmount} MCoin
+                  </Typography>
+                </Box>
+
+                {/* Кнопка пополнения */}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  disabled={depositLoading || depositAmount < 10}
+                  onClick={handleCreateDeposit}
+                  sx={{
+                    bgcolor: '#cfbcfb',
+                    color: 'white',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: 2,
+                    '&:hover': {
+                      bgcolor: '#cfbcfb',
+                    },
+                    '&:disabled': {
+                      bgcolor: 'rgba(207, 188, 251, 0.3)',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                    },
+                  }}
+                >
+                  {depositLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    `Пополнить на ${depositAmount} ₽`
+                  )}
+                </Button>
+
+                {/* Информация о способах оплаты */}
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                  <Typography variant='caption' sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                    Доступные способы: карты, СБП, Яндекс.Деньги
+                  </Typography>
+                </Box>
+              </Box>
+            </ContentBox>
           ) : (
             <Box
               sx={{
@@ -3336,10 +4051,10 @@ const BalancePage = () => {
                   {t('balance.topup.key.success.title')}
                 </Typography>
                 <Typography component='div' variant='body1' align='center'>
-                  {keySuccess.message}
+                  {keySuccess?.message}
                 </Typography>
 
-                {keySuccess.type === 'points' ? (
+                {keySuccess?.type === 'points' ? (
                   <Box
                     sx={{
                       mt: { xs: 2, sm: 3 },
@@ -3376,9 +4091,61 @@ const BalancePage = () => {
                       }}
                     >
                       <AccountBalanceWalletIcon sx={{ mr: 1 }} />
-                      {keySuccess.newBalance}{' '}
+                      {keySuccess?.newBalance}{' '}
                       {t('balance.topup.key.success.points')}
                     </Typography>
+                  </Box>
+                ) : keySuccess?.type === 'mcoin' ? (
+                  <Box
+                    sx={{
+                      mt: { xs: 2, sm: 3 },
+                      p: { xs: 1.5, sm: 2 },
+                      borderRadius: 2,
+                      bgcolor: 'background.paper',
+                      boxShadow: 1,
+                      width: '100%',
+                      maxWidth: 250,
+                      animation: 'fade-in 1s ease-in-out forwards',
+                      '@keyframes fade-in': {
+                        from: { opacity: 0, transform: 'translateY(20px)' },
+                        to: { opacity: 1, transform: 'translateY(0)' },
+                      },
+                    }}
+                  >
+                    <Typography
+                      component='div'
+                      variant='subtitle2'
+                      color='text.secondary'
+                      gutterBottom
+                      align='center'
+                    >
+                      {t('balance.topup.key.success.new_balance')}
+                    </Typography>
+                    <Typography
+                      component='div'
+                      variant='h6'
+                      color='primary'
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <CurrencyExchangeIcon sx={{ mr: 1 }} />
+                      {keySuccess?.newBalance}{' '}
+                      MCoin
+                    </Typography>
+                    {keySuccess?.oldBalance !== null && (
+                      <Typography
+                        component='div'
+                        variant='body2'
+                        color='text.secondary'
+                        align='center'
+                        sx={{ mt: 1 }}
+                      >
+                        +{keySuccess?.mcoinAdded} MCoin
+                      </Typography>
+                    )}
                   </Box>
                 ) : (
                   <Box
@@ -3416,7 +4183,7 @@ const BalancePage = () => {
                     >
                       <Chip
                         label={t(
-                          `balance.subscription.types.${keySuccess.subscriptionType}`
+                          `balance.subscription.types.${keySuccess?.subscriptionType}`
                         )}
                         color='secondary'
                         sx={{ fontSize: '1rem', py: 2, px: 1 }}
@@ -3429,7 +4196,7 @@ const BalancePage = () => {
                       align='center'
                     >
                       {t('balance.topup.key.success.expires_at', {
-                        date: keySuccess.expiresAt
+                        date: keySuccess?.expiresAt
                           ? new Date(keySuccess.expiresAt).toLocaleDateString()
                           : t('balance.subscription.duration.unlimited'),
                       })}
@@ -3442,7 +4209,7 @@ const BalancePage = () => {
                       sx={{ mt: 1 }}
                     >
                       {t('balance.topup.key.success.duration', {
-                        days: keySuccess.duration_days,
+                        days: keySuccess?.duration_days,
                       })}
                     </Typography>
                   </Box>
@@ -3636,6 +4403,505 @@ const BalancePage = () => {
         availableDecorations={availableDecorations}
         onSuccess={handleDecorationSelectionSuccess}
       />
+
+      {/* MCoin Purchase Modal */}
+      <UniversalModal
+        open={mcoinPurchaseModalOpen}
+        onClose={() => {
+          setMcoinPurchaseModalOpen(false);
+          setSelectedDecoration(null);
+          setActiveTab(0);
+        }}
+        title="Покупка за MCoin"
+        maxWidth="md"
+        fullWidth
+      >
+        <Box sx={{ p: 0, pt: 2.5, bgcolor: 'transparent' }}>
+          {/* Табы */}
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+            <Tabs 
+              value={activeTab} 
+              onChange={(e, newValue) => setActiveTab(newValue)}
+              sx={{
+                '& .MuiTab-root': {
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  '&.Mui-selected': {
+                    color: '#cfbcfb',
+                  },
+                },
+                '& .MuiTabs-indicator': {
+                  backgroundColor: '#cfbcfb',
+                },
+              }}
+            >
+              <Tab label="Подписки" />
+              <Tab label="Декорации" />
+              <Tab label="Конвертация" />
+            </Tabs>
+          </Box>
+
+          {/* Таб Подписки */}
+          {activeTab === 0 && (
+            <Box>
+              <Typography
+                component='div'
+                variant='body1'
+                color='text.secondary'
+                sx={{ mb: 3, textAlign: 'center' }}
+              >
+                Выберите подписку для покупки за MCoin
+              </Typography>
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {Object.entries(subscriptionPlans).map(([type, plan]) => (
+                  <Box
+                    key={type}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: 2,
+                      borderRadius: 2,
+                      backgroundColor: '#1e1e1e',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      cursor: plan.is_active || !isSubscriptionAvailable(type) ? 'default' : 'pointer',
+                      opacity: plan.is_active || !isSubscriptionAvailable(type) ? 0.6 : 1,
+                      position: 'relative',
+                      overflow: 'hidden',
+                      '&:hover': plan.is_active || !isSubscriptionAvailable(type) ? {} : {
+                        transform: 'translateY(-3px)',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+                      },
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                    }}
+                  >
+                    {/* Иконка подписки */}
+                    <Box
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: '12px',
+                        background: type === 'max' ? '#FF4D50' : '#cfbcfb',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 2,
+                        position: 'relative',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {type === 'max' ? (
+                        <MaxIcon size={32} color="#fff" />
+                      ) : (
+                        <DiamondIcon sx={{ fontSize: 32, color: '#fff' }} />
+                      )}
+                    </Box>
+
+                    {/* Информация о подписке */}
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Typography
+                        component='div'
+                        variant='subtitle1'
+                        sx={{ 
+                          fontWeight: 600, 
+                          color: 'rgba(255, 255, 255, 0.87)',
+                          mb: 0.5,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {plan.name}
+                      </Typography>
+                      
+                      <Typography 
+                        variant='body2' 
+                        sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}
+                      >
+                        {plan.description}
+                      </Typography>
+
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <MaxIcon size={16} color="#FF4D50" />
+                        <Typography 
+                          variant='body2' 
+                          sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+                        >
+                          {plan.price} MCoin
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    {/* Статус покупки */}
+                    <Box sx={{ marginLeft: 'auto' }}>
+                      {plan.is_active ? (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            color: '#4caf50',
+                          }}
+                        >
+                          <CheckCircleIcon sx={{ fontSize: 20 }} />
+                          <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                            Активна
+                          </Typography>
+                        </Box>
+                      ) : !isSubscriptionAvailable(type) ? (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            color: 'rgba(255, 255, 255, 0.5)',
+                          }}
+                        >
+                          <Typography variant='body2' sx={{ fontSize: '0.75rem' }}>
+                            Недоступно
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          disabled={purchaseLoading || mcoinBalance < plan.price}
+                          onClick={() => handlePurchaseSubscription(type)}
+                          sx={{
+                            bgcolor: type === 'max' ? '#FF4D50' : '#cfbcfb',
+                            color: 'white',
+                            fontWeight: 600,
+                            textTransform: 'none',
+                            px: 2,
+                            py: 1,
+                            borderRadius: 2,
+                            '&:hover': {
+                              bgcolor: type === 'max' ? '#E63946' : '#b8a8f0',
+                            },
+                            '&:disabled': {
+                              bgcolor: type === 'max' ? 'rgba(255, 77, 80, 0.3)' : 'rgba(207, 188, 251, 0.3)',
+                              color: 'rgba(255, 255, 255, 0.5)',
+                            },
+                          }}
+                        >
+                          {purchaseLoading ? (
+                            <CircularProgress size={16} color="inherit" />
+                          ) : (
+                            'Купить'
+                          )}
+                        </Button>
+                      )}
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+
+              {Object.keys(subscriptionPlans).length === 0 && (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography variant='body1' color='text.secondary'>
+                    Нет доступных планов подписок
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+
+          {/* Таб Декорации */}
+          {activeTab === 1 && (
+            <Box>
+              <Typography
+                component='div'
+                variant='body1'
+                color='text.secondary'
+                sx={{ mb: 3, textAlign: 'center' }}
+              >
+                Выберите декорацию для покупки за 199 MCoin
+              </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {decorations.map((decoration) => (
+              <Box
+                key={decoration.id}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: 2,
+                  borderRadius: 2,
+                  backgroundColor: '#1e1e1e',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  transition: 'all 0.3s ease',
+                  cursor: decoration.is_purchased ? 'default' : 'pointer',
+                  opacity: decoration.is_purchased ? 0.6 : 1,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&:hover': decoration.is_purchased ? {} : {
+                    transform: 'translateY(-3px)',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+                  },
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                }}
+              >
+                {/* Декорация */}
+                <Box
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 2,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    ...getBackgroundStyles(decoration.background || '#2a2a2a'),
+                  }}
+                >
+                  {decoration.item_path && (
+                    <img
+                      src={getDecorationImagePath(decoration.item_path)}
+                      alt={decoration.name}
+                      style={{
+                        maxWidth: '80%',
+                        maxHeight: '80%',
+                        objectFit: 'contain',
+                        ...parseItemSettings(decoration.item_path).styles,
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                </Box>
+
+                {/* Информация о декорации */}
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography
+                    component='div'
+                    variant='subtitle1'
+                    sx={{ 
+                      fontWeight: 600, 
+                      color: (() => {
+                        const bgType = getBackgroundType(decoration.background);
+                        if (bgType === 'color' && isLightBackground(decoration.background)) {
+                          return 'rgba(0, 0, 0, 0.87)';
+                        }
+                        return 'rgba(255, 255, 255, 0.87)';
+                      })(),
+                      mb: 0.5,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {decoration.name}
+                  </Typography>
+                  
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <MaxIcon size={16} color="#FF4D50" />
+                    <Typography 
+                      variant='body2' 
+                      sx={{ 
+                        color: (() => {
+                          const bgType = getBackgroundType(decoration.background);
+                          if (bgType === 'color' && isLightBackground(decoration.background)) {
+                            return 'rgba(0, 0, 0, 0.6)';
+                          }
+                          return 'rgba(255, 255, 255, 0.6)';
+                        })(),
+                      }}
+                    >
+                      199 MCoin
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* Статус покупки */}
+                <Box sx={{ marginLeft: 'auto' }}>
+                  {decoration.is_purchased ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        color: '#4caf50',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ fontSize: 20 }} />
+                      <Typography variant='body2' sx={{ fontWeight: 500 }}>
+                        Куплено
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      size="small"
+                      disabled={purchaseLoading || mcoinBalance < 199}
+                      onClick={() => handlePurchaseDecoration(decoration.id)}
+                      sx={{
+                        bgcolor: '#cfbcfb',
+                        color: 'white',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        px: 2,
+                        py: 1,
+                        borderRadius: 2,
+                        '&:hover': {
+                          bgcolor: '#cfbcfb',
+                        },
+                        '&:disabled': {
+                          bgcolor: 'rgba(207, 188, 251, 0.3)',
+                          color: 'rgba(255, 255, 255, 0.5)',
+                        },
+                      }}
+                    >
+                      {purchaseLoading ? (
+                        <CircularProgress size={16} color="inherit" />
+                      ) : (
+                        'Купить'
+                      )}
+                    </Button>
+                  )}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+
+          {decorations.length === 0 && (
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant='body1' color='text.secondary'>
+                Нет доступных декораций
+              </Typography>
+            </Box>
+          )}
+
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Typography variant='caption' color='text.secondary'>
+              Ваш баланс: {mcoinBalance} MCoin
+            </Typography>
+          </Box>
+            </Box>
+          )}
+
+          {/* Таб Конвертация */}
+          {activeTab === 2 && (
+            <Box>
+              <Typography
+                component='div'
+                variant='body1'
+                color='text.secondary'
+                sx={{ mb: 3, textAlign: 'center' }}
+              >
+                Конвертируйте MCoin в обычные баллы
+              </Typography>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 1,
+                  p: 2,
+                  borderRadius: 2,
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                }}
+              >
+                {/* Информация о курсе */}
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <Typography variant='h6' sx={{ color: '#cfbcfb', mb: 1 }}>
+                    Курс конвертации
+                  </Typography>
+                  <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    1 MCoin = 250 баллов
+                  </Typography>
+                </Box>
+
+                {/* Поле ввода */}
+                <Box sx={{ width: '100%', maxWidth: 300 }}>
+                  <TextField
+                    type="number"
+                    label="Количество MCoin"
+                    value={convertAmount}
+                    onChange={(e) => setConvertAmount(Math.max(1, parseInt(e.target.value) || 1))}
+                    fullWidth
+                    variant="outlined"
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        color: 'rgba(255, 255, 255, 0.87)',
+                        '& fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.23)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'rgba(255, 255, 255, 0.4)',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#cfbcfb',
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        '&.Mui-focused': {
+                          color: '#cfbcfb',
+                        },
+                      },
+                    }}
+                    InputProps={{
+                      inputProps: { min: 1, max: mcoinBalance }
+                    }}
+                  />
+                </Box>
+
+                {/* Результат конвертации */}
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography variant='body2' sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
+                    Получите:
+                  </Typography>
+                  <Typography variant='h5' sx={{ color: '#cfbcfb', fontWeight: 600 }}>
+                    {convertAmount * 250} баллов
+                  </Typography>
+                </Box>
+
+                {/* Кнопка конвертации */}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  disabled={convertLoading || convertAmount > mcoinBalance || convertAmount <= 0}
+                  onClick={handleConvertMCoin}
+                  sx={{
+                    bgcolor: '#cfbcfb',
+                    color: 'white',
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: '8px',
+                    '&:hover': {
+                      bgcolor: '#cfbcfb',
+                    },
+                    '&:disabled': {
+                      bgcolor: 'rgba(207, 188, 251, 0.3)',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                    },
+                  }}
+                >
+                  {convertLoading ? (
+                    <CircularProgress size={20} color="inherit" />
+                  ) : (
+                    `Конвертировать ${convertAmount} MCoin`
+                  )}
+                </Button>
+
+                {/* Информация о балансе */}
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                  <Typography variant='caption' sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                    Доступно: {mcoinBalance} MCoin
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          )}
+
+
+        </Box>
+      </UniversalModal>
     </Container>
   );
 };
