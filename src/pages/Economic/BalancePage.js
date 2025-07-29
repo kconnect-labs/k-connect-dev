@@ -2212,7 +2212,11 @@ const BalancePage = () => {
 
               <ActionButtonItem
                 key='action-topup'
-                onClick={() => setOpenKeyDialog(true)}
+                onClick={() => {
+                  setOpenKeyDialog(true);
+                  setKeySuccess(null);
+                  setActiveTopupTab(user?.id === 3 ? 0 : 1);
+                }}
               >
                 <ActionCircleIcon>
                   <AddIcon />
@@ -3597,7 +3601,11 @@ const BalancePage = () => {
               <Button
                 variant='contained'
                 color='primary'
-                onClick={() => setOpenKeyDialog(true)}
+                onClick={() => {
+                  setOpenKeyDialog(true);
+                  setKeySuccess(null);
+                  setActiveTopupTab(user?.id === 3 ? 0 : 1);
+                }}
                 startIcon={<AddIcon />}
               >
                 Активировать ключ
@@ -3616,7 +3624,7 @@ const BalancePage = () => {
             setKeyError('');
             setKeySuccess(null);
             setDecorationCheckError('');
-            setActiveTopupTab(0);
+            setActiveTopupTab(user?.id === 3 ? 0 : 1);
           }
         }}
         title="Пополнение баланса"
@@ -4182,9 +4190,9 @@ const BalancePage = () => {
                       }}
                     >
                       <Chip
-                        label={t(
-                          `balance.subscription.types.${keySuccess?.subscriptionType}`
-                        )}
+                        label={keySuccess?.subscriptionType ? t(
+                          `balance.subscription.types.${keySuccess.subscriptionType}`
+                        ) : 'Подписка'}
                         color='secondary'
                         sx={{ fontSize: '1rem', py: 2, px: 1 }}
                       />
@@ -4208,9 +4216,9 @@ const BalancePage = () => {
                       align='center'
                       sx={{ mt: 1 }}
                     >
-                      {t('balance.topup.key.success.duration', {
-                        days: keySuccess?.duration_days,
-                      })}
+                      {keySuccess?.duration_days ? t('balance.topup.key.success.duration', {
+                        days: keySuccess.duration_days,
+                      }) : 'Бессрочная подписка'}
                     </Typography>
                   </Box>
                 )}
