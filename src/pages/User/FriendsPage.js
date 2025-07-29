@@ -104,23 +104,69 @@ const FriendsPage = () => {
   const handleUnfollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
-      await axios.post('/api/profile/unfollow', { unfollowed_id: userId });
+      const response = await axios.post('/api/profile/unfollow', { followed_id: userId });
+      
+      if (response.data.success) {
+        // Немедленно обновляем список без перезагрузки с сервера
+        if (tab === 0) {
+          // На вкладке друзей - убираем из списка друзей
+          setFriends(prev => prev.filter(friend => friend.id !== userId));
+        } else if (tab === 1) {
+          // На вкладке подписчиков - убираем из списка подписчиков
+          setFollowers(prev => prev.filter(follower => follower.id !== userId));
+        } else if (tab === 2) {
+          // На вкладке подписок - убираем из списка подписок
+          setFollowing(prev => prev.filter(following => following.id !== userId));
+        }
+      }
+    } catch (e) {
+      console.error('Ошибка при отписке:', e);
+      // В случае ошибки перезагружаем данные с сервера
       if (tab === 0) fetchFriends();
       if (tab === 1) fetchFollowers();
       if (tab === 2) fetchFollowing();
-    } catch (e) {}
-    setLoadingIds(prev => ({ ...prev, [userId]: false }));
+    } finally {
+      setLoadingIds(prev => ({ ...prev, [userId]: false }));
+    }
   };
 
   const handleFollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
-      await axios.post('/api/profile/follow', { followed_id: userId });
+      const response = await axios.post('/api/profile/follow', { followed_id: userId });
+      
+      if (response.data.success) {
+        // Немедленно обновляем список без перезагрузки с сервера
+        if (tab === 0) {
+          // На вкладке друзей после подписки нужно перезагрузить список
+          fetchFriends();
+        } else if (tab === 1) {
+          // На вкладке подписчиков после подписки убираем из списка
+          setFollowers(prev => prev.filter(follower => follower.id !== userId));
+        } else if (tab === 2) {
+          // На вкладке подписок после подписки перезагружаем список
+          fetchFollowing();
+        }
+      }
+    } catch (e) {
+      console.error('Ошибка при подписке:', e);
+      // В случае ошибки перезагружаем данные с сервера
       if (tab === 0) fetchFriends();
       if (tab === 1) fetchFollowers();
       if (tab === 2) fetchFollowing();
-    } catch (e) {}
-    setLoadingIds(prev => ({ ...prev, [userId]: false }));
+    } finally {
+      setLoadingIds(prev => ({ ...prev, [userId]: false }));
+    }
+  };
+
+  const handleCopyLink = async (user) => {
+    const profileUrl = `${window.location.origin}/profile/${user.username}`;
+    try {
+      await navigator.clipboard.writeText(profileUrl);
+      // Можно добавить уведомление об успешном копировании
+    } catch (error) {
+      console.error('Ошибка при копировании ссылки:', error);
+    }
   };
 
   const filterUsers = arr => {
@@ -188,11 +234,18 @@ const FriendsPage = () => {
                   ...u,
                   onUnfollow: handleUnfollow,
                   onFollow: handleFollow,
+                  onCopyLink: handleCopyLink,
                   loading: !!loadingIds[u.id],
+                  showFollowButton: true, // Показываем кнопку подписки везде
+                  showMessageButton: false,
+                  showCopyLinkButton: true,
+                  showShareButton: false, // Скрываем "Поделиться" на странице друзей
+                  showBlockButton: false,
+                  showReportButton: false,
                 }))}
                 cardSpacing={2}
                 cardRadius={12}
-                forceUnfollow={tab === 0}
+                forceUnfollow={tab === 0} // На вкладке "Друзья" показываем "Отписаться", на других - "Подписаться"
               />
             )}
           </Box>

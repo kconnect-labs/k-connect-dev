@@ -38,9 +38,6 @@ const ArtistPage = React.lazy(() => import('../pages/Main/ArtistPage'));
 const MessengerPage = React.lazy(
   () => import('../pages/Messenger/MessengerPage')
 );
-const SubscriptionsPage = React.lazy(
-  () => import('../pages/Economic/SubscriptionsPage')
-) as React.LazyExoticComponent<React.ComponentType<{ tabIndex?: number }>>;
 const BugReportPage = React.lazy(
   () => import('../pages/BugPages/BugReportPage')
 );
@@ -207,30 +204,6 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             element={
               <ProtectedRoute>
                 <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/profile/:username/followers'
-            element={
-              <ProtectedRoute>
-                <SubscriptionsPage tabIndex={0} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/profile/:username/following'
-            element={
-              <ProtectedRoute>
-                <SubscriptionsPage tabIndex={1} />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/subscriptions'
-            element={
-              <ProtectedRoute>
-                <SubscriptionsPage tabIndex={0} />
               </ProtectedRoute>
             }
           />

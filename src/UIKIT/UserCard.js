@@ -9,7 +9,9 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VerifiedIcon from '@mui/icons-material/CheckCircle';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import { UserMenu } from './index';
 
 const UserCardContainer = styled(Paper, {
   shouldForwardProp: prop => prop !== 'cardRadius',
@@ -55,8 +57,19 @@ const UserCard = ({
   is_following,
   onUnfollow,
   onFollow,
+  onMessage,
+  onCopyLink,
+  onBlock,
+  onReport,
   cardRadius,
   forceUnfollow,
+  loading,
+  showFollowButton = true,
+  showMessageButton = true,
+  showCopyLinkButton = true,
+  showShareButton = true,
+  showBlockButton = true,
+  showReportButton = true,
 }) => {
   let avatarUrl = photo;
   if (
@@ -119,14 +132,26 @@ const UserCard = ({
               @{username}
             </TruncatedText>
           </Box>
-          <IconButton
-            size='small'
-            sx={{ ml: 1, alignSelf: 'flex-start' }}
-            onClick={handleFollowClick}
-            aria-label={forceUnfollow || is_following ? 'Отписаться' : 'Добавить'}
-          >
-            <MoreVertIcon />
-          </IconButton>
+          <UserMenu
+            id={id}
+            username={username}
+            isFollowing={is_following}
+            onFollow={onFollow}
+            onUnfollow={onUnfollow}
+            onMessage={onMessage}
+            onCopyLink={onCopyLink}
+            onBlock={onBlock}
+            onReport={onReport}
+            forceUnfollow={forceUnfollow}
+            loading={loading}
+            size="small"
+            showFollowButton={showFollowButton}
+            showMessageButton={showMessageButton}
+            showCopyLinkButton={showCopyLinkButton}
+            showShareButton={showShareButton}
+            showBlockButton={showBlockButton}
+            showReportButton={showReportButton}
+          />
         </UserCardContainer>
       </MuiLink>
     </Box>
