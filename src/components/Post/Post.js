@@ -16,7 +16,6 @@ import {
   ListItemText,
   Snackbar,
   Card,
-  styled,
   Button,
   CircularProgress,
   Alert,
@@ -98,50 +97,53 @@ const vscDarkPlus = React.lazy(() =>
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
 import MediaErrorDisplay from './MediaErrorDisplay';
+import {
+  processImages,
+  hasVideo,
+  formatVideoUrl,
+  getCoverPath,
+  formatDuration,
+  truncateText,
+  getOptimizedImageUrl,
+  isPostEditable,
+  getRandomRotation,
+  getRandomSize,
+  incrementViewCount,
+  fetchLastLikedUsers,
+  fetchLastComment,
+  createLightboxHandlers,
+  createMenuHandlers,
+  createCopyLinkHandler,
+  createToggleExpandedHandler,
+  createTrackPlayHandler,
+  createOpenPostFromMenuHandler,
+  createCloseRepostModalHandler,
+  createCommentClickHandler,
+  createShareHandler,
+  createOpenImageHandler,
+} from './utils/postUtils';
 import HeartAnimation from './HeartAnimation';
 import ChannelTag from './ChannelTag';
 import ShowMoreButton from './ShowMoreButton';
 import MarkdownContent from './MarkdownContent';
-import BlurredMenu from './BlurredMenu';
+import { UniversalMenu } from '../../UIKIT';
 import MetaWarningBanner from './MetaWarningBanner';
+import {
+  skeletonKeyframes,
+  PostCard,
+  FactCard,
+  FactHeader,
+  FactTitle,
+  FactText,
+  FactFooter,
+} from './styles/PostStyles';
 
 const ReportDialog = lazy(() => import('./ReportDialog'));
 const FactModal = lazy(() => import('./FactModal'));
 const RepostModal = lazy(() => import('./RepostModal'));
 const DeleteDialog = lazy(() => import('./DeleteDialog'));
 
-// CSS анимация для скелетона
-const skeletonKeyframes = `
-  @keyframes pulse {
-    0% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.4;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-`;
 
-const PostCard = styled(Card, {
-  shouldForwardProp: prop => !['isPinned', 'statusColor'].includes(prop),
-})(({ theme, isPinned, statusColor }) => ({
-  marginBottom: theme.spacing(2),
-  borderRadius: theme.spacing(1),
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-  transition: 'box-shadow 0.3s ease-in-out',
-              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: isPinned
-    ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
-    : '1px solid rgba(255, 255, 255, 0.1)',
-  '&:hover': {
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
-  },
-}));
 
 const EditPostDialog = lazy(() => import('./EditPostDialog'));
 
@@ -161,16 +163,6 @@ const Post = ({
   const { setPostDetail, openPostDetail } = usePostDetail();
 
 
-  // Функция для форматирования времени с переводами
-  const formatTimeAgoWithTranslation = dateString => {
-    if (!dateString) return '';
-
-    const date = parseDate(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-
-    return formatTimeAgoDiff(diffInSeconds, t);
-  };
   // вместо useMediaQuery используем window.matchMedia, чтобы убрать useSyncExternalStore
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth <= 600 : false
@@ -269,6 +261,39 @@ const Post = ({
     t('post.report.reasons.other'),
   ];
 
+  // Create handlers
+  const { handleCloseLightbox, handleNextImage, handlePrevImage } = createLightboxHandlers(
+    setLightboxOpen,
+    setCurrentImageIndex,
+    processImages,
+    post,
+    mediaError
+  );
+
+  const { handleMenuOpen, handleMenuClose } = createMenuHandlers(setMenuAnchorEl);
+
+  // Create utility handlers
+  const handleCopyLink = createCopyLinkHandler(post.id);
+  const toggleExpanded = createToggleExpandedHandler(setIsExpanded);
+
+  // Create music and post handlers
+  const handleTrackPlay = createTrackPlayHandler(currentTrack, togglePlay, playTrack);
+  const handleOpenPostFromMenu = createOpenPostFromMenuHandler(setPostDetail);
+  const handleCloseRepostModal = createCloseRepostModalHandler(setRepostModalOpen);
+
+  // Create comment and share handlers
+  const handleCommentClick = createCommentClickHandler(openPostDetail);
+  const handleShare = createShareHandler(post.id);
+
+  // Create image handlers
+  const handleOpenImage = createOpenImageHandler(
+    post,
+    mediaError,
+    onOpenLightbox,
+    setCurrentImageIndex,
+    setLightboxOpen
+  );
+
   useEffect(() => {
     if (post) {
       setLiked(post.user_liked || post.is_liked || false);
@@ -345,13 +370,22 @@ const Post = ({
           );
           setLastLikedUsers(cachedData.users);
         } else {
-          fetchLastLikedUsers(post.id);
+          fetchLastLikedUsers(post.id).then(users => {
+            if (users) setLastLikedUsers(users);
+          });
         }
       }
 
       // Загружаем последний комментарий (всегда, чтобы хуки вызывались в одинаковом порядке)
       if (post.id) {
-        fetchLastComment(post.id);
+        setLastCommentLoading(true);
+        fetchLastComment(post.id).then(comment => {
+          setLastComment(comment);
+          setLastCommentLoading(false);
+        }).catch(() => {
+          setLastComment(null);
+          setLastCommentLoading(false);
+        });
       }
 
       try {
@@ -381,49 +415,9 @@ const Post = ({
     }
   }, [post]);
 
-  const getCoverPath = track => {
-    if (!track || !track.cover_path) {
-      return '/uploads/system/album_placeholder.jpg';
-    }
 
-    if (track.cover_path.startsWith('/static/')) {
-      return track.cover_path;
-    }
 
-    if (track.cover_path.startsWith('static/')) {
-      return `/${track.cover_path}`;
-    }
 
-    if (track.cover_path.startsWith('http')) {
-      return track.cover_path;
-    }
-
-    return `/static/music/${track.cover_path}`;
-  };
-
-  const formatDuration = seconds => {
-    if (!seconds) return '0:00';
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const truncateText = (text, maxLength = 500) => {
-    if (!text || text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + '...';
-  };
-
-  const handleTrackPlay = (track, event) => {
-    if (event) event.stopPropagation();
-
-    const isCurrentlyPlaying = currentTrack && currentTrack.id === track.id;
-
-    if (isCurrentlyPlaying) {
-      togglePlay();
-    } else {
-      playTrack(track, 'post');
-    }
-  };
 
   useEffect(() => {
     const checkHeight = () => {
@@ -440,133 +434,20 @@ const Post = ({
     return () => clearTimeout(timeoutId);
   }, [post?.content]);
 
-  const fetchLastLikedUsers = async postId => {
-    try {
-      const response = await axios.get(`/api/posts/${postId}/likes`, {
-        params: { limit: 3 },
-        forceRefresh: true,
-      });
 
-      if (response.data && Array.isArray(response.data.users)) {
-        // Дедупликация пользователей по ID
-        const uniqueUsers = response.data.users.filter(
-          (user, index, self) => index === self.findIndex(u => u.id === user.id)
-        );
-        setLastLikedUsers(uniqueUsers);
-      }
-    } catch (error) {
-      console.error('Error fetching last liked users:', error);
-    }
-  };
 
-  const fetchLastComment = async postId => {
-    try {
-      setLastCommentLoading(true);
-      const response = await axios.get(`/api/posts/${postId}/comments`, {
-        params: { page: 1, limit: 1 },
-      });
 
-      if (response.data.comments && response.data.comments.length > 0) {
-        const comment = response.data.comments[0];
-        setLastComment(comment);
-      } else {
-        setLastComment(null);
-      }
-    } catch (error) {
-      setLastComment(null);
-    } finally {
-      setLastCommentLoading(false);
-    }
-  };
 
-  const processImages = () => {
-    if (mediaError.type === 'image') {
-      return [];
-    }
 
-    if (post?.images && Array.isArray(post.images) && post.images.length > 0) {
-      return post.images;
-    }
-
-    if (post?.image && typeof post.image === 'string') {
-      if (post.image.includes('||') || post.image.includes(',')) {
-        return post.image
-          .split(/[||,]/)
-          .map(url => url.trim())
-          .filter(Boolean);
-      }
-      return [post.image];
-    }
-
-    return [];
-  };
-
-  const hasVideo = () => {
-    return (
-      post?.video && typeof post.video === 'string' && post.video.trim() !== ''
-    );
-  };
-
-  const formatVideoUrl = url => {
-    if (!url) return '';
-
-    if (url.startsWith('http') || url.startsWith('//')) {
-      return url;
-    }
-
-    if (url.startsWith('/static/uploads/post/')) {
-      return url;
-    }
-
-    return `/static/uploads/post/${post.id}/${url}`;
-  };
-
-  const images = processImages();
-  const videoUrl = hasVideo() ? formatVideoUrl(post.video) : null;
-
-  const handleOpenImage = async index => {
-    if (window.event) {
-      window.event.stopPropagation();
-    }
-
-    if (onOpenLightbox && typeof onOpenLightbox === 'function') {
-      const allImages = processImages();
-      if (allImages.length > 0) {
-        onOpenLightbox(allImages[index], allImages, index);
-      }
-      return;
-    }
-
-    const allImages = processImages();
-    if (allImages.length > 0) {
-      try {
-        const currentImageUrl = allImages[index];
-        setCurrentImageIndex(index);
-        setLightboxOpen(true);
-      } catch (error) {
-        console.error('Error opening lightbox:', error);
-        setCurrentImageIndex(index);
-        setLightboxOpen(true);
-      }
-    }
-  };
-
-  const handleCloseLightbox = () => {
-    setLightboxOpen(false);
-  };
-
-  const handleNextImage = () => {
-    setCurrentImageIndex(prevIndex => (prevIndex + 1) % images.length);
-  };
-
-  const handlePrevImage = () => {
-    setCurrentImageIndex(
-      prevIndex => (prevIndex - 1 + images.length) % images.length
-    );
-  };
 
   const handleLike = async e => {
     if (e) e.stopPropagation();
+
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleLike: post.id is undefined or invalid:', post?.id);
+      return;
+    }
 
     const wasLiked = liked;
     const prevCount = likesCount;
@@ -625,14 +506,7 @@ const Post = ({
     }
   };
 
-  const handleMenuOpen = event => {
-    event.stopPropagation();
-    setMenuAnchorEl(event.currentTarget);
-  };
 
-  const handleMenuClose = () => {
-    setMenuAnchorEl(null);
-  };
 
   const handleDelete = () => {
     handleMenuClose();
@@ -641,7 +515,7 @@ const Post = ({
 
   const handleEdit = () => {
     handleMenuClose();
-    if (!isPostEditable()) {
+    if (!isPostEditable(post)) {
       setSnackbar({
         open: true,
         message:
@@ -729,8 +603,18 @@ const Post = ({
   };
 
   const handleSubmitEdit = async () => {
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleSubmitEdit: post.id is undefined or invalid:', post?.id);
+      setEditDialog({
+        ...editDialog,
+        error: 'Ошибка: не удалось определить ID поста',
+      });
+      return;
+    }
+
     try {
-      if (!isPostEditable()) {
+      if (!isPostEditable(post)) {
         setEditDialog({
           ...editDialog,
           error:
@@ -823,6 +707,18 @@ const Post = ({
   };
 
   const confirmDelete = async () => {
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('confirmDelete: post.id is undefined or invalid:', post?.id);
+      setDeleteDialog({ open: false, deleting: false, deleted: false });
+      setSnackbar({
+        open: true,
+        message: 'Ошибка: не удалось определить ID поста',
+        severity: 'error',
+      });
+      return;
+    }
+
     try {
       setDeleteDialog({ ...deleteDialog, deleting: true });
 
@@ -872,12 +768,18 @@ const Post = ({
     setRepostModalOpen(true);
   };
 
-  const handleCloseRepostModal = () => {
-    setRepostModalOpen(false);
-  };
+
 
   const handleCreateRepost = async () => {
     if (repostLoading) return;
+
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleCreateRepost: post.id is undefined or invalid:', post?.id);
+      setSnackbarMessage('Ошибка: не удалось определить ID поста');
+      setSnackbarOpen(true);
+      return;
+    }
 
     try {
       setRepostLoading(true);
@@ -922,148 +824,17 @@ const Post = ({
     }
   };
 
-  const handleCommentClick = e => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log(
-      'Comment button clicked, opening overlay for post ID:',
-      post.id
-    );
-    openPostDetail(post.id, e);
-  };
 
-  const handleShare = e => {
-    e.stopPropagation();
-    const postUrl = `${window.location.origin}/post/${post.id}`;
-    navigator.clipboard
-      .writeText(postUrl)
-      .then(() => {
-        window.dispatchEvent(
-          new CustomEvent('show-error', {
-            detail: {
-              message: 'Ссылка скопирована в буфер обмена',
-              shortMessage: 'Ссылка скопирована',
-              notificationType: 'success',
-              animationType: 'pill',
-            },
-          })
-        );
-      })
-      .catch(err => {
-        console.error('Не удалось скопировать ссылку:', err);
-        window.dispatchEvent(
-          new CustomEvent('show-error', {
-            detail: {
-              message: 'Не удалось скопировать ссылку',
-              shortMessage: 'Ошибка',
-              notificationType: 'error',
-              animationType: 'pill',
-            },
-          })
-        );
-      });
-  };
 
-  const handleCopyLink = () => {
-    try {
-      const linkToCopy = `https://k-connect.ru/post/${post.id}`;
-      navigator.clipboard.writeText(linkToCopy);
 
-      window.dispatchEvent(
-        new CustomEvent('show-error', {
-          detail: {
-            message: 'Ссылка скопирована в буфер обмена',
-            shortMessage: 'Ссылка скопирована',
-            notificationType: 'success',
-            animationType: 'pill',
-          },
-        })
-      );
-    } catch (error) {
-      console.error('Ошибка при копировании ссылки:', error);
 
-      window.dispatchEvent(
-        new CustomEvent('show-error', {
-          detail: {
-            message: 'Не удалось скопировать ссылку',
-            shortMessage: 'Ошибка копирования',
-            notificationType: 'error',
-            animationType: 'pill',
-          },
-        })
-      );
-    }
-  };
 
-  const handleOpenPostFromMenu = () => {
-    console.log('Opening post comments from context menu, ID:', post.id);
 
-    setPostDetail(post.id);
-  };
 
-  const toggleExpanded = e => {
-    e.stopPropagation();
-    setIsExpanded(!isExpanded);
-  };
 
-  const getOptimizedImageUrl = url => {
-    if (!url) return '/static/uploads/avatar/system/avatar.png';
 
-    if (url.includes('format=webp')) {
-      return url;
-    }
 
-    const supportsWebP = 'imageRendering' in document.documentElement.style;
 
-    if (
-      supportsWebP &&
-      (url.startsWith('/static/') || url.startsWith('/uploads/'))
-    ) {
-      return `${url}${url.includes('?') ? '&' : '?'}format=webp`;
-    }
-
-    return url;
-  };
-
-  const isPostEditable = () => {
-    if (!post?.timestamp) return false;
-
-    const postTime = new Date(post.timestamp);
-    const currentTime = new Date();
-    const timeDifference = (currentTime - postTime) / (1000 * 60 * 60);
-
-    return timeDifference <= 3;
-  };
-
-  const incrementViewCount = async () => {
-    if (post && post.id) {
-      try {
-        const viewKey = `post_viewed_${post.id}`;
-        if (sessionStorage.getItem(viewKey)) {
-          return;
-        }
-
-        sessionStorage.setItem(viewKey, 'true');
-
-        const attemptViewCount = async (retries = 3) => {
-          try {
-            const response = await axios.post(`/api/posts/${post.id}/view`);
-            if (response.data && response.data.success) {
-              setViewsCount(response.data.views_count);
-            }
-          } catch (error) {
-            if (retries > 1) {
-              setTimeout(() => attemptViewCount(retries - 1), 1000);
-            }
-          }
-        };
-
-        attemptViewCount();
-      } catch (error) {
-        console.error('Error incrementing view count:', error);
-      }
-    }
-  };
 
   const postRef = useRef(null);
 
@@ -1072,7 +843,15 @@ const Post = ({
       entries => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          incrementViewCount();
+          if (post?.id && post.id !== 'undefined') {
+            incrementViewCount(post.id, viewsCount).then(newViewsCount => {
+              if (newViewsCount !== viewsCount) {
+                setViewsCount(newViewsCount);
+              }
+            });
+          } else {
+            console.warn('Post ID is undefined or invalid:', post?.id);
+          }
 
           observer.unobserve(entry.target);
         }
@@ -1092,6 +871,16 @@ const Post = ({
   }, [post?.id]);
 
   const handleReportSubmit = async () => {
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleReportSubmit: post.id is undefined or invalid:', post?.id);
+      setReportDialog({
+        ...reportDialog,
+        error: 'Ошибка: не удалось определить ID поста',
+      });
+      return;
+    }
+
     if (!reportDialog.reason) {
       setReportDialog({
         ...reportDialog,
@@ -1166,6 +955,17 @@ const Post = ({
   };
 
   const handleFactSubmit = async factData => {
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleFactSubmit: post.id is undefined or invalid:', post?.id);
+      setFactModal({
+        ...factModal,
+        loading: false,
+        error: 'Ошибка: не удалось определить ID поста',
+      });
+      return;
+    }
+
     setFactModal({ ...factModal, loading: true, error: null });
 
     try {
@@ -1194,6 +994,17 @@ const Post = ({
   };
 
   const handleFactDelete = async () => {
+    // Проверяем, что post.id существует
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handleFactDelete: post.id is undefined or invalid:', post?.id);
+      setFactModal({
+        ...factModal,
+        loading: false,
+        error: 'Ошибка: не удалось определить ID поста',
+      });
+      return;
+    }
+
     setFactModal({ ...factModal, loading: true, error: null });
 
     try {
@@ -1214,22 +1025,17 @@ const Post = ({
 
   const handlePostClick = e => {
     if (e.target.closest('a, button')) return;
-    incrementViewCount();
+    // Проверяем, что post.id существует перед вызовом incrementViewCount
+    if (post?.id && post.id !== 'undefined') {
+      incrementViewCount(post.id, viewsCount);
+    }
   };
 
 
 
 
 
-  const getRandomRotation = () => {
-    const possibleAngles = [-60, -50, -45, -40, -35, 35, 40, 45, 50, 60];
 
-    return possibleAngles[Math.floor(Math.random() * possibleAngles.length)];
-  };
-
-  const getRandomSize = () => {
-    return Math.floor(Math.random() * 40) + 60;
-  };
 
   const addHeart = (x, y) => {
     const newHeart = {
@@ -1350,8 +1156,22 @@ const Post = ({
     setMediaError({ type: 'video', url });
   };
 
-  // Add pin post handler
+
   const handlePinPost = async () => {
+    if (!post?.id || post.id === 'undefined') {
+      console.warn('handlePinPost: post.id is undefined or invalid:', post?.id);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: 'Ошибка: не удалось определить ID поста',
+            shortMessage: 'Ошибка',
+            notificationType: 'error',
+          },
+        })
+      );
+      return;
+    }
+
     try {
       if (isPinned) {
         await axios.post(
@@ -1539,52 +1359,68 @@ const Post = ({
     </Box>
   );
 
-  const FactCard = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(2),
-    borderRadius: '12px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    position: 'relative',
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '4px',
-      height: '100%',
-      backgroundColor: '#FFA726',
-      borderRadius: '2px 0 0 2px',
-    },
-  }));
 
-  const FactHeader = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(1.5),
-    gap: theme.spacing(0.5),
-  }));
 
-  const FactTitle = styled(Typography)(({ theme }) => ({
-    fontWeight: 600,
-    fontSize: '0.9rem',
-    color: 'rgba(255, 255, 255, 0.9)',
-  }));
+  // Создаем массив элементов меню
+  const menuItems = React.useMemo(() => {
+    const items = [];
 
-  const FactText = styled(Typography)(({ theme }) => ({
-    fontSize: '0.85rem',
-    lineHeight: 1.5,
-    color: 'rgba(255, 255, 255, 0.8)',
-    marginBottom: theme.spacing(1.5),
-  }));
+    // Факты (только для пользователя с id 3)
+    if (currentUser && currentUser.id === 3) {
+      items.push({
+        id: 'facts',
+        label: 'Факты',
+        icon: <FactCheckIcon fontSize='small' />,
+        onClick: handleFactsClick,
+      });
+    }
 
-  const FactFooter = styled(Typography)(({ theme }) => ({
-    fontSize: '0.75rem',
-    color: 'rgba(255, 255, 255, 0.6)',
-    fontStyle: 'italic',
-  }));
+    // Пункты для владельца поста
+    if (isCurrentUserPost) {
+      items.push(
+        {
+          id: 'edit',
+          label: t('post.menu_actions.edit'),
+          icon: <EditIcon fontSize='small' />,
+          onClick: handleEdit,
+        },
+        {
+          id: 'delete',
+          label: t('post.menu_actions.delete'),
+          icon: <DeleteIcon fontSize='small' />,
+          onClick: handleDelete,
+          danger: true,
+        },
+        {
+          id: 'pin',
+          label: isPinned ? t('post.menu_actions.unpin') : t('post.menu_actions.pin'),
+          icon: isPinned ? <PushPinIcon fontSize='small' /> : <PushPinOutlinedIcon fontSize='small' />,
+          onClick: handlePinPost,
+        }
+      );
+    }
+
+    // Копировать ссылку (для всех)
+    items.push({
+      id: 'copy-link',
+      label: t('post.menu_actions.copy_link'),
+      icon: <Link2 size={16} />,
+      onClick: handleCopyLink,
+    });
+
+    // Пожаловаться (только для чужих постов)
+    if (!isCurrentUserPost) {
+      items.push({
+        id: 'report',
+        label: t('post.menu_actions.report'),
+        icon: <FlagIcon fontSize='small' />,
+        onClick: handleReportClick,
+        danger: true,
+      });
+    }
+
+    return items;
+  }, [currentUser, isCurrentUserPost, isPinned, t]);
 
   return (
     <>
@@ -1908,10 +1744,7 @@ const Post = ({
                       textDecoration: 'none',
                       display: 'flex',
                       alignItems: 'center',
-                      '&:hover': {
-                        color: 'primary.main',
-                        textDecoration: 'underline',
-                      },
+
                     }}
                   >
                     {post.original_post.user?.name || 'Unknown'}
@@ -1950,9 +1783,6 @@ const Post = ({
                     color: 'inherit',
                     display: 'block',
                     cursor: 'pointer',
-                    '&:hover': {
-                      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                    },
                   }}
                 >
                   {post.original_post.content && (
@@ -2208,36 +2038,6 @@ const Post = ({
                       sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Heart
-                          size={12}
-                          color='text.secondary'
-                          style={{ marginRight: '4px' }}
-                        />
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          sx={{ fontSize: '0.7rem' }}
-                        >
-                          {post.original_post.likes_count || 0}
-                        </Typography>
-                      </Box>
-
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <MessageCircle
-                          size={12}
-                          color='text.secondary'
-                          style={{ marginRight: '4px' }}
-                        />
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          sx={{ fontSize: '0.7rem' }}
-                        >
-                          {post.original_post.comments_count || 0}
-                        </Typography>
-                      </Box>
-
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <VisibilityIcon
                           sx={{
                             fontSize: 12,
@@ -2259,7 +2059,7 @@ const Post = ({
               </Box>
             )}
 
-          {videoUrl && mediaError.type !== 'video' ? (
+          {post.video && mediaError.type !== 'video' ? (
             <Box
               sx={{
                 mb: 2,
@@ -2297,14 +2097,14 @@ const Post = ({
                       </Box>
                     }
                   >
-                    <VideoPlayer
-                      videoUrl={videoUrl}
-                      poster={
-                        images.length > 0
-                          ? formatVideoUrl(images[0])
-                          : undefined
-                      }
-                      onError={() => handleVideoError(videoUrl)}
+                                                       <VideoPlayer
+                                     videoUrl={post.video}
+                                     poster={
+                                       processImages(post, mediaError).length > 0
+                                         ? formatVideoUrl(processImages(post, mediaError)[0])
+                                         : undefined
+                                     }
+                      onError={() => handleVideoError(post.video)}
                     />
                   </Suspense>
                 </Box>
@@ -2319,7 +2119,7 @@ const Post = ({
             )
           )}
 
-          {images.length > 0 && mediaError.type !== 'image' ? (
+                                   {processImages(post, mediaError).length > 0 && mediaError.type !== 'image' ? (
             <Box
               sx={{
                 mb: 2,
@@ -2358,8 +2158,8 @@ const Post = ({
                       </Box>
                     }
                   >
-                    <ImageGrid
-                      images={images}
+                                                       <ImageGrid
+                                     images={processImages(post, mediaError)}
                       onImageClick={handleOpenImage}
                       onImageError={handleImageError}
                     />
@@ -2992,67 +2792,13 @@ const Post = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       />
 
-      <BlurredMenu
+      <UniversalMenu
         anchorEl={menuAnchorEl}
         open={menuOpen}
         onClose={handleMenuClose}
+        items={menuItems}
         onClick={e => e.stopPropagation()}
-      >
-        {currentUser && currentUser.id === 3 && (
-          <MenuItem onClick={handleFactsClick}>
-            <ListItemIcon>
-              <FactCheckIcon fontSize='small' />
-            </ListItemIcon>
-            <ListItemText>Факты</ListItemText>
-          </MenuItem>
-        )}
-        {isCurrentUserPost && (
-          <>
-            <MenuItem onClick={handleEdit}>
-              <ListItemIcon>
-                <EditIcon fontSize='small' />
-              </ListItemIcon>
-              <ListItemText>{t('post.menu_actions.edit')}</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleDelete}>
-              <ListItemIcon>
-                <DeleteIcon fontSize='small' />
-              </ListItemIcon>
-              <ListItemText>{t('post.menu_actions.delete')}</ListItemText>
-            </MenuItem>
-          </>
-        )}
-        {isCurrentUserPost && (
-          <MenuItem onClick={handlePinPost}>
-            <ListItemIcon>
-              {isPinned ? (
-                <PushPinIcon fontSize='small' />
-              ) : (
-                <PushPinOutlinedIcon fontSize='small' />
-              )}
-            </ListItemIcon>
-            <ListItemText>
-              {isPinned
-                ? t('post.menu_actions.unpin')
-                : t('post.menu_actions.pin')}
-            </ListItemText>
-          </MenuItem>
-        )}
-        <MenuItem onClick={handleCopyLink}>
-          <ListItemIcon>
-            <Link2 size={16} />
-          </ListItemIcon>
-          <ListItemText>{t('post.menu_actions.copy_link')}</ListItemText>
-        </MenuItem>
-        {!isCurrentUserPost && (
-          <MenuItem onClick={handleReportClick}>
-            <ListItemIcon>
-              <FlagIcon fontSize='small' />
-            </ListItemIcon>
-            <ListItemText>{t('post.menu_actions.report')}</ListItemText>
-          </MenuItem>
-        )}
-      </BlurredMenu>
+      />
 
       <Suspense fallback={null}>
         <RepostModal
@@ -3071,7 +2817,7 @@ const Post = ({
         <SimpleImageViewer
           isOpen={lightboxOpen}
           onClose={handleCloseLightbox}
-          images={images}
+          images={processImages(post, mediaError)}
           initialIndex={currentImageIndex}
         />
       )}

@@ -1,6 +1,6 @@
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { linkRenderers } from '../../utils/LinkUtils';
-import React from 'react';
 
 // Ленивая загрузка синтаксиса только когда нужен
 const SyntaxHighlighter = React.lazy(() =>
@@ -14,9 +14,17 @@ const vscDarkPlus = React.lazy(() =>
   }))
 );
 
+interface CodeProps {
+  node?: any;
+  inline?: boolean;
+  className?: string;
+  children: React.ReactNode;
+  [key: string]: any;
+}
+
 export const getMarkdownComponents = () => ({
   ...linkRenderers,
-  code({ node, inline, className, children, ...props }) {
+  code({ node, inline, className, children, ...props }: CodeProps) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
       <React.Suspense fallback={<code>{children}</code>}>
@@ -36,4 +44,4 @@ export const getMarkdownComponents = () => ({
       </code>
     );
   },
-});
+}); 

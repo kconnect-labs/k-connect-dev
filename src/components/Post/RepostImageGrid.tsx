@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, styled, Typography } from '@mui/material';
+import { RepostImageGridProps } from './types';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -32,7 +33,11 @@ const BackgroundImage = styled('div')({
   transform: 'scale(1.2)',
 });
 
-const Image = styled('img')(({ isCenter }) => ({
+interface ImageProps {
+  isCenter?: boolean;
+}
+
+const Image = styled('img')<ImageProps>(({ isCenter }) => ({
   maxWidth: isCenter ? '90%' : '100%',
   maxHeight: isCenter ? '100%' : '100%',
   width: 'auto',
@@ -66,7 +71,7 @@ const LastImageOverlay = styled(Box)({
   right: 0,
   bottom: 0,
   backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      backdropFilter: 'var(--theme-backdrop-filter, blur(2px))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(2px))',
   zIndex: 2,
 });
 
@@ -74,7 +79,7 @@ const LastImageOverlay = styled(Box)({
  * A specialized image grid for reposts with blurred backgrounds and limited display
  * Shows maximum 2 images by default, or a 3-grid with +N indicator
  */
-const RepostImageGrid = ({ images, onImageClick }) => {
+const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick }) => {
   if (!images || !Array.isArray(images) || images.length === 0) {
     return null;
   }
@@ -187,4 +192,4 @@ const RepostImageGrid = ({ images, onImageClick }) => {
   );
 };
 
-export default RepostImageGrid;
+export default RepostImageGrid; 

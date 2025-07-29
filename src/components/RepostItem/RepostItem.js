@@ -24,7 +24,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
-import { VerificationBadge } from '../../UIKIT';
+import { VerificationBadge, UniversalMenu } from '../../UIKIT';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ReportIcon from '@mui/icons-material/Report';
@@ -124,19 +124,7 @@ const MarkdownContent = styled(Box)(({ theme }) => ({
   },
 }));
 
-const BlurredMenu = styled(Menu)(({ theme }) => ({
-  '& .MuiPaper-root': {
-    backgroundColor: 'rgba(30, 30, 30, 0.85)',
-    backdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-    '& .MuiMenuItem-root': {
-      '&:hover': {
-        backgroundColor: 'rgba(100, 90, 140, 0.1)',
-      },
-    },
-  },
-}));
+
 
 const MusicTrackPreview = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -252,6 +240,17 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
 
   const backgroundImage = repost.user?.avatar_url || null;
 
+  // Создаем массив элементов меню
+  const menuItems = React.useMemo(() => [
+    {
+      id: 'delete',
+      label: 'Удалить репост',
+      icon: <DeleteIcon fontSize='small' />,
+      onClick: handleDelete,
+      danger: true,
+    },
+  ], []);
+
   return (
     <Fade in={!isDeleting} timeout={300}>
       <RepostCard
@@ -314,14 +313,13 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
                 >
                   <MoreVertIcon fontSize='small' />
                 </IconButton>
-                <BlurredMenu
+                <UniversalMenu
                   anchorEl={menuAnchorEl}
                   open={Boolean(menuAnchorEl)}
                   onClose={handleMenuClose}
+                  items={menuItems}
                   onClick={e => e.stopPropagation()}
-                >
-                  <MenuItem onClick={handleDelete}>Удалить репост</MenuItem>
-                </BlurredMenu>
+                />
               </>
             )}
           </UserInfo>

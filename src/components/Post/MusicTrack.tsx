@@ -1,6 +1,12 @@
 import React from 'react';
 import { Box, styled } from '@mui/material';
 
+interface MusicTrackProps {
+  children: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  [key: string]: any;
+}
+
 const MusicTrackContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -18,7 +24,7 @@ const MusicTrackContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const MusicTrack = ({ children, onClick, ...props }) => {
+const MusicTrack: React.FC<MusicTrackProps> = ({ children, onClick, ...props }) => {
   return (
     <MusicTrackContainer onClick={onClick} {...props}>
       {children}
@@ -26,4 +32,4 @@ const MusicTrack = ({ children, onClick, ...props }) => {
   );
 };
 
-export default MusicTrack;
+export default MusicTrack; 

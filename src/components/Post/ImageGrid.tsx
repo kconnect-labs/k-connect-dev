@@ -3,6 +3,7 @@ import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import { imageCache, createImageProps } from '../../utils/imageUtils';
+import { ImageGridProps } from './types';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -38,7 +39,12 @@ const BackgroundImage = styled('div')({
   transform: 'scale(1.1)',
 });
 
-const Image = styled('img')(({ isSingle, isMobile }) => ({
+interface ImageProps {
+  isSingle?: boolean;
+  isMobile?: boolean;
+}
+
+const Image = styled('img')<ImageProps>(({ isSingle, isMobile }) => ({
   maxWidth: '100%',
   maxHeight: isSingle ? (isMobile ? '620px' : '620px') : '100%',
   width: 'auto',
@@ -76,7 +82,15 @@ const ImageOverlay = styled(Box)({
   },
 });
 
-const ImageGrid = ({
+interface GridLayout {
+  gridTemplateColumns: string;
+  gridTemplateRows: string;
+  maxHeight: string;
+  height?: string;
+  gridTemplateAreas?: string;
+}
+
+const ImageGrid: React.FC<ImageGridProps> = ({
   images,
   selectedImage = null,
   onImageClick,
@@ -85,11 +99,15 @@ const ImageGrid = ({
   miniMode = false,
   maxHeight = 620,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [optimizedImages, setOptimizedImages] = useState([]);
+  const [optimizedImages, setOptimizedImages] = useState<Array<{
+    src: string;
+    originalSrc: string;
+    [key: string]: any;
+  }>>([]);
   const [loading, setLoading] = useState(true);
-  const [errorImages, setErrorImages] = useState({});
+  const [errorImages, setErrorImages] = useState<Record<string, boolean>>({});
 
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -107,7 +125,7 @@ const ImageGrid = ({
     return null;
   }
 
-  const getGridLayout = (count, isMobile = false) => {
+  const getGridLayout = (count: number, isMobile = false): GridLayout => {
     switch (count) {
       case 1:
         return {
@@ -191,7 +209,7 @@ const ImageGrid = ({
     }
   };
 
-  const formatImageUrl = url => {
+  const formatImageUrl = (url: string): string => {
     if (!url) return '';
 
     if (url.startsWith('http') || url.startsWith('/')) {
@@ -205,7 +223,7 @@ const ImageGrid = ({
     return url;
   };
 
-  const supportsWebP = () => {
+  const supportsWebP = (): boolean => {
     try {
       return (
         ('imageRendering' in document.documentElement.style &&
@@ -221,14 +239,14 @@ const ImageGrid = ({
     }
   };
 
-  const addFormatParam = (url, format = 'webp') => {
+  const addFormatParam = (url: string, format = 'webp'): string => {
     if (!url || !url.startsWith('/')) return url;
     return `${url}${url.includes('?') ? '&' : '?'}format=${format}`;
   };
 
   useEffect(() => {
     const loadOptimizedImages = async () => {
-      if (!images || images.length === 0) {
+      if (!images || (Array.isArray(images) && images.length === 0)) {
         setOptimizedImages([]);
         setLoading(false);
         return;
@@ -240,7 +258,7 @@ const ImageGrid = ({
         const webpSupported = supportsWebP();
 
         const optimizedResults = await Promise.all(
-          limitedImages.map(async imageUrl => {
+          limitedImages.map(async (imageUrl: string) => {
             let formattedUrl = formatImageUrl(imageUrl);
             // Проверяем кэш
             const cacheKey = `${formattedUrl}-optimized`;
@@ -274,7 +292,7 @@ const ImageGrid = ({
         console.error('Error optimizing images:', error);
 
         setOptimizedImages(
-          limitedImages.map(url => ({
+          limitedImages.map((url: string) => ({
             src: formatImageUrl(url),
             originalSrc: formatImageUrl(url),
           }))
@@ -287,7 +305,7 @@ const ImageGrid = ({
     loadOptimizedImages();
   }, [images]);
 
-  const getOptimizedImageUrl = (url, isSingle = false) => {
+  const getOptimizedImageUrl = (url: string, isSingle = false): string => {
     const width = isSingle ? 1200 : 600;
     const height = isSingle ? 900 : 600;
 
@@ -302,7 +320,7 @@ const ImageGrid = ({
     return url;
   };
 
-  const openLightbox = (index, event) => {
+  const openLightbox = (index: number, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation();
     }
@@ -319,7 +337,7 @@ const ImageGrid = ({
     setLightboxOpen(false);
   };
 
-  const getCellGridArea = (index, count) => {
+  const getCellGridArea = (index: number, count: number): string => {
     if (count === 1) return '';
 
     if (count === 2) {
@@ -363,7 +381,7 @@ const ImageGrid = ({
     return '';
   };
 
-  const handleImageError = (url, index) => {
+  const handleImageError = (url: string, index: number) => {
     setErrorImages(prev => ({
       ...prev,
       [url]: true,
@@ -374,7 +392,7 @@ const ImageGrid = ({
     }
   };
 
-  const renderImage = (image, index, isSingle) => {
+  const renderImage = (image: string, index: number, isSingle: boolean) => {
     const imageUrl = formatImageUrl(image);
     const optimizedUrl = getOptimizedImageUrl(imageUrl, isSingle);
 
@@ -453,7 +471,7 @@ const ImageGrid = ({
         }}
       >
         <ImageContainer
-          onClick={event => openLightbox(0, event)}
+          onClick={(event: React.MouseEvent) => openLightbox(0, event)}
           sx={{
             height: miniMode ? '150px' : 'auto',
             maxHeight: miniMode ? '150px' : '620px',
@@ -464,7 +482,7 @@ const ImageGrid = ({
 
         {lightboxOpen && (
           <SimpleImageViewer
-            src={formatImageUrl(limitedImages[selectedIndex])}
+            src={formatImageUrl(limitedImages[selectedIndex!])}
             onClose={closeLightbox}
             alt='Полноразмерное изображение'
           />
@@ -489,7 +507,7 @@ const ImageGrid = ({
         {limitedImages.map((image, index) => (
           <ImageContainer
             key={`image-${index}`}
-            onClick={event => openLightbox(index, event)}
+            onClick={(event: React.MouseEvent) => openLightbox(index, event)}
             sx={{
               gridArea: getCellGridArea(index, limitedImages.length),
               cursor: 'pointer',
@@ -521,7 +539,7 @@ const ImageGrid = ({
 
       {lightboxOpen && (
         <SimpleImageViewer
-          src={formatImageUrl(limitedImages[selectedIndex])}
+          src={formatImageUrl(limitedImages[selectedIndex!])}
           onClose={closeLightbox}
           alt='Полноразмерное изображение'
         />
@@ -530,4 +548,4 @@ const ImageGrid = ({
   );
 };
 
-export default ImageGrid;
+export default ImageGrid; 

@@ -1,3 +1,4 @@
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Chip } from '@mui/material';
 
@@ -14,4 +15,4 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   },
 }));
 
-export default ChannelTag;
+export default ChannelTag; 

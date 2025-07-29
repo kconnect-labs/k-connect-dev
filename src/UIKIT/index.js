@@ -13,6 +13,7 @@ import Badge from './Badge';
 import StyledTabs from './StyledTabs';
 import InfoBlock from './InfoBlock';
 import UserMenu from './UserMenu';
+import UniversalMenu from './UniversalMenu';
 
 export {
   NavButton,
@@ -32,4 +33,5 @@ export {
   StyledTabs,
   InfoBlock,
   UserMenu,
+  UniversalMenu,
 };

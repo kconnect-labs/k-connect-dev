@@ -1,9 +1,16 @@
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
+interface MarkdownContentProps {
+  isExpanded?: boolean;
+  children?: React.ReactNode;
+  [key: string]: any;
+}
+
 const MarkdownContent = styled(Box, {
   shouldForwardProp: prop => prop !== 'isExpanded',
-})(({ theme, isExpanded }) => ({
+})<MarkdownContentProps>(({ theme, isExpanded }) => ({
   '& p': {
     margin: theme.spacing(0.5, 0),
     lineHeight: 1.2,
@@ -53,4 +60,4 @@ const MarkdownContent = styled(Box, {
   transition: 'max-height 0.3s ease',
 }));
 
-export default MarkdownContent;
+export default MarkdownContent; 

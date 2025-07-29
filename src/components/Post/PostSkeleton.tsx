@@ -2,14 +2,15 @@ import React from 'react';
 import { Box, Card, CardContent, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { PostSkeletonProps } from './types';
 
 const PostCard = styled(Card)(({ theme }) => ({
   marginBottom: 10,
   borderRadius: '10px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   [theme.breakpoints.down('sm')]: {
     boxShadow: 'none',
     marginBottom: 2,
@@ -17,7 +18,7 @@ const PostCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const PostSkeleton = () => {
+const PostSkeleton: React.FC<PostSkeletonProps> = () => {
   const theme = useTheme();
 
   // Use theme-based colors for skeleton backgrounds
@@ -112,4 +113,4 @@ const PostSkeleton = () => {
   );
 };
 
-export default PostSkeleton;
+export default PostSkeleton; 

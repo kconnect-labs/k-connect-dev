@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import Lottie from 'lottie-react';
+import { MediaErrorDisplayProps } from './types';
 
-const MediaErrorContainer = props => (
+interface MediaErrorContainerProps {
+  sx?: any;
+  children: React.ReactNode;
+}
+
+const MediaErrorContainer: React.FC<MediaErrorContainerProps> = ({ sx, children, ...props }) => (
   <Box
     sx={{
       height: '220px',
@@ -22,13 +28,20 @@ const MediaErrorContainer = props => (
       padding: 2,
       textAlign: 'center',
       color: 'rgba(255, 255, 255, 0.9)',
-      ...props.sx,
+      ...sx,
     }}
     {...props}
-  />
+  >
+    {children}
+  </Box>
 );
 
-const LottieWrapper = props => (
+interface LottieWrapperProps {
+  sx?: any;
+  children: React.ReactNode;
+}
+
+const LottieWrapper: React.FC<LottieWrapperProps> = ({ sx, children, ...props }) => (
   <Box
     sx={{
       width: '100%',
@@ -36,14 +49,16 @@ const LottieWrapper = props => (
       height: '150px',
       marginBottom: 1,
       opacity: 0.8,
-      ...props.sx,
+      ...sx,
     }}
     {...props}
-  />
+  >
+    {children}
+  </Box>
 );
 
-const MediaErrorDisplay = ({ type, t }) => {
-  const [spiderAnimation, setSpiderAnimation] = useState(null);
+const MediaErrorDisplay: React.FC<MediaErrorDisplayProps> = ({ type, t }) => {
+  const [spiderAnimation, setSpiderAnimation] = useState<any>(null);
 
   useEffect(() => {
     const loadSpiderAnimation = async () => {
@@ -79,4 +94,4 @@ const MediaErrorDisplay = ({ type, t }) => {
   );
 };
 
-export default MediaErrorDisplay;
+export default MediaErrorDisplay; 
