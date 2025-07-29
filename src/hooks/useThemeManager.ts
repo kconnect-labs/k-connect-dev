@@ -24,12 +24,72 @@ const THEME_SETTINGS: ThemeSettings = {
   },
 };
 
-export const useThemeManager = () => {
-  const [currentTheme, setCurrentTheme] = useState<ThemeType>(() => {
-    const saved = localStorage.getItem('theme-type');
-    return (saved as ThemeType) || 'default';
-  });
+// IndexedDB утилиты
+class ThemeDatabase {
+  private dbName = 'KConnectDB';
+  private dbVersion = 1;
+  private storeName = 'themeSettings';
 
+  async initDB(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, this.dbVersion);
+
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result;
+        
+        // Создаем хранилище для настроек темы
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          const store = db.createObjectStore(this.storeName, { keyPath: 'key' });
+          store.createIndex('key', 'key', { unique: true });
+        }
+      };
+    });
+  }
+
+  async getThemeType(): Promise<ThemeType> {
+    try {
+      const db = await this.initDB();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([this.storeName], 'readonly');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.get('theme-type');
+
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+          const result = request.result;
+          resolve(result ? result.value : 'default');
+        };
+      });
+    } catch (error) {
+      console.error('Error getting theme from IndexedDB:', error);
+      return 'default';
+    }
+  }
+
+  async setThemeType(themeType: ThemeType): Promise<void> {
+    try {
+      const db = await this.initDB();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([this.storeName], 'readwrite');
+        const store = transaction.objectStore(this.storeName);
+        const request = store.put({ key: 'theme-type', value: themeType });
+
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve();
+      });
+    } catch (error) {
+      console.error('Error setting theme in IndexedDB:', error);
+    }
+  }
+}
+
+const themeDB = new ThemeDatabase();
+
+export const useThemeManager = () => {
+  const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
   const [isApplying, setIsApplying] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -53,8 +113,8 @@ export const useThemeManager = () => {
         root.setAttribute('data-theme', 'default');
       }
 
-      // Сохраняем в localStorage
-      localStorage.setItem('theme-type', themeType);
+      // Сохраняем в IndexedDB
+      await themeDB.setThemeType(themeType);
       setCurrentTheme(themeType);
 
       // Обновляем все элементы с классом theme-aware
@@ -103,35 +163,77 @@ export const useThemeManager = () => {
   // Инициализация темы при загрузке
   useEffect(() => {
     const initializeTheme = async () => {
-      await applyTheme(currentTheme);
-      setIsInitialized(true);
+      try {
+        // Загружаем тему из IndexedDB
+        const savedTheme = await themeDB.getThemeType();
+        setCurrentTheme(savedTheme);
+        await applyTheme(savedTheme);
+      } catch (error) {
+        console.error('Error initializing theme:', error);
+        // В случае ошибки используем дефолтную тему
+        await applyTheme('default');
+      } finally {
+        setIsInitialized(true);
+      }
     };
     
     initializeTheme();
-  }, [applyTheme, currentTheme]);
+  }, [applyTheme]);
 
-  // Слушатель изменений в localStorage
+  // Слушатель изменений в IndexedDB (через BroadcastChannel API)
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme-type' && e.newValue) {
-        const newTheme = e.newValue as ThemeType;
-        if (newTheme !== currentTheme) {
-          applyTheme(newTheme);
+    let broadcastChannel: BroadcastChannel | null = null;
+    
+    try {
+      // Создаем канал для синхронизации между вкладками
+      broadcastChannel = new BroadcastChannel('theme-changes');
+      
+      broadcastChannel.onmessage = (event) => {
+        if (event.data.type === 'theme-changed' && event.data.theme !== currentTheme) {
+          applyTheme(event.data.theme);
         }
+      };
+    } catch (error) {
+      console.warn('BroadcastChannel not supported, theme sync between tabs disabled');
+    }
+
+    return () => {
+      if (broadcastChannel) {
+        broadcastChannel.close();
       }
     };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, [currentTheme, applyTheme]);
+
+  // Функция для уведомления других вкладок об изменении темы
+  const notifyThemeChange = useCallback((themeType: ThemeType) => {
+    try {
+      const broadcastChannel = new BroadcastChannel('theme-changes');
+      broadcastChannel.postMessage({
+        type: 'theme-changed',
+        theme: themeType
+      });
+      broadcastChannel.close();
+    } catch (error) {
+      console.warn('BroadcastChannel not supported');
+    }
+  }, []);
+
+  // Обновленная функция applyTheme с уведомлением других вкладок
+  const applyThemeWithNotification = useCallback(async (themeType: ThemeType) => {
+    await applyTheme(themeType);
+    notifyThemeChange(themeType);
+  }, [applyTheme, notifyThemeChange]);
 
   return {
     currentTheme,
     isApplying,
     isInitialized,
-    switchToDefaultTheme,
-    switchToBlurTheme,
-    toggleTheme,
-    applyTheme,
+    switchToDefaultTheme: () => applyThemeWithNotification('default'),
+    switchToBlurTheme: () => applyThemeWithNotification('blur'),
+    toggleTheme: async () => {
+      const newTheme = currentTheme === 'default' ? 'blur' : 'default';
+      await applyThemeWithNotification(newTheme);
+    },
+    applyTheme: applyThemeWithNotification,
   };
 }; 
