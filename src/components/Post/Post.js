@@ -2520,7 +2520,7 @@ const Post = ({
                   alignItems: 'center',
                   cursor: 'pointer',
                 }}
-                onClick={handleCommentClick}
+                onClick={(e) => handleCommentClick(post.id, e)}
               >
                 <Box
                   sx={{
@@ -2644,7 +2644,7 @@ const Post = ({
                 marginLeft: '-17px',
                 marginRight: '-17px',
               }}
-              onClick={handleCommentClick}
+              onClick={(e) => handleCommentClick(post.id, e)}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
                 {/* Аватар автора комментария */}
