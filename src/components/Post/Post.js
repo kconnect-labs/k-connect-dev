@@ -70,7 +70,8 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
-
+import { usePostReactions } from './hooks/usePostReactions';
+import { ReactionsButton } from './components';
 
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
@@ -192,6 +193,32 @@ const Post = ({
   const [repostModalOpen, setRepostModalOpen] = useState(false);
   const [repostContent, setRepostContent] = useState('');
   const [repostLoading, setRepostLoading] = useState(false);
+
+  // Хук для работы с реакциями
+  const {
+    reactionsSummary,
+    userReaction,
+    isLoading: reactionsLoading,
+    error: reactionsError,
+    addReaction,
+    removeReaction,
+    getReactions,
+  } = usePostReactions(
+    post?.id,
+    post?.reactions_summary || {},
+    post?.user_reaction || null
+  );
+
+  // Обработка ошибок реакций
+  React.useEffect(() => {
+    if (reactionsError) {
+      setSnackbar({
+        open: true,
+        message: reactionsError,
+        severity: 'error',
+      });
+    }
+  }, [reactionsError]);
   const [isPinned, setIsPinned] = useState(isPinnedPost || false);
   const [editDialog, setEditDialog] = useState({
     open: false,
@@ -439,6 +466,16 @@ const Post = ({
 
 
 
+
+  const handleReactionChange = async (emoji) => {
+    if (userReaction === emoji) {
+      // Если та же реакция - удаляем её
+      await removeReaction();
+    } else {
+      // Иначе добавляем/изменяем реакцию
+      await addReaction(emoji);
+    }
+  };
 
   const handleLike = async e => {
     if (e) e.stopPropagation();
@@ -2434,6 +2471,7 @@ const Post = ({
                 alignItems: 'center',
               }}
             >
+
               <Box
                 sx={{
                   display: 'flex',
@@ -2558,6 +2596,15 @@ const Post = ({
                   />
                 </Box>
               </Box>
+              
+              {/* Кнопка реакций */}
+              <ReactionsButton
+                postId={post.id}
+                reactionsSummary={reactionsSummary}
+                userReaction={userReaction}
+                onReactionChange={handleReactionChange}
+                isLoading={reactionsLoading}
+              />
             </Box>
 
             {/* Правая группа: просмотры и меню */}

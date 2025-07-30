@@ -15,6 +15,31 @@ export interface MusicTrack {
   url?: string;
 }
 
+// Типы для системы реакций
+export type ReactionEmoji = '🔥' | '❤️' | '😂' | '😮' | '😢';
+
+export interface ReactionUser {
+  id: number;
+  name: string;
+  username: string;
+  photo: string;
+  timestamp: string;
+}
+
+export interface ReactionDetail {
+  emoji: ReactionEmoji;
+  count: number;
+  users: ReactionUser[];
+}
+
+export type ReactionsSummary = Partial<Record<ReactionEmoji, number>>;
+
+export interface PostReactions {
+  reactions_summary: ReactionsSummary;
+  reactions_detail: ReactionDetail[];
+  user_reaction: ReactionEmoji | null;
+}
+
 export interface Post {
   id: number;
   content: string;
@@ -31,6 +56,9 @@ export interface Post {
   is_reposted?: boolean;
   is_pinned?: boolean;
   fact?: Fact;
+  // Добавляем поля для реакций
+  reactions_summary?: ReactionsSummary;
+  user_reaction?: ReactionEmoji | null;
 }
 
 export interface Fact {

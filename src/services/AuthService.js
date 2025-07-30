@@ -103,12 +103,24 @@ const AuthService = {
           },
         });
 
+        // Проверяем наличие временной сессии
         if (
           response.data &&
           response.data.sessionExists &&
           !response.data.user
         ) {
           response.data.hasSession = true;
+          response.data.isAuthenticated = false;
+        }
+
+        // Проверяем случай needsProfileSetup
+        if (
+          response.data &&
+          response.data.needsProfileSetup &&
+          response.data.sessionExists
+        ) {
+          response.data.hasSession = true;
+          response.data.isAuthenticated = false;
         }
 
         window._lastAuthCheckResponse = response;
@@ -123,12 +135,24 @@ const AuthService = {
             },
           });
 
+          // Проверяем наличие временной сессии
           if (
             fallbackResponse.data &&
             fallbackResponse.data.sessionExists &&
             !fallbackResponse.data.user
           ) {
             fallbackResponse.data.hasSession = true;
+            fallbackResponse.data.isAuthenticated = false;
+          }
+
+          // Проверяем случай needsProfileSetup
+          if (
+            fallbackResponse.data &&
+            fallbackResponse.data.needsProfileSetup &&
+            fallbackResponse.data.sessionExists
+          ) {
+            fallbackResponse.data.hasSession = true;
+            fallbackResponse.data.isAuthenticated = false;
           }
 
           window._lastAuthCheckResponse = fallbackResponse;
@@ -142,6 +166,7 @@ const AuthService = {
         data: {
           isAuthenticated: false,
           user: null,
+          hasSession: false,
           error: error.response?.data?.error || error.message,
         },
       };

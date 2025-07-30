@@ -144,6 +144,13 @@ const SidebarNavigation = memo(
             height='20'
           />
         ),
+        brand: (
+          <Icon
+            icon='solar:palette-outline'
+            width='20'
+            height='20'
+          />
+        ),
       }),
       [totalUnread]
     );
@@ -413,6 +420,15 @@ const SidebarNavigation = memo(
                   nested={true}
                 />
               )}
+              <NavButton
+                text={t('sidebar.navigation.more.brand')}
+                icon={icons.brand}
+                path='/brand'
+                active={isActive('/brand')}
+                themeColor={primaryColor}
+                nested={true}
+              />
+
               <NavButton
                 text={t('sidebar.navigation.more.referral')}
                 icon={icons.referral}

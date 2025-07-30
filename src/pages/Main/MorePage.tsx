@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, GlobalStyles, Grid, Card, CardContent, Avatar, Divider } from '@mui/material';
 import {
@@ -30,7 +30,9 @@ import {
   Help,
   PrivacyTip,
   Support,
+  Palette,
 } from '@mui/icons-material';
+import { Icon } from '@iconify/react';
 import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import VerificationBadge from '../../UIKIT/VerificationBadge';
@@ -337,6 +339,14 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
       id: 'info',
       title: 'Информация',
       items: [
+        {
+          id: 'brand',
+          title: 'Бренд',
+          subtitle: 'Информация о бренде',
+          icon: <Icon icon='solar:palette-outline' width='20' height='20' />,
+          color: 'rgb(255, 193, 7)',
+          link: '/brand',
+        },
         {
           id: 'bug-report',
           title: 'Баг-репорт',

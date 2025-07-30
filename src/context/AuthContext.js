@@ -20,6 +20,7 @@ export const AuthContext = createContext({
   login: () => {},
   logout: () => {},
   setUser: () => {},
+  hasTempSession: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -29,6 +30,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasTempSession, setHasTempSession] = useState(false);
   const themeContext = useContext(ThemeSettingsContext) || {};
 
   const checkAuth = useCallback(async () => {
@@ -36,19 +38,37 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await AuthService.checkAuth();
 
-      if (response && response.data && response.data.isAuthenticated && response.data.user) {
-        setUser(response.data.user);
-        setIsAuthenticated(true);
-        return response.data.user;
+      if (response && response.data) {
+        // Проверяем наличие временной сессии
+        if (response.data.hasSession && !response.data.user) {
+          setHasTempSession(true);
+          setIsAuthenticated(false);
+          setUser(null);
+          return null;
+        }
+
+        if (response.data.isAuthenticated && response.data.user) {
+          setUser(response.data.user);
+          setIsAuthenticated(true);
+          setHasTempSession(false);
+          return response.data.user;
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+          setHasTempSession(false);
+          return null;
+        }
       } else {
         setUser(null);
         setIsAuthenticated(false);
+        setHasTempSession(false);
         return null;
       }
     } catch (error) {
       console.error('Auth check error:', error);
       setUser(null);
       setIsAuthenticated(false);
+      setHasTempSession(false);
       return null;
     } finally {
       setLoading(false);
@@ -174,6 +194,7 @@ export const AuthProvider = ({ children }) => {
     checkAuth,
     registerProfile,
     setUser,
+    hasTempSession,
   };
 
   return (

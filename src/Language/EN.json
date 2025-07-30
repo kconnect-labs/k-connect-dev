@@ -449,6 +449,7 @@
       "event": "Event",
       "more": {
         "title": "More",
+        "brand": "Brand",
         "bug_reports": "Bug Reports",
         "rules": "Rules",
         "api_docs": "API Documentation",

@@ -14,6 +14,7 @@ import {
   Container,
   Paper,
   Fade,
+  Snackbar,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -40,6 +41,11 @@ const RegisterProfile = ({ setUser }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [referralRewards, setReferralRewards] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const handleCloseSuccessMessage = () => {
+    setShowSuccessMessage(false);
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -52,12 +58,10 @@ const RegisterProfile = ({ setUser }) => {
     const referralCode = urlReferralCode || '';
 
     if (chatId) {
-      console.log('Found chat_id:', chatId);
       setFormData(prev => ({ ...prev, chat_id: chatId }));
     }
 
     if (referralCode) {
-      console.log('Found referral code:', referralCode);
       setFormData(prev => ({
         ...prev,
         referral_code: referralCode.toUpperCase(),
@@ -133,16 +137,10 @@ const RegisterProfile = ({ setUser }) => {
 
       if (chatId && !formData.chat_id) {
         profileFormData.append('chat_id', chatId);
-        console.log('Добавлен chat_id из localStorage:', chatId);
       }
 
       if (avatar) {
         profileFormData.append('photo', avatar);
-      }
-
-      console.log('Отправка профиля:');
-      for (let pair of profileFormData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
       }
 
       const profileResponse =
@@ -162,7 +160,13 @@ const RegisterProfile = ({ setUser }) => {
           );
         }
 
-        navigate('/', { replace: true });
+        // Показываем уведомление об успехе
+        setShowSuccessMessage(true);
+        
+        // Ждем 2 секунды, затем перенаправляем на главную страницу
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
       } else if (profileResponse.error) {
         setError(profileResponse.error);
       }
@@ -634,6 +638,60 @@ const RegisterProfile = ({ setUser }) => {
           </Paper>
         </motion.div>
       </Box>
+
+      {/* Уведомление об успешной регистрации */}
+      <Snackbar
+        open={showSuccessMessage}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={handleCloseSuccessMessage}
+        sx={{
+          '& .MuiSnackbar-root': {
+            top: '20px',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            background: 'var(--background-color)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '12px',
+            p: 3,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            minWidth: '300px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <CircularProgress 
+            size={24} 
+            sx={{ 
+              color: 'var(--primary-color)',
+            }} 
+          />
+          <Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'var(--text-color)',
+                fontWeight: 600,
+                mb: 0.5,
+              }}
+            >
+              Профиль создан успешно!
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Перенаправляем на главную страницу...
+            </Typography>
+          </Box>
+        </Box>
+      </Snackbar>
     </Container>
   );
 };

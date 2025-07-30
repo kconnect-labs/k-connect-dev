@@ -610,6 +610,8 @@ function App() {
   const isAuthPage = [
     '/login',
     '/register',
+    '/register/profile',
+    '/register/channel',
     '/forgot-password',
     '/reset-password',
     '/element-auth',

@@ -123,6 +123,7 @@ const FriendsRedirect = React.lazy(() =>
   }))
 );
 const ReferralPage = React.lazy(() => import('../pages/ReferralPage'));
+const BrandPage = React.lazy(() => import('../pages/Brand/BrandPage'));
 
 const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
   const { isAuthenticated, loading, user } = useAuth();
@@ -467,6 +468,14 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             element={
               <ProtectedRoute>
                 <ReferralPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/brand'
+            element={
+              <ProtectedRoute>
+                <BrandPage />
               </ProtectedRoute>
             }
           />
