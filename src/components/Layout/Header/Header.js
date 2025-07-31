@@ -36,26 +36,7 @@ import {
   Collapse,
 } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import HomeIcon from '@mui/icons-material/Home';
-import SearchIcon from '@mui/icons-material/Search';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import SettingsIcon from '@mui/icons-material/Settings';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import PauseIcon from '@mui/icons-material/Pause';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import AddIcon from '@mui/icons-material/Add';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import ClearIcon from '@mui/icons-material/Clear';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import VerifiedIcon from '@mui/icons-material/Verified';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { AuthContext } from '../../../context/AuthContext';
 import { useMusic } from '../../../context/MusicContext';
@@ -741,7 +722,7 @@ const Header = ({ toggleSidebar }) => {
                     zIndex: 2000,
                     width: '100vw',
                     height: 56,
-                    bgcolor: theme.palette.background.paper,
+                    bgcolor: 'transparent',
                     display: 'flex',
                     alignItems: 'center',
                     px: 1,
@@ -785,7 +766,7 @@ const Header = ({ toggleSidebar }) => {
                       p: 2,
                       borderRadius: 1,
                       boxShadow: 8,
-                      bgcolor: theme.palette.background.paper,
+                      bgcolor: 'transparent',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',

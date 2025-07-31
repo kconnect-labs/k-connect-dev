@@ -478,7 +478,85 @@ const PrivacyPolicyPage = () => {
             variant='h6'
             sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
           >
-            8. Отказ от ответственности
+            7. Обработка данных при пожертвованиях
+          </Typography>
+
+          <Typography variant='body1' paragraph>
+            <strong>Благотворительные взносы:</strong> При совершении добровольных
+            пожертвований на поддержку К-Коннект обрабатываются следующие данные:
+          </Typography>
+
+          <Box component='ul' sx={{ pl: 2 }}>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Данные платежей:</strong> Сумма, дата и время
+                пожертвования для учета поощрений и бонусов.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Идентификация донатора:</strong> Привязка пожертвования к
+                аккаунту пользователя для предоставления соответствующих поощрений.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Статистика использования:</strong> Учет активности
+                использования предоставленных баллов и привилегий.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Платежные данные:</strong> К-Коннект НЕ хранит данные
+                банковских карт. Вся обработка платежей осуществляется сторонними
+                лицензированными платежными системами.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Typography variant='body1' paragraph>
+            <strong>Цель обработки:</strong> Данные используются исключительно для
+            предоставления поощрений донаторам и ведения внутренней отчетности о
+            поддержке платформы.
+          </Typography>
+
+          <Typography
+            variant='h6'
+            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+          >
+            8. Финансовая конфиденциальность
+          </Typography>
+
+          <Typography variant='body1' paragraph>
+            К-Коннект обеспечивает конфиденциальность финансовых операций:
+          </Typography>
+
+          <Box component='ul' sx={{ pl: 2 }}>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Неразглашение сумм:</strong> Размеры пожертвований
+                пользователей не разглашаются третьим лицам.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Публичные поощрения:</strong> Могут отображаться только
+                статусы и достижения, но не конкретные суммы поддержки.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Отчетность:</strong> Финансовые данные передаются только
+                налоговым органам в соответствии с законодательством РФ.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Typography
+            variant='h6'
+            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+          >
+            10. Отказ от ответственности
           </Typography>
 
           <Typography variant='body1' paragraph>
@@ -509,13 +587,20 @@ const PrivacyPolicyPage = () => {
                 Действия пользователей, нарушающие законодательство.
               </Typography>
             </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Финансовые операции:</strong> убытки от использования
+                сторонних платежных систем или неправильного указания данных
+                донатором.
+              </Typography>
+            </Box>
           </Box>
 
           <Typography
             variant='h6'
             sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
           >
-            9. Изменения в политике
+            11. Изменения в политике
           </Typography>
 
           <Typography variant='body1' paragraph>
@@ -528,11 +613,15 @@ const PrivacyPolicyPage = () => {
             variant='h6'
             sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
           >
-            10. Контакты
+            12. Контакты
           </Typography>
 
           <Typography variant='body1' paragraph>
             По вопросам политики конфиденциальности: verif@k-connect.ru
+          </Typography>
+          
+          <Typography variant='body1' paragraph>
+            По вопросам пожертвований и возвратов: verif@k-connect.ru
           </Typography>
 
           <Typography variant='body1' sx={{ mt: 4, fontStyle: 'italic' }}>

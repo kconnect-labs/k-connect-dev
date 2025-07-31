@@ -670,7 +670,100 @@ const TermsOfServicePage = () => {
             variant='h6'
             sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
           >
-            16. Технические ограничения
+            16. Добровольные пожертвования и поддержка платформы
+          </Typography>
+
+          <Typography variant='body1' paragraph>
+            <strong>Благотворительный характер платежей:</strong> Все денежные
+            переводы пользователей в пользу К-Коннект (включая "мкоин", "подписки",
+            покупку "баллов") являются добровольными пожертвованиями и
+            благотворительными взносами на поддержку и развитие платформы.
+          </Typography>
+
+          <Box component='ul' sx={{ pl: 2 }}>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Цель пожертвований:</strong> Поддержка технической
+                инфраструктуры, развитие функционала, обеспечение стабильной работы
+                платформы.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Поощрения за поддержку:</strong> В знак благодарности за
+                поддержку, К-Коннект предоставляет донаторам дополнительные
+                возможности (баллы, статусы, функции).
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Добровольность:</strong> Все базовые функции платформы
+                доступны бесплатно. Пожертвования являются исключительно
+                добровольными.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Сторонние платежные системы:</strong> Обработка платежей
+                осуществляется через лицензированные платежные сервисы в
+                соответствии с их условиями.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Typography
+            variant='h6'
+            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+          >
+            17. Возврат пожертвований
+          </Typography>
+
+          <Typography variant='body1' paragraph>
+            <strong>Политика возврата благотворительных взносов:</strong>
+          </Typography>
+
+          <Box component='ul' sx={{ pl: 2 }}>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Общий принцип:</strong> Пожертвования являются
+                безвозвратными благотворительными взносами. Возврат
+                рассматривается исключительно в индивидуальном порядке.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Возможность возврата:</strong> Запрос на возврат может быть
+                удовлетворен в течение 24 часов с момента пожертвования при
+                отсутствии использования предоставленных поощрений.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Основания для отказа:</strong> Возврат не производится при
+                частичном или полном использовании баллов, привилегий или по
+                истечении значительного времени с момента пожертвования.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Технические сборы:</strong> При возврате могут удерживаться
+                комиссии платежных систем и банковские сборы.
+              </Typography>
+            </Box>
+            <Box component='li' sx={{ mb: 1 }}>
+              <Typography variant='body1'>
+                <strong>Обращение:</strong> Запросы на возврат направлять на
+                verif@k-connect.ru с указанием причины и подтверждающих
+                документов.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Typography
+            variant='h6'
+            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+          >
+            18. Технические ограничения
           </Typography>
 
           <Typography variant='body1' paragraph>
