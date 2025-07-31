@@ -1794,6 +1794,7 @@ const UsernameAuctionPage = () => {
         onClose={() => setCreateDialogOpen(false)}
         maxWidth='sm'
         fullWidth
+        maxWidthCustom={650}
       >
         <DialogTitle>Создать новый аукцион</DialogTitle>
         <DialogContent sx={{ pb: 4 }}>
@@ -1919,6 +1920,7 @@ const UsernameAuctionPage = () => {
         onClose={() => !loadingButtons.bid && setBidDialogOpen(false)}
         maxWidth='sm'
         fullWidth
+        maxWidthCustom={650}
       >
         <DialogTitle>Сделать ставку</DialogTitle>
         <DialogContent sx={{ pb: 4 }}>
@@ -2023,6 +2025,7 @@ const UsernameAuctionPage = () => {
         onClose={handleCloseAuctionDetail}
         fullWidth
         maxWidth='md'
+        maxWidthCustom={650}
         fullScreen={isMobile}
       >
         {detailAuction && (

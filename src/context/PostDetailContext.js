@@ -10,20 +10,7 @@ export const PostDetailProvider = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const match = location.pathname.match(/\/post\/(\d+)/);
-    if (match && match[1]) {
-      const postId = match[1];
-      setCurrentPostId(postId);
-
-      if (!overlayOpen && location.state?.background) {
-        setOverlayOpen(true);
-      }
-    } else if (overlayOpen) {
-      setOverlayOpen(false);
-      setCurrentPostId(null);
-    }
-  }, [location, overlayOpen]);
+  // URL watcher removed; overlay controlled explicitly via openPostDetail/closePostDetail
 
   const openPostDetail = (postId, event) => {
     if (
@@ -38,32 +25,15 @@ export const PostDetailProvider = ({ children }) => {
       event.stopPropagation();
     }
 
-    console.log('Opening post detail for post ID:', postId);
     setCurrentPostId(postId);
-    setBackgroundLocation(location);
     setOverlayOpen(true);
-
-    navigate(`/post/${postId}`, {
-      state: { background: location },
-      replace: false,
-    });
-
     return false;
   };
 
   const closePostDetail = () => {
     setOverlayOpen(false);
 
-    if (backgroundLocation) {
-      navigate(backgroundLocation.pathname + backgroundLocation.search, {
-        replace: true,
-      });
-    } else {
-      navigate('/');
-    }
-
     setCurrentPostId(null);
-    setBackgroundLocation(null);
   };
 
   return (

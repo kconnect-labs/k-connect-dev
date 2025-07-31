@@ -565,4 +565,21 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
   );
 });
 
-export default EquippedItem;
+const areEqual = (prevProps, nextProps) => {
+  const keysToCheck = [
+    'id',
+    'image_url',
+    'profile_position_x',
+    'profile_position_y',
+    'upgrade_level',
+  ];
+
+  const prev = prevProps.item;
+  const next = nextProps.item;
+
+  const itemEqual = keysToCheck.every(k => prev[k] === next[k]);
+
+  return itemEqual && prevProps.isEditMode === nextProps.isEditMode;
+};
+
+export default React.memo(EquippedItem, areEqual);

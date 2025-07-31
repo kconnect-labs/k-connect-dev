@@ -8,12 +8,14 @@ import {
 } from '@mui/material';
 import Header from './Header/Header';
 import Sidebar from './Sidebar/Sidebar';
-import { Navigate, useLocation } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
 import { MobilePlayer, DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
 import AppBottomNavigation from '../BottomNavigation';
+import PostDetailOverlay from '../Post/PostDetailOverlay';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -97,10 +99,6 @@ const SidebarContainer = styled(Box, {
 const ContentContainer = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   paddingBottom: theme.spacing(2),
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
   marginRight: 0,
   maxWidth: '100%',
   color: theme.palette.text.primary,
@@ -127,6 +125,54 @@ const Overlay = styled(Box)(({ theme }) => ({
   '&.active': {
     opacity: 1,
     visibility: 'visible',
+  },
+}));
+
+const PageTransitionWrapper = styled(Box)(({ theme }) => ({
+  position: 'relative',
+  width: '100%',
+  height: '100%',
+  overflowX: 'hidden',
+  perspective: '800px',
+  '& .mobile-page': {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    willChange: 'transform, opacity',
+    backfaceVisibility: 'hidden',
+    transformOrigin: 'center center',
+  },
+  /* Входящая страница */
+  '& .mobile-page-enter': {
+    transform: 'translateX(100%) scale(0.93)',
+    opacity: 0.9,
+  },
+  '& .mobile-page-enter-active': {
+    transform: 'translateX(0%) scale(1)',
+    opacity: 1,
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+  /* Выходящая страница */
+  '& .mobile-page-exit': {
+    transform: 'translateX(0%) scale(1)',
+    opacity: 1,
+  },
+  '& .mobile-page-exit-active': {
+    transform: 'translateX(-100%) scale(0.93)',
+    opacity: 0.9,
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    '& .mobile-page-enter': {
+      transform: 'none',
+      opacity: 1,
+    },
+    '& .mobile-page-exit-active': {
+      transform: 'none',
+      opacity: 1,
+    },
   },
 }));
 
@@ -179,6 +225,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       setSidebarOpen(false);
     }
   }, [location, isMobile]);
+
+  // Эффект для сброса скролла при смене страницы
+  useEffect(() => {
+    // Сбрасываем скролл в начало страницы
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleMessengerLayoutChange = (
@@ -275,7 +327,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             },
           }}
         >
+          {isMobile ? (
+            <PageTransitionWrapper>
+              <TransitionGroup component={null}>
+                <CSSTransition
+                  key={location.pathname}
+                  classNames="mobile-page"
+                  timeout={400}
+                  onExited={() => window.scrollTo(0, 0)}
+                >
+                  <Box className="mobile-page" sx={{ height: '100%' }}>
           {children}
+                  </Box>
+                </CSSTransition>
+              </TransitionGroup>
+            </PageTransitionWrapper>
+          ) : (
+            children
+          )}
         </ContentContainer>
       </ContentWrapper>
 
@@ -284,6 +353,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       )}
       {isMobile && hasBottomPlayer && <MobilePlayer />}
       {!isMobile && hasDesktopPlayer && <DesktopPlayer />}
+
+      {/* Portal overlay for post detail */}
+      <PostDetailOverlay />
     </MainContainer>
   );
 };

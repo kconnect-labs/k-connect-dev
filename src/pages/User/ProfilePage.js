@@ -60,6 +60,7 @@ import UserSubscriptionBadge from './ProfilePage/components/UserSubscriptionBadg
 import { OwnedUsernames } from './ProfilePage/components';
 import { ProfileAbout } from './ProfilePage/components';
 import './ProfilePage.css';
+import { getProfileMediaCache, setProfileMediaCache } from '../../utils/profileMediaCache';
 
 const ProfilePage = () => {
   const { t } = useLanguage();
@@ -175,18 +176,22 @@ const ProfilePage = () => {
             const photosData = Array.isArray(response.data.user.photos)
               ? response.data.user.photos
               : [];
-            setPhotos(photosData);
+            if (!deepEqual(photosData, photos)) {
+              setPhotos(photosData);
+            }
           } else {
-            setPhotos([]);
+            // Не очищаем, если фото уже есть
           }
 
           if (response.data.user.videos) {
             const videosData = Array.isArray(response.data.user.videos)
               ? response.data.user.videos
               : [];
-            setVideos(videosData);
+            if (!deepEqual(videosData, videos)) {
+              setVideos(videosData);
+            }
           } else {
-            setVideos([]);
+            // Не очищаем, если видео уже есть
           }
 
           if (response.data.user.followers_count !== undefined) {
@@ -245,10 +250,36 @@ const ProfilePage = () => {
 
           // Получаем надетые предметы из API профиля
           if (response.data.equipped_items) {
-            setEquippedItems(response.data.equipped_items);
+            if (!deepEqual(response.data.equipped_items, equippedItems)) {
+              setEquippedItems(response.data.equipped_items);
+            }
           } else {
-            setEquippedItems([]);
+            // Не очищаем, если уже есть айтемы
           }
+
+          // === Сравниваем и обновляем кэш медиа ===
+          try {
+            const newMediaData = {
+              banner_url: response.data.user.banner_url || null,
+              avatar_url: response.data.user.avatar_url || null,
+              photos: Array.isArray(response.data.user.photos) ? response.data.user.photos : [],
+              videos: Array.isArray(response.data.user.videos) ? response.data.user.videos : [],
+              equipped_items: response.data.equipped_items || [],
+            };
+
+            if (!mediaCache || JSON.stringify(newMediaData) !== JSON.stringify(mediaCache)) {
+              setMediaCache(newMediaData);
+              setProfileMediaCache(username, newMediaData);
+
+              // Обновляем состояния, только если данные изменились
+              setPhotos(newMediaData.photos);
+              setVideos(newMediaData.videos);
+              setEquippedItems(newMediaData.equipped_items);
+            }
+          } catch (cacheErr) {
+            console.error('Media cache update error', cacheErr);
+          }
+
         } else {
           console.error('User data not found in response', response.data);
           setUser(null);
@@ -563,6 +594,31 @@ const ProfilePage = () => {
   }, [itemIdToOpen]);
 
   const equippedItemsPreview = useMemo(() => equippedItems.slice(0, 3), [equippedItems]);
+
+  const [mediaCache, setMediaCache] = useState(null);
+
+  // Загружаем медиа из кеша при первой загрузке
+  useEffect(() => {
+    const loadCache = async () => {
+      if (!username) return;
+      try {
+        const cache = await getProfileMediaCache(username);
+        if (cache) {
+          setMediaCache(cache);
+          if (cache.photos) setPhotos(cache.photos);
+          if (cache.videos) setVideos(cache.videos);
+          if (cache.equipped_items) setEquippedItems(cache.equipped_items);
+        }
+      } catch (e) {
+        console.error('Error loading media cache', e);
+      }
+    };
+    loadCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [username]);
+
+  // utility deep compare
+  const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
   if (loading) {
     return <ProfileLoader />;

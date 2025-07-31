@@ -78,6 +78,7 @@ import { usePostDetail } from '../../context/PostDetailContext';
 import { VerificationBadge } from '../../UIKIT';
 import { MaxIcon } from '../../components/icons/CustomIcons';
 import { useLanguage } from '../../context/LanguageContext';
+import UniversalModal from '../../UIKIT/UniversalModal';
 
 const MarkdownContent = styled(Box)(({ theme }) => ({
   '& p': { margin: theme.spacing(1, 0) },
@@ -1431,8 +1432,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-const PostDetailPage = ({ isOverlay = false }) => {
-  const { postId } = useParams();
+const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
+  const { postId: paramId } = useParams();
+  const postId = overlayPostId || paramId;
   const { user, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -2856,85 +2858,21 @@ const PostDetailPage = ({ isOverlay = false }) => {
 
   if (isOverlay) {
     return (
-      <Dialog
-        fullScreen={fullScreen}
-        open={true}
+      <UniversalModal
+        open={overlayOpen}
         onClose={handleClose}
-        TransitionComponent={Transition}
-        keepMounted={false}
-        BackdropProps={{
-          sx: {
-            backgroundColor: 'rgba(0, 0, 0, 0.95)',
-            backgroundImage: 'none',
-          },
-        }}
-        PaperProps={{
-          sx: {
-            bgcolor: '#0a0a0a',
-            backgroundImage: 'none',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            borderRadius: { xs: 0, sm: 2 },
-          },
-        }}
-        sx={{
-          '& .MuiDialog-paper': {
-            width: { sm: '100%', md: '90%', lg: '55%' },
-            height: { xs: '100%', sm: '90vh' },
-            maxWidth: 1000,
-            m: { xs: 0, sm: 2 },
-            backgroundColor: '#0a0a0a',
-            backgroundImage: 'none !important',
-          },
-          '& .MuiBackdrop-root': {
-            backgroundColor: '#000000 !important',
-            backgroundImage: 'none !important',
-            opacity: '0.95 !important',
-          },
+        title={t('post.post')}
+        maxWidth='md'
+        fullWidth
+        showBackButton
+        onBack={handleClose}
+        disableEscapeKeyDown={false}
+        addBottomPadding
+        maxWidthCustom={850}
 
-          '& .MuiModal-backdrop': {
-            backgroundColor: '#000000 !important',
-            backgroundImage: 'none !important',
-          },
-        }}
       >
-        <AppBar
-          sx={{
-            position: 'relative',
-            backgroundColor: '#0a0a0a',
-            backgroundImage: 'none',
-            boxShadow: 'none',
-            borderBottom: '1px solid',
-            borderColor: 'rgba(255, 255, 255, 0.1)',
-          }}
-        >
-          <Toolbar>
-            <IconButton
-              edge='start'
-              color='inherit'
-              onClick={handleClose}
-              aria-label='close'
-            >
-              {fullScreen ? <ArrowBackIcon /> : <CloseIcon />}
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-              {t('post.post')}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
-        <Box
-          sx={{
-            overflow: 'auto',
-            height: '100%',
-            px: 0,
-            backgroundColor: '#0a0a0a',
-            backgroundImage: 'none',
-          }}
-        >
-          {renderContent()}
-        </Box>
-      </Dialog>
+        <Box sx={{ maxHeight: '80vh', overflow: 'auto' }}>{renderContent()}</Box>
+      </UniversalModal>
     );
   }
 
