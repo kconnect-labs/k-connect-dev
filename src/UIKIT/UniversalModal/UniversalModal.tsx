@@ -71,7 +71,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     // Через время анимации вызываем onClose, чтобы родитель убрал модалку из DOM
     const timeout = isMobile ? 200 : 300;
     setTimeout(() => {
-      onClose();
+    onClose();
     }, timeout);
   };
 

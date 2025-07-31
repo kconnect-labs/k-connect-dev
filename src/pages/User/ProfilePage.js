@@ -49,7 +49,7 @@ import { getLighterColor } from './ProfilePage/utils/colorUtils';
 import { WallPostsTab, PostsTab } from './ProfilePage/components/TabComponents';
 import ImageLightbox from './ProfilePage/components/ImageLightbox';
 import { useLightbox } from './ProfilePage/hooks/useLightbox';
-import ProfileLoader from './ProfilePage/components/ProfileLoader';
+import ProfileSkeleton from './ProfilePage/components/ProfileSkeleton';
 import UserNotFound from './ProfilePage/components/UserNotFound';
 import ProfileInfo from './ProfilePage/components/ProfileInfo';
 import { useTabs } from './ProfilePage/hooks/useTabs';
@@ -621,7 +621,7 @@ const ProfilePage = () => {
   const deepEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
   if (loading) {
-    return <ProfileLoader />;
+    return <ProfileSkeleton />;
   }
 
   if (!user) {
