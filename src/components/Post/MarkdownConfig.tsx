@@ -2,18 +2,6 @@ import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { linkRenderers } from '../../utils/LinkUtils';
 
-// Ленивая загрузка синтаксиса только когда нужен
-const SyntaxHighlighter = React.lazy(() =>
-  import('react-syntax-highlighter').then(module => ({
-    default: module.Prism,
-  }))
-);
-const vscDarkPlus = React.lazy(() =>
-  import('react-syntax-highlighter/dist/esm/styles/prism').then(module => ({
-    default: module.vscDarkPlus,
-  }))
-);
-
 interface CodeProps {
   node?: any;
   inline?: boolean;
@@ -27,19 +15,35 @@ export const getMarkdownComponents = () => ({
   code({ node, inline, className, children, ...props }: CodeProps) {
     const match = /language-(\w+)/.exec(className || '');
     return !inline && match ? (
-      <React.Suspense fallback={<code>{children}</code>}>
-        <SyntaxHighlighter
-          style={vscDarkPlus}
-          language={match[1]}
-          PreTag='div'
-          customStyle={{ backgroundColor: 'transparent' }}
-          {...props}
-        >
+      <pre
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '4px',
+          padding: '16px',
+          overflow: 'auto',
+          fontFamily: 'monospace',
+          fontSize: '0.875rem',
+          margin: '8px 0',
+        }}
+        {...props}
+      >
+        <code className={className}>
           {String(children).replace(/\n$/, '')}
-        </SyntaxHighlighter>
-      </React.Suspense>
+        </code>
+      </pre>
     ) : (
-      <code className={className} {...props}>
+      <code 
+        className={className}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          padding: '2px 4px',
+          borderRadius: '3px',
+          fontFamily: 'monospace',
+          fontSize: '0.875rem',
+        }}
+        {...props}
+      >
         {children}
       </code>
     );

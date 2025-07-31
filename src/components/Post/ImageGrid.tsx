@@ -18,12 +18,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#11111C',
   maxWidth: '100%',
   transition: 'transform 0.2s ease',
-  '&:hover': {
-    transform: 'scale(1.015)',
-    '& .overlay': {
-      opacity: 1,
-    },
-  },
+
 }));
 
 const BackgroundImage = styled('div')({

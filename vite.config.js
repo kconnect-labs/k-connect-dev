@@ -117,32 +117,38 @@ export default defineConfig(({ mode }) => {
         },
       },
       rollupOptions: {
-        external: [], 
+        external: [],
+        treeshake: {
+          moduleSideEffects: false,
+          propertyReadSideEffects: false,
+          tryCatchDeoptimization: false,
+        },
         output: {
           manualChunks: {
-            'vendor': [
-              'react',
-              'react-dom',
+            // Основные библиотеки
+            'react': ['react', 'react-dom'],
+            'mui': [
               '@mui/material',
+              '@mui/icons-material', 
               '@emotion/react',
-              '@emotion/styled',
+              '@emotion/styled'
             ],
-            'icons': [
-              '@mui/icons-material',
-              'react-icons',
-            ],
-            'utils': [
-              'lodash',
-              'axios',
-              'date-fns',
-            ],
+            'router': ['react-router-dom'],
+            
+            // Тяжелые библиотеки отдельно
+            'markdown': ['react-markdown'],
+            'lottie': ['lottie-react'],
+            'framer': ['framer-motion'],
+            
+            // Утилиты
+            'utils': ['lodash', 'axios', 'date-fns'],
           },
           entryFileNames: 'assets/[name].[hash].js',
           chunkFileNames: 'assets/[name].[hash].js',
           assetFileNames: 'assets/[name].[hash].[ext]'
         }
       },
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 800, // Более строгий лимит для контроля размера
       target: 'es2020',
       cssCodeSplit: true,
       assetsInlineLimit: 4096,

@@ -6,12 +6,12 @@ export { default as MusicTrack } from './MusicTrack';
 export { default as MediaErrorDisplay } from './MediaErrorDisplay';
 export { default as PostSkeleton } from './PostSkeleton';
 
-// Модальные окна и диалоги
-export { default as DeleteDialog } from './DeleteDialog';
-export { default as EditPostDialog } from './EditPostDialog';
-export { default as FactModal } from './FactModal';
-export { default as ReportDialog } from './ReportDialog';
-export { default as RepostModal } from './RepostModal';
+// Модальные окна и диалоги (убраны статические импорты - используются только динамические)
+// export { default as DeleteDialog } from './DeleteDialog';
+// export { default as EditPostDialog } from './EditPostDialog';
+// export { default as FactModal } from './FactModal';
+// export { default as ReportDialog } from './ReportDialog';
+// export { default as RepostModal } from './RepostModal';
 
 // UI компоненты
 export { default as HeartAnimation } from './HeartAnimation';
@@ -46,7 +46,6 @@ export * from './constants/postConstants';
 export * from './constants/nsfwConstants';
 
 // Компоненты
-export * from './components/MarkdownComponents';
 export * from './components/MenuItems';
 
 // Типы

@@ -47,6 +47,7 @@ import {
   processTextWithLinks,
   LinkPreview,
 } from '../../utils/LinkUtils';
+import { getMarkdownComponents } from './MarkdownConfig';
 import { Icon } from '@iconify/react';
 import {
   MessageCircle,
@@ -77,24 +78,25 @@ import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
 import { MaxIcon } from '../icons/CustomIcons';
 
-// Ленивая загрузка тяжелых компонентов
-const SimpleImageViewer = React.lazy(() => import('../SimpleImageViewer'));
+// Статические импорты для часто используемых компонентов
+import SimpleImageViewer from '../SimpleImageViewer';
+import ImageGrid from './ImageGrid';
+import RepostImageGrid from './RepostImageGrid';
+import MusicTrack from './MusicTrack';
+
+// Ленивая загрузка для редко используемых тяжелых компонентов
 const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
-const ImageGrid = React.lazy(() => import('./ImageGrid'));
-const RepostImageGrid = React.lazy(() => import('./RepostImageGrid'));
-const MusicTrack = React.lazy(() => import('./MusicTrack'));
-const Lottie = React.lazy(() => import('lottie-react'));
-// Ленивая загрузка синтаксиса только когда нужен
-const SyntaxHighlighter = React.lazy(() =>
-  import('react-syntax-highlighter').then(module => ({
-    default: module.Prism,
-  }))
-);
-const vscDarkPlus = React.lazy(() =>
-  import('react-syntax-highlighter/dist/esm/styles/prism').then(module => ({
-    default: module.vscDarkPlus,
-  }))
-);
+
+// SyntaxHighlighter убран - слишком тяжелый (1.7MB) и не используется в постах
+
+// Ленивые импорты для модалок (загружаются только при открытии)
+const ReportDialog = React.lazy(() => import('./ReportDialog'));
+const FactModal = React.lazy(() => import('./FactModal'));
+const RepostModal = React.lazy(() => import('./RepostModal'));
+const DeleteDialog = React.lazy(() => import('./DeleteDialog'));
+const EditPostDialog = React.lazy(() => import('./EditPostDialog'));
+
+// Предварительная загрузка убрана, чтобы избежать конфликта с динамическими импортами
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
 import MediaErrorDisplay from './MediaErrorDisplay';
@@ -138,15 +140,6 @@ import {
   FactText,
   FactFooter,
 } from './styles/PostStyles';
-
-const ReportDialog = lazy(() => import('./ReportDialog'));
-const FactModal = lazy(() => import('./FactModal'));
-const RepostModal = lazy(() => import('./RepostModal'));
-const DeleteDialog = lazy(() => import('./DeleteDialog'));
-
-
-
-const EditPostDialog = lazy(() => import('./EditPostDialog'));
 
 const Post = ({
   post,
@@ -1277,29 +1270,7 @@ const Post = ({
     }
   };
 
-  const markdownComponents = {
-    ...linkRenderers,
-    code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || '');
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={vscDarkPlus}
-          language={match[1]}
-          PreTag='div'
-          customStyle={{
-            backgroundColor: 'transparent',
-          }}
-          {...props}
-        >
-          {String(children).replace(/\n$/, '')}
-        </SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
-  };
+  const markdownComponents = getMarkdownComponents();
 
   // NSFW Overlay (монотонный стиль)
   const NSFWOverlay = (
@@ -1878,39 +1849,22 @@ const Post = ({
                   {/* Replacing the single image with our new RepostImageGrid component */}
                   {post.original_post.image && (
                     <Box sx={{ mb: 1 }}>
-                      <Suspense
-                        fallback={
-                          <Box
-                            sx={{
-                              width: '100%',
-                              height: 150,
-                              bgcolor: 'rgba(255,255,255,0.1)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            <CircularProgress />
-                          </Box>
+                      <RepostImageGrid
+                        images={
+                          post.original_post.images || [
+                            post.original_post.image,
+                          ]
                         }
-                      >
-                        <RepostImageGrid
-                          images={
+                        onImageClick={index => {
+                          setCurrentImageIndex(index);
+                          setLightboxImages(
                             post.original_post.images || [
                               post.original_post.image,
                             ]
-                          }
-                          onImageClick={index => {
-                            setCurrentImageIndex(index);
-                            setLightboxImages(
-                              post.original_post.images || [
-                                post.original_post.image,
-                              ]
-                            );
-                            setLightboxOpen(true);
-                          }}
-                        />
-                      </Suspense>
+                          );
+                          setLightboxOpen(true);
+                        }}
+                      />
                     </Box>
                   )}
 
@@ -2179,28 +2133,11 @@ const Post = ({
                     height: '100%',
                   }}
                 >
-                  <Suspense
-                    fallback={
-                      <Box
-                        sx={{
-                          width: '100%',
-                          height: 200,
-                          bgcolor: 'rgba(255,255,255,0.1)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <CircularProgress />
-                      </Box>
-                    }
-                  >
-                                                       <ImageGrid
-                                     images={processImages(post, mediaError)}
-                      onImageClick={handleOpenImage}
-                      onImageError={handleImageError}
-                    />
-                  </Suspense>
+                  <ImageGrid
+                    images={processImages(post, mediaError)}
+                    onImageClick={handleOpenImage}
+                    onImageError={handleImageError}
+                  />
                 </Box>
                 {post.is_nsfw && !showSensitive && NSFWOverlay}
               </Box>
@@ -2216,24 +2153,7 @@ const Post = ({
           {musicTracks.length > 0 && (
             <Box sx={{ mt: 0, mb: 0 }}>
               {musicTracks.map((track, index) => (
-                <Suspense
-                  key={`track-${index}`}
-                  fallback={
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        p: 2,
-                        bgcolor: 'rgba(255,255,255,0.05)',
-                        borderRadius: 1,
-                        mb: 1,
-                      }}
-                    >
-                      <CircularProgress size={20} />
-                    </Box>
-                  }
-                >
-                  <MusicTrack onClick={e => handleTrackPlay(track, e)}>
+                <MusicTrack key={`track-${index}`} onClick={e => handleTrackPlay(track, e)}>
                     <Box
                       sx={{
                         width: 48,
@@ -2340,7 +2260,6 @@ const Post = ({
                       {formatDuration(track.duration)}
                     </Typography>
                   </MusicTrack>
-                </Suspense>
               ))}
             </Box>
           )}

@@ -224,12 +224,71 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     if (isMobile) {
       setSidebarOpen(false);
     }
+    
+    // Дополнительный сброс скролла при смене location
+    if (isMobile) {
+      const timer = setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        
+        // Сброс скролла для контентной области
+        const contentContainer = document.querySelector('[data-testid="content-container"]');
+        if (contentContainer) {
+          contentContainer.scrollTop = 0;
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
   }, [location, isMobile]);
 
   // Эффект для сброса скролла при смене страницы
   useEffect(() => {
     // Сбрасываем скролл в начало страницы
     window.scrollTo(0, 0);
+    
+    // Находим и сбрасываем скролл для всех скроллируемых контейнеров
+    const resetScrollForContainers = () => {
+      // Основной контейнер
+      const mainContainer = document.querySelector('[data-testid="main-container"]');
+      if (mainContainer) {
+        mainContainer.scrollTop = 0;
+      }
+      
+      // Контентная область - главная область скролла
+      const contentContainer = document.querySelector('[data-testid="content-container"]');
+      if (contentContainer) {
+        contentContainer.scrollTop = 0;
+      }
+      
+      // Все элементы с MUI styled компонентами (которые могут скроллиться)
+      const contentContainers = document.querySelectorAll('[class*="ContentContainer"], [class*="MuiBox-root"]');
+      contentContainers.forEach(container => {
+        if ((container as HTMLElement).scrollHeight > (container as HTMLElement).clientHeight) {
+          (container as HTMLElement).scrollTop = 0;
+        }
+      });
+      
+      // Области с overflow: auto или scroll
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(element => {
+        const computed = window.getComputedStyle(element as HTMLElement);
+        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
+          (element as HTMLElement).scrollTop = 0;
+        }
+      });
+      
+      // Сброс скролла для body и html
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    };
+    
+    resetScrollForContainers();
+    
+    // Дополнительный сброс через небольшую задержку
+    const timer = setTimeout(resetScrollForContainers, 50);
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -313,6 +372,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         )}
 
         <ContentContainer
+          data-testid="content-container"
           sx={{
             color: themeSettings?.textColor || theme.palette.text.primary,
             width: {
@@ -334,7 +394,41 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   key={location.pathname}
                   classNames="mobile-page"
                   timeout={400}
-                  onExited={() => window.scrollTo(0, 0)}
+                  onEntered={() => {
+                    // Принудительный сброс скролла после завершения анимации
+                    setTimeout(() => {
+                      window.scrollTo(0, 0);
+                      document.body.scrollTop = 0;
+                      document.documentElement.scrollTop = 0;
+                      
+                      // Сброс скролла для контентной области
+                      const contentContainer = document.querySelector('[data-testid="content-container"]');
+                      if (contentContainer) {
+                        contentContainer.scrollTop = 0;
+                      }
+                      
+                      const mainContainer = document.querySelector('[data-testid="main-container"]');
+                      if (mainContainer) {
+                        mainContainer.scrollTop = 0;
+                      }
+                      
+                      // Сброс для всех скроллируемых элементов
+                      const allElements = document.querySelectorAll('*');
+                      allElements.forEach(element => {
+                        const computed = window.getComputedStyle(element as HTMLElement);
+                        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
+                          (element as HTMLElement).scrollTop = 0;
+                        }
+                      });
+                    }, 50);
+                  }}
+                  onExited={() => {
+                    window.scrollTo(0, 0);
+                    const contentContainer = document.querySelector('[data-testid="content-container"]');
+                    if (contentContainer) {
+                      contentContainer.scrollTop = 0;
+                    }
+                  }}
                 >
                   <Box className="mobile-page" sx={{ height: '100%' }}>
           {children}
