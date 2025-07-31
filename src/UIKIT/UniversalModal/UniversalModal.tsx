@@ -52,14 +52,35 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Управляем состоянием анимации при открытии / закрытии
   useEffect(() => {
     if (open) {
-      setIsAnimating(true);
+      // Запускаем анимацию появления
+      requestAnimationFrame(() => setIsAnimating(true));
+    } else {
+      // Компонент может быть размонтирован родителем извне. Чтобы 
+      // предотвратить "jump cut", сразу выставляем состояние на скрытое.
+      setIsAnimating(false);
     }
   }, [open]);
 
-  const handleClose = () => {
-    onClose();
+  const closeWithAnimation = () => {
+    // Запускаем анимацию закрытия
+    setIsAnimating(false);
+
+    // Через время анимации вызываем onClose, чтобы родитель убрал модалку из DOM
+    const timeout = isMobile ? 200 : 300;
+    setTimeout(() => {
+      onClose();
+    }, timeout);
+  };
+
+  const handleDialogClose = (
+    _event: unknown,
+    _reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick' | undefined,
+  ) => {
+    if (disableEscapeKeyDown && _reason === 'escapeKeyDown') return;
+    closeWithAnimation();
   };
 
   const modalStyle = {
@@ -87,9 +108,12 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   };
 
   const backdropStyle = {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    backdropFilter: 'blur(4px)',
-    transition: 'opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+    backgroundColor: isAnimating
+      ? 'rgba(0, 0, 0, 0.5)'
+      : 'rgba(0, 0, 0, 0)',
+    backdropFilter: isAnimating ? 'blur(4px)' : 'blur(0px)',
+    transition:
+      'background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
   };
 
   const headerStyle = {
@@ -116,7 +140,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleDialogClose}
       maxWidth={maxWidth}
       fullWidth={fullWidth}
       PaperProps={{
@@ -129,15 +153,16 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
         sx: backdropStyle,
       }}
       TransitionComponent={isMobile ? Slide : Fade}
-      TransitionProps={{
-        direction: isMobile ? 'up' : undefined,
-        timeout: isMobile ? 200 : 300,
-      }}
+      TransitionProps={
+        (isMobile
+          ? { direction: 'up', timeout: 200 }
+          : { timeout: 300 }) as any
+      }
     >
       <Box sx={headerStyle}>
         {isMobile || showBackButton ? (
           <IconButton 
-            onClick={onBack || handleClose} 
+            onClick={onBack || closeWithAnimation} 
             sx={{ 
               color: 'text.primary',
               transition: 'transform 0.15s ease',
@@ -167,7 +192,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
         </Typography>
 
         <IconButton 
-          onClick={handleClose} 
+          onClick={closeWithAnimation} 
           sx={{ 
             color: 'text.primary',
             transition: 'transform 0.15s ease',
