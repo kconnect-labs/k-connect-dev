@@ -67,7 +67,8 @@ export const useUsernames = (): UseUsernamesReturn => {
     if (!subscriptionType) return 3;
     if (subscriptionType === 'basic') return 5;
     if (subscriptionType === 'premium') return 8;
-    if (subscriptionType === 'ultimate' || subscriptionType === 'max') return Infinity;
+    if (subscriptionType === 'ultimate' || subscriptionType === 'max')
+      return Infinity;
     return 3;
   }, []);
 
@@ -169,12 +170,20 @@ export const useUsernames = (): UseUsernamesReturn => {
 
       if (response.data.success) {
         setUsernameData(response.data);
+        // Если юзернейм недоступен, показываем сообщение об ошибке
+        if (!response.data.available && response.data.message) {
+          setError(response.data.message);
+        } else {
+          setError('');
+        }
       } else {
         setUsernameData(null);
+        setError(response.data.message || 'Ошибка при проверке юзернейма');
       }
     } catch (error: any) {
       console.error('Error calculating username price:', error);
       setUsernameData(null);
+      setError('Ошибка при проверке юзернейма');
     } finally {
       setLoading(false);
     }
@@ -200,9 +209,9 @@ export const useUsernames = (): UseUsernamesReturn => {
         return;
       }
 
-      setError('');
-
+      // Очищаем ошибку только при начале новой проверки
       const delayDebounceFn = setTimeout(() => {
+        setError('');
         calculateUsernamePrice(value.trim());
       }, 500);
 
