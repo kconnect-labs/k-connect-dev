@@ -55,7 +55,8 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
       open={open}
       onClose={handleClose}
       title="Сделать ставку"
-      maxWidth="sm"
+      maxWidth={false}
+      maxWidthCustom={650}
       disableEscapeKeyDown={loading}
     >
       {auction && (

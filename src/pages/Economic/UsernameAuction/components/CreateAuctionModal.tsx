@@ -70,7 +70,8 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
       open={open}
       onClose={handleClose}
       title="Создать новый аукцион"
-      maxWidth="sm"
+      maxWidth={false}
+      maxWidthCustom={650}
       disableEscapeKeyDown={loading}
     >
       <Box sx={{ mb: 3 }}>

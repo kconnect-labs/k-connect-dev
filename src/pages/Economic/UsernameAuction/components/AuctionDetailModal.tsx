@@ -94,8 +94,9 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
     <UniversalModal
       open={open}
       onClose={onClose}
-      title={`@${auction?.username}`}
-      maxWidth="md"
+      title={`Аукцион @${auction?.username || ''}`}
+      maxWidth={false}
+      maxWidthCustom={650}
       fullWidth
     >
       {loading ? (
