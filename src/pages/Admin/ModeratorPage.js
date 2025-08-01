@@ -98,6 +98,7 @@ import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import AddIcon from '@mui/icons-material/Add';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import WorkIcon from '@mui/icons-material/Work';
 import CloseIcon from '@mui/icons-material/Close';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import StarsIcon from '@mui/icons-material/Stars';
@@ -3770,7 +3771,24 @@ const ModeratorPage = () => {
             </Box>
           </Box>
         </Box>
-
+        {/* Кнопка для перехода к системе тикетов */}
+        <Box mt={4} display="flex" justifyContent="center">
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<WorkIcon />}
+            onClick={() => window.location.href = '/admin/tickets'}
+            sx={{
+              background: 'linear-gradient(45deg, #d0bcff 30%, #cfbcfb 90%)',
+              borderRadius: 1,
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+            }}
+          >
+             Начать работать с тикетами
+          </Button>
+        </Box>
         <Box sx={{ mb: 4 }}>
           <Box
             sx={{
@@ -5143,11 +5161,7 @@ const ModeratorPage = () => {
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Avatar
-                      src={
-                        log.moderator_avatar
-                          ? `static/uploads/${log.moderator_avatar}`
-                          : undefined
-                      }
+                      src={log.moderator?.avatar || undefined}
                       sx={{
                         width: 40,
                         height: 40,
@@ -5155,8 +5169,8 @@ const ModeratorPage = () => {
                         fontSize: '0.875rem',
                       }}
                     >
-                      {log.moderator_name
-                        ? log.moderator_name.charAt(0).toUpperCase()
+                      {log.moderator?.name
+                        ? log.moderator.name.charAt(0).toUpperCase()
                         : 'M'}
                     </Avatar>
                     <Box>
@@ -5167,13 +5181,13 @@ const ModeratorPage = () => {
                           fontWeight: 500,
                         }}
                       >
-                        {log.moderator_name || 'Неизвестный модератор'}
+                        {log.moderator?.name || 'Неизвестный модератор'}
                       </Typography>
                       <Typography
                         variant='body2'
                         sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
                       >
-                        @{log.moderator_username || 'unknown'}
+                        @{log.moderator?.username || 'unknown'}
                       </Typography>
                     </Box>
                   </Box>
@@ -5181,7 +5195,7 @@ const ModeratorPage = () => {
                     variant='caption'
                     sx={{ color: 'rgba(255, 255, 255, 0.4)' }}
                   >
-                    {new Date(log.timestamp).toLocaleString('ru-RU')}
+                    {new Date(log.created_at || log.timestamp).toLocaleString('ru-RU')}
                   </Typography>
                 </Box>
 
@@ -5265,6 +5279,16 @@ const ModeratorPage = () => {
       delete_key: 'Удаление ключа',
       grant_decoration: 'Выдача декорации',
       revoke_decoration: 'Отзыв декорации',
+      // Новые типы действий для тикетов
+      ticket_assigned: 'Назначение тикета',
+      ticket_resolved: 'Решение тикета',
+      ticket_closed: 'Закрытие тикета',
+      update_ticket: 'Обновление тикета',
+      // Новые типы действий для модерации
+      warning_issued: 'Выдача предупреждения',
+      user_banned: 'Бан пользователя',
+      post_deleted: 'Удаление поста',
+      review_complaint: 'Обработка жалобы',
     };
     return labels[actionType] || actionType;
   };
@@ -5275,7 +5299,7 @@ const ModeratorPage = () => {
       delete_track: 'rgba(244, 67, 54, 0.2)',
       delete_comment: 'rgba(244, 67, 54, 0.2)',
       delete_avatar: 'rgba(244, 67, 54, 0.2)',
-      update_user: 'rgba(33, 150, 243, 0.2)',
+      update_user: 'rgba(207, 188, 251, 0.2)',
       delete_bug_report: 'rgba(244, 67, 54, 0.2)',
       update_bug_report: 'rgba(76, 175, 80, 0.2)',
       edit_badge: 'rgba(255, 193, 7, 0.2)',
@@ -5292,6 +5316,16 @@ const ModeratorPage = () => {
       delete_key: 'rgba(244, 67, 54, 0.2)',
       grant_decoration: 'rgba(76, 175, 80, 0.2)',
       revoke_decoration: 'rgba(244, 67, 54, 0.2)',
+      // Новые типы действий для тикетов
+      ticket_assigned: 'rgba(207, 188, 251, 0.2)',
+      ticket_resolved: 'rgba(76, 175, 80, 0.2)',
+      ticket_closed: 'rgba(244, 67, 54, 0.2)',
+      update_ticket: 'rgba(255, 193, 7, 0.2)',
+      // Новые типы действий для модерации
+      warning_issued: 'rgba(255, 152, 0, 0.2)',
+      user_banned: 'rgba(244, 67, 54, 0.2)',
+      post_deleted: 'rgba(244, 67, 54, 0.2)',
+      review_complaint: 'rgba(156, 39, 176, 0.2)',
     };
     return colors[actionType] || 'rgba(158, 158, 158, 0.2)';
   };
@@ -5319,6 +5353,16 @@ const ModeratorPage = () => {
       delete_key: 'Модератор удалил ключ',
       grant_decoration: 'Модератор выдал декорацию пользователю',
       revoke_decoration: 'Модератор отозвал декорацию у пользователя',
+      // Новые типы действий для тикетов
+      ticket_assigned: 'Модератор назначил тикет себе',
+      ticket_resolved: 'Модератор отметил тикет как решенный',
+      ticket_closed: 'Модератор закрыл тикет',
+      update_ticket: 'Модератор обновил информацию о тикете',
+      // Новые типы действий для модерации
+      warning_issued: 'Модератор выдал предупреждение пользователю',
+      user_banned: 'Модератор забанил пользователя',
+      post_deleted: 'Модератор удалил пост',
+      review_complaint: 'Модератор обработал жалобу',
     };
     return descriptions[actionType] || `Выполнено действие: ${actionType}`;
   };
@@ -6092,6 +6136,8 @@ const ModeratorPage = () => {
                     </Grid>
           </Grid>
         )}
+
+
       </>
     );
   };

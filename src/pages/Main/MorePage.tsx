@@ -31,6 +31,7 @@ import {
   PrivacyTip,
   Support,
   Palette,
+  ConfirmationNumber,
 } from '@mui/icons-material';
 import { Icon } from '@iconify/react';
 import { AuthContext } from '../../context/AuthContext';
@@ -332,7 +333,14 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
           color: 'rgb(99, 102, 241)',
           link: '/settings',
         },
-
+        {
+          id: 'tickets',
+          title: 'Мои тикеты',
+          subtitle: 'Поддержка и жалобы',
+          icon: <ConfirmationNumber />,
+          color: 'rgb(156, 39, 176)',
+          link: '/tickets',
+        },
       ],
     },
     {

@@ -151,6 +151,13 @@ const SidebarNavigation = memo(
             height='20'
           />
         ),
+        tickets: (
+          <Icon
+            icon='solar:ticket-outline'
+            width='20'
+            height='20'
+          />
+        ),
       }),
       [totalUnread]
     );
@@ -411,15 +418,23 @@ const SidebarNavigation = memo(
           <Collapse in={expandedMore} timeout='auto' unmountOnExit>
             <NestedList component='div' disablePadding>
               {!isChannel && (
-                <NavButton
-                  text={t('sidebar.navigation.more.bug_reports')}
-                  icon={icons.bug}
-                  path='/bugs'
-                  active={isActive('/bugs')}
-                  themeColor={primaryColor}
-                  nested={true}
-                />
-              )}
+                              <NavButton
+                text={t('sidebar.navigation.more.bug_reports')}
+                icon={icons.bug}
+                path='/bugs'
+                active={isActive('/bugs')}
+                themeColor={primaryColor}
+                nested={true}
+              />
+            )}
+            <NavButton
+              text="Мои тикеты"
+              icon={icons.tickets}
+              path='/tickets'
+              active={isActive('/tickets')}
+              themeColor={primaryColor}
+              nested={true}
+            />
               <NavButton
                 text={t('sidebar.navigation.more.brand')}
                 icon={icons.brand}

@@ -6,6 +6,7 @@ import {
   IconButton,
   GlobalStyles,
   Grid,
+  Dialog,
 } from '@mui/material';
 import {
   Person,
@@ -24,6 +25,7 @@ import {
   Favorite,
   Storage,
   Style,
+  Gavel,
 } from '@mui/icons-material';
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
@@ -32,6 +34,8 @@ import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
 import CacheManagementModal from './SettingsPage/components/CacheManagementModal';
 import ThemeSettingsModal from './SettingsPage/components/ThemeSettingsModal';
+import AccountStatusForm from './SettingsPage/components/AccountStatusForm';
+import UniversalModal from '../../UIKIT/UniversalModal';
 import {
   useProfile,
   useProfileInfo,
@@ -55,6 +59,7 @@ const SettingsPage = () => {
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
   const [cacheModalOpen, setCacheModalOpen] = useState(false);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
+  const [accountStatusModalOpen, setAccountStatusModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState<{
     open: boolean;
     message: string;
@@ -147,6 +152,8 @@ const SettingsPage = () => {
       setCacheModalOpen(true);
     } else if (section === 'theme') {
       setThemeModalOpen(true);
+    } else if (section === 'account-status') {
+      setAccountStatusModalOpen(true);
     } else {
       setOpenModal(section);
     }
@@ -314,6 +321,13 @@ const SettingsPage = () => {
       color: 'rgba(239, 68, 68, 0.66)', // #ef4444 с прозрачностью
     },
     {
+      id: 'account-status',
+      title: 'Состояние аккаунта',
+      subtitle: 'Предупреждения, баны и апелляции',
+      icon: <Gavel />,
+      color: 'rgba(245, 158, 11, 0.66)', // #f59e0b с прозрачностью
+    },
+    {
       id: 'experimental',
       title: 'Экспериментальные функции',
       subtitle: 'Функции в разработке',
@@ -334,6 +348,7 @@ const SettingsPage = () => {
       icon: <AccountCircle />,
       color: 'rgba(59, 130, 246, 0.66)', // #3b82f6 с прозрачностью
     },
+    
     {
       id: 'sessions',
       title: 'Сессии',
@@ -563,6 +578,17 @@ const SettingsPage = () => {
           onClose={() => setThemeModalOpen(false)}
           onSuccess={showSuccess}
         />
+
+        <UniversalModal
+          open={accountStatusModalOpen}
+          onClose={() => setAccountStatusModalOpen(false)}
+          title="Состояние аккаунта"
+          maxWidth="md"
+          fullWidth
+          maxWidthCustom={'800px'}
+        >
+          <AccountStatusForm onClose={() => setAccountStatusModalOpen(false)} />
+        </UniversalModal>
 
         <SuccessModal
           open={successModal.open}

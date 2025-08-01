@@ -922,23 +922,28 @@ const Post = ({
     setReportDialog({ ...reportDialog, submitting: true, error: null });
 
     try {
-      const reportMessage =
-        `🚨 *ЖАЛОБА НА ПОСТ*\n\n` +
-        `📝 *ID поста*: ${post.id}\n` +
-        `👤 *Автор*: ${post.user?.name} (@${post.user?.username})\n` +
-        `🚩 *Причина*: ${reportDialog.reason}\n` +
-        `👮 *Отправитель*: ${currentUser?.name} (@${currentUser?.username})\n` +
-        `⏰ *Время*: ${new Date().toLocaleString()}` +
-        (post.content
-          ? `\n\n📄 *Текст поста*:\n${post.content?.substring(0, 300)}${post.content?.length > 300 ? '...' : ''}`
-          : `\n\n📄 *Пост содержит медиа-контент без текста*`);
+      // Формируем структурированное описание
+      const createdDate = post.created_at ? new Date(post.created_at).toLocaleString('ru-RU') : 'Дата не указана';
+      
+      const reportDescription = `Информация о посте:
+• Автор: ${post.user?.name} (@${post.user?.username})
+• ID поста: ${post.id}
+• Создан: ${createdDate}
 
-      const response = await axios.post('/api/report/send-to-telegram', {
-        message: reportMessage,
-        post_id: post.id,
+Содержание поста:
+${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '...' : '') : 'Пост содержит только медиа-контент'}
+
+Дополнительная информация:
+• Лайки: ${post.likes_count || 0}
+• Комментарии: ${post.comments_count || 0}
+• Репосты: ${post.reposts_count || 0}`;
+
+      const response = await axios.post('/api/complaints', {
+        target_type: 'post',
+        target_id: post.id,
         reason: reportDialog.reason,
-        post_author: post.user?.username,
-        reporter: currentUser?.username,
+        description: reportDescription,
+        evidence: post.content || 'Пост содержит медиа-контент'
       });
 
       if (response.data && response.data.success) {
@@ -947,6 +952,11 @@ const Post = ({
           submitting: false,
           submitted: true,
         });
+        
+        // Показываем уведомление об успехе
+        if (typeof showNotification === 'function') {
+          showNotification('success', 'Жалоба отправлена модераторам');
+        }
 
         setTimeout(() => {
           setReportDialog({
