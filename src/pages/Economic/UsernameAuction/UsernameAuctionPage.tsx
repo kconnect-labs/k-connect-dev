@@ -10,6 +10,9 @@ import {
   Snackbar,
   useTheme,
   useMediaQuery,
+  Dialog,
+  DialogContent,
+  IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../../context/AuthContext';
@@ -23,10 +26,13 @@ import EmptyState from './components/EmptyState';
 import CreateAuctionModal from './components/CreateAuctionModal';
 import PlaceBidModal from './components/PlaceBidModal';
 import AuctionDetailModal from './components/AuctionDetailModal';
+import UsernamesForm from '../../User/SettingsPage/components/UsernamesForm';
 import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import GavelIcon from '@mui/icons-material/Gavel';
 import PersonIcon from '@mui/icons-material/Person';
 import HistoryIcon from '@mui/icons-material/History';
+import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 
 const PageHeader = styled(Box)(({ theme }) => ({
@@ -45,7 +51,7 @@ const TabPanel = ({ children, value, index, ...other }: any) => (
     aria-labelledby={`tab-${index}`}
     {...other}
   >
-    {value === index && <Box >{children}</Box>}
+    {value === index && <Box>{children}</Box>}
   </div>
 );
 
@@ -65,7 +71,7 @@ const UsernameAuctionPage: React.FC = () => {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [tabValue, setTabValue] = useState(0);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [bidDialogOpen, setBidDialogOpen] = useState(false);
@@ -78,6 +84,7 @@ const UsernameAuctionPage: React.FC = () => {
     duration_hours: 24,
   });
   const [bidAmount, setBidAmount] = useState('');
+  const [usernamesSettingsOpen, setUsernamesSettingsOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -93,17 +100,17 @@ const UsernameAuctionPage: React.FC = () => {
     userAuctions,
     userBids,
     usernames,
-    
+
     // Loading states
     loading,
     detailLoading,
     loadingButtons,
-    
+
     // UI states
     searchQuery,
     sessionActive,
     sessionExpired,
-    
+
     // Actions
     fetchAuctions,
     fetchUserAuctions,
@@ -228,18 +235,32 @@ const UsernameAuctionPage: React.FC = () => {
           gap: 1,
         }}
       >
-        <Button
-          variant='contained'
-          color='primary'
-          startIcon={<AddIcon />}
-          onClick={() => setCreateDialogOpen(true)}
-          sx={{
-            borderRadius: '8px',
-            px: 2,
-          }}
-        >
-          Выставить юзернейм на аукцион
-        </Button>
+        <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+          <Button
+            variant='contained'
+            color='primary'
+            startIcon={<AddIcon />}
+            onClick={() => setCreateDialogOpen(true)}
+            sx={{
+              borderRadius: '8px',
+              px: 2,
+            }}
+          >
+            Выставить юзернейм на аукцион
+          </Button>
+          <Button
+            variant='outlined'
+            color='primary'
+            startIcon={<SettingsIcon />}
+            onClick={() => setUsernamesSettingsOpen(true)}
+            sx={{
+              borderRadius: '8px',
+              px: 2,
+            }}
+          >
+            Настройки юзернеймов
+          </Button>
+        </Box>
       </Box>
 
       <Box sx={{ mb: 1 }}>
@@ -275,7 +296,8 @@ const UsernameAuctionPage: React.FC = () => {
             Требуется обновление
           </Typography>
           <Typography variant='body2'>
-            Данные могут быть устаревшими. Пожалуйста, обновите страницу для получения актуальной информации.
+            Данные могут быть устаревшими. Пожалуйста, обновите страницу для
+            получения актуальной информации.
           </Typography>
         </Alert>
       )}
@@ -283,10 +305,7 @@ const UsernameAuctionPage: React.FC = () => {
       {/* Tab contents */}
       <TabPanel value={tabValue} index={0}>
         <Box>
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-          />
+          <SearchBar value={searchQuery} onChange={setSearchQuery} />
 
           {loading ? (
             <Box display='flex' justifyContent='center' my={4}>
@@ -294,23 +313,31 @@ const UsernameAuctionPage: React.FC = () => {
             </Box>
           ) : filteredAuctions.length === 0 ? (
             <EmptyState
-              title={searchQuery ? 'По вашему запросу ничего не найдено' : 'В данный момент нет активных аукционов'}
-              description={searchQuery ? 'Попробуйте изменить параметры поиска' : 'Будьте первым, кто выставит свой юзернейм на аукцион!'}
+              title={
+                searchQuery
+                  ? 'По вашему запросу ничего не найдено'
+                  : 'В данный момент нет активных аукционов'
+              }
+              description={
+                searchQuery
+                  ? 'Попробуйте изменить параметры поиска'
+                  : 'Будьте первым, кто выставит свой юзернейм на аукцион!'
+              }
             />
           ) : (
             <Grid container spacing={2}>
               {filteredAuctions.map((auction, index) => (
-                <AnimatedGrid 
-                  item 
-                  xs={12} 
+                <AnimatedGrid
+                  item
+                  xs={12}
                   key={auction.id}
-                  sx={{ 
+                  sx={{
                     animationDelay: `${index * 0.1}s`,
                   }}
                 >
                   <AuctionCard
                     auction={auction}
-                    type="auction"
+                    type='auction'
                     user={user}
                     loadingButtons={loadingButtons}
                     onCardClick={handleCardClick}
@@ -326,25 +353,25 @@ const UsernameAuctionPage: React.FC = () => {
       <TabPanel value={tabValue} index={1}>
         {userAuctions.length === 0 ? (
           <EmptyState
-            title="У вас нет активных аукционов"
-            description="Выставите свой юзернейм на аукцион и заработайте баллы!"
-            actionText="Создать аукцион"
+            title='У вас нет активных аукционов'
+            description='Выставите свой юзернейм на аукцион и заработайте баллы!'
+            actionText='Создать аукцион'
             onAction={() => setCreateDialogOpen(true)}
           />
         ) : (
           <Grid container spacing={2}>
             {userAuctions.map((auction, index) => (
-              <AnimatedGrid 
-                item 
-                xs={12} 
+              <AnimatedGrid
+                item
+                xs={12}
                 key={auction.id}
-                sx={{ 
+                sx={{
                   animationDelay: `${index * 0.1}s`,
                 }}
               >
                 <AuctionCard
                   auction={auction}
-                  type="userAuction"
+                  type='userAuction'
                   user={user}
                   loadingButtons={loadingButtons}
                   onCardClick={handleCardClick}
@@ -361,25 +388,25 @@ const UsernameAuctionPage: React.FC = () => {
       <TabPanel value={tabValue} index={2}>
         {userBids.length === 0 ? (
           <EmptyState
-            title="У вас нет активных ставок"
-            description="Поучаствуйте в аукционах, чтобы получить уникальный юзернейм!"
-            actionText="Смотреть аукционы"
+            title='У вас нет активных ставок'
+            description='Поучаствуйте в аукционах, чтобы получить уникальный юзернейм!'
+            actionText='Смотреть аукционы'
             onAction={() => setTabValue(0)}
           />
         ) : (
           <Grid container spacing={2}>
             {userBids.map((bid, index) => (
-              <AnimatedGrid 
-                item 
-                xs={12} 
+              <AnimatedGrid
+                item
+                xs={12}
                 key={bid.id}
-                sx={{ 
+                sx={{
                   animationDelay: `${index * 0.1}s`,
                 }}
               >
                 <AuctionCard
                   auction={bid}
-                  type="userBid"
+                  type='userBid'
                   user={user}
                   loadingButtons={loadingButtons}
                   onCardClick={handleCardClick}
@@ -394,25 +421,25 @@ const UsernameAuctionPage: React.FC = () => {
       <TabPanel value={tabValue} index={3}>
         {completedAuctions.length === 0 ? (
           <EmptyState
-            title="Нет завершенных аукционов"
-            description="Завершенные аукционы будут отображаться здесь."
-            actionText="К активным аукционам"
+            title='Нет завершенных аукционов'
+            description='Завершенные аукционы будут отображаться здесь.'
+            actionText='К активным аукционам'
             onAction={() => setTabValue(0)}
           />
         ) : (
           <Grid container spacing={2}>
             {completedAuctions.map((auction, index) => (
-              <AnimatedGrid 
-                item 
-                xs={12} 
+              <AnimatedGrid
+                item
+                xs={12}
                 key={auction.id}
-                sx={{ 
+                sx={{
                   animationDelay: `${index * 0.1}s`,
                 }}
               >
                 <AuctionCard
                   auction={auction}
-                  type="auction"
+                  type='auction'
                   user={user}
                   loadingButtons={loadingButtons}
                   onCardClick={handleCardClick}
@@ -454,6 +481,60 @@ const UsernameAuctionPage: React.FC = () => {
         loadingButtons={loadingButtons}
       />
 
+      {/* Usernames Settings Modal */}
+      <Dialog
+        open={usernamesSettingsOpen}
+        onClose={() => setUsernamesSettingsOpen(false)}
+        maxWidth='md'
+        fullWidth
+        PaperProps={{
+          sx: {
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            maxHeight: '90vh',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px 20px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+          }}
+        >
+          <Typography
+            variant='h6'
+            sx={{ fontWeight: 600, color: 'text.primary' }}
+          >
+            Настройки юзернеймов
+          </Typography>
+          <IconButton
+            onClick={() => setUsernamesSettingsOpen(false)}
+            sx={{ color: 'text.primary' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <DialogContent sx={{ p: 3, overflow: 'auto' }}>
+          <UsernamesForm
+            onSuccess={() => {
+              setUsernamesSettingsOpen(false);
+              setSnackbar({
+                open: true,
+                message: 'Настройки юзернеймов обновлены',
+                severity: 'success',
+              });
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+
       {/* Snackbar for notifications */}
       <Snackbar
         open={snackbar.open}
@@ -489,4 +570,4 @@ const UsernameAuctionPage: React.FC = () => {
   );
 };
 
-export default UsernameAuctionPage; 
+export default UsernameAuctionPage;

@@ -151,7 +151,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
-    maxWidth: '550px',
+    maxWidth: activeSection === 'usernames' ? '800px' : '550px',
     width: '100%',
     maxHeight: isMobile ? '100vh' : '90vh',
     margin: isMobile ? 0 : 'auto',
