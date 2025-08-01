@@ -27,14 +27,15 @@ const AuthService = {
       }
 
       if (response.data && response.data.success) {
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-        }
+        // Система работает на куки, token не нужен
+        // if (response.data.token) {
+        //   localStorage.setItem('token', response.data.token);
+        // }
 
         return {
           success: true,
           user: response.data.user || null,
-          token: response.data.token || null,
+          // token: response.data.token || null,
         };
       } else {
         return {
@@ -57,6 +58,66 @@ const AuthService = {
           error.response?.data?.message ||
           error.response?.data?.error ||
           'Ошибка при входе в систему',
+      };
+    }
+  },
+
+  googleLogin: async (googleToken) => {
+    try {
+      const response = await axios.post(
+        '/api/auth/google',
+        {
+          token: googleToken,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data && response.data.ban_info) {
+        return {
+          success: false,
+          error: response.data.error || 'Аккаунт заблокирован',
+          ban_info: response.data.ban_info,
+        };
+      }
+
+      if (response.data && response.data.success) {
+        // Система работает на куки, token не нужен
+        // if (response.data.token) {
+        //   localStorage.setItem('token', response.data.token);
+        // }
+
+        return {
+          success: true,
+          user: response.data.user || null,
+          // token: response.data.token || null,
+          needs_profile_setup: response.data.needs_profile_setup || false,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.data.error || 'Неизвестная ошибка при входе через Google',
+        };
+      }
+    } catch (error) {
+      if (error.response?.data?.ban_info) {
+        return {
+          success: false,
+          error: error.response.data.error || 'Аккаунт заблокирован',
+          ban_info: error.response.data.ban_info,
+        };
+      }
+
+      return {
+        success: false,
+        error:
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Ошибка при входе через Google',
       };
     }
   },
@@ -188,11 +249,11 @@ const AuthService = {
         }
       );
 
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token'); // Система работает на куки
 
       return response.data;
     } catch (error) {
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token'); // Система работает на куки
 
       throw error;
     }

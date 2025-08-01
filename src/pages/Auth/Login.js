@@ -25,6 +25,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import AuthCard from '../../components/AuthCard';
 import { AuthContext } from '../../context/AuthContext';
+import GoogleOneTap from '../../components/GoogleOneTap';
 
 const Login = () => {
   const theme = useTheme();
@@ -844,6 +845,9 @@ const Login = () => {
               >
                 Войти через Telegram
               </Button>
+              
+              {/* Google One Tap */}
+              <GoogleOneTap redirectPath={redirectPath} />
             </Box>
 
             <Box sx={{ textAlign: 'center', mt: 4 }}>

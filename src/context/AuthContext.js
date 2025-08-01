@@ -85,7 +85,14 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await AuthService.login(credentials);
+      let response;
+      
+      // Проверяем, если передан Google токен
+      if (credentials.googleToken) {
+        response = await AuthService.googleLogin(credentials.googleToken);
+      } else {
+        response = await AuthService.login(credentials);
+      }
 
       if (response.success) {
         setUser(response.user);
@@ -95,11 +102,20 @@ export const AuthProvider = ({ children }) => {
           themeContext.loadThemeSettings();
         }
 
-        return { success: true };
+        return { 
+          success: true, 
+          needs_profile_setup: response.needs_profile_setup 
+        };
       } else {
         const errorMessage = response.error || 'Ошибка при входе в систему';
-        setError({ message: errorMessage });
-        return { success: false, error: errorMessage };
+        setError({ message: errorMessage, ban_info: response.ban_info });
+        return { 
+          success: false, 
+          error: errorMessage, 
+          ban_info: response.ban_info,
+          registration_required: response.registration_required,
+          email: response.email
+        };
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -131,7 +147,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       await AuthService.logout();
       
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token'); // Система работает на куки
       resetMessengerSocket();
       setUser(null);
       setIsAuthenticated(false);
@@ -141,7 +157,7 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Logout error:', error);
-      localStorage.removeItem('token');
+      // localStorage.removeItem('token'); // Система работает на куки
       resetMessengerSocket();
       setUser(null);
       setIsAuthenticated(false);
