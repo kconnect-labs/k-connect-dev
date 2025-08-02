@@ -42,9 +42,27 @@ const RegisterProfile = ({ setUser }) => {
   const [error, setError] = useState('');
   const [referralRewards, setReferralRewards] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showSessionError, setShowSessionError] = useState(false);
 
   const handleCloseSuccessMessage = () => {
     setShowSuccessMessage(false);
+  };
+
+  const handleCloseSessionError = () => {
+    setShowSessionError(false);
+  };
+
+  const clearUserData = () => {
+    // Очищаем все данные пользователя
+    localStorage.removeItem('k-connect-chat-id');
+    localStorage.removeItem('k-connect-referral-rewards');
+    localStorage.removeItem('k-connect-user');
+    sessionStorage.clear();
+    
+    // Очищаем куки
+    document.cookie.split(";").forEach(function(c) { 
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+    });
   };
 
   useEffect(() => {
@@ -174,6 +192,7 @@ const RegisterProfile = ({ setUser }) => {
       console.error('Error:', err);
       if (err.response && err.response.data && err.response.data.error) {
         const errorMsg = err.response.data.error;
+        console.log('Получена ошибка с сервера:', errorMsg);
         if (errorMsg.includes('chat_id is required')) {
           setError(
             'Ошибка идентификации. Попробуйте перейти по ссылке из письма повторно или обратитесь в поддержку.'
@@ -182,8 +201,43 @@ const RegisterProfile = ({ setUser }) => {
           setError(
             'Профиль с этими данными уже существует. Попробуйте войти в систему.'
           );
+        } else if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
+          // Обработка ошибки сессии
+          setShowSessionError(true);
+          clearUserData();
+          
+          // Перенаправляем на логин через 4 секунды
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 4000);
         } else {
           setError(errorMsg);
+        }
+      } else if (err.response && err.response.data && err.response.data.message) {
+        const errorMsg = err.response.data.message;
+        console.log('Получена ошибка message с сервера:', errorMsg);
+        if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
+          setShowSessionError(true);
+          clearUserData();
+          
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 4000);
+        } else {
+          setError(errorMsg);
+        }
+      } else if (err.message) {
+        const errorMsg = err.message;
+        console.log('Получена ошибка err.message:', errorMsg);
+        if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
+          setShowSessionError(true);
+          clearUserData();
+          
+          setTimeout(() => {
+            window.location.href = '/login';
+          }, 4000);
+        } else {
+          setError('Ошибка при создании профиля. Пожалуйста, попробуйте позже.');
         }
       } else {
         setError('Ошибка при создании профиля. Пожалуйста, попробуйте позже.');
@@ -688,6 +742,60 @@ const RegisterProfile = ({ setUser }) => {
               }}
             >
               Перенаправляем на главную страницу...
+            </Typography>
+          </Box>
+        </Box>
+      </Snackbar>
+
+      {/* Уведомление об ошибке сессии */}
+      <Snackbar
+        open={showSessionError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={handleCloseSessionError}
+        sx={{
+          '& .MuiSnackbar-root': {
+            top: '20px',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            background: 'var(--background-color)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '12px',
+            p: 3,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            minWidth: '300px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <CircularProgress 
+            size={24} 
+            sx={{ 
+              color: '#ff6b6b',
+            }} 
+          />
+          <Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'var(--text-color)',
+                fontWeight: 600,
+                mb: 0.5,
+              }}
+            >
+              Ошибка создания сессии
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'var(--text-secondary)',
+              }}
+            >
+              Вам нужно авторизоваться вновь. Перенаправляем на страницу входа...
             </Typography>
           </Box>
         </Box>

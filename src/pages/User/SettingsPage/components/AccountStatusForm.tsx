@@ -138,6 +138,28 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
     });
   };
 
+  const getTimeRemaining = (expiresAt: string) => {
+    const now = new Date();
+    const expires = new Date(expiresAt);
+    const diff = expires.getTime() - now.getTime();
+
+    if (diff <= 0) {
+      return 'Истекло';
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (days > 0) {
+      return `${days} дн. ${hours} ч.`;
+    } else if (hours > 0) {
+      return `${hours} ч. ${minutes} мин.`;
+    } else {
+      return `${minutes} мин.`;
+    }
+  };
+
   const getStatusIcon = (item: Warning | Ban) => {
     if ('active' in item) {
       // Это предупреждение
@@ -283,7 +305,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                           </Typography>
                           {getStatusChip(ban)}
                                                      <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                             {ban.is_active ? 'Активен' : 'Истек'}
+                             {ban.is_active ? `Осталось: ${getTimeRemaining(ban.expires_at)}` : 'Истек'}
                            </Typography>
                         </Box>
                       }
