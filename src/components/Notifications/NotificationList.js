@@ -267,6 +267,7 @@ const getNotificationIcon = type => {
       return <EmojiEventsIcon sx={{ fontSize: '3rem' }} />;
     case 'bug_comment':
     case 'bug_status_change':
+    case 'ticket_comment':
       return <ArticleIcon sx={{ fontSize: '3rem' }} />;
     case 'item_transfer':
     case 'marketplace_sold':
@@ -311,6 +312,7 @@ const getNotificationColor = type => {
       return 'primary';
     case 'bug_comment':
     case 'bug_status_change':
+    case 'ticket_comment':
       return 'primary';
     case 'general':
       return 'primary';
@@ -660,6 +662,8 @@ const getNotificationMessage = (notification, t) => {
       return bugReportName
         ? t('notifications.messages.bug_status_change', { bugReport: bugReportName })
         : notification.message;
+    case 'ticket_comment':
+      return t('notifications.messages.ticket_comment');
     case 'item_transfer':
       return itemName
         ? t('notifications.messages.item_transfer', { item: itemName })

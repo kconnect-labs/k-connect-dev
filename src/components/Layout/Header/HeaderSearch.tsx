@@ -87,13 +87,21 @@ const SearchContainer = styled(motion.div)<{ isMobile: boolean }>(({ theme, isMo
   zIndex: 1300,
 }));
 
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  background: 'var(--theme-background)',
-  backdropFilter: 'var(--theme-backdrop-filter)',
+const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})<{ isMobile: boolean }>(({ theme, isMobile }) => ({
+  background: isMobile 
+    ? 'rgba(15, 15, 25, 0.98)' // Более темный и насыщенный фон для мобильных
+    : 'var(--theme-background)',
+  backdropFilter: isMobile 
+    ? 'none' // Отключаем backdrop-filter на мобильных
+    : 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: 16,
   overflow: 'hidden',
-  boxShadow: '0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)',
+  boxShadow: isMobile
+    ? '0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08)'
+    : '0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)',
 }));
 
 const SearchInputField = styled(TextField)(({ theme }) => ({
@@ -405,7 +413,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
         }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
-      <StyledPaper elevation={0} className="theme-modal">
+      <StyledPaper elevation={0} className="theme-modal" isMobile={isMobile}>
         {/* Search Input */}
         <Box sx={{ position: 'relative' }}>
           <SearchInputField

@@ -37,6 +37,8 @@ const getNotificationIcon = type => {
       return <ReplyIcon fontSize='small' color='primary' />;
     case 'follow':
       return <PersonAddIcon fontSize='small' color='primary' />;
+    case 'ticket_comment':
+      return <ArticleIcon fontSize='small' color='primary' />;
     default:
       return null;
   }

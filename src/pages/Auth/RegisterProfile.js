@@ -43,6 +43,7 @@ const RegisterProfile = ({ setUser }) => {
   const [referralRewards, setReferralRewards] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showSessionError, setShowSessionError] = useState(false);
+  const [showSupportError, setShowSupportError] = useState(false);
 
   const handleCloseSuccessMessage = () => {
     setShowSuccessMessage(false);
@@ -50,6 +51,10 @@ const RegisterProfile = ({ setUser }) => {
 
   const handleCloseSessionError = () => {
     setShowSessionError(false);
+  };
+
+  const handleCloseSupportError = () => {
+    setShowSupportError(false);
   };
 
   const clearUserData = () => {
@@ -211,7 +216,7 @@ const RegisterProfile = ({ setUser }) => {
             window.location.href = '/login';
           }, 4000);
         } else {
-          setError(errorMsg);
+          setShowSupportError(true);
         }
       } else if (err.response && err.response.data && err.response.data.message) {
         const errorMsg = err.response.data.message;
@@ -224,7 +229,7 @@ const RegisterProfile = ({ setUser }) => {
             window.location.href = '/login';
           }, 4000);
         } else {
-          setError(errorMsg);
+          setShowSupportError(true);
         }
       } else if (err.message) {
         const errorMsg = err.message;
@@ -237,10 +242,11 @@ const RegisterProfile = ({ setUser }) => {
             window.location.href = '/login';
           }, 4000);
         } else {
-          setError('Ошибка при создании профиля. Пожалуйста, попробуйте позже.');
+          setShowSupportError(true);
         }
       } else {
-        setError('Ошибка при создании профиля. Пожалуйста, попробуйте позже.');
+        // Показываем уведомление о необходимости обратиться в поддержку
+        setShowSupportError(true);
       }
     } finally {
       setLoading(false);
@@ -797,6 +803,99 @@ const RegisterProfile = ({ setUser }) => {
             >
               Вам нужно авторизоваться вновь. Перенаправляем на страницу входа...
             </Typography>
+          </Box>
+        </Box>
+      </Snackbar>
+
+      {/* Уведомление о необходимости обратиться в поддержку */}
+      <Snackbar
+        open={showSupportError}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={handleCloseSupportError}
+        sx={{
+          '& .MuiSnackbar-root': {
+            top: '20px',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            background: 'var(--background-color)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '12px',
+            p: 3,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            minWidth: '350px',
+            maxWidth: '500px',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <Box
+            sx={{
+              width: 24,
+              height: 24,
+              borderRadius: '50%',
+              background: '#ff6b6b',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '12px',
+              }}
+            >
+              !
+            </Typography>
+          </Box>
+          <Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'var(--text-color)',
+                fontWeight: 600,
+                mb: 1,
+              }}
+            >
+              Ошибка при создании профиля
+            </Typography>
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: 'var(--text-secondary)',
+                mb: 1,
+              }}
+            >
+              Пожалуйста, обратитесь в поддержку:
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: '#D0BCFF',
+                  fontWeight: 500,
+                }}
+              >
+                📱 Telegram: @KCONNECTSUP_BOT
+              </Typography>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: '#D0BCFF',
+                  fontWeight: 500,
+                }}
+              >
+                👨‍💻 Разработчик: @QSOULMAIN
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Snackbar>

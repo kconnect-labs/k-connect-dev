@@ -64,6 +64,7 @@ const getNotificationIcon = type => {
       return <EmojiEventsIcon />;
     case 'bug_comment':
     case 'bug_status_change':
+    case 'ticket_comment':
       return <ArticleIcon />;
     case 'item_transfer':
     case 'marketplace_sold':
@@ -178,6 +179,8 @@ const getNotificationMessage = (notification, t) => {
       return bugReportName
         ? t('notifications.messages.bug_status_change', { bugReport: bugReportName })
         : notification.message;
+    case 'ticket_comment':
+      return t('notifications.messages.ticket_comment');
     case 'item_transfer':
       return itemName
         ? t('notifications.messages.item_transfer', { item: itemName })

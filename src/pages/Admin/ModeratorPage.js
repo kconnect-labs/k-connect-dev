@@ -122,7 +122,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     borderRadius: 12,
     background: 'rgba(18, 18, 18, 0.8)',
-    backdropFilter: 'blur(10px)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     [theme.breakpoints.down('sm')]: {
@@ -525,8 +525,8 @@ const ModeratorPage = () => {
         sx={{
           mb: 3,
           borderRadius: 2,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
           color: 'rgba(255, 255, 255, 0.87)',
           '&:hover': {
@@ -553,8 +553,8 @@ const ModeratorPage = () => {
                 p: 3,
                 textAlign: 'center',
                 borderRadius: 2,
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'var(--theme-background)',
+                backdropFilter: 'var(--theme-backdrop-filter)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
               }}
             >
@@ -570,8 +570,8 @@ const ModeratorPage = () => {
                     sx={{
                       p: 3,
                       borderRadius: 2,
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      backdropFilter: 'blur(20px)',
+                      background: 'var(--theme-background)',
+                      backdropFilter: 'var(--theme-backdrop-filter)',
                       border: '1px solid rgba(255, 255, 255, 0.12)',
                       display: 'flex',
                       flexDirection: 'column',
@@ -1894,8 +1894,8 @@ const ModeratorPage = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: 2,
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'var(--theme-background)',
+                backdropFilter: 'var(--theme-backdrop-filter)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
@@ -1927,8 +1927,8 @@ const ModeratorPage = () => {
                 mb: 2,
                 position: 'relative',
                 borderRadius: 2,
-                background: 'rgba(255, 255, 255, 0.03)',
-                backdropFilter: 'blur(20px)',
+                background: 'var(--theme-background)',
+                backdropFilter: 'var(--theme-backdrop-filter)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
@@ -1995,8 +1995,8 @@ const ModeratorPage = () => {
                       mr: 1,
                       height: 36,
                       borderRadius: 2,
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      backdropFilter: 'blur(20px)',
+                      background: 'var(--theme-background)',
+                      backdropFilter: 'var(--theme-backdrop-filter)',
                       border: '1px solid rgba(255, 255, 255, 0.12)',
                       color: 'rgba(255, 255, 255, 0.87)',
                       '&:hover': {
@@ -2015,7 +2015,7 @@ const ModeratorPage = () => {
                     sx={{
                       borderRadius: 2,
                       background: 'rgba(244, 67, 54, 0.1)',
-                      backdropFilter: 'blur(20px)',
+                      backdropFilter: 'var(--theme-backdrop-filter)',
                       border: '1px solid rgba(244, 67, 54, 0.2)',
                       '&:hover': {
                         background: 'rgba(244, 67, 54, 0.2)',
@@ -2153,8 +2153,8 @@ const ModeratorPage = () => {
           sx={{
             overflowX: 'auto',
             borderRadius: 2,
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
           }}
         >
@@ -2309,8 +2309,8 @@ const ModeratorPage = () => {
           sx={{
             overflowX: 'auto',
             borderRadius: 2,
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
             border: '1px solid rgba(255, 255, 255, 0.12)',
           }}
         >
@@ -3461,8 +3461,8 @@ const ModeratorPage = () => {
                         flexDirection: 'column',
                         transition: 'all 0.3s ease',
                         borderRadius: 2,
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        backdropFilter: 'blur(20px)',
+                        background: 'var(--theme-background)',
+                        backdropFilter: 'var(--theme-backdrop-filter)',
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         '&:hover': {
                           background: 'rgba(255, 255, 255, 0.05)',
@@ -3717,8 +3717,8 @@ const ModeratorPage = () => {
               mb: 3,
               p: 3,
               borderRadius: 2,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background)',
+              backdropFilter: 'var(--theme-backdrop-filter)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >
@@ -3794,8 +3794,8 @@ const ModeratorPage = () => {
             sx={{
               p: 3,
               borderRadius: 2,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background)',
+              backdropFilter: 'var(--theme-backdrop-filter)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >
@@ -4456,7 +4456,7 @@ const ModeratorPage = () => {
               sx={{
                 borderRadius: 2,
                 background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
-                backdropFilter: 'blur(20px)',
+                backdropFilter: 'var(--theme-backdrop-filter)',
                 border: '1px solid rgba(25, 118, 210, 0.3)',
                 boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
                 '&:hover': {
@@ -4491,8 +4491,8 @@ const ModeratorPage = () => {
                   flexDirection: 'column',
                   transition: 'all 0.3s ease',
                   borderRadius: 2,
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -4598,7 +4598,7 @@ const ModeratorPage = () => {
                       sx={{
                         borderRadius: 2,
                         background: 'rgba(25, 118, 210, 0.1)',
-                        backdropFilter: 'blur(20px)',
+                        backdropFilter: 'var(--theme-backdrop-filter)',
                         border: '1px solid rgba(25, 118, 210, 0.2)',
                         '&:hover': {
                           background: 'rgba(25, 118, 210, 0.2)',
@@ -4618,7 +4618,7 @@ const ModeratorPage = () => {
                         sx={{
                           borderRadius: 2,
                           background: 'rgba(25, 118, 210, 0.1)',
-                          backdropFilter: 'blur(20px)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(25, 118, 210, 0.2)',
                           '&:hover': {
                             background: 'rgba(25, 118, 210, 0.2)',
@@ -4639,7 +4639,7 @@ const ModeratorPage = () => {
                         sx={{
                           borderRadius: 2,
                           background: 'rgba(25, 118, 210, 0.1)',
-                          backdropFilter: 'blur(20px)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(25, 118, 210, 0.2)',
                           '&:hover': {
                             background: 'rgba(25, 118, 210, 0.2)',
@@ -4660,7 +4660,7 @@ const ModeratorPage = () => {
                         sx={{
                           borderRadius: 2,
                           background: 'rgba(244, 67, 54, 0.1)',
-                          backdropFilter: 'blur(20px)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(244, 67, 54, 0.2)',
                           '&:hover': {
                             background: 'rgba(244, 67, 54, 0.2)',
@@ -5113,8 +5113,8 @@ const ModeratorPage = () => {
               textAlign: 'center',
               py: 2,
               borderRadius: 2,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background)',
+              backdropFilter: 'var(--theme-backdrop-filter)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >
@@ -5141,8 +5141,8 @@ const ModeratorPage = () => {
                   mb: 2,
                   p: 3,
                   borderRadius: 1,
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
@@ -5412,8 +5412,8 @@ const ModeratorPage = () => {
               textAlign: 'center',
               py: 2,
               borderRadius: 2,
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background)',
+              backdropFilter: 'var(--theme-backdrop-filter)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >
@@ -5437,8 +5437,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5513,8 +5513,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5584,8 +5584,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5640,8 +5640,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5696,8 +5696,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5752,8 +5752,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5803,8 +5803,8 @@ const ModeratorPage = () => {
             <Grid item xs={12} md={6} lg={4}>
               <Card
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
+                  background: 'var(--theme-background)',
+                  backdropFilter: 'var(--theme-backdrop-filter)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: 2,
                   transition: 'all 0.2s ease-in-out',
@@ -5854,8 +5854,8 @@ const ModeratorPage = () => {
                                                 <Grid item xs={12} md={6} lg={4}>
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(20px)',
+                          background: 'var(--theme-background)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(255, 255, 255, 0.12)',
                           borderRadius: 2,
                           transition: 'all 0.2s ease-in-out',
@@ -5915,8 +5915,8 @@ const ModeratorPage = () => {
                     <Grid item xs={12} md={6} lg={4}>
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(20px)',
+                          background: 'var(--theme-background)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(255, 255, 255, 0.12)',
                           borderRadius: 2,
                           transition: 'all 0.2s ease-in-out',
@@ -5971,8 +5971,8 @@ const ModeratorPage = () => {
                     <Grid item xs={12} md={6} lg={4}>
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(20px)',
+                          background: 'var(--theme-background)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(255, 255, 255, 0.12)',
                           borderRadius: 2,
                           transition: 'all 0.2s ease-in-out',
@@ -6027,8 +6027,8 @@ const ModeratorPage = () => {
                     <Grid item xs={12} md={6} lg={4}>
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(20px)',
+                          background: 'var(--theme-background)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(255, 255, 255, 0.12)',
                           borderRadius: 2,
                           transition: 'all 0.2s ease-in-out',
@@ -6088,8 +6088,8 @@ const ModeratorPage = () => {
                     <Grid item xs={12} md={6} lg={4}>
                       <Card
                         sx={{
-                          background: 'rgba(255, 255, 255, 0.03)',
-                          backdropFilter: 'blur(20px)',
+                          background: 'var(--theme-background)',
+                          backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(255, 255, 255, 0.12)',
                           borderRadius: 2,
                           transition: 'all 0.2s ease-in-out',
@@ -6151,8 +6151,8 @@ const ModeratorPage = () => {
           display: 'flex',
           alignItems: 'center',
           borderRadius: 2,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
@@ -6176,8 +6176,8 @@ const ModeratorPage = () => {
         sx={{
           p: 3,
           borderRadius: 2,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
           border: '1px solid rgba(255, 255, 255, 0.12)',
         }}
       >
@@ -6192,8 +6192,8 @@ const ModeratorPage = () => {
             mb: 2,
             '& .MuiTab-root': {
               borderRadius: '12px 12px 0 0',
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(20px)',
+              background: 'var(--theme-background)',
+              backdropFilter: 'var(--theme-backdrop-filter)',
               border: '1px solid rgba(255, 255, 255, 0.12)',
               borderBottom: 'none',
               marginRight: 1,
