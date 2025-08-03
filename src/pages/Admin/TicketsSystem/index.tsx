@@ -14,6 +14,8 @@ import TicketSearch from './components/TicketSearch';
 import ComplaintHistory from './components/ComplaintHistory';
 import TicketModerationHistory from './components/TicketModerationHistory';
 import TicketActionsModal from './components/TicketActionsModal';
+import PackProposalsList from './components/PackProposalsList';
+import PackProposalDetails from './components/PackProposalDetails';
 import Post from '../../../components/Post/Post';
 
 // Импорты хуков
@@ -51,6 +53,8 @@ const TicketsSystem: React.FC = () => {
   const [moderationHistoryTicketId, setModerationHistoryTicketId] = useState<number | null>(null);
   const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
   const [actionsModalTicket, setActionsModalTicket] = useState<any>(null);
+  const [selectedPackProposal, setSelectedPackProposal] = useState<any>(null);
+  const [isPackProposalModalOpen, setIsPackProposalModalOpen] = useState(false);
 
   // Хуки для работы с тикетами
   const {
@@ -175,6 +179,22 @@ const TicketsSystem: React.FC = () => {
   const handleCloseActionsModal = () => {
     setIsActionsModalOpen(false);
     setActionsModalTicket(null);
+  };
+
+  const handlePackProposalSelect = (proposal: any) => {
+    setSelectedPackProposal(proposal);
+    setIsPackProposalModalOpen(true);
+  };
+
+  const handleClosePackProposalModal = () => {
+    setIsPackProposalModalOpen(false);
+    setSelectedPackProposal(null);
+  };
+
+  const handlePackProposalSuccess = () => {
+    // Обновляем список заявок после успешного действия
+    setIsPackProposalModalOpen(false);
+    setSelectedPackProposal(null);
   };
 
   const handleIssueWarning = async (userId: number, reason: string, duration: string, ticketId?: number, targetType?: string, targetId?: number) => {
@@ -404,7 +424,8 @@ const TicketsSystem: React.FC = () => {
     { label: 'Новые', value: 1 },
     { label: 'В работе', value: 2 },
     { label: 'Завершенные', value: 3 },
-    { label: 'Статистика', value: 4 },
+    { label: 'Заявки на паки', value: 4 },
+    { label: 'Статистика', value: 5 },
   ];
 
   const filteredTickets = React.useMemo(() => {
@@ -477,6 +498,8 @@ const TicketsSystem: React.FC = () => {
 
         <Box mt={3}>
           {activeTab === 4 ? (
+            <PackProposalsList onProposalSelect={handlePackProposalSelect} />
+          ) : activeTab === 5 ? (
             <TicketStats tickets={tickets} />
           ) : (
             <TicketList
@@ -503,7 +526,7 @@ const TicketsSystem: React.FC = () => {
         {selectedTicket && (
                         <TicketDetails
                 ticket={selectedTicket}
-                comments={comments}
+                comments={comments as any}
                 commentsLoading={commentsLoading}
                 onTicketAction={handleTicketAction}
                 onCommentAction={handleCommentAction}
@@ -593,6 +616,24 @@ const TicketsSystem: React.FC = () => {
         onBanUser={(userId, reason, duration, ticketId, targetType, targetId) => handleBanUser(userId, reason, duration, ticketId, targetType, targetId)}
         onDeletePost={(postId, ticketId) => handleDeletePost(postId, ticketId)}
         />
+      )}
+
+      {/* Модалка детального просмотра заявки на пак */}
+      {isPackProposalModalOpen && selectedPackProposal && (
+        <UniversalModal
+          open={isPackProposalModalOpen}
+          onClose={handleClosePackProposalModal}
+          title={`Заявка на пак: ${selectedPackProposal.display_name}`}
+          maxWidth="lg"
+          fullWidth
+          maxWidthCustom={'1000px'}
+        >
+          <PackProposalDetails
+            proposal={selectedPackProposal}
+            onClose={handleClosePackProposalModal}
+            onSuccess={handlePackProposalSuccess}
+          />
+        </UniversalModal>
       )}
     </StyledContainer>
   );

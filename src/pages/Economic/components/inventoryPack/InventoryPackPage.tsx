@@ -13,6 +13,8 @@ import {
   IconButton,
   Alert,
   DialogActions,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,9 +23,13 @@ import {
   Diamond as DiamondIcon,
   Star as StarIcon,
   Lock as LockIcon,
+  Add as AddIcon,
 } from '@mui/icons-material';
 import PackCard from './PackCard';
 import PackOpeningModal from './PackOpeningModal';
+import MyProposals from './MyProposals';
+import ProposePackModal from './ProposePackModal';
+import StyledTabs from '../../../../UIKIT/StyledTabs';
 import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import InfoBlock from '../../../../UIKIT/InfoBlock';
@@ -64,6 +70,9 @@ interface PackWithPurchaseId extends Pack {
 }
 
 const InventoryPackPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
   const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,6 +87,8 @@ const InventoryPackPage = () => {
   const { user } = useAuth();
   const [confirmPack, setConfirmPack] = useState<Pack | null>(null);
   const [openedPack, setOpenedPack] = useState<PackWithPurchaseId | null>(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [proposeModalOpen, setProposeModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPacks();
@@ -165,6 +176,16 @@ const InventoryPackPage = () => {
   const handleClosePackDetails = () => {
     setShowPackDetails(false);
     setSelectedPackDetails(null);
+  };
+
+  const handleProposeSuccess = () => {
+    // Обновляем список паков после успешного предложения
+    fetchPacks();
+    // Если мы на табе "Мои заявки", переключаемся на него для обновления списка
+    if (activeTab === 1) {
+      // Принудительно обновляем компонент MyProposals
+      setActiveTab(1);
+    }
   };
 
   const getRarityColor = (rarity: string) => {
@@ -281,7 +302,6 @@ const InventoryPackPage = () => {
         styleVariant='dark'
         style={{
           textAlign: 'center',
-          marginBottom: '24px',
         }}
         children={null}
         titleStyle={{}}
@@ -290,59 +310,102 @@ const InventoryPackPage = () => {
         className=''
       />
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '12px',
-          justifyContent: 'center',
-          minHeight: '400px',
-          '@media (max-width: 768px)': {
-            gap: '8px',
-            minHeight: '300px',
-          },
-        }}
-      >
-        {packs.map(pack => (
-          <Box
-            key={pack.id}
-            sx={{
-              flex: '0 0 auto',
-              width: {
-                xs: '100%', // 1 в ряд на мобильных
-                sm: 'calc(50% - 6px)', // 2 в ряд на планшетах
-                md: 'calc(25% - 9px)', // 4 в ряд на средних экранах
-                lg: 'calc(25% - 9px)', // 4 в ряд на больших экранах
-                xl: 'calc(20% - 9.6px)', // 5 в ряд на очень больших экранах
-              },
-              minWidth: {
-                xs: '280px',
-                sm: '250px',
-                md: '300px',
-              },
-              maxWidth: {
-                xs: 'none',
-                sm: '300px',
-                md: '350px',
-              },
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <PackCard
-                pack={pack}
-                userPoints={userPoints}
-                onBuy={async () => await handleBuyPack(pack)}
-                disabled={!user || userPoints < pack.price}
-                onPackClick={handlePackClick}
-              />
-            </motion.div>
-          </Box>
-        ))}
+      {/* Табы */}
+      <Box sx={{ mb: 3 }}>
+        <StyledTabs
+          style={{
+            maxWidth: '100%',
+          }}
+          value={activeTab}
+          onChange={(_, newValue) => {
+            if (newValue === 2) {
+              // Если нажали на "Предложить пак", открываем модалку и остаемся на текущем табе
+              setProposeModalOpen(true);
+            } else {
+              setActiveTab(newValue as number);
+            }
+          }}
+          tabs={[
+            { value: 0, label: "Паки" },
+            { value: 1, label: "Мои заявки" },
+            { value: 2, label: "Предложить пак" }
+          ]}
+          variant={isMobile ? "fullWidth" : "standard"}
+          fullWidth={isMobile}
+          centered={!isMobile}
+        />
       </Box>
+
+      {/* Контент табов */}
+      {activeTab === 0 && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '12px',
+            justifyContent: 'center',
+            minHeight: '400px',
+            '@media (max-width: 768px)': {
+              gap: '8px',
+              minHeight: '300px',
+            },
+          }}
+        >
+          {packs.map(pack => (
+            <Box
+              key={pack.id}
+              sx={{
+                flex: '0 0 auto',
+                width: {
+                  xs: '100%', // 1 в ряд на мобильных
+                  sm: 'calc(50% - 6px)', // 2 в ряд на планшетах
+                  md: 'calc(25% - 9px)', // 4 в ряд на средних экранах
+                  lg: 'calc(25% - 9px)', // 4 в ряд на больших экранах
+                  xl: 'calc(20% - 9.6px)', // 5 в ряд на очень больших экранах
+                },
+                minWidth: {
+                  xs: '280px',
+                  sm: '250px',
+                  md: '300px',
+                },
+                maxWidth: {
+                  xs: 'none',
+                  sm: '300px',
+                  md: '350px',
+                },
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <PackCard
+                  pack={pack}
+                  userPoints={userPoints}
+                  onBuy={async () => await handleBuyPack(pack)}
+                  disabled={!user || userPoints < pack.price}
+                  onPackClick={handlePackClick}
+                  showProposeButton={false}
+                />
+              </motion.div>
+            </Box>
+          ))}
+        </Box>
+      )}
+
+      {activeTab === 1 && (
+        <MyProposals />
+      )}
+
+
+
+      {/* Модалка предложения пака */}
+      <ProposePackModal
+        open={proposeModalOpen}
+        onClose={() => setProposeModalOpen(false)}
+        onSuccess={handleProposeSuccess}
+      />
 
       <AnimatePresence>
         {openedPack && (

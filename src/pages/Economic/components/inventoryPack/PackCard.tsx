@@ -8,6 +8,7 @@ import {
   Chip,
   CircularProgress,
   Tooltip,
+  Fab,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -16,9 +17,11 @@ import {
   Star as StarIcon,
   Lock as LockIcon,
   Percent as PercentIcon,
+  Add as AddIcon,
 } from '@mui/icons-material';
 import OptimizedImage from '../../../../components/OptimizedImage';
 import { Pack, PackContent } from './types';
+import ProposePackModal from './ProposePackModal';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -229,6 +232,8 @@ interface PackCardProps {
   onBuy: () => Promise<void>;
   disabled: boolean;
   onPackClick?: (pack: Pack, packContents: PackContent[]) => void;
+  showProposeButton?: boolean;
+  onProposeSuccess?: () => void;
 }
 
 const PackCard = ({
@@ -237,12 +242,15 @@ const PackCard = ({
   onBuy,
   disabled,
   onPackClick,
+  showProposeButton = false,
+  onProposeSuccess,
 }: PackCardProps) => {
   const [packContents, setPackContents] = useState<PackContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [showItems, setShowItems] = useState(false);
   const [items, setItems] = useState<PackContent[]>([]);
   const [loadingItems, setLoadingItems] = useState(false);
+  const [proposeModalOpen, setProposeModalOpen] = useState(false);
 
   useEffect(() => {
     fetchPackContents();
@@ -342,8 +350,38 @@ const PackCard = ({
     pack.sold_quantity &&
     pack.max_quantity - pack.sold_quantity <= 0;
 
-  return (
-    <motion.div
+    return (
+    <>
+      {showProposeButton && (
+        <Fab
+          color="primary"
+          aria-label="Предложить пак"
+          onClick={() => setProposeModalOpen(true)}
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+            background: 'var(--theme-primary, #7c3aed)',
+            '&:hover': {
+              background: 'var(--theme-primary-dark, #6d28d9)',
+            },
+          }}
+        >
+          <AddIcon />
+        </Fab>
+      )}
+
+      <ProposePackModal
+        open={proposeModalOpen}
+        onClose={() => setProposeModalOpen(false)}
+        onSuccess={() => {
+          onProposeSuccess?.();
+          setProposeModalOpen(false);
+        }}
+      />
+
+      <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -604,6 +642,7 @@ const PackCard = ({
         </CardContent>
       </StyledCard>
     </motion.div>
+    </>
   );
 };
 
