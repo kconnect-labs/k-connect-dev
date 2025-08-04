@@ -158,7 +158,11 @@ const AttachmentsFeed = ({
       } catch (error) {
         console.error('Ошибка при загрузке вложений:', error);
         if (isMounted.current) {
-          setError(t('profile.feed.attachments.loading_error'));
+          if (error.response && error.response.status === 403) {
+            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к вложениям.');
+          } else {
+            setError(t('profile.feed.attachments.loading_error'));
+          }
         }
       } finally {
         if (isMounted.current) {
@@ -239,8 +243,9 @@ const AttachmentsFeed = ({
           textAlign: 'center',
           py: 4,
           px: 3,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
+          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          borderRadius: 1,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -249,7 +254,9 @@ const AttachmentsFeed = ({
       >
         <ImageIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
         <Typography variant='h6' color='text.primary' gutterBottom>
-          {t('profile.feed.attachments.error_title')}
+          {error.includes('приватный')
+            ? ' Приватный профиль'
+            : t('profile.feed.attachments.error_title')}
         </Typography>
         <Typography
           variant='body1'
@@ -269,8 +276,9 @@ const AttachmentsFeed = ({
           textAlign: 'center',
           py: 4,
           px: 3,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
+          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          borderRadius: 1,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

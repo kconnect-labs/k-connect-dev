@@ -2019,6 +2019,194 @@ const RulesPage = () => {
           <RuleSection>
             <RuleCard>
               <RuleCardHeader>
+                <SecurityIcon color='primary' fontSize='large' sx={{ mr: 2 }} />
+                <SectionTitle variant='h5'>
+                  IX. Правила для приватных профилей
+                </SectionTitle>
+              </RuleCardHeader>
+
+              <RuleCardContent>
+                <Typography variant='body1' paragraph>
+                  Приватные профили имеют особые правила модерации, учитывающие их закрытый характер. Однако это не означает полную свободу от правил платформы.
+                </Typography>
+
+                <NumberedRuleItem>
+                  <RuleNumber>9.1</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Модерация приватных профилей
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Приватные профили проходят менее строгую модерацию, так как контент виден только взаимным друзьям. Однако основные правила платформы остаются обязательными.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.1.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Контент в приватных профилях не проходит предварительную модерацию, но может быть проверен по жалобам.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.1.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          При получении жалоб на контент приватного профиля, модерация проводит проверку и принимает решение о соответствии правилам.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.1.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Нарушения в приватных профилях наказываются так же, как и в публичных - предупреждения, временные блокировки, постоянные блокировки.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>9.2</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Контент 18+ в приватных профилях
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      В приватных профилях разрешена публикация контента 18+ без обязательной маркировки NSFW, но с соблюдением ограничений.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.2.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Разрешен эротический контент.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.2.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Разрешена порнография: без сексуального насилия, без сексуального насилия над животными.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.2.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены материалы без согласия участников (revenge porn, интимные фото без разрешения).
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.2.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещена детская порнография, педофилия, сексуализация несовершеннолетних, зоофильство.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>9.3</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Ограничения приватных профилей
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Даже в приватных профилях запрещен контент, который может нанести вред или нарушить закон.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.3.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены призывы к насилию, экстремизму, терроризму, свержению власти.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.3.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещена пропаганда наркотиков, алкоголя, табака среди несовершеннолетних.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.3.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещено распространение личных данных других людей без их согласия (доксинг).
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.3.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены угрозы физической расправы, насилия, смерти, причинения вреда здоровью или имуществу.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>9.4</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Ответственность владельцев приватных профилей
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Владельцы приватных профилей несут полную ответственность за публикуемый контент, даже если он виден ограниченному кругу лиц.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.4.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Приватность профиля не является оправданием для нарушения правил платформы.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.4.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Владелец профиля отвечает за весь контент, включая комментарии и взаимодействия с другими пользователями.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>9.4.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          При систематических нарушениях приватный профиль может быть переведен в публичный режим или заблокирован.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <Fade in={true}>
+                  <Box
+                    sx={{
+                      mt: 3,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: 150,
+                    }}
+                  >
+                    <motion.div
+                      initial='initial'
+                      animate='animate'
+                      whileHover='whileHover'
+                      variants={shieldAnimation}
+                    >
+                      <SecurityIconWrapper>
+                        <SecurityIcon
+                          sx={{
+                            fontSize: 70,
+                            color: '#fff',
+                            filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.4))',
+                          }}
+                        />
+                      </SecurityIconWrapper>
+                    </motion.div>
+                  </Box>
+                </Fade>
+              </RuleCardContent>
+            </RuleCard>
+          </RuleSection>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <RuleSection>
+            <RuleCard>
+              <RuleCardHeader>
                 <GavelIcon color='warning' fontSize='large' sx={{ mr: 2 }} />
                 <SectionTitle variant='h5'>Важное примечание</SectionTitle>
               </RuleCardHeader>
@@ -2102,7 +2290,7 @@ const RulesPage = () => {
                     color='text.secondary'
                     sx={{ mt: 2 }}
                   >
-                    Последнее обновление: 16 Июля 2025
+                    Последнее обновление: 05 Августа 2025
                   </Typography>
                 </RuleCardContent>
               </RuleCard>

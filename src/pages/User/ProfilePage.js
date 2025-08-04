@@ -32,6 +32,7 @@ import InventoryItemCardPure from '../../UIKIT/InventoryItemCard';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useLanguage } from '../../context/LanguageContext';
 // Импорты вынесенных компонентов
 import {
@@ -111,6 +112,12 @@ const ProfilePage = () => {
   const [userBanInfo, setUserBanInfo] = useState(null);
 
   const [isCurrentUserModerator, setIsCurrentUserModerator] = useState(false);
+  const [hasModeratorAccess, setHasModeratorAccess] = useState(false);
+  const [isGrantingAccess, setIsGrantingAccess] = useState(false);
+  const [lastModeratorCheck, setLastModeratorCheck] = useState(0);
+
+  // Определяем isCurrentUser здесь, чтобы он был доступен во всех useEffect
+  const isCurrentUser = currentUser && user && currentUser.username === user.username;
 
   const { lightboxIsOpen, currentImage, openLightbox, closeLightbox } =
     useLightbox();
@@ -131,6 +138,92 @@ const ProfilePage = () => {
       }
     } catch (error) {
       console.error('Error following/unfollowing user:', error);
+    }
+  };
+
+  // Функция для предоставления временного доступа модератора
+  const handleGrantModeratorAccess = async () => {
+    if (!user?.id || !isCurrentUserModerator) return;
+
+    try {
+      setIsGrantingAccess(true);
+      const response = await axios.post('/api/moderator/private-profile/grant-access', {
+        target_user_id: user.id,
+        duration_hours: 24
+      });
+
+      if (response.data.success) {
+        setHasModeratorAccess(true);
+        // Перезагружаем профиль для обновления данных
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error granting moderator access:', error);
+    } finally {
+      setIsGrantingAccess(false);
+    }
+  };
+
+  // Функция для отзыва временного доступа модератора
+  const handleRevokeModeratorAccess = async () => {
+    if (!user?.id || !isCurrentUserModerator) return;
+
+    try {
+      const response = await axios.post('/api/moderator/private-profile/revoke-access', {
+        target_user_id: user.id
+      });
+
+      if (response.data.success) {
+        setHasModeratorAccess(false);
+        // Перезагружаем профиль для обновления данных
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error revoking moderator access:', error);
+    }
+  };
+
+  // Проверяем статус модератора через quick-status
+  const checkModeratorStatus = async () => {
+    try {
+      if (window._moderatorCheckInProgress) {
+        console.log('Moderator check already in progress, skipping...');
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastModeratorCheck < 15 * 60 * 1000) {
+        console.log('Using cached moderator status');
+        return;
+      }
+
+      window._moderatorCheckInProgress = true;
+
+      const response = await axios.get('/api/moderator/quick-status');
+      if (response.data && response.data.is_moderator) {
+        setIsCurrentUserModerator(true);
+      } else {
+        setIsCurrentUserModerator(false);
+      }
+
+      setLastModeratorCheck(now);
+    } catch (error) {
+      console.error('Error checking moderator status:', error);
+      setIsCurrentUserModerator(false);
+    } finally {
+      window._moderatorCheckInProgress = false;
+    }
+  };
+
+  // Проверяем временный доступ модератора при загрузке профиля
+  const checkModeratorAccess = async () => {
+    if (!user?.id || !isCurrentUserModerator) return;
+
+    try {
+      const response = await axios.get(`/api/moderator/private-profile/check-access?target_user_id=${user.id}`);
+      setHasModeratorAccess(response.data.has_access || false);
+    } catch (error) {
+      console.error('Error checking moderator access:', error);
     }
   };
 
@@ -162,6 +255,11 @@ const ProfilePage = () => {
           // Копируем connect_info из корневого объекта, если он есть
           if (response.data.connect_info) {
             response.data.user.connect_info = response.data.connect_info;
+          }
+
+          // Копируем is_friend из корневого объекта, если он есть
+          if (response.data.is_friend !== undefined) {
+            response.data.user.is_friend = response.data.is_friend;
           }
 
           setUser(response.data.user);
@@ -244,9 +342,8 @@ const ProfilePage = () => {
             setUserBanInfo(null);
           }
 
-          if (response.data.current_user_is_moderator !== undefined) {
-            setIsCurrentUserModerator(response.data.current_user_is_moderator);
-          }
+          // Проверяем статус модератора через quick-status
+          await checkModeratorStatus();
 
           // Получаем надетые предметы из API профиля
           if (response.data.equipped_items) {
@@ -302,6 +399,13 @@ const ProfilePage = () => {
       setLoadingFollowers(true);
       setLoadingFollowing(true);
       setLoadingFriends(true);
+
+      // Проверяем временный доступ модератора
+      if (isCurrentUserModerator && user.is_private) {
+        checkModeratorAccess();
+      }
+
+
 
       axios
         .get(`/api/profile/${user.id}/followers`)
@@ -374,6 +478,9 @@ const ProfilePage = () => {
   useEffect(() => {
     if (!currentUser) {
       setUser(null);
+    } else {
+      // Проверяем статус модератора при загрузке компонента
+      checkModeratorStatus();
     }
   }, [currentUser]);
 
@@ -628,7 +735,7 @@ const ProfilePage = () => {
     return <UserNotFound />;
   }
 
-  const isCurrentUser = currentUser && currentUser.username === user.username;
+
 
   return (
     <Container
@@ -1050,118 +1157,67 @@ const ProfilePage = () => {
 
                 <ProfileAbout user={user} getLighterColor={getLighterColor} />
 
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                      user?.subscription?.type === 'channel'
-                        ? 'repeat(2, 1fr)'
-                        : 'repeat(3, 1fr)',
-                    gap: 1,
-                    mt: 1,
-                  }}
-                >
-                  <Paper
+                {/* Показываем статистику только если профиль не приватный или у пользователя есть доступ */}
+                {(!user?.is_private || isCurrentUser || user?.is_friend) ? (
+                  <Box
                     sx={{
-                      p: 1,
-                      borderRadius: 1,
-                      textAlign: 'center',
-                      background: theme =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255,255,255,0.04)'
-                          : 'rgba(0,0,0,0.04)',
-                      backdropFilter: 'blur(5px)',
-                      border:
-                        user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                          ? `1px solid ${user.status_color}33`
-                          : theme =>
-                              theme.palette.mode === 'dark'
-                                ? '1px solid rgba(255,255,255,0.05)'
-                                : '1px solid rgba(0,0,0,0.05)',
-                      transition: 'all 0.2s ease',
+                      display: 'grid',
+                      gridTemplateColumns:
+                        user?.subscription?.type === 'channel'
+                          ? 'repeat(2, 1fr)'
+                          : 'repeat(3, 1fr)',
+                      gap: 1,
+                      mt: 1,
                     }}
                   >
-                    <Typography
-                      variant='h6'
+                    <Paper
                       sx={{
-                        fontWeight: 700,
-                        color:
+                        p: 1,
+                        borderRadius: 1,
+                        textAlign: 'center',
+                        background: theme =>
+                          theme.palette.mode === 'dark'
+                            ? 'rgba(255,255,255,0.04)'
+                            : 'rgba(0,0,0,0.04)',
+                        backdropFilter: 'blur(5px)',
+                        border:
                           user.status_color &&
                           user.status_text &&
                           user.subscription
-                            ? user.status_color
-                            : 'primary.main',
+                            ? `1px solid ${user.status_color}33`
+                            : theme =>
+                                theme.palette.mode === 'dark'
+                                  ? '1px solid rgba(255,255,255,0.05)'
+                                  : '1px solid rgba(0,0,0,0.05)',
+                        transition: 'all 0.2s ease',
                       }}
                     >
-                      {postsCount || 0}
-                    </Typography>
-                    <Typography
-                      variant='caption'
-                      sx={{
-                        color: user?.status_color
-                          ? getLighterColor(user.status_color)
-                          : theme => theme.palette.text.secondary,
-                      }}
-                    >
-                      {t('profile.info_stats.posts')}
-                    </Typography>
-                  </Paper>
+                      <Typography
+                        variant='h6'
+                        sx={{
+                          fontWeight: 700,
+                          color:
+                            user.status_color &&
+                            user.status_text &&
+                            user.subscription
+                              ? user.status_color
+                              : 'primary.main',
+                        }}
+                      >
+                        {postsCount || 0}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        sx={{
+                          color: user?.status_color
+                            ? getLighterColor(user.status_color)
+                            : theme => theme.palette.text.secondary,
+                        }}
+                      >
+                        {t('profile.info_stats.posts')}
+                      </Typography>
+                    </Paper>
 
-                  <Paper
-                    component={Link}
-                    to={`/friends/${user?.username}`}
-                    sx={{
-                      p: 1,
-                      borderRadius: 1,
-                      textAlign: 'center',
-                      background: theme =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255,255,255,0.04)'
-                          : 'rgba(0,0,0,0.04)',
-                      backdropFilter: 'blur(5px)',
-                      border:
-                        user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                          ? `1px solid ${user.status_color}33`
-                          : theme =>
-                              theme.palette.mode === 'dark'
-                                ? '1px solid rgba(255,255,255,0.05)'
-                                : '1px solid rgba(0,0,0,0.05)',
-                      textDecoration: 'none',
-                      transition: 'all 0.2s ease',
-                    }}
-                  >
-                    <Typography
-                      variant='h6'
-                      sx={{
-                        fontWeight: 700,
-                        color:
-                          user.status_color &&
-                          user.status_text &&
-                          user.subscription
-                            ? user.status_color
-                            : 'primary.main',
-                      }}
-                    >
-                      {followersCount || 0}
-                    </Typography>
-                    <Typography
-                      variant='caption'
-                      sx={{
-                        color: user?.status_color
-                          ? getLighterColor(user.status_color)
-                          : theme => theme.palette.text.secondary,
-                      }}
-                    >
-                      {t('profile.info_stats.followers')}
-                    </Typography>
-                  </Paper>
-
-                  {(!user?.subscription ||
-                    user.subscription.type !== 'channel') && (
                     <Paper
                       component={Link}
                       to={`/friends/${user?.username}`}
@@ -1199,7 +1255,7 @@ const ProfilePage = () => {
                               : 'primary.main',
                         }}
                       >
-                        {followingCount || 0}
+                        {followersCount || 0}
                       </Typography>
                       <Typography
                         variant='caption'
@@ -1209,11 +1265,104 @@ const ProfilePage = () => {
                             : theme => theme.palette.text.secondary,
                         }}
                       >
-                        {t('profile.info_stats.following')}
+                        {t('profile.info_stats.followers')}
                       </Typography>
                     </Paper>
-                  )}
-                </Box>
+
+                    {(!user?.subscription ||
+                      user.subscription.type !== 'channel') && (
+                      <Paper
+                        component={Link}
+                        to={`/friends/${user?.username}`}
+                        sx={{
+                          p: 1,
+                          borderRadius: 1,
+                          textAlign: 'center',
+                          background: theme =>
+                            theme.palette.mode === 'dark'
+                              ? 'rgba(255,255,255,0.04)'
+                              : 'rgba(0,0,0,0.04)',
+                          backdropFilter: 'blur(5px)',
+                          border:
+                            user.status_color &&
+                            user.status_text &&
+                            user.subscription
+                              ? `1px solid ${user.status_color}33`
+                              : theme =>
+                                  theme.palette.mode === 'dark'
+                                    ? '1px solid rgba(255,255,255,0.05)'
+                                    : '1px solid rgba(0,0,0,0.05)',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        <Typography
+                          variant='h6'
+                          sx={{
+                            fontWeight: 700,
+                            color:
+                              user.status_color &&
+                              user.status_text &&
+                              user.subscription
+                                ? user.status_color
+                                : 'primary.main',
+                          }}
+                        >
+                          {followingCount || 0}
+                        </Typography>
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            color: user?.status_color
+                              ? getLighterColor(user.status_color)
+                              : theme => theme.palette.text.secondary,
+                          }}
+                        >
+                          {t('profile.info_stats.following')}
+                        </Typography>
+                      </Paper>
+                    )}
+                  </Box>
+                ) : (
+                  /* Сообщение о приватном профиле */
+                  <Box
+                    sx={{
+                      mt: 1,
+                      p: 2,
+                      borderRadius: 1,
+                      textAlign: 'center',
+                      background: theme =>
+                        theme.palette.mode === 'dark'
+                          ? 'rgba(255,255,255,0.04)'
+                          : 'rgba(0,0,0,0.04)',
+                      backdropFilter: 'blur(5px)',
+                      border: theme =>
+                        theme.palette.mode === 'dark'
+                          ? '1px solid rgba(255,255,255,0.05)'
+                          : '1px solid rgba(0,0,0,0.05)',
+                    }}
+                  >
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        color: theme => theme.palette.text.secondary,
+                        fontWeight: 500,
+                      }}
+                    >
+                       Приватный профиль
+                    </Typography>
+                    <Typography
+                      variant='caption'
+                      sx={{
+                        color: theme => theme.palette.text.secondary,
+                        display: 'block',
+                        mt: 0.5,
+                      }}
+                    >
+                      Вас должны добавить взаимно в друзья для доступа
+                    </Typography>
+                  </Box>
+                )}
 
 
               </Box>
@@ -1333,6 +1482,70 @@ const ProfilePage = () => {
                 {following
                   ? t('profile.actions.unfollow')
                   : t('profile.actions.follow')}
+              </Button>
+            </Paper>
+          )}
+
+          {/* Блок с кнопкой просмотра профиля для модераторов */}
+          {!isCurrentUser && isCurrentUserModerator && user?.is_private && (
+            <Paper
+              sx={{
+                p: 1,
+                borderRadius: '12px',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                display: 'flex',
+                justifyContent: 'center',
+                marginBottom: '2px',
+              }}
+            >
+              <Button
+                variant={hasModeratorAccess ? 'outlined' : 'contained'}
+                color={hasModeratorAccess ? 'warning' : 'secondary'}
+                onClick={hasModeratorAccess ? handleRevokeModeratorAccess : handleGrantModeratorAccess}
+                disabled={isGrantingAccess}
+                fullWidth
+                startIcon={
+                  isGrantingAccess ? (
+                    <CircularProgress size={16} color="inherit" />
+                  ) : hasModeratorAccess ? (
+                    <PersonRemoveIcon />
+                  ) : (
+                    <VisibilityIcon />
+                  )
+                }
+                sx={{
+                  borderRadius: '12px',
+                  py: 1.2,
+                  fontWeight: 'bold',
+                  textTransform: 'none',
+                  backgroundColor: hasModeratorAccess 
+                    ? 'rgba(255, 193, 7, 0.1)' 
+                    : 'secondary.main',
+                  color: hasModeratorAccess ? 'warning.main' : '#fff',
+                  borderColor: hasModeratorAccess ? 'warning.main' : 'transparent',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: hasModeratorAccess 
+                      ? 'rgba(255, 193, 7, 0.2)' 
+                      : 'secondary.dark',
+                    transform: 'translateY(-2px)',
+                  },
+                  '&:active': {
+                    transform: 'translateY(0)',
+                  },
+                  '&:disabled': {
+                    opacity: 0.6,
+                  },
+                }}
+              >
+                {isGrantingAccess 
+                  ? 'Предоставление доступа...' 
+                  : hasModeratorAccess 
+                    ? 'Отозвать доступ' 
+                    : 'Просмотреть профиль'}
               </Button>
             </Paper>
           )}
@@ -1505,6 +1718,7 @@ const ProfilePage = () => {
                 equippedItems={equippedItems}
                 onEquippedItemsUpdate={refreshEquippedItems}
                 currentUserId={currentUser?.id}
+                user={user}
               />
             </UpgradeEffects>
           </TabPanel>
@@ -1515,6 +1729,7 @@ const ProfilePage = () => {
               socials={socials}
               onUsernameClick={handleUsernameClick}
               stats={stats}
+              currentUser={currentUser}
             />
           </TabPanel>
         </Grid>

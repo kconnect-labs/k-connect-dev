@@ -109,6 +109,8 @@ interface User {
   birthday?: string;
   connect_info?: ConnectInfo[];
   subscription?: Subscription;
+  is_private?: boolean;
+  is_friend?: boolean;
 }
 
 interface Verification {
@@ -147,6 +149,7 @@ interface ProfileInfoProps {
   socials: Social[];
   onUsernameClick: (event: React.MouseEvent, username: string) => void;
   stats: Stats;
+  currentUser?: User | null;
 }
 
 // Компонент для отображения информации
@@ -255,11 +258,16 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   socials,
   onUsernameClick,
   stats,
+  currentUser,
 }) => {
   const { t } = useLanguage();
 
   console.log('ProfileInfo socials:', socials);
   console.log('ProfileInfo user:', user);
+
+  // Проверяем, есть ли доступ к информации о пользователе
+  const isCurrentUser = currentUser && currentUser.id === user.id;
+  const hasAccess = !user?.is_private || isCurrentUser || user?.is_friend;
 
   const getSubscriptionContainerClass = () => {
     if (!user?.subscription) return styles.subscriptionContainerDefault;
@@ -324,6 +332,32 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
         return '';
     }
   };
+
+  // Если профиль приватный и нет доступа, показываем сообщение
+  if (!hasAccess) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.grid}>
+          <div className={styles.gridFullWidth}>
+            <div
+              style={{
+                textAlign: 'center',
+
+                color: 'rgba(255, 255, 255, 0.7)',
+              }}
+            >
+              <div style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+                Приватный профиль
+              </div>
+              <div style={{ fontSize: '0.875rem' }}>
+                Подпишитесь друг на друга для просмотра информации
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

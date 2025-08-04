@@ -75,7 +75,13 @@ const WallFeed = ({ userId }) => {
         console.error('Ошибка при загрузке записей стены:', error);
         if (isMounted.current) {
           if (pageNumber === 1) setWallPosts([]);
-          setError('Произошла ошибка при загрузке записей стены');
+          
+          // Проверяем, является ли ошибка связанной с приватностью
+          if (error.response && error.response.status === 403) {
+            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к записям стены.');
+          } else {
+            setError('Произошла ошибка при загрузке записей стены');
+          }
         }
       } finally {
         if (isMounted.current) {
@@ -181,14 +187,32 @@ const WallFeed = ({ userId }) => {
       <Box
         sx={{
           textAlign: 'center',
-          py: 3,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          mt: 2,
+          py: 4,
+          px: 3,
+          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          borderRadius: 1,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 1,
         }}
       >
-        <Typography color='error'>
-          {t('profile.feed.wall.loading_error')}
+        <Typography
+          variant='h6'
+          color='text.primary'
+          gutterBottom
+        >
+          {error.includes('приватный')
+            ? '🔒 Приватный профиль'
+            : t('profile.feed.wall.loading_error')}
+        </Typography>
+        <Typography
+          variant='body1'
+          color='text.secondary'
+          sx={{ maxWidth: 400 }}
+        >
+          {error}
         </Typography>
       </Box>
     );
@@ -199,14 +223,22 @@ const WallFeed = ({ userId }) => {
       <Box
         sx={{
           textAlign: 'center',
-          py: 6,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
-          mt: 2,
+          py: 4,
+          px: 3,
+          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          borderRadius: 1,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 1,
         }}
       >
-        <Typography variant='h6' color='text.secondary'>
+        <Typography variant='h6' color='text.primary' gutterBottom>
           {t('profile.feed.wall.empty')}
+        </Typography>
+        <Typography variant='body1' color='text.secondary' sx={{ maxWidth: 400 }}>
+          На стене пока нет записей
         </Typography>
       </Box>
     );

@@ -84,6 +84,11 @@ const PostsFeed = ({ userId, statusColor }) => {
           setPinnedPost(null);
           checkedPinnedPostsRef.current.add(username);
           return null;
+        } else if (error.response && error.response.status === 403) {
+          // Для приватного профиля не показываем ошибку закрепленного поста
+          setPinnedPost(null);
+          checkedPinnedPostsRef.current.add(username);
+          return null;
         }
         console.error('Ошибка при загрузке закрепленного поста:', error);
         setPinnedPost(null);
@@ -144,6 +149,8 @@ const PostsFeed = ({ userId, statusColor }) => {
         if (isMounted.current) {
           if (error.response && error.response.status === 401) {
             setError(t('profile.feed.posts.auth_required'));
+          } else if (error.response && error.response.status === 403) {
+            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к постам.');
           } else {
             setError(t('profile.feed.posts.loading_error'));
           }
@@ -275,8 +282,9 @@ const PostsFeed = ({ userId, statusColor }) => {
           textAlign: 'center',
           py: 4,
           px: 3,
-          bgcolor: 'background.paper',
-          borderRadius: 2,
+          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          borderRadius: 1,
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -287,6 +295,8 @@ const PostsFeed = ({ userId, statusColor }) => {
         <Typography variant='h6' color='text.primary' gutterBottom>
           {error === t('profile.feed.posts.auth_required')
             ? t('profile.feed.posts.auth_required')
+            : error.includes('приватный')
+            ? 'Приватный профиль'
             : t('profile.feed.posts.error_title')}
         </Typography>
         <Typography

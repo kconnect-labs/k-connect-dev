@@ -25,7 +25,7 @@ import OptimizedImage from '../../../../components/OptimizedImage';
 import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
 
 const InventoryTab = forwardRef(
-  ({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId }, ref) => {
+  ({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId, user }, ref) => {
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
@@ -84,7 +84,16 @@ const InventoryTab = forwardRef(
             setInventory([]);
           }
         } catch (error) {
+          console.error('Error fetching inventory:', error);
           setInventory([]);
+          
+          // Проверяем, является ли ошибка связанной с приватностью
+          if (error.response && error.response.status === 403) {
+            // Устанавливаем специальное состояние для приватного профиля
+            setInventory([]);
+            setLoading(false);
+            return; // Не показываем общую ошибку загрузки
+          }
         } finally {
           setLoading(false);
         }
@@ -319,6 +328,9 @@ const InventoryTab = forwardRef(
       [loadingMore, hasMore, loadMoreItems]
     );
 
+    // Проверяем, является ли профиль приватным и нет ли доступа
+    const isPrivateProfile = user?.is_private && !user?.is_friend;
+    
     if (loading) {
       return (
         <Box
@@ -328,6 +340,45 @@ const InventoryTab = forwardRef(
           minHeight='200px'
         >
           <CircularProgress />
+        </Box>
+      );
+    }
+
+    // Показываем сообщение о приватном профиле
+    if (isPrivateProfile) {
+      return (
+        <Box
+          display='flex'
+          flexDirection='column'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='200px'
+          bgcolor='var(--theme-background, rgba(255, 255, 255, 0.03))'
+          borderRadius={1}
+          border='1px solid rgba(255, 255, 255, 0.1)'
+          sx={{ p: 3 }}
+        >
+          <Typography
+            variant='h6'
+            sx={{
+              color: theme => theme.palette.text.secondary,
+              fontWeight: 600,
+              mb: 2,
+              textAlign: 'center',
+            }}
+          >
+             Приватный профиль
+          </Typography>
+          <Typography
+            variant='body2'
+            sx={{
+              color: theme => theme.palette.text.secondary,
+              textAlign: 'center',
+              maxWidth: '400px',
+            }}
+          >
+            Инвентарь этого пользователя скрыт. Подпишитесь друг на друга для получения доступа к инвентарю.
+          </Typography>
         </Box>
       );
     }
