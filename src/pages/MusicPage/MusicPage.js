@@ -140,7 +140,7 @@ const MusicPage = () => {
   }, [trackId, playTrackById]);
 
   return (
-    <Box sx={{ p: 1, paddingBottom: 10 }}>
+    <Box sx={{ paddingBottom: 10 }}>
       {/* Основной контент */}
       <Box sx={{ mt: 2 }}>
         {/* My Vibe Widget */}

@@ -99,8 +99,6 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         await switchToPickmeTheme();
         break;
     }
-    onSuccess?.('Тема изменена');
-    onClose();
   };
 
   const modalStyle = {

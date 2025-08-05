@@ -84,7 +84,6 @@ interface InventoryTabProps {
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
-  padding: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2),
   },
@@ -106,120 +105,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const ItemImage = styled(Box)(({ theme }) => ({
-  width: 100,
-  height: 100,
-  borderRadius: 12,
-  background: 'rgba(255, 255, 255, 0.1)',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: '2px solid rgba(255, 255, 255, 0.2)',
-  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-  margin: '0 auto 16px',
-  overflow: 'hidden',
-  position: 'relative',
-  '& img': {
-    width: '100%',
-    height: '100%',
-    objectFit: 'contain',
-    borderRadius: 'inherit',
-    position: 'relative',
-    zIndex: 2,
-    maxWidth: '100%',
-    maxHeight: '100%',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    borderRadius: 'inherit',
-    zIndex: 1,
-  },
-}));
 
-const PageTitle = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  marginBottom: theme.spacing(4),
-  fontWeight: 700,
-}));
 
-const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
-  const colors: Record<string, { bg: string; color: string }> = {
-    common: { bg: '#95a5a6', color: '#fff' },
-    rare: { bg: '#3498db', color: '#fff' },
-    epic: { bg: '#9b59b6', color: '#fff' },
-    legendary: { bg: '#f39c12', color: '#fff' },
-  };
 
-  return {
-    background: colors[rarity || 'common']?.bg || colors.common.bg,
-    color: colors[rarity || 'common']?.color || colors.common.color,
-    fontWeight: 600,
-    fontSize: '0.8rem',
-    '& .MuiChip-label': {
-      padding: '2px 8px',
-    },
-  };
-});
 
-const SuggestionsContainer = styled(Box)(() => ({
-  backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-  borderRadius: 8,
-  marginBottom: 24,
-  maxHeight: 200,
-  overflow: 'auto',
-}));
 
-const SuggestionItem = styled(Box)(() => ({
-  padding: '10px 16px',
-  display: 'flex',
-  alignItems: 'center',
-  cursor: 'pointer',
-  '&:hover': {
-    backgroundColor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
-  },
-}));
 
-const UserAvatar = styled(Avatar)(() => ({
-  width: 32,
-  height: 32,
-  fontSize: 14,
-  marginRight: 12,
-  backgroundColor: '#444444',
-}));
-
-const PriceBadge = styled(Box)({
-  position: 'absolute',
-  top: 8,
-  right: 8,
-  padding: '6px 12px',
-  borderRadius: '20px',
-  fontSize: '0.875rem',
-  fontWeight: 'bold',
-  color: '#fff',
-  background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-  display: 'flex',
-  alignItems: 'center',
-  gap: 4,
-  zIndex: 2,
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-});
-
-const KBallsIcon = styled('img')({
-  width: '16px',
-  height: '16px',
-  marginRight: '4px',
-});
 
 const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
   ({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
@@ -900,7 +791,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
     return (
       <StyledContainer
         onScroll={handleScroll}
-        sx={{ height: '100vh', overflowY: 'auto' }}
+        sx={{ height: '100vh', overflowY: 'auto', paddingTop: 2 }}
       >
         <InfoBlock
           title='Мой Инвентарь'

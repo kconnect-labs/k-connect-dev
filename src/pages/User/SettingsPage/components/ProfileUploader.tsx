@@ -151,18 +151,12 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
       const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
       const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
 
-      // Размер для круглого аватара
+      // Размер для квадратного аватара
       const size = Math.min(completedCrop.width, completedCrop.height);
       canvas.width = size;
       canvas.height = size;
 
-      // Создаем круглую маску
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
-      ctx.clip();
-
-      // Рисуем изображение с правильными координатами
+      // Рисуем изображение с правильными координатами (без круглой маски)
       ctx.drawImage(
         imgRef.current,
         completedCrop.x * scaleX,
@@ -174,8 +168,6 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         size,
         size,
       );
-
-      ctx.restore();
 
       canvas.toBlob((blob) => {
         if (blob) {

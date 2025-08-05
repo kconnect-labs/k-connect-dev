@@ -349,78 +349,8 @@ const KeyTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const DialogAvatar = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: 48,
-  height: 48,
-  borderRadius: '50%',
-  backgroundColor: 'var(--theme-background, rgba(156, 100, 242, 0.2))',
-  marginRight: theme.spacing(2),
-  '& svg': {
-    color: '#9c64f2',
-    fontSize: 28,
-  },
-}));
 
-const InputContainer = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-}));
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
-    backgroundColor:
-      theme.palette.mode === 'dark'
-        ? 'rgba(0, 0, 0, 0.3)'
-        : 'rgba(255, 255, 255, 0.8)',
-    '&:hover': {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.primary.main,
-      },
-    },
-    '&.Mui-focused': {
-      '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.primary.main,
-        borderWidth: 2,
-      },
-    },
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    borderColor:
-      theme.palette.mode === 'dark'
-        ? 'rgba(255, 255, 255, 0.2)'
-        : 'rgba(0, 0, 0, 0.1)',
-  },
-  '& .MuiInputLabel-root': {
-    color:
-      theme.palette.mode === 'dark'
-        ? 'rgba(255, 255, 255, 0.7)'
-        : 'rgba(0, 0, 0, 0.7)',
-  },
-}));
-
-const SuggestionsContainer = styled(Box)(({ theme }) => ({
-  marginTop: -2,
-  marginBottom: theme.spacing(3),
-  borderRadius: '0 0 12px 12px',
-  backgroundColor: 'var(--theme-background, rgba(30, 30, 30, 0.95))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  borderTop: 'none',
-  overflow: 'hidden',
-}));
-
-const SuggestionItem = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(1, 2),
-  display: 'flex',
-  alignItems: 'center',
-  cursor: 'pointer',
-  transition: 'background-color 0.2s',
-  '&:hover': {
-    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
-  },
-}));
 
 const UserAvatar = styled(Avatar)(({ theme }) => ({
   width: 32,
@@ -2143,9 +2073,12 @@ const BalancePage = () => {
     <Container
       maxWidth='md'
       sx={{
-        py: 4,
         pb: 12.5,
+        pl: '0 !important',
+        pr: '0 !important',
         paddingTop: 2,
+        marginLeft: 0, // Прижимаем к левой стороне
+        marginRight: 'auto', // Оставляем auto только справа
         [theme.breakpoints.down('sm')]: { pl: 1, pr: 1 },
       }}
     >

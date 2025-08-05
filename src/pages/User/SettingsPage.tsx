@@ -281,7 +281,7 @@ const SettingsPage = () => {
     {
       id: 'theme',
       title: 'Тема интерфейса',
-      subtitle: 'Blur Glass или дефолтная тема',
+      subtitle: 'Множество тем для интерфейса',
       icon: <Style />,
       color: 'rgba(168, 85, 247, 0.66)', // #a855f7 с прозрачностью
     },
@@ -390,7 +390,7 @@ const SettingsPage = () => {
         sx={{
           minHeight: '100vh',
           mb: 5,
-          padding: { xs: 1, sm: 2 },
+          paddingTop: 1,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

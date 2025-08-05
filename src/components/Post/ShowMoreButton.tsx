@@ -8,7 +8,7 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   background:
-    'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.8) 30%, rgba(26,26,26,1) 100%)',
+    'linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.47) 30%, rgba(26, 26, 26, 0.68) 100%)',
   color: theme.palette.primary.main,
   borderRadius: '0 0 10px 10px',
   textTransform: 'none',
@@ -20,7 +20,7 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   left: 0,
   '&:hover': {
     background:
-      'linear-gradient(180deg, rgba(26,26,26,0) 0%, rgba(26,26,26,0.9) 30%, rgba(26,26,26,1) 100%)',
+      'linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.47) 30%, rgba(26, 26, 26, 0.68) 100%)',
   },
 }));
 
