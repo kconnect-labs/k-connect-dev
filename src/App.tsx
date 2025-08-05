@@ -98,7 +98,7 @@ export const ThemeSettingsContext =
     themeSettings: {
       mode: 'dark',
       primaryColor: '#D0BCFF',
-      backgroundColor: '#151515',
+      backgroundColor: 'none',
       textColor: '#FFFFFF',
     },
     updateThemeSettings: () => {},
@@ -345,8 +345,8 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: 'var(--theme-site-background, #151515)',
-          paper: 'var(--theme-site-background, #151515)',
+          default: '#151515',
+          paper: '#151515',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
@@ -372,7 +372,7 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              backgroundColor: 'var(--theme-site-background, #151515)',
+              backgroundColor: '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -382,7 +382,7 @@ function App() {
             root: {
               borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: 'var(--theme-site-background, #151515)',
+              backgroundColor: '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -391,7 +391,7 @@ function App() {
           styleOverrides: {
             root: {
               borderRadius: '12px',
-              backgroundColor: 'var(--theme-site-background, #151515)',
+              backgroundColor: '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -419,6 +419,9 @@ function App() {
       updateThemeSettings({ mode: savedThemeMode });
     }
 
+    // Применяем класс фона сайта к body и html
+    document.body.classList.add('theme-site-background');
+    document.documentElement.classList.add('theme-site-background');
 
     // Инициализируем кеш медиа контента
     initMediaCache().catch(error => {

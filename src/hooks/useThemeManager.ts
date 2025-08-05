@@ -182,7 +182,7 @@ class ThemeDatabase {
 }
 
 const themeDB = new ThemeDatabase();
-
+ 
 export const useThemeManager = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
   const [isApplying, setIsApplying] = useState(false);

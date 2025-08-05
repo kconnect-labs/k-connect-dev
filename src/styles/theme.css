@@ -94,14 +94,14 @@
 
 /* Класс для фона сайта */
 .theme-site-background {
-  background: var(--theme-site-background) !important;
+  background: var(--theme-site-background);
   transition: background 0.3s ease;
 }
 
 /* Класс для body и html */
 body.theme-site-background,
 html.theme-site-background {
-  background: var(--theme-site-background) !important;
+  background: var(--theme-site-background);
   transition: background 0.3s ease;
 }
 

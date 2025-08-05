@@ -4,45 +4,18 @@ import {
   Toolbar,
   Box,
   IconButton,
-  Typography,
-  Badge,
-  Avatar,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
   useTheme,
   styled,
   alpha,
-  Tooltip,
-  Chip,
-  Switch,
-  FormControlLabel,
   useMediaQuery,
-  TextField,
-  InputAdornment,
-  Paper,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Tabs,
-  Tab,
-  ClickAwayListener,
-  CircularProgress,
-  Button,
   GlobalStyles,
-  Zoom,
   Collapse,
 } from '@mui/material';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import ClearIcon from '@mui/icons-material/Clear';
-import TranslateIcon from '@mui/icons-material/Translate';
 import { AuthContext } from '../../../context/AuthContext';
 import { useMusic } from '../../../context/MusicContext';
 import { ThemeSettingsContext } from '../../../App';
 import { useLanguage } from '../../../context/LanguageContext';
-import { ReactComponent as LogoSVG } from '../../../assets/Logo.svg';
 import NotificationList from '../../Notifications/NotificationList';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
@@ -59,7 +32,6 @@ const StyledAppBar = styled(AppBar, {
 })(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
   color: '#FFFFFF',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   position: 'fixed',
   left: '50%',
@@ -97,13 +69,12 @@ const Header = ({ toggleSidebar }) => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:700px)');
-  const [userChannels, setUserChannels] = useState([]);
   const [accounts, setAccounts] = useState({
     current_account: null,
     main_account: null,
     channels: [],
   });
-  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [setUnreadNotificationsCount] = useState(0);
 
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -127,7 +98,6 @@ const Header = ({ toggleSidebar }) => {
     const headerStyle = {
       background: 'rgba(255, 255, 255, 0.03)',
       color: headerTextColor,
-      boxShadow: `0 4px 15px ${alpha('#000000', 0.07)}`,
       borderColor: alpha(headerTextColor, 0.08),
     };
 
@@ -494,6 +464,7 @@ const Header = ({ toggleSidebar }) => {
       isMobile={isMobile}
       className="theme-aware"
       sx={{
+        borderRadius: '0px',
         display:
           (isMusicPage && isMobile) || isInMessengerChat ? 'none' : 'block',
       }}
@@ -580,7 +551,6 @@ const Header = ({ toggleSidebar }) => {
                     display: 'flex',
                     alignItems: 'center',
                     px: 1,
-                    boxShadow: 3,
                   }}
                 >
                   <HeaderSearch

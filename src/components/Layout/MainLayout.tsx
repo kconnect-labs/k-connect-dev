@@ -59,7 +59,6 @@ const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
-  backgroundColor: 'var(--theme-site-background, #151515)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundAttachment: 'fixed',
@@ -324,12 +323,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
 
+  const hasBackgroundImage = profileBackground || themeSettings?.backgroundImage;
+
   return (
     <MainContainer
       data-testid="main-container"
-      className="theme-site-background"
+      className={hasBackgroundImage ? '' : 'theme-site-background'}
       sx={{
-        backgroundColor: 'var(--theme-site-background, #151515)',
         backgroundImage: profileBackground
           ? `url(${profileBackground})`
           : themeSettings?.backgroundImage
