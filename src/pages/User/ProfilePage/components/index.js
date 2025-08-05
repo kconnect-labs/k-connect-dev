@@ -1,4 +1,3 @@
-export { default as CreatePost } from './CreatePost';
 export { default as TabPanel } from './TabPanel';
 export { default as SubscriptionBadge } from './SubscriptionBadge';
 export { default as UpgradeEffects } from './UpgradeEffects';

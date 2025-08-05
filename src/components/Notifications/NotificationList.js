@@ -21,7 +21,7 @@ import {
   ListItemButton,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Icon } from '@iconify/react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -40,7 +40,6 @@ import MessageIcon from '@mui/icons-material/Message';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { Icon } from '@iconify/react';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
 import axios from 'axios';
 import { formatDateTimeShort } from '../../utils/dateUtils';
@@ -273,9 +272,9 @@ const getNotificationIcon = type => {
     case 'marketplace_sold':
       return <MonetizationOnIcon sx={{ fontSize: '3rem' }} />;
     case 'general':
-      return <NotificationsIcon sx={{ fontSize: '3rem' }} />;
+      return <Icon icon='tabler:bell' width='48' height='48' />;
     default:
-      return <NotificationsIcon sx={{ fontSize: '3rem' }} />;
+      return <Icon icon='tabler:bell' width='48' height='48' />;
   }
 };
 
@@ -1378,7 +1377,7 @@ const NotificationList = ({ onNewNotification, onNotificationRead }) => {
               },
             }}
           >
-            <NotificationsIcon />
+            <Icon icon='tabler:bell' width='22' height='22' />
           </Badge>
         </IconButton>
       </Tooltip>
@@ -1469,7 +1468,7 @@ const NotificationList = ({ onNewNotification, onNotificationRead }) => {
             </List>
           ) : (
             <EmptyNotifications>
-              <NotificationsIcon sx={{ fontSize: 40, opacity: 0.5, mb: 2 }} />
+              <Icon icon='tabler:bell' width='40' height='40' style={{ opacity: 0.5, marginBottom: 16 }} />
               <Typography component='div' variant='body1'>
                 {t('notifications.empty.no_notifications')}
               </Typography>

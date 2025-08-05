@@ -4,7 +4,6 @@ import {
   Button,
   CircularProgress,
   Paper,
-  Avatar,
   Snackbar,
   Alert,
   IconButton,
@@ -18,18 +17,65 @@ import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
 import { useLanguage } from '../../context/LanguageContext';
-import MusicSelectDialog from '../Music/MusicSelectDialog';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import MusicSelectModal from '../Music/MusicSelectModal';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningIcon from '@mui/icons-material/Warning';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { handleImageError as safeImageError } from '../../utils/imageUtils';
 import ReactMarkdown from 'react-markdown';
 import MarkdownContent from '../Post/MarkdownContent';
 import axios from 'axios';
 import { getMarkdownComponents } from '../Post/MarkdownConfig';
+
+// Типы
+interface CreatePostProps {
+  onPostCreated?: (post: any) => void;
+  postType?: 'post' | 'wall';
+  recipientId?: number | null;
+}
+
+interface MediaFile {
+  name: string;
+  size: number;
+  type: string;
+}
+
+interface MusicTrack {
+  id: number;
+  title: string;
+  artist: string;
+  duration: number;
+  file_path: string;
+  cover_path: string;
+}
+
+interface CurrentTrack {
+  id: number;
+  title: string;
+  artist: string;
+  duration: number;
+  file_path: string;
+  cover_path: string;
+}
+
+interface SnackbarState {
+  open: boolean;
+  message: string;
+  severity: 'error' | 'success' | 'warning' | 'info';
+}
+
+interface RateLimitDialog {
+  open: boolean;
+  message: string;
+  timeRemaining: number;
+}
+
+interface MediaNotification {
+  open: boolean;
+  message: string;
+}
 
 // Стилизованные компоненты
 const PostInput = styled(TextField)(({ theme }) => ({
@@ -70,13 +116,11 @@ const PostInput = styled(TextField)(({ theme }) => ({
 const PostActions = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(1.5, 0, 0),
-  borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-  marginTop: theme.spacing(1.5),
+  padding: theme.spacing(1, 0, 0),
 }));
 
 const PublishButton = styled(Button)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '15px',
   textTransform: 'none',
   fontSize: '0.8rem',
   fontWeight: 400,
@@ -102,7 +146,7 @@ const PublishButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const CreatePost = ({
+const CreatePost: React.FC<CreatePostProps> = ({
   onPostCreated,
   postType = 'post',
   recipientId = null,
@@ -110,35 +154,41 @@ const CreatePost = ({
   const { t } = useLanguage();
   const { user } = useContext(AuthContext);
   const { playTrack, currentTrack, isPlaying, togglePlay } =
-    useContext(MusicContext);
-  const [content, setContent] = useState('');
-  const [mediaFiles, setMediaFiles] = useState([]);
-  const [mediaType, setMediaType] = useState('');
-  const [mediaPreview, setMediaPreview] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const fileInputRef = useRef(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [mediaNotification, setMediaNotification] = useState({
+    useContext(MusicContext) as {
+      playTrack: (track: MusicTrack, section?: string | null) => void;
+      currentTrack: CurrentTrack | null;
+      isPlaying: boolean;
+      togglePlay: () => void;
+    };
+  
+  const [content, setContent] = useState<string>('');
+  const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
+  const [mediaType, setMediaType] = useState<string>('');
+  const [mediaPreview, setMediaPreview] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [mediaNotification, setMediaNotification] = useState<MediaNotification>({
     open: false,
     message: '',
   });
-  const [musicSelectOpen, setMusicSelectOpen] = useState(false);
-  const [selectedTracks, setSelectedTracks] = useState([]);
-  const [snackbar, setSnackbar] = useState({
+  const [musicSelectOpen, setMusicSelectOpen] = useState<boolean>(false);
+  const [selectedTracks, setSelectedTracks] = useState<MusicTrack[]>([]);
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
     open: false,
     message: '',
     severity: 'error',
   });
-  const [rateLimitDialog, setRateLimitDialog] = useState({
+  const [rateLimitDialog, setRateLimitDialog] = useState<RateLimitDialog>({
     open: false,
     message: '',
     timeRemaining: 0,
   });
-  const [showSizeError, setShowSizeError] = useState(false);
-  const [sizeErrorMessage, setSizeErrorMessage] = useState('');
-  const [isNsfw, setIsNsfw] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showSizeError, setShowSizeError] = useState<boolean>(false);
+  const [sizeErrorMessage, setSizeErrorMessage] = useState<string>('');
+  const [isNsfw, setIsNsfw] = useState<boolean>(false);
+  const [showPreview, setShowPreview] = useState<boolean>(false);
 
   // Константы
   const MAX_VIDEO_SIZE = 150 * 1024 * 1024; // 150MB in bytes
@@ -163,9 +213,9 @@ const CreatePost = ({
     if (error) setError('');
   }, [content, mediaFiles, selectedTracks, error]);
 
-  const dragCounter = useRef(0);
+  const dragCounter = useRef<number>(0);
 
-  const handleDragEnter = e => {
+  const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current += 1;
@@ -174,12 +224,12 @@ const CreatePost = ({
     }
   };
 
-  const handleDragOver = e => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDragLeave = e => {
+  const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current -= 1;
@@ -188,7 +238,7 @@ const CreatePost = ({
     }
   };
 
-  const handleDrop = e => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -200,17 +250,19 @@ const CreatePost = ({
     }
   };
 
-  const handleMediaChange = event => {
-    const files = Array.from(event.target.files);
+  const handleMediaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
     if (files.length > 0) {
       processFiles(files);
     }
-    event.target.value = '';
+    if (event.target) {
+      event.target.value = '';
+    }
   };
 
-  const processFiles = files => {
-    const validFiles = [];
-    const previews = [];
+  const processFiles = (files: File[]) => {
+    const validFiles: MediaFile[] = [];
+    const previews: string[] = [];
 
     files.forEach(file => {
       // Проверка размера файла
@@ -243,14 +295,17 @@ const CreatePost = ({
         return;
       }
 
-      validFiles.push(file);
+      validFiles.push(file as MediaFile);
 
       // Создание превью
       const reader = new FileReader();
-      reader.onload = e => {
-        previews.push(e.target.result);
-        if (previews.length === validFiles.length) {
-          setMediaPreview(previews);
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        if (result) {
+          previews.push(result);
+          if (previews.length === validFiles.length) {
+            setMediaPreview(previews);
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -268,12 +323,12 @@ const CreatePost = ({
     setMediaType('');
   };
 
-  const handleMusicSelect = tracks => {
+  const handleMusicSelect = (tracks: MusicTrack[]) => {
     setSelectedTracks(tracks);
     setMusicSelectOpen(false);
   };
 
-  const handleRemoveTrack = trackId => {
+  const handleRemoveTrack = (trackId: number) => {
     setSelectedTracks(prev => prev.filter(track => track.id !== trackId));
   };
 
@@ -287,7 +342,7 @@ const CreatePost = ({
     setShowPreview(false);
   };
 
-  const handleTrackPlay = (track, event) => {
+  const handleTrackPlay = (track: MusicTrack, event?: React.MouseEvent) => {
     if (event) {
       event.stopPropagation();
     }
@@ -323,14 +378,14 @@ const CreatePost = ({
       }
 
       if (recipientId) {
-        formData.append('recipient_id', recipientId);
+        formData.append('recipient_id', recipientId.toString());
       }
 
       if (mediaType === 'image') {
         // Отправляем все изображения с правильным форматом
         mediaFiles.forEach((file, index) => {
           console.log(`Adding image[${index}]:`, file.name, file.size);
-          formData.append(`images[${index}]`, file); // Исправлено на правильный формат
+          formData.append(`images[${index}]`, file as File); // Исправлено на правильный формат
         });
       } else if (mediaType === 'video') {
         console.log(
@@ -338,7 +393,7 @@ const CreatePost = ({
           mediaFiles[0].name,
           mediaFiles[0].size
         );
-        formData.append('video', mediaFiles[0]);
+        formData.append('video', mediaFiles[0] as File);
       }
 
       if (selectedTracks.length > 0) {
@@ -379,7 +434,7 @@ const CreatePost = ({
       } else {
         setError(response.data?.error || 'Ошибка создания поста');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error creating post:', err);
 
       if (err.response?.status === 429) {
@@ -399,10 +454,11 @@ const CreatePost = ({
     }
   };
 
-  const handlePaste = e => {
-    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
 
-    for (let item of items) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
       if (item.kind === 'file') {
         const file = item.getAsFile();
         if (file) {
@@ -495,7 +551,7 @@ const CreatePost = ({
                 transition: 'opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
               }}
             >
-              <ImageOutlinedIcon
+              <AddPhotoAlternateIcon
                 sx={{
                   fontSize: 40,
                   color: '#D0BCFF',
@@ -517,26 +573,6 @@ const CreatePost = ({
           )}
 
           <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
-            <Avatar
-              src={
-                user?.photo
-                  ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                  : undefined
-              }
-              alt={user?.name || 'User'}
-              sx={{
-                mr: 1.5,
-                width: 40,
-                height: 40,
-                border: '2px solid rgba(208, 188, 255)',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.3)',
-                },
-              }}
-            />
             <Box sx={{ flex: 1, position: 'relative' }}>
               <PostInput
                 placeholder={
@@ -546,7 +582,7 @@ const CreatePost = ({
                 }
                 multiline
                 value={content}
-                onChange={e => {
+                onChange={(e) => {
                   setContent(e.target.value);
                 }}
                 onPaste={handlePaste}
@@ -631,7 +667,6 @@ const CreatePost = ({
                     }}
                   >
                     <ReactMarkdown
-                      components={getMarkdownComponents()}
                       urlTransform={url => url}
                     >
                       {content.replace(/\n/g, '  \n')}
@@ -662,7 +697,7 @@ const CreatePost = ({
                       onClick={() => {
                         const textarea = document.querySelector(
                           '.MuiInputBase-input'
-                        );
+                        ) as HTMLTextAreaElement;
                         if (textarea) {
                           const start = textarea.selectionStart;
                           const end = textarea.selectionEnd;
@@ -694,7 +729,7 @@ const CreatePost = ({
                       onClick={() => {
                         const textarea = document.querySelector(
                           '.MuiInputBase-input'
-                        );
+                        ) as HTMLTextAreaElement;
                         if (textarea) {
                           const start = textarea.selectionStart;
                           const end = textarea.selectionEnd;
@@ -726,7 +761,7 @@ const CreatePost = ({
                       onClick={() => {
                         const textarea = document.querySelector(
                           '.MuiInputBase-input'
-                        );
+                        ) as HTMLTextAreaElement;
                         if (textarea) {
                           const start = textarea.selectionStart;
                           const end = textarea.selectionEnd;
@@ -758,7 +793,7 @@ const CreatePost = ({
                       onClick={() => {
                         const textarea = document.querySelector(
                           '.MuiInputBase-input'
-                        );
+                        ) as HTMLTextAreaElement;
                         if (textarea) {
                           const start = textarea.selectionStart;
                           const end = textarea.selectionEnd;
@@ -790,7 +825,7 @@ const CreatePost = ({
                       onClick={() => {
                         const textarea = document.querySelector(
                           '.MuiInputBase-input'
-                        );
+                        ) as HTMLTextAreaElement;
                         if (textarea) {
                           const start = textarea.selectionStart;
                           const newContent =
@@ -941,7 +976,7 @@ const CreatePost = ({
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
-                  onClick={e => handleTrackPlay(track, e)}
+                  onClick={(e) => handleTrackPlay(track, e)}
                 >
                   <Box
                     sx={{
@@ -976,8 +1011,8 @@ const CreatePost = ({
                         height: '100%',
                         objectFit: 'cover',
                       }}
-                      onError={e => {
-                        e.target.src = '/uploads/system/album_placeholder.jpg';
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/uploads/system/album_placeholder.jpg';
                       }}
                     />
                     <Box
@@ -999,7 +1034,7 @@ const CreatePost = ({
                       isPlaying ? (
                         <PauseIcon sx={{ color: 'white', fontSize: 16 }} />
                       ) : (
-                        <MusicNoteIcon
+                        <QueueMusicIcon
                           sx={{
                             fontSize: 14,
                             color: 'rgba(255, 255, 255, 0.9)',
@@ -1060,7 +1095,7 @@ const CreatePost = ({
                   ) : null}
                   <IconButton
                     size='small'
-                    onClick={e => {
+                    onClick={(e) => {
                       e.stopPropagation();
                       handleRemoveTrack(track.id);
                     }}
@@ -1093,13 +1128,13 @@ const CreatePost = ({
               <label htmlFor='media-upload-profile'>
                 <Button
                   component='span'
-                  startIcon={<ImageOutlinedIcon sx={{ fontSize: 18 }} />}
+                  startIcon={<AddPhotoAlternateIcon sx={{ fontSize: 18 }} />}
                   sx={{
                     color:
                       mediaFiles.length > 0 || selectedTracks.length > 0
                         ? 'primary.main'
                         : 'text.secondary',
-                    borderRadius: '10px',
+                    borderRadius: '15px',
                     textTransform: 'none',
                     fontSize: '0.8rem',
                     fontWeight: 500,
@@ -1127,14 +1162,14 @@ const CreatePost = ({
               </label>
 
               <Button
-                startIcon={<MusicNoteIcon sx={{ fontSize: 18 }} />}
+                startIcon={<QueueMusicIcon sx={{ fontSize: 18 }} />}
                 onClick={() => setMusicSelectOpen(true)}
                 sx={{
                   color:
                     selectedTracks.length > 0
                       ? 'primary.main'
                       : 'text.secondary',
-                  borderRadius: '10px',
+                  borderRadius: '15px',
                   textTransform: 'none',
                   fontSize: '0.8rem',
                   fontWeight: 500,
@@ -1219,7 +1254,7 @@ const CreatePost = ({
             </PublishButton>
           </PostActions>
 
-          <MusicSelectDialog
+          <MusicSelectModal
             open={musicSelectOpen}
             onClose={() => setMusicSelectOpen(false)}
             onSelectTracks={handleMusicSelect}
@@ -1231,4 +1266,4 @@ const CreatePost = ({
   );
 };
 
-export default CreatePost;
+export default CreatePost; 

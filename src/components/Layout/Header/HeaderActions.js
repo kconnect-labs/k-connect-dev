@@ -28,7 +28,7 @@ const HeaderActions = ({
             className='action-button'
             onClick={() => navigate('/balance')}
           >
-            <Icon icon='solar:wallet-money-bold' width='24' height='24' />
+            <Icon icon='tabler:coins' width='22' height='22' />
           </button>
         </div>
       )}
@@ -38,7 +38,7 @@ const HeaderActions = ({
         className={`action-button ${showSearch ? 'action-button--active' : ''}`}
         onClick={toggleSearch}
       >
-        <Icon icon='solar:magnifer-bold' width='24' height='24' />
+        <Icon icon='tabler:search' width='22' height='22' />
       </button>
 
       {/* Уведомления рендерятся везде */}

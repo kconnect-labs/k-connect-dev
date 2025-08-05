@@ -36,7 +36,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useLanguage } from '../../context/LanguageContext';
 // Импорты вынесенных компонентов
 import {
-  CreatePost,
   TabPanel,
   UpgradeEffects,
   UserStatus,
@@ -45,6 +44,7 @@ import {
   WallFeed,
   EquippedItem,
 } from './ProfilePage/components';
+import CreatePost from '../../components/CreatePost/CreatePost';
 import { getLighterColor } from './ProfilePage/utils/colorUtils';
 
 import { WallPostsTab, PostsTab } from './ProfilePage/components/TabComponents';

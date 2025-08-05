@@ -39,11 +39,6 @@ const StyledAppBar = styled(AppBar, {
   width: '100%',
   zIndex: theme.zIndex.appBar,
   transition: 'transform 0.3s ease-in-out',
-  [theme.breakpoints.down('md')]: {
-    width: 'calc(100% - 5px)',
-    left: '2.5px',
-    transform: isMobile && isHeaderHidden ? 'translateY(-100%)' : 'none',
-  },
   height: 48,
 }));
 
