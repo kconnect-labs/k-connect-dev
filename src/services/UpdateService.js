@@ -7,7 +7,7 @@ const updates = [
     version: '3.0.1pre-release',
     date: '05.08.2025',
     title: 'Обновление 3.0.1pre-release',
-    updates: ['Приватный профиль', 'Оптимизация', 'Новые темы'],
+    updates: ['Приватный профиль', 'Оптимизация', 'Новые темы: Midnight, Ocean, Sunset, Forest, Aurora, Cosmic, Neon, Vintage'],
   },
   {
     version: '3.0.0-pre',

@@ -25,6 +25,7 @@ import {
   AutoAwesome,
   Lightbulb,
   Coffee,
+  Favorite,
 } from '@mui/icons-material';
 import { useThemeManager, ThemeType } from '../../../../hooks/useThemeManager';
 
@@ -54,7 +55,8 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switchToAuroraTheme,
     switchToCosmicTheme,
     switchToNeonTheme,
-    switchToVintageTheme
+    switchToVintageTheme,
+    switchToPickmeTheme
   } = useThemeManager();
 
   const handleClose = () => {
@@ -92,6 +94,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         break;
       case 'vintage':
         await switchToVintageTheme();
+        break;
+      case 'pickme':
+        await switchToPickmeTheme();
         break;
     }
     onSuccess?.('Тема изменена');
@@ -157,6 +162,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'cosmic': return 'rgba(30, 8, 35, 0.96)';
       case 'neon': return 'rgba(8, 20, 45, 0.89)';
       case 'vintage': return 'rgba(35, 20, 8, 0.95)';
+      case 'pickme': return 'rgba(131, 61, 96, 0.93)';
       default: return 'rgba(15, 15, 15, 0.98)';
     }
   };
@@ -173,6 +179,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'cosmic': return 'blur(20px)';
       case 'neon': return 'blur(20px)';
       case 'vintage': return 'blur(20px)';
+      case 'pickme': return 'blur(20px)';
       default: return 'none';
     }
   };
@@ -189,6 +196,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'cosmic': return <AutoAwesome />;
       case 'neon': return <Lightbulb />;
       case 'vintage': return <Coffee />;
+      case 'pickme': return <Favorite />;
       default: return <BlurOff />;
     }
   };
@@ -205,6 +213,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'cosmic': return 'Cosmic';
       case 'neon': return 'Neon';
       case 'vintage': return 'Vintage';
+      case 'pickme': return 'pickme';
       default: return 'Классическая';
     }
   };
@@ -221,6 +230,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'cosmic': return 'Яркий пурпурно-розовый космос';
       case 'neon': return 'Яркий электрический синий';
       case 'vintage': return 'Теплый коричнево-золотой';
+      case 'pickme': return 'Нежно-розовый приятный';
       default: return 'Темная тема без эффектов';
     }
   };
@@ -249,7 +259,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     );
   }
 
-  const themes: ThemeType[] = ['default', 'blur', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage'];
+  const themes: ThemeType[] = ['default', 'blur', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
 
   return (
     <Dialog

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage';
+export type ThemeType = 'default' | 'blur' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -53,62 +53,73 @@ interface ThemeSettings {
     backdropFilter: string;
     siteBackground: string;
   };
+  pickme: {
+    background: string;
+    backdropFilter: string;
+    siteBackground: string;
+  };
 }
 
-const THEME_SETTINGS: ThemeSettings = {
-  type: 'default',
-  blurGlass: {
+// Статический объект с настройками тем (синхронизирован с CSS)
+const THEME_SETTINGS: Record<ThemeType, { background: string; backdropFilter: string; siteBackground: string }> = {
+  default: {
+    background: 'rgba(15, 15, 15, 0.98)',
+    backdropFilter: 'none',
+    siteBackground: '#0a0a0a',
+  },
+  blur: {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
     siteBackground: '#0a0a0a',
   },
-  default: {
-    background: 'rgba(15, 15, 15, 0.98)',
-    siteBackground: '#0a0a0a',
-  },
   midnight: {
     background: 'rgba(5, 8, 20, 0.95)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#030510',
   },
   ocean: {
     background: 'rgba(8, 25, 40, 0.92)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#051520',
   },
   sunset: {
     background: 'rgba(40, 15, 8, 0.94)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#250a05',
   },
   forest: {
     background: 'rgba(8, 30, 15, 0.93)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#051a0a',
   },
   aurora: {
     background: 'rgba(12, 35, 25, 0.91)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#082015',
   },
   cosmic: {
     background: 'rgba(30, 8, 35, 0.96)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#1a051a',
   },
   neon: {
     background: 'rgba(8, 20, 45, 0.89)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#051025',
   },
   vintage: {
     background: 'rgba(35, 20, 8, 0.95)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'none',
     siteBackground: '#221205',
+  },
+  pickme: {
+    background: 'rgba(131, 61, 96, 0.93)',
+    backdropFilter: 'none',
+    siteBackground: '#b6668a',
   },
 };
 
-// IndexedDB утилиты
+// Класс для работы с IndexedDB
 class ThemeDatabase {
   private dbName = 'KConnectDB';
   private dbVersion = 1;
@@ -177,138 +188,60 @@ export const useThemeManager = () => {
   const [isApplying, setIsApplying] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  // Функция для уведомления других вкладок об изменении темы
+  const notifyThemeChange = useCallback((themeType: ThemeType) => {
+    try {
+      const broadcastChannel = new BroadcastChannel('theme-changes');
+      broadcastChannel.postMessage({
+        type: 'theme-changed',
+        theme: themeType
+      });
+      broadcastChannel.close();
+    } catch (error) {
+      console.warn('BroadcastChannel not supported');
+    }
+  }, []);
+
   // Применение темы к CSS переменным
   const applyTheme = useCallback(async (themeType: ThemeType) => {
     setIsApplying(true);
     
     try {
-      // Устанавливаем CSS переменные и data-атрибут
       const root = document.documentElement;
+      const settings = THEME_SETTINGS[themeType];
       
-      if (themeType === 'blur') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.blurGlass.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.blurGlass.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.blurGlass.siteBackground);
-        root.style.setProperty('--theme-type', 'blur');
-        root.setAttribute('data-theme', 'blur');
-      } else if (themeType === 'midnight') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.midnight.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.midnight.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.midnight.siteBackground);
-        root.style.setProperty('--theme-type', 'midnight');
-        root.setAttribute('data-theme', 'midnight');
-      } else if (themeType === 'ocean') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.ocean.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.ocean.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.ocean.siteBackground);
-        root.style.setProperty('--theme-type', 'ocean');
-        root.setAttribute('data-theme', 'ocean');
-      } else if (themeType === 'sunset') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.sunset.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.sunset.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.sunset.siteBackground);
-        root.style.setProperty('--theme-type', 'sunset');
-        root.setAttribute('data-theme', 'sunset');
-      } else if (themeType === 'forest') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.forest.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.forest.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.forest.siteBackground);
-        root.style.setProperty('--theme-type', 'forest');
-        root.setAttribute('data-theme', 'forest');
-      } else if (themeType === 'aurora') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.aurora.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.aurora.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.aurora.siteBackground);
-        root.style.setProperty('--theme-type', 'aurora');
-        root.setAttribute('data-theme', 'aurora');
-      } else if (themeType === 'cosmic') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.cosmic.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.cosmic.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.cosmic.siteBackground);
-        root.style.setProperty('--theme-type', 'cosmic');
-        root.setAttribute('data-theme', 'cosmic');
-      } else if (themeType === 'neon') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.neon.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.neon.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.neon.siteBackground);
-        root.style.setProperty('--theme-type', 'neon');
-        root.setAttribute('data-theme', 'neon');
-      } else if (themeType === 'vintage') {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.vintage.background);
-        root.style.setProperty('--theme-backdrop-filter', THEME_SETTINGS.vintage.backdropFilter);
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.vintage.siteBackground);
-        root.style.setProperty('--theme-type', 'vintage');
-        root.setAttribute('data-theme', 'vintage');
-      } else {
-        root.style.setProperty('--theme-background', THEME_SETTINGS.default.background);
-        root.style.setProperty('--theme-backdrop-filter', 'none');
-        root.style.setProperty('--theme-site-background', THEME_SETTINGS.default.siteBackground);
-        root.style.setProperty('--theme-type', 'default');
-        root.setAttribute('data-theme', 'default');
-      }
-
+      // Применяем CSS переменные
+      root.style.setProperty('--theme-background', settings.background);
+      root.style.setProperty('--theme-backdrop-filter', settings.backdropFilter);
+      root.style.setProperty('--theme-site-background', settings.siteBackground);
+      root.style.setProperty('--theme-type', themeType);
+      root.setAttribute('data-theme', themeType);
+      
+      // Обновляем состояние
+      setCurrentTheme(themeType);
+      
       // Сохраняем в IndexedDB
       await themeDB.setThemeType(themeType);
-      setCurrentTheme(themeType);
-
-      // Обновляем все элементы с классом theme-aware
-      const themeElements = document.querySelectorAll('.theme-aware');
-      themeElements.forEach((element) => {
+      
+      // Уведомляем другие вкладки
+      notifyThemeChange(themeType);
+      
+      // Принудительно обновляем элементы с классом theme-aware
+      const themeAwareElements = document.querySelectorAll('.theme-aware');
+      themeAwareElements.forEach((element) => {
         if (element instanceof HTMLElement) {
-          // Принудительно применяем стили
-          if (themeType === 'blur') {
-            element.style.background = THEME_SETTINGS.blurGlass.background;
-            element.style.backdropFilter = THEME_SETTINGS.blurGlass.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.blurGlass.backdropFilter;
-          } else if (themeType === 'midnight') {
-            element.style.background = THEME_SETTINGS.midnight.background;
-            element.style.backdropFilter = THEME_SETTINGS.midnight.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.midnight.backdropFilter;
-          } else if (themeType === 'ocean') {
-            element.style.background = THEME_SETTINGS.ocean.background;
-            element.style.backdropFilter = THEME_SETTINGS.ocean.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.ocean.backdropFilter;
-          } else if (themeType === 'sunset') {
-            element.style.background = THEME_SETTINGS.sunset.background;
-            element.style.backdropFilter = THEME_SETTINGS.sunset.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.sunset.backdropFilter;
-          } else if (themeType === 'forest') {
-            element.style.background = THEME_SETTINGS.forest.background;
-            element.style.backdropFilter = THEME_SETTINGS.forest.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.forest.backdropFilter;
-          } else if (themeType === 'aurora') {
-            element.style.background = THEME_SETTINGS.aurora.background;
-            element.style.backdropFilter = THEME_SETTINGS.aurora.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.aurora.backdropFilter;
-          } else if (themeType === 'cosmic') {
-            element.style.background = THEME_SETTINGS.cosmic.background;
-            element.style.backdropFilter = THEME_SETTINGS.cosmic.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.cosmic.backdropFilter;
-          } else if (themeType === 'neon') {
-            element.style.background = THEME_SETTINGS.neon.background;
-            element.style.backdropFilter = THEME_SETTINGS.neon.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.neon.backdropFilter;
-          } else if (themeType === 'vintage') {
-            element.style.background = THEME_SETTINGS.vintage.background;
-            element.style.backdropFilter = THEME_SETTINGS.vintage.backdropFilter;
-            (element.style as any).webkitBackdropFilter = THEME_SETTINGS.vintage.backdropFilter;
-          } else {
-            element.style.background = THEME_SETTINGS.default.background;
-            element.style.backdropFilter = 'none';
-            (element.style as any).webkitBackdropFilter = 'none';
-          }
+          element.style.background = settings.background;
+          element.style.backdropFilter = settings.backdropFilter;
+          (element.style as any).webkitBackdropFilter = settings.backdropFilter;
         }
       });
-
-      // Небольшая задержка для плавности
-      await new Promise(resolve => setTimeout(resolve, 100));
       
     } catch (error) {
-      console.error('Error applying theme:', error);
+      console.error('Ошибка при применении темы:', error);
     } finally {
       setIsApplying(false);
     }
-  }, []);
+  }, [notifyThemeChange]);
 
   // Переключение на дефолтную тему
   const switchToDefaultTheme = useCallback(async () => {
@@ -358,6 +291,11 @@ export const useThemeManager = () => {
   // Переключение на тему vintage
   const switchToVintageTheme = useCallback(async () => {
     await applyTheme('vintage');
+  }, [applyTheme]);
+
+  // Переключение на тему pickme
+  const switchToPickmeTheme = useCallback(async () => {
+    await applyTheme('pickme');
   }, [applyTheme]);
 
   // Переключение между темами
@@ -410,25 +348,15 @@ export const useThemeManager = () => {
     };
   }, [currentTheme, applyTheme]);
 
-  // Функция для уведомления других вкладок об изменении темы
-  const notifyThemeChange = useCallback((themeType: ThemeType) => {
-    try {
-      const broadcastChannel = new BroadcastChannel('theme-changes');
-      broadcastChannel.postMessage({
-        type: 'theme-changed',
-        theme: themeType
-      });
-      broadcastChannel.close();
-    } catch (error) {
-      console.warn('BroadcastChannel not supported');
-    }
-  }, []);
-
-  // Обновленная функция applyTheme с уведомлением других вкладок
+  // Функция для применения темы с уведомлением
   const applyThemeWithNotification = useCallback(async (themeType: ThemeType) => {
-    await applyTheme(themeType);
-    notifyThemeChange(themeType);
-  }, [applyTheme, notifyThemeChange]);
+    try {
+      await applyTheme(themeType);
+      // Здесь можно добавить уведомление пользователю
+    } catch (error) {
+      console.error('Ошибка при применении темы с уведомлением:', error);
+    }
+  }, [applyTheme]);
 
   return {
     currentTheme,
@@ -444,6 +372,7 @@ export const useThemeManager = () => {
     switchToCosmicTheme: () => applyThemeWithNotification('cosmic'),
     switchToNeonTheme: () => applyThemeWithNotification('neon'),
     switchToVintageTheme: () => applyThemeWithNotification('vintage'),
+    switchToPickmeTheme: () => applyThemeWithNotification('pickme'),
     toggleTheme: async () => {
       const newTheme = currentTheme === 'default' ? 'blur' : 'default';
       await applyThemeWithNotification(newTheme);

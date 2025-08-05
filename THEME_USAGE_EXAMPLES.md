@@ -52,6 +52,11 @@
 - `background: rgba(35, 20, 8, 0.95)`
 - `backdrop-filter: blur(20px)`
 
+### 11. **Pickme** (`pickme`)
+- Нежно-розовый приятный
+- `background: rgba(131, 61, 96, 0.93)`
+- `backdrop-filter: none`
+
 ## Быстрое применение к компонентам
 
 ### ❌ Что НЕ нужно делать (удалить эти стили):
@@ -122,6 +127,9 @@
 
 // Всегда vintage тема
 <Box className="theme-vintage">
+
+// Всегда pickme тема
+<Box className="theme-pickme">
 ```
 
 #### Способ 4: Утилитарные классы
@@ -245,7 +253,8 @@ const {
   switchToAuroraTheme,
   switchToCosmicTheme,
   switchToNeonTheme,
-  switchToVintageTheme
+  switchToVintageTheme,
+  switchToPixieTheme
 } = useThemeManager();
 
 // Переключить на дефолтную тему
@@ -277,6 +286,9 @@ await switchToNeonTheme();
 
 // Переключить на vintage тему
 await switchToVintageTheme();
+
+// Переключить на pickme тему
+await switchToPickmeTheme();
 ```
 
 ## Миграция существующих компонентов
