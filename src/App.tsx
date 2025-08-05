@@ -28,7 +28,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import MusicPlayerCore from './components/MusicPlayerCore';
 import './styles/theme.css';
 import { LanguageProvider } from './context/LanguageContext';
-import { DefaultPropsProvider } from './context/DefaultPropsContext';
 import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
 import { initMediaCache } from './services/mediaCache';
@@ -111,6 +110,38 @@ export const ThemeSettingsContext =
     setUserBackground: () => {},
     restoreUserBackground: () => {},
   });
+
+// Компонент для объединения всех провайдеров
+interface AppProvidersProps {
+  children: React.ReactNode;
+  themeContextValue: ThemeSettingsContextType;
+  theme: any;
+}
+
+const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue, theme }) => (
+  <HelmetProvider>
+    <AuthProvider>
+      <ThemeSettingsContext.Provider value={themeContextValue}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <SessionProvider>
+            <MessengerProvider>
+              <LanguageProvider>
+                <MusicProvider>
+                  <PostDetailProvider>
+                    <CommandPaletteProvider>
+                      {children}
+                    </CommandPaletteProvider>
+                  </PostDetailProvider>
+                </MusicProvider>
+              </LanguageProvider>
+            </MessengerProvider>
+          </SessionProvider>
+        </ThemeProvider>
+      </ThemeSettingsContext.Provider>
+    </AuthProvider>
+  </HelmetProvider>
+);
 
 function App() {
   const [isPending, startTransition] = useTransition();
@@ -314,8 +345,8 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: themeSettings.backgroundColor || '#151515',
-          paper: themeSettings.backgroundColor || '#151515',
+          default: 'var(--theme-site-background, #151515)',
+          paper: 'var(--theme-site-background, #151515)',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
@@ -341,7 +372,7 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              backgroundColor: themeSettings.backgroundColor || '#151515',
+              backgroundColor: 'var(--theme-site-background, #151515)',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -351,7 +382,7 @@ function App() {
             root: {
               borderRadius: '15px',
               overflow: 'hidden',
-              backgroundColor: themeSettings.backgroundColor || '#151515',
+              backgroundColor: 'var(--theme-site-background, #151515)',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -360,7 +391,7 @@ function App() {
           styleOverrides: {
             root: {
               borderRadius: '12px',
-              backgroundColor: themeSettings.backgroundColor || '#151515',
+              backgroundColor: 'var(--theme-site-background, #151515)',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -387,6 +418,7 @@ function App() {
     if (savedThemeMode && savedThemeMode !== themeSettings.mode) {
       updateThemeSettings({ mode: savedThemeMode });
     }
+
 
     // Инициализируем кеш медиа контента
     initMediaCache().catch(error => {
@@ -642,54 +674,33 @@ function App() {
   }, [themeSettings, globalProfileBackgroundEnabled, profileBackground]);
 
   return (
-    <HelmetProvider>
-      <AuthProvider>
-        <ThemeSettingsContext.Provider value={themeContextValue}>
-          <ThemeProvider theme={theme}>
-            <DefaultPropsProvider>
-              <CssBaseline />
-              <SessionProvider>
-                <MessengerProvider>
-                  <LanguageProvider>
-                    <MusicProvider>
-                      <PostDetailProvider>
-                        <CommandPaletteProvider>
-                          <ErrorBoundary FallbackComponent={ErrorFallback}>
-                            <Suspense fallback={<LoadingIndicator />}>
-                              {isAppLoading ? (
-                                <LoadingIndicator />
-                              ) : (
-                                <>
-                                  <DefaultSEO />
-                                  {isAuthPage ? (
-                                    <AuthRoutes setUser={authContext?.setUser} />
-                                  ) : isPublicPage ? (
-                                    <PublicRoutes />
-                                  ) : isSpecialPage ? (
-                                    <SpecialRoutes />
-                                  ) : (
-                                    <MainRoutes
-                                      setUser={authContext?.setUser}
-                                      background={location.state?.background}
-                                    />
-                                  )}
-                                  <MusicPlayerCore />
-                                  <CommandPalleteModal />
-                                </>
-                              )}
-                            </Suspense>
-                          </ErrorBoundary>
-                        </CommandPaletteProvider>
-                      </PostDetailProvider>
-                    </MusicProvider>
-                  </LanguageProvider>
-                </MessengerProvider>
-              </SessionProvider>
-            </DefaultPropsProvider>
-          </ThemeProvider>
-        </ThemeSettingsContext.Provider>
-      </AuthProvider>
-    </HelmetProvider>
+    <AppProviders themeContextValue={themeContextValue} theme={theme}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<LoadingIndicator />}>
+          {isAppLoading ? (
+            <LoadingIndicator />
+          ) : (
+            <>
+              <DefaultSEO />
+              {isAuthPage ? (
+                <AuthRoutes setUser={authContext?.setUser} />
+              ) : isPublicPage ? (
+                <PublicRoutes />
+              ) : isSpecialPage ? (
+                <SpecialRoutes />
+              ) : (
+                <MainRoutes
+                  setUser={authContext?.setUser}
+                  background={location.state?.background}
+                />
+              )}
+              <MusicPlayerCore />
+              <CommandPalleteModal />
+            </>
+          )}
+        </Suspense>
+      </ErrorBoundary>
+    </AppProviders>
   );
 }
 

@@ -5,17 +5,76 @@
   --theme-background: rgba(15, 15, 15, 0.98);
   --theme-backdrop-filter: none;
   --theme-type: default;
+  --theme-site-background: #0a0a0a; /* Фон сайта */
 }
 
 /* Принудительные значения для тем */
 [data-theme="default"] {
   --theme-background: rgba(15, 15, 15, 0.98);
   --theme-backdrop-filter: none;
+  --theme-site-background: #0a0a0a;
 }
 
 [data-theme="blur"] {
   --theme-background: rgba(255, 255, 255, 0.03);
   --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #0a0a0a;
+}
+
+/* Midnight - глубокий темно-синий с фиолетовым оттенком */
+[data-theme="midnight"] {
+  --theme-background: rgba(5, 8, 20, 0.95);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #030510;
+}
+
+/* Ocean - яркий синий с бирюзовым оттенком */
+[data-theme="ocean"] {
+  --theme-background: rgba(8, 25, 40, 0.92);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #051520;
+}
+
+/* Sunset - яркий красно-оранжевый закат */
+[data-theme="sunset"] {
+  --theme-background: rgba(40, 15, 8, 0.94);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #250a05;
+}
+
+/* Forest - яркий зеленый лес */
+[data-theme="forest"] {
+  --theme-background: rgba(8, 30, 15, 0.93);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #051a0a;
+}
+
+/* Aurora - яркий зелено-голубой северные сияния */
+[data-theme="aurora"] {
+  --theme-background: rgba(12, 35, 25, 0.91);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #082015;
+}
+
+/* Cosmic - яркий пурпурно-розовый космос */
+[data-theme="cosmic"] {
+  --theme-background: rgba(30, 8, 35, 0.96);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #1a051a;
+}
+
+/* Neon - яркий электрический синий */
+[data-theme="neon"] {
+  --theme-background: rgba(8, 20, 45, 0.89);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #051025;
+}
+
+/* Vintage - теплый коричнево-золотой */
+[data-theme="vintage"] {
+  --theme-background: rgba(35, 20, 8, 0.95);
+  --theme-backdrop-filter: blur(20px);
+  --theme-site-background: #221205;
 }
 
 /* Класс для элементов, которые должны реагировать на изменение темы */
@@ -24,6 +83,19 @@
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
   transition: background 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+/* Класс для фона сайта */
+.theme-site-background {
+  background: var(--theme-site-background) !important;
+  transition: background 0.3s ease;
+}
+
+/* Класс для body и html */
+body.theme-site-background,
+html.theme-site-background {
+  background: var(--theme-site-background) !important;
+  transition: background 0.3s ease;
 }
 
 /* Утилитарные классы для быстрого применения тем */
@@ -37,6 +109,54 @@
   background: rgba(255, 255, 255, 0.03) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.theme-midnight {
+  background: rgba(5, 8, 20, 0.95) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-ocean {
+  background: rgba(8, 25, 40, 0.92) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-sunset {
+  background: rgba(40, 15, 8, 0.94) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-forest {
+  background: rgba(8, 30, 15, 0.93) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-aurora {
+  background: rgba(12, 35, 25, 0.91) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-cosmic {
+  background: rgba(30, 8, 35, 0.96) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-neon {
+  background: rgba(8, 20, 45, 0.89) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.theme-vintage {
+  background: rgba(35, 20, 8, 0.95) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* Модификаторы для разных состояний */
@@ -55,6 +175,30 @@
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
   border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.theme-menu {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* 
+    Блюр включается только если поддерживается аппаратно.
+    Если у пользователя rasterizer off или слабое GPU, блюр можно отключить через JS, 
+    добавив класс .no-blur на body или .theme-menu.
+    Пример JS:
+      if (!CSS.supports('backdrop-filter: blur(1px)')) {
+        document.body.classList.add('no-blur');
+      }
+    Или если детектирован низкий FPS/плохое GPU:
+      document.body.classList.add('no-blur');
+  */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+body.no-blur .theme-menu,
+.theme-menu.no-blur {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* Классы для карточек */

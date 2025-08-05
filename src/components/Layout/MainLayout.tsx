@@ -59,7 +59,7 @@ const MainContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: 'var(--theme-site-background, #151515)',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundAttachment: 'fixed',
@@ -327,9 +327,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <MainContainer
       data-testid="main-container"
+      className="theme-site-background"
       sx={{
-        backgroundColor:
-          themeSettings?.backgroundColor || theme.palette.background.default,
+        backgroundColor: 'var(--theme-site-background, #151515)',
         backgroundImage: profileBackground
           ? `url(${profileBackground})`
           : themeSettings?.backgroundImage

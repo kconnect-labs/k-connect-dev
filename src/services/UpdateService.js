@@ -7,7 +7,7 @@ const updates = [
     version: '3.0.1pre-release',
     date: '05.08.2025',
     title: 'Обновление 3.0.1pre-release',
-    updates: ['Приватный профиль', 'Оптимизация'],
+    updates: ['Приватный профиль', 'Оптимизация', 'Новые темы'],
   },
   {
     version: '3.0.0-pre',

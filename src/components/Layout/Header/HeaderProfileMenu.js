@@ -54,6 +54,7 @@ const HeaderProfileMenu = ({
       open={isLanguageMenuOpen}
       onClose={handleLanguageMenuClose}
       container={isFullScreenMenu ? document.body : undefined}
+      className="theme-modal"
       PaperProps={{
         elevation: 3,
         sx: {
@@ -72,10 +73,10 @@ const HeaderProfileMenu = ({
           boxShadow: isFullScreenMenu ? 'none' : '0 8px 24px rgba(0,0,0,0.15)',
           border: isFullScreenMenu
             ? 'none'
-            : theme => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+            : '1px solid rgba(255, 255, 255, 0.12)',
           overflow: 'visible',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(10px)',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
           '& .MuiMenuItem-root': {
             padding: '10px 16px',
             borderRadius: '8px',
@@ -195,6 +196,7 @@ const HeaderProfileMenu = ({
         open={isMenuOpen}
         onClose={handleMenuClose}
         container={isFullScreenMenu ? document.body : undefined}
+        className="theme-menu"
         PaperProps={{
           elevation: 3,
           sx: {
@@ -215,10 +217,10 @@ const HeaderProfileMenu = ({
               : '0 8px 24px rgba(0,0,0,0.15)',
             border: isFullScreenMenu
               ? 'none'
-              : theme => `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+              : '1px solid rgba(255, 255, 255, 0.12)',
             overflow: 'visible',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            backdropFilter: 'blur(10px)',
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
             '& .MuiMenuItem-root': {
               padding: '8px 14px',
               borderRadius: '8px',
@@ -308,6 +310,7 @@ const HeaderProfileMenu = ({
                         height='18'
                       />
                     }
+                    className="theme-button"
                     sx={{
                       flex: 1,
                       borderRadius: 2,
@@ -330,6 +333,7 @@ const HeaderProfileMenu = ({
                     startIcon={
                       <Icon icon='solar:shop-bold' width='18' height='18' />
                     }
+                    className="theme-button"
                     sx={{
                       flex: 1,
                       borderRadius: 2,
