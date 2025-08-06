@@ -10,7 +10,6 @@
   background-color: transparent;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: none;
   outline: none;
@@ -24,8 +23,6 @@
 
 .nav-button:hover {
   background-color: var(--theme-background, rgba(255, 255, 255, 0.08));
-  transform: translateX(3px) scale(1.02);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .nav-button:active {
@@ -46,9 +43,6 @@
   width: 0px;
   background-color: var(--primary, #d0bcff);
   border-radius: 0 3px 3px 0;
-  transition:
-    width 0.3s ease,
-    height 0.3s ease;
   box-shadow: none;
 }
 
@@ -59,8 +53,8 @@
 
 .nav-button:hover::before {
   width: 2px;
-  height: 60%;
-  top: 20%;
+  height: 50%;
+  top: 25%;
 }
 
 .nav-button--active:hover::before {
@@ -76,7 +70,6 @@
 .nav-button__icon {
   min-width: 32px;
   color: var(--theme-text-secondary);
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +78,6 @@
 
 .nav-button__icon svg {
   font-size: 1.2rem;
-  transition: all 0.3s ease;
 }
 
 .nav-button--active .nav-button__icon {
@@ -105,8 +97,7 @@
 }
 
 .nav-button:hover .nav-button__icon svg {
-  transform: scale(1.15);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  /* Убрано увеличение при наведении */
 }
 
 .nav-button--active:hover .nav-button__icon {
@@ -123,7 +114,6 @@
   font-size: 0.9rem;
   color: var(--theme-text-primary);
   letter-spacing: 0.25px;
-  transition: all 0.3s ease;
   text-shadow: none;
   flex: 1;
   text-align: left;
@@ -141,8 +131,7 @@
 }
 
 .nav-button:hover .nav-button__text {
-  letter-spacing: 0.4px;
-  font-weight: 600;
+  /* Убрано изменение letter-spacing при наведении */
 }
 
 /* Вложенные кнопки */
@@ -172,7 +161,6 @@
 }
 
 .more-button__arrow {
-  transition: transform 0.3s ease;
   transform: rotate(0deg);
   color: var(--theme-text-secondary);
   display: flex;
@@ -182,7 +170,6 @@
 
 .more-button__arrow svg {
   font-size: 1.1rem;
-  transition: all 0.3s ease;
 }
 
 .more-button--active .more-button__arrow {
@@ -199,7 +186,7 @@
 }
 
 .more-button:hover .more-button__arrow svg {
-  transform: scale(1.1);
+  /* Убрано увеличение при наведении */
 }
 
 .more-button--active:hover .more-button__arrow {
@@ -256,43 +243,8 @@
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .nav-button,
-  .nav-button::before,
-  .nav-button__icon,
-  .nav-button__icon svg,
-  .nav-button__text,
-  .more-button__arrow,
-  .more-button__arrow svg {
-    transition: none;
-  }
-
-  .nav-button:hover {
-    transform: none;
-  }
-
-  .nav-button:hover .nav-button__icon svg {
-    transform: none;
-  }
-
-  .more-button:hover .more-button__arrow svg {
-    transform: none;
-  }
+  /* Анимации уже убраны */
 }
 
 /* Оптимизации для производительности */
-.nav-button {
-  will-change: transform, background-color;
-  contain: layout style paint;
-}
-
-.nav-button__icon {
-  will-change: color, transform;
-}
-
-.nav-button__text {
-  will-change: color, font-weight, letter-spacing;
-}
-
-.more-button__arrow {
-  will-change: transform, color;
-}
+/* Убраны will-change так как анимации удалены */

@@ -8,7 +8,6 @@
   gap: 12px;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
   border-radius: 12px;
   color: inherit;
   box-sizing: border-box;
@@ -17,8 +16,6 @@
 
 .user-profile-wrapper:hover {
   background-color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .SIDEBAR-user-avatar {
@@ -26,14 +23,12 @@
   height: 48px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
   flex-shrink: 0;
   object-fit: cover;
 }
 
 .SIDEBAR-user-avatar:hover {
-  transform: scale(1.05);
+  /* Убрано увеличение при наведении */
 }
 
 .user-info-container {
@@ -65,31 +60,11 @@
 
 /* Поддержка reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .user-profile-wrapper {
-    transition: none;
-  }
-
-  .user-profile-wrapper:hover {
-    transform: none;
-  }
-
-  .SIDEBAR-user-avatar {
-    transition: none;
-  }
-
-  .SIDEBAR-user-avatar:hover {
-    transform: none;
-  }
+  /* Анимации уже убраны */
 }
 
 /* Оптимизации для производительности */
-.user-profile-wrapper {
-  will-change: transform;
-}
-
-.SIDEBAR-user-avatar {
-  will-change: transform;
-}
+/* Убраны will-change так как анимации удалены */
 
 /* Поддержка высокого DPI */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
