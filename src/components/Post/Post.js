@@ -2739,7 +2739,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         borderRadius: '5px',
                         background: 'rgba(255, 255, 255, 0.08)',
                         animation: 'pulse 1.5s ease-in-out infinite',
-                        animationDelay: '0.2s',
+                        animationDelay: '0s',
                       }}
                     />
                   </Box>

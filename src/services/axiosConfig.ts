@@ -181,15 +181,14 @@ instance.interceptors.request.use(
 
       if (cachedData && !forceRefresh) {
         const source = axios.CancelToken.source();
-        setTimeout(() => {
-          source.cancel(
-            JSON.stringify({
-              status: 200,
-              data: cachedData,
-              fromCache: true,
-            })
-          );
-        }, 0);
+        // Убираем setTimeout для мгновенного возврата кэшированных данных
+        source.cancel(
+          JSON.stringify({
+            status: 200,
+            data: cachedData,
+            fromCache: true,
+          })
+        );
 
         config.cancelToken = source.token;
         return config;

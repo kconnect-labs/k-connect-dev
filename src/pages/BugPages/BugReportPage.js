@@ -280,7 +280,17 @@ const BugReportPage = () => {
   // Мемоизированные компоненты для предотвращения ререндеров
   const BugForm = useMemo(
     () => (
-      <div className={`${styles.card} ${styles['mb-8']}`}>
+      <div 
+        className={`${styles.card} ${styles['mb-1']}`}
+        style={{
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+          marginBottom: '5px',
+        }}
+      >
         <h2
           className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}
         >
@@ -303,6 +313,11 @@ const BugReportPage = () => {
               onChange={handleInputChange}
               maxLength={40}
               placeholder='Краткое описание проблемы'
+              style={{
+                background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+              }}
             />
             <small
               className={styles['text-secondary']}
@@ -327,6 +342,11 @@ const BugReportPage = () => {
               onChange={handleInputChange}
               maxLength={700}
               placeholder='Подробное описание проблемы'
+              style={{
+                background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '12px',
+              }}
             />
             <small
               className={styles['text-secondary']}
@@ -351,6 +371,11 @@ const BugReportPage = () => {
                 className={styles.input}
                 value={newBug.solver_type}
                 onChange={handleInputChange}
+                style={{
+                  background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '12px',
+                }}
               >
                 <option value='moderator'>Модератор</option>
                 <option value='developer'>Разработчик</option>
@@ -365,7 +390,13 @@ const BugReportPage = () => {
               </label>
               <label
                 className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']} ${styles['gap-2']}`}
-                style={{ cursor: 'pointer' }}
+                style={{ 
+                  cursor: 'pointer',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
+                }}
               >
                 <PhotoCamera style={{ fontSize: 20 }} />
                 Загрузить фото
@@ -385,6 +416,10 @@ const BugReportPage = () => {
                 src={imagePreview}
                 alt='Preview'
                 className={styles['img-preview']}
+                style={{
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                }}
               />
             </div>
           )}
@@ -399,6 +434,11 @@ const BugReportPage = () => {
             type='submit'
             className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
             disabled={submitLoading}
+            style={{
+              background: '#d0bcff',
+              borderRadius: '12px',
+              border: 'none',
+            }}
           >
             {submitLoading ? (
               <div className={styles.spinner}></div>
@@ -428,7 +468,14 @@ const BugReportPage = () => {
           <div
             key={bug.id}
             className={`${styles.card} ${styles.pointer} ${styles['mb-4']}`}
-            style={{ marginBottom: index === bugs.length - 1 ? '0' : '16px' }}
+            style={{ 
+              marginBottom: '5px',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderRadius: '16px',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+            }}
             onClick={() => handleBugClick(bug.id)}
           >
             <div
@@ -490,7 +537,7 @@ const BugReportPage = () => {
                   }}
                   disabled={!isAuthenticated}
                   style={{
-                    color: bug.is_liked_by_user ? '#2196f3' : 'inherit',
+                    color: bug.is_liked_by_user ? '#d0bcff' : 'inherit',
                     padding: '4px',
                   }}
                 >
@@ -513,8 +560,18 @@ const BugReportPage = () => {
   // Список баг-репортов
   if (!selectedBug) {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
-        <div className={`${styles.card} ${styles['mb-8']}`}>
+      <div style={{ maxWidth: '800px', marginRight: 'auto', paddingTop: '17px'}}>
+        <div 
+          className={`${styles.card} ${styles['mb-1']}`}
+          style={{
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+            marginBottom: '5px',
+          }}
+        >
           <div
             className={`${styles.flex} ${styles['items-center']} ${styles['gap-4']}`}
           >
@@ -534,14 +591,6 @@ const BugReportPage = () => {
         </div>
 
         {BugForm}
-
-        {/* Список баг-репортов */}
-        <h2
-          className={`${styles['text-base']} ${styles['font-bold']} ${styles['mb-5']}`}
-        >
-          Список проблем
-        </h2>
-
         {loading ? (
           <div className={styles.loading}>
             <div className={styles.spinner}></div>
@@ -564,13 +613,30 @@ const BugReportPage = () => {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '24px' }}>
       <button
-        className={`${styles.btn} ${styles['btn-outline']} ${styles['mb-5']}`}
+        className={`${styles.btn} ${styles['btn-outline']} ${styles['mb-1']}`}
         onClick={() => setSelectedBug(null)}
+        style={{
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '12px',
+          marginBottom: '5px',
+        }}
       >
         ← Назад к списку
       </button>
 
-      <div className={`${styles.card} ${styles['mb-8']}`}>
+      <div 
+        className={`${styles.card} ${styles['mb-1']}`}
+        style={{
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+          marginBottom: '5px',
+        }}
+      >
         <div
           className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']} ${styles['mb-5']}`}
         >
@@ -599,6 +665,10 @@ const BugReportPage = () => {
                   '_blank'
                 )
               }
+              style={{
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
             />
           </div>
         )}
@@ -622,7 +692,7 @@ const BugReportPage = () => {
               <div
                 className={`${styles.avatar} ${styles['avatar-small']} ${styles['mr-2']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
                 style={{
-                  background: '#2196f3',
+                  background: '#d0bcff',
                   color: 'white',
                   fontSize: '12px',
                   display: 'none',
@@ -650,7 +720,7 @@ const BugReportPage = () => {
               onClick={() => handleToggleLike(selectedBug.id)}
               disabled={!isAuthenticated}
               style={{
-                color: selectedBug.is_liked_by_user ? '#2196f3' : 'inherit',
+                color: selectedBug.is_liked_by_user ? '#d0bcff' : 'inherit',
                 padding: '4px',
               }}
             >
@@ -672,14 +742,26 @@ const BugReportPage = () => {
             <div className={`${styles.flex} ${styles['gap-2']}`}>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{ color: '#4caf50', borderColor: '#4caf50' }}
+                style={{ 
+                  color: '#4caf50', 
+                  borderColor: '#4caf50',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                  borderRadius: '8px',
+                }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Решено')}
               >
                 Решено
               </button>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{ color: '#2196f3', borderColor: '#2196f3' }}
+                style={{ 
+                  color: '#2196f3', 
+                  borderColor: '#2196f3',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                  borderRadius: '8px',
+                }}
                 onClick={() =>
                   handleChangeStatus(selectedBug.id, 'В обработке')
                 }
@@ -688,7 +770,13 @@ const BugReportPage = () => {
               </button>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{ color: '#f44336', borderColor: '#f44336' }}
+                style={{ 
+                  color: '#f44336', 
+                  borderColor: '#f44336',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                  borderRadius: '8px',
+                }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Открыт')}
               >
                 Открыт
@@ -712,8 +800,12 @@ const BugReportPage = () => {
               key={comment.id}
               className={`${styles['comment-card']} ${styles['mb-3']}`}
               style={{
-                marginBottom:
-                  index === selectedBug.comments.length - 1 ? '0' : '12px',
+                marginBottom: '5px',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '12px',
+                padding: '16px',
               }}
             >
               <div
@@ -731,7 +823,7 @@ const BugReportPage = () => {
                 <div
                   className={`${styles.avatar} ${styles['avatar-medium']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']}`}
                   style={{
-                    background: '#2196f3',
+                    background: '#d0bcff',
                     color: 'white',
                     fontSize: '14px',
                     display: 'none',
@@ -774,7 +866,16 @@ const BugReportPage = () => {
       )}
 
       {/* Форма добавления комментария */}
-      <div className={`${styles.card} ${styles['mt-4']}`}>
+      <div 
+        className={`${styles.card} ${styles['mt-4']}`}
+        style={{
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+          borderRadius: '16px',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        }}
+      >
         <textarea
           className={`${styles.input} ${styles.textarea}`}
           placeholder='Добавить комментарий...'
@@ -782,6 +883,11 @@ const BugReportPage = () => {
           onChange={e => setCommentText(e.target.value)}
           maxLength={500}
           rows={2}
+          style={{
+            background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '12px',
+          }}
         />
         <div
           className={`${styles.flex} ${styles['justify-end']} ${styles['mt-2']}`}
@@ -790,6 +896,11 @@ const BugReportPage = () => {
             className={`${styles.btn} ${styles['btn-primary']} ${styles.flex} ${styles['items-center']} ${styles['gap-2']}`}
             onClick={handleCommentSubmit}
             disabled={!commentText.trim()}
+            style={{
+              background: '#d0bcff',
+              borderRadius: '12px',
+              border: 'none',
+            }}
           >
             Отправить
             <SendIcon style={{ fontSize: 20 }} />

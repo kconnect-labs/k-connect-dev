@@ -5,24 +5,30 @@ import { styled } from '@mui/material/styles';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import SecurityIcon from '@mui/icons-material/Security';
 import RuleIcon from '@mui/icons-material/Rule';
+import InfoBlock from '../../UIKIT/InfoBlock';
 
 const PageContainer = styled(Container)(({ theme }) => ({
-  paddingTop: theme.spacing(4),
-  paddingBottom: theme.spacing(8),
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(4),
+  paddingLeft: '0 !important',
+  paddingRight: '0 !important',
   [theme.breakpoints.down('sm')]: {
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
   },
 }));
 
 const RuleCard = styled(Paper)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  borderRadius: theme.spacing(2),
+  marginBottom: '5px',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+  [theme.breakpoints.down('sm')]: {
+    borderRadius: '12px',
+    margin: '0 0 5px 0',
   },
 }));
 
@@ -31,606 +37,697 @@ const RuleCardHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(2),
   backgroundColor: 'rgba(208, 188, 255, 0.1)',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(1.5),
+    flexDirection: 'column',
+    textAlign: 'center',
+    gap: theme.spacing(1),
+  },
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
-  position: 'relative',
-  display: 'inline-block',
   marginBottom: theme.spacing(2),
   fontWeight: 'bold',
-  color: theme.palette.primary.main,
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: -8,
-    left: 0,
-    width: '100%',
-    height: 3,
-    background: `linear-gradient(to right, ${theme.palette.primary.main}, transparent)`,
-    borderRadius: 4,
+  color: '#d0bcff',
+  fontSize: '1.5rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.25rem',
+    marginBottom: theme.spacing(1),
+  },
+}));
+
+const NavigationBar = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: { xs: 'column', sm: 'row' },
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 3,
+  padding: theme.spacing(2),
+  marginBottom: '5px',
+  borderRadius: '16px',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+  [theme.breakpoints.down('sm')]: {
+    margin: '0 0 5px 0',
+    borderRadius: '12px',
+    padding: theme.spacing(1),
+    gap: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+}));
+
+const NavLink = styled(Box)(({ theme, active }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textDecoration: 'none',
+  color: active ? '#d0bcff' : 'rgba(255, 255, 255, 0.8)',
+  fontWeight: 'medium',
+  padding: theme.spacing(1, 2),
+  borderRadius: '8px',
+  backgroundColor: active ? 'rgba(208, 188, 255, 0.15)' : 'transparent',
+  transition: 'all 0.2s ease',
+  minWidth: 'fit-content',
+  whiteSpace: 'nowrap',
+  '&:hover': {
+    backgroundColor: active ? 'rgba(208, 188, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(0.5, 1),
+    fontSize: '0.8rem',
+    width: 'auto',
+    minWidth: 'auto',
+    flex: 1,
+    justifyContent: 'center',
+    whiteSpace: 'normal',
+    textAlign: 'center',
+  },
+}));
+
+const ContentSection = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(3),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
+  },
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  color: 'rgba(255, 255, 255, 0.9)',
+  lineHeight: 1.6,
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '0.875rem',
+  },
+}));
+
+const StyledList = styled(Box)(({ theme }) => ({
+  paddingLeft: theme.spacing(2),
+  [theme.breakpoints.down('sm')]: {
+    paddingLeft: theme.spacing(1.5),
+  },
+}));
+
+const StyledListItem = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(1),
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(0.75),
   },
 }));
 
 const PrivacyPolicyPage = () => {
   return (
     <PageContainer maxWidth='lg'>
-      <Paper
-        elevation={0}
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 3,
-          p: 2,
-          mb: 3,
-          borderRadius: 2,
-          background:
-            'linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(208, 188, 255, 0.1) 100%)',
-          border: '1px solid rgba(208, 188, 255, 0.2)',
-        }}
-      >
-        <Box
-          component={RouterLink}
-          to='/rules'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: 'text.primary',
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            },
-          }}
-        >
+      <NavigationBar elevation={0}>
+        <NavLink component={RouterLink} to='/rules'>
           <RuleIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Правила сообщества</Typography>
-        </Box>
+        </NavLink>
 
-        <Box
-          component={RouterLink}
-          to='/privacy-policy'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: 'primary.main',
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            backgroundColor: 'rgba(208, 188, 255, 0.15)',
-            '&:hover': {
-              backgroundColor: 'rgba(208, 188, 255, 0.25)',
-            },
-          }}
-        >
+        <NavLink component={RouterLink} to='/privacy-policy' active={true}>
           <SecurityIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Политика конфиденциальности</Typography>
-        </Box>
+        </NavLink>
 
-        <Box
-          component={RouterLink}
-          to='/terms-of-service'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: 'text.primary',
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            },
-          }}
-        >
+        <NavLink component={RouterLink} to='/terms-of-service'>
           <AssignmentIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Условия использования</Typography>
-        </Box>
-      </Paper>
+        </NavLink>
+      </NavigationBar>
 
-      <RuleCard>
-        <RuleCardHeader>
-          <SecurityIcon color='primary' fontSize='large' sx={{ mr: 2 }} />
-          <SectionTitle variant='h5'>
-            Политика конфиденциальности К-Коннект
-          </SectionTitle>
-        </RuleCardHeader>
-
-        <Box sx={{ p: 3 }}>
-          <Typography variant='body2' color='textSecondary' sx={{ mb: 2 }}>
+      <InfoBlock
+        title="Политика конфиденциальности К-Коннект"
+        description="Как мы собираем, используем и защищаем вашу информацию"
+        customStyle
+      >
+        <ContentSection>
+          <StyledTypography variant='body2' sx={{ mb: 2, opacity: 0.7 }}>
             Последнее обновление: {new Date().toLocaleDateString()}
-          </Typography>
+          </StyledTypography>
 
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: 3, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект уважает вашу конфиденциальность и стремится защитить ваши
             персональные данные. Эта политика конфиденциальности объясняет, как
             мы собираем, используем и защищаем вашу информацию.
-          </Typography>
+          </StyledTypography>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
             1. Собираемая информация
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект действует как платформа-посредник и собирает минимальную
             информацию, необходимую для функционирования сервиса:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Данные регистрации:</strong> никнейм, который
                 пользователь выбирает самостоятельно (не является персональными
                 данными).
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Email адрес:</strong> используется исключительно для
                 подтверждения регистрации и предотвращения создания ботов. Мы не
                 используем email для рассылок или маркетинга.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Telegram ID:</strong> при регистрации через Telegram мы
                 получаем только публичный Telegram ID и хеш для подтверждения
                 подлинности аккаунта. Мы НЕ получаем username, аватар или другие
                 данные Telegram.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Пользовательский контент:</strong> посты, комментарии,
                 изображения, которые пользователи загружают добровольно и по
                 своей инициативе.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Техническая информация:</strong> IP-адреса для
                 обеспечения безопасности сессий и предотвращения
                 злоупотреблений.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Данные активности:</strong> время последнего входа для
                 технического обслуживания системы.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
             2. Использование информации
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект использует собранную информацию исключительно для:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Обеспечения технического функционирования платформы.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Предотвращения злоупотреблений и обеспечения безопасности
                 пользователей.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Подтверждения регистрации (email) и верификации Telegram
                 аккаунтов.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Соблюдения требований законодательства при наличии
                 соответствующих запросов.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>К-Коннект НЕ использует данные для:</strong>{' '}
                 таргетированной рекламы, продажи третьим лицам, создания
                 профилей пользователей.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
             3. Использование контента для маркетинга
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект может использовать публичный контент платформы (скриншоты,
             профили, посты) для маркетинговых целей:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Промо-материалы:</strong> создание рекламных роликов,
                 постов, скриншотов для продвижения платформы.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Социальные сети:</strong> публикация контента в TikTok,
                 и других платформах для привлечения новых пользователей.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Развлекательный контент:</strong> создание видео, мемов
                 и развлекательных материалов на основе активности пользователей.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Ограничения:</strong> мы не используем приватные
                 сообщения, личные данные или контент, помеченный как приватный.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             <strong>Согласие пользователя:</strong> Регистрируясь на платформе,
             пользователь соглашается с возможным использованием публичного
             контента для маркетинговых целей К-Коннект.
-          </Typography>
+          </StyledTypography>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            3. Защита информации
+            4. Защита информации
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект принимает технические меры для защиты данных:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Шифрование данных при передаче (HTTPS).
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Ограничение доступа к серверной инфраструктуре.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Регулярное обновление систем безопасности.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Важно:</strong> К-Коннект не гарантирует абсолютную
                 безопасность данных, так как это технически невозможно.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            4. Обмен информацией
+            5. Обмен информацией
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект НЕ продает и НЕ передает персональные данные третьим
             лицам. Передача данных возможна только в следующих случаях:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 По требованию уполномоченных органов в соответствии с
                 законодательством РФ.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Для защиты прав и безопасности К-Коннект и других пользователей.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>К-Коннект НЕ передает данные:</strong> рекламным сетям,
                 аналитическим сервисам, маркетинговым компаниям.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            5. Ответственность пользователей
+            6. Ответственность пользователей
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             <strong>КРИТИЧЕСКИ ВАЖНО:</strong> К-Коннект действует как
             платформа-посредник. Пользователи несут полную ответственность за:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Контент:</strong> вся ответственность за загружаемые
                 материалы лежит на пользователях.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Персональные данные:</strong> пользователи сами решают,
                 какую информацию публиковать.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Соблюдение законов:</strong> пользователи обязаны
                 соблюдать законодательство при публикации контента.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Авторские права:</strong> пользователи отвечают за
                 соблюдение прав интеллектуальной собственности.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            6. Ваши права
+            7. Ваши права
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             Пользователи имеют право:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Удалить свой аккаунт и все связанные данные в любое время.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Запросить удаление конкретного контента, который они
                 опубликовали.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Отозвать согласие на обработку данных, удалив аккаунт.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Ограничение:</strong> К-Коннект не может удалить
                 контент, который был скопирован другими пользователями.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            7. Cookies и отслеживание
+            8. Cookies и отслеживание
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект использует минимальное количество cookies только для:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Сохранения сессии пользователя (авторизация).
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Базовой аналитики для улучшения работы платформы.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>К-Коннект НЕ использует:</strong> трекинговые cookies,
                 рекламные пиксели, аналитику третьих сторон.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            7. Обработка данных при пожертвованиях
+            9. Обработка данных при пожертвованиях
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             <strong>Благотворительные взносы:</strong> При совершении добровольных
             пожертвований на поддержку К-Коннект обрабатываются следующие данные:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Данные платежей:</strong> Сумма, дата и время
                 пожертвования для учета поощрений и бонусов.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Идентификация донатора:</strong> Привязка пожертвования к
                 аккаунту пользователя для предоставления соответствующих поощрений.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Статистика использования:</strong> Учет активности
                 использования предоставленных баллов и привилегий.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Платежные данные:</strong> К-Коннект НЕ хранит данные
                 банковских карт. Вся обработка платежей осуществляется сторонними
                 лицензированными платежными системами.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             <strong>Цель обработки:</strong> Данные используются исключительно для
             предоставления поощрений донаторам и ведения внутренней отчетности о
             поддержке платформы.
-          </Typography>
+          </StyledTypography>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            8. Финансовая конфиденциальность
+            10. Финансовая конфиденциальность
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект обеспечивает конфиденциальность финансовых операций:
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Неразглашение сумм:</strong> Размеры пожертвований
                 пользователей не разглашаются третьим лицам.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Публичные поощрения:</strong> Могут отображаться только
                 статусы и достижения, но не конкретные суммы поддержки.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Отчетность:</strong> Финансовые данные передаются только
                 налоговым органам в соответствии с законодательством РФ.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            10. Отказ от ответственности
+            11. Отказ от ответственности
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             <strong>
               К-Коннект действует как платформа-посредник и не несет
               ответственности за:
             </strong>
-          </Typography>
+          </StyledTypography>
 
-          <Box component='ul' sx={{ pl: 2 }}>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+          <StyledList component='ul'>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Контент, опубликованный пользователями.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Нарушения авторских прав пользователями.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Персональные данные, которые пользователи добровольно публикуют.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 Действия пользователей, нарушающие законодательство.
-              </Typography>
-            </Box>
-            <Box component='li' sx={{ mb: 1 }}>
-              <Typography variant='body1'>
+              </StyledTypography>
+            </StyledListItem>
+            <StyledListItem component='li'>
+              <StyledTypography variant='body1'>
                 <strong>Финансовые операции:</strong> убытки от использования
                 сторонних платежных систем или неправильного указания данных
                 донатором.
-              </Typography>
-            </Box>
-          </Box>
+              </StyledTypography>
+            </StyledListItem>
+          </StyledList>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            11. Изменения в политике
+            12. Изменения в политике
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             К-Коннект может обновлять эту политику конфиденциальности.
             Пользователи будут уведомлены о существенных изменениях через
             платформу.
-          </Typography>
+          </StyledTypography>
 
           <Typography
             variant='h6'
-            sx={{ mt: 4, mb: 2, fontWeight: 'bold', color: 'primary.main' }}
+            sx={{ 
+              mt: 4, 
+              mb: 2, 
+              fontWeight: 'bold', 
+              color: '#d0bcff',
+              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+            }}
           >
-            12. Контакты
+            13. Контакты
           </Typography>
 
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             По вопросам политики конфиденциальности: verif@k-connect.ru
-          </Typography>
+          </StyledTypography>
           
-          <Typography variant='body1' paragraph>
+          <StyledTypography variant='body1' paragraph>
             По вопросам пожертвований и возвратов: verif@k-connect.ru
-          </Typography>
+          </StyledTypography>
 
-          <Typography variant='body1' sx={{ mt: 4, fontStyle: 'italic' }}>
+          <StyledTypography variant='body1' sx={{ mt: 4, fontStyle: 'italic', opacity: 0.8 }}>
             Используя К-Коннект, вы подтверждаете, что понимаете роль платформы
             как посредника и принимаете полную ответственность за публикуемый
             контент.
-          </Typography>
-        </Box>
-      </RuleCard>
+          </StyledTypography>
+        </ContentSection>
+      </InfoBlock>
     </PageContainer>
   );
 };

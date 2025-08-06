@@ -389,7 +389,7 @@ const SettingsPage = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          mb: 5,
+          mb: 8,
           paddingTop: 1,
           display: 'flex',
           flexDirection: 'column',

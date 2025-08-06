@@ -39,24 +39,82 @@ import ShieldIcon from '@mui/icons-material/Shield';
 import GroupIcon from '@mui/icons-material/Group';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { motion } from 'framer-motion';
+import InfoBlock from '../../UIKIT/InfoBlock';
 
 const PageContainer = styled(Container)(({ theme }) => ({
-  paddingTop: theme.spacing(4),
-  paddingBottom: theme.spacing(8),
+  paddingTop: theme.spacing(2),
+  paddingBottom: theme.spacing(4),
+  paddingLeft: '0 !important',
+  paddingRight: '0 !important',
   [theme.breakpoints.down('sm')]: {
-    paddingTop: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
   },
 }));
 
 const RuleCard = styled(Card)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  borderRadius: theme.spacing(2),
+  marginBottom: '5px',
+  borderRadius: '16px',
   overflow: 'hidden',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+  [theme.breakpoints.down('sm')]: {
+    borderRadius: '12px',
+    margin: '0 0 5px 0',
+  },
+}));
+
+const NavigationBar = styled(Paper)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: { xs: 'column', sm: 'row' },
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 3,
+  padding: theme.spacing(2),
+  marginBottom: '5px',
+  borderRadius: '16px',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+  [theme.breakpoints.down('sm')]: {
+    margin: '0 0 5px 0',
+    borderRadius: '12px',
+    padding: theme.spacing(1),
+    gap: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+}));
+
+const NavLink = styled(Box)(({ theme, active }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  textDecoration: 'none',
+  color: active ? '#d0bcff' : 'rgba(255, 255, 255, 0.8)',
+  fontWeight: 'medium',
+  padding: theme.spacing(1, 2),
+  borderRadius: '8px',
+  backgroundColor: active ? 'rgba(208, 188, 255, 0.15)' : 'transparent',
+  transition: 'all 0.2s ease',
+  minWidth: 'fit-content',
+  whiteSpace: 'nowrap',
   '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.15)',
+    backgroundColor: active ? 'rgba(208, 188, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(0.5, 1),
+    fontSize: '0.8rem',
+    width: 'auto',
+    minWidth: 'auto',
+    flex: 1,
+    justifyContent: 'center',
+    whiteSpace: 'normal',
+    textAlign: 'center',
   },
 }));
 
@@ -76,20 +134,13 @@ const RuleSection = styled(Box)(({ theme }) => ({
 }));
 
 const SectionTitle = styled(Typography)(({ theme }) => ({
-  position: 'relative',
-  display: 'inline-block',
   marginBottom: theme.spacing(2),
   fontWeight: 'bold',
-  color: theme.palette.primary.main,
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    bottom: -8,
-    left: 0,
-    width: '100%',
-    height: 3,
-    background: `linear-gradient(to right, ${theme.palette.primary.main}, transparent)`,
-    borderRadius: 4,
+  color: '#d0bcff',
+  fontSize: '1.5rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.25rem',
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -118,20 +169,20 @@ const RuleNumber = styled(Typography)(({ theme }) => ({
   minWidth: '40px',
   fontWeight: 'bold',
   color: theme.palette.primary.main,
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(0),
 }));
 
 const SubRuleNumber = styled(Typography)(({ theme }) => ({
   minWidth: '50px',
   fontWeight: 'bold',
   color: theme.palette.primary.main,
-  marginRight: theme.spacing(2),
+  marginRight: theme.spacing(0),
 }));
 
 const SubRuleItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
-  marginLeft: theme.spacing(4),
+  marginLeft: 0,
   marginBottom: theme.spacing(1),
   borderRadius: theme.spacing(1),
   padding: theme.spacing(0.5, 1),
@@ -140,21 +191,7 @@ const SubRuleItem = styled(Box)(({ theme }) => ({
   },
 }));
 
-const RuleAccordion = styled(Accordion)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-  boxShadow: 'none',
-  '&:before': {
-    display: 'none',
-  },
-  marginBottom: theme.spacing(1.5),
-  borderRadius: `${theme.spacing(1.5)}px !important`,
-  overflow: 'hidden',
-}));
 
-const AccordionTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 'medium',
-  fontSize: '1rem',
-}));
 
 const AnimatedIconWrapper = styled(Box)(({ theme }) => ({
   borderRadius: '50%',
@@ -328,93 +365,20 @@ const RulesPage = () => {
 
   return (
     <PageContainer maxWidth='lg'>
-      <Paper
-        elevation={0}
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 3,
-          p: 2,
-          mb: 3,
-          borderRadius: 2,
-          background: `linear-gradient(90deg, ${theme.palette.background.paper} 0%, rgba(208, 188, 255, 0.1) 100%)`,
-          border: '1px solid rgba(208, 188, 255, 0.2)',
-        }}
-      >
-        <Typography
-          variant='body2'
-          color='text.secondary'
-          sx={{ display: { xs: 'block', sm: 'none' } }}
-        >
-          Юридические документы:
-        </Typography>
-
-        <Box
-          component={RouterLink}
-          to='/rules'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: theme.palette.primary.main,
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            backgroundColor: 'rgba(208, 188, 255, 0.15)',
-            '&:hover': {
-              backgroundColor: 'rgba(208, 188, 255, 0.25)',
-            },
-          }}
-        >
+      <NavigationBar>
+        <NavLink active={true} component={RouterLink} to='/rules'>
           <RuleIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Правила сообщества</Typography>
-        </Box>
-
-        <Box
-          component={RouterLink}
-          to='/privacy-policy'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: 'text.primary',
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            },
-          }}
-        >
+        </NavLink>
+        <NavLink component={RouterLink} to='/privacy-policy'>
           <SecurityIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Политика конфиденциальности</Typography>
-        </Box>
-
-        <Box
-          component={RouterLink}
-          to='/terms-of-service'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: 'text.primary',
-            fontWeight: 'medium',
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1,
-            '&:hover': {
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            },
-          }}
-        >
+        </NavLink>
+        <NavLink component={RouterLink} to='/terms-of-service'>
           <AssignmentIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Условия использования</Typography>
-        </Box>
-      </Paper>
+        </NavLink>
+      </NavigationBar>
 
       <Paper
         elevation={0}
@@ -458,11 +422,16 @@ const RulesPage = () => {
         </Box>
       </Paper>
 
-      <motion.div
-        initial='hidden'
-        animate='visible'
-        variants={containerVariants}
+      <InfoBlock
+        title="Правила сообщества К-Коннект"
+        description="Соблюдайте правила для комфортного общения на платформе"
+        customStyle
       >
+        <motion.div
+          initial='hidden'
+          animate='visible'
+          variants={containerVariants}
+        >
         <motion.div variants={itemVariants}>
           <Box
             sx={{
@@ -2331,6 +2300,7 @@ const RulesPage = () => {
           </RuleSection>
         </motion.div>
       </motion.div>
+      </InfoBlock>
     </PageContainer>
   );
 };

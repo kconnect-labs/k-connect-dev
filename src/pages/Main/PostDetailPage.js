@@ -2297,24 +2297,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
 
       {/* Comments Section */}
       <Box sx={{ px: { xs: 2, sm: 0 }, mb: 2 }}>
-        <Typography
-          variant='h6'
-          sx={{
-            mb: { xs: 2, sm: 2.5 },
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontWeight: 600,
-            color: 'text.primary',
-            fontSize: { xs: '0.95rem', sm: '1.1rem' },
-            letterSpacing: '0.01em',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-            <ChatBubbleOutlineIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
-            {t('post.comments')} ({commentsPagination.total || 0})
-          </Box>
-        </Typography>
 
         {user ? (
           <Box sx={{ mb: 3 }}>

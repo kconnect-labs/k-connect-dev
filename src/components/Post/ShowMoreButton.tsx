@@ -7,10 +7,14 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background:
-    'linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.47) 30%, rgba(26, 26, 26, 0.68) 100%)',
+  background: `
+    linear-gradient(180deg, 
+      var(--theme-background, rgba(26, 26, 26, 0)) 0%, 
+      var(--theme-background, rgba(26, 26, 26, 0.47)) 30%, 
+      var(--theme-background, rgba(26, 26, 26, 0.68)) 100%
+    )
+  `,
   color: theme.palette.primary.main,
-  borderRadius: '0 0 10px 10px',
   textTransform: 'none',
   fontWeight: 'normal',
   padding: '8px',
@@ -19,8 +23,13 @@ const ShowMoreButton = styled(Button)(({ theme }) => ({
   bottom: 0,
   left: 0,
   '&:hover': {
-    background:
-      'linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0.47) 30%, rgba(26, 26, 26, 0.68) 100%)',
+    background: `
+      linear-gradient(180deg, 
+        var(--theme-background, rgba(26, 26, 26, 0)) 0%, 
+        var(--theme-background, rgba(26, 26, 26, 0.47)) 30%, 
+        var(--theme-background, rgba(26, 26, 26, 0.68)) 100%
+      )
+    `,
   },
 }));
 

@@ -28,48 +28,32 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import StyledTabs from '../../UIKIT/StyledTabs';
+import InfoBlock from '../../UIKIT/InfoBlock';
 import { ThemeSettingsContext } from '../../App';
 import { AuthContext } from '../../context/AuthContext';
 import SearchIcon from '@mui/icons-material/Search';
 import { Icon } from '@iconify/react';
 import personAddIcon from '@iconify-icons/solar/user-plus-bold';
 import personCheckIcon from '@iconify-icons/solar/user-check-bold';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import TvIcon from '@mui/icons-material/Tv';
 import GroupsIcon from '@mui/icons-material/Groups';
-import PersonIcon from '@mui/icons-material/Person';
-import SortIcon from '@mui/icons-material/Sort';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import EmptyChannelsPlaceholder from './EmptyChannelsPlaceholder';
 
 const PageContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   paddingBottom: theme.spacing(10),
+  paddingLeft: '0 !important',
+  paddingRight: '0 !important',
   [theme.breakpoints.down('sm')]: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(8),
   },
 }));
 
-const PageHeader = styled(Box)(({ theme }) => ({
-  marginBottom: theme.spacing(3),
-  display: 'flex',
-  flexDirection: 'column',
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(2),
-  },
-}));
 
-const SearchSection = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2, 2.5),
+const SearchSection = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
-  borderRadius: 16,
-  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-  border: '1px solid rgba(255, 255, 255, 0.05)',
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1.5, 2),
     marginBottom: theme.spacing(2),
   },
 }));
@@ -210,26 +194,6 @@ const StyledChip = styled(Chip, {
   },
 }));
 
-const StyledTab = styled(Tab)(({ theme }) => ({
-  borderRadius: '8px',
-  minHeight: '38px',
-  padding: '6px 12px',
-  textTransform: 'none',
-  fontWeight: 500,
-  fontSize: '0.9rem',
-  minWidth: 0,
-  marginRight: theme.spacing(1),
-  color: 'rgba(255, 255, 255, 0.7)',
-  '&.Mui-selected': {
-    color: '#fff',
-    fontWeight: 600,
-  },
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.8rem',
-    padding: '5px 10px',
-  },
-}));
-
 const LoadMoreButton = styled(Button, {
   shouldForwardProp: prop => prop !== 'themecolor',
 })(({ theme, themecolor }) => ({
@@ -250,10 +214,10 @@ const ChannelCardLoader = () => {
   return (
     <Card
       sx={{
-        borderRadius: 4,
+        borderRadius: 1,
         overflow: 'hidden',
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
+        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         border: '1px solid rgba(255, 255, 255, 0.05)',
         height: '100%',
@@ -268,6 +232,7 @@ const ChannelCardLoader = () => {
           flexDirection: 'column',
           alignItems: 'center',
           height: '100%',
+          
           justifyContent: 'space-between',
         }}
       >
@@ -687,190 +652,177 @@ const ChannelsPage = () => {
 
   return (
     <PageContainer maxWidth='lg'>
-      <PageHeader>
-        <Typography
-          variant='h4'
-          sx={{
-            mb: 0.5,
-            fontWeight: 700,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-          }}
-        >
-          <GroupsIcon sx={{ fontSize: 28 }} />
-          Каналы
-        </Typography>
-        <Typography
-          variant='body1'
-          sx={{
-            color: 'rgba(255, 255, 255, 0.7)',
-            maxWidth: 600,
-          }}
-        >
-          Следите за обновлениями ваших любимых каналов и открывайте новый
-          контент
-        </Typography>
-      </PageHeader>
 
       <SearchSection>
-        <form onSubmit={handleSearch}>
-          <StyledTextField
-            fullWidth
-            variant='outlined'
-            placeholder='Найти каналы...'
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            themecolor={primaryColor}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
-                </InputAdornment>
-              ),
-              endAdornment: isSearching && (
-                <InputAdornment position='end'>
-                  <CircularProgress size={20} />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </form>
+        <InfoBlock
+          title="Поиск каналов"
+          description="Найдите интересные каналы по названию, описанию или тематике"
+          customStyle
+        >
+          <form onSubmit={handleSearch}>
+            <StyledTextField
+              fullWidth
+              variant='outlined'
+              placeholder='Найти каналы...'
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              themecolor={primaryColor}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: isSearching && (
+                  <InputAdornment position='end'>
+                    <CircularProgress size={20} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </form>
+        </InfoBlock>
       </SearchSection>
 
       {!searchQuery && popularChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
-          <SectionHeader>
-            <Typography variant='h5' sx={{ fontWeight: 700 }}>
-              Популярные каналы
-            </Typography>
-          </SectionHeader>
-
-          <Grid container spacing={2}>
-            {popularChannels.map(channel => (
-              <Grid item xs={6} sm={4} md={3} key={channel.id}>
-                {renderChannelCard(channel)}
-              </Grid>
-            ))}
-          </Grid>
+          <InfoBlock
+            title="Популярные каналы"
+            description="Самые популярные каналы на платформе"
+            customStyle
+          >
+            <Grid container spacing={2}>
+              {popularChannels.map(channel => (
+                <Grid item xs={6} sm={4} md={3} key={channel.id}>
+                  {renderChannelCard(channel)}
+                </Grid>
+              ))}
+            </Grid>
+          </InfoBlock>
         </Box>
       )}
 
       {!searchQuery && featuredChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
-          <SectionHeader>
-            <Typography variant='h5' sx={{ fontWeight: 700 }}>
-              Отборные каналы
-            </Typography>
-          </SectionHeader>
-
-          <Grid container spacing={2}>
-            {featuredChannels.map(channel => (
-              <Grid item xs={6} sm={4} md={3} key={channel.id}>
-                {renderChannelCard(channel)}
-              </Grid>
-            ))}
-          </Grid>
+          <InfoBlock
+            title="Отборные каналы"
+            description="Рекомендуемые каналы для вас"
+            customStyle
+          >
+            <Grid container spacing={2}>
+              {featuredChannels.map(channel => (
+                <Grid item xs={6} sm={4} md={3} key={channel.id}>
+                  {renderChannelCard(channel)}
+                </Grid>
+              ))}
+            </Grid>
+          </InfoBlock>
         </Box>
       )}
 
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-          <StyledTabs
-            value={activeTab}
-            onChange={handleTabChange}
-            tabs={[
-              { value: 'recent', label: 'Недавние' },
-              { value: 'popular', label: 'Популярные' },
-              ...(searchQuery
-                ? [{ value: 'search', label: `Поиск: ${searchQuery}` }]
-                : []),
-            ]}
-            fullWidth
-            customStyle
-          />
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 2,
-          }}
+        <InfoBlock
+          title="Все каналы"
+          description="Просматривайте и подписывайтесь на интересные каналы"
+          customStyle
         >
-          <Typography variant='body2' color='text.secondary'>
-            {isSearching ? (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CircularProgress size={16} sx={{ mr: 1 }} />
-                Поиск...
-              </Box>
-            ) : total > 0 ? (
-              `Найдено ${total} каналов`
-            ) : (
-              !loading && 'Нет каналов'
-            )}
-          </Typography>
-
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton
-              size='small'
-              onClick={() => setWithDescription(!withDescription)}
-              sx={{
-                color: withDescription ? 'primary.main' : 'text.secondary',
-                ml: 1,
-              }}
-              aria-label='Toggle filtering'
-              title={
-                withDescription ? 'Показывать все каналы' : 'Только с описанием'
-              }
-            >
-              <FilterAltIcon fontSize='small' />
-            </IconButton>
+          <Box sx={{ mb: 2 }}>
+            <StyledTabs
+              value={activeTab}
+              onChange={handleTabChange}
+              tabs={[
+                { value: 'recent', label: 'Недавние' },
+                { value: 'popular', label: 'Популярные' },
+                ...(searchQuery
+                  ? [{ value: 'search', label: `Поиск: ${searchQuery}` }]
+                  : []),
+              ]}
+              fullWidth
+              customStyle
+            />
           </Box>
-        </Box>
 
-        <Grid container spacing={2}>
-          {loading
-            ? Array.from(new Array(12)).map((_, index) => (
-                <Grid item xs={6} sm={4} md={3} key={index}>
-                  <ChannelCardLoader />
-                </Grid>
-              ))
-            : channels.length > 0
-              ? channels.map(channel => (
-                  <Grid item xs={6} sm={4} md={3} key={channel.id}>
-                    {renderChannelCard(channel)}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              mb: 2,
+            }}
+          >
+            <Typography variant='body2' color='text.secondary'>
+              {isSearching ? (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <CircularProgress size={16} sx={{ mr: 1 }} />
+                  Поиск...
+                </Box>
+              ) : total > 0 ? (
+                `Найдено ${total} каналов`
+              ) : (
+                !loading && 'Нет каналов'
+              )}
+            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <IconButton
+                size='small'
+                onClick={() => setWithDescription(!withDescription)}
+                sx={{
+                  color: withDescription ? 'primary.main' : 'text.secondary',
+                  ml: 1,
+                }}
+                aria-label='Toggle filtering'
+                title={
+                  withDescription ? 'Показывать все каналы' : 'Только с описанием'
+                }
+              >
+                <FilterAltIcon fontSize='small' />
+              </IconButton>
+            </Box>
+          </Box>
+
+          <Grid container spacing={2}>
+            {loading
+              ? Array.from(new Array(12)).map((_, index) => (
+                  <Grid item xs={6} sm={4} md={3} key={index}>
+                    <ChannelCardLoader />
                   </Grid>
                 ))
-              : !loading && (
-                  <Grid item xs={12}>
-                    <EmptyChannelsPlaceholder
-                      message={
-                        searchQuery
-                          ? `Каналы по запросу "${searchQuery}" не найдены`
-                          : 'Каналы не найдены'
-                      }
-                    />
-                  </Grid>
-                )}
-        </Grid>
+              : channels.length > 0
+                ? channels.map(channel => (
+                    <Grid item xs={6} sm={4} md={3} key={channel.id}>
+                      {renderChannelCard(channel)}
+                    </Grid>
+                  ))
+                : !loading && (
+                    <Grid item xs={12}>
+                      <EmptyChannelsPlaceholder
+                        message={
+                          searchQuery
+                            ? `Каналы по запросу "${searchQuery}" не найдены`
+                            : 'Каналы не найдены'
+                        }
+                      />
+                    </Grid>
+                  )}
+          </Grid>
 
-        {!loading && channels.length > 0 && hasMore && (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-            <LoadMoreButton
-              variant='contained'
-              onClick={loadMoreChannels}
-              disabled={loadingMore}
-              themecolor={primaryColor}
-              startIcon={
-                loadingMore && <CircularProgress size={20} color='inherit' />
-              }
-            >
-              {loadingMore ? 'Загрузка...' : 'Загрузить еще'}
-            </LoadMoreButton>
-          </Box>
-        )}
+          {!loading && channels.length > 0 && hasMore && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+              <LoadMoreButton
+                variant='contained'
+                onClick={loadMoreChannels}
+                disabled={loadingMore}
+                themecolor={primaryColor}
+                startIcon={
+                  loadingMore && <CircularProgress size={20} color='inherit' />
+                }
+              >
+                {loadingMore ? 'Загрузка...' : 'Загрузить еще'}
+              </LoadMoreButton>
+            </Box>
+          )}
+        </InfoBlock>
       </Box>
 
       <Box sx={{ height: '60px', width: '100%' }} />
