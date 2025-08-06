@@ -341,12 +341,12 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: 'var(--theme-background-full) ',
-          paper: 'var(--theme-background-full)',
+          default: 'rgba(15, 15, 15, 0.98)',
+          paper: 'rgba(15, 15, 15, 0.98)',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
-          secondary: 'var(--theme-text-secondary)',
+          secondary: 'rgba(255, 255, 255, 0.6)',
         },
       },
       typography: {

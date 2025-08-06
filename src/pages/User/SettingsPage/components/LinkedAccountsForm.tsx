@@ -164,7 +164,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
     py: 1.5,
     px: 2,
     borderRadius: 2,
-    bgcolor: alpha(theme.palette.background.default, 0.4),
+            bgcolor: 'rgba(255, 255, 255, 0.05)',
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
     mb: 1,
   };

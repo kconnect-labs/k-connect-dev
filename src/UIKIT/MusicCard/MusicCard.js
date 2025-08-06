@@ -25,9 +25,9 @@ const StyledCard = styled(Card)(({ theme, compact }) => ({
   transition: 'all 0.3s ease',
   backgroundColor:
     theme.palette.mode === 'light'
-      ? alpha(theme.palette.background.paper, 0.9)
+              ? 'rgba(255, 255, 255, 0.1)'
       : theme.palette.mode === 'contrast'
-        ? alpha(theme.palette.background.paper, 0.05)
+        ? 'rgba(255, 255, 255, 0.02)'
         : alpha(theme.palette.common.white, 0.05),
   '&:hover': {
     transform: 'translateY(-4px)',

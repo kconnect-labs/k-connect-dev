@@ -2933,7 +2933,7 @@ const BalancePage = () => {
                     overflow: 'hidden',
                     '&:before': { display: 'none' },
                     boxShadow: 'none',
-                    background: alpha(theme.palette.background.paper, 0.4),
+                    background: 'rgba(255, 255, 255, 0.05)',
                   }}
                 >
                   <AccordionSummary
@@ -3023,7 +3023,7 @@ const BalancePage = () => {
                         <List
                           dense
                           sx={{
-                            bgcolor: alpha(theme.palette.background.paper, 0.3),
+                            bgcolor: 'rgba(255, 255, 255, 0.05)',
                             borderRadius: 2,
                             mb: 1,
                           }}
@@ -3115,10 +3115,10 @@ const BalancePage = () => {
                   sx={{
                     borderRadius: '12px',
                     mb: 2,
-                    background: alpha(theme.palette.background.paper, 0.4),
+                    background: 'rgba(255, 255, 255, 0.05)',
                     padding: '12px 16px',
                     '&:hover': {
-                      background: alpha(theme.palette.background.paper, 0.6),
+                      background: 'rgba(255, 255, 255, 0.1)',
                     },
                   }}
                 >

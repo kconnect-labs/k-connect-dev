@@ -69,8 +69,8 @@ const HistoryItem = styled(Paper)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   background:
     theme.palette.mode === 'dark'
-      ? alpha(theme.palette.background.paper, 0.4)
-      : alpha(theme.palette.background.paper, 0.7),
+              ? 'rgba(255, 255, 255, 0.05)'
+              : 'rgba(255, 255, 255, 0.1)',
   transition: 'transform 0.2s ease',
   backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   '&:hover': {

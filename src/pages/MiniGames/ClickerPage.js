@@ -78,7 +78,7 @@ const ClickButton = styled(Button)(({ theme }) => ({
   border: `3px solid ${alpha(theme.palette.primary.light, 0.3)}`,
   boxShadow: `0 10px 30px ${alpha(theme.palette.primary.main, 0.25)}, 
               0 20px 60px ${alpha(theme.palette.primary.dark, 0.15)},
-              inset 0 1px 0 ${alpha('var(--theme-text-primary)', 0.1)}`,
+              inset 0 1px 0 rgba(255, 255, 255, 0.1)}`,
   transition: 'all 0.15s ease-out',
   overflow: 'hidden',
   position: 'relative',

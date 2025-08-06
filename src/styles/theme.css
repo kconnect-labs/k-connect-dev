@@ -42,7 +42,7 @@
   --theme-background: rgba(255, 255, 255, 0.03);
   --theme-backdrop-filter: blur(20px);
   --theme-site-background: #0a0a0a;
-  --theme-background-full: rgba(255, 255, 255, 1);
+  --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 0.87);

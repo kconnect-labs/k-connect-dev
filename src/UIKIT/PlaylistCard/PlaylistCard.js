@@ -27,7 +27,7 @@ const StyledCard = styled(Card)(({ theme, active }) => ({
       ? alpha(theme.palette.primary.dark, 0.8)
       : alpha(theme.palette.primary.light, 0.2)
     : theme.palette.mode === 'light'
-      ? alpha(theme.palette.background.paper, 0.9)
+              ? 'rgba(255, 255, 255, 0.1)'
       : theme.palette.mode === 'contrast'
         ? '#101010'
         : '#121212',

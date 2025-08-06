@@ -438,7 +438,7 @@ export const SortSelect = styled(FormControl)(({ theme }) => ({
   margin: theme.spacing(0, 2),
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
-    background: alpha(theme.palette.background.paper, 0.9),
+    background: 'rgba(255, 255, 255, 0.1)',
     boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
     '&:hover': {
       boxShadow: '0 4px 8px rgba(0,0,0,0.1)',

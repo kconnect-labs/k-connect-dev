@@ -91,7 +91,7 @@ const SearchBox = styled(Box)(({ theme }) => ({
 const SearchInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 12,
-    background: alpha(theme.palette.background.paper, 0.1),
+            background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     transition: 'all 0.3s ease',
     '&:hover': {

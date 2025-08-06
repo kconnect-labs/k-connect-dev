@@ -124,7 +124,7 @@ const MethodChip = styled(Chip)<MethodChipProps>(({ theme, method }) => {
 const EndpointPath = styled(Typography)(({ theme }) => ({
   fontFamily: 'monospace',
   padding: theme.spacing(0.5, 1),
-  backgroundColor: alpha(theme.palette.background.default, 0.5),
+  backgroundColor: 'rgba(255, 255, 255, 0.05)',
   borderRadius: theme.spacing(0.5),
   fontSize: '0.9rem',
   fontWeight: 500,
@@ -136,10 +136,7 @@ const CodeBlock = styled(Box)(({ theme }) => ({
   fontFamily: 'monospace',
   fontSize: '0.9rem',
   padding: theme.spacing(1.5),
-  backgroundColor:
-    theme.palette.mode === 'dark'
-      ? alpha(theme.palette.background.default, 0.4)
-      : alpha(theme.palette.background.default, 0.7),
+  backgroundColor: 'rgba(255, 255, 255, 0.05)',
   borderRadius: theme.spacing(1),
   overflowX: 'auto',
   border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,

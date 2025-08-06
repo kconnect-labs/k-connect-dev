@@ -135,7 +135,7 @@ const SearchInputField = styled(TextField)(({ theme }) => ({
 const SearchTabsContainer = styled(Box)(({ theme }) => ({
   borderTop: '1px solid rgba(255, 255, 255, 0.08)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  backgroundColor: alpha(theme.palette.background.default, 0.3),
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({

@@ -43,8 +43,8 @@ export const LoadingIndicator = () => {
         top: 0,
         left: 0,
         zIndex: 1000,
-        backgroundColor: theme.palette.background.default,
-        background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.background.paper} 100%)`,
+        backgroundColor: 'var(--theme-background-full)',
+        background: `linear-gradient(135deg, var(--theme-background-full) 0%, var(--theme-background-full) 100%)`,
       }}
     >
       {/* Анимированный фон */}

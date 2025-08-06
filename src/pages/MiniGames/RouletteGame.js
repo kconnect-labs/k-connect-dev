@@ -136,7 +136,7 @@ const ReelWrapper = styled(Box)(({ theme }) => ({
   height: 170,
   overflow: 'hidden',
   margin: '0 auto',
-  background: alpha(theme.palette.background.paper, 0.7),
+          background: 'rgba(255, 255, 255, 0.1)',
   borderRadius: 16,
   border: `2.5px solid ${alpha(theme.palette.primary.main, 0.18)}`,
   boxShadow: `0 4px 24px ${alpha(theme.palette.primary.main, 0.1)}`,
