@@ -164,7 +164,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
           <IconButton 
             onClick={onBack || closeWithAnimation} 
             sx={{ 
-              color: 'text.primary',
+              color: 'var(--theme-text-primary)',
               transition: 'transform 0.15s ease',
               '&:hover': {
                 transform: 'scale(1.1)',
@@ -184,7 +184,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
           variant='h6'
           sx={{ 
             fontWeight: 600, 
-            color: 'text.primary',
+            color: 'var(--theme-text-primary)',
             transition: 'opacity 0.2s ease',
           }}
         >
@@ -194,7 +194,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
         <IconButton 
           onClick={closeWithAnimation} 
           sx={{ 
-            color: 'text.primary',
+            color: 'var(--theme-text-primary)',
             transition: 'transform 0.15s ease',
             '&:hover': {
               transform: 'scale(1.1)',

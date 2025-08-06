@@ -32,7 +32,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   backdropFilter: 'var(--backdrop-filter)',
   border: '1px solid rgba(207, 188, 251, 0.12)',
   borderRadius: theme.spacing(2),
-  color: 'rgba(255, 255, 255, 0.87)',
+  color: 'var(--theme-text-primary)',
   '&:hover': {
     border: '1px solid rgba(207, 188, 251, 0.2)',
   },
@@ -211,7 +211,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" sx={{ color: 'white', fontWeight: 600 }}>
+        <Typography variant="h5" sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
           Состояние аккаунта
         </Typography>
         <Box display="flex" gap={1}>
@@ -236,7 +236,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <Warning sx={{ color: '#ffc107' }} />
-              <Typography variant="h6" sx={{ color: 'white' }}>
+              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
                 Активные предупреждения ({activeWarnings.length})
               </Typography>
             </Box>
@@ -250,21 +250,21 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                     <ListItemText
                       primary={
                         <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'white' }}>
+                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
                             {warning.reason}
                           </Typography>
                           {getStatusChip(warning)}
-                                                     <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
-                             Без срока действия
-                           </Typography>
+                                                     <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
+                              {new Date(warning.created_at).toLocaleDateString('ru-RU')}
+                            </Typography>
                         </Box>
                       }
                       secondary={
                         <Box mt={1}>
-                                                   <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                                   <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
                            Модератор: {warning.admin_username}
                          </Typography>
-                         <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                         <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
                            Выдано: {formatDate(warning.created_at)}
                          </Typography>
 
@@ -286,7 +286,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <Block sx={{ color: '#ef4444' }} />
-              <Typography variant="h6" sx={{ color: 'white' }}>
+              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
                 Активные баны ({activeBans.length})
               </Typography>
             </Box>
@@ -300,21 +300,21 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                     <ListItemText
                       primary={
                         <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'white' }}>
+                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
                             {ban.reason}
                           </Typography>
                           {getStatusChip(ban)}
-                                                     <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+                                                     <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
                              {ban.is_active ? `Осталось: ${getTimeRemaining(ban.expires_at)}` : 'Истек'}
                            </Typography>
                         </Box>
                       }
                       secondary={
                         <Box mt={1}>
-                                                   <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                                   <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
                            Модератор: {ban.moderator_name}
                          </Typography>
-                         <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                         <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
                            Выдан: {formatDate(ban.created_at)}
                          </Typography>
 
@@ -336,7 +336,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <CheckCircle sx={{ color: '#10b981' }} />
-              <Typography variant="h6" sx={{ color: 'white' }}>
+              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
                 История предупреждений ({expiredWarnings.length})
               </Typography>
             </Box>
@@ -350,7 +350,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                     <ListItemText
                       primary={
                         <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'white' }}>
+                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
                             {warning.reason}
                           </Typography>
                           {getStatusChip(warning)}
@@ -358,10 +358,10 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                       }
                       secondary={
                         <Box mt={1}>
-                                                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                                     <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
                              Модератор: {warning.admin_username}
                            </Typography>
-                           <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                           <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
                              Выдано: {formatDate(warning.created_at)}
                            </Typography>
                         </Box>
@@ -382,7 +382,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
           <CardContent>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
               <CheckCircle sx={{ color: '#10b981' }} />
-              <Typography variant="h6" sx={{ color: 'white' }}>
+              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
                 История банов ({expiredBans.length})
               </Typography>
             </Box>
@@ -396,7 +396,7 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                     <ListItemText
                       primary={
                         <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'white' }}>
+                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
                             {ban.reason}
                           </Typography>
                           {getStatusChip(ban)}
@@ -404,10 +404,10 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                       }
                       secondary={
                         <Box mt={1}>
-                                                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                                                     <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
                              Модератор: {ban.moderator_name}
                            </Typography>
-                           <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                           <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
                              Выдан: {formatDate(ban.created_at)} | Истек: {formatDate(ban.expires_at)}
                            </Typography>
                         </Box>
@@ -428,10 +428,10 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
           <CardContent>
             <Box display="flex" flexDirection="column" alignItems="center" py={4}>
               <CheckCircle sx={{ fontSize: 48, color: '#10b981', mb: 2 }} />
-              <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>
+              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
                 Аккаунт в порядке
               </Typography>
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center' }}>
+              <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)', textAlign: 'center' }}>
                 У вас нет активных предупреждений или банов
               </Typography>
             </Box>

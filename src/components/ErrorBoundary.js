@@ -231,7 +231,7 @@ class ErrorBoundary extends Component {
             .error-boundary-button {
               padding: 8px 16px;
               background-color: #dc3545;
-              color: white;
+              color: var(--theme-text-primary);
               border: none;
               border-radius: 4px;
               cursor: pointer;
@@ -241,7 +241,7 @@ class ErrorBoundary extends Component {
             .error-details {
               margin-top: 20px;
               text-align: left;
-              background-color: #f8f9fa;
+              background-color: var(--theme-background);
               padding: 10px;
               border-radius: 4px;
             }
@@ -250,7 +250,7 @@ class ErrorBoundary extends Component {
               overflow: auto;
               margin: 10px 0;
               padding: 10px;
-              background-color: #f1f1f1;
+              background-color: var(--theme-background);
               border-radius: 4px;
               font-size: 12px;
             }

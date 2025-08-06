@@ -179,7 +179,7 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
               <StarIcon sx={{ color: theme.palette.primary.main }} />
               <Typography
                 variant='body1'
-                sx={{ color: 'text.primary', fontWeight: 600 }}
+                sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}
               >
                 Лимит: {usernameLimit === Infinity ? '∞' : usernameLimit}{' '}
                 юзернеймов
@@ -195,10 +195,8 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
           variant='h6'
           sx={{
             mb: 2,
-            color: 'text.primary',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
+            fontWeight: 600,
+            color: 'var(--theme-text-primary)',
           }}
         >
           <ShoppingCartIcon sx={{ fontSize: 20 }} />
@@ -280,19 +278,8 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
       {/* Купленные юзернеймы */}
       {purchased.length > 0 && (
         <Box sx={sectionStyle}>
-          <Typography
-            variant='h6'
-            sx={{
-              mb: 2,
-              color: 'text.primary',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-            }}
-          >
-            <CheckIcon sx={{ fontSize: 20 }} />
-            Ваши юзернеймы ({purchased.length}/
-            {usernameLimit === Infinity ? '∞' : usernameLimit})
+          <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+            Купленные юзернеймы
           </Typography>
 
           <Grid container spacing={2}>
@@ -324,24 +311,21 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
                         mb: 1,
                       }}
                     >
-                      <Typography
-                        variant='h6'
-                        sx={{ color: 'text.primary', fontWeight: 600 }}
-                      >
-                        @{usernameObj.username}
+                      <Typography variant='body1' sx={{ color: 'var(--theme-text-primary)' }}>
+                        {usernameObj.username}
                       </Typography>
                     </Box>
 
                     <Typography
                       variant='caption'
-                      sx={{ color: 'text.secondary', display: 'block', mb: 1 }}
+                      sx={{ color: 'var(--theme-text-secondary)', display: 'block', mb: 1 }}
                     >
                       {formatDate(usernameObj.purchase_date)}
                     </Typography>
 
                     <Typography
                       variant='caption'
-                      sx={{ color: 'text.secondary', display: 'block', mb: 2 }}
+                      sx={{ color: 'var(--theme-text-secondary)', display: 'block', mb: 2 }}
                     >
                       {usernameObj.price_paid} баллов
                     </Typography>
@@ -392,19 +376,18 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
           variant='h6'
           sx={{
             mb: 2,
-            color: 'text.primary',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
+            color: 'var(--theme-text-primary)',
           }}
         >
-          <InfoIcon sx={{ fontSize: 20 }} />
-          Правила покупки юзернеймов
+          Правила и информация
         </Typography>
 
-        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
-          Приобретайте уникальные юзернеймы и выделитесь среди других
-          пользователей!
+        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
+          • Юзернеймы можно менять не чаще чем раз в 30 дней
+        </Typography>
+
+        <Typography variant='body2' sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
+          • При смене юзернейма старый становится неактивным
         </Typography>
 
         <Grid container spacing={2}>

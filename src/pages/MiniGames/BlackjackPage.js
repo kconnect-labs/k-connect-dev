@@ -339,7 +339,7 @@ const BlackjackPage = () => {
         padding: '16px',
         position: 'relative',
         minHeight: 'calc(100vh - 64px)',
-        color: '#ffffff',
+        color: 'var(--theme-text-primary)',
         marginBottom: '100px',
       }}
     >
@@ -480,7 +480,7 @@ const BlackjackPage = () => {
                 style={{
                   width: '150px',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  color: '#ffffff',
+                  color: 'var(--theme-text-primary)',
                   border: '1px solid #333333',
                 }}
               />

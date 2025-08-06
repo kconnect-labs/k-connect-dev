@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Typography, Avatar, Paper, Tooltip } from '@mui/material';
+import { Box, Typography, Avatar, Paper } from '@mui/material';
 import { LinkRounded as LinkRoundedIcon } from '@mui/icons-material';
-import { VerificationBadge, Badge } from '../../../../UIKIT';
-import { getLighterColor } from '../../ProfilePage/utils/colorUtils';
+// import { VerificationBadge, Badge } from '../../../../UIKIT'; // Комментируем, если не используется/нет экспорта
+// import { getLighterColor } from '../../ProfilePage/utils/colorUtils';
 
 interface ProfilePreviewProps {
   user: any;
@@ -13,26 +13,21 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
   user,
   profileData,
 }) => {
-  console.log('ProfilePreview props:', { user, profileData });
-
   if (!user) {
-    console.log('ProfilePreview: No user data');
     return (
       <Paper
         className='theme-aware'
         sx={{
           p: 2,
           borderRadius: '16px',
-
-          boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
           position: 'relative',
           zIndex: 2,
         }}
       >
         <Typography
           variant='body2'
-          sx={{ color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center' }}
+          sx={{ color: 'var(--theme-text-secondary)', textAlign: 'center' }}
         >
           Загрузка профиля...
         </Typography>
@@ -57,8 +52,6 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
     profile_id: user?.profile_id,
   };
 
-  console.log('ProfilePreview displayUser:', displayUser);
-
   return (
     <Paper
       className='theme-aware'
@@ -67,8 +60,8 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
         borderRadius: '16px',
         background:
           displayUser?.profile_id === 2 && displayUser?.banner_url
-            ? `url(${displayUser.banner_url}), var(--theme-background, rgba(255, 255, 255, 0.03))`
-            : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            ? `url(${displayUser.banner_url}), rgba(255,255,255,0.03)`
+            : 'rgba(255,255,255,0.03)',
         backgroundSize:
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'cover'
@@ -77,12 +70,12 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
           displayUser?.profile_id === 2 && displayUser?.banner_url
             ? 'center'
             : undefined,
-
-        boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
         overflow: 'hidden',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         position: 'relative',
         zIndex: 2,
+        backdropFilter: 'blur(20px)',
+        // boxShadow убран
       }}
     >
       {/* Banner section */}
@@ -145,27 +138,12 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                   displayUser?.subscription
                     ? `3px solid ${displayUser.status_color}`
                     : displayUser?.subscription
-                      ? `3px solid ${displayUser.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : displayUser.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : displayUser.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : displayUser.subscription.type === 'max' ? 'rgba(255, 77, 80)' : 'rgba(66, 165, 245)'}`
+                      ? `3px solid var(--primary)`
                       : theme =>
                           theme.palette.mode === 'dark'
                             ? '3px solid #121212'
                             : '3px solid #ffffff',
-                boxShadow:
-                  displayUser?.status_color &&
-                  displayUser?.status_text &&
-                  displayUser.subscription
-                    ? `0 0 12px ${displayUser.status_color}80`
-                    : displayUser?.subscription
-                      ? displayUser.subscription.type === 'premium'
-                        ? '0 0 12px rgba(186, 104, 200, 0.5)'
-                        : displayUser.subscription.type === 'pick-me'
-                          ? '0 0 12px rgba(208, 188, 255, 0.5)'
-                          : displayUser.subscription.type === 'ultimate'
-                            ? '0 0 12px rgba(124, 77, 255, 0.5)'
-                            : displayUser.subscription.type === 'max'
-                              ? '0 0 12px rgba(255, 77, 80, 0.5)'
-                              : '0 0 12px rgba(66, 165, 245, 0.5)'
-                      : '0 6px 16px rgba(0, 0, 0, 0.25)',
+                // boxShadow убран
                 bgcolor: 'primary.dark',
                 transition: 'all 0.3s ease',
               }}
@@ -179,22 +157,17 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
               variant='h6'
               sx={{
                 fontWeight: 700,
-                color: displayUser?.profile_id === 2 ? '#fff' : 'inherit',
+                color:
+                  displayUser?.profile_id === 2
+                    ? 'var(--theme-text-primary)'
+                    : 'var(--theme-text-primary)',
                 textShadow:
                   displayUser?.profile_id === 2
                     ? '0 1px 3px rgba(0,0,0,0.7)'
                     : 'none',
-                background:
-                  displayUser?.profile_id === 2
-                    ? 'none'
-                    : theme =>
-                        theme.palette.mode === 'dark'
-                          ? 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.8) 100%)'
-                          : 'linear-gradient(90deg, #000 0%, rgba(0,0,0,0.8) 100%)',
-                WebkitBackgroundClip:
-                  displayUser?.profile_id === 2 ? 'unset' : 'text',
-                WebkitTextFillColor:
-                  displayUser?.profile_id === 2 ? 'unset' : 'transparent',
+                background: 'none',
+                WebkitBackgroundClip: 'unset',
+                WebkitTextFillColor: 'unset',
                 fontSize: '1.1rem',
               }}
             >
@@ -202,7 +175,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
             </Typography>
             {/* <VerificationBadge status={displayUser?.verification_status} size="small" /> */}
 
-            {displayUser?.achievement && (
+            {/* {displayUser?.achievement && (
               <Badge
                 achievement={displayUser.achievement}
                 size='small'
@@ -213,7 +186,7 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                   console.error('Achievement badge failed to load:', e);
                 }}
               />
-            )}
+            )} */}
           </Box>
 
           <Box
@@ -232,31 +205,19 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
                 fontWeight: 500,
                 color:
                   displayUser?.profile_id === 2
-                    ? 'rgba(255,255,255,0.9)'
-                    : theme => theme.palette.text.secondary,
+                    ? 'var(--theme-text-secondary)'
+                    : 'var(--theme-text-secondary)',
                 textShadow:
                   displayUser?.profile_id === 2
                     ? '0 1px 2px rgba(0,0,0,0.5)'
                     : 'none',
                 display: 'flex',
                 alignItems: 'center',
-                background:
-                  displayUser?.profile_id === 2
-                    ? 'rgba(0,0,0,0.3)'
-                    : theme =>
-                        theme.palette.mode === 'dark'
-                          ? 'rgba(255,255,255,0.03)'
-                          : 'rgba(0,0,0,0.03)',
+                background: 'rgba(255,255,255,0.03)',
                 px: 1,
                 py: 0.3,
                 borderRadius: 1,
-                border:
-                  displayUser?.profile_id === 2
-                    ? '1px solid rgba(255,255,255,0.15)'
-                    : theme =>
-                        theme.palette.mode === 'dark'
-                          ? '1px solid rgba(255,255,255,0.05)'
-                          : '1px solid rgba(0,0,0,0.05)',
+                border: '1px solid rgba(255,255,255,0.12)',
                 fontSize: '0.8rem',
               }}
             >
@@ -267,47 +228,31 @@ const ProfilePreview: React.FC<ProfilePreviewProps> = ({
               displayUser.connect_info.length > 0 && (
                 <>
                   <LinkRoundedIcon
-                    sx={theme => ({
+                    sx={{
                       width: '1.5em',
                       height: '1.5em',
                       fontSize: 14,
-                      color:
-                        displayUser?.profile_id === 2
-                          ? 'rgba(255,255,255,0.9)'
-                          : theme.palette.text.secondary,
-                    })}
+                      color: 'var(--theme-text-secondary)',
+                    }}
                   />
                   <Typography
                     variant='body2'
-                    sx={theme => ({
+                    sx={{
                       fontWeight: 500,
-                      color:
-                        displayUser?.profile_id === 2
-                          ? 'rgba(255,255,255,0.9)'
-                          : theme.palette.text.secondary,
+                      color: 'var(--theme-text-secondary)',
                       textShadow:
                         displayUser?.profile_id === 2
                           ? '0 1px 2px rgba(0,0,0,0.5)'
                           : 'none',
                       display: 'flex',
                       alignItems: 'center',
-                      background:
-                        displayUser?.profile_id === 2
-                          ? 'rgba(0,0,0,0.3)'
-                          : theme.palette.mode === 'dark'
-                            ? 'rgba(255,255,255,0.03)'
-                            : 'rgba(0,0,0,0.03)',
+                      background: 'rgba(255,255,255,0.03)',
                       px: 1,
                       py: 0.3,
                       borderRadius: 1,
-                      border:
-                        displayUser?.profile_id === 2
-                          ? '1px solid rgba(255,255,255,0.15)'
-                          : theme.palette.mode === 'dark'
-                            ? '1px solid rgba(255,255,255,0.05)'
-                            : '1px solid rgba(0,0,0,0.05)',
+                      border: '1px solid rgba(255,255,255,0.12)',
                       fontSize: '0.8rem',
-                    })}
+                    }}
                   >
                     @{displayUser.connect_info[0].username}
                   </Typography>

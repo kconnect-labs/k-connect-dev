@@ -76,13 +76,13 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
             animation: 'pulse 0.6s ease-in-out',
           }}
         >
-          <CheckIcon sx={{ color: 'white', fontSize: 24 }} />
+          <CheckIcon sx={{ color: 'var(--theme-text-primary)', fontSize: 24 }} />
         </Box>
 
         <Typography
           variant='h6'
           sx={{
-            color: 'white',
+            color: 'var(--theme-text-primary)',
             fontWeight: 600,
             fontSize: '1.1rem',
             textAlign: 'center',

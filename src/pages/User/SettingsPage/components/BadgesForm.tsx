@@ -137,7 +137,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     top: -6,
     right: -6,
     backgroundColor: theme.palette.success.main,
-    color: '#fff',
+    color: 'var(--theme-text-primary)',
     borderRadius: '50%',
     width: 16,
     height: 16,
@@ -152,7 +152,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     top: -4,
     left: -4,
     backgroundColor: theme.palette.secondary.main,
-    color: '#fff',
+    color: 'var(--theme-text-primary)',
     borderRadius: '50%',
     width: 14,
     height: 14,
@@ -187,7 +187,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
         variant='h6'
         sx={{
           mb: 3,
-          color: 'text.primary',
+          color: 'var(--theme-text-primary)',
           fontSize: '1.2rem',
           fontWeight: 600,
           display: 'flex',
@@ -199,7 +199,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
         Управление бейджами
       </Typography>
 
-      <Typography variant='body2' sx={{ mb: 3, color: 'text.secondary' }}>
+      <Typography variant='body2' sx={{ mb: 3, color: 'var(--theme-text-secondary)' }}>
         Выберите бейдж, который будет отображаться рядом с вашим именем в
         профиле и публикациях
       </Typography>
@@ -282,13 +282,16 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                         <Typography
                           variant='caption'
                           sx={{
-                            fontWeight: 600,
-                            mb: 0.5,
-                            display: '-webkit-box',
-                            WebkitLineClamp: 1,
-                            WebkitBoxOrient: 'vertical',
+                            mt: 1,
+                            fontWeight: 500,
+                            color: 'var(--theme-text-secondary)',
+                            fontSize: '0.7rem',
+                            lineHeight: 1.2,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
                           }}
                         >
                           {achievement.name || achievement.bage}
@@ -419,8 +422,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
               >
                 <Typography
                   variant='caption'
-                  color='text.secondary'
-                  sx={{ mr: 1 }}
+                  sx={{ color: 'var(--theme-text-secondary)', mr: 1 }}
                 >
                   Покупайте новые бейджи в магазине
                 </Typography>

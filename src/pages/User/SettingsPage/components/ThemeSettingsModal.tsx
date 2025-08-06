@@ -26,6 +26,7 @@ import {
   Lightbulb,
   Coffee,
   Favorite,
+  LightMode,
 } from '@mui/icons-material';
 import { useThemeManager, ThemeType } from '../../../../hooks/useThemeManager';
 
@@ -56,7 +57,8 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switchToCosmicTheme,
     switchToNeonTheme,
     switchToVintageTheme,
-    switchToPickmeTheme
+    switchToPickmeTheme,
+    switchToLightTheme
   } = useThemeManager();
 
   const handleClose = () => {
@@ -70,6 +72,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         break;
       case 'blur':
         await switchToBlurTheme();
+        break;
+      case 'light':
+        await switchToLightTheme();
         break;
       case 'midnight':
         await switchToMidnightTheme();
@@ -132,7 +137,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       ? getThemeBackdropFilter(themeType)
       : 'none',
     border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: 'white',
+    color: 'var(--theme-text-primary)',
     textTransform: 'none',
     fontSize: '1rem',
     fontWeight: 500,
@@ -152,6 +157,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'rgba(15, 15, 15, 0.98)';
       case 'blur': return 'rgba(255, 255, 255, 0.03)';
+      case 'light': return 'rgba(255, 255, 255, 0.95)';
       case 'midnight': return 'rgba(5, 8, 20, 0.95)';
       case 'ocean': return 'rgba(8, 25, 40, 0.92)';
       case 'sunset': return 'rgba(40, 15, 8, 0.94)';
@@ -169,6 +175,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'none';
       case 'blur': return 'blur(20px)';
+      case 'light': return 'none';
       case 'midnight': return 'blur(20px)';
       case 'ocean': return 'blur(20px)';
       case 'sunset': return 'blur(20px)';
@@ -186,6 +193,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return <BlurOff />;
       case 'blur': return <BlurOn />;
+      case 'light': return <LightMode />;
       case 'midnight': return <DarkMode />;
       case 'ocean': return <WaterDrop />;
       case 'sunset': return <WbSunny />;
@@ -203,6 +211,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'Классическая';
       case 'blur': return 'Blur Glass';
+      case 'light': return 'Light';
       case 'midnight': return 'Midnight';
       case 'ocean': return 'Ocean';
       case 'sunset': return 'Sunset';
@@ -220,6 +229,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'Темная тема без эффектов';
       case 'blur': return 'Прозрачная с размытием';
+      case 'light': return '!!ALARM!! Не использовать, еще в разработке';
       case 'midnight': return 'Глубокий темно-синий с фиолетовым';
       case 'ocean': return 'Яркий синий с бирюзовым оттенком';
       case 'sunset': return 'Яркий красно-оранжевый закат';
@@ -246,18 +256,18 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         fullScreen={isMobile}
       >
         <Box sx={headerStyle}>
-          <Typography variant='h6' sx={{ fontWeight: 600, color: 'text.primary' }}>
+          <Typography variant='h6' sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}>
             Загрузка темы...
           </Typography>
         </Box>
         <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-          <Typography>Инициализация темы...</Typography>
+          <Typography sx={{ color: 'var(--theme-text-primary)' }}>Инициализация темы...</Typography>
         </DialogContent>
       </Dialog>
     );
   }
 
-  const themes: ThemeType[] = ['default', 'blur', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
+  const themes: ThemeType[] = ['default', 'blur', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
 
   return (
     <Dialog
@@ -271,7 +281,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     >
       <Box sx={headerStyle}>
         {isMobile ? (
-          <IconButton onClick={handleClose} sx={{ color: 'text.primary' }}>
+          <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
             <ArrowBackIcon />
           </IconButton>
         ) : (
@@ -280,22 +290,22 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
 
         <Typography
           variant='h6'
-          sx={{ fontWeight: 600, color: 'text.primary' }}
+          sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}
         >
           Выберите тему интерфейса
         </Typography>
 
-        <IconButton onClick={handleClose} sx={{ color: 'text.primary' }}>
+        <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
           <CloseIcon />
         </IconButton>
       </Box>
 
       <DialogContent sx={{ p: isMobile ? 2 : 3, overflow: 'auto' }}>
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2, color: 'text.primary', textAlign: 'center' }}>
+          <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)', textAlign: 'center' }}>
             Текущая тема: {getThemeName(currentTheme)}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+          <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)', textAlign: 'center' }}>
             Выберите одну из доступных тем для изменения внешнего вида интерфейса
           </Typography>
         </Box>
@@ -317,10 +327,10 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
               fullWidth
             >
               <Box sx={{ textAlign: 'left', width: '100%' }}>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                <Typography variant="body1" sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                   {getThemeName(themeType)}
                 </Typography>
-                <Typography variant="caption" sx={{ opacity: 0.8, display: 'block' }}>
+                <Typography variant="caption" sx={{ opacity: 0.8, display: 'block', color: 'var(--theme-text-secondary)' }}>
                   {getThemeDescription(themeType)}
                 </Typography>
               </Box>

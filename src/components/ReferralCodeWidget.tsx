@@ -131,7 +131,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
           style={{
             fontSize: '14px',
             fontWeight: '600',
-            color: '#FFFFFF',
+            color: 'var(--theme-text-primary)',
           }}
         >
           Реферальный код
@@ -189,9 +189,9 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             }}
           >
             {copied ? (
-              <Check size={14} color='#FFFFFF' />
+              <Check size={14} color='var(--theme-text-primary)' />
             ) : (
-              <Copy size={14} color='#FFFFFF' />
+              <Copy size={14} color='var(--theme-text-primary)' />
             )}
           </button>
         </div>

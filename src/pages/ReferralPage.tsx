@@ -155,7 +155,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
       <div
         style={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #131313 0%, #1a1a1a 100%)',
+          background: 'var(--theme-background)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -165,8 +165,8 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             width: '40px',
             height: '40px',
-            border: '3px solid rgba(255, 255, 255, 0.1)',
-            borderTop: '3px solid #D0BCFF',
+            border: '3px solid var(--theme-text-secondary)',
+            borderTop: '3px solid var(--theme-text-primary)',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
           }}
@@ -221,7 +221,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
           }}
         >
-          <ArrowLeft size={20} color='#FFFFFF' />
+          <ArrowLeft size={20} color='var(--theme-text-primary)' />
         </button>
 
         <h1
@@ -229,7 +229,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             margin: 0,
             fontSize: '28px',
             fontWeight: '600',
-            color: '#FFFFFF',
+            color: 'var(--theme-text-primary)',
             letterSpacing: '-0.5px',
           }}
         >
@@ -284,14 +284,14 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               justifyContent: 'center',
             }}
           >
-            <Users size={20} color='rgba(255, 255, 255, 0.8)' />
+            <Users size={20} color='var(--theme-text-secondary)' />
           </div>
           <div>
             <div
               style={{
                 fontSize: '24px',
                 fontWeight: '700',
-                color: '#FFFFFF',
+                color: 'var(--theme-text-primary)',
                 marginBottom: '2px',
               }}
             >
@@ -300,7 +300,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             <div
               style={{
                 fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'var(--theme-text-secondary)',
                 fontWeight: '500',
               }}
             >
@@ -332,14 +332,14 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               justifyContent: 'center',
             }}
           >
-            <Award size={20} color='rgba(255, 255, 255, 0.8)' />
+            <Award size={20} color='var(--theme-text-secondary)' />
           </div>
           <div>
             <div
               style={{
                 fontSize: '24px',
                 fontWeight: '700',
-                color: '#FFFFFF',
+                color: 'var(--theme-text-primary)',
                 marginBottom: '2px',
               }}
             >
@@ -348,7 +348,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             <div
               style={{
                 fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'var(--theme-text-secondary)',
                 fontWeight: '500',
               }}
             >
@@ -380,14 +380,14 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               justifyContent: 'center',
             }}
           >
-            <TrendingUp size={20} color='rgba(255, 255, 255, 0.8)' />
+            <TrendingUp size={20} color='var(--theme-text-secondary)' />
           </div>
           <div>
             <div
               style={{
                 fontSize: '24px',
                 fontWeight: '700',
-                color: '#FFFFFF',
+                color: 'var(--theme-text-primary)',
                 marginBottom: '2px',
               }}
             >
@@ -396,7 +396,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             <div
               style={{
                 fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'var(--theme-text-secondary)',
                 fontWeight: '500',
               }}
             >
@@ -428,14 +428,14 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               justifyContent: 'center',
             }}
           >
-            <Calendar size={20} color='rgba(255, 255, 255, 0.8)' />
+            <Calendar size={20} color='var(--theme-text-secondary)' />
           </div>
           <div>
             <div
               style={{
                 fontSize: '24px',
                 fontWeight: '700',
-                color: '#FFFFFF',
+                color: 'var(--theme-text-primary)',
                 marginBottom: '2px',
               }}
             >
@@ -444,7 +444,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             <div
               style={{
                 fontSize: '12px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'var(--theme-text-secondary)',
                 fontWeight: '500',
               }}
             >
@@ -470,13 +470,13 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             margin: '0 0 16px 0',
             fontSize: '18px',
             fontWeight: '600',
-            color: '#FFFFFF',
+            color: 'var(--theme-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
-          <UserPlus size={18} color='rgba(255, 255, 255, 0.8)' />
+          <UserPlus size={18} color='var(--theme-text-secondary)' />
           Ваш реферальный код
         </h2>
 
@@ -496,7 +496,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               style={{
                 fontSize: '16px',
                 fontWeight: '600',
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: 'var(--theme-text-secondary)',
                 fontFamily: 'monospace',
                 letterSpacing: '0.5px',
               }}
@@ -522,7 +522,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               {copied ? (
                 <Check size={14} color='#4caf50' />
               ) : (
-                <Copy size={14} color='rgba(255, 255, 255, 0.8)' />
+                <Copy size={14} color='var(--theme-text-secondary)' />
               )}
             </button>
           </div>
@@ -537,7 +537,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             <div
               style={{
                 fontSize: '14px',
-                color: 'rgba(255, 255, 255, 0.6)',
+                color: 'var(--theme-text-secondary)',
                 flex: 1,
               }}
             >
@@ -552,7 +552,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '6px',
                 padding: '8px 16px',
-                color: 'rgba(255, 255, 255, 0.9)',
+                color: 'var(--theme-text-secondary)',
                 fontSize: '13px',
                 fontWeight: '500',
                 cursor: creatingCode ? 'not-allowed' : 'pointer',
@@ -582,13 +582,13 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             margin: '0 0 16px 0',
             fontSize: '18px',
             fontWeight: '600',
-            color: '#FFFFFF',
+            color: 'var(--theme-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
-          <Gift size={18} color='rgba(255, 255, 255, 0.8)' />
+          <Gift size={18} color='var(--theme-text-secondary)' />
           Награды по уровням
         </h2>
 
@@ -654,14 +654,14 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       justifyContent: 'center',
                     }}
                   >
-                    <Star size={14} color='rgba(255, 255, 255, 0.8)' />
+                    <Star size={14} color='var(--theme-text-secondary)' />
                   </div>
                   <div>
                     <div
                       style={{
                         fontSize: '14px',
                         fontWeight: '600',
-                        color: '#FFFFFF',
+                        color: 'var(--theme-text-primary)',
                       }}
                     >
                       {levelInfo.name}
@@ -669,7 +669,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                     <div
                       style={{
                         fontSize: '11px',
-                        color: 'rgba(255, 255, 255, 0.5)',
+                        color: 'var(--theme-text-secondary)',
                       }}
                     >
                       Уровень {level}
@@ -680,7 +680,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                 <div
                   style={{
                     fontSize: '11px',
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: 'var(--theme-text-secondary)',
                     lineHeight: '1.3',
                   }}
                 >
@@ -712,13 +712,13 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             margin: '0 0 16px 0',
             fontSize: '18px',
             fontWeight: '600',
-            color: '#FFFFFF',
+            color: 'var(--theme-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
           }}
         >
-          <Users size={18} color='rgba(255, 255, 255, 0.8)' />
+          <Users size={18} color='var(--theme-text-secondary)' />
           Приглашенные друзья ({referredUsers.length})
         </h2>
 
@@ -754,7 +754,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                     justifyContent: 'center',
                     fontSize: '14px',
                     fontWeight: '600',
-                    color: 'rgba(255, 255, 255, 0.9)',
+                    color: 'var(--theme-text-secondary)',
                   }}
                 >
                   {user.photo ? (
@@ -793,7 +793,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       justifyContent: 'center',
                       fontSize: '14px',
                       fontWeight: '600',
-                      color: 'rgba(255, 255, 255, 0.9)',
+                      color: 'var(--theme-text-secondary)',
                     }}
                   >
                     {user.name.charAt(0).toUpperCase()}
@@ -805,7 +805,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                     style={{
                       fontSize: '16px',
                       fontWeight: '600',
-                      color: '#FFFFFF',
+                      color: 'var(--theme-text-primary)',
                       marginBottom: '4px',
                     }}
                   >
@@ -814,7 +814,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   <div
                     style={{
                       fontSize: '14px',
-                      color: 'rgba(255, 255, 255, 0.6)',
+                      color: 'var(--theme-text-secondary)',
                     }}
                   >
                     @{user.username}
@@ -834,7 +834,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       borderRadius: '6px',
                       padding: '4px 8px',
                       fontSize: '12px',
-                      color: 'rgba(255, 255, 255, 0.8)',
+                      color: 'var(--theme-text-secondary)',
                       fontWeight: '500',
                     }}
                   >
@@ -843,7 +843,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   <div
                     style={{
                       fontSize: '12px',
-                      color: 'rgba(255, 255, 255, 0.5)',
+                      color: 'var(--theme-text-secondary)',
                     }}
                   >
                     {user.created_at ? formatDate(user.created_at) : 'Недавно'}
@@ -857,7 +857,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             style={{
               textAlign: 'center',
               padding: '40px 20px',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: 'var(--theme-text-secondary)',
             }}
           >
             <Users size={48} style={{ marginBottom: '16px', opacity: 0.5 }} />

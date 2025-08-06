@@ -300,15 +300,15 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
             sx={{ width: 64, height: 64, mr: 2 }}
           />
           <Box>
-            <Typography sx={{ color: '#fff' }}>
+            <Typography sx={{ color: 'var(--theme-text-primary)' }}>
               {pendingConnection.username}
             </Typography>
-            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <Typography sx={{ color: 'var(--theme-text-secondary)' }}>
               {pendingConnection.name}
             </Typography>
           </Box>
         </Box>
-        <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+        <Typography sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
           Ожидаем подтверждения от пользователя
         </Typography>
         <Button
@@ -336,7 +336,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
 
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
+        <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
           Новый коннект
         </Typography>
         <Box
@@ -353,15 +353,15 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
             sx={{ width: 64, height: 64, mr: 2 }}
           />
           <Box>
-            <Typography sx={{ color: '#fff' }}>
+            <Typography sx={{ color: 'var(--theme-text-primary)' }}>
               {receivedConnection.username}
             </Typography>
-            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <Typography sx={{ color: 'var(--theme-text-secondary)' }}>
               {receivedConnection.name}
             </Typography>
           </Box>
         </Box>
-        <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}>
+        <Typography sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
           Пользователь хочет создать коннект с вами
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
@@ -403,7 +403,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
   // Рендер подключенных коннектов
   const renderConnectedView = () => (
     <Box sx={{ p: 2 }}>
-      <Typography variant='h6' sx={{ mb: 2, color: '#fff' }}>
+      <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
         Ваши коннекты
       </Typography>
       {connections
@@ -431,12 +431,12 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                   sx={{ mr: 2 }}
                 />
                 <Box>
-                  <Typography sx={{ color: '#fff', fontWeight: 500 }}>
+                  <Typography sx={{ color: 'var(--theme-text-primary)', fontWeight: 500 }}>
                     {connection.username}
                   </Typography>
                   <Typography
                     sx={{
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'var(--theme-text-secondary)',
                       fontSize: '0.875rem',
                     }}
                   >
@@ -445,7 +445,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                   {daysSince !== null && (
                     <Typography
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.5)',
+                        color: 'var(--theme-text-secondary)',
                         fontSize: '0.75rem',
                       }}
                     >
@@ -456,7 +456,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
               </Box>
               <IconButton
                 onClick={e => handleMenuOpen(e, connection.id)}
-                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                sx={{ color: 'var(--theme-text-secondary)' }}
               >
                 <MoreVertIcon />
               </IconButton>
@@ -494,13 +494,13 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
         sx={{
           mb: 2,
           '& .MuiOutlinedInput-root': {
-            color: '#fff',
+            color: 'var(--theme-text-primary)',
             '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.23)' },
             '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
             '&.Mui-focused fieldset': { borderColor: '#D0BCFF' },
           },
           '& .MuiInputLabel-root': {
-            color: 'rgba(255, 255, 255, 0.7)',
+            color: 'var(--theme-text-secondary)',
             '&.Mui-focused': {
               color: '#D0BCFF',
             },
@@ -509,7 +509,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
         InputProps={{
           startAdornment: (
             <InputAdornment position='start'>
-              <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+              <SearchIcon sx={{ color: 'var(--theme-text-secondary)' }} />
             </InputAdornment>
           ),
         }}
@@ -559,9 +559,9 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                   primary={user.username}
                   secondary={user.name}
                   sx={{
-                    color: '#fff',
+                    color: 'var(--theme-text-primary)',
                     '& .MuiListItemText-secondary': {
-                      color: 'rgba(255, 255, 255, 0.7)',
+                      color: 'var(--theme-text-secondary)',
                     },
                   }}
                 />
@@ -572,7 +572,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                   startIcon={user.is_connected ? undefined : <FavoriteIcon />}
                   sx={{
                     color: user.is_connected
-                      ? 'rgba(255, 255, 255, 0.7)'
+                      ? 'var(--theme-text-secondary)'
                       : '#D0BCFF',
                     bgcolor: user.is_connected
                       ? 'rgba(255, 255, 255, 0.1)'
@@ -592,7 +592,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
         {searchQuery && searchResults.length === 0 && (
           <Typography
             sx={{
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: 'var(--theme-text-secondary)',
               textAlign: 'center',
               py: 2,
             }}
@@ -637,12 +637,12 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant='h6' sx={{ color: 'white', fontWeight: 600 }}>
+        <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
           Коннектики
         </Typography>
         <IconButton
           onClick={onClose}
-          sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+          sx={{ color: 'var(--theme-text-secondary)' }}
         >
           <CloseIcon />
         </IconButton>

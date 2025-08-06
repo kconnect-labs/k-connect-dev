@@ -1143,7 +1143,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 >
                   {t('balance.transfer_menu.success.details.amount')}
                 </Typography>
-                <Typography variant='body1' sx={{ fontWeight: 'bold', color: '#ffffff', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
+                <Typography variant='body1' sx={{ fontWeight: 'bold', color: 'var(--theme-text-primary)', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
                   {transferReceipt?.amount} {t('balance.transfer_menu.points_suffix')}
                 </Typography>
               </Box>
@@ -1164,7 +1164,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 >
                   {t('balance.transfer_menu.success.details.recipient')}
                 </Typography>
-                <Typography variant='body1' sx={{ color: '#ffffff', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
+                <Typography variant='body1' sx={{ color: 'var(--theme-text-primary)', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
                   {transferReceipt?.recipient}
                 </Typography>
               </Box>
@@ -1193,7 +1193,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                     >
                       {t('balance.transfer_menu.success.details.balance.before')}
                     </Typography>
-                                    <Typography variant='h6' sx={{ color: '#ffffff', fontSize: { xs: '1.1rem', sm: '1.25rem' }, wordBreak: 'break-word' }}>
+                                    <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontSize: { xs: '1.1rem', sm: '1.25rem' }, wordBreak: 'break-word' }}>
                   {transferReceipt?.previousBalance}
                 </Typography>
                   </Box>

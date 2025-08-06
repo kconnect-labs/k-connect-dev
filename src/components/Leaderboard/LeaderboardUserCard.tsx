@@ -1,14 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import VerificationBadge from '../../UIKIT/VerificationBadge';
 import { MaxIcon } from '../../components/icons/CustomIcons';
+import { LeaderboardUserCardProps } from '../../types/leaderboard';
 import './LeaderboardUserCard.css';
 
 const API_URL = 'https://k-connect.ru';
 
 // Функция для проверки является ли цвет светлым
-const isLightColor = color => {
+const isLightColor = (color: string): boolean => {
   if (!color || !color.startsWith('#')) {
     return false;
   }
@@ -20,8 +21,20 @@ const isLightColor = color => {
   return brightness > 128;
 };
 
-// Функция для парсинга настроек из строки пути
-const parseItemSettings = itemPath => {
+// Функция для сокращения чисел
+const formatCompactNumber = (number: number): string => {
+  if (number < 1000) {
+    return number.toString();
+  }
+  const units = ['', 'K', 'M', 'B'];
+  const order = Math.floor(Math.log10(Math.abs(number)) / 3);
+  const unitName = units[order];
+  const value = (number / Math.pow(1000, order)).toFixed(1);
+  return value.replace('.0', '') + unitName;
+};
+
+// Функция для парсинга настроек декорации
+const parseItemSettings = (itemPath: string): { path: string; styles: React.CSSProperties } => {
   if (!itemPath || !itemPath.includes(';')) {
     return {
       path: itemPath,
@@ -32,7 +45,7 @@ const parseItemSettings = itemPath => {
   const [path, ...stylesParts] = itemPath.split(';');
   const stylesString = stylesParts.join(';');
 
-  const styles = {};
+  const styles: any = {};
   stylesString.split(';').forEach(style => {
     const [property, value] = style.split(':').map(s => s.trim());
     if (property && value) {
@@ -49,28 +62,21 @@ const parseItemSettings = itemPath => {
   };
 };
 
-// Функция для сокращения чисел
-const formatCompactNumber = number => {
-  if (number < 1000) {
-    return number.toString();
-  }
-  const units = ['', 'K', 'M', 'B'];
-  const order = Math.floor(Math.log10(Math.abs(number)) / 3);
-  const unitName = units[order];
-  const value = (number / Math.pow(1000, order)).toFixed(1);
-  return value.replace('.0', '') + unitName;
-};
-
-const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
+const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({ 
+  user, 
+  position, 
+  index, 
+  onCardClick 
+}) => {
   // Определяем тип фона
   const isGradient = user.decoration?.background?.includes('linear-gradient');
   const isImage = user.decoration?.background?.includes('/');
   const isHexColor = user.decoration?.background?.startsWith('#');
   const isLightBackground =
-    isHexColor && isLightColor(user.decoration?.background);
+    isHexColor && isLightColor(user.decoration?.background || '');
 
   // Определяем стили для декорации
-  let decorationStyles = {};
+  let decorationStyles: React.CSSProperties = {};
   let hasBottom0 = false;
   if (user.decoration?.item_path && user.decoration.item_path.trim() !== '') {
     const { styles } = parseItemSettings(user.decoration.item_path);
@@ -79,7 +85,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   }
 
   // Стили для карточки
-  const cardStyle = {
+  const cardStyle: React.CSSProperties = {
     background: user.decoration?.background
       ? isImage
         ? `url(${API_URL}/${user.decoration.background})`
@@ -92,7 +98,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   };
 
   // Стили для декорации
-  const decorationStyle = {
+  const decorationStyle: React.CSSProperties = {
     position: 'absolute',
     right: 0,
     height: 'max-content',
@@ -105,7 +111,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   };
 
   // Стили для очков
-  const scoreStyle = {
+  const scoreStyle: React.CSSProperties = {
     color:
       position <= 3
         ? '#fff'
@@ -115,7 +121,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   };
 
   // Стили для ранга
-  const getRankBackground = () => {
+  const getRankBackground = (): string => {
     if (position === 1)
       return 'linear-gradient(90deg, #FFFCA8 -0.05%, #FDB836 31.2%, #FDC966 75.92%, #F1DC83 100.02%)';
     if (position === 2)
@@ -126,14 +132,14 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   };
 
   // Стили для аватара
-  const getAvatarBorder = () => {
+  const getAvatarBorder = (): string => {
     if (position === 1) return '3px solid #FDB836';
     if (position === 2) return '3px solid #919191';
     if (position === 3) return '3px solid #7A5E50';
     return '2px solid var(--border-color)';
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -141,9 +147,15 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       transition: {
         delay: index * 0.1,
         duration: 0.5,
-        ease: 'easeOut',
+        ease: [0.4, 0, 0.2, 1],
       },
     },
+  };
+
+  const handleCardClick = () => {
+    if (onCardClick) {
+      onCardClick(user);
+    }
   };
 
   return (
@@ -153,7 +165,7 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
       variants={cardVariants}
       initial='hidden'
       animate='visible'
-      onClick={onCardClick}
+      onClick={handleCardClick}
     >
       {/* Декорация */}
       {user.decoration?.item_path && user.decoration.item_path.trim() !== '' && (
@@ -194,14 +206,19 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
 
             {/* Верификация */}
             {user.verification && user.verification.status && (
-              <VerificationBadge status={user.verification.status} />
+              <VerificationBadge status={user.verification.status} {...({} as any)} />
             )}
 
             {/* MAX подписка */}
             {(user.subscription?.type === 'max' || 
               user.subscription_type === 'max' ||
               user.subscription?.subscription_type === 'max') && (
-              <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
+              <MaxIcon 
+                size={24} 
+                color="#FF4D50" 
+                style={{ margin: '0 2.5px' }} 
+                className="max-icon"
+              />
             )}
 
             {/* Достижение */}
@@ -221,4 +238,4 @@ const LeaderboardUserCard = ({ user, position, index, onCardClick }) => {
   );
 };
 
-export default LeaderboardUserCard;
+export default LeaderboardUserCard; 

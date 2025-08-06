@@ -195,13 +195,9 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
       <Typography
         variant='h6'
         sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
+          mb: 2,
           fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
+          color: 'var(--theme-text-primary)',
         }}
       >
         <LinkIcon />
@@ -288,11 +284,8 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
         </ListItem>
       </List>
 
-      <Typography
-        variant='body2'
-        sx={{ color: 'text.secondary', mt: 2, fontSize: '0.875rem' }}
-      >
-        Подключите внешние аккаунты для расширенного функционала
+      <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mt: 2, fontSize: '0.875rem' }}>
+        Подключенные аккаунты позволяют вам входить в систему через сторонние сервисы
       </Typography>
     </Box>
   );

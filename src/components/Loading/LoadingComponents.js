@@ -11,7 +11,7 @@ export const SuspenseFallback = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: 'var(--theme-background-full)',
       }}
     >
       <CircularProgress

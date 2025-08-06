@@ -62,7 +62,7 @@ const LoadingStats = () => {
         bottom: 16,
         right: 16,
         background: 'rgba(0, 0, 0, 0.8)',
-        color: 'white',
+        color: 'var(--theme-text-primary)',
         padding: 1,
         borderRadius: 1,
         fontSize: '12px',
@@ -267,10 +267,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       case 'appearance':
         return (
           <Box sx={{ p: 2 }}>
-            <Typography variant='h6' sx={{ mb: 2, color: 'text.primary' }}>
+            <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
               Настройки внешнего вида
             </Typography>
-            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
               Раздел внешнего вида находится в разработке
             </Typography>
           </Box>
@@ -332,7 +332,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     >
       <Box sx={headerStyle}>
         {isMobile ? (
-          <IconButton onClick={handleClose} sx={{ color: 'text.primary' }}>
+          <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
             <ArrowBackIcon />
           </IconButton>
         ) : (
@@ -341,12 +341,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
         <Typography
           variant='h6'
-          sx={{ fontWeight: 600, color: 'text.primary' }}
+          sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}
         >
           {getSectionTitle()}
         </Typography>
 
-        <IconButton onClick={handleClose} sx={{ color: 'text.primary' }}>
+        <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
           <CloseIcon />
         </IconButton>
       </Box>

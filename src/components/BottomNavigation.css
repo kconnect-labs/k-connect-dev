@@ -8,7 +8,7 @@
   display: block;
   z-index: 1000;
   border-top: 1px solid rgba(43, 43, 43, 0.606);
-  background: var(--theme-background);
+  background: var(--theme-background-full);
 }
 
 @media (min-width: 700px) {

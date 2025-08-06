@@ -843,7 +843,7 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
   const handleCopyLink = useCallback(async () => {
     if (!trackId) return;
 
-    const url = `https://k-connect.ru/music/track/${trackId}`;
+            const url = `https://k-connect.ru/music/${trackId}`;
 
     try {
       await navigator.clipboard.writeText(url);

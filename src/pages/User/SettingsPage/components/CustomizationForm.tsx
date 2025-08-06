@@ -436,7 +436,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                     width: 16,
                     height: 16,
                     borderRadius: '50%',
-                    bgcolor: 'background.paper',
+                    bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -529,7 +529,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   key={decoration.id}
                   sx={{
                     p: 2,
-                    backgroundColor: 'background.paper',
+                    backgroundColor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     borderRadius: 2,
                     border: item.is_active
                       ? '2px solid primary.main'

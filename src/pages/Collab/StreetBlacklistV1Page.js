@@ -1091,7 +1091,7 @@ const StreetBlacklistV1Page = () => {
             }
             sx={{ mb: 2, mt: 1 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 },
+              sx: { color: 'var(--theme-text-primary)', borderRadius: 1.5 },
             }}
             InputLabelProps={{
               sx: { color: '#ffffffb0' },
@@ -1106,7 +1106,7 @@ const StreetBlacklistV1Page = () => {
             }
             sx={{ mb: 2 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 },
+              sx: { color: 'var(--theme-text-primary)', borderRadius: 1.5 },
             }}
             InputLabelProps={{
               sx: { color: '#ffffffb0' },
@@ -1204,7 +1204,7 @@ const StreetBlacklistV1Page = () => {
             }
             sx={{ mb: 2, mt: 1 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 },
+              sx: { color: 'var(--theme-text-primary)', borderRadius: 1.5 },
             }}
             InputLabelProps={{
               sx: { color: '#ffffffb0' },
@@ -1219,7 +1219,7 @@ const StreetBlacklistV1Page = () => {
             }
             sx={{ mb: 2 }}
             InputProps={{
-              sx: { color: '#ffffff', borderRadius: 1.5 },
+              sx: { color: 'var(--theme-text-primary)', borderRadius: 1.5 },
             }}
             InputLabelProps={{
               sx: { color: '#ffffffb0' },

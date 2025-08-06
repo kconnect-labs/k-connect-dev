@@ -399,7 +399,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          background: alpha(theme.palette.background.paper, 0.5),
+          background: 'rgba(255, 255, 255, 0.05)',
           borderRadius: 2,
           padding: 2,
           marginBottom: 2,
@@ -683,8 +683,8 @@ const StatusForm: React.FC<StatusFormProps> = ({
                   maxWidth='sm'
                   PaperProps={{
                     sx: {
-                      bgcolor: theme.palette.background.paper,
-                      color: theme.palette.text.primary,
+                      bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                      color: 'var(--theme-text-primary)',
                       borderRadius: 2,
                       boxShadow: theme.shadows[24],
                       '@media (max-width: 600px)': {

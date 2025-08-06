@@ -22,7 +22,7 @@ const ColorsSection: React.FC = () => {
       { name: 'Gradient End', hex: '#D0BCFF', description: 'Конец градиента' },
     ],
     backgrounds: [
-      { name: 'White Background', hex: '#FFFFFF', description: 'Светлый фон' },
+      { name: 'White Background', hex: 'var(--theme-text-primary)', description: 'Светлый фон' },
       { name: 'Dark Background', hex: '#1C1C1C', description: 'Темный фон' },
       { name: 'Card Background', hex: '#171717', description: 'Фон карточек' },
     ],

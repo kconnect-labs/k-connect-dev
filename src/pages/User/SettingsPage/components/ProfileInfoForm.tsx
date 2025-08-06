@@ -294,10 +294,9 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       <Typography
         variant='h6'
         sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
+          mb: 2,
           fontWeight: 600,
+          color: 'var(--theme-text-primary)',
         }}
       >
         Основная информация
@@ -367,7 +366,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
                 <Typography variant='subtitle1' fontWeight={600}>
                   Новый вид профиля
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                   Изменить внешний вид профиля
                 </Typography>
               </Box>
@@ -398,7 +397,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
               <Typography variant='subtitle1' fontWeight={600}>
                 Скрыть купленные юзернеймы
               </Typography>
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 Скрыть список купленных юзернеймов от других пользователей
               </Typography>
             </Box>
@@ -428,7 +427,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
               <Typography variant='subtitle1' fontWeight={600}>
                 Полная приватность
               </Typography>
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 Скрыть посты, друзей и инвентарь от всех, кроме взаимных друзей
               </Typography>
             </Box>

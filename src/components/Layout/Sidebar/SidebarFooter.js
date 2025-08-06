@@ -36,10 +36,7 @@ const FooterContainer = styled(Box)(({ theme, themecolor }) => ({
 
 // Enhanced typography with better styling
 const FooterTypography = styled(Typography)(({ theme }) => ({
-  color:
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.7)'
-      : 'rgba(0, 0, 0, 0.7)',
+  color: 'var(--theme-text-secondary)',
   fontSize: {
     xs: '0.65rem',
     sm: '0.7rem',
@@ -49,10 +46,7 @@ const FooterTypography = styled(Typography)(({ theme }) => ({
   letterSpacing: '0.3px',
   transition: 'color 0.2s ease-in-out',
   '&:hover': {
-    color:
-      theme.palette.mode === 'dark'
-        ? 'rgba(255, 255, 255, 0.9)'
-        : 'rgba(0, 0, 0, 0.9)',
+    color: 'var(--theme-text-primary)',
   },
 }));
 
@@ -78,10 +72,7 @@ const VersionChip = styled(Chip)(({ theme, themecolor }) => ({
 // Enhanced title typography
 const FooterTitle = styled(Typography)(({ theme, themecolor }) => ({
   fontWeight: 600,
-  color:
-    theme.palette.mode === 'dark'
-      ? 'rgba(255, 255, 255, 0.95)'
-      : 'rgba(0, 0, 0, 0.95)',
+  color: 'var(--theme-text-primary)',
   marginBottom: theme.spacing(1),
   letterSpacing: '0.5px',
   fontSize: {

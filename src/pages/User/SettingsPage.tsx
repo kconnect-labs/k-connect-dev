@@ -136,7 +136,7 @@ const SettingsPage = () => {
           padding: { xs: 1, sm: 2 },
         }}
       >
-        <Typography variant='h6' sx={{ color: 'white' }}>
+        <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)' }}>
           Загрузка...
         </Typography>
       </Box>
@@ -400,7 +400,7 @@ const SettingsPage = () => {
           variant='h6'
           className="theme-aware"
           sx={{
-            color: 'white',
+            color: 'var(--theme-text-primary)',
             mb: 1,
             mt: 1,
             padding: '8px 12px',
@@ -438,7 +438,7 @@ const SettingsPage = () => {
                     padding: '12px 16px',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     borderRadius: 1,
-                    color: 'white',
+                    color: 'var(--theme-text-primary)',
                     textTransform: 'none',
                     transition: 'all 0.2s ease',
                     '&:hover': {
@@ -473,6 +473,7 @@ const SettingsPage = () => {
                         fontSize: '1rem',
                         fontWeight: 600,
                         marginBottom: 0.5,
+                        color: 'var(--theme-text-primary)',
                       }}
                     >
                       {section.title}
@@ -480,7 +481,7 @@ const SettingsPage = () => {
                     <Typography
                       variant='body2'
                       sx={{
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: 'var(--theme-text-secondary)',
                         fontSize: '0.875rem',
                       }}
                     >
@@ -501,7 +502,7 @@ const SettingsPage = () => {
                     }}
                   >
                     <Edit
-                      sx={{ fontSize: 16, color: 'rgba(255, 255, 255, 0.7)' }}
+                      sx={{ fontSize: 16, color: 'var(--theme-text-secondary)' }}
                     />
                   </Box>
                 </Button>

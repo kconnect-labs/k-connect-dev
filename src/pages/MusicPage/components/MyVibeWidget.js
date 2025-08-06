@@ -94,13 +94,13 @@ const CurrentTrackInfo = styled(Box)({
 });
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.2),
-      backdropFilter: 'var(--theme-backdrop-filter, blur(12px))',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(12px))',
   border: `1px solid ${alpha(theme.palette.common.white, 0.2)}`,
   width: 72,
   height: 72,
   '&:hover': {
-    backgroundColor: alpha(theme.palette.background.paper, 0.3),
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     transform: 'scale(1.05)',
   },
   '& .MuiSvgIcon-root': {

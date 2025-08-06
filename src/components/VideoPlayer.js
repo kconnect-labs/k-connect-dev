@@ -91,7 +91,7 @@ const VideoPlayer = ({ videoUrl, poster, options = {} }) => {
         '--plyr-range-thumb-shadow',
         `0 1px 1px rgba(0, 0, 0, .15), 0 0 0 1px rgba(${parseInt(accentColor.slice(1, 3), 16)}, ${parseInt(accentColor.slice(3, 5), 16)}, ${parseInt(accentColor.slice(5, 7), 16)}, .2)`
       );
-      root.style.setProperty('--plyr-video-control-color', '#ffffff');
+      root.style.setProperty('--plyr-video-control-color', 'var(--theme-text-primary)');
       root.style.setProperty('--plyr-video-control-color-hover', accentColor);
     };
 

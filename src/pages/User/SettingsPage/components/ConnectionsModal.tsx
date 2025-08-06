@@ -273,20 +273,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
         <DialogTitle
           sx={{
             borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            color: 'var(--theme-text-primary)',
           }}
         >
-          <Typography variant='h6' sx={{ color: 'white', fontWeight: 600 }}>
-            Связанные аккаунты
-          </Typography>
-          <IconButton
-            onClick={onClose}
-            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
-          >
-            <CloseIcon />
-          </IconButton>
+          Мои коннекты
         </DialogTitle>
 
         <DialogContent sx={{ p: 3 }}>
@@ -309,9 +299,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               </ListItemIcon>
               <ListItemText
                 primary='Telegram'
-                primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
+                primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
                 secondary={telegramConnected ? 'Подключен' : 'Не подключен'}
-                secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                secondaryTypographyProps={{ color: 'var(--theme-text-secondary)' }}
               />
               <Button
                 variant='contained'
@@ -359,7 +349,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               </ListItemIcon>
               <ListItemText
                 primary='Element'
-                primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
+                primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
                 secondary={
                   loadingElementStatus
                     ? 'Проверка статуса...'
@@ -367,7 +357,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                       ? 'Подключен'
                       : 'Не подключен'
                 }
-                secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                secondaryTypographyProps={{ color: 'var(--theme-text-secondary)' }}
               />
               {loadingElementStatus ? (
                 <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
@@ -430,10 +420,10 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                 </ListItemIcon>
                 <ListItemText
                   primary='Telegram-уведомления'
-                  primaryTypographyProps={{ fontWeight: 500, color: 'white' }}
+                  primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
                   secondary='Получать уведомления в Telegram'
                   secondaryTypographyProps={{
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: 'var(--theme-text-secondary)',
                   }}
                 />
                 {savingNotificationPrefs ? (
@@ -469,7 +459,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
           {elementToken && (
             <Alert
               severity='info'
-              sx={{ mt: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', color: 'white' }}
+              sx={{ mt: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', color: 'var(--theme-text-primary)' }}
             >
               <Typography variant='body2'>
                 Токен для подключения: <strong>{elementToken}</strong>
@@ -502,7 +492,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
         <DialogTitle
           sx={{
             borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            color: 'white',
+            color: 'var(--theme-text-primary)',
           }}
         >
           Подключение Telegram
@@ -510,7 +500,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
         <DialogContent sx={{ p: 3 }}>
           <Typography
             variant='body2'
-            sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 2 }}
+            sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}
           >
             Введите ваш Telegram ID для подключения аккаунта
           </Typography>
@@ -523,13 +513,13 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
             helperText={telegramIdError}
             sx={{
               '& .MuiOutlinedInput-root': {
-                color: 'white',
+                color: 'var(--theme-text-primary)',
                 '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.23)' },
                 '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
                 '&.Mui-focused fieldset': { borderColor: '#D0BCFF' },
               },
               '& .MuiInputLabel-root': {
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'var(--theme-text-secondary)',
                 '&.Mui-focused': {
                   color: '#D0BCFF',
                 },
@@ -543,7 +533,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
         <DialogActions sx={{ p: 3, pt: 0 }}>
           <Button
             onClick={() => setTelegramDialogOpen(false)}
-            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+            sx={{ color: 'var(--theme-text-secondary)' }}
           >
             Отмена
           </Button>

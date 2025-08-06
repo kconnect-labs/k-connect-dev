@@ -75,7 +75,7 @@ const TextInputArea = React.memo(
       style={{
         border: 'none',
         backgroundColor: 'transparent',
-        color: '#ffffff',
+        color: 'var(--theme-text-primary)',
         resize: 'none',
         outline: 'none',
         margin: '0',

@@ -2,7 +2,7 @@
 export const getThemeColors = mode => {
   return {
     backgroundColor: 'none',
-    textColor: '#FFFFFF',
+    textColor: 'var(--theme-text-primary)',
   };
 };
 

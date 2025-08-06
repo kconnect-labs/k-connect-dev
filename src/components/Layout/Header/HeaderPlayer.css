@@ -57,7 +57,7 @@
 
 .track-artist {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--theme-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

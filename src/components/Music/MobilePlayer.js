@@ -323,7 +323,7 @@ const MobilePlayer = memo(({ isMobile }) => {
       e.stopPropagation();
       if (!currentTrack) return;
 
-      const trackLink = `${window.location.origin}/music/track/${currentTrack.id}`;
+              const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
 
       copyToClipboard(trackLink);
     },

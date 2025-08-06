@@ -11,38 +11,91 @@ import {
   useMediaQuery,
   Card,
   CardContent,
-  IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthContext } from '../../context/AuthContext';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import InfoIcon from '@mui/icons-material/Info';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import DateRangeIcon from '@mui/icons-material/DateRange';
 import axios from 'axios';
 import { LeaderboardUserCard } from '../../components/Leaderboard';
+import { 
+  LeaderboardUser, 
+  LeaderboardResponse, 
+  TimePeriod, 
+  DateRange 
+} from '../../types/leaderboard';
 
 const API_URL = '';
 
 const LeaderboardContainer = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(4),
+  paddingTop: theme.spacing(2),
   marginBottom: theme.spacing(8),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  paddingLeft: '0 !important',
+  paddingRight: '0 !important',
+
   [theme.breakpoints.down('sm')]: {
-    marginTop: theme.spacing(2),
-    paddingLeft: 0,
-    paddingRight: 0,
+    alignItems: 'center',
   },
 }));
 
 const LeaderboardHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  textAlign: 'center',
+  alignItems: 'flex-start',
+  textAlign: 'left',
+  [theme.breakpoints.down('sm')]: {
+    alignItems: 'center',
+    textAlign: 'center',
+  },
+}));
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  background: 'var(--theme-background)',
+  backdropFilter: 'var(--theme-backdrop-filter)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
+  overflow: 'hidden',
+  marginBottom: theme.spacing(1),
+  width: '100%',
+  maxWidth: 750,
+  minWidth: 320,
+  position: 'relative',
+  zIndex: 2,
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  background: 'var(--theme-background)',
+  backdropFilter: 'var(--theme-backdrop-filter)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  color: 'white',
+  position: 'relative',
+  overflow: 'hidden',
+  boxShadow: 'none',
+  marginTop: theme.spacing(4),
+  width: '100%',
+  maxWidth: 750,
+  minWidth: 320,
+  zIndex: 2,
+}));
+
+const LeaderboardList = styled('div')(({ theme }) => ({
+  width: '100%',
+  padding: 0,
+  maxWidth: 750,
+  minWidth: 320,
+  margin: 0,
+  [theme.breakpoints.down('sm')]: {
+    margin: '0 auto',
+  },
 }));
 
 // Функция для сокращения чисел
-const formatCompactNumber = number => {
+const formatCompactNumber = (number: number): string => {
   if (number < 1000) {
     return number.toString();
   }
@@ -53,23 +106,23 @@ const formatCompactNumber = number => {
   return value.replace('.0', '') + unitName;
 };
 
-const LeaderboardPage = () => {
-  const [leaderboardData, setLeaderboardData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [timePeriod, setTimePeriod] = useState('week');
-  const [userPosition, setUserPosition] = useState(null);
-  const [userScore, setUserScore] = useState(null);
-  const [dateRange, setDateRange] = useState(null);
+const LeaderboardPage: React.FC = () => {
+  const [leaderboardData, setLeaderboardData] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>('week');
+  const [userPosition, setUserPosition] = useState<number | null>(null);
+  const [userScore, setUserScore] = useState<number | null>(null);
+  const [dateRange, setDateRange] = useState<DateRange | null>(null);
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
+    const fetchLeaderboard = async (): Promise<void> => {
       setLoading(true);
       try {
-        const response = await axios.get(
+        const response = await axios.get<LeaderboardResponse>(
           `${API_URL}/api/leaderboard?period=${timePeriod}`
         );
         if (response.data.success) {
@@ -86,7 +139,8 @@ const LeaderboardPage = () => {
           setError('Не удалось загрузить данные лидерборда');
         }
       } catch (err) {
-        setError(`Ошибка: ${err.message}`);
+        const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка';
+        setError(`Ошибка: ${errorMessage}`);
       } finally {
         setLoading(false);
       }
@@ -95,18 +149,20 @@ const LeaderboardPage = () => {
     fetchLeaderboard();
   }, [timePeriod]);
 
-  const handleTimePeriodChange = (event, newValue) => {
+  const handleTimePeriodChange = (event: React.SyntheticEvent, newValue: TimePeriod): void => {
     setTimePeriod(newValue);
   };
 
-  const handleCardClick = user => {
+  const handleCardClick = (user: LeaderboardUser): void => {
     // Обработка клика по карточке пользователя
+    console.log('Clicked on user:', user.name);
   };
 
   return (
     <LeaderboardContainer maxWidth='md'>
       <LeaderboardHeader>
         <Box
+          className="theme-aware"
           sx={{
             width: '100%',
             maxWidth: 750,
@@ -114,45 +170,12 @@ const LeaderboardPage = () => {
             mx: 'auto',
             mb: 1,
             p: { xs: 2, md: 3 },
-            background: '#1c1c1c',
             borderRadius: '16px',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             color: 'white',
             textAlign: 'left',
             position: 'relative',
             overflow: 'hidden',
-            '::before': {
-              content: '""',
-              position: 'absolute',
-              left: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(-12deg)',
-              width: 180,
-              height: 220,
-              background:
-                'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            '::after': {
-              content: '""',
-              position: 'absolute',
-              right: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(12deg)',
-              width: 180,
-              height: 220,
-              background:
-                'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
             zIndex: 2,
           }}
         >
@@ -170,69 +193,15 @@ const LeaderboardPage = () => {
           </Typography>
         </Box>
 
-        <Paper
-          sx={{
-            borderRadius: '16px',
-            backgroundColor: theme =>
-              theme.palette.mode === 'dark'
-                ? '#1E1E1E'
-                : theme.palette.background.paper,
-            backgroundImage: 'unset',
-            boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-            overflow: 'hidden',
-            mb: 1,
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            width: '100%',
-            maxWidth: 750,
-            minWidth: 320,
-            mx: 'auto',
-            position: 'relative',
-            '::before': {
-              content: '""',
-              position: 'absolute',
-              left: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(-12deg)',
-              width: 180,
-              height: 220,
-              background:
-                'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            '::after': {
-              content: '""',
-              position: 'absolute',
-              right: -80,
-              top: '50%',
-              transform: 'translateY(-50%) rotate(12deg)',
-              width: 180,
-              height: 220,
-              background:
-                'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-              opacity: 0.25,
-              filter: 'blur(18px)',
-              borderRadius: '50%',
-              zIndex: 1,
-              pointerEvents: 'none',
-            },
-            zIndex: 2,
-          }}
-        >
+        <StyledPaper>
           <Tabs
             value={timePeriod}
             onChange={handleTimePeriodChange}
             variant='fullWidth'
             sx={{
               '& .MuiTab-root': {
-                color: theme =>
-                  theme.palette.mode === 'dark'
-                    ? 'rgba(255, 255, 255, 0.7)'
-                    : 'rgba(0, 0, 0, 0.7)',
-                backgroundColor: '#1c1c1c',
+                color: 'rgba(255, 255, 255, 0.7)',
+                backgroundColor: 'transparent',
                 fontWeight: 'bold',
                 fontSize: '1rem',
                 textTransform: 'none',
@@ -240,8 +209,8 @@ const LeaderboardPage = () => {
                 minHeight: 48,
                 transition: 'color 0.2s',
                 '&.Mui-selected': {
-                  color: theme => theme.palette.primary.main,
-                  backgroundColor: '#1c1c1c',
+                  color: '#D0BCFF',
+                  backgroundColor: 'transparent',
                 },
               },
               '& .MuiTabs-indicator': {
@@ -257,13 +226,13 @@ const LeaderboardPage = () => {
             <Tab label='Месяц' value='month' />
             <Tab label='Всё время' value='all_time' />
           </Tabs>
-        </Paper>
+        </StyledPaper>
 
         {user && userPosition && (
           <Box
+            className="theme-aware"
             sx={{
               borderRadius: '16px',
-              background: '#1c1c1c',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               color: '#D0BCFF',
               fontWeight: 700,
@@ -279,38 +248,6 @@ const LeaderboardPage = () => {
               boxShadow: 'none',
               position: 'relative',
               overflow: 'hidden',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                left: -80,
-                top: '50%',
-                transform: 'translateY(-50%) rotate(-12deg)',
-                width: 180,
-                height: 220,
-                background:
-                  'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-                opacity: 0.25,
-                filter: 'blur(18px)',
-                borderRadius: '50%',
-                zIndex: 1,
-                pointerEvents: 'none',
-              },
-              '::after': {
-                content: '""',
-                position: 'absolute',
-                right: -80,
-                top: '50%',
-                transform: 'translateY(-50%) rotate(12deg)',
-                width: 180,
-                height: 220,
-                background:
-                  'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-                opacity: 0.25,
-                filter: 'blur(18px)',
-                borderRadius: '50%',
-                zIndex: 1,
-                pointerEvents: 'none',
-              },
               zIndex: 2,
             }}
           >
@@ -329,7 +266,7 @@ const LeaderboardPage = () => {
               <Typography
                 sx={{ color: '#D0BCFF', fontWeight: 700, fontSize: '1.1rem' }}
               >
-                {formatCompactNumber(userScore)} очков
+                {userScore ? formatCompactNumber(userScore) : 0} очков
               </Typography>
             </Box>
           </Box>
@@ -352,73 +289,20 @@ const LeaderboardPage = () => {
           <Typography>{error}</Typography>
         </Paper>
       ) : (
-        <div
-          className='leaderboard-list'
-          style={{
-            width: '100%',
-            padding: 0,
-            maxWidth: 750,
-            minWidth: 320,
-            margin: '0 auto',
-          }}
-        >
+        <LeaderboardList>
           {leaderboardData.map((user, index) => (
             <LeaderboardUserCard
               key={user.id}
               user={user}
               position={index + 1}
               index={index}
-              onCardClick={() => handleCardClick(user)}
+              onCardClick={handleCardClick}
             />
           ))}
-        </div>
+        </LeaderboardList>
       )}
 
-      <Card
-        sx={{
-          background: '#1c1c1c',
-          borderRadius: '16px',
-          border: '1px solid rgba(255,255,255,0.1)',
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: 'none',
-          mt: 4,
-          '::before': {
-            content: '""',
-            position: 'absolute',
-            left: -80,
-            top: '50%',
-            transform: 'translateY(-50%) rotate(-12deg)',
-            width: 180,
-            height: 220,
-            background:
-              'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-            opacity: 0.25,
-            filter: 'blur(18px)',
-            borderRadius: '50%',
-            zIndex: 1,
-            pointerEvents: 'none',
-          },
-          '::after': {
-            content: '""',
-            position: 'absolute',
-            right: -80,
-            top: '50%',
-            transform: 'translateY(-50%) rotate(12deg)',
-            width: 180,
-            height: 220,
-            background:
-              'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
-            opacity: 0.25,
-            filter: 'blur(18px)',
-            borderRadius: '50%',
-            zIndex: 1,
-            pointerEvents: 'none',
-          },
-          zIndex: 2,
-        }}
-      >
+      <StyledCard>
         <CardContent sx={{ position: 'relative', zIndex: 2 }}>
           <Box display='flex' alignItems='center' mb={2}>
             <InfoIcon color='primary' sx={{ mr: 1 }} />
@@ -494,9 +378,9 @@ const LeaderboardPage = () => {
             </Typography>
           </Box>
         </CardContent>
-      </Card>
+      </StyledCard>
     </LeaderboardContainer>
   );
 };
 
-export default LeaderboardPage;
+export default LeaderboardPage; 

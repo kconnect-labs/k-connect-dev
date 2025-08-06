@@ -2099,7 +2099,7 @@ const ModeratorPage = () => {
   };
 
   const copyTrackLink = track => {
-    const trackLink = `${window.location.origin}/music/track/${track.id}`;
+            const trackLink = `${window.location.origin}/music/${track.id}`;
     navigator.clipboard
       .writeText(trackLink)
       .then(() => {
@@ -2115,7 +2115,7 @@ const ModeratorPage = () => {
   };
 
   const openTrack = track => {
-    navigate(`/music/track/${track.id}`);
+            navigate(`/music/${track.id}`);
   };
 
   const renderTracks = () => {

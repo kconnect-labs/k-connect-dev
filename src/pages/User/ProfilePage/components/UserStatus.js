@@ -19,7 +19,7 @@ const UserStatus = ({ statusText, statusColor }) => {
 
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
-    return brightness > 128 ? '#000000' : '#FFFFFF';
+    return brightness > 128 ? '#000000' : 'var(--theme-text-primary)';
   };
 
   const createGradientColor = hexColor => {
@@ -204,7 +204,7 @@ const UserStatus = ({ statusText, statusColor }) => {
                         0 1px 1px rgba(0,0,0,0.1),
                         0 4px 10px rgba(0,0,0,0.15)`,
             backdropFilter: 'blur(4px)',
-            border: `1px solid ${statusColor === '#ffffff' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)'}`,
+            border: `1px solid ${statusColor === 'var(--theme-text-primary)' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)'}`,
             display: 'flex',
             alignItems: 'center',
             gap: '6px',

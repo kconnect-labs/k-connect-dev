@@ -99,7 +99,7 @@ const BalanceAmount = styled(Typography)(({ theme }) => ({
   fontWeight: '700',
   marginTop: theme.spacing(0.5),
   marginBottom: theme.spacing(0.5),
-  color: '#ffffff',
+  color: 'var(--theme-text-primary)',
   lineHeight: 1.2,
 }));
 

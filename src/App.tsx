@@ -72,8 +72,8 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
   }
 
   // Сохраняем deeplink trackId в localStorage перед редиректом на логин
-  if (location.pathname.startsWith('/music/track/')) {
-    const trackId = location.pathname.split('/music/track/')[1];
+      if (location.pathname.startsWith('/music/')) {
+      const trackId = location.pathname.split('/music/')[1];
     if (trackId) {
       console.log('Saving deeplink trackId before login redirect:', trackId);
       localStorage.setItem('deeplinkTrackId', trackId);
@@ -170,7 +170,7 @@ function App() {
     // Настройки для темной темы
     const getThemeColors = (mode: string) => {
       return {
-        backgroundColor: '#151515',
+        backgroundColor: 'var(--theme-background-full)',
         textColor: '#FFFFFF',
       };
     };
@@ -341,12 +341,12 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: '#151515',
-          paper: '#151515',
+          default: 'var(--theme-background-full) ',
+          paper: 'var(--theme-background-full)',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
-          secondary: 'rgba(255, 255, 255, 0.7)',
+          secondary: 'var(--theme-text-secondary)',
         },
       },
       typography: {

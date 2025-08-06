@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
+export type ThemeType = 'default' | 'blur' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -11,6 +11,11 @@ interface ThemeSettings {
   };
   default: {
     background: string;
+    siteBackground: string;
+  };
+  light: {
+    background: string;
+    backdropFilter: string;
     siteBackground: string;
   };
   midnight: {
@@ -71,6 +76,11 @@ const THEME_SETTINGS: Record<ThemeType, { background: string; backdropFilter: st
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
     siteBackground: '#0a0a0a',
+  },
+  light: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'none',
+    siteBackground: '#f5f5f5',
   },
   midnight: {
     background: 'rgba(5, 8, 20, 0.95)',
@@ -236,6 +246,15 @@ export const useThemeManager = () => {
         }
       });
       
+      // Принудительно обновляем элементы с классами цветов текста
+      const textElements = document.querySelectorAll('.text-primary, .text-secondary, .text-disabled, .text-accent, .text-error, .text-success, .text-warning, .text-info');
+      textElements.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          // Перезагружаем CSS переменные для текста
+          element.style.color = getComputedStyle(root).getPropertyValue('--theme-text-primary');
+        }
+      });
+      
     } catch (error) {
       console.error('Ошибка при применении темы:', error);
     } finally {
@@ -251,6 +270,11 @@ export const useThemeManager = () => {
   // Переключение на блюрную тему
   const switchToBlurTheme = useCallback(async () => {
     await applyTheme('blur');
+  }, [applyTheme]);
+
+  // Переключение на белую тему
+  const switchToLightTheme = useCallback(async () => {
+    await applyTheme('light');
   }, [applyTheme]);
 
   // Переключение на тему midnight
@@ -364,6 +388,7 @@ export const useThemeManager = () => {
     isInitialized,
     switchToDefaultTheme: () => applyThemeWithNotification('default'),
     switchToBlurTheme: () => applyThemeWithNotification('blur'),
+    switchToLightTheme: () => applyThemeWithNotification('light'),
     switchToMidnightTheme: () => applyThemeWithNotification('midnight'),
     switchToOceanTheme: () => applyThemeWithNotification('ocean'),
     switchToSunsetTheme: () => applyThemeWithNotification('sunset'),

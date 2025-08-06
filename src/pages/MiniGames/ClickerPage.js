@@ -78,11 +78,11 @@ const ClickButton = styled(Button)(({ theme }) => ({
   border: `3px solid ${alpha(theme.palette.primary.light, 0.3)}`,
   boxShadow: `0 10px 30px ${alpha(theme.palette.primary.main, 0.25)}, 
               0 20px 60px ${alpha(theme.palette.primary.dark, 0.15)},
-              inset 0 1px 0 ${alpha('#ffffff', 0.1)}`,
+              inset 0 1px 0 ${alpha('var(--theme-text-primary)', 0.1)}`,
   transition: 'all 0.15s ease-out',
   overflow: 'hidden',
   position: 'relative',
-  color: '#ffffff',
+  color: 'var(--theme-text-primary)',
   fontWeight: 600,
 
   '&:hover': {
@@ -90,7 +90,7 @@ const ClickButton = styled(Button)(({ theme }) => ({
     transform: 'translateY(-2px)',
     boxShadow: `0 15px 40px ${alpha(theme.palette.primary.main, 0.35)}, 
                 0 25px 70px ${alpha(theme.palette.primary.dark, 0.2)},
-                inset 0 1px 0 ${alpha('#ffffff', 0.15)}`,
+                inset 0 1px 0 ${alpha('var(--theme-text-primary)', 0.15)}`,
   },
 
   '&:active': {
@@ -109,7 +109,7 @@ const ClickButton = styled(Button)(({ theme }) => ({
     width: 0,
     height: 0,
     borderRadius: '50%',
-    background: alpha('#ffffff', 0.3),
+    background: alpha('var(--theme-text-primary)', 0.3),
     transform: 'translate(-50%, -50%)',
     transition: 'width 0.3s ease, height 0.3s ease, opacity 0.3s ease',
     opacity: 0,
@@ -788,7 +788,7 @@ const ClickerPage = () => {
             left: `${effect.position.x}%`,
             top: `${effect.position.y}%`,
             transform: 'translate(-50%, -50%)',
-            color: '#ffffff',
+            color: 'var(--theme-text-primary)',
             animation: 'floatUp 1.2s cubic-bezier(0.25, 0.8, 0.25, 1) forwards',
             fontWeight: '700',
             fontSize: '1.3rem',
@@ -1058,13 +1058,13 @@ const ClickerPage = () => {
                   minWidth: 60,
                   minHeight: 60,
                   borderRadius: '50%',
-                  background: alpha('#ffffff', 0.15),
+                  background: alpha('var(--theme-text-primary)', 0.15),
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   mb: 1,
                   backdropFilter: 'blur(8px)',
-                  border: `2px solid ${alpha('#ffffff', 0.2)}`,
+                  border: `2px solid ${alpha('var(--theme-text-primary)', 0.2)}`,
                   transition: 'all 0.3s ease',
                   flexShrink: 0,
                 }}
@@ -1074,7 +1074,7 @@ const ClickerPage = () => {
                     fontSize: 32,
                     width: 32,
                     height: 32,
-                    color: '#ffffff',
+                    color: 'var(--theme-text-primary)',
                     filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
                     flexShrink: 0,
                   }}
@@ -1094,12 +1094,12 @@ const ClickerPage = () => {
               <Typography
                 variant='body1'
                 sx={{
-                  bgcolor: alpha('#ffffff', 0.15),
+                  bgcolor: alpha('var(--theme-text-primary)', 0.15),
                   px: 3,
                   py: 1,
                   borderRadius: 20,
                   backdropFilter: 'blur(8px)',
-                  border: `1px solid ${alpha('#ffffff', 0.2)}`,
+                  border: `1px solid ${alpha('var(--theme-text-primary)', 0.2)}`,
                   fontWeight: 600,
                   fontSize: '0.9rem',
                   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
@@ -2685,7 +2685,7 @@ const ClickerPage = () => {
             boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
           }}
         >
-          <TouchAppIcon sx={{ color: '#ffffff', fontSize: 28 }} />
+          <TouchAppIcon sx={{ color: 'var(--theme-text-primary)', fontSize: 28 }} />
         </Box>
         <Typography
           variant='h4'

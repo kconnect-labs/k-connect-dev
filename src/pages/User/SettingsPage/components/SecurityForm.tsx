@@ -202,10 +202,8 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
           variant='h6'
           sx={{
             mb: 2,
-            color: 'text.primary',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
+            fontWeight: 600,
+            color: 'var(--theme-text-primary)',
           }}
         >
           <LockIcon sx={{ fontSize: 20 }} />
@@ -285,7 +283,7 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
                       sx={{
                         minWidth: 'auto',
                         p: 1,
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: 'var(--theme-text-secondary)',
                       }}
                     >
                       {showPassword ? (
@@ -323,7 +321,7 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
                       sx={{
                         minWidth: 'auto',
                         p: 1,
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: 'var(--theme-text-secondary)',
                       }}
                     >
                       {showConfirmPassword ? (
@@ -360,7 +358,7 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
           variant='h6'
           sx={{
             mb: 2,
-            color: 'text.primary',
+            color: 'var(--theme-text-primary)',
             display: 'flex',
             alignItems: 'center',
             gap: 1,
@@ -370,10 +368,8 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
           Дополнительные настройки безопасности
         </Typography>
 
-        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
-          Здесь будут дополнительные настройки безопасности, такие как
-          двухфакторная аутентификация, история входов и другие параметры защиты
-          аккаунта.
+        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
+          Измените пароль для повышения безопасности аккаунта
         </Typography>
 
         <Alert

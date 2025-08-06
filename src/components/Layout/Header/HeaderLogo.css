@@ -8,6 +8,7 @@
   margin-right: 8px;
   box-sizing: border-box;
   contain: layout style paint;
+  color: var(--theme-main-color);
 }
 
 .logo-link {
@@ -34,11 +35,11 @@
   margin-left: 8px;
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: var(--theme-main-color);
 }
 
 .logo-text-content {
-  color: #ffffff;
+  color: var(--theme-main-color);
   opacity: 0.9;
   line-height: 1.2;
   font-weight: var(--font-weight-black);

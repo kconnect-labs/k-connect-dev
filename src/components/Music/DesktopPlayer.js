@@ -750,7 +750,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
   const handleShare = useCallback(() => {
     if (!currentTrack) return;
 
-    const trackLink = `${window.location.origin}/music/track/${currentTrack.id}`;
+            const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
 
     copyToClipboard(trackLink);
   }, [currentTrack]);

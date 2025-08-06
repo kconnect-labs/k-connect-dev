@@ -305,13 +305,9 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
       <Typography
         variant='h6'
         sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
+          mb: 2,
           fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
+          color: 'var(--theme-text-primary)',
         }}
       >
         <NotificationsIcon />
@@ -333,11 +329,11 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
             <Box>
               <Typography
                 variant='subtitle1'
-                sx={{ fontWeight: 600, color: 'text.primary' }}
+                sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}
               >
                 Push-уведомления
               </Typography>
-              <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 Получайте уведомления в браузере
               </Typography>
             </Box>
@@ -398,14 +394,14 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
                 ? 'Отключить push-уведомления'
                 : 'Включить push-уведомления'
             }
-            sx={{ color: 'text.primary' }}
+            sx={{ color: 'var(--theme-text-primary)' }}
           />
         )}
 
         {pushLoading && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
             <CircularProgress size={16} />
-            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
               Обработка...
             </Typography>
           </Box>
@@ -429,11 +425,11 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
             <Box>
               <Typography
                 variant='subtitle1'
-                sx={{ fontWeight: 600, color: 'text.primary' }}
+                sx={{ fontWeight: 600, color: 'var(--theme-text-primary)' }}
               >
                 Telegram уведомления
               </Typography>
-              <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 Получайте уведомления в Telegram
               </Typography>
             </Box>
@@ -469,7 +465,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
               onClick={() => setTelegramDialogOpen(true)}
               sx={{
                 borderColor: 'rgba(255, 255, 255, 0.3)',
-                color: 'text.primary',
+                color: 'var(--theme-text-primary)',
                 '&:hover': {
                   borderColor: 'rgba(255, 255, 255, 0.5)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -493,14 +489,14 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
                 ? 'Отключить Telegram уведомления'
                 : 'Включить Telegram уведомления'
             }
-            sx={{ color: 'text.primary' }}
+            sx={{ color: 'var(--theme-text-primary)' }}
           />
         )}
 
         {savingPrefs && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
             <CircularProgress size={16} />
-            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
               Сохранение...
             </Typography>
           </Box>

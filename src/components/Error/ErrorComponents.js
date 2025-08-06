@@ -25,10 +25,10 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
         p: 3,
       }}
     >
-      <Typography variant='h5' gutterBottom>
+      <Typography variant='h5' sx={{ color: 'var(--theme-text-primary)' }} gutterBottom>
         Что-то пошло не так
       </Typography>
-      <Typography variant='body1' color='text.secondary' paragraph>
+      <Typography variant='body1' sx={{ color: 'var(--theme-text-secondary)' }} paragraph>
         Пожалуйста, попробуйте перезагрузить страницу
       </Typography>
       <Box
@@ -51,7 +51,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
           sx={{
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
-            color: 'text.secondary',
+            color: 'var(--theme-text-secondary)',
             fontFamily: 'monospace',
             fontSize: '0.875rem',
           }}
@@ -66,7 +66,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
               mt: 1,
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
-              color: 'text.secondary',
+              color: 'var(--theme-text-secondary)',
               fontFamily: 'monospace',
               fontSize: '0.75rem',
               opacity: 0.7,

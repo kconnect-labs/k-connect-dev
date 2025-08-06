@@ -283,7 +283,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             }
           />
           <Route
-            path='/music/track/:trackId'
+            path='/music/:trackId'
             element={
               loading ? (
                 <LoadingIndicator />

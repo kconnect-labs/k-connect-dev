@@ -31,7 +31,7 @@ const StyledAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'isHeaderHidden' && prop !== 'isMobile',
 })(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
-  color: '#FFFFFF',
+  color: 'var(--theme-text-primary)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   position: 'fixed',
   left: '50%',
@@ -40,6 +40,7 @@ const StyledAppBar = styled(AppBar, {
   zIndex: theme.zIndex.appBar,
   transition: 'transform 0.3s ease-in-out',
   height: 48,
+  boxShadow: 'none',
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({

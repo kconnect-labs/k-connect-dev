@@ -22,12 +22,12 @@ const Sidebar = memo(({ isMobile }) => {
   const [isModeratorUser, setIsModeratorUser] = useState(false);
 
   const themeValues = useMemo(() => {
-    const sidebarTextColor = themeSettings.textColor || 'inherit';
+    const sidebarTextColor = 'var(--theme-text-primary)';
     const primaryColor = themeSettings.primaryColor || '#D0BCFF';
 
     const sidebarStyle = {
       color: sidebarTextColor,
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.07)',
+      boxShadow: 'none',
       borderColor: 'rgba(255, 255, 255, 0.08)',
     };
 

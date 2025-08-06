@@ -132,11 +132,11 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
         },
       }}
     >
-      <DialogTitle sx={{ fontWeight: 600, fontSize: '1.15rem' }}>
+      <DialogTitle sx={{ fontWeight: 600, fontSize: '1.15rem', color: 'var(--theme-text-primary)' }}>
         Экспорт / Импорт профиля
       </DialogTitle>
       <DialogContent>
-        <Typography variant='subtitle2' sx={{ mb: 1, color: 'text.secondary' }}>
+        <Typography variant='subtitle2' sx={{ mb: 1, color: 'var(--theme-text-secondary)' }}>
           Выберите, какие данные профиля экспортировать:
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 2 }}>
@@ -147,9 +147,13 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
                 <Checkbox
                   checked={selectedFields.includes(field.key)}
                   onChange={() => handleFieldChange(field.key)}
-                  color='primary'
                   size='small'
                   disabled={loading}
+                  sx={{
+                    '&.Mui-checked': {
+                      color: 'var(--theme-main-color)',
+                    },
+                  }}
                 />
               }
               label={
@@ -162,12 +166,11 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
         </Box>
         <Button
           variant='contained'
-          color='primary'
           startIcon={<CloudDownloadIcon />}
           onClick={handleExport}
           disabled={loading || selectedFields.length === 0}
           fullWidth
-          sx={{ mb: 2, borderRadius: 2, fontWeight: 500 }}
+          sx={{ mb: 2, borderRadius: 2, fontWeight: 500, color: 'var(--theme-text-primary)' }}
         >
           {loading ? (
             <CircularProgress size={20} color='inherit' />
@@ -178,7 +181,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
         <Box sx={{ mt: 1, mb: 1 }}>
           <Typography
             variant='subtitle2'
-            sx={{ color: 'text.secondary', mb: 0.5 }}
+              sx={{ color: 'var(--theme-text-secondary)', mb: 0.5 }}
           >
             Импортировать профиль (.konnect):
           </Typography>
@@ -187,7 +190,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
               variant='outlined'
               component='label'
               startIcon={<CloudUploadIcon />}
-              sx={{ borderRadius: 2, fontWeight: 500, minWidth: 0 }}
+              sx={{ borderRadius: 2, fontWeight: 500, minWidth: 0, color: 'var(--theme-text-primary)' }}
               disabled={loading}
             >
               {importFile ? importFile.name : 'Выбрать файл'}
@@ -201,10 +204,9 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
             </Button>
             <Button
               variant='contained'
-              color='primary'
               onClick={handleImport}
               disabled={loading || !importFile}
-              sx={{ borderRadius: 2, fontWeight: 500 }}
+              sx={{ borderRadius: 2, fontWeight: 500, color: 'var(--theme-text-primary)' }}
             >
               {loading ? (
                 <CircularProgress size={20} color='inherit' />

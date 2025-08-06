@@ -33,7 +33,7 @@
 
 .footer-title {
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--theme-text-primary);
   margin-bottom: 8px;
   letter-spacing: 0.5px;
   font-size: 0.85rem;
@@ -80,7 +80,7 @@
 }
 
 .footer-text {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--theme-text-secondary);
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -89,7 +89,7 @@
 }
 
 .footer-text:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text-primary);
 }
 
 /* Responsive breakpoints */

@@ -222,7 +222,7 @@ const PrizeDisplay = styled(Box)(({ theme, win }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   border: win ? '2px solid #16a34a' : '2px solid #dc2626',
-  color: '#ffffff',
+  color: 'var(--theme-text-primary)',
   fontWeight: 700,
   fontSize: '1.2rem',
   boxShadow: win
@@ -333,7 +333,7 @@ const renderPrize = (prize, idx, { isActive }) => (
         sx={{
           fontSize: '0.85rem',
           fontWeight: 600,
-          color: '#ffffff',
+          color: 'var(--theme-text-primary)',
           textAlign: 'center',
           lineHeight: 1.2,
           px: 0.5,
@@ -562,7 +562,7 @@ const RouletteGame = () => {
           variant='h4'
           align='center'
           gutterBottom
-          sx={{ fontWeight: 800, letterSpacing: 1, color: '#ffffff' }}
+          sx={{ fontWeight: 800, letterSpacing: 1, color: 'var(--theme-text-primary)' }}
         >
           Рулетка удачи
         </Typography>
@@ -577,7 +577,7 @@ const RouletteGame = () => {
             }}
           >
             <CircularProgress sx={{ color: '#D0BCFF' }} />
-            <Typography sx={{ ml: 2, color: '#ffffff' }}>
+            <Typography sx={{ ml: 2, color: 'var(--theme-text-primary)' }}>
               Загрузка...
             </Typography>
           </Box>
@@ -663,7 +663,7 @@ const RouletteGame = () => {
 
             <BetAmount>
               <Typography
-                sx={{ fontWeight: 600, minWidth: 60, color: '#ffffff' }}
+                sx={{ fontWeight: 600, minWidth: 60, color: 'var(--theme-text-primary)' }}
               >
                 Ставка:
               </Typography>
@@ -726,7 +726,7 @@ const RouletteGame = () => {
                   height='16'
                   alt=''
                 />
-                <Typography sx={{ fontWeight: 700, color: '#ffffff' }}>
+                <Typography sx={{ fontWeight: 700, color: 'var(--theme-text-primary)' }}>
                   {betAmount}
                 </Typography>
               </Box>
@@ -756,7 +756,7 @@ const RouletteGame = () => {
                     : '#D0BCFF',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: isSpinning ? '#ffffff' : '#000000',
+                  color: isSpinning ? 'var(--theme-text-primary)' : '#000000',
                   boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
                   letterSpacing: 0.5,
                   transition: 'all 0.3s ease',

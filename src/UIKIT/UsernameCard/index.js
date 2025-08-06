@@ -44,7 +44,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   background:
     theme.palette.mode === 'dark'
       ? alpha('#121212', 0.9)
-      : alpha('#FFFFFF', 0.9),
+      : alpha('var(--theme-text-primary)', 0.9),
       backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
   '&::-webkit-scrollbar': {
     width: '4px',

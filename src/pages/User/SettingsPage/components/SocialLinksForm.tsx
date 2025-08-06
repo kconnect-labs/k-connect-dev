@@ -281,13 +281,9 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
       <Typography
         variant='h6'
         sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
+          mb: 2,
           fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
+          color: 'var(--theme-text-primary)',
         }}
       >
         <LinkIcon />
@@ -302,20 +298,19 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
 
       {socials.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 4 }}>
-          <PublicIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
-          <Typography variant='body1' sx={{ color: 'text.secondary', mb: 2 }}>
-            У вас пока нет добавленных социальных сетей
+          <PublicIcon sx={{ fontSize: 48, color: 'var(--theme-text-secondary)', mb: 2 }} />
+          <Typography variant='body1' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
+            У вас пока нет добавленных ссылок
           </Typography>
-          <Typography variant='body2' sx={{ color: 'text.secondary', mb: 3 }}>
-            Добавьте ссылки на ваши социальные сети, чтобы другие пользователи
-            могли вас найти
+          <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 3 }}>
+            Добавьте ссылки на ваши социальные сети
           </Typography>
         </Box>
       ) : (
         <List>
           {socials.map((social, index) => (
             <ListItem key={index} sx={listItemStyle}>
-              <ListItemIcon sx={{ color: 'text.primary' }}>
+              <ListItemIcon sx={{ color: 'var(--theme-text-primary)' }}>
                 {getSocialIcon(social.name, social.link)}
               </ListItemIcon>
               <ListItemText
@@ -375,7 +370,7 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
         sx={{
           mt: 2,
           borderColor: 'rgba(255, 255, 255, 0.3)',
-          color: 'text.primary',
+          color: 'var(--theme-text-secondary)',
           '&:hover': {
             borderColor: 'rgba(255, 255, 255, 0.5)',
             backgroundColor: 'rgba(255, 255, 255, 0.05)',

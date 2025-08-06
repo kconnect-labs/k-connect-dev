@@ -325,7 +325,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
                   pointerEvents: 'none',
                 }}
               >
-                <PhotoCamera sx={{ fontSize: 12, color: 'white' }} />
+                <PhotoCamera sx={{ fontSize: 12, color: 'var(--theme-text-primary)' }} />
               </Box>
             </Box>
           </Grid>

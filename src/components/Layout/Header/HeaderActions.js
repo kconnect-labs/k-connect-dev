@@ -15,8 +15,17 @@ const HeaderActions = ({
   handleNewNotification,
   handleNotificationRead,
 }) => {
+  // Используем CSS переменные для цветов, если они определены, иначе fallback
+  const themeTextPrimary =
+    'var(--theme-text-primary, #fff)';
+  const themeTextSecondary =
+    'var(--theme-text-secondary, #aaa)';
+  const primary =
+    'var(--primary, #D0BCFF)';
+
   const actionsStyles = {
     '--primary-color': primaryColor,
+    color: 'var(--theme-text-primary, #fff)',
   };
 
   return (
@@ -27,8 +36,9 @@ const HeaderActions = ({
           <button
             className='action-button'
             onClick={() => navigate('/balance')}
+            style={{ color: themeTextPrimary }}
           >
-            <Icon icon='tabler:coins' width='22' height='22' />
+            <Icon icon='tabler:coins' width='22' height='22' color={themeTextPrimary} />
           </button>
         </div>
       )}
@@ -37,8 +47,14 @@ const HeaderActions = ({
       <button
         className={`action-button ${showSearch ? 'action-button--active' : ''}`}
         onClick={toggleSearch}
+        style={{ color: showSearch ? primary : themeTextPrimary }}
       >
-        <Icon icon='tabler:search' width='22' height='22' />
+        <Icon
+          icon='tabler:search'
+          width='22'
+          height='22'
+          color={showSearch ? primary : themeTextPrimary}
+        />
       </button>
 
       {/* Уведомления рендерятся везде */}
@@ -57,6 +73,7 @@ const HeaderActions = ({
         aria-label='account'
         aria-haspopup='true'
         onClick={handleProfileMenuOpen}
+        style={{ color: themeTextPrimary }}
       >
         {user ? (
           <img
@@ -69,7 +86,7 @@ const HeaderActions = ({
             alt={user.name || user.username}
           />
         ) : (
-          <Icon icon='solar:user-bold' width='24' height='24' />
+          <Icon icon='solar:user-bold' width='24' height='24' color={themeTextPrimary} />
         )}
       </button>
     </div>

@@ -67,18 +67,18 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
       <Typography
         variant='h6'
         sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
+          mb: 2,
           fontWeight: 600,
+          color: 'var(--theme-text-primary)',
         }}
       >
         Экспериментальные функции
       </Typography>
 
       <Alert severity='info' sx={{ mb: 3 }}>
-        Эти функции находятся в разработке и могут работать нестабильно.
-        Используйте на свой страх и риск.
+        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+          Экспериментальные функции могут быть нестабильными и изменяться без предупреждения
+        </Typography>
       </Alert>
 
       {/* Управление кешем медиа */}
@@ -92,7 +92,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
           <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
             Кеш медиа-файлов
           </Typography>
-          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+          <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
             Кеширование изображений и медиа для ускорения загрузки. 
             {cacheStatus.enabled && (
               <span style={{ color: '#ff9800' }}>
@@ -141,7 +141,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
           </Typography>
           <Typography
             variant='body2'
-            sx={{ color: 'text.secondary', opacity: 0.6 }}
+            sx={{ color: 'var(--theme-text-secondary)', opacity: 0.6 }}
           >
             Настройка интенсивности анимаций интерфейса
           </Typography>

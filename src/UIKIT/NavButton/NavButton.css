@@ -75,7 +75,7 @@
 /* Иконка навигации */
 .nav-button__icon {
   min-width: 32px;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -101,7 +101,7 @@
 }
 
 .nav-button:hover .nav-button__icon {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--theme-text-primary);
 }
 
 .nav-button:hover .nav-button__icon svg {
@@ -121,7 +121,7 @@
 .nav-button__text {
   font-weight: 500;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--theme-text-primary);
   letter-spacing: 0.25px;
   transition: all 0.3s ease;
   text-shadow: none;
@@ -174,7 +174,7 @@
 .more-button__arrow {
   transition: transform 0.3s ease;
   transform: rotate(0deg);
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--theme-text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,7 +195,7 @@
 }
 
 .more-button:hover .more-button__arrow {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--theme-text-primary);
 }
 
 .more-button:hover .more-button__arrow svg {

@@ -329,7 +329,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Typography variant="h6" sx={{ fontSize: '0.9rem', fontWeight: 600, color: 'white' }}>
+              <Typography variant="h6" sx={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                 {formatBytes(selectedTotalSize)}
               </Typography>
             </motion.div>
@@ -406,8 +406,8 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
               <ArrowBackIcon />
             </IconButton>
           )}
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Управление хранилищем
+          <Typography variant="h6" sx={{ color: 'var(--theme-text-secondary)' }}>
+            Управление кешем
           </Typography>
         </Box>
         {!isMobile && (
@@ -535,7 +535,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                         variant="body2" 
                         sx={{ 
                           fontWeight: 500,
-                          color: category.selected ? 'white' : 'rgba(255, 255, 255, 0.8)',
+                          color: category.selected ? 'var(--theme-text-primary)' : 'var(--theme-text-secondary)',
                           fontSize: '0.875rem'
                         }}
                       >
@@ -633,8 +633,8 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                       ? 'rgba(255, 255, 255, 0.3)' 
                       : 'rgba(255, 255, 255, 0.1)',
                     color: calculateTotalSize() > 0 
-                      ? 'rgba(255, 255, 255, 0.8)' 
-                      : 'rgba(255, 255, 255, 0.4)',
+                      ? 'var(--theme-text-primary)' 
+                      : 'var(--theme-text-secondary)',
                     transition: 'all 0.3s ease',
                     '&:hover': {
                       borderColor: calculateTotalSize() > 0 
