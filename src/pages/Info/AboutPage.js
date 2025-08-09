@@ -15,6 +15,9 @@ import {
   useMediaQuery,
   Link,
   IconButton,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import { motion } from 'framer-motion';
 
@@ -51,6 +54,11 @@ import BoxIcon from '@mui/icons-material/Inventory';
 import StoreIcon from '@mui/icons-material/Store';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WallpaperIcon from '@mui/icons-material/Wallpaper';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import LockIcon from '@mui/icons-material/Lock';
+import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact';
 
 const MotionBox = motion(Box);
 const MotionTypography = motion(Typography);
@@ -878,6 +886,38 @@ const AboutPage = () => {
       icon: <AutoAwesomeIcon fontSize='large' />,
       highlight: true,
     },
+    {
+      title: 'мКоины',
+      description:
+        'Вторая валюта платформы: тратьте на подписку, декорации и конвертируйте в обычные баллы',
+      icon: <CurrencyExchangeIcon fontSize='large' />,
+      highlight: true,
+    },
+    {
+      title: 'Темы для Коннекта',
+      description:
+        'Множество готовых тем оформления для комфортного использования под любой стиль',
+      icon: <ColorLensIcon fontSize='large' />,
+    },
+    {
+      title: 'Кастомные обои профиля',
+      description:
+        'Загрузите собственные обои профиля — их увидят все посетители вашей страницы',
+      icon: <WallpaperIcon fontSize='large' />,
+      highlight: true,
+    },
+    {
+      title: 'Приватные профили',
+      description:
+        'Закрытый режим, где можно публиковать что угодно и делиться контентом с выбранным кругом',
+      icon: <LockIcon fontSize='large' />,
+    },
+    {
+      title: 'Связи между людьми',
+      description:
+        'Устанавливайте и развивайте связи: подписки, взаимные интересы и совместные проекты',
+      icon: <ConnectWithoutContactIcon fontSize='large' />,
+    },
   ];
 
   const teamData = {
@@ -1259,6 +1299,158 @@ const AboutPage = () => {
               <ArrowDownwardIcon sx={{ fontSize: '1.5rem', opacity: 0.7 }} />
             </Box>
           </MotionBox>
+        </Container>
+      </Box>
+
+      {/* Экономика: Баллы и мКоины */}
+      <Box sx={{ py: 12, bgcolor: alpha(theme.palette.background.default, 0.6) }}>
+        <Container maxWidth='lg'>
+          <MotionBox
+            sx={{ textAlign: 'center', mb: 6 }}
+            variants={itemVariants}
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: true }}
+          >
+            <Typography variant='h2' sx={{ fontWeight: 700, mb: 1, fontSize: { xs: '2rem', md: '2.4rem' } }}>
+              Экономика: Баллы и мКоины
+            </Typography>
+            <Typography variant='subtitle1' sx={{ opacity: 0.9 }}>
+              Зарабатывайте баллы за активность и дополняйте их мКоинами для подписок, декора и обмена
+            </Typography>
+          </MotionBox>
+
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={6}>
+              <MotionPaper
+                variants={itemVariants}
+                initial='hidden'
+                whileInView='visible'
+                viewport={{ once: true }}
+                sx={{
+                  p: 4,
+                  borderRadius: 4,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.primary.main, 0.06)})`,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                }}
+                elevation={0}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <MonetizationOnIcon color='primary' sx={{ mr: 1.5 }} />
+                  <Typography variant='h5' sx={{ fontWeight: 700 }}>Баллы</Typography>
+                </Box>
+                <Typography variant='body1' sx={{ mb: 2 }}>
+                  Основная «социальная» валюта. Начисляется за публикации, реакции, достижения и вклад в сообщество.
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Покупайте предметы и никнеймы на маркетплейсе
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Получайте еженедельные награды
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Дарите и переводите друзьям
+                </Typography>
+              </MotionPaper>
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <MotionPaper
+                variants={itemVariants}
+                initial='hidden'
+                whileInView='visible'
+                viewport={{ once: true }}
+                sx={{
+                  p: 4,
+                  borderRadius: 4,
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.secondary?.main || theme.palette.primary.main, 0.06)})`,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                }}
+                elevation={0}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <CurrencyExchangeIcon color='primary' sx={{ mr: 1.5 }} />
+                  <Typography variant='h5' sx={{ fontWeight: 700 }}>мКоины</Typography>
+                </Box>
+                <Typography variant='body1' sx={{ mb: 2 }}>
+                  Вторая валюта для гибкого использования внутри платформы.
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Оформляйте подписку и получайте привилегии
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Покупайте декорации и косметические улучшения
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  • Конвертируйте мКоины в обычные баллы при необходимости
+                </Typography>
+              </MotionPaper>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* FAQ */}
+      <Box sx={{ py: 10 }}>
+        <Container maxWidth='md'>
+          <MotionBox
+            sx={{ textAlign: 'center', mb: 4 }}
+            variants={itemVariants}
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: true }}
+          >
+            <Typography variant='h2' sx={{ fontWeight: 700, mb: 1, fontSize: { xs: '1.8rem', md: '2.2rem' } }}>
+              Частые вопросы
+            </Typography>
+            <Typography variant='subtitle1' sx={{ opacity: 0.9 }}>
+              Быстрые ответы о мКоинах, темах и приватности
+            </Typography>
+          </MotionBox>
+
+          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius:1, mb: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что такое мКоины и зачем они нужны?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant='body2' color='text.secondary'>
+                мКоины — гибкая внутренняя валюта: оплачивайте подписку, покупайте декорации и при необходимости конвертируйте в обычные баллы.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1, mb: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Чем мКоины отличаются от баллов?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant='body2' color='text.secondary'>
+                Баллы зарабатываются за активность и используются в экономике сообщества. мКоины — более «утилитарны»: подписка, декорации и обмен.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1, mb: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Как работают темы и обои профиля?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant='body2' color='text.secondary'>
+                Выбирайте готовые темы или загружайте собственные обои. Обои видны всем посетителям вашего профиля.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1 }}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что даёт приватный профиль?</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography variant='body2' color='text.secondary'>
+                Приватный режим позволяет публиковать любой контент для выбранного круга — вы управляете доступом и аудиторией.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
         </Container>
       </Box>
 

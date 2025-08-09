@@ -213,9 +213,10 @@ const CommentItem = ({
                 {comment.user.name}
                 {(comment.user.verification?.status > 0 || 
                   comment.user.verification_status === 'verified' ||
-                  comment.user.verification_status > 0) && (
+                  comment.user.verification_status > 0 ||
+                  (typeof comment.user.verification === 'number' && comment.user.verification > 0)) && (
                     <VerificationBadge
-                      status={comment.user.verification?.status || comment.user.verification_status}
+                      status={comment.user.verification?.status || comment.user.verification_status || comment.user.verification}
                       size='small'
                     />
                   )}

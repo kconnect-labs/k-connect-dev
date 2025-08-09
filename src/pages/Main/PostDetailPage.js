@@ -810,9 +810,10 @@ const Comment = ({
                           {reply.user.name}
                           {(reply.user.verification?.status > 0 || 
                             reply.user.verification_status === 'verified' ||
-                            reply.user.verification_status > 0) && (
+                            reply.user.verification_status > 0 ||
+                            (typeof reply.user.verification === 'number' && reply.user.verification > 0)) && (
                               <VerificationBadge
-                                status={reply.user.verification?.status || reply.user.verification_status}
+                                status={reply.user.verification?.status || reply.user.verification_status || reply.user.verification}
                                 size='small'
                               />
                             )}

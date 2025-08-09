@@ -278,10 +278,16 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
                 >
                   {repost.user.name}
                 </Typography>
-                <VerificationBadge
-                  status={repost.user.verification}
-                  size='small'
-                />
+                {repost.user?.verification &&
+                  ((typeof repost.user.verification === 'number' && repost.user.verification > 0) ||
+                   (typeof repost.user.verification === 'object' && repost.user.verification.status > 0)) && (
+                    <VerificationBadge
+                      status={typeof repost.user.verification === 'number' 
+                        ? repost.user.verification 
+                        : repost.user.verification.status}
+                      size='small'
+                    />
+                  )}
                 <Typography
                   variant='body2'
                   color='text.secondary'
@@ -359,12 +365,16 @@ const RepostItem = ({ repost, onDelete, onOpenLightbox }) => {
                   >
                     {originalPost.user?.name || 'Unknown'}
                   </Typography>
-                  {originalPost.user?.verification && (
-                    <VerificationBadge
-                      status={originalPost.user.verification}
-                      size='small'
-                    />
-                  )}
+                  {originalPost.user?.verification &&
+                    ((typeof originalPost.user.verification === 'number' && originalPost.user.verification > 0) ||
+                     (typeof originalPost.user.verification === 'object' && originalPost.user.verification.status > 0)) && (
+                      <VerificationBadge
+                        status={typeof originalPost.user.verification === 'number' 
+                          ? originalPost.user.verification 
+                          : originalPost.user.verification.status}
+                        size='small'
+                      />
+                    )}
                   <Typography
                     variant='caption'
                     color='text.secondary'

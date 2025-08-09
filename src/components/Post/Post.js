@@ -1572,31 +1572,38 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   )}
 
                   {post.user?.verification &&
-                    post.user?.verification.status > 0 &&
-                    (post.user.verification.status === 6 ? (
-                      <Icon
-                        icon='material-symbols:verified-rounded'
-                        style={{
-                          fontSize: '24px',
-                          color: '#1e88e5',
-                          marginLeft: '4px',
-                        }}
-                      />
-                    ) : post.user.verification.status === 7 ? (
-                      <Icon
-                        icon='material-symbols:verified-user-rounded'
-                        style={{
-                          fontSize: '24px',
-                          color: '#7c4dff',
-                          marginLeft: '4px',
-                        }}
-                      />
-                    ) : (
-                      <VerificationBadge
-                        status={post.user.verification.status}
-                        size='small'
-                      />
-                    ))}
+                    ((typeof post.user.verification === 'number' && post.user.verification > 0) ||
+                     (typeof post.user.verification === 'object' && post.user.verification.status > 0)) &&
+                    (() => {
+                      const status = typeof post.user.verification === 'number' 
+                        ? post.user.verification 
+                        : post.user.verification.status;
+                      
+                      return status === 6 ? (
+                        <Icon
+                          icon='material-symbols:verified-rounded'
+                          style={{
+                            fontSize: '24px',
+                            color: '#1e88e5',
+                            marginLeft: '4px',
+                          }}
+                        />
+                      ) : status === 7 ? (
+                        <Icon
+                          icon='material-symbols:verified-user-rounded'
+                          style={{
+                            fontSize: '24px',
+                            color: '#7c4dff',
+                            marginLeft: '4px',
+                          }}
+                        />
+                      ) : (
+                        <VerificationBadge
+                          status={status}
+                          size='small'
+                        />
+                      );
+                    })()}
                   {(post.user?.subscription?.type === 'max' ||
                     post.user?.subscription_type === 'max' ||
                     post.user?.subscription?.subscription_type === 'max') && (
@@ -1767,9 +1774,12 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   >
                     {post.original_post.user?.name || 'Unknown'}
                     {post.original_post.user?.verification &&
-                      post.original_post.user?.verification.status > 0 && (
+                      ((typeof post.original_post.user.verification === 'number' && post.original_post.user.verification > 0) ||
+                       (typeof post.original_post.user.verification === 'object' && post.original_post.user.verification.status > 0)) && (
                         <VerificationBadge
-                          status={post.original_post.user?.verification.status}
+                          status={typeof post.original_post.user.verification === 'number' 
+                            ? post.original_post.user.verification 
+                            : post.original_post.user.verification.status}
                           size='small'
                         />
                       )}

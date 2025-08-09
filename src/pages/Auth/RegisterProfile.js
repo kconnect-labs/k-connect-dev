@@ -20,6 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { motion } from 'framer-motion';
 import AuthService from '../../services/AuthService';
+import axios from 'axios';
 
 const RegisterProfile = ({ setUser }) => {
   const theme = useTheme();
@@ -64,9 +65,17 @@ const RegisterProfile = ({ setUser }) => {
     localStorage.removeItem('k-connect-user');
     sessionStorage.clear();
     
-    // Очищаем куки
-    document.cookie.split(";").forEach(function(c) { 
-      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+    // Очищаем все куки более надежно
+    const cookies = document.cookie.split(";");
+    cookies.forEach(function(cookie) {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+      if (name) {
+        // Удаляем куку для всех возможных путей и доменов
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + window.location.hostname;
+      }
     });
   };
 
@@ -694,6 +703,61 @@ const RegisterProfile = ({ setUser }) => {
                   'Создать профиль'
                 )}
               </Button>
+
+              <Button
+                fullWidth
+                variant='outlined'
+                size='medium'
+                onClick={async () => {
+                  try {
+                    // Используем API logout для правильной очистки сессии
+                    await AuthService.logout();
+                    
+                    // Очищаем localStorage и sessionStorage
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    // Редирект на страницу логина
+                    window.location.href = '/login';
+                  } catch (error) {
+                    console.error('Logout error:', error);
+                    // Даже если API не сработал, очищаем данные и редиректим
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = '/login';
+                  }
+                }}
+                sx={{
+                  py: 1,
+                  borderRadius: 2,
+                  fontSize: '0.875rem',
+                  textTransform: 'none',
+                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  color: 'rgba(255, 255, 255, 0.7)',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                  },
+                }}
+              >
+                Деавторизация
+              </Button>
+              
+              <Typography
+                variant='caption'
+                color='text.secondary'
+                sx={{
+                  mt: 1,
+                  display: 'block',
+                  fontSize: '11px',
+                  lineHeight: 1.3,
+                  textAlign: 'center',
+                  opacity: 0.7,
+                }}
+              >
+                Нажмите при ошибках регистрации или проблемах с авторизацией
+              </Typography>
             </form>
           </Paper>
         </motion.div>
