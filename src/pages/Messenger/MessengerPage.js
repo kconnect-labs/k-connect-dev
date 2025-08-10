@@ -121,9 +121,10 @@ const MessengerPage = () => {
   );
 
   // Настройка API для мессенджера через путь /apiMes/ (будет проксирован через NGINX)
-  const API_URL = 'https://k-connect.ru/apiMes';
-  const MAIN_API_URL = 'https://k-connect.ru/api';
-  const BASE_URL = 'https://k-connect.ru';
+  const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+  const API_URL = `${ORIGIN}/apiMes`;
+  const MAIN_API_URL = `${ORIGIN}/api`;
+  const BASE_URL = ORIGIN;
 
   // Загрузка списка подписчиков и подписок
   useEffect(() => {

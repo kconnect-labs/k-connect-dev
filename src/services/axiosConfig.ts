@@ -134,7 +134,7 @@ const MAX_RETRIES = 2;
 const RETRY_DELAY = 1000;
 
 const instance = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? '' : 'https://k-connect.ru',
+  baseURL: '',
   withCredentials: true,
   timeout: 30000,
   headers: {

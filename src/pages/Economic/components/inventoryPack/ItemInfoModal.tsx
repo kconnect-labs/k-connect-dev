@@ -620,7 +620,8 @@ const ItemInfoModal = ({
 
   const handleCopyLink = () => {
     if (!item) return;
-    const url = `https://k-connect.ru/item/${item.id}`;
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+    const url = `${origin}/item/${item.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
       setTimeout(() => setCopyStatus(''), 1500);

@@ -71,7 +71,8 @@ const getFullUrl = path => {
     window.location.hostname.includes('localhost');
 
   if (isLocalhost && !path.startsWith('http')) {
-    return `https://k-connect.ru${path}`;
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+    return `${origin}${path}`;
   }
 
   return path;
@@ -843,7 +844,8 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
   const handleCopyLink = useCallback(async () => {
     if (!trackId) return;
 
-            const url = `https://k-connect.ru/music/${trackId}`;
+            const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+            const url = `${origin}/music/${trackId}`;
 
     try {
       await navigator.clipboard.writeText(url);

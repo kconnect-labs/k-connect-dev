@@ -148,7 +148,9 @@ class NotificationService {
         ...subscriptionJSON,
         send_test: true,
         platform: this.getBrowserInfo(),
-        url: 'https://k-connect.ru',
+        url:
+          (typeof window !== 'undefined' && window.location?.origin) ||
+          'https://k-connect.ru',
       };
 
       const response = await axios.post(
@@ -357,7 +359,9 @@ class NotificationService {
   async sendTestNotification() {
     try {
       const response = await axios.post('/api/notifications/test', {
-        url: 'https://k-connect.ru',
+        url:
+          (typeof window !== 'undefined' && window.location?.origin) ||
+          'https://k-connect.ru',
         title: 'Тестовое уведомление',
         body: 'Уведомления настроены и работают',
       });

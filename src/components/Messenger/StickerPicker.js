@@ -22,7 +22,8 @@ import Lottie from 'lottie-react';
 import pako from 'pako';
 
 // API URL для мессенджера
-const API_URL = 'https://k-connect.ru/apiMes';
+const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const API_URL = `${ORIGIN}/apiMes`;
 
 // Функция для определения типа стикера
 const getStickerType = sticker => {

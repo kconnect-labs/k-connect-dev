@@ -39,7 +39,8 @@ const WEBSOCKET_CONFIG = {
 };
 
 const DEV_MODE = process.env.NODE_ENV !== 'production';
-const API_URL = 'https://k-connect.ru/apiMes';
+const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const API_URL = `${ORIGIN}/apiMes`;
 
 export const MessengerContext = createContext();
 
@@ -3010,7 +3011,8 @@ export const MessengerProvider = ({ children }) => {
     }
     
     if (!sessionKey && authContext?.isAuthenticated && !fetchingSessionKey) {
-      const API_URL = 'https://k-connect.ru/apiMes';
+      const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+      const API_URL = `${ORIGIN}/apiMes`;
       setFetchingSessionKey(true);
       setSessionKeyAttempts(prev => prev + 1);
       

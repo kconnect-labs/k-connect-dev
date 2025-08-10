@@ -6,7 +6,7 @@ import { MaxIcon } from '../../components/icons/CustomIcons';
 import { LeaderboardUserCardProps } from '../../types/leaderboard';
 import './LeaderboardUserCard.css';
 
-const API_URL = 'https://k-connect.ru';
+const API_URL = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
 
 // Функция для проверки является ли цвет светлым
 const isLightColor = (color: string): boolean => {

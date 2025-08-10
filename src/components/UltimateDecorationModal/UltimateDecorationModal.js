@@ -236,7 +236,7 @@ const UltimateDecorationModal = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const API_URL = 'https://k-connect.ru';
+  const API_URL = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
 
   // Функция для проверки является ли цвет светлым
   const isLightColor = color => {

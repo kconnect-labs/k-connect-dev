@@ -25,7 +25,8 @@ const getAudioUrl = filePath => {
 
   // Если на localhost, добавляем полный URL
   if (isLocalhost) {
-    return `https://k-connect.ru${filePath}`;
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+    return `${origin}${filePath}`;
   }
 
   return filePath;

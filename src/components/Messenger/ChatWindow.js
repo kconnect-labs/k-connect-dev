@@ -266,8 +266,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   
-  const API_URL = 'https://k-connect.ru/apiMes';
-  const BASE_URL = 'https://k-connect.ru';
+  const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+  const API_URL = `${ORIGIN}/apiMes`;
+  const BASE_URL = ORIGIN;
   
   const BOTTOM_SCROLL_THRESHOLD = 200;
   
