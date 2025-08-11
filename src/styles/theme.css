@@ -381,8 +381,7 @@ html.theme-site-background {
 }
 
 .theme-menu {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+
   /* 
     Блюр включается только если поддерживается аппаратно.
     Если у пользователя rasterizer off или слабое GPU, блюр можно отключить через JS, 
@@ -394,8 +393,7 @@ html.theme-site-background {
     Или если детектирован низкий FPS/плохое GPU:
       document.body.classList.add('no-blur');
   */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+
 }
 
 body.no-blur .theme-menu,

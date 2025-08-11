@@ -959,21 +959,21 @@ const AboutPage = () => {
         role: 'Модератор',
         avatar: '/static/moderators/arb.jpg',
       },
-      // {
-      //   name: "Liquides",
-      //   role: "Модератор",
-      //   avatar: "/static/moderators/lix.jpg"
-      // },
+      {
+        name: "Liquides",
+        role: "Модератор",
+        avatar: "/static/moderators/lix.jpg"
+      },
       {
         name: 'IMarandici',
         role: 'Модератор',
         avatar: '/static/moderators/lmar.jpg',
       },
-      // {
-      //   name: "Morozik",
-      //   role: "Поддержка",
-      //   avatar: "/static/moderators/morozik.jpeg"
-      // },
+      {
+        name: "Morozik",
+        role: "Поддержка",
+        avatar: "/static/moderators/morozik.jpeg"
+      },
       {
         name: 'rev/x',
         role: 'Модератор',
@@ -986,6 +986,9 @@ const AboutPage = () => {
       },
     ],
   };
+
+  // Список бывших модераторов (исключая rev/x)
+  const previousHelpers = teamData.moderators.filter(m => m.name !== 'rev/x');
 
   return (
     <Box sx={{ overflow: 'hidden' }}>
@@ -1534,7 +1537,9 @@ const AboutPage = () => {
             whileInView='visible'
             viewport={{ once: true }}
           >
-            {teamData.moderators.map((moderator, index) => (
+            {teamData.moderators
+              .filter(m => m.name === 'rev/x')
+              .map((moderator, index) => (
               <MotionGrid
                 item
                 xs={6}
@@ -1576,6 +1581,97 @@ const AboutPage = () => {
                     }}
                   >
                     Модератор
+                  </Typography>
+                </MotionBox>
+              </MotionGrid>
+            ))}
+          </MotionGrid>
+        </Container>
+      </Box>
+
+      {/* Экс‑модераторы */}
+      <Box sx={{ py: 12, bgcolor: theme.palette.background.paper }}>
+        <Container maxWidth='lg'>
+          <MotionBox
+            sx={{ textAlign: 'center', mb: 8 }}
+            variants={itemVariants}
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant='h2'
+              sx={{
+                fontWeight: 700,
+                mb: 2,
+                fontSize: { xs: '2rem', md: '2.5rem' },
+              }}
+            >
+              Экс‑модераторы
+            </Typography>
+            <Typography
+              variant='subtitle1'
+              sx={{
+                fontSize: { xs: '1rem', md: '1.2rem' },
+                maxWidth: '800px',
+                mx: 'auto',
+              }}
+            >
+              Ранее помогавшие проекту в разных направлениях
+            </Typography>
+          </MotionBox>
+
+          <MotionGrid
+            container
+            spacing={4}
+            justifyContent='center'
+            variants={containerVariants}
+            initial='hidden'
+            whileInView='visible'
+            viewport={{ once: true }}
+          >
+            {previousHelpers.map((person, index) => (
+              <MotionGrid
+                item
+                xs={6}
+                sm={4}
+                md={3}
+                key={`${person.name}-${index}`}
+                variants={itemVariants}
+              >
+                <MotionBox
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                  }}
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Avatar
+                    src={person.avatar}
+                    alt={person.name}
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      mb: 2,
+                      border: '3px solid',
+                      borderColor: theme.palette.primary.main,
+                      boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
+                    }}
+                  />
+                  <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                    {person.name}
+                  </Typography>
+                  <Typography
+                    variant='body2'
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      mt: 0.5,
+                    }}
+                  >
+                    Экс‑модератор
                   </Typography>
                 </MotionBox>
               </MotionGrid>
