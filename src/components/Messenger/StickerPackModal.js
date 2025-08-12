@@ -242,21 +242,21 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
 
 // Стили в вашем стиле
 const cardStyles = {
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.12)',
   borderRadius: '8px',
-  color: 'inherit',
+  color: 'var(--theme-text-primary, inherit)',
 };
 
 const buttonStyles = {
   borderRadius: '8px',
-  background: 'rgba(255, 255, 255, 0.03)',
-  backdropFilter: 'blur(20px)',
+  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.12)',
-  color: 'inherit',
+  color: 'var(--theme-text-primary, inherit)',
   '&:hover': {
-    background: 'rgba(255, 255, 255, 0.08)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
   },
 };
 
@@ -584,7 +584,7 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
               ...(isInstalled
                 ? {}
                 : {
-                    background: 'rgba(255, 255, 255, 0.03)',
+                    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(255, 255, 255, 0.12)',
                   }),
             }}
@@ -603,7 +603,7 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
             variant='contained'
             sx={{
               ...buttonStyles,
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >

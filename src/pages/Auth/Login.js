@@ -252,9 +252,14 @@ const Login = () => {
     const left = window.screen.width / 2 - width / 2;
     const top = window.screen.height / 2 - height / 2;
 
+    // Определяем, какой домен используется
+    const isWWW = window.location.hostname.startsWith('www.');
+    const authPage = isWWW ? '/telegram-auth-beta.html' : '/telegram-auth.html';
+    const windowName = isWWW ? 'TelegramAuthBeta' : 'TelegramAuth';
+
     const telegramWindow = window.open(
-      '/telegram-auth.html',
-      'TelegramAuth',
+      authPage,
+      windowName,
       `width=${width},height=${height},left=${left},top=${top}`
     );
 

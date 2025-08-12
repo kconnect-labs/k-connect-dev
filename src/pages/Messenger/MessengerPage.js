@@ -34,6 +34,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import SEO from '../../components/SEO';
 import '../../styles/messenger.css';
+import './MessengerMobile.css';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
@@ -429,8 +430,8 @@ const MessengerPage = () => {
             mx: 'auto',
             mt: { xs: 0, md: 1 },
             overflow: 'hidden',
-            background: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             borderRadius: '8px',
             border: '1px solid rgba(255, 255, 255, 0.12)',
             position: 'relative',
@@ -452,10 +453,11 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  color: '#fff',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '8px',
+                  transition: 'all 0.3s ease',
                 }}
                 startIcon={<ChatIcon />}
                 onClick={handleNewChatClick}
@@ -466,10 +468,11 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                  color: '#fff',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '8px',
+                  transition: 'all 0.3s ease',
                 }}
                 startIcon={<AddIcon />}
                 onClick={handleCreateGroupOpen}
@@ -536,11 +539,11 @@ const MessengerPage = () => {
         fullWidth
         PaperProps={{
           sx: {
-            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-            color: '#fff',
+            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            color: 'var(--theme-text-primary, #fff)',
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
-            backdropFilter: 'blur(50px)',
-            WebkitBackdropFilter: 'blur(50px)',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
+            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
             borderRadius: '8px',
             border: '1px solid rgba(255, 255, 255, 0.12)',
           },

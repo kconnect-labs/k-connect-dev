@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Paper, Typography, Skeleton, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import axios from 'axios';
 
@@ -47,7 +47,7 @@ export const LinkPreview = ({ url }) => {
     }
   }, [url]);
 
-  if (error) {
+  if (error || loading) {
     return null;
   }
 
@@ -102,15 +102,7 @@ export const LinkPreview = ({ url }) => {
         },
       }}
     >
-      {loading ? (
-        <Box
-          sx={{ p: 1.5, width: '100%', display: 'flex', alignItems: 'center' }}
-        >
-          <Skeleton variant='text' width='70%' sx={{ mb: 0.5 }} />
-        </Box>
-      ) : (
-        <>
-          {preview?.image && (
+      {preview?.image && (
             <Box
               sx={{
                 width: 90,
@@ -231,8 +223,6 @@ export const LinkPreview = ({ url }) => {
               </Typography>
             </Box>
           </Box>
-        </>
-      )}
     </Paper>
   );
 };

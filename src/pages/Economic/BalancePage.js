@@ -676,6 +676,8 @@ const BalancePage = () => {
                 const [convertLoading, setConvertLoading] = useState(false);
                 const [depositAmount, setDepositAmount] = useState(100);
                 const [depositLoading, setDepositLoading] = useState(false);
+                const [paymentUrl, setPaymentUrl] = useState('');
+                const [showPaymentLink, setShowPaymentLink] = useState(false);
 
   const debounceTimerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -989,6 +991,21 @@ const BalancePage = () => {
           }
           if (transaction.transaction_type.startsWith('payment_deposit_')) {
             const orderId = transaction.transaction_type.replace('payment_deposit_', '');
+            // Если есть информация о платеже, показываем больше деталей
+            if (transaction.payment) {
+              const payment = transaction.payment;
+              let paymentInfo = `Платеж #${orderId}`;
+              
+              if (payment.payment_method && payment.payment_method !== 'unknown') {
+                paymentInfo += ` (${payment.payment_method})`;
+              }
+              
+              if (payment.commission_amount && payment.commission_amount > 0) {
+                paymentInfo += ` | Комиссия: ${payment.commission_amount}₽`;
+              }
+              
+              return paymentInfo;
+            }
             return `Платеж #${orderId}`;
           }
         }
@@ -1253,31 +1270,84 @@ const BalancePage = () => {
     }
   };
 
+  const handleCopyPaymentLink = async () => {
+    try {
+      await navigator.clipboard.writeText(paymentUrl);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: 'Ссылка скопирована в буфер обмена',
+            shortMessage: 'Скопировано',
+            notificationType: 'success',
+            animationType: 'pill',
+          },
+        })
+      );
+    } catch (error) {
+      console.error('Ошибка при копировании:', error);
+      window.dispatchEvent(
+        new CustomEvent('show-error', {
+          detail: {
+            message: 'Не удалось скопировать ссылку',
+            shortMessage: 'Ошибка',
+            notificationType: 'error',
+            animationType: 'pill',
+          },
+        })
+      );
+    }
+  };
+
   const handleCreateDeposit = async () => {
     if (depositLoading || depositAmount < 10) return;
     
     try {
       setDepositLoading(true);
+      setShowPaymentLink(false);
+      setPaymentUrl('');
       
-      const response = await axios.post('/api/mcoin/create-payment', {
+      // Добавляем информацию о пользователе для отключения проверки подписи для ID 3
+      const requestData = {
         amount_rub: depositAmount
-      });
+      };
+      
+
+      const response = await axios.post('/api/mcoin/create-payment', requestData);
       
       if (response.data.success) {
-        // Открываем страницу оплаты в новом окне
-        window.open(response.data.payment_url, '_blank');
+        // Пытаемся открыть страницу оплаты в новом окне
+        const paymentWindow = window.open(response.data.payment_url, '_blank');
         
-        // Показываем уведомление
-        window.dispatchEvent(
-          new CustomEvent('show-error', {
-            detail: {
-              message: `Платеж создан на сумму ${depositAmount} рублей. Откройте страницу оплаты для завершения.`,
-              shortMessage: 'Платеж создан',
-              notificationType: 'success',
-              animationType: 'pill',
-            },
-          })
-        );
+        // Сохраняем ссылку на платеж
+        setPaymentUrl(response.data.payment_url);
+        
+        // Проверяем, удалось ли открыть окно (может быть заблокировано на мобильных)
+        if (paymentWindow) {
+          // Окно открылось успешно
+          window.dispatchEvent(
+            new CustomEvent('show-error', {
+              detail: {
+                message: `Платеж создан на сумму ${depositAmount} рублей. Страница оплаты открыта в новой вкладке.`,
+                shortMessage: 'Платеж создан',
+                notificationType: 'success',
+                animationType: 'pill',
+              },
+            })
+          );
+        } else {
+          // Окно заблокировано (часто на мобильных устройствах)
+          setShowPaymentLink(true);
+          window.dispatchEvent(
+            new CustomEvent('show-error', {
+              detail: {
+                message: `Платеж создан на сумму ${depositAmount} рублей. Используйте кнопку ниже для копирования ссылки.`,
+                shortMessage: 'Платеж создан',
+                notificationType: 'warning',
+                animationType: 'pill',
+              },
+            })
+          );
+        }
       }
     } catch (error) {
       console.error('Ошибка при создании платежа:', error);
@@ -2148,7 +2218,7 @@ const BalancePage = () => {
                 onClick={() => {
                   setOpenKeyDialog(true);
                   setKeySuccess(null);
-                  setActiveTopupTab(user?.id === 3 ? 0 : 1);
+                  setActiveTopupTab(0);
                 }}
               >
                 <ActionCircleIcon>
@@ -2517,7 +2587,7 @@ const BalancePage = () => {
                   ) : (
                     <DiamondIcon sx={{ mr: 1, color: 'success.main' }} />
                   )}
-                  <Typography
+                                    <Typography
                     variant='subtitle1'
                     fontWeight={600}
                     color='text.primary'
@@ -2542,8 +2612,28 @@ const BalancePage = () => {
                               ? t('balance.transactions.custom_period_activity')
                               : selectedTransaction.type === 'username'
                                 ? t('balance.transactions.username_purchase')
-                                                              : selectedTransaction.type === 'mcoin'
-                                ? selectedTransaction.title
+                                : selectedTransaction.type === 'mcoin'
+                                  ? (() => {
+                                      // Специальная обработка для MCoin транзакций
+                                      if (selectedTransaction.transaction_type) {
+                                        if (selectedTransaction.transaction_type.startsWith('payment_deposit')) {
+                                          return 'Пополнение через платеж';
+                                        }
+                                        if (selectedTransaction.transaction_type.startsWith('subscription_purchase')) {
+                                          return 'Покупка подписки';
+                                        }
+                                        if (selectedTransaction.transaction_type.startsWith('decoration_purchase')) {
+                                          return 'Покупка декорации';
+                                        }
+                                        if (selectedTransaction.transaction_type.startsWith('convert_to_points')) {
+                                          return 'Конвертация в баллы';
+                                        }
+                                        if (selectedTransaction.transaction_type.startsWith('key_redemption')) {
+                                          return 'Активация ключа';
+                                        }
+                                      }
+                                      return selectedTransaction.title || 'Операция MCoin';
+                                    })()
                                 : selectedTransaction.type === 'game'
                                   ? getTransactionDescription(
                                       selectedTransaction
@@ -2558,8 +2648,8 @@ const BalancePage = () => {
                                       : selectedTransaction.type ===
                                           'conversion_withdrawal'
                                         ? t(
-                                            'balance.transactions.conversion_withdrawal'
-                                          )
+                                          'balance.transactions.conversion_withdrawal'
+                                        )
                                         : selectedTransaction.type ===
                                             'top_prize'
                                           ? t('balance.transactions.top_prize')
@@ -2568,7 +2658,18 @@ const BalancePage = () => {
                                             )}
                   </Typography>
                 </Box>
-                <TransactionStatusChip label='Выполнен' status='completed' />
+                <TransactionStatusChip 
+                  label={
+                    selectedTransaction.transaction_type && selectedTransaction.transaction_type.startsWith('payment_deposit') && selectedTransaction.payment_display
+                      ? selectedTransaction.payment_display.status_display
+                      : 'Выполнен'
+                  } 
+                  status={
+                    selectedTransaction.transaction_type && selectedTransaction.transaction_type.startsWith('payment_deposit') && selectedTransaction.payment
+                      ? selectedTransaction.payment.status
+                      : 'completed'
+                  } 
+                />
               </Box>
 
               <TransactionDetailAmount
@@ -2578,6 +2679,11 @@ const BalancePage = () => {
                   ? `${formatNumberWithSpaces(selectedTransaction.amount)} MCoin`
                   : formatCurrency(selectedTransaction.amount)
                 }
+                {selectedTransaction.transaction_type && selectedTransaction.transaction_type.startsWith('payment_deposit') && selectedTransaction.payment && (
+                  <Typography variant='caption' color='text.secondary' sx={{ mt: 0.5 }}>
+                    ({formatNumberWithSpaces(selectedTransaction.payment.amount_rub)} ₽)
+                  </Typography>
+                )}
               </TransactionDetailAmount>
 
               <Typography variant='caption' color='text.secondary'>
@@ -2761,6 +2867,127 @@ const BalancePage = () => {
                 </>
               )}
 
+              {/* Информация о MCoin платежах */}
+              {selectedTransaction.transaction_type && selectedTransaction.transaction_type.startsWith('payment_deposit') && selectedTransaction.payment && (
+                <>
+                  <DetailRow key='payment-order-id'>
+                    <DetailLabel>Номер заказа</DetailLabel>
+                    <DetailValue>{selectedTransaction.payment.order_id}</DetailValue>
+                  </DetailRow>
+                  
+                  {selectedTransaction.payment.rukassa_id && (
+                    <DetailRow key='payment-rukassa-id'>
+                      <DetailLabel>ID в Rukassa</DetailLabel>
+                      <DetailValue>{selectedTransaction.payment.rukassa_id}</DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  <DetailRow key='payment-amount-rub'>
+                    <DetailLabel>Сумма в рублях</DetailLabel>
+                    <DetailValue>{formatNumberWithSpaces(selectedTransaction.payment.amount_rub)} ₽</DetailValue>
+                  </DetailRow>
+                  
+
+                  
+
+                  
+                  {selectedTransaction.payment.payment_method && selectedTransaction.payment.payment_method !== 'unknown' && (
+                    <DetailRow key='payment-method'>
+                      <DetailLabel>Способ оплаты</DetailLabel>
+                      <DetailValue>
+                        {selectedTransaction.payment_display && selectedTransaction.payment_display.payment_method_display 
+                          ? selectedTransaction.payment_display.payment_method_display 
+                          : selectedTransaction.payment.payment_method}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  {selectedTransaction.payment.payment_system && (
+                    <DetailRow key='payment-system'>
+                      <DetailLabel>Платежная система</DetailLabel>
+                      <DetailValue>
+                        {selectedTransaction.payment_display && selectedTransaction.payment_display.payment_system_display 
+                          ? selectedTransaction.payment_display.payment_system_display 
+                          : selectedTransaction.payment.payment_system}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  {selectedTransaction.payment.currency && (
+                    <DetailRow key='payment-currency'>
+                      <DetailLabel>Валюта</DetailLabel>
+                      <DetailValue>{selectedTransaction.payment.currency}</DetailValue>
+                    </DetailRow>
+                  )}
+                  
+
+                  
+                  <DetailRow key='payment-created-at'>
+                    <DetailLabel>Дата создания</DetailLabel>
+                    <DetailValue>{formatDate(selectedTransaction.payment.created_at)}</DetailValue>
+                  </DetailRow>
+                  
+                  {selectedTransaction.payment.completed_at && (
+                    <DetailRow key='payment-completed-at'>
+                      <DetailLabel>Дата завершения</DetailLabel>
+                      <DetailValue>{formatDate(selectedTransaction.payment.completed_at)}</DetailValue>
+                    </DetailRow>
+                  )}
+                </>
+              )}
+
+              {/* Информация о других MCoin транзакциях */}
+              {selectedTransaction.transaction_type && (
+                <>
+                  {selectedTransaction.transaction_type.startsWith('subscription_purchase_') && (
+                    <DetailRow key='subscription-type'>
+                      <DetailLabel>Тип подписки</DetailLabel>
+                      <DetailValue>
+                        {(() => {
+                          const subscriptionType = selectedTransaction.transaction_type.replace('subscription_purchase_', '');
+                          const subscriptionNames = {
+                            'premium': 'Premium',
+                            'ultimate': 'Ultimate',
+                            'max': 'MAX'
+                          };
+                          return subscriptionNames[subscriptionType] || 'Подписка';
+                        })()}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  {selectedTransaction.transaction_type.startsWith('decoration_purchase_') && (
+                    <DetailRow key='decoration-id'>
+                      <DetailLabel>ID декорации</DetailLabel>
+                      <DetailValue>
+                        {selectedTransaction.transaction_type.replace('decoration_purchase_', '')}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  {selectedTransaction.transaction_type.startsWith('key_redemption_') && (
+                    <DetailRow key='key-id'>
+                      <DetailLabel>ID ключа</DetailLabel>
+                      <DetailValue>
+                        {selectedTransaction.transaction_type.replace('key_redemption_', '')}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                  
+                  {selectedTransaction.transaction_type.startsWith('convert_to_points_') && (
+                    <DetailRow key='conversion-amount'>
+                      <DetailLabel>Конвертировано</DetailLabel>
+                      <DetailValue>
+                        {(() => {
+                          const amount = selectedTransaction.transaction_type.replace('convert_to_points_', '');
+                          return `${amount} MCoin → ${amount * 250} баллов`;
+                        })()}
+                      </DetailValue>
+                    </DetailRow>
+                  )}
+                </>
+              )}
+
               <DetailRow key='transaction-amount'>
                 <DetailLabel>
                   {t('balance.transaction_details.operation.amount')}
@@ -2774,7 +3001,10 @@ const BalancePage = () => {
                     fontWeight: 700,
                   }}
                 >
-                  {formatCurrency(selectedTransaction.amount)}
+                  {balanceType === 'mcoin' 
+                    ? `${formatNumberWithSpaces(selectedTransaction.amount)} MCoin`
+                    : formatCurrency(selectedTransaction.amount)
+                  }
                 </DetailValue>
               </DetailRow>
 
@@ -3537,7 +3767,7 @@ const BalancePage = () => {
                 onClick={() => {
                   setOpenKeyDialog(true);
                   setKeySuccess(null);
-                  setActiveTopupTab(user?.id === 3 ? 0 : 1);
+                  setActiveTopupTab(0);
                 }}
                 startIcon={<AddIcon />}
               >
@@ -3557,7 +3787,7 @@ const BalancePage = () => {
             setKeyError('');
             setKeySuccess(null);
             setDecorationCheckError('');
-            setActiveTopupTab(user?.id === 3 ? 0 : 1);
+            setActiveTopupTab(0);
           }
         }}
         title="Пополнение баланса"
@@ -3575,7 +3805,7 @@ const BalancePage = () => {
               setDecorationCheckError('');
             }}
             tabs={[
-              ...(user?.id === 3 ? [{ value: 0, label: 'Пополнить' }] : []),
+              { value: 0, label: 'Пополнить' },
               { value: 1, label: t('balance.topup.tabs.key') },
               { value: 2, label: t('balance.topup.tabs.donate') },
               { value: 3, label: 'Проверить декорацию' },
@@ -3584,7 +3814,7 @@ const BalancePage = () => {
             style={{ marginBottom: '16px' }}
           />
 
-          {activeTopupTab === 0 && user?.id === 3 ? (
+          {activeTopupTab === 0 ? (
             <ContentBox>
               <Typography
                 component='div'
@@ -3693,6 +3923,30 @@ const BalancePage = () => {
                     `Пополнить на ${depositAmount} ₽`
                   )}
                 </Button>
+
+                {/* Кнопка копирования ссылки (показывается если окно заблокировано) */}
+                {showPaymentLink && paymentUrl && (
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={handleCopyPaymentLink}
+                    sx={{
+                      mt: 2,
+                      borderColor: '#cfbcfb',
+                      color: '#cfbcfb',
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      py: 1.5,
+                      borderRadius: '8px',
+                      '&:hover': {
+                        borderColor: '#b8a8f0',
+                        color: '#b8a8f0',
+                      },
+                    }}
+                  >
+                    📋 Скопировать ссылку для оплаты
+                  </Button>
+                )}
 
                 {/* Информация о способах оплаты */}
                 <Box sx={{ textAlign: 'center', mt: 2 }}>

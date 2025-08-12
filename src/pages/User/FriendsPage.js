@@ -213,14 +213,41 @@ const FriendsPage = () => {
             placeholder='Поиск по пользователям'
             size='small'
             fullWidth
-            sx={{ mb: 1.5, mt: 1 }}
+            sx={{ 
+              mb: 1.5, 
+              mt: 1,
+              '& .MuiOutlinedInput-root': {
+                background: 'var(--theme-background, rgba(255,255,255,0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: 2,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'var(--theme-background, rgba(255,255,255,0.05))',
+                },
+                '&.Mui-focused': {
+                  border: '1px solid rgba(208, 188, 255, 0.5)',
+                  boxShadow: '0 0 0 2px rgba(208, 188, 255, 0.1)',
+                },
+              },
+              '& .MuiOutlinedInput-input': {
+                color: 'var(--theme-text-primary, inherit)',
+                '&::placeholder': {
+                  color: 'var(--theme-text-secondary, rgba(255,255,255,0.5))',
+                  opacity: 1,
+                },
+              },
+              '& .MuiInputAdornment-root': {
+                color: 'var(--theme-text-secondary, rgba(255,255,255,0.6))',
+              },
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position='start'>
                   <SearchIcon fontSize='small' />
                 </InputAdornment>
               ),
-              sx: { borderRadius: 2 },
             }}
           />
           <Box sx={{ mt: '5px', minHeight: 300 }}>

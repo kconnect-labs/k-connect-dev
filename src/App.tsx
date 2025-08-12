@@ -28,6 +28,7 @@ import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
 import { initMediaCache } from './services/mediaCache';
 import { useThemeManager } from './hooks/useThemeManager';
+import { useStickerPreloader } from './hooks/useStickerPreloader';
 
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
@@ -144,6 +145,31 @@ function App() {
   const [isAppLoading, setIsAppLoading] = useState(true);
 
   const { isInitialized: isThemeInitialized } = useThemeManager();
+  
+  // экпериметально добавляю, не знаю как будет себя вести в проде, но вроде работает
+  const stickerPreloader = useStickerPreloader();
+
+  // Отслеживание активности пользователя для оптимизации загрузки стикеров
+  useEffect(() => {
+    const updateActivity = () => {
+      if (stickerPreloader.updateUserActivity) {
+        stickerPreloader.updateUserActivity();
+      }
+    };
+
+    // Слушаем события активности пользователя
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    events.forEach(event => {
+      document.addEventListener(event, updateActivity, { passive: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, updateActivity);
+      });
+    };
+  }, [stickerPreloader]);
 
   const authContext = useContext(AuthContext);
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};

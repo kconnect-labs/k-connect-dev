@@ -602,6 +602,7 @@
   position: relative;
   width: auto; /* Автоматическая ширина по контенту */
   display: inline-block; /* Позволяет блоку подстраиваться под текст */
+  min-width: 80px;
 }
 
 .my-message .message-bubble {
@@ -1724,6 +1725,8 @@ select {
 }
 
 .sender-name-in-bubble {
+  white-space: nowrap;
+
   font-size: 12px !important;
   font-weight: 600 !important;
   margin-bottom: 2px !important;

@@ -116,38 +116,51 @@ export default defineConfig(({ mode }) => {
           pure_funcs: isProduction ? ['console.log'] : [],
         },
       },
-      rollupOptions: {
-        external: [],
-        treeshake: {
-          moduleSideEffects: false,
-          propertyReadSideEffects: false,
-          tryCatchDeoptimization: false,
-        },
-        output: {
-          manualChunks: {
-            // Основные библиотеки
-            'react': ['react', 'react-dom'],
-            'mui': [
-              '@mui/material',
-              '@mui/icons-material', 
-              '@emotion/react',
-              '@emotion/styled'
-            ],
-            'router': ['react-router-dom'],
-            
-            // Тяжелые библиотеки отдельно
-            'markdown': ['react-markdown'],
-            'lottie': ['lottie-react'],
-            'framer': ['framer-motion'],
-            
-            // Утилиты
-            'utils': ['lodash', 'axios', 'date-fns'],
+              rollupOptions: {
+          onwarn(warning, warn) {
+            // Игнорируем WARN о eval в lottie-web
+            // Это безопасно, так как lottie-web использует eval только для парсинга JSON анимаций
+            // и не выполняет пользовательский код
+            if (warning.code === 'EVAL' && warning.id && warning.id.includes('lottie')) {
+              return;
+            }
+            // Игнорируем WARN о eval в node_modules
+            if (warning.code === 'EVAL' && warning.id && warning.id.includes('node_modules')) {
+              return;
+            }
+            warn(warning);
           },
-          entryFileNames: 'assets/[name].[hash].js',
-          chunkFileNames: 'assets/[name].[hash].js',
-          assetFileNames: 'assets/[name].[hash].[ext]'
-        }
-      },
+          external: [],
+          treeshake: {
+            moduleSideEffects: false,
+            propertyReadSideEffects: false,
+            tryCatchDeoptimization: false,
+          },
+          output: {
+            manualChunks: {
+              // Основные библиотеки
+              'react': ['react', 'react-dom'],
+              'mui': [
+                '@mui/material',
+                '@mui/icons-material', 
+                '@emotion/react',
+                '@emotion/styled'
+              ],
+              'router': ['react-router-dom'],
+              
+              // Тяжелые библиотеки отдельно
+              'markdown': ['react-markdown'],
+              'lottie': ['lottie-react'],
+              'framer': ['framer-motion'],
+              
+              // Утилиты
+              'utils': ['lodash', 'axios', 'date-fns'],
+            },
+            entryFileNames: 'assets/[name].[hash].js',
+            chunkFileNames: 'assets/[name].[hash].js',
+            assetFileNames: 'assets/[name].[hash].[ext]'
+          }
+        },
       chunkSizeWarningLimit: 800, // Более строгий лимит для контроля размера
       target: 'es2020',
       cssCodeSplit: true,
@@ -170,6 +183,16 @@ export default defineConfig(({ mode }) => {
       port: 3005,
       hmr: true,
       fs: { strict: true },
+      // Игнорируем WARN о eval в dev режиме
+      onwarn(warning, warn) {
+        if (warning.code === 'EVAL' && warning.id && warning.id.includes('lottie')) {
+          return;
+        }
+        if (warning.code === 'EVAL' && warning.id && warning.id.includes('node_modules')) {
+          return;
+        }
+        warn(warning);
+      },
       proxy: {
         '/api': {
           target: 'https://k-connect.ru',

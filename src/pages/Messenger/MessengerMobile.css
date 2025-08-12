@@ -1,3 +1,5 @@
+@import '../../styles/theme.css';
+
 input[type='text'],
 textarea {
   font-size: 16px !important;
@@ -23,7 +25,7 @@ textarea {
 }
 
 .message-bubble {
-  max-width: 80%;
+  /* max-width: 80%; */
   word-break: break-word;
   hyphens: auto;
   transition: opacity 0.2s ease;
@@ -31,7 +33,7 @@ textarea {
 
 .message-bubble-left {
   border-radius: 18px 18px 18px 4px;
-  background-color: #f5f5f5;
+  background-color: var(--theme-background, #f5f5f5);
   margin-right: auto;
 }
 
@@ -72,7 +74,7 @@ textarea {
 .message-input-container {
   position: sticky;
   bottom: 0;
-  background-color: #fff;
+  background-color: var(--theme-background, #fff);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding: 8px;
   z-index: 10;
@@ -85,6 +87,8 @@ textarea {
   min-height: 24px;
   max-height: 120px;
   outline: none;
+  background-color: var(--theme-background, #fff);
+  color: var(--theme-text-primary, inherit);
 }
 
 .attachment-preview {
@@ -99,92 +103,91 @@ textarea {
   margin: 4px 0;
 }
 
-.attachment-remove {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 2;
+/* Поддержка тем для мессенджера */
+.messenger-main {
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-.touch-scrollable {
-  -webkit-overflow-scrolling: touch;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+/* Стили для чатов с поддержкой тем */
+.chat-item {
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.3s ease;
 }
 
-@media (max-width: 350px) {
-  .message-bubble {
-    max-width: 90%;
-  }
+.chat-item:hover {
+  background: var(--theme-background, rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.user-avatar {
-  border-radius: 50%;
-  object-fit: cover;
+/* Стили для сообщений с поддержкой тем */
+.message-item {
+  color: var(--theme-text-primary, inherit);
 }
 
-.avatar-placeholder {
-  width: 40px;
-  height: 40px;
-  margin-right: 8px;
-  opacity: 0;
-}
-
-.chat-active {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.unread-badge {
-  background-color: #0084ff;
-  color: white;
-  border-radius: 50%;
-  min-width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
+.message-text {
+  color: var(--theme-text-primary, inherit);
 }
 
 .message-time {
-  font-size: 11px;
-  opacity: 0.7;
-  margin-top: 2px;
-  text-align: right;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  color: var(--theme-text-secondary, rgba(255, 255, 255, 0.6));
 }
 
-.fade-transition {
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+/* Стили для поля ввода с поддержкой тем */
+.message-input-field {
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--theme-text-primary, inherit);
+  transition: all 0.3s ease;
 }
 
-.fade-enter {
-  opacity: 0;
-  transform: translateY(10px);
+.message-input-field:focus {
+  border-color: rgba(208, 188, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(208, 188, 255, 0.1);
 }
 
-.fade-enter-active {
-  opacity: 1;
-  transform: translateY(0);
+/* Стили для модальных окон мессенджера */
+.messenger-modal {
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(50px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(50px));
+  color: var(--theme-text-primary, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.fade-exit {
-  opacity: 1;
+/* Стили для стикеров с поддержкой тем */
+.sticker-container {
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
+  backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(10px));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
 }
 
-.fade-exit-active {
-  opacity: 0;
+.sticker-container:hover {
+  background: var(--theme-background, rgba(255, 255, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Мобильные оптимизации для тем */
+@media (max-width: 768px) {
+  .messenger-main {
+    border-radius: 0;
+    margin: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  .message-input-container {
+    background: var(--theme-background, rgba(255, 255, 255, 0.03));
+    backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+    -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
+  }
 }

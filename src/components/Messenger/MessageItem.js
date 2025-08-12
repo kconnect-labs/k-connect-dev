@@ -28,6 +28,7 @@ import { TextWithLinks } from './linkUtils';
 import StickerPackModal from './StickerPackModal';
 import Lottie from 'lottie-react';
 import pako from 'pako';
+import { useStickerCache } from '../../services/stickerCache';
 
 // Функция для определения типа стикера
 const getStickerType = (stickerUrl, stickerData) => {
@@ -53,29 +54,45 @@ const getStickerType = (stickerUrl, stickerData) => {
   return 'static'; // webp, png, jpeg
 };
 
-// Компонент для TGS стикера с улучшенной загрузкой
+// Компонент для TGS стикера с кешированием
 const TGSSticker = ({ src, style, onClick }) => {
   const [animationData, setAnimationData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { getSticker, isCached } = useStickerCache();
 
   useEffect(() => {
     const loadTGS = async () => {
       try {
-        setLoading(true);
-        setError(false);
+        // Сначала проверяем кеш
+        const cachedData = getSticker(src);
+        if (cachedData) {
+          // Если есть в кеше, загружаем как blob
+          const response = await fetch(cachedData);
+          if (response.ok) {
+            const arrayBuffer = await response.arrayBuffer();
+            let jsonData;
 
-        const response = await fetch(src);
+            try {
+              // Пробуем распаковать как gzip
+              const decompressed = pako.inflate(arrayBuffer);
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(decompressed));
+            } catch (gzipError) {
+              // Если не gzip, пробуем как обычный JSON
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+            }
 
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
+            if (jsonData && jsonData.v && jsonData.fr) {
+              setAnimationData(jsonData);
+              return;
+            }
+          }
         }
 
-        const contentType = response.headers.get('content-type');
-
-        // Проверяем, действительно ли это TGS файл
-        if (contentType !== 'application/x-tgsticker') {
-          console.log('Not a TGS file, falling back to image:', contentType);
+        // Если нет в кеше или не удалось загрузить, загружаем оригинал
+        const response = await fetch(src);
+        if (!response.ok) {
           setError(true);
           return;
         }
@@ -94,49 +111,29 @@ const TGSSticker = ({ src, style, onClick }) => {
           jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
         }
 
-        setAnimationData(jsonData);
+        if (jsonData && jsonData.v && jsonData.fr) {
+          setAnimationData(jsonData);
+        } else {
+          setError(true);
+        }
       } catch (error) {
-        console.error('Error loading TGS:', error);
+        console.error('Error loading TGS sticker:', error);
         setError(true);
-      } finally {
-        setLoading(false);
       }
     };
 
     if (src) {
       loadTGS();
     }
-  }, [src]);
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          ...style,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255,255,255,0.03)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '8px',
-          minHeight: style?.maxWidth || '120px',
-          minWidth: style?.maxWidth || '120px',
-        }}
-      >
-        <CircularProgress size={24} />
-      </div>
-    );
-  }
+  }, [src, getSticker]);
 
   if (error || !animationData) {
-    // Fallback to image if TGS loading failed
+    // Fallback к изображению если TGS не загрузился
     return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
 
   return (
-    <div style={style} onClick={onClick}>
+    <div style={style} onClick={onClick} title={isCached(src) ? 'Кеширован' : 'Загружается...'}>
       <Lottie
         animationData={animationData}
         loop={true}
@@ -148,96 +145,33 @@ const TGSSticker = ({ src, style, onClick }) => {
   );
 };
 
-// Компонент для асинхронной проверки типа стикера
+// Упрощенный рендерер стикеров без лишних проверок
 const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
-  const [stickerType, setStickerType] = useState('loading');
-  const [animationData, setAnimationData] = useState(null);
+  // Определяем тип стикера по расширению файла для мгновенной загрузки
+  const getStickerType = (url) => {
+    if (!url) return 'static';
+    const extension = url.split('.').pop()?.toLowerCase();
+    
+    if (extension === 'tgs') return 'tgs';
+    if (extension === 'webm') return 'webm';
+    return 'static';
+  };
 
-  useEffect(() => {
-    const checkStickerType = async () => {
-      try {
-        // Сначала пробуем загрузить как TGS
-        const response = await fetch(src);
+  const stickerType = getStickerType(src);
 
-        if (!response.ok) {
-          setStickerType('static');
-          return;
-        }
-
-        const contentType = response.headers.get('content-type');
-
-        if (contentType === 'application/x-tgsticker') {
-          // Это TGS файл, пробуем его загрузить
-          try {
-            const arrayBuffer = await response.arrayBuffer();
-            let jsonData;
-
-            try {
-              // Пробуем распаковать как gzip
-              const decompressed = pako.inflate(arrayBuffer);
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(decompressed));
-            } catch (gzipError) {
-              // Если не gzip, пробуем как обычный JSON
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-            }
-
-            setAnimationData(jsonData);
-            setStickerType('tgs');
-          } catch (error) {
-            console.error('Error loading TGS data:', error);
-            setStickerType('static');
-          }
-        } else if (contentType === 'video/webm') {
-          setStickerType('webm');
-        } else {
-          setStickerType('static');
-        }
-      } catch (error) {
-        console.error('Error checking sticker type:', error);
-        setStickerType('static');
-      }
-    };
-
-    checkStickerType();
-  }, [src]);
-
-  if (stickerType === 'loading') {
+  // Для TGS файлов используем упрощенную загрузку
+  if (stickerType === 'tgs') {
     return (
-      <div
-        style={{
-          ...style,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'rgba(255,255,255,0.03)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '8px',
-          minHeight: style?.maxWidth || '120px',
-          minWidth: style?.maxWidth || '120px',
-        }}
-      >
-        <CircularProgress size={24} />
-      </div>
+      <TGSSticker
+        src={src}
+        style={style}
+        onClick={onClick}
+      />
     );
   }
 
-  if (stickerType === 'tgs' && animationData) {
-    return (
-      <div style={style} onClick={onClick}>
-        <Lottie
-          animationData={animationData}
-          loop={true}
-          autoplay={true}
-          speed={0.75}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
-  } else if (stickerType === 'webm') {
+  // Для WebM видео
+  if (stickerType === 'webm') {
     return (
       <video
         src={src}
@@ -249,9 +183,10 @@ const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
         playsInline
       />
     );
-  } else {
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
+
+  // Для статичных изображений (webp, png, jpeg)
+  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 const MessageItem = ({
@@ -599,8 +534,8 @@ const MessageItem = ({
               style={{
                 position: 'relative',
                 display: 'inline-block',
-                maxWidth: '256px',
-                minWidth: '150px',
+                maxWidth: '126px',
+                minWidth: '126px',
               }}
             >
               {/* Определяем тип стикера и рендерим соответствующий компонент */}
@@ -612,7 +547,7 @@ const MessageItem = ({
                 const commonStyle = {
                   width: '100%',
                   height: 'auto',
-                  maxWidth: '256px',
+                  maxWidth: '126px',
                   objectFit: 'contain',
                   borderRadius: '12px',
                   cursor: 'pointer',
@@ -914,8 +849,8 @@ const MessageItem = ({
             style={{
               position: 'relative',
               display: 'inline-block',
-              maxWidth: '256px',
-              minWidth: '150px',
+              maxWidth: '128px',
+              minWidth: '128px',
             }}
           >
             {/* Определяем тип стикера и рендерим соответствующий компонент */}
@@ -927,7 +862,7 @@ const MessageItem = ({
               const commonStyle = {
                 width: '100%',
                 height: 'auto',
-                maxWidth: '256px',
+                maxWidth: '128px',
                 objectFit: 'contain',
                 borderRadius: '12px',
                 cursor: 'pointer',

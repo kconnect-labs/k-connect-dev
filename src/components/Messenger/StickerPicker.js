@@ -20,10 +20,15 @@ import { useMessenger } from '../../contexts/MessengerContext';
 import axios from 'axios';
 import Lottie from 'lottie-react';
 import pako from 'pako';
+import { useStickerCache } from '../../services/stickerCache';
 
 // API URL для мессенджера
 const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
 const API_URL = `${ORIGIN}/apiMes`;
+
+// Константы для ленивой загрузки
+const STICKERS_PER_BATCH = 5; // Загружаем по 5 стикеров за раз
+const LOAD_MORE_THRESHOLD = 100; // Пиксели до конца для подгрузки
 
 // Функция для определения типа стикера
 const getStickerType = sticker => {
@@ -49,39 +54,46 @@ const getStickerType = sticker => {
   return 'static'; // webp, png, jpeg
 };
 
-// Компонент для TGS стикера с улучшенной загрузкой и кешированием
+// Компонент для TGS стикеров с кешированием
 const TGSSticker = React.memo(
-  ({ src, style, onClick, getCachedFile, setCachedFile }) => {
+  ({ src, style, onClick }) => {
     const [animationData, setAnimationData] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [isStatic, setIsStatic] = useState(true); // По умолчанию статичный режим
+    const { getSticker, isCached } = useStickerCache();
 
     useEffect(() => {
       const loadTGS = async () => {
         try {
-          setLoading(true);
-          setError(false);
+          // Сначала проверяем кеш
+          const cachedData = getSticker(src);
+          if (cachedData) {
+            // Если есть в кеше, загружаем как blob
+            const response = await fetch(cachedData);
+            if (response.ok) {
+              const arrayBuffer = await response.arrayBuffer();
+              let jsonData;
 
-          // Проверяем кеш
-          const cachedData = getCachedFile?.(src);
-          if (cachedData && cachedData.v && cachedData.fr) {
-            // Проверяем, что кешированные данные валидны для Lottie
-            setAnimationData(cachedData);
-            setLoading(false);
-            return;
+              try {
+                // Пробуем распаковать как gzip
+                const decompressed = pako.inflate(arrayBuffer);
+                const textDecoder = new TextDecoder();
+                jsonData = JSON.parse(textDecoder.decode(decompressed));
+              } catch (gzipError) {
+                // Если не gzip, пробуем как обычный JSON
+                const textDecoder = new TextDecoder();
+                jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+              }
+
+              if (jsonData && jsonData.v && jsonData.fr) {
+                setAnimationData(jsonData);
+                return;
+              }
+            }
           }
 
+          // Если нет в кеше или не удалось загрузить, загружаем оригинал
           const response = await fetch(src);
-
           if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-
-          const contentType = response.headers.get('content-type');
-
-          // Проверяем, действительно ли это TGS файл
-          if (contentType !== 'application/x-tgsticker') {
             setError(true);
             return;
           }
@@ -100,74 +112,50 @@ const TGSSticker = React.memo(
             jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
           }
 
-          // Проверяем валидность данных для Lottie
-          if (!jsonData || !jsonData.v || !jsonData.fr) {
-            console.error('Invalid TGS data for Lottie:', jsonData);
+          if (jsonData && jsonData.v && jsonData.fr) {
+            setAnimationData(jsonData);
+          } else {
             setError(true);
-            return;
           }
-
-          // Сохраняем в кеш только валидные данные
-          setCachedFile?.(src, jsonData);
-          setAnimationData(jsonData);
         } catch (error) {
-          console.error('Error loading TGS:', error);
+          console.error('Error loading TGS sticker:', error);
           setError(true);
-        } finally {
-          setLoading(false);
         }
       };
 
       if (src) {
         loadTGS();
       }
-    }, [src, getCachedFile, setCachedFile]);
+    }, [src, getSticker]);
 
-    if (loading) {
-      return (
-        <div
-          style={{
-            ...style,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CircularProgress size={24} />
-        </div>
-      );
-    }
+    // Мемоизируем title для предотвращения лишних рендеров
+    const title = React.useMemo(() => 
+      isCached(src) ? 'Кеширован' : 'Загружается...', 
+      [isCached, src]
+    );
 
     if (error || !animationData) {
-      // Fallback to image if TGS loading failed
+      // Fallback к изображению если TGS не загрузился
       return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
     }
 
     return (
-      <div
-        style={style}
-        onClick={onClick}
-        onMouseEnter={() => setIsStatic(false)} // Включаем анимацию при наведении
-        onMouseLeave={() => setIsStatic(true)} // Отключаем анимацию при уходе мыши
-      >
+      <div style={style} onClick={onClick} title={title}>
         <Lottie
           animationData={animationData}
-          loop={!isStatic} // Зацикливание только когда не статичный
-          autoplay={!isStatic} // Автовоспроизведение только когда не статичный
+          loop={true}
+          autoplay={true}
+          speed={0.75}
           style={{ width: '100%', height: '100%' }}
-          onError={error => {
-            console.error('Lottie animation error:', error);
-            setError(true);
-          }}
         />
       </div>
     );
   }
 );
 
-// Компонент для асинхронной проверки типа стикера с кешированием
+// Упрощенный компонент для стикеров без кеширования
 const AsyncStickerRenderer = React.memo(
-  ({ src, style, onClick, getCachedFile, setCachedFile }) => {
+  ({ src, style, onClick }) => {
     const [stickerType, setStickerType] = useState('loading');
     const [animationData, setAnimationData] = useState(null);
     const [isStatic, setIsStatic] = useState(true); // По умолчанию статичный режим
@@ -175,28 +163,14 @@ const AsyncStickerRenderer = React.memo(
     useEffect(() => {
       const checkStickerType = async () => {
         try {
-          // Проверяем кеш для TGS файлов
-          const cachedData = getCachedFile?.(src);
-          if (cachedData && cachedData.v && cachedData.fr) {
-            // Проверяем, что кешированные данные валидны для Lottie
-            setAnimationData(cachedData);
+          // Определяем тип стикера по расширению файла
+          const extension = src.split('.').pop()?.toLowerCase();
+          
+          if (extension === 'tgs') {
             setStickerType('tgs');
-            return;
-          }
-
-          // Сначала пробуем загрузить как TGS
-          const response = await fetch(src);
-
-          if (!response.ok) {
-            setStickerType('static');
-            return;
-          }
-
-          const contentType = response.headers.get('content-type');
-
-          if (contentType === 'application/x-tgsticker') {
-            // Это TGS файл, пробуем его загрузить
-            try {
+            // Загружаем TGS файл
+            const response = await fetch(src);
+            if (response.ok) {
               const arrayBuffer = await response.arrayBuffer();
               let jsonData;
 
@@ -211,22 +185,15 @@ const AsyncStickerRenderer = React.memo(
                 jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
               }
 
-              // Проверяем валидность данных для Lottie
-              if (!jsonData || !jsonData.v || !jsonData.fr) {
-                console.error('Invalid TGS data for Lottie:', jsonData);
+              if (jsonData && jsonData.v && jsonData.fr) {
+                setAnimationData(jsonData);
+              } else {
                 setStickerType('static');
-                return;
               }
-
-              // Сохраняем в кеш только валидные данные
-              setCachedFile?.(src, jsonData);
-              setAnimationData(jsonData);
-              setStickerType('tgs');
-            } catch (error) {
-              console.error('Error loading TGS data:', error);
+            } else {
               setStickerType('static');
             }
-          } else if (contentType === 'video/webm') {
+          } else if (extension === 'webm') {
             setStickerType('webm');
           } else {
             setStickerType('static');
@@ -238,7 +205,7 @@ const AsyncStickerRenderer = React.memo(
       };
 
       checkStickerType();
-    }, [src, getCachedFile, setCachedFile]);
+    }, [src]);
 
     if (stickerType === 'loading') {
       return (
@@ -298,6 +265,298 @@ const AsyncStickerRenderer = React.memo(
   }
 );
 
+// Компонент для изображений с кешированием
+const CachedImage = React.memo(({ src, alt, style, onClick }) => {
+  const { getSticker, isCached } = useStickerCache();
+  
+  // Мемоизируем все вычисления для предотвращения лишних рендеров
+  const cachedUrl = React.useMemo(() => getSticker(src), [getSticker, src]);
+  const finalSrc = React.useMemo(() => cachedUrl || src, [cachedUrl, src]);
+  const isCachedSticker = React.useMemo(() => isCached(src), [isCached, src]);
+  const title = React.useMemo(() => 
+    isCachedSticker ? 'Кеширован' : 'Загружается...', 
+    [isCachedSticker]
+  );
+  
+  return (
+    <img 
+      src={finalSrc} 
+      alt={alt} 
+      style={style} 
+      onClick={onClick}
+      title={title}
+    />
+  );
+});
+
+// Компонент для видео с кешированием
+const CachedVideo = React.memo(
+  ({
+    src,
+    style,
+    onClick,
+    autoPlay = false,
+    loop = false,
+    muted = true,
+    playsInline = true,
+  }) => {
+    const { getSticker, isCached } = useStickerCache();
+    
+    // Мемоизируем все вычисления для предотвращения лишних рендеров
+    const cachedUrl = React.useMemo(() => getSticker(src), [getSticker, src]);
+    const finalSrc = React.useMemo(() => cachedUrl || src, [cachedUrl, src]);
+    const isCachedSticker = React.useMemo(() => isCached(src), [isCached, src]);
+    const title = React.useMemo(() => 
+      isCachedSticker ? 'Кеширован' : 'Загружается...', 
+      [isCachedSticker]
+    );
+    
+    return (
+      <video
+        src={finalSrc}
+        style={style}
+        onClick={onClick}
+        autoPlay={autoPlay}
+        loop={loop}
+        muted={muted}
+        playsInline={playsInline}
+        onMouseEnter={e => e.target.play()} // Воспроизводим при наведении
+        onMouseLeave={e => {
+          e.target.pause();
+          e.target.currentTime = 0; // Возвращаем к началу
+        }}
+        title={title}
+      />
+    );
+  }
+);
+
+// Компонент для ленивой загрузки стикеров
+const LazyStickerGrid = React.memo(({ stickers, onStickerClick, pack }) => {
+  const [visibleStickers, setVisibleStickers] = useState([]);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const scrollRef = useRef(null);
+  const loadingRef = useRef(null);
+  const scrollTimeoutRef = useRef(null);
+
+  // Инициализация первых стикеров
+  useEffect(() => {
+    if (stickers && stickers.length > 0) {
+      const initialBatch = stickers.slice(0, STICKERS_PER_BATCH);
+      setVisibleStickers(initialBatch);
+      setHasMore(stickers.length > STICKERS_PER_BATCH);
+    }
+  }, [stickers]);
+
+  // Функция для загрузки следующей порции стикеров
+  const loadMoreStickers = useCallback(() => {
+    if (loadingMore || !hasMore) return;
+
+    setLoadingMore(true);
+    
+    // Имитируем небольшую задержку для плавности
+    setTimeout(() => {
+      const currentCount = visibleStickers.length;
+      const nextBatch = stickers.slice(currentCount, currentCount + STICKERS_PER_BATCH);
+      
+      setVisibleStickers(prev => [...prev, ...nextBatch]);
+      setHasMore(currentCount + STICKERS_PER_BATCH < stickers.length);
+      setLoadingMore(false);
+    }, 50); // Уменьшили задержку для более быстрой загрузки
+  }, [loadingMore, hasMore, visibleStickers.length, stickers]);
+
+  // Intersection Observer для автоматической подгрузки
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && hasMore && !loadingMore) {
+            loadMoreStickers();
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '100px' } // Добавили rootMargin для ранней загрузки
+    );
+
+    if (loadingRef.current) {
+      observer.observe(loadingRef.current);
+    }
+
+    return () => {
+      if (loadingRef.current) {
+        observer.unobserve(loadingRef.current);
+      }
+    };
+  }, [hasMore, loadingMore, loadMoreStickers]);
+
+  // Обработчик скролла с дебаунсингом
+  const handleScroll = useCallback((e) => {
+    // Очищаем предыдущий таймаут
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Устанавливаем новый таймаут для дебаунсинга
+    scrollTimeoutRef.current = setTimeout(() => {
+      const { scrollTop, scrollHeight, clientHeight } = e.target;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < LOAD_MORE_THRESHOLD;
+      
+      if (isNearBottom && hasMore && !loadingMore) {
+        loadMoreStickers();
+      }
+    }, 100); // Дебаунсинг 100ms
+  }, [hasMore, loadingMore, loadMoreStickers]);
+
+  // Очистка таймаута при размонтировании
+  useEffect(() => {
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  if (!stickers || stickers.length === 0) {
+    return (
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+          Нет стикеров в этом паке
+        </Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      ref={scrollRef}
+      onScroll={handleScroll}
+      sx={{
+        height: '100%',
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: 'transparent',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: 'rgba(255, 255, 255, 0.2)',
+          borderRadius: '2px',
+        },
+      }}
+    >
+      <Grid container spacing={0.5} sx={{ p: 1 }}>
+        {visibleStickers.map(sticker => (
+          <Grid item xs={3} sm={2.4} key={sticker.id}>
+            <Box
+              sx={{
+                width: '100%',
+                aspectRatio: '1',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'rgba(255, 255, 255, 0.05)',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
+            >
+              {(() => {
+                const stickerType = getStickerType(sticker);
+                const commonStyle = {
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                };
+
+                const handleClick = () => onStickerClick(pack, sticker);
+
+                // Для API эндпоинтов используем асинхронную проверку
+                if (stickerType === 'api_check_needed') {
+                  return (
+                    <AsyncStickerRenderer
+                      src={sticker.url}
+                      style={commonStyle}
+                      onClick={handleClick}
+                    />
+                  );
+                }
+
+                // Для известных типов используем прямой рендеринг
+                if (stickerType === 'tgs') {
+                  return (
+                    <TGSSticker
+                      src={sticker.url}
+                      style={commonStyle}
+                      onClick={handleClick}
+                    />
+                  );
+                } else if (stickerType === 'webm') {
+                  return (
+                    <CachedVideo
+                      src={sticker.url}
+                      style={commonStyle}
+                      onClick={handleClick}
+                      autoPlay={false}
+                      loop={false}
+                      muted
+                      playsInline
+                    />
+                  );
+                } else {
+                  // Статичные стикеры (webp, png, jpeg) с кешированием
+                  return (
+                    <CachedImage
+                      src={sticker.url}
+                      alt={sticker.name}
+                      style={commonStyle}
+                      onClick={handleClick}
+                    />
+                  );
+                }
+              })()}
+            </Box>
+          </Grid>
+        ))}
+        
+        {/* Индикатор загрузки */}
+        {loadingMore && (
+          <Grid item xs={12} sx={{ textAlign: 'center', py: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+              <CircularProgress size={24} sx={{ color: 'rgba(255, 255, 255, 0.5)' }} />
+              <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                Загружаем еще стикеры...
+              </Typography>
+            </Box>
+          </Grid>
+        )}
+        
+        {/* Индикатор прогресса */}
+        {hasMore && !loadingMore && (
+          <Grid item xs={12} sx={{ textAlign: 'center', py: 1 }}>
+            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+              {visibleStickers.length} из {stickers.length} стикеров
+            </Typography>
+          </Grid>
+        )}
+        
+        {/* Невидимый элемент для отслеживания скролла */}
+        {hasMore && (
+          <Grid item xs={12}>
+            <Box ref={loadingRef} sx={{ height: '20px' }} />
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  );
+});
+
 const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -306,57 +565,6 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
   const [stickerPacks, setStickerPacks] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [preloading, setPreloading] = useState(false);
-  const stickerGridRef = useRef(null);
-
-  // Кеш для стикерпаков
-  const [cachedPacks, setCachedPacks] = useState([]);
-  const [cacheTimestamp, setCacheTimestamp] = useState(null);
-  const CACHE_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 дней (месяц)
-
-  // Кеш для файлов стикеров
-  const stickerFileCache = useRef(new Map());
-  const CACHE_KEY_PREFIX = 'sticker_file_';
-
-  // Предзагрузка всех стикеров при загрузке стикерпаков
-  const preloadStickers = useCallback(async packs => {
-    if (!packs || packs.length === 0) return;
-
-    setPreloading(true);
-
-    try {
-      for (const pack of packs) {
-        if (!pack.stickers) continue;
-
-        for (const sticker of pack.stickers) {
-          const cacheKey = `${CACHE_KEY_PREFIX}${sticker.url}`;
-
-          // Проверяем, есть ли уже в кеше
-          if (stickerFileCache.current.has(cacheKey)) {
-            continue;
-          }
-
-          try {
-            // Загружаем файл в фоне
-            const response = await fetch(sticker.url);
-            if (response.ok) {
-              const blob = await response.blob();
-              const objectUrl = URL.createObjectURL(blob);
-
-              stickerFileCache.current.set(cacheKey, {
-                data: objectUrl,
-                timestamp: Date.now(),
-              });
-            }
-          } catch (error) {
-            console.warn('Failed to preload sticker:', sticker.url, error);
-          }
-        }
-      }
-    } finally {
-      setPreloading(false);
-    }
-  }, []);
 
   // Стили как в Телеграме
   const pickerStyles = {
@@ -365,8 +573,8 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     right: 0,
     width: isMobile ? '100vw' : '320px',
     height: isMobile ? '50vh' : '400px',
-    background: 'rgba(18, 18, 18, 0.95)',
-    backdropFilter: 'blur(20px)',
+    background: 'var(--theme-background, rgba(18, 18, 18, 0.95))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     borderRadius: isMobile ? '16px 16px 0 0' : '12px',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
@@ -376,20 +584,9 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     overflow: 'hidden',
   };
 
-  // Загрузка стикерпаков с кешированием
+  // Упрощенная загрузка стикерпаков без кеширования
   const loadStickerPacks = useCallback(async () => {
     if (!sessionKey) return;
-
-    // Проверяем кеш
-    const now = Date.now();
-    if (
-      cachedPacks.length > 0 &&
-      cacheTimestamp &&
-      now - cacheTimestamp < CACHE_DURATION
-    ) {
-      setStickerPacks(cachedPacks);
-      return;
-    }
 
     try {
       setLoading(true);
@@ -407,225 +604,13 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
       if (response.data.success) {
         const packs = response.data.packs || [];
         setStickerPacks(packs);
-
-        // Сохраняем в кеш
-        setCachedPacks(packs);
-        setCacheTimestamp(now);
-
-        // Запускаем предзагрузку всех стикеров в фоне
-        preloadStickers(packs);
       }
     } catch (error) {
       console.error('Error loading sticker packs:', error);
-
-      // Если API недоступен, используем кеш (даже если он устарел)
-      if (cachedPacks.length > 0) {
-        setStickerPacks(cachedPacks);
-      }
     } finally {
       setLoading(false);
     }
-  }, [sessionKey, cachedPacks, cacheTimestamp, CACHE_DURATION]);
-
-  // Функции для работы с кешем файлов стикеров
-  const getCachedStickerFile = useCallback(
-    url => {
-      const cacheKey = `${CACHE_KEY_PREFIX}${url}`;
-      const cached = stickerFileCache.current.get(cacheKey);
-
-      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return cached.data;
-      }
-
-      // Если нет в кеше, возвращаем null для загрузки
-      return null;
-    },
-    [CACHE_DURATION]
-  );
-
-  const setCachedStickerFile = useCallback((url, data) => {
-    // Проверяем валидность данных перед сохранением в кеш
-    if (!data) {
-      console.warn('StickerPicker: Attempting to cache invalid data for:', url);
-      return;
-    }
-
-    const cacheKey = `${CACHE_KEY_PREFIX}${url}`;
-    stickerFileCache.current.set(cacheKey, {
-      data,
-      timestamp: Date.now(),
-    });
-  }, []);
-
-  const clearStickerFileCache = useCallback(() => {
-    stickerFileCache.current.clear();
-  }, []);
-
-  // Функция для очистки некорректных данных из кеша
-  const cleanInvalidCache = useCallback(() => {
-    const entriesToRemove = [];
-
-    for (const [key, value] of stickerFileCache.current.entries()) {
-      // Проверяем TGS файлы на валидность
-      if (
-        value.data &&
-        typeof value.data === 'object' &&
-        value.data.v !== undefined
-      ) {
-        if (!value.data.v || !value.data.fr) {
-          entriesToRemove.push(key);
-        }
-      }
-    }
-
-    entriesToRemove.forEach(key => {
-      stickerFileCache.current.delete(key);
-    });
-
-    if (entriesToRemove.length > 0) {
-    }
-  }, []);
-
-  // Компонент для кешированных изображений
-  const CachedImage = React.memo(({ src, alt, style, onClick }) => {
-    const [imageSrc, setImageSrc] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-      const loadImage = async () => {
-        try {
-          setLoading(true);
-
-          // Проверяем кеш для изображений
-          const cachedData = getCachedStickerFile(src);
-          if (cachedData) {
-            setImageSrc(cachedData);
-            setLoading(false);
-            return;
-          }
-
-          // Загружаем изображение
-          const response = await fetch(src);
-          const blob = await response.blob();
-          const objectUrl = URL.createObjectURL(blob);
-
-          // Сохраняем в кеш
-          setCachedStickerFile(src, objectUrl);
-          setImageSrc(objectUrl);
-        } catch (error) {
-          console.error('Error loading image:', error);
-          setImageSrc(src); // Fallback к оригинальному URL
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      if (src) {
-        loadImage();
-      }
-    }, [src, getCachedStickerFile, setCachedStickerFile]);
-
-    if (loading) {
-      return (
-        <div
-          style={{
-            ...style,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <CircularProgress size={24} />
-        </div>
-      );
-    }
-
-    return (
-      <img src={imageSrc || src} alt={alt} style={style} onClick={onClick} />
-    );
-  });
-
-  // Компонент для кешированных видео
-  const CachedVideo = React.memo(
-    ({
-      src,
-      style,
-      onClick,
-      autoPlay = false,
-      loop = false,
-      muted = true,
-      playsInline = true,
-    }) => {
-      const [videoSrc, setVideoSrc] = useState(null);
-      const [loading, setLoading] = useState(true);
-
-      useEffect(() => {
-        const loadVideo = async () => {
-          try {
-            setLoading(true);
-
-            // Проверяем кеш для видео
-            const cachedData = getCachedStickerFile(src);
-            if (cachedData) {
-              setVideoSrc(cachedData);
-              setLoading(false);
-              return;
-            }
-
-            // Загружаем видео
-            const response = await fetch(src);
-            const blob = await response.blob();
-            const objectUrl = URL.createObjectURL(blob);
-
-            // Сохраняем в кеш
-            setCachedStickerFile(src, objectUrl);
-            setVideoSrc(objectUrl);
-          } catch (error) {
-            console.error('Error loading video:', error);
-            setVideoSrc(src); // Fallback к оригинальному URL
-          } finally {
-            setLoading(false);
-          }
-        };
-
-        if (src) {
-          loadVideo();
-        }
-      }, [src, getCachedStickerFile, setCachedStickerFile]);
-
-      if (loading) {
-        return (
-          <div
-            style={{
-              ...style,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <CircularProgress size={24} />
-          </div>
-        );
-      }
-
-      return (
-        <video
-          src={videoSrc || src}
-          style={style}
-          onClick={onClick}
-          autoPlay={autoPlay}
-          loop={loop}
-          muted={muted}
-          playsInline={playsInline}
-          onMouseEnter={e => e.target.play()} // Воспроизводим при наведении
-          onMouseLeave={e => {
-            e.target.pause();
-            e.target.currentTime = 0; // Возвращаем к началу
-          }}
-        />
-      );
-    }
-  );
+  }, [sessionKey]);
 
   // Функция для принудительного обновления кеша
   const refreshStickerPacks = useCallback(async () => {
@@ -647,13 +632,6 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
       if (response.data.success) {
         const packs = response.data.packs || [];
         setStickerPacks(packs);
-
-        // Обновляем кеш
-        setCachedPacks(packs);
-        setCacheTimestamp(Date.now());
-
-        // Запускаем предзагрузку всех стикеров в фоне
-        preloadStickers(packs);
       }
     } catch (error) {
       console.error('Error refreshing sticker packs:', error);
@@ -662,24 +640,11 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     }
   }, [sessionKey]);
 
-  // Очистка кеша при смене пользователя
-  useEffect(() => {
-    if (sessionKey) {
-      // Очищаем кеш при смене sessionKey
-      setCachedPacks([]);
-      setCacheTimestamp(null);
-      clearStickerFileCache();
-      setPreloading(false);
-    }
-  }, [sessionKey, clearStickerFileCache]);
-
   useEffect(() => {
     if (isOpen && sessionKey) {
-      // Очищаем некорректные данные перед загрузкой
-      cleanInvalidCache();
       loadStickerPacks();
     }
-  }, [isOpen, sessionKey, loadStickerPacks, cleanInvalidCache]);
+  }, [isOpen, sessionKey, loadStickerPacks]);
 
   // Обработка клика по стикеру
   const handleStickerClick = (pack, sticker) => {
@@ -716,7 +681,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
             Стикеры
           </Typography>
 
-          {preloading && (
+          {loading && (
             <Typography
               variant='caption'
               sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
@@ -788,110 +753,14 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
           </Box>
         ) : (
           <>
-            {/* Сетка стикеров */}
-            <Box
-              ref={stickerGridRef}
-              sx={{
-                flex: 1,
-                overflowY: 'auto',
-                p: 1,
-                '&::-webkit-scrollbar': {
-                  width: '4px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  background: 'transparent',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '2px',
-                },
-              }}
-            >
+            {/* Ленивая сетка стикеров */}
+            <Box sx={{ flex: 1, overflow: 'hidden' }}>
               {activePack && activePack.stickers && (
-                <Grid container spacing={0.5}>
-                  {activePack.stickers.map(sticker => (
-                    <Grid item xs={3} sm={2.4} key={sticker.id}>
-                      <Box
-                        sx={{
-                          width: '100%',
-                          aspectRatio: '1',
-                          borderRadius: '8px',
-                          overflow: 'hidden',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          '&:hover': {
-                            transform: 'scale(1.05)',
-                            background: 'rgba(255, 255, 255, 0.1)',
-                          },
-                        }}
-                      >
-                        {(() => {
-                          const stickerType = getStickerType(sticker);
-                          const commonStyle = {
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                          };
-
-                          const handleClick = () =>
-                            handleStickerClick(activePack, sticker);
-
-                          // Для API эндпоинтов используем асинхронную проверку
-                          if (stickerType === 'api_check_needed') {
-                            return (
-                              <AsyncStickerRenderer
-                                src={sticker.url}
-                                style={commonStyle}
-                                onClick={handleClick}
-                                getCachedFile={getCachedStickerFile}
-                                setCachedFile={setCachedStickerFile}
-                              />
-                            );
-                          }
-
-                          // Для известных типов используем прямой рендеринг
-                          if (stickerType === 'tgs') {
-                            return (
-                              <TGSSticker
-                                src={sticker.url}
-                                style={commonStyle}
-                                onClick={handleClick}
-                                getCachedFile={getCachedStickerFile}
-                                setCachedFile={setCachedStickerFile}
-                              />
-                            );
-                          } else if (stickerType === 'webm') {
-                            return (
-                              <CachedVideo
-                                src={sticker.url}
-                                style={commonStyle}
-                                onClick={handleClick}
-                                autoPlay={false}
-                                loop={false}
-                                muted
-                                playsInline
-                              />
-                            );
-                          } else {
-                            // Статичные стикеры (webp, png, jpeg) с кешированием
-                            return (
-                              <CachedImage
-                                src={sticker.url}
-                                alt={sticker.name}
-                                style={commonStyle}
-                                onClick={handleClick}
-                              />
-                            );
-                          }
-                        })()}
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
+                <LazyStickerGrid
+                  stickers={activePack.stickers}
+                  onStickerClick={handleStickerClick}
+                  pack={activePack}
+                />
               )}
             </Box>
 
@@ -969,8 +838,6 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                                     src={pack.stickers[0].url}
                                     style={commonStyle}
                                     onClick={() => {}}
-                                    getCachedFile={getCachedStickerFile}
-                                    setCachedFile={setCachedStickerFile}
                                   />
                                 );
                               } else if (stickerType === 'webm') {

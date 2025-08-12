@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Paper, Typography, Skeleton, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import axios from 'axios';
 
@@ -32,7 +32,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
     }
   }, [url]);
 
-  if (error) {
+  if (error || loading) {
     return null;
   }
 
@@ -83,8 +83,8 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         position: 'relative',
         maxHeight: '80px',
         maxWidth: '320px',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+        WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
         '&:hover': {
           backgroundColor: colors.hover,
           transform: 'translateY(-1px)',
@@ -102,15 +102,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         },
       }}
     >
-      {loading ? (
-        <Box
-          sx={{ p: 1.2, width: '100%', display: 'flex', alignItems: 'center' }}
-        >
-          <Skeleton variant='text' width='70%' height={16} sx={{ mb: 0.5 }} />
-        </Box>
-      ) : (
-        <>
-          {preview?.image && (
+      {preview?.image && (
             <Box
               sx={{
                 width: 80,
@@ -222,8 +214,6 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
               </Typography>
             </Box>
           </Box>
-        </>
-      )}
     </Paper>
   );
 };
