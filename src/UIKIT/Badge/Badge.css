@@ -16,18 +16,18 @@
 
 /* CSS переменные для размеров и цветов */
 .badge {
-  --badge-size: 24px;
+  --badge-size: 28px;
   --upgrade-color: #FFD700;
 }
 
 /* Размеры бейджиков - обновлены для соответствия Material-UI */
 .badge--post {
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  min-height: 24px !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
   max-width: 100px !important;
-  --badge-size: 24px;
+  --badge-size: 28px;
 }
 
 .badge--small {
@@ -40,12 +40,12 @@
 }
 
 .badge--medium {
-  width: 24px !important;
-  height: 24px !important;
-  min-width: 24px !important;
-  min-height: 24px !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
   max-width: 100px !important;
-  --badge-size: 24px;
+  --badge-size: 28px;
 }
 
 .badge--large {
@@ -131,7 +131,7 @@
   transform: translate(-50%, -50%) rotate(180deg) translateY(-60px);
 }
 .badge--shop .badge-sparkle:nth-child(5) {
-  transform: translate(-50%, -50%) rotate(240deg) translateY(-60px);
+  transform: translate(-50%, -50%) rotate(280deg) translateY(-60px);
 }
 .badge--shop .badge-sparkle:nth-child(6) {
   transform: translate(-50%, -50%) rotate(300deg) translateY(-60px);
@@ -151,7 +151,7 @@
   transform: translate(-50%, -50%) rotate(180deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(5) {
-  transform: translate(-50%, -50%) rotate(240deg) translateY(-8px);
+  transform: translate(-50%, -50%) rotate(280deg) translateY(-8px);
 }
 .badge--post .badge-sparkle:nth-child(6) {
   transform: translate(-50%, -50%) rotate(300deg) translateY(-8px);
@@ -308,10 +308,10 @@
   }
 
   .badge--large {
-    width: 24px !important;
-    height: 24px !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
   }
 
   .badge-particle {
@@ -341,7 +341,7 @@
 }
 
 .badge:focus {
-  box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(128, 77, 255, 0.5);
 }
 
 .badge__image {

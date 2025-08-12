@@ -75,6 +75,7 @@ const FeatureCard = ({ icon, title, description, delay }) => {
       transition={{ duration: 0.5, delay }}
     >
       <Card
+        className="theme-card"
         elevation={0}
         sx={{
           height: '100%',
@@ -82,8 +83,6 @@ const FeatureCard = ({ icon, title, description, delay }) => {
           flexDirection: 'column',
           borderRadius: 4,
           overflow: 'hidden',
-          bgcolor: alpha(theme.palette.background.paper, 0.5),
-          backdropFilter: 'blur(10px)',
           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
           boxShadow: '0 2px 8px 0 rgba(0,0,0,0.10)',
           transition: 'all 0.3s ease',
@@ -204,6 +203,7 @@ const BenefitCard = ({ icon, title, description, index }) => {
       viewport={{ once: true }}
     >
       <Box
+        className="theme-card"
         sx={{
           display: 'flex',
           alignItems: 'flex-start',
@@ -211,8 +211,6 @@ const BenefitCard = ({ icon, title, description, index }) => {
           p: 3,
           borderRadius: 4,
           transition: 'all 0.3s ease',
-          background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.6)}, ${alpha(theme.palette.background.paper, 0.3)})`,
-          backdropFilter: 'blur(10px)',
           border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
           '&:hover': {
             transform: 'translateY(-5px)',
@@ -394,15 +392,13 @@ const TeamSection = ({ title, members }) => {
               style={{ height: '100%' }}
             >
               <Card
+                className="theme-card"
                 sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
                   borderRadius: '20px',
                   overflow: 'hidden',
-                  background: `rgba(255,255,255,0.13)`,
-                  backdropFilter: 'blur(16px)',
-                  boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
                   border: `1.5px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                   transition: 'all 0.35s cubic-bezier(.4,2,.3,1)',
                   '&:hover': {
@@ -473,6 +469,7 @@ const TeamSection = ({ title, members }) => {
                       startIcon={<TelegramIcon />}
                       size='small'
                       variant='outlined'
+                      className="theme-button"
                       sx={{
                         mt: 1,
                         color: theme.palette.primary.main,
@@ -481,10 +478,8 @@ const TeamSection = ({ title, members }) => {
                         borderRadius: '8px',
                         px: 2,
                         textTransform: 'none',
-                        background: 'rgba(255,255,255,0.10)',
                         transition: 'all 0.2s',
                         '&:hover': {
-                          bgcolor: alpha(theme.palette.primary.main, 0.08),
                           borderColor: theme.palette.primary.main,
                           color: theme.palette.primary.main,
                         },
@@ -577,6 +572,7 @@ const HeroSlider = () => {
 
   return (
     <Box
+      className="theme-card"
       sx={{
         position: 'relative',
         width: { xs: '100%', sm: 500, md: 700 },
@@ -586,7 +582,6 @@ const HeroSlider = () => {
         borderRadius: '12px',
         overflow: 'visible',
         boxShadow: '0 8px 40px 0 rgba(80,40,180,0.18)',
-        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)}, ${alpha(theme.palette.background.paper, 0.7)})`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -610,12 +605,12 @@ const HeroSlider = () => {
       />
       <IconButton
         onClick={prevSlide}
+        className="theme-button"
         sx={{
           position: 'absolute',
           left: { xs: -18, sm: -38, md: -48 },
           top: '50%',
           transform: 'translateY(-50%)',
-          bgcolor: alpha(theme.palette.background.paper, 0.85),
           boxShadow: '0 0 16px 4px rgba(120,80,255,0.18)',
           border: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
           width: 56,
@@ -623,7 +618,6 @@ const HeroSlider = () => {
           zIndex: 2,
           transition: 'all 0.2s',
           '&:hover': {
-            bgcolor: alpha(theme.palette.primary.main, 0.18),
             boxShadow: '0 0 32px 8px rgba(120,80,255,0.28)',
             borderColor: theme.palette.primary.main,
             transform: 'translateY(-50%) scale(1.08)',
@@ -635,12 +629,12 @@ const HeroSlider = () => {
       </IconButton>
       <IconButton
         onClick={nextSlide}
+        className="theme-button"
         sx={{
           position: 'absolute',
           right: { xs: -18, sm: -38, md: -48 },
           top: '50%',
           transform: 'translateY(-50%)',
-          bgcolor: alpha(theme.palette.background.paper, 0.85),
           boxShadow: '0 0 16px 4px rgba(120,80,255,0.18)',
           border: `2px solid ${alpha(theme.palette.primary.main, 0.25)}`,
           width: 56,
@@ -648,7 +642,6 @@ const HeroSlider = () => {
           zIndex: 2,
           transition: 'all 0.2s',
           '&:hover': {
-            bgcolor: alpha(theme.palette.primary.main, 0.18),
             boxShadow: '0 0 32px 8px rgba(120,80,255,0.28)',
             borderColor: theme.palette.primary.main,
             transform: 'translateY(-50%) scale(1.08)',
@@ -948,6 +941,24 @@ const AboutPage = () => {
         username: '@yalinks',
       },
     ],
+    security: [
+      {
+        name: 'Михаил',
+        role: 'Специалист по безопасности',
+        avatar: '/static/moderators/misha.jpg',
+        description:
+          'Проверяет безопасность платформы, выявляет уязвимости.',
+        username: '@sunr153',
+      },
+      {
+        name: 'Tinker',
+        role: 'Эксперт по безопасности',
+        avatar: '/static/moderators/tinker.jpg',
+        description:
+          'Анализирует безопасность системы, сообщает о предположительных уязвимостях и помогает исправлять их.',
+        username: '@tinker',
+      },
+    ],
     moderators: [
       {
         name: 'ʙʟxꜱꜱxᴅ ₁₈₆',
@@ -963,6 +974,11 @@ const AboutPage = () => {
         name: "Liquides",
         role: "Модератор",
         avatar: "/static/moderators/lix.jpg"
+      },
+      {
+        name: "blaze",
+        role: "Модератор",
+        avatar: "/static/moderators/blade.png"
       },
       {
         name: 'IMarandici',
@@ -987,11 +1003,11 @@ const AboutPage = () => {
     ],
   };
 
-  // Список бывших модераторов (исключая rev/x)
-  const previousHelpers = teamData.moderators.filter(m => m.name !== 'rev/x');
+  // Список бывших модераторов (исключая rev/x и blaze)
+  const previousHelpers = teamData.moderators.filter(m => m.name !== 'rev/x' && m.name !== 'blaze');
 
   return (
-    <Box sx={{ overflow: 'hidden' }}>
+    <Box className="theme-site-background" sx={{ overflow: 'hidden' }}>
       <Box
         sx={{
           position: 'relative',
@@ -1069,12 +1085,12 @@ const AboutPage = () => {
             <Button
               variant='outlined'
               size='large'
+              className="theme-button"
               sx={{
                 fontSize: '1.08rem',
                 py: 1.2,
                 px: 4,
                 borderRadius: '32px',
-                background: 'rgba(255,255,255,0.08)',
                 color: '#fff',
                 border: '1.5px solid rgba(255,255,255,0.35)',
                 fontWeight: 500,
@@ -1083,7 +1099,6 @@ const AboutPage = () => {
                 textTransform: 'none',
                 transition: 'all 0.2s',
                 '&:hover': {
-                  background: 'rgba(255,255,255,0.18)',
                   borderColor: '#fff',
                   color: '#fff',
                   boxShadow: '0 2px 12px 0 rgba(120,80,255,0.10)',
@@ -1150,7 +1165,8 @@ const AboutPage = () => {
 
       <Box
         ref={featuresRef}
-        sx={{ py: 12, bgcolor: theme.palette.background.paper }}
+        className="theme-aware"
+        sx={{ py: 12 }}
       >
         <Container maxWidth='lg'>
           <MotionBox
@@ -1195,6 +1211,7 @@ const AboutPage = () => {
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <MotionPaper
                   variants={itemVariants}
+                  className="theme-card"
                   sx={{
                     p: 3,
                     height: '100%',
@@ -1208,7 +1225,6 @@ const AboutPage = () => {
                       : '0 4px 12px rgba(0,0,0,0.05)',
                     ...(feature.highlight && {
                       border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)} 0%, ${alpha(theme.palette.primary.main, 0.05)} 100%)`,
                     }),
                   }}
                   whileHover={{
@@ -1287,13 +1303,13 @@ const AboutPage = () => {
             whileHover={{ scale: 1.1 }}
           >
             <Box
+              className="theme-card"
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 p: 2,
                 borderRadius: '20px',
-                bgcolor: alpha(theme.palette.background.default, 0.5),
               }}
             >
               <Typography variant='body2' sx={{ mb: 1 }}>
@@ -1306,7 +1322,7 @@ const AboutPage = () => {
       </Box>
 
       {/* Экономика: Баллы и мКоины */}
-      <Box sx={{ py: 12, bgcolor: alpha(theme.palette.background.default, 0.6) }}>
+      <Box className="theme-aware" sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 6 }}
@@ -1358,19 +1374,19 @@ const AboutPage = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <MotionPaper
-                variants={itemVariants}
-                initial='hidden'
-                whileInView='visible'
-                viewport={{ once: true }}
-                sx={{
-                  p: 4,
-                  borderRadius: 4,
-                  background: `linear-gradient(135deg, ${alpha(theme.palette.background.paper, 0.9)}, ${alpha(theme.palette.secondary?.main || theme.palette.primary.main, 0.06)})`,
-                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-                }}
-                elevation={0}
-              >
+                              <MotionPaper
+                  variants={itemVariants}
+                  initial='hidden'
+                  whileInView='visible'
+                  viewport={{ once: true }}
+                  className="theme-card"
+                  sx={{
+                    p: 4,
+                    borderRadius: 4,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                  }}
+                  elevation={0}
+                >
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <CurrencyExchangeIcon color='primary' sx={{ mr: 1.5 }} />
                   <Typography variant='h5' sx={{ fontWeight: 700 }}>мКоины</Typography>
@@ -1393,9 +1409,9 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-      {/* FAQ */}
-      <Box sx={{ py: 10 }}>
-        <Container maxWidth='md'>
+              {/* FAQ */}
+        <Box className="theme-aware" sx={{ py: 10 }}>
+          <Container maxWidth='md'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 4 }}
             variants={itemVariants}
@@ -1411,7 +1427,7 @@ const AboutPage = () => {
             </Typography>
           </MotionBox>
 
-          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius:1, mb: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius:1, mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что такое мКоины и зачем они нужны?</Typography>
             </AccordionSummary>
@@ -1422,7 +1438,7 @@ const AboutPage = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1, mb: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius: 1, mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Чем мКоины отличаются от баллов?</Typography>
             </AccordionSummary>
@@ -1433,7 +1449,7 @@ const AboutPage = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1, mb: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius: 1, mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Как работают темы и обои профиля?</Typography>
             </AccordionSummary>
@@ -1444,7 +1460,7 @@ const AboutPage = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion sx={{ bgcolor: alpha(theme.palette.background.paper, 0.7), borderRadius: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что даёт приватный профиль?</Typography>
             </AccordionSummary>
@@ -1457,7 +1473,7 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-      <Box ref={teamRef} sx={{ py: 12 }}>
+      <Box ref={teamRef} className="theme-aware" sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1491,11 +1507,12 @@ const AboutPage = () => {
 
           <TeamSection title='Авторы' members={teamData.authors} />
           <TeamSection title='Дизайнеры' members={teamData.designers} />
+          <TeamSection title='Помогающие в безопасности' members={teamData.security} />
         </Container>
       </Box>
 
       {/* Moderators section with simpler cards */}
-      <Box sx={{ py: 12, bgcolor: theme.palette.background.paper }}>
+      <Box className="theme-aware" sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1538,7 +1555,7 @@ const AboutPage = () => {
             viewport={{ once: true }}
           >
             {teamData.moderators
-              .filter(m => m.name === 'rev/x')
+              .filter(m => m.name === 'rev/x' || m.name === 'blaze')
               .map((moderator, index) => (
               <MotionGrid
                 item
@@ -1590,7 +1607,7 @@ const AboutPage = () => {
       </Box>
 
       {/* Экс‑модераторы */}
-      <Box sx={{ py: 12, bgcolor: theme.palette.background.paper }}>
+      <Box className="theme-aware" sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1736,6 +1753,7 @@ const AboutPage = () => {
                   href='https://k-connect.ru'
                   variant='contained'
                   size='large'
+                  className="theme-button"
                   sx={{
                     borderRadius: '50px',
                     px: 4,
@@ -1760,6 +1778,7 @@ const AboutPage = () => {
                   rel='noopener noreferrer'
                   variant='outlined'
                   size='large'
+                  className="theme-button"
                   sx={{
                     borderRadius: '50px',
                     px: 4,
@@ -1785,7 +1804,7 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-      <Box sx={{ py: 6, bgcolor: theme.palette.background.paper }}>
+      <Box className="theme-aware" sx={{ py: 6 }}>
         <Container maxWidth='lg'>
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>

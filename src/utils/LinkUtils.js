@@ -390,11 +390,7 @@ export const linkRenderers = {
           <Typography component='div' variant='body1' sx={{ mb: 1 }}>
             {parts}
           </Typography>
-          {urls.length > 0 &&
-            !DISABLE_LINK_PREVIEWS &&
-            urls.map((url, index) => (
-              <LinkPreview key={`preview-${index}`} url={url} />
-            ))}
+          {/* Link preview отключены - теперь отображаются только в конце поста */}
         </>
       );
     }
@@ -501,7 +497,7 @@ export const linkRenderers = {
           {children}
         </a>
 
-        {!DISABLE_LINK_PREVIEWS && <LinkPreview url={enhancedHref} />}
+        {/* Link preview отключены - теперь отображаются только в конце поста */}
       </>
     );
   },
@@ -518,12 +514,51 @@ export const TextWithLinks = ({ text }) => {
         {parts}
       </Typography>
 
-      {!DISABLE_LINK_PREVIEWS && urls.length > 0 && (
-        <Box sx={{ mt: 2 }}>
-          <LinkPreview url={urls[0]} />
-        </Box>
-      )}
+      {/* Link preview отключены - теперь отображаются только в конце поста */}
     </>
+  );
+};
+
+// Функция для группировки ссылок по доменам
+export const groupUrlsByDomain = (urls) => {
+  const domainGroups = {};
+  
+  urls.forEach(url => {
+    try {
+      const hostname = new URL(url).hostname.replace('www.', '');
+      if (!domainGroups[hostname]) {
+        domainGroups[hostname] = [];
+      }
+      domainGroups[hostname].push(url);
+    } catch (e) {
+      // Если URL некорректный, добавляем в отдельную группу
+      const fallbackKey = `invalid-${Math.random()}`;
+      if (!domainGroups[fallbackKey]) {
+        domainGroups[fallbackKey] = [];
+      }
+      domainGroups[fallbackKey].push(url);
+    }
+  });
+  
+  // Возвращаем максимум 3 группы, каждая с первой ссылкой
+  return Object.values(domainGroups)
+    .slice(0, 3)
+    .map(group => group[0]); // Берем первую ссылку из каждой группы
+};
+
+// Компонент для отображения сгруппированных link preview
+export const GroupedLinkPreviews = ({ urls, maxCount = 3 }) => {
+  if (!urls || urls.length === 0) return null;
+  
+  const groupedUrls = groupUrlsByDomain(urls);
+  const displayUrls = groupedUrls.slice(0, maxCount);
+  
+  return (
+    <Box sx={{ mt: 2, mb: 1 }}>
+      {displayUrls.map((url, index) => (
+        <LinkPreview key={`grouped-link-${index}`} url={url} />
+      ))}
+    </Box>
   );
 };
 
@@ -533,4 +568,6 @@ export default {
   processTextWithLinks,
   linkRenderers,
   TextWithLinks,
+  groupUrlsByDomain,
+  GroupedLinkPreviews,
 };

@@ -81,7 +81,7 @@ const SimpleApiDocsPage = React.lazy(
   () => import('../pages/Info/SimpleApiDocsPage')
 );
 const SubPlanes = React.lazy(() => import('../pages/Economic/SubPlanes'));
-const AboutPage = React.lazy(() => import('../pages/Info/AboutPage'));
+
 const LikedTracksPage = React.lazy(
   () => import('../pages/MusicPage/components/LikedTracksPage')
 );

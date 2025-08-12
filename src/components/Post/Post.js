@@ -46,6 +46,7 @@ import {
   HASHTAG_REGEX,
   processTextWithLinks,
   LinkPreview,
+  GroupedLinkPreviews,
 } from '../../utils/LinkUtils';
 import { getMarkdownComponents } from './MarkdownConfig';
 import { Icon } from '@iconify/react';
@@ -230,6 +231,8 @@ const Post = ({
   const contentRef = useRef(null);
 
   const [processedContent, setProcessedContent] = useState('');
+  const [postUrls, setPostUrls] = useState([]);
+  const [repostUrls, setRepostUrls] = useState([]);
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -371,8 +374,31 @@ const Post = ({
         });
 
         setProcessedContent(content);
+        
+        // Извлекаем ссылки для link preview
+        const urls = [];
+        URL_REGEX.lastIndex = 0;
+        let urlMatch;
+        while ((urlMatch = URL_REGEX.exec(post.content)) !== null) {
+          urls.push(urlMatch[0]);
+        }
+        setPostUrls(urls);
       } else {
         setProcessedContent('');
+        setPostUrls([]);
+      }
+
+      // Извлекаем ссылки для репоста
+      if (post.type === 'repost' && post.original_post && post.original_post.content) {
+        const repostUrls = [];
+        URL_REGEX.lastIndex = 0;
+        let urlMatch;
+        while ((urlMatch = URL_REGEX.exec(post.original_post.content)) !== null) {
+          repostUrls.push(urlMatch[0]);
+        }
+        setRepostUrls(repostUrls);
+      } else {
+        setRepostUrls([]);
       }
 
       if (post.id && post.likes_count > 0) {
@@ -1850,18 +1876,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           truncateText(post.original_post.content, 500),
                           theme
                         );
-                        return (
-                          urls.length > 0 && (
-                            <Box sx={{ mt: 1 }}>
-                              {urls.map((url, index) => (
-                                <LinkPreview
-                                  key={`repost-link-${index}`}
-                                  url={url}
-                                />
-                              ))}
-                            </Box>
-                          )
-                        );
+                        return null; // Убираем старые LinkPreview из репостов
                       })()}
                     </Box>
                   )}
@@ -2384,6 +2399,14 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 Это разъяснение было предоставлено {post.fact.who_provided}
               </Typography>
             </Box>
+          )}
+
+          {/* Link Previews - отображаются после всего контента, но перед кнопками действий */}
+          {(postUrls.length > 0 || repostUrls.length > 0) && (
+            <GroupedLinkPreviews 
+              urls={[...postUrls, ...repostUrls]} 
+              maxCount={3} 
+            />
           )}
 
           <Box

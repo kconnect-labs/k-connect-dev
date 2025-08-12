@@ -204,7 +204,8 @@
       "types": {
         "basic": "Базовая",
         "premium": "Премиум",
-        "ultimate": "Ultimate"
+        "ultimate": "Ultimate",
+        "max": "MAX"
       },
       "duration": {
         "unlimited": "Бессрочно"

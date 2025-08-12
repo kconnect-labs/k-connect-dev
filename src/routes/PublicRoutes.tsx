@@ -30,7 +30,7 @@ const PublicRoutes: React.FC<PublicRoutesProps> = () => {
     </React.Suspense>
   );
 
-  return isAuthenticated ? <MainLayout>{content}</MainLayout> : content;
+  return content;
 };
 
 export default PublicRoutes;

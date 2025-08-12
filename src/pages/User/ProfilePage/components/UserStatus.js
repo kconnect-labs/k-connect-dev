@@ -199,7 +199,6 @@ const UserStatus = ({ statusText, statusColor }) => {
             borderRadius: '16px',
             fontSize: '13px',
             fontWeight: 500,
-            whiteSpace: 'nowrap',
             overflow: 'hidden',
             boxShadow: `inset 0 0 8px rgba(255,255,255,0.12), 
                         0 1px 2px rgba(0,0,0,0.08),
@@ -207,13 +206,14 @@ const UserStatus = ({ statusText, statusColor }) => {
             backdropFilter: 'blur(4px)',
             border: `1px solid ${statusColor === 'var(--theme-text-primary)' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.15)'}`,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             gap: '5px',
             position: 'relative',
             minHeight: '24px',
-            // Адаптивность для мобильных устройств
+            maxWidth: '200px',
+            width: 'max-content',
             '@media (max-width: 600px)': {
-              maxWidth: '220px',
+              maxWidth: '200px',
               fontSize: '12px',
               padding: '5px 8px',
               gap: '4px',
@@ -229,10 +229,11 @@ const UserStatus = ({ statusText, statusColor }) => {
           <Box
             sx={{
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              wordBreak: 'break-word',
+              wordWrap: 'break-word',
+              hyphens: 'auto',
+              lineHeight: 1.3,
               maxWidth: '220px',
-              lineHeight: 1.2,
               // Адаптивность для мобильных устройств
               '@media (max-width: 600px)': {
                 maxWidth: '170px',
