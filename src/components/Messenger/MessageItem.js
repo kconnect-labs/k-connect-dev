@@ -28,7 +28,6 @@ import { TextWithLinks } from './linkUtils';
 import StickerPackModal from './StickerPackModal';
 import Lottie from 'lottie-react';
 import pako from 'pako';
-import { useStickerCache } from '../../services/stickerCache';
 
 // Функция для определения типа стикера
 const getStickerType = (stickerUrl, stickerData) => {
@@ -54,45 +53,29 @@ const getStickerType = (stickerUrl, stickerData) => {
   return 'static'; // webp, png, jpeg
 };
 
-// Компонент для TGS стикера с кешированием
+// Компонент для TGS стикера с улучшенной загрузкой
 const TGSSticker = ({ src, style, onClick }) => {
   const [animationData, setAnimationData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { getSticker, isCached } = useStickerCache();
 
   useEffect(() => {
     const loadTGS = async () => {
       try {
-        // Сначала проверяем кеш
-        const cachedData = getSticker(src);
-        if (cachedData) {
-          // Если есть в кеше, загружаем как blob
-          const response = await fetch(cachedData);
-          if (response.ok) {
-            const arrayBuffer = await response.arrayBuffer();
-            let jsonData;
+        setLoading(true);
+        setError(false);
 
-            try {
-              // Пробуем распаковать как gzip
-              const decompressed = pako.inflate(arrayBuffer);
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(decompressed));
-            } catch (gzipError) {
-              // Если не gzip, пробуем как обычный JSON
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-            }
+        const response = await fetch(src);
 
-            if (jsonData && jsonData.v && jsonData.fr) {
-              setAnimationData(jsonData);
-              return;
-            }
-          }
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
         }
 
-        // Если нет в кеше или не удалось загрузить, загружаем оригинал
-        const response = await fetch(src);
-        if (!response.ok) {
+        const contentType = response.headers.get('content-type');
+
+        // Проверяем, действительно ли это TGS файл
+        if (contentType !== 'application/x-tgsticker') {
+          console.log('Not a TGS file, falling back to image:', contentType);
           setError(true);
           return;
         }
@@ -111,29 +94,49 @@ const TGSSticker = ({ src, style, onClick }) => {
           jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
         }
 
-        if (jsonData && jsonData.v && jsonData.fr) {
-          setAnimationData(jsonData);
-        } else {
-          setError(true);
-        }
+        setAnimationData(jsonData);
       } catch (error) {
-        console.error('Error loading TGS sticker:', error);
+        console.error('Error loading TGS:', error);
         setError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
     if (src) {
       loadTGS();
     }
-  }, [src, getSticker]);
+  }, [src]);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          ...style,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--theme-background, rgba(255,255,255,0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+          WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '8px',
+          minHeight: style?.maxWidth || '120px',
+          minWidth: style?.maxWidth || '120px',
+        }}
+      >
+        <CircularProgress size={24} />
+      </div>
+    );
+  }
 
   if (error || !animationData) {
-    // Fallback к изображению если TGS не загрузился
+    // Fallback to image if TGS loading failed
     return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
 
   return (
-    <div style={style} onClick={onClick} title={isCached(src) ? 'Кеширован' : 'Загружается...'}>
+    <div style={style} onClick={onClick}>
       <Lottie
         animationData={animationData}
         loop={true}
@@ -145,33 +148,96 @@ const TGSSticker = ({ src, style, onClick }) => {
   );
 };
 
-// Упрощенный рендерер стикеров без лишних проверок
+// Компонент для асинхронной проверки типа стикера
 const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
-  // Определяем тип стикера по расширению файла для мгновенной загрузки
-  const getStickerType = (url) => {
-    if (!url) return 'static';
-    const extension = url.split('.').pop()?.toLowerCase();
-    
-    if (extension === 'tgs') return 'tgs';
-    if (extension === 'webm') return 'webm';
-    return 'static';
-  };
+  const [stickerType, setStickerType] = useState('loading');
+  const [animationData, setAnimationData] = useState(null);
 
-  const stickerType = getStickerType(src);
+  useEffect(() => {
+    const checkStickerType = async () => {
+      try {
+        // Сначала пробуем загрузить как TGS
+        const response = await fetch(src);
 
-  // Для TGS файлов используем упрощенную загрузку
-  if (stickerType === 'tgs') {
+        if (!response.ok) {
+          setStickerType('static');
+          return;
+        }
+
+        const contentType = response.headers.get('content-type');
+
+        if (contentType === 'application/x-tgsticker') {
+          // Это TGS файл, пробуем его загрузить
+          try {
+            const arrayBuffer = await response.arrayBuffer();
+            let jsonData;
+
+            try {
+              // Пробуем распаковать как gzip
+              const decompressed = pako.inflate(arrayBuffer);
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(decompressed));
+            } catch (gzipError) {
+              // Если не gzip, пробуем как обычный JSON
+              const textDecoder = new TextDecoder();
+              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+            }
+
+            setAnimationData(jsonData);
+            setStickerType('tgs');
+          } catch (error) {
+            console.error('Error loading TGS data:', error);
+            setStickerType('static');
+          }
+        } else if (contentType === 'video/webm') {
+          setStickerType('webm');
+        } else {
+          setStickerType('static');
+        }
+      } catch (error) {
+        console.error('Error checking sticker type:', error);
+        setStickerType('static');
+      }
+    };
+
+    checkStickerType();
+  }, [src]);
+
+  if (stickerType === 'loading') {
     return (
-      <TGSSticker
-        src={src}
-        style={style}
-        onClick={onClick}
-      />
+      <div
+        style={{
+          ...style,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--theme-background, rgba(255,255,255,0.03))',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '8px',
+          minHeight: style?.maxWidth || '120px',
+          minWidth: style?.maxWidth || '120px',
+        }}
+      >
+        <CircularProgress size={24} />
+      </div>
     );
   }
 
-  // Для WebM видео
-  if (stickerType === 'webm') {
+  if (stickerType === 'tgs' && animationData) {
+    return (
+      <div style={style} onClick={onClick}>
+        <Lottie
+          animationData={animationData}
+          loop={true}
+          autoplay={true}
+          speed={0.75}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    );
+  } else if (stickerType === 'webm') {
     return (
       <video
         src={src}
@@ -183,10 +249,9 @@ const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
         playsInline
       />
     );
+  } else {
+    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
-
-  // Для статичных изображений (webp, png, jpeg)
-  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 const MessageItem = ({

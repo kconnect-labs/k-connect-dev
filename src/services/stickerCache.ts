@@ -173,24 +173,14 @@ class StickerCacheService {
   // Предзагрузка стикеров в фоне с низким приоритетом
   async preloadStickers(packs: StickerPack[]): Promise<void> {
     if (this.isPreloading) {
-      console.log('Sticker preloading already in progress');
+      console.log('🔄 Sticker preloading already in progress');
       return;
     }
 
     this.isPreloading = true;
-    console.log(`Starting preload of ${packs.length} sticker packs`);
+    console.log(`🚀 Starting preload of ${packs.length} sticker packs`);
 
     try {
-      // Пытаемся загрузить из сжатого API (самый эффективный способ)
-      try {
-        console.log('Attempting to load stickers from compressed API...');
-        await this.preloadFromCompressed();
-        return;
-      } catch (error) {
-        console.log('Compressed preloading failed, falling back to regular preloading:', error);
-        // Продолжаем с обычной загрузкой
-      }
-
       // Создаем очередь для загрузки
       const stickersToLoad: string[] = [];
       
@@ -205,14 +195,14 @@ class StickerCacheService {
       });
 
       this.preloadQueue = stickersToLoad;
-      console.log(`Queued ${stickersToLoad.length} stickers for preloading`);
+      console.log(`🔄 Queued ${stickersToLoad.length} stickers for preloading`);
 
       // Загружаем стикеры с очень низким приоритетом
       await this.preloadWithLowPriority(stickersToLoad);
 
-      console.log('Sticker preloading completed');
+      console.log('✅ Sticker preloading completed');
     } catch (error) {
-      console.error('Error during sticker preloading:', error);
+      console.error('❌ Error during sticker preloading:', error);
     } finally {
       this.isPreloading = false;
       this.preloadQueue = [];
@@ -296,7 +286,7 @@ class StickerCacheService {
     this.lastUserActivity = Date.now();
   }
 
-  // Предзагрузка из сжатого API
+  // Предзагрузка из сжатого API (только статические изображения)
   private async preloadFromCompressed(): Promise<void> {
     try {
       const headers = this.getAuthHeaders();
@@ -311,9 +301,9 @@ class StickerCacheService {
         throw new Error('No user ID available');
       }
 
-      console.log('Loading stickers from compressed API...');
+      console.log('Loading static stickers from compressed API...');
       
-      // Получаем сжатые данные стикеров
+      // Получаем сжатые данные стикеров (только статические)
       const response = await fetch(`${this.API_URL}/messenger/stickers-compressed/${userId}`, {
         headers,
       });
@@ -333,7 +323,7 @@ class StickerCacheService {
       const data = JSON.parse(jsonText);
       
       if (data.success && data.stickers) {
-        console.log(`Compressed API loaded: ${data.stickers.length} stickers`);
+        console.log(`Compressed API loaded: ${data.stickers.length} static stickers`);
         
         // Обрабатываем каждый стикер
         for (const sticker of data.stickers) {
@@ -356,7 +346,7 @@ class StickerCacheService {
               type: 'blob',
             });
 
-            console.log(`Compressed cached sticker: ${sticker.name}`);
+            console.log(`Compressed cached static sticker: ${sticker.name} (${sticker.mime_type})`);
           } catch (error) {
             console.warn(`Failed to process compressed sticker ${sticker.id}:`, error);
           }
@@ -373,11 +363,136 @@ class StickerCacheService {
     }
   }
 
+  // Предзагрузка из простого API (включая WebM, TGS)
+  private async preloadFromSimpleBatch(): Promise<void> {
+    try {
+      const headers = this.getAuthHeaders();
+      if (!headers) {
+        console.warn('No auth headers for simple batch preloading');
+        return;
+      }
+
+      const userId = this.getUserId();
+      if (!userId) {
+        console.warn('No user ID available for simple batch loading');
+        return;
+      }
+
+      console.log('🔄 Loading all stickers from simple batch API...');
+      
+      // Получаем все стикеры без сжатия
+      const response = await fetch(`${this.API_URL}/messenger/stickers-batch-simple/${userId}`, {
+        headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Simple batch API failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.stickers) {
+        console.log(`✅ Simple batch API loaded: ${data.stickers.length} stickers`);
+        
+        // Анализируем типы стикеров
+        const typeBreakdown = data.stickers.reduce((acc: any, s: any) => {
+          acc[s.mime_type] = (acc[s.mime_type] || 0) + 1;
+          return acc;
+        }, {});
+        console.log('📊 Sticker types breakdown:', typeBreakdown);
+        
+        // Обрабатываем каждый стикер
+        for (const sticker of data.stickers) {
+          try {
+            console.log(`🔄 Processing sticker ${sticker.id} (${sticker.mime_type})`);
+            
+            // Декодируем base64 данные
+            const binaryData = atob(sticker.data);
+            const bytes = new Uint8Array(binaryData.length);
+            for (let i = 0; i < binaryData.length; i++) {
+              bytes[i] = binaryData.charCodeAt(i);
+            }
+            
+            // Создаем blob и URL
+            const blob = new Blob([bytes], { type: sticker.mime_type });
+            const objectUrl = URL.createObjectURL(blob);
+
+            // Сохраняем в кеш
+            this.cache.set(sticker.url, {
+              data: objectUrl,
+              timestamp: Date.now(),
+              type: 'blob',
+            });
+
+            console.log(`✅ Cached sticker: ${sticker.name} (${sticker.mime_type}) - ${sticker.file_size} bytes`);
+            
+            // Логируем для проблемных стикеров
+            if (sticker.id === '70' || sticker.id === '71' || sticker.id === '494') {
+              console.log(`🎯 Successfully cached problematic sticker ${sticker.id}:`, {
+                mime_type: sticker.mime_type,
+                file_size: sticker.file_size,
+                url: sticker.url
+              });
+            }
+          } catch (error) {
+            console.error(`❌ Failed to process simple batch sticker ${sticker.id}:`, error);
+          }
+        }
+
+        this.updateStats();
+        this.saveToStorage();
+        console.log('✅ Simple batch preloading completed');
+      } else {
+        console.warn('⚠️ Simple batch API returned no stickers');
+      }
+    } catch (error) {
+      console.error('Error during simple batch preloading:', error);
+      // Fallback к обычной предзагрузке
+      throw error;
+    }
+  }
+
     // Распаковка gzip данных
   private async decompressGzip(compressedData: ArrayBuffer): Promise<Uint8Array> {
-    // Пока используем простой fallback - возвращаем ошибку
-    // В будущем можно добавить pako или использовать встроенный CompressionStream API
-    throw new Error('Gzip decompression not implemented yet, falling back to regular loading');
+    try {
+      // Пытаемся использовать встроенный CompressionStream API
+      if ('CompressionStream' in window) {
+        const stream = new (window as any).CompressionStream('gzip');
+        const writer = stream.writable.getWriter();
+        const reader = stream.readable.getReader();
+        
+        // Записываем сжатые данные
+        writer.write(new Uint8Array(compressedData));
+        writer.close();
+        
+        // Читаем распакованные данные
+        const chunks: Uint8Array[] = [];
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+        }
+        
+        // Объединяем чанки
+        const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
+        const result = new Uint8Array(totalLength);
+        let offset = 0;
+        for (const chunk of chunks) {
+          result.set(chunk, offset);
+          offset += chunk.length;
+        }
+        
+        return result;
+      } else {
+        // Fallback: если CompressionStream не поддерживается, возвращаем как есть
+        // (предполагая, что сервер не сжимает данные)
+        return new Uint8Array(compressedData);
+      }
+    } catch (error) {
+      console.warn('Gzip decompression failed, trying fallback:', error);
+      // Fallback: возвращаем данные как есть
+      return new Uint8Array(compressedData);
+    }
   }
 
   // Распаковка ZIP архива
@@ -453,6 +568,14 @@ class StickerCacheService {
       this.saveToStorage();
 
       console.log(`Preloaded sticker: ${url}`);
+      
+      // Логируем для проблемных стикеров
+      if (url.includes('/70') || url.includes('/71') || url.includes('/494')) {
+        console.log(`Successfully preloaded problematic sticker: ${url}`, {
+          blob_size: blob.size,
+          blob_type: blob.type
+        });
+      }
     } catch (error) {
       console.warn(`Failed to preload sticker ${url}:`, error);
     }

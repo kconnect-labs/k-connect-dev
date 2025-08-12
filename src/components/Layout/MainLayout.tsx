@@ -320,6 +320,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   };
 
   const isMusicPage = location.pathname.startsWith('/music');
+  const isMessengerPage = location.pathname.startsWith('/messenger');
   const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
 
@@ -381,9 +382,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)`,
             },
             paddingBottom: {
-              xs: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
-              sm: hasBottomPlayer ? theme.spacing(12) : theme.spacing(8),
-              md: hasDesktopPlayer ? theme.spacing(12) : theme.spacing(2),
+              xs: hasBottomPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(8),
+              sm: hasBottomPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(8),
+              md: hasDesktopPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(2),
             },
           }}
         >

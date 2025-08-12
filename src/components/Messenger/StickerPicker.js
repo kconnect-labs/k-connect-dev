@@ -86,7 +86,7 @@ const TGSSticker = React.memo(
 
               if (jsonData && jsonData.v && jsonData.fr) {
                 setAnimationData(jsonData);
-                return;
+            return;
               }
             }
           }
@@ -169,7 +169,7 @@ const AsyncStickerRenderer = React.memo(
           if (extension === 'tgs') {
             setStickerType('tgs');
             // Загружаем TGS файл
-            const response = await fetch(src);
+          const response = await fetch(src);
             if (response.ok) {
               const arrayBuffer = await response.arrayBuffer();
               let jsonData;

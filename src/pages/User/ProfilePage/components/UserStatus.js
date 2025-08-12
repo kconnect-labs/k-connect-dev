@@ -68,7 +68,7 @@ const UserStatus = ({ statusText, statusColor }) => {
     switch (iconName) {
       case 'minion':
         return (
-          <SvgIcon sx={{ fontSize: 18, opacity: 0.8 }}>
+          <SvgIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }}>
             <svg
               width='800'
               height='800'
@@ -101,7 +101,7 @@ const UserStatus = ({ statusText, statusColor }) => {
         );
       case 'heart':
         return (
-          <SvgIcon sx={{ fontSize: 18, opacity: 0.8 }}>
+          <SvgIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -113,7 +113,7 @@ const UserStatus = ({ statusText, statusColor }) => {
         );
       case 'star':
         return (
-          <SvgIcon sx={{ fontSize: 18, opacity: 0.8 }}>
+          <SvgIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -124,18 +124,18 @@ const UserStatus = ({ statusText, statusColor }) => {
           </SvgIcon>
         );
       case 'music':
-        return <MusicNoteIcon sx={{ fontSize: 18, opacity: 0.8 }} />;
+        return <MusicNoteIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       case 'location':
-        return <LocationOnIcon sx={{ fontSize: 18, opacity: 0.8 }} />;
+        return <LocationOnIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       case 'cake':
-        return <CakeIcon sx={{ fontSize: 18, opacity: 0.8 }} />;
+        return <CakeIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       case 'info':
-        return <InfoIcon sx={{ fontSize: 18, opacity: 0.8 }} />;
+        return <InfoIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       case 'chat':
-        return <ChatIcon sx={{ fontSize: 18, opacity: 0.8 }} />;
+        return <ChatIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       default:
         return (
-          <SvgIcon sx={{ fontSize: 18, opacity: 0.8 }}>
+          <SvgIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }}>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 24 24'
@@ -163,7 +163,8 @@ const UserStatus = ({ statusText, statusColor }) => {
       style={{
         position: 'absolute',
         left: '100%',
-        top: '60%',
+        top: '50%',
+        transform: 'translateY(-50%)',
         zIndex: 10,
       }}
     >
@@ -171,21 +172,21 @@ const UserStatus = ({ statusText, statusColor }) => {
         sx={{
           position: 'relative',
           backgroundColor: 'transparent',
-          filter: `drop-shadow(0 4px 8px rgba(0,0,0,0.2))`,
-          maxWidth: '200px',
-          transform: 'translateX(10px)',
+          filter: `drop-shadow(0 3px 6px rgba(0,0,0,0.15))`,
+          maxWidth: '280px',
+          transform: 'translateX(8px)',
           '&:before': {
             content: '""',
             position: 'absolute',
-            top: 0,
-            left: -8,
+            top: '50%',
+            left: -6,
             width: 0,
             height: 0,
             borderStyle: 'solid',
-            borderWidth: '0 14px 14px 0',
+            borderWidth: '6px 8px 6px 0',
             borderColor: `transparent ${statusColor || '#D0BCFF'} transparent transparent`,
-            transform: 'rotate(40deg)',
-            filter: 'drop-shadow(-3px 2px 2px rgba(0,0,0,0.1))',
+            transform: 'translateY(-50%)',
+            filter: 'drop-shadow(-2px 1px 1px rgba(0,0,0,0.1))',
             zIndex: 0,
           },
         }}
@@ -194,21 +195,34 @@ const UserStatus = ({ statusText, statusColor }) => {
           sx={{
             background: `linear-gradient(135deg, ${statusColor || '#D0BCFF'} 0%, ${gradientColor} 100%)`,
             color: textColor,
-            padding: '8px 12px',
-            borderRadius: '12px',
-            fontSize: '14px',
+            padding: '6px 10px',
+            borderRadius: '16px',
+            fontSize: '13px',
             fontWeight: 500,
             whiteSpace: 'nowrap',
             overflow: 'hidden',
-            boxShadow: `inset 0 0 10px rgba(255,255,255,0.15), 
-                        0 1px 1px rgba(0,0,0,0.1),
-                        0 4px 10px rgba(0,0,0,0.15)`,
+            boxShadow: `inset 0 0 8px rgba(255,255,255,0.12), 
+                        0 1px 2px rgba(0,0,0,0.08),
+                        0 3px 8px rgba(0,0,0,0.12)`,
             backdropFilter: 'blur(4px)',
-            border: `1px solid ${statusColor === 'var(--theme-text-primary)' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)'}`,
+            border: `1px solid ${statusColor === 'var(--theme-text-primary)' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.15)'}`,
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '5px',
             position: 'relative',
+            minHeight: '24px',
+            // Адаптивность для мобильных устройств
+            '@media (max-width: 600px)': {
+              maxWidth: '220px',
+              fontSize: '12px',
+              padding: '5px 8px',
+              gap: '4px',
+            },
+            '@media (max-width: 480px)': {
+              maxWidth: '180px',
+              fontSize: '11px',
+              padding: '4px 6px',
+            },
           }}
         >
           {StatusIcon}
@@ -217,7 +231,15 @@ const UserStatus = ({ statusText, statusColor }) => {
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              maxWidth: '150px',
+              maxWidth: '220px',
+              lineHeight: 1.2,
+              // Адаптивность для мобильных устройств
+              '@media (max-width: 600px)': {
+                maxWidth: '170px',
+              },
+              '@media (max-width: 480px)': {
+                maxWidth: '140px',
+              },
             }}
           >
             {parsedStatus.text}
