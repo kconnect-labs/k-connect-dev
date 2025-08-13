@@ -139,9 +139,9 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    willChange: 'transform, opacity',
     backfaceVisibility: 'hidden',
     transformOrigin: 'center center',
+    isolation: 'isolate',
   },
   /* Входящая страница */
   '& .mobile-page-enter': {
@@ -152,6 +152,7 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
     transform: 'translateX(0%) scale(1)',
     opacity: 1,
     transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    willChange: 'transform, opacity',
   },
   /* Выходящая страница */
   '& .mobile-page-exit': {
@@ -162,6 +163,7 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
     transform: 'translateX(-100%) scale(0.93)',
     opacity: 0.9,
     transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    willChange: 'transform, opacity',
   },
   '@media (prefers-reduced-motion: reduce)': {
     '& .mobile-page-enter': {
@@ -172,6 +174,13 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
       transform: 'none',
       opacity: 1,
     },
+  },
+  /* Сброс will-change после завершения анимации */
+  '& .mobile-page-enter-done': {
+    willChange: 'auto',
+  },
+  '& .mobile-page-exit-done': {
+    willChange: 'auto',
   },
 }));
 

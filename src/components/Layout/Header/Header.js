@@ -31,6 +31,9 @@ const StyledAppBar = styled(AppBar, {
   shouldForwardProp: (prop) => prop !== 'isHeaderHidden' && prop !== 'isMobile',
 })(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
+  background: 'rgba(255, 255, 255, 0.03)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   color: 'var(--theme-text-primary)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   position: 'fixed',

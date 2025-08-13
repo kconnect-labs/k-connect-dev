@@ -47,19 +47,16 @@ export const MessengerContext = createContext();
 
 const buildAvatarUrl = (userId, avatarFilename) => {
   if (!avatarFilename || !userId) {
-    console.log(`Создание URL аватара: Missing required params - userId: ${userId}, filename: ${avatarFilename}`);
     return null;
   }
   
   
   if (avatarFilename.startsWith('http')) {
-    console.log(`buildAvatarUrl: Already a full URL: ${avatarFilename}`);
     return avatarFilename;
   }
   
   
   if (avatarFilename.startsWith('/static/')) {
-    console.log(`buildAvatarUrl: Already starts with /static/: ${avatarFilename}`);
     return avatarFilename;
   }
   
@@ -68,12 +65,10 @@ const buildAvatarUrl = (userId, avatarFilename) => {
   if (avatarFilename.includes('uploads/avatar/') || avatarFilename.includes('avatar/')) {
     const parts = avatarFilename.split('/');
     filename = parts[parts.length - 1];
-    console.log(`buildAvatarUrl: Extracted filename from path: ${filename}`);
   }
   
   
   const finalUrl = `/static/uploads/avatar/${userId}/${filename}`;
-  console.log(`buildAvatarUrl: Created URL for user ${userId}: ${finalUrl}`);
   return finalUrl;
 };
 
@@ -90,32 +85,26 @@ const xorCipher = (text, key) => {
 
 const formatToLocalTime = (isoDateString) => {
   if (!isoDateString) {
-    console.log('formatToLocalTime: Empty date string');
     return '';
   }
   
-  console.log('formatToLocalTime input:', isoDateString, 'type:', typeof isoDateString);
     
   try {
     // Если уже в формате времени (HH:MM)
     if (typeof isoDateString === 'string' && /^\d{1,2}:\d{2}$/.test(isoDateString)) {
-      console.log('formatToLocalTime: Already in time format, returning as is');
       return isoDateString;
     }
     
     // Если в формате "X мин назад" или подобном
     if (typeof isoDateString === 'string' && /^\d{1,2}\s+\w+$/.test(isoDateString)) {
-      console.log('formatToLocalTime: Relative time format, returning as is');
       return isoDateString;
     }
     
     // Парсим ISO дату
     const date = new Date(isoDateString);
-    console.log('formatToLocalTime: Parsed date:', date, 'isValid:', !isNaN(date.getTime()));
     
     // Проверяем валидность даты
     if (isNaN(date.getTime())) {
-      console.warn('formatToLocalTime: Неверный формат даты:', isoDateString);
       return typeof isoDateString === 'string' ? isoDateString : '';
     }
     
@@ -124,10 +113,8 @@ const formatToLocalTime = (isoDateString) => {
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const result = `${hours}:${minutes}`;
     
-    console.log('formatToLocalTime result:', result);
     return result;
   } catch (e) {
-    console.error('formatToLocalTime: Ошибка преобразования времени:', e, isoDateString);
     return typeof isoDateString === 'string' ? isoDateString : '';
   }
 };

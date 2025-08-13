@@ -1016,7 +1016,11 @@ const ProfilePage = () => {
                     />
 
                     {user?.subscription?.type === 'max' && (
-                      <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
+                      <MaxIcon 
+                        size={24} 
+                        color={user?.status_color || "#FF4D50"} 
+                        style={{ marginLeft: '5px' }} 
+                      />
                     )}
 
                     {user?.achievement && (

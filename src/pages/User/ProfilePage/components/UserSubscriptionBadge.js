@@ -40,24 +40,7 @@ const UserSubscriptionBadge = ({ user }) => {
           },
           py: 0.1,
           height: 'auto',
-          animation: 'pulse-light 2s infinite',
-          '@keyframes pulse-light': {
-            '0%': {
-              boxShadow: user.status_color
-                ? `0 0 0 0 ${user.status_color}66`
-                : '0 0 0 0 rgba(124, 77, 255, 0.4)',
-            },
-            '70%': {
-              boxShadow: user.status_color
-                ? `0 0 0 6px ${user.status_color}00`
-                : '0 0 0 6px rgba(124, 77, 255, 0)',
-            },
-            '100%': {
-              boxShadow: user.status_color
-                ? `0 0 0 0 ${user.status_color}00`
-                : '0 0 0 0 rgba(124, 77, 255, 0)',
-            },
-          },
+
         }}
       />
     );
@@ -99,7 +82,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.6)'
                 : user.subscription.type === 'max'
-                  ? 'rgba(208, 7, 7, 0.3)'
+                  ? (user?.status_color ? `${user.status_color}26` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.15)'
                     : 'rgba(66, 165, 245, 0.4)',
@@ -109,7 +92,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? '#B8A9FF'
                 : user.subscription.type === 'max'
-                  ? '#FF4D50'
+                  ? (user?.status_color || '#FF4D50')
                   : user.subscription.type === 'pick-me'
                     ? 'rgb(208, 188, 255)'
                     : '#90CAF9',
@@ -121,7 +104,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.7)'
                 : user.subscription.type === 'max'
-                  ? 'rgba(208, 7, 7, 0.3)'
+                  ? (user?.status_color ? `${user.status_color}4D` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.3)'
                     : 'rgba(66, 165, 245, 0.5)',
@@ -135,39 +118,6 @@ const UserSubscriptionBadge = ({ user }) => {
           },
           py: 0.25,
           height: 'auto',
-          animation: 'pulse-light 2s infinite',
-          '@keyframes pulse-light': {
-            '0%': {
-              boxShadow:
-                user.status_color && user.status_text
-                  ? `0 0 0 0 ${user.status_color}66`
-                  : user.subscription.type === 'ultimate'
-                    ? '0 0 0 0 rgba(124, 77, 255, 0.6)'
-                    : user.subscription.type === 'max'
-                      ? '0 0 0 0 rgba(255, 77, 80, 0.6)'
-                      : '0 0 0 0 rgba(124, 77, 255, 0.4)',
-            },
-            '70%': {
-              boxShadow:
-                user.status_color && user.status_text
-                  ? `0 0 0 6px ${user.status_color}00`
-                  : user.subscription.type === 'ultimate'
-                    ? '0 0 0 8px rgba(124, 77, 255, 0)'
-                    : user.subscription.type === 'max'
-                      ? '0 0 0 8px rgba(255, 77, 80, 0)'
-                      : '0 0 0 6px rgba(124, 77, 255, 0)',
-            },
-            '100%': {
-              boxShadow:
-                user.status_color && user.status_text
-                  ? `0 0 0 0 ${user.status_color}00`
-                  : user.subscription.type === 'ultimate'
-                    ? '0 0 0 0 rgba(124, 77, 255, 0)'
-                    : user.subscription.type === 'max'
-                      ? '0 0 0 0 rgba(255, 77, 80, 0)'
-                      : '0 0 0 0 rgba(124, 77, 255, 0)',
-            },
-          },
         }}
       />
     </Tooltip>
