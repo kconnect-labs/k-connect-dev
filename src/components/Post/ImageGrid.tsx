@@ -4,6 +4,7 @@ import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import { imageCache, createImageProps } from '../../utils/imageUtils';
 import { ImageGridProps } from './types';
+import ImageSkeleton from './ImageSkeleton';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -93,6 +94,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
   hideOverlay = false,
   miniMode = false,
   maxHeight = 620,
+  imageDimensions = {},
 }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -103,6 +105,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
   }>>([]);
   const [loading, setLoading] = useState(true);
   const [errorImages, setErrorImages] = useState<Record<string, boolean>>({});
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
 
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -249,6 +252,14 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 
       setLoading(true);
 
+      // Инициализируем состояния загрузки для всех изображений
+      const initialLoadingStates: Record<string, boolean> = {};
+      limitedImages.forEach((imageUrl: string) => {
+        const formattedUrl = formatImageUrl(imageUrl);
+        initialLoadingStates[formattedUrl] = true;
+      });
+      setImageLoadingStates(initialLoadingStates);
+
       try {
         const webpSupported = supportsWebP();
 
@@ -269,7 +280,6 @@ const ImageGrid: React.FC<ImageGridProps> = ({
               quality: 0.85,
               maxWidth: 1200,
               cacheResults: true,
-              preferWebP: webpSupported,
             });
 
             const result = {
@@ -382,6 +392,12 @@ const ImageGrid: React.FC<ImageGridProps> = ({
       [url]: true,
     }));
 
+    // Сбрасываем состояние загрузки при ошибке
+    setImageLoadingStates(prev => ({
+      ...prev,
+      [url]: false,
+    }));
+
     if (onImageError && typeof onImageError === 'function') {
       onImageError(url, index);
     }
@@ -390,8 +406,15 @@ const ImageGrid: React.FC<ImageGridProps> = ({
   const renderImage = (image: string, index: number, isSingle: boolean) => {
     const imageUrl = formatImageUrl(image);
     const optimizedUrl = getOptimizedImageUrl(imageUrl, isSingle);
+    const isLoading = imageLoadingStates[imageUrl] !== false; // true by default until loaded
 
     const hasError = errorImages[imageUrl];
+
+    // Получаем размеры изображения
+    const dimensions = imageDimensions[imageUrl] || imageDimensions[image];
+    const aspectRatio = dimensions?.aspect_ratio || 1;
+    const isPortrait = aspectRatio < 1;
+    const isLandscape = aspectRatio > 1.5;
 
     if (hasError) {
       return (
@@ -414,17 +437,41 @@ const ImageGrid: React.FC<ImageGridProps> = ({
         </Box>
       );
     }
+
+    const handleImageLoad = () => {
+      setImageLoadingStates(prev => ({
+        ...prev,
+        [imageUrl]: false
+      }));
+    };
+
     const imageProps = createImageProps(optimizedUrl, {
       lazy: true,
       alt: `Изображение ${index + 1}`,
-      isSingle,
-      isMobile,
+      onLoad: handleImageLoad,
       onError: () => handleImageError(imageUrl, index),
     });
+
     return (
       <React.Fragment>
+        {isLoading && (
+          <ImageSkeleton 
+            isSingle={limitedImages.length === 1} 
+            isMobile={isMobile}
+            height={isPortrait ? "100%" : "auto"}
+            width="100%"
+            imageDimensions={dimensions}
+          />
+        )}
         <BackgroundImage style={{ backgroundImage: `url(${optimizedUrl})` }} />
-        <Image {...imageProps} />
+        <Image 
+          {...imageProps}
+          style={{
+            ...imageProps.style,
+            opacity: isLoading ? 0 : 1,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
         {!hideOverlay && <ImageOverlay />}
       </React.Fragment>
     );
@@ -440,16 +487,27 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           opacity: 0.7,
         }}
       >
-        {limitedImages.map((_, index) => (
-          <Box
-            key={index}
-            sx={{
-              bgcolor: 'rgba(0, 0, 0, 0.1)',
-              borderRadius: '12px',
-              gridArea: getCellGridArea(index, limitedImages.length),
-            }}
-          />
-        ))}
+        {limitedImages.map((image, index) => {
+          const imageUrl = formatImageUrl(image);
+          const dimensions = imageDimensions[imageUrl] || imageDimensions[image];
+          
+          return (
+            <Box
+              key={index}
+              sx={{
+                gridArea: getCellGridArea(index, limitedImages.length),
+              }}
+            >
+              <ImageSkeleton 
+                isSingle={limitedImages.length === 1}
+                isMobile={isMobile}
+                height="100%"
+                width="100%"
+                imageDimensions={dimensions}
+              />
+            </Box>
+          );
+        })}
       </Box>
     );
   }

@@ -24,6 +24,32 @@ export const processImages = (post: any, mediaError: { type: string | null; url:
   return [];
 };
 
+// Функция для обработки размеров изображений
+export const processImageDimensions = (post: any) => {
+  const dimensions: Record<string, any> = {};
+  
+  if (post?.image_dimensions) {
+    // Если есть одно изображение
+    if (post.image && typeof post.image === 'string') {
+      dimensions[post.image] = post.image_dimensions;
+    }
+    
+    // Если есть массив изображений
+    if (post.images && Array.isArray(post.images)) {
+      post.images.forEach((imageUrl: string, index: number) => {
+        if (post.image_dimensions[imageUrl]) {
+          dimensions[imageUrl] = post.image_dimensions[imageUrl];
+        } else if (index === 0 && typeof post.image_dimensions === 'object') {
+          // Если размеры для первого изображения
+          dimensions[imageUrl] = post.image_dimensions;
+        }
+      });
+    }
+  }
+  
+  return dimensions;
+};
+
 export const hasVideo = (post: any) => {
   return (
     post?.video && typeof post.video === 'string' && post.video.trim() !== ''

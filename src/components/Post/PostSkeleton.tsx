@@ -3,6 +3,7 @@ import { Box, Card, CardContent, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { PostSkeletonProps } from './types';
+import ImageSkeleton from './ImageSkeleton';
 
 const PostCard = styled(Card)(({ theme }) => ({
   marginBottom: 10,
@@ -78,11 +79,12 @@ const PostSkeleton: React.FC<PostSkeletonProps> = () => {
           />
         </Box>
 
-        <Skeleton
-          variant='rectangular'
-          height={200}
-          sx={{ mb: 2, bgcolor: skeletonBgColor, borderRadius: 1 }}
-          animation='wave'
+        <ImageSkeleton 
+          isSingle={true}
+          isMobile={false}
+          height="200px"
+          width="100%"
+          imageDimensions={null}
         />
 
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1 }}>

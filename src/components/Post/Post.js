@@ -103,6 +103,7 @@ import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import MediaErrorDisplay from './MediaErrorDisplay';
 import {
   processImages,
+  processImageDimensions,
   hasVideo,
   formatVideoUrl,
   getCoverPath,
@@ -1899,6 +1900,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           );
                           setLightboxOpen(true);
                         }}
+                        imageDimensions={processImageDimensions(post.original_post)}
                       />
                     </Box>
                   )}
@@ -2172,6 +2174,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     images={processImages(post, mediaError)}
                     onImageClick={handleOpenImage}
                     onImageError={handleImageError}
+                    imageDimensions={processImageDimensions(post)}
                   />
                 </Box>
                 {post.is_nsfw && !showSensitive && NSFWOverlay}

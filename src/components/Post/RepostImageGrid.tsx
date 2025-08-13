@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { RepostImageGridProps } from './types';
+import ImageSkeleton from './ImageSkeleton';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -79,7 +80,9 @@ const LastImageOverlay = styled(Box)({
  * A specialized image grid for reposts with blurred backgrounds and limited display
  * Shows maximum 2 images by default, or a 3-grid with +N indicator
  */
-const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick }) => {
+const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick, imageDimensions = {} }) => {
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
+
   if (!images || !Array.isArray(images) || images.length === 0) {
     return null;
   }
@@ -93,6 +96,47 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick 
   const displayImages = validImages.slice(0, 3);
   const remainingCount = validImages.length - 3;
   const hasMoreImages = remainingCount > 0;
+
+  const handleImageLoad = (imageUrl: string) => {
+    setImageLoadingStates(prev => ({
+      ...prev,
+      [imageUrl]: false
+    }));
+  };
+
+  const renderImage = (image: string, index: number, isCenter: boolean = false) => {
+    const isLoading = imageLoadingStates[image] !== false; // true by default until loaded
+
+    // Получаем размеры изображения
+    const dimensions = imageDimensions[image];
+    const aspectRatio = dimensions?.aspect_ratio || 1;
+    const isPortrait = aspectRatio < 1;
+
+    return (
+      <React.Fragment>
+        {isLoading && (
+          <ImageSkeleton 
+            isSingle={displayImages.length === 1}
+            isMobile={false}
+            height={isPortrait ? "100%" : "auto"}
+            width="100%"
+            imageDimensions={dimensions}
+          />
+        )}
+        <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
+        <Image 
+          src={image} 
+          alt={`Repost image ${index + 1}`} 
+          isCenter={isCenter}
+          style={{
+            opacity: isLoading ? 0 : 1,
+            transition: 'opacity 0.3s ease',
+          }}
+          onLoad={() => handleImageLoad(image)}
+        />
+      </React.Fragment>
+    );
+  };
 
   if (displayImages.length === 1) {
     return (
@@ -109,10 +153,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick 
           onClick={() => onImageClick && onImageClick(0)}
           sx={{ height: '250px' }}
         >
-          <BackgroundImage
-            style={{ backgroundImage: `url(${displayImages[0]})` }}
-          />
-          <Image src={displayImages[0]} alt='Repost image' isCenter={true} />
+          {renderImage(displayImages[0], 0, true)}
         </ImageContainer>
       </Box>
     );
@@ -136,12 +177,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick 
             key={`repost-img-${index}`}
             onClick={() => onImageClick && onImageClick(index)}
           >
-            <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
-            <Image
-              src={image}
-              alt={`Repost image ${index + 1}`}
-              isCenter={true}
-            />
+            {renderImage(image, index, true)}
           </ImageContainer>
         ))}
       </Box>
@@ -171,12 +207,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick 
           }}
         >
           <ImageContainer onClick={() => onImageClick && onImageClick(index)}>
-            <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
-            <Image
-              src={image}
-              alt={`Repost image ${index + 1}`}
-              isCenter={true}
-            />
+            {renderImage(image, index, true)}
 
             {/* Show +N on the last visible image if there are more */}
             {index === 2 && hasMoreImages && (

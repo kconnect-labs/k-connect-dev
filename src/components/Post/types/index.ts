@@ -111,6 +111,12 @@ export interface FactModalState {
   error: string | null;
 }
 
+export interface ImageDimensions {
+  width: number;
+  height: number;
+  aspect_ratio: number;
+}
+
 export interface ImageGridProps {
   images: string[] | string;
   selectedImage?: string | null;
@@ -119,6 +125,7 @@ export interface ImageGridProps {
   hideOverlay?: boolean;
   miniMode?: boolean;
   maxHeight?: number;
+  imageDimensions?: Record<string, ImageDimensions>;
 }
 
 export interface DeleteDialogProps {
@@ -186,6 +193,7 @@ export interface ReportDialogProps {
 export interface RepostImageGridProps {
   images: string[];
   onImageClick?: (index: number) => void;
+  imageDimensions?: Record<string, ImageDimensions>;
 }
 
 export interface RepostModalProps {
