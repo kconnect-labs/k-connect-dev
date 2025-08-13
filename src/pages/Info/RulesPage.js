@@ -1737,6 +1737,244 @@ const RulesPage = () => {
                   </Box>
                 </NumberedRuleItem>
 
+
+
+                <Fade in={true}>
+                  <Box
+                    sx={{
+                      mt: 3,
+                      display: 'flex',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: 150,
+                    }}
+                  >
+                    <motion.div
+                      initial='initial'
+                      animate='animate'
+                      whileHover='whileHover'
+                      variants={diamondAnimation}
+                    >
+                      <WarningIconWrapper>
+                        <DiamondIcon
+                          sx={{
+                            fontSize: 70,
+                            color: '#fff',
+                            filter: 'drop-shadow(0 2px 5px rgba(0,0,0,0.4))',
+                          }}
+                        />
+                      </WarningIconWrapper>
+                    </motion.div>
+                  </Box>
+                </Fade>
+              </RuleCardContent>
+            </RuleCard>
+          </RuleSection>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <RuleSection>
+            <RuleCard>
+              <RuleCardHeader>
+                <DiamondIcon color='primary' fontSize='large' sx={{ mr: 2 }} />
+                <SectionTitle variant='h5'>
+                  VIII. Правила для подачи своей Пачки Айтемов
+                </SectionTitle>
+              </RuleCardHeader>
+
+              <RuleCardContent>
+                <Typography variant='body1' paragraph>
+                  Пачки Айтемов в К-Коннект — это коллекции уникальных элементов для персонализации профиля. 
+                  Для обеспечения качества и соответствия стандартам платформы, все пачки проходят строгую модерацию.
+                </Typography>
+
+                <NumberedRuleItem>
+                  <RuleNumber>8.1</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Технические требования к файлам
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Все файлы в пачке должны соответствовать строгим техническим стандартам для обеспечения качества и производительности.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.1.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Файлы должны иметь соотношение сторон 1:1 (квадратная форма).
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.1.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Размер одного файла не должен превышать 150-200 килобайт.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.1.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Файлы не должны содержать фоновые элементы, свечение, тени или другие эффекты.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.1.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Изображения должны быть идеально ровными, без плохого вырезания, зазубрин или неровных краев.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>8.2</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Уникальность и оригинальность
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Все айтемы в пачке должны быть уникальными авторскими работами, не похожими на существующие.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.2.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещено копирование или незначительная модификация существующих айтемов.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.2.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Не приветствуется "слизывание" дизайна или концепций других авторов.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.2.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Предложение айтемов из других площадок или платформ может привести к предупреждению.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.2.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Каждый айтем должен иметь уникальную концепцию и дизайн.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>8.3</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Запрещенный контент в пачках
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Пачки не должны содержать контент, нарушающий общие правила платформы.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.3.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещен контент 18+: порнография, откровенные изображения, сексуальные сцены.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.3.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены изображения насилия, крови, оружия, наркотиков, алкоголя.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.3.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены оскорбительные, дискриминационные или провокационные изображения.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.3.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены политические символы, логотипы брендов без разрешения, религиозные символы в оскорбительном контексте.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.3.5</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Запрещены изображения, нарушающие авторские права третьих лиц.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>8.4</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Стилистические требования
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Пачки должны соответствовать общему стилю платформы и быть приятными для восприятия.
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.4.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Рекомендуется использовать яркие, контрастные цвета для лучшей видимости.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.4.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Избегайте слишком сложных деталей, которые могут плохо смотреться в маленьком размере.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.4.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Айтемы должны быть понятными и легко читаемыми даже в уменьшенном виде.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.4.4</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Рекомендуется использовать простые, четкие формы и минималистичный дизайн.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
+                <NumberedRuleItem>
+                  <RuleNumber>8.5</RuleNumber>
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight='500'>
+                      Модерация пачек
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.5.1</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Все пачки проходят модерацию перед публикацией.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.5.2</SubRuleNumber>
+                        <Typography variant='body2'>
+                          Администрация оставляет за собой право отклонять пачки, не соответствующие стандартам качества или нарушающие правила платформы.
+                        </Typography>
+                      </SubRuleItem>
+                      <SubRuleItem>
+                        <SubRuleNumber>8.5.3</SubRuleNumber>
+                        <Typography variant='body2'>
+                          В случае обнаружения нарушений после публикации, пачка может быть удалена без предупреждения.
+                        </Typography>
+                      </SubRuleItem>
+                    </Box>
+                  </Box>
+                </NumberedRuleItem>
+
                 <Fade in={true}>
                   <Box
                     sx={{
@@ -1776,7 +2014,7 @@ const RulesPage = () => {
               <RuleCardHeader>
                 <GroupIcon color='primary' fontSize='large' sx={{ mr: 2 }} />
                 <SectionTitle variant='h5'>
-                  VIII. Правила ведения групп/каналов
+                  IX. Правила ведения групп/каналов
                 </SectionTitle>
               </RuleCardHeader>
 
@@ -1990,7 +2228,7 @@ const RulesPage = () => {
               <RuleCardHeader>
                 <SecurityIcon color='primary' fontSize='large' sx={{ mr: 2 }} />
                 <SectionTitle variant='h5'>
-                  IX. Правила для приватных профилей
+                  X. Правила для приватных профилей
                 </SectionTitle>
               </RuleCardHeader>
 
