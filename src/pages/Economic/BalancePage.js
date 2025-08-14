@@ -248,14 +248,6 @@ const TabPanel = ({ children, value, index, ...other }) => (
   </div>
 );
 
-// StyledDialog удален - теперь используется UniversalModal
-
-// DialogHeader, HeaderGlow, DialogHeaderContent удалены - теперь используется UniversalModal
-
-const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
-
-  justifyContent: 'space-between',
-}));
 
 const CancelButton = styled(Button)(({ theme }) => ({
   borderRadius: 12,

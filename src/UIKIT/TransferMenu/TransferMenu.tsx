@@ -145,18 +145,17 @@ const ButtonContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   gap: '12px',
   borderTop: '1px solid rgba(207, 188, 251, 0.2)',
-  position: 'sticky',
+  position: 'static',
   bottom: 0,
   marginTop: 'auto',
   [`@media (max-width:600px)`]: {
     padding: '12px',
     flexDirection: 'row',
     gap: '12px',
-    position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 1000,
+    zIndex: 9999,
   },
 }));
 
@@ -600,7 +599,6 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
       title={t('balance.transfer_menu.title')}
       maxWidth="sm"
       fullWidth
-      addBottomPadding
     >
       {!transferSuccess ? (
         <>
