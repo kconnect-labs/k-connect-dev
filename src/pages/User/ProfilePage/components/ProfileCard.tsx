@@ -22,6 +22,10 @@ import {
   ProfileAbout,
 } from './index';
 
+// Типизация компонентов
+const TypedEquippedItem = EquippedItem as React.ComponentType<EquippedItemProps>;
+const TypedVerificationBadge = VerificationBadge as React.ComponentType<VerificationBadgeProps>;
+
 interface User {
   id: number;
   username: string;
@@ -46,7 +50,22 @@ interface EquippedItemType {
   id: number;
   profile_position_x: number | null;
   profile_position_y: number | null;
+  upgradeable?: boolean | string;
+  is_equipped?: boolean;
   [key: string]: any; // Для других свойств айтема
+}
+
+interface EquippedItemProps {
+  item: EquippedItemType;
+  index: number;
+  onPositionUpdate: (itemId: number, newPosition: { x: number; y: number }) => void;
+  isEditMode: boolean;
+  onEditModeActivate?: () => void;
+}
+
+interface VerificationBadgeProps {
+  status?: string;
+  size?: string;
 }
 
 interface ProfileCardProps {
@@ -151,7 +170,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       >
         {normalEquippedItems
           .map((item, index) => (
-            <EquippedItem 
+            <TypedEquippedItem 
               key={item.id} 
               item={item} 
               index={index} 
@@ -361,7 +380,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {user?.name || 'Пользователь'}
               </Typography>
               <div>
-                <VerificationBadge
+                <TypedVerificationBadge
                   status={user?.verification_status}
                   size="small"
                 />
@@ -372,6 +391,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   size={24} 
                   color={user?.status_color || "#FF4D50"} 
                   style={{ marginLeft: '5px' }}
+                  className=""
                 />
               )}
 
