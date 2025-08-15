@@ -128,7 +128,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
             name: 'Видео',
             icon: <Article />,
             color: '#4ECDC4',
-            size: (sizes.mp4 || 0) + (sizes.webm || 0) + (sizes.ogg || 0),
+            size: (sizes.mp4 || 0) + (sizes.ogg || 0),
             selected: true,
           },
           {

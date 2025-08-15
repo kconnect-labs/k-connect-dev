@@ -23,6 +23,7 @@ import CasinoIcon from '@mui/icons-material/Casino';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import GridOnIcon from '@mui/icons-material/GridOn';
 import SEO from '../../components/SEO';
 
 const PageHeader = styled(Box)(({ theme }) => ({
@@ -137,6 +138,15 @@ const MiniGamesPage = () => {
       icon: <CasinoIcon sx={{ fontSize: 40 }} />,
       color: '#3f51b5',
       path: '/minigames/blackjack',
+      available: true,
+    },
+    {
+      id: 'pixel-miner',
+      name: 'Pixel Miner',
+      description: 'Откройте блоки с золотом, избегая бомб! Забирайте выигрыш в любой момент.',
+      icon: <GridOnIcon sx={{ fontSize: 40 }} />,
+      color: '#ff9800',
+      path: '/minigames/pixel-miner',
       available: true,
     },
   ];

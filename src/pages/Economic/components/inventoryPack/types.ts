@@ -16,7 +16,7 @@ export interface InventoryItem {
   image_url: string;
   background_url?: string;
   pack_price: number;
-  upgradeable: boolean;
+  upgradeable: boolean | string;
   item_number?: number;
   total_count?: number;
   marketplace?: {
@@ -52,7 +52,7 @@ export interface EquippedItem {
   upgrade_level: number;
   image_url: string;
   background_url?: string;
-  upgradeable?: boolean;
+  upgradeable?: boolean | string;
 }
 
 export interface User {

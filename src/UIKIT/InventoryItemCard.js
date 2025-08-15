@@ -17,6 +17,12 @@ const getRarityColor = (rarity = 'common') => {
   }
 };
 
+// Utility to check if item is overlay item (levels 2, 3, 4)
+const isOverlayItem = (item) => {
+  const upgradeable = String(item.upgradeable);
+  return upgradeable === '2' || upgradeable === '3' || upgradeable === '4';
+};
+
 const getRarityLabel = (rarity = 'common') => {
   switch (rarity) {
     case 'legendary':
@@ -102,9 +108,12 @@ const InventoryItemCardPure = memo(
             </div>
           )}
 
-          {item.is_equipped && (
+          {(isOverlayItem(item) || item.is_equipped) && (
             <div className='equipped-badge'>
-              <span className='equipped-text'>Надет</span>
+              <span className='equipped-text'>
+                {isOverlayItem(item) && item.is_equipped ? 'Оверлей + Надет' : 
+                 isOverlayItem(item) ? 'Оверлей' : 'Надет'}
+              </span>
             </div>
           )}
         </div>

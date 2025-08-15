@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -30,6 +30,8 @@ import {
 import SettingsModal from './SettingsPage/components/SettingsModal';
 import SuccessModal from './SettingsPage/components/SuccessModal';
 import ProfilePreview from './SettingsPage/components/ProfilePreview';
+import ProfileCard from './ProfilePage/components/ProfileCard';
+import { useLanguage } from '../../context/LanguageContext';
 import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
 import CacheManagementModal from './SettingsPage/components/CacheManagementModal';
@@ -44,15 +46,14 @@ import {
 import { useLocalUser } from './SettingsPage/hooks/useLocalUser';
 import { AuthContext } from '../../context/AuthContext';
 
+
 const SettingsPage = () => {
+  const { t } = useLanguage();
   const { user, isAuthenticated } = useContext<any>(AuthContext);
   console.log('SettingsPage - AuthContext data:', { user, isAuthenticated });
 
   const localUser = useLocalUser();
   console.log('SettingsPage - LocalUser data:', localUser);
-
-  // Используем данные из AuthContext или localStorage как fallback
-  const displayUser = user || localUser;
 
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
@@ -85,15 +86,17 @@ const SettingsPage = () => {
     error,
   });
 
+
+
   const {
     profileInfo,
     loading: profileInfoLoading,
     error: profileInfoError,
     updateProfileInfo,
   } = useProfileInfo({
-    name: displayUser?.name || '',
-    username: displayUser?.username || '',
-    about: displayUser?.about || '',
+    name: (user || localUser)?.name || '',
+    username: (user || localUser)?.username || '',
+    about: (user || localUser)?.about || '',
   });
 
   const {
@@ -103,8 +106,29 @@ const SettingsPage = () => {
     fetchSubscription,
   } = useSubscription();
 
+  // Используем данные из AuthContext или localStorage как fallback
+  // Объединяем с данными профиля для превью
+  const [displayUser, setDisplayUser] = useState(() => ({
+    ...(user || localUser),
+  }));
+
   const [settings, setSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
+  
+  // Состояния для ProfileCard (как в ProfilePage.js)
+  const [ownedUsernames, setOwnedUsernames] = useState<string[]>([]);
+  const [equippedItems, setEquippedItems] = useState<any[]>([]);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [following, setFollowing] = useState(false);
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [postsCount, setPostsCount] = useState(0);
+  const [isOnline, setIsOnline] = useState(false);
+  const [fallbackAvatarUrl, setFallbackAvatarUrl] = useState('');
+  const [userBanInfo, setUserBanInfo] = useState<any>(null);
+  const [isCurrentUserModerator, setIsCurrentUserModerator] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [usernameCardOpen, setUsernameCardOpen] = useState(false);
 
   useEffect(() => {
     console.log(
@@ -121,8 +145,90 @@ const SettingsPage = () => {
     if (currentUser && currentUser.username) {
       fetchProfile(currentUser.username);
       fetchSettings();
+      fetchProfileData(currentUser.username);
     }
   }, [isAuthenticated, user?.username, localUser?.username, fetchProfile]);
+
+
+
+  // Загрузка данных профиля для превью
+  const fetchProfileData = async (username: string) => {
+    try {
+      const response = await fetch(`/api/profile/${username}`);
+      const data = await response.json();
+      
+      console.log('Profile API data for preview:', data);
+      
+      if (data.user) {
+        // Полностью заменяем displayUser данными из API
+        const updatedDisplayUser = {
+          ...data.user,
+          // Копируем данные из корневого объекта
+          connect_info: data.connect_info || data.user.connect_info,
+          is_friend: data.is_friend !== undefined ? data.is_friend : data.user.is_friend,
+          subscription: data.subscription || data.user.subscription,
+          achievement: data.achievement || data.user.achievement,
+          verification_status: data.verification?.status || data.user.verification_status,
+        };
+        
+        setDisplayUser(updatedDisplayUser);
+        
+        setFollowersCount(data.user.followers_count || 0);
+        setFollowingCount(data.user.following_count || 0);
+        setPostsCount(data.user.posts_count || 0);
+        setFollowing(data.user.is_following || false);
+        setUserBanInfo(data.user.ban || data.ban || null);
+        
+        // Загружаем owned usernames
+        if (data.user.id) {
+          try {
+            const usernamesResponse = await fetch(`/api/username/purchased/${data.user.id}`);
+            const usernamesData = await usernamesResponse.json();
+            if (usernamesData.success) {
+              const otherUsernames = usernamesData.usernames
+                .filter((item: any) => !item.is_active && item.username !== data.user.username)
+                .map((item: any) => item.username);
+              setOwnedUsernames(otherUsernames);
+            }
+          } catch (error) {
+            console.error('Error fetching owned usernames:', error);
+          }
+        }
+        
+        // Загружаем equipped items
+        if (data.equipped_items) {
+          setEquippedItems(data.equipped_items);
+        }
+
+        // Загружаем онлайн статус
+        try {
+          const onlineResponse = await fetch(`/api/profile/${username}/online_status`);
+          const onlineData = await onlineResponse.json();
+          if (onlineData.success) {
+            setIsOnline(onlineData.is_online);
+          }
+        } catch (error) {
+          console.error('Error fetching online status:', error);
+        }
+
+        // Загружаем статус модератора
+        try {
+          const moderatorResponse = await fetch('/api/moderator/quick-status');
+          const moderatorData = await moderatorResponse.json();
+          if (moderatorData && moderatorData.is_moderator) {
+            setIsCurrentUserModerator(true);
+          } else {
+            setIsCurrentUserModerator(false);
+          }
+        } catch (error) {
+          console.error('Error checking moderator status:', error);
+          setIsCurrentUserModerator(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
 
   // Показываем загрузку если пользователь еще не загружен
   if (!isAuthenticated && !localUser) {
@@ -165,6 +271,10 @@ const SettingsPage = () => {
 
   const showSuccess = (message: string = 'Обновлено') => {
     setSuccessModal({ open: true, message });
+    // Обновляем превью при любом успешном изменении
+    setTimeout(() => {
+      updatePreview();
+    }, 100); // Небольшая задержка для обновления данных
   };
 
   const hideSuccess = () => {
@@ -175,6 +285,8 @@ const SettingsPage = () => {
     try {
       await updateAvatar(file);
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
     } catch (err) {
       console.error('Failed to update avatar:', err);
     }
@@ -184,6 +296,8 @@ const SettingsPage = () => {
     try {
       await updateBanner(file);
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
     } catch (err) {
       console.error('Failed to update banner:', err);
     }
@@ -193,6 +307,8 @@ const SettingsPage = () => {
     try {
       await deleteAvatar();
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
     } catch (err) {
       console.error('Failed to delete avatar:', err);
     }
@@ -202,6 +318,8 @@ const SettingsPage = () => {
     try {
       await deleteBanner();
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
     } catch (err) {
       console.error('Failed to delete banner:', err);
     }
@@ -215,6 +333,8 @@ const SettingsPage = () => {
     try {
       await updateProfileInfo(info);
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
       showSuccess('Информация обновлена');
     } catch (err) {
       console.error('Failed to update profile info:', err);
@@ -224,6 +344,8 @@ const SettingsPage = () => {
   const handleStatusUpdate = async (statusData: any) => {
     try {
       await fetchProfile(); // Обновляем данные профиля
+      // Обновляем превью
+      updatePreview();
       showSuccess('Статус обновлен');
     } catch (err) {
       console.error('Failed to update status:', err);
@@ -234,6 +356,50 @@ const SettingsPage = () => {
     console.error('Settings error:', message);
     // Можно добавить показ ошибки пользователю
   };
+
+  // Функция для обновления превью профиля
+  const updatePreview = () => {
+    if (displayUser?.username) {
+      fetchProfileData(displayUser.username);
+    }
+  };
+
+  // Функции для ProfileCard (как в ProfilePage.js)
+  const handleItemPositionUpdate = useCallback((itemId: number, newPosition: { x: number; y: number }) => {
+    setEquippedItems(prevItems => 
+      prevItems.map(item => 
+        item.id === itemId 
+          ? { ...item, profile_position_x: newPosition.x, profile_position_y: newPosition.y }
+          : item
+      )
+    );
+  }, []);
+
+  const handleEditModeActivate = useCallback(() => {
+    setIsEditMode(true);
+  }, []);
+
+  const handleUsernameClick = useCallback((event: React.MouseEvent, username: string) => {
+    event.preventDefault();
+    setSelectedUsername(username);
+    setUsernameCardOpen(true);
+  }, []);
+
+  const handleCloseUsernameCard = useCallback(() => {
+    setUsernameCardOpen(false);
+  }, []);
+
+  const openLightbox = useCallback((imageUrl: string) => {
+    // Простая реализация для превью
+    console.log('Open lightbox:', imageUrl);
+  }, []);
+
+  const getLighterColor = useCallback((color: string) => {
+    // Простая реализация для превью
+    return color;
+  }, []);
+
+
 
   const fetchSettings = async () => {
     try {
@@ -389,7 +555,7 @@ const SettingsPage = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          mb: 8,
+          mb: 12,
           paddingTop: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -405,7 +571,7 @@ const SettingsPage = () => {
             mt: 1,
             padding: '8px 12px',
             width: '100%',
-            maxWidth: 1200,
+            maxWidth: 1400,
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: 1,
           }}
@@ -415,16 +581,14 @@ const SettingsPage = () => {
 
         <Grid
           container
-          spacing={2}
+          spacing={0.5}
           sx={{
-            width: '100%',
-            maxWidth: 1200,
             flexDirection: { xs: 'column', lg: 'row' },
             flexWrap: { xs: 'nowrap', lg: 'nowrap' },
           }}
         >
           {/* Левая колонка - список настроек */}
-          <Grid item xs={12} lg={8} sx={{ order: { xs: 1, lg: 1 } }}>
+          <Grid item xs={12} lg={7} sx={{ order: { xs: 1, lg: 1 } }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {settingsSections.map(section => (
                 <Button
@@ -514,22 +678,39 @@ const SettingsPage = () => {
           <Grid
             item
             xs={12}
-            lg={4}
+            lg={5}
             sx={{
+              position: { xs: 'static', lg: 'sticky' },
+              top: '50px',
+              height: 'fit-content',
+              zIndex: 2,
               order: { xs: 2, lg: 2 },
               display: { xs: 'none', lg: 'block' },
             }}
           >
-            <Box
-              sx={{
-                position: 'sticky',
-                top: '80px',
-                height: 'fit-content',
-                zIndex: 2,
-              }}
-            >
-              <ProfilePreview user={displayUser} profileData={profileData} />
-            </Box>
+            <ProfileCard
+                user={displayUser}
+                currentUser={displayUser}
+                equippedItems={equippedItems}
+                isOwnProfile={true}
+                isEditMode={isEditMode}
+                isOnline={isOnline}
+                isCurrentUser={true}
+                isCurrentUserModerator={isCurrentUserModerator}
+                postsCount={postsCount}
+                followersCount={followersCount}
+                followingCount={followingCount}
+                ownedUsernames={ownedUsernames}
+                userBanInfo={userBanInfo}
+                fallbackAvatarUrl={fallbackAvatarUrl}
+                t={t}
+                getLighterColor={getLighterColor}
+                openLightbox={openLightbox}
+                setFallbackAvatarUrl={setFallbackAvatarUrl}
+                handleItemPositionUpdate={handleItemPositionUpdate}
+                handleEditModeActivate={handleEditModeActivate}
+                handleUsernameClick={handleUsernameClick}
+              />
           </Grid>
         </Grid>
 
@@ -555,6 +736,7 @@ const SettingsPage = () => {
           onStatusUpdate={handleStatusUpdate}
           onSuccess={showSuccess}
           onError={handleError}
+
         />
 
         <ConnectionsModal
@@ -596,6 +778,8 @@ const SettingsPage = () => {
           onClose={hideSuccess}
           message={successModal.message}
         />
+
+
       </Box>
     </>
   );

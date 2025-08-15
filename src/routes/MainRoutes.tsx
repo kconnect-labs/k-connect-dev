@@ -110,6 +110,9 @@ const CupsGamePage = React.lazy(
 const BlackjackPage = React.lazy(
   () => import('../pages/MiniGames/BlackjackPage')
 );
+const PixelMinerPage = React.lazy(
+  () => import('../pages/MiniGames/PixelMinerPage')
+);
 const ChannelsPage = React.lazy(() => import('../pages/Main/ChannelsPage'));
 const JoinGroupChat = React.lazy(
   () => import('../pages/Messenger/JoinGroupChat')
@@ -420,6 +423,14 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             element={
               <ProtectedRoute>
                 <BlackjackPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/minigames/pixel-miner'
+            element={
+              <ProtectedRoute>
+                <PixelMinerPage />
               </ProtectedRoute>
             }
           />

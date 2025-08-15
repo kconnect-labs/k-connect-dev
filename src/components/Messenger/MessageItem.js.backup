@@ -42,9 +42,8 @@ const getStickerType = (stickerUrl, stickerData) => {
 
   // Если данных нет, проверяем URL (менее надежно)
   const url = stickerUrl.toLowerCase();
-  // TGS и WebM поддержка временно отключена
-  // if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
-  // if (url.includes('.webm')) return 'webm';
+  if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
+  if (url.includes('.webm')) return 'webm';
 
   // Для API эндпоинтов делаем асинхронную проверку
   if (url.includes('/api/messenger/stickers/')) {

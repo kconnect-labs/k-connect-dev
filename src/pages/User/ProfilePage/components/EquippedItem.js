@@ -455,7 +455,7 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
     return null;
   }
 
-  const isUpgraded = item.upgrade_level === 1;
+  const isUpgraded = item.upgrade_level >= 1;
 
   const particles = isUpgraded
     ? Array.from({ length: 10 }).map((_, i) => (

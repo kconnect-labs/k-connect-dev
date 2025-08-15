@@ -12,10 +12,12 @@ export { default as PostsFeed } from './PostsFeed';
 export { default as WallFeed } from './WallFeed';
 export { default as AttachmentsFeed } from './AttachmentsFeed';
 export { default as EquippedItem } from './EquippedItem';
+export { default as OverlayAvatar } from './OverlayAvatar';
 export { default as UserBanInfo } from './UserBanInfo';
 export { default as UserScamBadge } from './UserScamBadge';
 export { default as UserSubscriptionBadge } from './UserSubscriptionBadge';
 export { default as OwnedUsernames } from './OwnedUsernames';
 export { default as ProfileAbout } from './ProfileAbout';
+export { default as ProfileCard } from './ProfileCard.js';
 
 export * from './StyledComponents';

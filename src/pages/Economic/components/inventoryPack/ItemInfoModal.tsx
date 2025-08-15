@@ -43,6 +43,12 @@ import {
 } from './upgradeEffectsConfig';
 import { InventoryItem, ItemAction } from './types';
 
+// Utility to check if item is overlay item (levels 2, 3, 4)
+const isOverlayItem = (item: InventoryItem) => {
+  const upgradeable = String(item.upgradeable);
+  return upgradeable === '2' || upgradeable === '3' || upgradeable === '4';
+};
+
 interface UpgradeEffectsProps {
   item: InventoryItem;
   children: React.ReactNode;
@@ -757,7 +763,10 @@ const ItemInfoModal = ({
                   variant='body2'
                   sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
                 >
-                  Статус: {item.is_equipped ? 'Экипировано' : 'Не экипировано'}
+                  Статус: {(isOverlayItem(item) || item.is_equipped) ? 
+                    (isOverlayItem(item) && item.is_equipped ? 'Оверлей + Экипировано' : 
+                     isOverlayItem(item) ? 'Оверлей' : 'Экипировано') 
+                    : 'Не экипировано'}
                 </Typography>
                 {item.item_number && item.total_count && (
                   <Typography
@@ -824,7 +833,7 @@ const ItemInfoModal = ({
                   },
                 }}
               >
-                Экипировать
+                {isOverlayItem(item) ? 'Надеть в оверлей' : 'Экипировать'}
               </Button>
             ) : (
               <Button

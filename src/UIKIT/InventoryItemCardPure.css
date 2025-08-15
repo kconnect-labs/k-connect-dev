@@ -82,25 +82,15 @@
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 3;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-  animation: equipped-glow 2s ease-in-out infinite alternate;
 }
 
 .equipped-text {
   color: #fff;
   font-weight: bold;
   font-size: 0.6rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes equipped-glow {
-  0% {
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-  }
-  100% {
-    box-shadow: 0 2px 12px rgba(76, 175, 80, 0.5);
-  }
-}
+
 
 .item-name {
   font-weight: 500;

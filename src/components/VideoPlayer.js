@@ -113,8 +113,8 @@ const VideoPlayer = ({ videoUrl, poster, options = {} }) => {
       return 'vimeo';
     } else if (url.endsWith('.mp4')) {
       return 'video/mp4';
-    } else if (url.endsWith('.webm')) {
-      return 'video/webm';
+    // } else if (url.endsWith('.webm')) {
+    //   return 'video/webm';
     } else if (url.endsWith('.ogg') || url.endsWith('.ogv')) {
       return 'video/ogg';
     } else {

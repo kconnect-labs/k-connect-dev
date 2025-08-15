@@ -275,7 +275,7 @@ class MediaCacheService {
   private isMediaFile(url: string): boolean {
     const mediaExtensions = [
       '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg',
-      '.mp4', '.webm', '.ogg', '.mp3', '.wav',
+      '.mp4', '.ogg', '.mp3', '.wav',
       '.ico', '.bmp', '.tiff'
     ];
     

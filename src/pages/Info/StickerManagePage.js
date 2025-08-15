@@ -62,17 +62,19 @@ const API_URL = 'https://k-connect.ru/apiMes';
 const getStickerType = sticker => {
   if (!sticker.url) return 'unknown';
 
-  // Сначала проверяем данные стикера, если есть
-  if (sticker.mime_type) {
-    if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
-    if (sticker.mime_type === 'video/webm') return 'webm';
-    return 'static';
-  }
+      // Сначала проверяем данные стикера, если есть
+    if (sticker.mime_type) {
+      // TGS и WebM поддержка временно отключена
+      // if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
+      // if (sticker.mime_type === 'video/webm') return 'webm';
+      return 'static';
+    }
 
   // Если данных нет, проверяем URL (менее надежно)
   const url = sticker.url.toLowerCase();
-  if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
-  if (url.includes('.webm')) return 'webm';
+  // TGS и WebM поддержка временно отключена
+  // if (url.includes('.tgs') || url.includes('tgsticker')) return 'tgs';
+  // if (url.includes('.webm')) return 'webm';
 
   // Для API эндпоинтов делаем асинхронную проверку
   if (url.includes('/api/messenger/stickers/')) {
@@ -82,90 +84,10 @@ const getStickerType = sticker => {
   return 'static'; // webp, png, jpeg
 };
 
-// Компонент для TGS стикера
+// Компонент для TGS стикера (временно отключен)
 const TGSSticker = ({ src, style, onClick }) => {
-  const [animationData, setAnimationData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const loadTGS = async () => {
-      try {
-        setLoading(true);
-        setError(false);
-
-        const response = await fetch(src);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const contentType = response.headers.get('content-type');
-
-        // Проверяем, действительно ли это TGS файл
-        if (contentType !== 'application/x-tgsticker') {
-          setError(true);
-          return;
-        }
-
-        const arrayBuffer = await response.arrayBuffer();
-        let jsonData;
-
-        try {
-          // Пробуем распаковать как gzip
-          const decompressed = pako.inflate(arrayBuffer);
-          const textDecoder = new TextDecoder();
-          jsonData = JSON.parse(textDecoder.decode(decompressed));
-        } catch (gzipError) {
-          // Если не gzip, пробуем как обычный JSON
-          const textDecoder = new TextDecoder();
-          jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-        }
-
-        setAnimationData(jsonData);
-      } catch (error) {
-        console.error('Error loading TGS:', error);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (src) {
-      loadTGS();
-    }
-  }, [src]);
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          ...style,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <CircularProgress size={16} />
-      </div>
-    );
-  }
-
-  if (error || !animationData) {
-    // Fallback to image if TGS loading failed
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
-  }
-
-  return (
-    <div style={style} onClick={onClick}>
-      <Lottie
-        animationData={animationData}
-        loop={true}
-        autoplay={true}
-        style={{ width: '100%', height: '100%' }}
-      />
-    </div>
-  );
+  // TGS поддержка временно отключена - показываем как статичное изображение
+  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 // Компонент для асинхронной проверки типа стикера
@@ -186,34 +108,36 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
 
         const contentType = response.headers.get('content-type');
 
-        if (contentType === 'application/x-tgsticker') {
-          // Это TGS файл, пробуем его загрузить
-          try {
-            const arrayBuffer = await response.arrayBuffer();
-            let jsonData;
+        // TGS и WebM поддержка временно отключена
+        // if (contentType === 'application/x-tgsticker') {
+        //   // Это TGS файл, пробуем его загрузить
+        //   try {
+        //     const arrayBuffer = await response.arrayBuffer();
+        //     let jsonData;
 
-            try {
-              // Пробуем распаковать как gzip
-              const decompressed = pako.inflate(arrayBuffer);
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(decompressed));
-            } catch (gzipError) {
-              // Если не gzip, пробуем как обычный JSON
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-            }
+        //     try {
+        //       // Пробуем распаковать как gzip
+        //       const decompressed = pako.inflate(arrayBuffer);
+        //       const textDecoder = new TextDecoder();
+        //       jsonData = JSON.parse(textDecoder.decode(decompressed));
+        //     } catch (gzipError) {
+        //       // Если не gzip, пробуем как обычный JSON
+        //       const textDecoder = new TextDecoder();
+        //       jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
+        //     }
 
-            setAnimationData(jsonData);
-            setStickerType('tgs');
-          } catch (error) {
-            console.error('Error loading TGS data:', error);
-            setStickerType('static');
-          }
-        } else if (contentType === 'video/webm') {
-          setStickerType('webm');
-        } else {
-          setStickerType('static');
-        }
+        //     setAnimationData(jsonData);
+        //     setStickerType('tgs');
+        //   } catch (error) {
+        //     console.error('Error loading TGS data:', error);
+        //     setStickerType('static');
+        //   }
+        // } else if (contentType === 'video/webm') {
+        //   setStickerType('webm');
+        // } else {
+        //   setStickerType('static');
+        // }
+        setStickerType('static');
       } catch (error) {
         console.error('Error checking sticker type:', error);
         setStickerType('static');
@@ -238,32 +162,34 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
     );
   }
 
-  if (stickerType === 'tgs' && animationData) {
-    return (
-      <div style={style} onClick={onClick}>
-        <Lottie
-          animationData={animationData}
-          loop={true}
-          autoplay={true}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
-  } else if (stickerType === 'webm') {
-    return (
-      <video
-        src={src}
-        style={style}
-        onClick={onClick}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-    );
-  } else {
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
-  }
+  // TGS и WebM поддержка временно отключена
+  // if (stickerType === 'tgs' && animationData) {
+  //   return (
+  //     <div style={style} onClick={onClick}>
+  //       <Lottie
+  //         animationData={animationData}
+  //         loop={true}
+  //         autoplay={true}
+  //         style={{ width: '100%', height: '100%' }}
+  //       />
+  //     </div>
+  //   );
+  // } else if (stickerType === 'webm') {
+  //   return (
+  //     <video
+  //       src={src}
+  //       style={style}
+  //       onClick={onClick}
+  //       autoPlay
+  //       loop
+  //       muted
+  //       playsInline
+  //     />
+  //   );
+  // } else {
+  //   return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
+  // }
+  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 // Компонент для рендеринга стикера с автоопределением типа
@@ -288,33 +214,34 @@ const StickerRenderer = ({ sticker, style, onClick }) => {
   }
 
   // Для известных типов используем прямой рендеринг
-  if (stickerType === 'tgs') {
-    return (
-      <TGSSticker src={sticker.url} style={commonStyle} onClick={onClick} />
-    );
-  } else if (stickerType === 'webm') {
-    return (
-      <video
-        src={sticker.url}
-        style={commonStyle}
-        onClick={onClick}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-    );
-  } else {
-    // Статичные стикеры (webp, png, jpeg)
-    return (
-      <img
-        src={sticker.url}
-        alt={sticker.name}
-        style={commonStyle}
-        onClick={onClick}
-      />
-    );
-  }
+  // TGS и WebM поддержка временно отключена
+  // if (stickerType === 'tgs') {
+  //   return (
+  //     <TGSSticker src={sticker.url} style={commonStyle} onClick={onClick} />
+  //   );
+  // } else if (stickerType === 'webm') {
+  //   return (
+  //     <video
+  //       src={sticker.url}
+  //       style={commonStyle}
+  //       onClick={onClick}
+  //       autoPlay
+  //       loop
+  //       muted
+  //       playsInline
+  //     />
+  //   );
+  // } else {
+  // Статичные стикеры (webp, png, jpeg)
+  return (
+    <img
+      src={sticker.url}
+      alt={sticker.name}
+      style={commonStyle}
+      onClick={onClick}
+    />
+  );
+  // }
 };
 
 // Стили для компонентов
@@ -724,15 +651,13 @@ const StickerManagePage = () => {
     // Проверка типа файла - добавляем поддержку TGS
     const allowedTypes = [
       'image/webp',
-      'video/webm',
       'image/png',
       'image/jpeg',
-      'application/x-tgsticker',
     ];
-    const isTGSFile = file.name.toLowerCase().endsWith('.tgs');
+    const isTGSFile = false; // TGS поддержка временно отключена
 
     if (!allowedTypes.includes(file.type) && !isTGSFile) {
-      setError('Поддерживаются только файлы WEBP, WEBM, PNG, JPEG, TGS');
+      setError('Поддерживаются только файлы WEBP, PNG, JPEG');
       return;
     }
 
@@ -762,17 +687,15 @@ const StickerManagePage = () => {
 
     const allowedTypes = [
       'image/webp',
-      'video/webm',
       'image/png',
       'image/jpeg',
-      'application/x-tgsticker',
     ];
     const validFiles = [];
     const previews = [];
     let hasErrors = false;
 
     files.forEach(file => {
-      const isTGSFile = file.name.toLowerCase().endsWith('.tgs');
+      const isTGSFile = false; // TGS поддержка временно отключена
 
       if (!allowedTypes.includes(file.type) && !isTGSFile) {
         setError(`Файл ${file.name} имеет неподдерживаемый тип`);
@@ -805,11 +728,7 @@ const StickerManagePage = () => {
         stickerName: stickerName.substring(0, 30), // Ограничиваем длину
         emoji: '',
         id: Date.now() + Math.random(), // Уникальный ID для каждого превью
-        mime_type:
-          file.type === 'application/x-tgsticker' ||
-          file.name.toLowerCase().endsWith('.tgs')
-            ? 'application/x-tgsticker'
-            : file.type,
+        mime_type: file.type,
       });
     });
 
@@ -1849,11 +1768,11 @@ const StickerManagePage = () => {
               fullWidth
               sx={buttonStyles}
             >
-              Выбрать файлы (WEBP, WEBM, PNG, JPEG, TGS)
+              Выбрать файлы (WEBP, PNG, JPEG)
               <input
                 type='file'
                 hidden
-                accept='.webp,.webm,.png,.jpeg,.jpg,.tgs'
+                accept='.webp,.png,.jpeg,.jpg'
                 multiple
                 onChange={handleMultiFileChange}
               />
@@ -2030,7 +1949,7 @@ const StickerManagePage = () => {
           )}
 
           <Typography variant='caption' color='text.secondary'>
-            Поддерживаемые форматы: WEBP, WEBM, PNG, JPEG, TGS. Максимальный
+            Поддерживаемые форматы: WEBP, PNG, JPEG. Максимальный
             размер: 1MB. PNG автоматически конвертируется в WEBP.
           </Typography>
         </DialogContent>
