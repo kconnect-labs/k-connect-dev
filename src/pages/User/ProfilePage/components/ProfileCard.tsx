@@ -75,6 +75,15 @@ interface ProfileCardProps {
   handleUsernameClick: (event: React.MouseEvent, username: string) => void;
 }
 
+const isOverlayItem = (item: EquippedItemType) => {
+  const upgradeable = String(item.upgradeable);
+  return upgradeable === '2' || upgradeable === '3' || upgradeable === '4';
+};
+
+const hasEquippedOverlayItems = (items: EquippedItemType[]) => {
+  return items.some(item => isOverlayItem(item) && item.is_equipped);
+};
+
 const ProfileCard: React.FC<ProfileCardProps> = ({
   user,
   currentUser,
@@ -323,6 +332,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              mt: hasEquippedOverlayItems(equippedItems) ? '15px' : 0,
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -351,7 +361,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 {user?.name || 'Пользователь'}
               </Typography>
               <div>
-                {/* @ts-ignore */}
                 <VerificationBadge
                   status={user?.verification_status}
                   size="small"
