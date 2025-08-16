@@ -26,7 +26,7 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import SimpleImageViewer from '../../components/SimpleImageViewerMes';
 import { TextWithLinks } from './linkUtils';
 import StickerPackModal from './StickerPackModal';
-import Lottie from 'lottie-react';
+// Lottie removed - too heavy
 import pako from 'pako';
 
 // Функция для определения типа стикера
@@ -136,17 +136,8 @@ const TGSSticker = ({ src, style, onClick }) => {
     return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
   }
 
-  return (
-    <div style={style} onClick={onClick}>
-      <Lottie
-        animationData={animationData}
-        loop={true}
-        autoplay={true}
-        speed={0.75}
-        style={{ width: '100%', height: '100%' }}
-      />
-    </div>
-  );
+  // TGS animation removed - fallback to image
+  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 // Компонент для асинхронной проверки типа стикера
@@ -227,17 +218,9 @@ const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
   }
 
   if (stickerType === 'tgs' && animationData) {
-    return (
-      <div style={style} onClick={onClick}>
-        <Lottie
-          animationData={animationData}
-          loop={true}
-          autoplay={true}
-          speed={0.75}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
+    // TGS animation removed - fallback to image
+    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
+
   } else if (stickerType === 'webm') {
     return (
       <video

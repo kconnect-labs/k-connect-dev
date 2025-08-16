@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
-import Lottie from 'lottie-react';
+import { BugReport } from '@mui/icons-material';
 import { MediaErrorDisplayProps } from './types';
 
 interface MediaErrorContainerProps {
@@ -36,50 +36,23 @@ const MediaErrorContainer: React.FC<MediaErrorContainerProps> = ({ sx, children,
   </Box>
 );
 
-interface LottieWrapperProps {
-  sx?: any;
-  children: React.ReactNode;
-}
-
-const LottieWrapper: React.FC<LottieWrapperProps> = ({ sx, children, ...props }) => (
-  <Box
-    sx={{
-      width: '100%',
-      maxWidth: '150px',
-      height: '150px',
-      marginBottom: 1,
-      opacity: 0.8,
-      ...sx,
-    }}
-    {...props}
-  >
-    {children}
-  </Box>
-);
-
 const MediaErrorDisplay: React.FC<MediaErrorDisplayProps> = ({ type, t }) => {
-  const [spiderAnimation, setSpiderAnimation] = useState<any>(null);
-
-  useEffect(() => {
-    const loadSpiderAnimation = async () => {
-      try {
-        const response = await fetch('/static/json/error/spider.json');
-        const animationData = await response.json();
-        setSpiderAnimation(animationData);
-      } catch (error) {
-        console.error(t('post.media_error.animation_load_error'), error);
-      }
-    };
-    loadSpiderAnimation();
-  }, [t]);
-
   return (
     <MediaErrorContainer>
-      {spiderAnimation && (
-        <LottieWrapper>
-          <Lottie animationData={spiderAnimation} loop autoplay />
-        </LottieWrapper>
-      )}
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '150px',
+          height: '150px',
+          marginBottom: 1,
+          opacity: 0.8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <BugReport sx={{ fontSize: 80, color: 'rgba(255, 255, 255, 0.7)' }} />
+      </Box>
       <Typography variant='h6' gutterBottom>
         {type === 'image'
           ? t('post.media_error.image_load_error')

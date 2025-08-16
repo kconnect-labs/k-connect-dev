@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useRef, useMemo } from 'react';
 import {
   Box,
-  Container,
   Typography,
   Avatar,
   TextField,
@@ -36,7 +35,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../../context/AuthContext';
 import PostService from '../../services/PostService';
-import ReactMarkdown from 'react-markdown';
+import { marked } from 'marked';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ImageIcon from '@mui/icons-material/Image';
 import SendIcon from '@mui/icons-material/Send';
@@ -2222,7 +2221,15 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const renderContent = () => (
-    <Container maxWidth='md' sx={{ pt: 2, pb: 10, px: { xs: 0, sm: 0 } }}>
+    <Box sx={{ 
+      ...(isOverlay ? {} : { 
+        maxWidth: 'md', 
+        mx: 'auto',
+        pt: 2, 
+        pb: 10, 
+        px: { xs: 0, sm: 0 } 
+      })
+    }}>
       {/* Image lightbox */}
       {lightboxOpen && (
         <SimpleImageViewer
@@ -2237,7 +2244,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
           initialIndex={0}
         />
       )}
-      {post && (
+      {post && !isOverlay && (
         <SEO
           title={`${post.user?.name || 'Пользователь'} - ${post.content.substring(0, 60)}${post.content.length > 60 ? '...' : ''}`}
           description={post.content.substring(0, 160)}
@@ -2297,7 +2304,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
       )}
 
       {/* Comments Section */}
-      <Box sx={{ px: { xs: 2, sm: 0 }, mb: 2 }}>
+      <Box sx={{ px: { xs: 2, sm: 0 }, mb: isOverlay ? 0 : 2 }}>
 
         {user ? (
           <Box sx={{ mb: 3 }}>
@@ -2836,7 +2843,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
           )}
         </Box>
       </Dialog>
-    </Container>
+    </Box>
   );
 
   if (isOverlay) {
@@ -2852,9 +2859,8 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
         disableEscapeKeyDown={false}
         addBottomPadding
         maxWidthCustom={850}
-
       >
-        <Box sx={{ maxHeight: '80vh', overflow: 'auto' }}>{renderContent()}</Box>
+        {renderContent()}
       </UniversalModal>
     );
   }

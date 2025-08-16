@@ -51,7 +51,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import SEO from '../../components/SEO';
 import { useMessenger } from '../../contexts/MessengerContext';
-import Lottie from 'lottie-react';
+// Lottie removed - too heavy
 import pako from 'pako';
 import StickerPackModal from '../../components/Messenger/StickerPackModal';
 

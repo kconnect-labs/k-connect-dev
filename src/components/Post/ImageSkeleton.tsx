@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Skeleton, styled, CircularProgress } from '@mui/material';
+import { Box, Skeleton, styled } from '@mui/material';
 import { ImageDimensions } from './types';
 
 const SkeletonContainer = styled(Box)(({ theme }) => ({
@@ -63,15 +63,7 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
         skeletonHeight = `${Math.min(maxW / aspectRatio, maxH)}px`;
       }
       
-      // Отладочная информация (убрать в продакшене)
-      console.log('ImageSkeleton calculation:', {
-        original: `${imageDimensions.width}x${imageDimensions.height}`,
-        aspectRatio,
-        isMobile,
-        maxW,
-        maxH,
-        calculatedHeight: skeletonHeight
-      });
+
     } else {
       // Для сетки изображений используем пропорции
       // В сетке изображения обычно квадратные или с фиксированной высотой
@@ -92,36 +84,17 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
         variant="rectangular"
         width="100%"
         height="100%"
+        animation="wave"
         sx={{
           borderRadius: '8px',
           backgroundColor: 'var(--theme-background)',
           '&::after': {
-            background: 'linear-gradient(90deg, transparent, var(--theme-background), transparent)',
+            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
           },
         }}
       />
       
-      {/* Крутящийся кружок загрузки */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 2,
-        }}
-      >
-        <CircularProgress
-          size={32}
-          thickness={3}
-          sx={{
-            color: 'rgba(255, 255, 255, 0.6)',
-            '& .MuiCircularProgress-circle': {
-              strokeLinecap: 'round',
-            },
-          }}
-        />
-      </Box>
+
     </SkeletonContainer>
   );
 };

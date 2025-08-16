@@ -7,10 +7,6 @@ import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
 import viteCompression from 'vite-plugin-compression';
 import { createHtmlPlugin } from 'vite-plugin-html';
-import imagePresets, { widthPreset } from 'vite-plugin-image-presets';
-// import terser from '@rollup/plugin-terser'; // Not used directly
-
-// [INFO] Проект переведён на rolldown-vite вместо vite. Конфиг совместим с rolldown-vite.
 
 // Aliases for cleaner imports
 const alias = {
@@ -82,12 +78,7 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
-      imagePresets({
-        cover: widthPreset({
-          widths: [400, 800, 1200],
-          formats: ['webp', 'jpeg', 'png'],
-        })
-      }),
+
     ].filter(Boolean),
 
     // --- Module Resolution ---
@@ -118,12 +109,7 @@ export default defineConfig(({ mode }) => {
       },
               rollupOptions: {
           onwarn(warning, warn) {
-            // Игнорируем WARN о eval в lottie-web
-            // Это безопасно, так как lottie-web использует eval только для парсинга JSON анимаций
-            // и не выполняет пользовательский код
-            if (warning.code === 'EVAL' && warning.id && warning.id.includes('lottie')) {
-              return;
-            }
+            // Игнорируем WARN о eval в node_modules
             // Игнорируем WARN о eval в node_modules
             if (warning.code === 'EVAL' && warning.id && warning.id.includes('node_modules')) {
               return;
@@ -150,7 +136,7 @@ export default defineConfig(({ mode }) => {
               
               // Тяжелые библиотеки отдельно
               'markdown': ['react-markdown'],
-              'lottie': ['lottie-react'],
+
               'framer': ['framer-motion'],
               
               // Утилиты
@@ -185,9 +171,7 @@ export default defineConfig(({ mode }) => {
       fs: { strict: true },
       // Игнорируем WARN о eval в dev режиме
       onwarn(warning, warn) {
-        if (warning.code === 'EVAL' && warning.id && warning.id.includes('lottie')) {
-          return;
-        }
+
         if (warning.code === 'EVAL' && warning.id && warning.id.includes('node_modules')) {
           return;
         }

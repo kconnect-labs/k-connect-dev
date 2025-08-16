@@ -18,7 +18,7 @@ import {
 } from '@mui/icons-material';
 import { useMessenger } from '../../contexts/MessengerContext';
 import axios from 'axios';
-import Lottie from 'lottie-react';
+// Lottie removed - too heavy
 import pako from 'pako';
 import { useStickerCache } from '../../services/stickerCache';
 
@@ -140,17 +140,8 @@ const TGSSticker = React.memo(
       return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
     }
 
-    return (
-      <div style={style} onClick={onClick} title={title}>
-        <Lottie
-          animationData={animationData}
-          loop={true}
-          autoplay={true}
-          speed={0.75}
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    );
+    // TGS animation removed - fallback to image
+    return <img src={src} style={style} onClick={onClick} alt='Стикер' title={title} />;
   }
 );
 
@@ -224,25 +215,8 @@ const AsyncStickerRenderer = React.memo(
     }
 
     if (stickerType === 'tgs' && animationData) {
-      return (
-        <div
-          style={style}
-          onClick={onClick}
-          onMouseEnter={() => setIsStatic(false)} // Включаем анимацию при наведении
-          onMouseLeave={() => setIsStatic(true)} // Отключаем анимацию при уходе мыши
-        >
-          <Lottie
-            animationData={animationData}
-            loop={!isStatic} // Зацикливание только когда не статичный
-            autoplay={!isStatic} // Автовоспроизведение только когда не статичный
-            style={{ width: '100%', height: '100%' }}
-            onError={error => {
-              console.error('Lottie animation error:', error);
-              setStickerType('static');
-            }}
-          />
-        </div>
-      );
+      // TGS animation removed - fallback to image
+      return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
     } else if (stickerType === 'webm') {
       return (
         <video
