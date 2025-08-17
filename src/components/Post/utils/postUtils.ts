@@ -145,43 +145,9 @@ export const getRandomSize = () => {
   return Math.floor(Math.random() * 40) + 60;
 };
 
-// API functions
-export const fetchLastLikedUsers = async (postId: string) => {
-  try {
-    const response = await axios.get(`/api/posts/${postId}/likes`, {
-      params: { limit: 3 },
-    });
 
-    if (response.data && Array.isArray(response.data.users)) {
-      // Deduplicate users by ID
-      const uniqueUsers = response.data.users.filter(
-        (user: any, index: number, self: any[]) => 
-          index === self.findIndex((u: any) => u.id === user.id)
-      );
-      return uniqueUsers;
-    }
-    return [];
-  } catch (error) {
-    console.error('Error fetching last liked users:', error);
-    return [];
-  }
-};
 
-export const fetchLastComment = async (postId: string) => {
-  try {
-    const response = await axios.get(`/api/posts/${postId}/comments`, {
-      params: { page: 1, limit: 1 },
-    });
 
-    if (response.data.comments && response.data.comments.length > 0) {
-      return response.data.comments[0];
-    }
-    return null;
-  } catch (error) {
-    console.error('Error fetching last comment:', error);
-    return null;
-  }
-};
 
 export const incrementViewCount = async (postId: string, currentViews: number) => {
   if (!postId || postId === 'undefined') {

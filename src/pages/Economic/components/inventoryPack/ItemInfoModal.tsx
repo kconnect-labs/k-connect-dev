@@ -42,6 +42,8 @@ import {
   useUpgradeEffects,
 } from './upgradeEffectsConfig';
 import { InventoryItem, ItemAction } from './types';
+import { useBackgroundGradients } from './useBackgroundGradients';
+import { getBackgroundGradient, createTwoCirclePattern } from './utils';
 
 // Utility to check if item is overlay item (levels 2, 3, 4)
 const isOverlayItem = (item: InventoryItem) => {
@@ -221,6 +223,11 @@ const ItemInfoModal = ({
   onItemUpdate,
   onTransferSuccess,
 }: ItemInfoModalProps) => {
+  const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
+  
+  // Получаем corner_color для фона модалки
+  const gradientData = item?.background_id ? getGradientData(item.background_id) : null;
+  const cornerColor = gradientData?.corner_color || '#974835';
   const [transferModalOpen, setTransferModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState('');
   const [transferLoading, setTransferLoading] = useState(false);
@@ -669,7 +676,18 @@ const ItemInfoModal = ({
 
   return (
     <>
-      <StyledDialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
+      <StyledDialog 
+        open={open} 
+        onClose={onClose} 
+        maxWidth='sm' 
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            background: cornerColor,
+            border: `1px solid ${cornerColor}4D`,
+          }
+        }}
+      >
         <UpgradeEffects item={item}>
           <DialogTitle
             sx={{
@@ -698,24 +716,47 @@ const ItemInfoModal = ({
           <DialogContent sx={{ pt: 0, overflow: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
             <Box sx={{ mb: 2, textAlign: 'center' }}> {/* Уменьшил отступ с mb: 3 до mb: 2 */}
               <Box position='relative'>
-                <ItemImage
+                <Box
                   sx={{
-                    ...(item?.background_url && {
-                      '&::before': {
-                        backgroundImage: `url(${item.background_url})`,
-                      },
-                    }),
+                    width: 250,
+                    height: 250,
+                    borderRadius: 3,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    mb: 2,
+                    margin: 'auto',
+                    background: getBackgroundGradient(item?.background_id, getGradient),
+                    ...(item?.background_id && getItemId(item.background_id) ? 
+                      createTwoCirclePattern(getItemId(item.background_id)!, 22, String(item.upgradeable)) : {}),
                   }}
                 >
-                  <img src={item?.image_url} alt={item?.item_name} />
-                </ItemImage>
-                {item?.marketplace?.status === 'active' && (
-                  <MarketPriceChip>
-                    <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
-                    {item.marketplace.price}
-                  </MarketPriceChip>
-                )}
-              </Box>
+                  <img
+                    src={item?.image_url}
+                    alt={item?.item_name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      borderRadius: 'inherit',
+                      position: 'relative',
+                      zIndex: 10,
+                      display: 'block',
+                      margin: 'auto',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                    }}
+                  />
+                                     {item?.marketplace?.status === 'active' && (
+                     <MarketPriceChip>
+                       <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
+                       {item.marketplace.price}
+                     </MarketPriceChip>
+                   )}
+                 </Box>
+               </Box>
 
               <Typography
                 variant='h6' // Уменьшил с h5 до h6
@@ -806,7 +847,7 @@ const ItemInfoModal = ({
               pb: 2,
               px: 2,
               '& .MuiButton-root': {
-                // Унифицированные стили для всех кнопок
+                marginLeft: '0px !important',
                 minHeight: '40px',
                 fontSize: '0.875rem',
                 fontWeight: 500,
@@ -1020,16 +1061,27 @@ const ItemInfoModal = ({
                     width: 125,
                     height: 125,
                     mb: 2,
-                    ...(item?.background_url && {
-                      '&::before': {
-                        backgroundImage: `url(${item.background_url})`,
-                      },
-                    }),
+                    background: getBackgroundGradient(item?.background_id, getGradient),
+                    position: 'relative',
+                                          '&::after': item?.background_id ? {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        ...(item?.background_id && getItemId(item.background_id) ? 
+                          createTwoCirclePattern(getItemId(item.background_id)!, 22, String(item.upgradeable)) : {}),
+                        opacity: 0.3,
+                        zIndex: 2,
+                        pointerEvents: 'none',
+                      } : {},
                   }}
                 >
                   <img
                     src={item.image_url}
                     alt={item.item_name}
+                    style={{ position: 'relative', zIndex: 10 }}
                     onError={e => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';

@@ -69,8 +69,9 @@ import {
   useUpgradeEffects,
 } from './upgradeEffectsConfig';
 import inventoryImageService from '../../../../services/InventoryImageService';
-import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
+import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
 import { InventoryItem, EquippedItem, ItemAction } from './types';
+import { useBackgroundGradients } from './useBackgroundGradients';
 import { InventorySearch } from './InventorySearch';
 import { useInventorySearch } from './useInventorySearch';
 
@@ -114,6 +115,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
   ({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
+    const { getGradient } = useBackgroundGradients();
     const [items, setItems] = useState<InventoryItem[]>([]);
     const [profileEquippedItems, setProfileEquippedItems] = useState<
       EquippedItem[]
@@ -382,7 +384,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
                   rarity: item.rarity,
                   upgrade_level: item.upgrade_level,
                   image_url: item.image_url,
-                  background_url: item.image_url,
+                  background_url: item.background_url || item.image_url,
                 },
               ];
             }
@@ -806,6 +808,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
           descriptionStyle={{}}
           customStyle={false}
           className=''
+          useTheme={true}
         />
 
         <Box sx={{ mb: 0.5 }}>
@@ -870,7 +873,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
                   >
                     <Box onClick={() => handleItemClick(item)}>
                       <UpgradeEffects item={item}>
-                        <InventoryItemCard item={item} {...({} as any)} />
+                        <InventoryItemCardPure item={item} {...({} as any)} />
                       </UpgradeEffects>
                     </Box>
                   </motion.div>

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { PostState } from './usePostState';
-import { fetchLastLikedUsers, fetchLastComment } from '../utils/postUtils';
 
 export const usePostEffects = (
   post: any,
@@ -25,34 +24,24 @@ export const usePostEffects = (
     return () => clearTimeout(timeoutId);
   }, [post?.content, setPostState]);
 
-  // Effect for fetching last liked users
-  useEffect(() => {
-    if (post?.id && postState.likesCount > 0) {
-      fetchLastLikedUsers(post.id).then(users => {
-        setPostState(prev => ({ ...prev, lastLikedUsers: users }));
-      });
-    }
-  }, [post?.id, postState.likesCount, setPostState]);
 
-  // Effect for fetching last comment
+
+  // Effect for setting last comment from post data
   useEffect(() => {
-    if (post?.id && post.comments_count > 0) {
-      setPostState(prev => ({ ...prev, lastCommentLoading: true }));
-      fetchLastComment(post.id).then(comment => {
-        setPostState(prev => ({ 
-          ...prev, 
-          lastComment: comment,
-          lastCommentLoading: false 
-        }));
-      }).catch(() => {
-        setPostState(prev => ({ 
-          ...prev, 
-          lastComment: null,
-          lastCommentLoading: false 
-        }));
-      });
+    if (post?.last_comment) {
+      setPostState(prev => ({ 
+        ...prev, 
+        lastComment: post.last_comment,
+        lastCommentLoading: false 
+      }));
+    } else {
+      setPostState(prev => ({ 
+        ...prev, 
+        lastComment: null,
+        lastCommentLoading: false 
+      }));
     }
-  }, [post?.id, post?.comments_count, setPostState]);
+  }, [post?.last_comment, setPostState]);
 
   return {
     contentRef,

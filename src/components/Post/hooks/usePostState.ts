@@ -7,7 +7,6 @@ export interface PostState {
   liked: boolean;
   likesCount: number;
   viewsCount: number;
-  lastLikedUsers: any[];
   reposted: boolean;
   isPinned: boolean;
   isExpanded: boolean;
@@ -80,7 +79,6 @@ export const usePostState = (post: any, isPinnedPost: boolean) => {
     liked: post?.user_liked || post?.is_liked || false,
     likesCount: post?.likes_count || 0,
     viewsCount: post?.views_count || 0,
-    lastLikedUsers: [],
     reposted: post?.is_reposted || false,
     isPinned: isPinnedPost || false,
     isExpanded: false,
@@ -173,23 +171,7 @@ export const usePostState = (post: any, isPinnedPost: boolean) => {
         },
       }));
 
-      // Check cached likes data
-      if (post.id && post.likes_count > 0) {
-        const postLikesCache = (window as any)._postLikesCache || {};
-        const cachedData = postLikesCache[post.id];
-        const now = Date.now();
 
-        if (
-          cachedData &&
-          cachedData.timestamp &&
-          now - cachedData.timestamp < 5 * 60 * 1000
-        ) {
-          console.log(
-            `Using cached likes data for post ${post.id} (from useEffect)`
-          );
-          setPostState(prev => ({ ...prev, lastLikedUsers: cachedData.users }));
-        }
-      }
 
       // Process content
       if (post.content) {

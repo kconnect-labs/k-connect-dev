@@ -114,8 +114,7 @@ import {
   getRandomRotation,
   getRandomSize,
   incrementViewCount,
-  fetchLastLikedUsers,
-  fetchLastComment,
+
   createLightboxHandlers,
   createMenuHandlers,
   createCopyLinkHandler,
@@ -176,7 +175,7 @@ const Post = ({
   );
   const [likesCount, setLikesCount] = useState(post?.likes_count || 0);
   const [viewsCount, setViewsCount] = useState(post?.views_count || 0);
-  const [lastLikedUsers, setLastLikedUsers] = useState([]);
+
   const [clickTimer, setClickTimer] = useState(null);
   const isCurrentUserPost =
     currentUser && post?.user && currentUser.id === post.user.id;
@@ -402,37 +401,15 @@ const Post = ({
         setRepostUrls([]);
       }
 
-      if (post.id && post.likes_count > 0) {
-        const postLikesCache = window._postLikesCache || {};
-        const cachedData = postLikesCache[post.id];
-        const now = Date.now();
 
-        if (
-          cachedData &&
-          cachedData.timestamp &&
-          now - cachedData.timestamp < 5 * 60 * 1000
-        ) {
-          console.log(
-            `Using cached likes data for post ${post.id} (from useEffect)`
-          );
-          setLastLikedUsers(cachedData.users);
-        } else {
-          fetchLastLikedUsers(post.id).then(users => {
-            if (users) setLastLikedUsers(users);
-          });
-        }
-      }
 
-      // Загружаем последний комментарий (всегда, чтобы хуки вызывались в одинаковом порядке)
-      if (post.id) {
-        setLastCommentLoading(true);
-        fetchLastComment(post.id).then(comment => {
-          setLastComment(comment);
-          setLastCommentLoading(false);
-        }).catch(() => {
-          setLastComment(null);
-          setLastCommentLoading(false);
-        });
+      // Устанавливаем последний комментарий из данных поста
+      if (post.last_comment) {
+        setLastComment(post.last_comment);
+        setLastCommentLoading(false);
+      } else {
+        setLastComment(null);
+        setLastCommentLoading(false);
       }
 
       try {

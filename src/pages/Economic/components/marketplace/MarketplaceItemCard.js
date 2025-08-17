@@ -1,4 +1,6 @@
 import React from 'react';
+import { useBackgroundGradients } from '../inventoryPack/useBackgroundGradients';
+import { getBackgroundGradient } from '../inventoryPack/utils';
 import {
   Box,
   Card,
@@ -56,6 +58,7 @@ const rarityColors = {
 };
 
 const MarketplaceItemCard = ({ listing, onClick }) => {
+  const { getGradient } = useBackgroundGradients();
   const { item, price, listed_at, seller_name } = listing;
   const timeAgo = formatDistance(new Date(listed_at), new Date(), {
     addSuffix: true,
@@ -77,22 +80,7 @@ const MarketplaceItemCard = ({ listing, onClick }) => {
             background: 'var(--theme-background, rgba(255,255,255,0.04))',
             margin: 'auto',
             marginTop: '12px',
-            ...(item.background_url && {
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundImage: `url(${item.background_url})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                borderRadius: 'inherit',
-                zIndex: 1,
-              },
-            }),
+            background: getBackgroundGradient(item.background_id, getGradient),
           }}
         >
           <ItemImage

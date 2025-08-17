@@ -1,0 +1,5744 @@
+{
+  "271": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 10
+  },
+  "226": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 3
+  },
+  "809": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 7
+  },
+  "540": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 6
+  },
+  "937": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 6
+  },
+  "335": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 5
+  },
+  "457": {
+    "center_color": "#c0392b",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #a93226 100%)",
+    "item_id": 6
+  },
+  "786": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 10
+  },
+  "781": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 2
+  },
+  "862": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 7
+  },
+  "677": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 9
+  },
+  "864": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 11
+  },
+  "820": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 3
+  },
+  "743": {
+    "center_color": "#a93226",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #d35400 100%)",
+    "item_id": 5
+  },
+  "330": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 6
+  },
+  "727": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 1
+  },
+  "252": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 3
+  },
+  "445": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 9
+  },
+  "669": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 4
+  },
+  "554": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #97a7ca 100%)",
+    "item_id": 11
+  },
+  "448": {
+    "center_color": "#c0392b",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #2c5aa0 100%)",
+    "item_id": 7
+  },
+  "71": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 11
+  },
+  "241": {
+    "center_color": "#a93226",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #d35400 100%)",
+    "item_id": 3
+  },
+  "249": {
+    "center_color": "#d35400",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #a93226 100%)",
+    "item_id": 4
+  },
+  "724": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 1
+  },
+  "38": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 3
+  },
+  "265": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 5
+  },
+  "182": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 8
+  },
+  "317": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 2
+  },
+  "939": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 10
+  },
+  "428": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 11
+  },
+  "120": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 11
+  },
+  "812": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 5
+  },
+  "513": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 8
+  },
+  "319": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 10
+  },
+  "577": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 10
+  },
+  "854": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 2
+  },
+  "55": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 5
+  },
+  "344": {
+    "center_color": "#922b21",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #a93226 100%)",
+    "item_id": 1
+  },
+  "934": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 1
+  },
+  "467": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 5
+  },
+  "418": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 3
+  },
+  "18": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 11
+  },
+  "698": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 7
+  },
+  "637": {
+    "center_color": "#c0392b",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #a93226 100%)",
+    "item_id": 9
+  },
+  "297": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 10
+  },
+  "304": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 4
+  },
+  "658": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 8
+  },
+  "73": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 2
+  },
+  "281": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 1
+  },
+  "684": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 1
+  },
+  "787": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 8
+  },
+  "757": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 1
+  },
+  "842": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #34495e 100%)",
+    "item_id": 6
+  },
+  "195": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 11
+  },
+  "936": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 9
+  },
+  "170": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 3
+  },
+  "113": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 7
+  },
+  "801": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 6
+  },
+  "752": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 2
+  },
+  "488": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 3
+  },
+  "8": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 3
+  },
+  "230": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 5
+  },
+  "950": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 2
+  },
+  "105": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 8
+  },
+  "715": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 3
+  },
+  "671": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 10
+  },
+  "708": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 2
+  },
+  "384": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 9
+  },
+  "134": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 3
+  },
+  "416": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 7
+  },
+  "269": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 1
+  },
+  "599": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 2
+  },
+  "924": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 5
+  },
+  "385": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 2
+  },
+  "475": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 1
+  },
+  "602": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 1
+  },
+  "741": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 11
+  },
+  "141": {
+    "center_color": "#a93226",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #c0392b 100%)",
+    "item_id": 2
+  },
+  "56": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 11
+  },
+  "656": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 1
+  },
+  "891": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 11
+  },
+  "796": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 4
+  },
+  "581": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 7
+  },
+  "700": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 6
+  },
+  "521": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 3
+  },
+  "441": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 1
+  },
+  "322": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 4
+  },
+  "387": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 7
+  },
+  "956": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 9
+  },
+  "321": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 11
+  },
+  "938": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 8
+  },
+  "277": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 3
+  },
+  "501": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 1
+  },
+  "359": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 2
+  },
+  "871": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 7
+  },
+  "493": {
+    "center_color": "#474b4b",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #000000 100%)",
+    "item_id": 6
+  },
+  "219": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 8
+  },
+  "474": {
+    "center_color": "#922b21",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #f4adb7 100%)",
+    "item_id": 9
+  },
+  "59": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 2
+  },
+  "191": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 8
+  },
+  "921": {
+    "center_color": "#d35400",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #c0392b 100%)",
+    "item_id": 6
+  },
+  "723": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 3
+  },
+  "419": {
+    "center_color": "#d38960",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #000000 100%)",
+    "item_id": 9
+  },
+  "263": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 10
+  },
+  "131": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 1
+  },
+  "449": {
+    "center_color": "#922b21",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #c0392b 100%)",
+    "item_id": 3
+  },
+  "925": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 5
+  },
+  "373": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 7
+  },
+  "625": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 9
+  },
+  "908": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 9
+  },
+  "378": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 2
+  },
+  "714": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 8
+  },
+  "63": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 4
+  },
+  "459": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 11
+  },
+  "517": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 1
+  },
+  "155": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 4
+  },
+  "745": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 4
+  },
+  "172": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 2
+  },
+  "90": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 3
+  },
+  "280": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 10
+  },
+  "942": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 4
+  },
+  "311": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 10
+  },
+  "72": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 9
+  },
+  "11": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 11
+  },
+  "215": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 1
+  },
+  "203": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 4
+  },
+  "109": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 3
+  },
+  "800": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 7
+  },
+  "868": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 2
+  },
+  "114": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 1
+  },
+  "927": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 9
+  },
+  "29": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 6
+  },
+  "329": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 9
+  },
+  "518": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 7
+  },
+  "32": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 7
+  },
+  "951": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 11
+  },
+  "164": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 5
+  },
+  "730": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 9
+  },
+  "174": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 4
+  },
+  "408": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 8
+  },
+  "699": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 10
+  },
+  "162": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 8
+  },
+  "750": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 3
+  },
+  "476": {
+    "center_color": "#34495e",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #97a7ca 100%)",
+    "item_id": 8
+  },
+  "710": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 7
+  },
+  "636": {
+    "center_color": "#a93226",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #ff9d7d 100%)",
+    "item_id": 3
+  },
+  "768": {
+    "center_color": "#c0392b",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #f4adb7 100%)",
+    "item_id": 9
+  },
+  "673": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 10
+  },
+  "251": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 8
+  },
+  "149": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c5aa0 100%)",
+    "item_id": 2
+  },
+  "832": {
+    "center_color": "#a93226",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #ff9d7d 100%)",
+    "item_id": 5
+  },
+  "388": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 7
+  },
+  "835": {
+    "center_color": "#2c3e50",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #97a7ca 100%)",
+    "item_id": 9
+  },
+  "436": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 7
+  },
+  "285": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 11
+  },
+  "763": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 8
+  },
+  "857": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 2
+  },
+  "261": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 8
+  },
+  "355": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 11
+  },
+  "527": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 5
+  },
+  "412": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 9
+  },
+  "240": {
+    "center_color": "#d35400",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #ff9d7d 100%)",
+    "item_id": 8
+  },
+  "434": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 9
+  },
+  "343": {
+    "center_color": "#d35400",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #a93226 100%)",
+    "item_id": 3
+  },
+  "124": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 6
+  },
+  "690": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 7
+  },
+  "44": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 7
+  },
+  "482": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 11
+  },
+  "437": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 5
+  },
+  "746": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 4
+  },
+  "623": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 3
+  },
+  "400": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 11
+  },
+  "353": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 9
+  },
+  "948": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 3
+  },
+  "258": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 8
+  },
+  "143": {
+    "center_color": "#922b21",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #ff9d7d 100%)",
+    "item_id": 11
+  },
+  "325": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 10
+  },
+  "34": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 7
+  },
+  "579": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 9
+  },
+  "503": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 1
+  },
+  "719": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 7
+  },
+  "286": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 5
+  },
+  "957": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 5
+  },
+  "949": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 8
+  },
+  "237": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 3
+  },
+  "158": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 6
+  },
+  "940": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 5
+  },
+  "863": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 6
+  },
+  "171": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 1
+  },
+  "128": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 6
+  },
+  "507": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 4
+  },
+  "607": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 11
+  },
+  "572": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 4
+  },
+  "628": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 8
+  },
+  "168": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 2
+  },
+  "528": {
+    "center_color": "#d35400",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #f4adb7 100%)",
+    "item_id": 1
+  },
+  "932": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 10
+  },
+  "209": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 6
+  },
+  "687": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 1
+  },
+  "792": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 8
+  },
+  "181": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 4
+  },
+  "612": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 10
+  },
+  "17": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 10
+  },
+  "811": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 5
+  },
+  "139": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 2
+  },
+  "760": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 9
+  },
+  "680": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 11
+  },
+  "722": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 2
+  },
+  "923": {
+    "center_color": "#2c3e50",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #97a7ca 100%)",
+    "item_id": 3
+  },
+  "423": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 2
+  },
+  "235": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 4
+  },
+  "596": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 2
+  },
+  "737": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #97a7ca 100%)",
+    "item_id": 9
+  },
+  "75": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 4
+  },
+  "776": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 6
+  },
+  "306": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 10
+  },
+  "605": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 5
+  },
+  "943": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 4
+  },
+  "188": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 1
+  },
+  "7": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 10
+  },
+  "852": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 4
+  },
+  "421": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 5
+  },
+  "137": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 7
+  },
+  "41": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 10
+  },
+  "365": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 5
+  },
+  "199": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 9
+  },
+  "96": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 8
+  },
+  "176": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 10
+  },
+  "3": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 6
+  },
+  "85": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 4
+  },
+  "762": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 7
+  },
+  "62": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 8
+  },
+  "107": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 3
+  },
+  "236": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 1
+  },
+  "494": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 8
+  },
+  "664": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 1
+  },
+  "479": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 1
+  },
+  "797": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 10
+  },
+  "610": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 9
+  },
+  "123": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 5
+  },
+  "720": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 3
+  },
+  "125": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 9
+  },
+  "33": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 7
+  },
+  "611": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 5
+  },
+  "61": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 7
+  },
+  "80": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 4
+  },
+  "765": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 6
+  },
+  "200": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 7
+  },
+  "480": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 4
+  },
+  "660": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 5
+  },
+  "818": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 9
+  },
+  "48": {
+    "center_color": "#922b21",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #922b21 100%)",
+    "item_id": 5
+  },
+  "233": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 10
+  },
+  "766": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 7
+  },
+  "856": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 11
+  },
+  "606": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 10
+  },
+  "557": {
+    "center_color": "#34495e",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #2c3e50 100%)",
+    "item_id": 8
+  },
+  "224": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 5
+  },
+  "151": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 10
+  },
+  "778": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 4
+  },
+  "214": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 6
+  },
+  "165": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 6
+  },
+  "358": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 5
+  },
+  "122": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 6
+  },
+  "806": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 3
+  },
+  "270": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 8
+  },
+  "197": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 2
+  },
+  "64": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 5
+  },
+  "409": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 6
+  },
+  "76": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 6
+  },
+  "439": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 8
+  },
+  "86": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 9
+  },
+  "405": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 8
+  },
+  "288": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 3
+  },
+  "649": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 6
+  },
+  "604": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 2
+  },
+  "618": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 1
+  },
+  "772": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 1
+  },
+  "753": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 9
+  },
+  "342": {
+    "center_color": "#d35400",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #ff9d7d 100%)",
+    "item_id": 10
+  },
+  "716": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 8
+  },
+  "810": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 1
+  },
+  "42": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 11
+  },
+  "208": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 9
+  },
+  "926": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c5aa0 100%)",
+    "item_id": 6
+  },
+  "97": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 7
+  },
+  "892": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 1
+  },
+  "674": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 10
+  },
+  "443": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #97a7ca 100%)",
+    "item_id": 4
+  },
+  "826": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 10
+  },
+  "904": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 3
+  },
+  "242": {
+    "center_color": "#a93226",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #d35400 100%)",
+    "item_id": 9
+  },
+  "58": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 4
+  },
+  "888": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 6
+  },
+  "425": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 5
+  },
+  "253": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 2
+  },
+  "92": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 4
+  },
+  "813": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 3
+  },
+  "568": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 2
+  },
+  "885": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 9
+  },
+  "627": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 3
+  },
+  "918": {
+    "center_color": "#d35400",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #a93226 100%)",
+    "item_id": 3
+  },
+  "314": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 9
+  },
+  "260": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 4
+  },
+  "440": {
+    "center_color": "#d35400",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #ff9d7d 100%)",
+    "item_id": 2
+  },
+  "509": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 11
+  },
+  "883": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 2
+  },
+  "530": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 10
+  },
+  "663": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 2
+  },
+  "790": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 1
+  },
+  "53": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 7
+  },
+  "870": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 5
+  },
+  "279": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 8
+  },
+  "148": {
+    "center_color": "#2c3e50",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #1e3a5f 100%)",
+    "item_id": 4
+  },
+  "930": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c5aa0 100%)",
+    "item_id": 6
+  },
+  "175": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 11
+  },
+  "430": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 5
+  },
+  "523": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 7
+  },
+  "247": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 4
+  },
+  "580": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 10
+  },
+  "785": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 9
+  },
+  "547": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 2
+  },
+  "531": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 2
+  },
+  "21": {
+    "center_color": "#b3afaa",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #000000 100%)",
+    "item_id": 5
+  },
+  "323": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 6
+  },
+  "452": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 9
+  },
+  "70": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 3
+  },
+  "520": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 11
+  },
+  "913": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 3
+  },
+  "683": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 9
+  },
+  "537": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 5
+  },
+  "654": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 3
+  },
+  "879": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 2
+  },
+  "89": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 10
+  },
+  "231": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 5
+  },
+  "483": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 7
+  },
+  "397": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 10
+  },
+  "703": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 10
+  },
+  "268": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 6
+  },
+  "154": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 7
+  },
+  "603": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 3
+  },
+  "569": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 9
+  },
+  "345": {
+    "center_color": "#2c3e50",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #97a7ca 100%)",
+    "item_id": 9
+  },
+  "25": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 3
+  },
+  "736": {
+    "center_color": "#a93226",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #922b21 100%)",
+    "item_id": 6
+  },
+  "93": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 5
+  },
+  "60": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 8
+  },
+  "773": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 5
+  },
+  "655": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 3
+  },
+  "588": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 7
+  },
+  "744": {
+    "center_color": "#34495e",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #34495e 100%)",
+    "item_id": 8
+  },
+  "300": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 8
+  },
+  "221": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 10
+  },
+  "848": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 7
+  },
+  "432": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 6
+  },
+  "905": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 8
+  },
+  "360": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 2
+  },
+  "398": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 3
+  },
+  "238": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 10
+  },
+  "707": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 7
+  },
+  "877": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 8
+  },
+  "817": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 4
+  },
+  "538": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 1
+  },
+  "769": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 3
+  },
+  "471": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 8
+  },
+  "909": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 3
+  },
+  "667": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 5
+  },
+  "366": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 8
+  },
+  "39": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 11
+  },
+  "672": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 9
+  },
+  "104": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 4
+  },
+  "928": {
+    "center_color": "#424949",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #424949 0%, #2c3e50 100%)",
+    "item_id": 3
+  },
+  "682": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 6
+  },
+  "911": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 5
+  },
+  "327": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 3
+  },
+  "267": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 6
+  },
+  "487": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 3
+  },
+  "866": {
+    "center_color": "#d35400",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #f4adb7 100%)",
+    "item_id": 11
+  },
+  "563": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 3
+  },
+  "650": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 7
+  },
+  "861": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 3
+  },
+  "827": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 11
+  },
+  "546": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 10
+  },
+  "705": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 6
+  },
+  "361": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 2
+  },
+  "954": {
+    "center_color": "#d35400",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #f4adb7 100%)",
+    "item_id": 4
+  },
+  "748": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 10
+  },
+  "694": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 7
+  },
+  "95": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 8
+  },
+  "291": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 4
+  },
+  "275": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 7
+  },
+  "116": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 6
+  },
+  "218": {
+    "center_color": "#d38960",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #000000 100%)",
+    "item_id": 5
+  },
+  "807": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 10
+  },
+  "726": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 3
+  },
+  "458": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 7
+  },
+  "23": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 9
+  },
+  "894": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 2
+  },
+  "102": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 4
+  },
+  "274": {
+    "center_color": "#d35400",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #f4adb7 100%)",
+    "item_id": 10
+  },
+  "272": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 5
+  },
+  "99": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 10
+  },
+  "77": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 3
+  },
+  "718": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 11
+  },
+  "223": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 3
+  },
+  "665": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 7
+  },
+  "839": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 11
+  },
+  "756": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 4
+  },
+  "534": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 7
+  },
+  "561": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 2
+  },
+  "427": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 4
+  },
+  "843": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 11
+  },
+  "313": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 11
+  },
+  "849": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 4
+  },
+  "186": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 10
+  },
+  "644": {
+    "center_color": "#e67e22",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e67e22 0%, #34495e 100%)",
+    "item_id": 4
+  },
+  "662": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 5
+  },
+  "947": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 8
+  },
+  "805": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 6
+  },
+  "621": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 2
+  },
+  "202": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 6
+  },
+  "338": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 8
+  },
+  "880": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 5
+  },
+  "35": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 9
+  },
+  "303": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 6
+  },
+  "177": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 4
+  },
+  "456": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 11
+  },
+  "477": {
+    "center_color": "#2c3e50",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #34495e 100%)",
+    "item_id": 7
+  },
+  "643": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 3
+  },
+  "874": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 4
+  },
+  "450": {
+    "center_color": "#34495e",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #34495e 100%)",
+    "item_id": 8
+  },
+  "14": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 10
+  },
+  "587": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 7
+  },
+  "600": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 1
+  },
+  "334": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 6
+  },
+  "675": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 3
+  },
+  "127": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 3
+  },
+  "819": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 11
+  },
+  "733": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 3
+  },
+  "798": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 10
+  },
+  "243": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #97a7ca 100%)",
+    "item_id": 9
+  },
+  "316": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 6
+  },
+  "393": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 1
+  },
+  "115": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 4
+  },
+  "375": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 11
+  },
+  "52": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 10
+  },
+  "504": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 4
+  },
+  "36": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 9
+  },
+  "130": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 3
+  },
+  "394": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 2
+  },
+  "512": {
+    "center_color": "#a93226",
+    "corner_color": "#a93226",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #a93226 100%)",
+    "item_id": 10
+  },
+  "865": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 10
+  },
+  "881": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 1
+  },
+  "292": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 10
+  },
+  "294": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 11
+  },
+  "591": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 2
+  },
+  "333": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 1
+  },
+  "875": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 10
+  },
+  "648": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 5
+  },
+  "395": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 9
+  },
+  "729": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 3
+  },
+  "196": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 11
+  },
+  "594": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 7
+  },
+  "37": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 5
+  },
+  "377": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 9
+  },
+  "302": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 1
+  },
+  "549": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 6
+  },
+  "16": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 5
+  },
+  "712": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 11
+  },
+  "47": {
+    "center_color": "#d35400",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #ff9d7d 100%)",
+    "item_id": 3
+  },
+  "232": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 10
+  },
+  "912": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 11
+  },
+  "859": {
+    "center_color": "#a175ab",
+    "corner_color": "#855a8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #855a8f 100%)",
+    "item_id": 5
+  },
+  "173": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 5
+  },
+  "145": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 8
+  },
+  "45": {
+    "center_color": "#c0392b",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #c0392b 100%)",
+    "item_id": 4
+  },
+  "869": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 1
+  },
+  "542": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 9
+  },
+  "118": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 10
+  },
+  "574": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 8
+  },
+  "931": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 10
+  },
+  "46": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 8
+  },
+  "758": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 7
+  },
+  "609": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 6
+  },
+  "691": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 3
+  },
+  "147": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #97a7ca 100%)",
+    "item_id": 3
+  },
+  "593": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 4
+  },
+  "635": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 6
+  },
+  "453": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 1
+  },
+  "506": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 10
+  },
+  "780": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 5
+  },
+  "502": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 10
+  },
+  "498": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 10
+  },
+  "919": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 11
+  },
+  "555": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 4
+  },
+  "814": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 9
+  },
+  "9": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 10
+  },
+  "227": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 11
+  },
+  "332": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 11
+  },
+  "254": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 11
+  },
+  "290": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 2
+  },
+  "205": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 5
+  },
+  "320": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 10
+  },
+  "545": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 7
+  },
+  "836": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #1e3a5f 100%)",
+    "item_id": 3
+  },
+  "873": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 4
+  },
+  "589": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 11
+  },
+  "417": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 8
+  },
+  "739": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #1e3a5f 100%)",
+    "item_id": 7
+  },
+  "189": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 7
+  },
+  "206": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 6
+  },
+  "108": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 1
+  },
+  "575": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 2
+  },
+  "160": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 7
+  },
+  "278": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 2
+  },
+  "847": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 4
+  },
+  "194": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 4
+  },
+  "146": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 9
+  },
+  "324": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 7
+  },
+  "804": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 9
+  },
+  "890": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 2
+  },
+  "845": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 1
+  },
+  "380": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 7
+  },
+  "906": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 8
+  },
+  "838": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 5
+  },
+  "526": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 5
+  },
+  "368": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 10
+  },
+  "619": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 3
+  },
+  "533": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #1e3a5f 100%)",
+    "item_id": 2
+  },
+  "571": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 6
+  },
+  "422": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 7
+  },
+  "470": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 1
+  },
+  "844": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 5
+  },
+  "709": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 9
+  },
+  "878": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 4
+  },
+  "952": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 9
+  },
+  "159": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 9
+  },
+  "840": {
+    "center_color": "#1e8449",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e8449 0%, #2c3e50 100%)",
+    "item_id": 9
+  },
+  "248": {
+    "center_color": "#7d3c98",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7d3c98 0%, #2c3e50 100%)",
+    "item_id": 3
+  },
+  "510": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 6
+  },
+  "592": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 8
+  },
+  "515": {
+    "center_color": "#d35400",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #922b21 100%)",
+    "item_id": 1
+  },
+  "354": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 5
+  },
+  "150": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 8
+  },
+  "336": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 6
+  },
+  "783": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 1
+  },
+  "496": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 9
+  },
+  "376": {
+    "center_color": "#c0392b",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #f4adb7 100%)",
+    "item_id": 2
+  },
+  "24": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 7
+  },
+  "135": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 3
+  },
+  "15": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 10
+  },
+  "6": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 6
+  },
+  "490": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 11
+  },
+  "764": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 6
+  },
+  "308": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 4
+  },
+  "681": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 2
+  },
+  "511": {
+    "center_color": "#229954",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #229954 0%, #1e3a5f 100%)",
+    "item_id": 6
+  },
+  "276": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 8
+  },
+  "225": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 8
+  },
+  "828": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 8
+  },
+  "872": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 5
+  },
+  "424": {
+    "center_color": "#922b21",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #c0392b 100%)",
+    "item_id": 3
+  },
+  "13": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 9
+  },
+  "822": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 7
+  },
+  "415": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 9
+  },
+  "117": {
+    "center_color": "#474b4b",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #000000 100%)",
+    "item_id": 6
+  },
+  "647": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 1
+  },
+  "584": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 11
+  },
+  "454": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 2
+  },
+  "678": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 3
+  },
+  "447": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 11
+  },
+  "184": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 7
+  },
+  "505": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 11
+  },
+  "582": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 7
+  },
+  "481": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 10
+  },
+  "69": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 1
+  },
+  "337": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 11
+  },
+  "740": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 2
+  },
+  "853": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 4
+  },
+  "514": {
+    "center_color": "#c0392b",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #ff9d7d 100%)",
+    "item_id": 2
+  },
+  "211": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 9
+  },
+  "922": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 5
+  },
+  "829": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 6
+  },
+  "725": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 8
+  },
+  "1": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 6
+  },
+  "831": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 4
+  },
+  "601": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 10
+  },
+  "250": {
+    "center_color": "#34495e",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #2c3e50 100%)",
+    "item_id": 10
+  },
+  "74": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 5
+  },
+  "328": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 11
+  },
+  "508": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 9
+  },
+  "661": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 3
+  },
+  "484": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 8
+  },
+  "491": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 6
+  },
+  "695": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 7
+  },
+  "216": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 3
+  },
+  "777": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 7
+  },
+  "645": {
+    "center_color": "#d35400",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #c0392b 100%)",
+    "item_id": 8
+  },
+  "500": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 7
+  },
+  "858": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 2
+  },
+  "54": {
+    "center_color": "#cd853f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd853f 0%, #2c5aa0 100%)",
+    "item_id": 6
+  },
+  "646": {
+    "center_color": "#34495e",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #34495e 100%)",
+    "item_id": 10
+  },
+  "622": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 11
+  },
+  "799": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 4
+  },
+  "67": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 2
+  },
+  "213": {
+    "center_color": "#474b4b",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #000000 100%)",
+    "item_id": 5
+  },
+  "91": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 10
+  },
+  "392": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 5
+  },
+  "347": {
+    "center_color": "#2c3e50",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #2c3e50 100%)",
+    "item_id": 4
+  },
+  "379": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 11
+  },
+  "266": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 8
+  },
+  "497": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 11
+  },
+  "933": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 4
+  },
+  "81": {
+    "center_color": "#a93226",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #f4adb7 100%)",
+    "item_id": 3
+  },
+  "876": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 8
+  },
+  "551": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 7
+  },
+  "414": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 6
+  },
+  "315": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 4
+  },
+  "341": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 5
+  },
+  "289": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 9
+  },
+  "492": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 8
+  },
+  "955": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 5
+  },
+  "495": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 5
+  },
+  "433": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 7
+  },
+  "552": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 1
+  },
+  "98": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 8
+  },
+  "187": {
+    "center_color": "#cf4a41",
+    "corner_color": "#a7353d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cf4a41 0%, #a7353d 100%)",
+    "item_id": 4
+  },
+  "111": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 9
+  },
+  "262": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 10
+  },
+  "318": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 7
+  },
+  "713": {
+    "center_color": "#d38960",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #000000 100%)",
+    "item_id": 10
+  },
+  "40": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 3
+  },
+  "256": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 7
+  },
+  "245": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #2c3e50 100%)",
+    "item_id": 8
+  },
+  "386": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 7
+  },
+  "469": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 10
+  },
+  "126": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 8
+  },
+  "257": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 8
+  },
+  "914": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 5
+  },
+  "79": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 5
+  },
+  "755": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 10
+  },
+  "22": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 7
+  },
+  "259": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 7
+  },
+  "403": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 6
+  },
+  "692": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 7
+  },
+  "586": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 10
+  },
+  "898": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 4
+  },
+  "4": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 2
+  },
+  "49": {
+    "center_color": "#c0392b",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #d35400 100%)",
+    "item_id": 4
+  },
+  "466": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 10
+  },
+  "110": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 2
+  },
+  "659": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 7
+  },
+  "451": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 10
+  },
+  "516": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 9
+  },
+  "633": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 3
+  },
+  "882": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 8
+  },
+  "153": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #1e3a5f 100%)",
+    "item_id": 6
+  },
+  "106": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 3
+  },
+  "429": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 10
+  },
+  "815": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 5
+  },
+  "478": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 7
+  },
+  "767": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 1
+  },
+  "463": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 7
+  },
+  "192": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 1
+  },
+  "178": {
+    "center_color": "#c0392b",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #f4adb7 100%)",
+    "item_id": 8
+  },
+  "220": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 8
+  },
+  "185": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 8
+  },
+  "30": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 10
+  },
+  "455": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 11
+  },
+  "356": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 8
+  },
+  "367": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 6
+  },
+  "363": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 7
+  },
+  "564": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 9
+  },
+  "821": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 3
+  },
+  "886": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 8
+  },
+  "850": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 9
+  },
+  "310": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 5
+  },
+  "157": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 10
+  },
+  "749": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 11
+  },
+  "920": {
+    "center_color": "#922b21",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #ff9d7d 100%)",
+    "item_id": 9
+  },
+  "770": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 5
+  },
+  "129": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 7
+  },
+  "190": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 7
+  },
+  "915": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 8
+  },
+  "402": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 3
+  },
+  "565": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 7
+  },
+  "372": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 1
+  },
+  "626": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 3
+  },
+  "539": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 9
+  },
+  "833": {
+    "center_color": "#a93226",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #922b21 100%)",
+    "item_id": 5
+  },
+  "460": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 4
+  },
+  "284": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 5
+  },
+  "896": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 11
+  },
+  "642": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 5
+  },
+  "374": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 4
+  },
+  "357": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 6
+  },
+  "352": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c3e50 100%)",
+    "item_id": 1
+  },
+  "5": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 3
+  },
+  "210": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 10
+  },
+  "27": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 4
+  },
+  "287": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 6
+  },
+  "404": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 6
+  },
+  "929": {
+    "center_color": "#922b21",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #d35400 100%)",
+    "item_id": 4
+  },
+  "791": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 6
+  },
+  "485": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 6
+  },
+  "754": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 10
+  },
+  "946": {
+    "center_color": "#a58fe2",
+    "corner_color": "#6d62ba",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a58fe2 0%, #6d62ba 100%)",
+    "item_id": 4
+  },
+  "629": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 7
+  },
+  "407": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 10
+  },
+  "420": {
+    "center_color": "#c98c31",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #000000 100%)",
+    "item_id": 11
+  },
+  "953": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 1
+  },
+  "121": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 1
+  },
+  "735": {
+    "center_color": "#c0392b",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #c0392b 100%)",
+    "item_id": 1
+  },
+  "759": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 6
+  },
+  "732": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 11
+  },
+  "615": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 6
+  },
+  "902": {
+    "center_color": "#b3614a",
+    "corner_color": "#974835",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3614a 0%, #974835 100%)",
+    "item_id": 7
+  },
+  "702": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 9
+  },
+  "312": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 8
+  },
+  "66": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 11
+  },
+  "867": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 9
+  },
+  "620": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 1
+  },
+  "305": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 11
+  },
+  "234": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 10
+  },
+  "283": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 5
+  },
+  "31": {
+    "center_color": "#ab656d",
+    "corner_color": "#804a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab656d 0%, #804a50 100%)",
+    "item_id": 11
+  },
+  "907": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 6
+  },
+  "544": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 3
+  },
+  "519": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 8
+  },
+  "103": {
+    "center_color": "#71a2a2",
+    "corner_color": "#55828f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #71a2a2 0%, #55828f 100%)",
+    "item_id": 4
+  },
+  "685": {
+    "center_color": "#a175ab",
+    "corner_color": "#855a8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #855a8f 100%)",
+    "item_id": 8
+  },
+  "893": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 10
+  },
+  "201": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 4
+  },
+  "548": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 11
+  },
+  "349": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 11
+  },
+  "567": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 2
+  },
+  "169": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 2
+  },
+  "246": {
+    "center_color": "#2c3e50",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #2c5aa0 100%)",
+    "item_id": 1
+  },
+  "688": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 8
+  },
+  "351": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 2
+  },
+  "183": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 1
+  },
+  "747": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 7
+  },
+  "273": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 1
+  },
+  "686": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 5
+  },
+  "2": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 5
+  },
+  "855": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 1
+  },
+  "499": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 3
+  },
+  "824": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 4
+  },
+  "264": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 1
+  },
+  "887": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 2
+  },
+  "244": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 7
+  },
+  "396": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 10
+  },
+  "83": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 5
+  },
+  "793": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 8
+  },
+  "362": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 5
+  },
+  "901": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 6
+  },
+  "631": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 8
+  },
+  "598": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 7
+  },
+  "679": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 9
+  },
+  "903": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 1
+  },
+  "851": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 11
+  },
+  "465": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 8
+  },
+  "94": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 3
+  },
+  "595": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 7
+  },
+  "50": {
+    "center_color": "#2c3e50",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #97a7ca 100%)",
+    "item_id": 9
+  },
+  "348": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 5
+  },
+  "632": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 4
+  },
+  "944": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 7
+  },
+  "900": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 9
+  },
+  "802": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 6
+  },
+  "616": {
+    "center_color": "#c98c31",
+    "corner_color": "#b2722d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c98c31 0%, #b2722d 100%)",
+    "item_id": 5
+  },
+  "222": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 8
+  },
+  "339": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 4
+  },
+  "689": {
+    "center_color": "#6ba58b",
+    "corner_color": "#3a8f8a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6ba58b 0%, #3a8f8a 100%)",
+    "item_id": 9
+  },
+  "212": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 2
+  },
+  "255": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 8
+  },
+  "489": {
+    "center_color": "#2c3e50",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #1e3a5f 100%)",
+    "item_id": 11
+  },
+  "207": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 1
+  },
+  "734": {
+    "center_color": "#c0392b",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #ff9d7d 100%)",
+    "item_id": 5
+  },
+  "617": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 2
+  },
+  "742": {
+    "center_color": "#27ae60",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #27ae60 0%, #2c3e50 100%)",
+    "item_id": 3
+  },
+  "779": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 5
+  },
+  "156": {
+    "center_color": "#62bb7f",
+    "corner_color": "#429f6d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb7f 0%, #429f6d 100%)",
+    "item_id": 1
+  },
+  "198": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 11
+  },
+  "468": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 2
+  },
+  "486": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 1
+  },
+  "401": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 2
+  },
+  "152": {
+    "center_color": "#c0392b",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #d35400 100%)",
+    "item_id": 10
+  },
+  "163": {
+    "center_color": "#6f88f1",
+    "corner_color": "#6560e2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6f88f1 0%, #6560e2 100%)",
+    "item_id": 11
+  },
+  "307": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 2
+  },
+  "444": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #1e3a5f 100%)",
+    "item_id": 5
+  },
+  "411": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 3
+  },
+  "390": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 2
+  },
+  "578": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 1
+  },
+  "391": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 1
+  },
+  "782": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 9
+  },
+  "101": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 7
+  },
+  "830": {
+    "center_color": "#a93226",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #922b21 100%)",
+    "item_id": 10
+  },
+  "775": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 10
+  },
+  "837": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #1e3a5f 100%)",
+    "item_id": 5
+  },
+  "193": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 8
+  },
+  "132": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 10
+  },
+  "556": {
+    "center_color": "#2c3e50",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #2c3e50 100%)",
+    "item_id": 4
+  },
+  "142": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 7
+  },
+  "119": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 4
+  },
+  "309": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 4
+  },
+  "298": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 7
+  },
+  "522": {
+    "center_color": "#d35400",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #922b21 100%)",
+    "item_id": 8
+  },
+  "897": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 8
+  },
+  "535": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 11
+  },
+  "945": {
+    "center_color": "#9f5e9d",
+    "corner_color": "#824582",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f5e9d 0%, #824582 100%)",
+    "item_id": 4
+  },
+  "553": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 2
+  },
+  "136": {
+    "center_color": "#1a1b1b",
+    "corner_color": "#0d100d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1a1b1b 0%, #0d100d 100%)",
+    "item_id": 6
+  },
+  "51": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #1e3a5f 100%)",
+    "item_id": 11
+  },
+  "597": {
+    "center_color": "#5694c2",
+    "corner_color": "#5078bd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5694c2 0%, #5078bd 100%)",
+    "item_id": 8
+  },
+  "541": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 5
+  },
+  "78": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 9
+  },
+  "652": {
+    "center_color": "#5c9274",
+    "corner_color": "#3d786a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5c9274 0%, #3d786a 100%)",
+    "item_id": 7
+  },
+  "204": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 4
+  },
+  "638": {
+    "center_color": "#c0392b",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #c0392b 0%, #922b21 100%)",
+    "item_id": 10
+  },
+  "573": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 2
+  },
+  "640": {
+    "center_color": "#2c3e50",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c3e50 0%, #2c3e50 100%)",
+    "item_id": 10
+  },
+  "326": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 2
+  },
+  "84": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 9
+  },
+  "364": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 5
+  },
+  "10": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 4
+  },
+  "524": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 1
+  },
+  "613": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 9
+  },
+  "717": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 10
+  },
+  "525": {
+    "center_color": "#dc9658",
+    "corner_color": "#c56a5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #dc9658 0%, #c56a5a 100%)",
+    "item_id": 1
+  },
+  "823": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 2
+  },
+  "543": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 3
+  },
+  "12": {
+    "center_color": "#7f817c",
+    "corner_color": "#6a6a65",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7f817c 0%, #6a6a65 100%)",
+    "item_id": 10
+  },
+  "941": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 5
+  },
+  "808": {
+    "center_color": "#bf6bc7",
+    "corner_color": "#9762d2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf6bc7 0%, #9762d2 100%)",
+    "item_id": 10
+  },
+  "566": {
+    "center_color": "#46b584",
+    "corner_color": "#3a9775",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #46b584 0%, #3a9775 100%)",
+    "item_id": 2
+  },
+  "917": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 9
+  },
+  "576": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 10
+  },
+  "784": {
+    "center_color": "#5a99c2",
+    "corner_color": "#4582aa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5a99c2 0%, #4582aa 100%)",
+    "item_id": 7
+  },
+  "28": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 4
+  },
+  "657": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 2
+  },
+  "624": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 10
+  },
+  "583": {
+    "center_color": "#bcaa62",
+    "corner_color": "#9d8f50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bcaa62 0%, #9d8f50 100%)",
+    "item_id": 2
+  },
+  "57": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c5aa0 100%)",
+    "item_id": 8
+  },
+  "834": {
+    "center_color": "#d35400",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #d35400 100%)",
+    "item_id": 3
+  },
+  "167": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 11
+  },
+  "140": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 6
+  },
+  "641": {
+    "center_color": "#34495e",
+    "corner_color": "#34495e",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #34495e 100%)",
+    "item_id": 2
+  },
+  "728": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 4
+  },
+  "68": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 1
+  },
+  "282": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 6
+  },
+  "472": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 10
+  },
+  "614": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 2
+  },
+  "331": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 6
+  },
+  "381": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 11
+  },
+  "701": {
+    "center_color": "#82919c",
+    "corner_color": "#62727a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #82919c 0%, #62727a 100%)",
+    "item_id": 10
+  },
+  "935": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 7
+  },
+  "82": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 10
+  },
+  "438": {
+    "center_color": "#a93226",
+    "corner_color": "#c0392b",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #c0392b 100%)",
+    "item_id": 3
+  },
+  "461": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 5
+  },
+  "788": {
+    "center_color": "#4b6f87",
+    "corner_color": "#406275",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b6f87 0%, #406275 100%)",
+    "item_id": 10
+  },
+  "706": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 7
+  },
+  "711": {
+    "center_color": "#cc6634",
+    "corner_color": "#b2482a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cc6634 0%, #b2482a 100%)",
+    "item_id": 10
+  },
+  "558": {
+    "center_color": "#a8b0c6",
+    "corner_color": "#8490ad",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a8b0c6 0%, #8490ad 100%)",
+    "item_id": 9
+  },
+  "704": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 9
+  },
+  "389": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 6
+  },
+  "473": {
+    "center_color": "#689009",
+    "corner_color": "#2a3513",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #689009 0%, #2a3513 100%)",
+    "item_id": 11
+  },
+  "426": {
+    "center_color": "#d27d5c",
+    "corner_color": "#c2624a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27d5c 0%, #c2624a 100%)",
+    "item_id": 6
+  },
+  "651": {
+    "center_color": "#78aa56",
+    "corner_color": "#529242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78aa56 0%, #529242 100%)",
+    "item_id": 2
+  },
+  "100": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 2
+  },
+  "676": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 10
+  },
+  "340": {
+    "center_color": "#d35400",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d35400 0%, #922b21 100%)",
+    "item_id": 7
+  },
+  "382": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 3
+  },
+  "761": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 1
+  },
+  "239": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 5
+  },
+  "369": {
+    "center_color": "#a175ab",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a175ab 0%, #000000 100%)",
+    "item_id": 1
+  },
+  "299": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 7
+  },
+  "668": {
+    "center_color": "#8a62cb",
+    "corner_color": "#604a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8a62cb 0%, #604a8d 100%)",
+    "item_id": 4
+  },
+  "529": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 5
+  },
+  "161": {
+    "center_color": "#68bc74",
+    "corner_color": "#459d5a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #68bc74 0%, #459d5a 100%)",
+    "item_id": 6
+  },
+  "697": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 5
+  },
+  "19": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 11
+  },
+  "295": {
+    "center_color": "#7da1b5",
+    "corner_color": "#627d8f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7da1b5 0%, #627d8f 100%)",
+    "item_id": 3
+  },
+  "296": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 5
+  },
+  "634": {
+    "center_color": "#922b21",
+    "corner_color": "#922b21",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #922b21 100%)",
+    "item_id": 6
+  },
+  "560": {
+    "center_color": "#922b21",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #d35400 100%)",
+    "item_id": 5
+  },
+  "590": {
+    "center_color": "#7caeb2",
+    "corner_color": "#65929d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #7caeb2 0%, #65929d 100%)",
+    "item_id": 4
+  },
+  "293": {
+    "center_color": "#bf7949",
+    "corner_color": "#9d6230",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf7949 0%, #9d6230 100%)",
+    "item_id": 6
+  },
+  "639": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#97a7ca",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #97a7ca 100%)",
+    "item_id": 8
+  },
+  "803": {
+    "center_color": "#81ac53",
+    "corner_color": "#409750",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #81ac53 0%, #409750 100%)",
+    "item_id": 5
+  },
+  "816": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 8
+  },
+  "346": {
+    "center_color": "#2c5aa0",
+    "corner_color": "#2c3e50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #2c5aa0 0%, #2c3e50 100%)",
+    "item_id": 1
+  },
+  "301": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 9
+  },
+  "370": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 5
+  },
+  "696": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 9
+  },
+  "608": {
+    "center_color": "#92545c",
+    "corner_color": "#6a4048",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #92545c 0%, #6a4048 100%)",
+    "item_id": 4
+  },
+  "383": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 1
+  },
+  "229": {
+    "center_color": "#62bb8d",
+    "corner_color": "#3a9a80",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #62bb8d 0%, #3a9a80 100%)",
+    "item_id": 8
+  },
+  "406": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 4
+  },
+  "180": {
+    "center_color": "#d27eab",
+    "corner_color": "#a55a8d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d27eab 0%, #a55a8d 100%)",
+    "item_id": 5
+  },
+  "435": {
+    "center_color": "#98b187",
+    "corner_color": "#6d8d75",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #98b187 0%, #6d8d75 100%)",
+    "item_id": 10
+  },
+  "585": {
+    "center_color": "#de504a",
+    "corner_color": "#c13645",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #de504a 0%, #c13645 100%)",
+    "item_id": 1
+  },
+  "410": {
+    "center_color": "#cd8069",
+    "corner_color": "#b55a5d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cd8069 0%, #b55a5d 100%)",
+    "item_id": 7
+  },
+  "825": {
+    "center_color": "#a3806c",
+    "corner_color": "#7a6055",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a3806c 0%, #7a6055 100%)",
+    "item_id": 4
+  },
+  "771": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 10
+  },
+  "26": {
+    "center_color": "#d38960",
+    "corner_color": "#c76d4d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #c76d4d 100%)",
+    "item_id": 11
+  },
+  "138": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 1
+  },
+  "774": {
+    "center_color": "#50afb0",
+    "corner_color": "#3c96b9",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50afb0 0%, #3c96b9 100%)",
+    "item_id": 7
+  },
+  "87": {
+    "center_color": "#cda93f",
+    "corner_color": "#b2822a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #cda93f 0%, #b2822a 100%)",
+    "item_id": 7
+  },
+  "350": {
+    "center_color": "#34495e",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #34495e 0%, #2c5aa0 100%)",
+    "item_id": 8
+  },
+  "562": {
+    "center_color": "#78c77f",
+    "corner_color": "#5aad68",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #78c77f 0%, #5aad68 100%)",
+    "item_id": 10
+  },
+  "789": {
+    "center_color": "#567cc9",
+    "corner_color": "#5060b5",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #567cc9 0%, #5060b5 100%)",
+    "item_id": 6
+  },
+  "413": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 5
+  },
+  "559": {
+    "center_color": "#6c7b7f",
+    "corner_color": "#1e3a5f",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6c7b7f 0%, #1e3a5f 100%)",
+    "item_id": 2
+  },
+  "88": {
+    "center_color": "#54aea2",
+    "corner_color": "#42aab2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #54aea2 0%, #42aab2 100%)",
+    "item_id": 11
+  },
+  "738": {
+    "center_color": "#1e3a5f",
+    "corner_color": "#2c5aa0",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #1e3a5f 0%, #2c5aa0 100%)",
+    "item_id": 6
+  },
+  "731": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 7
+  },
+  "399": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 10
+  },
+  "910": {
+    "center_color": "#799d6e",
+    "corner_color": "#4a825a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #799d6e 0%, #4a825a 100%)",
+    "item_id": 10
+  },
+  "670": {
+    "center_color": "#922b21",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #f4adb7 100%)",
+    "item_id": 7
+  },
+  "371": {
+    "center_color": "#9377e9",
+    "corner_color": "#5d62d4",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9377e9 0%, #5d62d4 100%)",
+    "item_id": 6
+  },
+  "860": {
+    "center_color": "#6b9bdb",
+    "corner_color": "#6282cf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #6b9bdb 0%, #6282cf 100%)",
+    "item_id": 11
+  },
+  "112": {
+    "center_color": "#d67d81",
+    "corner_color": "#924a50",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d67d81 0%, #924a50 100%)",
+    "item_id": 9
+  },
+  "895": {
+    "center_color": "#b3afaa",
+    "corner_color": "#9d9a95",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #b3afaa 0%, #9d9a95 100%)",
+    "item_id": 4
+  },
+  "884": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 1
+  },
+  "462": {
+    "center_color": "#867de7",
+    "corner_color": "#855dcf",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #867de7 0%, #855dcf 100%)",
+    "item_id": 8
+  },
+  "442": {
+    "center_color": "#922b21",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #d35400 100%)",
+    "item_id": 5
+  },
+  "446": {
+    "center_color": "#922b21",
+    "corner_color": "#ff9d7d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #ff9d7d 100%)",
+    "item_id": 6
+  },
+  "899": {
+    "center_color": "#d38960",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d38960 0%, #000000 100%)",
+    "item_id": 6
+  },
+  "536": {
+    "center_color": "#e2c164",
+    "corner_color": "#c59a38",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #e2c164 0%, #c59a38 100%)",
+    "item_id": 5
+  },
+  "846": {
+    "center_color": "#95aa57",
+    "corner_color": "#559242",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #95aa57 0%, #559242 100%)",
+    "item_id": 10
+  },
+  "841": {
+    "center_color": "#a93226",
+    "corner_color": "#d35400",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a93226 0%, #d35400 100%)",
+    "item_id": 7
+  },
+  "550": {
+    "center_color": "#ab8b45",
+    "corner_color": "#8a7535",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ab8b45 0%, #8a7535 100%)",
+    "item_id": 8
+  },
+  "179": {
+    "center_color": "#bf746a",
+    "corner_color": "#ad556a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bf746a 0%, #ad556a 100%)",
+    "item_id": 4
+  },
+  "721": {
+    "center_color": "#bc9b3b",
+    "corner_color": "#977830",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #bc9b3b 0%, #977830 100%)",
+    "item_id": 2
+  },
+  "653": {
+    "center_color": "#d06f81",
+    "corner_color": "#b5587a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #d06f81 0%, #b5587a 100%)",
+    "item_id": 4
+  },
+  "65": {
+    "center_color": "#809d68",
+    "corner_color": "#5d824d",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #809d68 0%, #5d824d 100%)",
+    "item_id": 10
+  },
+  "228": {
+    "center_color": "#4e5b74",
+    "corner_color": "#323d55",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4e5b74 0%, #323d55 100%)",
+    "item_id": 11
+  },
+  "666": {
+    "center_color": "#9ca267",
+    "corner_color": "#6d7d52",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9ca267 0%, #6d7d52 100%)",
+    "item_id": 11
+  },
+  "166": {
+    "center_color": "#a0a19b",
+    "corner_color": "#8a8580",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a0a19b 0%, #8a8580 100%)",
+    "item_id": 3
+  },
+  "431": {
+    "center_color": "#9398a4",
+    "corner_color": "#7a808a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9398a4 0%, #7a808a 100%)",
+    "item_id": 2
+  },
+  "43": {
+    "center_color": "#945d4e",
+    "corner_color": "#75453a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #75453a 100%)",
+    "item_id": 8
+  },
+  "532": {
+    "center_color": "#55b28d",
+    "corner_color": "#389d82",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #55b28d 0%, #389d82 100%)",
+    "item_id": 4
+  },
+  "464": {
+    "center_color": "#9f79d3",
+    "corner_color": "#8a5abd",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f79d3 0%, #8a5abd 100%)",
+    "item_id": 10
+  },
+  "795": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 5
+  },
+  "794": {
+    "center_color": "#8c61b1",
+    "corner_color": "#7a4aa2",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #8c61b1 0%, #7a4aa2 100%)",
+    "item_id": 10
+  },
+  "133": {
+    "center_color": "#4b8db4",
+    "corner_color": "#35729a",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #4b8db4 0%, #35729a 100%)",
+    "item_id": 2
+  },
+  "889": {
+    "center_color": "#5fb1cd",
+    "corner_color": "#4a7092",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #5fb1cd 0%, #4a7092 100%)",
+    "item_id": 6
+  },
+  "916": {
+    "center_color": "#945d4e",
+    "corner_color": "#000000",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #945d4e 0%, #000000 100%)",
+    "item_id": 11
+  },
+  "570": {
+    "center_color": "#a66e93",
+    "corner_color": "#8a5578",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #a66e93 0%, #8a5578 100%)",
+    "item_id": 1
+  },
+  "630": {
+    "center_color": "#9f8f72",
+    "corner_color": "#7a7258",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #9f8f72 0%, #7a7258 100%)",
+    "item_id": 11
+  },
+  "751": {
+    "center_color": "#922b21",
+    "corner_color": "#f4adb7",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #922b21 0%, #f4adb7 100%)",
+    "item_id": 5
+  },
+  "144": {
+    "center_color": "#586480",
+    "corner_color": "#3d4860",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #586480 0%, #3d4860 100%)",
+    "item_id": 3
+  },
+  "217": {
+    "center_color": "#ca8a3e",
+    "corner_color": "#bd6d45",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #ca8a3e 0%, #bd6d45 100%)",
+    "item_id": 1
+  },
+  "693": {
+    "center_color": "#50a6c4",
+    "corner_color": "#428aaa",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #50a6c4 0%, #428aaa 100%)",
+    "item_id": 10
+  },
+  "20": {
+    "center_color": "#474b4b",
+    "corner_color": "#303235",
+    "gradient": "radial-gradient(50% 50% at 48.88% 50%, #474b4b 0%, #303235 100%)",
+    "item_id": 8
+  }
+}

@@ -28,6 +28,32 @@ import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
 import { initMediaCache } from './services/mediaCache';
 import { useThemeManager } from './hooks/useThemeManager';
+const preloadBackgroundGradients = async () => {
+  try {
+    const response = await fetch('/background_gradients.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    (window as any).__backgroundGradientsCache = data;
+    console.log('Background gradients preloaded successfully');
+  } catch (err) {
+    console.error('Ошибка предварительной загрузки градиентов:', err);
+  }
+};
+
+// Функция для предварительной загрузки SVG данных
+const preloadSvgAssets = async () => {
+  try {
+    // Импортируем сгенерированный файл с SVG данными
+    const svgAssetsModule = await import('./utils/svgAssets');
+    // Сохраняем в глобальный кэш
+    (window as any).__svgAssetsCache = svgAssetsModule.svgAssets;
+    console.log('SVG assets preloaded successfully');
+  } catch (err) {
+    console.error('Ошибка предварительной загрузки SVG данных:', err);
+  }
+};
 
 import axios from 'axios';
 import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
@@ -149,9 +175,19 @@ function App() {
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
 
   useEffect(() => {
-    if (isThemeInitialized) {
-      setIsAppLoading(false);
-    }
+    const initializeApp = async () => {
+      // Предварительно загружаем градиенты и SVG данные
+      await Promise.all([
+        preloadBackgroundGradients(),
+        preloadSvgAssets()
+      ]);
+      
+      if (isThemeInitialized) {
+        setIsAppLoading(false);
+      }
+    };
+
+    initializeApp();
     
     const timeout = setTimeout(() => {
       setIsAppLoading(false);

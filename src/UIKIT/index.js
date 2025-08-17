@@ -8,7 +8,7 @@ import PlaylistGrid from './PlaylistGrid';
 import VerificationBadge from './VerificationBadge';
 import CommentSystem from './CommentSystem';
 import TransferMenu from './TransferMenu';
-import InventoryItemCard from './InventoryItemCard';
+import InventoryItemCardPure from './InventoryItemCard';
 import Badge from './Badge';
 import StyledTabs from './StyledTabs';
 import InfoBlock from './InfoBlock';
@@ -28,7 +28,7 @@ export {
   VerificationBadge,
   CommentSystem,
   TransferMenu,
-  InventoryItemCard,
+  InventoryItemCardPure,
   Badge,
   StyledTabs,
   InfoBlock,

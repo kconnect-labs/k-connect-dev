@@ -22,10 +22,13 @@ import { UpgradeEffects } from './index';
 import { StyledSelect } from './StyledComponents';
 import inventoryImageService from '../../../../services/InventoryImageService';
 import OptimizedImage from '../../../../components/OptimizedImage';
-import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
+import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
+import { useBackgroundGradients } from '../../../Economic/components/inventoryPack/useBackgroundGradients';
+import { getBackgroundGradient, createTwoCirclePattern } from '../../../Economic/components/inventoryPack/utils';
 
 const InventoryTab = forwardRef(
   ({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId, user }, ref) => {
+    const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
@@ -53,6 +56,14 @@ const InventoryTab = forwardRef(
     });
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+
+    // Получаем corner_color для модалки
+    const gradientData = selectedItem?.background_id ? getGradientData(selectedItem.background_id) : null;
+    const cornerColor = gradientData?.corner_color || '#666666';
+    
+    // Получаем corner_color для второй модалки
+    const secondModalGradientData = (selectedItem || externalItem)?.background_id ? getGradientData((selectedItem || externalItem).background_id) : null;
+    const secondModalCornerColor = secondModalGradientData?.corner_color || '#666666';
 
     useImperativeHandle(ref, () => ({
       openItemModalById: id => {
@@ -521,9 +532,10 @@ const InventoryTab = forwardRef(
                     key={`${item.id}-${item.obtained_at}-${index}`}
                   >
                     <UpgradeEffects item={item}>
-                      <InventoryItemCard
+                      <InventoryItemCardPure
                         item={item}
                         onClick={() => handleItemClick(item)}
+                        className='small'
                       />
                     </UpgradeEffects>
                   </Grid>
@@ -579,9 +591,8 @@ const InventoryTab = forwardRef(
               <Box
                 onClick={e => e.stopPropagation()}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: `${cornerColor}`,
+                  border: `1px solid ${cornerColor}4D`,
                   borderRadius: 1,
                   p: 3,
                   width: 400,
@@ -614,29 +625,15 @@ const InventoryTab = forwardRef(
                           height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                           margin: '0 auto',
                           borderRadius: 2,
-                          background: 'rgba(208, 188, 255, 0.1)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           mb: 2,
                           overflow: 'hidden',
                           position: 'relative', // Добавили для позиционирования фона
-                          ...(selectedItem.background_url && {
-                            '&::before': {
-                              content: '""',
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              backgroundImage: `url(${selectedItem.background_url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat',
-                              borderRadius: 'inherit',
-                              zIndex: 1,
-                            },
-                          }),
+                          background: getBackgroundGradient(selectedItem.background_id, getGradient),
+                          ...(selectedItem.background_id && getItemId(selectedItem.background_id) ? 
+                            createTwoCirclePattern(getItemId(selectedItem.background_id), 30, selectedItem.upgradeable) : {}),
                         }}
                       >
                         <OptimizedImage
@@ -648,7 +645,7 @@ const InventoryTab = forwardRef(
                           showSkeleton={true}
                           style={{
                             position: 'relative',
-                            zIndex: 2,
+                            zIndex: 10,
                             objectFit: 'contain',
                           }}
                         />
@@ -817,9 +814,8 @@ const InventoryTab = forwardRef(
               <Box
                 onClick={e => e.stopPropagation()}
                 sx={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: `${secondModalCornerColor}`,
+                  border: `1px solid ${secondModalCornerColor}4D`,
                   borderRadius: 2,
                   p: 3,
                   width: 400,
@@ -835,29 +831,15 @@ const InventoryTab = forwardRef(
                       height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                       margin: '0 auto',
                       borderRadius: 2,
-                      background: 'rgba(208, 188, 255, 0.1)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       mb: 2,
                       overflow: 'hidden',
                       position: 'relative', // Добавили для позиционирования фона
-                      ...(selectedItem.background_url && {
-                        '&::before': {
-                          content: '""',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundImage: `url(${selectedItem.background_url})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
-                          borderRadius: 'inherit',
-                          zIndex: 1,
-                        },
-                      }),
+                      background: getBackgroundGradient(selectedItem.background_id, getGradient),
+                      ...(selectedItem.background_id && getItemId(selectedItem.background_id) ? 
+                        createTwoCirclePattern(getItemId(selectedItem.background_id), 30, selectedItem.upgradeable) : {}),
                     }}
                   >
                     <OptimizedImage
@@ -869,7 +851,7 @@ const InventoryTab = forwardRef(
                       showSkeleton={true}
                       style={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 10,
                         objectFit: 'contain',
                       }}
                     />

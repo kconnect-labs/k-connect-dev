@@ -22,7 +22,7 @@ import { AuthContext } from '../../../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import inventoryImageService from '../../../../services/InventoryImageService';
-import InventoryItemCard from '../../../../UIKIT/InventoryItemCard';
+import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -422,7 +422,7 @@ const MarketplacePage = () => {
                 transition={{ duration: 0.5 }}
               >
                 <Box onClick={() => handleItemClick(listing)}>
-                  <InventoryItemCard
+                  <InventoryItemCardPure
                     item={{
                       ...listing.item,
                       marketplace: { price: listing.price },

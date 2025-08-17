@@ -800,7 +800,16 @@ const ProfilePage = () => {
         spacing={0.5}
         sx={{
           flexDirection: { xs: 'column', lg: 'row' },
-          flexWrap: { xs: 'nowrap', lg: 'nowrap' },   
+          flexWrap: { xs: 'nowrap', lg: 'nowrap' },
+          '& .MuiGrid-item': {
+            order: { xs: 'unset', lg: user?.profile_id === 3 ? 'unset' : 'unset' },
+          },
+          '& .MuiGrid-item:first-of-type': {
+            order: { xs: 1, lg: user?.profile_id === 3 ? 2 : 1 },
+          },
+          '& .MuiGrid-item:last-of-type': {
+            order: { xs: 2, lg: user?.profile_id === 3 ? 1 : 2 },
+          },
         }}
       >
         <Grid
@@ -1020,7 +1029,7 @@ const ProfilePage = () => {
             </Paper>
           )}
           
-          {user?.profile_id === 2 &&
+          {(user?.profile_id === 2 || user?.profile_id === 3) &&
             equippedItemsPreview &&
             equippedItemsPreview.length > 0 && (
               <Box
@@ -1060,7 +1069,8 @@ const ProfilePage = () => {
           lg={7}
           sx={{
             pt: 0,
-            ml: { xs: 0, lg: '5px' },
+            ml: { xs: 0, lg: user?.profile_id === 3 ? 0 : '5px' },
+            mr: { xs: 0, lg: user?.profile_id === 3 ? '5px' : 0 },
             mb: '100px',
             ...(tabValue === 2 && {
               height: '100vh',

@@ -134,15 +134,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         p: 0,
         borderRadius: '16px',
         background:
-          user?.profile_id === 2 && user?.banner_url
+          (user?.profile_id === 2 || user?.profile_id === 3) && user?.banner_url
             ? `url(${user.banner_url}), var(--theme-background, rgba(255, 255, 255, 0.03))`
             : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backgroundSize:
-          user?.profile_id === 2 && user?.banner_url
+          (user?.profile_id === 2 || user?.profile_id === 3) && user?.banner_url
             ? 'cover'
             : undefined,
         backgroundPosition:
-          user?.profile_id === 2 && user?.banner_url
+          (user?.profile_id === 2 || user?.profile_id === 3) && user?.banner_url
             ? 'center'
             : undefined,
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -181,7 +181,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           ))}
       </Box>
       {/* Banner section */}
-      {user?.profile_id !== 2 ? (
+      {(user?.profile_id !== 2 && user?.profile_id !== 3) ? (
         user?.banner_url ? (
           <Box
             sx={{
@@ -218,7 +218,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       ) : null}
 
       <Box
-        sx={{ px: 3, pb: 3, pt: 0, mt: user?.profile_id === 2 ? 2 : -7 }}
+        sx={{ px: 3, pb: 3, pt: 0, mt: (user?.profile_id === 2 || user?.profile_id === 3) ? 2 : -7 }}
       >
         <Box
           sx={{
@@ -359,22 +359,22 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant='h5'
                 sx={{
                   fontWeight: 700,
-                  color: user?.profile_id === 2 ? '#fff' : 'inherit',
+                  color: (user?.profile_id === 2 || user?.profile_id === 3) ? '#fff' : 'inherit',
                   textShadow:
-                    user?.profile_id === 2
+                    (user?.profile_id === 2 || user?.profile_id === 3)
                       ? '0 1px 3px rgba(0,0,0,0.7)'
                       : 'none',
                   background:
-                    user?.profile_id === 2
+                    (user?.profile_id === 2 || user?.profile_id === 3)
                       ? 'none'
                       : theme =>
                           theme.palette.mode === 'dark'
                             ? 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.8) 100%)'
                             : 'linear-gradient(90deg, #000 0%, rgba(0,0,0,0.8) 100%)',
                   WebkitBackgroundClip:
-                    user?.profile_id === 2 ? 'unset' : 'text',
+                    (user?.profile_id === 2 || user?.profile_id === 3) ? 'unset' : 'text',
                   WebkitTextFillColor:
-                    user?.profile_id === 2 ? 'unset' : 'transparent',
+                    (user?.profile_id === 2 || user?.profile_id === 3) ? 'unset' : 'transparent',
                 }}
               >
                 {user?.name || 'Пользователь'}
@@ -425,17 +425,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               sx={{
                 fontWeight: 500,
                 color:
-                  user?.profile_id === 2
+                  (user?.profile_id === 2 || user?.profile_id === 3)
                     ? 'rgba(255,255,255,0.9)'
                     : theme => theme.palette.text.secondary,
                 textShadow:
-                  user?.profile_id === 2
+                  (user?.profile_id === 2 || user?.profile_id === 3)
                     ? '0 1px 2px rgba(0,0,0,0.5)'
                     : 'none',
                 display: 'flex',
                 alignItems: 'center',
                 background:
-                  user?.profile_id === 2
+                  (user?.profile_id === 2 || user?.profile_id === 3)
                     ? 'rgba(0,0,0,0.3)'
                     : theme =>
                         theme.palette.mode === 'dark'
@@ -445,7 +445,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 py: 0.4,
                 borderRadius: 1,
                 border:
-                  user?.profile_id === 2
+                  (user?.profile_id === 2 || user?.profile_id === 3)
                     ? '1px solid rgba(255,255,255,0.15)'
                     : theme =>
                         theme.palette.mode === 'dark'
@@ -476,17 +476,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={theme => ({
                     fontWeight: 500,
                     color:
-                      user?.profile_id === 2
+                      (user?.profile_id === 2 || user?.profile_id === 3)
                         ? 'rgba(255,255,255,0.9)'
                         : theme.palette.text.secondary,
                     textShadow:
-                      user?.profile_id === 2
+                      (user?.profile_id === 2 || user?.profile_id === 3)
                         ? '0 1px 2px rgba(0,0,0,0.5)'
                         : 'none',
                     display: 'flex',
                     alignItems: 'center',
                     background:
-                      user?.profile_id === 2
+                      (user?.profile_id === 2 || user?.profile_id === 3)
                         ? 'rgba(0,0,0,0.3)'
                         : theme.palette.mode === 'dark'
                           ? 'rgba(255,255,255,0.03)'
@@ -495,7 +495,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     py: 0.4,
                     borderRadius: 1,
                     border:
-                      user?.profile_id === 2
+                      (user?.profile_id === 2 || user?.profile_id === 3)
                         ? '1px solid rgba(255,255,255,0.15)'
                         : theme.palette.mode === 'dark'
                           ? '1px solid rgba(255,255,255,0.05)'

@@ -20,7 +20,7 @@
   width: 100%;
   aspect-ratio: 1;
   border-radius: 6px;
-  background: rgba(208, 188, 255, 0.1);
+  background: rgba(208, 228, 255, 0.1);
   position: relative;
   display: flex;
   align-items: center;
@@ -36,13 +36,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: var(--background-url);
+  background: var(--background-gradient);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: inherit;
   z-index: 1;
 }
+
+/* SVG паттерн теперь применяется через inline стили в компоненте */
 
 .marketplace-badge {
   position: absolute;
@@ -90,8 +92,6 @@
   font-size: 0.6rem;
 }
 
-
-
 .item-name {
   font-weight: 500;
   display: block;
@@ -118,7 +118,6 @@
   justify-content: center;
 }
 
-/* Компактный режим для закрепленных предметов */
 .equipped-item-compact .item-name,
 .equipped-item-compact .rarity-container {
   display: none;

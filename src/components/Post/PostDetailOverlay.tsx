@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PostDetailPage from '../../pages/Main/PostDetailPage';
+// Заменяем статический импорт на динамический для избежания конфликта
+const PostDetailPage = React.lazy(() => import('../../pages/Main/PostDetailPage'));
 import { usePostDetail } from '../../context/PostDetailContext';
 
 const getOverlayRoot = () => {
@@ -19,7 +20,9 @@ const PostDetailOverlay: React.FC = () => {
   if (!overlayOpen) return null;
 
   return ReactDOM.createPortal(
-    <PostDetailPage isOverlay={true} overlayPostId={currentPostId} />,
+    <React.Suspense fallback={<div>Загрузка...</div>}>
+      <PostDetailPage isOverlay={true} overlayPostId={currentPostId} />
+    </React.Suspense>,
     getOverlayRoot()
   );
 };

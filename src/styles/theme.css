@@ -2,7 +2,7 @@
 
 :root {
   /* Дефолтные значения */
-  --theme-background: rgba(15, 15, 15, 0.98);
+  --theme-background: rgba(15, 15, 15, 1);
   --theme-backdrop-filter: none;
   --theme-type: default;
   --theme-site-background: #0a0a0a; /* Фон сайта */
@@ -10,9 +10,9 @@
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   /* Цвета текста */
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -22,15 +22,15 @@
 
 /* Принудительные значения для тем */
 [data-theme="default"] {
-  --theme-background: rgba(15, 15, 15, 0.98);
+  --theme-background: rgba(15, 15, 15, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #0a0a0a;
   --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -45,9 +45,9 @@
   --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -57,15 +57,15 @@
 
 /* Белая тема */
 [data-theme="light"] {
-  --theme-background: rgba(255, 255, 255, 0.95);
+  --theme-background: rgba(255, 255, 255, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #f5f5f5;
   --theme-background-full: rgba(255, 255, 255, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(0, 0, 0, 0.87);
-  --theme-text-secondary: rgba(0, 0, 0, 0.6);
-  --theme-text-disabled: rgba(0, 0, 0, 0.38);
+  --theme-text-primary: rgba(0, 0, 0, 1);
+  --theme-text-secondary: rgba(0, 0, 0, 1);
+  --theme-text-disabled: rgba(0, 0, 0, 1);
   --theme-text-accent: #6750A4;
   --theme-text-error: #d32f2f;
   --theme-text-success: #2e7d32;
@@ -75,15 +75,15 @@
 
 /* Midnight - глубокий темно-синий с фиолетовым оттенком */
 [data-theme="midnight"] {
-  --theme-background: rgba(5, 8, 20, 0.95);
+  --theme-background: rgba(5, 8, 20, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #030510;
   --theme-background-full: rgba(5, 8, 20, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #B69DF8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -93,15 +93,15 @@
 
 /* Ocean - яркий синий с бирюзовым оттенком */
 [data-theme="ocean"] {
-  --theme-background: rgba(8, 25, 40, 0.92);
+  --theme-background: rgba(8, 25, 40, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051520;
   --theme-background-full: rgba(8, 25, 40, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #81C784;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -111,15 +111,15 @@
 
 /* Sunset - яркий красно-оранжевый закат */
 [data-theme="sunset"] {
-  --theme-background: rgba(40, 15, 8, 0.94);
+  --theme-background: rgba(40, 15, 8, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #250a05;
   --theme-background-full: rgba(40, 15, 8, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #FFB74D;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -129,15 +129,15 @@
 
 /* Forest - яркий зеленый лес */
 [data-theme="forest"] {
-  --theme-background: rgba(8, 30, 15, 0.93);
+  --theme-background: rgba(8, 30, 15, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051a0a;
   --theme-background-full: rgba(8, 30, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #A5D6A7;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -147,15 +147,15 @@
 
 /* Aurora - яркий зелено-голубой северные сияния */
 [data-theme="aurora"] {
-  --theme-background: rgba(12, 35, 25, 0.91);
+  --theme-background: rgba(12, 35, 25, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #082015;
   --theme-background-full: rgba(12, 35, 25, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #80CBC4;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -165,15 +165,15 @@
 
 /* Cosmic - яркий пурпурно-розовый космос */
 [data-theme="cosmic"] {
-  --theme-background: rgba(30, 8, 35, 0.96);
+  --theme-background: rgba(30, 8, 35, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #1a051a;
   --theme-background-full: rgba(30, 8, 35, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #CE93D8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -183,15 +183,15 @@
 
 /* Neon - яркий электрический синий */
 [data-theme="neon"] {
-  --theme-background: rgba(8, 20, 45, 0.89);
+  --theme-background: rgba(8, 20, 45, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051025;
   --theme-background-full: rgba(8, 20, 45, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #64B5F6;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -201,15 +201,15 @@
 
 /* Vintage - теплый коричнево-золотой */
 [data-theme="vintage"] {
-  --theme-background: rgba(35, 20, 8, 0.95);
+  --theme-background: rgba(35, 20, 8, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #221205;
   --theme-background-full: rgba(35, 20, 8, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #D7CCC8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -219,15 +219,15 @@
 
 /* Pixie - нежно-розовый приятный */
 [data-theme="pickme"] {
-  --theme-background: rgba(131, 61, 96, 0.93);
+  --theme-background: rgba(131, 61, 96, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #b6668a;
   --theme-background-full: rgba(131, 61, 96, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
-  --theme-text-primary: rgba(255, 255, 255, 0.87);
-  --theme-text-secondary: rgba(255, 255, 255, 0.6);
-  --theme-text-disabled: rgba(255, 255, 255, 0.38);
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgba(255, 255, 255, 1);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
   --theme-text-accent: #F8BBD9;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
@@ -270,61 +270,61 @@ html.theme-site-background {
 }
 
 .theme-light {
-  background: rgba(255, 255, 255, 0.95) !important;
+  background: rgba(255, 255, 255, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-midnight {
-  background: rgba(5, 8, 20, 0.95) !important;
+  background: rgba(5, 8, 20, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-ocean {
-  background: rgba(8, 25, 40, 0.92) !important;
+  background: rgba(8, 25, 40, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-sunset {
-  background: rgba(40, 15, 8, 0.94) !important;
+  background: rgba(40, 15, 8, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-forest {
-  background: rgba(8, 30, 15, 0.93) !important;
+  background: rgba(8, 30, 15, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-aurora {
-  background: rgba(12, 35, 25, 0.91) !important;
+  background: rgba(12, 35, 25, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-cosmic {
-  background: rgba(30, 8, 35, 0.96) !important;
+  background: rgba(30, 8, 35, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-neon {
-  background: rgba(8, 20, 45, 0.89) !important;
+  background: rgba(8, 20, 45, 1) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .theme-vintage {
-  background: rgba(35, 20, 8, 0.95) !important;
+  background: rgba(35, 20, 8, 1) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
 }
 
 .theme-pickme {
-  background: rgba(131, 61, 96, 0.93) !important;
+  background: rgba(131, 61, 96, 1) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
 }
@@ -377,7 +377,6 @@ html.theme-site-background {
 .theme-modal {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .theme-menu {

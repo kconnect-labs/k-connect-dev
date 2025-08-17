@@ -15,6 +15,7 @@ export interface InventoryItem {
   is_equipped: boolean;
   image_url: string;
   background_url?: string;
+  background_id?: number;
   pack_price: number;
   upgradeable: boolean | string;
   item_number?: number;
@@ -43,6 +44,7 @@ export interface PackContent {
   item_name: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   background_url?: string;
+  background_id?: number;
 }
 
 export interface EquippedItem {
@@ -52,6 +54,7 @@ export interface EquippedItem {
   upgrade_level: number;
   image_url: string;
   background_url?: string;
+  background_id?: number;
   upgradeable?: boolean | string;
 }
 

@@ -22,6 +22,8 @@ import {
 import OptimizedImage from '../../../../components/OptimizedImage';
 import { Pack, PackContent } from './types';
 import ProposePackModal from './ProposePackModal';
+import { useBackgroundGradients } from './useBackgroundGradients';
+import { getBackgroundGradient } from './utils';
 
 // Компонент для эксклюзивного бейджа
 const ExclusiveBadge = styled(Box)(({ theme }) => ({
@@ -352,6 +354,7 @@ const PackCard = ({
   showProposeButton = false,
   onProposeSuccess,
 }: PackCardProps) => {
+  const { getGradient, getItemId } = useBackgroundGradients();
   const [packContents, setPackContents] = useState<PackContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [showItems, setShowItems] = useState(false);
@@ -588,22 +591,54 @@ const PackCard = ({
                           position: 'relative',
                           borderRadius: 4,
                           overflow: 'hidden',
-                          ...(item.background_url && {
-                            '&::before': {
-                              content: '""',
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              backgroundImage: `url(${item.background_url})`,
-                              backgroundSize: 'cover',
-                              backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat',
-                              borderRadius: 'inherit',
-                              zIndex: 1,
-                            },
-                          }),
+                          background: getBackgroundGradient(item.background_id, getGradient),
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat',
+                          '&::after': item.background_id ? {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundImage: 
+                              `url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg),
+                               url(/assets/${getItemId(item.background_id) || 1}.svg)`,
+                            backgroundSize: 
+                              '15px 15px, 18px 18px, 21px 21px, 24px 24px, 27px 27px, 30px 30px, 33px 33px, 36px 36px, 39px 39px, 42px 42px, 45px 45px, 48px 48px, 51px 51px, 54px 54px, 57px 57px, 60px 60px, 63px 63px, 66px 66px, 69px 69px, 72px 72px, 75px 75px, 78px 78px, 81px 81px, 84px 84px, 87px 87px, 90px 90px, 93px 93px, 96px 96px, 99px 99px, 102px 102px, 105px 105px, 108px 108px, 111px 111px, 114px 114px, 117px 117px, 120px 120px',
+                            backgroundPosition: 
+                              '50% 50%, 25% 25%, 75% 25%, 25% 75%, 75% 75%, 10% 50%, 90% 50%, 50% 10%, 50% 90%, 15% 15%, 85% 15%, 15% 85%, 85% 85%, 35% 35%, 65% 35%, 35% 65%, 65% 65%, 5% 30%, 95% 30%, 5% 70%, 95% 70%, 30% 5%, 70% 5%, 30% 95%, 70% 95%',
+                            backgroundRepeat: 'no-repeat',
+                            opacity: 0.3,
+                            zIndex: 2,
+                            pointerEvents: 'none',
+                          } : {},
                         }}
                       >
                         <OptimizedImage
@@ -617,7 +652,7 @@ const PackCard = ({
                           onError={() => {}}
                           style={{
                             position: 'relative',
-                            zIndex: 2,
+                            zIndex: 3,
                             objectFit: 'contain',
                           }}
                         />
@@ -845,22 +880,55 @@ const PackCard = ({
                       position: 'relative',
                       borderRadius: 4,
                       overflow: 'hidden',
-                      ...(item.background_url && {
-                        '&::before': {
-                          content: '""',
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundImage: `url(${item.background_url})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
-                          borderRadius: 'inherit',
-                          zIndex: 1,
-                        },
-                      }),
+                      background: getBackgroundGradient(item.background_id, getGradient),
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
+                      '&::after': item.background_id ? {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundImage: 
+                          `url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg),
+                           url(/assets/${getItemId(item.background_id) || 1}.svg)`,
+                        backgroundSize: 
+                          '15px 15px, 18px 18px, 21px 21px, 24px 24px, 27px 27px, 30px 30px, 33px 33px, 36px 36px, 39px 39px, 42px 42px, 45px 45px, 48px 48px, 51px 51px, 54px 54px, 57px 57px, 60px 60px, 63px 63px, 66px 66px, 69px 69px, 72px 72px, 75px 75px, 78px 78px, 81px 81px, 84px 84px, 87px 87px, 90px 90px, 93px 93px, 96px 96px, 99px 99px, 102px 102px, 105px 105px, 108px 108px, 111px 111px, 114px 114px, 117px 117px, 120px 120px',
+                        backgroundPosition: 
+                          '50% 50%, 25% 25%, 75% 25%, 25% 75%, 75% 75%, 10% 50%, 90% 50%, 50% 10%, 50% 90%, 15% 15%, 85% 15%, 15% 85%, 85% 85%, 35% 35%, 65% 35%, 35% 65%, 65% 65%, 5% 30%, 95% 30%, 5% 70%, 95% 70%, 30% 5%, 70% 5%, 30% 95%, 70% 95%',
+                        backgroundRepeat: 'no-repeat',
+                        opacity: 0.3,
+                        zIndex: 2,
+                        pointerEvents: 'none',
+                      } : {},
                     }}
                   >
                     <OptimizedImage
@@ -874,7 +942,7 @@ const PackCard = ({
                       onError={() => {}}
                       style={{
                         position: 'relative',
-                        zIndex: 2,
+                        zIndex: 3,
                         objectFit: 'contain',
                       }}
                     />

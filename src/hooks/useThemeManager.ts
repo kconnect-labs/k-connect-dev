@@ -68,7 +68,7 @@ interface ThemeSettings {
 // Статический объект с настройками тем (синхронизирован с CSS)
 const THEME_SETTINGS: Record<ThemeType, { background: string; backdropFilter: string; siteBackground: string }> = {
   default: {
-    background: 'rgba(15, 15, 15, 0.98)',
+    background: 'rgba(15, 15, 15, 1)',
     backdropFilter: 'none',
     siteBackground: '#0a0a0a',
   },
@@ -78,52 +78,52 @@ const THEME_SETTINGS: Record<ThemeType, { background: string; backdropFilter: st
     siteBackground: '#0a0a0a',
   },
   light: {
-    background: 'rgba(255, 255, 255, 0.95)',
+    background: 'rgba(255, 255, 255, 1)',
     backdropFilter: 'none',
     siteBackground: '#f5f5f5',
   },
   midnight: {
-    background: 'rgba(5, 8, 20, 0.95)',
+    background: 'rgba(5, 8, 20, 1)',
     backdropFilter: 'none',
     siteBackground: '#030510',
   },
   ocean: {
-    background: 'rgba(8, 25, 40, 0.92)',
+    background: 'rgba(8, 25, 40, 1)',
     backdropFilter: 'none',
     siteBackground: '#051520',
   },
   sunset: {
-    background: 'rgba(40, 15, 8, 0.94)',
+    background: 'rgba(40, 15, 8, 1)',
     backdropFilter: 'none',
     siteBackground: '#250a05',
   },
   forest: {
-    background: 'rgba(8, 30, 15, 0.93)',
+    background: 'rgba(8, 30, 15, 1)',
     backdropFilter: 'none',
     siteBackground: '#051a0a',
   },
   aurora: {
-    background: 'rgba(12, 35, 25, 0.91)',
+    background: 'rgba(12, 35, 25, 1)',
     backdropFilter: 'none',
     siteBackground: '#082015',
   },
   cosmic: {
-    background: 'rgba(30, 8, 35, 0.96)',
+    background: 'rgba(30, 8, 35, 1)',
     backdropFilter: 'none',
     siteBackground: '#1a051a',
   },
   neon: {
-    background: 'rgba(8, 20, 45, 0.89)',
+    background: 'rgba(8, 20, 45, 1)',
     backdropFilter: 'none',
     siteBackground: '#051025',
   },
   vintage: {
-    background: 'rgba(35, 20, 8, 0.95)',
+    background: 'rgba(35, 20, 8, 1)',
     backdropFilter: 'none',
     siteBackground: '#221205',
   },
   pickme: {
-    background: 'rgba(131, 61, 96, 0.93)',
+    background: 'rgba(131, 61, 96, 1)',
     backdropFilter: 'none',
     siteBackground: '#b6668a',
   },

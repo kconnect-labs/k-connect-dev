@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import { useBackgroundGradients } from '../inventoryPack/useBackgroundGradients';
+import { getBackgroundGradient, createTwoCirclePattern } from '../inventoryPack/utils';
 import {
   Dialog,
   DialogTitle,
@@ -108,6 +110,11 @@ const KBallsIcon = styled('img')({
 });
 
 const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
+  const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
+  
+  // Получаем corner_color для фона модалки
+  const gradientData = listing?.item?.background_id ? getGradientData(listing.item.background_id) : null;
+  const cornerColor = gradientData?.corner_color || '#974835';
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const { user: currentUser } = useContext(AuthContext);
@@ -224,7 +231,18 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   };
 
   return (
-    <StyledDialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
+    <StyledDialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth='sm' 
+      fullWidth
+      sx={{
+        '& .MuiDialog-paper': {
+          background: cornerColor,
+          border: `1px solid ${cornerColor}4D`,
+        }
+      }}
+    >
       <DialogTitle
         sx={{
           display: 'flex',
@@ -257,7 +275,6 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 width: 250,
                 height: 250,
                 borderRadius: 3,
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -265,22 +282,9 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 position: 'relative',
                 mb: 2,
                 margin: 'auto',
-                ...(item.background_url && {
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundImage: `url(${item.background_url})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    borderRadius: 'inherit',
-                    zIndex: 1,
-                  },
-                }),
+                background: getBackgroundGradient(item.background_id, getGradient),
+                ...(item.background_id && getItemId(item.background_id) ? 
+                  createTwoCirclePattern(getItemId(item.background_id), 22, item.upgradeable) : {}),
               }}
             >
               <img
@@ -292,7 +296,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                   objectFit: 'contain',
                   borderRadius: 'inherit',
                   position: 'relative',
-                  zIndex: 2,
+                  zIndex: 10,
                   display: 'block',
                   margin: 'auto',
                   maxWidth: '100%',
