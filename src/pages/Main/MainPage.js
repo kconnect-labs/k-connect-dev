@@ -3,8 +3,6 @@ import React, {
   useEffect,
   useContext,
   useRef,
-  useCallback,
-  useMemo,
 } from 'react';
 import {
   Box,
@@ -12,20 +10,13 @@ import {
   Container,
   Card,
   Avatar,
-  Button,
   CircularProgress,
   Divider,
   Paper,
-  IconButton,
   styled,
-  InputBase,
-  Tooltip,
-  Snackbar,
   useTheme,
-  ImageList,
-  ImageListItem,
-  Alert,
-  Dialog,
+
+
 } from '@mui/material';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import './MainPage.css';
@@ -34,31 +25,18 @@ import { AuthContext } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import axios from '../../services/axiosConfig';
 import { handleImageError as safeImageError } from '../../utils/imageUtils';
-
-import CloseIcon from '@mui/icons-material/Close';
-
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Post } from '../../components/Post';
 import RepostItem from '../../components/RepostItem';
 import PostSkeleton from '../../components/Post/PostSkeleton';
 
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import { MusicContext } from '../../context/MusicContext';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
-import TimerIcon from '@mui/icons-material/Timer';
 import UpdateInfo from '../../components/Updates/UpdateInfo';
 import UpdateService from '../../services/UpdateService';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
-import DynamicIslandNotification from '../../components/DynamicIslandNotification';
-import WarningIcon from '@mui/icons-material/Warning';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import StarIcon from '@mui/icons-material/Star';
+
 import { usePageCommands } from '../../context/CommandPalleteContext';
-import ReactMarkdown from 'react-markdown';
-import MarkdownContent from '../../components/Post/MarkdownContent';
+
 import CreatePost from '../../components/CreatePost/CreatePost';
 import { usePostActions } from '../User/ProfilePage/hooks/usePostActions';
 
@@ -78,6 +56,7 @@ const OnlineUsers = () => {
   const { t } = useLanguage();
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(12);
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -85,7 +64,7 @@ const OnlineUsers = () => {
     const fetchOnlineUsers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/users/online?limit=1200');
+        const response = await axios.get('/api/users/online?limit=4200');
 
         if (Array.isArray(response.data)) {
           setOnlineUsers(response.data);
@@ -94,12 +73,12 @@ const OnlineUsers = () => {
         } else {
           setOnlineUsers([]);
         }
-      } catch (error) {
-        console.error('Error fetching online users:', error);
-        setOnlineUsers([]);
-      } finally {
-        setLoading(false);
-      }
+              } catch (error) {
+          console.error('Error fetching online users:', error);
+          setOnlineUsers([]);
+        } finally {
+          setLoading(false);
+        }
     };
 
     fetchOnlineUsers();
@@ -112,6 +91,27 @@ const OnlineUsers = () => {
   const handleUserClick = username => {
     navigate(`/profile/${username}`);
   };
+
+  // Автоматическая загрузка при скролле до конца
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = document.querySelector('.online-users-container');
+      if (container) {
+        const { scrollLeft, scrollWidth, clientWidth } = container;
+        const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10; // 10px tolerance
+        
+        if (isAtEnd && visibleCount < onlineUsers.length) {
+          setVisibleCount(prev => Math.min(prev + 12, onlineUsers.length));
+        }
+      }
+    };
+
+    const container = document.querySelector('.online-users-container');
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [visibleCount, onlineUsers.length]);
 
   if (loading) {
     return (
@@ -136,11 +136,12 @@ const OnlineUsers = () => {
         p: 1,
         minHeight: 56,
         display: 'flex',
-        alignItems: 'center',
-        overflowX: 'auto',
+        flexDirection: 'column',
+        gap: 1,
       }}
     >
       <Box
+        className="online-users-container"
         sx={{
           display: 'flex',
           flexWrap: 'nowrap',
@@ -187,15 +188,16 @@ const OnlineUsers = () => {
             {t('main_page.online_count', { count: onlineUsers.length })}
           </Typography>
         </Box>
-        {onlineUsers.map(user => (
+        {onlineUsers.slice(0, visibleCount).map((user, index) => (
           <Box
             key={user.id}
             sx={{ position: 'relative', cursor: 'pointer', mx: 0.25 }}
             onClick={() => handleUserClick(user.username)}
           >
             <Avatar
-              src={user?.photo || '/static/uploads/system/avatar.png'}
+              src={user?.photo ? `${user.photo}?w=72&h=72&fit=crop&q=60` : '/static/uploads/system/avatar.png'}
               alt={user?.username || 'User'}
+              loading="lazy"
               sx={{
                 width: 36,
                 height: 36,
