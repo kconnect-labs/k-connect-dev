@@ -101,7 +101,7 @@ const SubPlanes = () => {
         const statusResponse = await axios.get('/api/user/subscription/status');
         if (statusResponse.data.active) {
           setUserSubscription({
-            type: statusResponse.data.subscription_type,
+            type: statusResponse.data.subscription_type?.toLowerCase()?.trim(),
             expires_at: statusResponse.data.expiration_date,
             features: statusResponse.data.features || [],
           });

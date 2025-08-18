@@ -42,7 +42,7 @@ const BugReportPage = React.lazy(
   () => import('../pages/BugPages/BugReportPage')
 );
 const LeaderboardPage = React.lazy(
-  () => import('../pages/Main/LeaderboardPage')
+  () => import('../pages/Leaderbord/LeaderboardPage.js')
 );
 const RulesPage = React.lazy(() => import('../pages/Info/RulesPage'));
 const PrivacyPolicyPage = React.lazy(

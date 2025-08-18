@@ -278,20 +278,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                             theme.palette.mode === 'dark'
                               ? '4px solid #121212'
                               : '4px solid #ffffff',
-                  boxShadow:
-                    user?.status_color &&
-                    user?.status_text &&
-                    user.subscription
-                      ? `0 0 15px ${user.status_color}80`
-                      : user?.subscription
-                        ? user.subscription.type === 'premium'
-                          ? '0 0 15px rgba(186, 104, 200, 0.5)'
-                          : user.subscription.type === 'pick-me'
-                            ? '0 0 15px rgba(208, 188, 255, 0.5)'
-                            : user.subscription.type === 'ultimate'
-                              ? '0 0 15px rgba(124, 77, 255, 0.5)'
-                              : '0 0 15px rgba(66, 165, 245, 0.5)'
-                        : '0 8px 20px rgba(0, 0, 0, 0.25)',
                   bgcolor: 'primary.dark',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
@@ -306,7 +292,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               />
             </Tooltip>
 
-            {isOnline && user?.subscription?.type !== 'channel' && (
+            {/* {isOnline && user?.subscription?.type !== 'channel' && (
               <Box
                 sx={{
                   position: 'absolute',
@@ -336,7 +322,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   },
                 }}
               />
-            )}
+            )} */}
 
             <UserStatus
               statusText={user?.status_text}

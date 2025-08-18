@@ -47,6 +47,7 @@ import { AuthContext } from '../../context/AuthContext';
 import axios from 'axios';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import CheckIcon from '@mui/icons-material/Check';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import TimelineIcon from '@mui/icons-material/Timeline';
@@ -607,6 +608,8 @@ const BalancePage = () => {
   const [mcoinBalance, setMCoinBalance] = useState(0);
   const [mcoinTransactions, setMCoinTransactions] = useState([]);
   const [weeklyEstimate, setWeeklyEstimate] = useState(0);
+  const [weeklyMultiplier, setWeeklyMultiplier] = useState(1);
+  const [weeklySubType, setWeeklySubType] = useState(null);
   const [balanceType, setBalanceType] = useState('kballs'); // 'kballs' или 'mcoin'
   const [purchaseHistory, setPurchaseHistory] = useState([]);
   const [royaltyHistory, setRoyaltyHistory] = useState([]);
@@ -1363,9 +1366,18 @@ const BalancePage = () => {
         '/api/leaderboard/user/' + user.id + '?period=week'
       );
       setWeeklyEstimate(response.data.score || 0);
+      if (response.data && typeof response.data.multiplier !== 'undefined') {
+        setWeeklyMultiplier(response.data.multiplier || 1);
+        setWeeklySubType(response.data.subscription_type || null);
+      } else {
+        setWeeklyMultiplier(1);
+        setWeeklySubType(null);
+      }
     } catch (error) {
       console.error('Ошибка при загрузке прогноза:', error);
       setWeeklyEstimate(0);
+      setWeeklyMultiplier(1);
+      setWeeklySubType(null);
     }
   };
 
@@ -2265,7 +2277,7 @@ const BalancePage = () => {
         styleVariant='dark'
         description={
           <>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1, flexWrap: 'wrap' }}>
               <CalendarTodayIcon
                 sx={{ mr: 1, color: 'rgba(255,255,255,0.7)' }}
               />
@@ -2276,6 +2288,15 @@ const BalancePage = () => {
               >
                 {`${weekRange.start} — ${weekRange.end}`}
               </Typography>
+              {weeklyMultiplier > 1 && (
+                <Typography
+                  component='div'
+                  variant='body2'
+                  sx={{ color: '#cfbcfb', fontWeight: 600 }}
+                >
+                  {weeklySubType === 'max' ? 'MAX' : weeklySubType === 'ultimate' ? 'ULTIMATE' : weeklySubType === 'premium' ? 'PREMIUM' : weeklySubType === 'basic' ? 'BASIC' : ''} {`- X${weeklyMultiplier}`}
+                </Typography>
+              )}
             </Box>
 
             <Typography
@@ -3498,231 +3519,120 @@ const BalancePage = () => {
               </CardContent>
             </Card>
           ) : subscription && subscription.active ? (
-            <Card
-              elevation={3}
+            <Paper
+              elevation={0}
               sx={{
-                backgroundImage: `unset`,
+                p: 3,
+                mb: 4,
+                borderRadius: '12px',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                position: 'relative',
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '3px',
+                  background: '#D0BCFF',
+                  borderRadius: '12px 12px 0 0',
+                },
               }}
             >
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <DiamondIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography component='div' variant='h6' fontWeight='bold'>
-                    {t('balance.subscription.active.title')}
+              <Box display='flex' alignItems='center' flexWrap='wrap' gap={2}>
+                <DiamondIcon sx={{ color: '#D0BCFF', fontSize: 28 }} />
+                <Box>
+                  <Typography
+                    variant='h6'
+                    sx={{ fontWeight: 600, color: '#D0BCFF' }}
+                  >
+                    {subscription.type === 'premium'
+                      ? 'Premium'
+                      : subscription.type === 'ultimate'
+                        ? 'Ultimate'
+                        : subscription.type === 'max'
+                          ? 'MAX'
+                          : 'Подписка'}
+                  </Typography>
+                  <Typography variant='body2' color='text.secondary'>
+                    Активна до: {new Date(subscription.expires_at).toLocaleDateString()}
                   </Typography>
                 </Box>
-
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <Typography component='div' variant='body1'>
-                    {t('balance.subscription.active.type')}:{' '}
-                    <Chip
-                      label={
-                        subscription.type === 'basic'
-                          ? t('balance.subscription.types.basic')
-                          : subscription.type === 'premium'
-                            ? t('balance.subscription.types.premium')
-                            : subscription.type === 'ultimate'
-                              ? t('balance.subscription.types.ultimate')
-                              : subscription.type
-                      }
-                      color={
-                        subscription.type === 'premium'
-                          ? 'secondary'
-                          : subscription.type === 'ultimate'
-                            ? 'primary'
-                            : 'default'
-                      }
-                      size='small'
-                      sx={{ fontWeight: 'bold', ml: 1 }}
-                    />
-                  </Typography>
-
-                  <Typography component='div' variant='body2'>
-                    {t('balance.subscription.active.expires')}:{' '}
-                    {new Date(subscription.expires_at).toLocaleDateString()}
-                    <Typography
-                      component='span'
-                      variant='caption'
-                      color='text.secondary'
-                      sx={{ ml: 1 }}
-                    >
-                      {t('balance.subscription.active.days_left', {
-                        days: Math.ceil(
-                          (new Date(subscription.expires_at) - new Date()) /
-                            (1000 * 60 * 60 * 24)
-                        ),
-                      })}
-                    </Typography>
-                  </Typography>
-
-                  <Box sx={{ mt: 1 }}>
-                    <Typography
-                      component='div'
-                      variant='body2'
-                      fontWeight='medium'
-                    >
-                      {t('balance.subscription.active.features.title')}:
-                    </Typography>
-                    <List dense sx={{ pl: 2 }}>
-                      {subscription.type === 'basic' && (
-                        <Box key='basic-features'>
-                          <ListItem key='basic-monthly-points' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.basic.monthly_points'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='basic-no-ads' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.basic.no_ads'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='basic-badge-limit' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.basic.badge_limit'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='basic-username-limit' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.basic.username_limit'
-                              )}
-                            />
-                          </ListItem>
+                <Chip
+                  label='Активна'
+                  sx={{
+                    ml: 'auto',
+                    backgroundColor: '#D0BCFF',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                  }}
+                />
+              </Box>
+              <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+              <Typography
+                variant='subtitle2'
+                gutterBottom
+                sx={{ color: '#D0BCFF', fontWeight: 600 }}
+              >
+                Ваши преимущества:
+              </Typography>
+              <Grid container spacing={2}>
+                {(() => {
+                  const subscriptionFeatures = {
+                    premium: [
+                      '8 бейджиков',
+                      '8 никнеймов',
+                      'Приоритетная поддержка',
+                      'Установка статуса',
+                      'Цвет профиля',
+                      '3 предмета на профиле',
+                      'X4 к баллам активности',
+                    ],
+                    ultimate: [
+                      'Все преимущества Premium',
+                      'Неограниченные никнеймы',
+                      'Неограниченные бейджики',
+                      'Анимированные бейджики',
+                      'Любой цвет профиля',
+                      'Ультима чат',
+                      'Ультима Канал',
+                      'Новый вид профиля',
+                      'Кастомные Темы',
+                      'Обои в профиле',
+                      'X8 к баллам активности',
+                    ],
+                    max: [
+                      'Все преимущества Ultimate',
+                      '🔥 Эксклюзивный MAX значок',
+                      '🔒 Доступ к закрытым функциям',
+                      '∞ Максимальные лимиты на все',
+                      '🚀 Ранний доступ к новым функциям',
+                      '✨ Специальные анимации профиля',
+                      '🎨 Неограниченные возможности кастомизации',
+                      '🔑 Безлимитное обращение к API',
+                      '💬 Консультации с разработчиками',
+                      '🎁 150,000 баллов в подарок',
+                      'X12 к баллам активности',
+                    ],
+                  };
+                  
+                  const features = subscriptionFeatures[subscription.type?.toLowerCase()];
+                  
+                  return features?.map(
+                    (feature, index) => (
+                      <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Box display='flex' alignItems='center' gap={1}>
+                          <CheckIcon sx={{ color: '#D0BCFF', fontSize: '0.9rem' }} />
+                          <Typography variant='body2'>{feature}</Typography>
                         </Box>
-                      )}
-                      {subscription.type === 'premium' && (
-                        <Box key='premium-features'>
-                          <ListItem key='premium-monthly-points' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.premium.monthly_points'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='premium-features' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.premium.features'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='premium-support' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.premium.support'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='premium-badge-limit' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.premium.badge_limit'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='premium-username-limit' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.premium.username_limit'
-                              )}
-                            />
-                          </ListItem>
-                        </Box>
-                      )}
-                      {(subscription.type === 'ultimate' || subscription.type === 'max') && (
-                        <Box key='ultimate-features'>
-                          <ListItem key='premium-benefits' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.ultimate.premium_benefits'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='monthly-points' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.ultimate.monthly_points'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='animated-badges' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.ultimate.animated_badges'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='unlimited-badges' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.ultimate.unlimited_badges'
-                              )}
-                            />
-                          </ListItem>
-                          <ListItem key='unlimited-usernames' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary={t(
-                                'balance.subscription.active.features.ultimate.unlimited_usernames'
-                              )}
-                            />
-                          </ListItem>
-                        </Box>
-                      )}
-                      {subscription.type === 'max' && (
-                        <Box key='max-features'>
-                          <ListItem key='max-exclusive' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="🔥 Эксклюзивный MAX значок"
-                            />
-                          </ListItem>
-                          <ListItem key='max-priority' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="⚡ Приоритет во всех очередях"
-                            />
-                          </ListItem>
-                          <ListItem key='max-manager' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="👑 Персональный менеджер"
-                            />
-                          </ListItem>
-                          <ListItem key='max-closed' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="🔒 Доступ к закрытым функциям"
-                            />
-                          </ListItem>
-                          <ListItem key='max-unlimited' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="∞ Максимальные лимиты на все"
-                            />
-                          </ListItem>
-                          <ListItem key='max-beta' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="🚀 Ранний доступ к новым функциям"
-                            />
-                          </ListItem>
-                          <ListItem key='max-animations' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="✨ Специальные анимации профиля"
-                            />
-                          </ListItem>
-                          <ListItem key='max-customization' sx={{ py: 0 }}>
-                            <ListItemText
-                              primary="🎨 Неограниченные возможности кастомизации"
-                            />
-                          </ListItem>
-                        </Box>
-                      )}
-                    </List>
-                  </Box>
-                </Box>
-              </CardContent>
-            </Card>
+                      </Grid>
+                    )
+                  );
+                })()}
+              </Grid>
+            </Paper>
           ) : (
             <Box
               sx={{

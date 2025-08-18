@@ -4,16 +4,23 @@ export interface LeaderboardUser {
   username: string;
   score: number;
   avatar_url?: string;
+  photo?: string;
   verification?: {
-    status: string;
+    status: number;
   };
   achievement?: {
     bage: string;
     image_path: string;
+    color_upgrade?: string;
+    upgrade?: string;
   };
   decoration?: {
     background?: string;
     item_path?: string;
+  };
+  stats?: {
+    posts_count: number;
+    followers_count: number;
   };
   subscription?: {
     type?: string;
