@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Icon } from '@iconify/react';
+import { Flame } from 'lucide-react';
 import { ReactionEmoji, ReactionsSummary } from '../types';
 
 // Импортируем кастомные эмодзи
@@ -29,11 +29,11 @@ interface ReactionsButtonProps {
 }
 
 const REACTION_EMOJIS: { emoji: ReactionEmoji; label: string; icon: string; image: string }[] = [
-  { emoji: '🔥', label: 'Огонь', icon: 'solar:fire-bold', image: fireEmoji },
-  { emoji: '❤️', label: 'Любовь', icon: 'solar:heart-bold', image: heartEmoji },
-  { emoji: '😂', label: 'Смех', icon: 'solar:emoji-funny-bold', image: joyEmoji },
-  { emoji: '😮', label: 'Удивление', icon: 'solar:emoji-surprised-bold', image: astonishedEmoji },
-  { emoji: '😢', label: 'Грусть', icon: 'solar:emoji-sad-bold', image: sadEmoji },
+  { emoji: '🔥', label: 'Огонь', icon: 'flame', image: fireEmoji },
+  { emoji: '❤️', label: 'Любовь', icon: 'heart', image: heartEmoji },
+  { emoji: '😂', label: 'Смех', icon: 'laugh', image: joyEmoji },
+  { emoji: '😮', label: 'Удивление', icon: 'surprised', image: astonishedEmoji },
+  { emoji: '😢', label: 'Грусть', icon: 'sad', image: sadEmoji },
 ];
 
 // Функция для определения Apple устройства
@@ -209,10 +209,8 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Icon
-                icon="solar:fire-linear"
-                width={21}
-                height={21}
+              <Flame
+                size={21}
                 color="#fff"
                 style={{
                   display: 'block',

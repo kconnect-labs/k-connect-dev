@@ -3,19 +3,13 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  lazy,
   Suspense,
 } from 'react';
 import {
   Box,
   Typography,
   Avatar,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
   Snackbar,
-  Card,
   Button,
   CircularProgress,
   Alert,
@@ -49,15 +43,17 @@ import {
   GroupedLinkPreviews,
 } from '../../utils/LinkUtils';
 import { getMarkdownComponents } from './MarkdownConfig';
-import { Icon } from '@iconify/react';
 import {
-  MessageCircle,
   Repeat2,
   Link2,
   Heart,
-  Share2,
-  MessageSquare,
+  MessageCircle,
   RefreshCw,
+  Share2,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle,
+  UserCheck,
 } from 'lucide-react';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -135,11 +131,6 @@ import MetaWarningBanner from './MetaWarningBanner';
 import {
   skeletonKeyframes,
   PostCard,
-  FactCard,
-  FactHeader,
-  FactTitle,
-  FactText,
-  FactFooter,
 } from './styles/PostStyles';
 
 const Post = ({
@@ -1584,20 +1575,18 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         : post.user.verification.status;
                       
                       return status === 6 ? (
-                        <Icon
-                          icon='material-symbols:verified-rounded'
+                        <CheckCircle
+                          size={24}
+                          color="#1e88e5"
                           style={{
-                            fontSize: '24px',
-                            color: '#1e88e5',
                             marginLeft: '4px',
                           }}
                         />
                       ) : status === 7 ? (
-                        <Icon
-                          icon='material-symbols:verified-user-rounded'
+                        <UserCheck
+                          size={24}
+                          color="#7c4dff"
                           style={{
-                            fontSize: '24px',
-                            color: '#7c4dff',
                             marginLeft: '4px',
                           }}
                         />
@@ -1656,7 +1645,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 <Typography variant='body2' sx={{ mr: 1 }}>
                   Показать полностью
                 </Typography>
-                <Icon icon='solar:alt-arrow-down-bold' width='20' height='20' />
+                <ChevronDown size={20} />
               </ShowMoreButton>
             )}
 
@@ -1666,7 +1655,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 size='small'
                 onClick={toggleExpanded}
                 startIcon={
-                  <Icon icon='solar:alt-arrow-up-bold' width='20' height='20' />
+                  <ChevronUp size={20} />
                 }
                 sx={{
                   display: 'flex',
@@ -2433,17 +2422,14 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   }}
                 >
                   {liked ? (
-                    <Icon
-                      icon='solar:heart-bold'
-                      width={21}
-                      height={21}
+                    <Heart
+                      size={21}
                       color={theme.palette.primary.main}
+                      fill={theme.palette.primary.main}
                     />
                   ) : (
-                    <Icon
-                      icon='solar:heart-linear'
-                      width={21}
-                      height={21}
+                    <Heart
+                      size={21}
                       color='#fff'
                     />
                   )}
@@ -2473,10 +2459,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <Icon
-                    icon='solar:chat-round-dots-linear'
-                    width={21}
-                    height={21}
+                  <MessageCircle
+                    size={21}
                     color='#fff'
                   />
                 </Box>
@@ -2505,10 +2489,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <Icon
-                    icon='solar:refresh-linear'
-                    width={21}
-                    height={21}
+                  <RefreshCw
+                    size={21}
                     color='#fff'
                   />
                 </Box>
@@ -2530,10 +2512,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <Icon
-                    icon='solar:share-linear'
-                    width={21}
-                    height={21}
+                  <Share2
+                    size={21}
                     color='#fff'
                   />
                 </Box>
