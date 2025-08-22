@@ -347,7 +347,7 @@ const PostsFeed = ({ userId, statusColor }) => {
   }
 
   return (
-    <Box sx={{ mt: 0.5 }}>
+    <Box>
       <Paper
         sx={{
           borderRadius: '12px',

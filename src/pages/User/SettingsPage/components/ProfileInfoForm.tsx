@@ -103,6 +103,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [updatingProfileStyle, setUpdatingProfileStyle] = useState(false);
   const [isPrivateUsername, setIsPrivateUsername] = useState(false);
   const [updatingPrivateUsername, setUpdatingPrivateUsername] = useState(false);
+  const [isCompactInvertedActive, setIsCompactInvertedActive] = useState(false);
+  const [updatingCompactInverted, setUpdatingCompactInverted] = useState(false);
   
   // Используем хук только для приватности профиля
   const {
@@ -124,6 +126,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     const fetchProfileStyle = async () => {
       if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) {
         setIsCustomProfileActive(false);
+        setIsCompactInvertedActive(false);
         return;
       }
 
@@ -133,11 +136,14 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         );
         const data = await response.json();
         if (data.user && data.user.profile_id) {
-          setIsCustomProfileActive(data.user.profile_id === 2);
+          const profileId = data.user.profile_id;
+          setIsCustomProfileActive(profileId === 2);
+          setIsCompactInvertedActive(profileId === 3);
         }
       } catch (error) {
         console.error('Error fetching profile style:', error);
         setIsCustomProfileActive(false);
+        setIsCompactInvertedActive(false);
       }
     };
 
@@ -183,6 +189,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
     setUpdatingProfileStyle(true);
     try {
+      // Если включаем компактный вид, отключаем инвертированный
       const newProfileId = isCustomProfileActive ? 1 : 2;
       const response = await fetch('/api/user/profile-style', {
         method: 'POST',
@@ -195,10 +202,10 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       const data = await response.json();
       if (data.success) {
         setIsCustomProfileActive(!isCustomProfileActive);
-        if (onSuccess) {
-          onSuccess();
+        // Отключаем инвертированный вид при включении обычного компактного
+        if (!isCustomProfileActive) {
+          setIsCompactInvertedActive(false);
         }
-        // Показываем уведомление об успехе
         if (onSuccess) {
           onSuccess();
         }
@@ -215,6 +222,47 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       }
     } finally {
       setUpdatingProfileStyle(false);
+    }
+  };
+
+  const handleCompactInvertedToggle = async () => {
+    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
+
+    setUpdatingCompactInverted(true);
+    try {
+      // Если включаем инвертированный вид, отключаем обычный компактный
+      const newProfileId = isCompactInvertedActive ? 1 : 3;
+      const response = await fetch('/api/user/profile-style', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ profile_id: newProfileId }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsCompactInvertedActive(!isCompactInvertedActive);
+        // Отключаем обычный компактный вид при включении инвертированного
+        if (!isCompactInvertedActive) {
+          setIsCustomProfileActive(false);
+        }
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        console.error('Error updating compact inverted profile style:', data.error);
+        if (onError) {
+          onError(data.error || 'Не удалось обновить стиль профиля');
+        }
+      }
+    } catch (error) {
+      console.error('Error updating compact inverted profile style:', error);
+      if (onError) {
+        onError('Ошибка при обновлении стиля профиля');
+      }
+    } finally {
+      setUpdatingCompactInverted(false);
     }
   };
 
@@ -351,36 +399,69 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
       {/* Profile style toggle - only for Ultimate and MAX subscription */}
       {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
-        <Box sx={{ mt: 4, mb: 2 }}>
-          <Paper
-            sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
+        <>
+          <Box sx={{ mt: 4, mb: 2 }}>
+            <Paper
+              sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
             >
-              <Box>
-                <Typography variant='subtitle1' fontWeight={600}>
-                  Новый вид профиля
-                </Typography>
-                <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                  Изменить внешний вид профиля
-                </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Box>
+                  <Typography variant='subtitle1' fontWeight={600}>
+                    Компактный вид профиля
+                  </Typography>
+                  <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                   Убирается баннер из профиля и накладывается фоном карточки профиля
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {updatingProfileStyle && <CircularProgress size={16} />}
+                  <IOSSwitch
+                    checked={isCustomProfileActive}
+                    onChange={handleProfileStyleToggle}
+                    disabled={updatingProfileStyle || updatingCompactInverted}
+                  />
+                </Box>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                {updatingProfileStyle && <CircularProgress size={16} />}
-                <IOSSwitch
-                  checked={isCustomProfileActive}
-                  onChange={handleProfileStyleToggle}
-                  disabled={updatingProfileStyle}
-                />
+            </Paper>
+          </Box>
+
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <Paper
+              sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Box>
+                  <Typography variant='subtitle1' fontWeight={600}>
+                    Компактный вид профиля с инверсией
+                  </Typography>
+                  <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                    Инвертированный компактный вид профиля
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {updatingCompactInverted && <CircularProgress size={16} />}
+                  <IOSSwitch
+                    checked={isCompactInvertedActive}
+                    onChange={handleCompactInvertedToggle}
+                    disabled={updatingCompactInverted || updatingProfileStyle}
+                  />
+                </Box>
               </Box>
-            </Box>
-          </Paper>
-        </Box>
+            </Paper>
+          </Box>
+        </>
       )}
 
       {/* Private username toggle */}

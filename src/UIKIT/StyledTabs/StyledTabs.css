@@ -14,6 +14,7 @@
   box-sizing: border-box;
   contain: layout style paint;
   margin-bottom: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .styled-tabs--default {

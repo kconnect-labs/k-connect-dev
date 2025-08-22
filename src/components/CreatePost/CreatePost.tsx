@@ -34,6 +34,7 @@ interface CreatePostProps {
   onPostCreated?: (post: any) => void;
   postType?: 'post' | 'wall';
   recipientId?: number | null;
+  sx?: any;
 }
 
 interface MediaFile {
@@ -150,6 +151,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
   onPostCreated,
   postType = 'post',
   recipientId = null,
+  sx,
 }) => {
   const { t } = useLanguage();
   const { user } = useContext(AuthContext);
@@ -485,6 +487,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
         position: 'relative',
         overflow: 'hidden',
         border: '1px solid rgba(255, 255, 255, 0.1)',
+        ...sx,
       }}
     >
       {error && (

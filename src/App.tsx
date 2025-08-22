@@ -56,8 +56,7 @@ const preloadSvgAssets = async () => {
 };
 
 import axios from 'axios';
-import { CommandPaletteProvider } from './context/CommandPalleteContext.js';
-import { CommandPalleteModal } from './components/Layout/CommandPalette/CommandPalleteModal.js';
+
 
 import { LoadingIndicator } from './components/Loading/LoadingComponents';
 import { ErrorFallback } from './components/Error/ErrorComponents';
@@ -151,9 +150,7 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
               <LanguageProvider>
                 <MusicProvider>
                   <PostDetailProvider>
-                    <CommandPaletteProvider>
-                      {children}
-                    </CommandPaletteProvider>
+                    {children}
                   </PostDetailProvider>
                 </MusicProvider>
               </LanguageProvider>
@@ -730,7 +727,6 @@ function App() {
                 />
               )}
               <MusicPlayerCore />
-              <CommandPalleteModal />
             </>
           )}
         </Suspense>

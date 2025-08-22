@@ -26,7 +26,7 @@ interface ProfileRequiredRouteProps {
 
 // Lazy imports
 const ProfilePage = React.lazy(() => import('../pages/User/ProfilePage'));
-const MainPage = React.lazy(() => import('../pages/Main/MainPage'));
+const MainPage = React.lazy(() => import('../pages/MainPage/MainPage'));
 const PostDetailPage = React.lazy(() => import('../pages/Main/PostDetailPage'));
 const SettingsPage = React.lazy(() => import('../pages/User/SettingsPage'));
 const NotificationsPage = React.lazy(

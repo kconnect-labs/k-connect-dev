@@ -1117,7 +1117,7 @@ const ProfilePage = () => {
           </Paper>
 
           <TabPanel value={tabValue} index={0} sx={{ p: 0, mt: 1 }}>
-            {isCurrentUser && <CreatePost onPostCreated={handlePostCreated} />}
+            {isCurrentUser && <CreatePost onPostCreated={handlePostCreated} sx={{ mb: 0.5 }}/>}
 
             <PostsTab
               userId={user?.id}
@@ -1134,6 +1134,7 @@ const ProfilePage = () => {
                   onPostCreated={handlePostCreated}
                   postType='stena'
                   recipientId={user.id}
+                  sx={{ mb: 0.5 }}
                 />
               )}
 
