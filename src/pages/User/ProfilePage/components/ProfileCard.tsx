@@ -164,7 +164,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           width: '100%',
           height: '100%',
           pointerEvents: isOwnProfile && isEditMode ? 'auto' : 'none',
-          zIndex: 10,
+          zIndex: 20,
         }}
         data-profile-container="true"
       >
