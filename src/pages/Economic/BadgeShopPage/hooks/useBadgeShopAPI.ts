@@ -152,10 +152,6 @@ export const useBadgeShopAPI = ({
         formData.append('name', newBadge.name);
         formData.append('description', newBadge.description);
         formData.append('price', price.toString());
-        formData.append(
-          'royalty_percentage',
-          newBadge.royalty_percentage.toString()
-        );
 
         const maxCopies = parseInt(newBadge.max_copies) || 0;
         if (maxCopies === 1) {

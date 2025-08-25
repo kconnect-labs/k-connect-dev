@@ -40,7 +40,6 @@ export interface NewBadge {
   name: string;
   description: string;
   price: string;
-  royalty_percentage: number;
   max_copies: string;
   image: File | null;
   is_upgraded: boolean;

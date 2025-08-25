@@ -17,52 +17,57 @@
 /* CSS переменные для размеров и цветов */
 .badge {
   --badge-size: 28px;
-  --upgrade-color: #FFD700;
+  --upgrade-color: #a680ca;
 }
 
-/* Размеры бейджиков - обновлены для соответствия Material-UI */
+/* Размеры бейджиков - баннерный формат */
 .badge--post {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  max-width: 100px !important;
-  --badge-size: 28px;
+  width: auto !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  max-width: 80px !important;
+  max-height: 24px !important;
+  --badge-size: 24px;
 }
 
 .badge--small {
-  width: 16px !important;
+  width: auto !important;
   height: 16px !important;
   min-width: 16px !important;
   min-height: 16px !important;
-  max-width: 100px !important;
+  max-width: 60px !important;
+  max-height: 16px !important;
   --badge-size: 16px;
 }
 
 .badge--medium {
-  width: 28px !important;
+  width: auto !important;
   height: 28px !important;
   min-width: 28px !important;
   min-height: 28px !important;
   max-width: 100px !important;
+  max-height: 28px !important;
   --badge-size: 28px;
 }
 
 .badge--large {
-  width: 32px !important;
+  width: auto !important;
   height: 32px !important;
   min-width: 32px !important;
   min-height: 32px !important;
-  max-width: 100px !important;
+  max-width: 120px !important;
+  max-height: 32px !important;
   --badge-size: 32px;
 }
 
 .badge--shop {
-  width: 150px !important;
+  width: auto !important;
   height: 150px !important;
   min-width: 150px !important;
   min-height: 150px !important;
-  max-width: 100px !important;
+  max-width: 300px !important;
+  max-height: 150px !important;
   --badge-size: 150px;
 }
 
@@ -71,9 +76,15 @@
   width: 100% !important;
   height: 100% !important;
   object-fit: contain;
+  object-position: left center;
   border-radius: inherit;
   transition: all 0.3s ease;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Привязка всех бейджиков к низу контейнера */
+.badge {
+  margin-top: auto !important;
 }
 
 /* Состояния загрузки */
@@ -89,12 +100,13 @@
 
 /* Hover эффекты */
 .badge--hovered {
-  transform: scale(1.1);
+  transform: scale(1.05);
   z-index: 10;
+  transition: transform 0.2s ease;
 }
 
 .badge--hovered .badge__image {
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 /* ===== UPGRADE EFFECTS ===== */
@@ -157,29 +169,35 @@
   transform: translate(-50%, -50%) rotate(300deg) translateY(-8px);
 }
 
-/* Летающие частицы */
-.badge-particle {
+/* Минималистичный эффект свечения */
+.badge-glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--particle-size);
-  height: var(--particle-size);
-  color: var(--particle-color);
-  pointer-events: none;
-  z-index: 2;
-  animation: particle-float 2s ease-out forwards;
-  animation-delay: var(--particle-delay);
-  transform: translate(var(--particle-x), var(--particle-y)) rotate(var(--particle-rotation));
-}
-
-.badge-particle svg {
+  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-  animation: particle-rotate 1s linear infinite;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+  animation: glow-pulse 3s ease-in-out infinite;
 }
 
-/* Анимации */
+/* Анимация пульсации свечения */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* Анимации для искр (оставляем для совместимости) */
 @keyframes sparkle-rotate {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
@@ -242,51 +260,32 @@
   height: 20px;
 }
 
-@keyframes particle-float {
-  0% {
-    opacity: 1;
-    transform: translate(var(--particle-x), var(--particle-y)) scale(1) rotate(var(--particle-rotation));
-  }
-  50% {
-    opacity: 0.8;
-    transform: translate(calc(var(--particle-x) * 1.5), calc(var(--particle-y) * 1.5)) scale(1.2) rotate(calc(var(--particle-rotation) + 180deg));
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--particle-x) * 2), calc(var(--particle-y) * 2)) scale(0.5) rotate(calc(var(--particle-rotation) + 360deg));
-  }
-}
-
-@keyframes particle-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 /* Upgrade эффекты */
 .badge--upgraded {
   position: relative;
 }
 
 .badge--upgraded .badge__image {
-  filter: drop-shadow(0 0 8px var(--upgrade-color));
+  filter: drop-shadow(0 0 4px var(--upgrade-color));
+  transition: filter 0.3s ease;
 }
 
 .badge--upgraded.badge--hovered {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 12px var(--upgrade-color));
+  transform: scale(1.05);
+}
+
+.badge--upgraded.badge--hovered .badge__image {
+  filter: drop-shadow(0 0 6px var(--upgrade-color));
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
   .badge--large {
-    width: 28px !important;
+    width: auto !important;
     height: 28px !important;
     min-width: 28px !important;
     min-height: 28px !important;
+    max-width: 80px !important;
   }
 
   .badge-upgrade-effect {
@@ -301,17 +300,19 @@
 
 @media (max-width: 480px) {
   .badge--medium {
-    width: 20px !important;
+    width: auto !important;
     height: 20px !important;
     min-width: 20px !important;
     min-height: 20px !important;
+    max-width: 60px !important;
   }
 
   .badge--large {
-    width: 28px !important;
+    width: auto !important;
     height: 28px !important;
     min-width: 28px !important;
     min-height: 28px !important;
+    max-width: 80px !important;
   }
 
   .badge-particle {

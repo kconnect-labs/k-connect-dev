@@ -3823,12 +3823,12 @@ Content-Type: multipart/form-data
   "name": "Название бейджика",
   "description": "Описание бейджика",
   "price": 3000,
-  "royalty_percentage": 15,
   "max_copies": 10,
   "upgrade": "Анимация (опционально)",
   "color_upgrade": "#FFD700 (опционально)",
   "image": [файл SVG/GIF, макс. 100KB]
-}`}
+}
+Примечание: Роялти автоматически устанавливаются в 30%`}
             response={`{
   "message": "Бейджик успешно создан за 3000 баллов",
   "badge_id": 123,

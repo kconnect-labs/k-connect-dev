@@ -26,6 +26,13 @@ import {
 const TypedEquippedItem = EquippedItem as React.ComponentType<EquippedItemProps>;
 const TypedVerificationBadge = VerificationBadge as React.ComponentType<VerificationBadgeProps>;
 
+interface Achievement {
+  bage: string;
+  color_upgrade?: string | null;
+  image_path: string;
+  upgrade?: string | null;
+}
+
 interface User {
   id: number;
   username: string;
@@ -39,7 +46,7 @@ interface User {
     type: string;
   };
   verification_status?: string;
-  achievement?: any;
+  achievement?: Achievement;
   connect_info?: Array<{ username: string }>;
   is_private?: boolean;
   is_friend?: boolean;
@@ -382,16 +389,22 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               )}
 
               {user?.achievement && (
-                <Badge
-                  achievement={user.achievement}
-                  size='medium'
-                  className='profile-achievement-badge'
-                  showTooltip={true}
-                  tooltipText={user.achievement.bage}
-                  onError={(e: any) => {
-                    console.error('Achievement badge failed to load:', e);
-                  }}
-                />
+                <Box sx={{ mt: 'auto' }}>
+                  <Badge
+                    achievement={{
+                      ...user.achievement,
+                      upgrade: user.achievement.upgrade || '',
+                      color_upgrade: user.achievement.color_upgrade || '#FFD700'
+                    } as any}
+                    size='medium'
+                    className='profile-achievement-badge'
+                    showTooltip={true}
+                    tooltipText={user.achievement.bage}
+                    onError={(e: any) => {
+                      console.error('Achievement badge failed to load:', e);
+                    }}
+                  />
+                </Box>
               )}
             </Box>
           </Box>

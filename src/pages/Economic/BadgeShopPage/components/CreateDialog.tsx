@@ -72,7 +72,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
   };
 
   const modalStyle = {
-    background: 'rgba(255, 255, 255, 0.03)',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
@@ -304,23 +304,12 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
               onChange={e => handleInputChange('max_copies', e.target.value)}
               fullWidth
               type='number'
-              helperText='Оставьте пустым для неограниченного количества'
+              helperText='Укажите 0 для неограниченного количества'
               disabled={badgeLimitReached}
               sx={{ mb: 2 }}
             />
 
-            <TextField
-              label='Процент роялти'
-              value={newBadge.royalty_percentage}
-              onChange={e =>
-                handleInputChange('royalty_percentage', Number(e.target.value))
-              }
-              fullWidth
-              type='number'
-              inputProps={{ min: 0, max: 100 }}
-              disabled={badgeLimitReached}
-              sx={{ mb: 2 }}
-            />
+
 
             <Box
               sx={{

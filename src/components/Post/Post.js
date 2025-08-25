@@ -1603,7 +1603,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
                   )}
                   {post.user?.achievement && (
-                    <Box >
+                    <Box sx={{ mt: 'auto' }}>
                       <Badge achievement={post.user.achievement} size='post' />
                     </Box>
                   )}
@@ -1782,7 +1782,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
                     )}
                     {post.original_post.user?.achievement && (
-                      <Box sx={{ ml: 0.5 }}>
+                      <Box sx={{ ml: 0.5, mt: 'auto' }}>
                         <Badge
                           achievement={post.original_post.user.achievement}
                           size='post'

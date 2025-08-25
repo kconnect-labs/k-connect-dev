@@ -36,15 +36,15 @@ const Badge = ({
   const badgeSize = useMemo(() => {
     switch (size) {
       case 'post':
-        return { width: 24, height: 24 };
+        return { width: 80, height: 24 }; // Баннерный формат 24x80
       case 'small':
-        return { width: 16, height: 16 };
+        return { width: 60, height: 16 }; // Баннерный формат 16x60
       case 'large':
-        return { width: 32, height: 32 };
+        return { width: 120, height: 32 }; // Баннерный формат 32x120
       case 'shop':
-        return { width: 150, height: 150 };
+        return { width: 300, height: 150 }; // Баннерный формат 150x300
       default:
-        return { width: 24, height: 24 };
+        return { width: 100, height: 28 }; // Баннерный формат 28x100
     }
   }, [size]);
 
@@ -114,78 +114,29 @@ const Badge = ({
     }
   };
 
-  // Эффект для создания летающих бейджиков при upgrade
+  // Минималистичный эффект свечения для upgrade бейджиков
   useEffect(() => {
     if (!achievement?.upgrade || !containerRef.current || !imageLoaded) return;
 
     const container = containerRef.current;
-    const particles = [];
-    const particleCount = 6; // Уменьшено с 8 до 6 (на 30%)
-    const colors = achievement.color_upgrade
-      ? [achievement.color_upgrade]
-      : ['#FFD700', '#FFA500', '#FF6B35'];
+    
+    // Создаем элемент свечения
+    const glowElement = document.createElement('div');
+    glowElement.className = 'badge-glow';
+    glowElement.style.setProperty('--glow-color', achievement.color_upgrade || '#FFD700');
+    
+    container.appendChild(glowElement);
 
-    // Настройки для разных размеров
-    const isPostSize = size === 'post';
-    const isShopSize = size === 'shop';
-    const baseDistance = isPostSize ? 4 : isShopSize ? 40 : 8;
-    const distanceVariation = isPostSize ? 3 : isShopSize ? 30 : 6;
-    const particleSize = isPostSize ? 6 : isShopSize ? 30 : 12;
-
-    // Создаем летающие бейджики
-    for (let i = 0; i < particleCount; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'badge-particle';
-
-      // Случайный цвет из палитры
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      particle.style.setProperty('--particle-color', color);
-
-      // Случайная позиция вокруг бейджика (еще больше уменьшена)
-      const angle = (i / particleCount) * 2 * Math.PI;
-      const distance = baseDistance + Math.random() * distanceVariation;
-      const x = Math.cos(angle) * distance;
-      const y = Math.sin(angle) * distance;
-
-      particle.style.setProperty('--particle-x', `${x}px`);
-      particle.style.setProperty('--particle-y', `${y}px`);
-      particle.style.setProperty('--particle-delay', `${i * 0.15}s`);
-      particle.style.setProperty(
-        '--particle-rotation',
-        `${Math.random() * 360}deg`
-      );
-
-      // Если есть SVG содержимое, используем его для частиц
-      if (svgContent) {
-        particle.innerHTML = svgContent;
-        particle.style.setProperty('--particle-size', `${particleSize}px`);
-      } else {
-        // Fallback - создаем простую иконку
-        particle.innerHTML = `
-          <svg width="${particleSize}" height="${particleSize}" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
-          </svg>
-        `;
-        particle.style.setProperty('--particle-size', `${particleSize}px`);
-      }
-
-      container.appendChild(particle);
-      particles.push(particle);
-    }
-
-    // Очистка частиц
+    // Очистка
     return () => {
-      particles.forEach(particle => {
-        if (particle.parentNode) {
-          particle.parentNode.removeChild(particle);
-        }
-      });
+      if (glowElement.parentNode) {
+        glowElement.parentNode.removeChild(glowElement);
+      }
     };
   }, [
     achievement?.upgrade,
     achievement?.color_upgrade,
     imageLoaded,
-    svgContent,
     size,
   ]);
 
@@ -197,16 +148,17 @@ const Badge = ({
       ref={containerRef}
       className={badgeClasses}
       sx={{
-        width: Math.min(badgeSize.width, 100), // Максимум 100px ширина
+        width: 'auto',
         height: badgeSize.height,
         minWidth: badgeSize.width,
         minHeight: badgeSize.height,
-        maxWidth: 100,
+        maxWidth: badgeSize.width * 3, // Максимум в 3 раза шире
         maxHeight: badgeSize.height,
         ml: '0px',
+
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-start', // Привязка к левой стороне
         position: 'relative',
         overflow: 'visible',
         cursor: 'pointer',

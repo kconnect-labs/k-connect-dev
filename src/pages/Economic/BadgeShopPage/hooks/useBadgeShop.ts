@@ -14,7 +14,6 @@ const initialNewBadge: NewBadge = {
   name: '',
   description: '',
   price: '',
-  royalty_percentage: 30,
   max_copies: '',
   image: null,
   is_upgraded: false,
