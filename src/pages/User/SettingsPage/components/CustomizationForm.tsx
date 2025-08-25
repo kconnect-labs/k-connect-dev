@@ -32,11 +32,13 @@ import {
   CloudDownload as CloudDownloadIcon,
   PhotoCamera as PhotoCameraIcon,
   Delete as DeleteIcon,
+  MusicNote as MusicNoteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import ProfileKonnectModal from './ProfileKonnectModal';
 import { ThemeSettingsContext } from '../../../../App';
+import { Radio, RadioGroup, FormControl, FormLabel } from '@mui/material';
 
 // Компонент для отображения декорации
 const DecorationItem = styled('img')(
@@ -154,10 +156,15 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const [profileBackgroundUrl, setProfileBackgroundUrl] = useState<
     string | null
   >(null);
+  
+  // Состояния для настроек музыки
+  const [musicDisplayMode, setMusicDisplayMode] = useState('static');
+  const [musicSettingsLoading, setMusicSettingsLoading] = useState(false);
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
     fetchUserDecorations();
+    fetchMusicSettings();
     if (profileData?.user?.profile_background_url) {
       setProfileBackgroundUrl(profileData.user.profile_background_url);
     }
@@ -171,6 +178,49 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
       subscription?.active
     );
   }, [profileData, subscription]);
+
+  // Загрузка настроек музыки
+  const fetchMusicSettings = async () => {
+    try {
+      const response = await fetch('/api/user/settings/music-privacy');
+      const data = await response.json();
+      
+      if (data.success) {
+        setMusicDisplayMode(data.music_display_mode || 'static');
+      }
+    } catch (error) {
+      console.error('Error fetching music settings:', error);
+    }
+  };
+
+  // Обновление настроек музыки
+  const handleMusicDisplayModeChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMode = event.target.value;
+    setMusicSettingsLoading(true);
+    
+    try {
+      const response = await fetch('/api/user/settings/music-privacy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          music_display_mode: newMode,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setMusicDisplayMode(newMode);
+        onSuccess?.();
+      }
+    } catch (error) {
+      console.error('Error updating music settings:', error);
+    } finally {
+      setMusicSettingsLoading(false);
+    }
+  };
 
   const fetchUserDecorations = async () => {
     setLoadingDecorations(true);
@@ -402,6 +452,53 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         <BrushIcon />
         Кастомизация
       </Typography>
+
+      {/* Режим отображения музыки */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <MusicNoteIcon />
+          Режим отображения музыки
+        </Typography>
+
+        <FormControl component="fieldset" sx={{ mb: 2 }}>
+          <FormLabel component="legend" sx={{ color: 'text.primary', mb: 1 }}>
+            Как отображать музыку в профиле?
+          </FormLabel>
+          <RadioGroup
+            value={musicDisplayMode}
+            onChange={handleMusicDisplayModeChange}
+          >
+            <FormControlLabel
+              value="dynamic"
+              control={<Radio disabled={musicSettingsLoading} />}
+              label="Динамический - показывать текущий трек"
+              sx={{ color: 'text.primary' }}
+            />
+            <FormControlLabel
+              value="static"
+              control={<Radio disabled={musicSettingsLoading} />}
+              label="Статический - зафиксированный трек"
+              sx={{ color: 'text.primary' }}
+            />
+          </RadioGroup>
+        </FormControl>
+
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {musicDisplayMode === 'dynamic' 
+            ? 'Музыка будет автоматически обновляться в зависимости от того, что вы слушаете'
+            : 'При переключении на статический режим текущий трек будет автоматически сохранен как статичный'
+          }
+        </Typography>
+      </Box>
 
       {/* Изменение цвета */}
       <Box sx={sectionStyle}>

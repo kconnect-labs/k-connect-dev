@@ -263,6 +263,16 @@ const ProfilePage = () => {
             response.data.user.is_friend = response.data.is_friend;
           }
 
+          // Копируем музыку из корневого объекта, если она есть
+          if (response.data.music) {
+            response.data.user.music = response.data.music;
+          }
+
+          // Копируем настройки приватности музыки из корневого объекта, если они есть
+          if (response.data.music_privacy !== undefined) {
+            response.data.user.music_privacy = response.data.music_privacy;
+          }
+
           setUser(response.data.user);
 
           if (response.data.subscription) {

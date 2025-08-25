@@ -592,6 +592,40 @@ export const MusicProvider = ({ children }) => {
       return;
     }
 
+    // Если передали только ID трека, ищем его в списках
+    if (typeof track === 'number') {
+      const trackId = track;
+      const foundTrack = 
+        tracks.find(t => t.id === trackId) ||
+        popularTracks.find(t => t.id === trackId) ||
+        likedTracks.find(t => t.id === trackId) ||
+        newTracks.find(t => t.id === trackId) ||
+        randomTracks.find(t => t.id === trackId) ||
+        myVibeTracks.find(t => t.id === trackId) ||
+        searchResults.find(t => t.id === trackId);
+      
+      if (foundTrack) {
+        track = foundTrack;
+      } else {
+        // Если трек не найден в локальных списках, загружаем его с сервера
+        console.log('Track not found in local lists, loading from server:', trackId);
+        axios.get(`/api/music/${trackId}`)
+          .then(response => {
+            if (response.data && response.data.success && response.data.track) {
+              playTrack(response.data.track, section);
+            } else {
+              console.error('Failed to load track from server:', trackId);
+              setIsTrackLoading(false);
+            }
+          })
+          .catch(error => {
+            console.error('Error loading track from server:', error);
+            setIsTrackLoading(false);
+          });
+        return;
+      }
+    }
+
     setIsTrackLoading(true);
 
     try {
@@ -673,22 +707,7 @@ export const MusicProvider = ({ children }) => {
                     )
                   );
 
-                axios
-                  .post(
-                    '/api/user/now-playing',
-                    {
-                      track_id: track.id,
-                      artist: track.artist,
-                      title: track.title,
-                    },
-                    { withCredentials: true }
-                  )
-                  .catch(error =>
-                    console.error(
-                      'Ошибка при установке статуса now playing:',
-                      error
-                    )
-                  );
+
               } catch (error) {
                 console.error(
                   'Ошибка при отправке статистики воспроизведения:',
@@ -763,24 +782,7 @@ export const MusicProvider = ({ children }) => {
             .then(() => {
               setIsPlaying(true);
 
-              if (currentTrack) {
-                axios
-                  .post(
-                    '/api/user/now-playing',
-                    {
-                      track_id: currentTrack.id,
-                      artist: currentTrack.artist,
-                      title: currentTrack.title,
-                    },
-                    { withCredentials: true }
-                  )
-                  .catch(error =>
-                    console.error(
-                      'Ошибка при обновлении статуса now playing:',
-                      error
-                    )
-                  );
-              }
+
             })
             .catch(error => {
               console.error('Ошибка при воспроизведении:', error);
@@ -2146,57 +2148,7 @@ export const MusicProvider = ({ children }) => {
     }
   }, [volume]);
 
-  useEffect(() => {
-    let inactivityTimer = null;
-    let lastClearTime = Date.now();
-    const throttleTime = 15000;
 
-    const clearNowPlayingStatus = () => {
-      const now = Date.now();
-
-      if (now - lastClearTime > throttleTime) {
-        lastClearTime = now;
-        axios
-          .post('/api/user/clear-now-playing', {}, { withCredentials: true })
-          .then(response => {})
-          .catch(error => {
-            console.error('Ошибка при очистке статуса now playing:', error);
-          });
-      }
-    };
-
-    if (isPlaying && currentTrack) {
-      if (inactivityTimer) {
-        clearTimeout(inactivityTimer);
-      }
-
-      inactivityTimer = setTimeout(
-        () => {
-          clearNowPlayingStatus();
-        },
-        5 * 60 * 1000
-      );
-    } else if (!isPlaying && currentTrack) {
-      if (inactivityTimer) {
-        clearTimeout(inactivityTimer);
-      }
-
-      inactivityTimer = setTimeout(
-        () => {
-          clearNowPlayingStatus();
-        },
-        5 * 60 * 1000
-      );
-    }
-
-    return () => {
-      if (inactivityTimer) {
-        clearTimeout(inactivityTimer);
-      }
-
-      clearNowPlayingStatus();
-    };
-  }, [isPlaying, currentTrack]);
 
   const getCurrentTimeRaw = useCallback(() => {
     const audio = audioRef.current;

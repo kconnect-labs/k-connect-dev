@@ -15,6 +15,7 @@ import {
   Storage,
   Style,
   Gavel,
+  Security,
 } from '@mui/icons-material';
 
 interface SettingsSection {
@@ -50,6 +51,13 @@ const settingsSections: SettingsSection[] = [
     subtitle: 'Настройка статуса профиля',
     icon: <Chat />,
     color: 'rgba(6, 182, 212, 0.66)', // #06b6d4 с прозрачностью
+  },
+  {
+    id: 'privacy',
+    title: 'Приватность',
+    subtitle: 'Настройки приватности профиля и музыки',
+    icon: <Security />,
+    color: 'rgba(34, 197, 94, 0.66)', // #22c55e с прозрачностью
   },
   {
     id: 'customization',

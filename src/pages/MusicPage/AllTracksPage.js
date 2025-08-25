@@ -36,19 +36,7 @@ const AllTracksPage = () => {
       <AllTracksBlock />
 
       {/* Mobile Player */}
-      {isMobile && currentTrack && (
-        <Box
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1100,
-          }}
-        >
-          <MobilePlayer isMobile={isMobile} />
-        </Box>
-      )}
+      <MobilePlayer isMobile={isMobile} />
     </Box>
   );
 };

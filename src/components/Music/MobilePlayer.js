@@ -17,6 +17,7 @@ import {
   Snackbar,
   Alert,
 } from '@mui/material';
+import { createPortal } from 'react-dom';
 import { PlayIcon, PauseIcon, ForwardIcon } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
 import { formatDuration } from '../../utils/formatters';
@@ -35,7 +36,7 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   bottom: 85,
   left: 0,
   right: 0,
-  zIndex: theme.zIndex.appBar - 1,
+  zIndex: 99999,
   backgroundColor: covercolor
     ? `rgba(${covercolor}, 0.35)`
     : 'rgba(10, 10, 10, 0.6)',
@@ -49,6 +50,8 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   borderTop: '1px solid rgba(255, 255, 255, 0.07)',
   borderLeft: '1px solid rgba(255, 255, 255, 0.07)',
   borderRight: '1px solid rgba(255, 255, 255, 0.07)',
+  width: '100%',
+  maxWidth: '100vw',
   '&.hidden': {
     display: 'none !important',
     opacity: 0,
@@ -72,17 +75,7 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
   },
 }));
 
-const ProgressBar = styled(LinearProgress)(({ theme, covercolor }) => ({
-  height: 2,
-  borderRadius: 0,
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
-  '& .MuiLinearProgress-bar': {
-    borderRadius: 0,
-    backgroundColor: covercolor
-      ? `rgba(${covercolor}, 1)`
-      : theme.palette.primary.main,
-  },
-}));
+
 
 const TrackInfo = memo(({ title, artist, onClick }) => (
   <Box
@@ -118,11 +111,6 @@ const TrackInfo = memo(({ title, artist, onClick }) => (
 ));
 
 const MobilePlayer = memo(({ isMobile }) => {
-  // MobilePlayer рендерится только на мобильных устройствах
-  if (!isMobile) {
-    return null;
-  }
-  
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
   const {
@@ -142,6 +130,11 @@ const MobilePlayer = memo(({ isMobile }) => {
     closeFullScreenPlayer,
     isFullScreenPlayerOpen,
   } = useMusic();
+
+  // MobilePlayer рендерится только на мобильных устройствах и когда есть трек
+  if (!isMobile || !currentTrack) {
+    return null;
+  }
 
   const progressRef = useRef(0);
   const [dominantColor, setDominantColor] = useState(null);
@@ -387,8 +380,8 @@ const MobilePlayer = memo(({ isMobile }) => {
     [handleControlClick, nextTrack]
   );
 
-  return (
-    <React.Fragment>
+  return createPortal(
+    <>
       <PlayerContainer
         elevation={0}
         covercolor={dominantColor}
@@ -463,7 +456,8 @@ const MobilePlayer = memo(({ isMobile }) => {
           {shareSnackbar.message}
         </Alert>
       </Snackbar>
-    </React.Fragment>
+    </>,
+    document.body
   );
 });
 

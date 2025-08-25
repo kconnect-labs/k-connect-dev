@@ -111,7 +111,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     privacySettings,
     loading: privacyLoading,
     error: privacyError,
-    updateProfilePrivacy,
   } = usePrivacy();
 
   // Обновляем форму при изменении profileInfo
@@ -299,18 +298,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     }
   };
 
-  const handlePrivateProfileToggle = async () => {
-    try {
-      await updateProfilePrivacy(!privacySettings.isPrivate);
-      if (onSuccess) {
-        onSuccess();
-      }
-    } catch (error) {
-      if (onError) {
-        onError('Не удалось обновить настройку приватности профиля');
-      }
-    }
-  };
+
 
   // Показываем ошибки из хука приватности
   useEffect(() => {
@@ -494,35 +482,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </Paper>
       </Box>
 
-      {/* Private profile toggle */}
-      <Box sx={{ mt: 2, mb: 2 }}>
-        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Box>
-              <Typography variant='subtitle1' fontWeight={600}>
-                Полная приватность
-              </Typography>
-              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                Скрыть посты, друзей и инвентарь от всех, кроме взаимных друзей
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {privacyLoading && <CircularProgress size={16} />}
-              <IOSSwitch
-                checked={privacySettings.isPrivate}
-                onChange={handlePrivateProfileToggle}
-                disabled={privacyLoading}
-              />
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
+
 
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button

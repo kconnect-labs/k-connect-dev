@@ -12,7 +12,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ThemeSettingsContext } from '../../App';
-import { MobilePlayer, DesktopPlayer } from '../Music';
+import { DesktopPlayer } from '../Music';
 import { useMusic } from '../../context/MusicContext';
 import AppBottomNavigation from '../BottomNavigation';
 import PostDetailOverlay from '../Post/PostDetailOverlay';
@@ -330,7 +330,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   const isMusicPage = location.pathname.startsWith('/music');
   const isMessengerPage = location.pathname.startsWith('/messenger');
-  const hasBottomPlayer = isMobile && currentTrack && isMusicPage;
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
 
   const hasBackgroundImage = profileBackground || themeSettings?.backgroundImage;
@@ -391,8 +390,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               md: isInMessengerChat ? '100%' : `calc(100% - ${sidebarWidth}px)`,
             },
             paddingBottom: {
-              xs: hasBottomPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(8),
-              sm: hasBottomPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(8),
+              xs: isMessengerPage ? 0 : theme.spacing(8),
+              sm: isMessengerPage ? 0 : theme.spacing(8),
               md: hasDesktopPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(2),
             },
           }}
@@ -455,7 +454,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       {isMobile && (
         <AppBottomNavigation user={user as any} isMobile={isMobile} />
       )}
-      {isMobile && hasBottomPlayer && <MobilePlayer />}
       {!isMobile && hasDesktopPlayer && <DesktopPlayer />}
 
       {/* Portal overlay for post detail */}

@@ -11,6 +11,7 @@ import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import { MaxIcon } from '../../../../components/icons/CustomIcons';
 import VerificationBadge from '../../../../UIKIT/VerificationBadge';
 import Badge from '../../../../UIKIT/Badge';
+import CurrentTrackDisplay from '../../../../UIKIT/CurrentTrackDisplay/CurrentTrackDisplay';
 import {
   UserStatus,
   EquippedItem,
@@ -51,6 +52,17 @@ interface User {
   is_private?: boolean;
   is_friend?: boolean;
   photo?: string;
+  music?: {
+    id: number;
+    title: string;
+    artist: string;
+    album?: string;
+    duration?: number;
+    plays_count?: number;
+    is_verified?: boolean;
+    display_mode?: string;
+  };
+  music_privacy?: number;
 }
 
 interface EquippedItemType {
@@ -389,22 +401,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               )}
 
               {user?.achievement && (
-                <Box sx={{ mt: 'auto' }}>
-                  <Badge
-                    achievement={{
-                      ...user.achievement,
-                      upgrade: user.achievement.upgrade || '',
-                      color_upgrade: user.achievement.color_upgrade || '#FFD700'
-                    } as any}
-                    size='medium'
-                    className='profile-achievement-badge'
-                    showTooltip={true}
-                    tooltipText={user.achievement.bage}
-                    onError={(e: any) => {
-                      console.error('Achievement badge failed to load:', e);
-                    }}
-                  />
-                </Box>
+                <Badge
+                  achievement={{
+                    ...user.achievement,
+                    upgrade: user.achievement.upgrade || '',
+                    color_upgrade: user.achievement.color_upgrade || '#FFD700'
+                  } as any}
+                  size='medium'
+                  className='profile-achievement-badge'
+                  showTooltip={true}
+                  tooltipText={user.achievement.bage}
+                  onError={(e: any) => {
+                    console.error('Achievement badge failed to load:', e);
+                  }}
+                />
               )}
             </Box>
           </Box>
@@ -531,6 +541,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           />
 
           <ProfileAbout user={user} getLighterColor={getLighterColor} />
+
+          {/* Отображение текущего трека */}
+          {user?.music && user.music_privacy !== 2 && (
+            <Box sx={{ mt: 1, mb: 1 }}>
+              <CurrentTrackDisplay
+                track={{
+                  id: user.music.id,
+                  title: user.music.title,
+                  artist: user.music.artist,
+                }}
+                statusColor={user?.status_color}
+                getLighterColor={getLighterColor}
+              />
+            </Box>
+          )}
 
           {/* Показываем статистику только если профиль не приватный или у пользователя есть доступ */}
           {(!user?.is_private || isCurrentUser || user?.is_friend) ? (

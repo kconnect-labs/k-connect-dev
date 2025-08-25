@@ -35,6 +35,7 @@ const LinkedAccountsForm = lazy(() => import('./LinkedAccountsForm'));
 const BadgesForm = lazy(() => import('./BadgesForm'));
 const SecurityForm = lazy(() => import('./SecurityForm'));
 const UsernamesForm = lazy(() => import('./UsernamesForm'));
+const PrivacyForm = lazy(() => import('./PrivacyForm'));
 
 // Компонент загрузки
 const LoadingFallback = () => (
@@ -108,7 +109,8 @@ type Section =
   | 'sessions'
   | 'linked'
   | 'badges'
-  | 'usernames';
+  | 'usernames'
+  | 'privacy';
 
 const SettingsModal: React.FC<SettingsModalProps> = ({
   open,
@@ -281,6 +283,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <SecurityForm onSuccess={onSuccess} />
           </Suspense>
         );
+      case 'privacy':
+        return (
+          <Suspense fallback={<LoadingFallback />}>
+            <PrivacyForm onSuccess={onSuccess} />
+          </Suspense>
+        );
       default:
         return null;
     }
@@ -315,6 +323,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         return 'Внешний вид';
       case 'security':
         return 'Безопасность';
+      case 'privacy':
+        return 'Приватность';
       default:
         return 'Настройки профиля';
     }
