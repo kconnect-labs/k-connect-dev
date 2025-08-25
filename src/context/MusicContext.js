@@ -23,10 +23,9 @@ const getAudioUrl = filePath => {
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname.includes('localhost');
 
-  // Если на localhost, добавляем полный URL
+  // Если на localhost, используем домен сервера вместо localhost
   if (isLocalhost) {
-    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
-    return `${origin}${filePath}`;
+    return `https://k-connect.ru${filePath}`;
   }
 
   return filePath;
@@ -416,7 +415,7 @@ export const MusicProvider = ({ children }) => {
         }
 
         const now = Date.now();
-        if (now - lastTimeUpdateRef.current > 1000) {
+        if (now - lastTimeUpdateRef.current > 100) { // Уменьшаем до 100ms для лучшей синхронизации
           setCurrentTime(audio.currentTime);
           setDuration(audio.duration);
           lastTimeUpdateRef.current = now;
@@ -726,7 +725,20 @@ export const MusicProvider = ({ children }) => {
       const handleLoadStart = () => {};
 
       const handleError = error => {
-        console.error('Ошибка при загрузке трека:', error);
+        const audio = audioRef.current;
+        
+        // Проверяем, действительно ли есть ошибка
+        if (!audio.error) {
+          return; // Нет ошибки, выходим
+        }
+        
+        // Логируем только реальные ошибки
+        console.error('Ошибка при загрузке трека:', {
+          errorCode: audio.error.code,
+          errorMessage: audio.error.message,
+          track: track ? { id: track.id, title: track.title, file_path: track.file_path } : 'N/A'
+        });
+        
         setIsTrackLoading(false);
       };
 
@@ -847,126 +859,120 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      // Для секций artist и playlist_ делаем запрос к бэкенду
-      if (
-        currentSection === 'artist' ||
-        currentSection.startsWith('playlist_')
-      ) {
-        try {
-          const response = await axios.get('/api/music/next', {
-            params: {
-              current_id: currentTrack.id,
-              context: currentSection,
-            },
-            withCredentials: true,
-          });
+      // Для всех секций делаем запрос к бэкенду
+      try {
+        const response = await axios.get('/api/music/next', {
+          params: {
+            current_id: currentTrack.id,
+            context: currentSection,
+          },
+          withCredentials: true,
+        });
 
-          if (response.data.success && response.data.track) {
-            return response.data.track;
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error(
-            'Ошибка при запросе следующего трека к бэкенду:',
-            error
-          );
+        if (response.data.success && response.data.track) {
+          return response.data.track;
+        } else {
           return null;
         }
-      }
-
-      // Для остальных секций используем локальные списки
-      let trackList;
-      switch (currentSection) {
-        case 'popular':
-          trackList = popularTracks;
-          break;
-        case 'liked':
-          trackList = likedTracks;
-          break;
-        case 'new':
-          trackList = newTracks;
-          break;
-        case 'random':
-          trackList = randomTracks;
-          break;
-        case 'search':
-          trackList = searchResults;
-          break;
-        case 'my-vibe':
-          trackList = myVibeTracks;
-          break;
-        default:
-          trackList = tracks;
-      }
-
-      if (!trackList || trackList.length === 0) {
-        return null;
-      }
-
-      // Находим текущую позицию в списке
-      const currentIndex = trackList.findIndex(
-        track => track.id === currentTrack.id
-      );
-
-      if (currentIndex === -1) {
-        // Если текущий трек не найден в списке, возвращаем первый
-        return trackList[0];
-      }
-
-      // Проверяем, нужно ли загрузить больше треков
-      const isNearingEnd = currentIndex >= trackList.length - 3;
-      const isNearing15Increment =
-        (currentIndex + 1) % 15 >= 12 || (currentIndex + 1) % 15 === 0;
-
-      if (
-        (isNearingEnd || isNearing15Increment) &&
-        hasMoreByType[currentSection]
-      ) {
-        loadMoreTracks(currentSection);
-      }
-
-      // Возвращаем следующий трек
-      if (currentIndex < trackList.length - 1) {
-        return trackList[currentIndex + 1];
-      } else {
-        // Если это последний трек, пытаемся загрузить больше
-        if (hasMoreByType[currentSection]) {
-          const loaded = await loadMoreTracks(currentSection);
-
-          if (loaded) {
-            let updatedTrackList;
-            switch (currentSection) {
-              case 'popular':
-                updatedTrackList = popularTracks;
-                break;
-              case 'liked':
-                updatedTrackList = likedTracks;
-                break;
-              case 'new':
-                updatedTrackList = newTracks;
-                break;
-              case 'random':
-                updatedTrackList = randomTracks;
-                break;
-              case 'search':
-                updatedTrackList = searchResults;
-                break;
-              case 'my-vibe':
-                updatedTrackList = myVibeTracks;
-                break;
-              default:
-                updatedTrackList = tracks;
-            }
-
-            if (updatedTrackList.length > trackList.length) {
-              return updatedTrackList[trackList.length];
-            }
-          }
+      } catch (error) {
+        console.error(
+          'Ошибка при запросе следующего трека к бэкенду:',
+          error
+        );
+        
+        // Fallback к локальным спискам в случае ошибки
+        let trackList;
+        switch (currentSection) {
+          case 'popular':
+            trackList = popularTracks;
+            break;
+          case 'liked':
+            trackList = likedTracks;
+            break;
+          case 'new':
+            trackList = newTracks;
+            break;
+          case 'random':
+            trackList = randomTracks;
+            break;
+          case 'search':
+            trackList = searchResults;
+            break;
+          case 'my-vibe':
+            trackList = myVibeTracks;
+            break;
+          default:
+            trackList = tracks;
         }
 
-        // Зацикливаемся на первый трек
-        return trackList[0];
+        if (!trackList || trackList.length === 0) {
+          return null;
+        }
+
+        // Находим текущую позицию в списке
+        const currentIndex = trackList.findIndex(
+          track => track.id === currentTrack.id
+        );
+
+        if (currentIndex === -1) {
+          // Если текущий трек не найден в списке, возвращаем первый
+          return trackList[0];
+        }
+
+        // Проверяем, нужно ли загрузить больше треков
+        const isNearingEnd = currentIndex >= trackList.length - 3;
+        const isNearing15Increment =
+          (currentIndex + 1) % 15 >= 12 || (currentIndex + 1) % 15 === 0;
+
+        if (
+          (isNearingEnd || isNearing15Increment) &&
+          hasMoreByType[currentSection]
+        ) {
+          loadMoreTracks(currentSection);
+        }
+
+        // Возвращаем следующий трек
+        if (currentIndex < trackList.length - 1) {
+          return trackList[currentIndex + 1];
+        } else {
+          // Если это последний трек, пытаемся загрузить больше
+          if (hasMoreByType[currentSection]) {
+            const loaded = await loadMoreTracks(currentSection);
+
+            if (loaded) {
+              let updatedTrackList;
+              switch (currentSection) {
+                case 'popular':
+                  updatedTrackList = popularTracks;
+                  break;
+                case 'liked':
+                  updatedTrackList = likedTracks;
+                  break;
+                case 'new':
+                  updatedTrackList = newTracks;
+                  break;
+                case 'random':
+                  updatedTrackList = randomTracks;
+                  break;
+                case 'search':
+                  updatedTrackList = searchResults;
+                  break;
+                case 'my-vibe':
+                  updatedTrackList = myVibeTracks;
+                  break;
+                default:
+                  updatedTrackList = tracks;
+              }
+
+              if (updatedTrackList.length > trackList.length) {
+                return updatedTrackList[trackList.length];
+              }
+            }
+          }
+
+          // Зацикливаемся на первый трек
+          return trackList[0];
+        }
       }
     } catch (error) {
       console.error('Error getting next track:', error);
@@ -978,126 +984,120 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      // Для секций artist и playlist_ делаем запрос к бэкенду
-      if (
-        currentSection === 'artist' ||
-        currentSection.startsWith('playlist_')
-      ) {
-        try {
-          const response = await axios.get('/api/music/previous', {
-            params: {
-              current_id: currentTrack.id,
-              context: currentSection,
-            },
-            withCredentials: true,
-          });
+      // Для всех секций делаем запрос к бэкенду
+      try {
+        const response = await axios.get('/api/music/previous', {
+          params: {
+            current_id: currentTrack.id,
+            context: currentSection,
+          },
+          withCredentials: true,
+        });
 
-          if (response.data.success && response.data.track) {
-            return response.data.track;
-          } else {
-            return null;
-          }
-        } catch (error) {
-          console.error(
-            'Ошибка при запросе предыдущего трека к бэкенду:',
-            error
-          );
+        if (response.data.success && response.data.track) {
+          return response.data.track;
+        } else {
           return null;
         }
-      }
-
-      // Для остальных секций используем локальные списки
-      let trackList;
-      switch (currentSection) {
-        case 'popular':
-          trackList = popularTracks;
-          break;
-        case 'liked':
-          trackList = likedTracks;
-          break;
-        case 'new':
-          trackList = newTracks;
-          break;
-        case 'random':
-          trackList = randomTracks;
-          break;
-        case 'search':
-          trackList = searchResults;
-          break;
-        case 'my-vibe':
-          trackList = myVibeTracks;
-          break;
-        default:
-          trackList = tracks;
-      }
-
-      if (!trackList || trackList.length === 0) {
-        return null;
-      }
-
-      // Находим текущую позицию в списке
-      const currentIndex = trackList.findIndex(
-        track => track.id === currentTrack.id
-      );
-
-      if (currentIndex === -1) {
-        // Если текущий трек не найден в списке, возвращаем последний
-        return trackList[trackList.length - 1];
-      }
-
-      // Проверяем, нужно ли загрузить больше треков
-      const isNearingStart = currentIndex <= 2;
-      const isNearing15Increment =
-        (currentIndex + 1) % 15 <= 3 || (currentIndex + 1) % 15 === 0;
-
-      if (
-        (isNearingStart || isNearing15Increment) &&
-        hasMoreByType[currentSection]
-      ) {
-        loadMoreTracks(currentSection);
-      }
-
-      // Возвращаем предыдущий трек
-      if (currentIndex > 0) {
-        return trackList[currentIndex - 1];
-      } else {
-        // Если это первый трек, пытаемся загрузить больше
-        if (hasMoreByType[currentSection]) {
-          const loaded = await loadMoreTracks(currentSection);
-
-          if (loaded) {
-            let updatedTrackList;
-            switch (currentSection) {
-              case 'popular':
-                updatedTrackList = popularTracks;
-                break;
-              case 'liked':
-                updatedTrackList = likedTracks;
-                break;
-              case 'new':
-                updatedTrackList = newTracks;
-                break;
-              case 'random':
-                updatedTrackList = randomTracks;
-                break;
-              case 'search':
-                updatedTrackList = searchResults;
-                break;
-              case 'my-vibe':
-                updatedTrackList = myVibeTracks;
-                break;
-              default:
-                updatedTrackList = tracks;
-            }
-
-            if (updatedTrackList.length > trackList.length) {
-              return updatedTrackList[updatedTrackList.length - 1];
-            }
-          }
+      } catch (error) {
+        console.error(
+          'Ошибка при запросе предыдущего трека к бэкенду:',
+          error
+        );
+        
+        // Fallback к локальным спискам в случае ошибки
+        let trackList;
+        switch (currentSection) {
+          case 'popular':
+            trackList = popularTracks;
+            break;
+          case 'liked':
+            trackList = likedTracks;
+            break;
+          case 'new':
+            trackList = newTracks;
+            break;
+          case 'random':
+            trackList = randomTracks;
+            break;
+          case 'search':
+            trackList = searchResults;
+            break;
+          case 'my-vibe':
+            trackList = myVibeTracks;
+            break;
+          default:
+            trackList = tracks;
         }
 
-        // Зацикливаемся на последний трек
-        return trackList[trackList.length - 1];
+        if (!trackList || trackList.length === 0) {
+          return null;
+        }
+
+        // Находим текущую позицию в списке
+        const currentIndex = trackList.findIndex(
+          track => track.id === currentTrack.id
+        );
+
+        if (currentIndex === -1) {
+          // Если текущий трек не найден в списке, возвращаем последний
+          return trackList[trackList.length - 1];
+        }
+
+        // Проверяем, нужно ли загрузить больше треков
+        const isNearingStart = currentIndex <= 2;
+        const isNearing15Increment =
+          (currentIndex + 1) % 15 <= 3 || (currentIndex + 1) % 15 === 0;
+
+        if (
+          (isNearingStart || isNearing15Increment) &&
+          hasMoreByType[currentSection]
+        ) {
+          loadMoreTracks(currentSection);
+        }
+
+        // Возвращаем предыдущий трек
+        if (currentIndex > 0) {
+          return trackList[currentIndex - 1];
+        } else {
+          // Если это первый трек, пытаемся загрузить больше
+          if (hasMoreByType[currentSection]) {
+            const loaded = await loadMoreTracks(currentSection);
+
+            if (loaded) {
+              let updatedTrackList;
+              switch (currentSection) {
+                case 'popular':
+                  updatedTrackList = popularTracks;
+                  break;
+                case 'liked':
+                  updatedTrackList = likedTracks;
+                  break;
+                case 'new':
+                  updatedTrackList = newTracks;
+                  break;
+                case 'random':
+                  updatedTrackList = randomTracks;
+                  break;
+                case 'search':
+                  updatedTrackList = searchResults;
+                  break;
+                case 'my-vibe':
+                  updatedTrackList = myVibeTracks;
+                  break;
+                default:
+                  updatedTrackList = tracks;
+              }
+
+              if (updatedTrackList.length > trackList.length) {
+                return updatedTrackList[updatedTrackList.length - 1];
+              }
+            }
+          }
+
+          // Зацикливаемся на последний трек
+          return trackList[trackList.length - 1];
+        }
       }
     } catch (error) {
       console.error('Error getting previous track:', error);

@@ -715,11 +715,9 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
     const updateTimeForLyrics = () => {
       if (audioRef?.current && !audioRef.current.paused) {
         const actualCurrentTime = audioRef.current.currentTime;
-        // Обновляем только если изменение больше 0.1 секунды для оптимизации
-        if (Math.abs(actualCurrentTime - lastTime) > 0.1) {
-          setCurrentTime(actualCurrentTime);
-          lastTime = actualCurrentTime;
-        }
+        // Обновляем мгновенно для точной синхронизации лирики
+        setCurrentTime(actualCurrentTime);
+        lastTime = actualCurrentTime;
       }
       rafId = requestAnimationFrame(updateTimeForLyrics);
     };
@@ -2074,13 +2072,9 @@ const LyricsModernView = memo(
       [lyricsData, filteredLines, currentLineIndex]
     );
 
-    // Увеличенный дебаунс для меньшего количества обновлений
+    // Убираем дебаунс для мгновенной синхронизации
     useEffect(() => {
-      const timeoutId = setTimeout(() => {
-        updateCurrentLine(currentTime);
-      }, 300); // Компромисс между плавностью и отзывчивостью
-
-      return () => clearTimeout(timeoutId);
+      updateCurrentLine(currentTime);
     }, [currentTime, updateCurrentLine]);
 
     if (loading) {
@@ -2237,9 +2231,9 @@ const LyricsModernView = memo(
       prevProps.isMainDisplay === nextProps.isMainDisplay &&
       prevProps.lyricsData === nextProps.lyricsData &&
       prevProps.filteredLines === nextProps.filteredLines &&
-      // Сравниваем время только с точностью до 500мс для текстов
-      Math.floor(prevProps.currentTime * 2) ===
-        Math.floor(nextProps.currentTime * 2) &&
+      // Сравниваем время с точностью до 100ms для лучшей синхронизации текстов
+      Math.floor(prevProps.currentTime * 10) ===
+        Math.floor(nextProps.currentTime * 10) &&
       prevProps.dominantColor === nextProps.dominantColor &&
       prevProps.theme === nextProps.theme
     );
@@ -2296,8 +2290,8 @@ const AlbumArtLyricsContainer = memo(
       prevProps.loadingLyrics === nextProps.loadingLyrics &&
       prevProps.coverPath === nextProps.coverPath &&
       prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
-      // Сравниваем время только с точностью до секунды
-      Math.floor(prevProps.currentTime) === Math.floor(nextProps.currentTime) &&
+      // Сравниваем время с точностью до 100ms для лучшей синхронизации
+      Math.floor(prevProps.currentTime * 10) === Math.floor(nextProps.currentTime * 10) &&
       prevProps.lyricsData === nextProps.lyricsData &&
       prevProps.filteredLines === nextProps.filteredLines
     );
