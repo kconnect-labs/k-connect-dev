@@ -61,6 +61,7 @@ interface User {
     plays_count?: number;
     is_verified?: boolean;
     display_mode?: string;
+    lyrics_display_mode?: string;
   };
   music_privacy?: number;
 }
@@ -550,7 +551,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   id: user.music.id,
                   title: user.music.title,
                   artist: user.music.artist,
+                  lyrics_display_mode: user.music?.lyrics_display_mode,
                 }}
+                userId={user.id}
                 statusColor={user?.status_color}
                 getLighterColor={getLighterColor}
               />
