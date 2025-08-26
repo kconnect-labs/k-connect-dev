@@ -728,6 +728,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               minHeight: isMobile && lyricsDisplayMode ? '300px' : '350px', 
               width: '100%',
               flex: isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto',
+              marginTop: isMobile && !lyricsDisplayMode ? '99px' : '0px',
             }}>
               {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
                 <Box
