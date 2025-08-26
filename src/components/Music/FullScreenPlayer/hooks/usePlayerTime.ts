@@ -7,6 +7,8 @@ export const usePlayerTime = (open: boolean, audioRef: React.RefObject<HTMLAudio
     duration: contextDuration,
     volume: contextVolume,
     setVolume: setContextVolume,
+    enableTimeUpdates,
+    disableTimeUpdates,
   } = useMusic();
 
   const [currentTime, setCurrentTime] = useState(0);
@@ -52,6 +54,41 @@ export const usePlayerTime = (open: boolean, audioRef: React.RefObject<HTMLAudio
     setCurrentTime(0);
     setDragValue(0);
   }, [contextCurrentTime === 0]);
+
+  // Управление обновлениями времени
+  useEffect(() => {
+    if (open) {
+      enableTimeUpdates();
+    } else {
+      disableTimeUpdates();
+    }
+
+    return () => {
+      if (!open) {
+        disableTimeUpdates();
+      }
+    };
+  }, [open, enableTimeUpdates, disableTimeUpdates]);
+
+  // Принудительное обновление времени для таймлайна
+  useEffect(() => {
+    if (!open) return;
+
+    const updateTime = () => {
+      if ((audioRef as any)?.current) {
+        const audioTime = (audioRef as any).current.currentTime;
+        if (!isNaN(audioTime)) {
+          setCurrentTime(audioTime);
+        }
+      }
+    };
+
+    const interval = setInterval(updateTime, 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [open, audioRef]);
 
   // Обработчики
   const handleTimeChange = useCallback(

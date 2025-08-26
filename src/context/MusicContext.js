@@ -77,6 +77,8 @@ export const MusicContext = createContext({
   openFullScreenPlayer: () => {},
   closeFullScreenPlayer: () => {},
   playTrackById: () => {},
+  enableTimeUpdates: () => {},
+  disableTimeUpdates: () => {},
 });
 
 export const MusicProvider = ({ children }) => {
@@ -110,6 +112,7 @@ export const MusicProvider = ({ children }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [isTrackLoading, setIsTrackLoading] = useState(false);
   const [isFullScreenPlayerOpen, setIsFullScreenPlayerOpen] = useState(false);
+  const [hasActiveTimeListeners, setHasActiveTimeListeners] = useState(false);
 
   const audioRef = useRef(new Audio());
   const nextAudioRef = useRef(new Audio());
@@ -124,6 +127,7 @@ export const MusicProvider = ({ children }) => {
   const durationRef = useRef(0);
   const timeUpdateThrottleRef = useRef(null);
   const lastTimeUpdateRef = useRef(0);
+  const hasTimeListenersRef = useRef(false);
 
   const likedTracksLastLoadedRef = useRef(null);
 
@@ -406,7 +410,7 @@ export const MusicProvider = ({ children }) => {
         currentTimeRef.current = audio.currentTime;
         durationRef.current = audio.duration;
 
-        if ('mediaSession' in navigator && audio.duration) {
+        if ('mediaSession' in navigator && audio.duration && isPlaying) {
           navigator.mediaSession.setPositionState({
             duration: audio.duration,
             position: audio.currentTime,
@@ -416,8 +420,13 @@ export const MusicProvider = ({ children }) => {
 
         const now = Date.now();
         if (now - lastTimeUpdateRef.current > 100) { // Уменьшаем до 100ms для лучшей синхронизации
-          setCurrentTime(audio.currentTime);
-          setDuration(audio.duration);
+          // Обновляем состояние только если есть слушатели, музыка играет и время действительно изменилось
+          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && isPlaying && Math.abs(currentTimeRef.current - audio.currentTime) > 0.1) {
+            setCurrentTime(audio.currentTime);
+          }
+          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && Math.abs(durationRef.current - audio.duration) > 0.1) {
+            setDuration(audio.duration);
+          }
           lastTimeUpdateRef.current = now;
         }
 
@@ -2167,6 +2176,16 @@ export const MusicProvider = ({ children }) => {
     return currentTimeRef.current || 0;
   }, []);
 
+  const enableTimeUpdates = useCallback(() => {
+    hasTimeListenersRef.current = true;
+    setHasActiveTimeListeners(true);
+  }, []);
+
+  const disableTimeUpdates = useCallback(() => {
+    hasTimeListenersRef.current = false;
+    setHasActiveTimeListeners(false);
+  }, []);
+
   const getDurationRaw = useCallback(() => {
     const audio = audioRef.current;
 
@@ -2279,6 +2298,7 @@ export const MusicProvider = ({ children }) => {
   // Функции для управления полноэкранным плеером
   const openFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(true);
+    hasTimeListenersRef.current = true; // Включаем обновления времени
 
     // Проверяем, работаем ли мы на iOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -2321,6 +2341,7 @@ export const MusicProvider = ({ children }) => {
 
   const closeFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(false);
+    hasTimeListenersRef.current = false; // Отключаем обновления времени
 
     // Проверяем, работаем ли мы на iOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -2513,6 +2534,8 @@ export const MusicProvider = ({ children }) => {
     closeFullScreenPlayer,
     forceLoadTracks,
     playTrackById,
+    enableTimeUpdates,
+    disableTimeUpdates,
   };
 
   return (

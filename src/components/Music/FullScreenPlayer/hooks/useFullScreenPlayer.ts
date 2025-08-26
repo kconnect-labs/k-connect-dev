@@ -73,6 +73,8 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     volume: contextVolume,
     setVolume: setContextVolume,
     likeTrack,
+    enableTimeUpdates,
+    disableTimeUpdates,
   } = useMusic();
 
   // Состояния
@@ -112,9 +114,20 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     if (isDragging) {
       return isNaN(dragValue) ? 0 : dragValue;
     }
+    // Принудительно получаем время из audio элемента
+    if ((audioRef as any)?.current && !isNaN((audioRef as any).current.currentTime)) {
+      const audioTime = (audioRef as any).current.currentTime;
+      return audioTime;
+    }
     return isNaN(currentTime) ? 0 : currentTime;
-  }, [currentTime, dragValue, isDragging]);
-  const safeDuration = useMemo(() => (isNaN(duration) ? 100 : duration), [duration]);
+  }, [currentTime, dragValue, isDragging, audioRef]);
+  const safeDuration = useMemo(() => {
+    // Принудительно получаем длительность из audio элемента
+    if ((audioRef as any)?.current && !isNaN((audioRef as any).current.duration) && (audioRef as any).current.duration > 0) {
+      return (audioRef as any).current.duration;
+    }
+    return isNaN(duration) ? 100 : duration;
+  }, [duration, audioRef]);
   const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
 
   // Синхронизация с контекстом
@@ -136,6 +149,26 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     }
   }, [contextVolume]);
 
+  // Принудительное обновление времени для таймлайна
+  useEffect(() => {
+    if (!open) return;
+
+    const updateTime = () => {
+      if ((audioRef as any)?.current) {
+        const audioTime = (audioRef as any).current.currentTime;
+        if (!isNaN(audioTime)) {
+          setCurrentTime(audioTime);
+        }
+      }
+    };
+
+    const interval = setInterval(updateTime, 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [open, audioRef]);
+
   // Сброс времени при смене трека
   useEffect(() => {
     if (currentTrack) {
@@ -143,6 +176,21 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
       setDragValue(0);
     }
   }, [(currentTrack as any)?.id]);
+
+  // Управление обновлениями времени
+  useEffect(() => {
+    if (open) {
+      enableTimeUpdates();
+    } else {
+      disableTimeUpdates();
+    }
+
+    return () => {
+      if (!open) {
+        disableTimeUpdates();
+      }
+    };
+  }, [open, enableTimeUpdates, disableTimeUpdates]);
 
   // Обновление времени для синхронизации текстов
   useEffect(() => {
@@ -689,6 +737,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     menuAnchorEl,
     uploading,
     lyricsDisplayMode,
+    isDragging,
     snackbar,
     
     // Мемоизированные значения
@@ -747,5 +796,8 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     setIsDragging,
     setDragValue,
     setSnackbar,
+    
+    // Дополнительные значения
+    dragValue,
   };
 };
