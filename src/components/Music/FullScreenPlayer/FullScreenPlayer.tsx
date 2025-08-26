@@ -1134,7 +1134,7 @@ const LyricsLine: React.FC<{
             fontSize: isMainDisplay
               ? { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' }
               : { xs: '1rem', sm: '1.2rem' },
-            fontWeight: 400,
+            fontWeight: 700,
             ...baseStyles,
             maxWidth: isMainDisplay
               ? { xs: '92%', sm: '87%', md: '82%', lg: '75%' }
@@ -1168,7 +1168,7 @@ const LyricsLine: React.FC<{
             fontSize: isMainDisplay
               ? { xs: '1rem', sm: '1.2rem', md: '1.4rem' }
               : { xs: '0.9rem', sm: '1rem' },
-            fontWeight: 400,
+            fontWeight: 700,
             ...baseStyles,
             maxWidth: '100%',
             position: 'static',
@@ -1200,7 +1200,7 @@ const LyricsLine: React.FC<{
             fontSize: isMainDisplay
               ? { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
               : { xs: '0.7rem', sm: '0.8rem' },
-            fontWeight: 400,
+            fontWeight: 700,
             ...baseStyles,
             maxWidth: '100%',
 
@@ -1233,7 +1233,7 @@ const LyricsLine: React.FC<{
             fontSize: isMainDisplay
               ? { xs: '0.9rem', sm: '1rem', md: '1.2rem' }
               : { xs: '0.8rem', sm: '0.9rem' },
-            fontWeight: 400,
+            fontWeight: 700,
             ...baseStyles,
             maxWidth: '100%',
             position: 'static',
@@ -1488,9 +1488,9 @@ const LyricsModernView: React.FC<{
               fontSize: isMainDisplay 
                 ? { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
                 : { xs: '0.8rem', sm: '0.9rem' },
-              fontWeight: 400,
+              fontWeight: 700,
               color: 'rgba(255,255,255,0.3)',
-              filter: 'none',
+              filter: 'blur(1.5px)',
               transform: 'scale(0.9)',
             };
 
@@ -1500,7 +1500,7 @@ const LyricsModernView: React.FC<{
                 fontSize: isMainDisplay 
                   ? { xs: '1.8rem', sm: '2.2rem', md: '2.6rem' }
                   : { xs: '1.4rem', sm: '1.6rem' },
-                fontWeight: 600,
+                fontWeight: 700,
                 color: 'white',
                 filter: 'none',
                 transform: 'scale(1)',
@@ -1512,9 +1512,9 @@ const LyricsModernView: React.FC<{
                 fontSize: isMainDisplay 
                   ? { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }
                   : { xs: '0.9rem', sm: '1.1rem' },
-                fontWeight: 500,
+                fontWeight: 700,
                 color: 'rgba(255,255,255,0.6)',
-                filter: 'none',
+                filter: 'blur(0.5px)',
                 transform: 'scale(0.95)',
               };
             } else if (distanceFromCurrent === 1) {
@@ -1524,34 +1524,10 @@ const LyricsModernView: React.FC<{
                 fontSize: isMainDisplay 
                   ? { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
                   : { xs: '0.8rem', sm: '0.9rem' },
-                fontWeight: 400,
+                fontWeight: 700,
                 color: 'rgba(255,255,255,0.4)',
-                filter: 'none',
+                filter: 'blur(0.5px)',
                 transform: 'scale(0.92)',
-              };
-            } else if (distanceFromCurrent === -2) {
-              // Предыдущая-предыдущая строка
-              lineStyles = {
-                opacity: 0.3,
-                fontSize: isMainDisplay 
-                  ? { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' }
-                  : { xs: '0.6rem', sm: '0.7rem' },
-                fontWeight: 400,
-                color: 'rgba(255,255,255,0.2)',
-                filter: 'blur(1.5px)',
-                transform: 'scale(0.85)',
-              };
-            } else if (distanceFromCurrent === 2) {
-              // Строка после следующей
-              lineStyles = {
-                opacity: 0.25,
-                fontSize: isMainDisplay 
-                  ? { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
-                  : { xs: '0.7rem', sm: '0.8rem' },
-                fontWeight: 400,
-                color: 'rgba(255,255,255,0.15)',
-                filter: 'none',
-                transform: 'scale(0.88)',
               };
             }
 
@@ -1575,14 +1551,16 @@ const LyricsModernView: React.FC<{
                 <Typography
                   variant={isActive ? 'h3' : 'h5'}
                   sx={{
-                    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-                    lineHeight: 1,
+                    fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+                    lineHeight: 0.8,
                     letterSpacing: isActive ? '-0.02em' : '-0.01em',
                     textAlign: 'left',
                     width: '100%',
-                    maxWidth: isMainDisplay
-                      ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' }
-                      : { xs: '98%', sm: '95%' },
+                    maxWidth: isActive 
+                      ? '100%'
+                      : distanceFromCurrent === -1 || distanceFromCurrent === 1
+                      ? '95%'
+                      : '90%',
                     wordBreak: 'break-word',
                     whiteSpace: 'pre-wrap',
                     overflowWrap: 'break-word',
@@ -1590,6 +1568,7 @@ const LyricsModernView: React.FC<{
                       ? '0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(255,255,255,0.1)'
                       : '0 2px 8px rgba(0,0,0,0.2)',
                     willChange: 'opacity, transform, filter',
+                    fontWeight: 'var(--font-weight-black, 700)',
                   }}
                 >
                   {line.text}
