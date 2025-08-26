@@ -22,6 +22,7 @@ interface PrivacyFormProps {
 interface PrivacySettings {
   music_privacy: number;
   music_display_mode: string;
+  lyrics_display_mode: string;
   static_music_id?: number;
   current_music_id?: number;
   current_music_updated_at?: string;
@@ -40,6 +41,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
   const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
     music_privacy: 0,
     music_display_mode: 'static',
+    lyrics_display_mode: 'no',
   });
 
   const [profilePrivacySettings, setProfilePrivacySettings] = useState<ProfilePrivacySettings>({
@@ -64,6 +66,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
         setPrivacySettings({
           music_privacy: data.music_privacy || 0,
           music_display_mode: data.music_display_mode || 'static',
+          lyrics_display_mode: data.lyrics_display_mode || 'no',
           static_music_id: data.static_music?.id,
         });
       } else {
@@ -100,6 +103,40 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
   const handleMusicDisplayModeChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const newMode = event.target.value;
     await updatePrivacySettings({ music_display_mode: newMode });
+  };
+
+  const handleLyricsDisplayModeToggle = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      
+      const response = await fetch('/api/user/settings/lyrics-display-mode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setPrivacySettings(prev => ({ 
+          ...prev,
+          lyrics_display_mode: data.lyrics_display_mode 
+        }));
+        setSuccess('Режим отображения лириков обновлен');
+        onSuccess?.();
+        
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(data.error || 'Не удалось обновить режим отображения лириков');
+      }
+    } catch (err) {
+      console.error('Error updating lyrics display mode:', err);
+      setError('Ошибка при обновлении режима отображения лириков');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleProfilePrivacyToggle = async () => {
@@ -311,6 +348,49 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
             )}
           </Box>
         )}
+      </Box>
+
+      <Divider sx={{ my: 3 }} />
+
+      {/* Режим отображения лириков */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
+          Отображение лириков
+        </Typography>
+        
+        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Показывать текст песни в профиле
+              </Typography>
+              
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                Для отображения текста у песни должен быть синхронизированный текст (лирические строки).
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                {privacySettings.lyrics_display_mode === 'lyrics' 
+                  ? 'В профиле будут отображаться строки лириков текущего трека'
+                  : 'В профиле будет отображаться только название трека'
+                }
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {saving && <CircularProgress size={16} />}
+              <Switch
+                checked={privacySettings.lyrics_display_mode === 'lyrics'}
+                onChange={handleLyricsDisplayModeToggle}
+                disabled={saving}
+              />
+            </Box>
+          </Box>
+        </Paper>
       </Box>
 
       {saving && (
