@@ -662,13 +662,43 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
       }}
     >
       <PlayerContainer dominantColor={dominantColor}>
-        {/* Header */}
-        <PlayerHeader
-          onClose={onClose}
-          onOpenLyricsEditor={handleOpenLyricsEditor}
-          showLyricsEditor={showLyricsEditor}
-          theme={theme}
-        />
+        {/* Fixed Header Buttons */}
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: { xs: '16px 20px', sm: '20px 24px', md: '24px 32px' },
+            pointerEvents: 'none',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, pointerEvents: 'auto' }}>
+            <CloseButton onClick={onClose}>
+              <KeyboardArrowDownIcon />
+            </CloseButton>
+          </Box>
+
+          <Box sx={{ display: 'flex', gap: 1, pointerEvents: 'auto' }}>
+            <IconButton
+              onClick={handleOpenLyricsEditor}
+              sx={{
+                color: showLyricsEditor
+                  ? theme.palette.primary.main
+                  : 'rgba(255,255,255,0.8)',
+                backgroundColor: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)' },
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Box>
+        </Box>
 
         {/* Main Content */}
         <Box
@@ -695,7 +725,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
           >
             {/* Album Art or Lyrics Display */}
             <AlbumArtContainer sx={{ 
-              minHeight: '350px', 
+              minHeight: isMobile && lyricsDisplayMode ? '300px' : '350px', 
               width: '100%',
               flex: isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto',
             }}>
@@ -704,8 +734,9 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                   key='lyrics-display-mobile'
                   sx={{
                     width: '100%',
-                    height: '100%',
-                    minHeight: '350px',
+                    height: '50vh',
+                    maxHeight: '50vh',
+                    minHeight: '300px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -862,20 +893,32 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 flex: '0 0 50%',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: '100%',
+                height: '100vh',
+                maxHeight: '100vh',
                 paddingLeft: '32px',
                 paddingRight: '16px',
+                overflow: 'hidden',
               }}
             >
-              <LyricsModernView
-                lyricsData={lyricsData}
-                loading={loadingLyrics}
-                currentTime={currentTime}
-                dominantColor={dominantColor}
-                theme={theme}
-                filteredLines={filteredLines}
-                isMainDisplay={true}
-              />
+              <Box
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  maxHeight: '100%',
+                  overflow: 'hidden',
+                  position: 'relative',
+                }}
+              >
+                <LyricsModernView
+                  lyricsData={lyricsData}
+                  loading={loadingLyrics}
+                  currentTime={currentTime}
+                  dominantColor={dominantColor}
+                  theme={theme}
+                  filteredLines={filteredLines}
+                  isMainDisplay={true}
+                />
+              </Box>
             </Box>
           )}
         </Box>
@@ -1127,9 +1170,7 @@ const LyricsLine: React.FC<{
               : { xs: '0.9rem', sm: '1rem' },
             fontWeight: 400,
             ...baseStyles,
-            maxWidth: isMainDisplay
-              ? { xs: '90%', sm: '85%', md: '80%', lg: '70%' }
-              : { xs: '94%', sm: '90%' },
+            maxWidth: '100%',
             position: 'static',
           }}
         >
@@ -1161,9 +1202,8 @@ const LyricsLine: React.FC<{
               : { xs: '0.7rem', sm: '0.8rem' },
             fontWeight: 400,
             ...baseStyles,
-            maxWidth: isMainDisplay
-              ? { xs: '80%', sm: '75%', md: '70%', lg: '60%' }
-              : { xs: '90%', sm: '85%' },
+            maxWidth: '100%',
+
             position: 'static',
           }}
         >
@@ -1195,9 +1235,7 @@ const LyricsLine: React.FC<{
               : { xs: '0.8rem', sm: '0.9rem' },
             fontWeight: 400,
             ...baseStyles,
-            maxWidth: isMainDisplay
-              ? { xs: '85%', sm: '80%', md: '75%', lg: '65%' }
-              : { xs: '92%', sm: '88%' },
+            maxWidth: '100%',
             position: 'static',
           }}
         >
@@ -1244,9 +1282,8 @@ const StaticLyricsLine: React.FC<{ text: string; index: number; isMainDisplay?: 
       mb: 0,
       textShadow: '0 2px 8px rgba(0,0,0,0.2)',
       width: '100%',
-      maxWidth: isMainDisplay
-        ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' }
-        : { xs: '98%', sm: '95%' },
+      maxWidth: '100%',
+
       margin: '0 auto',
       wordBreak: 'break-word',
       hyphens: 'auto',
@@ -1298,6 +1335,7 @@ const LyricsModernView: React.FC<{
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [fadeOpacity, setFadeOpacity] = useState(1);
   const [isNewLine, setIsNewLine] = useState(false);
+  const [lineHeights, setLineHeights] = useState<number[]>([]);
 
   // Оптимизированное обновление строк с fade эффектом
   const updateCurrentLine = useCallback(
@@ -1326,30 +1364,30 @@ const LyricsModernView: React.FC<{
         }
       }
 
-      // Проверяем время до следующей строки
+      // Плавное изменение opacity при приближении к следующей строке
       if (newLineIndex >= 0 && newLineIndex < filteredLines.length - 1) {
         const nextLineTime = filteredLines[newLineIndex + 1].startTimeMs;
         const timeUntilNext = nextLineTime - currentTimeMs;
         
-        if (timeUntilNext <= 200 && timeUntilNext > 0) {
-          // За 600мс до следующей строки - fade out
-          setFadeOpacity(0);
-        } else if (timeUntilNext > 100) {
+        if (timeUntilNext <= 300 && timeUntilNext > 0) {
+          // Плавное fade out за 300мс до следующей строки
+          const fadeProgress = Math.max(0, 1 - (300 - timeUntilNext) / 300);
+          setFadeOpacity(fadeProgress);
+        } else {
           setFadeOpacity(1);
         }
+      } else {
+        setFadeOpacity(1);
       }
 
       if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
         setCurrentLineIndex(newLineIndex);
-        // При смене строки новая строка появляется с opacity 0.2
-        setFadeOpacity(0);
         setIsNewLine(true);
         
-        // Через небольшую задержку запускаем fade in
+        // Плавный fade in для новой строки
         setTimeout(() => {
-          setFadeOpacity(1);
           setIsNewLine(false);
-        }, 50);
+        }, 100);
       }
     },
     [lyricsData, filteredLines, currentLineIndex]
@@ -1412,7 +1450,7 @@ const LyricsModernView: React.FC<{
       <Box
         className='lyrics-container'
         sx={{
-          width: isMainDisplay ? '95vw' : '100%',
+          width: '100%',
           height: '100%',
           minHeight: '350px',
           display: 'flex',
@@ -1424,63 +1462,142 @@ const LyricsModernView: React.FC<{
           overflow: 'hidden',
         }}
       >
-        {/* Предыдущая строка */}
-        {currentLineIndex > 0 && filteredLines[currentLineIndex - 1] && (
-          <LyricsLine
-            text={filteredLines[currentLineIndex - 1].text}
-            isPrevious={true}
-            isMainDisplay={isMainDisplay}
-            lineKey={filteredLines[currentLineIndex - 1].key}
-          />
-        )}
+        {/* Весь текст создается сразу и поднимается вверх */}
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: `${filteredLines.length * 90}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            transform: `translateY(calc(50% - ${(currentLineIndex * 90) + 45}px))`,
+            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+            gap: '20px',
+          }}
+        >
+          {filteredLines.map((line, index) => {
+            const distanceFromCurrent = index - currentLineIndex;
+            const isActive = index === currentLineIndex;
+            const isNearby = Math.abs(distanceFromCurrent) <= 2;
+            
+            // Определяем стили в зависимости от позиции
+            let lineStyles = {
+              opacity: 0.3,
+              fontSize: isMainDisplay 
+                ? { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
+                : { xs: '0.8rem', sm: '0.9rem' },
+              fontWeight: 400,
+              color: 'rgba(255,255,255,0.3)',
+              filter: 'none',
+              transform: 'scale(0.9)',
+            };
 
-        {/* Предыдущая-предыдущая строка */}
-        {currentLineIndex > 1 && filteredLines[currentLineIndex - 2] && (
-          <LyricsLine
-            text={filteredLines[currentLineIndex - 2].text}
-            isPrevPrev={true}
-            isMainDisplay={isMainDisplay}
-            lineKey={filteredLines[currentLineIndex - 2].key}
-          />
-        )}
+            if (isActive) {
+              lineStyles = {
+                opacity: fadeOpacity,
+                fontSize: isMainDisplay 
+                  ? { xs: '1.8rem', sm: '2.2rem', md: '2.6rem' }
+                  : { xs: '1.4rem', sm: '1.6rem' },
+                fontWeight: 600,
+                color: 'white',
+                filter: 'none',
+                transform: 'scale(1)',
+              };
+            } else if (distanceFromCurrent === -1) {
+              // Предыдущая строка
+              lineStyles = {
+                opacity: 0.6,
+                fontSize: isMainDisplay 
+                  ? { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' }
+                  : { xs: '0.9rem', sm: '1.1rem' },
+                fontWeight: 500,
+                color: 'rgba(255,255,255,0.6)',
+                filter: 'none',
+                transform: 'scale(0.95)',
+              };
+            } else if (distanceFromCurrent === 1) {
+              // Следующая строка
+              lineStyles = {
+                opacity: 0.5,
+                fontSize: isMainDisplay 
+                  ? { xs: '0.9rem', sm: '1.1rem', md: '1.3rem' }
+                  : { xs: '0.8rem', sm: '0.9rem' },
+                fontWeight: 400,
+                color: 'rgba(255,255,255,0.4)',
+                filter: 'none',
+                transform: 'scale(0.92)',
+              };
+            } else if (distanceFromCurrent === -2) {
+              // Предыдущая-предыдущая строка
+              lineStyles = {
+                opacity: 0.3,
+                fontSize: isMainDisplay 
+                  ? { xs: '0.7rem', sm: '0.8rem', md: '0.9rem' }
+                  : { xs: '0.6rem', sm: '0.7rem' },
+                fontWeight: 400,
+                color: 'rgba(255,255,255,0.2)',
+                filter: 'blur(1.5px)',
+                transform: 'scale(0.85)',
+              };
+            } else if (distanceFromCurrent === 2) {
+              // Строка после следующей
+              lineStyles = {
+                opacity: 0.25,
+                fontSize: isMainDisplay 
+                  ? { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
+                  : { xs: '0.7rem', sm: '0.8rem' },
+                fontWeight: 400,
+                color: 'rgba(255,255,255,0.15)',
+                filter: 'none',
+                transform: 'scale(0.88)',
+              };
+            }
 
-        {/* Текущая строка */}
-        {currentLineIndex >= 0 &&
-          currentLineIndex < filteredLines.length &&
-          filteredLines[currentLineIndex] && (
-            <LyricsLine
-              text={filteredLines[currentLineIndex].text}
-              isActive={true}
-              isMainDisplay={isMainDisplay}
-              lineKey={filteredLines[currentLineIndex].key}
-              fadeOpacity={fadeOpacity}
-              isNewLine={isNewLine}
-            />
-          )}
-
-        {/* Следующая строка */}
-        {currentLineIndex < filteredLines.length - 1 &&
-          filteredLines[currentLineIndex + 1] && (
-            <LyricsLine
-              text={filteredLines[currentLineIndex + 1].text}
-              isNext={true}
-              isMainDisplay={isMainDisplay}
-              lineKey={filteredLines[currentLineIndex + 1].key}
-            />
-          )}
-
-        {/* Строка после следующей */}
-        {currentLineIndex < filteredLines.length - 2 &&
-          filteredLines[currentLineIndex + 2] && (
-            <LyricsLine
-              text={filteredLines[currentLineIndex + 2].text}
-              isAfterNext={true}
-              isMainDisplay={isMainDisplay}
-              lineKey={filteredLines[currentLineIndex + 2].key}
-            />
-          )}
-
-
+            return (
+              <Box
+                key={line.key}
+                sx={{
+                  width: '100%',
+                  minHeight: '70px',
+                  height: 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                  padding: '15px 0',
+                  boxSizing: 'border-box',
+                  ...lineStyles,
+                }}
+              >
+                <Typography
+                  variant={isActive ? 'h3' : 'h5'}
+                  sx={{
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
+                    lineHeight: 1,
+                    letterSpacing: isActive ? '-0.02em' : '-0.01em',
+                    textAlign: 'left',
+                    width: '100%',
+                    maxWidth: isMainDisplay
+                      ? { xs: '95%', sm: '90%', md: '85%', lg: '80%' }
+                      : { xs: '98%', sm: '95%' },
+                    wordBreak: 'break-word',
+                    whiteSpace: 'pre-wrap',
+                    overflowWrap: 'break-word',
+                    textShadow: isActive 
+                      ? '0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(255,255,255,0.1)'
+                      : '0 2px 8px rgba(0,0,0,0.2)',
+                    willChange: 'opacity, transform, filter',
+                  }}
+                >
+                  {line.text}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Box>
       </Box>
     );
   }
