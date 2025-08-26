@@ -136,6 +136,14 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     }
   }, [contextVolume]);
 
+  // Сброс времени при смене трека
+  useEffect(() => {
+    if (currentTrack) {
+      setCurrentTime(0);
+      setDragValue(0);
+    }
+  }, [(currentTrack as any)?.id]);
+
   // Обновление времени для синхронизации текстов
   useEffect(() => {
     if (!open || !lyricsData?.has_synced_lyrics || isDragging) return;
@@ -146,8 +154,12 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     const updateTimeForLyrics = () => {
       if ((audioRef as any)?.current && !(audioRef as any).current.paused) {
         const actualCurrentTime = (audioRef as any).current.currentTime;
-        setCurrentTime(actualCurrentTime);
-        lastTime = actualCurrentTime;
+        
+        // Проверяем, что время не "застряло" на старом значении
+        if (actualCurrentTime !== lastTime || actualCurrentTime === 0) {
+          setCurrentTime(actualCurrentTime);
+          lastTime = actualCurrentTime;
+        }
       }
       rafId = requestAnimationFrame(updateTimeForLyrics);
     };

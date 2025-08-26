@@ -667,6 +667,14 @@ export const MusicProvider = ({ children }) => {
       audioRef.current.src = '';
       nextAudioRef.current.src = '';
 
+      // Принудительно сбрасываем время в audio элементе
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+      }
+      if (nextAudioRef.current) {
+        nextAudioRef.current.currentTime = 0;
+      }
+
       setCurrentTrack(track);
       setCurrentSectionHandler(trackSection);
       setCurrentTime(0);

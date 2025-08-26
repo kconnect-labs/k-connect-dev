@@ -47,6 +47,12 @@ export const usePlayerTime = (open: boolean, audioRef: React.RefObject<HTMLAudio
     }
   }, [contextVolume]);
 
+  // Сброс времени при смене трека
+  useEffect(() => {
+    setCurrentTime(0);
+    setDragValue(0);
+  }, [contextCurrentTime === 0]);
+
   // Обработчики
   const handleTimeChange = useCallback(
     (event: Event, newValue: number | number[]) => {
