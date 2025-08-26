@@ -108,17 +108,15 @@ const formatTime = seconds => {
 };
 // Стилизованные компоненты - оптимизированы для производительности
 const PlayerContainer = memo(
-  styled(Box)(({ theme, dominantColor, coverPath }) => ({
+  styled(Box)(({ theme, dominantColor }) => ({
     position: 'relative',
     width: '100%',
     height: '100vh',
     minHeight: '100vh',
     maxHeight: '100vh',
     background: dominantColor
-      ? `linear-gradient(135deg, ${dominantColor}15 0%, ${dominantColor}08 50%, rgba(0,0,0,0.95) 100%)`
-      : 'linear-gradient(135deg, rgba(140,82,255,0.1) 0%, rgba(0,0,0,0.95) 100%)',
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
+      ? `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`
+      : 'rgb(87, 63, 135)',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
@@ -130,18 +128,6 @@ const PlayerContainer = memo(
     '@media (max-height: 500px)': {
       height: '100vh',
       minHeight: '100vh',
-    },
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: `url(${coverPath || getFullUrl(defaultCover)}) center/cover`,
-      opacity: 0.55,
-      filter: 'blur(40px)',
-      zIndex: -1,
     },
   }))
 );
@@ -170,11 +156,10 @@ const HeaderSection = memo(
 const CloseButton = memo(
   styled(IconButton)(({ theme }) => ({
     color: 'rgba(255,255,255,0.8)',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    backdropFilter: 'blur(10px)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
     border: '1px solid rgba(255,255,255,0.2)',
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255,0.2)',
+      backgroundColor: 'rgba(255,255,255,0.15)',
       transform: 'scale(1.05)',
     },
     transition: 'all 0.2s ease',
@@ -186,61 +171,45 @@ const AlbumArtContainer = memo(
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
+    flex: '0 0 auto',
     position: 'relative',
+    width: '100%',
+    marginBottom: theme.spacing(3),
   }))
 );
 
 const AlbumArt = memo(
   styled.img(({ theme }) => ({
-    width: 'min(70vw, 24rem)',
-    height: 'min(70vw, 24rem)',
+    width: 'min(80vw, 26rem)',
+    height: 'min(80vw, 26rem)',
     borderRadius: '20px',
-    boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
     objectFit: 'cover',
     border: '1px solid rgba(255,255,255,0.1)',
     transition: 'all 0.3s ease',
-    opacity: 0,
-    transform: 'scale(0.4)',
-    animation: 'albumArtFadeIn 0.6s ease forwards',
-    '&:hover': {
-      transform: 'scale(1.02)',
-      boxShadow: '0 1.5rem 3rem rgba(0,0,0,0.4)',
-    },
-    // Адаптивность по высоте через rem (уменьшено на 25% и добавлены пороги 850 и 800)
+    // Адаптивность по высоте через rem (увеличено на 15% и добавлены пороги 850 и 800)
     '@media (max-height: 850px)': {
-      width: 'min(52.5vw, 16.5rem)',
-      height: 'min(52.5vw, 16.5rem)',
+      width: 'min(67.5vw, 20rem)',
+      height: 'min(67.5vw, 20rem)',
     },
     '@media (max-height: 800px)': {
-      width: 'min(48.75vw, 15.125rem)',
-      height: 'min(48.75vw, 15.125rem)',
+      width: 'min(63.75vw, 18.75rem)',
+      height: 'min(63.75vw, 18.75rem)',
     },
     '@media (max-height: 700px)': {
-      width: 'min(45vw, 13.125rem)',
-      height: 'min(45vw, 13.125rem)',
+      width: 'min(60vw, 17.5rem)',
+      height: 'min(60vw, 17.5rem)',
     },
     '@media (max-height: 600px)': {
-      width: 'min(37.5vw, 10.5rem)',
-      height: 'min(37.5vw, 10.5rem)',
+      width: 'min(52.5vw, 15rem)',
+      height: 'min(52.5vw, 15rem)',
     },
     '@media (max-height: 500px)': {
-      width: 'min(30vw, 8.25rem)',
-      height: 'min(30vw, 8.25rem)',
+      width: 'min(45vw, 12.5rem)',
+      height: 'min(45vw, 12.5rem)',
     },
     '@media (max-height: 400px)': {
-      width: 'min(26.25vw, 6.75rem)',
-      height: 'min(26.25vw, 6.75rem)',
-    },
-    '@keyframes albumArtFadeIn': {
-      '0%': {
-        opacity: 0,
-        transform: 'scale(0.4)',
-      },
-      '100%': {
-        opacity: 1,
-        transform: 'scale(0.9)',
-      },
+      width: 'min(37.5vw, 10rem)',
+      height: 'min(37.5vw, 10rem)',
     },
   }))
 );
@@ -249,13 +218,14 @@ const TrackInfo = memo(
   styled(Box)(({ theme }) => ({
     textAlign: 'center',
     maxWidth: '600px',
-    marginBottom: theme.spacing(1.5), // 2 * 0.75 = 1.5
+    marginBottom: theme.spacing(2),
+    flex: '0 0 auto',
     // адаптивность по высоте
     '@media (max-height: 850px)': {
-      marginBottom: theme.spacing(1.125), // 1.5 * 0.75 = 1.125
+      marginBottom: theme.spacing(1.5),
     },
     '@media (max-height: 800px)': {
-      marginBottom: theme.spacing(0.9375), // 1.25 * 0.75 = 0.9375
+      marginBottom: theme.spacing(1.25),
     },
   }))
 );
@@ -492,9 +462,8 @@ const PlayerHeader = memo(
             color: showLyricsEditor
               ? theme.palette.primary.main
               : 'rgba(255,255,255,0.8)',
-            backgroundColor: 'rgba(255,255,255,0.1)',
-            backdropFilter: 'blur(10px)',
-            '&:hover': { backgroundColor: 'rgba(255,255,255,0.2)' },
+            backgroundColor: 'rgba(255,255,255,0.08)',
+            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)' },
           }}
         >
           <EditIcon />
@@ -516,7 +485,9 @@ const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => {
   }, [currentTrack.artist]);
 
   return (
-    <TrackInfo>
+    <TrackInfo
+
+    >
       <TrackTitle variant='h3'>{currentTrack.title}</TrackTitle>
       <Box
         sx={{
@@ -569,7 +540,7 @@ const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => {
           </Box>
         ))}
       </Box>
-      {currentTrack.album && (
+      {/* {currentTrack.album && (
         <Typography
           variant='body1'
           sx={{
@@ -579,7 +550,7 @@ const PlayerTrackInfo = memo(({ currentTrack, onArtistClick }) => {
         >
           {currentTrack.album}
         </Typography>
-      )}
+      )} */}
     </TrackInfo>
   );
 });
@@ -737,10 +708,35 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
       extractDominantColor(
         currentTrack.cover_path ||
           '/static/uploads/system/album_placeholder.jpg',
-        color => {
-          setDominantColor(color);
+        colorString => {
+          if (colorString) {
+            // Парсим строку "r, g, b" в объект
+            const [r, g, b] = colorString.split(',').map(c => parseInt(c.trim()));
+            
+            // Проверяем, не является ли цвет слишком светлым или белым
+            const brightness = (r + g + b) / 3;
+            const isTooLight = brightness > 180; // Уменьшил порог с 200 до 180
+            const isTooWhite = r > 220 && g > 220 && b > 220; // Проверяем на белый цвет
+            
+            if (isTooLight || isTooWhite) {
+              // Используем темный цвет по умолчанию
+              setDominantColor({ r: 87, g: 63, b: 135 });
+            } else {
+              // Затемняем цвета для более приглушенного матового фона
+              const darkenedColor = {
+                r: Math.max(20, Math.round(r * 0.6)), // Затемняем на 40% и устанавливаем минимум 20
+                g: Math.max(20, Math.round(g * 0.6)),
+                b: Math.max(20, Math.round(b * 0.6)),
+              };
+              setDominantColor(darkenedColor);
+            }
+          } else {
+            setDominantColor(null);
+          }
         }
       );
+    } else {
+      setDominantColor(null);
     }
   }, [currentTrack?.cover_path]); // Только при изменении cover_path
 
@@ -1212,7 +1208,7 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
 
   return (
     <PlayerDialog open={open} onClose={onClose}>
-      <PlayerContainer dominantColor={dominantColor} coverPath={coverPath}>
+      <PlayerContainer dominantColor={dominantColor}>
         {/* Header */}
         <PlayerHeader
           onClose={onClose}
@@ -1227,7 +1223,7 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            justifyContent: 'flex-start',
+            justifyContent: isMobile ? 'flex-start' : 'center',
             alignItems: 'center',
             padding: theme.spacing(0, 4),
           }}
@@ -1251,47 +1247,49 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
             onArtistClick={goToArtist}
           />
 
-          {/* Progress Bar */}
-          <ProgressSlider
-            currentTime={currentTime}
-            duration={duration}
-            onTimeChange={handleTimeChange}
-            formattedCurrentTime={formattedCurrentTime}
-            formattedDuration={formattedDuration}
-          />
-
-          {/* Main Controls */}
-          <MainPlayControls
-            isShuffled={isShuffled}
-            toggleShuffle={toggleShuffle}
-            prevTrack={prevTrack}
-            isPlaying={isPlaying}
-            togglePlay={togglePlay}
-            nextTrack={nextTrack}
-            repeatMode={repeatMode}
-            toggleRepeat={toggleRepeat}
-          />
-
-          {/* Secondary Controls */}
-          <SecondaryPlayControls
-            currentTrack={currentTrack}
-            onToggleLike={handleToggleLike}
-            lyricsData={lyricsData}
-            lyricsDisplayMode={lyricsDisplayMode}
-            onToggleLyricsDisplay={handleToggleLyricsDisplay}
-            onCopyLink={handleCopyLink}
-          />
-
-          {/* Desktop Volume Control */}
-          {!isMobile && (
-            <VolumeControls
-              isMuted={isMuted}
-              volume={volume}
-              volumePercentage={volumePercentage}
-              onToggleMute={handleToggleMute}
-              onVolumeChange={handleVolumeChange}
+          {/* Controls Section */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              flex: '0 0 auto',
+            }}
+          >
+            {/* Progress Bar */}
+            <ProgressSlider
+              currentTime={currentTime}
+              duration={duration}
+              onTimeChange={handleTimeChange}
+              formattedCurrentTime={formattedCurrentTime}
+              formattedDuration={formattedDuration}
             />
-          )}
+
+            {/* Main Controls */}
+            <MainPlayControls
+              isShuffled={isShuffled}
+              toggleShuffle={toggleShuffle}
+              prevTrack={prevTrack}
+              isPlaying={isPlaying}
+              togglePlay={togglePlay}
+              nextTrack={nextTrack}
+              repeatMode={repeatMode}
+              toggleRepeat={toggleRepeat}
+            />
+
+            {/* Secondary Controls */}
+            <SecondaryPlayControls
+              currentTrack={currentTrack}
+              onToggleLike={handleToggleLike}
+              lyricsData={lyricsData}
+              lyricsDisplayMode={lyricsDisplayMode}
+              onToggleLyricsDisplay={handleToggleLyricsDisplay}
+              onCopyLink={handleCopyLink}
+            />
+          </Box>
+
+
         </Box>
 
         {/* Lyrics Panel - Only for Editor */}
@@ -1303,10 +1301,7 @@ const FullScreenPlayerCore = memo(({ open, onClose, ...props }) => {
               left: 0,
               right: 0,
               height: '90%',
-              background: dominantColor
-                ? `linear-gradient(135deg, ${dominantColor}20 0%, ${dominantColor}10 50%, rgba(0,0,0,0.9) 100%)`
-                : 'rgba(10, 10, 10, 0.8)',
-              backdropFilter: 'blur(60px)',
+              background: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
               borderTop: '1px solid rgba(255,255,255,0.1)',
               padding: theme.spacing(3),
               overflow: 'auto',
@@ -1548,7 +1543,7 @@ const LyricsEditorContent = memo(
     onOpenTimestampEditor,
   }) => {
     return (
-      <Box sx={{ width: '100%', zIndex: 99000 }}>
+      <Box sx={{ width: '100%', zIndex: 99000,  }}>
         <Typography
           variant='h5'
           sx={{
@@ -1628,12 +1623,12 @@ const LyricsEditorContent = memo(
             onClick={handleOpenMenu}
             startIcon={<ScheduleIcon />}
             sx={{
-              borderColor: getButtonBackgroundColor,
-              color: getActiveColor,
-              backgroundColor: 'transparent',
+              borderColor: 'rgba(255,255,255,0.3)',
+              color: 'rgba(255,255,255,0.8)',
+              backgroundColor: 'rgba(255,255,255,0.08)',
               '&:hover': {
-                backgroundColor: getButtonBackgroundColor,
-                borderColor: getActiveColor,
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderColor: 'rgba(255,255,255,0.5)',
               },
             }}
           >
@@ -1645,9 +1640,10 @@ const LyricsEditorContent = memo(
               onClick={onCancel}
               sx={{
                 color: 'rgba(255,255,255,0.7)',
+                backgroundColor: 'rgba(255,255,255,0.08)',
                 '&:hover': {
                   color: 'white',
-                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backgroundColor: 'rgba(255,255,255,0.15)',
                 },
               }}
             >
@@ -1666,13 +1662,14 @@ const LyricsEditorContent = memo(
                 )
               }
               sx={{
-                backgroundColor: getActiveColor,
-                boxShadow: dominantColor
-                  ? `0 4px 12px rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.3)`
-                  : undefined,
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                color: 'white',
                 '&:hover': {
-                  backgroundColor: getActiveColor,
-                  filter: 'brightness(1.1)',
+                  backgroundColor: 'rgba(255,255,255,0.25)',
+                },
+                '&:disabled': {
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  color: 'rgba(255,255,255,0.5)',
                 },
               }}
             >
@@ -1696,8 +1693,7 @@ const LyricsEditorContent = memo(
           }}
           PaperProps={{
             style: {
-              backgroundColor: 'rgba(25, 25, 25, 0.95)',
-              backdropFilter: 'blur(12px)',
+              backgroundColor: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
               border: '1px solid rgba(255, 255, 255, 0.12)',
               borderRadius: '12px',
               color: 'white',
@@ -2085,6 +2081,7 @@ const LyricsModernView = memo(
             justifyContent: 'center',
             alignItems: 'center',
             height: isMainDisplay ? '100%' : 400,
+            minHeight: isMainDisplay ? '350px' : 400,
             width: '100%',
           }}
         >
@@ -2114,6 +2111,7 @@ const LyricsModernView = memo(
             alignItems: 'center',
             justifyContent: 'center',
             height: '100%',
+            minHeight: '350px',
           }}
         >
           <Typography variant='h6' sx={{ mb: 2 }}>
@@ -2131,7 +2129,9 @@ const LyricsModernView = memo(
           sx={{
             width: '100%',
             height: '100%',
+            minHeight: '350px',
             display: 'flex',
+            maxWidth: '850px',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
@@ -2189,6 +2189,7 @@ const LyricsModernView = memo(
           sx={{
             width: '100%',
             height: '100%',
+            minHeight: '350px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
@@ -2253,7 +2254,7 @@ const AlbumArtLyricsContainer = memo(
     currentTrack,
     filteredLines,
   }) => (
-    <AlbumArtContainer sx={{ maxHeight: '350px', width: '100%' }}>
+    <AlbumArtContainer sx={{ minHeight: '350px', width: '100%' }}>
       {lyricsDisplayMode &&
       (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
         <Box
@@ -2261,6 +2262,7 @@ const AlbumArtLyricsContainer = memo(
           sx={{
             width: '100%',
             height: '100%',
+            minHeight: '350px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
