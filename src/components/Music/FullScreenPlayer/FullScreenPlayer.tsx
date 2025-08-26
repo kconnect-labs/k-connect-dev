@@ -1491,7 +1491,7 @@ const LyricsModernView: React.FC<{
       <Box
         className='lyrics-container'
         sx={{
-          width: isMainDisplay ? '95vw' : '100%',
+          width: '100%',
           height: '100%',
           minHeight: '350px',
           maxHeight: '350px',
