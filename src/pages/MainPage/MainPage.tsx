@@ -13,7 +13,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { usePostActions } from '../User/ProfilePage/hooks/usePostActions';
 import StyledTabs from '../../UIKIT/StyledTabs';
 import { Post } from '../../components/Post';
-import RepostItem from '../../components/RepostItem';
+
 import PostSkeleton from '../../components/Post/PostSkeleton';
 import CreatePost from '../../components/CreatePost/CreatePost';
 import UpdateInfo from '../../components/Updates/UpdateInfo';
@@ -156,25 +156,16 @@ const MainPage: React.FC = React.memo(() => {
               </>
             ) : posts.length > 0 ? (
               <Box sx={{ mt: 0 }}>
-                {posts.map((post, index) =>
-                  post.is_repost ? (
-                    <RepostItem 
-                      key={`${post.id}-${index}`} 
-                      repost={post}
-                      onDelete={handleDeletePost}
-                      onOpenLightbox={handleOpenLightbox}
-                    />
-                  ) : (
-                    <Post
-                      key={`${post.id}-${index}`}
-                      post={post}
-                      onDelete={handleDeletePost}
-                      onOpenLightbox={handleOpenLightbox}
-                      isPinned={false}
-                      statusColor={null}
-                    />
-                  )
-                )}
+                {posts.map((post, index) => (
+                  <Post
+                    key={`${post.id}-${index}`}
+                    post={post}
+                    onDelete={handleDeletePost}
+                    onOpenLightbox={handleOpenLightbox}
+                    isPinned={false}
+                    statusColor={null}
+                  />
+                ))}
 
                 {hasMore && (
                   <Box

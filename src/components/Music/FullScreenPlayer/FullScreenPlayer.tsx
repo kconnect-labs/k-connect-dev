@@ -719,15 +719,15 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               flexDirection: 'column',
               flex: isMobile || !lyricsDisplayMode ? 1 : '0 0 50%',
               alignItems: 'center',
-              justifyContent: isMobile ? 'flex-start' : 'center',
+              justifyContent: isMobile && lyricsDisplayMode ? 'flex-end' : (isMobile ? 'flex-start' : 'center'),
               minHeight: isMobile ? 'auto' : '100%',
             }}
           >
             {/* Album Art or Lyrics Display */}
             <AlbumArtContainer sx={{ 
-              minHeight: isMobile && lyricsDisplayMode ? '300px' : '350px', 
+              minHeight: isMobile && lyricsDisplayMode ? '0' : '350px', 
               width: '100%',
-              flex: isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto',
+              flex: isMobile && lyricsDisplayMode ? '1 1 auto' : (isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto'),
               marginTop: isMobile && !lyricsDisplayMode ? '99px' : '0px',
             }}>
               {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
@@ -735,8 +735,8 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                   key='lyrics-display-mobile'
                   sx={{
                     width: '100%',
-                    height: '50vh',
-                    maxHeight: '50vh',
+                    height: '65vh',
+                    maxHeight: '65vh',
                     minHeight: '300px',
                     display: 'flex',
                     alignItems: 'center',
@@ -761,13 +761,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               )}
             </AlbumArtContainer>
 
-            {/* Track Info */}
-            <PlayerTrackInfo
-              currentTrack={currentTrack}
-              onArtistClick={goToArtist}
-            />
-
-                        {/* Controls Section */}
+            {/* Track Info and Controls Container */}
             <Box
               sx={{
                 display: 'flex',
@@ -775,8 +769,25 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 alignItems: 'center',
                 width: '100%',
                 flex: '0 0 auto',
+                paddingBottom: isMobile && lyricsDisplayMode ? '20px' : '0',
               }}
             >
+              {/* Track Info */}
+              <PlayerTrackInfo
+                currentTrack={currentTrack}
+                onArtistClick={goToArtist}
+              />
+
+              {/* Controls Section */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  width: '100%',
+                  flex: '0 0 auto',
+                }}
+              >
               {/* Progress Bar */}
               <ProgressContainer>
                 <Slider
@@ -883,6 +894,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 </ControlButton>
               </SecondaryControls>
             </Box>
+          </Box>
           </Box>
 
           {/* Right Side - Lyrics Display (Desktop only) */}
@@ -1042,7 +1054,6 @@ const LyricsLine: React.FC<{
   isPrevPrev?: boolean;
   lineKey: string;
   isMainDisplay?: boolean;
-  fadeOpacity?: number;
   isNewLine?: boolean;
 }> = memo(({
   text,
@@ -1053,13 +1064,12 @@ const LyricsLine: React.FC<{
   isPrevPrev,
   lineKey,
   isMainDisplay,
-  fadeOpacity = 1,
   isNewLine = false,
 }) => {
   const baseStyles = {
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-    lineHeight: isActive ? 1.2 : 1.3,
+    lineHeight: isActive ? 1.2 : 1.1,
     letterSpacing: isActive ? '-0.02em' : '-0.01em',
     textShadow: 'none',
     width: '100%',
@@ -1085,10 +1095,9 @@ const LyricsLine: React.FC<{
           sx={{
             ...baseStyles,
             top: '50%',
-            opacity: fadeOpacity,
+            opacity: 1,
             filter: 'none',
             transform: 'translateY(-50%) scale(1)',
-            transition: isNewLine ? 'opacity 0.4s ease-out' : 'opacity 0.3s ease-out',
           }}
         >
         <Typography
@@ -1259,7 +1268,6 @@ const LyricsLine: React.FC<{
     prevProps.isPrevPrev === nextProps.isPrevPrev &&
     prevProps.lineKey === nextProps.lineKey &&
     prevProps.isMainDisplay === nextProps.isMainDisplay &&
-    prevProps.fadeOpacity === nextProps.fadeOpacity &&
     prevProps.isNewLine === nextProps.isNewLine
   );
 });
@@ -1278,7 +1286,7 @@ const StaticLyricsLine: React.FC<{ text: string; index: number; isMainDisplay?: 
       fontWeight: 500,
       fontFamily:
         '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
-      lineHeight: 1.4,
+      lineHeight: 1.1,
       letterSpacing: '-0.01em',
       mb: 0,
       textShadow: '0 2px 8px rgba(0,0,0,0.2)',
@@ -1334,11 +1342,10 @@ const LyricsModernView: React.FC<{
   isMainDisplay = false,
 }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [fadeOpacity, setFadeOpacity] = useState(1);
   const [isNewLine, setIsNewLine] = useState(false);
   const [lineHeights, setLineHeights] = useState<number[]>([]);
 
-  // Оптимизированное обновление строк с fade эффектом
+  // Оптимизированное обновление строк
   const updateCurrentLine = useCallback(
     (time: number) => {
       if (
@@ -1365,27 +1372,10 @@ const LyricsModernView: React.FC<{
         }
       }
 
-      // Плавное изменение opacity при приближении к следующей строке
-      if (newLineIndex >= 0 && newLineIndex < filteredLines.length - 1) {
-        const nextLineTime = filteredLines[newLineIndex + 1].startTimeMs;
-        const timeUntilNext = nextLineTime - currentTimeMs;
-        
-        if (timeUntilNext <= 300 && timeUntilNext > 0) {
-          // Плавное fade out за 300мс до следующей строки
-          const fadeProgress = Math.max(0, 1 - (300 - timeUntilNext) / 300);
-          setFadeOpacity(fadeProgress);
-        } else {
-          setFadeOpacity(1);
-        }
-      } else {
-        setFadeOpacity(1);
-      }
-
       if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
         setCurrentLineIndex(newLineIndex);
         setIsNewLine(true);
         
-        // Плавный fade in для новой строки
         setTimeout(() => {
           setIsNewLine(false);
         }, 100);
@@ -1468,14 +1458,14 @@ const LyricsModernView: React.FC<{
           sx={{
             position: 'relative',
             width: '100%',
-            height: `${filteredLines.length * 90}px`,
+            height: `${filteredLines.length * (isMainDisplay ? 130 : 115)}px`,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            transform: `translateY(calc(50% - ${(currentLineIndex * 90) + 45}px))`,
-            transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            gap: '20px',
+            transform: `translateY(calc(50% - ${(currentLineIndex * (isMainDisplay ? 130 : 115)) + (isMainDisplay ? 65 : 57.5)}px))`,
+            transition: 'transform 2s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            gap: isMainDisplay ? '40px' : '25px',
           }}
         >
           {filteredLines.map((line, index) => {
@@ -1497,7 +1487,7 @@ const LyricsModernView: React.FC<{
 
             if (isActive) {
               lineStyles = {
-                opacity: fadeOpacity,
+                opacity: 1,
                 fontSize: isMainDisplay 
                   ? { xs: '1.8rem', sm: '2.2rem', md: '2.6rem' }
                   : { xs: '1.4rem', sm: '1.6rem' },
@@ -1537,14 +1527,14 @@ const LyricsModernView: React.FC<{
                 key={line.key}
                 sx={{
                   width: '100%',
-                  minHeight: '70px',
+                  minHeight: isMainDisplay ? '90px' : '70px',
                   height: 'auto',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
-                  transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  padding: '15px 0',
+                  transition: 'all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1)',
+                  padding: isMainDisplay ? '20px 0' : '15px 0',
                   boxSizing: 'border-box',
                   ...lineStyles,
                 }}
@@ -1553,7 +1543,7 @@ const LyricsModernView: React.FC<{
                   variant={isActive ? 'h3' : 'h5'}
                   sx={{
                     fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
-                    lineHeight: 0.8,
+                    lineHeight: 1.2,
                     letterSpacing: isActive ? '-0.02em' : '-0.01em',
                     textAlign: 'left',
                     width: '100%',

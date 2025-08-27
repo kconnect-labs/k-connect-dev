@@ -67,7 +67,30 @@ export const formatVideoUrl = (url: string, postId?: string) => {
     return url;
   }
 
+  if (url.startsWith('/static/')) {
+    return url;
+  }
+
   return `/static/uploads/post/${postId}/${url}`;
+};
+
+// Функция для форматирования URL превьюшки видео
+export const formatVideoPosterUrl = (poster: string, postId?: string) => {
+  if (!poster) return '/static/images/video_placeholder.png';
+
+  if (poster.startsWith('http') || poster.startsWith('//')) {
+    return poster;
+  }
+
+  if (poster.startsWith('/static/')) {
+    return poster;
+  }
+
+  if (poster.startsWith('/static/uploads/post/')) {
+    return poster;
+  }
+
+  return `/static/uploads/post/${postId}/${poster}`;
 };
 
 // Music functions

@@ -274,11 +274,17 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const [isSeeking, setIsSeeking] = useState(false);
   const [seekValue, setSeekValue] = useState(0);
+  const [posterError, setPosterError] = useState(false);
 
   const isMobile = useMemo(() => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
            window.innerWidth < 768;
   }, []);
+
+  // Сбрасываем ошибку превьюшки при изменении poster
+  useEffect(() => {
+    setPosterError(false);
+  }, [poster]);
 
   const showControls = useCallback(() => {
     setPlayerState(prev => ({ ...prev, showControls: true }));
@@ -551,10 +557,15 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
     >
       <VideoElement
         ref={videoRef}
-        poster={poster}
+        poster={posterError ? '/static/images/video_placeholder.png' : poster}
         loop={loop}
         playsInline
         preload="metadata"
+        onError={(e) => {
+          if (e.target === videoRef.current) {
+            setPosterError(true);
+          }
+        }}
       >
         <source src={videoUrl} type="video/mp4" />
         Ваш браузер не поддерживает HTML5 видео.

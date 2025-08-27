@@ -82,12 +82,12 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
 
   const fetchProfilePrivacySettings = async () => {
     try {
-      const response = await fetch('/api/profile/privacy');
+      const response = await fetch('/api/user/settings/privacy');
       const data = await response.json();
       
       if (data.success) {
         setProfilePrivacySettings({
-          isPrivate: data.isPrivate || false,
+          isPrivate: data.is_private || false,
         });
       }
     } catch (err) {
@@ -144,13 +144,13 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
       setSaving(true);
       setError(null);
       
-      const response = await fetch('/api/profile/privacy', {
+      const response = await fetch('/api/user/settings/privacy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          isPrivate: !profilePrivacySettings.isPrivate,
+          is_private: !profilePrivacySettings.isPrivate,
         }),
       });
       

@@ -102,6 +102,7 @@ import {
   processImageDimensions,
   hasVideo,
   formatVideoUrl,
+  formatVideoPosterUrl,
   getCoverPath,
   formatDuration,
   truncateText,
@@ -1892,7 +1893,13 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       >
                         <VideoPlayer
                           videoUrl={post.original_post.video}
-                          sx={{ maxHeight: '200px' }}
+                          poster={
+                            post.original_post.video_poster 
+                              ? formatVideoPosterUrl(post.original_post.video_poster, post.original_post.id)
+                              : (processImages(post.original_post, mediaError).length > 0
+                                ? formatVideoUrl(processImages(post.original_post, mediaError)[0])
+                                : '/static/images/video_placeholder.png')
+                          }
                           onError={() => {
                             console.error(
                               'Repost video failed to load:',
@@ -2094,9 +2101,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                                                        <VideoPlayer
                                      videoUrl={post.video}
                                      poster={
-                                       processImages(post, mediaError).length > 0
+                        post.video_poster 
+                          ? formatVideoPosterUrl(post.video_poster, post.id)
+                          : (processImages(post, mediaError).length > 0
                                          ? formatVideoUrl(processImages(post, mediaError)[0])
-                                         : undefined
+                            : '/static/images/video_placeholder.png')
                                      }
                       onError={() => handleVideoError(post.video)}
                     />
