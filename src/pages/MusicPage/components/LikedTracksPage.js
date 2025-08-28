@@ -47,7 +47,7 @@ const HeaderCard = styled(Card)(({ theme }) => ({
   border: '1px solid rgba(255, 255, 255, 0.1)',
 }));
 
-const TrackListItem = styled(ListItem)(({ theme, isActive }) => ({
+const TrackListItem = styled(ListItem)(({ theme, isActive, ...props }) => ({
   borderRadius: 12,
   background: isActive
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
@@ -320,11 +320,12 @@ const LikedTracksPage = ({ onBack }) => {
 
                   <ListItemText
                     primary={
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                      <span
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                       >
                         <Typography
                           variant='body1'
+                          component='span'
                           fontWeight={isCurrentTrack ? 600 : 500}
                           sx={{
                             color: isCurrentTrack
@@ -337,12 +338,13 @@ const LikedTracksPage = ({ onBack }) => {
                         >
                           {track.title}
                         </Typography>
-                      </Box>
+                      </span>
                     }
                     secondary={
-                      <Box>
+                      <span>
                         <Typography
                           variant='body2'
+                          component='span'
                           color='text.secondary'
                           sx={{
                             overflow: 'hidden',
@@ -352,24 +354,25 @@ const LikedTracksPage = ({ onBack }) => {
                         >
                           {track.artist}
                         </Typography>
-                        <Box
-                          sx={{
+                        <span
+                          style={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 1,
-                            mt: 0.5,
+                            gap: '8px',
+                            marginTop: '4px',
                           }}
                         >
                           <AccessTimeIcon
                             sx={{ fontSize: 14, color: 'text.secondary' }}
                           />
-                          <Typography variant='caption' color='text.secondary'>
+                          <Typography variant='caption' component='span' color='text.secondary'>
                             {formatDuration(track.duration)}
                           </Typography>
                           {track.genre && (
                             <>
                               <Typography
                                 variant='caption'
+                                component='span'
                                 color='text.secondary'
                               >
                                 •
@@ -387,8 +390,8 @@ const LikedTracksPage = ({ onBack }) => {
                               />
                             </>
                           )}
-                        </Box>
-                      </Box>
+                        </span>
+                      </span>
                     }
                   />
 

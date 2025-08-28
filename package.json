@@ -50,6 +50,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-insta-stories": "^2.8.0",
     "react-ios-icons": "^1.1.1",
+    "react-konva": "^19.0.7",
     "react-lottie-player": "^2.1.0",
     "react-lrc": "^3.2.1",
     "react-markdown": "^10.1.0",

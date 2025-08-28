@@ -119,6 +119,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
       const audioTime = (audioRef as any).current.currentTime;
       return audioTime;
     }
+    // Используем время из локального состояния
     return isNaN(currentTime) ? 0 : currentTime;
   }, [currentTime, dragValue, isDragging, audioRef]);
   const safeDuration = useMemo(() => {
@@ -126,19 +127,24 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     if ((audioRef as any)?.current && !isNaN((audioRef as any).current.duration) && (audioRef as any).current.duration > 0) {
       return (audioRef as any).current.duration;
     }
-    return isNaN(duration) ? 100 : duration;
+    // Если длительность из контекста больше 0, используем её
+    if (duration > 0) {
+      return duration;
+    }
+    // Fallback значение
+    return 100;
   }, [duration, audioRef]);
   const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
 
   // Синхронизация с контекстом
   useEffect(() => {
-    if (contextCurrentTime !== undefined) {
+    if (contextCurrentTime !== undefined && contextCurrentTime >= 0) {
       setCurrentTime(contextCurrentTime);
     }
   }, [contextCurrentTime]);
 
   useEffect(() => {
-    if (contextDuration !== undefined) {
+    if (contextDuration !== undefined && contextDuration > 0) {
       setDuration(contextDuration);
     }
   }, [contextDuration]);
@@ -156,8 +162,14 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     const updateTime = () => {
       if ((audioRef as any)?.current) {
         const audioTime = (audioRef as any).current.currentTime;
+        const audioDuration = (audioRef as any).current.duration;
+        
         if (!isNaN(audioTime)) {
           setCurrentTime(audioTime);
+        }
+        
+        if (!isNaN(audioDuration) && audioDuration > 0) {
+          setDuration(audioDuration);
         }
       }
     };
@@ -174,6 +186,8 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     if (currentTrack) {
       setCurrentTime(0);
       setDragValue(0);
+      // Также сбрасываем длительность при смене трека
+      setDuration(0);
     }
   }, [(currentTrack as any)?.id]);
 
@@ -205,7 +219,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         
         // Проверяем, что время не "застряло" на старом значении
         if (actualCurrentTime !== lastTime || actualCurrentTime === 0) {
-          setCurrentTime(actualCurrentTime);
+          // Обновляем время только для лириков, не перезаписывая основное состояние
           lastTime = actualCurrentTime;
         }
       }

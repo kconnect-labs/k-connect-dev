@@ -74,33 +74,31 @@ import * as utils from './utils';
 import * as constants from './constants';
 
 // Стилизованные компоненты
-const PlayerContainer = memo(
-  styled(Box)<{ dominantColor?: any }>`
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    min-height: 100vh;
-    max-height: 100vh;
-    background: ${({ dominantColor }) => 
-      dominantColor 
-        ? `rgb(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b})`
-        : constants.DEFAULT_COLORS.BACKGROUND
-    };
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    
-    @media (max-height: 600px) {
-      height: 100vh;
-      min-height: 100vh;
-    }
-    
-    @media (max-height: 500px) {
-      height: 100vh;
-      min-height: 100vh;
-    }
-  `
-);
+const PlayerContainer = memo(({ dominantColor, ...props }: { dominantColor?: any; [key: string]: any }) => (
+  <Box
+    {...props}
+    sx={{
+      position: 'relative',
+      width: '100%',
+      height: '100vh',
+      minHeight: '100vh',
+      maxHeight: '100vh',
+      overflow: 'hidden',
+      display: 'flex',
+      flexDirection: 'column',
+      // Прозрачный фон, так как теперь используется анимированная обложка
+      background: 'transparent',
+      '@media (max-height: 600px)': {
+        height: '100vh',
+        minHeight: '100vh',
+      },
+      '@media (max-height: 500px)': {
+        height: '100vh',
+        minHeight: '100vh',
+      },
+    }}
+  />
+));
 
 const HeaderSection = memo(
   styled(Box)`
@@ -127,16 +125,21 @@ const HeaderSection = memo(
 
 const CloseButton = memo(
   styled(IconButton)`
-    color: rgba(255,255,255,0.8);
-    background-color: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    background: none;
+    border: none;
+    padding: 0;
+    width: 80px;
+    height: 30px;
+    min-width: 80px;
+    min-height: 30px;
     
     &:hover {
-      background-color: rgba(255,255,255,0.15);
-      transform: scale(1.05);
+      background: none;
+      opacity: 0.8;
     }
     
-    transition: ${constants.ANIMATIONS.DURATION.FAST} ease;
+    transition: opacity 0.2s ease;
   `
 );
 
@@ -159,7 +162,7 @@ const AlbumArt = memo(
     border-radius: 20px;
     object-fit: cover;
     border: 1px solid rgba(255,255,255,0.1);
-    transition: ${constants.ANIMATIONS.DURATION.NORMAL} ease;
+    transition: opacity 0.3s ease;
     
     @media (max-width: 768px) {
       @media (max-height: 850px) {
@@ -267,7 +270,7 @@ const TrackArtist = memo(
     color: rgba(255,255,255,0.8);
     margin-bottom: 6px;
     cursor: pointer;
-    transition: ${constants.ANIMATIONS.DURATION.FAST} ease;
+    transition: color 0.2s ease;
     
     &:hover {
       color: white;
@@ -381,115 +384,80 @@ const MainControls = memo(
   styled(Box)`
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 36px;
     margin-bottom: 12px;
     
     @media (max-height: 850px) {
-      gap: 9px;
+      gap: 24px;
       margin-bottom: 9px;
     }
     
     @media (max-height: 800px) {
-      gap: 6px;
+      gap: 18px;
       margin-bottom: 6px;
     }
     
     @media (max-height: 700px) {
-      gap: 9px;
+      gap: 24px;
       margin-bottom: 9px;
     }
     
     @media (max-height: 600px) {
-      gap: 6px;
+      gap: 18px;
       margin-bottom: 6px;
     }
     
     @media (max-height: 500px) {
-      gap: 3px;
+      gap: 12px;
       margin-bottom: 3px;
     }
     
     @media (max-height: 400px) {
-      gap: 1.5px;
+      gap: 12px;
       margin-bottom: 1.5px;
     }
   `
 );
 
-const ControlButton = memo(
-  styled(IconButton)<{ active?: boolean; play?: boolean }>`
-    background: none;
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
-    padding: ${({ play }) => play ? '8px' : '4px'};
-    margin: 0;
-    color: ${({ active }) => active ? '#fff' : '#d3d3d3'};
-    transition: ${constants.ANIMATIONS.DURATION.FAST};
-    
-    &:hover {
-      color: #fff;
-      background: none;
-      box-shadow: none;
-      border: none;
-    }
-    
-    min-width: 0;
-    min-height: 0;
-  `
-);
+const ControlButton = memo(({ active, play, ...props }: { active?: boolean; play?: boolean; [key: string]: any }) => (
+  <IconButton
+    {...props}
+    sx={{
+      background: 'none',
+      border: 'none',
+      boxShadow: 'none',
+      borderRadius: 0,
+      padding: play ? '8px' : '4px',
+      margin: 0,
+      color: active ? '#fff' : '#d3d3d3',
+      transition: constants.ANIMATIONS.DURATION.FAST,
+      minWidth: 0,
+      minHeight: 0,
+      '&:hover': {
+        color: '#fff',
+        background: 'none',
+        boxShadow: 'none',
+        border: 'none',
+      },
+    }}
+  />
+));
 
 const SecondaryControls = memo(
   styled(Box)`
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 16px;
+    gap: 36px;
+    
+    @media (max-width: 768px) {
+      margin-bottom: 35px;
+    }
   `
 );
 
-const VolumeControl = memo(
-  styled(Box)`
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 120px;
-  `
-);
 
-// Компоненты
-const PlayerHeader: React.FC<PlayerHeaderProps> = memo(
-  ({ onClose, onOpenLyricsEditor, showLyricsEditor, theme }) => (
-    <HeaderSection>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <CloseButton onClick={onClose}>
-          <KeyboardArrowDownIcon />
-        </CloseButton>
-        <Typography
-          variant='h6'
-          sx={{ color: 'rgba(255,255,255,0.8)', fontWeight: 500 }}
-        >
-          Сейчас играет
-        </Typography>
-      </Box>
 
-      <Box sx={{ display: 'flex', gap: 1 }}>
-        <IconButton
-          onClick={onOpenLyricsEditor}
-          sx={{
-            color: showLyricsEditor
-              ? theme.palette.primary.main
-              : 'rgba(255,255,255,0.8)',
-            backgroundColor: 'rgba(255,255,255,0.08)',
-            '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)' },
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      </Box>
-    </HeaderSection>
-  )
-);
+
 
 const PlayerTrackInfo: React.FC<PlayerTrackInfoProps> = memo(({ currentTrack, onArtistClick }) => {
   const artists = React.useMemo(() => {
@@ -646,6 +614,8 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
     setSnackbar,
   } = useFullScreenPlayer(open, onClose);
 
+
+
   if (!open || !currentTrack) return null;
 
   return (
@@ -662,43 +632,104 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
       }}
     >
       <PlayerContainer dominantColor={dominantColor}>
-        {/* Fixed Header Buttons */}
-        <Box
-          sx={{
+        {/* Анимированный фон с обложкой альбома */}
+        <div style={{
+          position: 'fixed',
+          width: '100%',
+          height: '100%',
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}>
+          <div style={{
+            zIndex: -1,
+            content: "",
+            position: 'fixed',
+            top: '-50%',
+            left: '-50%',
+            width: '300%',
+            height: '300%',
+            overflow: 'visible',
+            backgroundImage: `url(${coverPath})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(80px)',
+            animation: 'rotating 100s linear infinite',
+          }} />
+          
+          {/* Темный оверлей для контраста */}
+          <div style={{
             position: 'fixed',
             top: 0,
             left: 0,
-            right: 0,
-            zIndex: 1000,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: { xs: '16px 20px', sm: '20px 24px', md: '24px 32px' },
-            pointerEvents: 'none',
-          }}
-        >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, pointerEvents: 'auto' }}>
-            <CloseButton onClick={onClose}>
-              <KeyboardArrowDownIcon />
-            </CloseButton>
-          </Box>
+            width: '100%',
+            height: '100%',
+            background: dominantColor 
+              ? `linear-gradient(135deg, 
+                  rgba(0,0,0,0.3) 0%, 
+                  rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.2) 25%,
+                  rgba(0,0,0,0.5) 50%, 
+                  rgba(${Math.max(0, dominantColor.r - 50)}, ${Math.max(0, dominantColor.g - 50)}, ${Math.max(0, dominantColor.b - 50)}, 0.3) 75%,
+                  rgba(0,0,0,0.7) 100%)`
+              : 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.8) 100%)',
+            zIndex: 0,
+          }} />
+          
+          {/* Дополнительный радиальный градиент для глубины */}
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: dominantColor 
+              ? `radial-gradient(circle at 30% 20%, 
+                  rgba(${dominantColor.r}, ${dominantColor.g}, ${dominantColor.b}, 0.1) 0%, 
+                  transparent 50%),
+                  radial-gradient(circle at 70% 80%, 
+                  rgba(0,0,0,0.3) 0%, 
+                  transparent 50%)`
+              : 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.05) 0%, transparent 50%), radial-gradient(circle at 70% 80%, rgba(0,0,0,0.3) 0%, transparent 50%)',
+            zIndex: 0,
+          }} />
+        </div>
 
-          <Box sx={{ display: 'flex', gap: 1, pointerEvents: 'auto' }}>
-            <IconButton
-              onClick={handleOpenLyricsEditor}
-              sx={{
-                color: showLyricsEditor
-                  ? theme.palette.primary.main
-                  : 'rgba(255,255,255,0.8)',
-                backgroundColor: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                '&:hover': { backgroundColor: 'rgba(255,255,255,0.15)' },
-              }}
-            >
-              <EditIcon />
-            </IconButton>
-          </Box>
-        </Box>
+        {/* CSS анимация вращения */}
+        <style>
+          {`
+            @keyframes rotating {
+              from {
+                transform: rotate(0deg);
+              }
+              to {
+                transform: rotate(360deg);
+              }
+            }
+          `}
+        </style>
+
+        {/* Плавный эффект появления */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.1)',
+            animation: 'fadeIn 0.5s ease-out forwards',
+            '@keyframes fadeIn': {
+              '0%': {
+                opacity: 0,
+              },
+              '100%': {
+                opacity: 1,
+              },
+            },
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
 
         {/* Main Content */}
         <Box
@@ -708,8 +739,10 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
             flex: 1,
             justifyContent: isMobile ? 'flex-start' : 'center',
             alignItems: isMobile || !lyricsDisplayMode ? 'center' : 'stretch',
-            padding: '0 32px',
+            padding: isMobile ? '0 10px' : '0 32px',
             gap: isMobile || !lyricsDisplayMode ? 0 : '32px',
+            position: 'relative',
+            zIndex: 2,
           }}
         >
           {/* Left Side - Album Art and Controls (Desktop) or Full Content (Mobile) */}
@@ -743,7 +776,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     justifyContent: 'center',
                     overflow: 'hidden',
                     position: 'relative',
-                    padding: '0 16px',
+                    padding: '0px',
                   }}
                 >
                 <LyricsModernView
@@ -892,7 +925,20 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 >
                   <ContentCopy size={24} color='rgb(255, 255, 255)' className="" />
                 </ControlButton>
+
+                <ControlButton
+                  onClick={handleOpenLyricsEditor}
+                  className='secondary'
+                  sx={{
+                    color: showLyricsEditor ? '#9a7ace' : 'rgba(255,255,255,0.8)',
+                    '&:hover': { color: showLyricsEditor ? '#9a7ace' : 'white' },
+                  }}
+                >
+                  <EditIcon sx={{ fontSize: 24 }} />
+                </ControlButton>
               </SecondaryControls>
+              
+
             </Box>
           </Box>
           </Box>
@@ -944,24 +990,16 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               bottom: 0,
               left: 0,
               right: 0,
-              height: '90%',
-              background: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
+              height: '100%',
+              background: 'rgba(25, 25, 25, 0.95)',
+              backdropFilter: 'blur(20px)',
               borderTop: '1px solid rgba(255,255,255,0.1)',
               padding: '24px',
               overflow: 'auto',
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'center',
-              transform: 'translateY(0)',
-              animation: 'slideUpModal 0.3s ease-out forwards',
-              '@keyframes slideUpModal': {
-                '0%': {
-                  transform: 'translateY(100%)',
-                },
-                '100%': {
-                  transform: 'translateY(0)',
-                },
-              },
+              zIndex: 10,
             }}
           >
             <IconButton
@@ -1013,11 +1051,36 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
           </Box>
         )}
 
+        {/* Close Button - Always at Bottom */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1001,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '30px',
+            width: '120px',
+          }}
+        >
+          <CloseButton onClick={onClose}>
+          <svg width="59" height="15" viewBox="0 0 59 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M59 1.86043L54.8542 3.57628e-07L29.4613 11.06L26.753 9.88068L26.7679 9.88656L4.20833 0.0594871L-9.53674e-07 1.89312C6.23512 4.6092 23.6429 12.192 29.4613 14.7266C33.7857 12.8441 29.5714 14.6799 59 1.86043Z" fill="white"/>
+</svg>
+
+
+          </CloseButton>
+        </Box>
+
         {/* Snackbar */}
         <Snackbar
           open={snackbar.open}
           autoHideDuration={constants.TIMING.SNACKBAR_AUTO_HIDE}
           onClose={handleSnackbarClose}
+          sx={{ zIndex: 1002 }}
         >
           <Alert
             onClose={handleSnackbarClose}
@@ -1084,7 +1147,7 @@ const LyricsLine: React.FC<{
     position: 'absolute' as const,
     transform: 'translateY(-50%)',
     zIndex: isActive ? 10 : 5,
-    willChange: 'opacity, transform, filter',
+
   };
 
       if (isActive) {
@@ -1098,6 +1161,7 @@ const LyricsLine: React.FC<{
             opacity: 1,
             filter: 'none',
             transform: 'translateY(-50%) scale(1)',
+            transition: 'transform 0.3s ease-out',
           }}
         >
         <Typography
@@ -1132,8 +1196,8 @@ const LyricsLine: React.FC<{
           sx={{
             ...baseStyles,
             top: '25%',
-            opacity: 0.4,
-            filter: 'blur(1.5px)',
+            opacity: 0.5,
+            filter: 'blur(0.5px)',
             transform: 'translateY(-50%) scale(0.9)',
           }}
         >
@@ -1166,8 +1230,8 @@ const LyricsLine: React.FC<{
           sx={{
             ...baseStyles,
             top: '60%',
-            opacity: 0.4,
-            filter: 'blur(1.5px)',
+            opacity: 0.5,
+            filter: 'blur(0.5px)',
             transform: 'translateY(-50%) scale(0.9)',
           }}
         >
@@ -1198,15 +1262,15 @@ const LyricsLine: React.FC<{
         sx={{
           ...baseStyles,
           top: '15%',
-          opacity: 0.2,
-          filter: 'blur(2.5px)',
-          transform: 'translateY(-50%) scale(0.75)',
+          opacity: 0.3,
+          filter: 'none',
+          transform: 'translateY(-50%) scale(0.85)',
         }}
       >
         <Typography
           variant='h6'
           sx={{
-            color: 'rgba(255,255,255,0.15)',
+            color: 'rgba(255,255,255,0.25)',
             fontSize: isMainDisplay
               ? { xs: '0.8rem', sm: '0.9rem', md: '1rem' }
               : { xs: '0.7rem', sm: '0.8rem' },
@@ -1231,15 +1295,15 @@ const LyricsLine: React.FC<{
         sx={{
           ...baseStyles,
           top: '70%',
-          opacity: 0.25,
-          filter: 'blur(2px)',
-          transform: 'translateY(-50%) scale(0.8)',
+          opacity: 0.35,
+          filter: 'none',
+          transform: 'translateY(-50%) scale(0.85)',
         }}
       >
         <Typography
           variant='h6'
           sx={{
-            color: 'rgba(255,255,255,0.2)',
+            color: 'rgba(255,255,255,0.3)',
             fontSize: isMainDisplay
               ? { xs: '0.9rem', sm: '1rem', md: '1.2rem' }
               : { xs: '0.8rem', sm: '0.9rem' },
@@ -1304,19 +1368,7 @@ const StaticLyricsLine: React.FC<{ text: string; index: number; isMainDisplay?: 
       justifyContent: 'center',
       paddingBottom: '0.8rem',
       paddingTop: '0.4rem',
-      opacity: 0,
-      animation: `staticLineAppear 0.3s ease-out forwards`,
-      animationDelay: `${index * 0.05}s`,
-      '@keyframes staticLineAppear': {
-        '0%': {
-          opacity: 0,
-          transform: 'translateY(20px)',
-        },
-        '100%': {
-          opacity: 1,
-          transform: 'translateY(0)',
-        },
-      },
+      opacity: 1,
     }}
   >
     {text}
@@ -1345,7 +1397,7 @@ const LyricsModernView: React.FC<{
   const [isNewLine, setIsNewLine] = useState(false);
   const [lineHeights, setLineHeights] = useState<number[]>([]);
 
-  // Оптимизированное обновление строк
+  // Оптимизированное обновление строк с fade эффектом
   const updateCurrentLine = useCallback(
     (time: number) => {
       if (
@@ -1372,13 +1424,16 @@ const LyricsModernView: React.FC<{
         }
       }
 
+
+
       if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
         setCurrentLineIndex(newLineIndex);
         setIsNewLine(true);
         
+        // Плавный fade in для новой строки (уменьшено время)
         setTimeout(() => {
           setIsNewLine(false);
-        }, 100);
+        }, 50);
       }
     },
     [lyricsData, filteredLines, currentLineIndex]
@@ -1464,7 +1519,7 @@ const LyricsModernView: React.FC<{
             justifyContent: 'flex-start',
             alignItems: 'center',
             transform: `translateY(calc(50% - ${(currentLineIndex * (isMainDisplay ? 130 : 115)) + (isMainDisplay ? 65 : 57.5)}px))`,
-            transition: 'transform 2s cubic-bezier(0.25, 0.1, 0.25, 1)',
+            transition: 'transform 0.4s ease-out',
             gap: isMainDisplay ? '40px' : '25px',
           }}
         >
@@ -1533,33 +1588,31 @@ const LyricsModernView: React.FC<{
                   alignItems: 'center',
                   justifyContent: 'center',
                   position: 'relative',
-                  transition: 'all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1)',
-                  padding: isMainDisplay ? '20px 0' : '15px 0',
+                  transition: 'all 0.3s ease-out',
+                  padding: isMainDisplay ? '0px' : '0 16px',
                   boxSizing: 'border-box',
                   ...lineStyles,
                 }}
               >
                 <Typography
-                  variant={isActive ? 'h3' : 'h5'}
+                  variant={isActive ? 'h4' : 'h4'}
                   sx={{
                     fontFamily: '"SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
                     lineHeight: 1.2,
                     letterSpacing: isActive ? '-0.02em' : '-0.01em',
-                    textAlign: 'left',
+                    textAlign: 'center',
                     width: '100%',
                     maxWidth: isActive 
                       ? '100%'
                       : distanceFromCurrent === -1 || distanceFromCurrent === 1
-                      ? '95%'
-                      : '90%',
+                      ? '100%'
+                      : '100%',
                     wordBreak: 'break-word',
                     whiteSpace: 'pre-wrap',
                     overflowWrap: 'break-word',
-                    textShadow: isActive 
-                      ? '0 4px 20px rgba(0,0,0,0.4), 0 0 40px rgba(255,255,255,0.1)'
-                      : '0 2px 8px rgba(0,0,0,0.2)',
-                    willChange: 'opacity, transform, filter',
+
                     fontWeight: 'var(--font-weight-black, 700)',
+                    transition: 'all 0.3s ease-out',
                   }}
                 >
                   {line.text}
@@ -1603,15 +1656,6 @@ const LyricsModernView: React.FC<{
           },
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(255,255,255,0.3) rgba(255,255,255,0.1)',
-          animation: 'containerFadeIn 0.3s ease-out forwards',
-          '@keyframes containerFadeIn': {
-            '0%': {
-              opacity: 0,
-            },
-            '100%': {
-              opacity: 1,
-            },
-          },
         }}
       >
         <Box sx={{ 
