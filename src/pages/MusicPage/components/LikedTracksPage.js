@@ -17,6 +17,10 @@ import {
   Avatar,
   Chip,
   Divider,
+  Switch,
+  FormControlLabel,
+  Snackbar,
+  Button,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useMusic } from '../../../context/MusicContext';
@@ -27,11 +31,35 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import MusicUploadDialog from '../../../components/Music/MusicUploadDialog';
 import UploadIcon from '@mui/icons-material/Upload';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { MoreHoriz } from '@mui/icons-material';
+
+// DnD Kit imports
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  restrictToVerticalAxis,
+} from '@dnd-kit/modifiers';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const PageContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(4),
@@ -101,25 +129,116 @@ const ActionButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const DragHandle = styled('div')(({ theme }) => ({
+  color: 'text.secondary',
+  width: 32,
+  height: 32,
+  marginRight: theme.spacing(1),
+  cursor: 'grab',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  userSelect: 'none',
+  touchAction: 'none',
+  '&:active': {
+    cursor: 'grabbing',
+  },
+  '&:hover': {
+    color: 'text.primary',
+  },
+}));
+
+const DraggableTrackListItem = styled(ListItem)(({ theme, isActive, isDragging, ...props }) => ({
+  borderRadius: 12,
+  background: isActive
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
+    : isDragging
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.08))'
+    : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.05)',
+  marginBottom: theme.spacing(0.25),
+  padding: theme.spacing(0.75, 2),
+  transition: 'all 0.15s ease',
+  cursor: 'pointer',
+  opacity: isDragging ? 0.9 : 1,
+  transform: isDragging ? 'rotate(2deg) scale(1.02)' : 'none',
+  zIndex: isDragging ? 1000 : 'auto',
+  boxShadow: isDragging ? '0 8px 25px rgba(0,0,0,0.15)' : 'none',
+  '&:hover': {
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
+  },
+  '&:last-child': {
+    marginBottom: 0,
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(0.5, 1.5),
+  },
+}));
+
 const LikedTracksPage = ({ onBack }) => {
-  const { playTrack, isPlaying, currentTrack, togglePlay } = useMusic();
+  const { playTrack, isPlaying, currentTrack, togglePlay, currentSection } = useMusic();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    total: 0,
+    hasMore: true,
+  });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3, // Уменьшаем дистанцию для мобильных
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     fetchLikedTracks();
   }, []);
 
-  const fetchLikedTracks = async () => {
+  const fetchLikedTracks = async (page = 1, append = false) => {
     try {
-      setLoading(true);
-      const response = await apiClient.get('/api/music/liked');
+      if (!append) {
+        setLoading(true);
+      }
+      
+      const response = await apiClient.get('/api/music/liked/order', {
+        params: {
+          page: page,
+          per_page: 20
+        }
+      });
+      
       if (response.data.success) {
-        setTracks(response.data.tracks);
+        const newTracks = response.data.tracks;
+        
+        if (append) {
+          setTracks(prevTracks => [...prevTracks, ...newTracks]);
+        } else {
+          setTracks(newTracks);
+        }
+        
+        setPagination({
+          currentPage: response.data.current_page,
+          totalPages: response.data.pages,
+          total: response.data.total,
+          hasMore: response.data.current_page < response.data.pages,
+        });
       } else {
         setError('Не удалось загрузить любимые треки');
       }
@@ -168,10 +287,168 @@ const LikedTracksPage = ({ onBack }) => {
     }
   };
 
+  const handleDragEnd = async (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = tracks.findIndex(track => track.id === active.id);
+      const newIndex = tracks.findIndex(track => track.id === over.id);
+
+      const newTracks = arrayMove(tracks, oldIndex, newIndex);
+      setTracks(newTracks);
+
+      // Отправляем новый порядок на сервер
+      try {
+        const trackOrder = newTracks.map(track => track.id);
+        console.log('Отправляем новый порядок:', trackOrder);
+        await apiClient.post('/api/music/liked/reorder', {
+          track_order: trackOrder
+        });
+        
+        // Убираем уведомление об успехе - показываем только ошибки
+      } catch (err) {
+        console.error('Error updating track order:', err);
+        setSnackbar({
+          open: true,
+          message: 'Ошибка при обновлении порядка треков',
+          severity: 'error',
+        });
+        // Восстанавливаем исходный порядок при ошибке
+        fetchLikedTracks();
+      }
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  const loadMoreTracks = async () => {
+    if (pagination.hasMore && !loading) {
+      const nextPage = pagination.currentPage + 1;
+      await fetchLikedTracks(nextPage, true);
+    }
+  };
+
+
+
   const formatDuration = seconds => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  // Sortable Track Item Component
+  const SortableTrackItem = ({ track, isActive, onPlay, onLike, onTrackClick }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: track.id });
+
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+    };
+
+    return (
+      <DraggableTrackListItem
+        ref={setNodeRef}
+        style={style}
+        isActive={isActive}
+        isDragging={isDragging}
+        onClick={() => onTrackClick(track)}
+      >
+        <DragHandle
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon fontSize="small" />
+        </DragHandle>
+        
+        <ListItemAvatar>
+          <TrackAvatar src={track.cover_path} alt={track.title} />
+        </ListItemAvatar>
+        
+        <ListItemText
+          primary={
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Typography
+                variant="body1"
+                component="span"
+                fontWeight={isActive ? 600 : 500}
+                sx={{
+                  color: isActive ? 'primary.main' : 'text.primary',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {track.title}
+              </Typography>
+            </span>
+          }
+          secondary={
+            <span>
+              <Typography
+                variant="body2"
+                component="span"
+                color="text.secondary"
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {track.artist}
+              </Typography>
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginTop: '4px',
+                }}
+              >
+                <AccessTimeIcon
+                  sx={{ fontSize: 14, color: 'text.secondary' }}
+                />
+                <Typography variant="caption" component="span" color="text.secondary">
+                  {formatDuration(track.duration)}
+                </Typography>
+                {track.genre && (
+                  <>
+                    <Typography
+                      variant="caption"
+                      component="span"
+                      color="text.secondary"
+                    >
+                      •
+                    </Typography>
+                    <Chip
+                      label={track.genre}
+                      size="small"
+                      sx={{
+                        height: 20,
+                        fontSize: '0.7rem',
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        color: 'text.secondary',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                      }}
+                    />
+                  </>
+                )}
+              </span>
+            </span>
+          }
+        />
+        
+
+      </DraggableTrackListItem>
+    );
   };
 
   // Upload dialog handlers
@@ -210,7 +487,7 @@ const LikedTracksPage = ({ onBack }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: 2,
+          mb: '4px',
         }}
       >
         <CardContent
@@ -240,7 +517,7 @@ const LikedTracksPage = ({ onBack }) => {
               Мои любимые
             </Typography>
             <Typography variant='body1' color='text.secondary'>
-              {tracks.length} треков в вашей коллекции
+              {tracks.length} треков в вашей коллекции • Перетаскивайте треки для изменения порядка
             </Typography>
           </Box>
           <Tooltip title='Загрузить трек'>
@@ -302,150 +579,72 @@ const LikedTracksPage = ({ onBack }) => {
           </Typography>
         </Box>
       ) : (
-        <List sx={{ p: 0 }}>
-          {tracks.map((track, index) => {
-            const isCurrentTrack = currentTrack?.id === track.id;
-            const isTrackPlaying = isPlaying && isCurrentTrack;
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis]}
+        >
+          <SortableContext
+            items={tracks.map(track => track.id)}
+            strategy={verticalListSortingStrategy}
+            transitionDuration={150}
+          >
+            <List sx={{ p: 0 }}>
+              {tracks.map((track) => {
+                const isCurrentTrack = currentTrack?.id === track.id;
+                const isTrackPlaying = isPlaying && isCurrentTrack;
 
-            return (
-              <React.Fragment key={track.id}>
-                <TrackListItem
-                  isActive={isCurrentTrack}
-                  onClick={() => handlePlayTrack(track)}
-
-                >
-                  <ListItemAvatar>
-                    <TrackAvatar src={track.cover_path} alt={track.title} />
-                  </ListItemAvatar>
-
-                  <ListItemText
-                    primary={
-                      <span
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                      >
-                        <Typography
-                          variant='body1'
-                          component='span'
-                          fontWeight={isCurrentTrack ? 600 : 500}
-                          sx={{
-                            color: isCurrentTrack
-                              ? 'primary.main'
-                              : 'text.primary',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {track.title}
-                        </Typography>
-                      </span>
-                    }
-                    secondary={
-                      <span>
-                        <Typography
-                          variant='body2'
-                          component='span'
-                          color='text.secondary'
-                          sx={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}
-                        >
-                          {track.artist}
-                        </Typography>
-                        <span
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            marginTop: '4px',
-                          }}
-                        >
-                          <AccessTimeIcon
-                            sx={{ fontSize: 14, color: 'text.secondary' }}
-                          />
-                          <Typography variant='caption' component='span' color='text.secondary'>
-                            {formatDuration(track.duration)}
-                          </Typography>
-                          {track.genre && (
-                            <>
-                              <Typography
-                                variant='caption'
-                                component='span'
-                                color='text.secondary'
-                              >
-                                •
-                              </Typography>
-                              <Chip
-                                label={track.genre}
-                                size='small'
-                                sx={{
-                                  height: 20,
-                                  fontSize: '0.7rem',
-                                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                  color: 'text.secondary',
-                                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                                }}
-                              />
-                            </>
-                          )}
-                        </span>
-                      </span>
-                    }
+                return (
+                  <SortableTrackItem
+                    key={track.id}
+                    track={track}
+                    isActive={isCurrentTrack && currentSection === 'liked'}
+                    onPlay={handlePlayTrack}
+                    onLike={handleLikeTrack}
+                    onTrackClick={handlePlayTrack}
                   />
+                );
+              })}
+            </List>
+          </SortableContext>
+        </DndContext>
+      )}
 
-                  <ListItemSecondaryAction>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <ActionButton
-                        onClick={e => {
-                          e.stopPropagation();
-                          handleLikeTrack(track.id);
-                        }}
-                      >
-                        {track.is_liked ? (
-                          <FavoriteIcon />
-                        ) : (
-                          <FavoriteBorderIcon />
-                        )}
-                      </ActionButton>
-                      <ActionButton
-                        onClick={e => {
-                          e.stopPropagation();
-                          handlePlayTrack(track);
-                        }}
-                        sx={{
-                          color: isCurrentTrack
-                            ? 'primary.main'
-                            : 'text.secondary',
-                        }}
-                      >
-                        {isTrackPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-                      </ActionButton>
-                      <ActionButton
-                        onClick={e => {
-                          e.stopPropagation();
-                          handleOpenMenu(e, track);
-                        }}
-                      >
-                        <MoreHoriz />
-                      </ActionButton>
-                    </Box>
-                  </ListItemSecondaryAction>
-                </TrackListItem>
-                {index < tracks.length - 1 && (
-                  <Divider
-                    sx={{
-                      mx: 2,
-                      borderColor: 'rgba(255, 255, 255, 0.05)',
-                      opacity: 0.5,
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
-        </List>
+      {/* Кнопка "Загрузить еще" */}
+      {pagination.hasMore && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
+          <Button
+            variant="outlined"
+            onClick={loadMoreTracks}
+            disabled={loading}
+            sx={{
+              borderRadius: 2,
+              textTransform: 'none',
+              minWidth: 120,
+              borderColor: 'rgba(255, 255, 255, 0.2)',
+              color: 'text.primary',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              }
+            }}
+          >
+            {loading ? (
+              <CircularProgress size={20} sx={{ mr: 1 }} />
+            ) : null}
+            Загрузить еще
+          </Button>
+        </Box>
+      )}
+      
+      {/* Информация о пагинации */}
+      {pagination.total > 0 && (
+        <Box sx={{ textAlign: 'center', mt: 2, mb: 2 }}>
+          <Typography variant="body2" color="text.secondary">
+            Показано {tracks.length} из {pagination.total} треков
+          </Typography>
+        </Box>
       )}
 
       {/* Меню для трека */}
@@ -488,6 +687,20 @@ const LikedTracksPage = ({ onBack }) => {
         )}
         {/* Добавьте другие пункты меню по необходимости */}
       </Menu>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </PageContainer>
   );
 };

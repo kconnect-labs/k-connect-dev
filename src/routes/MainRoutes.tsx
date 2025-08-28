@@ -85,6 +85,7 @@ const SubPlanes = React.lazy(() => import('../pages/Economic/SubPlanes'));
 const LikedTracksPage = React.lazy(
   () => import('../pages/MusicPage/components/LikedTracksPage')
 );
+
 const AllTracksPage = React.lazy(
   () => import('../pages/MusicPage/AllTracksPage')
 );
@@ -261,6 +262,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
               </ProtectedRoute>
             }
           />
+
           <Route
             path='/music/all'
             element={
