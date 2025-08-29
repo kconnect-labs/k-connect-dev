@@ -464,7 +464,7 @@ export const LyricsIcon = ({
 };
 
 export const ContentCopy = ({
-  size = 18,
+  size = 20,
   color = 'currentColor',
   className,
   ...props

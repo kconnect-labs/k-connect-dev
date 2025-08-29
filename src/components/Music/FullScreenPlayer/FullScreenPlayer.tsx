@@ -45,32 +45,16 @@ import {
 // Импорт хуков
 import {
   useFullScreenPlayer,
-  useLyrics,
   usePortal,
-  useDominantColor,
-  usePlayerTime,
-  useSnackbar,
 } from './hooks';
 
 // Импорт типов
 import {
   FullScreenPlayerProps,
-  PlayerHeaderProps,
   PlayerTrackInfoProps,
-  AlbumArtLyricsContainerProps,
-  LyricsModernViewProps,
-  LyricsLineProps,
-  StaticLyricsLineProps,
-  ProgressSliderProps,
-  MainPlayControlsProps,
-  SecondaryPlayControlsProps,
-  VolumeControlsProps,
-  LyricsEditorContentProps,
-  StyledComponentProps,
 } from './types';
 
 // Импорт утилит и констант
-import * as utils from './utils';
 import * as constants from './constants';
 
 // Стилизованные компоненты
@@ -166,40 +150,37 @@ const AlbumArt = memo(
     
     @media (max-width: 768px) {
       @media (max-height: 850px) {
-        width: min(67.5vw, 20rem);
-        height: min(67.5vw, 20rem);
+        width: min(70vw, 20rem);
+        height: min(70vw, 20rem);
       }
       
       @media (max-height: 800px) {
-        width: min(63.75vw, 18.75rem);
-        height: min(63.75vw, 18.75rem);
+        width: min(67.5vw, 18.75rem);
+        height: min(67.5vw, 18.75rem);
       }
       
       @media (max-height: 700px) {
-        width: min(60vw, 17.5rem);
-        height: min(60vw, 17.5rem);
+        width: min(65vw, 17.5rem);
+        height: min(65vw, 17.5rem);
       }
       
       @media (max-height: 600px) {
-        width: min(52.5vw, 15rem);
-        height: min(52.5vw, 15rem);
+        width: min(55vw, 15rem);
+        height: min(55vw, 15rem);
       }
       
       @media (max-height: 500px) {
-        width: min(45vw, 12.5rem);
-        height: min(45vw, 12.5rem);
+        width: min(47.5vw, 12.5rem);
+        height: min(47.5vw, 12.5rem);
       }
       
       @media (max-height: 400px) {
-        width: min(37.5vw, 10rem);
-        height: min(37.5vw, 10rem);
+        width: min(40vw, 10rem);
+        height: min(40vw, 10rem);
       }
     }
     
-    @media (min-width: 769px) {
-      width: min(25vw, 20rem);
-      height: min(25vw, 20rem);
-    }
+
   `
 );
 
@@ -316,23 +297,23 @@ const TrackArtist = memo(
 const ProgressContainer = memo(
   styled(Box)`
     width: 100%;
-    max-width: 375px;
     display: flex;
     flex-direction: column;
     gap: 6px;
     
     @media (max-width: 768px) {
-      width: 95vw;
-      max-width: 95vw;
+      width: 100%;
+    }
+    
+    @media (min-width: 769px) {
+      max-width: 375px;
     }
     
     @media (max-height: 850px) {
-      max-width: 281.25px;
       gap: 4.5px;
     }
     
     @media (max-height: 800px) {
-      max-width: 234.375px;
       gap: 3.375px;
     }
   `
@@ -384,8 +365,10 @@ const MainControls = memo(
   styled(Box)`
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 36px;
     margin-bottom: 12px;
+    width: 100%;
     
     @media (max-height: 850px) {
       gap: 24px;
@@ -422,6 +405,7 @@ const MainControls = memo(
 const ControlButton = memo(({ active, play, ...props }: { active?: boolean; play?: boolean; [key: string]: any }) => (
   <IconButton
     {...props}
+    disableRipple
     sx={{
       background: 'none',
       border: 'none',
@@ -447,11 +431,10 @@ const SecondaryControls = memo(
   styled(Box)`
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 36px;
-    
-    @media (max-width: 768px) {
-      margin-bottom: 35px;
-    }
+    margin-bottom: 12px;
+    width: 100%;
   `
 );
 
@@ -743,6 +726,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
             gap: isMobile || !lyricsDisplayMode ? 0 : '32px',
             position: 'relative',
             zIndex: 2,
+            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {/* Left Side - Album Art and Controls (Desktop) or Full Content (Mobile) */}
@@ -754,6 +738,8 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               alignItems: 'center',
               justifyContent: isMobile && lyricsDisplayMode ? 'flex-end' : (isMobile ? 'flex-start' : 'center'),
               minHeight: isMobile ? 'auto' : '100%',
+              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isMobile || !lyricsDisplayMode ? 'translateX(0)' : 'translateX(-50%)',
             }}
           >
             {/* Album Art or Lyrics Display */}
@@ -762,36 +748,70 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
               width: '100%',
               flex: isMobile && lyricsDisplayMode ? '1 1 auto' : (isMobile || !lyricsDisplayMode ? '0 0 auto' : '1 1 auto'),
               marginTop: isMobile && !lyricsDisplayMode ? '99px' : '0px',
+              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
             }}>
-              {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
-                <Box
-                  key='lyrics-display-mobile'
-                  sx={{
-                    width: '100%',
-                    height: '65vh',
-                    maxHeight: '65vh',
-                    minHeight: '300px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    position: 'relative',
-                    padding: '0px',
-                  }}
-                >
-                <LyricsModernView
-                  lyricsData={lyricsData}
-                  loading={loadingLyrics}
-                  currentTime={currentTime}
-                  dominantColor={dominantColor}
-                  theme={theme}
-                  filteredLines={filteredLines}
-                  isMainDisplay={true}
-                />
-                </Box>
-              ) : (
-                <AlbumArt key='album-cover' src={coverPath} alt={(currentTrack as any)?.title || 'Track'} />
-              )}
+              <Box
+                sx={{
+                  width: '100%',
+                  height: isMobile && lyricsDisplayMode ? '65vh' : '350px',
+                  maxHeight: isMobile && lyricsDisplayMode ? '65vh' : '350px',
+                  minHeight: isMobile && lyricsDisplayMode ? '300px' : '350px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  padding: '0px',
+                  transition: lyricsDisplayMode 
+                    ? 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' 
+                    : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              >
+                {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      opacity: 1,
+                      transform: 'scale(1)',
+                      transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                      animation: 'fadeInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                      '@keyframes fadeInScale': {
+                        '0%': {
+                          opacity: 0,
+                          transform: 'scale(0.8)',
+                        },
+                        '100%': {
+                          opacity: 1,
+                          transform: 'scale(1)',
+                        },
+                      },
+                    }}
+                  >
+                    <LyricsModernView
+                      lyricsData={lyricsData}
+                      loading={loadingLyrics}
+                      currentTime={currentTime}
+                      dominantColor={dominantColor}
+                      theme={theme}
+                      filteredLines={filteredLines}
+                      isMainDisplay={true}
+                      isMobile={isMobile}
+                    />
+                  </Box>
+                ) : (
+                  <AlbumArt 
+                    key='album-cover' 
+                    src={coverPath} 
+                    alt={(currentTrack as any)?.title || 'Track'} 
+                    style={{
+                      transform: isMobile ? 'scale(1)' : 'scale(0.8)',
+                      transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                      opacity: 1,
+                    }}
+                  />
+                )}
+              </Box>
             </AlbumArtContainer>
 
             {/* Track Info and Controls Container */}
@@ -834,29 +854,24 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     color: 'white',
                     '& .MuiSlider-track': {
                       backgroundColor: 'white',
-                      height: 6,
-                      borderRadius: '2.5px',
+                      height: 9,
+                      borderRadius: '10px',
                     },
                     '& .MuiSlider-rail': {
                       backgroundColor: 'rgba(255,255,255,0.5)',
-                      height: 6,
-                      borderRadius: '2.5px',
+                      height: 9,
+                      borderRadius: '10px',
                     },
                     '& .MuiSlider-thumb': {
-                      backgroundColor: 'white',
-                      width: 16,
-                      height: 16,
-                      '&:hover': {
-                        boxShadow: '0 0 0 8px rgba(255,255,255,0.2)',
-                      },
+                      display: 'none',
                     },
                     '&:hover': {
                       '& .MuiSlider-track': {
-                        height: 10,
+                        height: 14,
                         borderRadius: '10px',
                       },
                       '& .MuiSlider-rail': {
-                        height: 10,
+                        height: 14,
                         borderRadius: '10px',
                       },
                     },
@@ -923,7 +938,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     '&:hover': { color: 'white' },
                   }}
                 >
-                  <ContentCopy size={24} color='rgb(255, 255, 255)' className="" />
+                  <ContentCopy size={20} color='currentColor' className="" />
                 </ControlButton>
 
                 <ControlButton
@@ -943,22 +958,31 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
           </Box>
           </Box>
 
-          {/* Right Side - Lyrics Display (Desktop only) */}
-          {!isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) && (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: '0 0 50%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100vh',
-                maxHeight: '100vh',
-                paddingLeft: '32px',
-                paddingRight: '16px',
-                overflow: 'hidden',
-              }}
-            >
+                      {/* Right Side - Lyrics Display (Desktop only) */}
+            {!isMobile && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: lyricsDisplayMode ? '0 0 50%' : '0 0 0%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: '100vh',
+                  maxHeight: '100vh',
+                  paddingLeft: lyricsDisplayMode ? '32px' : '0px',
+                  paddingRight: '16px',
+                  overflow: 'hidden',
+                  opacity: lyricsDisplayMode ? 1 : 0,
+                  transform: lyricsDisplayMode ? 'translateX(0)' : 'translateX(100%)',
+                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                  pointerEvents: lyricsDisplayMode ? 'auto' : 'none',
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                  width: '50%',
+                  visibility: lyricsDisplayMode ? 'visible' : 'hidden',
+                }}
+              >
               <Box
                 sx={{
                   width: '100%',
@@ -976,6 +1000,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                   theme={theme}
                   filteredLines={filteredLines}
                   isMainDisplay={true}
+                  isMobile={isMobile}
                 />
               </Box>
             </Box>
@@ -1004,6 +1029,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
           >
             <IconButton
               onClick={() => setShowLyricsEditor(false)}
+              disableRipple
               sx={{
                 position: 'absolute',
                 top: '8px',
@@ -1055,7 +1081,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
         <Box
           sx={{
             position: 'fixed',
-            bottom: 0,
+            top: 15,
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 1001,
@@ -1066,10 +1092,11 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
             width: '120px',
           }}
         >
-          <CloseButton onClick={onClose}>
-          <svg width="59" height="15" viewBox="0 0 59 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M59 1.86043L54.8542 3.57628e-07L29.4613 11.06L26.753 9.88068L26.7679 9.88656L4.20833 0.0594871L-9.53674e-07 1.89312C6.23512 4.6092 23.6429 12.192 29.4613 14.7266C33.7857 12.8441 29.5714 14.6799 59 1.86043Z" fill="white"/>
-</svg>
+          <CloseButton onClick={onClose} disableRipple>
+          <svg width="31" height="13" viewBox="0 0 31 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M29.9049 2.44378C30.446 2.04778 30.4605 1.23555 29.9251 0.8319L29.4148 0.44717C29.0626 0.181672 28.5782 0.178211 28.2222 0.438652L16.0701 9.3312C15.7185 9.58849 15.2408 9.58852 14.8892 9.33128L14.0566 8.72226L14.0645 8.72745L2.80182 0.484793C2.45012 0.227397 1.97222 0.227426 1.62055 0.484863L1.1024 0.864167C0.556606 1.26371 0.555576 2.07777 1.10142 2.47725C4.73609 5.13731 11.7446 10.2664 14.8914 12.5694C15.2429 12.8267 15.72 12.8243 16.0716 12.5671C17.4436 11.5638 17.174 11.7611 29.9049 2.44378Z" fill="white"/>
+          </svg>
+
 
 
           </CloseButton>
@@ -1384,6 +1411,7 @@ const LyricsModernView: React.FC<{
   theme: any;
   filteredLines: any[];
   isMainDisplay?: boolean;
+  isMobile?: boolean;
 }> = memo(({
   lyricsData,
   loading,
@@ -1392,6 +1420,7 @@ const LyricsModernView: React.FC<{
   theme,
   filteredLines,
   isMainDisplay = false,
+  isMobile = false,
 }) => {
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [isNewLine, setIsNewLine] = useState(false);
@@ -1633,8 +1662,8 @@ const LyricsModernView: React.FC<{
         sx={{
           width: '100%',
           height: '100%',
-          minHeight: '350px',
-          maxHeight: '350px',
+          minHeight: isMobile ? '65vh' : '100vh',
+          maxHeight: isMobile ? '65vh' : '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',

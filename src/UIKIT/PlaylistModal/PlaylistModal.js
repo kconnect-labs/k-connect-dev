@@ -555,11 +555,28 @@ const PlaylistModal = ({
                           ? theme.spacing(1)
                           : theme.spacing(2),
                       overflow: 'hidden',
-                      maxHeight: '400px',
+                      maxHeight: '60vh',
                       mx: 1,
                     }}
                   >
-                    <List sx={{ overflow: 'auto', maxHeight: '100%' }}>
+                    <List sx={{ 
+                      overflow: 'auto', 
+                      maxHeight: '100%',
+                      '&::-webkit-scrollbar': {
+                        width: '8px',
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: '4px',
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                        borderRadius: '4px',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        },
+                      },
+                    }}>
                       {playlistTracks.map((track, index) => {
                         const playing = isTrackPlaying(track);
                         return (

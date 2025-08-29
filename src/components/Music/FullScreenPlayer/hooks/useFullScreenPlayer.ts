@@ -305,6 +305,13 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     }
   }, [trackId, open, currentTrack]);
 
+  // Сброс режима отображения текста, если нет данных текста
+  useEffect(() => {
+    if (!lyricsData || (!lyricsData.has_synced_lyrics && !lyricsData.lyrics)) {
+      setLyricsDisplayMode(false);
+    }
+  }, [lyricsData]);
+
   // Управление скроллом страницы
   useEffect(() => {
     if (open) {
