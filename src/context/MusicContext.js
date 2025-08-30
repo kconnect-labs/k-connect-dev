@@ -77,6 +77,8 @@ export const MusicContext = createContext({
   openFullScreenPlayer: () => {},
   closeFullScreenPlayer: () => {},
   playTrackById: () => {},
+  enableTimeUpdates: () => {},
+  disableTimeUpdates: () => {},
 });
 
 export const MusicProvider = ({ children }) => {
@@ -110,6 +112,7 @@ export const MusicProvider = ({ children }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [isTrackLoading, setIsTrackLoading] = useState(false);
   const [isFullScreenPlayerOpen, setIsFullScreenPlayerOpen] = useState(false);
+  const [hasActiveTimeListeners, setHasActiveTimeListeners] = useState(false);
 
   const audioRef = useRef(new Audio());
   const nextAudioRef = useRef(new Audio());
@@ -124,6 +127,9 @@ export const MusicProvider = ({ children }) => {
   const durationRef = useRef(0);
   const timeUpdateThrottleRef = useRef(null);
   const lastTimeUpdateRef = useRef(0);
+  const hasTimeListenersRef = useRef(false);
+  const nextTrackCacheRef = useRef(null);
+  const lastNextTrackCallRef = useRef(0);
 
   const likedTracksLastLoadedRef = useRef(null);
 
@@ -406,7 +412,7 @@ export const MusicProvider = ({ children }) => {
         currentTimeRef.current = audio.currentTime;
         durationRef.current = audio.duration;
 
-        if ('mediaSession' in navigator && audio.duration) {
+        if ('mediaSession' in navigator && audio.duration && isPlaying) {
           navigator.mediaSession.setPositionState({
             duration: audio.duration,
             position: audio.currentTime,
@@ -416,19 +422,39 @@ export const MusicProvider = ({ children }) => {
 
         const now = Date.now();
         if (now - lastTimeUpdateRef.current > 100) { // Уменьшаем до 100ms для лучшей синхронизации
-          setCurrentTime(audio.currentTime);
-          setDuration(audio.duration);
+          // Обновляем состояние только если есть слушатели, музыка играет и время действительно изменилось
+          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && isPlaying && Math.abs(currentTimeRef.current - audio.currentTime) > 0.1) {
+            setCurrentTime(audio.currentTime);
+          }
+          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && Math.abs(durationRef.current - audio.duration) > 0.1) {
+            setDuration(audio.duration);
+          }
           lastTimeUpdateRef.current = now;
         }
 
         if (enableCrossfade && isPlaying && audio.duration > 0) {
           const timeRemaining = audio.duration - audio.currentTime;
 
+          // Предзагрузка следующего трека за 10 секунд до конца
+          if (timeRemaining <= 10 && timeRemaining > 3 && !crossfadeTimeoutRef.current) {
+            getNextTrack().then(nextTrackToLoad => {
+              if (nextTrackToLoad && nextAudioRef.current) {
+                console.log('Preloading next track:', nextTrackToLoad.title);
+                nextAudioRef.current.src = nextTrackToLoad.file_path;
+                nextAudioRef.current.load();
+              }
+            });
+          }
+
+          // Запуск crossfade за 3 секунды до конца
           if (
             timeRemaining <= 3 &&
             timeRemaining > 0 &&
             !crossfadeTimeoutRef.current
           ) {
+            console.log('Starting crossfade...');
+            crossfadeTimeoutRef.current = true; // Устанавливаем флаг, чтобы предотвратить повторные вызовы
+            
             getNextTrack().then(nextTrackToPlay => {
               if (nextTrackToPlay) {
                 nextAudioRef.current.src = nextTrackToPlay.file_path;
@@ -467,27 +493,16 @@ export const MusicProvider = ({ children }) => {
                       ];
 
                       setCurrentTrack(nextTrackToPlay);
-
-                      // Сохраняем текущую секцию вместо автоматического определения
                       setCurrentSectionHandler(currentSection);
+                      localStorage.setItem('currentTrack', JSON.stringify(nextTrackToPlay));
 
                       crossfadeTimeoutRef.current = null;
                     }
                   } else {
                     clearInterval(fadeInterval);
+                    crossfadeTimeoutRef.current = null;
                   }
                 }, 100);
-
-                crossfadeTimeoutRef.current = fadeInterval;
-              }
-            });
-          }
-
-          if (timeRemaining <= 10 && timeRemaining > 3) {
-            getNextTrack().then(nextTrackToLoad => {
-              if (nextTrackToLoad && nextAudioRef.current) {
-                nextAudioRef.current.src = nextTrackToLoad.file_path;
-                nextAudioRef.current.load();
               }
             });
           }
@@ -497,39 +512,39 @@ export const MusicProvider = ({ children }) => {
 
     const handleEnded = () => {
       if (isMounted) {
-        if (enableCrossfade && crossfadeTimeoutRef.current) {
-          clearInterval(crossfadeTimeoutRef.current);
-          crossfadeTimeoutRef.current = null;
-
-          audioRef.current.pause();
-
+        console.log('Track ended, handling transition...');
+        
+        // Сбрасываем crossfade флаг
+        crossfadeTimeoutRef.current = null;
+        
+        // Останавливаем текущий трек
+        audioRef.current.pause();
+        
+        // Если crossfade был активен, но не завершился, используем nextAudioRef
+        if (enableCrossfade && nextAudioRef.current.src && !nextAudioRef.current.paused) {
+          console.log('Using preloaded next track from crossfade');
+          
+          // Меняем местами audio элементы
           const tempAudio = audioRef.current;
           audioRef.current = nextAudioRef.current;
           nextAudioRef.current = tempAudio;
-
+          
+          // Получаем информацию о следующем треке
           getNextTrack()
             .then(nextTrackToPlay => {
               if (nextTrackToPlay) {
                 setCurrentTrack(nextTrackToPlay);
-
-                // Сохраняем текущую секцию вместо автоматического определения
                 setCurrentSectionHandler(currentSection);
-
-                localStorage.setItem(
-                  'currentTrack',
-                  JSON.stringify(nextTrackToPlay)
-                );
+                localStorage.setItem('currentTrack', JSON.stringify(nextTrackToPlay));
               }
             })
             .catch(error => {
-              console.error(
-                'Error getting next track after track ended:',
-                error
-              );
-
+              console.error('Error getting next track after track ended:', error);
               nextTrack();
             });
         } else {
+          // Если crossfade не сработал, просто переключаем на следующий трек
+          console.log('Crossfade not active, switching to next track normally');
           nextTrack();
         }
       }
@@ -661,16 +676,36 @@ export const MusicProvider = ({ children }) => {
           .catch(err => console.error('Error fetching lyrics for track:', err));
       }
 
+      // Сначала сбрасываем состояние времени
+      setCurrentTime(0);
+      setDuration(0);
+      
+      // Останавливаем и очищаем все audio элементы
       audioRef.current.pause();
       nextAudioRef.current.pause();
+
+      // Очищаем crossfade если он активен
+      if (crossfadeTimeoutRef.current) {
+        clearInterval(crossfadeTimeoutRef.current);
+        crossfadeTimeoutRef.current = null;
+      }
 
       audioRef.current.src = '';
       nextAudioRef.current.src = '';
 
+      // Принудительно сбрасываем время в audio элементе
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+      }
+      if (nextAudioRef.current) {
+        nextAudioRef.current.currentTime = 0;
+      }
+
       setCurrentTrack(track);
       setCurrentSectionHandler(trackSection);
-      setCurrentTime(0);
-      setDuration(0);
+      
+      // Очищаем кеш следующего трека при смене трека
+      nextTrackCacheRef.current = null;
 
       try {
         localStorage.setItem('currentTrack', JSON.stringify(track));
@@ -681,8 +716,16 @@ export const MusicProvider = ({ children }) => {
 
       audioRef.current = new Audio();
 
+      // Добавляем слушатели событий для нового audio элемента
+      // (эти функции будут пересозданы в useEffect выше)
+
       const handleCanPlayThrough = () => {
         setIsTrackLoading(false);
+
+        // Устанавливаем длительность трека
+        if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
+          setDuration(audioRef.current.duration);
+        }
 
         audioRef.current.volume = isMuted ? 0 : volume;
 
@@ -724,6 +767,13 @@ export const MusicProvider = ({ children }) => {
 
       const handleLoadStart = () => {};
 
+      const handleLoadedMetadata = () => {
+        // Устанавливаем длительность трека сразу после загрузки метаданных
+        if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
+          setDuration(audioRef.current.duration);
+        }
+      };
+
       const handleError = error => {
         const audio = audioRef.current;
         
@@ -748,6 +798,7 @@ export const MusicProvider = ({ children }) => {
         { once: true }
       );
       audioRef.current.addEventListener('loadstart', handleLoadStart);
+      audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
       audioRef.current.addEventListener('error', handleError);
 
       audioRef.current.src = getAudioUrl(track.file_path);
@@ -759,6 +810,7 @@ export const MusicProvider = ({ children }) => {
           handleCanPlayThrough
         );
         audioRef.current.removeEventListener('loadstart', handleLoadStart);
+        audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
         audioRef.current.removeEventListener('error', handleError);
       };
     } catch (error) {
@@ -859,6 +911,15 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
+      // Проверяем кеш - если недавно запрашивали, возвращаем кешированный результат
+      const now = Date.now();
+      if (nextTrackCacheRef.current && (now - lastNextTrackCallRef.current) < 5000) {
+        console.log('Using cached next track');
+        return nextTrackCacheRef.current;
+      }
+
+      lastNextTrackCallRef.current = now;
+
       // Для всех секций делаем запрос к бэкенду
       try {
         const response = await axios.get('/api/music/next', {
@@ -870,6 +931,7 @@ export const MusicProvider = ({ children }) => {
         });
 
         if (response.data.success && response.data.track) {
+          nextTrackCacheRef.current = response.data.track;
           return response.data.track;
         } else {
           return null;
@@ -916,7 +978,9 @@ export const MusicProvider = ({ children }) => {
 
         if (currentIndex === -1) {
           // Если текущий трек не найден в списке, возвращаем первый
-          return trackList[0];
+          const firstTrack = trackList[0];
+          nextTrackCacheRef.current = firstTrack;
+          return firstTrack;
         }
 
         // Проверяем, нужно ли загрузить больше треков
@@ -933,7 +997,9 @@ export const MusicProvider = ({ children }) => {
 
         // Возвращаем следующий трек
         if (currentIndex < trackList.length - 1) {
-          return trackList[currentIndex + 1];
+          const nextTrack = trackList[currentIndex + 1];
+          nextTrackCacheRef.current = nextTrack;
+          return nextTrack;
         } else {
           // Если это последний трек, пытаемся загрузить больше
           if (hasMoreByType[currentSection]) {
@@ -965,13 +1031,17 @@ export const MusicProvider = ({ children }) => {
               }
 
               if (updatedTrackList.length > trackList.length) {
-                return updatedTrackList[trackList.length];
+                const nextTrack = updatedTrackList[trackList.length];
+                nextTrackCacheRef.current = nextTrack;
+                return nextTrack;
               }
             }
           }
 
           // Зацикливаемся на первый трек
-          return trackList[0];
+          const firstTrack = trackList[0];
+          nextTrackCacheRef.current = firstTrack;
+          return firstTrack;
         }
       }
     } catch (error) {
@@ -2159,6 +2229,16 @@ export const MusicProvider = ({ children }) => {
     return currentTimeRef.current || 0;
   }, []);
 
+  const enableTimeUpdates = useCallback(() => {
+    hasTimeListenersRef.current = true;
+    setHasActiveTimeListeners(true);
+  }, []);
+
+  const disableTimeUpdates = useCallback(() => {
+    hasTimeListenersRef.current = false;
+    setHasActiveTimeListeners(false);
+  }, []);
+
   const getDurationRaw = useCallback(() => {
     const audio = audioRef.current;
 
@@ -2271,6 +2351,7 @@ export const MusicProvider = ({ children }) => {
   // Функции для управления полноэкранным плеером
   const openFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(true);
+    hasTimeListenersRef.current = true; // Включаем обновления времени
 
     // Проверяем, работаем ли мы на iOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -2313,6 +2394,7 @@ export const MusicProvider = ({ children }) => {
 
   const closeFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(false);
+    hasTimeListenersRef.current = false; // Отключаем обновления времени
 
     // Проверяем, работаем ли мы на iOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -2505,6 +2587,8 @@ export const MusicProvider = ({ children }) => {
     closeFullScreenPlayer,
     forceLoadTracks,
     playTrackById,
+    enableTimeUpdates,
+    disableTimeUpdates,
   };
 
   return (

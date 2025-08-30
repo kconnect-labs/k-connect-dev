@@ -55,7 +55,7 @@ const Badge = ({
     if (className) classes.push(className);
     if (imageLoaded) classes.push('badge--loaded');
     if (imageError) classes.push('badge--error');
-    if (achievement?.upgrade) classes.push('badge--upgraded');
+    if (achievement?.upgrade && achievement.upgrade !== '0') classes.push('badge--upgraded');
     if (isHovered) classes.push('badge--hovered');
 
     return classes.join(' ');

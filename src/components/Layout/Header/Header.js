@@ -73,7 +73,7 @@ const Header = ({ toggleSidebar }) => {
     main_account: null,
     channels: [],
   });
-  const [setUnreadNotificationsCount] = useState(0);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

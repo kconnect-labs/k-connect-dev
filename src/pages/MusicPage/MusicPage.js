@@ -161,6 +161,8 @@ const MusicPage = () => {
           onClick={() => navigate('/music/liked')}
         />
 
+
+
         {/* Все треки */}
         <MusicTypeContainer
           title={t('music.links.all_tracks.title')}
