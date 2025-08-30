@@ -143,7 +143,7 @@ const AllTracksBlock = () => {
     isPlaying,
     playTrack,
     pauseTrack,
-    toggleLike,
+    likeTrack,
     searchTracks,
     searchResults,
     isSearching,
@@ -156,6 +156,7 @@ const AllTracksBlock = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [localSearchResults, setLocalSearchResults] = useState([]);
 
   // Refs для управления поиском
   const searchTimeoutRef = useRef(null);
@@ -212,6 +213,10 @@ const AllTracksBlock = () => {
 
       try {
         const results = await searchTracks(query);
+        // Обновляем локальные результаты поиска
+        if (results && Array.isArray(results)) {
+          setLocalSearchResults(results);
+        }
       } catch (error) {
         if (error.name !== 'AbortError') {
           console.error('[AllTracksBlock] Ошибка поиска:', error);
@@ -261,9 +266,63 @@ const AllTracksBlock = () => {
   const handleLikeTrack = useCallback(
     (trackId, event) => {
       event.stopPropagation();
-      toggleLike(trackId);
+
+      if (trackId) {
+        try {
+          const likeButton = event.currentTarget;
+          likeButton.style.transform = 'scale(1.3)';
+          setTimeout(() => {
+            likeButton.style.transform = 'scale(1)';
+          }, 150);
+
+          // Оптимистично обновляем UI
+          const currentTracks = searchQuery.trim() ? (localSearchResults.length > 0 ? localSearchResults : searchResults) : tracks;
+          const trackIndex = currentTracks.findIndex(track => track.id === trackId);
+          
+          if (trackIndex !== -1) {
+            const updatedTracks = [...currentTracks];
+            updatedTracks[trackIndex] = {
+              ...updatedTracks[trackIndex],
+              is_liked: !updatedTracks[trackIndex].is_liked
+            };
+            
+            if (searchQuery.trim()) {
+              // Обновляем локальные результаты поиска
+              setLocalSearchResults(updatedTracks);
+            } else {
+              // Обновляем обычные треки
+              setTracks(updatedTracks);
+            }
+          }
+
+          likeTrack(trackId)
+            .then(result => {
+              console.log('Like result:', result);
+            })
+            .catch(error => {
+              console.error('Error liking track:', error);
+              // Откатываем изменения в случае ошибки
+              if (trackIndex !== -1) {
+                const revertedTracks = [...currentTracks];
+                revertedTracks[trackIndex] = {
+                  ...revertedTracks[trackIndex],
+                  is_liked: !revertedTracks[trackIndex].is_liked
+                };
+                
+                if (searchQuery.trim()) {
+                  // Откатываем локальные результаты поиска
+                  setLocalSearchResults(revertedTracks);
+                } else {
+                  setTracks(revertedTracks);
+                }
+              }
+            });
+        } catch (error) {
+          console.error('Error liking track:', error);
+        }
+      }
     },
-    [toggleLike]
+    [likeTrack, tracks, searchResults, searchQuery, localSearchResults]
   );
 
   const handleSearchChange = e => {
@@ -291,6 +350,7 @@ const AllTracksBlock = () => {
 
   const clearSearch = () => {
     setSearchQuery('');
+    setLocalSearchResults([]);
     // Отменяем активный поиск
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -352,7 +412,7 @@ const AllTracksBlock = () => {
             <Box sx={{ flexGrow: 1 }} />
             <Typography variant='body2' color='text.secondary'>
               {searchQuery.trim()
-                ? `${searchResults.length} найдено`
+                ? `${localSearchResults.length > 0 ? localSearchResults.length : searchResults.length} найдено`
                 : `${tracks.length} треков`}
             </Typography>
           </AllTracksHeader>
@@ -385,7 +445,7 @@ const AllTracksBlock = () => {
           </SearchContainer>
 
           <List sx={{ p: 0 }}>
-            {(searchQuery.trim() ? searchResults : tracks).map(
+            {(searchQuery.trim() ? (localSearchResults.length > 0 ? localSearchResults : searchResults) : tracks).map(
               (track, index) => {
                 const isCurrentTrack = currentTrack?.id === track.id;
                 const isTrackPlaying = isPlaying && isCurrentTrack;
@@ -442,7 +502,7 @@ const AllTracksBlock = () => {
                     </TrackCard>
                     {index <
                       (searchQuery.trim()
-                        ? searchResults.length
+                        ? (localSearchResults.length > 0 ? localSearchResults.length : searchResults.length)
                         : tracks.length) -
                         1 && (
                       <Divider
