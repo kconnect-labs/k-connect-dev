@@ -718,15 +718,15 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
         <Box
           sx={{
             display: 'flex',
-            flexDirection: isMobile || !lyricsDisplayMode ? 'column' : 'row',
+            flexDirection: isMobile ? 'column' : 'row',
             flex: 1,
             justifyContent: isMobile ? 'flex-start' : 'center',
-            alignItems: isMobile || !lyricsDisplayMode ? 'center' : 'stretch',
+            alignItems: isMobile ? 'center' : 'stretch',
             padding: isMobile ? '0 10px' : '0 32px',
-            gap: isMobile || !lyricsDisplayMode ? 0 : '32px',
+            gap: isMobile ? 0 : '32px',
             position: 'relative',
             zIndex: 2,
-            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+            transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {/* Left Side - Album Art and Controls (Desktop) or Full Content (Mobile) */}
@@ -734,12 +734,12 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              flex: isMobile || !lyricsDisplayMode ? 1 : '0 0 50%',
+              flex: 1,
               alignItems: 'center',
               justifyContent: isMobile && lyricsDisplayMode ? 'flex-end' : (isMobile ? 'flex-start' : 'center'),
               minHeight: isMobile ? 'auto' : '100%',
-              transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isMobile || !lyricsDisplayMode ? 'translateX(0)' : 'translateX(-50%)',
+              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isMobile || !lyricsDisplayMode ? 'translateX(0)' : 'translateX(-25%)',
             }}
           >
             {/* Album Art or Lyrics Display */}
@@ -762,9 +762,7 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                   overflow: 'hidden',
                   position: 'relative',
                   padding: '0px',
-                  transition: lyricsDisplayMode 
-                    ? 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)' 
-                    : 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
               >
                 {isMobile && lyricsDisplayMode && (lyricsData?.has_synced_lyrics || lyricsData?.lyrics) ? (
@@ -964,12 +962,11 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
-                  flex: lyricsDisplayMode ? '0 0 50%' : '0 0 0%',
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: '100vh',
                   maxHeight: '100vh',
-                  paddingLeft: lyricsDisplayMode ? '32px' : '0px',
+                  paddingLeft: '32px',
                   paddingRight: '16px',
                   overflow: 'hidden',
                   opacity: lyricsDisplayMode ? 1 : 0,
@@ -1200,9 +1197,7 @@ const LyricsLine: React.FC<{
               : { xs: '1.6rem', sm: '1.8rem' },
             fontWeight: 600,
             ...baseStyles,
-            maxWidth: isMainDisplay
-              ? { xs: '95%', sm: '90%', md: '100%', lg: '100%' }
-              : { xs: '98%', sm: '95%' },
+            maxWidth: '100%',
             minHeight: isMainDisplay ? '3.5em' : '2.5em',
             position: 'static',
             textShadow:
@@ -1237,9 +1232,7 @@ const LyricsLine: React.FC<{
               : { xs: '1rem', sm: '1.2rem' },
             fontWeight: 700,
             ...baseStyles,
-            maxWidth: isMainDisplay
-              ? { xs: '92%', sm: '87%', md: '82%', lg: '75%' }
-              : { xs: '96%', sm: '92%' },
+            maxWidth: '100%',
             position: 'static',
           }}
         >
@@ -1529,7 +1522,7 @@ const LyricsModernView: React.FC<{
           height: '100%',
           minHeight: '350px',
           display: 'flex',
-          maxWidth: isMainDisplay ? '650px' : '850px',
+          maxWidth: '100%',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
@@ -1631,11 +1624,7 @@ const LyricsModernView: React.FC<{
                     letterSpacing: isActive ? '-0.02em' : '-0.01em',
                     textAlign: 'center',
                     width: '100%',
-                    maxWidth: isActive 
-                      ? '100%'
-                      : distanceFromCurrent === -1 || distanceFromCurrent === 1
-                      ? '100%'
-                      : '100%',
+                    maxWidth: '100%',
                     wordBreak: 'break-word',
                     whiteSpace: 'pre-wrap',
                     overflowWrap: 'break-word',
@@ -1689,7 +1678,7 @@ const LyricsModernView: React.FC<{
       >
         <Box sx={{ 
           width: '100%',
-          maxWidth: isMainDisplay ? '100%' : '100%',
+          maxWidth: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
