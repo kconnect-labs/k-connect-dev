@@ -18,6 +18,10 @@ import {
   Alert,
 } from '@mui/material';
 import {
+  Favorite as FavoriteIcon,
+  FavoriteBorder as FavoriteBorderIcon,
+} from '@mui/icons-material';
+import {
   PlayIcon,
   PauseIcon,
   ForwardIcon,
@@ -397,17 +401,34 @@ const ControlsSection = memo(
   }
 );
 
-// Мемоизированная секция громкости
+// Мемоизированная секция громкости и лайка
 const VolumeSection = memo(
-  ({ volume, isMuted, toggleMute, handleVolumeChange, dominantColor }) => (
+  ({ volume, isMuted, toggleMute, handleVolumeChange, dominantColor, currentTrack, onLikeClick }) => (
     <Box
       sx={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-end',
         width: '25%',
+        gap: 1,
       }}
     >
+      {/* Кнопка лайка */}
+      <ControlButton
+        icon={
+          (currentTrack?.is_liked) ? (
+            <FavoriteIcon size={20} />
+          ) : (
+            <FavoriteBorderIcon size={20} />
+          )
+        }
+        onClick={onLikeClick}
+        ariaLabel='Toggle like'
+        color={(currentTrack?.is_liked) ? '#ff2d55' : 'rgba(255,255,255,0.8)'}
+        active={(currentTrack?.is_liked)}
+        activeColor='#ff2d55'
+      />
+
       <ControlButton
         icon={
           volume < 0.5 ? (
@@ -430,14 +451,16 @@ const VolumeSection = memo(
     </Box>
   ),
   (prevProps, nextProps) => {
-    // Сравнение для громкости - округляем до процентов
+    // Сравнение для громкости и лайка - округляем до процентов
     return (
       prevProps.isMuted === nextProps.isMuted &&
       Math.round(prevProps.volume * 100) ===
         Math.round(nextProps.volume * 100) &&
       prevProps.dominantColor === nextProps.dominantColor &&
       prevProps.toggleMute === nextProps.toggleMute &&
-      prevProps.handleVolumeChange === nextProps.handleVolumeChange
+      prevProps.handleVolumeChange === nextProps.handleVolumeChange &&
+      prevProps.currentTrack?.is_liked === nextProps.currentTrack?.is_liked &&
+      prevProps.onLikeClick === nextProps.onLikeClick
     );
   }
 );
@@ -869,6 +892,8 @@ const DesktopPlayer = memo(({ isMobile }) => {
           toggleMute={toggleMute}
           handleVolumeChange={handleVolumeChange}
           dominantColor={dominantColor}
+          currentTrack={currentTrack}
+          onLikeClick={toggleLikeTrack}
         />
       </PlayerContainer>
 
