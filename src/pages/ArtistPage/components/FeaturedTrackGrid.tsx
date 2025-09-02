@@ -242,7 +242,7 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
         
         <TrackMeta>
           <PlaysCount>
-            {(track.plays_count || 0).toLocaleString()} прослушиваний
+            {(track.plays_count || 0).toLocaleString()}
           </PlaysCount>
           <ActionButtons>
             <LikeButton onClick={handleLikeClick}>

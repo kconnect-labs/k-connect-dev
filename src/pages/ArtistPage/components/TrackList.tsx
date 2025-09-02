@@ -222,7 +222,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
               <MetaText>•</MetaText>
             </>
           )}
-          <MetaText>{(track.plays_count ?? 0).toLocaleString()} прослушиваний</MetaText>
+          <MetaText>{(track.plays_count ?? 0).toLocaleString()} </MetaText>
         </TrackMeta>
       </TrackInfo>
 

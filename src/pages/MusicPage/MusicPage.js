@@ -198,7 +198,7 @@ const MusicPage = () => {
       </Snackbar>
 
       {/* Mobile Player */}
-      <MobilePlayer isMobile={isMobile} />
+      <MobilePlayer isMobile={isMobile} isModalOpen={false} />
     </Box>
   );
 };

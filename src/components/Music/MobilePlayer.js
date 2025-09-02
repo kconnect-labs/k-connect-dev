@@ -6,6 +6,7 @@ import React, {
   useMemo,
   memo,
 } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Typography,
@@ -31,9 +32,9 @@ import {
 
 const getColorFromImage = extractDominantColor;
 
-const PlayerContainer = styled(Paper)(({ theme, covercolor }) => ({
+const PlayerContainer = styled(Paper)(({ theme, covercolor, isModalOpen }) => ({
   position: 'fixed',
-  bottom: 85,
+  bottom: isModalOpen ? 0 : 85,
   left: 0,
   right: 0,
   zIndex: 99999,
@@ -110,7 +111,7 @@ const TrackInfo = memo(({ title, artist, onClick }) => (
   </Box>
 ));
 
-const MobilePlayer = memo(({ isMobile }) => {
+const MobilePlayer = memo(({ isMobile, isModalOpen }) => {
   const theme = useTheme();
   const { themeSettings } = useContext(ThemeSettingsContext);
   const {
@@ -385,6 +386,7 @@ const MobilePlayer = memo(({ isMobile }) => {
       <PlayerContainer
         elevation={0}
         covercolor={dominantColor}
+        isModalOpen={isModalOpen}
         sx={{ display: isFullScreenPlayerOpen ? 'none' : 'flex' }}
         className={isFullScreenPlayerOpen ? 'hidden' : ''}
       >
@@ -460,5 +462,15 @@ const MobilePlayer = memo(({ isMobile }) => {
     document.body
   );
 });
+
+MobilePlayer.propTypes = {
+  isMobile: PropTypes.bool,
+  isModalOpen: PropTypes.bool,
+};
+
+MobilePlayer.defaultProps = {
+  isMobile: false,
+  isModalOpen: false,
+};
 
 export default MobilePlayer;
