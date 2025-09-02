@@ -204,10 +204,15 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
     // Здесь можно добавить функциональность меню
   };
 
+  const handleTrackClick = () => {
+    // Передаем контекст артиста для правильного переключения
+    onTrackClick(track, 'artist');
+  };
+
   return (
     <TrackCard
       className="track-card"
-      onClick={() => onTrackClick(track)}
+      onClick={handleTrackClick}
     >
       <TrackImageContainer>
         <TrackImage

@@ -19,13 +19,15 @@ export const useArtistActions = (artist: Artist | null): UseArtistActionsReturn 
   } = useMusic();
 
   // Обработка клика по треку
-  const handleTrackClick = useCallback((track: Track) => {
-    handlePlayTrack(track);
+  const handleTrackClick = useCallback((track: Track, context?: string) => {
+    handlePlayTrack(track, context);
   }, []);
 
   // Обработка воспроизведения трека
-  const handlePlayTrack = useCallback((track: Track) => {
-    playTrack(track, 'artist');
+  const handlePlayTrack = useCallback((track: Track, context?: string) => {
+    // Если передан контекст альбома, используем его, иначе используем контекст артиста
+    const playContext = context || 'artist';
+    playTrack(track, playContext);
     if (isMobile) {
       openFullScreenPlayer();
     }

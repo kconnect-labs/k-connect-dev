@@ -77,7 +77,6 @@ const AlbumCard = styled(Card)(({ theme }) => ({
 const AlbumCover = styled(CardMedia)(({ theme }) => ({
   aspectRatio: '1',
   position: 'relative',
-  background: 'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 100%)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

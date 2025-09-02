@@ -189,10 +189,15 @@ const TrackItem: React.FC<TrackItemProps> = ({
     // Здесь можно добавить функциональность меню
   };
 
+  const handleTrackClick = () => {
+    // Передаем контекст артиста для правильного переключения
+    onTrackClick(track, 'artist');
+  };
+
   return (
     <StyledListItem
       ref={isLast ? lastTrackRef : null}
-      onClick={() => onTrackClick(track)}
+      onClick={handleTrackClick}
       isCurrentTrack={isCurrentTrack}
     >
       {/* Номер трека / Кнопка воспроизведения */}

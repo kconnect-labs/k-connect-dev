@@ -61,7 +61,7 @@ interface AlbumModalProps {
   album: Album | null;
   isOpen: boolean;
   onClose: () => void;
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => void;
   currentTrack: any;
   isPlaying: boolean;
@@ -245,7 +245,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
   isPlaying,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   const [albumDetails, setAlbumDetails] = useState<Album | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -282,8 +282,14 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 
   const handlePlayAlbum = () => {
     if (albumDetails?.tracks && albumDetails.tracks.length > 0) {
-      onTrackClick(albumDetails.tracks[0]);
+      // Передаем контекст альбома для правильного переключения
+      onTrackClick(albumDetails.tracks[0], `album_${albumDetails.id}`);
     }
+  };
+
+  const handleTrackClick = (track: Track) => {
+    // Передаем контекст альбома для правильного переключения
+    onTrackClick(track, `album_${albumDetails?.id}`);
   };
 
   if (!album) return null;
@@ -435,7 +441,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                     key={track.id}
                     className={isCurrentTrack ? 'current-track' : ''}
                     sx={{ cursor: 'pointer' }}
-                    onClick={() => onTrackClick(track)}
+                    onClick={() => handleTrackClick(track)}
                   >
                     <ListItemAvatar>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

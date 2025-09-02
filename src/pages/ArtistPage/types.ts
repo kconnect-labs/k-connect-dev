@@ -60,8 +60,8 @@ export interface UseArtistDataReturn extends ArtistPageState {
 }
 
 export interface UseArtistActionsReturn {
-  handleTrackClick: (track: Track) => void;
-  handlePlayTrack: (track: Track) => void;
+  handleTrackClick: (track: Track, context?: string) => void;
+  handlePlayTrack: (track: Track, context?: string) => void;
   handleLikeTrack: (trackId: number) => Promise<void>;
   handleTogglePlay: (track: Track) => void;
   handleBackClick: () => void;
@@ -85,7 +85,7 @@ export interface TrackSectionProps {
   title: string;
   tracks: Track[];
   featured?: boolean;
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => Promise<void>;
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -93,7 +93,7 @@ export interface TrackSectionProps {
 
 export interface TrackListProps {
   tracks: Track[];
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => Promise<void>;
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -104,7 +104,7 @@ export interface TrackListProps {
 
 export interface FeaturedTrackGridProps {
   tracks: Track[];
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => Promise<void>;
   currentTrack: Track | null;
   isPlaying: boolean;
@@ -115,7 +115,7 @@ export interface TrackItemProps {
   index: number;
   isCurrentTrack: boolean;
   isPlaying: boolean;
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => Promise<void>;
   isLast?: boolean;
   lastTrackRef?: ((node: any) => void) | null;
@@ -125,7 +125,7 @@ export interface FeaturedTrackItemProps {
   track: Track;
   isCurrentTrack: boolean;
   isPlaying: boolean;
-  onTrackClick: (track: Track) => void;
+  onTrackClick: (track: Track, context?: string) => void;
   onLikeTrack: (trackId: number) => Promise<void>;
 }
 
