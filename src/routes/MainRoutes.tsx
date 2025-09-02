@@ -34,7 +34,7 @@ const NotificationsPage = React.lazy(
 );
 const SearchPage = React.lazy(() => import('../pages/Main/SearchPage'));
 const MusicPage = React.lazy(() => import('../pages/MusicPage/MusicPage.js'));
-const ArtistPage = React.lazy(() => import('../pages/Main/ArtistPage'));
+const ArtistPage = React.lazy(() => import('../pages/ArtistPage/ArtistPage'));
 const MessengerPage = React.lazy(
   () => import('../pages/Messenger/MessengerPage')
 );

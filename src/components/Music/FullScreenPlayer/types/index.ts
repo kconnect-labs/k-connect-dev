@@ -7,6 +7,8 @@ export interface Track {
   cover_path?: string;
   duration?: number;
   is_liked?: boolean;
+  plays_count?: number;
+  created_at?: string;
   lyricsData?: LyricsData;
 }
 
