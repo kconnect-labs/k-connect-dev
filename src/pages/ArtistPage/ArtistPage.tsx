@@ -333,7 +333,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
       )}
 
       {/* Мобильный плеер */}
-      <MobilePlayer />
+      <MobilePlayer isMobile={isMobile} />
 
               {/* Десктопный плеер */}
         {!isMobile && currentTrack && <DesktopPlayer />}

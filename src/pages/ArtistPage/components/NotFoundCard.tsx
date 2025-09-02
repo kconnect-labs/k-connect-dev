@@ -100,7 +100,6 @@ const Title = styled(Typography)(({ theme }) => ({
 const Description = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.7)',
   lineHeight: 1.6,
-  marginBottom: theme.spacing(3),
   maxWidth: 600,
   margin: '0 auto',
   marginBottom: theme.spacing(3),

@@ -62,21 +62,43 @@ const ArtistsBlock = () => {
   const searchTimeoutRef = useRef(null);
   const abortControllerRef = useRef(null);
 
-  // Загрузка популярных артистов
+  // Загрузка рекомендованных артистов
   const fetchPopularArtists = useCallback(async () => {
     try {
       setArtistsLoading(true);
       const response = await axios.get(
-        '/api/moderator/artists?page=1&per_page=6'
+        '/api/music/artists/recommended?limit=6'
       );
 
       if (response.data.success) {
         setPopularArtists(response.data.artists || []);
       } else {
         console.error('Ошибка при получении артистов:', response.data.error);
+        // Fallback к старому эндпоинту
+        try {
+          const fallbackResponse = await axios.get(
+            '/api/moderator/artists?page=1&per_page=6'
+          );
+          if (fallbackResponse.data.success) {
+            setPopularArtists(fallbackResponse.data.artists || []);
+          }
+        } catch (fallbackError) {
+          console.error('Fallback получение артистов также упало:', fallbackError);
+        }
       }
     } catch (error) {
       console.error('Ошибка при получении артистов:', error);
+      // Fallback к старому эндпоинту
+      try {
+        const fallbackResponse = await axios.get(
+          '/api/moderator/artists?page=1&per_page=6'
+        );
+        if (fallbackResponse.data.success) {
+          setPopularArtists(fallbackResponse.data.artists || []);
+        }
+      } catch (fallbackError) {
+        console.error('Fallback получение артистов также упало:', fallbackError);
+      }
     } finally {
       setArtistsLoading(false);
     }

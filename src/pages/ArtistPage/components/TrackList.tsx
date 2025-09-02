@@ -200,17 +200,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
       onClick={handleTrackClick}
       isCurrentTrack={isCurrentTrack}
     >
-      {/* Номер трека / Кнопка воспроизведения */}
-      <TrackNumber className="track-number">
-        {index + 1}
-      </TrackNumber>
-      <PlayButtonOverlay className="play-button">
-        {isPlaying ? (
-          <Pause sx={{ fontSize: 20 }} />
-        ) : (
-          <PlayArrow sx={{ fontSize: 20, marginLeft: '2px' }} />
-        )}
-      </PlayButtonOverlay>
+
 
       {/* Обложка трека */}
       <TrackAvatar
@@ -250,9 +240,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
             <FavoriteBorder sx={{ fontSize: 18 }} />
           )}
         </LikeButton>
-        <MoreButton className="more-button" onClick={handleMoreClick}>
-          <MoreHoriz sx={{ fontSize: 18 }} />
-        </MoreButton>
+
       </ActionButtons>
     </StyledListItem>
   );

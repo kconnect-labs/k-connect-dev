@@ -97,7 +97,6 @@ const ErrorTitle = styled(Typography)(({ theme }) => ({
 const ErrorDescription = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.7)',
   lineHeight: 1.6,
-  marginBottom: theme.spacing(3),
   maxWidth: 500,
   margin: '0 auto',
   marginBottom: theme.spacing(3),

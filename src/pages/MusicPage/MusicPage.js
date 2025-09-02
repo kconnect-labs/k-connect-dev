@@ -171,6 +171,9 @@ const MusicPage = () => {
           onClick={() => navigate('/music/all')}
         />
 
+        {/* Artists Block */}
+
+
         {/* Плейлисты */}
         <MusicTypeContainer
           title={t('music.links.playlists.title')}
@@ -178,12 +181,10 @@ const MusicPage = () => {
           icon={<MusicNote sx={{ fontSize: 24 }} />}
           onClick={() => navigate('/music/playlists')}
         />
+        <ArtistsBlock />
 
         {/* Charts Block */}
         <ChartsBlock />
-
-        {/* Artists Block */}
-        <ArtistsBlock />
       </Box>
 
       <Snackbar
