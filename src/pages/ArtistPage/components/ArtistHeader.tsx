@@ -220,7 +220,7 @@ const ActionSection = styled(Box)(({ theme }) => ({
 }));
 
 const PlayButton = styled(Button)(({ theme }) => ({
-  borderRadius: '32px',
+  borderRadius: '12px',
   padding: theme.spacing(1.5, 4),
   fontWeight: 800,
   fontSize: '1rem',

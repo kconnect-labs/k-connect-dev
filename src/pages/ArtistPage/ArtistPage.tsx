@@ -17,6 +17,7 @@ import InfoBlock from '../../UIKIT/InfoBlock';
 // Хуки
 import { useArtistData } from './hooks/useArtistData';
 import { useArtistActions } from './hooks/useArtistActions';
+import { useArtistAlbums } from './hooks/useArtistAlbums';
 
 // Компоненты
 import ArtistHeader from './components/ArtistHeader';
@@ -26,6 +27,8 @@ import TrackList from './components/TrackList';
 import NotFoundCard from './components/NotFoundCard';
 import LoadingState, { DetailedLoadingState } from './components/LoadingState';
 import ErrorState from './components/ErrorState';
+import AlbumsSection from './components/AlbumsSection';
+import AlbumModal from './components/AlbumModal';
 
 // Типы
 import { ArtistPageProps } from './types';
@@ -101,6 +104,13 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     shareArtist,
   } = useArtistActions(artist);
 
+  // Хук для альбомов
+  const {
+    albums,
+    isLoading: albumsLoading,
+    error: albumsError,
+  } = useArtistAlbums(artist?.id || null);
+
   // Обработчики для полноэкранного плеера
   const handleOpenFullScreenPlayer = React.useCallback(() => {
     openFullScreenPlayer();
@@ -129,6 +139,22 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
   // Обработчик перехода к музыке
   const handleNavigateToMusic = React.useCallback(() => {
     window.location.href = '/music';
+  }, []);
+
+  // Состояние для модалки альбома
+  const [selectedAlbum, setSelectedAlbum] = React.useState<any>(null);
+  const [isAlbumModalOpen, setIsAlbumModalOpen] = React.useState(false);
+
+  // Обработчик клика по альбому
+  const handleAlbumClick = React.useCallback((album: any) => {
+    setSelectedAlbum(album);
+    setIsAlbumModalOpen(true);
+  }, []);
+
+  // Обработчик закрытия модалки альбома
+  const handleCloseAlbumModal = React.useCallback(() => {
+    setIsAlbumModalOpen(false);
+    setSelectedAlbum(null);
   }, []);
 
   // Состояние загрузки
@@ -188,25 +214,33 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
             onPlayClick={handlePlayFirstTrack}
           />
 
-          {/* Контент с ограничением ширины */}
-          <ContentContainer>
-            {/* Биография */}
-            {artist.bio && (
-              <InfoBlock
-                title="Биография"
-                description={artist.bio}
-                children={null}
-                useTheme={true}
-                style={{ marginBottom: '5px' }}
-                styleVariant="default"
-                titleStyle={{}}
-                descriptionStyle={{}}
-                customStyle={false}
-                className=""
-              />
-            )}
+                              {/* Контент с ограничением ширины */}
+                    <ContentContainer>
+                      {/* Биография */}
+                      {artist.bio && (
+                        <InfoBlock
+                          title="Биография"
+                          description={artist.bio}
+                          children={null}
+                          useTheme={true}
+                          style={{ marginBottom: '5px' }}
+                          styleVariant="default"
+                          titleStyle={{}}
+                          descriptionStyle={{}}
+                          customStyle={false}
+                          className=""
+                        />
+                      )}
 
-            <TracksSection>
+                      {/* Альбомы */}
+                      <AlbumsSection
+                        albums={albums}
+                        isLoading={albumsLoading}
+                        error={albumsError}
+                        onAlbumClick={handleAlbumClick}
+                      />
+
+                      <TracksSection>
               {/* Самые прослушиваемые треки */}
               {mostListenedTracks && mostListenedTracks.length > 0 && (
                 <InfoBlock
@@ -232,8 +266,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
                 </InfoBlock>
               )}
 
-              {/* Новые треки */}
-              {newestTracks && newestTracks.length > 0 && (
+              {/* {newestTracks && newestTracks.length > 0 && (
                 <InfoBlock
                   title="Новые релизы"
                   description=""
@@ -255,7 +288,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
                     isPlaying={isPlaying}
                   />
                 </InfoBlock>
-              )}
+              )} */}
 
               {/* Все треки */}
               <InfoBlock
@@ -302,10 +335,21 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
       {/* Мобильный плеер */}
       <MobilePlayer />
 
-      {/* Десктопный плеер */}
-      {!isMobile && currentTrack && <DesktopPlayer />}
-    </PageContainer>
-  );
-};
+              {/* Десктопный плеер */}
+        {!isMobile && currentTrack && <DesktopPlayer />}
 
-export default ArtistPage;
+        {/* Модалка альбома */}
+        <AlbumModal
+          album={selectedAlbum}
+          isOpen={isAlbumModalOpen}
+          onClose={handleCloseAlbumModal}
+          onTrackClick={handleTrackClick}
+          onLikeTrack={handleLikeTrack}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+      </PageContainer>
+    );
+  };
+
+  export default ArtistPage;
