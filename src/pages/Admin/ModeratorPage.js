@@ -313,7 +313,7 @@ const ModeratorPage = () => {
   const [selectedMedal, setSelectedMedal] = useState('');
   const [medalDescription, setMedalDescription] = useState('');
 
-  // --- СТЕЙТЫ ДЛЯ КЛЮЧЕЙ ---
+  
   const [modKeys, setModKeys] = useState([]);
   const [modKeysLoading, setModKeysLoading] = useState(false);
   const [modKeysLoadingMore, setModKeysLoadingMore] = useState(false);
@@ -344,7 +344,7 @@ const ModeratorPage = () => {
   const [selectedUserForDecorations, setSelectedUserForDecorations] =
     useState(null);
 
-  // --- ЗАГРУЗКА КЛЮЧЕЙ ---
+  
   const fetchModKeys = useCallback(async (page = 1, append = false) => {
     if (page === 1) setModKeysLoading(true);
     else setModKeysLoadingMore(true);
@@ -361,13 +361,13 @@ const ModeratorPage = () => {
           const newKeys = res.data.keys || [];
           let merged;
           if (append) {
-            // Исключаем дубли по id
+            
             const ids = new Set(prev.map(k => k.id));
             merged = [...prev, ...newKeys.filter(k => !ids.has(k.id))];
           } else {
             merged = newKeys;
           }
-          // Сортировка по created_at (сначала новые)
+          
           return merged.sort(
             (a, b) => new Date(b.created_at) - new Date(a.created_at)
           );
@@ -387,7 +387,7 @@ const ModeratorPage = () => {
     fetchModKeys(1, false);
   }, [fetchModKeys]);
 
-  // --- INFINITE SCROLL ---
+  
   useEffect(() => {
     if (!modKeysHasNext || modKeysLoading || modKeysLoadingMore) return;
     const observer = new window.IntersectionObserver(
@@ -405,7 +405,7 @@ const ModeratorPage = () => {
       if (modKeysLoaderRef.current)
         observer.unobserve(modKeysLoaderRef.current);
     };
-    // eslint-disable-next-line
+    
   }, [
     modKeysHasNext,
     modKeysLoading,
@@ -414,7 +414,7 @@ const ModeratorPage = () => {
     fetchModKeys,
   ]);
 
-  // --- СОЗДАНИЕ КЛЮЧА ---
+  
   const handleOpenCreateKeyDialog = () => {
     setModKeysForm({
       type: 'points',
@@ -467,13 +467,13 @@ const ModeratorPage = () => {
         expires_days: Number(modKeysForm.expires_days),
         description: modKeysForm.description,
       };
-      // Удаляем undefined поля
+      
       Object.keys(payload).forEach(
         k => payload[k] === undefined && delete payload[k]
       );
       const res = await axios.post('/api/moderator/keys/generate', payload);
       if (res.data && res.data.success) {
-        // Если вернулся массив ключей (keys), показываем их все
+        
         if (Array.isArray(res.data.keys)) {
           setGeneratedKeys(res.data.keys.map(k => k.key || k));
         } else if (res.data.key && res.data.key.key) {
@@ -492,7 +492,7 @@ const ModeratorPage = () => {
     }
   };
 
-  // --- УДАЛЕНИЕ КЛЮЧА ---
+  
   const handleDeleteKey = async keyId => {
     setModKeysDeleting(prev => ({ ...prev, [keyId]: true }));
     try {
@@ -509,14 +509,14 @@ const ModeratorPage = () => {
     }
   };
 
-  // --- КОПИРОВАНИЕ КЛЮЧА ---
+  
   const handleCopyKey = key => {
     navigator.clipboard.writeText(key.key).then(() => {
       showNotification('success', 'Ключ скопирован');
     });
   };
 
-  // --- UI СЕКЦИЯ КЛЮЧЕЙ ---
+  
   const renderModKeysSection = () => (
     <Box sx={{ mt: 4 }}>
       <Button
@@ -5279,12 +5279,12 @@ const ModeratorPage = () => {
       delete_key: 'Удаление ключа',
       grant_decoration: 'Выдача декорации',
       revoke_decoration: 'Отзыв декорации',
-      // Новые типы действий для тикетов
+      
       ticket_assigned: 'Назначение тикета',
       ticket_resolved: 'Решение тикета',
       ticket_closed: 'Закрытие тикета',
       update_ticket: 'Обновление тикета',
-      // Новые типы действий для модерации
+      
       warning_issued: 'Выдача предупреждения',
       user_banned: 'Бан пользователя',
       post_deleted: 'Удаление поста',
@@ -5316,12 +5316,12 @@ const ModeratorPage = () => {
       delete_key: 'rgba(244, 67, 54, 0.2)',
       grant_decoration: 'rgba(76, 175, 80, 0.2)',
       revoke_decoration: 'rgba(244, 67, 54, 0.2)',
-      // Новые типы действий для тикетов
+      
       ticket_assigned: 'rgba(207, 188, 251, 0.2)',
       ticket_resolved: 'rgba(76, 175, 80, 0.2)',
       ticket_closed: 'rgba(244, 67, 54, 0.2)',
       update_ticket: 'rgba(255, 193, 7, 0.2)',
-      // Новые типы действий для модерации
+      
       warning_issued: 'rgba(255, 152, 0, 0.2)',
       user_banned: 'rgba(244, 67, 54, 0.2)',
       post_deleted: 'rgba(244, 67, 54, 0.2)',
@@ -5353,12 +5353,12 @@ const ModeratorPage = () => {
       delete_key: 'Модератор удалил ключ',
       grant_decoration: 'Модератор выдал декорацию пользователю',
       revoke_decoration: 'Модератор отозвал декорацию у пользователя',
-      // Новые типы действий для тикетов
+      
       ticket_assigned: 'Модератор назначил тикет себе',
       ticket_resolved: 'Модератор отметил тикет как решенный',
       ticket_closed: 'Модератор закрыл тикет',
       update_ticket: 'Модератор обновил информацию о тикете',
-      // Новые типы действий для модерации
+      
       warning_issued: 'Модератор выдал предупреждение пользователю',
       user_banned: 'Модератор забанил пользователя',
       post_deleted: 'Модератор удалил пост',

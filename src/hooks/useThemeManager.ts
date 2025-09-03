@@ -65,71 +65,114 @@ interface ThemeSettings {
   };
 }
 
-// Статический объект с настройками тем (синхронизирован с CSS)
-const THEME_SETTINGS: Record<ThemeType, { background: string; backdropFilter: string; siteBackground: string }> = {
+
+const THEME_SETTINGS: Record<ThemeType, { 
+  background: string; 
+  backdropFilter: string; 
+  siteBackground: string; 
+  themeColor: string;
+  colorScheme: 'light' | 'dark';
+  browserAccent: string;
+}> = {
   default: {
     background: 'rgba(15, 15, 15, 1)',
     backdropFilter: 'none',
     siteBackground: '#0a0a0a',
+    themeColor: '#0f0f0f',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
   },
   blur: {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
     siteBackground: '#0a0a0a',
+    themeColor: '#0a0a0a',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
   },
   light: {
     background: 'rgba(255, 255, 255, 1)',
     backdropFilter: 'none',
     siteBackground: '#f5f5f5',
+    themeColor: '#ffffff',
+    colorScheme: 'light',
+    browserAccent: '#6750A4',
   },
   midnight: {
     background: 'rgba(5, 8, 20, 1)',
     backdropFilter: 'none',
     siteBackground: '#030510',
+    themeColor: '#050814',
+    colorScheme: 'dark',
+    browserAccent: '#B69DF8',
   },
   ocean: {
     background: 'rgba(8, 25, 40, 1)',
     backdropFilter: 'none',
     siteBackground: '#051520',
+    themeColor: '#081928',
+    colorScheme: 'dark',
+    browserAccent: '#81C784',
   },
   sunset: {
     background: 'rgba(40, 15, 8, 1)',
     backdropFilter: 'none',
     siteBackground: '#250a05',
+    themeColor: '#280f08',
+    colorScheme: 'dark',
+    browserAccent: '#FFB74D',
   },
   forest: {
     background: 'rgba(8, 30, 15, 1)',
     backdropFilter: 'none',
     siteBackground: '#051a0a',
+    themeColor: '#081e0f',
+    colorScheme: 'dark',
+    browserAccent: '#A5D6A7',
   },
   aurora: {
     background: 'rgba(12, 35, 25, 1)',
     backdropFilter: 'none',
     siteBackground: '#082015',
+    themeColor: '#0c2319',
+    colorScheme: 'dark',
+    browserAccent: '#80CBC4',
   },
   cosmic: {
     background: 'rgba(30, 8, 35, 1)',
     backdropFilter: 'none',
     siteBackground: '#1a051a',
+    themeColor: '#1e0823',
+    colorScheme: 'dark',
+    browserAccent: '#CE93D8',
   },
   neon: {
     background: 'rgba(8, 20, 45, 1)',
     backdropFilter: 'none',
     siteBackground: '#051025',
+    themeColor: '#08142d',
+    colorScheme: 'dark',
+    browserAccent: '#64B5F6',
   },
   vintage: {
     background: 'rgba(35, 20, 8, 1)',
     backdropFilter: 'none',
     siteBackground: '#221205',
+    themeColor: '#231408',
+    colorScheme: 'dark',
+    browserAccent: '#D7CCC8',
   },
   pickme: {
     background: 'rgba(131, 61, 96, 1)',
     backdropFilter: 'none',
     siteBackground: '#b6668a',
+    themeColor: '#833d60',
+    colorScheme: 'dark',
+    browserAccent: '#F8BBD9',
   },
 };
 
-// Класс для работы с IndexedDB
+
 class ThemeDatabase {
   private dbName = 'KConnectDB';
   private dbVersion = 1;
@@ -145,7 +188,7 @@ class ThemeDatabase {
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
         
-        // Создаем хранилище для настроек темы
+        
         if (!db.objectStoreNames.contains(this.storeName)) {
           const store = db.createObjectStore(this.storeName, { keyPath: 'key' });
           store.createIndex('key', 'key', { unique: true });
@@ -198,7 +241,7 @@ export const useThemeManager = () => {
   const [isApplying, setIsApplying] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Функция для уведомления других вкладок об изменении темы
+  
   const notifyThemeChange = useCallback((themeType: ThemeType) => {
     try {
       const broadcastChannel = new BroadcastChannel('theme-changes');
@@ -212,7 +255,7 @@ export const useThemeManager = () => {
     }
   }, []);
 
-  // Применение темы к CSS переменным
+  
   const applyTheme = useCallback(async (themeType: ThemeType) => {
     setIsApplying(true);
     
@@ -220,23 +263,62 @@ export const useThemeManager = () => {
       const root = document.documentElement;
       const settings = THEME_SETTINGS[themeType];
       
-      // Применяем CSS переменные
+      
       root.style.setProperty('--theme-background', settings.background);
       root.style.setProperty('--theme-backdrop-filter', settings.backdropFilter);
       root.style.setProperty('--theme-site-background', settings.siteBackground);
       root.style.setProperty('--theme-type', themeType);
       root.setAttribute('data-theme', themeType);
       
-      // Обновляем состояние
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', settings.themeColor);
+        console.log(`🎨 Theme color updated to: ${settings.themeColor} for theme: ${themeType}`);
+      }
+      
+      const appleStatusBarStyle = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      if (appleStatusBarStyle) {
+        const statusBarStyle = themeType === 'light' ? 'default' : 'black-translucent';
+        appleStatusBarStyle.setAttribute('content', statusBarStyle);
+        console.log(`📱 iOS status bar style updated to: ${statusBarStyle} for theme: ${themeType}`);
+      }
+      
+      let msNavButtonColor = document.querySelector('meta[name="msapplication-navbutton-color"]');
+      if (!msNavButtonColor) {
+        msNavButtonColor = document.createElement('meta');
+        msNavButtonColor.setAttribute('name', 'msapplication-navbutton-color');
+        document.head.appendChild(msNavButtonColor);
+      }
+      msNavButtonColor.setAttribute('content', settings.themeColor);
+      
+      root.style.setProperty('color-scheme', settings.colorScheme);
+      let colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+      if (!colorSchemeMeta) {
+        colorSchemeMeta = document.createElement('meta');
+        colorSchemeMeta.setAttribute('name', 'color-scheme');
+        document.head.appendChild(colorSchemeMeta);
+      }
+      colorSchemeMeta.setAttribute('content', settings.colorScheme);
+      
+      root.style.setProperty('accent-color', settings.browserAccent);
+      
+      let safariTintColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      if (safariTintColor) {
+        safariTintColor.setAttribute('content', themeType === 'light' ? 'default' : 'black-translucent');
+      }
+      
+      console.log(`🌐 Browser UI updated: color-scheme=${settings.colorScheme}, accent-color=${settings.browserAccent}`);
+      
+      
       setCurrentTheme(themeType);
       
-      // Сохраняем в IndexedDB
+      
       await themeDB.setThemeType(themeType);
       
-      // Уведомляем другие вкладки
+      
       notifyThemeChange(themeType);
       
-      // Принудительно обновляем элементы с классом theme-aware
+      
       const themeAwareElements = document.querySelectorAll('.theme-aware');
       themeAwareElements.forEach((element) => {
         if (element instanceof HTMLElement) {
@@ -246,11 +328,11 @@ export const useThemeManager = () => {
         }
       });
       
-      // Принудительно обновляем элементы с классами цветов текста
+      
       const textElements = document.querySelectorAll('.text-primary, .text-secondary, .text-disabled, .text-accent, .text-error, .text-success, .text-warning, .text-info');
       textElements.forEach((element) => {
         if (element instanceof HTMLElement) {
-          // Перезагружаем CSS переменные для текста
+          
           element.style.color = getComputedStyle(root).getPropertyValue('--theme-text-primary');
         }
       });
@@ -262,83 +344,83 @@ export const useThemeManager = () => {
     }
   }, [notifyThemeChange]);
 
-  // Переключение на дефолтную тему
+  
   const switchToDefaultTheme = useCallback(async () => {
     await applyTheme('default');
   }, [applyTheme]);
 
-  // Переключение на блюрную тему
+  
   const switchToBlurTheme = useCallback(async () => {
     await applyTheme('blur');
   }, [applyTheme]);
 
-  // Переключение на белую тему
+  
   const switchToLightTheme = useCallback(async () => {
     await applyTheme('light');
   }, [applyTheme]);
 
-  // Переключение на тему midnight
+  
   const switchToMidnightTheme = useCallback(async () => {
     await applyTheme('midnight');
   }, [applyTheme]);
 
-  // Переключение на тему ocean
+  
   const switchToOceanTheme = useCallback(async () => {
     await applyTheme('ocean');
   }, [applyTheme]);
 
-  // Переключение на тему sunset
+  
   const switchToSunsetTheme = useCallback(async () => {
     await applyTheme('sunset');
   }, [applyTheme]);
 
-  // Переключение на тему forest
+  
   const switchToForestTheme = useCallback(async () => {
     await applyTheme('forest');
   }, [applyTheme]);
 
-  // Переключение на тему aurora
+  
   const switchToAuroraTheme = useCallback(async () => {
     await applyTheme('aurora');
   }, [applyTheme]);
 
-  // Переключение на тему cosmic
+  
   const switchToCosmicTheme = useCallback(async () => {
     await applyTheme('cosmic');
   }, [applyTheme]);
 
-  // Переключение на тему neon
+  
   const switchToNeonTheme = useCallback(async () => {
     await applyTheme('neon');
   }, [applyTheme]);
 
-  // Переключение на тему vintage
+  
   const switchToVintageTheme = useCallback(async () => {
     await applyTheme('vintage');
   }, [applyTheme]);
 
-  // Переключение на тему pickme
+  
   const switchToPickmeTheme = useCallback(async () => {
     await applyTheme('pickme');
   }, [applyTheme]);
 
-  // Переключение между темами
+  
   const toggleTheme = useCallback(async () => {
     const newTheme = currentTheme === 'default' ? 'blur' : 'default';
     await applyTheme(newTheme);
   }, [currentTheme, applyTheme]);
 
-  // Инициализация темы при загрузке
+  
   useEffect(() => {
     const initializeTheme = async () => {
       try {
-        // Загружаем тему из IndexedDB
+        
         const savedTheme = await themeDB.getThemeType();
         setCurrentTheme(savedTheme);
         await applyTheme(savedTheme);
       } catch (error) {
         console.error('Error initializing theme:', error);
-        // В случае ошибки используем дефолтную тему
+        
         await applyTheme('default');
       } finally {
         setIsInitialized(true);
@@ -348,12 +430,12 @@ export const useThemeManager = () => {
     initializeTheme();
   }, [applyTheme]);
 
-  // Слушатель изменений в IndexedDB (через BroadcastChannel API)
+  
   useEffect(() => {
     let broadcastChannel: BroadcastChannel | null = null;
     
     try {
-      // Создаем канал для синхронизации между вкладками
+      
       broadcastChannel = new BroadcastChannel('theme-changes');
       
       broadcastChannel.onmessage = (event) => {
@@ -372,11 +454,11 @@ export const useThemeManager = () => {
     };
   }, [currentTheme, applyTheme]);
 
-  // Функция для применения темы с уведомлением
+  
   const applyThemeWithNotification = useCallback(async (themeType: ThemeType) => {
     try {
       await applyTheme(themeType);
-      // Здесь можно добавить уведомление пользователю
+      
     } catch (error) {
       console.error('Ошибка при применении темы с уведомлением:', error);
     }

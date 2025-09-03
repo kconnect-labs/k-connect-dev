@@ -99,7 +99,7 @@ const ArtistBiography: React.FC<ArtistBiographyProps> = ({
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
 
-  // Определяем, нужна ли кнопка "Читать полностью"
+  
   const needsExpansion = bio.length > (isMobile ? 200 : 300);
 
   const handleToggleExpanded = () => {

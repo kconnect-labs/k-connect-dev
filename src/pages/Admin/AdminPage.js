@@ -1160,7 +1160,7 @@ const AdminPage = () => {
     try {
       setIsGeneratingKeys(true);
 
-      // Проверка параметров в зависимости от типа ключа
+      
       if (keyGenerationParams.type === 'points') {
         if (keyGenerationParams.points <= 0) {
           showNotification(
@@ -1179,7 +1179,7 @@ const AdminPage = () => {
         }
       }
 
-      // Добавляем логирование параметров
+      
       console.log('Отправляемые параметры:', keyGenerationParams);
 
       const response = await axios.post(
@@ -1187,7 +1187,7 @@ const AdminPage = () => {
         keyGenerationParams
       );
 
-      // Логируем ответ от сервера
+      
       console.log('Ответ сервера:', response.data);
 
       if (response.data.success) {
@@ -1501,7 +1501,7 @@ const AdminPage = () => {
                       setKeyGenerationParams({
                         ...keyGenerationParams,
                         type: newType,
-                        // Сбрасываем значения в зависимости от типа
+                        
                         points: newType === 'points' ? 1000 : 0,
                         subscription_type:
                           newType === 'subscription' ? 'basic' : 'basic',

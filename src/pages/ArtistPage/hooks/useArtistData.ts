@@ -17,7 +17,7 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
   const observer = useRef<IntersectionObserver>();
   const lastTrackElementRef = useRef<HTMLElement>(null);
 
-  // Функция для получения данных исполнителя
+  
   const fetchArtistData = useCallback(async (page = 1, append = false) => {
     try {
       if (page === 1) {
@@ -63,7 +63,7 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
     }
   }, [artistParam]);
 
-  // Функция для загрузки дополнительных треков
+  
   const loadMoreTracks = useCallback(() => {
     if (!loadingMoreTracks && hasMoreTracks) {
       const nextPage = currentPage + 1;
@@ -71,13 +71,13 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
     }
   }, [loadingMoreTracks, hasMoreTracks, currentPage, fetchArtistData]);
 
-  // Функция для повторной загрузки данных исполнителя
+  
   const refetchArtist = useCallback(async () => {
     setCurrentPage(1);
     await fetchArtistData(1, false);
   }, [fetchArtistData]);
 
-  // Подготовка самых прослушиваемых треков
+  
   const prepareMostListenedTracks = useCallback(() => {
     const sorted = [...tracks]
       .sort((a, b) => (b.plays_count || 0) - (a.plays_count || 0))
@@ -85,7 +85,7 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
     setMostListenedTracks(sorted);
   }, [tracks]);
 
-  // Подготовка новейших треков
+  
   const prepareNewestTracks = useCallback(() => {
     const sorted = [...tracks]
       .sort((a, b) => {
@@ -97,7 +97,7 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
     setNewestTracks(sorted);
   }, [tracks]);
 
-  // Intersection Observer для бесконечной прокрутки
+  
   const lastTrackRef = useCallback(
     (node: HTMLElement | null) => {
       if (loadingMoreTracks) return;
@@ -112,14 +112,14 @@ export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDa
     [loadingMoreTracks, hasMoreTracks, loadMoreTracks]
   );
 
-  // Загрузка данных при изменении параметра исполнителя
+  
   useEffect(() => {
     if (artistParam) {
       fetchArtistData();
     }
   }, [artistParam, fetchArtistData]);
 
-  // Подготовка треков при изменении основного списка
+  
   useEffect(() => {
     if (tracks.length > 0) {
       prepareMostListenedTracks();

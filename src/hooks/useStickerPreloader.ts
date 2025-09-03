@@ -35,7 +35,7 @@ export const useStickerPreloader = () => {
     error: null,
   });
 
-  // Инициализация предзагрузки
+  
   const initializePreload = useCallback(async () => {
     if (!isAuthenticated || authLoading) {
       return;
@@ -46,7 +46,7 @@ export const useStickerPreloader = () => {
 
       console.log('Starting sticker preload initialization...');
 
-      // Загружаем стикерпаки пользователя (с поддержкой batch API)
+      
       const packs = await stickerCacheService.loadUserStickerPacks();
       
       if (packs.length === 0) {
@@ -61,16 +61,16 @@ export const useStickerPreloader = () => {
 
       console.log(`Found ${packs.length} sticker packs, starting preload...`);
 
-      // Обновляем статистику
+      
       setState(prev => ({ 
         ...prev, 
         stats: stickerCacheService.getStats(),
       }));
 
-      // Запускаем предзагрузку в фоне (автоматически использует batch если доступен)
+      
       await stickerCacheService.preloadStickers(packs);
 
-      // Мониторим прогресс
+      
       const progressInterval = setInterval(() => {
         const progress = stickerCacheService.getPreloadProgress();
         const isPreloading = stickerCacheService.isPreloadingInProgress();
@@ -83,7 +83,7 @@ export const useStickerPreloader = () => {
           stats,
         }));
 
-        // Если предзагрузка завершена, останавливаем мониторинг
+        
         if (!isPreloading) {
           clearInterval(progressInterval);
           console.log('Sticker preload completed');
@@ -100,12 +100,12 @@ export const useStickerPreloader = () => {
     }
   }, [isAuthenticated, authLoading]);
 
-  // Принудительная предзагрузка
+  
   const forcePreload = useCallback(async () => {
     await initializePreload();
   }, [initializePreload]);
 
-  // Очистка кеша
+  
   const clearCache = useCallback(() => {
     stickerCacheService.clearCache();
     setState(prev => ({
@@ -114,26 +114,26 @@ export const useStickerPreloader = () => {
     }));
   }, []);
 
-  // Автоматическая инициализация при авторизации
+  
   useEffect(() => {
     if (isAuthenticated && !authLoading) {
-      // Увеличенная задержка для снижения нагрузки на сеть
+      
       const timer = setTimeout(() => {
         initializePreload();
-      }, 5000); // Увеличили до 5 секунд
+      }, 5000); 
 
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated, authLoading, initializePreload]);
 
-  // Периодическое обновление статистики
+  
   useEffect(() => {
     const statsInterval = setInterval(() => {
       setState(prev => ({
         ...prev,
         stats: stickerCacheService.getStats(),
       }));
-    }, 30000); // Каждые 30 секунд
+    }, 30000); 
 
     return () => clearInterval(statsInterval);
   }, []);
@@ -147,7 +147,7 @@ export const useStickerPreloader = () => {
   };
 };
 
-// Хук для получения статистики кеша
+
 export const useStickerCacheStats = () => {
   const [stats, setStats] = useState(stickerCacheService.getStats());
 
@@ -156,7 +156,7 @@ export const useStickerCacheStats = () => {
       setStats(stickerCacheService.getStats());
     };
 
-    // Обновляем статистику каждые 10 секунд
+    
     const interval = setInterval(updateStats, 10000);
 
     return () => clearInterval(interval);

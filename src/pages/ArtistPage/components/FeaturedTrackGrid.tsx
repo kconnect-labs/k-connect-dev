@@ -201,11 +201,11 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
 
   const handleMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Здесь можно добавить функциональность меню
+    
   };
 
   const handleTrackClick = () => {
-    // Передаем контекст артиста для правильного переключения
+    
     onTrackClick(track, 'artist');
   };
 

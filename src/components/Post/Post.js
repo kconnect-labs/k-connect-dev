@@ -75,25 +75,25 @@ import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
 import { MaxIcon } from '../icons/CustomIcons';
 
-// Статические импорты для часто используемых компонентов
+
 import SimpleImageViewer from '../SimpleImageViewer';
 import ImageGrid from './ImageGrid';
 import RepostImageGrid from './RepostImageGrid';
 import MusicTrack from './MusicTrack';
 
-// Ленивая загрузка для редко используемых тяжелых компонентов
+
 const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
 
-// SyntaxHighlighter убран - слишком тяжелый (1.7MB) и не используется в постах
 
-// Ленивые импорты для модалок (загружаются только при открытии)
+
+
 const ReportDialog = React.lazy(() => import('./ReportDialog'));
 const FactModal = React.lazy(() => import('./FactModal'));
 const RepostModal = React.lazy(() => import('./RepostModal'));
 const DeleteDialog = React.lazy(() => import('./DeleteDialog'));
 const EditPostDialog = React.lazy(() => import('./EditPostDialog'));
 
-// Предварительная загрузка убрана, чтобы избежать конфликта с динамическими импортами
+
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
 import MediaErrorDisplay from './MediaErrorDisplay';
@@ -150,7 +150,7 @@ const Post = ({
   const { setPostDetail, openPostDetail } = usePostDetail();
 
 
-  // вместо useMediaQuery используем window.matchMedia, чтобы убрать useSyncExternalStore
+  
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth <= 600 : false
   );
@@ -180,7 +180,7 @@ const Post = ({
   const [repostContent, setRepostContent] = useState('');
   const [repostLoading, setRepostLoading] = useState(false);
 
-  // Хук для работы с реакциями
+  
   const {
     reactionsSummary,
     userReaction,
@@ -195,7 +195,7 @@ const Post = ({
     post?.user_reaction || null
   );
 
-  // Обработка ошибок реакций
+  
   React.useEffect(() => {
     if (reactionsError) {
       setSnackbar({
@@ -258,11 +258,11 @@ const Post = ({
   const [lastComment, setLastComment] = useState(null);
   const [lastCommentLoading, setLastCommentLoading] = useState(false);
 
-  // Lightbox state
+  
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Hearts animation state
+  
   const [hearts, setHearts] = useState([]);
   const [lastTap, setLastTap] = useState({ time: 0, x: 0, y: 0 });
 
@@ -276,7 +276,7 @@ const Post = ({
     t('post.report.reasons.other'),
   ];
 
-  // Create handlers
+  
   const { handleCloseLightbox, handleNextImage, handlePrevImage } = createLightboxHandlers(
     setLightboxOpen,
     setCurrentImageIndex,
@@ -287,20 +287,20 @@ const Post = ({
 
   const { handleMenuOpen, handleMenuClose } = createMenuHandlers(setMenuAnchorEl);
 
-  // Create utility handlers
+  
   const handleCopyLink = createCopyLinkHandler(post.id);
   const toggleExpanded = createToggleExpandedHandler(setIsExpanded);
 
-  // Create music and post handlers
+  
   const handleTrackPlay = createTrackPlayHandler(currentTrack, togglePlay, playTrack);
   const handleOpenPostFromMenu = createOpenPostFromMenuHandler(setPostDetail);
   const handleCloseRepostModal = createCloseRepostModalHandler(setRepostModalOpen);
 
-  // Create comment and share handlers
+  
   const handleCommentClick = createCommentClickHandler(openPostDetail);
   const handleShare = createShareHandler(post.id);
 
-  // Create image handlers
+  
   const handleOpenImage = createOpenImageHandler(
     post,
     mediaError,
@@ -329,11 +329,11 @@ const Post = ({
         HASHTAG_REGEX.lastIndex = 0;
         URL_REGEX.lastIndex = 0;
 
-        // Создаем временные маркеры для URL, чтобы защитить их от обработки упоминаний
+        
         const urlMarkers = [];
         let markerIndex = 0;
 
-        // Обработка обычных ссылок с созданием маркеров
+        
         content = content.replace(URL_REGEX, match => {
           const marker = `__URL_MARKER_${markerIndex}__`;
           urlMarkers.push({
@@ -344,7 +344,7 @@ const Post = ({
           return marker;
         });
 
-        // Обработка упоминаний пользователей (только те, что не в URL)
+        
         content = content.replace(
           USERNAME_MENTION_REGEX,
           (match, prefix, username) => {
@@ -355,19 +355,19 @@ const Post = ({
           }
         );
 
-        // Обработка хештегов
+        
         content = content.replace(HASHTAG_REGEX, (match, hashtag) => {
           return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
         });
 
-        // Восстанавливаем URL из маркеров
+        
         urlMarkers.forEach(({ marker, replacement }) => {
           content = content.replace(marker, replacement);
         });
 
         setProcessedContent(content);
         
-        // Извлекаем ссылки для link preview
+        
         const urls = [];
         URL_REGEX.lastIndex = 0;
         let urlMatch;
@@ -380,7 +380,7 @@ const Post = ({
         setPostUrls([]);
       }
 
-      // Извлекаем ссылки для репоста
+      
       if (post.type === 'repost' && post.original_post && post.original_post.content) {
         const repostUrls = [];
         URL_REGEX.lastIndex = 0;
@@ -395,7 +395,7 @@ const Post = ({
 
 
 
-      // Устанавливаем последний комментарий из данных поста
+      
       if (post.last_comment) {
         setLastComment(post.last_comment);
         setLastCommentLoading(false);
@@ -458,10 +458,10 @@ const Post = ({
 
   const handleReactionChange = async (emoji) => {
     if (userReaction === emoji) {
-      // Если та же реакция - удаляем её
+      
       await removeReaction();
     } else {
-      // Иначе добавляем/изменяем реакцию
+      
       await addReaction(emoji);
     }
   };
@@ -469,7 +469,7 @@ const Post = ({
   const handleLike = async e => {
     if (e) e.stopPropagation();
 
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleLike: post.id is undefined or invalid:', post?.id);
       return;
@@ -629,7 +629,7 @@ const Post = ({
   };
 
   const handleSubmitEdit = async () => {
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleSubmitEdit: post.id is undefined or invalid:', post?.id);
       setEditDialog({
@@ -733,7 +733,7 @@ const Post = ({
   };
 
   const confirmDelete = async () => {
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('confirmDelete: post.id is undefined or invalid:', post?.id);
       setDeleteDialog({ open: false, deleting: false, deleted: false });
@@ -748,28 +748,28 @@ const Post = ({
     try {
       setDeleteDialog({ ...deleteDialog, deleting: true });
 
-      // Сразу удаляем пост из UI
+      
       if (onDelete) {
         onDelete(post.id);
       }
 
-      // Очищаем кеш
+      
       if (axios.cache) {
         axios.cache.clearPostsCache();
         axios.cache.clearByUrlPrefix(`/api/profile/pinned_post`);
         axios.cache.clearByUrlPrefix(`/api/posts/${post.id}`);
       }
 
-      // Отправляем запрос на удаление
+      
       await axios.delete(`/api/posts/${post.id}`);
 
-      // Закрываем диалог
+      
       setDeleteDialog({ open: false, deleting: false, deleted: false });
     } catch (error) {
       console.error('Error deleting post:', error);
       setDeleteDialog({ open: false, deleting: false, deleted: false });
 
-      // Показываем ошибку
+      
       setSnackbar({
         open: true,
         message: 'Не удалось удалить пост. Попробуйте позже.',
@@ -799,7 +799,7 @@ const Post = ({
   const handleCreateRepost = async () => {
     if (repostLoading) return;
 
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleCreateRepost: post.id is undefined or invalid:', post?.id);
       setSnackbarMessage('Ошибка: не удалось определить ID поста');
@@ -897,7 +897,7 @@ const Post = ({
   }, [post?.id]);
 
   const handleReportSubmit = async () => {
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleReportSubmit: post.id is undefined or invalid:', post?.id);
       setReportDialog({
@@ -918,7 +918,7 @@ const Post = ({
     setReportDialog({ ...reportDialog, submitting: true, error: null });
 
     try {
-      // Формируем структурированное описание
+      
       const createdDate = post.created_at ? new Date(post.created_at).toLocaleString('ru-RU') : 'Дата не указана';
       
       const reportDescription = `Информация о посте:
@@ -949,7 +949,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           submitted: true,
         });
         
-        // Показываем уведомление об успехе
+        
         if (typeof showNotification === 'function') {
           showNotification('success', 'Жалоба отправлена модераторам');
         }
@@ -991,7 +991,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
   };
 
   const handleFactSubmit = async factData => {
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleFactSubmit: post.id is undefined or invalid:', post?.id);
       setFactModal({
@@ -1006,10 +1006,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
     try {
       if (post.fact) {
-        // Обновляем существующий факт
+        
         await axios.put(`/api/facts/${post.fact.id}`, factData);
       } else {
-        // Создаем новый факт и привязываем к посту
+        
         const factResponse = await axios.post('/api/facts', factData);
         const factId = factResponse.data.fact.id;
         await axios.post(`/api/posts/${post.id}/attach-fact`, {
@@ -1017,7 +1017,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         });
       }
 
-      // Перезагружаем страницу для обновления данных
+      
       window.location.reload();
     } catch (error) {
       console.error('Error submitting fact:', error);
@@ -1030,7 +1030,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
   };
 
   const handleFactDelete = async () => {
-    // Проверяем, что post.id существует
+    
     if (!post?.id || post.id === 'undefined') {
       console.warn('handleFactDelete: post.id is undefined or invalid:', post?.id);
       setFactModal({
@@ -1044,10 +1044,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     setFactModal({ ...factModal, loading: true, error: null });
 
     try {
-      // Отвязываем факт от поста
+      
       await axios.delete(`/api/posts/${post.id}/detach-fact`);
 
-      // Перезагружаем страницу для обновления данных
+      
       window.location.reload();
     } catch (error) {
       console.error('Error deleting fact:', error);
@@ -1061,7 +1061,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
   const handlePostClick = e => {
     if (e.target.closest('a, button')) return;
-    // Проверяем, что post.id существует перед вызовом incrementViewCount
+    
     if (post?.id && post.id !== 'undefined') {
       incrementViewCount(post.id, viewsCount);
     }
@@ -1278,7 +1278,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
   const markdownComponents = getMarkdownComponents();
 
-  // NSFW Overlay (монотонный стиль)
+  
   const NSFWOverlay = (
     <Box
       sx={{
@@ -1375,11 +1375,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
 
 
-  // Создаем массив элементов меню
+  
   const menuItems = React.useMemo(() => {
     const items = [];
 
-    // Факты (только для пользователя с id 3)
+    
     if (currentUser && currentUser.id === 3) {
       items.push({
         id: 'facts',
@@ -1389,7 +1389,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
       });
     }
 
-    // Пункты для владельца поста
+    
     if (isCurrentUserPost) {
       items.push(
         {
@@ -1414,7 +1414,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
       );
     }
 
-    // Копировать ссылку (для всех)
+    
     items.push({
       id: 'copy-link',
       label: t('post.menu_actions.copy_link'),
@@ -1422,7 +1422,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
       onClick: handleCopyLink,
     });
 
-    // Пожаловаться (только для чужих постов)
+    
     if (!isCurrentUserPost) {
       items.push({
         id: 'report',
@@ -1844,7 +1844,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           truncateText(post.original_post.content, 500),
                           theme
                         );
-                        return null; // Убираем старые LinkPreview из репостов
+                        return null; 
                       })()}
                     </Box>
                   )}
@@ -2393,7 +2393,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               justifyContent: 'space-between',
               alignItems: 'center',
               mt: 2,
-              gap: 1.7, // уменьшено с 2
+              gap: 1.7, 
             }}
           >
             {/* Левая группа: лайк, коммент, репост, поделиться */}
@@ -2543,12 +2543,12 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                borderRadius: '10px', // было 12px
-                px: 1.2, // было 2
-                py: 0.85, // было 1
-                minWidth: 68, // было 80
+                borderRadius: '10px', 
+                px: 1.2, 
+                py: 0.85, 
+                minWidth: 68, 
                 justifyContent: 'center',
-                gap: 0.5, // было 1
+                gap: 0.5, 
               }}
             >
               {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />

@@ -251,7 +251,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Загружаем детали альбома при открытии модалки
+  
   useEffect(() => {
     if (album && isOpen) {
       fetchAlbumDetails();
@@ -282,13 +282,13 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 
   const handlePlayAlbum = () => {
     if (albumDetails?.tracks && albumDetails.tracks.length > 0) {
-      // Передаем контекст альбома для правильного переключения
+      
       onTrackClick(albumDetails.tracks[0], `album_${albumDetails.id}`);
     }
   };
 
   const handleTrackClick = (track: Track) => {
-    // Передаем контекст альбома для правильного переключения
+    
     onTrackClick(track, `album_${albumDetails?.id}`);
   };
 

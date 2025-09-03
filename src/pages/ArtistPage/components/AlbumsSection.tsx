@@ -230,10 +230,10 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showAll, setShowAll] = useState(false);
 
-  // Определяем количество альбомов для показа в первой строке
+  
   const getAlbumsPerRow = () => {
-    if (isMobile) return 2; // xs: 2 альбома в ряд
-    return 4; // sm и выше: 4 альбома в ряд
+    if (isMobile) return 2; 
+    return 4; 
   };
 
   const albumsPerRow = getAlbumsPerRow();
@@ -241,7 +241,7 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   const hasMoreAlbums = albums.length > albumsPerRow;
 
   if (error) {
-    return null; // Не показываем ошибки, просто скрываем секцию
+    return null; 
   }
 
   if (isLoading) {
@@ -262,7 +262,7 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   }
 
   if (!albums || albums.length === 0) {
-    return null; // Не показываем пустую секцию
+    return null; 
   }
 
   return (

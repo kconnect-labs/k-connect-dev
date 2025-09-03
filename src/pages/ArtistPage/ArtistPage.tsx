@@ -14,12 +14,12 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import DesktopPlayer from '../../components/Music/DesktopPlayer';
 import InfoBlock from '../../UIKIT/InfoBlock';
 
-// Хуки
+
 import { useArtistData } from './hooks/useArtistData';
 import { useArtistActions } from './hooks/useArtistActions';
 import { useArtistAlbums } from './hooks/useArtistAlbums';
 
-// Компоненты
+
 import ArtistHeader from './components/ArtistHeader';
 import ArtistBiography from './components/ArtistBiography';
 import TrackSection from './components/TrackSection';
@@ -30,7 +30,7 @@ import ErrorState from './components/ErrorState';
 import AlbumsSection from './components/AlbumsSection';
 import AlbumModal from './components/AlbumModal';
 
-// Типы
+
 import { ArtistPageProps } from './types';
 
 const PageContainer = styled(Box)(({ theme }) => ({
@@ -82,7 +82,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     isFullScreenPlayerOpen,
   } = useMusic();
 
-  // Хуки для данных и действий
+  
   const {
     artist,
     tracks,
@@ -104,14 +104,14 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     shareArtist,
   } = useArtistActions(artist);
 
-  // Хук для альбомов
+  
   const {
     albums,
     isLoading: albumsLoading,
     error: albumsError,
   } = useArtistAlbums(artist?.id || null);
 
-  // Обработчики для полноэкранного плеера
+  
   const handleOpenFullScreenPlayer = React.useCallback(() => {
     openFullScreenPlayer();
   }, [openFullScreenPlayer]);
@@ -122,42 +122,42 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     document.body.style.touchAction = '';
   }, [closeFullScreenPlayer]);
 
-  // Обработчик для первого трека
+  
   const handlePlayFirstTrack = React.useCallback(() => {
     if (tracks && tracks.length > 0) {
       handleTrackClick(tracks[0]);
     }
   }, [tracks, handleTrackClick]);
 
-  // Обработчик поделиться
+  
   const handleShareClick = React.useCallback(() => {
     if (artist) {
       shareArtist(artist);
     }
   }, [artist, shareArtist]);
 
-  // Обработчик перехода к музыке
+  
   const handleNavigateToMusic = React.useCallback(() => {
     window.location.href = '/music';
   }, []);
 
-  // Состояние для модалки альбома
+  
   const [selectedAlbum, setSelectedAlbum] = React.useState<any>(null);
   const [isAlbumModalOpen, setIsAlbumModalOpen] = React.useState(false);
 
-  // Обработчик клика по альбому
+  
   const handleAlbumClick = React.useCallback((album: any) => {
     setSelectedAlbum(album);
     setIsAlbumModalOpen(true);
   }, []);
 
-  // Обработчик закрытия модалки альбома
+  
   const handleCloseAlbumModal = React.useCallback(() => {
     setIsAlbumModalOpen(false);
     setSelectedAlbum(null);
   }, []);
 
-  // Состояние загрузки
+  
   if (isLoading && !artist) {
     return (
       <PageContainer>
@@ -168,7 +168,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     );
   }
 
-  // Состояние ошибки
+  
   if (error || !artist) {
     return (
       <PageContainer>
@@ -182,7 +182,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     );
   }
 
-  // Проверка на отсутствие треков у неподтвержденного исполнителя
+  
   const noTracksAndNotVerified = (!tracks || tracks.length === 0) && !artist.verified;
 
   return (

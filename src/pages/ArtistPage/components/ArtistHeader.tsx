@@ -28,13 +28,13 @@ import { styled } from '@mui/material/styles';
 import { ArtistHeaderProps } from '../types';
 import InfoBlock from '../../../UIKIT/InfoBlock';
 
-// КОНТЕЙНЕР ДЛЯ INFOBLOCKA
+
 const HeaderWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
 }));
 
-// WATERMARK С ИМЕНЕМ АРТИСТА - ОДИН СЛОЙ НА ВСЮ ОБЛАСТЬ
+
 const ArtistWatermark = styled(Box)<{ artistName: string }>(({ theme, artistName }) => ({
   position: 'absolute',
   top: 0,
@@ -76,7 +76,7 @@ const ArtistWatermark = styled(Box)<{ artistName: string }>(({ theme, artistName
   },
 }));
 
-// НОВЫЙ СОВРЕМЕННЫЙ LAYOUT
+
 const InfoBlockContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',

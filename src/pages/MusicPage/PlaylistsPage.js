@@ -33,7 +33,7 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import { PlaylistModal, PlaylistViewModal } from '../../UIKIT';
 import axios from 'axios';
 
-// Стили
+
 const PlaylistCard = styled(Card)(({ theme }) => ({
   borderRadius: '16px',
   cursor: 'pointer',
@@ -57,7 +57,7 @@ const PlaylistsPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { playTrack, currentTrack } = useMusic();
 
-  // Состояние
+  
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
@@ -66,12 +66,12 @@ const PlaylistsPage = () => {
   const [playlistViewModalOpen, setPlaylistViewModalOpen] = useState(false);
   const [viewingPlaylist, setViewingPlaylist] = useState(null);
 
-  // Загрузка плейлистов
+  
   const fetchPlaylists = useCallback(async () => {
     try {
       setIsLoading(true);
 
-      // Загружаем пользовательские плейлисты
+      
       const userResponse = await axios.get('/api/music/playlists');
       let userPlaylists = [];
 
@@ -98,7 +98,7 @@ const PlaylistsPage = () => {
                   }));
               }
             } catch (error) {
-              // Игнорируем ошибки загрузки preview треков
+              
             }
 
             return {
@@ -119,7 +119,7 @@ const PlaylistsPage = () => {
         );
       }
 
-      // Загружаем публичные плейлисты
+      
       const publicResponse = await axios.get('/api/music/playlists/public');
       let publicPlaylists = [];
 
@@ -146,7 +146,7 @@ const PlaylistsPage = () => {
                   }));
               }
             } catch (error) {
-              // Игнорируем ошибки загрузки preview треков
+              
             }
 
             return {
@@ -169,7 +169,7 @@ const PlaylistsPage = () => {
         );
       }
 
-      // Убираем дубликаты
+      
       const publicPlaylistIds = new Set(publicPlaylists.map(p => p.id));
       const uniqueUserPlaylists = userPlaylists.filter(
         p => !publicPlaylistIds.has(p.id) || p.is_owner
@@ -185,7 +185,7 @@ const PlaylistsPage = () => {
     }
   }, []);
 
-  // Обработчики
+  
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
@@ -201,7 +201,7 @@ const PlaylistsPage = () => {
   };
 
   const handleViewPlaylist = async playlist => {
-    // Загружаем полный список треков для плейлиста
+    
     try {
       const detailResponse = await axios.get(
         `/api/music/playlists/${playlist.id}`
@@ -232,15 +232,15 @@ const PlaylistsPage = () => {
   const handleSavePlaylist = async (playlistData, playlistId) => {
     try {
       if (playlistId) {
-        // Обновление
+        
         await axios.put(`/api/music/playlists/${playlistId}`, playlistData);
       } else {
-        // Создание
+        
         await axios.post('/api/music/playlists', playlistData);
       }
 
       setPlaylistModalOpen(false);
-      fetchPlaylists(); // Перезагружаем список
+      fetchPlaylists(); 
     } catch (error) {
       console.error('Error saving playlist:', error);
     }
@@ -250,7 +250,7 @@ const PlaylistsPage = () => {
     try {
       await axios.delete(`/api/music/playlists/${playlistId}`);
       setPlaylistModalOpen(false);
-      fetchPlaylists(); // Перезагружаем список
+      fetchPlaylists(); 
     } catch (error) {
       console.error('Error deleting playlist:', error);
     }
@@ -265,7 +265,7 @@ const PlaylistsPage = () => {
           })
         )
       );
-      // Обновляем плейлист в модалке
+      
       if (editingPlaylist && editingPlaylist.id === playlistId) {
         const response = await axios.get(`/api/music/playlists/${playlistId}`);
         if (response.data.success) {
@@ -282,7 +282,7 @@ const PlaylistsPage = () => {
       await axios.delete(
         `/api/music/playlists/${playlistId}/tracks/${trackId}`
       );
-      // Обновляем плейлист в модалке
+      
       if (editingPlaylist && editingPlaylist.id === playlistId) {
         const response = await axios.get(`/api/music/playlists/${playlistId}`);
         if (response.data.success) {
@@ -294,11 +294,11 @@ const PlaylistsPage = () => {
     }
   };
 
-  // Фильтрация плейлистов
+  
   const userPlaylists = playlists.filter(p => p.is_owner);
   const publicPlaylists = playlists.filter(p => !p.is_owner);
 
-  // Загрузка при монтировании
+  
   useEffect(() => {
     fetchPlaylists();
   }, [fetchPlaylists]);
@@ -308,7 +308,7 @@ const PlaylistsPage = () => {
       sx={{
         p: 1,
         paddingBottom: 10,
-        paddingTop: { xs: 7, md: 1 }, // 40px на мобилках, 8px на десктопе
+        paddingTop: { xs: 7, md: 1 }, 
       }}
     >
       {/* Заголовок */}

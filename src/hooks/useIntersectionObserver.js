@@ -5,14 +5,14 @@ import { useEffect, useRef } from 'react';
  * Используется для бесконечной прокрутки и подгрузки контента
  */
 const useIntersectionObserver = ({
-  target, // ref элемента, который нужно отслеживать
-  onIntersect, // callback, который вызывается при пересечении
-  threshold = 0.1, // порог видимости (0-1)
-  rootMargin = '0px', // отступы от root элемента
-  enabled = true, // включен ли observer
-  debounceTime = 300, // Добавляем параметр для дебаунса
+  target, 
+  onIntersect, 
+  threshold = 0.1, 
+  rootMargin = '0px', 
+  enabled = true, 
+  debounceTime = 300, 
 }) => {
-  // Сохраняем таймер дебаунса
+  
   const debounceRef = useRef(null);
 
   useEffect(() => {
@@ -20,17 +20,17 @@ const useIntersectionObserver = ({
       return;
     }
 
-    // Функция-обработчик с дебаунсом
+    
     const handleIntersect = entries => {
       const [entry] = entries;
 
       if (entry.isIntersecting) {
-        // Очищаем существующий таймер если есть
+        
         if (debounceRef.current) {
           clearTimeout(debounceRef.current);
         }
 
-        // Устанавливаем новый таймер
+        
         debounceRef.current = setTimeout(() => {
           onIntersect();
           debounceRef.current = null;

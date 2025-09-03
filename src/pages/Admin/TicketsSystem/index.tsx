@@ -3,10 +3,10 @@ import { Box, Typography, Container, Paper, Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 
-// Импорты из UIKIT
+
 import UniversalModal from '../../../UIKIT/UniversalModal';
 
-// Импорты компонентов
+
 import TicketList from './components/TicketList';
 import TicketDetails from './components/TicketDetails';
 import TicketStats from './components/TicketStats';
@@ -18,12 +18,12 @@ import PackProposalsList from './components/PackProposalsList';
 import PackProposalDetails from './components/PackProposalDetails';
 import Post from '../../../components/Post/Post';
 
-// Импорты хуков
+
 import { useTickets } from './hooks/useTickets';
 import { useTicketActions } from './hooks/useTicketActions';
 import { useTicketComments } from './hooks/useTicketComments';
 
-// Стилизованные компоненты с темизацией
+
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(2),
   minHeight: '100vh',
@@ -56,7 +56,7 @@ const TicketsSystem: React.FC = () => {
   const [selectedPackProposal, setSelectedPackProposal] = useState<any>(null);
   const [isPackProposalModalOpen, setIsPackProposalModalOpen] = useState(false);
 
-  // Хуки для работы с тикетами
+  
   const {
     tickets,
     loading,
@@ -85,7 +85,7 @@ const TicketsSystem: React.FC = () => {
     loading: commentsLoading,
   } = useTicketComments();
 
-  // Обработчики событий
+  
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
@@ -104,7 +104,7 @@ const TicketsSystem: React.FC = () => {
     try {
       console.log('Загружаем пост с ID:', postId);
       
-      // Загружаем данные поста с правильными заголовками
+      
       const response = await fetch(`/api/posts/${postId}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const postData = await response.json();
         
-        // Проверяем структуру данных
+        
         if (postData.success && postData.post) {
           setSelectedPost(postData.post);
         } else if (postData.id) {
@@ -150,10 +150,10 @@ const TicketsSystem: React.FC = () => {
   };
 
   const handleOpenTicketFromHistory = (ticketId: number) => {
-    // Закрываем модалку истории жалоб
+    
     handleCloseComplaintHistory();
     
-    // Находим тикет по ID и открываем его
+    
     const ticket = tickets.find(t => t.id === ticketId);
     if (ticket) {
       setSelectedTicket(ticket);
@@ -192,7 +192,7 @@ const TicketsSystem: React.FC = () => {
   };
 
   const handlePackProposalSuccess = () => {
-    // Обновляем список заявок после успешного действия
+    
     setIsPackProposalModalOpen(false);
     setSelectedPackProposal(null);
   };
@@ -228,7 +228,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Обновляем тикеты после действия
+          
           refreshTickets();
         }
       }
@@ -268,7 +268,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Обновляем тикеты после действия
+          
           refreshTickets();
         }
       }
@@ -296,7 +296,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Обновляем тикеты после действия
+          
           refreshTickets();
         }
       }
@@ -321,7 +321,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Обновляем тикеты после действия
+          
           refreshTickets();
         }
       }
@@ -347,7 +347,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          // Обновляем тикеты после действия
+          
           refreshTickets();
         }
       }
@@ -374,7 +374,7 @@ const TicketsSystem: React.FC = () => {
       }
       refreshTickets();
       if (selectedTicket?.id === ticketId) {
-        // Обновляем выбранный тикет
+        
         const updatedTicket = tickets.find(t => t.id === ticketId);
         if (updatedTicket) {
           setSelectedTicket(updatedTicket);
@@ -398,7 +398,7 @@ const TicketsSystem: React.FC = () => {
           await deleteComment(ticketId, commentId);
           break;
       }
-      // Обновляем комментарии после действия
+      
       if (selectedTicket) {
         await fetchComments(selectedTicket.id);
       }
@@ -407,12 +407,12 @@ const TicketsSystem: React.FC = () => {
     }
   };
 
-  // Загрузка данных при монтировании
+  
   useEffect(() => {
     fetchTickets();
   }, [filters]);
 
-  // Загрузка комментариев при выборе тикета
+  
   useEffect(() => {
     if (selectedTicket) {
       fetchComments(selectedTicket.id);

@@ -26,7 +26,7 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import apiClient from '../../services/axiosConfig';
 import NewTracksBlock from './components/NewTracksBlock';
 
-// Стили для поиска
+
 const SearchContainer = styled(Box)(({ theme, open }) => ({
   position: 'sticky',
   top: 0,
@@ -88,7 +88,7 @@ const NewTracksPage = () => {
     isSearching,
   } = useMusic();
 
-  // Состояние для поиска
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -97,29 +97,29 @@ const NewTracksPage = () => {
   const abortControllerRef = useRef(null);
   const searchTimeoutRef = useRef(null);
 
-  // Состояние для уведомлений
+  
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
 
-  // Стабильная функция поиска с использованием useRef
+  
   const performSearch = useCallback(
     async query => {
-      // Отменяем предыдущий запрос если он еще выполняется
+      
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
 
-      // Проверяем минимальную длину запроса
+      
       if (!query.trim() || query.trim().length < 2) {
         return;
       }
 
       setSearchLoading(true);
 
-      // Создаем новый AbortController для этого запроса
+      
       abortControllerRef.current = new AbortController();
 
       try {
@@ -144,17 +144,17 @@ const NewTracksPage = () => {
     [searchTracks]
   );
 
-  // Обработчики поиска
+  
   const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
 
-    // Отменяем предыдущий таймер
+    
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
-    // Отменяем активный поиск если запрос слишком короткий
+    
     if (query.trim().length < 2) {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -163,10 +163,10 @@ const NewTracksPage = () => {
       return;
     }
 
-    // Устанавливаем новый таймер для debounce
+    
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(query.trim());
-    }, 1200); // 1.2 секунды debounce
+    }, 1200); 
   };
 
   const handleSearchFocus = () => {
@@ -182,12 +182,12 @@ const NewTracksPage = () => {
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
     }
-    // Отменяем активный поиск
+    
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       setSearchLoading(false);
     }
-    // Отменяем таймер debounce
+    
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
       searchTimeoutRef.current = null;
@@ -214,7 +214,7 @@ const NewTracksPage = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  // Очистка при размонтировании компонента
+  
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
@@ -226,7 +226,7 @@ const NewTracksPage = () => {
     };
   }, []);
 
-  // Если есть поисковый запрос, показываем страницу поиска
+  
   if (searchQuery.trim()) {
     return (
       <Box sx={{ p: 2 }}>

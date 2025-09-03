@@ -18,6 +18,10 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  
+  /* Цветовая схема браузера */
+  color-scheme: dark;
+  accent-color: #D0BCFF;
 }
 
 /* Принудительные значения для тем */
@@ -71,6 +75,10 @@
   --theme-text-success: #2e7d32;
   --theme-text-warning: #ed6c02;
   --theme-text-info: #1976d2;
+  
+  /* Цветовая схема браузера */
+  color-scheme: light;
+  accent-color: #6750A4;
 }
 
 /* Midnight - глубокий темно-синий с фиолетовым оттенком */
@@ -380,7 +388,9 @@ html.theme-site-background {
 }
 
 .theme-menu {
-
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  
   /* 
     Блюр включается только если поддерживается аппаратно.
     Если у пользователя rasterizer off или слабое GPU, блюр можно отключить через JS, 
@@ -392,7 +402,6 @@ html.theme-site-background {
     Или если детектирован низкий FPS/плохое GPU:
       document.body.classList.add('no-blur');
   */
-
 }
 
 body.no-blur .theme-menu,
@@ -499,4 +508,48 @@ body.no-blur .theme-menu,
 
 .theme-transition {
   animation: themeTransition 0.3s ease-out;
+}
+
+/* Стили для браузерных элементов */
+/* Скроллбары для WebKit браузеров (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-site-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-main-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-text-accent);
+}
+
+/* Стили для форм и элементов управления */
+input[type="checkbox"], 
+input[type="radio"], 
+input[type="range"] {
+  accent-color: var(--theme-main-color);
+}
+
+/* Стили для выделения текста */
+::selection {
+  background-color: var(--theme-main-color);
+  color: var(--theme-background);
+}
+
+::-moz-selection {
+  background-color: var(--theme-main-color);
+  color: var(--theme-background);
+}
+
+/* Стили для фокуса элементов */
+:focus-visible {
+  outline: 2px solid var(--theme-main-color);
+  outline-offset: 2px;
 } 
