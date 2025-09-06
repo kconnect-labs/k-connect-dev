@@ -345,7 +345,13 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
         <>
           <AlbumHeader>
             <AlbumCover
-              src={albumDetails.cover_url || '/static/uploads/system/album_placeholder.jpg'}
+              src={
+                albumDetails.cover_url 
+                  ? (albumDetails.cover_url.startsWith('http') 
+                      ? albumDetails.cover_url 
+                      : `https://s3.k-connect.ru${albumDetails.cover_url}`)
+                  : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
+              }
               alt={albumDetails.title}
             >
               {!albumDetails.cover_url && (
@@ -453,7 +459,13 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                           )}
                         </TrackNumber>
                         <Avatar
-                          src={track.cover_path}
+                          src={
+                            track.cover_path 
+                              ? (track.cover_path.startsWith('http') 
+                                  ? track.cover_path 
+                                  : `https://s3.k-connect.ru${track.cover_path}`)
+                              : undefined
+                          }
                           alt={track.title}
                           sx={{ width: 40, height: 40, borderRadius: '8px', marginRight: '10px' }}
                         >

@@ -28,14 +28,14 @@ const UserProfileBlock = ({ user }) => {
           user?.photo
             ? user.photo.startsWith('/')
               ? user.photo
-              : `/static/uploads/avatar/${user.id}/${user.photo}`
+              : `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
             : undefined
         }
         alt={user?.name || t('sidebar.profile.default_name')}
         onError={e => {
           console.error(`Failed to load avatar for ${user?.username}`);
           e.target.onerror = null;
-          e.target.src = `/static/uploads/avatar/system/avatar.png`;
+          e.target.src = `https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png`;
         }}
       />
       <div className='user-info-container'>

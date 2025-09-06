@@ -279,7 +279,13 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
                   onClick={() => onAlbumClick(album)}
                 >
                   <AlbumCover
-                    image={album.cover_url || '/static/uploads/system/album_placeholder.jpg'}
+                    image={
+                      album.cover_url 
+                        ? (album.cover_url.startsWith('http') 
+                            ? album.cover_url 
+                            : `https://s3.k-connect.ru${album.cover_url}`)
+                        : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
+                    }
                     title={album.title}
                   >
                     {!album.cover_url && (

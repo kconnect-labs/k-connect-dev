@@ -347,9 +347,9 @@ const Comment = ({
         >
           <Avatar
             src={
-              comment.user.photo && comment.user.photo !== 'avatar.png'
-                ? `/static/uploads/avatar/${comment.user.id}/${comment.user.photo}`
-                : `/static/uploads/avatar/system/avatar.png`
+              comment.user.avatar_url || (comment.user.photo && comment.user.photo !== 'avatar.png'
+                ? `https://s3.k-connect.ru/static/uploads/avatar/${comment.user.id}/${comment.user.photo}`
+                : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
             }
             alt={comment.user.name}
             component={Link}
@@ -370,7 +370,7 @@ const Comment = ({
               if (e.currentTarget && e.currentTarget.setAttribute) {
                 e.currentTarget.setAttribute(
                   'src',
-                  '/static/uploads/avatar/system/avatar.png'
+                  'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
                 );
               }
             }}
@@ -754,9 +754,9 @@ const Comment = ({
                   >
                     <Avatar
                       src={
-                        reply.user.photo && reply.user.photo !== 'avatar.png'
-                          ? `/static/uploads/avatar/${reply.user.id}/${reply.user.photo}`
-                          : `/static/uploads/avatar/system/avatar.png`
+                        reply.user.avatar_url || (reply.user.photo && reply.user.photo !== 'avatar.png'
+                          ? `https://s3.k-connect.ru/static/uploads/avatar/${reply.user.id}/${reply.user.photo}`
+                          : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                       }
                       alt={reply.user.name}
                       component={Link}
@@ -775,7 +775,7 @@ const Comment = ({
                         if (e.currentTarget && e.currentTarget.setAttribute) {
                           e.currentTarget.setAttribute(
                             'src',
-                            '/static/uploads/avatar/system/avatar.png'
+                            'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
                           );
                         }
                       }}
@@ -850,10 +850,10 @@ const Comment = ({
                           >
                             <Avatar
                               src={
-                                comment.user.photo &&
+                                comment.user.avatar_url || (comment.user.photo &&
                                 comment.user.photo !== 'avatar.png'
-                                  ? `/static/uploads/avatar/${comment.user.id}/${comment.user.photo}`
-                                  : `/static/uploads/avatar/system/avatar.png`
+                                  ? `https://s3.k-connect.ru/static/uploads/avatar/${comment.user.id}/${comment.user.photo}`
+                                  : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                               }
                               alt={comment.user.name}
                               sx={{ width: 16, height: 16 }}
@@ -867,7 +867,7 @@ const Comment = ({
                                 ) {
                                   e.currentTarget.setAttribute(
                                     'src',
-                                    '/static/uploads/avatar/system/avatar.png'
+                                    'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
                                   );
                                 }
                               }}
@@ -924,10 +924,10 @@ const Comment = ({
                           >
                             <Avatar
                               src={
-                                reply.parent_reply.user.photo &&
+                                reply.parent_reply.user.avatar_url || (reply.parent_reply.user.photo &&
                                 reply.parent_reply.user.photo !== 'avatar.png'
-                                  ? `/static/uploads/avatar/${reply.parent_reply.user.id}/${reply.parent_reply.user.photo}`
-                                  : `/static/uploads/avatar/system/avatar.png`
+                                  ? `https://s3.k-connect.ru/static/uploads/avatar/${reply.parent_reply.user.id}/${reply.parent_reply.user.photo}`
+                                  : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                               }
                               alt={reply.parent_reply.user.name}
                               sx={{ width: 16, height: 16 }}
@@ -941,7 +941,7 @@ const Comment = ({
                                 ) {
                                   e.currentTarget.setAttribute(
                                     'src',
-                                    '/static/uploads/avatar/system/avatar.png'
+                                    'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
                                   );
                                 }
                               }}
@@ -1298,9 +1298,9 @@ const Comment = ({
                 <Box component='span' sx={{ mr: 0.75 }}>
                   <Avatar
                     src={
-                      user?.photo && user.photo !== 'avatar.png'
-                        ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                        : `/static/uploads/avatar/system/avatar.png`
+                      user?.avatar_url || (user?.photo && user.photo !== 'avatar.png'
+                        ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
+                        : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                     }
                     alt={user?.name}
                     sx={{ width: 30, height: 30 }}
@@ -2329,9 +2329,9 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                   <Box component='span' sx={{ mr: 0.75 }}>
                     <Avatar
                       src={
-                        user?.photo && user.photo !== 'avatar.png'
-                          ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                          : `/static/uploads/avatar/system/avatar.png`
+                        user?.avatar_url || (user?.photo && user.photo !== 'avatar.png'
+                          ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
+                          : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                       }
                       alt={user?.name}
                       sx={{ width: 30, height: 30 }}

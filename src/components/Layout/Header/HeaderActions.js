@@ -79,9 +79,7 @@ const HeaderActions = ({
           <img
             className='profile-avatar'
             src={
-              user.photo
-                ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                : '/static/uploads/avatar/system/avatar.png'
+              user.avatar_url || (user.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
             }
             alt={user.name || user.username}
           />

@@ -204,7 +204,13 @@ const TrackItem: React.FC<TrackItemProps> = ({
 
       {/* Обложка трека */}
       <TrackAvatar
-        src={track.cover_path}
+        src={
+          track.cover_path 
+            ? (track.cover_path.startsWith('http') 
+                ? track.cover_path 
+                : `https://s3.k-connect.ru${track.cover_path}`)
+            : undefined
+        }
         variant="rounded"
       >
         <Album />

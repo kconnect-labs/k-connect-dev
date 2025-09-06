@@ -216,7 +216,13 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
     >
       <TrackImageContainer>
         <TrackImage
-          src={track.cover_path || '/static/uploads/system/album_placeholder.jpg'}
+          src={
+            track.cover_path 
+              ? (track.cover_path.startsWith('http') 
+                  ? track.cover_path 
+                  : `https://s3.k-connect.ru${track.cover_path}`)
+              : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
+          }
           alt={track.title}
         />
         <PlayOverlay className="track-overlay" isPlaying={isPlaying}>
