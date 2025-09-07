@@ -274,6 +274,18 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
   
   const HEADER_HEIGHT = 56; // px, adjust if header size changes
   
+  // Состояние для отслеживания необходимости отступов
+  const [needsPadding, setNeedsPadding] = useState(false);
+  
+  // Функция для проверки, нужны ли отступы
+  const checkIfNeedsPadding = useCallback(() => {
+    if (!messagesContainerRef.current) return;
+    
+    const container = messagesContainerRef.current;
+    const hasScroll = container.scrollHeight > container.clientHeight;
+    setNeedsPadding(hasScroll);
+  }, []);
+  
   const inputRef = useRef(null);
   const [inputHeightState, setInputHeightState] = useState(60);
   
@@ -839,11 +851,21 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         
         // Determine if avatar should be shown (only on last message in consecutive block)
         let showAvatar = true;
+        let showSenderName = true;
+        
         if (activeChat?.is_group && message.sender_id !== user?.id) {
           const currentIdx = chatMessages.findIndex(m => m.id === message.id);
           const nextMsg = chatMessages[currentIdx + 1];
+          const prevMsg = chatMessages[currentIdx - 1];
+          
+          // Если следующее сообщение от того же пользователя - не показываем аватар
           if (nextMsg && nextMsg.sender_id === message.sender_id) {
             showAvatar = false;
+          }
+          
+          // Если предыдущее сообщение от того же пользователя - не показываем имя
+          if (prevMsg && prevMsg.sender_id === message.sender_id) {
+            showSenderName = false;
           }
         }
         
@@ -857,6 +879,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             replyMessage={replyMessage}
             chatMembers={activeChat?.members}
             showAvatar={showAvatar}
+            showSenderName={showSenderName}
           />
         );
       }
@@ -1044,20 +1067,25 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         const h = inputRef.current.offsetHeight || 60;
         setInputHeightState(h);
       }
+      // Проверяем отступы при изменении размера окна
+      setTimeout(checkIfNeedsPadding, 100);
     };
     update();
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
-  }, []);
+  }, [checkIfNeedsPadding]);
 
   // Отправляем read_receipt для всех сообщений при открытии чата или получении новых сообщений
   useEffect(() => {
     if (activeChat && messages[activeChat.id] && messages[activeChat.id].length > 0) {
   
       markAllMessagesAsRead(activeChat.id);
+      
+      // Проверяем необходимость отступов после изменения сообщений
+      setTimeout(checkIfNeedsPadding, 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeChat?.id, messages[activeChat?.id]?.length]);
+  }, [activeChat?.id, messages[activeChat?.id]?.length, checkIfNeedsPadding]);
 
   // Optionally add cleanup for unmount
   useEffect(() => {
@@ -1078,11 +1106,14 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         attempts++;
         if (attempts < maxAttempts) {
           setTimeout(tryScroll, 60);
+        } else {
+          // После завершения скролла проверяем необходимость отступов
+          setTimeout(checkIfNeedsPadding, 100);
         }
       }
       tryScroll();
     }
-  }, [activeChat?.id]);
+  }, [activeChat?.id, checkIfNeedsPadding]);
 
   // ДОБАВЛЯЕМ: если нет активного чата, показываем только баннер
   if (!activeChat) {
@@ -1101,8 +1132,8 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
     <Box sx={{ 
       display: 'flex', 
       flexDirection: 'column',
-      height: '100dvh',        // динамическая высота вьюпорта, корректно реагирует на скрытие/появление адресной строки/клавиатуры
-      maxHeight: '100dvh',
+      height: isMobile ? '100vh' : '100dvh',        // на мобильных используем 100vh для избежания конфликтов с CSS
+      maxHeight: isMobile ? '100vh' : '100dvh',
       overscrollBehavior: 'contain', // предотвращает "bounce-scroll"
       background: isMobile ? 'rgb(26 26 26)' : 'transparent',
     }}>
@@ -1235,9 +1266,9 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         ref={messagesContainerRef}
         sx={{ 
           flex: 1, 
-          overflow: 'auto',
-          pt: `${HEADER_HEIGHT}px`,
-          pb: isMobile ? 0 : `${inputHeightState}px`,
+          overflow: needsPadding ? 'auto' : (isMobile ? 'hidden' : 'auto'),
+          pt: needsPadding ? `${HEADER_HEIGHT}px` : 0,
+          pb: needsPadding ? (isMobile ? 0 : `${inputHeightState}px`) : 0,
           px: 0.5,
           display: 'flex',
           flexDirection: 'column',

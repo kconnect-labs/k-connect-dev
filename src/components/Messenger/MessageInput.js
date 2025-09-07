@@ -335,7 +335,7 @@ const MessageInput = ({
         bottom: 0,
         zIndex: 6,
         padding: '8px',
-        pb: 'calc(env(safe-area-inset-bottom, 0px) + 20px)',
+        pb: '20px',
         backgroundColor: 'transparent' ? isMobile : '#1a1a1a',
         borderRadius: 0,
         boxShadow: 'none',

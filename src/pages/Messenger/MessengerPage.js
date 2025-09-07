@@ -34,7 +34,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import SEO from '../../components/SEO';
 import '../../styles/messenger.css';
-import './MessengerMobile.css';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';

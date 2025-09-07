@@ -54,188 +54,16 @@ const getStickerType = (stickerUrl, stickerData) => {
   return 'static'; // webp, png, jpeg
 };
 
-// Компонент для TGS стикера с улучшенной загрузкой
+// Упрощенный компонент для TGS стикера
 const TGSSticker = ({ src, style, onClick }) => {
-  const [animationData, setAnimationData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const loadTGS = async () => {
-      try {
-        setLoading(true);
-        setError(false);
-
-        const response = await fetch(src);
-
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-
-        const contentType = response.headers.get('content-type');
-
-        // Проверяем, действительно ли это TGS файл
-        if (contentType !== 'application/x-tgsticker') {
-          console.log('Not a TGS file, falling back to image:', contentType);
-          setError(true);
-          return;
-        }
-
-        const arrayBuffer = await response.arrayBuffer();
-        let jsonData;
-
-        try {
-          // Пробуем распаковать как gzip
-          const decompressed = pako.inflate(arrayBuffer);
-          const textDecoder = new TextDecoder();
-          jsonData = JSON.parse(textDecoder.decode(decompressed));
-        } catch (gzipError) {
-          // Если не gzip, пробуем как обычный JSON
-          const textDecoder = new TextDecoder();
-          jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-        }
-
-        setAnimationData(jsonData);
-      } catch (error) {
-        console.error('Error loading TGS:', error);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (src) {
-      loadTGS();
-    }
-  }, [src]);
-
-  if (loading) {
-    return (
-      <div
-        style={{
-          ...style,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--theme-background, rgba(255,255,255,0.03))',
-          backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-          WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '8px',
-          minHeight: style?.maxWidth || '120px',
-          minWidth: style?.maxWidth || '120px',
-        }}
-      >
-        <CircularProgress size={24} />
-      </div>
-    );
-  }
-
-  if (error || !animationData) {
-    // Fallback to image if TGS loading failed
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
-  }
-
-  // TGS animation removed - fallback to image
+  // Просто отображаем как изображение без анимаций
   return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
-// Компонент для асинхронной проверки типа стикера
+// Упрощенный компонент для рендеринга стикеров
 const AsyncStickerRenderer = ({ src, style, onClick, stickerData }) => {
-  const [stickerType, setStickerType] = useState('loading');
-  const [animationData, setAnimationData] = useState(null);
-
-  useEffect(() => {
-    const checkStickerType = async () => {
-      try {
-        // Сначала пробуем загрузить как TGS
-        const response = await fetch(src);
-
-        if (!response.ok) {
-          setStickerType('static');
-          return;
-        }
-
-        const contentType = response.headers.get('content-type');
-
-        if (contentType === 'application/x-tgsticker') {
-          // Это TGS файл, пробуем его загрузить
-          try {
-            const arrayBuffer = await response.arrayBuffer();
-            let jsonData;
-
-            try {
-              // Пробуем распаковать как gzip
-              const decompressed = pako.inflate(arrayBuffer);
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(decompressed));
-            } catch (gzipError) {
-              // Если не gzip, пробуем как обычный JSON
-              const textDecoder = new TextDecoder();
-              jsonData = JSON.parse(textDecoder.decode(arrayBuffer));
-            }
-
-            setAnimationData(jsonData);
-            setStickerType('tgs');
-          } catch (error) {
-            console.error('Error loading TGS data:', error);
-            setStickerType('static');
-          }
-        } else if (contentType === 'video/webm') {
-          setStickerType('webm');
-        } else {
-          setStickerType('static');
-        }
-      } catch (error) {
-        console.error('Error checking sticker type:', error);
-        setStickerType('static');
-      }
-    };
-
-    checkStickerType();
-  }, [src]);
-
-  if (stickerType === 'loading') {
-    return (
-      <div
-        style={{
-          ...style,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--theme-background, rgba(255,255,255,0.03))',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: '8px',
-          minHeight: style?.maxWidth || '120px',
-          minWidth: style?.maxWidth || '120px',
-        }}
-      >
-        <CircularProgress size={24} />
-      </div>
-    );
-  }
-
-  if (stickerType === 'tgs' && animationData) {
-    // TGS animation removed - fallback to image
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
-
-  } else if (stickerType === 'webm') {
-    return (
-      <video
-        src={src}
-        style={style}
-        onClick={onClick}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-    );
-  } else {
-    return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
-  }
+  // Просто отображаем как изображение без проверок типов
+  return <img src={src} style={style} onClick={onClick} alt='Стикер' />;
 };
 
 const MessageItem = ({
@@ -248,6 +76,7 @@ const MessageItem = ({
   showDateSeparator = false,
   dateSeparatorText = '',
   showAvatar = true,
+  showSenderName = true,
 }) => {
   const [showActions, setShowActions] = useState(false);
   const {
@@ -648,7 +477,6 @@ const MessageItem = ({
                     <img
                       src={stickerUrl}
                       alt='Стикер'
-                      loading='lazy'
                       style={commonStyle}
                       onClick={commonClickHandler}
                     />
@@ -767,7 +595,6 @@ const MessageItem = ({
               <img
                 src={photoUrl}
                 alt='Фото'
-                loading='lazy'
                 onClick={e => handlePhotoClick(e, photoUrl)}
                 style={{
                   objectFit: 'contain',
@@ -963,7 +790,6 @@ const MessageItem = ({
                   <img
                     src={stickerUrl}
                     alt='Стикер'
-                    loading='lazy'
                     style={commonStyle}
                     onClick={commonClickHandler}
                   />
@@ -1094,8 +920,6 @@ const MessageItem = ({
         ref={messageRef}
         className={`message-item ${isCurrentUser ? 'my-message' : 'their-message'} ${isDeleting ? 'deleting' : ''} ${!isCurrentUser && isGroupChat && !showAvatar ? 'no-avatar' : ''}`}
         style={{
-          transition:
-            'opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease',
           opacity: isDeleting ? 0 : 1,
           transform: isDeleting ? 'scale(0.8)' : 'scale(1)',
           position: 'relative',
@@ -1120,7 +944,7 @@ const MessageItem = ({
             {message.reply_to_id && renderReplyContent()}
             <div className='message-bubble'>
               {/* Имя внутри баббла сверху */}
-              {!isCurrentUser && isGroupChat && (
+              {!isCurrentUser && isGroupChat && showSenderName && (
                 <div className='sender-name-in-bubble'>
                   {message.sender_name || getSenderName(message.sender_id)}
                 </div>
@@ -1290,7 +1114,8 @@ function areEqual(prevProps, nextProps) {
     prevProps.message.updated_at === nextProps.message.updated_at &&
     prevProps.isCurrentUser === nextProps.isCurrentUser &&
     prevProps.decryptedContent === nextProps.decryptedContent &&
-    prevProps.showAvatar === nextProps.showAvatar
+    prevProps.showAvatar === nextProps.showAvatar &&
+    prevProps.showSenderName === nextProps.showSenderName
   );
 }
 
