@@ -13,6 +13,8 @@ import {
   FormControl,
   FormLabel,
   Paper,
+  Button,
+  ButtonGroup,
 } from '@mui/material';
 
 interface PrivacyFormProps {
@@ -30,6 +32,8 @@ interface PrivacySettings {
 
 interface ProfilePrivacySettings {
   isPrivate: boolean;
+  privateUsername: boolean;
+  inventoryPrivacy: number;
 }
 
 const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
@@ -46,6 +50,8 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
 
   const [profilePrivacySettings, setProfilePrivacySettings] = useState<ProfilePrivacySettings>({
     isPrivate: false,
+    privateUsername: false,
+    inventoryPrivacy: 0,
   });
 
   // Загрузка настроек приватности
@@ -88,6 +94,8 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
       if (data.success) {
         setProfilePrivacySettings({
           isPrivate: data.is_private || false,
+          privateUsername: data.private_username || false,
+          inventoryPrivacy: data.inventory_privacy || 0,
         });
       }
     } catch (err) {
@@ -158,6 +166,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
       
       if (data.success) {
         setProfilePrivacySettings(prev => ({ 
+          ...prev,
           isPrivate: !prev.isPrivate 
         }));
         setSuccess('Настройки приватности профиля обновлены');
@@ -170,6 +179,76 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
     } catch (err) {
       console.error('Error updating profile privacy settings:', err);
       setError('Ошибка при обновлении настроек приватности профиля');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handlePrivateUsernameToggle = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      
+      const response = await fetch('/api/user/settings/private-username', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ private_username: !profilePrivacySettings.privateUsername }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setProfilePrivacySettings(prev => ({ 
+          ...prev,
+          privateUsername: !prev.privateUsername 
+        }));
+        setSuccess('Настройки приватности юзернеймов обновлены');
+        onSuccess?.();
+        
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(data.error || 'Не удалось обновить настройку приватности юзернеймов');
+      }
+    } catch (err) {
+      console.error('Error updating private username setting:', err);
+      setError('Ошибка при обновлении настройки приватности юзернеймов');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleInventoryPrivacyToggle = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+      
+      const newInventoryPrivacy = profilePrivacySettings.inventoryPrivacy === 0 ? 1 : 0;
+      
+      const response = await fetch('/api/user/settings/inventory-privacy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inventory_privacy: newInventoryPrivacy }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setProfilePrivacySettings(prev => ({ 
+          ...prev,
+          inventoryPrivacy: newInventoryPrivacy 
+        }));
+        setSuccess('Настройки приватности инвентаря обновлены');
+        onSuccess?.();
+        
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(data.error || 'Не удалось обновить настройку приватности инвентаря');
+      }
+    } catch (err) {
+      console.error('Error updating inventory privacy setting:', err);
+      setError('Ошибка при обновлении настройки приватности инвентаря');
     } finally {
       setSaving(false);
     }
@@ -220,11 +299,11 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
   }
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box>
 
       {/* Приватность профиля */}
-      <Box sx={{ mb: 4 }}>        
-        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
+      <Box sx={{ mb: 1 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
           <Box
             sx={{
               display: 'flex',
@@ -252,113 +331,11 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
         </Paper>
       </Box>
 
-      <Divider sx={{ my: 3 }} />
+ 
 
-      {/* Приватность музыки */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
-          Приватность музыки
-        </Typography>
-        
-        <FormControl component="fieldset" sx={{ mb: 2 }}>
-          <FormLabel component="legend" sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
-            Кто может видеть вашу музыку?
-          </FormLabel>
-          <RadioGroup
-            value={privacySettings.music_privacy}
-            onChange={handleMusicPrivacyChange}
-          >
-            <FormControlLabel
-              value={0}
-              control={<Radio />}
-              label="Все пользователи"
-              sx={{ color: 'var(--theme-text-primary)' }}
-            />
-            <FormControlLabel
-              value={1}
-              control={<Radio />}
-              label="Только друзья"
-              sx={{ color: 'var(--theme-text-primary)' }}
-            />
-            <FormControlLabel
-              value={2}
-              control={<Radio />}
-              label="Скрыто"
-              sx={{ color: 'var(--theme-text-primary)' }}
-            />
-          </RadioGroup>
-        </FormControl>
-
-        <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
-          Выберите, кто может видеть информацию о музыке, которую вы слушаете
-        </Typography>
-      </Box>
-
-      <Divider sx={{ my: 3 }} />
-
-      {/* Режим отображения музыки */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
-          Режим отображения музыки
-        </Typography>
-        
-        <FormControl component="fieldset" sx={{ mb: 2 }}>
-          <FormLabel component="legend" sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
-            Как отображать музыку в профиле?
-          </FormLabel>
-          <RadioGroup
-            value={privacySettings.music_display_mode}
-            onChange={handleMusicDisplayModeChange}
-          >
-            <FormControlLabel
-              value="dynamic"
-              control={<Radio />}
-              label="Динамический - показывать текущий трек"
-              sx={{ color: 'var(--theme-text-primary)' }}
-            />
-            <FormControlLabel
-              value="static"
-              control={<Radio />}
-              label="Статический - зафиксированный трек"
-              sx={{ color: 'var(--theme-text-primary)' }}
-            />
-          </RadioGroup>
-        </FormControl>
-
-        <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-          {privacySettings.music_display_mode === 'dynamic' 
-            ? 'Музыка будет автоматически обновляться в зависимости от того, что вы слушаете'
-            : 'Вы сможете выбрать один трек, который будет отображаться в профиле'
-          }
-        </Typography>
-
-        {/* Информация о текущем треке в динамическом режиме */}
-        {privacySettings.music_display_mode === 'dynamic' && privacySettings.current_music_id && (
-          <Box sx={{ mt: 2, p: 2, bgcolor: 'rgba(255, 255, 255, 0.05)', borderRadius: 1 }}>
-            <Typography variant="body2" sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
-              Текущий трек:
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-              ID: {privacySettings.current_music_id}
-            </Typography>
-            {privacySettings.current_music_updated_at && (
-              <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-                Обновлен: {new Date(privacySettings.current_music_updated_at).toLocaleString()}
-              </Typography>
-            )}
-          </Box>
-        )}
-      </Box>
-
-      <Divider sx={{ my: 3 }} />
-
-      {/* Режим отображения лириков */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
-          Отображение лириков
-        </Typography>
-        
-        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
+      {/* Приватность юзернеймов */}
+      <Box sx={{ mb: 1 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
           <Box
             sx={{
               display: 'flex',
@@ -367,6 +344,232 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
             }}
           >
             <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Скрыть купленные юзернеймы
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                Скрыть список купленных юзернеймов от других пользователей
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {saving && <CircularProgress size={16} />}
+              <Switch
+                checked={profilePrivacySettings.privateUsername}
+                onChange={handlePrivateUsernameToggle}
+                disabled={saving}
+              />
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+ 
+
+      {/* Приватность инвентаря */}
+      <Box sx={{ mb: 1 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Скрыть инвентарь полностью
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                {profilePrivacySettings.inventoryPrivacy === 0 
+                  ? 'Инвентарь виден всем пользователям'
+                  : 'Инвентарь скрыт от всех, включая вас'
+                }
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {saving && <CircularProgress size={16} />}
+              <Switch
+                checked={profilePrivacySettings.inventoryPrivacy === 1}
+                onChange={handleInventoryPrivacyToggle}
+                disabled={saving}
+              />
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+ 
+
+      {/* Приватность музыки */}
+      <Box sx={{ mb: 1 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Приватность музыки
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                {privacySettings.music_privacy === 0 
+                  ? 'Все пользователи могут видеть вашу музыку'
+                  : privacySettings.music_privacy === 1 
+                  ? 'Только друзья могут видеть вашу музыку'
+                  : 'Музыка скрыта от всех'
+                }
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ButtonGroup 
+                variant="outlined" 
+                size="small"
+                sx={{
+                  '& .MuiButton-root': {
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'var(--theme-text-primary)',
+                    fontSize: '0.875rem',
+                    textTransform: 'none',
+                    minWidth: '60px',
+                    '&:hover': {
+                      borderColor: 'rgba(255, 255, 255, 0.4)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: 'var(--theme-primary, #d0bcff)',
+                      color: '#000',
+                      borderColor: 'var(--theme-primary, #d0bcff)',
+                      '&:hover': {
+                        backgroundColor: 'var(--theme-primary, #d0bcff)',
+                        opacity: 0.9,
+                      }
+                    }
+                  }
+                }}
+              >
+                <Button
+                  variant={privacySettings.music_privacy === 0 ? "contained" : "outlined"}
+                  onClick={() => handleMusicPrivacyChange({ target: { value: '0' } } as any)}
+                  sx={{
+                    backgroundColor: privacySettings.music_privacy === 0 ? 'var(--theme-primary, #d0bcff)' : 'transparent',
+                    color: privacySettings.music_privacy === 0 ? '#000' : 'var(--theme-text-primary)',
+                  }}
+                >
+                  Все
+                </Button>
+                <Button
+                  variant={privacySettings.music_privacy === 1 ? "contained" : "outlined"}
+                  onClick={() => handleMusicPrivacyChange({ target: { value: '1' } } as any)}
+                  sx={{
+                    backgroundColor: privacySettings.music_privacy === 1 ? 'var(--theme-primary, #d0bcff)' : 'transparent',
+                    color: privacySettings.music_privacy === 1 ? '#000' : 'var(--theme-text-primary)',
+                  }}
+                >
+                  Друзья
+                </Button>
+                <Button
+                  variant={privacySettings.music_privacy === 2 ? "contained" : "outlined"}
+                  onClick={() => handleMusicPrivacyChange({ target: { value: '2' } } as any)}
+                  sx={{
+                    backgroundColor: privacySettings.music_privacy === 2 ? 'var(--theme-primary, #d0bcff)' : 'transparent',
+                    color: privacySettings.music_privacy === 2 ? '#000' : 'var(--theme-text-primary)',
+                  }}
+                >
+                  Скрыто
+                </Button>
+              </ButtonGroup>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+      <Divider sx={{ my: 3 }} />
+
+      {/* Режим отображения музыки */}
+      <Box sx={{ mb: 1 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Режим отображения музыки
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                {privacySettings.music_display_mode === 'dynamic' 
+                  ? 'Автоматически обновляется текущий трек'
+                  : 'Зафиксированный трек в профиле'
+                }
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <ButtonGroup 
+                variant="outlined" 
+                size="small"
+                sx={{
+                  '& .MuiButton-root': {
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: 'var(--theme-text-primary)',
+                    fontSize: '0.875rem',
+                    textTransform: 'none',
+                    minWidth: '80px',
+                    '&:hover': {
+                      borderColor: 'rgba(255, 255, 255, 0.4)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    }
+                  }
+                }}
+              >
+                <Button
+                  variant={privacySettings.music_display_mode === 'dynamic' ? "contained" : "outlined"}
+                  onClick={() => handleMusicDisplayModeChange({ target: { value: 'dynamic' } } as any)}
+                  sx={{
+                    backgroundColor: privacySettings.music_display_mode === 'dynamic' ? 'var(--theme-primary, #d0bcff)' : 'transparent',
+                    color: privacySettings.music_display_mode === 'dynamic' ? '#000' : 'var(--theme-text-primary)',
+                  }}
+                >
+                  Динамический
+                </Button>
+                <Button
+                  variant={privacySettings.music_display_mode === 'static' ? "contained" : "outlined"}
+                  onClick={() => handleMusicDisplayModeChange({ target: { value: 'static' } } as any)}
+                  sx={{
+                    backgroundColor: privacySettings.music_display_mode === 'static' ? 'var(--theme-primary, #d0bcff)' : 'transparent',
+                    color: privacySettings.music_display_mode === 'static' ? '#000' : 'var(--theme-text-primary)',
+                  }}
+                >
+                  Статический
+                </Button>
+              </ButtonGroup>
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
+
+ 
+
+      {/* Режим отображения лириков */}
+      <Box sx={{ mb: 1 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
+          Отображение лириков
+        </Typography>
+        
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box >
               <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
                 Показывать текст песни в профиле
               </Typography>

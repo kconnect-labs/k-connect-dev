@@ -191,7 +191,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box>
       <Typography
         variant='h6'
         sx={{

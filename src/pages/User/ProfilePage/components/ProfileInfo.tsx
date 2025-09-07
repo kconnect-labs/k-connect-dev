@@ -10,18 +10,8 @@ import LinkIcon from '@mui/icons-material/Link';
 import CakeIcon from '@mui/icons-material/Cake';
 import TodayIcon from '@mui/icons-material/Today';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import DiamondIcon from '@mui/icons-material/Diamond';
-import StarIcon from '@mui/icons-material/Star';
 import styles from './ProfileInfo.module.css';
-import { AutoGraph } from '@mui/icons-material';
 
-// Type definitions based on server response
-interface Achievement {
-  bage: string;
-  color_upgrade: string | null;
-  image_path: string;
-  upgrade: string | null;
-}
 
 interface ConnectInfo {
   connection_date: string;
@@ -118,24 +108,6 @@ interface Verification {
   status: number;
 }
 
-interface ProfileData {
-  achievement: Achievement;
-  ban: any | null;
-  connect_info: ConnectInfo[];
-  current_user_is_moderator: boolean;
-  equipped_items: EquippedItem[];
-  followers_count: number;
-  following_count: number;
-  friends_count: number;
-  is_following: boolean;
-  is_friend: boolean;
-  notifications_enabled: boolean;
-  posts_count: number;
-  socials: Social[];
-  subscription: Subscription;
-  user: User;
-  verification: Verification;
-}
 
 interface Stats {
   avg_likes_per_post: number;
@@ -269,69 +241,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   const isCurrentUser = currentUser && currentUser.id === user.id;
   const hasAccess = !user?.is_private || isCurrentUser || user?.is_friend;
 
-  const getSubscriptionContainerClass = () => {
-    if (!user?.subscription) return styles.subscriptionContainerDefault;
-    switch (user.subscription.type) {
-      case 'premium':
-        return styles.subscriptionContainerPremium;
-      case 'ultimate':
-        return styles.subscriptionContainerUltimate;
-      case 'pick-me':
-        return styles.subscriptionContainerPickMe;
-      case 'channel':
-        return styles.subscriptionContainerChannel;
-      default:
-        return styles.subscriptionContainerDefault;
-    }
-  };
-
-  const getSubscriptionIconClass = () => {
-    if (!user?.subscription) return styles.subscriptionIconDefault;
-    switch (user.subscription.type) {
-      case 'premium':
-        return styles.subscriptionIconPremium;
-      case 'ultimate':
-        return styles.subscriptionIconUltimate;
-      case 'pick-me':
-        return styles.subscriptionIconPickMe;
-      case 'channel':
-        return styles.subscriptionIconChannel;
-      default:
-        return styles.subscriptionIconDefault;
-    }
-  };
-
-  const getSubscriptionTitleClass = () => {
-    if (!user?.subscription) return '';
-    switch (user.subscription.type) {
-      case 'premium':
-        return styles.subscriptionTitlePremium;
-      case 'ultimate':
-        return styles.subscriptionTitleUltimate;
-      case 'pick-me':
-        return styles.subscriptionTitlePickMe;
-      case 'channel':
-        return styles.subscriptionTitleChannel;
-      default:
-        return '';
-    }
-  };
-
-  const getSubscriptionDurationClass = () => {
-    if (!user?.subscription) return '';
-    switch (user.subscription.type) {
-      case 'premium':
-        return styles.subscriptionDurationPremium;
-      case 'ultimate':
-        return styles.subscriptionDurationUltimate;
-      case 'pick-me':
-        return styles.subscriptionDurationPickMe;
-      case 'channel':
-        return styles.subscriptionDurationChannel;
-      default:
-        return '';
-    }
-  };
 
   // Если профиль приватный и нет доступа, показываем сообщение
   if (!hasAccess) {
@@ -460,7 +369,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
           </div>
         )}
 
-        {stats && (
+        {/* {stats && (
           <div className={styles.gridFullWidth}>
             <InfoItem icon={<AutoGraph />} label={t('profile.stats')}>
               <div className={styles.statsContainer}>
@@ -483,7 +392,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
               </div>
             </InfoItem>
           </div>
-        )}
+        )} */}
 
         {/* Социальные сети */}
         {socials && socials.length > 0 && (
@@ -498,97 +407,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
           </div>
         )}
 
-        {/* Секция подписки */}
-        {user?.subscription && (
-          <div className={styles.gridFullWidth}>
-            <div
-              className={`${styles.subscriptionContainer} ${getSubscriptionContainerClass()}`}
-            >
-              <div
-                className={`${styles.subscriptionIcon} ${getSubscriptionIconClass()}`}
-              >
-                {/* Показываем значок длительности подписки, если есть total_duration_months */}
-                {user.subscription.total_duration_months > 0 ? (
-                  <Tooltip
-                    title={`${t('profile.subscription.subscriber')} • ${user.subscription.total_duration_months} ${t('profile.subscription.months')}`}
-                    arrow
-                  >
-                    <img
-                      src={`/static/subs/${
-                        user.subscription.total_duration_months >= 6
-                          ? 'diamond'
-                          : user.subscription.total_duration_months >= 3
-                            ? 'gold'
-                            : user.subscription.total_duration_months >= 2
-                              ? 'silver'
-                              : 'bronze'
-                      }.svg`}
-                      alt='Подписка'
-                      className={styles.subscriptionIconImage}
-                    />
-                  </Tooltip>
-                ) : /* Обычные иконки для подписок без длительности */
-                user.subscription.type === 'channel' ? (
-                  <StarIcon />
-                ) : (
-                  <DiamondIcon />
-                )}
-              </div>
-
-              <div className={styles.subscriptionContent}>
-                <div className={styles.subscriptionHeader}>
-                  <div
-                    className={`${styles.subscriptionTitle} ${getSubscriptionTitleClass()}`}
-                  >
-                    {(() => {
-                      switch (user.subscription.type) {
-                        case 'channel':
-                          return t('profile.subscription.channel');
-                        case 'premium':
-                          return t('balance.subscription_types.premium');
-                        case 'ultimate':
-                          return t('balance.subscription_types.ultimate');
-                        case 'max':
-                          return t('balance.subscription_types.max');
-                        case 'pick-me':
-                          return t('profile.subscription.pick_me');
-                        default:
-                          return t('balance.subscription_types.basic');
-                      }
-                    })()}
-                  </div>
-                </div>
-
-                <div className={styles.subscriptionExpires}>
-                  {user.subscription.expires_at ? (
-                    <>
-                      {t('profile.subscription.expires')}:{' '}
-                      {new Date(
-                        user.subscription.expires_at
-                      ).toLocaleDateString('ru-RU', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric',
-                      })}
-                    </>
-                  ) : (
-                    t('profile.subscription.active')
-                  )}
-                </div>
-
-                {user.subscription.total_duration_months > 0 && (
-                  <div
-                    className={`${styles.subscriptionDuration} ${getSubscriptionDurationClass()}`}
-                  >
-                    {t('profile.subscription.total_duration')}:{' '}
-                    {user.subscription.total_duration_months}{' '}
-                    {t('profile.subscription.months')}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -9,19 +9,14 @@ import {
   Box,
   CircularProgress,
   Typography,
-  Tabs,
-  Tab,
-  Paper,
 } from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../../../../context/AuthContext';
 import { useLanguage } from '../../../../context/LanguageContext';
 import FeedIcon from '@mui/icons-material/Feed';
-import ImageIcon from '@mui/icons-material/Image';
 
 import Post from '../../../../components/Post/Post';
 import PostSkeleton from '../../../../components/Post/PostSkeleton';
-import AttachmentsFeed from './AttachmentsFeed';
 
 const PostsFeed = ({ userId, statusColor }) => {
   const { t } = useLanguage();
@@ -32,7 +27,6 @@ const PostsFeed = ({ userId, statusColor }) => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState(0); // 0 - посты, 1 - вложения
   const checkedPinnedPostsRef = useRef(new Set());
   const observer = useRef();
 
@@ -235,9 +229,6 @@ const PostsFeed = ({ userId, statusColor }) => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-  };
 
   useEffect(() => {
     const handleGlobalPostCreated = event => {
@@ -348,105 +339,59 @@ const PostsFeed = ({ userId, statusColor }) => {
 
   return (
     <Box>
-      <Paper
-        sx={{
-          borderRadius: '12px',
-                      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-          overflow: 'hidden',
-          mb: '5px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-        }}
-      >
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          indicatorColor='primary'
-          variant='fullWidth'
+      {pinnedPost && (
+        <Box
           sx={{
-            '& .MuiTab-root': {
-              color: theme =>
-                theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.7)'
-                  : 'rgba(0, 0, 0, 0.7)',
-              '&.Mui-selected': {
-                color: theme => theme.palette.primary.main,
-              },
-            },
-            '& .MuiTabs-indicator': {
-              backgroundColor: 'primary.main',
-            },
+            position: 'relative',
           }}
         >
-          <Tab label={t('profile.feed.tabs.posts')} />
-          <Tab label={t('profile.feed.tabs.attachments')} />
-        </Tabs>
-      </Paper>
-
-      {/* Контент вкладок */}
-      {activeTab === 0 && (
-        <Box>
-          {pinnedPost && (
-            <Box
-              sx={{
-                position: 'relative',
-              }}
-            >
-              <Post
-                post={pinnedPost}
-                onDelete={handleDeletePost}
-                showActions
-                isPinned
-                statusColor={statusColor}
-              />
-            </Box>
-          )}
-
-          {posts.map((post, index) => {
-            if (posts.length === index + 1) {
-              return (
-                <Box ref={lastPostElementRef} key={`${post.id}-${index}`}>
-                  <Post
-                    post={post}
-                    onDelete={handleDeletePost}
-                    showActions
-                    statusColor={statusColor}
-                  />
-                </Box>
-              );
-            } else {
-              return (
-                <Post
-                  key={`${post.id}-${index}`}
-                  post={post}
-                  onDelete={handleDeletePost}
-                  showActions
-                  statusColor={statusColor}
-                />
-              );
-            }
-          })}
-
-          {isLoadingMore && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-              <CircularProgress size={24} />
-            </Box>
-          )}
-
-          {!hasMore && posts.length > 5 && (
-            <Box sx={{ textAlign: 'center', py: 2, mt: 2 }}>
-              <Typography variant='body2' color='text.secondary'>
-                {t('profile.feed.posts.all_loaded')}
-              </Typography>
-            </Box>
-          )}
+          <Post
+            post={pinnedPost}
+            onDelete={handleDeletePost}
+            showActions
+            isPinned
+            statusColor={statusColor}
+          />
         </Box>
       )}
 
-      {activeTab === 1 && (
-        <AttachmentsFeed userId={userId} statusColor={statusColor} />
+      {posts.map((post, index) => {
+        if (posts.length === index + 1) {
+          return (
+            <Box ref={lastPostElementRef} key={`${post.id}-${index}`}>
+              <Post
+                post={post}
+                onDelete={handleDeletePost}
+                showActions
+                statusColor={statusColor}
+              />
+            </Box>
+          );
+        } else {
+          return (
+            <Post
+              key={`${post.id}-${index}`}
+              post={post}
+              onDelete={handleDeletePost}
+              showActions
+              statusColor={statusColor}
+            />
+          );
+        }
+      })}
+
+      {isLoadingMore && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+          <CircularProgress size={24} />
+        </Box>
+      )}
+
+      {!hasMore && posts.length > 5 && (
+        <Box sx={{ textAlign: 'center', py: 2, mt: 2 }}>
+          <Typography variant='body2' color='text.secondary'>
+            {t('profile.feed.posts.all_loaded')}
+          </Typography>
+        </Box>
       )}
     </Box>
   );

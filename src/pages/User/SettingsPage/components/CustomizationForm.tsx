@@ -32,13 +32,11 @@ import {
   CloudDownload as CloudDownloadIcon,
   PhotoCamera as PhotoCameraIcon,
   Delete as DeleteIcon,
-  MusicNote as MusicNoteIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import ProfileKonnectModal from './ProfileKonnectModal';
 import { ThemeSettingsContext } from '../../../../App';
-import { Radio, RadioGroup, FormControl, FormLabel } from '@mui/material';
 
 // Компонент для отображения декорации
 const DecorationItem = styled('img')(
@@ -157,14 +155,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     string | null
   >(null);
   
-  // Состояния для настроек музыки
-  const [musicDisplayMode, setMusicDisplayMode] = useState('static');
-  const [musicSettingsLoading, setMusicSettingsLoading] = useState(false);
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
     fetchUserDecorations();
-    fetchMusicSettings();
     if (profileData?.user?.profile_background_url) {
       setProfileBackgroundUrl(profileData.user.profile_background_url);
     }
@@ -179,48 +173,6 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     );
   }, [profileData, subscription]);
 
-  // Загрузка настроек музыки
-  const fetchMusicSettings = async () => {
-    try {
-      const response = await fetch('/api/user/settings/music-privacy');
-      const data = await response.json();
-      
-      if (data.success) {
-        setMusicDisplayMode(data.music_display_mode || 'static');
-      }
-    } catch (error) {
-      console.error('Error fetching music settings:', error);
-    }
-  };
-
-  // Обновление настроек музыки
-  const handleMusicDisplayModeChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMode = event.target.value;
-    setMusicSettingsLoading(true);
-    
-    try {
-      const response = await fetch('/api/user/settings/music-privacy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          music_display_mode: newMode,
-        }),
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setMusicDisplayMode(newMode);
-        onSuccess?.();
-      }
-    } catch (error) {
-      console.error('Error updating music settings:', error);
-    } finally {
-      setMusicSettingsLoading(false);
-    }
-  };
 
   const fetchUserDecorations = async () => {
     setLoadingDecorations(true);
@@ -437,23 +389,120 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
   return (
     <Box>
-      <Typography
-        variant='h6'
-        sx={{
-          mb: 3,
-          color: 'text.primary',
-          fontSize: '1.2rem',
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-        }}
-      >
-        <BrushIcon />
-        Кастомизация
-      </Typography>
 
-      {/* Режим отображения музыки */}
+
+      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
+        <Box sx={sectionStyle}>
+          <Typography
+            variant='subtitle1'
+            sx={{
+              mb: 2,
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <WallpaperIcon />
+            Фоновая картинка профиля
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            {profileBackgroundUrl ? (
+              <Box sx={{ position: 'relative' }}>
+                <Avatar
+                  variant='rounded'
+                  src={profileBackgroundUrl}
+                  alt='Profile Background'
+                  sx={{ width: 96, height: 96, borderRadius: 3, boxShadow: 2 }}
+                />
+                <IconButton
+                  size='small'
+                  color='error'
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    bgcolor: 'rgba(0,0,0,0.5)',
+                    '&:hover': {
+                      bgcolor: 'rgba(0,0,0,0.7)',
+                    },
+                  }}
+                  onClick={handleDeleteBackground}
+                >
+                  <DeleteIcon fontSize='small' />
+                </IconButton>
+              </Box>
+            ) : (
+              <Avatar
+                variant='rounded'
+                sx={{
+                  width: 96,
+                  height: 96,
+                  borderRadius: 3,
+                  bgcolor: 'background.default',
+                  color: 'text.disabled',
+                  boxShadow: 1,
+                }}
+              >
+                <PhotoCameraIcon fontSize='large' />
+              </Avatar>
+            )}
+            <Box>
+              <Button
+                variant='contained'
+                component='label'
+                startIcon={<PhotoCameraIcon />}
+                sx={{ borderRadius: 2, fontWeight: 500 }}
+              >
+                Загрузить фон
+                <input
+                  type='file'
+                  accept='image/png, image/jpeg, image/jpg, image/gif'
+                  hidden
+                  onChange={handleBackgroundUpload}
+                />
+              </Button>
+              <Typography
+                variant='caption'
+                sx={{ display: 'block', mt: 1, color: 'text.secondary' }}
+              >
+                Только для подписки Ultimate или MAX. PNG, JPG, GIF. До 5MB.
+              </Typography>
+            </Box>
+          </Box>
+          {/* Глобальные обои профиля */}
+          {profileBackgroundUrl && (
+            <Box sx={{ mt: 2 }}>
+              <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Box>
+                    <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                      Глобальные обои профиля
+                    </Typography>
+                    <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                      При включении ваша фоновая картинка будет использоваться по всему сайту
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Switch
+                      checked={globalProfileBackgroundEnabled}
+                      onChange={handleGlobalProfileBackgroundToggle}
+                    />
+                  </Box>
+                </Box>
+              </Paper>
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {/* Декорации */}
       <Box sx={sectionStyle}>
         <Typography
           variant='subtitle1'
@@ -465,41 +514,112 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             gap: 1,
           }}
         >
-          <MusicNoteIcon />
-          Режим отображения музыки
+          <BrushIcon />
+          Декорации профиля
         </Typography>
 
-        <FormControl component="fieldset" sx={{ mb: 2 }}>
-          <FormLabel component="legend" sx={{ color: 'text.primary', mb: 1 }}>
-            Как отображать музыку в профиле?
-          </FormLabel>
-          <RadioGroup
-            value={musicDisplayMode}
-            onChange={handleMusicDisplayModeChange}
-          >
-            <FormControlLabel
-              value="dynamic"
-              control={<Radio disabled={musicSettingsLoading} />}
-              label="Динамический - показывать текущий трек"
-              sx={{ color: 'text.primary' }}
-            />
-            <FormControlLabel
-              value="static"
-              control={<Radio disabled={musicSettingsLoading} />}
-              label="Статический - зафиксированный трек"
-              sx={{ color: 'text.primary' }}
-            />
-          </RadioGroup>
-        </FormControl>
+        {loadingDecorations ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+            <CircularProgress />
+          </Box>
+        ) : userDecorations.length === 0 ? (
+          <Typography color='textSecondary'>
+            У вас пока нет декораций
+          </Typography>
+        ) : (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {userDecorations.map(item => {
+              const decoration = item.decoration || item;
+              return (
+                <Paper
+                  key={decoration.id}
+                  sx={{
+                    p: 2,
+                    backgroundColor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                    borderRadius: 2,
+                    border: item.is_active
+                      ? '2px solid primary.main'
+                      : '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
+                >
+                  <DecorationPreview decoration={decoration}>
+                    {decoration.item_path &&
+                      (() => {
+                        const [path, ...styles] =
+                          decoration.item_path.split(';');
+                        const styleObj = styles.reduce(
+                          (acc: any, style: string) => {
+                            const [key, value] = style
+                              .split(':')
+                              .map(s => s.trim());
+                            return { ...acc, [key]: value };
+                          },
+                          {}
+                        );
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {musicDisplayMode === 'dynamic' 
-            ? 'Музыка будет автоматически обновляться в зависимости от того, что вы слушаете'
-            : 'При переключении на статический режим текущий трек будет автоматически сохранен как статичный'
-          }
-        </Typography>
+                        return (
+                          <DecorationItem
+                            src={path}
+                            alt=''
+                            customStyles={styleObj}
+                          />
+                        );
+                      })()}
+                  </DecorationPreview>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      mt: 1,
+                    }}
+                  >
+                    <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                      {decoration.name}
+                    </Typography>
+                    <Switch
+                      checked={item.is_active || false}
+                      onChange={e =>
+                        handleToggleDecoration(decoration.id, e.target.checked)
+                      }
+                    />
+                  </Box>
+                </Paper>
+              );
+            })}
+          </Box>
+        )}
       </Box>
 
+      {/* Экспорт / Импорт профиля */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <CloudDownloadIcon />
+          Экспорт / Импорт профиля
+        </Typography>
+
+        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
+          Экспортируйте или импортируйте настройки профиля в формате .konnect
+        </Typography>
+
+        <Button
+          variant='outlined'
+          color='primary'
+          sx={{ borderRadius: 2, fontWeight: 500 }}
+          onClick={() => setKonnectModalOpen(true)}
+        >
+          Экспорт / Импорт профиля (.konnect)
+        </Button>
+      </Box>
       {/* Изменение цвета */}
       <Box sx={sectionStyle}>
         <Typography
@@ -592,226 +712,6 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           </Button>
         </Box>
       </Box>
-
-      {/* Декорации */}
-      <Box sx={sectionStyle}>
-        <Typography
-          variant='subtitle1'
-          sx={{
-            mb: 2,
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-          }}
-        >
-          <BrushIcon />
-          Декорации профиля
-        </Typography>
-
-        {loadingDecorations ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-            <CircularProgress />
-          </Box>
-        ) : userDecorations.length === 0 ? (
-          <Typography color='textSecondary'>
-            У вас пока нет декораций
-          </Typography>
-        ) : (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {userDecorations.map(item => {
-              const decoration = item.decoration || item;
-              return (
-                <Paper
-                  key={decoration.id}
-                  sx={{
-                    p: 2,
-                    backgroundColor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
-                    borderRadius: 2,
-                    border: item.is_active
-                      ? '2px solid primary.main'
-                      : '1px solid rgba(255, 255, 255, 0.1)',
-                  }}
-                >
-                  <DecorationPreview decoration={decoration}>
-                    {decoration.item_path &&
-                      (() => {
-                        const [path, ...styles] =
-                          decoration.item_path.split(';');
-                        const styleObj = styles.reduce(
-                          (acc: any, style: string) => {
-                            const [key, value] = style
-                              .split(':')
-                              .map(s => s.trim());
-                            return { ...acc, [key]: value };
-                          },
-                          {}
-                        );
-
-                        return (
-                          <DecorationItem
-                            src={path}
-                            alt=''
-                            customStyles={styleObj}
-                          />
-                        );
-                      })()}
-                  </DecorationPreview>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      mt: 1,
-                    }}
-                  >
-                    <Typography variant='subtitle1'>
-                      {decoration.name}
-                    </Typography>
-                    <Switch
-                      checked={item.is_active || false}
-                      onChange={e =>
-                        handleToggleDecoration(decoration.id, e.target.checked)
-                      }
-                    />
-                  </Box>
-                </Paper>
-              );
-            })}
-          </Box>
-        )}
-      </Box>
-
-      {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
-        <Box sx={sectionStyle}>
-          <Typography
-            variant='subtitle1'
-            sx={{
-              mb: 2,
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-            }}
-          >
-            <WallpaperIcon />
-            Фоновая картинка профиля
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {profileBackgroundUrl ? (
-              <Box sx={{ position: 'relative' }}>
-                <Avatar
-                  variant='rounded'
-                  src={profileBackgroundUrl}
-                  alt='Profile Background'
-                  sx={{ width: 96, height: 96, borderRadius: 3, boxShadow: 2 }}
-                />
-                <IconButton
-                  size='small'
-                  color='error'
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    bgcolor: 'rgba(0,0,0,0.5)',
-                    '&:hover': {
-                      bgcolor: 'rgba(0,0,0,0.7)',
-                    },
-                  }}
-                  onClick={handleDeleteBackground}
-                >
-                  <DeleteIcon fontSize='small' />
-                </IconButton>
-              </Box>
-            ) : (
-              <Avatar
-                variant='rounded'
-                sx={{
-                  width: 96,
-                  height: 96,
-                  borderRadius: 3,
-                  bgcolor: 'background.default',
-                  color: 'text.disabled',
-                  boxShadow: 1,
-                }}
-              >
-                <PhotoCameraIcon fontSize='large' />
-              </Avatar>
-            )}
-            <Box>
-              <Button
-                variant='contained'
-                component='label'
-                startIcon={<PhotoCameraIcon />}
-                sx={{ borderRadius: 2, fontWeight: 500 }}
-              >
-                Загрузить фон
-                <input
-                  type='file'
-                  accept='image/png, image/jpeg, image/jpg, image/gif'
-                  hidden
-                  onChange={handleBackgroundUpload}
-                />
-              </Button>
-              <Typography
-                variant='caption'
-                sx={{ display: 'block', mt: 1, color: 'text.secondary' }}
-              >
-                Только для подписки Ultimate или MAX. PNG, JPG, GIF. До 5MB.
-              </Typography>
-            </Box>
-          </Box>
-          {/* Глобальные обои профиля */}
-          {profileBackgroundUrl && (
-            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Switch
-                checked={globalProfileBackgroundEnabled}
-                onChange={handleGlobalProfileBackgroundToggle}
-              />
-              <Box>
-                <Typography variant='body2' fontWeight={500}>
-                  Глобальные обои профиля
-                </Typography>
-                <Typography variant='caption' sx={{ color: 'text.secondary' }}>
-                  При включении ваша фоновая картинка будет использоваться по
-                  всему сайту
-                </Typography>
-              </Box>
-            </Box>
-          )}
-        </Box>
-      )}
-
-      {/* Экспорт / Импорт профиля */}
-      <Box sx={sectionStyle}>
-        <Typography
-          variant='subtitle1'
-          sx={{
-            mb: 2,
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-          }}
-        >
-          <CloudDownloadIcon />
-          Экспорт / Импорт профиля
-        </Typography>
-
-        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
-          Экспортируйте или импортируйте настройки профиля в формате .konnect
-        </Typography>
-
-        <Button
-          variant='outlined'
-          color='primary'
-          sx={{ borderRadius: 2, fontWeight: 500 }}
-          onClick={() => setKonnectModalOpen(true)}
-        >
-          Экспорт / Импорт профиля (.konnect)
-        </Button>
-      </Box>
-
       {/* ColorPicker Dialog */}
       <Dialog
         open={colorPickerOpen}

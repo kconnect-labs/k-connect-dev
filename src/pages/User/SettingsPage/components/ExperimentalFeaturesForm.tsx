@@ -7,6 +7,7 @@ import {
   Alert,
   CircularProgress,
   Button,
+  Paper,
 } from '@mui/material';
 import { Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
 import { 
@@ -34,19 +35,6 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
     mb: 3,
   };
 
-  const featureItemStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 2,
-    p: 2,
-    borderRadius: 1.5,
-    background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    mb: 2,
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.05)',
-    },
-  };
 
   const handleCacheToggle = () => {
     if (cacheStatus.enabled) {
@@ -63,7 +51,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box >
       <Typography
         variant='h6'
         sx={{
@@ -82,33 +70,36 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
       </Alert>
 
       {/* Управление кешем медиа */}
-      <Box sx={featureItemStyle}>
-        <Switch
-          checked={cacheStatus.enabled}
-          onChange={handleCacheToggle}
-          color='primary'
-        />
-        <Box sx={{ flex: 1 }}>
-          <Typography variant='body1' fontWeight={500} sx={{ mb: 0.5 }}>
-            Кеш медиа-файлов
-          </Typography>
-          <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-            Кеширование изображений и медиа для ускорения загрузки. 
-            {cacheStatus.enabled && (
-              <span style={{ color: '#ff9800' }}>
-                {' '}Активно: {cacheStatus.queueLength} в очереди, {cacheStatus.activeOperations} операций
-              </span>
-            )}
-          </Typography>
-        </Box>
-        {cacheStatus.enabled && (
-          <Switch
-            checked={cacheStatus.performanceMode}
-            onChange={handlePerformanceModeToggle}
-            size='small'
-            color='secondary'
-          />
-        )}
+      <Box sx={{ mb: 4 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                Кеш медиа-файлов
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                Кеширование изображений и медиа для ускорения загрузки. 
+                {cacheStatus.enabled && (
+                  <span style={{ color: '#ff9800' }}>
+                    {' '}Активно: {cacheStatus.queueLength} в очереди, {cacheStatus.activeOperations} операций
+                  </span>
+                )}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Switch
+                checked={cacheStatus.enabled}
+                onChange={handleCacheToggle}
+              />
+            </Box>
+          </Box>
+        </Paper>
       </Box>
 
       {cacheStatus.enabled && (
@@ -129,23 +120,28 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
       )}
 
       {/* Анимации (в разработке) */}
-      <Box sx={featureItemStyle}>
-        <Switch checked={false} disabled={true} color='primary' />
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            variant='body1'
-            fontWeight={500}
-            sx={{ mb: 0.5, opacity: 0.6 }}
+      <Box sx={{ mb: 4 }}>
+        <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
           >
-            Анимации (в разработке)
-          </Typography>
-          <Typography
-            variant='body2'
-            sx={{ color: 'var(--theme-text-secondary)', opacity: 0.6 }}
-          >
-            Настройка интенсивности анимаций интерфейса
-          </Typography>
-        </Box>
+            <Box>
+              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)', opacity: 0.6 }}>
+                Анимации (в разработке)
+              </Typography>
+              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', opacity: 0.6 }}>
+                Настройка интенсивности анимаций интерфейса
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Switch checked={false} disabled={true} />
+            </Box>
+          </Box>
+        </Paper>
       </Box>
     </Box>
   );

@@ -10,58 +10,8 @@ import {
   Paper,
 } from '@mui/material';
 import { Save as SaveIcon, Check as CheckIcon } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 import { usePrivacy } from '../hooks/usePrivacy';
 
-// IOS Switch стиль
-const IOSSwitch = styled(Switch)(({ theme }) => ({
-  width: 42,
-  height: 26,
-  padding: 0,
-  '& .MuiSwitch-switchBase': {
-    padding: 0,
-    margin: 2,
-    transitionDuration: '300ms',
-    '&.Mui-checked': {
-      transform: 'translateX(16px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        backgroundColor: '#D0BCFF',
-        opacity: 1,
-        border: 0,
-      },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: 0.5,
-      },
-    },
-    '&.Mui-focusVisible .MuiSwitch-thumb': {
-      color: '#D0BCFF',
-      border: '6px solid #fff',
-    },
-    '&.Mui-disabled .MuiSwitch-thumb': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    '&.Mui-disabled + .MuiSwitch-track': {
-      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxSizing: 'border-box',
-    width: 22,
-    height: 22,
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === 'light' ? '#555' : '#39393D',
-    opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
-      duration: 500,
-    }),
-  },
-}));
 
 interface ProfileInfo {
   name: string;
@@ -101,8 +51,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [success, setSuccess] = useState(false);
   const [isCustomProfileActive, setIsCustomProfileActive] = useState(false);
   const [updatingProfileStyle, setUpdatingProfileStyle] = useState(false);
-  const [isPrivateUsername, setIsPrivateUsername] = useState(false);
-  const [updatingPrivateUsername, setUpdatingPrivateUsername] = useState(false);
   const [isCompactInvertedActive, setIsCompactInvertedActive] = useState(false);
   const [updatingCompactInverted, setUpdatingCompactInverted] = useState(false);
   
@@ -149,13 +97,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     fetchProfileStyle();
   }, [subscription, profileInfo?.username]);
 
-  // Инициализируем настройку приватности юзернеймов
-  useEffect(() => {
-    if (settings) {
-      const privateUsername = settings.private_username || false;
-      setIsPrivateUsername(privateUsername);
-    }
-  }, [settings]);
 
   const handleChange =
     (field: keyof ProfileInfo) =>
@@ -265,38 +206,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     }
   };
 
-  const handlePrivateUsernameToggle = async () => {
-    setUpdatingPrivateUsername(true);
-    try {
-      const response = await fetch('/api/user/settings/private-username', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ private_username: !isPrivateUsername }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setIsPrivateUsername(!isPrivateUsername);
-        if (onSuccess) {
-          onSuccess();
-        }
-      } else {
-        console.error('Error updating private username setting:', data.error);
-        if (onError) {
-          onError(data.error || 'Не удалось обновить настройку приватности');
-        }
-      }
-    } catch (error) {
-      console.error('Error updating private username setting:', error);
-      if (onError) {
-        onError('Ошибка при обновлении настройки приватности');
-      }
-    } finally {
-      setUpdatingPrivateUsername(false);
-    }
-  };
 
 
 
@@ -326,7 +235,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box >
       <Typography
         variant='h6'
         sx={{
@@ -388,9 +297,9 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       {/* Profile style toggle - only for Ultimate and MAX subscription */}
       {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
         <>
-          <Box sx={{ mt: 4, mb: 2 }}>
+          <Box sx={{ mt: 2, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
+              sx={{ p: 2, borderRadius: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
             >
               <Box
                 sx={{
@@ -409,7 +318,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   {updatingProfileStyle && <CircularProgress size={16} />}
-                  <IOSSwitch
+                  <Switch
                     checked={isCustomProfileActive}
                     onChange={handleProfileStyleToggle}
                     disabled={updatingProfileStyle || updatingCompactInverted}
@@ -419,9 +328,9 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
             </Paper>
           </Box>
 
-          <Box sx={{ mt: 2, mb: 2 }}>
+          <Box sx={{ mt: 1, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}
+              sx={{ p: 2, borderRadius: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
             >
               <Box
                 sx={{
@@ -440,7 +349,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   {updatingCompactInverted && <CircularProgress size={16} />}
-                  <IOSSwitch
+                  <Switch
                     checked={isCompactInvertedActive}
                     onChange={handleCompactInvertedToggle}
                     disabled={updatingCompactInverted || updatingProfileStyle}
@@ -452,35 +361,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         </>
       )}
 
-      {/* Private username toggle */}
-      <Box sx={{ mt: 2, mb: 2 }}>
-        <Paper sx={{ p: 2, borderRadius: 2, bgcolor: 'rgba(18, 18, 18, 0.9)' }}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
-            <Box>
-              <Typography variant='subtitle1' fontWeight={600}>
-                Скрыть купленные юзернеймы
-              </Typography>
-              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                Скрыть список купленных юзернеймов от других пользователей
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {updatingPrivateUsername && <CircularProgress size={16} />}
-              <IOSSwitch
-                checked={isPrivateUsername}
-                onChange={handlePrivateUsernameToggle}
-                disabled={updatingPrivateUsername}
-              />
-            </Box>
-          </Box>
-        </Paper>
-      </Box>
 
 
 

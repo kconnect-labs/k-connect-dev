@@ -14,6 +14,7 @@ import {
   CircularProgress,
   Chip,
   Divider,
+  Paper,
 } from '@mui/material';
 import {
   Notifications as NotificationsIcon,
@@ -263,7 +264,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
           response.data?.error || 'Не удалось привязать Telegram ID'
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка при привязке Telegram ID:', error);
       setTelegramIdError(
         error.response?.data?.error ||
@@ -301,7 +302,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
   }
 
   return (
-    <Box sx={containerStyle}>
+    <Box >
       <Typography
         variant='h6'
         sx={{
@@ -377,25 +378,38 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
             браузере.
           </Alert>
         ) : (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={pushSubscribed}
-                onChange={
-                  pushSubscribed
-                    ? handleDisablePushNotifications
-                    : handleEnablePushNotifications
-                }
-                disabled={pushLoading}
-              />
-            }
-            label={
-              pushSubscribed
-                ? 'Отключить push-уведомления'
-                : 'Включить push-уведомления'
-            }
-            sx={{ color: 'var(--theme-text-primary)' }}
-          />
+          <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                  {pushSubscribed
+                    ? 'Отключить push-уведомления'
+                    : 'Включить push-уведомления'}
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                  Получать уведомления в браузере
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {pushLoading && <CircularProgress size={16} />}
+                <Switch
+                  checked={pushSubscribed}
+                  onChange={
+                    pushSubscribed
+                      ? handleDisablePushNotifications
+                      : handleEnablePushNotifications
+                  }
+                  disabled={pushLoading}
+                />
+              </Box>
+            </Box>
+          </Paper>
         )}
 
         {pushLoading && (
@@ -476,21 +490,34 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
             </Button>
           </Box>
         ) : (
-          <FormControlLabel
-            control={
-              <Switch
-                checked={notificationPrefs.telegramNotificationsEnabled}
-                onChange={handleToggleTelegramNotifications}
-                disabled={savingPrefs}
-              />
-            }
-            label={
-              notificationPrefs.telegramNotificationsEnabled
-                ? 'Отключить Telegram уведомления'
-                : 'Включить Telegram уведомления'
-            }
-            sx={{ color: 'var(--theme-text-primary)' }}
-          />
+          <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Box>
+                <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                  {notificationPrefs.telegramNotificationsEnabled
+                    ? 'Отключить Telegram уведомления'
+                    : 'Включить Telegram уведомления'}
+                </Typography>
+                <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                  Получать уведомления в Telegram
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {savingPrefs && <CircularProgress size={16} />}
+                <Switch
+                  checked={notificationPrefs.telegramNotificationsEnabled}
+                  onChange={handleToggleTelegramNotifications}
+                  disabled={savingPrefs}
+                />
+              </Box>
+            </Box>
+          </Paper>
         )}
 
         {savingPrefs && (

@@ -313,7 +313,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column',
-          gap: 2,
+          gap: 0.5,
           maxWidth: '100%',
         }}>
           {themes.map((themeType) => (

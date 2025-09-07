@@ -273,6 +273,11 @@ const ProfilePage = () => {
             response.data.user.music_privacy = response.data.music_privacy;
           }
 
+          // Копируем настройки приватности инвентаря из корневого объекта, если они есть
+          if (response.data.inventory_privacy !== undefined) {
+            response.data.user.inventory_privacy = response.data.inventory_privacy;
+          }
+
           setUser(response.data.user);
 
           if (response.data.subscription) {
@@ -1121,7 +1126,7 @@ const ProfilePage = () => {
             >
               <Tab label={t('profile.tabs.posts')} />
               <Tab label={t('profile.tabs.wall')} />
-              <Tab label='Инвентарь' />
+              {user?.inventory_privacy !== 1 && <Tab label='Инвентарь' />}
               <Tab label={t('profile.tabs.about')} />
             </Tabs>
           </Paper>
@@ -1151,20 +1156,22 @@ const ProfilePage = () => {
             <WallPostsTab userId={user.id} WallFeed={WallFeed} />
           </TabPanel>
 
-          <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
-            <UpgradeEffects item={user}>
-              <InventoryTab
-                userId={user?.id}
-                itemIdToOpen={itemIdToOpen}
-                equippedItems={equippedItems}
-                onEquippedItemsUpdate={refreshEquippedItems}
-                currentUserId={currentUser?.id}
-                user={user}
-              />
-            </UpgradeEffects>
-          </TabPanel>
+          {user?.inventory_privacy !== 1 && (
+            <TabPanel value={tabValue} index={2} sx={{ p: 0, mt: 1 }}>
+              <UpgradeEffects item={user}>
+                <InventoryTab
+                  userId={user?.id}
+                  itemIdToOpen={itemIdToOpen}
+                  equippedItems={equippedItems}
+                  onEquippedItemsUpdate={refreshEquippedItems}
+                  currentUserId={currentUser?.id}
+                  user={user}
+                />
+              </UpgradeEffects>
+            </TabPanel>
+          )}
 
-          <TabPanel value={tabValue} index={3} sx={{ p: 0, mt: 1 }}>
+          <TabPanel value={tabValue} index={user?.inventory_privacy === 1 ? 2 : 3} sx={{ p: 0, mt: 1 }}>
             <ProfileInfo
               user={user}
               socials={socials}

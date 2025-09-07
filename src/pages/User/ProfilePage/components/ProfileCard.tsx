@@ -64,6 +64,7 @@ interface User {
     lyrics_display_mode?: string;
   };
   music_privacy?: number;
+  inventory_privacy?: number;
 }
 
 interface EquippedItemType {
@@ -120,7 +121,7 @@ const isOverlayItem = (item: EquippedItemType) => {
 };
 
 const hasEquippedOverlayItems = (items: EquippedItemType[]) => {
-  return items.some(item => isOverlayItem(item) && item.is_equipped);
+  return Array.isArray(items) && items.some(item => isOverlayItem(item) && item.is_equipped);
 };
 
 const ProfileCard: React.FC<ProfileCardProps> = ({

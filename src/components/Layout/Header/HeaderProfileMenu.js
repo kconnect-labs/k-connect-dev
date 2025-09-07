@@ -36,156 +36,9 @@ const HeaderProfileMenu = ({
   handleCreateChannel,
   accounts,
   handleSwitchAccount,
-  handleLanguageMenuOpen,
-  languageMenuAnchorEl,
-  isLanguageMenuOpen,
-  handleLanguageMenuClose,
-  handleLanguageChange,
-  language,
 }) => {
   const isFullScreenMenu = isMobile;
 
-  // Языковое меню
-  const languageMenu = (
-    <Menu
-      anchorEl={languageMenuAnchorEl}
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isLanguageMenuOpen}
-      onClose={handleLanguageMenuClose}
-      container={isFullScreenMenu ? document.body : undefined}
-      className="theme-modal"
-      PaperProps={{
-        elevation: 3,
-        sx: {
-          minWidth: isFullScreenMenu ? '100vw' : 200,
-          maxWidth: isFullScreenMenu ? '100vw' : undefined,
-          width: isFullScreenMenu ? '100vw' : undefined,
-          margin: 0,
-          borderRadius: isFullScreenMenu ? 0 : '14px',
-          position: isFullScreenMenu ? 'fixed' : undefined,
-          top: isFullScreenMenu ? '0 !important' : undefined,
-          left: isFullScreenMenu ? '0 !important' : undefined,
-          right: isFullScreenMenu ? '0 !important' : undefined,
-          bottom: isFullScreenMenu ? '0 !important' : undefined,
-          height: isFullScreenMenu ? '100vh' : undefined,
-          maxHeight: isFullScreenMenu ? '100vh' : undefined,
-          boxShadow: isFullScreenMenu ? 'none' : '0 8px 24px rgba(0,0,0,0.15)',
-          border: isFullScreenMenu
-            ? 'none'
-            : '1px solid rgba(255, 255, 255, 0.12)',
-          overflow: 'visible',
-          background: 'var(--theme-background)',
-          backdropFilter: 'var(--theme-backdrop-filter)',
-          '& .MuiMenuItem-root': {
-            padding: '10px 16px',
-            borderRadius: '8px',
-            margin: '2px 8px',
-            transition: 'all 0.2s',
-            '&:hover': {
-              backgroundColor: theme => alpha(theme.palette.primary.main, 0.08),
-            },
-          },
-        },
-      }}
-    >
-      <Box sx={{ px: 3, py: 2, textAlign: 'center' }}>
-        {isMobile && (
-          <IconButton
-            onClick={handleLanguageMenuClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: 'text.secondary',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.08),
-              },
-            }}
-          >
-            <ClearIcon />
-          </IconButton>
-        )}
-        <TranslateIcon sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
-        <Typography variant='h6' sx={{ fontWeight: 600 }}>
-          {t('header.profile_menu.select_language')}
-        </Typography>
-      </Box>
-      <Divider sx={{ opacity: 0.1, mx: 2, mb: 1 }} />
-      <MenuItem
-        onClick={() => handleLanguageChange('RU')}
-        selected={language === 'RU'}
-      >
-        <ListItemIcon>
-          <img
-            src='/static/flags/ru.svg'
-            alt='Russian'
-            style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_Russia_%28CMYK%29.png/120px-Flag_of_Russia_%28CMYK%29.png';
-            }}
-          />
-        </ListItemIcon>
-        <ListItemText primary='Русский' />
-        {language === 'RU' && (
-          <Icon
-            icon='solar:check-circle-bold'
-            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
-          />
-        )}
-      </MenuItem>
-      <MenuItem
-        onClick={() => handleLanguageChange('EN')}
-        selected={language === 'EN'}
-      >
-        <ListItemIcon>
-          <img
-            src='/static/flags/en.svg'
-            alt='English'
-            style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Flag_of_Great_Britain_%281707%E2%80%931800%29.svg/2560px-Flag_of_Great_Britain_%281707%E2%80%931800%29.svg.png';
-            }}
-          />
-        </ListItemIcon>
-        <ListItemText primary='English' />
-        {language === 'EN' && (
-          <Icon
-            icon='solar:check-circle-bold'
-            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
-          />
-        )}
-      </MenuItem>
-      <MenuItem
-        onClick={() => handleLanguageChange('JP')}
-        selected={language === 'JP'}
-      >
-        <ListItemIcon>
-          <img
-            src='/static/flags/jp.svg'
-            alt='Japanese'
-            style={{ width: 24, height: 24, borderRadius: '50%' }}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/1200px-Flag_of_Japan.svg.png';
-            }}
-          />
-        </ListItemIcon>
-        <ListItemText primary='日本語' />
-        {language === 'JP' && (
-          <Icon
-            icon='solar:check-circle-bold'
-            style={{ color: theme.palette.primary.main, marginLeft: 8 }}
-          />
-        )}
-      </MenuItem>
-    </Menu>
-  );
 
   return (
     <>
@@ -196,7 +49,6 @@ const HeaderProfileMenu = ({
         open={isMenuOpen}
         onClose={handleMenuClose}
         container={isFullScreenMenu ? document.body : undefined}
-        className="theme-menu"
         PaperProps={{
           elevation: 3,
           sx: {
@@ -509,12 +361,6 @@ const HeaderProfileMenu = ({
               </Typography>
             </Box>
             <Divider sx={{ opacity: 0.1, mx: 2 }} />
-            <MenuItem onClick={handleLanguageMenuOpen}>
-              <ListItemIcon>
-                <TranslateIcon fontSize='small' color='primary' />
-              </ListItemIcon>
-              <ListItemText>{t('header.profile_menu.language')}</ListItemText>
-            </MenuItem>
           </>
         )}
         
@@ -536,7 +382,6 @@ const HeaderProfileMenu = ({
           <ListItemText>{t('header.profile_menu.logout')}</ListItemText>
         </MenuItem>
       </Menu>
-      {languageMenu}
     </>
   );
 };
