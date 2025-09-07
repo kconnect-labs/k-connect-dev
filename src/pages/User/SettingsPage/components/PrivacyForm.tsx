@@ -412,7 +412,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
           >
             <Box>
               <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
-                Приватность музыки
+                Музыка
               </Typography>
               <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 {privacySettings.music_privacy === 0 
@@ -500,7 +500,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
           >
             <Box>
               <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
-                Режим отображения музыки
+                Режим музыки
               </Typography>
               <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 {privacySettings.music_display_mode === 'dynamic' 
@@ -557,9 +557,6 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
 
       {/* Режим отображения лириков */}
       <Box sx={{ mb: 1 }}>
-        <Typography variant="h6" sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
-          Отображение лириков
-        </Typography>
         
         <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
           <Box
@@ -577,12 +574,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
               <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
                 Для отображения текста у песни должен быть синхронизированный текст (лирические строки).
               </Typography>
-              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                {privacySettings.lyrics_display_mode === 'lyrics' 
-                  ? 'В профиле будут отображаться строки лириков текущего трека'
-                  : 'В профиле будет отображаться только название трека'
-                }
-              </Typography>
+
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               {saving && <CircularProgress size={16} />}

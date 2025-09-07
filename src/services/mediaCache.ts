@@ -258,7 +258,12 @@ class MediaCacheService {
               element.addEventListener('load', () => {
                 if (self.canPerformCacheOperation()) {
                   self.queueCacheOperation(async () => {
-                    await self.cacheImageFromElement(element as HTMLImageElement, normalizedValue);
+                    try {
+                      await self.cacheImageFromElement(element as HTMLImageElement, normalizedValue);
+                    } catch (error) {
+                      // Ошибка уже обработана в cacheImageFromElement
+                      console.debug('Cache operation failed for:', normalizedValue);
+                    }
                   });
                 }
               });
@@ -298,6 +303,7 @@ class MediaCacheService {
                            lowerUrl.includes('/subs/') ||
                            lowerUrl.includes('/receipt/') ||
                            lowerUrl.includes('/badge_prev/') ||
+                           lowerUrl.includes('/bages/') ||
                            lowerUrl.includes('/leaderboard_snapshots/') ||
                            lowerUrl.includes('/street_blacklist/') ||
                            lowerUrl.includes('/spider/') ||
@@ -313,8 +319,21 @@ class MediaCacheService {
   private isPriorityMediaFile(url: string): boolean {
     const lowerUrl = url.toLowerCase();
     
+    // Исключаем внешние домены, которые могут вызывать CORS проблемы
+    // Но разрешаем s3.k-connect.ru (наш S3 сервер)
+    if (lowerUrl.startsWith('http') && 
+        !lowerUrl.includes(window.location.hostname) && 
+        !lowerUrl.includes('s3.k-connect.ru')) {
+      return false;
+    }
+    
+    // Бейджики всегда кешируем (они имеют уникальные названия и часто используются)
+    if (lowerUrl.includes('/bages/') && lowerUrl.endsWith('.svg')) {
+      return true;
+    }
+    
     // Only cache high-priority media files to reduce overhead
-    const priorityExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    const priorityExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.svg'];
     const hasPriorityExtension = priorityExtensions.some(ext => lowerUrl.includes(ext));
     
     // Only cache from specific high-priority folders
@@ -322,7 +341,8 @@ class MediaCacheService {
                             lowerUrl.includes('/uploads/post/') ||
                             lowerUrl.includes('/uploads/prof_back/') ||
                             lowerUrl.includes('/images/') ||
-                            lowerUrl.includes('/avatars/');
+                            lowerUrl.includes('/avatars/') ||
+                            lowerUrl.includes('/static/');
     
     return hasPriorityExtension && isPriorityFolder;
   }
@@ -427,7 +447,7 @@ class MediaCacheService {
   }
 
   private isImageFile(url: string): boolean {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff'];
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.tiff', '.svg'];
     const lowerUrl = url.toLowerCase();
     return imageExtensions.some(ext => lowerUrl.includes(ext));
   }
@@ -439,12 +459,13 @@ class MediaCacheService {
     if (lowerUrl.includes('/icons/') || 
         lowerUrl.includes('/favicon') || 
         lowerUrl.includes('/emoji') ||
-        lowerUrl.includes('/small/')) {
+        lowerUrl.includes('/small/') ||
+        lowerUrl.includes('/bages/')) {
       return true;
     }
     
 
-    if (lowerUrl.endsWith('.webp') || lowerUrl.endsWith('.gif')) {
+    if (lowerUrl.endsWith('.webp') || lowerUrl.endsWith('.gif') || lowerUrl.endsWith('.svg')) {
       return true;
     }
     
@@ -461,6 +482,15 @@ class MediaCacheService {
 
   private async cacheImageFromElement(img: HTMLImageElement, normalizedUrl?: string): Promise<void> {
     try {
+      // Проверяем, не является ли изображение "tainted" (загрязненным)
+      if (this.isImageTainted(img)) {
+        // Для S3 изображений не показываем предупреждение, так как это ожидаемое поведение
+        if (!img.src.includes('s3.k-connect.ru')) {
+          console.warn('Image is tainted, cannot cache:', img.src);
+        }
+        return;
+      }
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
@@ -469,6 +499,15 @@ class MediaCacheService {
       canvas.height = img.naturalHeight;
       ctx.drawImage(img, 0, 0);
 
+      // Проверяем, не стал ли canvas "tainted" после рисования
+      if (this.isCanvasTainted(canvas)) {
+        // Для S3 изображений не показываем предупреждение
+        if (!img.src.includes('s3.k-connect.ru')) {
+          console.warn('Canvas became tainted, cannot export:', img.src);
+        }
+        return;
+      }
+
       canvas.toBlob(async (blob) => {
         if (blob) {
           const urlToCache = normalizedUrl || img.src;
@@ -476,7 +515,48 @@ class MediaCacheService {
         }
       }, this.imageCompressionSettings.format, this.imageCompressionSettings.quality);
     } catch (error) {
-      console.warn('Failed to cache image from element:', error);
+      // Для S3 изображений не показываем предупреждение
+      if (!img.src.includes('s3.k-connect.ru')) {
+        console.warn('Failed to cache image from element:', error);
+      }
+    }
+  }
+
+  private isImageTainted(img: HTMLImageElement): boolean {
+    try {
+      // Проверяем, является ли изображение с S3 сервера
+      const isS3Image = img.src.includes('s3.k-connect.ru');
+      
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return true;
+      
+      canvas.width = 1;
+      canvas.height = 1;
+      ctx.drawImage(img, 0, 0);
+      
+      // Пытаемся получить данные - если canvas tainted, это вызовет ошибку
+      ctx.getImageData(0, 0, 1, 1);
+      return false;
+    } catch (error) {
+      // Для S3 изображений логируем более подробную информацию
+      if (img.src.includes('s3.k-connect.ru')) {
+        console.debug('S3 image is tainted (CORS issue):', img.src);
+      }
+      return true;
+    }
+  }
+
+  private isCanvasTainted(canvas: HTMLCanvasElement): boolean {
+    try {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return true;
+      
+      // Пытаемся получить данные - если canvas tainted, это вызовет ошибку
+      ctx.getImageData(0, 0, 1, 1);
+      return false;
+    } catch (error) {
+      return true;
     }
   }
 

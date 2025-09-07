@@ -301,7 +301,6 @@
 @media (max-width: 480px) {
   .badge--medium {
     width: auto !important;
-    height: 20px !important;
     min-width: 20px !important;
     min-height: 20px !important;
     max-width: 60px !important;
@@ -309,7 +308,6 @@
 
   .badge--large {
     width: auto !important;
-    height: 28px !important;
     min-width: 28px !important;
     min-height: 28px !important;
     max-width: 80px !important;

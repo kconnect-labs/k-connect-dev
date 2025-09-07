@@ -420,7 +420,6 @@ const Post = ({
             parsedTracks = [];
           }
 
-          console.log('Parsed music tracks:', parsedTracks);
           setMusicTracks(Array.isArray(parsedTracks) ? parsedTracks : []);
         } else {
           setMusicTracks([]);
