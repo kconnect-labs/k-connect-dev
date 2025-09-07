@@ -755,7 +755,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
         if (photo && otherUserId && typeof photo === 'string') {
           if (!photo.startsWith('/') && !photo.startsWith('http') && !photo.startsWith('/static/')) {
 
-            return `/static/uploads/avatar/${otherUserId}/${photo}`;
+            return `https://s3.k-connect.ru/static/uploads/avatar/${otherUserId}/${photo}`;
           }
         }
         

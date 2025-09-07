@@ -457,10 +457,12 @@ const MessageItem = ({
           avatarUrl = getAvatarUrl(senderId, member.avatar || member.photo);
         } else {
           const photoPath = member.avatar || member.photo;
-          if (photoPath?.startsWith('/static/')) {
+          if (photoPath?.startsWith('/static/uploads/avatar/')) {
+            avatarUrl = `https://s3.k-connect.ru${photoPath}`;
+          } else if (photoPath?.startsWith('/static/')) {
             avatarUrl = photoPath;
           } else {
-            avatarUrl = `/static/uploads/avatar/${senderId}/${photoPath}`;
+            avatarUrl = `https://s3.k-connect.ru/static/uploads/avatar/${senderId}/${photoPath}`;
           }
         }
       }

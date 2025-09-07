@@ -56,6 +56,12 @@ const buildAvatarUrl = (userId, avatarFilename) => {
   }
   
   
+  if (avatarFilename.startsWith('/static/uploads/avatar/')) {
+    // Добавляем домен s3.k-connect.ru для аватаров
+    return `https://s3.k-connect.ru${avatarFilename}`;
+  }
+  
+  
   if (avatarFilename.startsWith('/static/')) {
     return avatarFilename;
   }
@@ -68,7 +74,7 @@ const buildAvatarUrl = (userId, avatarFilename) => {
   }
   
   
-  const finalUrl = `/static/uploads/avatar/${userId}/${filename}`;
+  const finalUrl = `https://s3.k-connect.ru/static/uploads/avatar/${userId}/${filename}`;
   return finalUrl;
 };
 

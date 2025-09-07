@@ -607,7 +607,7 @@ const MessengerPage = () => {
                       <Avatar
                         src={
                           user.photo
-                            ? `${BASE_URL}/static/uploads/avatar/${user.id}/${user.photo}`
+                            ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
                             : undefined
                         }
                         alt={user.name}
