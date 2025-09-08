@@ -2,7 +2,8 @@ import { Badge, SortOption, TabValue } from '../types';
 
 export const getBadgeImageUrl = (imagePath: string): string => {
   if (!imagePath) return '';
-  return `/static/images/bages/shop/${imagePath}`;
+  // Просто возвращаем imagePath как есть, так как бэкенд уже возвращает полный URL
+  return imagePath;
 };
 
 export const getSortedBadges = (

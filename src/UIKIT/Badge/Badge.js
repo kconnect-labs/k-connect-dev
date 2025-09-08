@@ -74,9 +74,12 @@ const Badge = ({
 
     const loadSvgContent = async () => {
       try {
-        const response = await fetch(
-          `/static/images/bages/${achievement.image_path}`
-        );
+        // Определяем правильный URL для изображения
+        const imageUrl = achievement.image_path.startsWith('http') 
+          ? achievement.image_path 
+          : `/static/images/bages/${achievement.image_path}`;
+          
+        const response = await fetch(imageUrl);
         if (response.ok) {
           const svgText = await response.text();
           setSvgContent(svgText);
@@ -170,7 +173,9 @@ const Badge = ({
     >
       <img
         ref={imageRef}
-        src={`/static/images/bages/${achievement.image_path}`}
+        src={achievement.image_path.startsWith('http') 
+          ? achievement.image_path 
+          : `/static/images/bages/${achievement.image_path}`}
         alt={achievement.bage}
         className='badge__image'
         onLoad={handleImageLoad}

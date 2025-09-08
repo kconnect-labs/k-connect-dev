@@ -68,8 +68,6 @@ import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import { usePostDetail } from '../../context/PostDetailContext';
-import { usePostReactions } from './hooks/usePostReactions';
-import { ReactionsButton } from './components';
 
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
@@ -180,31 +178,8 @@ const Post = ({
   const [repostContent, setRepostContent] = useState('');
   const [repostLoading, setRepostLoading] = useState(false);
 
-  
-  const {
-    reactionsSummary,
-    userReaction,
-    isLoading: reactionsLoading,
-    error: reactionsError,
-    addReaction,
-    removeReaction,
-    getReactions,
-  } = usePostReactions(
-    post?.id,
-    post?.reactions_summary || {},
-    post?.user_reaction || null
-  );
 
   
-  React.useEffect(() => {
-    if (reactionsError) {
-      setSnackbar({
-        open: true,
-        message: reactionsError,
-        severity: 'error',
-      });
-    }
-  }, [reactionsError]);
   const [isPinned, setIsPinned] = useState(isPinnedPost || false);
   const [editDialog, setEditDialog] = useState({
     open: false,
@@ -454,16 +429,6 @@ const Post = ({
 
 
 
-
-  const handleReactionChange = async (emoji) => {
-    if (userReaction === emoji) {
-      
-      await removeReaction();
-    } else {
-      
-      await addReaction(emoji);
-    }
-  };
 
   const handleLike = async e => {
     if (e) e.stopPropagation();
@@ -2526,15 +2491,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   />
                 </Box>
               </Box>
-              
-              {/* Кнопка реакций */}
-              <ReactionsButton
-                postId={post.id}
-                reactionsSummary={reactionsSummary}
-                userReaction={userReaction}
-                onReactionChange={handleReactionChange}
-                isLoading={reactionsLoading}
-              />
+            
             </Box>
 
             {/* Правая группа: просмотры и меню */}
@@ -2550,8 +2507,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 gap: 0.5, 
               }}
             >
-              {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize: 21 }} />
-              <Typography sx={{ color: '#fff', fontSize: '0.85rem', mr: 1.7 }}>{viewsCount}</Typography> */}
+              {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize:14 }} />
+              <Typography sx={{ color: '#fff', fontSize: '0.65rem', mr: 1.7 }}>{viewsCount}</Typography> */}
               <MoreVertIcon
                 sx={{ color: '#fff', cursor: 'pointer', fontSize: 21 }}
                 onClick={handleMenuOpen}

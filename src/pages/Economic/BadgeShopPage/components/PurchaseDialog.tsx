@@ -157,7 +157,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
             {badge.is_upgraded || badge.upgrade ? (
               <BadgeComponent
                 achievement={{
-                  image_path: `shop/${badge.image_path}`,
+                  image_path: badge.image_path,
                   upgrade: badge.is_upgraded || badge.upgrade ? 'upgraded' : '',
                   color_upgrade:
                     badge.particle_color || badge.color_upgrade || '#FFD700',
@@ -171,7 +171,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               />
             ) : (
               <img
-                src={`/static/images/bages/shop/${badge.image_path}`}
+                src={badge.image_path}
                 alt={badge.name}
                 style={{ width: 80, height: 80, objectFit: 'contain' }}
               />

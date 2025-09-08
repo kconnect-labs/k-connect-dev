@@ -56,9 +56,6 @@ export interface Post {
   is_reposted?: boolean;
   is_pinned?: boolean;
   fact?: Fact;
-  // Добавляем поля для реакций
-  reactions_summary?: ReactionsSummary;
-  user_reaction?: ReactionEmoji | null;
 }
 
 export interface Fact {

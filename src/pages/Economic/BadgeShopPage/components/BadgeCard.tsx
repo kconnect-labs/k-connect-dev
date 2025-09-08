@@ -75,7 +75,7 @@ export const BadgeCard: React.FC<BadgeCardProps> = ({
           >
             <BadgeComponent
               achievement={{
-                image_path: `shop/${badge.image_path}`,
+                image_path: badge.image_path,
                 upgrade: badge.is_upgraded || badge.upgrade ? 'upgraded' : '',
                 color_upgrade:
                   badge.particle_color || badge.color_upgrade || '#FFD700',
