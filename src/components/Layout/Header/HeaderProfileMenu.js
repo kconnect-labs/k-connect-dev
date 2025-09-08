@@ -288,7 +288,9 @@ const HeaderProfileMenu = ({
                   >
                     <ListItemIcon>
                       <Avatar
-                        src={accounts.main_account.avatar_url || (accounts.main_account.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${accounts.main_account.id}/${accounts.main_account.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')}
+                        src={
+                          accounts.main_account.avatar_url || (accounts.main_account.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${accounts.main_account.id}/${accounts.main_account.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                        }
                         sx={{ width: 30, height: 30 }}
                       />
                     </ListItemIcon>
@@ -318,7 +320,9 @@ const HeaderProfileMenu = ({
                   >
                     <ListItemIcon>
                       <Avatar
-                        src={channel.avatar_url || (channel.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${channel.id}/${channel.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')}
+                        src={
+                          channel.avatar_url || (channel.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${channel.id}/${channel.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                        }
                         sx={{ width: 30, height: 30 }}
                       />
                     </ListItemIcon>

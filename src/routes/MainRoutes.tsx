@@ -96,12 +96,6 @@ const FriendsPage = React.lazy(() => import('../pages/User/FriendsPage'));
 const StickerManagePage = React.lazy(
   () => import('../pages/Info/StickerManagePage')
 );
-const StreetBlacklistPage = React.lazy(
-  () => import('../pages/Collab/StreetBlacklistPage')
-);
-const StreetBlacklistV1Page = React.lazy(
-  () => import('../pages/Collab/StreetBlacklistV1Page')
-);
 const MiniGamesPage = React.lazy(
   () => import('../pages/MiniGames/MiniGamesPage')
 );
@@ -142,9 +136,6 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
 
   // Компонент для защищенных роутов с проверкой профиля
   const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-    if (loading) {
-      return <LoadingIndicator />;
-    }
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -161,9 +152,6 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
   const ProfileRequiredRoute: React.FC<ProfileRequiredRouteProps> = ({
     children,
   }) => {
-    if (loading) {
-      return <LoadingIndicator />;
-    }
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -182,9 +170,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           <Route
             path='/'
             element={
-              loading ? (
-                <LoadingIndicator />
-              ) : isAuthenticated ? (
+              isAuthenticated ? (
                 hasProfile() ? (
                   <MainPage />
                 ) : (
@@ -290,9 +276,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           <Route
             path='/music/:trackId'
             element={
-              loading ? (
-                <LoadingIndicator />
-              ) : isAuthenticated ? (
+              isAuthenticated ? (
                 hasProfile() ? (
                   <MusicPage />
                 ) : (

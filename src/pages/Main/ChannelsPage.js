@@ -533,7 +533,7 @@ const ChannelsPage = () => {
       <CardActionArea onClick={() => handleChannelClick(channel.username)}>
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <ChannelAvatar
-            src={channel.photo}
+            src={channel.avatar_url || channel.photo}
             alt={channel.name}
             onError={e => {
               e.target.onerror = null;

@@ -162,60 +162,36 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
 );
 
 function App() {
-  const [isPending, startTransition] = useTransition();
-  const [isAppLoading, setIsAppLoading] = useState(true);
+  // Убрали неиспользуемые useTransition и isAppLoading
 
-  const { isInitialized: isThemeInitialized, currentTheme } = useThemeManager();
+  const { isInitialized: isThemeInitialized } = useThemeManager();
 
   const authContext = useContext(AuthContext);
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
 
   useEffect(() => {
-    const initializeApp = async () => {
-      
-      await Promise.all([
+    // Запускаем предзагрузку в фоне после рендера
+    const schedulePreload = () => {
+      Promise.all([
         preloadBackgroundGradients(),
         preloadSvgAssets()
-      ]);
-      
-      if (isThemeInitialized) {
-        setIsAppLoading(false);
-      }
+      ]).catch(console.warn);
     };
-
-    initializeApp();
     
-    const timeout = setTimeout(() => {
-      setIsAppLoading(false);
-    }, 3000);
-    
-    return () => clearTimeout(timeout);
-  }, [isThemeInitialized]);
+    // Используем requestIdleCallback если доступен, иначе setTimeout
+    if ((window as any).requestIdleCallback) {
+      (window as any).requestIdleCallback(schedulePreload);
+    } else {
+      setTimeout(schedulePreload, 100);
+    }
+  }, []);
 
-  const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
-    const savedThemeMode =
-      localStorage.getItem('theme') ||
-      localStorage.getItem('themeMode') ||
-      'default';
-    const savedPrimaryColor = localStorage.getItem('primaryColor') || '#D0BCFF';
-
-    
-    const getThemeColors = (mode: string) => {
-      return {
-        backgroundColor: 'var(--theme-background-full)',
-        textColor: '#FFFFFF',
-      };
-    };
-
-    const colors = getThemeColors(savedThemeMode);
-
-    return {
-      mode: savedThemeMode,
-      backgroundColor: colors.backgroundColor,
-      textColor: colors.textColor,
-      primaryColor: savedPrimaryColor,
-    };
-  });
+  const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => ({
+    mode: localStorage.getItem('themeMode') || 'default',
+    backgroundColor: 'var(--theme-background-full)',
+    textColor: '#FFFFFF',
+    primaryColor: localStorage.getItem('primaryColor') || '#D0BCFF',
+  }));
 
   
   const [profileBackground, setProfileBackgroundState] = useState<
@@ -308,29 +284,14 @@ function App() {
 
   const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
     setThemeSettings(prev => {
-      
-      const hasChanges = Object.keys(newSettings).some(
-        key =>
-          prev[key as keyof ThemeSettings] !==
-          newSettings[key as keyof ThemeSettings]
-      );
-
-      if (!hasChanges) {
-        return prev; 
-      }
-
       const updated = { ...prev, ...newSettings };
-
       
-      if (newSettings.backgroundColor) {
-        localStorage.setItem('backgroundColor', newSettings.backgroundColor);
-      }
-      if (newSettings.textColor) {
-        localStorage.setItem('textColor', newSettings.textColor);
-      }
-      if (newSettings.primaryColor) {
-        localStorage.setItem('primaryColor', newSettings.primaryColor);
-      }
+      // Сохраняем в localStorage только измененные значения
+      Object.entries(newSettings).forEach(([key, value]) => {
+        if (value && key !== 'mode') {
+          localStorage.setItem(key, value);
+        }
+      });
 
       return updated;
     });
@@ -666,42 +627,34 @@ function App() {
     '/terms-of-service',
     '/about',
   ].some(path => currentPath.startsWith(path));
-  const themeContextValue = useMemo<ThemeSettingsContextType>(() => {
-    return {
-      themeSettings,
-      updateThemeSettings,
-      globalProfileBackgroundEnabled,
-      setGlobalProfileBackgroundEnabled,
-      profileBackground,
-      setProfileBackground,
-      clearProfileBackground,
-      setUserBackground,
-      restoreUserBackground,
-    };
-  }, [themeSettings, globalProfileBackgroundEnabled, profileBackground]);
+  const themeContextValue = useMemo<ThemeSettingsContextType>(() => ({
+    themeSettings,
+    updateThemeSettings,
+    globalProfileBackgroundEnabled,
+    setGlobalProfileBackgroundEnabled,
+    profileBackground,
+    setProfileBackground,
+    clearProfileBackground,
+    setUserBackground,
+    restoreUserBackground,
+  }), [themeSettings, globalProfileBackgroundEnabled, profileBackground]);
 
   return (
     <AppProviders themeContextValue={themeContextValue} theme={theme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<LoadingIndicator />}>
-          {isAppLoading ? (
-            <LoadingIndicator />
+          <DefaultSEO />
+          {isAuthPage ? (
+            <AuthRoutes setUser={authContext?.setUser} />
+          ) : isPublicPage ? (
+            <PublicRoutes />
           ) : (
-            <>
-              <DefaultSEO />
-              {isAuthPage ? (
-                <AuthRoutes setUser={authContext?.setUser} />
-              ) : isPublicPage ? (
-                <PublicRoutes />
-              ) : (
-                <MainRoutes
-                  setUser={authContext?.setUser}
-                  background={location.state?.background}
-                />
-              )}
-              <MusicPlayerCore />
-            </>
+            <MainRoutes
+              setUser={authContext?.setUser}
+              background={location.state?.background}
+            />
           )}
+          <MusicPlayerCore />
         </Suspense>
       </ErrorBoundary>
     </AppProviders>
