@@ -130,19 +130,12 @@
     <noscript>Для работы К-Коннект необходим JavaScript</noscript>
     <div id="root"></div>
     <script type="module" src="/src/index.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <div id="fullscreen-player-portal"></div>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/custom-sw.js')
-            .then(function(registration) {
-              console.log('Воркер зареган йоу:', registration);
-            })
-            .catch(function(error) {
-              console.log('воркер помер:', error);
-            });
         });
       }
     </script>

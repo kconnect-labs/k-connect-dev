@@ -112,7 +112,6 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
 import AuthRoutes from './routes/AuthRoutes';
 import MainRoutes from './routes/MainRoutes';
 import PublicRoutes from './routes/PublicRoutes';
-import SpecialRoutes from './routes/SpecialRoutes';
 
 export const ThemeSettingsContext =
   React.createContext<ThemeSettingsContextType>({
@@ -671,6 +670,7 @@ function App() {
   }, [isAuthenticated, loading]);
 
   
+  
   const isAuthPage = [
     '/login',
     '/register',
@@ -687,10 +687,6 @@ function App() {
     '/terms-of-service',
     '/about',
   ].some(path => currentPath.startsWith(path));
-  const isSpecialPage = ['/street/blacklist'].some(path =>
-    currentPath.startsWith(path)
-  );
-
   const themeContextValue = useMemo<ThemeSettingsContextType>(() => {
     return {
       themeSettings,
@@ -718,8 +714,6 @@ function App() {
                 <AuthRoutes setUser={authContext?.setUser} />
               ) : isPublicPage ? (
                 <PublicRoutes />
-              ) : isSpecialPage ? (
-                <SpecialRoutes />
               ) : (
                 <MainRoutes
                   setUser={authContext?.setUser}
