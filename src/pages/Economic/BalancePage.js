@@ -2480,7 +2480,7 @@ const BalancePage = () => {
                       >
                         {transaction.type === 'purchase' ? (
                           <BadgeImage
-                            src={`/static/images/bages/shop/${transaction.badge.image_path}`}
+                            src={`${transaction.badge.image_path}`}
                             alt={transaction.badge.name}
                           />
                         ) : (
@@ -3195,7 +3195,7 @@ const BalancePage = () => {
                         sx={{ mr: 2, bgcolor: 'background.paper', p: 0.5 }}
                       >
                         <CreatedBadgeImage
-                          src={`/static/images/bages/shop/${badge.image_path}`}
+                          src={`${badge.image_path}`}
                           alt={badge.name}
                         />
                       </Avatar>

@@ -86,7 +86,6 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   const modalStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: maxWidthCustom 
       ? (typeof maxWidthCustom === 'number' ? `${maxWidthCustom}px` : maxWidthCustom)

@@ -259,6 +259,7 @@ const FriendsPage = () => {
               <FriendsList
                 users={getList().map(u => ({
                   ...u,
+                  photo: u.avatar_url || u.photo, // Используем avatar_url если есть, иначе photo
                   onUnfollow: handleUnfollow,
                   onFollow: handleFollow,
                   onCopyLink: handleCopyLink,
@@ -318,9 +319,9 @@ const FriendsPage = () => {
                     <Box
                       component='img'
                       src={
-                        user.photo && user.photo !== ''
+                        user.avatar_url || (user.photo && user.photo !== ''
                           ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                          : '/static/uploads/avatar/system/avatar.png'
+                          : '/static/uploads/avatar/system/avatar.png')
                       }
                       alt={user.name || user.username}
                       sx={{

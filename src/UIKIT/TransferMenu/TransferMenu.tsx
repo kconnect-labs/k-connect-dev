@@ -48,6 +48,7 @@ interface User {
   username: string;
   name: string;
   photo?: string;
+  avatar_url?: string;
   verification_status?: string;
   subscription?: {
     type?: string;
@@ -726,9 +727,9 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                   >
                     <UserAvatar
                       src={
-                        user.photo
+                        user.avatar_url || (user.photo
                           ? `/static/uploads/avatar/${user.id}/${user.photo}`
-                          : undefined
+                          : undefined)
                       }
                       alt={user.username}
                     >

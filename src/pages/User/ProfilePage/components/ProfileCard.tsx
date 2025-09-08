@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import {
   Box,
   Typography,
   Paper,
   Avatar,
   Tooltip,
+  CircularProgress,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
@@ -22,6 +23,9 @@ import {
   UserSubscriptionBadge,
   ProfileAbout,
 } from './index';
+
+// Ленивая загрузка модалки - загружается только при первом использовании
+const BadgeInfoModal = lazy(() => import('../../../../components/BadgeInfoModal'));
 
 // Типизация компонентов
 const TypedEquippedItem = EquippedItem as React.ComponentType<EquippedItemProps>;
@@ -149,6 +153,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   handleEditModeActivate,
   handleUsernameClick,
 }) => {
+  const [badgeModalOpen, setBadgeModalOpen] = useState(false);
+  const [selectedBadgeImagePath, setSelectedBadgeImagePath] = useState<string | null>(null);
+
+  const handleBadgeClick = (imagePath: string) => {
+    setSelectedBadgeImagePath(imagePath);
+    setBadgeModalOpen(true);
+  };
   return (
     <Paper
       sx={{
@@ -403,20 +414,39 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               )}
 
               {user?.achievement && (
-                <Badge
-                  achievement={{
-                    ...user.achievement,
-                    upgrade: user.achievement.upgrade || '',
-                    color_upgrade: user.achievement.color_upgrade || '#FFD700'
-                  } as any}
-                  size='medium'
-                  className='profile-achievement-badge'
-                  showTooltip={true}
-                  tooltipText={user.achievement.bage}
-                  onError={(e: any) => {
-                    console.error('Achievement badge failed to load:', e);
+                <Box
+                  onClick={() => {
+                    // Проверяем, является ли это shop бейджем (начинается с shop/)
+                    if (user.achievement?.image_path?.startsWith('shop/')) {
+                      handleBadgeClick(user.achievement.image_path);
+                    }
                   }}
-                />
+                  sx={{
+                    cursor: user.achievement?.image_path?.startsWith('shop/') ? 'pointer' : 'default',
+                    transition: 'transform 0.2s ease',
+                    '&:hover': user.achievement?.image_path?.startsWith('shop/') ? {
+                      transform: 'scale(1.05)',
+                    } : {},
+                  }}
+                >
+                  <Badge
+                    achievement={{
+                      ...user.achievement,
+                      upgrade: user.achievement.upgrade || '',
+                      color_upgrade: user.achievement.color_upgrade || '#FFD700'
+                    } as any}
+                    size='medium'
+                    className='profile-achievement-badge'
+                    showTooltip={true}
+                    tooltipText={user.achievement.image_path?.startsWith('shop/') 
+                      ? `${user.achievement.bage} (нажмите для подробностей)`
+                      : user.achievement.bage
+                    }
+                    onError={(e: any) => {
+                      console.error('Achievement badge failed to load:', e);
+                    }}
+                  />
+                </Box>
               )}
             </Box>
           </Box>
@@ -769,6 +799,32 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           )}
         </Box>
       </Box>
+
+      {/* Badge Info Modal - загружается только при открытии */}
+      {badgeModalOpen && (
+        <Suspense fallback={
+          <Box sx={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            right: 0, 
+            bottom: 0, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            bgcolor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999
+          }}>
+            <CircularProgress />
+          </Box>
+        }>
+          <BadgeInfoModal
+            open={badgeModalOpen}
+            onClose={() => setBadgeModalOpen(false)}
+            imagePath={selectedBadgeImagePath}
+          />
+        </Suspense>
+      )}
     </Paper>
   );
 };
