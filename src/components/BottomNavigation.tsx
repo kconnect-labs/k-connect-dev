@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { ThemeSettingsContext } from '../App';
-import { useMessenger } from '../contexts/MessengerContext';
+// import { useMessenger } from '../contexts/MessengerContext';
 import './BottomNavigation.css';
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
@@ -38,22 +38,9 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState<boolean>(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
-  let messengerContext: MessengerContextType | null = null;
+  // Мессенджер временно отключен
   let unreadCounts: UnreadCounts = {};
   let totalUnread = 0;
-
-  try {
-    messengerContext = useMessenger() as MessengerContextType;
-    unreadCounts = messengerContext?.unreadCounts || {};
-    totalUnread = Object.values(unreadCounts).filter(
-      (c: number) => c > 0
-    ).length;
-  } catch (error) {
-    // MessengerProvider может быть недоступен во время инициализации
-    console.warn('MessengerContext недоступен в BottomNavigation:', error);
-    unreadCounts = {};
-    totalUnread = 0;
-  }
 
   const isChannel = user?.account_type === 'channel';
 

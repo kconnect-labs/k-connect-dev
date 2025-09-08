@@ -35,8 +35,8 @@ const NotificationsPage = React.lazy(
 const SearchPage = React.lazy(() => import('../pages/Main/SearchPage'));
 const MusicPage = React.lazy(() => import('../pages/MusicPage/MusicPage.js'));
 const ArtistPage = React.lazy(() => import('../pages/ArtistPage/ArtistPage'));
-const MessengerPage = React.lazy(
-  () => import('../pages/Messenger/MessengerPage')
+const MessengerDisabled = React.lazy(
+  () => import('../pages/Messenger/MessengerDisabled')
 );
 const BugReportPage = React.lazy(
   () => import('../pages/BugPages/BugReportPage')
@@ -319,7 +319,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             path='/messenger'
             element={
               <ProtectedRoute>
-                <MessengerPage />
+                <MessengerDisabled />
               </ProtectedRoute>
             }
           />

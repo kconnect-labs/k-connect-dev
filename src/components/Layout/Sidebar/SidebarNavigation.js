@@ -9,7 +9,7 @@ import { SidebarContext } from '../../../context/SidebarContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 import Badge from '@mui/material/Badge';
-import { useMessenger } from '../../../contexts/MessengerContext';
+// import { useMessenger } from '../../../contexts/MessengerContext';
 
 // Clean, minimal nested list styling
 const NestedList = styled(List)(({ theme }) => ({
@@ -45,11 +45,9 @@ const SidebarNavigation = memo(
       toggleExpandShops,
       toggleExpandSocial,
     } = useContext(SidebarContext);
-    const { unreadCounts } = useMessenger();
-    const totalUnread = useMemo(() => {
-      const total = Object.values(unreadCounts || {}).filter(c => c > 0).length;
-      return total;
-    }, [unreadCounts]);
+    // Мессенджер временно отключен
+    const unreadCounts = {};
+    const totalUnread = 0;
 
     const isActive = useCallback(
       path => {
@@ -159,7 +157,7 @@ const SidebarNavigation = memo(
           />
         ),
       }),
-      [totalUnread]
+      []
     );
 
     const mainMenu = useMemo(
