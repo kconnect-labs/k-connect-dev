@@ -435,7 +435,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               borderRadius: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               overflow: 'hidden',
               mt: '10px',
             }}
@@ -508,7 +508,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                   sx={{
                     background: 'var(--theme-background, rgba(77, 214, 81, 0.15))',
                     border: '1px solid rgba(77, 214, 81, 0.25)',
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     color: '#4CAF50',
                     fontSize: '0.85rem',
                     fontWeight: 600,
@@ -539,7 +539,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                  borderRadius: '16px',
                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                 border: '1px solid rgba(255, 255, 255, 0.12)',
+                 border: '1px solid rgba(0, 0, 0, 0.12)',
                  overflow: 'hidden',
                }}
              >
@@ -550,7 +550,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                      px: 2,
                      py: 1.5,
                      background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                     borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                     borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
                    }}
                  >
                    <Typography
@@ -593,7 +593,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                              background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
                            },
                            '&:active': {
-                             background: 'var(--theme-background, rgba(255, 255, 255, 0.12))',
+                             background: 'var(--theme-background, rgb(24 24 24))',
                            },
                          }}
                       >
@@ -602,7 +602,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                             sx={{
                               width: 36,
                               height: 36,
-                              borderRadius: '8px',
+                              borderRadius: '16px',
                               background: item.color,
                               display: 'flex',
                               alignItems: 'center',

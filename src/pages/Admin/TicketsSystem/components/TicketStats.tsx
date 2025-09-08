@@ -38,7 +38,7 @@ interface TicketStatsProps {
 
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: theme.spacing(2),
   height: '100%',
   transition: 'all 0.2s ease',

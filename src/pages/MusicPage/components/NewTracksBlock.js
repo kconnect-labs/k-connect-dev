@@ -30,11 +30,11 @@ const NewTracksContainer = styled(Box)(({ theme }) => ({
 }));
 
 const NewTracksCard = styled(Card)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
       background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
 }));
 
 const NewTracksHeader = styled(Box)(({ theme }) => ({
@@ -42,14 +42,14 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
       background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
 const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: isActive
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
@@ -280,7 +280,7 @@ const NewTracksBlock = () => {
                                       'rgba(255, 255, 255, 0.05)',
                                     color: 'text.secondary',
                                     border:
-                                      '1px solid rgba(255, 255, 255, 0.1)',
+                                      '1px solid rgba(66, 66, 66, 0.5)',
                                   }}
                                 />
                               </>

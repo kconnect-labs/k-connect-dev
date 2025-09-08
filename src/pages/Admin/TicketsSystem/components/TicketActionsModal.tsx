@@ -40,7 +40,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: theme.spacing(2),
     color: 'rgba(255, 255, 255, 0.87)',
   },
@@ -53,7 +53,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   border: '1px solid rgba(255, 255, 255, 0.08)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
   },
 }));
 
@@ -136,7 +136,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               '&:hover': {
                 border: '1px solid rgba(255, 255, 255, 0.2)',
               },
@@ -163,7 +163,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
               onChange={(e) => setDuration(e.target.value)}
               sx={{
                 background: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 '& .MuiSelect-icon': {
                   color: 'rgba(255, 255, 255, 0.7)',
                 },

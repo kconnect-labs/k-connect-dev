@@ -72,12 +72,12 @@ interface AuctionCardProps {
 }
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   overflow: 'hidden',
   transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   cursor: 'pointer',
   '&:hover': {
     transform: 'translateY(-2px)',
@@ -97,7 +97,7 @@ const StatusChip = styled(Chip)(({ theme, status }: { theme: any; status: string
   }
 
   return {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     fontWeight: 600,
     fontSize: '0.75rem',
     backgroundColor: alpha(statusColor, 0.15),

@@ -260,7 +260,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
           sx: {
             bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             borderRadius: { xs: 0, sm: 2 },
             width: { xs: '100%', sm: '100%' },
             maxWidth: { xs: '100%', sm: 550 },
@@ -272,7 +272,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
       >
         <DialogTitle
           sx={{
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             color: 'var(--theme-text-primary)',
           }}
         >
@@ -286,9 +286,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               sx={{
                 py: 2,
                 px: 2,
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(66, 66, 66, 0.5)',
                 mb: 2,
               }}
             >
@@ -336,9 +336,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               sx={{
                 py: 2,
                 px: 2,
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(66, 66, 66, 0.5)',
                 mb: 2,
               }}
             >
@@ -407,9 +407,9 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
                 sx={{
                   py: 2,
                   px: 2,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   mb: 2,
                 }}
               >
@@ -479,7 +479,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
           sx: {
             bgcolor: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             borderRadius: { xs: 0, sm: 2 },
             m: { xs: 0, sm: 2 },
             width: { xs: '100%', sm: '100%' },
@@ -491,7 +491,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
       >
         <DialogTitle
           sx={{
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             color: 'var(--theme-text-primary)',
           }}
         >

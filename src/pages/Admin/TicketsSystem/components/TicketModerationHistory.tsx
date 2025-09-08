@@ -44,7 +44,7 @@ interface TicketModerationHistoryProps {
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: theme.spacing(2),
   padding: theme.spacing(2),
   maxHeight: '70vh',
@@ -58,7 +58,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
   border: '1px solid rgba(255, 255, 255, 0.08)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
   },
 }));
 

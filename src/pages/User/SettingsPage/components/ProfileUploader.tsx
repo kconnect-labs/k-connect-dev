@@ -241,8 +241,8 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const containerStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderRadius: '18px',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -250,7 +250,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const sectionStyle = {
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '8px',
+    borderRadius: '16px',
     padding: '16px',
     marginBottom: '16px',
   };
@@ -381,7 +381,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               display: 'block',
               width: '100%',
               height: '120px',
-              borderRadius: '8px',
+              borderRadius: '16px',
               overflow: 'hidden',
               background: bannerPreview
                 ? `url(${bannerPreview}) center/cover`
@@ -486,7 +486,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               justifyContent: 'center', 
               mb: 3,
               background: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: '8px',
+              borderRadius: '16px',
               p: 2
             }}>
               <ReactCrop
@@ -517,7 +517,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
             mb: 3,
             p: 2,
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '8px'
+            borderRadius: '16px'
           }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
@@ -544,7 +544,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
             gap: 2, 
             justifyContent: 'center',
             pt: 2,
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+            borderTop: '1px solid rgba(66, 66, 66, 0.5)'
           }}>
             <Button 
               onClick={handleCropCancel}

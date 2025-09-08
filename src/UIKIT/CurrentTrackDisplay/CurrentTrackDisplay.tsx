@@ -38,12 +38,12 @@ const StyledContainer = styled(Box)<{ statusColor?: string }>(({ theme, statusCo
   alignItems: 'center',
   gap: 12,
   padding: '8px 12px',
-  borderRadius: '12px',
+  borderRadius: '18px',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(10px)',
   border: statusColor 
     ? `1px solid ${statusColor}33`
-    : '1px solid rgba(255, 255, 255, 0.12)',
+    : '1px solid rgb(24 24 24)',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
   maxWidth: '372px',
@@ -60,7 +60,7 @@ const AnimatedLines = styled(Box)({
 
 const Line = styled(Box)<{ delay: number; animation: string; statusColor?: string; getLighterColor?: (color: string) => string }>(({ delay, animation, statusColor, getLighterColor }) => ({
   width: 3,
-  borderRadius: 2,
+  borderRadius: 'var(--main-border-radius)',
   background: statusColor && getLighterColor
     ? `linear-gradient(180deg, ${statusColor} 0%, ${getLighterColor(statusColor)} 100%)`
     : 'linear-gradient(180deg, #4CAF50 0%, #81C784 100%)',

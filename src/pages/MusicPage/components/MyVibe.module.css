@@ -1,7 +1,7 @@
 .container {
   position: relative;
   height: 240px;
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   overflow: hidden;
   cursor: pointer;
   background: var(--theme-background, rgba(21, 4, 56, 0.11)); /* Темный стеклянный фон для контраста */

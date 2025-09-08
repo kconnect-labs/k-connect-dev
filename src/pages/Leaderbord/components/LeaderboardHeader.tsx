@@ -12,7 +12,7 @@ import { TimePeriod } from '../types/leaderboard';
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   borderRadius: '16px',
   boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
   overflow: 'hidden',
@@ -57,7 +57,7 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
             mb: 1,
             p: { xs: 2, md: 3 },
             borderRadius: '16px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
             color: 'white',
             textAlign: 'left',
             position: 'relative',

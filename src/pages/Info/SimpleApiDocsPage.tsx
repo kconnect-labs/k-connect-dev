@@ -278,7 +278,7 @@ const SimpleApiDocsPage: React.FC = () => {
             sx={{
               mb: 4,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor:
                 theme.palette.mode === 'dark'
                   ? alpha(theme.palette.primary.main, 0.05)
@@ -345,7 +345,7 @@ fetch('https://k-connect.ru/api/posts', {
               sx={{
                 mt: 2,
                 p: 2,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 backgroundColor:
                   theme.palette.mode === 'dark'
                     ? alpha(theme.palette.warning.main, 0.1)
@@ -364,7 +364,7 @@ fetch('https://k-connect.ru/api/posts', {
             sx={{
               mb: 4,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor:
                 theme.palette.mode === 'dark'
                   ? alpha(theme.palette.primary.main, 0.05)
@@ -727,7 +727,7 @@ Content-Type: application/json
             sx={{
               mt: 4,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor:
                 theme.palette.mode === 'dark'
                   ? alpha(theme.palette.warning.main, 0.1)
@@ -2499,7 +2499,7 @@ Content-Type: application/json
             sx={{
               mb: 4,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor:
                 theme.palette.mode === 'dark'
                   ? alpha(theme.palette.info.main, 0.05)
@@ -2642,7 +2642,7 @@ Content-Type: application/json
             sx={{
               mb: 4,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor:
                 theme.palette.mode === 'dark'
                   ? alpha(theme.palette.warning.main, 0.05)
@@ -2691,7 +2691,7 @@ fetch('https://k-connect.ru/api/music/upload', {
               sx={{
                 mt: 2,
                 p: 2,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 backgroundColor:
                   theme.palette.mode === 'dark'
                     ? alpha(theme.palette.info.main, 0.1)

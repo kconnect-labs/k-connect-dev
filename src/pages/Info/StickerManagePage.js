@@ -248,16 +248,16 @@ const StickerRenderer = ({ sticker, style, onClick }) => {
 const cardStyles = {
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  borderRadius: '8px',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderRadius: '16px',
   color: 'inherit',
 };
 
 const buttonStyles = {
-  borderRadius: '8px',
+  borderRadius: '16px',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   color: 'inherit',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.08)',

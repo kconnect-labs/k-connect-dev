@@ -307,7 +307,7 @@ const ConnectionModal = ({ open, onClose }) => {
               display: 'flex',
               alignItems: 'center',
               bgcolor: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               p: 2,
               mb: 2,
             }}
@@ -427,7 +427,7 @@ const ConnectionModal = ({ open, onClose }) => {
                 key={user.id}
                 sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   mb: 1,
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.1)',

@@ -100,9 +100,9 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -110,7 +110,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
   const cardStyle = (isActive: boolean, isPurchased: boolean = false) => ({
     position: 'relative' as const,
     height: '100%',
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
     background: 'transparent',
     border: isActive
       ? `2px solid ${isPurchased ? theme.palette.secondary.main : theme.palette.primary.main}`
@@ -168,7 +168,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
     py: 0.5,
     width: '100%',
     minWidth: 'auto',
-    borderRadius: '8px',
+    borderRadius: '16px',
     textTransform: 'none' as const,
     boxShadow: 'none',
   });
@@ -221,7 +221,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                 onClick={handleClearActiveBadge}
                 disabled={updatingActiveBadge}
                 sx={{
-                  borderRadius: '10px',
+                  borderRadius: 'var(--large-border-radius)!important',
                   textTransform: 'none',
                   '&:hover': {
                     backgroundColor: alpha(theme.palette.error.main, 0.08),

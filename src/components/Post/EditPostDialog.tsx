@@ -100,7 +100,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
             '& .MuiOutlinedInput-root': {
               bgcolor: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-              borderRadius: '12px',
+              borderRadius: '18px',
               border: '1px solid rgba(255, 255, 255, 0.09)',
               transition: 'all 0.2s ease',
               '&:hover': {
@@ -141,7 +141,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
                       width: 80,
                       height: 80,
                       objectFit: 'cover',
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   />
                 ))
@@ -154,7 +154,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
                       width: 80,
                       height: 80,
                       objectFit: 'cover',
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   />
                 )}
@@ -196,7 +196,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
             sx={{
               maxWidth: '100%',
               height: 120,
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               mb: 2,
             }}
           />
@@ -230,7 +230,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
           <Typography variant='subtitle2' gutterBottom sx={{ color: '#cfbcfb', mb: 2 }}>
             {t('post.edit_dialog.current_audio')}
           </Typography>
-          <List dense sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', borderRadius: 1, mb: 2 }}>
+          <List dense sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', borderRadius: 'var(--main-border-radius)', mb: 2 }}>
             {musicTracks.map((track, idx) => (
               <ListItem key={`track-${idx}`} sx={{ color: 'rgba(207, 188, 251, 0.8)' }}>
                 {track.title || t('post.edit_dialog.audio_track')}

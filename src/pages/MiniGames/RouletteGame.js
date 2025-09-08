@@ -78,7 +78,7 @@ const GlobalRouletteStyles = styled('div')`
   .roulette-pro-regular-prize-item-wrapper {
     background: transparent !important;
     background-color: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgb(24 24 24) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -125,7 +125,7 @@ const GameContainer = styled(Paper)(({ theme }) => ({
   margin: '0 auto',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: 8,
   boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
 }));
@@ -279,7 +279,7 @@ const renderPrize = (prize, idx, { isActive }) => (
       borderRadius: 8,
       border: isActive
         ? '3px solid #D0BCFF'
-        : '1px solid rgba(255, 255, 255, 0.12)',
+        : '1px solid rgb(24 24 24)',
       boxShadow: isActive
         ? '0 0 20px 4px rgba(208, 188, 255, 0.4)'
         : '0 2px 8px rgba(0,0,0,0.1)',
@@ -614,7 +614,7 @@ const RouletteGame = () => {
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   borderRadius: 8,
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                 }}
               />
@@ -755,7 +755,7 @@ const RouletteGame = () => {
                     ? 'rgba(255, 255, 255, 0.1)'
                     : '#D0BCFF',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   color: isSpinning ? 'var(--theme-text-primary)' : '#000000',
                   boxShadow: '0 4px 12px rgba(208, 188, 255, 0.3)',
                   letterSpacing: 0.5,

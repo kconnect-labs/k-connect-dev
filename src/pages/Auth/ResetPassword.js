@@ -324,10 +324,10 @@ const ResetPassword = () => {
               p: isMobile ? 3 : 4,
               width: '100%',
               maxWidth: '480px',
-              borderRadius: '12px',
+              borderRadius: '18px',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               mt: isMobile ? '120px' : 0,
             }}
           >
@@ -347,7 +347,7 @@ const ResetPassword = () => {
                 severity='error'
                 sx={{
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   '& .MuiAlert-icon': { alignItems: 'center' },
                 }}
               >
@@ -375,7 +375,7 @@ const ResetPassword = () => {
                 severity='error'
                 sx={{
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   '& .MuiAlert-icon': { alignItems: 'center' },
                 }}
               >
@@ -388,7 +388,7 @@ const ResetPassword = () => {
                 severity='success'
                 sx={{
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   '& .MuiAlert-icon': { alignItems: 'center' },
                 }}
               >
@@ -431,7 +431,7 @@ const ResetPassword = () => {
                   sx={{
                     mb: 2.5,
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                     },
                   }}
                 />
@@ -452,7 +452,7 @@ const ResetPassword = () => {
                   sx={{
                     mb: 3,
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                     },
                   }}
                 />
@@ -467,7 +467,7 @@ const ResetPassword = () => {
                   }
                   sx={{
                     py: 1.5,
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     fontSize: '1rem',
                     textTransform: 'none',
                     background:

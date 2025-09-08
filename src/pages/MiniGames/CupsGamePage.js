@@ -213,8 +213,8 @@ const CupsGamePage = () => {
             padding: '12px 20px',
             fontSize: '14px',
             fontWeight: '500',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -228,7 +228,7 @@ const CupsGamePage = () => {
           className={`${styles.card} ${styles['p-3']}`}
           style={{
             background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
             backdropFilter: 'blur(8px)',
             minWidth: '150px',
           }}
@@ -307,8 +307,8 @@ const CupsGamePage = () => {
                 marginLeft: 'auto',
                 padding: '8px',
                 fontSize: '14px',
-                borderRadius: '8px',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '16px',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 background: 'transparent',
                 color: 'white',
                 cursor: 'pointer',
@@ -332,7 +332,7 @@ const CupsGamePage = () => {
         style={{
           background:
             'linear-gradient(to bottom, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
         }}
       >
         {/* Секция ставки */}
@@ -416,8 +416,8 @@ const CupsGamePage = () => {
                     minWidth: '80px',
                     padding: '8px 16px',
                     fontSize: '14px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
                     background: 'transparent',
                     color: 'white',
                     cursor: isPlaying ? 'not-allowed' : 'pointer',
@@ -573,7 +573,7 @@ const CupsGamePage = () => {
                 padding: '16px 32px',
                 fontSize: '16px',
                 fontWeight: '600',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 backgroundColor: '#e91e63',
                 border: 'none',
                 color: 'white',
@@ -616,7 +616,7 @@ const CupsGamePage = () => {
                 padding: '16px 32px',
                 fontSize: '16px',
                 fontWeight: '600',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 border: '2px solid #e91e63',
                 background: 'transparent',
                 color: '#e91e63',
@@ -758,7 +758,7 @@ const CupsGamePage = () => {
                   padding: '12px 24px',
                   fontSize: '14px',
                   fontWeight: '600',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   backgroundColor: '#e91e63',
                   border: 'none',
                   color: 'white',

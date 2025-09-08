@@ -128,7 +128,7 @@ const ProgressBar = styled(Box)(({ theme, progress }) => ({
   flex: 1,
   height: 2,
   backgroundColor: 'rgba(255, 255, 255, 0.3)',
-  borderRadius: 2,
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
   '&::after': {
     content: '""',

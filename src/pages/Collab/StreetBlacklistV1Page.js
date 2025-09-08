@@ -327,7 +327,7 @@ const StreetBlacklistV1Page = () => {
       background:
         'linear-gradient(135deg, rgba(255, 68, 68, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
       backdropFilter: 'blur(20px)',
-      borderRadius: 2,
+      borderRadius: 'var(--main-border-radius)',
       height: '100%',
       transition: 'all 0.3s ease',
       position: 'relative',
@@ -606,7 +606,7 @@ const StreetBlacklistV1Page = () => {
                     'linear-gradient(135deg, rgba(138, 255, 138, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
                   backdropFilter: 'blur(20px)',
                   border: '2px solid rgba(138, 255, 138, 0.2)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',
@@ -642,7 +642,7 @@ const StreetBlacklistV1Page = () => {
                   background: `linear-gradient(135deg, ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.05)')} 0%, rgba(19, 19, 19, 0.95) 100%)`,
                   backdropFilter: 'blur(20px)',
                   border: `2px solid ${getAverageDominantColor().replace('rgb', 'rgba').replace(')', ', 0.2)')}`,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',
@@ -678,7 +678,7 @@ const StreetBlacklistV1Page = () => {
                     'linear-gradient(135deg, rgba(207, 188, 251, 0.05) 0%, rgba(19, 19, 19, 0.95) 100%)',
                   backdropFilter: 'blur(20px)',
                   border: '2px solid rgba(207, 188, 251, 0.2)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   textAlign: 'center',
                   position: 'relative',
                   overflow: 'hidden',
@@ -792,7 +792,7 @@ const StreetBlacklistV1Page = () => {
                                 backgroundColor: `${getTagColor(tag)}20`,
                                 color: getTagColor(tag),
                                 border: `1px solid ${getTagColor(tag)}40`,
-                                borderRadius: 1,
+                                borderRadius: 'var(--main-border-radius)',
                                 px: 1,
                                 py: 0.5,
                                 fontSize: '0.7rem',
@@ -838,7 +838,7 @@ const StreetBlacklistV1Page = () => {
                               width: 80,
                               height: 80,
                               backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                              borderRadius: 2,
+                              borderRadius: 'var(--main-border-radius)',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -901,7 +901,7 @@ const StreetBlacklistV1Page = () => {
                               : `${dominantColors[participant.id] || '#ff4444'}`
                                   .replace('rgb', 'rgba')
                                   .replace(')', ', 0.1)'),
-                          borderRadius: 1,
+                          borderRadius: 'var(--main-border-radius)',
                           border: `1px solid ${
                             participant.rank <= 3
                               ? `rgba(${participant.rank === 1 ? '255, 69, 0' : participant.rank === 2 ? '255, 255, 0' : '128, 128, 128'}, 0.4)`
@@ -1014,7 +1014,7 @@ const StreetBlacklistV1Page = () => {
                                   borderColor: '#6be96b',
                                   backgroundColor: 'rgba(138, 255, 138, 0.2)',
                                 },
-                                borderRadius: 1.5,
+                                borderRadius: 'var(--main-border-radius)',
                               }}
                             >
                               + Победа
@@ -1054,7 +1054,7 @@ const StreetBlacklistV1Page = () => {
               '&:hover': { backgroundColor: '#b8a8e8' },
               fontWeight: 700,
               px: 4,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               boxShadow: '0 0 10px rgba(207,188,251,0.6)',
             }}
           >
@@ -1073,8 +1073,8 @@ const StreetBlacklistV1Page = () => {
           sx: {
             background: 'rgba(19, 19, 19, 0.95)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: 2,
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >
@@ -1168,7 +1168,7 @@ const StreetBlacklistV1Page = () => {
               backgroundColor: '#8aff8a',
               color: '#000',
               '&:hover': { backgroundColor: '#6be96b' },
-              borderRadius: 1.5,
+              borderRadius: 'var(--main-border-radius)',
             }}
           >
             Добавить
@@ -1186,8 +1186,8 @@ const StreetBlacklistV1Page = () => {
           sx: {
             background: 'rgba(19, 19, 19, 0.95)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: 2,
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >
@@ -1281,7 +1281,7 @@ const StreetBlacklistV1Page = () => {
               backgroundColor: '#8aff8a',
               color: '#000',
               '&:hover': { backgroundColor: '#6be96b' },
-              borderRadius: 1.5,
+              borderRadius: 'var(--main-border-radius)',
             }}
           >
             Сохранить

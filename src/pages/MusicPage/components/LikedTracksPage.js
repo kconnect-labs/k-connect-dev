@@ -68,15 +68,15 @@ const PageContainer = styled(Container)(({ theme }) => ({
 
 const HeaderCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(1),
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
 }));
 
 const TrackListItem = styled(ListItem)(({ theme, isActive, ...props }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: isActive
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
@@ -149,7 +149,7 @@ const DragHandle = styled('div')(({ theme }) => ({
 }));
 
 const DraggableTrackListItem = styled(ListItem)(({ theme, isActive, isDragging, ...props }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: isActive
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : isDragging
@@ -436,7 +436,7 @@ const LikedTracksPage = ({ onBack }) => {
                         fontSize: '0.7rem',
                         backgroundColor: 'rgba(255, 255, 255, 0.05)',
                         color: 'text.secondary',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(66, 66, 66, 0.5)',
                       }}
                     />
                   </>
@@ -528,7 +528,7 @@ const LikedTracksPage = ({ onBack }) => {
                 color: 'primary.main',
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
                 transition: 'background 0.2s',
@@ -551,7 +551,7 @@ const LikedTracksPage = ({ onBack }) => {
       />
 
       {error && (
-        <Alert severity='error' sx={{ mb: 3, borderRadius: 12 }}>
+        <Alert severity='error' sx={{ mb: 3, borderRadius: 'var(--main-border-radius) !important' }}>
           {error}
         </Alert>
       )}
@@ -564,7 +564,7 @@ const LikedTracksPage = ({ onBack }) => {
           justifyContent='center'
           minHeight='40vh'
           sx={{
-            borderRadius: 12,
+            borderRadius: 'var(--main-border-radius) !important',
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) ',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -619,7 +619,7 @@ const LikedTracksPage = ({ onBack }) => {
             onClick={loadMoreTracks}
             disabled={loading}
             sx={{
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               textTransform: 'none',
               minWidth: 120,
               borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -657,7 +657,7 @@ const LikedTracksPage = ({ onBack }) => {
             backgroundColor: 'rgba(30, 30, 30, 0.95)',
             backdropFilter: 'blur(10px)',
             border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
           },
         }}

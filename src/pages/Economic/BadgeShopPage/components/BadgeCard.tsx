@@ -115,7 +115,7 @@ export const BadgeCard: React.FC<BadgeCardProps> = ({
               top: 8,
               left: 8,
               height: 24,
-              borderRadius: 12,
+              borderRadius: 'var(--main-border-radius) !important',
               fontWeight: 500,
               backgroundColor: 'rgba(183, 0, 255, 0.9)',
               color: '#fffff',

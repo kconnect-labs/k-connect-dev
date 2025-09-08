@@ -19,7 +19,7 @@ const suitSymbols = {
 const CardContainer = styled(Box)(({ theme, suits, hidden }) => ({
   width: '120px',
   height: '180px',
-  borderRadius: '10px',
+  borderRadius: 'var(--large-border-radius)!important',
   background: hidden ? '#7986cb' : '#fff',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
   position: 'relative',
@@ -54,7 +54,7 @@ const CardBack = styled(Box)({
   height: '100%',
   background:
     'repeating-linear-gradient(45deg, #5c6bc0, #5c6bc0 10px, #3f51b5 10px, #3f51b5 20px)',
-  borderRadius: '8px',
+  borderRadius: '16px',
   position: 'absolute',
   top: 0,
   left: 0,

@@ -238,7 +238,7 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
           sx: {
             background: 'var(--background-color)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             borderRadius: '999px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
             p: '2px',

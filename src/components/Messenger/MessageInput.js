@@ -300,7 +300,7 @@ const MessageInput = ({
           justifyContent: 'space-between',
           padding: '8px 12px',
           marginBottom: '4px',
-          borderRadius: '12px 12px 0 0',
+          borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
           backgroundColor: '#252525',
           borderLeft: '2px solid #D0BCFF',
         }}

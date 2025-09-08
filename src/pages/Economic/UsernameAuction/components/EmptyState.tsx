@@ -24,7 +24,7 @@ const EmptyStateContainer = styled(Box)(({ theme }) => ({
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   borderRadius: 16,
   boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   marginBottom: theme.spacing(3),
 }));
 
@@ -70,7 +70,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
           startIcon={actionIcon}
           onClick={onAction}
           sx={{
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             px: 2,
             py: 1,
             fontWeight: 500,

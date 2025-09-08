@@ -33,7 +33,7 @@ const ExclusiveBadge = styled(Box)(({ theme }) => ({
   background: 'linear-gradient(135deg, #d0bcff 0%, #9c64f2 100%)',
   color: '#fff',
   padding: '4px 12px',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   fontSize: '0.75rem',
   fontWeight: 700,
   zIndex: 10,
@@ -46,7 +46,7 @@ const ExclusiveBadge = styled(Box)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   borderRadius: 20,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
@@ -189,7 +189,7 @@ const ItemContainer = styled(Box)(({ theme }) => ({
 const MainItem = styled(Box)(({ theme }) => ({
   width: 100,
   height: 100,
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
@@ -280,7 +280,7 @@ const PriceChip = styled(Chip)(({ theme }) => ({
   color: 'text.primary',
   fontWeight: 500,
   fontSize: '0.8rem',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   '& .MuiChip-label': {
     padding: '4px 8px',
   },
@@ -511,7 +511,7 @@ const PackCard = ({
           >
             <ExclusiveBadge>Эксклюзив</ExclusiveBadge>
             {/* Все по 1000 */}
-            {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 'var(--main-border-radius)', px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
               <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
               <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
             </Box> */}
@@ -742,7 +742,7 @@ const PackCard = ({
                       background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                       color: 'text.secondary',
                       fontSize: '0.75rem',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(66, 66, 66, 0.5)',
                       '& .MuiChip-label': {
                         padding: '2px 6px',
                       },
@@ -760,7 +760,7 @@ const PackCard = ({
                   borderColor: '#d0bcff',
                   color: '#d0bcff',
                   fontWeight: 500,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   py: 1,
                   fontSize: '0.85rem',
                   textTransform: 'none',
@@ -800,7 +800,7 @@ const PackCard = ({
         }}
       >
         {/* Все по 1000 */}
-        {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 2, px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+        {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 'var(--main-border-radius)', px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
           <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
           <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
         </Box> */}
@@ -1030,7 +1030,7 @@ const PackCard = ({
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   color: 'text.secondary',
                   fontSize: '0.75rem',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   '& .MuiChip-label': {
                     padding: '2px 6px',
                   },
@@ -1048,7 +1048,7 @@ const PackCard = ({
               borderColor: 'rgba(255, 255, 255, 0.2)',
               color: 'text.primary',
               fontWeight: 500,
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               py: 1,
               fontSize: '0.85rem',
               textTransform: 'none',

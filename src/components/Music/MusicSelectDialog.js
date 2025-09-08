@@ -546,7 +546,7 @@ const MusicSelectDialog = ({
                           alignItems: 'center',
                           justifyContent: 'center',
                           background: 'rgba(0,0,0,0.3)',
-                          borderRadius: 1,
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'background 0.2s ease',
                           '&:hover': {
                             background: 'rgba(0,0,0,0.5)',
@@ -618,7 +618,7 @@ const MusicSelectDialog = ({
           sx={{
             textTransform: 'none',
             color: 'text.secondary',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
           }}
         >
           Отмена
@@ -630,7 +630,7 @@ const MusicSelectDialog = ({
           disabled={selectedTracks.length === 0}
           sx={{
             textTransform: 'none',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             px: 3,
           }}
         >

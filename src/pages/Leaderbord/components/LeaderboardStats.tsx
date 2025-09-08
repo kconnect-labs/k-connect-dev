@@ -26,8 +26,8 @@ const StatsContainer = styled(Box)(({ theme }) => ({
 const UserStatCard = styled(Paper)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  borderRadius: '12px',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
+  borderRadius: '18px',
   padding: theme.spacing(2),
   color: 'white',
   position: 'relative',

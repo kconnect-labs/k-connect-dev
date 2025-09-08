@@ -147,7 +147,7 @@ const FactModal: React.FC<FactModalProps> = ({
             '& .MuiOutlinedInput-root': {
               backgroundColor: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               '& fieldset': {
                 borderColor: 'rgba(255, 255, 255, 0.2)',
               },
@@ -184,7 +184,7 @@ const FactModal: React.FC<FactModalProps> = ({
             '& .MuiOutlinedInput-root': {
               backgroundColor: 'rgba(255, 255, 255, 0.05)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               '& fieldset': {
                 borderColor: 'rgba(255, 255, 255, 0.2)',
               },
@@ -216,7 +216,7 @@ const FactModal: React.FC<FactModalProps> = ({
           <Box
             sx={{
               p: 2,
-              borderRadius: '12px',
+              borderRadius: '18px',
               backgroundColor: 'rgba(244, 67, 54, 0.1)',
               border: '1px solid rgba(244, 67, 54, 0.3)',
               mb: 3,
@@ -256,7 +256,7 @@ const FactModal: React.FC<FactModalProps> = ({
                 disabled={loading}
                 startIcon={<DeleteIcon />}
                 sx={{
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   borderColor: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.5)',
                   color: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.8)',
                   '&:hover': {

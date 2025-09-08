@@ -14,7 +14,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import axios from '../../services/axiosConfig';
 
 const FollowButton = styled(Button)(({ theme, following }) => ({
-  borderRadius: '10px',
+  borderRadius: 'var(--large-border-radius)!important',
   textTransform: 'none',
   fontWeight: 'medium',
   minWidth: '90px',
@@ -63,7 +63,7 @@ const UserRecommendation = ({ user }) => {
       onClick={handleCardClick}
       sx={{
         cursor: 'pointer',
-        borderRadius: '12px',
+        borderRadius: '18px',
         background: '#1d1d1d',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
         mb: 1.5,

@@ -206,7 +206,7 @@ const UserCard = styled(Box)<{ decoration?: any }>(({ theme, decoration }) => {
     display: 'flex',
     alignItems: 'center',
     padding: '12px',
-    borderRadius: '8px',
+    borderRadius: '16px',
     marginBottom: '8px',
     backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
     position: 'relative',
@@ -775,7 +775,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 mb: 3,
                 bgcolor: 'rgba(40, 40, 40, 0.4)',
                 backdropFilter: 'blur(5px)',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 border: '1px solid rgba(60, 60, 60, 0.4)',
                 display: 'flex',
                 alignItems: 'center',
@@ -867,7 +867,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                   mt: 2,
                   p: 2,
                   bgcolor: 'var(--theme-background, rgba(0,0,0,0.2))',
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <Typography
@@ -1036,7 +1036,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 mb: 2,
                 bgcolor: 'rgba(50, 20, 20, 0.4)',
                 backdropFilter: 'blur(5px)',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 border: '1px solid rgba(70, 20, 20, 0.4)',
               }}
             >
@@ -1113,7 +1113,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
               sx={{
                 p: { xs: 1, sm: 2 },
                 bgcolor: 'rgba(207, 188, 251, 0.05)',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 mb: 3,
                 border: '1px solid rgba(207, 188, 251, 0.2)',
                 overflow: 'hidden',

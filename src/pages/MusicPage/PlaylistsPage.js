@@ -40,7 +40,7 @@ const PlaylistCard = styled(Card)(({ theme }) => ({
   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   transition: 'all 0.3s ease',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   '&:hover': {
     transform: 'translateY(-5px)',
     boxShadow: '0 10px 20px rgba(0,0,0,0.2)',

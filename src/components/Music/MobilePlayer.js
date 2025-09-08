@@ -409,9 +409,9 @@ const MobilePlayer = memo(({ isMobile, isModalOpen }) => {
             sx={{
               width: 40,
               height: 40,
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               objectFit: 'cover',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
               marginRight: 1.5,
             }}
           />

@@ -36,7 +36,7 @@ const UpdatesPage = () => {
           display: 'flex',
           alignItems: 'center',
           mb: 4,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
           pb: 2,
         }}
       >

@@ -10,7 +10,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  borderRadius: '8px',
+  borderRadius: '16px',
   overflow: 'hidden',
   cursor: 'zoom-in',
   display: 'flex',
@@ -426,7 +426,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            borderRadius: '8px',
+            borderRadius: '16px',
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '0.8rem',
             padding: '10px',
@@ -518,7 +518,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
       <Box
         sx={{
           position: 'relative',
-          borderRadius: '8px',
+          borderRadius: '16px',
           overflow: 'hidden',
           mb: 1,
         }}
@@ -553,7 +553,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           display: 'grid',
           gap: '4px',
           ...layoutProps,
-          borderRadius: '8px',
+          borderRadius: '16px',
           overflow: 'hidden',
         }}
       >

@@ -61,7 +61,7 @@ const SearchSection = styled(Box)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme, themecolor }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-    borderRadius: '12px',
+    borderRadius: '18px',
     '& fieldset': {
       borderColor: 'rgba(255, 255, 255, 0.1)',
     },
@@ -171,7 +171,7 @@ const ChannelDescription = styled(Typography)(({ theme }) => ({
 const StyledChip = styled(Chip, {
   shouldForwardProp: prop => prop !== 'isFollowing' && prop !== 'themecolor',
 })(({ theme, isFollowing, themecolor }) => ({
-  borderRadius: '8px',
+  borderRadius: '16px',
   fontWeight: 500,
   background: isFollowing
     ? 'rgba(255, 255, 255, 0.1)'
@@ -197,7 +197,7 @@ const StyledChip = styled(Chip, {
 const LoadMoreButton = styled(Button, {
   shouldForwardProp: prop => prop !== 'themecolor',
 })(({ theme, themecolor }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   padding: theme.spacing(1, 3),
   marginTop: theme.spacing(2),
   textTransform: 'none',
@@ -214,7 +214,7 @@ const ChannelCardLoader = () => {
   return (
     <Card
       sx={{
-        borderRadius: 1,
+        borderRadius: 'var(--main-border-radius)',
         overflow: 'hidden',
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -287,7 +287,7 @@ const ChannelCardLoader = () => {
             variant='rectangular'
             width='40%'
             height={32}
-            sx={{ borderRadius: '8px', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
+            sx={{ borderRadius: '16px', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
           />
         </Box>
       </Box>
@@ -592,7 +592,7 @@ const ChannelsPage = () => {
                 sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.08)',
                   color: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   borderRadius: '6px',
                   height: '22px',
                   '& .MuiChip-label': {

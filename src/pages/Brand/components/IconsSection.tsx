@@ -161,7 +161,7 @@ const IconsSection: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'rgba(255, 255, 255, 0.02)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             mb: 2,
             border: '1px solid rgba(255, 255, 255, 0.05)',
           }}
@@ -411,7 +411,7 @@ const IconsSection: React.FC = () => {
                 color: '#D0BCFF',
                 backgroundColor: 'rgba(0, 0, 0, 0.3)',
                 p: 2,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 overflow: 'auto',
               }}
             >

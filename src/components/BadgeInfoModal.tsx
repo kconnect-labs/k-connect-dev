@@ -158,7 +158,7 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                 width: 120,
                 height: 120,
                 objectFit: 'contain',
-                borderRadius: 1.5,
+                borderRadius: 'var(--main-border-radius)',
                 border: '2px solid rgba(255, 255, 255, 0.1)',
               }}
             />
@@ -206,8 +206,8 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                   sx={{
                     p: 1.5,
                     bgcolor: 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: 1.5,
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 'var(--main-border-radius)',
+                    border: '1px solid rgba(66, 66, 66, 0.5)',
                   }}
                 >
                   <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500, mb: 0.5 }}>
@@ -268,8 +268,8 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                 sx={{
                   p: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: 1.5,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 'var(--main-border-radius)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -287,8 +287,8 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                 sx={{
                   p: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: 1.5,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 'var(--main-border-radius)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -307,8 +307,8 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                   sx={{
                     p: 2,
                     bgcolor: 'rgba(255, 255, 255, 0.03)',
-                    borderRadius: 1.5,
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 'var(--main-border-radius)',
+                    border: '1px solid rgba(66, 66, 66, 0.5)',
                   }}
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
@@ -343,8 +343,8 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                         justifyContent: 'space-between',
                         p: 2,
                         bgcolor: 'rgba(255, 255, 255, 0.03)',
-                        borderRadius: 1.5,
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: 'var(--main-border-radius)',
+                        border: '1px solid rgba(66, 66, 66, 0.5)',
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

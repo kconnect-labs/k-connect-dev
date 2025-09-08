@@ -49,7 +49,7 @@ const StyledContainer = styled(Box)(({ theme }) => ({
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   borderRadius: 16,
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
   transition: 'all 0.3s ease',
@@ -430,7 +430,7 @@ const InventoryPackPage = () => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
             borderRadius: window.innerWidth <= 768 ? 0 : '8px',
             '@media (max-width: 768px)': {
               margin: 0,
@@ -513,8 +513,8 @@ const InventoryPackPage = () => {
                       <Card
                         sx={{
                           background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(66, 66, 66, 0.5)',
+                          borderRadius: 'var(--main-border-radius)',
                           p: 2,
                           textAlign: 'center',
                           height: '100%',
@@ -661,8 +661,8 @@ const InventoryPackPage = () => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '8px',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderRadius: '16px',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           },
         }}

@@ -425,7 +425,7 @@ const DynamicIslandNotification = ({
             style={{
               backgroundColor: 'rgba(0, 0, 0, 0.9)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
               borderRadius: '25px',
               display: 'flex',
               alignItems: 'center',

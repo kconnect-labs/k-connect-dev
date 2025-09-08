@@ -242,7 +242,7 @@ const UsernameAuctionPage: React.FC = () => {
             startIcon={<AddIcon />}
             onClick={() => setCreateDialogOpen(true)}
             sx={{
-              borderRadius: '8px',
+              borderRadius: '16px',
               px: 2,
             }}
           >
@@ -254,7 +254,7 @@ const UsernameAuctionPage: React.FC = () => {
             startIcon={<SettingsIcon />}
             onClick={() => setUsernamesSettingsOpen(true)}
             sx={{
-              borderRadius: '8px',
+              borderRadius: '16px',
               px: 2,
             }}
           >
@@ -279,7 +279,7 @@ const UsernameAuctionPage: React.FC = () => {
           severity='warning'
           sx={{
             mb: 1,
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             '& .MuiAlert-message': { width: '100%' },
           }}
           action={
@@ -491,7 +491,7 @@ const UsernameAuctionPage: React.FC = () => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             borderRadius: '16px',
             maxHeight: '90vh',
           },
@@ -503,7 +503,7 @@ const UsernameAuctionPage: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '16px 20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
           }}

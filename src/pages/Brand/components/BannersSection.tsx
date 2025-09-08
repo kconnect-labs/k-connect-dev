@@ -95,7 +95,7 @@ const BannersSection: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'rgba(255, 255, 255, 0.02)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             mb: 2,
             border: '1px solid rgba(255, 255, 255, 0.05)',
             overflow: 'hidden',
@@ -242,10 +242,10 @@ const BannersSection: React.FC = () => {
               position: 'relative',
               width: '100%',
               height: '300px',
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               overflow: 'hidden',
               mb: 3,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
           >
             <img
@@ -470,7 +470,7 @@ const BannersSection: React.FC = () => {
                 color: '#D0BCFF',
                 backgroundColor: 'rgba(0, 0, 0, 0.3)',
                 p: 2,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 overflow: 'auto',
               }}
             >

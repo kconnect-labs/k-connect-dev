@@ -79,7 +79,7 @@ const NotificationGroup = ({ notifications, onNotificationClick }) => {
         bgcolor: hasUnread ? 'rgba(140, 82, 255, 0.03)' : 'background.paper',
         border: hasUnread
           ? '1px solid rgba(140, 82, 255, 0.1)'
-          : '1px solid rgba(255, 255, 255, 0.1)',
+          : '1px solid rgba(66, 66, 66, 0.5)',
       }}
     >
       <ListItem
@@ -283,7 +283,7 @@ const NotificationsPage = () => {
           sx={{
             p: 4,
             textAlign: 'center',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             bgcolor: 'background.paper',
           }}
         >

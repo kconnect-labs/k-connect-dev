@@ -30,7 +30,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
         component={Paper}
         sx={{
           p: 0,
-          borderRadius: '12px',
+          borderRadius: '18px',
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -58,7 +58,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '8px',
+                borderRadius: '16px',
                 backgroundColor: '#292929',
                 mb: 1,
                 animation: 'pulse 2s infinite',
@@ -68,7 +68,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '8px',
+                borderRadius: '16px',
                 backgroundColor: '#292929',
                 mb: 1,
                 animation: 'pulse 2s infinite',
@@ -78,7 +78,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '8px',
+                borderRadius: '16px',
                 backgroundColor: '#292929',
                 animation: 'pulse 2s infinite',
               }}
@@ -95,7 +95,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
         component={Paper}
         sx={{
           p: 0,
-          borderRadius: '12px',
+          borderRadius: '18px',
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -157,7 +157,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
       component={Paper}
       sx={{
         p: 0,
-        borderRadius: '12px',
+        borderRadius: '18px',
         mb: -0.625,
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',

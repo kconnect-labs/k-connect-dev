@@ -587,7 +587,7 @@ const Header = ({ toggleSidebar }) => {
                       maxWidth: 520,
                       zIndex: 2000,
                       p: 2,
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                       boxShadow: 8,
                       bgcolor: 'transparent',
                       display: 'flex',

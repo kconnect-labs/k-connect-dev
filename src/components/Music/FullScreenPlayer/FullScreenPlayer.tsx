@@ -853,12 +853,12 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     '& .MuiSlider-track': {
                       backgroundColor: 'white',
                       height: 9,
-                      borderRadius: '10px',
+                      borderRadius: 'var(--large-border-radius)!important',
                     },
                     '& .MuiSlider-rail': {
                       backgroundColor: 'rgba(255,255,255,0.5)',
                       height: 9,
-                      borderRadius: '10px',
+                      borderRadius: 'var(--large-border-radius)!important',
                     },
                     '& .MuiSlider-thumb': {
                       display: 'none',
@@ -866,11 +866,11 @@ const FullScreenPlayerCore: React.FC<FullScreenPlayerProps> = memo(({ open, onCl
                     '&:hover': {
                       '& .MuiSlider-track': {
                         height: 14,
-                        borderRadius: '10px',
+                        borderRadius: 'var(--large-border-radius)!important',
                       },
                       '& .MuiSlider-rail': {
                         height: 14,
-                        borderRadius: '10px',
+                        borderRadius: 'var(--large-border-radius)!important',
                       },
                     },
                   }}
@@ -1897,8 +1897,8 @@ const LyricsEditorContent: React.FC<{
         PaperProps={{
           style: {
             backgroundColor: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '12px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: '18px',
             color: 'white',
             minWidth: '250px',
           },

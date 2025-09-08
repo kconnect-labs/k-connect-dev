@@ -23,7 +23,7 @@ const UserBanInfo = ({
         sx={{
           mt: 2,
           p: 1.5,
-          borderRadius: '12px',
+          borderRadius: '18px',
           backgroundColor: 'rgba(211, 47, 47, 0.7)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(211, 47, 47, 0.8)',

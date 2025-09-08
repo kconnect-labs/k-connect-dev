@@ -64,7 +64,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
@@ -264,7 +264,7 @@ const CommentItem = ({
                       bgcolor: 'rgba(28, 28, 32, 0.9)',
                       backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
-                      borderRadius: '12px',
+                      borderRadius: '18px',
                       border: '1px solid rgba(255, 255, 255, 0.03)',
                       mt: 1,
                     },
@@ -280,7 +280,7 @@ const CommentItem = ({
                       onReply();
                     }}
                     sx={{
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -304,7 +304,7 @@ const CommentItem = ({
                     }}
                     sx={{
                       color: '#f44336',
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -333,7 +333,7 @@ const CommentItem = ({
                   style={{
                     maxWidth: '100%',
                     maxHeight: '200px',
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     objectFit: 'contain',
                     display: 'block',
                     margin: '0 auto',
@@ -371,7 +371,7 @@ const CommentItem = ({
               sx={{
                 backgroundColor: 'rgba(244, 67, 54, 0.1)',
                 border: '1px solid rgba(244, 67, 54, 0.3)',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 padding: '10px',
                 margin: '10px 0',
                 color: '#f44336',

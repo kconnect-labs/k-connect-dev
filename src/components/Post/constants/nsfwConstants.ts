@@ -7,7 +7,7 @@ export const createNSFWOverlay = (isMobile: boolean, onShowSensitive: () => void
     width: '100%',
     height: '100%',
     zIndex: 2,
-    borderRadius: '12px',
+    borderRadius: '18px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -24,7 +24,7 @@ export const createNSFWOverlay = (isMobile: boolean, onShowSensitive: () => void
     mb: isMobile ? 1 : 2,
   },
   NSFWButton: {
-    borderRadius: '8px',
+    borderRadius: '16px',
     fontWeight: 500,
     mb: isMobile ? 1 : 2,
     background: '#5c5b5e',

@@ -14,7 +14,7 @@ const ProfileAbout = ({ user, getLighterColor }) => {
           ? getLighterColor(user.status_color)
           : theme => theme.palette.text.secondary,
         p: 1.5,
-        borderRadius: 1,
+        borderRadius: 'var(--main-border-radius)',
         background: theme =>
           theme.palette.mode === 'dark'
             ? 'rgba(255,255,255,0.04)'

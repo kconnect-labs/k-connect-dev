@@ -73,7 +73,7 @@ const InfoBlock = ({
         margin: '0 auto 8px auto',
         background: 'var(--theme-background, rgba(255,255,255,0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        border: '1px solid rgba(0, 0, 0, 0.12)',
         color: 'var(--theme-text-primary, inherit)',
         textAlign: 'left',
         padding: 14,

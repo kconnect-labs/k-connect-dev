@@ -6,7 +6,7 @@ const SkeletonContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  borderRadius: '8px',
+  borderRadius: '16px',
   overflow: 'hidden',
   backgroundColor: 'var(--theme-background)',
   display: 'flex',
@@ -22,7 +22,7 @@ const GradientPreview = styled(Box)({
   bottom: 0,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
-  borderRadius: '8px',
+  borderRadius: '16px',
 });
 
 interface ImageSkeletonProps {
@@ -86,7 +86,7 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
         height="100%"
         animation="wave"
         sx={{
-          borderRadius: '8px',
+          borderRadius: '16px',
           backgroundColor: 'var(--theme-background)',
           '&::after': {
             background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',

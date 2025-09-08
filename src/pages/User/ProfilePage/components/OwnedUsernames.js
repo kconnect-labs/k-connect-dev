@@ -29,7 +29,7 @@ const OwnedUsernames = ({
           backdropFilter: 'blur(5px)',
           px: 1.2,
           py: 0.4,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           border:
             user.status_color && user.status_text && user.subscription
               ? `1px solid ${user.status_color}33`

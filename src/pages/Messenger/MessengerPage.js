@@ -431,8 +431,8 @@ const MessengerPage = () => {
             overflow: 'hidden',
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             position: 'relative',
           }}
         >
@@ -455,7 +455,7 @@ const MessengerPage = () => {
                   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   transition: 'all 0.3s ease',
                 }}
                 startIcon={<ChatIcon />}
@@ -470,7 +470,7 @@ const MessengerPage = () => {
                   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   transition: 'all 0.3s ease',
                 }}
                 startIcon={<AddIcon />}
@@ -543,8 +543,8 @@ const MessengerPage = () => {
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
             backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
             WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
           },
         }}
       >

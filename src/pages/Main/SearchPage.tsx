@@ -84,15 +84,15 @@ const SearchBox = styled(Box)(({ theme }) => ({
   borderRadius: 16,
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
 }));
 
 const SearchInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
             background: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     transition: 'all 0.3s ease',
     '&:hover': {
       border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -116,7 +116,7 @@ const SearchInput = styled(TextField)(({ theme }) => ({
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
-  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
   marginTop: theme.spacing(2),
   '& .MuiTabs-indicator': {
     backgroundColor: theme.palette.primary.main,
@@ -504,7 +504,7 @@ const SearchPage: React.FC = () => {
             followingStatus[user.id] ? <PersonRemoveIcon /> : <PersonAddIcon />
           }
           sx={{
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             textTransform: 'none',
             minWidth: 120,
           }}

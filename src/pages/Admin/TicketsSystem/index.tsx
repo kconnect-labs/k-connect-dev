@@ -468,13 +468,13 @@ const TicketsSystem: React.FC = () => {
           scrollButtons="auto"
           sx={{
             borderBottom: 1,
-            borderColor: 'rgba(255, 255, 255, 0.12)',
+            borderColor: 'rgb(24 24 24)',
             mb: 2,
             '& .MuiTab-root': {
-              borderRadius: '12px 12px 0 0',
+              borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               borderBottom: 'none',
               marginRight: 1,
               color: 'rgba(255, 255, 255, 0.7)',

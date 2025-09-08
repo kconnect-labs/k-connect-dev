@@ -62,7 +62,7 @@ const AlbumsGrid = styled(Grid)(({ theme }) => ({
 const AlbumCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   borderRadius: '16px',
   overflow: 'hidden',
   cursor: 'pointer',
@@ -189,7 +189,7 @@ const LoadingSkeleton: React.FC = () => (
   <AlbumsGrid container spacing={0}>
     {[...Array(4)].map((_, index) => (
       <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
-        <Card sx={{ background: 'var(--theme-background)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <Card sx={{ background: 'var(--theme-background)', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
           <Skeleton variant="rectangular" height={200} />
           <CardContent>
             <Skeleton variant="text" height={24} />
@@ -203,7 +203,7 @@ const LoadingSkeleton: React.FC = () => (
 );
 
 const ShowAllButton = styled(Button)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   padding: theme.spacing(1, 3),
   fontWeight: 600,
   fontSize: '0.9rem',

@@ -64,7 +64,7 @@ const FullScreenDialog = styled(Dialog)(({ theme }) => ({
       backdropFilter: 'var(--theme-backdrop-filter, blur(20px)) !important',
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
-      border: '1px solid rgba(255, 255, 255, 0.1) !important',
+      border: '1px solid rgba(66, 66, 66, 0.5) !important',
     },
   },
 }));
@@ -74,7 +74,7 @@ const DialogHeader = styled(DialogTitle)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
-  borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
+  borderBottom: `1px solid rgba(66, 66, 66, 0.5)`,
   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   color: '#fff',

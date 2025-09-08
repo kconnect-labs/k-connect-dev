@@ -24,10 +24,10 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     zIndex: 999999999999,
   },
   '& .MuiDialog-paper': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     overflow: 'hidden',
     maxWidth: '600px',
     width: '100%',
@@ -48,10 +48,10 @@ const DialogHeader = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   padding: theme.spacing(3),
-  borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+  borderBottom: '1px solid rgb(24 24 24)',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderRadius: '12px 12px 0 0',
+  borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
   [theme.breakpoints.down('sm')]: {
     borderRadius: 0,
     padding: theme.spacing(2),
@@ -107,12 +107,12 @@ const DecorationGrid = styled(Box)(({ theme }) => ({
 
 const DecorationCard = styled(motion.div)(({ theme, selected }) => ({
   position: 'relative',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   overflow: 'hidden',
   cursor: 'pointer',
   border: selected
     ? '2px solid rgba(255, 255, 255, 0.3)'
-    : '1px solid rgba(255, 255, 255, 0.12)',
+    : '1px solid rgb(24 24 24)',
   transition: 'all 0.3s ease',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
@@ -171,7 +171,7 @@ const DecorationInfo = styled(Box)(({ theme }) => ({
   padding: theme.spacing(1),
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+  borderTop: '1px solid rgb(24 24 24)',
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
@@ -192,7 +192,7 @@ const ActionButton = styled(Button)(({ theme }) => ({
   '&:disabled': {
     background: 'rgba(255, 255, 255, 0.05)',
     color: 'rgba(255, 255, 255, 0.3)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
   },
 }));
 
@@ -202,7 +202,7 @@ const CancelButton = styled(Button)(({ theme }) => ({
   paddingRight: theme.spacing(3),
   background: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(20px)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   color: 'rgba(255, 255, 255, 0.7)',
   '&:hover': {
     background: 'rgba(255, 255, 255, 0.1)',
@@ -439,7 +439,7 @@ const UltimateDecorationModal = ({
                 borderRadius: 8,
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 maxWidth: 300,
                 width: '100%',
                 [theme.breakpoints.down('sm')]: {
@@ -555,10 +555,10 @@ const UltimateDecorationModal = ({
                 sx={{
                   mt: 3,
                   p: 2,
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   [theme.breakpoints.down('sm')]: {
                     mt: 2,
                     p: 1.5,
@@ -598,8 +598,8 @@ const UltimateDecorationModal = ({
           justifyContent: 'space-between',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '0 0 12px 12px',
+          borderTop: '1px solid rgb(24 24 24)',
+          borderRadius: '0 0 var(--main-border-radius) !important var(--main-border-radius) !important',
           [theme.breakpoints.down('sm')]: {
             borderRadius: 0,
             padding: theme.spacing(2),

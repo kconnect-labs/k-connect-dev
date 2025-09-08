@@ -18,11 +18,15 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
   
   /* Цветовая схема браузера */
   color-scheme: dark;
   accent-color: #D0BCFF;
 }
+
 
 /* Принудительные значения для тем */
 [data-theme="default"] {
@@ -40,7 +44,30 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
+[data-theme="amoled"] {
+  --theme-background: rgba(0, 0, 0, 1);
+  --theme-backdrop-filter: none;
+  --theme-site-background: #000000;
+  --theme-background-full: rgba(0, 0, 0, 1);
+  --theme-button-main: #D0BCFF;
+  --theme-main-color: #d0bcff;
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgb(212, 212, 212);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
+  --theme-text-accent: #D0BCFF;
+  --theme-text-error: #f44336;
+  --theme-text-success: #4caf50;
+  --theme-text-warning: #ff9800;
+  --theme-text-info: #2196f3;
+ --main-border-radius: 24px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
+}
+
 
 [data-theme="blur"] {
   --theme-background: rgba(255, 255, 255, 0.03);
@@ -79,6 +106,9 @@
   /* Цветовая схема браузера */
   color-scheme: light;
   accent-color: #6750A4;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Midnight - глубокий темно-синий с фиолетовым оттенком */
@@ -97,6 +127,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Ocean - яркий синий с бирюзовым оттенком */
@@ -115,6 +148,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Sunset - яркий красно-оранжевый закат */
@@ -133,6 +169,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Forest - яркий зеленый лес */
@@ -151,6 +190,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Aurora - яркий зелено-голубой северные сияния */
@@ -169,6 +211,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Cosmic - яркий пурпурно-розовый космос */
@@ -187,6 +232,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Neon - яркий электрический синий */
@@ -205,6 +253,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Vintage - теплый коричнево-золотой */
@@ -223,6 +274,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Pixie - нежно-розовый приятный */
@@ -241,6 +295,9 @@
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
+  --main-border-radius: 18px;
+  --small-border-radius: 14px;
+  --large-border-radius: 22px;
 }
 
 /* Класс для элементов, которые должны реагировать на изменение темы */
@@ -414,7 +471,7 @@ body.no-blur .theme-menu,
 .theme-card {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
   transition: all 0.2s ease;
 }
 
@@ -429,7 +486,7 @@ body.no-blur .theme-menu,
 .theme-button {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
   color: white;
   transition: all 0.2s ease;
 }
@@ -444,21 +501,21 @@ body.no-blur .theme-menu,
 .theme-sidebar {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 /* Классы для хедера */
 .theme-header {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 /* Классы для форм */
 .theme-form {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 /* Классы для списков */
@@ -477,7 +534,7 @@ body.no-blur .theme-menu,
 .theme-list-item:hover {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 /* Адаптация для мобильных устройств */

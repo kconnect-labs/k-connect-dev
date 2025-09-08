@@ -38,7 +38,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
       backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   borderRadius: theme.spacing(2),
   marginBottom: theme.spacing(2),
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
 }));
 
 const MarketplacePage = () => {

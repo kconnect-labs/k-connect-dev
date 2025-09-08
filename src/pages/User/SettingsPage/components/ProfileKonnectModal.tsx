@@ -124,11 +124,11 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
       maxWidth='xs'
       PaperProps={{
         sx: {
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
                       background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                       backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
         },
       }}
     >
@@ -170,7 +170,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
           onClick={handleExport}
           disabled={loading || selectedFields.length === 0}
           fullWidth
-          sx={{ mb: 2, borderRadius: 2, fontWeight: 500, color: 'var(--theme-text-primary)' }}
+          sx={{ mb: 2, borderRadius: 'var(--main-border-radius)', fontWeight: 500, color: 'var(--theme-text-primary)' }}
         >
           {loading ? (
             <CircularProgress size={20} color='inherit' />
@@ -190,7 +190,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
               variant='outlined'
               component='label'
               startIcon={<CloudUploadIcon />}
-              sx={{ borderRadius: 2, fontWeight: 500, minWidth: 0, color: 'var(--theme-text-primary)' }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, minWidth: 0, color: 'var(--theme-text-primary)' }}
               disabled={loading}
             >
               {importFile ? importFile.name : 'Выбрать файл'}
@@ -206,7 +206,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
               variant='contained'
               onClick={handleImport}
               disabled={loading || !importFile}
-              sx={{ borderRadius: 2, fontWeight: 500, color: 'var(--theme-text-primary)' }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, color: 'var(--theme-text-primary)' }}
             >
               {loading ? (
                 <CircularProgress size={20} color='inherit' />

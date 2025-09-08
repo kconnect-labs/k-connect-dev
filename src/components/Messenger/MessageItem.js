@@ -429,7 +429,7 @@ const MessageItem = ({
                   height: 'auto',
                   maxWidth: '126px',
                   objectFit: 'contain',
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   cursor: 'pointer',
                 };
 
@@ -742,7 +742,7 @@ const MessageItem = ({
                 height: 'auto',
                 maxWidth: '128px',
                 objectFit: 'contain',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 cursor: 'pointer',
               };
 
@@ -997,7 +997,7 @@ const MessageItem = ({
             backgroundImage:
               'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
             boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             overflow: 'hidden',
             maxWidth: '360px',
             width: '90%',
@@ -1087,7 +1087,7 @@ const MessageItem = ({
           sx={{
             width: '100%',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            borderRadius: '12px',
+            borderRadius: '18px',
             border: '1px solid rgba(211, 47, 47, 0.2)',
           }}
         >

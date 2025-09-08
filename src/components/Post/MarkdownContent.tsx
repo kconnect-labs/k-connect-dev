@@ -48,7 +48,7 @@ const MarkdownContent = styled(Box, {
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadius,
     overflowX: 'auto',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     '& code': {
       backgroundColor: 'transparent',
       padding: 0,

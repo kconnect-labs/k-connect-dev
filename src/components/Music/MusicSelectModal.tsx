@@ -487,7 +487,7 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
             variant="outlined"
             onClick={handleClose}
             fullWidth
-            sx={{ borderRadius: '12px' }}
+            sx={{ borderRadius: '18px' }}
           >
             Отмена
           </Button>
@@ -496,7 +496,7 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
             onClick={handleComplete}
             disabled={selectedTracks.length === 0}
             fullWidth
-            sx={{ borderRadius: '12px' }}
+            sx={{ borderRadius: '18px' }}
           >
             Добавить ({selectedTracks.length})
           </Button>

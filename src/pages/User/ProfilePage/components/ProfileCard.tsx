@@ -182,7 +182,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
         overflow: 'hidden',
         mb: '5px',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(66, 66, 66, 0.5)',
         position: 'relative',
         zIndex: 2,
       }}
@@ -484,7 +484,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                           : 'rgba(0,0,0,0.03)',
                 px: 1.2,
                 py: 0.4,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 border:
                   (user?.profile_id === 2 || user?.profile_id === 3)
                     ? '1px solid rgba(255,255,255,0.15)'
@@ -534,7 +534,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                           : 'rgba(0,0,0,0.03)',
                     px: 1.2,
                     py: 0.4,
-                    borderRadius: 1,
+                    borderRadius: 'var(--main-border-radius)',
                     border:
                       (user?.profile_id === 2 || user?.profile_id === 3)
                         ? '1px solid rgba(255,255,255,0.15)'
@@ -607,7 +607,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <Paper
                 sx={{
                   p: 1,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   textAlign: 'center',
                   background: theme =>
                     theme.palette.mode === 'dark'
@@ -657,7 +657,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 to={`/friends/${user?.username}`}
                 sx={{
                   p: 1,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   textAlign: 'center',
                   background: theme =>
                     theme.palette.mode === 'dark'
@@ -710,7 +710,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   to={`/friends/${user?.username}`}
                   sx={{
                     p: 1,
-                    borderRadius: 1,
+                    borderRadius: 'var(--main-border-radius)',
                     textAlign: 'center',
                     background: theme =>
                       theme.palette.mode === 'dark'
@@ -763,7 +763,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               sx={{
                 mt: 1,
                 p: 2,
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 textAlign: 'center',
                 background: theme =>
                   theme.palette.mode === 'dark'

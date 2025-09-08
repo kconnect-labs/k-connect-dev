@@ -18,7 +18,7 @@ const UserScamBadge = ({ user }) => {
           background: 'rgba(211, 47, 47, 0.6)',
           px: 1,
           py: 0.1,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           border: '1px solid rgba(211, 47, 47, 0.8)',
           boxShadow: '0 0 8px rgba(211, 47, 47, 0.5)',
           '&:hover': {

@@ -88,7 +88,7 @@ const JoinGroupChat = () => {
               mt: 2,
               p: 2,
               bgcolor: 'grey.100',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               maxWidth: '600px',
               overflow: 'auto',
             }}
@@ -139,7 +139,7 @@ const JoinGroupChat = () => {
         PaperProps={{
           sx: {
             backgroundColor: 'background.paper',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >

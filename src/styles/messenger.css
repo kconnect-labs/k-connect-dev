@@ -22,7 +22,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border-bottom: 1px solid var(--divider-color, rgb(24 24 24));
 }
 
 .chat-list-header h2 {
@@ -40,7 +40,7 @@
   width: 100%;
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--divider-color, rgb(24 24 24));
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;
   font-size: 14px;
@@ -227,7 +227,7 @@
   align-items: center;
   justify-content: flex-start;
   padding: 12px 16px;
-  border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border-bottom: 1px solid var(--divider-color, rgb(24 24 24));
   flex-shrink: 0;
 }
 
@@ -450,7 +450,7 @@
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 var(--main-border-radius) !important var(--main-border-radius) !important;
   margin-bottom: 8px;
   z-index: 5;
   animation: slideDown 0.3s ease;
@@ -815,7 +815,7 @@
   padding: 6px 12px;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 .typing-animation {
@@ -884,7 +884,7 @@
 /* Поле ввода сообщения */
 .message-input-container {
   padding: 12px;
-  border-top: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border-top: 1px solid var(--divider-color, rgb(24 24 24));
   position: relative;
 }
 
@@ -988,7 +988,7 @@
   border-radius: 20px;
   padding: 2px;
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   pointer-events: auto;
 }
@@ -1080,7 +1080,7 @@
   right: 0;
   margin-bottom: 8px;
   background-color: var(--content-color, #1a1a1a);
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   padding: 8px;
 }
@@ -1117,7 +1117,7 @@
 
 .search-header {
   padding: 6px 8px;
-  border-bottom: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border-bottom: 1px solid var(--divider-color, rgb(24 24 24));
 }
 
 .search-header h3 {
@@ -1135,7 +1135,7 @@
   width: 100%;
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid var(--divider-color, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--divider-color, rgb(24 24 24));
   background-color: rgba(255, 255, 255, 0.05);
   color: inherit;
   font-size: 16px;
@@ -1495,7 +1495,7 @@ select {
   margin-top: 8px;
   margin-bottom: 4px;
   max-width: 100%;
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   overflow: hidden;
   transition: all 0.2s ease;
 }
@@ -1628,7 +1628,7 @@ select {
   height: auto !important;
   max-width: 170px !important;
   object-fit: contain !important;
-  border-radius: 12px !important;
+  border-radius: var(--main-border-radius) !important !important;
   display: block !important;
 }
 

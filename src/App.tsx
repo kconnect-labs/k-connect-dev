@@ -165,7 +165,7 @@ function App() {
   const [isPending, startTransition] = useTransition();
   const [isAppLoading, setIsAppLoading] = useState(true);
 
-  const { isInitialized: isThemeInitialized } = useThemeManager();
+  const { isInitialized: isThemeInitialized, currentTheme } = useThemeManager();
 
   const authContext = useContext(AuthContext);
   const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
@@ -337,30 +337,9 @@ function App() {
   };
 
   
-  useEffect(() => {
-    if (isAuthenticated && !loading) {
-      
-    }
-  }, [isAuthenticated, loading]);
+  // Убрали пустой useEffect
 
-  const prevAuthState = useRef({ isAuthenticated: false, loading: false });
-
-  useEffect(() => {
-    const currentAuthState = {
-      isAuthenticated: isAuthenticated,
-      loading: loading,
-    };
-
-    
-    if (
-      prevAuthState.current.isAuthenticated !==
-        currentAuthState.isAuthenticated ||
-      prevAuthState.current.loading !== currentAuthState.loading
-    ) {
-      
-      prevAuthState.current = currentAuthState;
-    }
-  }, [isAuthenticated, loading]);
+  // Убрали лишний useEffect для отслеживания auth state
 
   const theme = useMemo(() => {
     const themeObj = createTheme({
@@ -385,13 +364,13 @@ function App() {
         fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
       },
       shape: {
-        borderRadius: 12,
+        borderRadius: 18, // Фиксированное значение для MUI
       },
       components: {
         MuiButton: {
           styleOverrides: {
             root: {
-              borderRadius: '12px',
+              borderRadius: 'var(--main-border-radius)',
               textTransform: 'none',
               fontWeight: 500,
             },
@@ -408,7 +387,7 @@ function App() {
         MuiCard: {
           styleOverrides: {
             root: {
-              borderRadius: '15px',
+              borderRadius: 'var(--main-border-radius)',
               overflow: 'hidden',
               backgroundColor: '#151515',
               color: themeSettings.textColor || '#FFFFFF',
@@ -418,7 +397,7 @@ function App() {
         MuiPaper: {
           styleOverrides: {
             root: {
-              borderRadius: '12px',
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: '#151515',
               color: themeSettings.textColor || '#FFFFFF',
             },
@@ -427,7 +406,7 @@ function App() {
       },
     });
     return themeObj;
-  }, [themeSettings]);
+  }, [themeSettings.primaryColor, themeSettings.textColor]);
 
   const location = useLocation();
   const currentPath = location.pathname;

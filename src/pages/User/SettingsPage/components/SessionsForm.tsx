@@ -256,7 +256,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
           variant='contained'
           onClick={() => setOpen(true)}
           sx={{
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             py: 1.8,
             justifyContent: 'flex-start',
             textTransform: 'none',
@@ -389,7 +389,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                         backgroundColor: 'rgba(208, 188, 255, 0.08)',
                         mb: 1,
                         mx: 1,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         position: 'relative',
                         '&::after': {
                           content: '""',
@@ -481,7 +481,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                           : 'transparent',
                         mx: 2,
                         mb: 1,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         px: 2,
                         py: 1,
                         '&:hover': {
@@ -530,7 +530,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                                   ml: 1,
                                   px: 1,
                                   py: 0.5,
-                                  borderRadius: 1,
+                                  borderRadius: 'var(--main-border-radius)',
                                   backgroundColor: 'rgba(208, 188, 255, 0.15)',
                                   color: '#d0bcff',
                                 }}

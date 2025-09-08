@@ -220,7 +220,7 @@ const ActionSection = styled(Box)(({ theme }) => ({
 }));
 
 const PlayButton = styled(Button)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   padding: theme.spacing(1.5, 4),
   fontWeight: 800,
   fontSize: '1rem',
@@ -285,7 +285,7 @@ const BackButton = styled(Button)(({ theme }) => ({
   borderRadius: '50%',
   backgroundColor: 'rgba(31, 31, 31, 0.9)',
   color: '#ffffff',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   transition: 'all 0.3s ease',
   '&:hover': {
     backgroundColor: 'rgba(46, 46, 46, 0.9)',

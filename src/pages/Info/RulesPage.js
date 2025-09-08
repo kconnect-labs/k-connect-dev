@@ -58,10 +58,10 @@ const RuleCard = styled(Card)(({ theme }) => ({
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
-    borderRadius: '12px',
+    borderRadius: '18px',
     margin: '0 0 5px 0',
   },
 }));
@@ -77,11 +77,11 @@ const NavigationBar = styled(Paper)(({ theme }) => ({
   borderRadius: '16px',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
     margin: '0 0 5px 0',
-    borderRadius: '12px',
+    borderRadius: '18px',
     padding: theme.spacing(1),
     gap: 1,
     flexDirection: 'row',
@@ -98,7 +98,7 @@ const NavLink = styled(Box)(({ theme, active }) => ({
   color: active ? '#d0bcff' : 'rgba(255, 255, 255, 0.8)',
   fontWeight: 'medium',
   padding: theme.spacing(1, 2),
-  borderRadius: '8px',
+  borderRadius: '16px',
   backgroundColor: active ? 'rgba(208, 188, 255, 0.15)' : 'transparent',
   transition: 'all 0.2s ease',
   minWidth: 'fit-content',
@@ -385,7 +385,7 @@ const RulesPage = () => {
         sx={{
           p: 2,
           mb: 4,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background:
             'linear-gradient(to right, rgba(156, 39, 176, 0.15), rgba(103, 58, 183, 0.1))',
           border: '1px solid rgba(156, 39, 176, 0.3)',
@@ -2422,7 +2422,7 @@ const RulesPage = () => {
                 <Box
                   sx={{
                     p: 2,
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255, 193, 7, 0.1)',
                     border: '1px solid rgba(255, 193, 7, 0.3)',
                     mb: 2,

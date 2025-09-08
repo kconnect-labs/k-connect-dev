@@ -21,11 +21,11 @@ interface SearchBarProps {
 const StyledSearchBar = styled(TextField)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     transition: 'all 0.3s',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     '&:hover': {
       boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
       border: '1px solid rgba(255, 255, 255, 0.2)',

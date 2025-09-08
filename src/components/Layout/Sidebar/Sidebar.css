@@ -2,7 +2,7 @@
 
 .sidebar-container {
   padding: 16px 12px;
-  border-radius: 16px;
+  border-radius: var(--main-border-radius);
   height: calc(100vh - 65px);
   position: sticky;
   top: 55px;

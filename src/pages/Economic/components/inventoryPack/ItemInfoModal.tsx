@@ -74,7 +74,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     borderRadius: 16,
     overflow: 'hidden',
     width: 400,
@@ -93,7 +93,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const ItemImage = styled(Box)(({ theme }) => ({
   width: 200, // Уменьшил с 250 до 200
   height: 200, // Уменьшил с 250 до 200
-  borderRadius: 12, // Уменьшил с 16 до 12
+  borderRadius: 'var(--main-border-radius) !important', // Уменьшил с 16 до 12
   background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
@@ -193,7 +193,7 @@ const MarketPriceChip = styled(Box)(({ theme }) => ({
   fontWeight: 'bold',
   fontSize: '0.75rem', // Уменьшил с 0.9rem до 0.75rem
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   zIndex: 2,
 }));
 
@@ -1022,7 +1022,7 @@ const ItemInfoModal = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
             borderRadius: window.innerWidth <= 768 ? 0 : 1,
             '@media (max-width: 768px)': {
               margin: 0,
@@ -1193,7 +1193,7 @@ const ItemInfoModal = ({
                     mb: 3,
                     bgcolor: 'var(--theme-background, rgba(40, 40, 40, 0.4))',
                     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     border: '1px solid rgba(60, 60, 60, 0.4)',
                     display: 'flex',
                     alignItems: 'center',
@@ -1300,8 +1300,8 @@ const ItemInfoModal = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            borderRadius: 2,
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 'var(--main-border-radius)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
           },
         }}
       >
@@ -1355,8 +1355,8 @@ const ItemInfoModal = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            borderRadius: 2,
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 'var(--main-border-radius)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
           },
         }}
       >
@@ -1425,7 +1425,7 @@ const ItemInfoModal = ({
                     ? 'rgba(33, 150, 243, 0.9)'
                     : 'rgba(76, 175, 80, 0.9)',
             backdropFilter: 'blur(10px)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             fontWeight: 500,
           },
         }}

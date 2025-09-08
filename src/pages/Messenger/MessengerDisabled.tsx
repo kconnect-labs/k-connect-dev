@@ -13,7 +13,7 @@ const MessengerDisabled: React.FC = () => {
           borderRadius: 3,
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
         }}
       >
         <Box sx={{ mb: 3 }}>
@@ -53,7 +53,7 @@ const MessengerDisabled: React.FC = () => {
           sx={{
             p: 2,
             backgroundColor: 'rgba(208, 188, 255, 0.1)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             border: '1px solid rgba(208, 188, 255, 0.2)',
           }}
         >

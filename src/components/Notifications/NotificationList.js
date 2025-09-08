@@ -47,7 +47,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     minWidth: 380,
     maxWidth: 380,
     maxHeight: 'calc(100vh - 100px)',
@@ -77,7 +77,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     },
     '& .MuiMenuItem-root': {
       padding: '10px 16px',
-      borderRadius: '8px',
+      borderRadius: '16px',
       margin: '2px 8px',
       transition: 'all 0.2s',
       backgroundImage:
@@ -823,7 +823,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
       sx={{
         borderLeft: `2px solid ${!notification.is_read ? theme.palette[notificationColor].main : 'transparent'}`,
         mb: 1,
-        borderRadius: 1,
+        borderRadius: 'var(--main-border-radius)',
         '&:hover': {
           backgroundColor: alpha(theme.palette[notificationColor].main, 0.08),
         },
@@ -1023,7 +1023,7 @@ const GroupedNotificationComponent = React.memo(
           sx={{
             borderLeft: `2px solid ${group.unreadCount > 0 ? theme.palette[notificationColor].main : 'transparent'}`,
             mb: 1,
-            borderRadius: 1,
+            borderRadius: 'var(--main-border-radius)',
             '&:hover': {
               backgroundColor: alpha(
                 theme.palette[notificationColor].main,

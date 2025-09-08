@@ -7,7 +7,7 @@ import ImageSkeleton from './ImageSkeleton';
 
 const PostCard = styled(Card)(({ theme }) => ({
   marginBottom: 10,
-  borderRadius: '10px',
+  borderRadius: 'var(--large-border-radius)!important',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',

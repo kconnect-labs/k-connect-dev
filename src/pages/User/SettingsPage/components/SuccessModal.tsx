@@ -41,8 +41,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
         sx: {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: isMobile ? '12px' : '16px',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderRadius: isMobile ? 'var(--main-border-radius) !important' : '16px',
           maxWidth: '300px',
           width: '100%',
           margin: isMobile ? '16px' : 'auto',

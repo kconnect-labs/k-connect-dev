@@ -164,7 +164,7 @@ const TrackItemSkeleton = () => (
         variant='rectangular'
         width={24}
         height={24}
-        sx={{ borderRadius: 1, mr: 2 }}
+        sx={{ borderRadius: 'var(--main-border-radius)', mr: 2 }}
       />
       <Box sx={{ minWidth: 0, flex: '1 1 auto' }}>
         <Skeleton variant='text' width='60%' height={22} />

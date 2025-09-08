@@ -366,7 +366,7 @@ const InventoryTab = forwardRef(
           minHeight='200px'
           bgcolor='var(--theme-background, rgba(255, 255, 255, 0.03))'
           borderRadius={1}
-          border='1px solid rgba(255, 255, 255, 0.1)'
+          border='1px solid rgba(66, 66, 66, 0.5)'
           sx={{ p: 3 }}
         >
           <Typography
@@ -412,7 +412,7 @@ const InventoryTab = forwardRef(
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
                   background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
                   },
@@ -440,7 +440,7 @@ const InventoryTab = forwardRef(
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
                   background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
                   },
@@ -469,7 +469,7 @@ const InventoryTab = forwardRef(
                 minWidth: 120,
                 '& .MuiOutlinedInput-root': {
                   background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.2)',
                   },
@@ -593,7 +593,7 @@ const InventoryTab = forwardRef(
                 sx={{
                   background: `${cornerColor}`,
                   border: `1px solid ${cornerColor}4D`,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   p: 3,
                   width: 400,
                   height: 'auto',
@@ -624,7 +624,7 @@ const InventoryTab = forwardRef(
                           width: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                           height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                           margin: '0 auto',
-                          borderRadius: 2,
+                          borderRadius: 'var(--main-border-radius)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -816,7 +816,7 @@ const InventoryTab = forwardRef(
                 sx={{
                   background: `${secondModalCornerColor}`,
                   border: `1px solid ${secondModalCornerColor}4D`,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   p: 3,
                   width: 400,
                   height: 550,
@@ -830,7 +830,7 @@ const InventoryTab = forwardRef(
                       width: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                       height: 250, // Увеличили с 200px на 25% (200 * 1.25 = 250)
                       margin: '0 auto',
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',

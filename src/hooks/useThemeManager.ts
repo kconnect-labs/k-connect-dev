@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
+export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -11,6 +11,11 @@ interface ThemeSettings {
   };
   default: {
     background: string;
+    siteBackground: string;
+  };
+  amoled: {
+    background: string;
+    backdropFilter: string;
     siteBackground: string;
   };
   light: {
@@ -73,6 +78,9 @@ const THEME_SETTINGS: Record<ThemeType, {
   themeColor: string;
   colorScheme: 'light' | 'dark';
   browserAccent: string;
+  mainBorderRadius: string;
+  smallBorderRadius: string;
+  largeBorderRadius: string;
 }> = {
   default: {
     background: 'rgba(15, 15, 15, 1)',
@@ -81,6 +89,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#0f0f0f',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   blur: {
     background: 'rgba(255, 255, 255, 0.03)',
@@ -89,6 +100,20 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#0a0a0a',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
+  },
+  amoled: {
+    background: 'rgba(0, 0, 0, 1)',
+    backdropFilter: 'none',
+    siteBackground: '#000000',
+    themeColor: '#0a0a0a',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   light: {
     background: 'rgba(255, 255, 255, 1)',
@@ -97,6 +122,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#ffffff',
     colorScheme: 'light',
     browserAccent: '#6750A4',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   midnight: {
     background: 'rgba(5, 8, 20, 1)',
@@ -105,6 +133,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#050814',
     colorScheme: 'dark',
     browserAccent: '#B69DF8',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   ocean: {
     background: 'rgba(8, 25, 40, 1)',
@@ -113,6 +144,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#081928',
     colorScheme: 'dark',
     browserAccent: '#81C784',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   sunset: {
     background: 'rgba(40, 15, 8, 1)',
@@ -121,6 +155,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#280f08',
     colorScheme: 'dark',
     browserAccent: '#FFB74D',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   forest: {
     background: 'rgba(8, 30, 15, 1)',
@@ -129,6 +166,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#081e0f',
     colorScheme: 'dark',
     browserAccent: '#A5D6A7',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   aurora: {
     background: 'rgba(12, 35, 25, 1)',
@@ -137,6 +177,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#0c2319',
     colorScheme: 'dark',
     browserAccent: '#80CBC4',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   cosmic: {
     background: 'rgba(30, 8, 35, 1)',
@@ -145,6 +188,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#1e0823',
     colorScheme: 'dark',
     browserAccent: '#CE93D8',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   neon: {
     background: 'rgba(8, 20, 45, 1)',
@@ -153,6 +199,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#08142d',
     colorScheme: 'dark',
     browserAccent: '#64B5F6',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
   vintage: {
     background: 'rgba(35, 20, 8, 1)',
@@ -161,7 +210,10 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#231408',
     colorScheme: 'dark',
     browserAccent: '#D7CCC8',
-  },
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
+    },
   pickme: {
     background: 'rgba(131, 61, 96, 1)',
     backdropFilter: 'none',
@@ -169,6 +221,9 @@ const THEME_SETTINGS: Record<ThemeType, {
     themeColor: '#833d60',
     colorScheme: 'dark',
     browserAccent: '#F8BBD9',
+    mainBorderRadius: '18px',
+    smallBorderRadius: '14px',
+    largeBorderRadius: '22px',
   },
 };
 
@@ -268,7 +323,16 @@ export const useThemeManager = () => {
       root.style.setProperty('--theme-backdrop-filter', settings.backdropFilter);
       root.style.setProperty('--theme-site-background', settings.siteBackground);
       root.style.setProperty('--theme-type', themeType);
+      root.style.setProperty('--main-border-radius !important', settings.mainBorderRadius);
+      root.style.setProperty('--small-border-radius', settings.smallBorderRadius);
+      root.style.setProperty('--large-border-radius', settings.largeBorderRadius);  
       root.setAttribute('data-theme', themeType);
+      
+      // Принудительное обновление стилей для применения новых border-radius
+      document.documentElement.style.setProperty('--main-border-radius !important', settings.mainBorderRadius);
+      document.documentElement.style.setProperty('--small-border-radius', settings.smallBorderRadius);
+      document.documentElement.style.setProperty('--large-border-radius', settings.largeBorderRadius);
+      
       
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (metaThemeColor) {
@@ -352,6 +416,11 @@ export const useThemeManager = () => {
   
   const switchToBlurTheme = useCallback(async () => {
     await applyTheme('blur');
+  }, [applyTheme]);
+
+  
+  const switchToAmoledTheme = useCallback(async () => {
+    await applyTheme('amoled');
   }, [applyTheme]);
 
   
@@ -470,6 +539,7 @@ export const useThemeManager = () => {
     isInitialized,
     switchToDefaultTheme: () => applyThemeWithNotification('default'),
     switchToBlurTheme: () => applyThemeWithNotification('blur'),
+    switchToAmoledTheme: () => applyThemeWithNotification('amoled'),
     switchToLightTheme: () => applyThemeWithNotification('light'),
     switchToMidnightTheme: () => applyThemeWithNotification('midnight'),
     switchToOceanTheme: () => applyThemeWithNotification('ocean'),

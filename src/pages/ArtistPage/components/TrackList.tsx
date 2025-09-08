@@ -35,7 +35,7 @@ const StyledListItem = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCur
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 3),
-  borderRadius: '12px',
+  borderRadius: '18px',
   cursor: 'pointer',
   transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   backgroundColor: isCurrentTrack 

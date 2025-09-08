@@ -400,7 +400,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
           display: 'flex',
           alignItems: 'center',
           background: 'rgba(255, 255, 255, 0.05)',
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           padding: 2,
           marginBottom: 2,
           position: 'relative',
@@ -480,8 +480,8 @@ const StatusForm: React.FC<StatusFormProps> = ({
   const containerStyle = {
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderRadius: '18px',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -555,7 +555,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                       key={icon.name}
                       onClick={() => handleIconSelect(icon.name)}
                       sx={{
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         padding: 1,
                         bgcolor:
                           selectedIcon === icon.name
@@ -685,7 +685,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                     sx: {
                       bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                       color: 'var(--theme-text-primary)',
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       boxShadow: theme.shadows[24],
                       '@media (max-width: 600px)': {
                         width: '100%',
@@ -725,7 +725,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                         height: 100,
                         width: '100%',
                         backgroundColor: statusColor,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         mb: 3,
                         boxShadow: `0 4px 20px ${alpha(statusColor, 0.5)}`,
                         border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
@@ -769,7 +769,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                                 height: 16,
                                 width: 16,
                                 backgroundColor: statusColor,
-                                borderRadius: 1,
+                                borderRadius: 'var(--main-border-radius)',
                               }}
                             />
                           </InputAdornment>
@@ -811,7 +811,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                             height: 32,
                             width: 32,
                             backgroundColor: presetColor,
-                            borderRadius: 1,
+                            borderRadius: 'var(--main-border-radius)',
                             cursor: 'pointer',
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             transform:
@@ -846,7 +846,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                   mt: 1,
                   mb: 2,
                   p: 2,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   bgcolor: alpha(theme.palette.primary.main, 0.1),
                   border: '1px solid',
                   borderColor: isUltimate
@@ -879,7 +879,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                     isSaving ? <CircularProgress size={20} /> : <CheckIcon />
                   }
                   sx={{
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     py: 1,
                     px: 3,
                     minWidth: 140,

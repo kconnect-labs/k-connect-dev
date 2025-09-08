@@ -112,7 +112,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
               sx={{
                 p: 2,
                 mb: 3,
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 bgcolor: alpha(theme.palette.background.paper, 0.7),
               }}
             >
@@ -277,7 +277,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                 fullWidth
                 size='large'
                 disabled={true}
-                sx={{ mt: 1, borderRadius: 2, py: 1.25 }}
+                sx={{ mt: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
               >
                 Аукцион завершен
               </Button>
@@ -292,7 +292,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   onBidClick(auction);
                 }}
                 disabled={loadingButtons.bid}
-                sx={{ mt: 1, borderRadius: 2, py: 1.25 }}
+                sx={{ mt: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
               >
                 Сделать ставку
               </Button>
@@ -302,7 +302,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   <Button
                     variant='contained'
                     color='success'
-                    sx={{ flex: 1, borderRadius: 2, py: 1.25 }}
+                    sx={{ flex: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
                     onClick={() => onAcceptBid(auction)}
                     disabled={loadingButtons.accept === auction.id}
                     startIcon={
@@ -320,7 +320,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   <Button
                     variant='outlined'
                     color='error'
-                    sx={{ flex: 1, borderRadius: 2, py: 1.25 }}
+                    sx={{ flex: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
                     onClick={() => onCancelAuction(auction.id)}
                     disabled={loadingButtons.cancel === auction.id}
                     startIcon={
@@ -344,7 +344,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
               elevation={0}
               sx={{
                 p: 2,
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 bgcolor: alpha(theme.palette.background.paper, 0.7),
               }}
             >
@@ -400,7 +400,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                         <ListItem
                           key={`${bid.bidder.id}-${bid.time}`}
                           sx={{
-                            borderRadius: 1,
+                            borderRadius: 'var(--main-border-radius)',
                             mb: 1,
                             bgcolor: isHighestBid || isWinner
                               ? alpha(theme.palette.success.main, 0.1)

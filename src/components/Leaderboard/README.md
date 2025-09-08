@@ -144,7 +144,7 @@ decoration: {
   --card-background: #1e1e1e;
   --text-primary: rgba(255, 255, 255, 0.87);
   --text-secondary: rgba(255, 255, 255, 0.6);
-  --border-color: rgba(255, 255, 255, 0.12);
+  --border-color: rgb(24 24 24);
   --rank-background: #424242;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   --card-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);

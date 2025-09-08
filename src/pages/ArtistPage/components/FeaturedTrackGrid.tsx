@@ -33,7 +33,7 @@ const GridContainer = styled(Box)(({ theme }) => ({
 
 const TrackCard = styled(Box)(({ theme }) => ({
   position: 'relative',
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   cursor: 'pointer',
   transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -55,7 +55,7 @@ const TrackImageContainer = styled(Box)(({ theme }) => ({
   aspectRatio: '1/1',
   overflow: 'hidden',
   backgroundColor: '#0a0a0a',
-  borderRadius: '8px',
+  borderRadius: '16px',
 }));
 
 const TrackImage = styled('img')(({ theme }) => ({
@@ -80,7 +80,7 @@ const PlayOverlay = styled(Box)<{ isPlaying?: boolean }>(({ theme, isPlaying }) 
   opacity: isPlaying ? 1 : 0,
   transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   backdropFilter: 'blur(10px)',
-  borderRadius: '8px',
+  borderRadius: '16px',
 }));
 
 const PlayButton = styled(Box)(({ theme }) => ({
@@ -110,7 +110,7 @@ const DurationBadge = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCurr
     ? theme.palette.primary.main 
     : 'rgba(0, 0, 0, 0.8)',
   color: isCurrentTrack ? '#000' : '#fff',
-  borderRadius: '12px',
+  borderRadius: '18px',
   fontSize: '0.75rem',
   fontWeight: 500,
   backdropFilter: 'blur(10px)',
@@ -164,7 +164,7 @@ const LikeButton = styled(IconButton)(({ theme }) => ({
   padding: theme.spacing(0.75),
   color: 'rgba(255, 255, 255, 0.6)',
   transition: 'all 0.2s ease',
-  borderRadius: '8px',
+  borderRadius: '16px',
   '&:hover': {
     color: '#B69DF8',
     backgroundColor: 'rgba(182, 157, 248, 0.1)',
@@ -176,7 +176,7 @@ const MoreButton = styled(IconButton)(({ theme }) => ({
   padding: theme.spacing(0.75),
   color: 'rgba(255, 255, 255, 0.4)',
   transition: 'all 0.2s ease',
-  borderRadius: '8px',
+  borderRadius: '16px',
   opacity: 0,
   '.track-card:hover &': {
     opacity: 1,

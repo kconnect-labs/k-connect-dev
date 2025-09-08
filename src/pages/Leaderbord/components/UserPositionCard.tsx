@@ -20,7 +20,7 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
       className="theme-aware"
       sx={{
         borderRadius: '16px',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        border: '1px solid rgba(66, 66, 66, 0.5)',
         color: '#D0BCFF',
         fontWeight: 700,
         px: 3,

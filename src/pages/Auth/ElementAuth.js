@@ -123,7 +123,7 @@ const ElementAuth = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'rgba(30, 30, 30, 0.8)',
           backdropFilter: 'blur(10px)',
         }}

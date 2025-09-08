@@ -100,7 +100,7 @@
   border-radius: 8px;
 }
 .rounded-md {
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
 }
 .rounded-lg {
   border-radius: 16px;
@@ -126,7 +126,7 @@
   outline: none;
   background: transparent;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
   padding: 12px 24px;
   color: white;
   font-size: 14px;
@@ -219,7 +219,7 @@
 .bg-block {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
 }
 
 /* Дополнительные border-radius */
@@ -227,7 +227,7 @@
   border-radius: 8px;
 }
 .rounded-12 {
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
 }
 
 /* Отступы */
@@ -301,7 +301,7 @@
 .input {
   width: 100%;
   padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.03);
   color: inherit;
@@ -352,14 +352,14 @@ select.input:focus option:checked {
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 500;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
 }
 
 .btn-outline {
   background: transparent;
   color: white;
   padding: 12px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
   border-radius: 8px;
 }
 
@@ -373,7 +373,7 @@ select.input:focus option:checked {
   display: inline-flex;
   align-items: center;
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   font-size: 12px;
   font-weight: 500;
   gap: 4px;
@@ -409,8 +409,8 @@ select.input:focus option:checked {
 .card {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
+  border: 1px solid rgb(24 24 24);
+  border-radius: var(--main-border-radius) !important;
   padding: 16px;
   transition: transform 0.2s;
 }

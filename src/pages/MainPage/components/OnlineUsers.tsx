@@ -16,14 +16,14 @@ import { handleImageError as safeImageError } from '../../../utils/imageUtils';
 import { User } from '../types';
 
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border:
     theme.palette.mode === 'dark'
-      ? '1px solid rgba(255, 255, 255, 0.1)'
+      ? '1px solid rgba(66, 66, 66, 0.5)'
       : '1px solid rgba(0, 0, 0, 0.1)',
 }));
 
@@ -135,7 +135,7 @@ const OnlineUsers: React.FC = () => {
             gap: 0.5,
             px: 1,
             py: 0.5,
-            borderRadius: '12px',
+            borderRadius: '18px',
             backgroundColor: 'var(--theme-background, rgba(76, 175, 80, 0.1))',
             border: '1px solid rgba(76, 175, 80, 0.2)',
             minWidth: 'fit-content',

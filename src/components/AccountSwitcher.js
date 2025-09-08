@@ -141,7 +141,7 @@ const AccountSwitcher = () => {
             width: 240,
             bgcolor: 'background.paper',
             boxShadow: 5,
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >
@@ -165,7 +165,7 @@ const AccountSwitcher = () => {
                 <MenuItem
                   selected
                   sx={{
-                    borderRadius: 1.5,
+                    borderRadius: 'var(--main-border-radius)',
                     mb: 1,
                   }}
                 >
@@ -194,7 +194,7 @@ const AccountSwitcher = () => {
                 <MenuItem
                   onClick={() => handleSwitchAccount(accounts.main_account.id)}
                   sx={{
-                    borderRadius: 1.5,
+                    borderRadius: 'var(--main-border-radius)',
                     mb: 1,
                   }}
                 >
@@ -223,7 +223,7 @@ const AccountSwitcher = () => {
                     key={channel.id}
                     onClick={() => handleSwitchAccount(channel.id)}
                     sx={{
-                      borderRadius: 1.5,
+                      borderRadius: 'var(--main-border-radius)',
                       mb: 0.5,
                     }}
                   >
@@ -245,7 +245,7 @@ const AccountSwitcher = () => {
               <MenuItem
                 onClick={handleCreateChannel}
                 sx={{
-                  borderRadius: 1.5,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <AddIcon sx={{ mr: 1.5 }} />

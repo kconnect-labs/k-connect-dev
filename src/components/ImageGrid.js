@@ -40,7 +40,7 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
           justifyContent: 'center',
           alignItems: 'center',
           overflow: 'hidden',
-          borderRadius: '8px',
+          borderRadius: '16px',
           cursor: 'pointer',
         }}
       >
@@ -75,7 +75,7 @@ const ImageGrid = ({ images, maxImages = 4, onImageClick }) => {
           sx={{
             height: '100%',
             overflow: 'hidden',
-            borderRadius: '8px',
+            borderRadius: '16px',
             position: 'relative',
             cursor: 'pointer',
             gridArea:

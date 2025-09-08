@@ -228,8 +228,8 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const containerStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
+    borderRadius: '18px',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -299,7 +299,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         <>
           <Box sx={{ mt: 2, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              sx={{ p: 2, borderRadius: 'var(--main-border-radius)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
             >
               <Box
                 sx={{
@@ -330,7 +330,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
           <Box sx={{ mt: 1, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 1, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              sx={{ p: 2, borderRadius: 'var(--main-border-radius)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
             >
               <Box
                 sx={{
@@ -380,7 +380,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           onClick={handleSave}
           disabled={saving || loading || !hasChanges()}
           sx={{
-            borderRadius: '12px',
+            borderRadius: '18px',
             py: 1,
             px: 3,
             minWidth: 140,

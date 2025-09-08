@@ -34,7 +34,7 @@ const {
 } = StoryViewerComponents;
 
 const StoriesCard = styled(Card)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -42,7 +42,7 @@ const StoriesCard = styled(Card)(({ theme }) => ({
     WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border:
     theme.palette.mode === 'dark'
-      ? '1px solid rgba(255, 255, 255, 0.1)'
+      ? '1px solid rgba(66, 66, 66, 0.5)'
       : '1px solid rgba(0, 0, 0, 0.1)',
   marginBottom: 0,
 }));
@@ -423,7 +423,7 @@ const Stories = ({ userIdentifier = null }) => {
                   display: 'flex',
                   flexDirection: 'column',
                   position: 'relative',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   overflow: 'hidden',
                   maxWidth: 400,
                   maxHeight: 600,

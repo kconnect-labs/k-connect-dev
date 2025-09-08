@@ -70,7 +70,7 @@ const DecorationPreview = ({
         position: 'relative',
         width: '100%',
         height: 60,
-        borderRadius: 1,
+        borderRadius: 'var(--main-border-radius)',
         overflow: 'hidden',
         bgcolor: 'background.default',
         background: decoration?.background
@@ -372,16 +372,16 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
   const sectionStyle = {
     p: 2,
-    borderRadius: 1.5,
+    borderRadius: 'var(--main-border-radius)',
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     mb: 2,
@@ -452,7 +452,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                 variant='contained'
                 component='label'
                 startIcon={<PhotoCameraIcon />}
-                sx={{ borderRadius: 2, fontWeight: 500 }}
+                sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
               >
                 Загрузить фон
                 <input
@@ -536,10 +536,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   sx={{
                     p: 2,
                     backgroundColor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     border: item.is_active
                       ? '2px solid primary.main'
-                      : '1px solid rgba(255, 255, 255, 0.1)',
+                      : '1px solid rgba(66, 66, 66, 0.5)',
                   }}
                 >
                   <DecorationPreview decoration={decoration}>
@@ -614,7 +614,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         <Button
           variant='outlined'
           color='primary'
-          sx={{ borderRadius: 2, fontWeight: 500 }}
+          sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
           onClick={() => setKonnectModalOpen(true)}
         >
           Экспорт / Импорт профиля (.konnect)
@@ -724,7 +724,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             pb: 2,
           }}
         >
@@ -747,10 +747,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
               height: 100,
               width: '100%',
               backgroundColor: currentColor,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               mb: 3,
               boxShadow: `0 4px 20px ${currentColor}50`,
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
           />
 

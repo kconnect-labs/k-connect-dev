@@ -29,7 +29,7 @@ interface PlayerState {
 const PlayerContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   backgroundColor: '#000',
   aspectRatio: '16/9',
@@ -38,7 +38,7 @@ const PlayerContainer = styled(Box)(({ theme }) => ({
     opacity: 1,
   },
   '@media (max-width: 768px)': {
-    borderRadius: '8px',
+    borderRadius: '16px',
   },
 }));
 
@@ -87,12 +87,12 @@ const ProgressSlider = styled(Slider)(({ theme }) => ({
     border: 'none',
     backgroundColor: '#d0bcff',
     height: '6px',
-    borderRadius: '12px',
+    borderRadius: '18px',
   },
   '& .MuiSlider-rail': {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     height: '6px',
-    borderRadius: '12px',
+    borderRadius: '18px',
   },
   '& .MuiSlider-thumb': {
     display: 'none',

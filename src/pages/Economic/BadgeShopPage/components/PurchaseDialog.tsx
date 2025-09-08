@@ -61,7 +61,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
   const modalStyle = {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '550px',
     width: '100%',
@@ -74,7 +74,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
     background: 'rgba(255, 255, 255, 0.02)',
     backdropFilter: 'blur(10px)',
   };
@@ -150,7 +150,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               height: 80,
               p: 2,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
           >
@@ -191,7 +191,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               mb: 3,
               p: 3,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
           >
@@ -227,8 +227,8 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
           sx={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '12px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: '18px',
             padding: '20px',
             marginBottom: '20px',
           }}
@@ -253,7 +253,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                 alignItems: 'center',
                 p: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                 },
@@ -284,7 +284,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                 alignItems: 'center',
                 p: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                 },
@@ -323,7 +323,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                   alignItems: 'center',
                   p: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   border: '1px solid rgba(76, 175, 80, 0.3)',
                   '&:hover': {
                     bgcolor: 'rgba(76, 175, 80, 0.05)',

@@ -106,7 +106,7 @@ export const DetailedLoadingState: React.FC<LoadingStateProps> = () => {
           width={160}
           height={160}
           sx={{
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             flexShrink: 0,
             '@media (max-width: 960px)': {
               width: 120,
@@ -158,7 +158,7 @@ export const DetailedLoadingState: React.FC<LoadingStateProps> = () => {
                   <Skeleton
                     variant="rectangular"
                     width="100%"
-                    sx={{ aspectRatio: '1/1', borderRadius: 2, mb: 1 }}
+                    sx={{ aspectRatio: '1/1', borderRadius: 'var(--main-border-radius)', mb: 1 }}
                   />
                   <Skeleton variant="text" width="100%" height={24} />
                   <Skeleton variant="text" width="70%" height={20} />
@@ -178,7 +178,7 @@ export const DetailedLoadingState: React.FC<LoadingStateProps> = () => {
                   <Skeleton
                     variant="rectangular"
                     width="100%"
-                    sx={{ aspectRatio: '1/1', borderRadius: 2, mb: 1 }}
+                    sx={{ aspectRatio: '1/1', borderRadius: 'var(--main-border-radius)', mb: 1 }}
                   />
                   <Skeleton variant="text" width="100%" height={24} />
                   <Skeleton variant="text" width="70%" height={20} />
@@ -193,7 +193,7 @@ export const DetailedLoadingState: React.FC<LoadingStateProps> = () => {
           <Skeleton variant="text" width="25%" height={40} sx={{ mb: 3 }} />
           {[...Array(8)].map((_, i) => (
             <Box key={i} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Skeleton variant="rectangular" width={56} height={56} sx={{ borderRadius: 1, mr: 2 }} />
+              <Skeleton variant="rectangular" width={56} height={56} sx={{ borderRadius: 'var(--main-border-radius)', mr: 2 }} />
               <Box sx={{ flex: 1 }}>
                 <Skeleton variant="text" width="60%" height={24} sx={{ mb: 0.5 }} />
                 <Skeleton variant="text" width="80%" height={20} />

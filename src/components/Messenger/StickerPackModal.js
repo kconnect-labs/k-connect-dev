@@ -229,16 +229,16 @@ const AsyncStickerRenderer = ({ src, style, onClick }) => {
 const cardStyles = {
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
-  borderRadius: '8px',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
+  borderRadius: '16px',
   color: 'var(--theme-text-primary, inherit)',
 };
 
 const buttonStyles = {
-  borderRadius: '8px',
+  borderRadius: '16px',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   color: 'var(--theme-text-primary, inherit)',
   '&:hover': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
@@ -570,7 +570,7 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
                 ? {}
                 : {
                     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
                   }),
             }}
           >
@@ -589,7 +589,7 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
             sx={{
               ...buttonStyles,
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
             }}
           >
             Войти для добавления

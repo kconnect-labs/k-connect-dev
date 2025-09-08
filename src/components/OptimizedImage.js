@@ -146,7 +146,7 @@ const OptimizedImage = ({
           height='100%'
           animation='wave'
           sx={{
-            borderRadius: 1,
+            borderRadius: 'var(--main-border-radius)',
             background: 'rgba(255, 255, 255, 0.1)',
           }}
         />
@@ -176,7 +176,7 @@ const OptimizedImage = ({
             height='100%'
             animation='wave'
             sx={{
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               background: 'rgba(255, 255, 255, 0.1)',
             }}
           />

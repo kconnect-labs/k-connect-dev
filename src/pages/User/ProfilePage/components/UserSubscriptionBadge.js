@@ -17,7 +17,7 @@ const UserSubscriptionBadge = ({ user }) => {
         size='small'
         sx={{
           backdropFilter: 'blur(10px)',
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           bgcolor: user.status_color
             ? `${user.status_color}26`
             : theme =>
@@ -75,7 +75,7 @@ const UserSubscriptionBadge = ({ user }) => {
         }
         size='small'
         sx={{
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
                     bgcolor:
             user.subscription.type === 'premium'
               ? 'rgba(186, 104, 200, 0.5)'

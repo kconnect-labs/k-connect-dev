@@ -69,13 +69,13 @@ const HeaderProfileMenu = ({
               : '0 8px 24px rgba(0,0,0,0.15)',
             border: isFullScreenMenu
               ? 'none'
-              : '1px solid rgba(255, 255, 255, 0.12)',
+              : '1px solid rgb(24 24 24)',
             overflow: 'visible',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
             '& .MuiMenuItem-root': {
               padding: '8px 14px',
-              borderRadius: '8px',
+              borderRadius: '16px',
               margin: '1px 6px',
               minHeight: '36px',
               transition: 'all 0.2s',
@@ -163,7 +163,7 @@ const HeaderProfileMenu = ({
                     className="theme-button"
                     sx={{
                       flex: 1,
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       textTransform: 'none',
                       backgroundColor: alpha(theme.palette.primary.main, 0.08),
                       color: 'primary.main',
@@ -186,7 +186,7 @@ const HeaderProfileMenu = ({
                     className="theme-button"
                     sx={{
                       flex: 1,
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       textTransform: 'none',
                       backgroundColor: alpha(theme.palette.primary.main, 0.08),
                       color: 'primary.main',

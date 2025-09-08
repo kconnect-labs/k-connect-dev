@@ -120,7 +120,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: isMobile ? '12px 16px' : '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
     minHeight: isMobile ? '56px' : '64px',

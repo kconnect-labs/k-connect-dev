@@ -32,7 +32,7 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: theme.spacing(1),
     '&:hover': {
       border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -53,7 +53,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.05)',
     backdropFilter: 'blur(20px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: theme.spacing(1),
     '&:hover': {
       border: '1px solid rgba(255, 255, 255, 0.2)',

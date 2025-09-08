@@ -1705,7 +1705,7 @@ const ClickerPage = () => {
               borderRadius: 3,
               background: 'rgba(30, 30, 30, 0.6)',
               backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
           >
             <Box sx={{ mb: 2 }}>
@@ -2574,7 +2574,7 @@ const ClickerPage = () => {
                 onClick={handleNavigateToClick}
                 startIcon={<ArrowBackIcon />}
                 sx={{
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   px: 3,
                   py: 1,
                 }}
@@ -2676,7 +2676,7 @@ const ClickerPage = () => {
           sx={{
             width: 48,
             height: 48,
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             background: theme.palette.primary.main,
             display: 'flex',
             alignItems: 'center',

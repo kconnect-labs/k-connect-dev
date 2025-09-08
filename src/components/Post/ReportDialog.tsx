@@ -107,7 +107,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
                 setReportDialog({ ...reportDialog, reason, error: null })
               }
               sx={{
-                borderRadius: '10px',
+                borderRadius: 'var(--large-border-radius)!important',
                 justifyContent: 'flex-start',
                 textTransform: 'none',
                 py: 1,
@@ -155,7 +155,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
               sx={{
                 '& .MuiOutlinedInput-root': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '10px',
+                  borderRadius: 'var(--large-border-radius)!important',
                   '&:hover .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'rgba(255, 152, 0, 0.5)',
                   },
@@ -179,7 +179,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
           sx={{
             p: 2,
             border: '1px solid rgba(255, 152, 0, 0.3)',
-            borderRadius: '10px',
+            borderRadius: 'var(--large-border-radius)!important',
             bgcolor: 'rgba(255, 152, 0, 0.05)',
             mb: 3,
           }}

@@ -83,7 +83,7 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
         onClick={handleGoogleLogin}
         sx={{
           py: 1.25,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           textTransform: 'none',
           borderColor: '#4285f4',
           color: '#4285f4',
@@ -132,7 +132,7 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
               background: 'var(--background-color)',
               backdropFilter: 'blur(20px)',
               border: '1px solid var(--border-color)',
-              borderRadius: '12px',
+              borderRadius: '18px',
               p: 3,
               display: 'flex',
               alignItems: 'center',

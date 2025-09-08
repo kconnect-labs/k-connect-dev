@@ -21,7 +21,7 @@ const twinkle = keyframes`
 const VibeWidgetContainer = styled(Paper)(({ theme, $hasCurrentTrack }) => ({
   position: 'relative',
   height: $hasCurrentTrack ? '320px' : '240px',
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   cursor: 'pointer',
       background: 'var(--theme-background, rgba(21, 4, 56, 0.11))', // Темный стеклянный фон для контраста
@@ -88,9 +88,9 @@ const CurrentTrackInfo = styled(Box)({
   zIndex: 3,
       background: 'var(--theme-background, rgba(0, 0, 0, 0.3))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
-  borderRadius: '8px',
+  borderRadius: '16px',
   padding: '8px 12px',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
 });
 
 const PlayButton = styled(IconButton)(({ theme }) => ({

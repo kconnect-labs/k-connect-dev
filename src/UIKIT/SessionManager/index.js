@@ -325,7 +325,7 @@ const SessionManager = ({ open, onClose }) => {
                         backgroundColor: 'rgba(208, 188, 255, 0.08)',
                         mb: 1,
                         mx: 1,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         position: 'relative',
                         '&::after': {
                           content: '""',
@@ -417,7 +417,7 @@ const SessionManager = ({ open, onClose }) => {
                           : 'transparent',
                         mx: 2,
                         mb: 1,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         px: 2,
                         py: 1,
                         '&:hover': {
@@ -466,7 +466,7 @@ const SessionManager = ({ open, onClose }) => {
                                   ml: 1,
                                   px: 1,
                                   py: 0.5,
-                                  borderRadius: 1,
+                                  borderRadius: 'var(--main-border-radius)',
                                   backgroundColor: 'rgba(208, 188, 255, 0.15)',
                                   color: '#d0bcff',
                                 }}

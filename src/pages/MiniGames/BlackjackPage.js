@@ -269,7 +269,7 @@ const BlackjackPage = () => {
                 padding: '12px 24px',
                 fontSize: '14px',
                 fontWeight: '600',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 backgroundColor: '#e91e63',
                 border: 'none',
                 color: 'white',
@@ -362,8 +362,8 @@ const BlackjackPage = () => {
             padding: '12px 20px',
             fontSize: '14px',
             fontWeight: '500',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -392,8 +392,8 @@ const BlackjackPage = () => {
             padding: '12px 20px',
             fontSize: '14px',
             fontWeight: '500',
-            borderRadius: '8px',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '16px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             background: 'transparent',
             color: 'white',
             cursor: 'pointer',
@@ -410,8 +410,8 @@ const BlackjackPage = () => {
         style={{
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '12px',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderRadius: '18px',
           padding: '16px',
         }}
       >
@@ -446,8 +446,8 @@ const BlackjackPage = () => {
           style={{
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: '12px',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: '18px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -494,7 +494,7 @@ const BlackjackPage = () => {
                 padding: '16px 32px',
                 fontSize: '16px',
                 fontWeight: '600',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 backgroundColor: '#e91e63',
                 border: 'none',
                 color: 'white',
@@ -537,8 +537,8 @@ const BlackjackPage = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '12px',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: '18px',
                   padding: '16px',
                 }}
               >
@@ -568,8 +568,8 @@ const BlackjackPage = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '12px',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: '18px',
                   padding: '16px',
                 }}
               >
@@ -606,7 +606,7 @@ const BlackjackPage = () => {
                       padding: '16px 32px',
                       fontSize: '16px',
                       fontWeight: '600',
-                      borderRadius: '12px',
+                      borderRadius: '18px',
                       backgroundColor: '#e91e63',
                       border: 'none',
                       color: 'white',
@@ -626,7 +626,7 @@ const BlackjackPage = () => {
                         padding: '16px 32px',
                         fontSize: '16px',
                         fontWeight: '600',
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         backgroundColor: '#e91e63',
                         border: 'none',
                         color: 'white',
@@ -646,7 +646,7 @@ const BlackjackPage = () => {
                         padding: '16px 32px',
                         fontSize: '16px',
                         fontWeight: '600',
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         border: '2px solid #9c27b0',
                         background: 'transparent',
                         color: '#9c27b0',
@@ -668,7 +668,7 @@ const BlackjackPage = () => {
                   style={{
                     background: 'rgba(33, 150, 243, 0.1)',
                     border: '1px solid rgba(33, 150, 243, 0.3)',
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     textAlign: 'center',
                   }}
                 >

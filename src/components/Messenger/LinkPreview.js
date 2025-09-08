@@ -62,7 +62,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         background: 'rgba(255, 255, 255, 0.08)',
         border: 'rgba(255, 255, 255, 0.15)',
         accent: '#9E77ED',
-        hover: 'rgba(255, 255, 255, 0.12)',
+        hover: 'rgb(24 24 24)',
       };
 
   return (
@@ -73,7 +73,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         mt: 1,
         mb: 0.5,
         overflow: 'hidden',
-        borderRadius: '12px',
+        borderRadius: '18px',
         backgroundColor: colors.background,
         border: `1px solid ${colors.border}`,
         display: 'flex',

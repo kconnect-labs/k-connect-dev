@@ -23,7 +23,7 @@ const TrackItemContainer = styled(Box)(({ theme, isPlaying }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(1, 1.5),
-  borderRadius: '12px',
+  borderRadius: '18px',
   transition:
     'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease',
   backgroundColor: isPlaying
@@ -54,7 +54,7 @@ const CoverArt = styled('img')(({ theme }) => ({
   width: '100%',
   height: '100%',
   objectFit: 'cover',
-  borderRadius: '8px',
+  borderRadius: '16px',
   boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
 }));
 
@@ -70,7 +70,7 @@ const PlayButtonContainer = styled(Box)({
   backgroundColor: 'var(--theme-background, rgba(0,0,0,0.6))',
   opacity: 0,
   transition: 'opacity 0.2s ease-in-out',
-  borderRadius: '8px',
+  borderRadius: '16px',
 });
 
 const TrackInfo = styled(Box)({

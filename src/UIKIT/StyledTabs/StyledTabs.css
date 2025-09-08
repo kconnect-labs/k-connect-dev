@@ -3,7 +3,7 @@
 /* StyledTabs - Точные стили панели рекомендаций из MainPage */
 
 .styled-tabs-container {
-  border-radius: 12px;
+  border-radius: 18px;
   background: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -14,7 +14,7 @@
   box-sizing: border-box;
   contain: layout style paint;
   margin-bottom: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(66, 66, 66, 0.5);
 }
 
 .styled-tabs--default {
@@ -56,7 +56,7 @@
   font-weight: 500;
   font-size: 0.875rem;
   text-transform: none;
-  border-radius: 8px;
+  border-radius: 14px;
   min-height: 40px;
   transition: all 0.2s ease;
   color: rgba(255, 255, 255, 0.7);
@@ -132,7 +132,7 @@
 @media (max-width: 768px) {
   .styled-tabs-container {
     min-width: 280px;
-    border-radius: 12px;
+    border-radius: var(--main-border-radius) !important;
     margin-bottom: 16px;
   }
 

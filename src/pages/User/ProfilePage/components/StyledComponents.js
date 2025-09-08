@@ -9,7 +9,7 @@ export const StyledSelect = styled(TextField)(({ theme }) => ({
   '& .MuiMenu-paper': {
       background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
   backdropFilter: 'var(--theme-backdrop-filter, blur(10px)) !important',
-    border: '1px solid rgba(255, 255, 255, 0.1) !important',
+    border: '1px solid rgba(66, 66, 66, 0.5) !important',
     '& .MuiMenuItem-root': {
       height: '20px !important',
       fontSize: '0.75rem !important',
@@ -28,7 +28,7 @@ export const PostInput = styled(TextField)(({ theme }) => ({
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
     backdropFilter: 'blur(5px)',
-    borderRadius: '12px',
+    borderRadius: '18px',
     border:
       theme.palette.mode === 'dark'
         ? '1px solid rgba(255, 255, 255, 0.05)'

@@ -5,8 +5,8 @@
   background-color: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--main-border-radius) !important;
+  border: 1px solid rgb(24 24 24);
 }
 .content {
 }
@@ -17,7 +17,7 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }

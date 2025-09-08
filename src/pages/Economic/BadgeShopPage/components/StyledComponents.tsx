@@ -276,7 +276,7 @@ export const StyledBalanceChip = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledInfoBlock = styled(Box)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
@@ -336,7 +336,7 @@ export const CopiesChip = styled(Chip)<{ issoldout?: string }>(
     top: 8,
     right: 8,
     height: 24,
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     fontWeight: 500,
     backgroundColor:
       issoldout === 'true'
@@ -392,7 +392,7 @@ export const BadgeDialog = styled(Dialog)(({ theme }) => ({
     background: 'rgba(18, 18, 18, 0.8)',
     backdropFilter: 'blur(10px)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
   },
   '& .MuiBackdrop-root': {
     zIndex: 999999,
@@ -413,7 +413,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
     border:
       theme.palette.mode === 'dark'
-        ? '1px solid rgba(255, 255, 255, 0.1)'
+        ? '1px solid rgba(66, 66, 66, 0.5)'
         : '1px solid rgba(208, 188, 255, 0.3)',
     overflow: 'hidden',
     maxWidth: '450px',
@@ -437,7 +437,7 @@ export const SortSelect = styled(FormControl)(({ theme }) => ({
   minWidth: 160,
   margin: theme.spacing(0, 2),
   '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     background: 'rgba(255, 255, 255, 0.1)',
     boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
     '&:hover': {

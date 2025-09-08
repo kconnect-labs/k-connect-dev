@@ -1860,7 +1860,7 @@ const AdminPage = () => {
                           style={{
                             width: '100%',
                             height: 'auto',
-                            borderRadius: '8px',
+                            borderRadius: '16px',
                           }}
                         />
                       </Box>

@@ -74,7 +74,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
   const modalStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '600px',
     width: '100%',
@@ -87,7 +87,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   };
@@ -128,10 +128,10 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
           sx={{
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             padding: '20px',
             marginBottom: '20px',
-            borderRadius: '12px',
+            borderRadius: '18px',
           }}
         >
           <Typography
@@ -156,7 +156,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
               mb: 2,
               p: 2,
               bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
             }}
           >
             <Typography variant='subtitle2' sx={{ mb: 1, fontWeight: 600 }}>
@@ -190,11 +190,11 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
             sx={{
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               padding: '20px',
               marginBottom: '20px',
               textAlign: 'center',
-              borderRadius: '12px',
+              borderRadius: '18px',
             }}
           >
             <Typography variant='h6' sx={{ mb: 2, color: 'text.primary' }}>
@@ -244,10 +244,10 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
           sx={{
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             padding: '20px',
             marginBottom: '20px',
-            borderRadius: '12px',
+            borderRadius: '18px',
           }}
         >
           <Typography
@@ -316,7 +316,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
                 mb: 2,
                 p: 2,
                 bgcolor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
-                borderRadius: 1,
+                borderRadius: 'var(--main-border-radius)',
                 border: '1px solid rgba(208, 188, 255, 0.3)',
               }}
             >
@@ -409,7 +409,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
                   mt: 2,
                   p: 2,
                   bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <Typography variant='subtitle2' sx={{ mb: 1, fontWeight: 600 }}>

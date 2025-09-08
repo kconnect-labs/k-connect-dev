@@ -36,7 +36,7 @@ const ItemImage = styled(Box)(({ theme }) => ({
   borderRadius: 8,
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -289,7 +289,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
       <Grid container spacing={3}>
         {/* Основная информация */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Основная информация
@@ -465,7 +465,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
         {/* Предметы */}
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Предметы в паке ({proposal.contents?.length || 0})
             </Typography>
@@ -512,7 +512,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
       {/* Действия */}
       {proposal.status === 'pending' && (
-        <Paper sx={{ mt: 3, p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+        <Paper sx={{ mt: 3, p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Действия модератора
           </Typography>

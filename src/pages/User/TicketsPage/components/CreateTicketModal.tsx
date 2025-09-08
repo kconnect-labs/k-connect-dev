@@ -220,7 +220,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
     <StyledDialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ 
         color: 'rgba(255, 255, 255, 0.87)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        borderBottom: '1px solid rgb(24 24 24)',
         pb: 2
       }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -341,7 +341,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
       <DialogActions sx={{ 
         p: 3, 
-        borderTop: '1px solid rgba(255, 255, 255, 0.12)' 
+        borderTop: '1px solid rgb(24 24 24)' 
       }}>
         <Button
           onClick={handleClose}
@@ -368,7 +368,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               background: 'linear-gradient(45deg, #b8a8e8 30%, #6b5b7a 90%)',
             },
             '&:disabled': {
-              background: 'rgba(255, 255, 255, 0.12)',
+              background: 'rgb(24 24 24)',
               color: 'rgba(255, 255, 255, 0.3)',
             },
           }}

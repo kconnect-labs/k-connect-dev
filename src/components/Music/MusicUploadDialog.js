@@ -75,7 +75,7 @@ const StyledDialogPaper = styled('div')(({ theme }) => ({
 
 const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
   background: 'rgba(255,255,255,0.02)',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
   border: '1px solid rgba(255,255,255,0.07)',
   margin: theme.spacing(2),
@@ -84,7 +84,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(255,255,255,0.04)',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
   border: '1px solid rgba(255,255,255,0.07)',
 }));
@@ -575,7 +575,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
             sx={{
               border: '1px dashed',
               borderColor: 'divider',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               p: 2,
               textAlign: 'center',
               mb: 1,
@@ -626,7 +626,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
               p: 1.5,
               border: '1px solid',
               borderColor: 'divider',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               height: '100%',
             }}
           >
@@ -724,7 +724,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           minHeight: '70vh',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          borderRadius: '12px',
+          borderRadius: '18px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
           border: '1px solid rgba(255,255,255,0.10)',
           overflow: 'hidden',
@@ -806,7 +806,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
                             sx={{
                               width: 44,
                               height: 44,
-                              borderRadius: 2,
+                              borderRadius: 'var(--main-border-radius)',
                               boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
                             }}
                           />
@@ -816,7 +816,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
                             sx={{
                               width: 44,
                               height: 44,
-                              borderRadius: 2,
+                              borderRadius: 'var(--main-border-radius)',
                               background: 'rgba(255,255,255,0.08)',
                             }}
                           >
@@ -891,7 +891,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           onClick={onClose}
           disabled={loading}
           color='inherit'
-          sx={{ borderRadius: 2, px: 3 }}
+          sx={{ borderRadius: 'var(--main-border-radius)', px: 3 }}
         >
           Отмена
         </Button>
@@ -901,7 +901,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           disabled={loading || tracks.length === 0}
           startIcon={loading ? <CircularProgress size={20} /> : <CloudUpload />}
           sx={{
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             px: 3,
             boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
           }}

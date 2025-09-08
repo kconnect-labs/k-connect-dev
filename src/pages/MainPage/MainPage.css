@@ -83,10 +83,10 @@
 }
 
 .support-block {
-  border-radius: 12px;
+  border-radius: var(--main-border-radius) !important;
   background: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(24 24 24);
   overflow: hidden;
   position: relative;
 }

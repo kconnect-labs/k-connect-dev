@@ -179,7 +179,7 @@ const PlayAlbumButton = styled(Button)(({ theme }) => ({
 const TracksList = styled(List)(({ theme }) => ({
   padding: 0,
   '& .MuiListItem-root': {
-    borderRadius: '12px',
+    borderRadius: '18px',
     marginBottom: '2px',
     background: 'transparent',
     transition: 'all 0.2s ease',
@@ -312,9 +312,9 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
               <Skeleton variant="text" height={24} width="50%" />
               <Skeleton variant="text" height={20} width="80%" />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '12px' }} />
-                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '12px' }} />
-                <Skeleton variant="rectangular" height={28} width={110} sx={{ borderRadius: '12px' }} />
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
+                <Skeleton variant="rectangular" height={28} width={110} sx={{ borderRadius: '18px' }} />
               </Box>
             </Box>
           </Box>
@@ -322,7 +322,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
             {[...Array(5)].map((_, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
                 <Skeleton variant="rectangular" width={24} height={24} sx={{ borderRadius: '4px' }} />
-                <Skeleton variant="rectangular" width={40} height={40} sx={{ borderRadius: '8px' }} />
+                <Skeleton variant="rectangular" width={40} height={40} sx={{ borderRadius: '16px' }} />
                 <Box sx={{ flex: 1 }}>
                   <Skeleton variant="text" height={20} width="60%" />
                   <Skeleton variant="text" height={16} width="40%" />
@@ -391,7 +391,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         px: 1.5,
                         py: 0.5,
                         fontSize: 13,
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         height: 28,
                         mr: 1,
                         background: 'rgba(182,157,248,0.12)',
@@ -467,7 +467,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                               : undefined
                           }
                           alt={track.title}
-                          sx={{ width: 40, height: 40, borderRadius: '8px', marginRight: '10px' }}
+                          sx={{ width: 40, height: 40, borderRadius: '16px', marginRight: '10px' }}
                         >
                           <MusicNote sx={{ fontSize: 20 }} />
                         </Avatar>

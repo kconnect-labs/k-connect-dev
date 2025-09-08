@@ -90,16 +90,16 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
   const sectionStyle = {
     p: 2,
-    borderRadius: 1.5,
+    borderRadius: 'var(--main-border-radius)',
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     mb: 2,
@@ -129,7 +129,7 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
   };
 
   const buttonStyle = {
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
     textTransform: 'none' as const,
     fontWeight: 600,
     height: 56,
@@ -294,7 +294,7 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
                     border: usernameObj.is_active
                       ? `2px solid ${theme.palette.success.main}`
                       : '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     transition: 'all 0.2s ease',
                     '&:hover': {
                       transform: 'translateY(-2px)',

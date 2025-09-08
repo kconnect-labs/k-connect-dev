@@ -113,7 +113,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
       maxWidth='xs'
       PaperProps={{
         sx: {
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
@@ -155,7 +155,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
           onClick={handleExport}
           disabled={loading || selectedFields.length === 0}
           fullWidth
-          sx={{ mb: 2, borderRadius: 2, fontWeight: 500 }}
+          sx={{ mb: 2, borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
         >
           {loading ? (
             <CircularProgress size={20} color='inherit' />
@@ -175,7 +175,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
               variant='outlined'
               component='label'
               startIcon={<CloudUploadIcon />}
-              sx={{ borderRadius: 2, fontWeight: 500, minWidth: 0 }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, minWidth: 0 }}
               disabled={loading}
             >
               {importFile ? importFile.name : 'Выбрать файл'}
@@ -192,7 +192,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
               color='primary'
               onClick={handleImport}
               disabled={loading || !importFile}
-              sx={{ borderRadius: 2, fontWeight: 500 }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
             >
               {loading ? (
                 <CircularProgress size={20} color='inherit' />

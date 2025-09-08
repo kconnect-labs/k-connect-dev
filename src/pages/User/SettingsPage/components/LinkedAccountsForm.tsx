@@ -153,9 +153,9 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -163,7 +163,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
   const listItemStyle = {
     py: 1.5,
     px: 2,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
             bgcolor: 'rgba(255, 255, 255, 0.05)',
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
     mb: 1,

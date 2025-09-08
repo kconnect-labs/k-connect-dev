@@ -37,7 +37,7 @@ const ImagePreview = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '150px',
     objectFit: 'cover',
-    borderRadius: '12px',
+    borderRadius: '18px',
   },
 }));
 

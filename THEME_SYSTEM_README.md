@@ -79,7 +79,7 @@ frontend/src/
   sx={{
     background: 'var(--theme-background)',
     backdropFilter: 'var(--theme-backdrop-filter)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
   }}
 >
   Содержимое

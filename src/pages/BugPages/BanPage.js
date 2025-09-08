@@ -71,7 +71,7 @@ const BanPage = () => {
             sx={{
               p: 3,
               bgcolor: 'rgba(244, 67, 54, 0.05)',
-              borderRadius: '8px',
+              borderRadius: '16px',
               mb: 4,
               border: '1px solid rgba(244, 67, 54, 0.1)',
             }}

@@ -15,7 +15,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
       backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-  borderRadius: '8px',
+  borderRadius: '16px',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),
   borderLeft: '3px solid rgba(140, 82, 255, 0.5)',
@@ -46,7 +46,7 @@ const ImagePreview = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '150px',
     objectFit: 'cover',
-    borderRadius: '12px',
+    borderRadius: '18px',
   },
 }));
 

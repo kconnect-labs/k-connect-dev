@@ -219,8 +219,8 @@ const FriendsPage = () => {
               '& .MuiOutlinedInput-root': {
                 background: 'var(--theme-background, rgba(255,255,255,0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: 2,
+                border: '1px solid rgba(0, 0, 0, 0.12)',
+                borderRadius: 'var(--main-border-radius)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -309,7 +309,7 @@ const FriendsPage = () => {
                       textDecoration: 'none',
                       cursor: 'pointer',
                       background: 'rgba(255,255,255,0.07)',
-                      borderRadius: '12px',
+                      borderRadius: '18px',
                       px: 1.5,
                       py: 1,
                       transition: 'background 0.18s',

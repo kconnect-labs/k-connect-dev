@@ -120,11 +120,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     zIndex: 999999999999,
   },
   '& .MuiDialog-paper': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     background: 'rgba(18, 18, 18, 0.8)',
             backdropFilter: 'var(--theme-backdrop-filter)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       maxWidth: '100%',
@@ -524,10 +524,10 @@ const ModeratorPage = () => {
         onClick={handleOpenCreateKeyDialog}
         sx={{
           mb: 3,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
           color: 'rgba(255, 255, 255, 0.87)',
           '&:hover': {
             background: 'rgba(255, 255, 255, 0.08)',
@@ -552,10 +552,10 @@ const ModeratorPage = () => {
               sx={{
                 p: 3,
                 textAlign: 'center',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
               }}
             >
               <Typography variant='body2' color='rgba(255, 255, 255, 0.6)'>
@@ -569,10 +569,10 @@ const ModeratorPage = () => {
                   <Box
                     sx={{
                       p: 3,
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       background: 'var(--theme-background)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(0, 0, 0, 0.12)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: 1.5,
@@ -602,7 +602,7 @@ const ModeratorPage = () => {
                         size='small'
                         onClick={() => handleCopyKey(key)}
                         sx={{
-                          borderRadius: 1,
+                          borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(255, 255, 255, 0.05)',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.1)',
@@ -692,7 +692,7 @@ const ModeratorPage = () => {
                       disabled={modKeysDeleting[key.id]}
                       sx={{
                         mt: 1,
-                        borderRadius: 1,
+                        borderRadius: 'var(--main-border-radius)',
                         background: 'rgba(244, 67, 54, 0.05)',
                         border: '1px solid rgba(244, 67, 54, 0.2)',
                         color: 'rgba(244, 67, 54, 0.8)',
@@ -1893,10 +1893,10 @@ const ModeratorPage = () => {
             size='small'
             sx={{
               '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -1926,10 +1926,10 @@ const ModeratorPage = () => {
                 p: { xs: 1.5, sm: 2 },
                 mb: 2,
                 position: 'relative',
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
                   background: 'rgba(255, 255, 255, 0.05)',
@@ -1994,10 +1994,10 @@ const ModeratorPage = () => {
                     sx={{
                       mr: 1,
                       height: 36,
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       background: 'var(--theme-background)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(0, 0, 0, 0.12)',
                       color: 'rgba(255, 255, 255, 0.87)',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 0.08)',
@@ -2013,7 +2013,7 @@ const ModeratorPage = () => {
                     color='error'
                     onClick={() => openDeletePostDialog(post)}
                     sx={{
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       background: 'rgba(244, 67, 54, 0.1)',
                       backdropFilter: 'var(--theme-backdrop-filter)',
                       border: '1px solid rgba(244, 67, 54, 0.2)',
@@ -2063,7 +2063,7 @@ const ModeratorPage = () => {
                     style={{
                       width: '100%',
                       height: 'auto',
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                     }}
                   />
                 </Box>
@@ -2152,10 +2152,10 @@ const ModeratorPage = () => {
         <TableContainer
           sx={{
             overflowX: 'auto',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
           }}
         >
           <Table size='small'>
@@ -2164,7 +2164,7 @@ const ModeratorPage = () => {
                 sx={{
                   '& .MuiTableCell-head': {
                     background: 'rgba(255, 255, 255, 0.05)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderBottom: '1px solid rgb(24 24 24)',
                     color: 'rgba(255, 255, 255, 0.87)',
                     fontWeight: 600,
                   },
@@ -2308,10 +2308,10 @@ const ModeratorPage = () => {
         <TableContainer
           sx={{
             overflowX: 'auto',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
           }}
         >
           <Table size='small'>
@@ -2320,7 +2320,7 @@ const ModeratorPage = () => {
                 sx={{
                   '& .MuiTableCell-head': {
                     background: 'rgba(255, 255, 255, 0.05)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderBottom: '1px solid rgb(24 24 24)',
                     color: 'rgba(255, 255, 255, 0.87)',
                     fontWeight: 600,
                   },
@@ -3460,10 +3460,10 @@ const ModeratorPage = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         transition: 'all 0.3s ease',
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         background: 'var(--theme-background)',
                         backdropFilter: 'var(--theme-backdrop-filter)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(0, 0, 0, 0.12)',
                         '&:hover': {
                           background: 'rgba(255, 255, 255, 0.05)',
                           border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -3639,7 +3639,7 @@ const ModeratorPage = () => {
                               label='Улучшен'
                               size='small'
                               sx={{
-                                borderRadius: 1,
+                                borderRadius: 'var(--main-border-radius)',
                                 background: badge.color_upgrade
                                   ? badge.color_upgrade
                                   : 'rgba(255, 152, 0, 0.2)',
@@ -3716,10 +3716,10 @@ const ModeratorPage = () => {
               alignItems: 'center',
               mb: 3,
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
             }}
           >
             <Avatar
@@ -3760,7 +3760,7 @@ const ModeratorPage = () => {
                 }
                 size='small'
                 sx={{
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   background: 'rgba(255, 255, 255, 0.08)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   color: 'rgba(255, 255, 255, 0.87)',
@@ -3780,7 +3780,7 @@ const ModeratorPage = () => {
             onClick={() => window.location.href = '/admin/tickets'}
             sx={{
               background: 'linear-gradient(45deg, #d0bcff 30%, #cfbcfb 90%)',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               fontSize: '1.1rem',
               fontWeight: 'bold',
               transition: 'all 0.3s ease',
@@ -3793,10 +3793,10 @@ const ModeratorPage = () => {
           <Box
             sx={{
               p: 3,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
             }}
           >
             {assignedDate && (
@@ -3955,7 +3955,7 @@ const ModeratorPage = () => {
       <Box
         sx={{
           p: 2,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           background: enabled
             ? 'rgba(255, 255, 255, 0.05)'
             : 'rgba(255, 255, 255, 0.02)',
@@ -3976,7 +3976,7 @@ const ModeratorPage = () => {
             sx={{
               width: 28,
               height: 28,
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               background: enabled
                 ? 'rgba(255, 255, 255, 0.1)'
                 : 'rgba(255, 255, 255, 0.05)',
@@ -4454,7 +4454,7 @@ const ModeratorPage = () => {
               startIcon={<PersonAddIcon />}
               onClick={openCreateArtistDialog}
               sx={{
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 background: 'linear-gradient(45deg, #1976d2 30%, #42a5f5 90%)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
                 border: '1px solid rgba(25, 118, 210, 0.3)',
@@ -4490,10 +4490,10 @@ const ModeratorPage = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'all 0.3s ease',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -4596,7 +4596,7 @@ const ModeratorPage = () => {
                       }
                       title='Открыть страницу артиста'
                       sx={{
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         background: 'rgba(25, 118, 210, 0.1)',
                         backdropFilter: 'var(--theme-backdrop-filter)',
                         border: '1px solid rgba(25, 118, 210, 0.2)',
@@ -4616,7 +4616,7 @@ const ModeratorPage = () => {
                         color='primary'
                         size='small'
                         sx={{
-                          borderRadius: 2,
+                          borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(25, 118, 210, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(25, 118, 210, 0.2)',
@@ -4637,7 +4637,7 @@ const ModeratorPage = () => {
                         color='primary'
                         size='small'
                         sx={{
-                          borderRadius: 2,
+                          borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(25, 118, 210, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(25, 118, 210, 0.2)',
@@ -4658,7 +4658,7 @@ const ModeratorPage = () => {
                         color='error'
                         size='small'
                         sx={{
-                          borderRadius: 2,
+                          borderRadius: 'var(--main-border-radius)',
                           background: 'rgba(244, 67, 54, 0.1)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
                           border: '1px solid rgba(244, 67, 54, 0.2)',
@@ -5112,10 +5112,10 @@ const ModeratorPage = () => {
             sx={{
               textAlign: 'center',
               py: 2,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
             }}
           >
             <ListAltIcon
@@ -5140,10 +5140,10 @@ const ModeratorPage = () => {
                 sx={{
                   mb: 2,
                   p: 3,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5204,7 +5204,7 @@ const ModeratorPage = () => {
                     label={getActionTypeLabel(log.action_type)}
                     size='small'
                     sx={{
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                       background: getActionTypeColor(log.action_type),
                       color: 'rgba(255, 255, 255, 0.9)',
                       fontWeight: 500,
@@ -5235,9 +5235,9 @@ const ModeratorPage = () => {
                     sx={{
                       mt: 2,
                       p: 2,
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                       background: 'rgba(0, 0, 0, 0.2)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(66, 66, 66, 0.5)',
                     }}
                   >
                     <Typography
@@ -5411,10 +5411,10 @@ const ModeratorPage = () => {
             sx={{
               textAlign: 'center',
               py: 2,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
             }}
           >
             <BarChartIcon
@@ -5439,8 +5439,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5515,8 +5515,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5586,8 +5586,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5642,8 +5642,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5698,8 +5698,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5754,8 +5754,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5805,8 +5805,8 @@ const ModeratorPage = () => {
                 sx={{
                   background: 'var(--theme-background)',
                   backdropFilter: 'var(--theme-backdrop-filter)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: 2,
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
                   transition: 'all 0.2s ease-in-out',
                   '&:hover': {
                     background: 'rgba(255, 255, 255, 0.05)',
@@ -5856,8 +5856,8 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.05)',
@@ -5917,8 +5917,8 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.05)',
@@ -5973,8 +5973,8 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.05)',
@@ -6029,8 +6029,8 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.05)',
@@ -6090,8 +6090,8 @@ const ModeratorPage = () => {
                         sx={{
                           background: 'var(--theme-background)',
                           backdropFilter: 'var(--theme-backdrop-filter)',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          borderRadius: 2,
+                          border: '1px solid rgba(0, 0, 0, 0.12)',
+                          borderRadius: 'var(--main-border-radius)',
                           transition: 'all 0.2s ease-in-out',
                           '&:hover': {
                             background: 'rgba(255, 255, 255, 0.05)',
@@ -6150,10 +6150,10 @@ const ModeratorPage = () => {
           mb: 3,
           display: 'flex',
           alignItems: 'center',
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
         }}
       >
         <SecurityIcon sx={{ fontSize: 40, mr: 2, color: 'primary.main' }} />
@@ -6175,10 +6175,10 @@ const ModeratorPage = () => {
       <Paper
         sx={{
           p: 3,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background)',
           backdropFilter: 'var(--theme-backdrop-filter)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
         }}
       >
         <Tabs
@@ -6188,13 +6188,13 @@ const ModeratorPage = () => {
           scrollButtons='auto'
           sx={{
             borderBottom: 1,
-            borderColor: 'rgba(255, 255, 255, 0.12)',
+            borderColor: 'rgb(24 24 24)',
             mb: 2,
             '& .MuiTab-root': {
-              borderRadius: '12px 12px 0 0',
+              borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
               background: 'var(--theme-background)',
               backdropFilter: 'var(--theme-backdrop-filter)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               borderBottom: 'none',
               marginRight: 1,
               color: 'rgba(255, 255, 255, 0.7)',
@@ -6284,7 +6284,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -6321,7 +6321,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -6339,7 +6339,7 @@ const ModeratorPage = () => {
               <Box
                 sx={{
                   mt: 2,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   bgcolor: 'rgba(0,0,0,0.3)',
                   p: 2,
                 }}
@@ -6354,7 +6354,7 @@ const ModeratorPage = () => {
                       maxWidth: '100%',
                       maxHeight: 200,
                       overflow: 'hidden',
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   >
                     <img
@@ -6437,7 +6437,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -6474,7 +6474,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -6492,7 +6492,7 @@ const ModeratorPage = () => {
               <Box
                 sx={{
                   mt: 2,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   bgcolor: 'rgba(0,0,0,0.3)',
                   p: 2,
                 }}
@@ -6575,7 +6575,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -6612,7 +6612,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -6630,7 +6630,7 @@ const ModeratorPage = () => {
               <Box
                 sx={{
                   mt: 2,
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                   bgcolor: 'rgba(0,0,0,0.3)',
                   p: 2,
                 }}
@@ -6645,7 +6645,7 @@ const ModeratorPage = () => {
                       maxWidth: '100%',
                       maxHeight: 200,
                       overflow: 'hidden',
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   >
                     <img
@@ -6724,7 +6724,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -6761,7 +6761,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -6855,7 +6855,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(25,118,210,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
@@ -6893,7 +6893,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(25,118,210,0.05)',
               border: '1px solid rgba(25,118,210,0.2)',
               mb: 2,
@@ -6948,7 +6948,7 @@ const ModeratorPage = () => {
                     size='small'
                     InputProps={{
                       sx: {
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         backgroundColor: 'rgba(255,255,255,0.05)',
                         color: 'rgba(255,255,255,0.87)',
                         '&:hover': {
@@ -6992,7 +6992,7 @@ const ModeratorPage = () => {
                     }}
                     InputProps={{
                       sx: {
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         backgroundColor: 'rgba(255,255,255,0.05)',
                         color: 'rgba(255,255,255,0.87)',
                         '&:hover': {
@@ -7083,7 +7083,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(156,39,176,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
@@ -7125,7 +7125,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(156,39,176,0.05)',
               border: '1px solid rgba(156,39,176,0.2)',
               mb: 2,
@@ -7163,7 +7163,7 @@ const ModeratorPage = () => {
                       value={bugReportStatus}
                       onChange={e => setBugReportStatus(e.target.value)}
                       sx={{
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         backgroundColor: 'rgba(255,255,255,0.05)',
                         color: 'rgba(255,255,255,0.87)',
                         '.MuiOutlinedInput-notchedOutline': {
@@ -7245,7 +7245,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
@@ -7287,7 +7287,7 @@ const ModeratorPage = () => {
                 size='small'
                 InputProps={{
                   sx: {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255,255,255,0.05)',
                     color: 'rgba(255,255,255,0.87)',
                     '&:hover': {
@@ -7333,7 +7333,7 @@ const ModeratorPage = () => {
                 }}
                 InputProps={{
                   sx: {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255,255,255,0.05)',
                     color: 'rgba(255,255,255,0.87)',
                     '&:hover': {
@@ -7378,7 +7378,7 @@ const ModeratorPage = () => {
                     </InputAdornment>
                   ),
                   sx: {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255,255,255,0.05)',
                     color: 'rgba(255,255,255,0.87)',
                     '&:hover': {
@@ -7415,7 +7415,7 @@ const ModeratorPage = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   height: '100%',
@@ -7454,7 +7454,7 @@ const ModeratorPage = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   height: '100%',
@@ -7522,7 +7522,7 @@ const ModeratorPage = () => {
                       </InputAdornment>
                     ),
                     sx: {
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       backgroundColor: 'rgba(255,255,255,0.05)',
                       color: 'rgba(255,255,255,0.87)',
                       '&:hover': {
@@ -7559,7 +7559,7 @@ const ModeratorPage = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   p: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px dashed rgba(255, 255, 255, 0.2)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   position: 'relative',
@@ -7718,7 +7718,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -7755,7 +7755,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -7867,7 +7867,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(244, 67, 54, 0.15)',
           }}
         >
@@ -7904,7 +7904,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(244, 67, 54, 0.05)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 1,
@@ -8017,7 +8017,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
@@ -8063,7 +8063,7 @@ const ModeratorPage = () => {
                 size='small'
                 InputProps={{
                   sx: {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255,255,255,0.05)',
                     color: 'rgba(255,255,255,0.87)',
                     '&:hover': {
@@ -8109,7 +8109,7 @@ const ModeratorPage = () => {
                 }}
                 InputProps={{
                   sx: {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     backgroundColor: 'rgba(255,255,255,0.05)',
                     color: 'rgba(255,255,255,0.87)',
                     '&:hover': {
@@ -8146,7 +8146,7 @@ const ModeratorPage = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 }}
@@ -8189,7 +8189,7 @@ const ModeratorPage = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   p: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px dashed rgba(255, 255, 255, 0.2)',
                   backgroundColor: 'rgba(255, 255, 255, 0.05)',
                   position: 'relative',
@@ -8348,7 +8348,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
@@ -8495,7 +8495,7 @@ const ModeratorPage = () => {
                   justifyContent: 'center',
                   py: 3,
                   bgcolor: 'rgba(0,0,0,0.2)',
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <AudiotrackIcon
@@ -8719,7 +8719,7 @@ const ModeratorPage = () => {
                   justifyContent: 'center',
                   py: 3,
                   bgcolor: 'rgba(0,0,0,0.2)',
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <SearchIcon
@@ -8755,7 +8755,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             backgroundColor: 'rgba(25, 118, 210, 0.15)',
           }}
         >
@@ -8795,7 +8795,7 @@ const ModeratorPage = () => {
             sx={{
               position: 'relative',
               p: 2.5,
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               backgroundColor: 'rgba(25,118,210,0.05)',
               border: '1px solid rgba(25,118,210,0.2)',
               mb: 2,
@@ -8908,7 +8908,7 @@ const ModeratorPage = () => {
                   justifyContent: 'center',
                   py: 3,
                   bgcolor: 'rgba(0,0,0,0.2)',
-                  borderRadius: 1,
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <EmojiEventsOutlinedIcon
@@ -8999,7 +8999,7 @@ const ModeratorPage = () => {
             position: 'relative',
             overflow: 'hidden',
             p: 2,
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             background:
               'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}

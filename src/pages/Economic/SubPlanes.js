@@ -30,11 +30,11 @@ const SubscriptionCard = styled(Paper)(({ theme, type }) => ({
   flexDirection: 'column',
   position: 'relative',
   overflow: 'hidden',
-  borderRadius: '12px',
+  borderRadius: '18px',
   transition: 'all 0.3s ease',
   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   '&:hover': {
     transform: 'translateY(-4px)',
     borderColor: '#D0BCFF',
@@ -75,7 +75,7 @@ const PopularBadge = styled(Chip)(({ theme }) => ({
   color: '#fff',
   fontWeight: 'bold',
   fontSize: '0.7rem',
-  borderRadius: '8px',
+  borderRadius: '16px',
   zIndex: 5,
   height: '24px',
 }));
@@ -207,10 +207,10 @@ const SubPlanes = () => {
           sx={{
             p: 3,
             mb: 4,
-            borderRadius: '12px',
+            borderRadius: '18px',
             backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(0, 0, 0, 0.12)',
             position: 'relative',
             '&::before': {
               content: '""',
@@ -220,7 +220,7 @@ const SubPlanes = () => {
               right: 0,
               height: '3px',
               background: '#D0BCFF',
-              borderRadius: '12px 12px 0 0',
+              borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
             },
           }}
         >
@@ -353,7 +353,7 @@ const SubPlanes = () => {
                   fullWidth
                   onClick={handleNavigateToBalance}
                   sx={{
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     textTransform: 'none',
                     py: 1.2,
                     borderColor: '#D0BCFF',
@@ -428,7 +428,7 @@ const SubPlanes = () => {
                   fullWidth
                   onClick={handleNavigateToBalance}
                   sx={{
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     textTransform: 'none',
                     py: 1.2,
                     backgroundColor: '#D0BCFF',
@@ -522,7 +522,7 @@ const SubPlanes = () => {
                   fullWidth
                   onClick={handleNavigateToBalance}
                   sx={{
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     textTransform: 'none',
                     py: 1.2,
                     backgroundColor: '#FF4D50',
@@ -546,10 +546,10 @@ const SubPlanes = () => {
         sx={{
           mt: 4,
           p: 3,
-          borderRadius: '12px',
+          borderRadius: '18px',
           backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
           position: 'relative',
           '&::before': {
             content: '""',
@@ -559,7 +559,7 @@ const SubPlanes = () => {
             right: 0,
             height: '3px',
             background: '#D0BCFF',
-            borderRadius: '12px 12px 0 0',
+            borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
           },
         }}
       >
@@ -577,7 +577,7 @@ const SubPlanes = () => {
           startIcon={<AccountBalanceWalletIcon />}
           onClick={handleNavigateToBalance}
           sx={{
-            borderRadius: '12px',
+            borderRadius: '18px',
             textTransform: 'none',
             py: 1.2,
             px: 3,

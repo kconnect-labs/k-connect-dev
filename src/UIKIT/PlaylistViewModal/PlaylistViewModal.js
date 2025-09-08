@@ -53,7 +53,7 @@ const ViewDialog = styled(Dialog)(({ theme }) => ({
       backdropFilter: 'blur(20px) !important',
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
-      border: '1px solid rgba(255, 255, 255, 0.1) !important',
+      border: '1px solid rgba(66, 66, 66, 0.5) !important',
     },
   },
 }));
@@ -63,7 +63,7 @@ const DialogHeader = styled(DialogTitle)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: theme.spacing(2, 3),
-  borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
+  borderBottom: `1px solid rgba(66, 66, 66, 0.5)`,
   backgroundColor: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   color: '#fff',
@@ -594,7 +594,7 @@ const PlaylistViewModal = ({
                     theme.palette.mode === 'dark'
                       ? 'rgba(0, 0, 0, 0.2)'
                       : 'rgba(0, 0, 0, 0.05)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   mt: 2,
                 }}
               >

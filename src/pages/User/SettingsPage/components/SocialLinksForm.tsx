@@ -251,9 +251,9 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -261,7 +261,7 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
   const listItemStyle = {
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: 1.5,
+    borderRadius: 'var(--main-border-radius)',
     mb: 1,
     '&:hover': {
       background: 'rgba(255, 255, 255, 0.05)',
@@ -388,8 +388,8 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: 2,
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >

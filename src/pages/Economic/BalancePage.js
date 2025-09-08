@@ -105,7 +105,7 @@ const BalanceAmount = styled(Typography)(({ theme }) => ({
 }));
 
 const TransactionItem = styled(ListItem)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   marginBottom: theme.spacing(1),
   transition: 'all 0.3s ease',
   '&:hover': {
@@ -118,7 +118,7 @@ const TransactionAmount = styled(Typography)(({ theme, type }) => ({
   fontWeight: 'bold',
   fontSize: '0.9rem',
   padding: '4px 8px',
-  borderRadius: '8px',
+  borderRadius: '16px',
   backgroundColor:
     type === 'positive'
       ? alpha(theme.palette.success.main, 0.1)
@@ -204,9 +204,9 @@ const BalanceToggleContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'space-between',
   padding: '8px 16px',
   marginTop: '16px',
-  borderRadius: '12px',
+  borderRadius: '18px',
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   backdropFilter: 'blur(10px)',
 }));
 
@@ -215,7 +215,7 @@ const ToggleButton = styled(Box)(({ theme, active }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   padding: '8px 12px',
-  borderRadius: '8px',
+  borderRadius: '16px',
   cursor: 'pointer',
   transition: 'all 0.3s ease',
   background: active ? 'rgba(207, 188, 251, 0.2)' : 'transparent',
@@ -251,7 +251,7 @@ const TabPanel = ({ children, value, index, ...other }) => (
 
 
 const CancelButton = styled(Button)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   borderColor:
@@ -275,7 +275,7 @@ const CancelButton = styled(Button)(({ theme }) => ({
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   paddingLeft: theme.spacing(4),
   paddingRight: theme.spacing(4),
   paddingTop: theme.spacing(0.75),
@@ -311,7 +311,7 @@ const ContentBox = styled(Box)(({ theme }) => ({
 
 const KeyTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     backgroundColor:
       theme.palette.mode === 'dark'
         ? 'rgba(0, 0, 0, 0.3)'
@@ -354,7 +354,7 @@ const UserAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const GradientButton = styled(Button)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   paddingLeft: theme.spacing(3),
   paddingRight: theme.spacing(3),
   background: 'linear-gradient(45deg, #6200ee 30%, #9c64f2 90%)',
@@ -366,7 +366,7 @@ const GradientButton = styled(Button)(({ theme }) => ({
   '&:disabled': {
     background:
       theme.palette.mode === 'dark'
-        ? 'rgba(255, 255, 255, 0.12)'
+        ? 'rgb(24 24 24)'
         : 'rgba(0, 0, 0, 0.12)',
     color:
       theme.palette.mode === 'dark'
@@ -459,7 +459,7 @@ const TransactionDetailAmount = styled(Typography)(({ theme, type }) => ({
 }));
 
 const TransactionStatusChip = styled(Chip)(({ theme, status }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   height: 24,
   fontSize: '0.7rem',
   fontWeight: 600,
@@ -3029,7 +3029,7 @@ const BalancePage = () => {
                     mt: 2,
                     p: 2,
                     bgcolor: 'rgba(76, 175, 80, 0.1)',
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                   }}
                 >
                   <Typography variant='body2' color='success.main'>
@@ -3071,7 +3071,7 @@ const BalancePage = () => {
                         generateReceiptForTransaction(selectedTransaction)
                       }
                       sx={{ 
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         borderColor: '#cfbcfb',
                         color: '#cfbcfb',
                         padding: '6px 12px',
@@ -3098,7 +3098,7 @@ const BalancePage = () => {
                         generateReceiptForTransaction(selectedTransaction)
                       }
                       sx={{ 
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         borderColor: '#cfbcfb',
                         color: '#cfbcfb',
                         padding: '6px 12px',
@@ -3119,7 +3119,7 @@ const BalancePage = () => {
                   variant='outlined'
                   onClick={handleCloseTransactionDetails}
                   sx={{ 
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     border: '1px solid rgba(207, 188, 251, 0.5)',
                     borderColor: '#cfbcfb',
                     color: '#cfbcfb',
@@ -3172,7 +3172,7 @@ const BalancePage = () => {
                   key={badge.id}
                   sx={{
                     mb: 2,
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     overflow: 'hidden',
                     '&:before': { display: 'none' },
                     boxShadow: 'none',
@@ -3181,7 +3181,7 @@ const BalancePage = () => {
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    sx={{ borderRadius: '12px' }}
+                    sx={{ borderRadius: '18px' }}
                   >
                     <Box
                       sx={{
@@ -3267,7 +3267,7 @@ const BalancePage = () => {
                           dense
                           sx={{
                             bgcolor: 'rgba(255, 255, 255, 0.05)',
-                            borderRadius: 2,
+                            borderRadius: 'var(--main-border-radius)',
                             mb: 1,
                           }}
                         >
@@ -3356,7 +3356,7 @@ const BalancePage = () => {
                 <ListItem
                   key={purchase.id}
                   sx={{
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     mb: 2,
                     background: 'rgba(255, 255, 255, 0.05)',
                     padding: '12px 16px',
@@ -3524,10 +3524,10 @@ const BalancePage = () => {
               sx={{
                 p: 3,
                 mb: 4,
-                borderRadius: '12px',
+                borderRadius: '18px',
                 backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 position: 'relative',
                 '&::before': {
                   content: '""',
@@ -3537,7 +3537,7 @@ const BalancePage = () => {
                   right: 0,
                   height: '3px',
                   background: '#D0BCFF',
-                  borderRadius: '12px 12px 0 0',
+                  borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
                 },
               }}
             >
@@ -3738,7 +3738,7 @@ const BalancePage = () => {
                   alignItems: 'center',
                   gap: 3,
                   p: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   mt: 2,
                 }}
               >
@@ -3809,7 +3809,7 @@ const BalancePage = () => {
                     fontWeight: 600,
                     textTransform: 'none',
                     py: 1.5,
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     '&:hover': {
                       bgcolor: '#cfbcfb',
                     },
@@ -3839,7 +3839,7 @@ const BalancePage = () => {
                       fontWeight: 600,
                       textTransform: 'none',
                       py: 1.5,
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       '&:hover': {
                         borderColor: '#b8a8f0',
                         color: '#b8a8f0',
@@ -4013,9 +4013,9 @@ const BalancePage = () => {
                   alignItems: 'center',
                   gap: 3,
                   p: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   backgroundColor: '#1e1e1e',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                   mt: 2,
                 }}
               >
@@ -4086,7 +4086,7 @@ const BalancePage = () => {
                     fontWeight: 600,
                     textTransform: 'none',
                     py: 1.5,
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     '&:hover': {
                       bgcolor: '#cfbcfb',
                     },
@@ -4156,7 +4156,7 @@ const BalancePage = () => {
                     sx={{
                       mt: { xs: 2, sm: 3 },
                       p: { xs: 1.5, sm: 2 },
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       bgcolor: 'background.paper',
                       boxShadow: 1,
                       width: '100%',
@@ -4197,7 +4197,7 @@ const BalancePage = () => {
                     sx={{
                       mt: { xs: 2, sm: 3 },
                       p: { xs: 1.5, sm: 2 },
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       bgcolor: 'background.paper',
                       boxShadow: 1,
                       width: '100%',
@@ -4249,7 +4249,7 @@ const BalancePage = () => {
                     sx={{
                       mt: { xs: 2, sm: 3 },
                       p: { xs: 1.5, sm: 2 },
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       bgcolor: 'background.paper',
                       boxShadow: 1,
                       width: '100%',
@@ -4336,7 +4336,7 @@ const BalancePage = () => {
                 variant='outlined'
                 disabled={isSubmittingKey}
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   borderColor: '#cfbcfb',
                   color: '#cfbcfb',
                   padding: '6px 12px',
@@ -4360,7 +4360,7 @@ const BalancePage = () => {
                   ) : null
                 }
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   borderColor: '#cfbcfb',
                   color: '#cfbcfb',
                   padding: '6px 12px',
@@ -4386,7 +4386,7 @@ const BalancePage = () => {
               }}
               sx={{ 
                 mx: 'auto',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 borderColor: '#cfbcfb',
                 color: '#cfbcfb',
                 padding: '6px 12px',
@@ -4557,7 +4557,7 @@ const BalancePage = () => {
                       display: 'flex',
                       alignItems: 'center',
                       padding: 2,
-                      borderRadius: 2,
+                      borderRadius: 'var(--main-border-radius)',
                       backgroundColor: '#1e1e1e',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                       transition: 'all 0.3s ease',
@@ -4569,7 +4569,7 @@ const BalancePage = () => {
                         transform: 'translateY(-3px)',
                         boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                       },
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      border: '1px solid rgba(0, 0, 0, 0.12)',
                     }}
                   >
                     {/* Иконка подписки */}
@@ -4577,7 +4577,7 @@ const BalancePage = () => {
                       sx={{
                         width: 60,
                         height: 60,
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         background: type === 'max' ? '#FF4D50' : '#cfbcfb',
                         display: 'flex',
                         alignItems: 'center',
@@ -4671,7 +4671,7 @@ const BalancePage = () => {
                             textTransform: 'none',
                             px: 2,
                             py: 1,
-                            borderRadius: 2,
+                            borderRadius: 'var(--main-border-radius)',
                             '&:hover': {
                               bgcolor: type === 'max' ? '#E63946' : '#b8a8f0',
                             },
@@ -4723,7 +4723,7 @@ const BalancePage = () => {
                   display: 'flex',
                   alignItems: 'center',
                   padding: 2,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   backgroundColor: '#1e1e1e',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                   transition: 'all 0.3s ease',
@@ -4735,7 +4735,7 @@ const BalancePage = () => {
                     transform: 'translateY(-3px)',
                     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
                   },
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                 }}
               >
                 {/* Декорация */}
@@ -4743,7 +4743,7 @@ const BalancePage = () => {
                   sx={{
                     width: 60,
                     height: 60,
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -4841,7 +4841,7 @@ const BalancePage = () => {
                         textTransform: 'none',
                         px: 2,
                         py: 1,
-                        borderRadius: 2,
+                        borderRadius: 'var(--main-border-radius)',
                         '&:hover': {
                           bgcolor: '#cfbcfb',
                         },
@@ -4898,8 +4898,8 @@ const BalancePage = () => {
                   alignItems: 'center',
                   gap: 1,
                   p: 2,
-                  borderRadius: 2,
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: 'var(--main-border-radius)',
+                  border: '1px solid rgba(0, 0, 0, 0.12)',
                 }}
               >
                 {/* Информация о курсе */}
@@ -4969,7 +4969,7 @@ const BalancePage = () => {
                     fontWeight: 600,
                     textTransform: 'none',
                     py: 1.5,
-                    borderRadius: '8px',
+                    borderRadius: '16px',
                     '&:hover': {
                       bgcolor: '#cfbcfb',
                     },

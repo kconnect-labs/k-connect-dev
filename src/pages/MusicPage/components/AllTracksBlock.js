@@ -41,11 +41,11 @@ const AllTracksContainer = styled(Box)(({ theme }) => ({
 }));
 
 const AllTracksCard = styled(Card)(({ theme }) => ({
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
 }));
 
 const AllTracksHeader = styled(Box)(({ theme }) => ({
@@ -53,7 +53,7 @@ const AllTracksHeader = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -65,12 +65,12 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 
 const StyledSearchField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: 12,
+    borderRadius: 'var(--main-border-radius) !important',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '&:hover': {
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      border: '1px solid rgba(66, 66, 66, 0.5)',
     },
     '&.Mui-focused': {
       border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -90,11 +90,11 @@ const StyledSearchField = styled(TextField)(({ theme }) => ({
 }));
 
 const TrackCard = styled(Paper)(({ theme }) => ({
-  borderRadius: '12px',
+  borderRadius: '18px',
   padding: '8px',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
@@ -460,7 +460,7 @@ const AllTracksBlock = () => {
                         sx={{
                           width: 40,
                           height: 40,
-                          borderRadius: '8px',
+                          borderRadius: '16px',
                           objectFit: 'cover',
                         }}
                       />

@@ -279,7 +279,7 @@ const CommentSystem = ({
             display: 'inline-flex',
             backgroundColor: 'rgba(140, 82, 255, 0.15)',
             color: 'primary.main',
-            borderRadius: '12px',
+            borderRadius: '18px',
             padding: '2px 8px',
             fontSize: '0.75rem',
             fontWeight: 'bold',
@@ -484,7 +484,7 @@ const CommentSystem = ({
                   }
                   disabled={commentDeleteDialog.deleting}
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
@@ -501,7 +501,7 @@ const CommentSystem = ({
                   variant='contained'
                   color='error'
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     boxShadow: 'none',
                   }}
                 >
@@ -565,7 +565,7 @@ const CommentSystem = ({
                   }
                   disabled={replyDeleteDialog.deleting}
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
@@ -582,7 +582,7 @@ const CommentSystem = ({
                   variant='contained'
                   color='error'
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     boxShadow: 'none',
                     px: 2,
                   }}

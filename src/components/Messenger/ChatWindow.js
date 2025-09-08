@@ -202,7 +202,7 @@ const ChatHeader = memo(({
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
             backdropFilter: 'var(--theme-backdrop-filter, blur(12px))',
             WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(12px))',
-            borderRadius: '8px',
+            borderRadius: '16px',
             minWidth: 180,
             p: 0.5
           }
@@ -1169,7 +1169,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             color: 'var(--theme-text-primary, #fff)',
             backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
             WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
-            borderRadius: '8px',
+            borderRadius: '16px',
           }
         }}
       >
@@ -1309,7 +1309,7 @@ const ChatWindow = ({ backAction, isMobile, currentChat, setCurrentChat }) => {
             color: 'var(--theme-text-primary, #fff)',
             backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
             WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(50px))',
-            borderRadius: '8px',
+            borderRadius: '16px',
           }
         }}
       >

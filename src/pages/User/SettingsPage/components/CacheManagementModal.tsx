@@ -357,7 +357,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                   sx: {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
           borderRadius: isMobile ? 0 : 2,
         },
         }}
@@ -382,7 +382,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
         sx: {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
           borderRadius: isMobile ? 0 : 1,
           minHeight: isMobile ? '100vh' : 600,
           maxWidth: isMobile ? '100%' : 400,
@@ -397,7 +397,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           alignItems: 'center',
           justifyContent: 'space-between',
           p: 2,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -479,7 +479,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                       background: category.selected 
                         ? 'rgba(255, 255, 255, 0.08)' 
                         : 'rgba(255, 255, 255, 0.03)',
-                      borderRadius: 1,
+                      borderRadius: 'var(--main-border-radius)',
                       border: category.selected 
                         ? `1px solid ${category.color}40` 
                         : '1px solid rgba(255, 255, 255, 0.05)',
@@ -487,7 +487,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                       transition: 'all 0.3s ease',
                       '&:hover': {
                         background: category.selected 
-                          ? 'rgba(255, 255, 255, 0.12)' 
+                          ? 'rgb(24 24 24)' 
                           : 'rgba(255, 255, 255, 0.06)',
                         transform: 'translateX(4px)',
                       },

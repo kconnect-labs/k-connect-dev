@@ -4,7 +4,7 @@ import AppleStyleVideoPlayer from './StyleVideoPlayer';
 
 const VideoContainer = styled(Box)({
   width: '100%',
-  borderRadius: '8px',
+  borderRadius: '16px',
   overflow: 'hidden',
   position: 'relative',
   aspectRatio: '16/9',

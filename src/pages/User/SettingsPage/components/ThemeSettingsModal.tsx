@@ -49,6 +49,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     isInitialized, 
     switchToDefaultTheme, 
     switchToBlurTheme,
+    switchToAmoledTheme,
     switchToMidnightTheme,
     switchToOceanTheme,
     switchToSunsetTheme,
@@ -72,6 +73,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         break;
       case 'blur':
         await switchToBlurTheme();
+        break;
+      case 'amoled':
+        await switchToAmoledTheme();
         break;
       case 'light':
         await switchToLightTheme();
@@ -109,7 +113,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
   const modalStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: '800px',
     width: '100%',
@@ -122,7 +126,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
     background: 'rgba(255, 255, 255, 0.02)',
     backdropFilter: 'blur(10px)',
   };
@@ -136,7 +140,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     backdropFilter: currentTheme === themeType 
       ? getThemeBackdropFilter(themeType)
       : 'none',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     color: 'var(--theme-text-primary)',
     textTransform: 'none',
     fontSize: '1rem',
@@ -157,6 +161,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'rgba(15, 15, 15, 0.98)';
       case 'blur': return 'rgba(255, 255, 255, 0.03)';
+      case 'amoled': return 'rgba(0, 0, 0, 1)';
       case 'light': return 'rgba(255, 255, 255, 0.95)';
       case 'midnight': return 'rgba(5, 8, 20, 0.95)';
       case 'ocean': return 'rgba(8, 25, 40, 0.92)';
@@ -175,6 +180,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'none';
       case 'blur': return 'blur(20px)';
+      case 'amoled': return 'none';
       case 'light': return 'none';
       case 'midnight': return 'blur(20px)';
       case 'ocean': return 'blur(20px)';
@@ -193,6 +199,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return <BlurOff />;
       case 'blur': return <BlurOn />;
+      case 'amoled': return <DarkMode />;
       case 'light': return <LightMode />;
       case 'midnight': return <DarkMode />;
       case 'ocean': return <WaterDrop />;
@@ -211,6 +218,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'Классическая';
       case 'blur': return 'Blur Glass';
+      case 'amoled': return 'Amoled';
       case 'light': return 'Light';
       case 'midnight': return 'Midnight';
       case 'ocean': return 'Ocean';
@@ -229,6 +237,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switch (themeType) {
       case 'default': return 'Темная тема без эффектов';
       case 'blur': return 'Прозрачная с размытием';
+      case 'amoled': return 'Чисто черная тема';
       case 'light': return '!!ALARM!! Не использовать, еще в разработке';
       case 'midnight': return 'Глубокий темно-синий с фиолетовым';
       case 'ocean': return 'Яркий синий с бирюзовым оттенком';
@@ -267,7 +276,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     );
   }
 
-  const themes: ThemeType[] = ['default', 'blur', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
+  const themes: ThemeType[] = ['default', 'blur', 'amoled', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
 
   return (
     <Dialog

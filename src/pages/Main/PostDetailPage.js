@@ -470,7 +470,7 @@ const Comment = ({
                   <Box
                     sx={{
                       position: 'relative',
-                      borderRadius: '12px',
+                      borderRadius: '18px',
                       overflow: 'hidden',
                       cursor: 'pointer',
                       width: '100%',
@@ -489,7 +489,7 @@ const Comment = ({
                         style={{
                           width: '100%',
                           maxHeight: '160px',
-                          borderRadius: '10px',
+                          borderRadius: 'var(--large-border-radius)!important',
                           objectFit: 'cover',
                         }}
                         onError={handleCommentImageError}
@@ -499,7 +499,7 @@ const Comment = ({
                         sx={{
                           backgroundColor: 'rgba(244, 67, 54, 0.1)',
                           border: '1px solid rgba(244, 67, 54, 0.3)',
-                          borderRadius: '8px',
+                          borderRadius: '16px',
                           padding: '8px',
                           color: '#f44336',
                           fontSize: '0.7rem',
@@ -561,7 +561,7 @@ const Comment = ({
                   alignItems: 'center',
                   cursor: 'pointer',
                   p: '2px 4px',
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   transition: 'all 0.15s ease',
                   mr: 1.5,
                   '&:hover': {
@@ -599,7 +599,7 @@ const Comment = ({
                   alignItems: 'center',
                   cursor: 'pointer',
                   p: '2px 4px',
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   color: 'text.secondary',
                   transition: 'all 0.15s ease',
                   '&:hover': {
@@ -652,7 +652,7 @@ const Comment = ({
                       'linear-gradient(135deg, rgb(19 19 19 / 51%) 0%, rgb(25 24 24 / 39%) 100%)',
                     backdropFilter: 'blur(10px)',
                     minWidth: 120,
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                     overflow: 'hidden',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
                   },
@@ -834,7 +834,7 @@ const Comment = ({
                         <Box
                           sx={{
                             bgcolor: 'rgba(255, 255, 255, 0.03)',
-                            borderRadius: '8px',
+                            borderRadius: '16px',
                             p: 1,
                             mb: 0.75,
                             borderLeft: '2px solid rgba(140, 82, 255, 0.5)',
@@ -908,7 +908,7 @@ const Comment = ({
                         <Box
                           sx={{
                             bgcolor: 'rgba(255, 255, 255, 0.03)',
-                            borderRadius: '8px',
+                            borderRadius: '16px',
                             p: 1,
                             mb: 0.75,
                             borderLeft: '2px solid rgba(140, 82, 255, 0.5)',
@@ -1011,7 +1011,7 @@ const Comment = ({
                             <Box
                               sx={{
                                 position: 'relative',
-                                borderRadius: '12px',
+                                borderRadius: '18px',
                                 overflow: 'hidden',
                                 cursor: 'pointer',
                                 width: '100%',
@@ -1043,7 +1043,7 @@ const Comment = ({
                                   style={{
                                     width: '100%',
                                     maxHeight: '160px',
-                                    borderRadius: '10px',
+                                    borderRadius: 'var(--large-border-radius)!important',
                                     objectFit: 'cover',
                                   }}
                                   onError={() =>
@@ -1059,7 +1059,7 @@ const Comment = ({
                                   sx={{
                                     backgroundColor: 'rgba(244, 67, 54, 0.1)',
                                     border: '1px solid rgba(244, 67, 54, 0.3)',
-                                    borderRadius: '8px',
+                                    borderRadius: '16px',
                                     padding: '8px',
                                     color: '#f44336',
                                     fontSize: '0.7rem',
@@ -1121,7 +1121,7 @@ const Comment = ({
                             alignItems: 'center',
                             cursor: 'pointer',
                             p: '2px 4px',
-                            borderRadius: '12px',
+                            borderRadius: '18px',
                             transition: 'all 0.15s ease',
                             mr: 1.5,
                             '&:hover': {
@@ -1165,7 +1165,7 @@ const Comment = ({
                             alignItems: 'center',
                             cursor: 'pointer',
                             p: '2px 4px',
-                            borderRadius: '12px',
+                            borderRadius: '18px',
                             color: 'text.secondary',
                             transition: 'all 0.15s ease',
                             '&:hover': {
@@ -1241,7 +1241,7 @@ const Comment = ({
               <Box
                 sx={{
                   bgcolor: 'rgba(140, 82, 255, 0.08)',
-                  borderRadius: '8px',
+                  borderRadius: '16px',
                   py: 0.75,
                   px: 1,
                   fontSize: '0.7rem',
@@ -2416,7 +2416,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                     width: '100%',
                     maxHeight: '150px',
                     objectFit: 'cover',
-                    borderRadius: '12px',
+                    borderRadius: '18px',
                   }}
                 />
                 <IconButton
@@ -2701,7 +2701,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                   }
                   disabled={commentDeleteDialog.deleting}
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
@@ -2718,7 +2718,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                   variant='contained'
                   color='error'
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     boxShadow: 'none',
                     px: 2,
                   }}
@@ -2813,7 +2813,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                   }
                   disabled={replyDeleteDialog.deleting}
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     color: 'rgba(255, 255, 255, 0.7)',
                     px: 2,
                     '&:hover': {
@@ -2830,7 +2830,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                   variant='contained'
                   color='error'
                   sx={{
-                    borderRadius: '10px',
+                    borderRadius: 'var(--large-border-radius)!important',
                     boxShadow: 'none',
                     px: 2,
                   }}

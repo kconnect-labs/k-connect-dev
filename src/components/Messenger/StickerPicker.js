@@ -64,7 +64,7 @@ const InstantStickerGrid = React.memo(({ stickers, onStickerClick, pack }) => {
               sx={{
                 width: '100%',
                 aspectRatio: '1',
-                borderRadius: '8px',
+                borderRadius: '16px',
                 overflow: 'hidden',
                 cursor: 'pointer',
                 display: 'flex',
@@ -121,8 +121,8 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     height: isMobile ? '50vh' : '400px',
     background: 'var(--theme-background, rgba(18, 18, 18, 0.95))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    borderRadius: isMobile ? '16px 16px 0 0' : '12px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: isMobile ? '16px 16px 0 0' : 'var(--main-border-radius) !important',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
     zIndex: 1000,
     display: 'flex',
@@ -219,7 +219,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
           alignItems: 'center',
           justifyContent: 'space-between',
           p: 2,
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -313,7 +313,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
             {/* Вкладки стикерпаков внизу */}
             <Box
               sx={{
-                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                borderTop: '1px solid rgba(66, 66, 66, 0.5)',
                 background: 'rgba(0, 0, 0, 0.3)',
               }}
             >

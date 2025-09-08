@@ -420,10 +420,10 @@ const RegisterProfile = ({ setUser }) => {
               p: isMobile ? 3 : 4,
               width: '100%',
               maxWidth: '480px',
-              borderRadius: '12px',
+              borderRadius: '18px',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               mt: isMobile ? '70px' : 0,
               overflowY: 'auto',
               maxHeight: isMobile ? 'calc(100vh - 200px)' : '80vh',
@@ -447,7 +447,7 @@ const RegisterProfile = ({ setUser }) => {
                 severity='error'
                 sx={{
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   '& .MuiAlert-icon': { alignItems: 'center' },
                 }}
               >
@@ -482,7 +482,7 @@ const RegisterProfile = ({ setUser }) => {
                   sx={{
                     borderColor: '#D0BCFF',
                     color: '#D0BCFF',
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                     '&:hover': {
                       borderColor: '#B69DF8',
                       backgroundColor: 'rgba(208, 188, 255, 0.04)',
@@ -513,7 +513,7 @@ const RegisterProfile = ({ setUser }) => {
                 sx={{
                   mb: 2.5,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                   },
                 }}
               />
@@ -531,7 +531,7 @@ const RegisterProfile = ({ setUser }) => {
                 sx={{
                   mb: 2.5,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                   },
                 }}
               />
@@ -551,7 +551,7 @@ const RegisterProfile = ({ setUser }) => {
                 sx={{
                   mb: 2.5,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                   },
                 }}
               />
@@ -569,7 +569,7 @@ const RegisterProfile = ({ setUser }) => {
                 sx={{
                   mb: 1,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
+                    borderRadius: 'var(--main-border-radius)',
                   },
                 }}
               />
@@ -682,7 +682,7 @@ const RegisterProfile = ({ setUser }) => {
                 size='large'
                 sx={{
                   py: 1.5,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   fontSize: '1rem',
                   textTransform: 'none',
                   background:
@@ -729,7 +729,7 @@ const RegisterProfile = ({ setUser }) => {
                 }}
                 sx={{
                   py: 1,
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   fontSize: '0.875rem',
                   textTransform: 'none',
                   borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -779,7 +779,7 @@ const RegisterProfile = ({ setUser }) => {
             background: 'var(--background-color)',
             backdropFilter: 'blur(20px)',
             border: '1px solid var(--border-color)',
-            borderRadius: '12px',
+            borderRadius: '18px',
             p: 3,
             display: 'flex',
             alignItems: 'center',
@@ -833,7 +833,7 @@ const RegisterProfile = ({ setUser }) => {
             background: 'var(--background-color)',
             backdropFilter: 'blur(20px)',
             border: '1px solid var(--border-color)',
-            borderRadius: '12px',
+            borderRadius: '18px',
             p: 3,
             display: 'flex',
             alignItems: 'center',
@@ -887,7 +887,7 @@ const RegisterProfile = ({ setUser }) => {
             background: 'var(--background-color)',
             backdropFilter: 'blur(20px)',
             border: '1px solid var(--border-color)',
-            borderRadius: '12px',
+            borderRadius: '18px',
             p: 3,
             display: 'flex',
             alignItems: 'center',

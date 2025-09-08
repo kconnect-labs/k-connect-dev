@@ -420,8 +420,8 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                 p: 2,
                 mb: 1,
                 bgcolor: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: 2,
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: 'var(--main-border-radius)',
+                border: '1px solid rgba(66, 66, 66, 0.5)',
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -542,7 +542,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                 key={user.id}
                 sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   mb: 1,
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.1)',
@@ -631,7 +631,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
     >
       <DialogTitle
         sx={{
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',

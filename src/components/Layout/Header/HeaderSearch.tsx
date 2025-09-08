@@ -96,7 +96,7 @@ const StyledPaper = styled(Paper, {
   backdropFilter: isMobile 
     ? 'none' // Отключаем backdrop-filter на мобильных
     : 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: 16,
   overflow: 'hidden',
   boxShadow: isMobile
@@ -188,7 +188,7 @@ const SearchResultItem = styled(motion.div)(({ theme }) => ({
   alignItems: 'center',
   padding: '12px 16px',
   margin: '0 8px 4px',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   cursor: 'pointer',
   transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
   '&:hover': {
@@ -247,7 +247,7 @@ const NoResultsContainer = styled(Box)(({ theme }) => ({
 
 const ViewAllButton = styled(Button)(({ theme }) => ({
   margin: '16px 0 8px 0',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   textTransform: 'none',
   fontWeight: 600,
   backgroundColor: alpha(theme.palette.primary.main, 0.1),

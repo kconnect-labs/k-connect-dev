@@ -36,7 +36,7 @@ export const ErrorFallback = ({ error, resetErrorBoundary }) => {
           mt: 2,
           p: 2,
           bgcolor: 'background.paper',
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           maxWidth: '600px',
           width: '100%',
           textAlign: 'left',

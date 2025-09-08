@@ -89,7 +89,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
             sx={{
               p: 2,
               bgcolor: 'rgba(244, 67, 54, 0.05)',
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               border: '1px solid rgba(244, 67, 54, 0.2)',
               mb: 3,
             }}

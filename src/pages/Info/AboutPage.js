@@ -99,7 +99,7 @@ const FeatureCard = ({ icon, title, description, delay }) => {
               sx={{
                 bgcolor: alpha(theme.palette.primary.main, 0.1),
                 p: 1.5,
-                borderRadius: 2,
+                borderRadius: 'var(--main-border-radius)',
                 color: theme.palette.primary.main,
                 mr: 2,
                 transition: 'all 0.3s ease',
@@ -224,7 +224,7 @@ const BenefitCard = ({ icon, title, description, index }) => {
             color: theme.palette.primary.main,
             mr: 3,
             p: 1.5,
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             background: alpha(theme.palette.primary.main, 0.1),
             display: 'flex',
             alignItems: 'center',
@@ -452,7 +452,7 @@ const TeamSection = ({ title, members }) => {
                         fontWeight: 600,
                         color: theme.palette.primary.main,
                         bgcolor: alpha(theme.palette.primary.main, 0.1),
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         letterSpacing: 0.2,
                         boxShadow: '0 1px 4px 0 rgba(120,80,255,0.06)',
                       }}
@@ -475,7 +475,7 @@ const TeamSection = ({ title, members }) => {
                         color: theme.palette.primary.main,
                         borderColor: alpha(theme.palette.primary.main, 0.25),
                         fontWeight: 500,
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         px: 2,
                         textTransform: 'none',
                         transition: 'all 0.2s',
@@ -579,7 +579,7 @@ const HeroSlider = () => {
         height: { xs: 220, sm: 320, md: 400 },
         mx: 'auto',
         my: 4,
-        borderRadius: '12px',
+        borderRadius: '18px',
         overflow: 'visible',
         boxShadow: '0 8px 40px 0 rgba(80,40,180,0.18)',
         display: 'flex',
@@ -599,7 +599,7 @@ const HeroSlider = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          borderRadius: '12px',
+          borderRadius: '18px',
           boxShadow: '0 4px 32px rgba(80,40,180,0.10)',
         }}
       />
@@ -695,7 +695,7 @@ const HeroSlider = () => {
           transform: 'translateX(-50%)',
           background: alpha(theme.palette.background.paper, 0.85),
           color: theme.palette.primary.main,
-          borderRadius: 12,
+          borderRadius: 'var(--main-border-radius) !important',
           padding: '6px 18px',
           fontWeight: 600,
           fontSize: 18,
@@ -1243,7 +1243,7 @@ const AboutPage = () => {
                         right: 24,
                         bgcolor: alpha(theme.palette.primary.main, 0.1),
                         color: theme.palette.primary.main,
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         px: 1.5,
                         py: 0.5,
                         fontSize: '0.75rem',
@@ -1438,7 +1438,7 @@ const AboutPage = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion className="theme-card" sx={{ borderRadius: 1, mb: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Чем мКоины отличаются от баллов?</Typography>
             </AccordionSummary>
@@ -1449,7 +1449,7 @@ const AboutPage = () => {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion className="theme-card" sx={{ borderRadius: 1, mb: 1 }}>
+          <Accordion className="theme-card" sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Как работают темы и обои профиля?</Typography>
             </AccordionSummary>

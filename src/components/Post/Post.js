@@ -1252,7 +1252,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         width: '100%',
         height: '100%',
         zIndex: 2,
-        borderRadius: '12px',
+        borderRadius: '18px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -1307,7 +1307,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         variant='contained'
         disableElevation
         sx={{
-          borderRadius: '8px',
+          borderRadius: '16px',
           fontWeight: 500,
           mb: isMobile ? 1 : 2,
           background: '#5c5b5e',
@@ -1431,10 +1431,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         sx={{
           overflow: 'visible',
           mb: 1,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           border: isPinned
             ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
-            : '1px solid rgba(255, 255, 255, 0.1)',
+            : '1px solid rgba(66, 66, 66, 0.5)',
           borderColor: isPinned ? statusColor || 'primary.main' : 'divider',
           cursor: 'auto',
           position: 'relative',
@@ -1647,7 +1647,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   mt: 1,
                   px: 2,
                   py: 1.5,
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   border: theme =>
                     `1px solid ${
                       theme.palette.mode === 'dark'
@@ -1664,10 +1664,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       theme.palette.mode === 'dark'
                         ? 'rgba(255, 255, 255, 0.05)'
                         : 'rgba(0, 0, 0, 0.05)',
-                    borderColor: theme =>
-                      theme.palette.mode === 'dark'
-                        ? 'rgba(255, 255, 255, 0.15)'
-                        : 'rgba(0, 0, 0, 0.2)',
                   },
                 }}
               >
@@ -1881,7 +1877,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         mt: 1.5,
                         p: 1.5,
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -2029,7 +2025,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               sx={{
                 mb: 2,
                 position: 'relative',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 overflow: 'hidden',
               }}
               data-no-navigate
@@ -2092,7 +2088,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 mb: 2,
                 width: '100%',
                 position: 'relative',
-                borderRadius: '12px',
+                borderRadius: '18px',
                 overflow: 'hidden',
               }}
               data-no-navigate
@@ -2135,7 +2131,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         width: 48,
                         height: 48,
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         overflow: 'hidden',
                         position: 'relative',
                         mr: 2,
@@ -2227,7 +2223,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         py: 0.4,
                         px: 1,
-                        borderRadius: '12px',
+                        borderRadius: '18px',
                         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         fontSize: '0.7rem',
@@ -2248,10 +2244,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 mt: 1,
                 mb: 1,
                 p: 2,
-                borderRadius: '8px',
+                borderRadius: '16px',
                 backgroundColor: 'rgba(255, 255, 255, 0.02)',
                 backdropFilter: 'blur(50px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(66, 66, 66, 0.5)',
                 position: 'relative',
                 '&::before': {
                   content: '""',
@@ -2369,7 +2365,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 backdropFilter: 'blur(40px)',
                 WebkitBackdropFilter: 'blur(0px)',
                 border: '1px solid #333',
-                borderRadius: '10px',
+                borderRadius: 'var(--large-border-radius)!important',
                 px: 2.5,
                 py: 0.85,
                 alignItems: 'center',
@@ -2499,7 +2495,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                borderRadius: '10px', 
+                borderRadius: 'var(--large-border-radius)!important', 
                 px: 1.2, 
                 py: 0.85, 
                 minWidth: 68, 
@@ -2522,7 +2518,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             <Box
               sx={{
                 padding: '12px',
-                borderRadius: '0 0 12px 12px',
+                borderRadius: '0 0 var(--main-border-radius) !important var(--main-border-radius) !important',
                 background: 'rgba(255, 255, 255, 0.03)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
@@ -2544,7 +2540,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   sx={{
                     width: 28,
                     height: 28,
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(66, 66, 66, 0.5)',
                     flexShrink: 0,
                   }}
                   onError={safeImageError}
@@ -2626,7 +2622,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     <Box
                       sx={{
                         mt: 0.8,
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         overflow: 'hidden',
                         maxWidth: 120,
                         maxHeight: 80,
@@ -2656,10 +2652,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 mt: 1.5,
                 mb: 1.5,
                 p: 1.5,
-                borderRadius: '12px',
+                borderRadius: '18px',
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
@@ -2705,7 +2701,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     sx={{
                       width: '100%',
                       height: 16,
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       background: 'rgba(255, 255, 255, 0.08)',
                       animation: 'pulse 1.5s ease-in-out infinite',
                       animationDelay: '0.4s',

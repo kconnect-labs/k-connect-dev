@@ -49,10 +49,10 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
           alignItems: 'center',
           gap: 1,
           p: 1,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           background: 'var(--theme-background, rgba(255,255,255,0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
           minWidth: 200,
         }}
       >
@@ -96,10 +96,10 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
     <Box
       sx={{
         p: 2,
-        borderRadius: 2,
+        borderRadius: 'var(--main-border-radius)',
         background: 'var(--theme-background, rgba(255,255,255,0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        border: '1px solid rgba(0, 0, 0, 0.12)',
         mb: 2,
       }}
     >
@@ -141,7 +141,7 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
       )}
 
       {error && (
-        <Box sx={{ mb: 2, p: 1, borderRadius: 1, bgcolor: 'error.dark' }}>
+        <Box sx={{ mb: 2, p: 1, borderRadius: 'var(--main-border-radius)', bgcolor: 'error.dark' }}>
           <Typography variant="body2" sx={{ color: 'error.light' }}>
             Ошибка загрузки: {error}
           </Typography>

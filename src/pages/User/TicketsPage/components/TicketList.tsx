@@ -171,9 +171,9 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loadin
               
               {/* Статусы и приоритет */}
               <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 12 }} />
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 12 }} />
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 12 }} />
+                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
+                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
+                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
               </Box>
 
               {/* Описание */}

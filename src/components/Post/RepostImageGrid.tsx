@@ -7,7 +7,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  borderRadius: '8px',
+  borderRadius: '16px',
   overflow: 'hidden',
   cursor: 'pointer',
   display: 'flex',
@@ -145,7 +145,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           position: 'relative',
           width: '100%',
           height: '250px',
-          borderRadius: '8px',
+          borderRadius: '16px',
           overflow: 'hidden',
         }}
       >
@@ -168,7 +168,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           gap: 1,
           width: '100%',
           height: '200px',
-          borderRadius: '8px',
+          borderRadius: '16px',
           overflow: 'hidden',
         }}
       >
@@ -202,7 +202,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           sx={{
             position: 'relative',
             gridArea: index === 0 ? 'img1' : index === 1 ? 'img2' : 'img3',
-            borderRadius: '8px',
+            borderRadius: '16px',
             overflow: 'hidden',
           }}
         >

@@ -65,7 +65,7 @@ const LoadingStats = () => {
         background: 'rgba(0, 0, 0, 0.8)',
         color: 'var(--theme-text-primary)',
         padding: 1,
-        borderRadius: 1,
+        borderRadius: 'var(--main-border-radius)',
         fontSize: '12px',
         zIndex: 9999,
       }}
@@ -151,7 +151,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   const modalStyle = {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: isMobile ? 0 : '16px',
     maxWidth: activeSection === 'usernames' ? '800px' : '550px',
     width: '100%',
@@ -164,7 +164,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   };

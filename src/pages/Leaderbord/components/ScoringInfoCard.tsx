@@ -11,7 +11,7 @@ import InfoIcon from '@mui/icons-material/Info';
 const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   borderRadius: '16px',
   color: 'white',
   position: 'relative',
@@ -77,7 +77,7 @@ export const ScoringInfoCard: React.FC = () => {
             mt: 3,
             p: 2,
             bgcolor: 'rgba(208, 188, 255, 0.05)',
-            borderRadius: 2,
+            borderRadius: 'var(--main-border-radius)',
             border: '1px solid rgba(208, 188, 255, 0.1)',
           }}
         >

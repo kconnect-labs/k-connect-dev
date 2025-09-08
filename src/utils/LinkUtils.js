@@ -73,7 +73,7 @@ export const LinkPreview = ({ url }) => {
         mt: 1,
         mb: 1,
         overflow: 'hidden',
-        borderRadius: '8px',
+        borderRadius: '16px',
         backgroundColor:
           theme.palette.mode === 'dark'
             ? theme.palette.primary.main + '08'

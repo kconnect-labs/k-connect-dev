@@ -38,7 +38,7 @@ const VisuallyHiddenInput = styled('input')({
 
 const UploadArea = styled(Box)(({ theme }) => ({
   border: '2px dashed rgba(255, 255, 255, 0.2)',
-  borderRadius: 12,
+  borderRadius: 'var(--main-border-radius) !important',
   padding: theme.spacing(3),
   textAlign: 'center',
   cursor: 'pointer',
@@ -60,7 +60,7 @@ const FilePreview = styled(Box)(({ theme }) => ({
   borderRadius: 8,
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -74,7 +74,7 @@ const FilePreview = styled(Box)(({ theme }) => ({
 const ItemNameInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(66, 66, 66, 0.5)',
     borderRadius: 8,
     '&:hover': {
       borderColor: 'rgba(255, 255, 255, 0.2)',
@@ -367,8 +367,8 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
                       sx={{
                         p: isMobile ? 0.5 : 1,
                         background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: 2,
+                        border: '1px solid rgba(66, 66, 66, 0.5)',
+                        borderRadius: 'var(--main-border-radius)',
                         position: 'relative',
                         width: isMobile ? 'calc(50% - 4px)' : 'auto',
                         minWidth: isMobile ? '120px' : 'auto',

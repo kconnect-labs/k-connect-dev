@@ -86,7 +86,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
               p: 2, 
               bgcolor: 'warning.main', 
               color: 'warning.contrastText',
-              borderRadius: 1,
+              borderRadius: 'var(--main-border-radius)',
               mb: 2 
             }}>
               Этот аукцион уже завершен, ставки больше не принимаются.

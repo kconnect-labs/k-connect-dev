@@ -74,7 +74,7 @@ const EmailConfirmation = () => {
         elevation={6}
         sx={{
           padding: 4,
-          borderRadius: 2,
+          borderRadius: 'var(--main-border-radius)',
           maxWidth: 500,
           width: '100%',
           textAlign: 'center',

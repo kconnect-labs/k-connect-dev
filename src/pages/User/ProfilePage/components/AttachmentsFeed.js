@@ -31,13 +31,13 @@ import Dialog from '@mui/material/Dialog';
 
 const AttachmentCard = styled(Card)(({ theme }) => ({
   position: 'relative',
-  borderRadius: '12px',
+  borderRadius: '18px',
   overflow: 'hidden',
   cursor: 'pointer',
   transition: 'all 0.3s ease',
   background: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
+  border: '1px solid rgba(66, 66, 66, 0.5)',
   '&:hover': {
     transform: 'translateY(-4px)',
     boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
@@ -244,8 +244,8 @@ const AttachmentsFeed = ({
           py: 4,
           px: 3,
           bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-          borderRadius: 1,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: 'var(--main-border-radius)',
+          border: '1px solid rgba(66, 66, 66, 0.5)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -277,8 +277,8 @@ const AttachmentsFeed = ({
           py: 4,
           px: 3,
           bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-          borderRadius: 1,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: 'var(--main-border-radius)',
+          border: '1px solid rgba(66, 66, 66, 0.5)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -324,7 +324,7 @@ const AttachmentsFeed = ({
                       width: '100%',
                       aspectRatio: '16/9',
                       background: '#11111C',
-                      borderRadius: '8px',
+                      borderRadius: '16px',
                       overflow: 'hidden',
                     }}
                   >
@@ -338,7 +338,7 @@ const AttachmentsFeed = ({
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         display: 'block',
                       }}
                       preload='metadata'
@@ -455,7 +455,7 @@ const AttachmentsFeed = ({
             sx: {
               background: 'rgba(0,0,0,0.95)',
               boxShadow: 'none',
-              borderRadius: 2,
+              borderRadius: 'var(--main-border-radius)',
               p: 0,
               m: 0,
               overflow: 'hidden',

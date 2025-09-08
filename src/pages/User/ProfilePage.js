@@ -870,11 +870,11 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '12px',
+                borderRadius: '18px',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(66, 66, 66, 0.5)',
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: '2px',
@@ -889,7 +889,7 @@ const ProfilePage = () => {
                 onClick={handleFollow}
                 fullWidth
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   py: 1.2,
                   fontWeight: 'bold',
                   textTransform: 'none',
@@ -935,11 +935,11 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '12px',
+                borderRadius: '18px',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: '2px',
@@ -961,7 +961,7 @@ const ProfilePage = () => {
                   )
                 }
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
                   py: 1.2,
                   fontWeight: 'bold',
                   textTransform: 'none',
@@ -999,12 +999,12 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '12px',
+                borderRadius: '18px',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(0, 0, 0, 0.12)',
                 mb: 1,
                 display: 'flex',
                 gap: 2,
@@ -1015,7 +1015,7 @@ const ProfilePage = () => {
                 variant="outlined"
                 onClick={handleCancelEdit}
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
 
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                   color: 'text.primary',
@@ -1031,7 +1031,7 @@ const ProfilePage = () => {
                 variant="contained"
                 onClick={handleSavePositions}
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '18px',
 
                   backgroundColor: 'primary.main',
                   '&:hover': {
@@ -1094,14 +1094,14 @@ const ProfilePage = () => {
         >
           <Paper
             sx={{
-              borderRadius: '12px',
+              borderRadius: '18px',
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
           >
             <Tabs

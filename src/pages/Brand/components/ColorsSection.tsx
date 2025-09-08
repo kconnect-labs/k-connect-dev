@@ -44,8 +44,8 @@ const ColorsSection: React.FC = () => {
     <Box
       sx={{
         p: 3,
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: 2,
+        border: '1px solid rgba(66, 66, 66, 0.5)',
+        borderRadius: 'var(--main-border-radius)',
         backgroundColor: 'rgba(255, 255, 255, 0.02)',
         height: '100%',
       }}
@@ -55,9 +55,9 @@ const ColorsSection: React.FC = () => {
           width: '100%',
           height: '80px',
           backgroundColor: hex,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           mb: 2,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(66, 66, 66, 0.5)',
         }}
       />
       <Typography
@@ -100,8 +100,8 @@ const ColorsSection: React.FC = () => {
     <Box
       sx={{
         p: 3,
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: 2,
+        border: '1px solid rgba(66, 66, 66, 0.5)',
+        borderRadius: 'var(--main-border-radius)',
         backgroundColor: 'rgba(255, 255, 255, 0.02)',
         height: '100%',
       }}
@@ -111,9 +111,9 @@ const ColorsSection: React.FC = () => {
           width: '100%',
           height: '80px',
           background: `linear-gradient(135deg, ${start} 0%, ${end} 100%)`,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           mb: 2,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(66, 66, 66, 0.5)',
         }}
       />
       <Typography
@@ -307,7 +307,7 @@ const ColorsSection: React.FC = () => {
                   sx={{
                     p: 2,
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                    borderRadius: 1,
+                    borderRadius: 'var(--main-border-radius)',
                     fontFamily: 'monospace',
                     fontSize: '0.875rem',
                     color: '#D0BCFF',
@@ -341,7 +341,7 @@ const ColorsSection: React.FC = () => {
                   sx={{
                     p: 2,
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                    borderRadius: 1,
+                    borderRadius: 'var(--main-border-radius)',
                     fontFamily: 'monospace',
                     fontSize: '0.875rem',
                     color: '#D0BCFF',

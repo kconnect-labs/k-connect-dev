@@ -292,10 +292,10 @@ const NewTracksPage = () => {
                   <Paper
                     sx={{
                       p: 1,
-                      borderRadius: '12px',
+                      borderRadius: '18px',
                       background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                       backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(66, 66, 66, 0.5)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
@@ -314,7 +314,7 @@ const NewTracksPage = () => {
                       sx={{
                         width: 40,
                         height: 40,
-                        borderRadius: '8px',
+                        borderRadius: '16px',
                         objectFit: 'cover',
                       }}
                     />

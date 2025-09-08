@@ -170,7 +170,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
     <StyledDialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle sx={{ 
         color: 'rgba(255, 255, 255, 0.87)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+        borderBottom: '1px solid rgb(24 24 24)',
         pb: 2
       }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -258,7 +258,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           </Box>
         </Box>
 
-        <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+        <Divider sx={{ my: 3, borderColor: 'rgb(24 24 24)' }} />
 
         {/* Комментарии */}
         <Box mb={3}>
@@ -272,7 +272,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                 <Box key={i} sx={{ 
                   p: 2, 
                   background: 'rgba(207, 188, 251, 0.05)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(207, 188, 251, 0.1)'
                 }}>
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -295,7 +295,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                 <Box key={comment.id} sx={{ 
                   p: 2, 
                   background: 'rgba(207, 188, 251, 0.05)',
-                  borderRadius: 2,
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(207, 188, 251, 0.1)'
                 }}>
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
@@ -317,7 +317,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                             color: 'white',
                             px: 1,
                             py: 0.25,
-                            borderRadius: 1,
+                            borderRadius: 'var(--main-border-radius)',
                             fontSize: '0.7rem',
                             fontWeight: 600,
                             textTransform: 'uppercase',
@@ -389,7 +389,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                     background: 'linear-gradient(45deg, #b8a8e8 30%, #6b5b7a 90%)',
                   },
                   '&:disabled': {
-                    background: 'rgba(255, 255, 255, 0.12)',
+                    background: 'rgb(24 24 24)',
                     color: 'rgba(255, 255, 255, 0.3)',
                   },
                 }}
@@ -407,7 +407,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
       <DialogActions sx={{ 
         p: 3, 
-        borderTop: '1px solid rgba(255, 255, 255, 0.12)' 
+        borderTop: '1px solid rgb(24 24 24)' 
       }}>
         <Button
           onClick={onClose}

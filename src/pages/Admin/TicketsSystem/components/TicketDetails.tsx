@@ -91,7 +91,7 @@ interface TicketDetailsProps {
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.05)',
-  border: '1px solid rgba(255, 255, 255, 0.12)',
+  border: '1px solid rgba(0, 0, 0, 0.12)',
   borderRadius: theme.spacing(2),
   padding: theme.spacing(2),
   marginBottom: theme.spacing(2),
@@ -275,7 +275,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           color: 'rgba(255, 255, 255, 0.7)', 
           mb: 2,
           p: 2,
-          borderRadius: 1,
+          borderRadius: 'var(--main-border-radius)',
           background: 'rgba(207, 188, 251, 0.05)',
           border: '1px solid rgba(207, 188, 251, 0.1)',
           fontSize: '0.9rem',
@@ -306,7 +306,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           flexWrap="wrap" 
           mb={2}
           sx={{ 
-            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            borderTop: '1px solid rgba(66, 66, 66, 0.5)',
             pt: 2
           }}
         >
@@ -585,7 +585,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
         )}
       </StyledPaper>
 
-      <Divider sx={{ my: 3, borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+      <Divider sx={{ my: 3, borderColor: 'rgb(24 24 24)' }} />
 
       {/* Комментарии */}
       <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
@@ -605,7 +605,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
             mb: 2,
             '& .MuiOutlinedInput-root': {
               background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
               '&:hover': {
                 border: '1px solid rgba(255, 255, 255, 0.2)',
               },
@@ -722,7 +722,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                             mb: 1,
                             '& .MuiOutlinedInput-root': {
                               background: 'rgba(255, 255, 255, 0.05)',
-                              border: '1px solid rgba(255, 255, 255, 0.12)',
+                              border: '1px solid rgba(0, 0, 0, 0.12)',
                             },
                             '& .MuiInputBase-input': {
                               color: 'rgba(255, 255, 255, 0.87)',

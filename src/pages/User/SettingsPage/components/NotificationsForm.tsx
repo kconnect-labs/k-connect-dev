@@ -278,9 +278,9 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
 
   const containerStyle = {
     p: 3,
-    borderRadius: 2,
+    borderRadius: 'var(--main-border-radius)',
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(0, 0, 0, 0.12)',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
@@ -288,7 +288,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
   const sectionStyle = {
     mb: 3,
     p: 2,
-    borderRadius: 1.5,
+    borderRadius: 'var(--main-border-radius)',
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
   };
@@ -422,7 +422,7 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
         )}
       </Box>
 
-      <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.12)' }} />
+      <Divider sx={{ my: 2, borderColor: 'rgb(24 24 24)' }} />
 
       {/* Telegram уведомления */}
       <Box sx={sectionStyle}>
@@ -538,8 +538,8 @@ const NotificationsForm: React.FC<NotificationsFormProps> = ({ onSuccess }) => {
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            borderRadius: 2,
+            border: '1px solid rgba(0, 0, 0, 0.12)',
+            borderRadius: 'var(--main-border-radius)',
           },
         }}
       >
