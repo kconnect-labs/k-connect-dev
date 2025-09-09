@@ -9,6 +9,9 @@ const UserSubscriptionBadge = ({ user }) => {
   const { t } = useLanguage();
   if (!user?.subscription) return null;
 
+  // Используем profile_color вместо status_color для всех цветов
+  const mainColor = user?.profile_color;
+
   if (user.subscription.type === 'channel') {
     return (
       <Chip
@@ -18,19 +21,19 @@ const UserSubscriptionBadge = ({ user }) => {
         sx={{
           backdropFilter: 'blur(10px)',
           borderRadius: 'var(--main-border-radius)',
-          bgcolor: user.status_color
-            ? `${user.status_color}26`
+          bgcolor: mainColor
+            ? `${mainColor}26`
             : theme =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(208, 188, 255, 0.15)'
                   : 'rgba(124, 77, 255, 0.15)',
-          color: user.status_color
-            ? user.status_color
+          color: mainColor
+            ? mainColor
             : theme => (theme.palette.mode === 'dark' ? '#d0bcff' : '#7c4dff'),
           fontWeight: 'bold',
           border: '1px solid',
-          borderColor: user.status_color
-            ? `${user.status_color}4D`
+          borderColor: mainColor
+            ? `${mainColor}4D`
             : theme =>
                 theme.palette.mode === 'dark'
                   ? 'rgba(208, 188, 255, 0.3)'
@@ -40,7 +43,6 @@ const UserSubscriptionBadge = ({ user }) => {
           },
           py: 0.1,
           height: 'auto',
-
         }}
       />
     );
@@ -64,7 +66,7 @@ const UserSubscriptionBadge = ({ user }) => {
     >
       <Chip
         icon={
-          user.subscription.type === 'max' 
+          user.subscription.type === 'max'
             ? <MaxIcon size={16} color="currentColor" />
             : <DiamondIcon fontSize='small' />
         }
@@ -76,13 +78,13 @@ const UserSubscriptionBadge = ({ user }) => {
         size='small'
         sx={{
           borderRadius: 'var(--main-border-radius)',
-                    bgcolor:
+          bgcolor:
             user.subscription.type === 'premium'
               ? 'rgba(186, 104, 200, 0.5)'
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.6)'
                 : user.subscription.type === 'max'
-                  ? (user?.status_color ? `${user.status_color}26` : 'rgba(208, 7, 7, 0.3)')
+                  ? (mainColor ? `${mainColor}26` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.15)'
                     : 'rgba(66, 165, 245, 0.4)',
@@ -92,7 +94,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? '#B8A9FF'
                 : user.subscription.type === 'max'
-                  ? (user?.status_color || '#FF4D50')
+                  ? (mainColor || '#FF4D50')
                   : user.subscription.type === 'pick-me'
                     ? 'rgb(208, 188, 255)'
                     : '#90CAF9',
@@ -104,7 +106,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.7)'
                 : user.subscription.type === 'max'
-                  ? (user?.status_color ? `${user.status_color}4D` : 'rgba(208, 7, 7, 0.3)')
+                  ? (mainColor ? `${mainColor}4D` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.3)'
                     : 'rgba(66, 165, 245, 0.5)',

@@ -155,10 +155,17 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     string | null
   >(null);
   
+  // Состояния для цвета профиля
+  const [profileColor, setProfileColor] = useState('#D0BCFF');
+  const [profileColorLoading, setProfileColorLoading] = useState(false);
+  const [profileColorPickerOpen, setProfileColorPickerOpen] = useState(false);
+  const [profileColorInput, setProfileColorInput] = useState('#D0BCFF');
+  
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
     fetchUserDecorations();
+    fetchProfileColor();
     if (profileData?.user?.profile_background_url) {
       setProfileBackgroundUrl(profileData.user.profile_background_url);
     }
@@ -186,6 +193,53 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     } finally {
       setLoadingDecorations(false);
     }
+  };
+
+  // Загрузка цвета профиля
+  const fetchProfileColor = async () => {
+    try {
+      const response = await fetch('/api/user/settings/profile-color');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.profile_color) {
+          setProfileColor(data.profile_color);
+          setProfileColorInput(data.profile_color);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching profile color:', error);
+    }
+  };
+
+  // Сохранение цвета профиля
+  const handleSaveProfileColor = async () => {
+    setProfileColorLoading(true);
+    try {
+      const response = await fetch('/api/user/settings/profile-color', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          profile_color: profileColorInput,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setProfileColor(profileColorInput);
+        if (onSuccess) onSuccess();
+      }
+    } catch (error) {
+      console.error('Error saving profile color:', error);
+    } finally {
+      setProfileColorLoading(false);
+    }
+  };
+
+  // Валидация hex цвета
+  const isValidHexColor = (color: string) => {
+    return /^#[0-9A-Fa-f]{6}$/.test(color);
   };
 
   // Переключение декораций
@@ -389,7 +443,106 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
   return (
     <Box>
+      {/* Цвет профиля */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <ColorLensIcon />
+          Цвет профиля
+        </Typography>
 
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Typography
+            variant='body2'
+            sx={{ minWidth: 120, color: 'text.secondary' }}
+          >
+            Цвет профиля
+          </Typography>
+          <Tooltip title='Нажмите для выбора цвета'>
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={
+                <Box
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: '50%',
+                    bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ColorLensIcon sx={{ fontSize: 12, color: 'primary.main' }} />
+                </Box>
+              }
+            >
+              <Box
+                onClick={() => setProfileColorPickerOpen(true)}
+                sx={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: '50%',
+                  backgroundColor: profileColor,
+                  cursor: 'pointer',
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                  boxShadow: `0 4px 12px ${profileColor}40`,
+                }}
+              />
+            </Badge>
+          </Tooltip>
+        </Box>
+
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <Typography
+            variant='body2'
+            sx={{ minWidth: 120, color: 'text.secondary' }}
+          >
+            Hex код
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <input
+              type="text"
+              value={profileColorInput}
+              onChange={(e) => setProfileColorInput(e.target.value)}
+              placeholder="#D0BCFF"
+              style={{
+                padding: '8px 12px',
+                borderRadius: 'var(--main-border-radius)',
+                border: `1px solid ${isValidHexColor(profileColorInput) ? 'rgba(66, 66, 66, 0.5)' : '#f44336'}`,
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                color: 'var(--theme-text-primary)',
+                fontSize: '14px',
+                fontFamily: 'monospace',
+                width: '120px',
+                outline: 'none',
+              }}
+            />
+            <Button
+              size='small'
+              variant='contained'
+              onClick={handleSaveProfileColor}
+              disabled={!isValidHexColor(profileColorInput) || profileColorLoading || profileColorInput === profileColor}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
+            >
+              {profileColorLoading ? <CircularProgress size={16} /> : 'Применить'}
+            </Button>
+          </Box>
+        </Box>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          Цвет профиля будет отображаться в элементах интерфейса вашего профиля
+        </Typography>
+      </Box>
 
       {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
         <Box sx={sectionStyle}>
@@ -852,6 +1005,104 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             onClick={() => {
               setPendingAccentColor(currentColor);
               setColorPickerOpen(false);
+            }}
+            variant='contained'
+          >
+            Применить
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Profile Color Picker Dialog */}
+      <Dialog
+        open={profileColorPickerOpen}
+        onClose={() => setProfileColorPickerOpen(false)}
+        maxWidth='sm'
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
+            pb: 2,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <ColorLensIcon fontSize='small' color='primary' />
+            <Typography variant='h6'>Выберите цвет профиля</Typography>
+          </Box>
+          <IconButton
+            size='small'
+            onClick={() => setProfileColorPickerOpen(false)}
+            color='inherit'
+          >
+            <CloseIcon fontSize='small' />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ pt: 3 }}>
+          <Box
+            sx={{
+              height: 100,
+              width: '100%',
+              backgroundColor: profileColorInput,
+              borderRadius: 'var(--main-border-radius)',
+              mb: 3,
+              boxShadow: `0 4px 20px ${profileColorInput}50`,
+              border: '1px solid rgba(66, 66, 66, 0.5)',
+            }}
+          />
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant='body2' color='text.secondary' gutterBottom>
+              Готовые цвета
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+              {[
+                '#D0BCFF',
+                '#FF6B6B',
+                '#4ECDC4',
+                '#45B7D1',
+                '#96CEB4',
+                '#FECA57',
+                '#FF9FF3',
+                '#54A0FF',
+                '#FF4D50',
+                '#00D4AA',
+                '#FFD700',
+                '#FF69B4',
+              ].map(color => (
+                <Box
+                  key={color}
+                  onClick={() => setProfileColorInput(color)}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: '50%',
+                    backgroundColor: color,
+                    cursor: 'pointer',
+                    border:
+                      profileColorInput === color
+                        ? '2px solid white'
+                        : '1px solid rgba(255, 255, 255, 0.2)',
+                    '&:hover': {
+                      transform: 'scale(1.1)',
+                    },
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={() => setProfileColorPickerOpen(false)}>Отмена</Button>
+          <Button
+            onClick={() => {
+              setProfileColorInput(profileColorInput);
+              setProfileColorPickerOpen(false);
             }}
             variant='contained'
           >

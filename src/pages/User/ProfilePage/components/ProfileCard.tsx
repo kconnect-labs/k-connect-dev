@@ -9,9 +9,19 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
-import { MaxIcon } from '../../../../components/icons/CustomIcons';
 import VerificationBadge from '../../../../UIKIT/VerificationBadge';
 import Badge from '../../../../UIKIT/Badge';
+
+// Типизация для Badge компонента
+interface BadgeProps {
+  achievement: any;
+  size?: string;
+  className?: string;
+  onError?: (e: any) => void;
+  showTooltip?: boolean;
+  tooltipText?: string;
+  onClick?: () => void;
+}
 import CurrentTrackDisplay from '../../../../UIKIT/CurrentTrackDisplay/CurrentTrackDisplay';
 import {
   UserStatus,
@@ -30,6 +40,7 @@ const BadgeInfoModal = lazy(() => import('../../../../components/BadgeInfoModal'
 // Типизация компонентов
 const TypedEquippedItem = EquippedItem as React.ComponentType<EquippedItemProps>;
 const TypedVerificationBadge = VerificationBadge as React.ComponentType<VerificationBadgeProps>;
+const TypedBadge = Badge as React.ComponentType<BadgeProps>;
 
 interface Achievement {
   bage: string;
@@ -47,6 +58,7 @@ interface User {
   profile_id?: number;
   status_color?: string;
   status_text?: string;
+  profile_color?: string;  // Новое поле для цвета профиля
   subscription?: {
     type: string;
   };
@@ -300,16 +312,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   width: { xs: 110, sm: 130 },
                   height: { xs: 110, sm: 130 },
                   border:
-                    user?.status_color &&
-                    user?.status_text &&
-                    user?.subscription
-                      ? `4px solid ${user.status_color}`
-                      : user?.subscription
-                        ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}`
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '4px solid #121212'
-                              : '4px solid #ffffff',
+                    user?.profile_color
+                      ? `4px solid ${user.profile_color}`
+                      : user?.status_color &&
+                        user?.status_text &&
+                        user?.subscription
+                        ? `4px solid ${user.status_color}`
+                        : user?.subscription
+                          ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}`
+                          : theme =>
+                              theme.palette.mode === 'dark'
+                                ? '4px solid #121212'
+                                : '4px solid #ffffff',
                   bgcolor: 'primary.dark',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
@@ -404,49 +418,31 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 />
               </div>
 
-              {user?.subscription?.type === 'max' && (
-                <MaxIcon 
-                  size={24} 
-                  color={user?.status_color || "#FF4D50"} 
-                  style={{ marginLeft: '5px' }}
-                  className=""
-                />
-              )}
 
               {user?.achievement && (
-                <Box
+                <TypedBadge
+                  achievement={{
+                    ...user.achievement,
+                    upgrade: user.achievement.upgrade || '',
+                    color_upgrade: user.achievement.color_upgrade || '#FFD700'
+                  } as any}
+                  size='medium'
+                  className='profile-achievement-badge'
+                  showTooltip={true}
+                  tooltipText={user.achievement.image_path?.startsWith('shop/') 
+                    ? `${user.achievement.bage} (нажмите для подробностей)`
+                    : user.achievement.bage
+                  }
                   onClick={() => {
                     // Проверяем, является ли это shop бейджем (начинается с shop/)
                     if (user.achievement?.image_path?.startsWith('shop/')) {
                       handleBadgeClick(user.achievement.image_path);
                     }
                   }}
-                  sx={{
-                    cursor: user.achievement?.image_path?.startsWith('shop/') ? 'pointer' : 'default',
-                    transition: 'transform 0.2s ease',
-                    '&:hover': user.achievement?.image_path?.startsWith('shop/') ? {
-                      transform: 'scale(1.05)',
-                    } : {},
+                  onError={(e: any) => {
+                    console.error('Achievement badge failed to load:', e);
                   }}
-                >
-                  <Badge
-                    achievement={{
-                      ...user.achievement,
-                      upgrade: user.achievement.upgrade || '',
-                      color_upgrade: user.achievement.color_upgrade || '#FFD700'
-                    } as any}
-                    size='medium'
-                    className='profile-achievement-badge'
-                    showTooltip={true}
-                    tooltipText={user.achievement.image_path?.startsWith('shop/') 
-                      ? `${user.achievement.bage} (нажмите для подробностей)`
-                      : user.achievement.bage
-                    }
-                    onError={(e: any) => {
-                      console.error('Achievement badge failed to load:', e);
-                    }}
-                  />
-                </Box>
+                />
               )}
             </Box>
           </Box>
@@ -585,7 +581,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   lyrics_display_mode: user.music?.lyrics_display_mode,
                 }}
                 userId={user.id}
-                statusColor={user?.status_color}
+                statusColor={user?.profile_color || user?.status_color}
                 getLighterColor={getLighterColor}
               />
             </Box>
@@ -615,14 +611,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       : 'rgba(0,0,0,0.04)',
                   backdropFilter: 'blur(5px)',
                   border:
-                    user.status_color &&
-                    user.status_text &&
-                    user.subscription
-                      ? `1px solid ${user.status_color}33`
-                      : theme =>
-                          theme.palette.mode === 'dark'
-                            ? '1px solid rgba(255,255,255,0.05)'
-                            : '1px solid rgba(0,0,0,0.05)',
+                    user.profile_color
+                      ? `1px solid ${user.profile_color}33`
+                      : user.status_color &&
+                        user.status_text &&
+                        user.subscription
+                        ? `1px solid ${user.status_color}33`
+                        : theme =>
+                            theme.palette.mode === 'dark'
+                              ? '1px solid rgba(255,255,255,0.05)'
+                              : '1px solid rgba(0,0,0,0.05)',
                   transition: 'all 0.2s ease',
                 }}
               >
@@ -631,11 +629,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={{
                     fontWeight: 700,
                     color:
-                      user.status_color &&
-                      user.status_text &&
-                      user.subscription
-                        ? user.status_color
-                        : 'primary.main',
+                      user.profile_color
+                        ? user.profile_color
+                        : user.status_color &&
+                          user.status_text &&
+                          user.subscription
+                          ? user.status_color
+                          : 'primary.main',
                   }}
                 >
                   {postsCount || 0}
@@ -643,9 +643,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Typography
                   variant='caption'
                   sx={{
-                    color: user?.status_color
-                      ? getLighterColor(user.status_color)
-                      : theme => theme.palette.text.secondary,
+                    color: user?.profile_color
+                      ? getLighterColor(user.profile_color)
+                      : user?.status_color
+                        ? getLighterColor(user.status_color)
+                        : theme => theme.palette.text.secondary,
                   }}
                 >
                   {t('profile.info_stats.posts')}
@@ -665,14 +667,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       : 'rgba(0,0,0,0.04)',
                   backdropFilter: 'blur(5px)',
                   border:
-                    user.status_color &&
-                    user.status_text &&
-                    user.subscription
-                      ? `1px solid ${user.status_color}33`
-                      : theme =>
-                          theme.palette.mode === 'dark'
-                            ? '1px solid rgba(255,255,255,0.05)'
-                            : '1px solid rgba(0,0,0,0.05)',
+                    user.profile_color
+                      ? `1px solid ${user.profile_color}33`
+                      : user.status_color &&
+                        user.status_text &&
+                        user.subscription
+                        ? `1px solid ${user.status_color}33`
+                        : theme =>
+                            theme.palette.mode === 'dark'
+                              ? '1px solid rgba(255,255,255,0.05)'
+                              : '1px solid rgba(0,0,0,0.05)',
                   textDecoration: 'none',
                   transition: 'all 0.2s ease',
                 }}
@@ -682,11 +686,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={{
                     fontWeight: 700,
                     color:
-                      user.status_color &&
-                      user.status_text &&
-                      user.subscription
-                        ? user.status_color
-                        : 'primary.main',
+                      user.profile_color
+                        ? user.profile_color
+                        : user.status_color &&
+                          user.status_text &&
+                          user.subscription
+                          ? user.status_color
+                          : 'primary.main',
                   }}
                 >
                   {followersCount || 0}
@@ -694,9 +700,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Typography
                   variant='caption'
                   sx={{
-                    color: user?.status_color
-                      ? getLighterColor(user.status_color)
-                      : theme => theme.palette.text.secondary,
+                    color: user?.profile_color
+                      ? getLighterColor(user.profile_color)
+                      : user?.status_color
+                        ? getLighterColor(user.status_color)
+                        : theme => theme.palette.text.secondary,
                   }}
                 >
                   {t('profile.info_stats.followers')}
@@ -718,14 +726,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                         : 'rgba(0,0,0,0.04)',
                     backdropFilter: 'blur(5px)',
                     border:
-                      user.status_color &&
-                      user.status_text &&
-                      user.subscription
-                        ? `1px solid ${user.status_color}33`
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '1px solid rgba(255,255,255,0.05)'
-                              : '1px solid rgba(0,0,0,0.05)',
+                      user.profile_color
+                        ? `1px solid ${user.profile_color}33`
+                        : user.status_color &&
+                          user.status_text &&
+                          user.subscription
+                          ? `1px solid ${user.status_color}33`
+                          : theme =>
+                              theme.palette.mode === 'dark'
+                                ? '1px solid rgba(255,255,255,0.05)'
+                                : '1px solid rgba(0,0,0,0.05)',
                     textDecoration: 'none',
                     transition: 'all 0.2s ease',
                   }}
@@ -735,11 +745,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     sx={{
                       fontWeight: 700,
                       color:
-                        user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                          ? user.status_color
-                          : 'primary.main',
+                        user.profile_color
+                          ? user.profile_color
+                          : user.status_color &&
+                            user.status_text &&
+                            user.subscription
+                            ? user.status_color
+                            : 'primary.main',
                     }}
                   >
                     {followingCount || 0}
@@ -747,9 +759,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   <Typography
                     variant='caption'
                     sx={{
-                      color: user?.status_color
-                        ? getLighterColor(user.status_color)
-                        : theme => theme.palette.text.secondary,
+                      color: user?.profile_color
+                        ? getLighterColor(user.profile_color)
+                        : user?.status_color
+                          ? getLighterColor(user.status_color)
+                          : theme => theme.palette.text.secondary,
                     }}
                   >
                     {t('profile.info_stats.following')}

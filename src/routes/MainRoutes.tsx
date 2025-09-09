@@ -136,6 +136,11 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
 
   // Компонент для защищенных роутов с проверкой профиля
   const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+    // Показываем загрузку пока проверяется авторизация
+    if (loading) {
+      return <LoadingIndicator />;
+    }
+
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -152,6 +157,11 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
   const ProfileRequiredRoute: React.FC<ProfileRequiredRouteProps> = ({
     children,
   }) => {
+    // Показываем загрузку пока проверяется авторизация
+    if (loading) {
+      return <LoadingIndicator />;
+    }
+
     if (!isAuthenticated) {
       return <Navigate to='/login' replace />;
     }
@@ -170,7 +180,9 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           <Route
             path='/'
             element={
-              isAuthenticated ? (
+              loading ? (
+                <LoadingIndicator />
+              ) : isAuthenticated ? (
                 hasProfile() ? (
                   <MainPage />
                 ) : (
@@ -276,7 +288,9 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           <Route
             path='/music/:trackId'
             element={
-              isAuthenticated ? (
+              loading ? (
+                <LoadingIndicator />
+              ) : isAuthenticated ? (
                 hasProfile() ? (
                   <MusicPage />
                 ) : (

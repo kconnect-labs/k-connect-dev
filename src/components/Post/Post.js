@@ -71,7 +71,6 @@ import { usePostDetail } from '../../context/PostDetailContext';
 
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
-import { MaxIcon } from '../icons/CustomIcons';
 
 
 import SimpleImageViewer from '../SimpleImageViewer';
@@ -1562,11 +1561,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         />
                       );
                     })()}
-                  {(post.user?.subscription?.type === 'max' ||
-                    post.user?.subscription_type === 'max' ||
-                    post.user?.subscription?.subscription_type === 'max') && (
-                    <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
-                  )}
+
                   {post.user?.achievement && (
                     <Box sx={{ mt: 'auto' }}>
                       <Badge achievement={post.user.achievement} size='post' />
@@ -1737,11 +1732,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           size='small'
                         />
                       )}
-                    {(post.original_post.user?.subscription?.type === 'max' ||
-                      post.original_post.user?.subscription_type === 'max' ||
-                      post.original_post.user?.subscription?.subscription_type === 'max') && (
-                      <MaxIcon size={24} color="#FF4D50" style={{ marginLeft: '5px' }} />
-                    )}
+
                     {post.original_post.user?.achievement && (
                       <Box sx={{ ml: 0.5, mt: 'auto' }}>
                         <Badge
@@ -2582,11 +2573,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                             size='small'
                           />
                         )}
-                      {(lastComment.user?.subscription?.type === 'max' || 
-                        lastComment.user?.subscription_type === 'max' ||
-                        lastComment.user?.subscription?.subscription_type === 'max') && (
-                        <MaxIcon size={20} color="#FF4D50" style={{ marginLeft: '5px' }} />
-                      )}
                     </Typography>
 
                     <Typography

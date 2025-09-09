@@ -13,6 +13,7 @@ import {
   Gift,
   Calendar,
 } from 'lucide-react';
+import { formatUserAvatar, getAvatarFallback } from '../utils/avatarUtils';
 
 interface ReferralStats {
   total_invited: number;
@@ -206,7 +207,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '8px',
             cursor: 'pointer',
             display: 'flex',
@@ -242,7 +243,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           style={{
             background: 'rgba(244, 67, 54, 0.1)',
             border: '1px solid rgba(244, 67, 54, 0.3)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             marginBottom: '24px',
             color: '#f44336',
@@ -267,7 +268,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -277,7 +278,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           <div
             style={{
               background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
+              borderRadius: 'var(--main-border-radius)',
               padding: '8px',
               display: 'flex',
               alignItems: 'center',
@@ -315,7 +316,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -325,7 +326,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           <div
             style={{
               background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
+              borderRadius: 'var(--main-border-radius)',
               padding: '8px',
               display: 'flex',
               alignItems: 'center',
@@ -363,7 +364,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -373,7 +374,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           <div
             style={{
               background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
+              borderRadius: 'var(--main-border-radius)',
               padding: '8px',
               display: 'flex',
               alignItems: 'center',
@@ -411,7 +412,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '16px',
             display: 'flex',
             alignItems: 'center',
@@ -421,7 +422,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           <div
             style={{
               background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
+              borderRadius: 'var(--main-border-radius)',
               padding: '8px',
               display: 'flex',
               alignItems: 'center',
@@ -460,7 +461,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           marginBottom: '24px',
         }}
@@ -487,7 +488,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               alignItems: 'center',
               gap: '8px',
               background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '6px',
+              borderRadius: 'var(--main-border-radius)',
               padding: '12px',
               border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
@@ -510,7 +511,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   ? 'rgba(76, 175, 80, 0.2)'
                   : 'rgba(255, 255, 255, 0.1)',
                 border: 'none',
-                borderRadius: '6px',
+                borderRadius: 'var(--main-border-radius)',
                 padding: '6px',
                 cursor: 'pointer',
                 display: 'flex',
@@ -550,7 +551,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
               style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '6px',
+                borderRadius: 'var(--main-border-radius)',
                 padding: '8px 16px',
                 color: 'var(--theme-text-secondary)',
                 fontSize: '13px',
@@ -572,7 +573,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           marginBottom: '24px',
         }}
@@ -613,7 +614,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   border: isCurrentLevel
                     ? '2px solid #D0BCFF'
                     : '1px solid rgba(66, 66, 66, 0.5)',
-                  borderRadius: '16px',
+                  borderRadius: 'var(--main-border-radius)',
                   padding: '16px',
                   position: 'relative',
                 }}
@@ -629,7 +630,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       fontSize: '12px',
                       fontWeight: '600',
                       padding: '4px 8px',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   >
                     ТЕКУЩИЙ
@@ -647,7 +648,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   <div
                     style={{
                       background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '6px',
+                      borderRadius: 'var(--main-border-radius)',
                       padding: '6px',
                       display: 'flex',
                       alignItems: 'center',
@@ -703,7 +704,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '16px',
         }}
       >
@@ -739,7 +740,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   gap: '12px',
                   padding: '12px',
                   background: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '6px',
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               >
@@ -757,13 +758,9 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                     color: 'var(--theme-text-secondary)',
                   }}
                 >
-                  {user.photo ? (
+                  {formatUserAvatar(user.photo, user.id) ? (
                     <img
-                      src={
-                        user.photo.startsWith('/')
-                          ? user.photo
-                          : `/static/uploads/avatar/${user.id}/${user.photo}`
-                      }
+                      src={formatUserAvatar(user.photo, user.id)!}
                       alt={user.name}
                       style={{
                         width: '100%',
@@ -788,7 +785,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       height: '32px',
                       borderRadius: '50%',
                       background: 'rgba(255, 255, 255, 0.1)',
-                      display: user.photo ? 'none' : 'flex',
+                      display: formatUserAvatar(user.photo, user.id) ? 'none' : 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '14px',
@@ -796,7 +793,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       color: 'var(--theme-text-secondary)',
                     }}
                   >
-                    {user.name.charAt(0).toUpperCase()}
+                    {getAvatarFallback(user.name)}
                   </div>
                 </div>
 
@@ -831,7 +828,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   <div
                     style={{
                       background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '6px',
+                      borderRadius: 'var(--main-border-radius)',
                       padding: '4px 8px',
                       fontSize: '12px',
                       color: 'var(--theme-text-secondary)',

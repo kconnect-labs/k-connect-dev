@@ -15,6 +15,7 @@ import './Badge.css';
  * @param {Function} props.onError - Обработчик ошибки загрузки
  * @param {boolean} props.showTooltip - Показывать ли тултип
  * @param {string} props.tooltipText - Текст тултипа
+ * @param {Function} props.onClick - Обработчик клика
  */
 const Badge = ({
   achievement,
@@ -23,6 +24,7 @@ const Badge = ({
   onError,
   showTooltip = false,
   tooltipText,
+  onClick,
   ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -32,19 +34,19 @@ const Badge = ({
   const imageRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Мемоизируем размеры для оптимизации
+  // Мемоизируем размеры для оптимизации - размеры как у VerificationBadge
   const badgeSize = useMemo(() => {
     switch (size) {
       case 'post':
-        return { width: 80, height: 24 }; // Баннерный формат 24x80
+        return { width: 24, height: 24 }; // Немного больше для постов
       case 'small':
-        return { width: 60, height: 16 }; // Баннерный формат 16x60
+        return { width: 20, height: 20 }; // Как у VerificationBadge small
       case 'large':
-        return { width: 120, height: 32 }; // Баннерный формат 32x120
+        return { width: 28, height: 28 }; // Больше для large
       case 'shop':
         return { width: 300, height: 150 }; // Баннерный формат 150x300
       default:
-        return { width: 100, height: 28 }; // Баннерный формат 28x100
+        return { width: 24, height: 24 }; // 24px как вы сказали
     }
   }, [size]);
 
@@ -151,22 +153,21 @@ const Badge = ({
       ref={containerRef}
       className={badgeClasses}
       sx={{
-        width: 'auto',
+        width: badgeSize.width,
         height: badgeSize.height,
-        minWidth: badgeSize.width,
-        minHeight: badgeSize.height,
-        maxWidth: badgeSize.width * 3, // Максимум в 3 раза шире
-        maxHeight: badgeSize.height,
-        ml: '0px',
-
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'flex-start', // Привязка к левой стороне
+        justifyContent: 'center', // Центрирование как у VerificationBadge
         position: 'relative',
         overflow: 'visible',
-        cursor: 'pointer',
+        cursor: onClick ? 'pointer' : 'default', // Курсор только если есть onClick
+        transition: 'all 0.2s ease', // Такая же анимация как у VerificationBadge
         '--upgrade-color': achievement.color_upgrade || '#FFD700',
+        '&:active': onClick ? {
+          transform: 'scale(0.95)', // Такая же анимация как у VerificationBadge
+        } : {},
       }}
+      onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       {...props}
