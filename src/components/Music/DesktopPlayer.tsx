@@ -27,7 +27,6 @@ import {
   ForwardIcon,
 } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
-import { formatDuration } from '../../utils/formatters';
 import { ThemeSettingsContext } from '../../App';
 import { useContext } from 'react';
 import { extractDominantColor } from '../../utils/imageUtils';
@@ -434,6 +433,30 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
     }
   }, [(currentTrack as any)?.id]);
 
+  // Принудительное обновление времени для таймлайна (как в FullScreenPlayer)
+  useEffect(() => {
+    const updateTime = () => {
+      if ((audioRef as any)?.current && !isSeeking) {
+        const audioTime = (audioRef as any).current.currentTime;
+        const audioDuration = (audioRef as any).current.duration;
+        
+        if (!isNaN(audioTime) && !isNaN(audioDuration) && audioDuration > 0) {
+          const progress = (audioTime / audioDuration) * 100;
+          if (progress !== currentSeekValueRef.current) {
+            setSeekValue(progress);
+            currentSeekValueRef.current = progress;
+          }
+        }
+      }
+    };
+
+    const interval = setInterval(updateTime, 100);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isSeeking, audioRef]);
+
   const [titleOverflowing, setTitleOverflowing] = useState(false);
   const [artistOverflowing, setArtistOverflowing] = useState(false);
 
@@ -476,14 +499,6 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
           durationEl.textContent = (window as any).audioTiming.formattedDuration;
         }
 
-        if (
-          !isSeeking &&
-          (window as any).audioTiming &&
-          typeof (window as any).audioTiming.progress === 'number'
-        ) {
-          setSeekValue((window as any).audioTiming.progress);
-          currentSeekValueRef.current = (window as any).audioTiming.progress;
-        }
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
@@ -503,7 +518,7 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
       isMounted = false;
       cancelAnimationFrame(animationId);
     };
-  }, [isSeeking]);
+  }, []);
 
   useEffect(() => {
     if (titleRef.current) {
