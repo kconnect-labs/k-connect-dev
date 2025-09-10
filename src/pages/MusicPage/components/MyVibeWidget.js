@@ -38,8 +38,8 @@ const pulseGlow = keyframes`
   }
 `;
 
-// Функция для генерации цветов на основе названия трека
-const generateTrackColors = (trackTitle) => {
+// Функция для генерации цветов на основе названия трека с плавным изменением оттенков
+const generateTrackColors = (trackTitle, timeOffset = 0) => {
   if (!trackTitle) {
     return {
       bass: 'rgba(110, 23, 23, 0.9)',
@@ -56,8 +56,12 @@ const generateTrackColors = (trackTitle) => {
     hash = hash & hash; // Конвертируем в 32-битное число
   }
 
-  // Генерируем цвета на основе хеша
-  const hue1 = Math.abs(hash) % 360; // Основной цвет
+  // Добавляем плавное изменение оттенка на основе времени
+  const hueShift = Math.sin(timeOffset * 0.001) * 15; // Плавное изменение ±15 градусов
+  
+  // Генерируем цвета на основе хеша с плавным смещением
+  const baseHue = Math.abs(hash) % 360;
+  const hue1 = (baseHue + hueShift) % 360; // Основной цвет с плавным изменением
   const hue2 = (hue1 + 30) % 360; // Смещенный цвет
   const hue3 = (hue1 + 60) % 360; // Еще один смещенный цвет
 
@@ -67,9 +71,9 @@ const generateTrackColors = (trackTitle) => {
   };
 
   return {
-    bass: createColor(hue1, 70, 45, 0.9),    // Темный насыщенный
-    mid: createColor(hue2, 65, 55, 0.7),     // Средний
-    treble: createColor(hue3, 60, 65, 0.5)   // Светлый
+    bass: createColor(hue1, 75, 45, 0.9),    // Темный насыщенный
+    mid: createColor(hue2, 70, 55, 0.7),     // Средний
+    treble: createColor(hue3, 65, 65, 0.5)   // Светлый
   };
 };
 
@@ -95,10 +99,11 @@ const WaveContainer = ({ isPlaying }) => {
       // Масштабируем контекст
       ctx.scale(dpr, dpr);
       
-      // Настраиваем качество рендеринга
+      // Настраиваем качество рендеринга для максимальной четкости
       ctx.imageSmoothingEnabled = false; // Отключаем сглаживание для четкости
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
+      ctx.lineWidth = 3; // Увеличиваем толщину линий для четкости
     };
 
     resizeCanvas();
@@ -154,8 +159,8 @@ const WaveContainer = ({ isPlaying }) => {
         const waveData = getWaveData();
         const { bass, mid, treble, overall } = waveData;
         
-        // Генерируем цвета на основе названия трека
-        const trackColors = generateTrackColors(currentTrack?.title);
+        // Генерируем цвета на основе названия трека с плавным изменением оттенков
+        const trackColors = generateTrackColors(currentTrack?.title, time);
         
         // Три волны разной высоты с цветами трека
         const waves = [
@@ -193,8 +198,8 @@ const WaveContainer = ({ isPlaying }) => {
           // Начинаем с левого края внизу
           ctx.moveTo(0, canvasHeight);
           
-          // Рисуем волну с более высоким разрешением
-          for (let x = 0; x <= canvasWidth; x += 1) { // Уменьшили шаг для четкости
+          // Рисуем волну с максимальным разрешением для четкости
+          for (let x = 0; x <= canvasWidth; x += 0.5) { // Увеличиваем разрешение для четкости
             // Замедленная формула волны для более плавного движения
             const wave1 = Math.sin((x * dynamicFreq) + (time * (0.8 + waveIndex * 0.2))) * dynamicAmplitude;
             const wave2 = Math.sin((x * dynamicFreq * 1.3) + (time * (1.1 + waveIndex * 0.15))) * (dynamicAmplitude * 0.4);
@@ -208,10 +213,11 @@ const WaveContainer = ({ isPlaying }) => {
           ctx.lineTo(canvasWidth, canvasHeight);
           ctx.closePath();
           
-          // Создаем градиент с цветами трека
+          // Создаем более четкий градиент с цветами трека
           const gradient = ctx.createLinearGradient(0, wave.baseHeight, 0, canvasHeight);
           gradient.addColorStop(0, wave.color);
-          gradient.addColorStop(0.3, wave.color.replace(/[\d.]+\)$/g, '0.6)'));
+          gradient.addColorStop(0.2, wave.color.replace(/[\d.]+\)$/g, '0.8)'));
+          gradient.addColorStop(0.4, wave.color.replace(/[\d.]+\)$/g, '0.6)'));
           gradient.addColorStop(0.7, wave.color.replace(/[\d.]+\)$/g, '0.3)'));
           gradient.addColorStop(1, wave.color.replace(/[\d.]+\)$/g, '0.05)'));
           
@@ -219,9 +225,9 @@ const WaveContainer = ({ isPlaying }) => {
           ctx.fillStyle = gradient;
           ctx.fill();
           
-          // Добавляем четкое свечение
+          // Добавляем максимально четкое свечение
           ctx.strokeStyle = wave.color;
-          ctx.lineWidth = 2.5;
+          ctx.lineWidth = 3; // Увеличиваем толщину для четкости
           ctx.stroke();
         });
       }
@@ -266,19 +272,7 @@ const WaveContainer = ({ isPlaying }) => {
   );
 };
 
-const ContentOverlay = styled(Box)({
-  position: 'absolute',
-  inset: 0,
-  zIndex: 2,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  textAlign: 'center',
-  padding: '16px',
-  color: 'white',
-  textShadow: '0 2px 8px rgba(0,0,0,0.7)',
-});
+
 
 const CurrentTrackInfo = styled(Box)({
   position: 'absolute',
