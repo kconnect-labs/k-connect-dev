@@ -43,18 +43,19 @@ import {
   GroupedLinkPreviews,
 } from '../../utils/LinkUtils';
 import { getMarkdownComponents } from './MarkdownConfig';
-import {
-  Repeat2,
-  Link2,
-  Heart,
-  MessageCircle,
-  RefreshCw,
-  Share2,
-  ChevronDown,
-  ChevronUp,
-  CheckCircle,
-  UserCheck,
-} from 'lucide-react';
+import { 
+  LikeIcon, 
+  LikeIconFill, 
+  CommentIcon, 
+  RepostIcon, 
+  ShareIcon,
+  Repeat2Icon,
+  Link2Icon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CheckCircleIcon,
+  UserCheckIcon
+} from '../icons/PostIcon';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -1381,7 +1382,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     items.push({
       id: 'copy-link',
       label: t('post.menu_actions.copy_link'),
-      icon: <Link2 size={16} />,
+      icon: <Link2Icon />,
       onClick: handleCopyLink,
     });
 
@@ -1457,7 +1458,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 transform: `rotate(${heart.rotation}deg)`,
               }}
             >
-              <Heart size={heart.size} />
+              <LikeIcon />
             </HeartAnimation>
           ))}
         </AnimatePresence>
@@ -1539,21 +1540,29 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         : post.user.verification.status;
                       
                       return status === 6 ? (
-                        <CheckCircle
-                          size={24}
-                          color="#1e88e5"
-                          style={{
+                        <Box
+                          sx={{
+                            color: "#1e88e5",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             marginLeft: '4px',
                           }}
-                        />
+                        >
+                          <CheckCircleIcon />
+                        </Box>
                       ) : status === 7 ? (
-                        <UserCheck
-                          size={24}
-                          color="#7c4dff"
-                          style={{
+                        <Box
+                          sx={{
+                            color: "#7c4dff",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                             marginLeft: '4px',
                           }}
-                        />
+                        >
+                          <UserCheckIcon />
+                        </Box>
                       ) : (
                         <VerificationBadge
                           status={status}
@@ -1605,7 +1614,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 <Typography variant='body2' sx={{ mr: 1 }}>
                   Показать полностью
                 </Typography>
-                <ChevronDown size={20} />
+                <ChevronDownIcon />
               </ShowMoreButton>
             )}
 
@@ -1615,7 +1624,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 size='small'
                 onClick={toggleExpanded}
                 startIcon={
-                  <ChevronUp size={20} />
+                  <ChevronUpIcon />
                 }
                 sx={{
                   display: 'flex',
@@ -1664,11 +1673,17 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               >
                 {/* Заголовок с информацией о репосте */}
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
-                  <Repeat2
-                    size={16}
-                    color={theme.palette.primary.main}
-                    style={{ marginRight: '4px' }}
-                  />
+                  <Box
+                    sx={{
+                      color: theme.palette.primary.main,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: '4px',
+                    }}
+                  >
+                    <RepostIcon />
+                  </Box>
                   <Typography
                     variant='caption'
                     color='text.secondary'
@@ -2382,16 +2397,18 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   }}
                 >
                   {liked ? (
-                    <Heart
-                      size={21}
-                      color={theme.palette.primary.main}
-                      fill={theme.palette.primary.main}
-                    />
+                    <Box
+                      sx={{
+                        color: theme.palette.primary.main,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <LikeIconFill />
+                    </Box>
                   ) : (
-                    <Heart
-                      size={21}
-                      color='#fff'
-                    />
+                    <LikeIcon />
                   )}
                 </Box>
                 {likesCount > 0 && (
@@ -2419,10 +2436,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <MessageCircle
-                    size={21}
-                    color='#fff'
-                  />
+                  <CommentIcon />
                 </Box>
                 {(post?.total_comments_count || post?.comments_count) > 0 && (
                   <Typography
@@ -2449,10 +2463,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <RefreshCw
-                    size={21}
-                    color='#fff'
-                  />
+                  <RepostIcon />
                 </Box>
               </Box>
               <Box
@@ -2472,10 +2483,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     height: 21,
                   }}
                 >
-                  <Share2
-                    size={21}
-                    color='#fff'
-                  />
+                  <ShareIcon />
                 </Box>
               </Box>
             
@@ -2509,7 +2517,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             <Box
               sx={{
                 padding: '12px',
-                borderRadius: '0 0 var(--main-border-radius) !important var(--main-border-radius) !important',
+                borderRadius: 'var(--main-border-radius) !important',
                 background: 'rgba(255, 255, 255, 0.03)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',

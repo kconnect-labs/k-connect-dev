@@ -1,0 +1,322 @@
+/* Comment Input Component Styles */
+.comment-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.comment-input-container {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: var(--main-border-radius);
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.comment-input-container:focus-within {
+  border-color: rgba(140, 82, 255, 0.3);
+  box-shadow: 0 0 0 2px rgba(140, 82, 255, 0.1);
+}
+
+.comment-input-avatar {
+  flex-shrink: 0;
+}
+
+.comment-input-avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(140, 82, 255, 0.15);
+  object-fit: cover;
+  transition: all 0.2s ease;
+}
+
+.comment-input-avatar-img:hover {
+  border-color: rgba(140, 82, 255, 0.3);
+}
+
+.comment-input-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.comment-input-field {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: rgba(28, 28, 32, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+}
+
+.comment-input-field:focus-within {
+  border-color: rgba(140, 82, 255, 0.2);
+  background: rgba(28, 28, 32, 0.4);
+}
+
+.comment-input-textarea {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.4;
+  resize: none;
+  min-height: 20px;
+  max-height: 120px;
+  font-family: inherit;
+  padding: 4px 0;
+}
+
+.comment-input-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.comment-input-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-input-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.comment-input-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.comment-input-action:hover:not(:disabled) {
+  background: rgba(140, 82, 255, 0.1);
+  color: var(--primary-color);
+}
+
+.comment-input-action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.comment-input-action-icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.comment-input-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--primary-color);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.comment-input-send:hover:not(:disabled) {
+  background: var(--primary-color-dark, #7c3aed);
+  transform: scale(1.05);
+}
+
+.comment-input-send:disabled {
+  background: var(--text-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.comment-input-send-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.comment-input-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.comment-input-image-preview {
+  position: relative;
+  margin-top: 8px;
+  border-radius: var(--small-border-radius);
+  overflow: hidden;
+  max-width: 200px;
+}
+
+.comment-input-preview-img {
+  width: 100%;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: var(--small-border-radius);
+}
+
+.comment-input-remove-image {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.comment-input-remove-image:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.comment-input-remove-image svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.comment-input-counter {
+  margin-top: 4px;
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.comment-input-counter .warning {
+  color: #ff9800;
+}
+
+.comment-input-counter .error {
+  color: #f44336;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .comment-input-container {
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .comment-input-avatar-img {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .comment-input-field {
+    padding: 6px 10px;
+  }
+  
+  .comment-input-textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .comment-input-action,
+  .comment-input-send {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .comment-input-action-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .comment-input-send-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .comment-input-image-preview {
+    max-width: 100%;
+  }
+}
+
+/* Dark theme adjustments */
+[data-theme="default"] .comment-input-container {
+  background: rgba(15, 15, 15, 0.98);
+}
+
+[data-theme="blur"] .comment-input-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="midnight"] .comment-input-container {
+  background: rgba(5, 8, 20, 0.95);
+}
+
+[data-theme="ocean"] .comment-input-container {
+  background: rgba(8, 25, 40, 0.92);
+}
+
+[data-theme="sunset"] .comment-input-container {
+  background: rgba(40, 15, 8, 0.94);
+}
+
+[data-theme="forest"] .comment-input-container {
+  background: rgba(8, 30, 15, 0.93);
+}
+
+[data-theme="aurora"] .comment-input-container {
+  background: rgba(12, 35, 25, 0.91);
+}
+
+[data-theme="cosmic"] .comment-input-container {
+  background: rgba(30, 8, 35, 0.96);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="neon"] .comment-input-container {
+  background: rgba(8, 20, 45, 0.89);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="vintage"] .comment-input-container {
+  background: rgba(35, 20, 8, 0.95);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="pickme"] .comment-input-container {
+  background: rgba(131, 61, 96, 0.93);
+}

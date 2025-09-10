@@ -6,12 +6,16 @@
   cursor: pointer;
   background: var(--theme-background, rgba(21, 4, 56, 0.11)); /* Темный стеклянный фон для контраста */
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
-  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
 .hasCurrentTrack {
   height: 320px;
+}
+
+.playing {
+  /* Только легкое усиление свечения при воспроизведении */
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
 }
 
 .contentOverlay {
@@ -26,4 +30,19 @@
   padding: 16px;
   color: white;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* Оптимизация для мобильных устройств */
+@media (max-width: 768px) {
+  .container {
+    height: 200px;
+  }
+  
+  .hasCurrentTrack {
+    height: 260px;
+  }
+  
+  .contentOverlay {
+    padding: 12px;
+  }
 }

@@ -1,0 +1,183 @@
+/* PostDetailPage Comments Section Styles */
+.comments-section {
+  width: 100%;
+}
+
+.comment-error {
+  margin-bottom: 16px;
+}
+
+.comment-login-prompt {
+  margin-bottom: 24px;
+}
+
+.comment-login-content {
+  padding: 16px;
+  text-align: center;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-radius: var(--small-border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.comment-login-link {
+  color: var(--primary-color) !important;
+  text-decoration: none !important;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.comment-login-link:hover {
+  text-decoration: underline !important;
+}
+
+.comments-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px 0;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.load-more-comments {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.load-more-button {
+  border-radius: 20px !important;
+  padding: 8px 24px !important;
+  text-transform: none !important;
+  border-color: rgba(140, 82, 255, 0.3) !important;
+  color: var(--primary-color) !important;
+  transition: all 0.2s ease !important;
+}
+
+.load-more-button:hover {
+  border-color: var(--primary-color) !important;
+  background-color: rgba(140, 82, 255, 0.05) !important;
+}
+
+.load-more-button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+.no-comments {
+  padding: 32px 24px;
+  text-align: center;
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  border-radius: var(--large-border-radius);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+}
+
+.no-comments-icon {
+  font-size: 32px !important;
+  color: var(--text-secondary) !important;
+  margin-bottom: 12px !important;
+  opacity: 0.5;
+}
+
+.no-comments-text {
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .comments-section {
+    padding: 0 8px !important;
+  }
+  
+  .comment-login-content {
+    padding: 12px;
+    font-size: 13px;
+  }
+  
+  .no-comments {
+    padding: 24px 16px;
+  }
+  
+  .no-comments-icon {
+    font-size: 28px !important;
+  }
+  
+  .no-comments-text {
+    font-size: 13px !important;
+  }
+  
+  .load-more-button {
+    padding: 6px 20px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Theme Support */
+[data-theme="default"] .comment-login-content,
+[data-theme="default"] .no-comments {
+  background: rgba(15, 15, 15, 0.98);
+}
+
+[data-theme="blur"] .comment-login-content,
+[data-theme="blur"] .no-comments {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="midnight"] .comment-login-content,
+[data-theme="midnight"] .no-comments {
+  background: rgba(5, 8, 20, 0.95);
+}
+
+[data-theme="ocean"] .comment-login-content,
+[data-theme="ocean"] .no-comments {
+  background: rgba(8, 25, 40, 0.92);
+}
+
+[data-theme="sunset"] .comment-login-content,
+[data-theme="sunset"] .no-comments {
+  background: rgba(40, 15, 8, 0.94);
+}
+
+[data-theme="forest"] .comment-login-content,
+[data-theme="forest"] .no-comments {
+  background: rgba(8, 30, 15, 0.93);
+}
+
+[data-theme="aurora"] .comment-login-content,
+[data-theme="aurora"] .no-comments {
+  background: rgba(12, 35, 25, 0.91);
+}
+
+[data-theme="cosmic"] .comment-login-content,
+[data-theme="cosmic"] .no-comments {
+  background: rgba(30, 8, 35, 0.96);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="neon"] .comment-login-content,
+[data-theme="neon"] .no-comments {
+  background: rgba(8, 20, 45, 0.89);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="vintage"] .comment-login-content,
+[data-theme="vintage"] .no-comments {
+  background: rgba(35, 20, 8, 0.95);
+  backdrop-filter: blur(20px);
+}
+
+[data-theme="pickme"] .comment-login-content,
+[data-theme="pickme"] .no-comments {
+  background: rgba(131, 61, 96, 0.93);
+}

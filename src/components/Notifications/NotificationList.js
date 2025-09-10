@@ -474,10 +474,14 @@ const getContextIcon = link => {
 };
 
 const getAvatarUrl = user => {
-  if (!user) return '/static/uploads/avatar/system/avatar.png';
+  if (!user) return 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
+  // Используем avatar_url из API, если он есть, иначе формируем URL
+  if (user.avatar_url) {
+    return user.avatar_url;
+  }
   return user.photo
-    ? `/static/uploads/avatar/${user.id}/${user.photo}`
-    : '/static/uploads/avatar/system/avatar.png';
+    ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
+    : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
 };
 
 const getContextText = notification => {
@@ -844,7 +848,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
             if (e.currentTarget && e.currentTarget.setAttribute) {
               e.currentTarget.setAttribute(
                 'src',
-                '/static/uploads/avatar/system/avatar.png'
+                'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
               );
             }
           }}
@@ -1048,7 +1052,7 @@ const GroupedNotificationComponent = React.memo(
                 if (e.currentTarget && e.currentTarget.setAttribute) {
                   e.currentTarget.setAttribute(
                     'src',
-                    '/static/uploads/avatar/system/avatar.png'
+                    'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'
                   );
                 }
               }}

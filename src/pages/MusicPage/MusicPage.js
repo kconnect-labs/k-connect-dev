@@ -144,7 +144,7 @@ const MusicPage = () => {
       {/* Основной контент */}
       <Box sx={{ mt: 2 }}>
         {/* My Vibe Widget */}
-        <Box sx={{ mb: 0.5, position: 'relative' }}>
+        <Box sx={{ mb: 0.5,borderRadius: 'var(--main-border-radius)', position: 'relative' }}>
           <MyVibeWidget
             onClick={handleVibeClick}
             isPlaying={isPlaying && currentSection === 'my-vibe'}

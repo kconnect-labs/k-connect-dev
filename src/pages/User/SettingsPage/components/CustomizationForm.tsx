@@ -4,11 +4,9 @@ import {
   Typography,
   Button,
   Switch,
-  FormControlLabel,
   CircularProgress,
   Alert,
   Paper,
-  Grid,
   IconButton,
   Dialog,
   DialogTitle,
@@ -60,9 +58,7 @@ const DecorationPreview = ({
   decoration: any;
   children: React.ReactNode;
 }) => {
-  const isGradient = decoration?.background?.includes('linear-gradient');
   const isImage = decoration?.background?.includes('/');
-  const isHexColor = decoration?.background?.startsWith('#');
 
   return (
     <Box
@@ -161,6 +157,12 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const [profileColorPickerOpen, setProfileColorPickerOpen] = useState(false);
   const [profileColorInput, setProfileColorInput] = useState('#D0BCFF');
   
+  // Состояния для уведомлений
+  const [notification, setNotification] = useState<{
+    type: 'success' | 'error';
+    message: string;
+  } | null>(null);
+  
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
@@ -179,6 +181,22 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
       subscription?.active
     );
   }, [profileData, subscription]);
+
+  // Функция для показа уведомлений
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ type, message });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  // Функция для обновления данных после успешных операций
+  const handleSuccess = () => {
+    if (onSuccess) {
+      onSuccess();
+    }
+    // Дополнительно можно обновить данные профиля
+    fetchUserDecorations();
+    fetchProfileColor();
+  };
 
 
   const fetchUserDecorations = async () => {
@@ -228,10 +246,17 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
       const data = await response.json();
       if (data.success) {
         setProfileColor(profileColorInput);
-        if (onSuccess) onSuccess();
+        
+        // Сохраняем цвет в localStorage для глобального использования
+        localStorage.setItem('profileColor', profileColorInput);
+        document.cookie = `profileColor=${profileColorInput};path=/;max-age=31536000`;
+        
+        showNotification('success', 'Цвет профиля успешно сохранен!');
+        handleSuccess();
       }
     } catch (error) {
       console.error('Error saving profile color:', error);
+      showNotification('error', 'Ошибка при сохранении цвета профиля');
     } finally {
       setProfileColorLoading(false);
     }
@@ -260,11 +285,23 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
       });
 
       if (response.ok) {
-        fetchUserDecorations();
-        if (onSuccess) onSuccess();
+        // Обновляем локальное состояние сразу
+        setUserDecorations(prev => 
+          prev.map(item => {
+            const decoration = item.decoration || item;
+            if (decoration.id === decorationId) {
+              return { ...item, is_active: isActive };
+            }
+            return item;
+          })
+        );
+        
+        showNotification('success', `Декорация ${isActive ? 'включена' : 'выключена'}!`);
+        handleSuccess();
       }
     } catch (error) {
       console.error('Error toggling decoration:', error);
+      showNotification('error', 'Ошибка при изменении декорации');
     }
   };
 
@@ -297,43 +334,53 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (response.data?.background_url) {
-        setProfileBackgroundUrl(response.data.background_url);
-        if (onSuccess) onSuccess();
+      if (response.data?.success && response.data?.profile_background_url) {
+        setProfileBackgroundUrl(response.data.profile_background_url);
+        
+        // Сохраняем URL в localStorage для глобального использования
+        localStorage.setItem('myProfileBackgroundUrl', response.data.profile_background_url);
+        document.cookie = `myProfileBackgroundUrl=${response.data.profile_background_url};path=/;max-age=31536000`;
+        
+        showNotification('success', 'Фоновое изображение успешно загружено!');
+        handleSuccess();
       }
     } catch (error: any) {
       console.error('Error uploading background:', error);
-      // Можно добавить уведомление об ошибке
+      showNotification('error', 'Ошибка при загрузке фонового изображения');
     }
   };
 
   // Удаление обоев профиля
   const handleDeleteBackground = async () => {
     try {
-      await axios.delete('/api/profile/background');
-      setProfileBackgroundUrl(null);
+      const response = await axios.delete('/api/profile/background');
+      
+      if (response.data?.success) {
+        setProfileBackgroundUrl(null);
 
-      // Очищаем localStorage от сохраненных обоев
-      localStorage.removeItem('myProfileBackgroundUrl');
-      document.cookie =
-        'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        // Очищаем localStorage от сохраненных обоев
+        localStorage.removeItem('myProfileBackgroundUrl');
+        document.cookie =
+          'myProfileBackgroundUrl=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
 
-      // Если глобальные обои включены, выключаем их
-      if (globalProfileBackgroundEnabled) {
-        try {
-          await axios.post('/api/user/settings/global-profile-bg', {
-            enabled: false,
-          });
-          setGlobalProfileBackgroundEnabled(false);
-        } catch (error) {
-          console.error('Error disabling global background:', error);
+        // Если глобальные обои включены, выключаем их
+        if (globalProfileBackgroundEnabled) {
+          try {
+            await axios.post('/api/user/settings/global-profile-bg', {
+              enabled: false,
+            });
+            setGlobalProfileBackgroundEnabled(false);
+          } catch (error) {
+            console.error('Error disabling global background:', error);
+          }
         }
-      }
 
-      if (onSuccess) onSuccess();
+        showNotification('success', 'Фоновое изображение успешно удалено!');
+        handleSuccess();
+      }
     } catch (error: any) {
       console.error('Error deleting background:', error);
-      // Можно добавить уведомление об ошибке
+      showNotification('error', 'Ошибка при удалении фонового изображения');
     }
   };
 
@@ -361,7 +408,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
       setAppliedAccentColor(pendingAccentColor);
       setAppliedTextColorMode(pendingTextColorMode);
-      if (onSuccess) onSuccess();
+      handleSuccess();
     } catch (error) {
       console.error('Ошибка при сохранении primary color:', error);
     } finally {
@@ -443,6 +490,17 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
   return (
     <Box>
+      {/* Уведомления */}
+      {notification && (
+        <Alert
+          severity={notification.type}
+          onClose={() => setNotification(null)}
+          sx={{ mb: 2 }}
+        >
+          {notification.message}
+        </Alert>
+      )}
+      
       {/* Цвет профиля */}
       <Box sx={sectionStyle}>
         <Typography
