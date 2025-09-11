@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import { Box, Typography, IconButton } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -7,8 +7,9 @@ import { alpha } from '@mui/material/styles';
 import styles from './MyVibe.module.css';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useMusic } from '../../../context/MusicContext';
+import { useFullScreenPlayer } from '../../../components/Music/FullScreenPlayer/hooks';
 
-// Оптимизированные анимации для мобильных устройств
+
 const waveAnimation = keyframes`
   0%, 100% {
     transform: translateY(0) scaleY(1);
@@ -38,8 +39,8 @@ const pulseGlow = keyframes`
   }
 `;
 
-// Функция для генерации цветов на основе названия трека с плавным изменением оттенков
-const generateTrackColors = (trackTitle, timeOffset = 0) => {
+
+const generateTrackColors = (trackTitle) => {
   if (!trackTitle) {
     return {
       bass: 'rgba(110, 23, 23, 0.9)',
@@ -48,37 +49,383 @@ const generateTrackColors = (trackTitle, timeOffset = 0) => {
     };
   }
 
-  // Создаем хеш из названия трека
-  let hash = 0;
+  
+  let mainHash = 0;
+  let secondaryHash = 0;
+  
   for (let i = 0; i < trackTitle.length; i++) {
     const char = trackTitle.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Конвертируем в 32-битное число
+    mainHash = ((mainHash << 5) - mainHash) + char;
+    secondaryHash = ((secondaryHash << 3) - secondaryHash) + char * (i + 1);
+    mainHash = mainHash & mainHash;
+    secondaryHash = secondaryHash & secondaryHash;
   }
 
-  // Добавляем плавное изменение оттенка на основе времени
-  const hueShift = Math.sin(timeOffset * 0.001) * 15; // Плавное изменение ±15 градусов
   
-  // Генерируем цвета на основе хеша с плавным смещением
-  const baseHue = Math.abs(hash) % 360;
-  const hue1 = (baseHue + hueShift) % 360; // Основной цвет с плавным изменением
-  const hue2 = (hue1 + 30) % 360; // Смещенный цвет
-  const hue3 = (hue1 + 60) % 360; // Еще один смещенный цвет
-
-  // Функция для создания HSL цвета с фиксированной насыщенностью и яркостью
-  const createColor = (hue, saturation, lightness, alpha) => {
-    return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+  const timeFactor = 25; 
+  const timeFactor2 = 18; 
+  
+  
+  const positionFactor = trackTitle.split('').reduce((acc, char, index) => {
+    return acc + char.charCodeAt(0) * (index + 1);
+  }, 0);
+  
+  
+  const baseHue = (Math.abs(mainHash) + timeFactor + positionFactor) % 360;
+  
+  
+  const dynamicHue = (baseHue + 12) % 360; 
+  
+  
+  const createColor = (hue, baseSaturation, baseLightness, alpha, hueShift = 0, satShift = 0, lightShift = 0) => {
+    const finalHue = (hue + hueShift) % 360;
+    const saturation = Math.max(65, Math.min(85, baseSaturation + satShift));
+    const lightness = Math.max(40, Math.min(65, baseLightness + lightShift));
+    return `hsla(${finalHue}, ${saturation}%, ${lightness}%, ${alpha})`;
   };
 
+  
+  const bassHueShift = 5; 
+  const midHueShift = 3;  
+  const trebleHueShift = 7; 
+  
+  
+  const satVariation = 4; 
+  const lightVariation = 3; 
+
   return {
-    bass: createColor(hue1, 75, 45, 0.9),    // Темный насыщенный
-    mid: createColor(hue2, 70, 55, 0.7),     // Средний
-    treble: createColor(hue3, 65, 65, 0.5)   // Светлый
+    
+    bass: createColor(
+      dynamicHue, 
+      80, 45, 0.9, 
+      bassHueShift, 
+      satVariation + 5, 
+      lightVariation - 5
+    ),    
+    
+    mid: createColor(
+      dynamicHue, 
+      75, 55, 0.7, 
+      midHueShift, 
+      satVariation, 
+      lightVariation
+    ),     
+    
+    treble: createColor(
+      dynamicHue, 
+      70, 65, 0.5, 
+      trebleHueShift, 
+      satVariation - 3, 
+      lightVariation + 5
+    )   
   };
 };
 
-// Компонент волны с симуляцией на основе времени воспроизведения
-const WaveContainer = ({ isPlaying }) => {
+
+const LyricsCanvas = React.memo(({ isPlaying, lyricsData, currentTime, dominantColor, currentTrack }) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [wordPositions, setWordPositions] = useState([]);
+  const [fadeInWords, setFadeInWords] = useState([]);
+  const [fadeOutWords, setFadeOutWords] = useState([]);
+  const [oldWordPositions, setOldWordPositions] = useState([]); 
+
+
+  
+  const filteredLines = useMemo(() => {
+    if (lyricsData?.has_synced_lyrics && Array.isArray(lyricsData.synced_lyrics)) {
+      const filtered = lyricsData.synced_lyrics
+        .filter(line => line && line.text !== undefined && line.text.trim().length > 0)
+        .map((line, index) => ({
+          ...line,
+          key: `${index}-${line.text.slice(0, 10)}`,
+        }));
+      
+      
+      return filtered;
+    }
+    if (lyricsData?.lyrics) {
+      const filtered = lyricsData.lyrics
+        .split('\n')
+        .filter(line => line.trim())
+        .map((line, index) => ({
+          text: line,
+          startTimeMs: 0,
+          key: `static-${index}-${line.slice(0, 10)}`,
+        }));
+      
+      
+      return filtered;
+    }
+    return [];
+  }, [lyricsData]);
+
+  
+  const updateCurrentLine = useCallback((time) => {
+    if (!lyricsData?.has_synced_lyrics || !filteredLines || filteredLines.length === 0) return;
+
+    const currentTimeMs = time * 1000;
+    let newLineIndex = -1;
+
+    
+    let left = 0;
+    let right = filteredLines.length - 1;
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (filteredLines[mid].startTimeMs <= currentTimeMs) {
+        newLineIndex = mid;
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+
+
+    if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
+      setCurrentLineIndex(newLineIndex);
+      
+      
+      
+      
+      setOldWordPositions(wordPositions);
+      
+      
+      setFadeInWords([]);
+      
+      
+      setFadeOutWords(prev => {
+        const allCurrentWords = wordPositions.map(wp => wp.word);
+        return [...prev, ...allCurrentWords.map(word => ({
+          word,
+          startTime: Date.now(),
+          duration: 800
+        }))];
+      });
+      
+      
+      setTimeout(() => {
+        setOldWordPositions([]);
+      }, 1000);
+      
+      const currentLine = filteredLines[newLineIndex];
+      if (currentLine && currentLine.text && currentLine.text.trim().length > 0) {
+        const rawWords = currentLine.text.split(' ').filter(word => word.trim().length > 0);
+        
+        
+        const words = [];
+        for (let i = 0; i < rawWords.length; i++) {
+          const currentWord = rawWords[i];
+          if (currentWord.length <= 2 && i < rawWords.length - 1) {
+            
+            words.push(currentWord + ' ' + rawWords[i + 1]);
+            i++; 
+          } else {
+            words.push(currentWord);
+          }
+        }
+        
+        
+        const isMobile = window.innerWidth < 768;
+        const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+        const maxWords = 10; 
+        const limitedWords = words.slice(0, maxWords);
+        
+        const newWordPositions = limitedWords.map((word, index) => {
+          
+          const angle = (index / limitedWords.length) * Math.PI * 2 - Math.PI / 2; 
+          const radius = 0.2 + Math.random() * 0.2; 
+          const x = 0.5 + Math.cos(angle) * radius;
+          const y = 0.5 + Math.sin(angle) * radius;
+          
+          return {
+            word,
+            x: Math.max(0.1, Math.min(0.9, x)), 
+            y: Math.max(0.2, Math.min(0.8, y)), 
+            scale: 0,
+            opacity: 0,
+            rotation: (Math.random() - 0.5) * 0.3, 
+            delay: index * 150, 
+            duration: 1000 + Math.random() * 500, 
+            startTime: Date.now(),
+          };
+        });
+        
+        setWordPositions(newWordPositions);
+        
+        
+        
+        
+        newWordPositions.forEach((wordPos, index) => {
+          setTimeout(() => {
+            setFadeInWords(prev => {
+              
+              const filtered = prev.filter(fw => fw.word !== wordPos.word);
+              return [...filtered, { ...wordPos, startTime: Date.now() }];
+            });
+          }, 1000 + (index * 200)); 
+        });
+        
+        
+        
+      }
+    }
+  }, [lyricsData, filteredLines, currentLineIndex]);
+
+  useEffect(() => {
+    updateCurrentLine(currentTime);
+  }, [currentTime, updateCurrentLine]);
+
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const isMobile = window.innerWidth < 768;
+    const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+    
+    const resizeCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = isMobile || isLowEnd ? 1 : (window.devicePixelRatio || 1); 
+      
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      
+      ctx.scale(dpr, dpr);
+      ctx.imageSmoothingEnabled = !isLowEnd; 
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let lastFrameTime = 0;
+    const targetFPS = isMobile || isLowEnd ? 30 : 60; 
+    const frameInterval = 1000 / targetFPS;
+
+    const animate = (currentTime) => {
+      
+      if (currentTime - lastFrameTime < frameInterval) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTime = currentTime;
+      
+      
+      if (isPlaying && (wordPositions.length > 0 || fadeInWords.length > 0 || fadeOutWords.length > 0)) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      
+      if (isPlaying && wordPositions.length > 0) {
+        const canvasWidth = canvas.width / (isMobile || isLowEnd ? 1 : window.devicePixelRatio);
+        const canvasHeight = canvas.height / (isMobile || isLowEnd ? 1 : window.devicePixelRatio);
+        
+        
+        
+        
+        
+        
+        
+        
+        const oldVisibleWords = oldWordPositions.filter(wordPos => {
+          const fadeOutWord = fadeOutWords.find(fw => fw.word === wordPos.word);
+          return fadeOutWord;
+        });
+        
+        
+        const newVisibleWords = wordPositions.filter(wordPos => {
+          const fadeInWord = fadeInWords.find(fw => fw.word === wordPos.word);
+          return fadeInWord;
+        });
+        
+        
+        const visibleWords = [...oldVisibleWords, ...newVisibleWords];
+        
+        visibleWords.forEach((wordPos, index) => {
+          const fadeInWord = fadeInWords.find(fw => fw.word === wordPos.word);
+          const fadeOutWord = fadeOutWords.find(fw => fw.word === wordPos.word);
+          
+          let scale = wordPos.scale;
+          let opacity = wordPos.opacity;
+          let yOffset = 0;
+          
+          
+          if (fadeInWord) {
+            const elapsed = Date.now() - fadeInWord.startTime;
+            const progress = Math.min(1, elapsed / fadeInWord.duration);
+            
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            scale = easeOut;
+            opacity = easeOut;
+            yOffset = (1 - easeOut) * 20; 
+          }
+          
+          
+          if (fadeOutWord) {
+            const elapsed = Date.now() - fadeOutWord.startTime;
+            const progress = Math.min(1, elapsed / fadeOutWord.duration);
+            
+            const easeIn = Math.pow(progress, 3);
+            scale = 1 - easeIn;
+            opacity = 1 - easeIn;
+            yOffset = easeIn * 20; 
+          }
+          
+          const x = wordPos.x * canvasWidth;
+          const y = wordPos.y * canvasHeight + yOffset;
+          
+          
+          
+          
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(wordPos.rotation * scale * 0.5); 
+          ctx.scale(scale, scale);
+          
+          
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          ctx.globalAlpha = opacity;
+          const fontSize = isMobile ? 12 + scale * 4 : 16 + scale * 6;
+          ctx.font = `bold ${fontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif`;
+          ctx.fillText(wordPos.word, 0, 0);
+          
+          ctx.restore();
+        });
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isPlaying, wordPositions, oldWordPositions, fadeInWords, fadeOutWords, currentTrack, dominantColor]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        zIndex: 2,
+        pointerEvents: 'none',
+      }}
+    />
+  );
+});
+
+
+const WaveContainer = React.memo(({ isPlaying }) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const { currentTime, duration, currentTrack } = useMusic();
@@ -92,53 +439,43 @@ const WaveContainer = ({ isPlaying }) => {
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
       
-      // Устанавливаем высокое разрешение для четкости
+      
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
       
-      // Масштабируем контекст
+      
       ctx.scale(dpr, dpr);
       
-      // Настраиваем качество рендеринга для максимальной четкости
-      ctx.imageSmoothingEnabled = false; // Отключаем сглаживание для четкости
+      
+      ctx.imageSmoothingEnabled = false; 
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.lineWidth = 3; // Увеличиваем толщину линий для четкости
+      ctx.lineWidth = 3; 
     };
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Создаем чувствительные к биту волны
+    
     const getWaveData = () => {
-      if (!isPlaying || !duration) {
+      if (!isPlaying) {
         return { bass: 0, mid: 0, treble: 0, overall: 0 };
       }
 
-      const time = currentTime;
-      const progress = time / duration;
       
-      // Более чувствительная реакция на прогресс
-      const progressIntensity = Math.sin(progress * Math.PI) * 0.7 + 0.3; // Минимум 30% активности
+      const progressIntensity = 0.8; 
       
-      // Имитируем бит-детектор - более резкие изменения
-      const beatDetector = () => {
-        const beatTime = time * 2; // Базовый ритм
-        const kickBeat = Math.sin(beatTime) > 0.8 ? 1 : 0; // Кик-барабан
-        const snareBeat = Math.sin(beatTime + Math.PI) > 0.7 ? 1 : 0; // Снейр
-        const hihatBeat = Math.sin(beatTime * 2) > 0.6 ? 1 : 0; // Хай-хэт
-        
-        return { kickBeat, snareBeat, hihatBeat };
-      };
       
-      const { kickBeat, snareBeat, hihatBeat } = beatDetector();
+      const kickBeat = 0.6; 
+      const snareBeat = 0.4; 
+      const hihatBeat = 0.3; 
       
-      // Базовые ритмы с бит-детектором
-      const beat1 = Math.sin(time * 1.5) * 0.3 + 0.7; // Основной ритм
-      const beat2 = Math.sin(time * 3) * 0.2 + 0.8; // Кик-барабан
-      const beat3 = Math.sin(time * 4.5) * 0.15 + 0.85; // Хай-хэт
       
-      // Применяем бит-детектор для резких всплесков
+      const beat1 = 0.7; 
+      const beat2 = 0.8; 
+      const beat3 = 0.85; 
+      
+      
       const bass = Math.max(beat1 * 0.8, beat2 * 0.6) * progressIntensity + (kickBeat * 0.4);
       const mid = Math.max(beat1 * 0.6, beat2 * 0.8, beat3 * 0.4) * progressIntensity + (snareBeat * 0.3);
       const treble = Math.max(beat2 * 0.4, beat3 * 0.9) * progressIntensity + (hihatBeat * 0.2);
@@ -155,52 +492,52 @@ const WaveContainer = ({ isPlaying }) => {
         const canvasWidth = canvas.width / window.devicePixelRatio;
         const canvasHeight = canvas.height / window.devicePixelRatio;
         
-        // Получаем данные волн
+        
         const waveData = getWaveData();
         const { bass, mid, treble, overall } = waveData;
         
-        // Генерируем цвета на основе названия трека с плавным изменением оттенков
-        const trackColors = generateTrackColors(currentTrack?.title, time);
         
-        // Три волны разной высоты с цветами трека
+        const trackColors = generateTrackColors(currentTrack?.title);
+        
+        
         const waves = [
           {
             intensity: bass,
-            baseHeight: canvasHeight * 0.25, // Нижняя волна - 25% высоты
+            baseHeight: canvasHeight * 0.25, 
             color: trackColors.bass,
             frequency: 0.012,
             amplitude: 20
           },
           {
             intensity: mid,
-            baseHeight: canvasHeight * 0.45, // Средняя волна - 45% высоты
+            baseHeight: canvasHeight * 0.45, 
             color: trackColors.mid,
             frequency: 0.01,
             amplitude: 25
           },
           {
             intensity: treble,
-            baseHeight: canvasHeight * 0.65, // Верхняя волна - 65% высоты
+            baseHeight: canvasHeight * 0.65, 
             color: trackColors.treble,
             frequency: 0.008,
             amplitude: 30
           }
         ];
         
-        // Рисуем каждую волну с улучшенным качеством
+        
         waves.forEach((wave, waveIndex) => {
           ctx.beginPath();
           
-          // Более чувствительная динамическая амплитуда
+          
           const dynamicAmplitude = wave.amplitude * (0.4 + wave.intensity * 2.2);
           const dynamicFreq = wave.frequency * (0.7 + wave.intensity * 1.2);
           
-          // Начинаем с левого края внизу
+          
           ctx.moveTo(0, canvasHeight);
           
-          // Рисуем волну с максимальным разрешением для четкости
-          for (let x = 0; x <= canvasWidth; x += 0.5) { // Увеличиваем разрешение для четкости
-            // Замедленная формула волны для более плавного движения
+          
+          for (let x = 0; x <= canvasWidth; x += 0.5) { 
+            
             const wave1 = Math.sin((x * dynamicFreq) + (time * (0.8 + waveIndex * 0.2))) * dynamicAmplitude;
             const wave2 = Math.sin((x * dynamicFreq * 1.3) + (time * (1.1 + waveIndex * 0.15))) * (dynamicAmplitude * 0.4);
             const wave3 = Math.sin((x * dynamicFreq * 0.8) + (time * (0.6 + waveIndex * 0.1))) * (dynamicAmplitude * 0.3);
@@ -209,11 +546,11 @@ const WaveContainer = ({ isPlaying }) => {
             ctx.lineTo(x, y);
           }
           
-          // Замыкаем до правого края внизу
+          
           ctx.lineTo(canvasWidth, canvasHeight);
           ctx.closePath();
           
-          // Создаем более четкий градиент с цветами трека
+          
           const gradient = ctx.createLinearGradient(0, wave.baseHeight, 0, canvasHeight);
           gradient.addColorStop(0, wave.color);
           gradient.addColorStop(0.2, wave.color.replace(/[\d.]+\)$/g, '0.8)'));
@@ -221,13 +558,13 @@ const WaveContainer = ({ isPlaying }) => {
           gradient.addColorStop(0.7, wave.color.replace(/[\d.]+\)$/g, '0.3)'));
           gradient.addColorStop(1, wave.color.replace(/[\d.]+\)$/g, '0.05)'));
           
-          // Заливаем волну градиентом
+          
           ctx.fillStyle = gradient;
           ctx.fill();
           
-          // Добавляем максимально четкое свечение
+          
           ctx.strokeStyle = wave.color;
-          ctx.lineWidth = 3; // Увеличиваем толщину для четкости
+          ctx.lineWidth = 3; 
           ctx.stroke();
         });
       }
@@ -270,7 +607,7 @@ const WaveContainer = ({ isPlaying }) => {
       />
     </div>
   );
-};
+});
 
 
 
@@ -280,14 +617,14 @@ const CurrentTrackInfo = styled(Box)({
   left: '16px',
   right: '16px',
   zIndex: 3,
-      background: 'var(--theme-background, rgba(0, 0, 0, 0.3))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
+      background: 'var(--theme-background)',
+    backdropFilter: 'var(--theme-backdrop-filter)',
   borderRadius: '16px',
   padding: '8px 12px',
   border: '1px solid rgba(66, 66, 66, 0.5)',
 });
 
-const PlayButton = styled(IconButton)(({ theme, $isPlaying }) => ({
+const PlayButton = styled(IconButton)(({ theme }) => ({
   width: 72,
   height: 72,
   '&:hover': {
@@ -299,8 +636,8 @@ const PlayButton = styled(IconButton)(({ theme, $isPlaying }) => ({
   },
 }));
 
-// Компонент для статичных частиц (когда не играет)
-const StaticParticles = () => {
+
+const StaticParticles = React.memo(() => {
   const particles = useMemo(() => {
     const isMobile = window.innerWidth < 768;
     const isLowEnd = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
@@ -336,12 +673,56 @@ const StaticParticles = () => {
       ))}
     </Box>
   );
-};
+});
 
-const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
+const MyVibeWidget = ({ 
+  onClick, 
+  isPlaying, 
+  currentTrack, 
+  currentSection 
+}) => {
   const isVibePlaying = isPlaying && currentSection === 'my-vibe';
   const showCurrentTrack = isVibePlaying && currentTrack;
   const { t } = useLanguage();
+  
+  
+  const { currentTime: contextCurrentTime, audioRef } = useMusic();
+  const [currentTime, setCurrentTime] = useState(0);
+  
+  
+  useEffect(() => {
+    if (!isVibePlaying) return;
+
+    const updateTime = () => {
+      if (audioRef?.current) {
+        const audioTime = audioRef.current.currentTime;
+        if (!isNaN(audioTime)) {
+          setCurrentTime(audioTime);
+        }
+      }
+    };
+
+    const interval = setInterval(updateTime, 100);
+    return () => clearInterval(interval);
+  }, [isVibePlaying, audioRef]);
+
+  
+  useEffect(() => {
+    if (currentTrack) {
+      setCurrentTime(0);
+    }
+  }, [currentTrack?.id]);
+
+  
+  
+  const {
+    lyricsData,
+    loadingLyrics,
+    dominantColor,
+    filteredLines,
+  } = useFullScreenPlayer(true, () => {});
+
+
 
   return (
     <div
@@ -353,36 +734,31 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
       {/* Анимированная волна когда играет */}
       {isVibePlaying && <WaveContainer isPlaying={isVibePlaying} />}
       
+      {/* Лирики в канвасе когда играет и есть данные */}
+      {isVibePlaying && lyricsData && (lyricsData.has_synced_lyrics || lyricsData.lyrics) && (
+        <LyricsCanvas 
+          isPlaying={isVibePlaying}
+          lyricsData={lyricsData}
+          currentTime={currentTime}
+          dominantColor={dominantColor}
+          currentTrack={currentTrack}
+        />
+      )}
+      
       {/* Статичные частицы когда не играет */}
       {!isVibePlaying && <StaticParticles />}
       
       <div className={styles.contentOverlay}>
-        <h2 className='font-bold text-lg'>{t('music.my_vibe.title')}</h2>
-        <Typography
-          variant='body2'
-          sx={{ color: alpha('#FFFFFF', 0.8), mt: 0.5 }}
-        >
-          {t('music.my_vibe.description')}
-        </Typography>
-        <PlayButton $isPlaying={isVibePlaying} sx={{ mt: 2 }}>
+        <h2 className='font-bold text-lg' style={{ marginTop: '85px' }}>{t('music.my_vibe.title')}</h2>
+
+        <PlayButton sx={{ mb: 14 }}>
           {isVibePlaying ? <PauseRoundedIcon /> : <PlayArrowRoundedIcon />}
         </PlayButton>
       </div>
 
       {showCurrentTrack && (
         <CurrentTrackInfo>
-          <Typography
-            variant='caption'
-            sx={{
-              color: alpha('#FFFFFF', 0.7),
-              display: 'block',
-              fontSize: '0.7rem',
-              fontWeight: 500,
-              mb: 0.5,
-            }}
-          >
-            {t('music.my_vibe.now_playing')}
-          </Typography>
+
           <Typography
             variant='body2'
             sx={{
@@ -396,10 +772,22 @@ const MyVibeWidget = ({ onClick, isPlaying, currentTrack, currentSection }) => {
           >
             {currentTrack.title} - {currentTrack.artist}
           </Typography>
+
         </CurrentTrackInfo>
       )}
     </div>
   );
 };
 
-export default MyVibeWidget;
+const MemoizedMyVibeWidget = React.memo(MyVibeWidget);
+
+
+MemoizedMyVibeWidget.defaultProps = {
+  onClick: () => {},
+  isPlaying: false,
+  currentTrack: null,
+  currentSection: 'my-vibe'
+};
+
+export default MemoizedMyVibeWidget;
+

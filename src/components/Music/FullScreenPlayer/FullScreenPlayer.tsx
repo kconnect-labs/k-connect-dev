@@ -1780,6 +1780,28 @@ const LyricsEditorContent: React.FC<{
         Пожалуйста, соблюдайте авторские права при добавлении текстов.
       </Alert>
 
+      {lyricsData && (
+        <Alert
+          severity={lyricsData.has_synced_lyrics ? 'success' : 'warning'}
+          variant='outlined'
+          sx={{
+            mb: 3,
+            backgroundColor: lyricsData.has_synced_lyrics 
+              ? 'rgba(76, 175, 80, 0.1)' 
+              : 'rgba(255, 152, 0, 0.1)',
+            borderColor: lyricsData.has_synced_lyrics 
+              ? 'rgba(76, 175, 80, 0.3)' 
+              : 'rgba(255, 152, 0, 0.3)',
+            color: 'rgba(255,255,255,0.9)',
+          }}
+        >
+          {lyricsData.has_synced_lyrics 
+            ? `✅ Синхронизированные лирики активны (${lyricsData.synced_lyrics?.length || 0} строк)`
+            : '⚠️ Только статический текст. Загрузите LRC файл для синхронизации.'
+          }
+        </Alert>
+      )}
+
       <TextField
         multiline
         fullWidth
@@ -1937,9 +1959,14 @@ const LyricsEditorContent: React.FC<{
               color: 'rgba(255,255,255,0.7)',
             }}
           />
-          <Typography variant='body2'>
-            Загрузить синхронизацию (LRC/JSON)
-          </Typography>
+          <Box>
+            <Typography variant='body2'>
+              Загрузить синхронизацию (LRC/JSON)
+            </Typography>
+            <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' }}>
+              LRC файлы должны содержать временные метки [mm:ss.xx]
+            </Typography>
+          </Box>
         </MenuItem>
       </Menu>
 

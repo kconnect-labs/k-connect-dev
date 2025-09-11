@@ -38,7 +38,6 @@ const PlayerContainer = styled(Paper)<{ covercolor?: string | null }>(({ theme, 
   transform: 'translateX(-50%)',
   width: '100%',
   maxWidth: 1000,
-  minWidth: 580,
   zIndex: theme.zIndex.appBar - 1,
   backgroundColor: covercolor
     ? `rgba(${covercolor}, 0.15)`
@@ -70,8 +69,8 @@ const PlayerContainer = styled(Paper)<{ covercolor?: string | null }>(({ theme, 
     borderRadius: 24,
   },
   '@media (min-width: 700px)': {
-    width: 'calc(100% - 300px)', // Учитываем ширину сайдбара (280px + отступы)
-    left: 'calc(50% + 140px)', // Сдвигаем вправо на половину ширины сайдбара
+    width: 'calc(100% - 300px)', 
+    left: 'calc(50% + 140px)', 
   },
   '@media (max-width: 700px)': {
     width: 'calc(100% - 40px)',

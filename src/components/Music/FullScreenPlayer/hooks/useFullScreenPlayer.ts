@@ -631,6 +631,47 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Проверяем тип файла
+    const fileName = file.name.toLowerCase();
+    const isValidFile = fileName.endsWith('.lrc') || fileName.endsWith('.json');
+    
+    if (!isValidFile) {
+      setLyricsError('Поддерживаются только файлы .lrc и .json');
+      setSnackbar({
+        open: true,
+        message: 'Неподдерживаемый формат файла. Используйте .lrc или .json',
+        severity: 'error',
+      });
+      return;
+    }
+
+    // Показываем информацию о загружаемом файле
+    setSnackbar({
+      open: true,
+      message: `Загружается файл: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+      severity: 'info',
+    });
+
+    // Предварительная проверка LRC файла
+    if (fileName.endsWith('.lrc')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        console.log('LRC file content preview:', content.substring(0, 500));
+        
+        // Проверяем наличие временных меток
+        const hasTimeTags = /\[\d{2}:\d{2}\.\d{2}\]/.test(content);
+        if (!hasTimeTags) {
+          setSnackbar({
+            open: true,
+            message: 'Внимание: LRC файл не содержит временных меток. Файл будет загружен как статический текст.',
+            severity: 'warning',
+          });
+        }
+      };
+      reader.readAsText(file);
+    }
+
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -652,6 +693,13 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         const formData = new FormData();
         formData.append('file', file);
 
+        console.log('Uploading file:', {
+          fileName: file.name,
+          fileSize: file.size,
+          fileType: file.type,
+          trackId: trackId
+        });
+
         const response = await fetch(`/api/music/${trackId}/lyrics/upload`, {
           method: 'POST',
           body: formData,
@@ -665,21 +713,39 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         }
 
         const result = await response.json();
-
-        setSnackbar({
-          open: true,
-          message: 'Синхронизация успешно загружена',
-          severity: 'success',
-        });
+        console.log('Upload response:', result);
 
         // Reload lyrics data
         const lyricsResponse = await fetch(`/api/music/${trackId}/lyrics`);
         if (lyricsResponse.ok) {
           const newLyricsData: LyricsData = await lyricsResponse.json();
+          console.log('Reloaded lyrics data:', newLyricsData);
           setLyricsData(newLyricsData);
           if (currentTrack) {
             (currentTrack as any).lyricsData = newLyricsData;
           }
+          
+          // Check if sync was actually successful
+          if (newLyricsData.has_synced_lyrics && newLyricsData.synced_lyrics && newLyricsData.synced_lyrics.length > 0) {
+            setSnackbar({
+              open: true,
+              message: 'Синхронизация успешно загружена',
+              severity: 'success',
+            });
+          } else {
+            setSnackbar({
+              open: true,
+              message: 'Файл загружен, но синхронизация не распознана. Проверьте формат LRC файла.',
+              severity: 'warning',
+            });
+            setLyricsError('Файл загружен как статический текст. Убедитесь, что LRC файл содержит временные метки в формате [mm:ss.xx]');
+          }
+        } else {
+          setSnackbar({
+            open: true,
+            message: 'Ошибка при получении обновленных данных лириков',
+            severity: 'error',
+          });
         }
 
         setShowLyricsEditor(false);
