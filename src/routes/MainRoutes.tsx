@@ -53,8 +53,8 @@ const TermsOfServicePage = React.lazy(
 );
 const MorePage = React.lazy(() => import('../pages/Main/MorePage'));
 const NotFound = React.lazy(() => import('../pages/Info/NotFound'));
-const AdminPage = React.lazy(() => import('../pages/Admin/AdminPage'));
 const ModeratorPage = React.lazy(() => import('../pages/Admin/ModeratorPage'));
+const ModeratorNitroPanel = React.lazy(() => import('../pages/ModeratorNitroPanel'));
 const TicketsSystem = React.lazy(() => import('../pages/Admin/TicketsSystem/index'));
 const TicketsSystemUser = React.lazy(() => import('../pages/User/TicketsPage/index'));
 const UpdatesPage = React.lazy(() => import('../pages/Main/UpdatesPage'));
@@ -347,18 +347,18 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
             }
           />
           <Route
-            path='/admin'
-            element={
-              <ProtectedRoute>
-                <AdminPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
             path='/moderator'
             element={
               <ProtectedRoute>
                 <ModeratorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/panel/nitro'
+            element={
+              <ProtectedRoute>
+                <ModeratorNitroPanel />
               </ProtectedRoute>
             }
           />

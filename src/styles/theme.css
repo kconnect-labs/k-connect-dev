@@ -471,16 +471,10 @@ body.no-blur .theme-menu,
 .theme-card {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
+  border-radius: var(--main-border-radius);
   border: 1px solid rgba(66, 66, 66, 0.5);
-  transition: all 0.2s ease;
 }
 
-.theme-card:hover {
-  background: var(--theme-background);
-  backdrop-filter: var(--theme-backdrop-filter);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
 
 /* Классы для кнопок */
 .theme-button {

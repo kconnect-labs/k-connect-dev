@@ -340,12 +340,13 @@ export const useThemeManager = () => {
         console.log(`🎨 Theme color updated to: ${settings.themeColor} for theme: ${themeType}`);
       }
       
-      const appleStatusBarStyle = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-      if (appleStatusBarStyle) {
-        const statusBarStyle = themeType === 'light' ? 'default' : 'black-translucent';
-        appleStatusBarStyle.setAttribute('content', statusBarStyle);
-        console.log(`📱 iOS status bar style updated to: ${statusBarStyle} for theme: ${themeType}`);
-      }
+      // Убираем изменение status bar style - это может вызывать проблемы с PWA
+      // const appleStatusBarStyle = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      // if (appleStatusBarStyle) {
+      //   const statusBarStyle = themeType === 'light' ? 'default' : 'black-translucent';
+      //   appleStatusBarStyle.setAttribute('content', statusBarStyle);
+      //   console.log(`📱 iOS status bar style updated to: ${statusBarStyle} for theme: ${themeType}`);
+      // }
       
       let msNavButtonColor = document.querySelector('meta[name="msapplication-navbutton-color"]');
       if (!msNavButtonColor) {
@@ -366,10 +367,11 @@ export const useThemeManager = () => {
       
       root.style.setProperty('accent-color', settings.browserAccent);
       
-      let safariTintColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-      if (safariTintColor) {
-        safariTintColor.setAttribute('content', themeType === 'light' ? 'default' : 'black-translucent');
-      }
+      // Убираем дублирующий код для status bar style
+      // let safariTintColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      // if (safariTintColor) {
+      //   safariTintColor.setAttribute('content', themeType === 'light' ? 'default' : 'black-translucent');
+      // }
       
       console.log(`🌐 Browser UI updated: color-scheme=${settings.colorScheme}, accent-color=${settings.browserAccent}`);
       

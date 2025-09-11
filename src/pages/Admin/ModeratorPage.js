@@ -3771,8 +3771,8 @@ const ModeratorPage = () => {
             </Box>
           </Box>
         </Box>
-        {/* Кнопка для перехода к системе тикетов */}
-        <Box mt={4} display="flex" justifyContent="center">
+        {/* Кнопки для перехода к дополнительным системам */}
+        <Box mt={4} display="flex" justifyContent="center" gap={2} flexWrap="wrap">
           <Button
             variant="contained"
             size="large"
@@ -3787,6 +3787,25 @@ const ModeratorPage = () => {
             }}
           >
              Начать работать с тикетами
+          </Button>
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<VerifiedUserIcon />}
+            onClick={() => navigate('/panel/nitro')}
+            sx={{
+              background: 'linear-gradient(45deg, #FF6B6B 30%, #4ECDC4 90%)',
+              borderRadius: 'var(--main-border-radius)',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: '0 8px 25px rgba(255, 107, 107, 0.3)',
+              },
+            }}
+          >
+             Nitro Panel
           </Button>
         </Box>
         <Box sx={{ mb: 4 }}>

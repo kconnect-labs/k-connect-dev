@@ -305,6 +305,18 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                     },
                   ]
                 : []),
+              ...(isModeratorUser
+                ? [
+                    {
+                      id: 'nitro-panel',
+                      title: 'Nitro Панель',
+                      subtitle: 'Управление контентом',
+                      icon: <Security />,
+                      color: 'rgb(255, 193, 7)',
+                      link: '/panel/nitro',
+                    },
+                  ]
+                : []),
               ...(isAdmin
                 ? [
                     {

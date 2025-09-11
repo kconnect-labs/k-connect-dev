@@ -656,12 +656,12 @@ const BugReportPage = () => {
         {selectedBug.image_url && (
           <div className={styles['mb-5']}>
             <img
-              src={`https://${window.location.hostname}${selectedBug.image_url}`}
+              src={selectedBug.image_url}
               alt='Bug report'
               className={styles['img-detail']}
               onClick={() =>
                 window.open(
-                  `https://${window.location.hostname}${selectedBug.image_url}`,
+                  selectedBug.image_url,
                   '_blank'
                 )
               }

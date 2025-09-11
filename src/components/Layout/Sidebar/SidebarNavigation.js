@@ -32,7 +32,7 @@ const SectionSpacer = styled(Box)(({ theme }) => ({
 }));
 
 const SidebarNavigation = memo(
-  ({ isAdmin, isModeratorUser, isChannel, primaryColor, user }) => {
+  ({isModeratorUser, isChannel, primaryColor, user }) => {
     const location = useLocation();
     const { t } = useLanguage();
     const {
@@ -272,7 +272,7 @@ const SidebarNavigation = memo(
 
     const adminModMenu = useMemo(
       () =>
-        (isAdmin || isModeratorUser) && (
+        (isModeratorUser) && (
           <>
             <NavButton
               text={t('sidebar.navigation.management')}
@@ -287,26 +287,27 @@ const SidebarNavigation = memo(
 
             <Collapse in={expandedAdminMod} timeout='auto' unmountOnExit>
               <NestedList component='div' disablePadding>
-                {isAdmin && (
-                  <NavButton
-                    text={t('sidebar.navigation.admin_panel')}
-                    icon={icons.admin}
-                    path='/admin'
-                    active={isActive('/admin')}
-                    isSpecial={true}
-                    nested={true}
-                  />
-                )}
+
 
                 {isModeratorUser && (
-                  <NavButton
-                    text={t('sidebar.navigation.moderate')}
-                    icon={icons.moderator}
-                    path='/moderator'
-                    active={isActive('/moderator')}
-                    isSpecial={true}
-                    nested={true}
-                  />
+                  <>
+                    <NavButton
+                      text={t('sidebar.navigation.moderate')}
+                      icon={icons.moderator}
+                      path='/moderator'
+                      active={isActive('/moderator')}
+                      isSpecial={true}
+                      nested={true}
+                    />
+                    <NavButton
+                      text={t('Nitro Панель')}
+                      icon={icons.moderator}
+                      path='/panel/nitro'
+                      active={isActive('/panel/nitro')}
+                      isSpecial={true}
+                      nested={true}
+                    />
+                  </>
                 )}
               </NestedList>
             </Collapse>
@@ -315,7 +316,6 @@ const SidebarNavigation = memo(
       [
         icons,
         isActive,
-        isAdmin,
         isModeratorUser,
         expandedAdminMod,
         toggleExpandAdminMod,
