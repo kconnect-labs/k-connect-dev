@@ -664,10 +664,10 @@ const UsersTab: React.FC = () => {
                       )}
                       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                         <Typography variant="caption" color="text.secondary">
-                          👤 {warning.admin_name}
+                           {warning.admin_name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          📅 {formatDate(warning.created_at)}
+                           {formatDate(warning.created_at)}
                         </Typography>
                       </Box>
                     </Box>
@@ -744,17 +744,17 @@ const UsersTab: React.FC = () => {
                       )}
                       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                         <Typography variant="caption" color="text.secondary">
-                          👤 {ban.admin_name}
+                          {ban.admin_name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          📅 {formatDate(ban.start_date)}
+                          {formatDate(ban.start_date)}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          ⏰ {ban.formatted_end_date}
+                         {ban.formatted_end_date}
                         </Typography>
                         {ban.remaining_days > 0 && (
                           <Typography variant="caption" color="text.secondary">
-                            ⏳ {ban.remaining_days} дн. осталось
+                             {ban.remaining_days} дн. осталось
                           </Typography>
                         )}
                       </Box>
