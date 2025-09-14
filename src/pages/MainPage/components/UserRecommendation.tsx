@@ -41,13 +41,20 @@ const UserRecommendation: React.FC<UserRecommendationProps> = ({ user }) => {
   };
 
   const getAvatarSrc = (): string => {
-    if (!user?.photo) return '/static/uploads/system/avatar.png';
+    if (!user?.avatar_url) return '/static/uploads/system/avatar.png';
 
-    if (user.photo.startsWith('/') || user.photo.startsWith('http')) {
-      return user.photo;
+    // Если URL уже полный (содержит домен), возвращаем как есть
+    if (user.avatar_url.startsWith('http')) {
+      return user.avatar_url;
     }
 
-    return `/static/uploads/avatar/${user.id}/${user.photo}`;
+    // Если URL начинается с /, добавляем домен
+    if (user.avatar_url.startsWith('/')) {
+      return `${window.location.origin}${user.avatar_url}`;
+    }
+
+    // Для относительных путей формируем полный URL
+    return `${window.location.origin}/static/uploads/avatar/${user.id}/${user.avatar_url}`;
   };
 
   const isChannelAccount =

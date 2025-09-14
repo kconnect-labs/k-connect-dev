@@ -145,7 +145,7 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <SessionProvider>
-            {/* <MessengerProvider> */}
+            <MessengerProvider>
               <LanguageProvider>
                 <MusicProvider>
                   <PostDetailProvider>
@@ -153,7 +153,7 @@ const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue
                   </PostDetailProvider>
                 </MusicProvider>
               </LanguageProvider>
-            {/* </MessengerProvider> */}
+            </MessengerProvider>
           </SessionProvider>
         </ThemeProvider>
       </ThemeSettingsContext.Provider>

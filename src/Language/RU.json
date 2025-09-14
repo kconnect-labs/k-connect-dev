@@ -611,6 +611,10 @@
       "bug_reports": "баг-репортов",
       "marketplace": "товар",
       "marketplace_items": "товаров",
+      "verification": "верификация",
+      "verifications": "верификаций",
+      "moderator": "модератор",
+      "moderators": "модераторов",
       "notification": "уведомление",
       "notifications": "уведомлений"
     },
@@ -650,7 +654,12 @@
       "marketplace_sold": "Ваш товар {item} был продан за {points} баллов",
       "medal": "выдал вам медаль",
       "mention": "упомянул вас в посте",
-      "general": "Тестовое уведомление"
+      "general": "Тестовое уведомление",
+      "verification_granted": "Поздравляем! Ваш аккаунт получил статус верификации",
+      "verification_updated": "Ваш статус верификации был изменен",
+      "verification_removed": "Ваш статус верификации был удален",
+      "moderator_assigned": "Поздравляем! Вы назначены модератором платформы",
+      "moderator_removed": "Ваши права модератора были отозваны"
     }
   },
   "profile": {

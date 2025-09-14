@@ -38,6 +38,8 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import GavelIcon from '@mui/icons-material/Gavel';
 import MessageIcon from '@mui/icons-material/Message';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import walletMoneyIcon from '@iconify-icons/solar/wallet-money-bold';
@@ -271,6 +273,13 @@ const getNotificationIcon = type => {
     case 'item_transfer':
     case 'marketplace_sold':
       return <MonetizationOnIcon sx={{ fontSize: '3rem' }} />;
+    case 'verification_granted':
+    case 'verification_updated':
+    case 'verification_removed':
+      return <VerifiedUserIcon sx={{ fontSize: '3rem' }} />;
+    case 'moderator_assigned':
+    case 'moderator_removed':
+      return <AdminPanelSettingsIcon sx={{ fontSize: '3rem' }} />;
     case 'general':
       return <Icon icon='tabler:bell' width='48' height='48' />;
     default:
@@ -312,6 +321,13 @@ const getNotificationColor = type => {
     case 'bug_comment':
     case 'bug_status_change':
     case 'ticket_comment':
+      return 'primary';
+    case 'verification_granted':
+    case 'verification_updated':
+    case 'verification_removed':
+      return 'primary';
+    case 'moderator_assigned':
+    case 'moderator_removed':
       return 'primary';
     case 'general':
       return 'primary';
@@ -687,6 +703,16 @@ const getNotificationMessage = (notification, t) => {
       return t('notifications.messages.post_repost');
     case 'follow':
       return t('notifications.messages.follow');
+    case 'verification_granted':
+      return t('notifications.messages.verification_granted');
+    case 'verification_updated':
+      return t('notifications.messages.verification_updated');
+    case 'verification_removed':
+      return t('notifications.messages.verification_removed');
+    case 'moderator_assigned':
+      return t('notifications.messages.moderator_assigned');
+    case 'moderator_removed':
+      return t('notifications.messages.moderator_removed');
     default:
       return notification.message;
   }
@@ -727,6 +753,7 @@ const groupNotificationsByUser = notifications => {
 const NotificationItemComponent = React.memo(({ notification, onClick }) => {
   const theme = useTheme();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const senderName =
     notification.sender_user?.name || t('notifications.user.default');
   const avatar = getAvatarUrl(notification.sender_user);
@@ -871,6 +898,17 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
               maxWidth: 'calc(100% - 80px)',
+              cursor: 'pointer',
+              color: 'primary.main',
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (notification.sender_user?.username) {
+                navigate(`/profile/${notification.sender_user.username}`);
+              }
             }}
           >
             {senderName}
@@ -909,6 +947,7 @@ const GroupedNotificationComponent = React.memo(
   }) => {
     const theme = useTheme();
     const { t } = useLanguage();
+    const navigate = useNavigate();
 
     const userName = group.user?.name || t('notifications.user.default');
     const avatar = getAvatarUrl(group.user);
@@ -1009,6 +1048,13 @@ const GroupedNotificationComponent = React.memo(
           case 'item_transfer':
           case 'marketplace_sold':
             return `${count} ${count === 1 ? t('notifications.types.marketplace') : t('notifications.types.marketplace_items')}`;
+          case 'verification_granted':
+          case 'verification_updated':
+          case 'verification_removed':
+            return `${count} ${count === 1 ? t('notifications.types.verification') : t('notifications.types.verifications')}`;
+          case 'moderator_assigned':
+          case 'moderator_removed':
+            return `${count} ${count === 1 ? t('notifications.types.moderator') : t('notifications.types.moderators')}`;
           case 'general':
             return `${count} ${count === 1 ? t('notifications.types.notification') : t('notifications.types.notifications')}`;
           default:
@@ -1076,6 +1122,17 @@ const GroupedNotificationComponent = React.memo(
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   maxWidth: 'calc(100% - 120px)',
+                  cursor: 'pointer',
+                  color: 'primary.main',
+                  '&:hover': {
+                    textDecoration: 'underline',
+                  },
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (group.user?.username) {
+                    navigate(`/profile/${group.user.username}`);
+                  }
                 }}
               >
                 {userName}

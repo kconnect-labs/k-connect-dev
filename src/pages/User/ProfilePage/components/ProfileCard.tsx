@@ -236,9 +236,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               backgroundPosition: 'center',
               position: 'relative',
               transition: 'transform 0.5s ease',
-              '&:hover': {
-                transform: 'scale(1.02)',
-              },
               '&::after': {
                 content: '""',
                 position: 'absolute',

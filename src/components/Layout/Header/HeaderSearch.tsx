@@ -32,6 +32,7 @@ interface User {
   username: string;
   name: string;
   photo?: string;
+  avatar_url?: string;
   verification_status?: 'verified' | 'unverified';
 }
 
@@ -40,6 +41,7 @@ interface Channel {
   username: string;
   name: string;
   photo?: string;
+  avatar_url?: string;
   is_verified?: boolean;
 }
 
@@ -335,10 +337,10 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
       whileTap={{ scale: 0.98 }}
     >
       <UserAvatar
-        src={user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined}
+        src={user.avatar_url || (user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined)}
         alt={user.name || user.username}
       >
-        {!user.photo && <PersonIcon />}
+        {!user.avatar_url && !user.photo && <PersonIcon />}
       </UserAvatar>
       <ResultContent>
         <ResultName>
@@ -363,8 +365,8 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
       whileHover={{ x: 4 }}
       whileTap={{ scale: 0.98 }}
     >
-      <UserAvatar src={channel.photo} alt={channel.name}>
-        {!channel.photo && <TagIcon />}
+      <UserAvatar src={channel.avatar_url || channel.photo} alt={channel.name}>
+        {!channel.avatar_url && !channel.photo && <TagIcon />}
       </UserAvatar>
       <ResultContent>
         <ResultName>

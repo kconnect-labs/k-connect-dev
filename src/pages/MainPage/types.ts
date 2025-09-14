@@ -3,6 +3,7 @@ export interface User {
   username: string;
   name?: string;
   photo?: string;
+  avatar_url?: string;
   is_verified?: boolean;
   is_following?: boolean;
   account_type?: string;

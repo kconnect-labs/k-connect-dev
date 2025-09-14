@@ -15,14 +15,14 @@ import {
   DialogActions,
   TextField,
   Alert,
-  alpha,
   useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
   Telegram as TelegramIcon,
   Close as CloseIcon,
   Check as CheckIcon,
-  Favorite as FavoriteIcon,
+  Notifications as NotificationsIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -51,6 +51,7 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
   onSuccess,
 }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Состояние для Telegram
   const [telegramConnected, setTelegramConnected] = useState(false);
@@ -254,77 +255,118 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
       <Dialog
         open={open}
         onClose={onClose}
-        maxWidth={false}
+        maxWidth="sm"
         fullWidth
+        fullScreen={isMobile}
         PaperProps={{
           sx: {
-            bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: { xs: 0, sm: 2 },
-            width: { xs: '100%', sm: '100%' },
-            maxWidth: { xs: '100%', sm: 550 },
-            minHeight: { xs: '100vh', sm: 'auto' },
-            maxHeight: { xs: '100vh', sm: '90vh' },
-            m: { xs: 0, sm: 2 },
+            borderRadius: isMobile ? 0 : 'var(--main-border-radius)',
+            minHeight: isMobile ? '100vh' : 'auto',
+            maxHeight: isMobile ? '100vh' : '90vh',
+            m: isMobile ? 0 : 2,
           },
         }}
       >
         <DialogTitle
           sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             color: 'var(--theme-text-primary)',
+            p: 3,
+            pb: 2,
           }}
         >
-          Мои коннекты
+          <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
+            Мои подключения
+          </Typography>
+          <IconButton
+            onClick={onClose}
+            size="small"
+            sx={{
+              color: 'var(--theme-text-secondary)',
+              '&:hover': {
+                bgcolor: 'var(--theme-hover)',
+              },
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
 
-        <DialogContent sx={{ p: 3 }}>
+        <DialogContent sx={{ p: 3, pt: 2 }}>
           <List disablePadding>
             {/* Telegram аккаунт */}
             <ListItem
               sx={{
                 py: 2,
-                px: 2,
+                px: 3,
                 borderRadius: 'var(--main-border-radius)',
-                bgcolor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                bgcolor: 'var(--theme-surface)',
+                border: '1px solid var(--theme-border)',
                 mb: 2,
+                '&:hover': {
+                  bgcolor: 'var(--theme-hover)',
+                },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 40 }}>
+              <ListItemIcon sx={{ minWidth: 48 }}>
                 <TelegramIcon
-                  sx={{ color: telegramConnected ? '#D0BCFF' : '#777' }}
+                  sx={{ 
+                    color: telegramConnected ? 'var(--theme-accent)' : 'var(--theme-text-disabled)',
+                    fontSize: 28,
+                  }}
                 />
               </ListItemIcon>
               <ListItemText
-                primary='Telegram'
-                primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
-                secondary={telegramConnected ? 'Подключен' : 'Не подключен'}
-                secondaryTypographyProps={{ color: 'var(--theme-text-secondary)' }}
+                primary="Telegram"
+                primaryTypographyProps={{ 
+                  fontWeight: 600, 
+                  color: 'var(--theme-text-primary)',
+                  fontSize: '1.1rem',
+                }}
+                secondary={telegramConnected ? 'Аккаунт подключен' : 'Аккаунт не подключен'}
+                secondaryTypographyProps={{ 
+                  color: 'var(--theme-text-secondary)',
+                  fontSize: '0.9rem',
+                }}
               />
               <Button
-                variant='contained'
-                size='small'
+                variant={telegramConnected ? "outlined" : "contained"}
+                size="small"
                 onClick={() => setTelegramDialogOpen(true)}
                 sx={{
                   bgcolor: telegramConnected
                     ? 'transparent'
-                    : 'rgba(208, 188, 255, 0.1)',
-                  color: telegramConnected ? 'success.main' : '#D0BCFF',
+                    : 'var(--theme-accent)',
+                  color: telegramConnected 
+                    ? 'var(--theme-accent)' 
+                    : 'var(--theme-text-on-accent)',
                   border: telegramConnected
-                    ? 'none'
-                    : '1px solid rgba(208, 188, 255, 0.3)',
-                  boxShadow: 'none',
-                  minWidth: 'auto',
+                    ? '1px solid var(--theme-accent)'
+                    : 'none',
+                  borderRadius: 'var(--main-border-radius)',
+                  minWidth: 100,
                   px: 2,
+                  py: 1,
+                  fontWeight: 500,
                   '&:hover': {
-                    bgcolor: 'rgba(208, 188, 255, 0.2)',
+                    bgcolor: telegramConnected
+                      ? 'var(--theme-accent-hover)'
+                      : 'var(--theme-accent-hover)',
+                    color: 'var(--theme-text-on-accent)',
                   },
                 }}
               >
                 {telegramConnected ? (
-                  <CheckIcon fontSize='small' />
+                  <>
+                    <CheckIcon fontSize="small" sx={{ mr: 1 }} />
+                    Подключен
+                  </>
                 ) : (
                   'Подключить'
                 )}
@@ -335,65 +377,102 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
             <ListItem
               sx={{
                 py: 2,
-                px: 2,
+                px: 3,
                 borderRadius: 'var(--main-border-radius)',
-                bgcolor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                bgcolor: 'var(--theme-surface)',
+                border: '1px solid var(--theme-border)',
                 mb: 2,
+                '&:hover': {
+                  bgcolor: 'var(--theme-hover)',
+                },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 40 }}>
+              <ListItemIcon sx={{ minWidth: 48 }}>
                 <ElementIcon
-                  sx={{ color: elementConnected ? '#D0BCFF' : '#777' }}
+                  sx={{ 
+                    color: elementConnected ? 'var(--theme-accent)' : 'var(--theme-text-disabled)',
+                    fontSize: 28,
+                  }}
                 />
               </ListItemIcon>
               <ListItemText
-                primary='Element'
-                primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
+                primary="Element"
+                primaryTypographyProps={{ 
+                  fontWeight: 600, 
+                  color: 'var(--theme-text-primary)',
+                  fontSize: '1.1rem',
+                }}
                 secondary={
                   loadingElementStatus
                     ? 'Проверка статуса...'
                     : elementConnected
-                      ? 'Подключен'
-                      : 'Не подключен'
+                      ? 'Аккаунт подключен'
+                      : 'Аккаунт не подключен'
                 }
-                secondaryTypographyProps={{ color: 'var(--theme-text-secondary)' }}
+                secondaryTypographyProps={{ 
+                  color: 'var(--theme-text-secondary)',
+                  fontSize: '0.9rem',
+                }}
               />
               {loadingElementStatus ? (
-                <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
+                <CircularProgress 
+                  size={24} 
+                  sx={{ color: 'var(--theme-accent)' }} 
+                />
               ) : elementLinking ? (
                 <IconButton
-                  edge='end'
-                  color='error'
+                  edge="end"
+                  color="error"
                   onClick={handleCancelElementLinking}
-                  size='small'
+                  size="small"
+                  sx={{
+                    color: 'var(--theme-error)',
+                    '&:hover': {
+                      bgcolor: 'var(--theme-error-hover)',
+                    },
+                  }}
                 >
-                  <CloseIcon fontSize='small' />
+                  <CloseIcon fontSize="small" />
                 </IconButton>
               ) : (
                 <Button
-                  variant='contained'
-                  size='small'
+                  variant={elementConnected ? "outlined" : "contained"}
+                  size="small"
                   onClick={elementConnected ? undefined : handleLinkElement}
                   disabled={elementConnected}
                   sx={{
                     bgcolor: elementConnected
                       ? 'transparent'
-                      : 'rgba(208, 188, 255, 0.1)',
-                    color: elementConnected ? 'success.main' : '#D0BCFF',
+                      : 'var(--theme-accent)',
+                    color: elementConnected 
+                      ? 'var(--theme-accent)' 
+                      : 'var(--theme-text-on-accent)',
                     border: elementConnected
-                      ? 'none'
-                      : '1px solid rgba(208, 188, 255, 0.3)',
-                    boxShadow: 'none',
-                    minWidth: 'auto',
+                      ? '1px solid var(--theme-accent)'
+                      : 'none',
+                    borderRadius: 'var(--main-border-radius)',
+                    minWidth: 100,
                     px: 2,
+                    py: 1,
+                    fontWeight: 500,
                     '&:hover': {
-                      bgcolor: 'rgba(208, 188, 255, 0.2)',
+                      bgcolor: elementConnected
+                        ? 'var(--theme-accent-hover)'
+                        : 'var(--theme-accent-hover)',
+                      color: 'var(--theme-text-on-accent)',
+                    },
+                    '&:disabled': {
+                      bgcolor: 'var(--theme-disabled)',
+                      color: 'var(--theme-text-disabled)',
+                      border: '1px solid var(--theme-border)',
                     },
                   }}
                 >
                   {elementConnected ? (
-                    <CheckIcon fontSize='small' />
+                    <>
+                      <CheckIcon fontSize="small" sx={{ mr: 1 }} />
+                      Подключен
+                    </>
                   ) : (
                     'Подключить'
                   )}
@@ -406,46 +485,67 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               <ListItem
                 sx={{
                   py: 2,
-                  px: 2,
+                  px: 3,
                   borderRadius: 'var(--main-border-radius)',
-                  bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  bgcolor: 'var(--theme-surface)',
+                  border: '1px solid var(--theme-border)',
                   mb: 2,
+                  '&:hover': {
+                    bgcolor: 'var(--theme-hover)',
+                  },
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 40 }}>
-                  <TelegramIcon
-                    color={telegramNotificationsEnabled ? 'success' : 'action'}
+                <ListItemIcon sx={{ minWidth: 48 }}>
+                  <NotificationsIcon
+                    sx={{ 
+                      color: telegramNotificationsEnabled ? 'var(--theme-success)' : 'var(--theme-text-disabled)',
+                      fontSize: 28,
+                    }}
                   />
                 </ListItemIcon>
                 <ListItemText
-                  primary='Telegram-уведомления'
-                  primaryTypographyProps={{ fontWeight: 500, color: 'var(--theme-text-primary)' }}
-                  secondary='Получать уведомления в Telegram'
+                  primary="Telegram-уведомления"
+                  primaryTypographyProps={{ 
+                    fontWeight: 600, 
+                    color: 'var(--theme-text-primary)',
+                    fontSize: '1.1rem',
+                  }}
+                  secondary="Получать уведомления в Telegram"
                   secondaryTypographyProps={{
                     color: 'var(--theme-text-secondary)',
+                    fontSize: '0.9rem',
                   }}
                 />
                 {savingNotificationPrefs ? (
-                  <CircularProgress size={24} sx={{ color: '#D0BCFF' }} />
+                  <CircularProgress 
+                    size={24} 
+                    sx={{ color: 'var(--theme-accent)' }} 
+                  />
                 ) : (
                   <Button
-                    variant='contained'
-                    size='small'
+                    variant={telegramNotificationsEnabled ? "outlined" : "contained"}
+                    size="small"
                     onClick={handleToggleTelegramNotifications}
                     sx={{
                       bgcolor: telegramNotificationsEnabled
-                        ? 'rgba(76, 175, 80, 0.1)'
-                        : 'rgba(208, 188, 255, 0.1)',
+                        ? 'transparent'
+                        : 'var(--theme-accent)',
                       color: telegramNotificationsEnabled
-                        ? 'success.main'
-                        : '#D0BCFF',
-                      border: '1px solid rgba(208, 188, 255, 0.3)',
-                      boxShadow: 'none',
-                      minWidth: 'auto',
+                        ? 'var(--theme-success)'
+                        : 'var(--theme-text-on-accent)',
+                      border: telegramNotificationsEnabled
+                        ? '1px solid var(--theme-success)'
+                        : 'none',
+                      borderRadius: 'var(--main-border-radius)',
+                      minWidth: 100,
                       px: 2,
+                      py: 1,
+                      fontWeight: 500,
                       '&:hover': {
-                        bgcolor: 'rgba(208, 188, 255, 0.2)',
+                        bgcolor: telegramNotificationsEnabled
+                          ? 'var(--theme-success-hover)'
+                          : 'var(--theme-accent-hover)',
+                        color: 'var(--theme-text-on-accent)',
                       },
                     }}
                   >
@@ -458,10 +558,16 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
 
           {elementToken && (
             <Alert
-              severity='info'
-              sx={{ mt: 2, bgcolor: 'rgba(33, 150, 243, 0.1)', color: 'var(--theme-text-primary)' }}
+              severity="info"
+              sx={{ 
+                mt: 2, 
+                bgcolor: 'var(--theme-info-bg)', 
+                color: 'var(--theme-text-primary)',
+                border: '1px solid var(--theme-info-border)',
+                borderRadius: 'var(--main-border-radius)',
+              }}
             >
-              <Typography variant='body2'>
+              <Typography variant="body2">
                 Токен для подключения: <strong>{elementToken}</strong>
               </Typography>
             </Alert>
@@ -473,73 +579,113 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
       <Dialog
         open={telegramDialogOpen}
         onClose={() => setTelegramDialogOpen(false)}
-        maxWidth={false}
+        maxWidth="sm"
         fullWidth
+        fullScreen={isMobile}
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(255, 255, 255, 0.03)',
-            backdropFilter: 'blur(20px)',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: { xs: 0, sm: 2 },
-            m: { xs: 0, sm: 2 },
-            width: { xs: '100%', sm: '100%' },
-            height: { xs: '100vh', sm: 'auto' },
-            maxWidth: { xs: '100%', sm: 550 },
-            maxHeight: { xs: '100vh', sm: '90vh' },
+            borderRadius: isMobile ? 0 : 'var(--main-border-radius)',
+            minHeight: isMobile ? '100vh' : 'auto',
+            maxHeight: isMobile ? '100vh' : '90vh',
+            m: isMobile ? 0 : 2,
           },
         }}
       >
         <DialogTitle
           sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
             color: 'var(--theme-text-primary)',
+            p: 3,
+            pb: 2,
           }}
         >
-          Подключение Telegram
-        </DialogTitle>
-        <DialogContent sx={{ p: 3 }}>
-          <Typography
-            variant='body2'
-            sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}
+          <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
+            Подключение Telegram
+          </Typography>
+          <IconButton
+            onClick={() => setTelegramDialogOpen(false)}
+            size="small"
+            sx={{
+              color: 'var(--theme-text-secondary)',
+              '&:hover': {
+                bgcolor: 'var(--theme-hover)',
+              },
+            }}
           >
-            Введите ваш Telegram ID для подключения аккаунта
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ p: 3, pt: 2 }}>
+          <Typography
+            variant="body2"
+            sx={{ 
+              color: 'var(--theme-text-secondary)', 
+              mb: 3,
+              fontSize: '0.95rem',
+              lineHeight: 1.5,
+            }}
+          >
+            Введите ваш Telegram ID для подключения аккаунта. 
+            Вы можете найти свой ID, написав боту @userinfobot
           </Typography>
           <TextField
             fullWidth
-            label='Telegram ID'
+            label="Telegram ID"
             value={telegramIdInput}
             onChange={e => setTelegramIdInput(e.target.value)}
             error={!!telegramIdError}
             helperText={telegramIdError}
+            placeholder="Например: 123456789"
             sx={{
               '& .MuiOutlinedInput-root': {
                 color: 'var(--theme-text-primary)',
-                '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.23)' },
-                '&:hover fieldset': { borderColor: 'rgba(255, 255, 255, 0.5)' },
-                '&.Mui-focused fieldset': { borderColor: '#D0BCFF' },
+                borderRadius: 'var(--main-border-radius)',
+                '& fieldset': { 
+                  borderColor: 'var(--theme-border)',
+                },
+                '&:hover fieldset': { 
+                  borderColor: 'var(--theme-accent)',
+                },
+                '&.Mui-focused fieldset': { 
+                  borderColor: 'var(--theme-accent)',
+                },
               },
               '& .MuiInputLabel-root': {
                 color: 'var(--theme-text-secondary)',
                 '&.Mui-focused': {
-                  color: '#D0BCFF',
+                  color: 'var(--theme-accent)',
                 },
               },
               '& .MuiFormHelperText-root': {
-                color: '#f44336',
+                color: 'var(--theme-error)',
               },
             }}
           />
         </DialogContent>
-        <DialogActions sx={{ p: 3, pt: 0 }}>
+        <DialogActions sx={{ p: 3, pt: 0, gap: 1 }}>
           <Button
             onClick={() => setTelegramDialogOpen(false)}
-            sx={{ color: 'var(--theme-text-secondary)' }}
+            variant="outlined"
+            sx={{ 
+              color: 'var(--theme-text-secondary)',
+              borderColor: 'var(--theme-border)',
+              '&:hover': {
+                borderColor: 'var(--theme-accent)',
+                color: 'var(--theme-accent)',
+              },
+            }}
           >
             Отмена
           </Button>
           <Button
             onClick={handleSaveTelegramId}
-            variant='contained'
+            variant="contained"
             disabled={savingTelegramId || !telegramIdInput.trim()}
             startIcon={
               savingTelegramId ? (
@@ -549,11 +695,16 @@ const ConnectionsModal: React.FC<ConnectionsModalProps> = ({
               )
             }
             sx={{
-              bgcolor: 'rgba(208, 188, 255, 0.1)',
-              color: '#D0BCFF',
-              border: '1px solid rgba(208, 188, 255, 0.3)',
+              bgcolor: 'var(--theme-accent)',
+              color: 'var(--theme-text-on-accent)',
+              borderRadius: 'var(--main-border-radius)',
+              px: 3,
               '&:hover': {
-                bgcolor: 'rgba(208, 188, 255, 0.2)',
+                bgcolor: 'var(--theme-accent-hover)',
+              },
+              '&:disabled': {
+                bgcolor: 'var(--theme-disabled)',
+                color: 'var(--theme-text-disabled)',
               },
             }}
           >

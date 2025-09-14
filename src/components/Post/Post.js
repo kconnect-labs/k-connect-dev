@@ -25,9 +25,6 @@ import { useLanguage } from '../../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
 import {
   formatTimeAgo,
-  formatTimeAgoDiff,
-  parseDate,
-  getRussianWordForm,
 } from '../../utils/dateUtils';
 import {
   optimizeImage,
@@ -49,12 +46,9 @@ import {
   CommentIcon, 
   RepostIcon, 
   ShareIcon,
-  Repeat2Icon,
   Link2Icon,
   ChevronDownIcon,
-  ChevronUpIcon,
-  CheckCircleIcon,
-  UserCheckIcon
+  ChevronUpIcon
 } from '../icons/PostIcon';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -1533,43 +1527,14 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
                   {post.user?.verification &&
                     ((typeof post.user.verification === 'number' && post.user.verification > 0) ||
-                     (typeof post.user.verification === 'object' && post.user.verification.status > 0)) &&
-                    (() => {
-                      const status = typeof post.user.verification === 'number' 
-                        ? post.user.verification 
-                        : post.user.verification.status;
-                      
-                      return status === 6 ? (
-                        <Box
-                          sx={{
-                            color: "#1e88e5",
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginLeft: '4px',
-                          }}
-                        >
-                          <CheckCircleIcon />
-                        </Box>
-                      ) : status === 7 ? (
-                        <Box
-                          sx={{
-                            color: "#7c4dff",
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginLeft: '4px',
-                          }}
-                        >
-                          <UserCheckIcon />
-                        </Box>
-                      ) : (
-                        <VerificationBadge
-                          status={status}
-                          size='small'
-                        />
-                      );
-                    })()}
+                     (typeof post.user.verification === 'object' && post.user.verification.status > 0)) && (
+                      <VerificationBadge
+                        status={typeof post.user.verification === 'number' 
+                          ? post.user.verification 
+                          : post.user.verification.status}
+                        size='small'
+                      />
+                    )}
 
                   {post.user?.achievement && (
                     <Box sx={{ mt: 'auto' }}>
@@ -1608,6 +1573,29 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 </ReactMarkdown>
               )}
             </MarkdownContent>
+
+            {/* Twitch iframe для поста с ID 8558 */}
+            {post.id === 8558 && (
+              <Box sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                justifyContent: 'center',
+                '& iframe': {
+                  borderRadius: 'var(--main-border-radius)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                }
+              }}>
+                <iframe 
+                  src={`https://player.twitch.tv/?channel=dota2ti_ru&parent=${window.location.hostname}`} 
+                  frameBorder="0" 
+                  allowFullScreen={true} 
+                  scrolling="no" 
+                  height="378" 
+                  width="620"
+                  title="Twitch Stream"
+                />
+              </Box>
+            )}
 
             {needsExpandButton && !isExpanded && (
               <ShowMoreButton onClick={toggleExpanded}>
