@@ -56,43 +56,14 @@ const ChatItem = ({
   useEffect(() => {
     if (chat.is_group || !otherMember) return;
 
-    const loadUserDetails = async () => {
-      const otherUserId =
-        otherMember.user_id ||
-        otherMember.id ||
-        (otherMember.user && otherMember.user.id);
-
-      if (!otherUserId) {
-        console.error(
-          `Cannot find valid user ID for other member in chat ${chat.id}:`,
-          otherMember
-        );
-        return;
-      }
-
-      if (!isLoading && !otherUserDetails) {
-        setIsLoading(true);
-        try {
-          console.log(
-            `Loading details for user ${otherUserId} in chat ${chat.id}`
-          );
-          const userInfo = await getUserInfo(otherUserId);
-          if (userInfo) {
-            console.log(`Got details for user ${otherUserId}:`, userInfo.name);
-            setOtherUserDetails(userInfo);
-          } else {
-            console.warn(`No user info returned for ${otherUserId}`);
-          }
-        } catch (err) {
-          console.error(`Error loading user info for ${otherUserId}:`, err);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    loadUserDetails();
-  }, [chat, otherMember, getUserInfo, isLoading, otherUserDetails]);
+    // Используем данные из chat.members (уже приходят из WebSocket)
+    if (otherMember) {
+      console.log(`ChatItem: Using WebSocket data for user ${otherMember.user_id || otherMember.id}:`, otherMember.name);
+      setOtherUserDetails(otherMember);
+      setIsLoading(false);
+      return;
+    }
+  }, [chat, otherMember]);
 
   const title = useMemo(() => {
     if (chat.is_group) {
@@ -190,11 +161,11 @@ const ChatItem = ({
     switch (message.message_type) {
       case 'text':
         if (STICKER_RE.test(message.content)) {
-          return `${senderPrefix}🏷️ Стикер`;
+          return `${senderPrefix} Стикер`;
         }
         return `${senderPrefix}${message.content}`;
       case 'sticker':
-        return `${senderPrefix}🏷️ Стикер`;
+        return `${senderPrefix} Стикер`;
       case 'photo':
         return `${senderPrefix}📷 Фото`;
       case 'video':

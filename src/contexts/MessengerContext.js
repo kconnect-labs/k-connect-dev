@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getMessengerSocket, resetMessengerSocket } from '../utils/MessengerSocket';
 
 
-// Enhanced logger with better formatting and levels
+
 const logger = {
   debug: (...args) => {
     if (process.env.NODE_ENV !== 'production' || window.MESSENGER_DEV_MODE) {
@@ -27,15 +27,15 @@ const logger = {
   }
 };
 
-// Enhanced configuration with better defaults
+
 const WEBSOCKET_CONFIG = {
-  PING_INTERVAL: 25000,  // 25 seconds (increased from 15s)
-  PONG_TIMEOUT: 10000,   // 10 seconds  
+  PING_INTERVAL: 25000,  
+  PONG_TIMEOUT: 10000,   
   RECONNECT_BASE_DELAY: 1000,
-  MAX_RECONNECT_ATTEMPTS: 10, // Increased from implicit 5
-  QUEUE_MESSAGE_LIMIT: 100,   // Limit queued messages
-  CONNECTION_TIMEOUT: 30000,  // 30 seconds for initial connection
-  HEALTH_CHECK_INTERVAL: 60000, // 1 minute health checks
+  MAX_RECONNECT_ATTEMPTS: 10, 
+  QUEUE_MESSAGE_LIMIT: 100,   
+  CONNECTION_TIMEOUT: 30000,  
+  HEALTH_CHECK_INTERVAL: 60000, 
 };
 
 const DEV_MODE = process.env.NODE_ENV !== 'production';
@@ -57,7 +57,7 @@ const buildAvatarUrl = (userId, avatarFilename) => {
   
   
   if (avatarFilename.startsWith('/static/uploads/avatar/')) {
-    // Добавляем домен s3.k-connect.ru для аватаров
+    
     return `https://s3.k-connect.ru${avatarFilename}`;
   }
   
@@ -96,25 +96,25 @@ const formatToLocalTime = (isoDateString) => {
   
     
   try {
-    // Если уже в формате времени (HH:MM)
+    
     if (typeof isoDateString === 'string' && /^\d{1,2}:\d{2}$/.test(isoDateString)) {
       return isoDateString;
     }
     
-    // Если в формате "X мин назад" или подобном
+    
     if (typeof isoDateString === 'string' && /^\d{1,2}\s+\w+$/.test(isoDateString)) {
       return isoDateString;
     }
     
-    // Парсим ISO дату
+    
     const date = new Date(isoDateString);
     
-    // Проверяем валидность даты
+    
     if (isNaN(date.getTime())) {
       return typeof isoDateString === 'string' ? isoDateString : '';
     }
     
-    // Форматируем в HH:MM
+    
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     const result = `${hours}:${minutes}`;
@@ -145,16 +145,16 @@ export const MessengerProvider = ({ children }) => {
   const jwtToken = localStorage.getItem('token') || sessionKeyCookie;
   
   
-  // Состояние для принудительно сохранённого ключа и его загрузки
+  
   const [forcedSessionKey, setForcedSessionKey] = useState(null);
   const [fetchingSessionKey, setFetchingSessionKey] = useState(false);
   const [sessionKeyAttempts, setSessionKeyAttempts] = useState(0);
   
-  // Сбрасываем счетчик попыток при смене пользователя
+  
   useEffect(() => {
     setSessionKeyAttempts(0);
     
-    // Сбрасываем WebSocket при смене пользователя
+    
     if (authContext?.user?.id) {
       console.log('[MessengerContext] User changed, resetting WebSocket');
       resetMessengerSocket();
@@ -165,13 +165,13 @@ export const MessengerProvider = ({ children }) => {
   
   const sessionKeyCookieValue = getCookie('session_key');
   
-  // Итоговый ключ сессии (проверяем все источники, включая только что полученный)
+  
   const sessionKey = authContext?.sessionKey || authContext?.session_key ||
                      localStorage.getItem('session_key') || 
-                     getCookie('session_key') || // Добавляем проверку session_key в cookie
+                     getCookie('session_key') || 
                      sessionKeyCookie || forcedSessionKey || jwtToken;
   
-  // Логируем источник session_key для отладки
+  
   React.useEffect(() => {
     if (sessionKey) {
       let source = 'unknown';
@@ -207,7 +207,7 @@ export const MessengerProvider = ({ children }) => {
       console.log('Контекст мессенджера: Использование JWT токена в качестве session_key');
     }
     
-    // Проверяем session_key в cookie и сохраняем в localStorage если его там нет
+    
     if (sessionKeyCookieValue && !localStorage.getItem('session_key')) {
       localStorage.setItem('session_key', sessionKeyCookieValue);
       console.log('Контекст мессенджера: Сохранение session_key из cookie в localStorage');
@@ -249,21 +249,21 @@ export const MessengerProvider = ({ children }) => {
   const [hasMoreMessages, setHasMoreMessages] = useState({});
   const [lastFetchedMessageId, setLastFetchedMessageId] = useState({});
 
-  // Global loading and request management state
+  
   const [globalLoading, setGlobalLoading] = useState(false);
   const [lastRequestTime, setLastRequestTime] = useState({});
   const activeRequestsRef = useRef({});
   const requestQueueRef = useRef({});
   
-  // Enhanced request throttling
+  
   const safeRequest = useCallback(async (key, fn) => {
-    // Prevent duplicate requests
+    
     if (activeRequestsRef.current[key]) {
       logger.debug(`Request ${key} already in progress, skipping duplicate`);
       return null;
     }
     
-    // Throttle rapid requests
+    
     const now = Date.now();
     const lastRequest = lastRequestTime[key] || 0;
     if (now - lastRequest < 1000) {
@@ -277,14 +277,14 @@ export const MessengerProvider = ({ children }) => {
       
       return await fn();
     } finally {
-      // Add small delay before allowing next request
+      
       setTimeout(() => {
         activeRequestsRef.current[key] = false;
       }, 300);
     }
   }, [lastRequestTime]);
 
-  // Enhanced WebSocket state using our new client
+  
   const websocketClient = useRef(null);
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [socketStats, setSocketStats] = useState({
@@ -298,7 +298,7 @@ export const MessengerProvider = ({ children }) => {
     uptime: 0
   });
   
-  // Enhanced WebSocket connection management
+  
   const initializeWebSocket = useCallback(() => {
     if (!sessionKey || isChannel) return null;
     
@@ -315,14 +315,14 @@ export const MessengerProvider = ({ children }) => {
       debug: DEV_MODE || window.MESSENGER_DEV_MODE
     });
     
-    // Очищаем все предыдущие обработчики чтобы избежать дублирования
+    
     if (client.eventHandlers) {
       Object.keys(client.eventHandlers).forEach(event => {
         client.eventHandlers[event] = [];
       });
     }
     
-    // Setup event handlers
+    
     client.on('connected', (data) => {
       logger.info('улучшенный сокет подключен:', data);
       setIsSocketConnected(true);
@@ -340,7 +340,7 @@ export const MessengerProvider = ({ children }) => {
       setError(error.message || 'WebSocket connection error');
     });
     
-    // Handle incoming messages with enhanced processing
+    
     client.on('new_message', (data) => {
       handleWebSocketMessage(data);
     });
@@ -365,7 +365,7 @@ export const MessengerProvider = ({ children }) => {
       handleWebSocketMessage(data);
     });
     
-    // Handle WebSocket command responses
+    
     client.on('chats', (data) => {
       handleWebSocketMessage(data);
     });
@@ -382,7 +382,7 @@ export const MessengerProvider = ({ children }) => {
       handleWebSocketMessage(data);
     });
     
-    // Handle unread counts updates
+    
     client.on('unread_counts', (data) => {
       handleWebSocketMessage(data);
     });
@@ -390,7 +390,7 @@ export const MessengerProvider = ({ children }) => {
     return client;
   }, [sessionKey, isChannel, deviceId]);
   
-  // Enhanced force reconnect function
+  
   const forceReconnectWebSocket = useCallback(() => {
     logger.info('принудительное переподключение сокета');
     
@@ -402,7 +402,7 @@ export const MessengerProvider = ({ children }) => {
       }
     }
     
-    // Create new client
+    
     const newClient = initializeWebSocket();
     if (newClient) {
       websocketClient.current = newClient;
@@ -412,11 +412,11 @@ export const MessengerProvider = ({ children }) => {
     }
   }, [initializeWebSocket]);
   
-  // Enhanced connection management
+  
   const connectEnhancedWebSocket = useCallback(async () => {
     if (isChannel || !sessionKey) return;
     
-    // Получаем синглтон клиент
+    
     const client = getMessengerSocket({
       sessionKey: sessionKey,
       deviceId: deviceId,
@@ -428,7 +428,7 @@ export const MessengerProvider = ({ children }) => {
       debug: DEV_MODE || window.MESSENGER_DEV_MODE
     });
     
-    // Если клиент уже подключен или подключается, не подключаемся заново
+    
     if (client && (client.isConnected || client.isConnecting)) {
       logger.info('сокет уже подключен');
       websocketClient.current = client;
@@ -441,7 +441,7 @@ export const MessengerProvider = ({ children }) => {
     
     logger.info('Connecting Enhanced WebSocket...');
     
-    // Используем initializeWebSocket для правильной настройки обработчиков
+    
     const setupClient = initializeWebSocket();
     if (setupClient) {
       
@@ -451,7 +451,7 @@ export const MessengerProvider = ({ children }) => {
         await setupClient.connect();
         logger.info('улучшенный сокет подключен');
 
-        // Сразу после подключения запрашиваем список чатов
+        
         try {
           setupClient.sendMessage({ type: 'get_chats' });
         } catch (e) {
@@ -464,7 +464,7 @@ export const MessengerProvider = ({ children }) => {
     }
   }, [isChannel, sessionKey, deviceId, initializeWebSocket]);
   
-  // Update socket stats periodically
+  
   useEffect(() => {
     if (!isSocketConnected || !websocketClient.current) return;
     
@@ -474,12 +474,12 @@ export const MessengerProvider = ({ children }) => {
       }
     };
     
-    const interval = setInterval(updateStats, 5000); // Update every 5 seconds
+    const interval = setInterval(updateStats, 5000); 
     
     return () => clearInterval(interval);
   }, [isSocketConnected]);
   
-  // Cleanup WebSocket on unmount
+  
   useEffect(() => {
     return () => {
       if (websocketClient.current) {
@@ -528,7 +528,7 @@ export const MessengerProvider = ({ children }) => {
         const newMessageChatId = data.chatId || data.chat_id;
         const newMessage = data.message;
         
-        // Добавляем temp_id если он есть в данных
+        
         if (data.temp_id) {
           newMessage.temp_id = data.temp_id;
         }
@@ -537,20 +537,20 @@ export const MessengerProvider = ({ children }) => {
         if (newMessage?.sender) {
           const senderId = newMessage.sender.id || newMessage.sender_id;
           
-          // Проверяем и исправляем аватар отправителя
+          
           if (senderId) {
-            // Если аватар уже есть, но содержит неправильный путь, исправляем его
+            
             if (newMessage.sender.avatar && newMessage.sender.avatar.includes('/api/messenger/files/')) {
               console.log(`Исправляем неправильный путь аватара отправителя ${senderId}:`, newMessage.sender.avatar);
-              newMessage.sender.avatar = null; // Сбрасываем, чтобы пересоздать
+              newMessage.sender.avatar = null; 
             }
             
-            // Если аватар есть в кэше, используем его
+            
             if (!newMessage.sender.avatar && avatarCache[senderId]) {
             newMessage.sender.avatar = avatarCache[senderId];
               console.log(`Применение кэшированной аватарки для отправителя ${senderId}`);
           }
-            // Если есть фото, но нет аватара, создаем аватар
+            
             else if (!newMessage.sender.avatar && newMessage.sender.photo) {
             newMessage.sender.avatar = getAvatarUrl(senderId, newMessage.sender.photo);
               console.log(`Обработка новой аватарки отправителя ${senderId}`);
@@ -613,20 +613,20 @@ export const MessengerProvider = ({ children }) => {
             data.chat.members.forEach(member => {
               const userId = member.user_id || member.id;
               
-              // Проверяем и исправляем аватар участника
+              
               if (userId) {
-                // Если аватар содержит неправильный путь, исправляем его
+                
                 if (member.avatar && member.avatar.includes('/api/messenger/files/')) {
                   console.log(`Исправляем неправильный путь аватара участника ${userId}:`, member.avatar);
-                  member.avatar = null; // Сбрасываем, чтобы пересоздать
+                  member.avatar = null; 
                 }
                 
-                // Если аватар есть в кэше, используем его
+                
                 if (!member.avatar && avatarCache[userId]) {
                 member.avatar = avatarCache[userId];
                 console.log(`WebSocket chat_update: Использована кэшированная аватарка для участника ${userId}`);
               }
-                // Если есть фото, но нет аватара, создаем аватар
+                
                 else if (!member.avatar) {
                 const photo = member.photo || member.avatar;
                 if (photo) {
@@ -704,12 +704,12 @@ export const MessengerProvider = ({ children }) => {
             return true;
           });
           
-          // 🔥 ИСПРАВЛЕНИЕ: Извлекаем счетчики непрочитанных из WebSocket ответа
+          
           const newUnreadCounts = {};
           
           
           filteredChats.forEach(chat => {
-            // 🔥 Устанавливаем unread_count для каждого чата
+            
             newUnreadCounts[chat.id] = chat.unread_count || 0;
             
             
@@ -779,7 +779,7 @@ export const MessengerProvider = ({ children }) => {
           
           setChats(filteredChats);
           
-          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из WebSocket ответа
+          
           setUnreadCounts(prevCounts => {
             const prevKeys = Object.keys(prevCounts);
             const newKeys = Object.keys(newUnreadCounts);
@@ -826,20 +826,20 @@ export const MessengerProvider = ({ children }) => {
           setMessages(prev => {
             const existingMessages = prev[chatId] || [];
 
-            // Определяем, это первоначальная загрузка или загрузка старых сообщений
+            
             const isLoadingOlderMessages = existingMessages.length > 0;
             
             let mergedMessages;
             
             if (isLoadingOlderMessages) {
-              // Загружаем старые сообщения - добавляем в начало
+              
               console.log('📜 WebSocket: Loading older messages - adding to beginning');
               const uniqueNewMessages = newMessages.filter(newMsg => 
                 !existingMessages.some(msg => msg.id === newMsg.id)
               );
               mergedMessages = [...uniqueNewMessages, ...existingMessages];
             } else {
-              // Первоначальная загрузка - добавляем как обычно
+              
               console.log('🆕 WebSocket: Initial message loading');
               mergedMessages = [...existingMessages];
               newMessages.forEach(newMsg => {
@@ -849,10 +849,10 @@ export const MessengerProvider = ({ children }) => {
               });
             }
             
-            // Сортируем по ID для корректного порядка
+            
             mergedMessages.sort((a, b) => a.id - b.id);
             
-            // Добавляем флаг о сообщениях модератора
+            
             mergedMessages.hasModeratorMessages = hasModeratorMessages;
             
             console.log(`Chat ${chatId}: final merged messages:`, mergedMessages.length);
@@ -885,7 +885,7 @@ export const MessengerProvider = ({ children }) => {
           if (user) {
             newMessages.forEach(msg => {
               if (msg.sender_id !== user.id) {
-                markMessageAsRead(msg.id);
+                debouncedMarkMessageAsRead(msg.id);
               }
             });
           }
@@ -895,24 +895,24 @@ export const MessengerProvider = ({ children }) => {
       case 'message_sent':
         console.log('Подтверждение отправки сообщения:', data.messageId, data.tempId);
         
-        // Если есть tempId, заменяем временное сообщение на реальное
+        
         if (data.tempId && data.messageId) {
           setMessages(prev => {
             const updatedMessages = { ...prev };
             
-            // Ищем чат с временным сообщением
+            
             Object.keys(updatedMessages).forEach(chatId => {
               const chatMessages = updatedMessages[chatId];
               const tempIndex = chatMessages.findIndex(msg => msg.id === data.tempId);
               
               if (tempIndex !== -1) {
-                // Заменяем временное сообщение на реальное, сохраняя reply_to_id
+                
                 const tempMessage = chatMessages[tempIndex];
                 const realMessage = {
                   ...tempMessage,
                   id: data.messageId,
                   is_temp: false,
-                  reply_to_id: tempMessage.reply_to_id // Сохраняем reply_to_id
+                  reply_to_id: tempMessage.reply_to_id 
                 };
                 
                 const newChatMessages = [...chatMessages];
@@ -938,7 +938,7 @@ export const MessengerProvider = ({ children }) => {
           setMessages(prev => {
             const chatMessages = prev[chatId] || [];
             
-            // Удаляем сообщение из списка
+            
             const updatedChatMessages = chatMessages.filter(msg => msg.id !== messageId);
             
             return {
@@ -947,14 +947,14 @@ export const MessengerProvider = ({ children }) => {
             };
           });
           
-          // Обновляем последнее сообщение в чате, если удаленное было последним
+          
           setChats(prev => {
             const chatIndex = prev.findIndex(c => c.id === chatId);
             if (chatIndex === -1) return prev;
             
             const chat = prev[chatIndex];
             if (chat.last_message && chat.last_message.id === messageId) {
-              // Находим новое последнее сообщение
+              
               const chatMessages = messages[chatId] || [];
               const newLastMessage = chatMessages
                 .filter(msg => msg.id !== messageId)
@@ -978,19 +978,19 @@ export const MessengerProvider = ({ children }) => {
         break;
       
       case 'unread_counts':
-        // Сервер прислал актуальную карту непрочитанных чатов
+        
         console.log('Received unread_counts via WebSocket:', data);
         const incomingCounts = data.counts || {};
         const totalChats = data.totalChats || 0;
 
-        // Обновляем состояние только если значения действительно изменились, 
-        // чтобы избежать лишних ререндеров и возможной рекурсивной петли обновлений
+        
+        
         setUnreadCounts(prevCounts => {
           const prevKeys = Object.keys(prevCounts);
           const newKeys = Object.keys(incomingCounts);
 
           if (prevKeys.length === newKeys.length && prevKeys.every(key => prevCounts[key] === incomingCounts[key])) {
-            // Никаких фактических изменений нет – возвращаем предыдущее состояние
+            
             return prevCounts;
           }
 
@@ -1132,7 +1132,7 @@ export const MessengerProvider = ({ children }) => {
     };
   }, [sessionKey, fetchCurrentUser, isChannel]);
   
-  // Legacy WebSocket refs for compatibility (to be removed)
+  
   const reconnectTimeoutRef = useRef(null);
   const pingIntervalRef = useRef(null);
   const reconnectAttempts = useRef(0);
@@ -1140,7 +1140,7 @@ export const MessengerProvider = ({ children }) => {
   const errorReportRef = useRef({});
   const connectionCheckTimerRef = useRef(null);
   
-  // Error reporting helper
+  
   const setErrorReportRef = {
     current: (key, message) => {
       errorReportRef.current[key] = {
@@ -1151,7 +1151,7 @@ export const MessengerProvider = ({ children }) => {
     }
   };
   
-  // Enhanced connection checker
+  
   const startConnectionChecker = useCallback(() => {
     if (connectionCheckTimerRef.current) {
       clearInterval(connectionCheckTimerRef.current);
@@ -1172,7 +1172,7 @@ export const MessengerProvider = ({ children }) => {
   
 
   
-  // Enhanced reconnection with exponential backoff
+  
   const reconnectWebSocket = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
@@ -1204,24 +1204,24 @@ export const MessengerProvider = ({ children }) => {
   const handleNewMessage = (message, chatId) => {
     if (!message || !chatId) return;
     
-    // Обработка аватара отправителя
+    
     if (message.sender) {
       const senderId = message.sender.id || message.sender_id;
       
-      // Проверяем и исправляем аватар отправителя
+      
       if (senderId) {
-        // Если аватар уже есть, но содержит неправильный путь, исправляем его
+        
         if (message.sender.avatar && message.sender.avatar.includes('/api/messenger/files/')) {
           console.log(`Исправляем неправильный путь аватара отправителя ${senderId}:`, message.sender.avatar);
-          message.sender.avatar = null; // Сбрасываем, чтобы пересоздать
+          message.sender.avatar = null; 
         }
         
-        // Если аватар есть в кэше, используем его
+        
         if (!message.sender.avatar && avatarCache[senderId]) {
         message.sender.avatar = avatarCache[senderId];
         console.log(`Применение кэшированной аватарки для отправителя ${senderId}`);
       }
-        // Если есть фото, но нет аватара, создаем аватар
+        
         else if (!message.sender.avatar && message.sender.photo) {
         message.sender.avatar = getAvatarUrl(senderId, message.sender.photo);
         console.log(`Обработка новой аватарки отправителя ${senderId}`);
@@ -1229,12 +1229,12 @@ export const MessengerProvider = ({ children }) => {
       }
     }
     
-    // Обработка файлов сообщений
+    
     if (message.message_type && message.message_type !== 'text') {
       const messageType = message.message_type;
       const content = message.content;
       
-      // Генерируем URL для файлов
+      
       if (content) {
         if (messageType === 'photo' && !message.photo_url) {
           message.photo_url = getFileUrl(chatId, content);
@@ -1260,22 +1260,22 @@ export const MessengerProvider = ({ children }) => {
     setMessages(prev => {
       const chatMessages = prev[numChatId] || [];
       
-      // Проверяем, есть ли уже сообщение с таким ID
+      
       if (chatMessages.some(m => m.id === message.id)) {
         console.log(`Сообщение с ID ${message.id} уже существует, пропускаем`);
         return prev;
       }
       
-      // ДЕДУПЛИКАЦИЯ: Если это сообщение от текущего пользователя и есть tempId
+      
       if (isFromCurrentUser && message.temp_id) {
-        // Ищем временное сообщение с таким tempId
+        
         const tempMessageIndex = chatMessages.findIndex(m => 
           m.is_temp && m.id === message.temp_id
         );
         
         if (tempMessageIndex !== -1) {
           console.log(`Заменяем временное сообщение ${message.temp_id} на реальное ${message.id}`);
-          // Заменяем временное сообщение на реальное
+          
           const newChatMessages = [...chatMessages];
           newChatMessages[tempMessageIndex] = message;
           
@@ -1286,19 +1286,19 @@ export const MessengerProvider = ({ children }) => {
         }
       }
       
-      // ДЕДУПЛИКАЦИЯ: Проверяем на дубликаты по содержимому и времени (для сообщений без tempId)
+      
       if (isFromCurrentUser && !message.temp_id) {
         const now = new Date();
         const messageTime = new Date(message.created_at);
         const timeDiff = Math.abs(now - messageTime);
         
-        // Если сообщение было создано в последние 10 секунд, проверяем на дубликаты
+        
         if (timeDiff < 10000) {
           const duplicateIndex = chatMessages.findIndex(m => 
             m.content === message.content && 
             m.sender_id === message.sender_id &&
-            m.is_temp && // Только временные сообщения
-            Math.abs(new Date(m.created_at) - messageTime) < 5000 // В пределах 5 секунд
+            m.is_temp && 
+            Math.abs(new Date(m.created_at) - messageTime) < 5000 
           );
           
           if (duplicateIndex !== -1) {
@@ -1314,7 +1314,7 @@ export const MessengerProvider = ({ children }) => {
         }
       }
       
-      // Если это новое сообщение, добавляем его
+      
       return {
         ...prev,
         [numChatId]: [...chatMessages, message].sort((a, b) => a.id - b.id)
@@ -1327,67 +1327,38 @@ export const MessengerProvider = ({ children }) => {
     if (!user || !messageId || isChannel) return;
     
     try {
-      // Находим сообщение в кэше
+      
       const message = Object.values(messages).flat().find(msg => msg.id === messageId);
       
-      // Проверяем, что это не наше собственное сообщение
+      
       if (message && message.sender_id === user?.id) {
         logger.debug(`Skipping read receipt for own message ${messageId}`);
         return;
       }
       
-      // Отправляем запрос на сервер
-      const response = await fetch(`${API_URL}/messenger/read/${messageId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${sessionKey}`,
-          'Accept': 'application/json'
-        }
-      });
       
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success) {
-          logger.debug(`Message ${messageId} marked as read via API`);
-          
-          // Обновляем локальное состояние
-          setMessages(prevMessages => {
-            const updatedMessages = { ...prevMessages };
-            
-            Object.keys(updatedMessages).forEach(chatId => {
-              updatedMessages[chatId] = updatedMessages[chatId].map(msg => {
-                if (msg.id === messageId) {
-                  const currentReadBy = msg.read_by || [];
-                  if (!currentReadBy.includes(user.id)) {
-                    return { ...msg, read_by: [...currentReadBy, user.id], read_count: (msg.read_count || 0) + 1 };
-                  }
-                }
-                return msg;
-              });
-            });
-            
-            return updatedMessages;
-          });
-        }
+      if (message && message.read_by && message.read_by.includes(user.id)) {
+        logger.debug(`Message ${messageId} already marked as read by user ${user.id}`);
+        return;
       }
       
-      // Send read receipt via Enhanced WebSocket
+      
       if (websocketClient.current && websocketClient.current.isConnected) {
-        // Find the chat for this message
+        
         const chatId = Object.keys(messages).find(chatId => 
           messages[chatId].some(message => message.id === messageId)
         );
         
         if (chatId) {
-          // Дополнительная проверка - не отправляем read_receipt для своих сообщений
+          
           const targetMessage = messages[chatId].find(msg => msg.id === messageId);
           if (targetMessage && targetMessage.sender_id !== user?.id) {
             logger.debug(`Sending read receipt for message ${messageId} in chat ${chatId} from user ${targetMessage.sender_id} (current user: ${user?.id})`);
             
-            // Use Enhanced WebSocket client method
+            
             websocketClient.current.sendReadReceipt(messageId, parseInt(chatId));
             
-            // Update local read status
+            
             updateReadStatus(messageId, parseInt(chatId), user?.id);
           } else {
             logger.debug(`Skipping read receipt for message ${messageId} - own message or invalid (sender: ${targetMessage?.sender_id}, current user: ${user?.id})`);
@@ -1400,12 +1371,120 @@ export const MessengerProvider = ({ children }) => {
   };
   
   
+  const readReceiptDebounceRef = useRef({});
+  const debouncedMarkMessageAsRead = useCallback((messageId) => {
+    
+    if (readReceiptDebounceRef.current[messageId]) {
+      clearTimeout(readReceiptDebounceRef.current[messageId]);
+    }
+    
+    
+    readReceiptDebounceRef.current[messageId] = setTimeout(() => {
+      markMessageAsRead(messageId);
+      delete readReceiptDebounceRef.current[messageId];
+    }, 300); 
+  }, [markMessageAsRead]);
+  
+  
+  const [userInfoCache, setUserInfoCache] = useState({});
+  
+  
+  const getUsersBatchInfo = useCallback(async (userIds) => {
+    if (!sessionKey || !userIds || !Array.isArray(userIds) || userIds.length === 0 || isChannel) {
+      return [];
+    }
+    
+    
+    const cachedUsers = [];
+    const userIdsToFetch = [];
+    
+    userIds.forEach(userId => {
+      if (userInfoCache[userId]) {
+        cachedUsers.push(userInfoCache[userId]);
+      } else {
+        userIdsToFetch.push(userId);
+      }
+    });
+    
+    
+    if (userIdsToFetch.length === 0) {
+      return cachedUsers;
+    }
+    
+    try {
+      const response = await fetch(`${API_URL}/messenger/users/batch`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${sessionKey}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          user_ids: userIdsToFetch
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.success && data.users) {
+        
+        const processedUsers = data.users.map(user => {
+          if (user.photo || user.avatar) {
+            user.avatar = buildAvatarUrl(user.id, user.photo || user.avatar);
+          }
+          return user;
+        });
+        
+        
+        const newCache = { ...userInfoCache };
+        processedUsers.forEach(user => {
+          newCache[user.id] = user;
+        });
+        setUserInfoCache(newCache);
+        
+        
+        return [...cachedUsers, ...processedUsers];
+      } else {
+        console.error('Error getting users batch info:', data.error);
+        return cachedUsers; 
+      }
+    } catch (err) {
+      console.error('Error getting users batch info:', err);
+      return cachedUsers; 
+    }
+  }, [sessionKey, isChannel, API_URL, userInfoCache]);
+  
+  
+  useEffect(() => {
+    setUserInfoCache({});
+  }, [user?.id]);
+  
+  
+  const markAllMessagesAsReadDebounceRef = useRef({});
+  
   const markAllMessagesAsRead = async (chatId) => {
     if (!user || !chatId || isChannel) return;
     
     console.log(`markAllMessagesAsRead called for chat ${chatId}, user:`, user);
     
-    // Сначала пытаемся использовать новый API эндпоинт
+    // Проверяем, есть ли непрочитанные сообщения
+    const currentChatMessages = messages[chatId] || [];
+    const currentUnreadMessages = currentChatMessages.filter(msg => 
+      msg.sender_id !== user.id && 
+      (!msg.read_by || !msg.read_by.includes(user.id))
+    );
+    
+    if (currentUnreadMessages.length === 0) {
+      console.log(`No unread messages in chat ${chatId}, skipping API call`);
+      return;
+    }
+    
+    console.log(`Found ${currentUnreadMessages.length} unread messages in chat ${chatId}, marking as read`);
+    
     try {
       const response = await fetch(`${API_URL}/messenger/chats/${chatId}/read-all`, {
         method: 'POST',
@@ -1419,13 +1498,13 @@ export const MessengerProvider = ({ children }) => {
         const result = await response.json();
         if (result.success) {
 
-          // Если сервер не нашел непрочитанных сообщений, не отправляем read_receipt
+          
           if (result.marked_count === 0) {
             logger.info(`No unread messages found in chat ${chatId}, skipping read_receipt`);
             return;
           }
           
-          // Уведомляем других участников через WebSocket о прочтении
+          
           if (websocketClient.current && websocketClient.current.isConnected) {
             const chatMessages = messages[chatId] || [];
             const unreadMessages = chatMessages.filter(msg => 
@@ -1433,14 +1512,14 @@ export const MessengerProvider = ({ children }) => {
               (!msg.read_by || !msg.read_by.includes(user.id))
             );
             
-                          // Берём только последний (максимальный id) непрочитанный
+                          
               if (unreadMessages.length) {
                 const lastUnread = unreadMessages.reduce((a, b) => (a.id > b.id ? a : b));
-                // Дополнительная проверка - не отправляем read_receipt для своих сообщений
+                
                 if (lastUnread && lastUnread.sender_id !== user?.id) {
                   console.log(`markAllChatMessagesAsRead: Sending read_receipt for message ${lastUnread.id} from user ${lastUnread.sender_id} (current user: ${user?.id})`);
                   websocketClient.current.sendReadReceipt(lastUnread.id, chatId);
-                  // Локально обновляем статус всех сообщений <= lastUnread.id
+                  
                   updateReadStatus(lastUnread.id, chatId, user.id);
                 } else {
                   console.log(`markAllChatMessagesAsRead: Skipping read_receipt for message ${lastUnread?.id} - own message or invalid`);
@@ -1454,7 +1533,7 @@ export const MessengerProvider = ({ children }) => {
       logger.error('Error using new API for marking messages as read, falling back to old method:', error);
     }
     
-    // Fallback к старому методу
+    
     const chatMessages = messages[chatId] || [];
     
     const unreadMessages = chatMessages.filter(msg => 
@@ -1463,15 +1542,30 @@ export const MessengerProvider = ({ children }) => {
     );
     
     unreadMessages.forEach(msg => {
-      markMessageAsRead(msg.id);
+      debouncedMarkMessageAsRead(msg.id);
     });
     
     if (unreadMessages.length > 0) {
-      // Removed local unreadCounts update - rely entirely on server WebSocket updates
+      
       console.log(`Marked ${unreadMessages.length} messages as read in chat ${chatId}, waiting for server update`);
     }
   };
   
+  
+  const debouncedMarkAllMessagesAsRead = useCallback((chatId) => {
+    if (!chatId) return;
+    
+    
+    if (markAllMessagesAsReadDebounceRef.current[chatId]) {
+      clearTimeout(markAllMessagesAsReadDebounceRef.current[chatId]);
+    }
+    
+    
+    markAllMessagesAsReadDebounceRef.current[chatId] = setTimeout(() => {
+      markAllMessagesAsRead(chatId);
+      delete markAllMessagesAsReadDebounceRef.current[chatId];
+    }, 300); 
+  }, [markAllMessagesAsRead]);
   
   const updateReadStatus = (messageId, chatId, userId) => {
     if (!messageId || !chatId || !userId) return;
@@ -1481,7 +1575,7 @@ export const MessengerProvider = ({ children }) => {
     setMessages(prev => {
       const chatMessages = prev[chatId] || [];
       const updatedMessages = chatMessages.map(msg => {
-        // Если это сообщение от текущего пользователя (отправителя), ставим двойную галочку
+        
         if (msg.sender_id === user?.id) {
           const currentReadBy = msg.read_by || [];
           if (!currentReadBy.includes(userId)) {
@@ -1494,7 +1588,7 @@ export const MessengerProvider = ({ children }) => {
       
 
       
-      // Обновляем last_message в списке чатов, чтобы галочки отображались сразу и там
+      
       const lastMsg = updatedMessages.length ? updatedMessages[updatedMessages.length - 1] : null;
       if (lastMsg) {
         updateLastMessage(chatId, lastMsg);
@@ -1543,11 +1637,11 @@ export const MessengerProvider = ({ children }) => {
       setGlobalLoading(true);
       
       try {
-        // Если WebSocket соединение активно, используем WebSocket команду
+        
         if (websocketClient.current && websocketClient.current.isConnected) {
           console.log('Загрузка чатов через WebSocket...');
           websocketClient.current.getChats();
-          return; // WebSocket ответ обработается в handleWebSocketMessage
+          return; 
         }
         
         console.log('Загрузка чатов с:', `${API_URL}/messenger/chats`);
@@ -1580,12 +1674,12 @@ export const MessengerProvider = ({ children }) => {
             return true;
           });
           
-          // 🔥 ИСПРАВЛЕНИЕ: Извлекаем счетчики непрочитанных из API ответа
+          
           const newUnreadCounts = {};
           
           
           filteredChats.forEach(chat => {
-            // 🔥 Устанавливаем unread_count для каждого чата
+            
             newUnreadCounts[chat.id] = chat.unread_count || 0;
             
             
@@ -1655,13 +1749,13 @@ export const MessengerProvider = ({ children }) => {
           
           setChats(filteredChats);
           
-          // 🔥 ИСПРАВЛЕНИЕ: Устанавливаем счетчики непрочитанных из API
+          
           setUnreadCounts(prevCounts => {
             const prevKeys = Object.keys(prevCounts);
             const newKeys = Object.keys(newUnreadCounts);
 
             if (prevKeys.length === newKeys.length && prevKeys.every(k => prevCounts[k] === newUnreadCounts[k])) {
-              return prevCounts; // без изменений
+              return prevCounts; 
             }
 
             console.log('Загружены счетчики непрочитанных:', newUnreadCounts);
@@ -1821,13 +1915,13 @@ export const MessengerProvider = ({ children }) => {
       setLoadingMessages(true);
       
       try {
-        // Если WebSocket соединение активно, используем WebSocket команду
+        
         if (websocketClient.current && websocketClient.current.isConnected) {
           console.log(`Загрузка сообщений через WebSocket для чата ${chatId}...`);
           const beforeId = lastFetchedMessageId[chatId];
           const success = websocketClient.current.getMessages(chatId, limit, beforeId, false);
           console.log(`WebSocket getMessages result: ${success}`);
-          return; // WebSocket ответ обработается в handleWebSocketMessage
+          return; 
         } else {
           console.log(`WebSocket не доступен: client=${!!websocketClient.current}, connected=${websocketClient.current?.isConnected}`);
         }
@@ -1862,7 +1956,7 @@ export const MessengerProvider = ({ children }) => {
           console.log('First message:', newMessages[0]);
           console.log('Last message:', newMessages[newMessages.length - 1]);
           
-          // Логируем даты сообщений
+          
           newMessages.forEach((msg, index) => {
             console.log(`Message ${index}:`, {
               id: msg.id,
@@ -1889,20 +1983,20 @@ export const MessengerProvider = ({ children }) => {
             console.log(`Chat ${chatId}: existing messages:`, existingMessages.length);
             console.log(`Chat ${chatId}: new messages:`, newMessages.length);
             
-            // Определяем, это первоначальная загрузка или загрузка старых сообщений
+            
             const isLoadingOlderMessages = existingMessages.length > 0;
             
             let mergedMessages;
             
             if (isLoadingOlderMessages) {
-              // Загружаем старые сообщения - добавляем в начало
+              
               console.log('📜 API: Loading older messages - adding to beginning');
               const uniqueNewMessages = newMessages.filter(newMsg => 
                 !existingMessages.some(msg => msg.id === newMsg.id)
               );
               mergedMessages = [...uniqueNewMessages, ...existingMessages];
             } else {
-              // Первоначальная загрузка - добавляем как обычно
+              
               console.log('🆕 API: Initial message loading');
               mergedMessages = [...existingMessages];
               newMessages.forEach(newMsg => {
@@ -1912,10 +2006,10 @@ export const MessengerProvider = ({ children }) => {
               });
             }
             
-            // Сортируем по ID для корректного порядка
+            
             mergedMessages.sort((a, b) => a.id - b.id);
             
-            // Добавляем флаг о сообщениях модератора
+            
             mergedMessages.hasModeratorMessages = hasModeratorMessages;
             
             console.log(`Chat ${chatId}: final merged messages:`, mergedMessages.length);
@@ -1948,7 +2042,7 @@ export const MessengerProvider = ({ children }) => {
           if (user) {
             newMessages.forEach(msg => {
               if (msg.sender_id !== user.id) {
-                markMessageAsRead(msg.id);
+                debouncedMarkMessageAsRead(msg.id);
               }
             });
           }
@@ -1985,7 +2079,13 @@ export const MessengerProvider = ({ children }) => {
     
     try {
       
-      const userInfo = await getUserInfo(userId);
+      // Проверяем кеш сначала, если нет - используем batch API
+      let userInfo = userInfoCache[userId];
+      if (!userInfo) {
+        const userInfoArray = await getUsersBatchInfo([userId]);
+        userInfo = userInfoArray.length > 0 ? userInfoArray[0] : null;
+      }
+      
       if (userInfo?.type === 'channel') {
         setError('Нельзя создать чат с каналом');
         return null;
@@ -2032,8 +2132,8 @@ export const MessengerProvider = ({ children }) => {
     
     try {
       
-      const memberPromises = memberIds.map(id => getUserInfo(id));
-      const memberInfos = await Promise.all(memberPromises);
+      
+      const memberInfos = await getUsersBatchInfo(memberIds);
       
       if (memberInfos.some(m => m?.type === 'channel')) {
         setError('Нельзя добавлять каналы в групповой чат');
@@ -2093,11 +2193,11 @@ export const MessengerProvider = ({ children }) => {
         messageText = xorCipher(text, encryptionKey);
       }
       
-      // Если WebSocket соединение активно, используем WebSocket команду
+      
       if (websocketClient.current && websocketClient.current.isConnected) {
         console.log(`Отправка сообщения через WebSocket в чат ${chatId}...`);
         
-        // Создаем временное сообщение для немедленного отображения
+        
         const tempMessage = {
           id: `temp_${Date.now()}_${Math.random()}`,
           content: text,
@@ -2111,11 +2211,11 @@ export const MessengerProvider = ({ children }) => {
           chat_id: chatId,
           message_type: 'text',
           created_at: formatToLocalTime(new Date().toISOString()),
-          reply_to_id: replyToId, // Добавляем информацию о reply_to_id
-          is_temp: true // Флаг для идентификации временного сообщения
+          reply_to_id: replyToId, 
+          is_temp: true 
         };
         
-        // Добавляем временное сообщение в состояние
+        
         setMessages(prev => {
           const chatMessages = prev[chatId] || [];
           return {
@@ -2124,7 +2224,7 @@ export const MessengerProvider = ({ children }) => {
           };
         });
         
-        // Обновляем последнее сообщение в чате
+        
         setChats(prev => {
           const chatIndex = prev.findIndex(c => c.id === chatId);
           if (chatIndex === -1) return prev;
@@ -2136,7 +2236,7 @@ export const MessengerProvider = ({ children }) => {
           return [updatedChat, ...newChats];
         });
         
-        // Отправляем сообщение через WebSocket с tempId
+        
         websocketClient.current.sendChatMessage(chatId, messageText, replyToId, tempMessage.id);
         
         return tempMessage;
@@ -2288,7 +2388,7 @@ export const MessengerProvider = ({ children }) => {
     if (!websocketClient.current || !chatId || !isSocketConnected || isChannel) return;
     
     try {
-      // Use Enhanced WebSocket client methods
+      
       if (isTyping) {
         websocketClient.current.sendTypingStart(chatId);
       } else {
@@ -2339,45 +2439,16 @@ export const MessengerProvider = ({ children }) => {
   const getUserInfo = async (userId) => {
     if (!sessionKey || !userId || isChannel) return null;
     
-    try {
-      const response = await fetch(`${API_URL}/messenger/users/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${sessionKey}`,
-          'Accept': 'application/json'
-        }
-      });
-      
-      
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const textResponse = await response.text();
-        console.error('Received non-JSON response:', textResponse.substring(0, 100) + '...');
-        throw new Error('API returned non-JSON response');
-      }
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        
-        if (data.user) {
-          
-          console.log('User fields:', Object.keys(data.user));
-          
-          
-          const photo = data.user.photo || data.user.avatar;
-          if (photo) {
-            data.user.avatar = buildAvatarUrl(data.user.id, photo);
-          }
-        }
-        return data.user;
-      } else {
-        console.error('Error getting user info:', data.error);
-        return null;
-      }
-    } catch (err) {
-      console.error('Error getting user info:', err);
-      return null;
+    
+    if (userInfoCache[userId]) {
+      console.log(`Using cached user info for ${userId}`);
+      return userInfoCache[userId];
     }
+    
+    
+    console.log(`User ${userId} not in cache, using batch API`);
+    const userInfoArray = await getUsersBatchInfo([userId]);
+    return userInfoArray.length > 0 ? userInfoArray[0] : null;
   };
   
   
@@ -2403,12 +2474,12 @@ export const MessengerProvider = ({ children }) => {
   const getFileUrl = (chatId, filePath) => {
     if (!sessionKey || !filePath) return '';
     
-    // Если путь уже содержит /static/, это аватар или статический файл
-    // Не добавляем ID чата и не используем API messenger/files
+    
+    
     if (filePath.includes('/static/')) {
-      // Проверяем, не содержит ли путь уже /api/messenger/files/
+      
       if (filePath.includes('/api/messenger/files/')) {
-        // Убираем лишнюю часть пути
+        
         const staticIndex = filePath.indexOf('/static/');
         if (staticIndex !== -1) {
           filePath = filePath.substring(staticIndex);
@@ -2416,23 +2487,23 @@ export const MessengerProvider = ({ children }) => {
         }
       }
       
-      // Для аватаров и статических файлов просто добавляем токен авторизации
+      
     const authParam = `token=${encodeURIComponent(sessionKey)}`;
       const url = `${filePath}?${authParam}`;
       console.log(`Generated static file URL: ${url}`);
       return url;
     }
     
-    // Для файлов сообщений используем API messenger/files
+    
     const authParam = `token=${encodeURIComponent(sessionKey)}`;
     let url = `${API_URL}/messenger/files/${chatId}/`;
     
     if (filePath.includes(`attachments/chat_${chatId}/`)) {
-      // Убираем префикс с ID чата
+      
       const pathParts = filePath.split(`attachments/chat_${chatId}/`);
       url += pathParts[1];
     } else {
-      // Добавляем путь как есть
+      
       url += filePath;
     }
     
@@ -2473,14 +2544,13 @@ export const MessengerProvider = ({ children }) => {
         console.log(`MessengerContext.setActiveAndLoadChat: Already have ${messages[chatId].length} messages for chat ${chatId}`);
       }
       
-      // 🔥 ИСПРАВЛЕНИЕ: Используем обновленную функцию markAllMessagesAsRead
+      
       if (user) {
-        setTimeout(async () => {
-          await markAllMessagesAsRead(chatId);
-        }, 500); // Небольшая задержка для загрузки сообщений
+        // Используем дебаунсированную версию
+        debouncedMarkAllMessagesAsRead(chatId);
       }
     }
-  }, [isChannel, chats, messages, user, loadMessages, activeChat, markAllMessagesAsRead]);
+  }, [isChannel, chats, messages, user, loadMessages, activeChat, debouncedMarkAllMessagesAsRead]);
   
   
   const updateLastMessage = (chatId, message) => {
@@ -2601,7 +2671,7 @@ export const MessengerProvider = ({ children }) => {
     
     const handleNetworkChange = () => {
       if (navigator.onLine) {
-        // Network is back online, check Enhanced WebSocket state
+        
         logger.info('Network is back online, checking Enhanced WebSocket state');
         if (!isSocketConnected || !websocketClient.current || 
             !websocketClient.current.isConnected) {
@@ -2611,7 +2681,7 @@ export const MessengerProvider = ({ children }) => {
           }, 1000);
         }
       } else {
-        // Network is offline
+        
         logger.warn('Network is offline, waiting for recovery');
         setIsSocketConnected(false);
       }
@@ -2656,7 +2726,7 @@ export const MessengerProvider = ({ children }) => {
         
         if (args[0].includes && args[0].includes('/apiMes/')) {
           
-          // If Enhanced WebSocket is connected, send a test ping to verify connection
+          
           if (isSocketConnected && websocketClient.current && websocketClient.current.isConnected) {
             
             try {
@@ -2743,7 +2813,7 @@ export const MessengerProvider = ({ children }) => {
         console.warn('MessengerContext: Канал не может использовать мессенджер. Операция заблокирована.');
         return;
       }
-      return markMessageAsRead(messageId);
+      return debouncedMarkMessageAsRead(messageId);
     },
     markAllMessagesAsRead: (chatId) => {
       
@@ -2751,7 +2821,7 @@ export const MessengerProvider = ({ children }) => {
         console.warn('MessengerContext: Канал не может использовать мессенджер. Операция заблокирована.');
         return;
       }
-      return markAllMessagesAsRead(chatId);
+      return debouncedMarkAllMessagesAsRead(chatId);
     },
     sendTypingIndicator: (chatId, isTyping) => {
       
@@ -2776,6 +2846,14 @@ export const MessengerProvider = ({ children }) => {
         return Promise.resolve(null);
       }
       return getUserInfo(userId);
+    },
+    getUsersBatchInfo: (userIds) => {
+      
+      if (isChannel) {
+        console.warn('MessengerContext: Канал не может использовать мессенджер. Операция заблокирована.');
+        return Promise.resolve([]);
+      }
+      return getUsersBatchInfo(userIds);
     },
     createPersonalChat: (userId, encrypted) => {
       
@@ -2890,7 +2968,7 @@ export const MessengerProvider = ({ children }) => {
             }
           }
           
-          // Отправляем WebSocket событие для синхронизации удаления
+          
           if (websocketClient.current && websocketClient.current.isConnected && messageChatId) {
             websocketClient.current.sendMessageDeleted(messageId, messageChatId);
           }
@@ -2951,7 +3029,7 @@ export const MessengerProvider = ({ children }) => {
         console.log(`Messenger logging ${enable ? 'enabled' : 'disabled'}`);
       }
     },
-    // Функция для отметки всех сообщений в чате как прочитанных (через API)
+    
     markAllChatMessagesAsRead: async (chatId) => {
       if (!sessionKey || !chatId) return;
       
@@ -2969,15 +3047,15 @@ export const MessengerProvider = ({ children }) => {
           if (result.success && result.marked_count > 0) {
             logger.info(`Marked ${result.marked_count} messages as read in chat ${chatId}`);
             
-            // Removed local unreadCounts update - rely entirely on server WebSocket updates
+            
             console.log(`API marked ${result.marked_count} messages as read in chat ${chatId}, waiting for server unread_counts update`);
             
-            // Уведомляем других участников через WebSocket о прочтении
+            
             if (websocketClient.current && websocketClient.current.isConnected) {
               const chatMessages = messages[chatId] || [];
               console.log(`markAllMessagesAsRead: Chat ${chatId} has ${chatMessages.length} messages`);
               
-              // Просто отправляем read_receipt для последнего сообщения в чате
+              
               if (chatMessages.length > 0) {
                 const lastMessage = chatMessages[chatMessages.length - 1];
                 console.log(`Sending read_receipt for last message ${lastMessage.id} in chat ${chatId}`);
@@ -2992,12 +3070,12 @@ export const MessengerProvider = ({ children }) => {
     },
   };
   
-  // Автоматически запрашиваем session_key, если он ещё не доступен
+  
   useEffect(() => {
-    // Проверяем, находимся ли мы в development режиме
+    
     const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
     
-    // В development режиме ограничиваем количество попыток до 3
+    
     if (isDevelopment && sessionKeyAttempts >= 3) {
       console.warn('MessengerContext: Превышено максимальное количество попыток получения session_key (3) в development режиме');
       return;
@@ -3023,14 +3101,14 @@ export const MessengerProvider = ({ children }) => {
           localStorage.setItem('session_key', res.data.session_key);
           setForcedSessionKey(res.data.session_key);
           console.log('MessengerContext: session_key fetched and saved');
-          // Сбрасываем счетчик попыток при успешном получении
+          
           setSessionKeyAttempts(0);
         }
       })
       .catch(err => {
         console.error(`MessengerContext: error fetching session_key (попытка ${sessionKeyAttempts + 1})`, err);
         
-        // В development режиме показываем предупреждение о CORS
+        
         if (isDevelopment && err.code === 'ERR_NETWORK') {
           console.warn('MessengerContext: Возможная ошибка CORS в development режиме. Проверьте настройки бэкенда.');
         }
@@ -3039,10 +3117,10 @@ export const MessengerProvider = ({ children }) => {
     }
   }, [sessionKey, authContext?.isAuthenticated, jwtToken, fetchingSessionKey, sessionKeyAttempts]);
   
-  // Removed local unreadCounts update for active chat - rely entirely on server WebSocket updates
-  // The server will handle unread count updates when messages are read in active chat
   
-  // ---- Звуковое оповещение о новых непрочитанных ----
+  
+  
+  
   const notificationAudioRef = useRef(null);
   const prevTotalUnreadRef = useRef(0);
 
@@ -3051,7 +3129,7 @@ export const MessengerProvider = ({ children }) => {
     const prevTotal = prevTotalUnreadRef.current;
     const isOnMessengerPage = window.location.pathname.startsWith('/messenger');
 
-    // Если количество непрочитанных увеличилось и мы не в мессенджере, воспроизводим звук
+    
     if (currentTotal > prevTotal && !isOnMessengerPage) {
       try {
         if (!notificationAudioRef.current) {
@@ -3062,11 +3140,11 @@ export const MessengerProvider = ({ children }) => {
     }
     prevTotalUnreadRef.current = currentTotal;
   }, [unreadCounts]);
-  // ---- конец звукового оповещения ----
+  
   
   useEffect(() => {
     if (sessionKey && !isChannel) {
-      // Получаем singleton клиент
+      
       const client = getMessengerSocket({
         sessionKey: sessionKey,
         deviceId: deviceId,
@@ -3078,7 +3156,7 @@ export const MessengerProvider = ({ children }) => {
         debug: DEV_MODE || window.MESSENGER_DEV_MODE
       });
       
-      // Проверяем состояние подключения
+      
       if (client && !client.isConnected && !client.isConnecting) {
         console.log('[MessengerContext] Session key available, connecting to WebSocket');
         connectEnhancedWebSocket();
@@ -3092,7 +3170,7 @@ export const MessengerProvider = ({ children }) => {
         websocketClient.current = client;
       }
     }
-    // eslint-disable-next-line
+    
   }, [sessionKey, isChannel]);
   
 

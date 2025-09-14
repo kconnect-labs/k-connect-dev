@@ -132,59 +132,19 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
 
   // Упрощенная загрузка стикерпаков без кеширования
   const loadStickerPacks = useCallback(async () => {
-    if (!sessionKey) return;
-
-    try {
-      setLoading(true);
-
-      const response = await axios.get(
-        `${API_URL}/messenger/sticker-packs/my`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionKey}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.data.success) {
-        const packs = response.data.packs || [];
-        setStickerPacks(packs);
-      }
-    } catch (error) {
-      console.error('Error loading sticker packs:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [sessionKey]);
+    // Временно отключена загрузка стикерпаков
+    console.log('🚫 Sticker packs loading temporarily disabled');
+    setStickerPacks([]);
+    setLoading(false);
+  }, []);
 
   // Функция для принудительного обновления кеша
   const refreshStickerPacks = useCallback(async () => {
-    if (!sessionKey) return;
-
-    try {
-      setLoading(true);
-
-      const response = await axios.get(
-        `${API_URL}/messenger/sticker-packs/my`,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionKey}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (response.data.success) {
-        const packs = response.data.packs || [];
-        setStickerPacks(packs);
-      }
-    } catch (error) {
-      console.error('Error refreshing sticker packs:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [sessionKey]);
+    // Временно отключено обновление стикерпаков
+    console.log('🚫 Sticker packs refresh temporarily disabled');
+    setStickerPacks([]);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     if (isOpen && sessionKey) {

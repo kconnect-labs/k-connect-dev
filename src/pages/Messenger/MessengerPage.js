@@ -476,7 +476,7 @@ const MessengerPage = () => {
                 startIcon={<AddIcon />}
                 onClick={handleCreateGroupOpen}
               >
-                Создать группу
+                Создать
               </Button>
             </Box>
 
@@ -549,7 +549,7 @@ const MessengerPage = () => {
         }}
       >
         <DialogTitle sx={{ bgcolor: 'transparent', color: '#fff' }}>
-          Создать группу
+          Создать
           <IconButton
             aria-label='close'
             onClick={() => setCreateGroupOpen(false)}

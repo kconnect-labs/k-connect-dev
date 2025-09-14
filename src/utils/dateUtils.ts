@@ -169,15 +169,23 @@ export const formatDate = (dateString: string): string => {
   if (!dateString) return '';
 
   const date = parseDate(dateString);
+  const currentYear = new Date().getFullYear();
+  const dateYear = date.getFullYear();
 
-  return new Intl.DateTimeFormat(navigator.language || 'ru-RU', {
+  // Если год совпадает с текущим, не показываем год
+  const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
     timeZone: getUserTimezoneName(),
-  }).format(date);
+  };
+
+  if (dateYear !== currentYear) {
+    options.year = 'numeric';
+  }
+
+  return new Intl.DateTimeFormat(navigator.language || 'ru-RU', options).format(date);
 };
 
 export const formatDateTimeShort = (dateString: string): string => {

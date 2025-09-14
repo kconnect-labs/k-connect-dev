@@ -38,6 +38,7 @@ const EmojiButton = React.memo(({ onClick, active }) => (
       color: active ? '#D0BCFF' : '#6b6b6b',
       padding: '8px',
       '&:hover': { color: '#D0BCFF' },
+      display: 'none', // Временно отключаем кнопку стикеров
     }}
   >
     <EmojiEmotionsIcon fontSize='small' />
@@ -251,11 +252,11 @@ const MessageInput = ({
 
   const handleStickerSelect = useCallback(
     stickerData => {
-      const stickerMessage = `[STICKER_${stickerData.pack_id}_${stickerData.sticker_id}]`;
-      onSendMessage(stickerMessage);
+      // Временно отключена отправка стикеров
+      console.log('Отправка стикеров временно отключена');
       setShowStickerPicker(false);
     },
-    [onSendMessage]
+    []
   );
 
   const toggleStickerPicker = useCallback(() => {
@@ -273,7 +274,7 @@ const MessageInput = ({
     if (replyTo.message_type === 'text') {
       const stickerMatch = replyTo.content.match(/\[STICKER_(\d+)_(\d+)\]/);
       if (stickerMatch) {
-        previewContent = '🏷️ Стикер';
+        previewContent = ' Стикер';
       } else {
         previewContent =
           replyTo.content.length > 30
@@ -287,7 +288,7 @@ const MessageInput = ({
     } else if (replyTo.message_type === 'audio') {
       previewContent = '🎵 Аудио';
     } else if (replyTo.message_type === 'sticker') {
-      previewContent = '🏷️ Стикер';
+      previewContent = ' Стикер';
     } else {
       previewContent = '📎 Файл';
     }
@@ -357,11 +358,14 @@ const MessageInput = ({
         fileInputRef={fileInputRef}
         handleFileChange={handleFileChange}
       />
-      <StickerPicker
-        isOpen={showStickerPicker}
-        onStickerSelect={handleStickerSelect}
-        onClose={closeStickerPicker}
-      />
+      {/* Временно отключен StickerPicker */}
+      {false && (
+        <StickerPicker
+          isOpen={showStickerPicker}
+          onStickerSelect={handleStickerSelect}
+          onClose={closeStickerPicker}
+        />
+      )}
     </Box>
   );
 };

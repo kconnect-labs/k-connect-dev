@@ -286,7 +286,10 @@ const MessageItem = ({
           avatarUrl = getAvatarUrl(senderId, member.avatar || member.photo);
         } else {
           const photoPath = member.avatar || member.photo;
-          if (photoPath?.startsWith('/static/uploads/avatar/')) {
+          // Если уже содержит полный URL с доменом - используем как есть
+          if (photoPath?.startsWith('http://') || photoPath?.startsWith('https://')) {
+            avatarUrl = photoPath;
+          } else if (photoPath?.startsWith('/static/uploads/avatar/')) {
             avatarUrl = `https://s3.k-connect.ru${photoPath}`;
           } else if (photoPath?.startsWith('/static/')) {
             avatarUrl = photoPath;
@@ -403,106 +406,18 @@ const MessageItem = ({
         // Проверяем, является ли текстовое сообщение стикером
         const stickerMatch = decryptedContent.match(/\[STICKER_(\d+)_(\d+)\]/);
         if (stickerMatch) {
-          // Обрабатываем как стикер
-          const packId = stickerMatch[1];
-          const stickerId = stickerMatch[2];
-          const stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
-
+          // Временно отключено отображение стикеров
           return (
-            <div
-              className='sticker-message'
-              style={{
-                position: 'relative',
-                display: 'inline-block',
-                maxWidth: '126px',
-                minWidth: '126px',
-              }}
-            >
-              {/* Определяем тип стикера и рендерим соответствующий компонент */}
-              {(() => {
-                const stickerType = getStickerType(
-                  stickerUrl,
-                  message.sticker_data
-                );
-                const commonStyle = {
-                  width: '100%',
-                  height: 'auto',
-                  maxWidth: '126px',
-                  objectFit: 'contain',
-                  borderRadius: '18px',
-                  cursor: 'pointer',
-                };
-
-                const commonClickHandler = e => {
-                  e.stopPropagation();
-                  handleStickerClick(packId, stickerId);
-                };
-
-                // Для API эндпоинтов используем асинхронную проверку
-                if (stickerType === 'api_check_needed') {
-                  return (
-                    <AsyncStickerRenderer
-                      src={stickerUrl}
-                      style={commonStyle}
-                      onClick={commonClickHandler}
-                      stickerData={message.sticker_data}
-                    />
-                  );
-                }
-
-                // Для известных типов используем прямой рендеринг
-                if (stickerType === 'tgs') {
-                  return (
-                    <TGSSticker
-                      src={stickerUrl}
-                      style={commonStyle}
-                      onClick={commonClickHandler}
-                    />
-                  );
-                } else if (stickerType === 'webm') {
-                  return (
-                    <video
-                      src={stickerUrl}
-                      style={commonStyle}
-                      onClick={commonClickHandler}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                    />
-                  );
-                } else {
-                  // Статичные стикеры (webp, png, jpeg)
-                  return (
-                    <img
-                      src={stickerUrl}
-                      alt='Стикер'
-                      style={commonStyle}
-                      onClick={commonClickHandler}
-                    />
-                  );
-                }
-              })()}
-              {/* Время справа внизу как в Телеграме */}
-              <div className='sticker-time-bubble'>
-                {formatMessageTime(message.created_at)}
-                {isCurrentUser && (
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      color: 'rgba(255, 255, 255, 0.9)',
-                    }}
-                  >
-                    {(message.read_by && message.read_by.length > 0) ||
-                    (message.read_count && message.read_count > 0) ? (
-                      <DoneAllIcon sx={{ fontSize: 12 }} />
-                    ) : (
-                      <DoneIcon sx={{ fontSize: 12 }} />
-                    )}
-                  </span>
-                )}
-              </div>
+            <div style={{ 
+              padding: '8px 12px', 
+              background: 'rgba(255, 255, 255, 0.1)', 
+              borderRadius: '8px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              fontSize: '14px',
+              display: 'inline-block',
+              maxWidth: '200px'
+            }}>
+               Стикер (временно отключен)
             </div>
           );
         }
@@ -605,14 +520,29 @@ const MessageItem = ({
                   zIndex: 5,
                 }}
               />
+              {/* Время при наведении (аналогично стикерам) */}
+              <div className='photo-time-bubble'>
+                <span className='message-time-inline'>
+                  {formatMessageTime(message.created_at)}
+                </span>
+                {isCurrentUser && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                    }}
+                  >
+                    {(message.read_by && message.read_by.length > 0) ||
+                    (message.read_count && message.read_count > 0) ? (
+                      <DoneAllIcon sx={{ fontSize: 12 }} />
+                    ) : (
+                      <DoneIcon sx={{ fontSize: 12 }} />
+                    )}
+                  </span>
+                )}
+              </div>
             </div>
-            <span
-              className='message-time-inline'
-              style={{ alignSelf: 'flex-end' }}
-            >
-              {formatMessageTime(message.created_at)}
-              {renderReadStatus()}
-            </span>
           </div>
         );
 
@@ -690,134 +620,21 @@ const MessageItem = ({
         );
 
       case 'sticker':
-        // Обрабатываем стикеры как в Телеграме - без обводки
-        let stickerUrl = null;
-        let packId = null;
-        let stickerId = null;
-
-        // Если есть данные стикера
-        if (message.sticker_data) {
-          packId = message.sticker_data.pack_id;
-          stickerId = message.sticker_data.sticker_id;
-          stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
-        } else {
-          // Извлекаем данные стикера из контента [STICKER_PACKID_STICKERID]
-          const stickerMatch = decryptedContent.match(
-            /\[STICKER_(\d+)_(\d+)\]/
-          );
-          if (stickerMatch) {
-            packId = stickerMatch[1];
-            stickerId = stickerMatch[2];
-            stickerUrl = `/api/messenger/stickers/${packId}/${stickerId}`;
-          }
-        }
-
-        if (!stickerUrl) {
-          return (
-            <div className='message-text-container'>
-              <p className='message-text'>❓ Стикер недоступен</p>
-              {timeElement}
-            </div>
-          );
-        }
-
+        // Временно отключено отображение стикеров
         return (
-          <div
-            className='sticker-message'
-            style={{
-              position: 'relative',
-              display: 'inline-block',
-              maxWidth: '128px',
-              minWidth: '128px',
-            }}
-          >
-            {/* Определяем тип стикера и рендерим соответствующий компонент */}
-            {(() => {
-              const stickerType = getStickerType(
-                stickerUrl,
-                message.sticker_data
-              );
-              const commonStyle = {
-                width: '100%',
-                height: 'auto',
-                maxWidth: '128px',
-                objectFit: 'contain',
-                borderRadius: '18px',
-                cursor: 'pointer',
-              };
-
-              const commonClickHandler = e => {
-                e.stopPropagation();
-                handleStickerClick(packId, stickerId);
-              };
-
-              // Для API эндпоинтов используем асинхронную проверку
-              if (stickerType === 'api_check_needed') {
-                return (
-                  <AsyncStickerRenderer
-                    src={stickerUrl}
-                    style={commonStyle}
-                    onClick={commonClickHandler}
-                    stickerData={message.sticker_data}
-                  />
-                );
-              }
-
-              // Для известных типов используем прямой рендеринг
-              if (stickerType === 'tgs') {
-                return (
-                  <TGSSticker
-                    src={stickerUrl}
-                    style={commonStyle}
-                    onClick={commonClickHandler}
-                  />
-                );
-              } else if (stickerType === 'webm') {
-                return (
-                  <video
-                    src={stickerUrl}
-                    style={commonStyle}
-                    onClick={commonClickHandler}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                  />
-                );
-              } else {
-                // Статичные стикеры (webp, png, jpeg)
-                return (
-                  <img
-                    src={stickerUrl}
-                    alt='Стикер'
-                    style={commonStyle}
-                    onClick={commonClickHandler}
-                  />
-                );
-              }
-            })()}
-            {/* Время справа внизу как в Телеграме */}
-            <div className='sticker-time-bubble'>
-              {formatMessageTime(message.created_at)}
-              {isCurrentUser && (
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    color: 'rgba(255, 255, 255, 0.9)',
-                  }}
-                >
-                  {(message.read_by && message.read_by.length > 0) ||
-                  (message.read_count && message.read_count > 0) ? (
-                    <DoneAllIcon sx={{ fontSize: 12 }} />
-                  ) : (
-                    <DoneIcon sx={{ fontSize: 12 }} />
-                  )}
-                </span>
-              )}
-            </div>
+          <div style={{ 
+            padding: '8px 12px', 
+            background: 'rgba(255, 255, 255, 0.1)', 
+            borderRadius: '8px',
+            color: 'rgba(255, 255, 255, 0.7)',
+            fontSize: '14px',
+            display: 'inline-block',
+            maxWidth: '200px'
+          }}>
+             Стикер (временно отключен)
           </div>
         );
+
 
       default:
         return (
@@ -850,7 +667,7 @@ const MessageItem = ({
           /\[STICKER_(\d+)_(\d+)\]/
         );
         if (stickerMatch) {
-          previewContent = '🏷️ Стикер';
+          previewContent = ' Стикер';
         } else {
           previewContent =
             replyMessage.content.length > 30
@@ -868,7 +685,7 @@ const MessageItem = ({
         previewContent = '🎵 Аудио';
         break;
       case 'sticker':
-        previewContent = '🏷️ Стикер';
+        previewContent = ' Стикер';
         break;
       default:
         previewContent = '📎 Файл';

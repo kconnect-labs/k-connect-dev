@@ -29,6 +29,7 @@ const ChatList = ({ onSelectChat }) => {
 
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
   const filteredChats = useMemo(() => {
     if (!searchQuery.trim()) return chats;
     const query = searchQuery.toLowerCase();
@@ -158,6 +159,8 @@ const ChatList = ({ onSelectChat }) => {
           <div className='chat-list-items'>
             {filteredChats.map(chat => {
               const unreadCount = unreadCounts[chat.id] || 0;
+              
+              
               return (
                 <MemoizedChatItem
                   key={chat.id}
@@ -176,7 +179,7 @@ const ChatList = ({ onSelectChat }) => {
     );
   };
 
-  // Открытие поиска по внешнему событию (Новый чат)
+  
   useEffect(() => {
     const toggleSearch = () => setSearchMode(prev => !prev);
     window.addEventListener('messenger-new-chat', toggleSearch);

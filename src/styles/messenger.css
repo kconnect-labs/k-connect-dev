@@ -284,6 +284,8 @@
   flex-direction: column;
   scroll-behavior: smooth; /* Плавная прокрутка */
   position: relative;
+  scroll-padding-bottom: 20px; /* Отступ снизу для лучшей видимости */
+  overscroll-behavior: contain; /* Предотвращаем bounce-эффект */
 }
 
 .messages-list {
@@ -294,6 +296,7 @@
   padding: 0 10px;
   min-height: min-content; /* Обеспечиваем минимальную высоту */
   justify-content: flex-end;
+  gap: 2px; /* Небольшой отступ между сообщениями */
 }
 
 /* Якорь в самом низу списка сообщений */
@@ -376,7 +379,7 @@
 
 /* Убрана анимация появления кнопки прокрутки */
 .scroll-to-bottom {
-  /* Анимация убрана для мгновенного отображения */
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 /* Стили для плавного добавления сообщений */
@@ -384,19 +387,19 @@
   margin-bottom: 12px;
   align-self: flex-start;
   max-width: 95%;
-  /* transition: all 0.3s ease; - убрано для мгновенного отображения */
+  transition: opacity 0.2s ease, transform 0.2s ease;
   position: relative;
   transform-origin: top;
 }
 
 .message-item.just-added {
-  /* animation: slideInMessage 0.4s ease; - убрано для мгновенного отображения */
+  animation: slideInMessage 0.3s ease-out;
 }
 
 @keyframes slideInMessage {
   0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(10px) scale(0.98);
   }
   100% {
     opacity: 1;
@@ -406,13 +409,13 @@
 
 /* Стили для старых сообщений при загрузке */
 .message-item.loading-above {
-  /* animation: slideInFromTop 0.3s ease; - убрано для мгновенного отображения */
+  animation: slideInFromTop 0.25s ease-out;
 }
 
 @keyframes slideInFromTop {
   0% {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
   100% {
     opacity: 1;
@@ -425,6 +428,8 @@
   .messages-container {
     padding: 16px 8px;
     -webkit-overflow-scrolling: touch; /* Плавная прокрутка на iOS */
+    scroll-padding-bottom: 30px; /* Больше отступ на мобильных */
+    overscroll-behavior-y: contain; /* Предотвращаем pull-to-refresh */
   }
 
   .scroll-to-bottom {
@@ -450,7 +455,7 @@
   text-align: center;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
-  border-radius: 0 0 var(--main-border-radius) !important var(--main-border-radius) !important;
+  border-radius: 0 0 var(--main-border-radius) var(--main-border-radius);
   margin-bottom: 8px;
   z-index: 5;
   animation: slideDown 0.3s ease;
@@ -509,6 +514,7 @@
 
 .empty-state h3 {
   margin-top: 0;
+  font-weight: 200 !important;
 }
 
 /* Элемент сообщения */
@@ -674,6 +680,9 @@
 
   .message-photo img {
     max-height: 320px;
+    /* Минимальный размер для десктопа */
+    min-width: 250px;
+    min-height: 250px;
   }
 }
 
@@ -690,6 +699,9 @@
 
   .message-photo img {
     max-height: 240px;
+    /* Минимальный размер для мобильных */
+    min-width: 200px;
+    min-height: 200px;
   }
 }
 
@@ -727,6 +739,9 @@
   pointer-events: auto;
   display: block;
   object-fit: cover;
+  /* Минимальный размер для всех фотографий */
+  min-width: 250px;
+  min-height: 250px;
 }
 
 /* Видео контейнер */
@@ -1339,6 +1354,9 @@
   .message-photo img,
   .message-video video {
     max-width: 95vw; /* Увеличиваем с 90vw до 95vw (+5%) */
+    /* Минимальный размер для мобильных */
+    min-width: 200px;
+    min-height: 200px;
   }
 
   .message-audio audio {
@@ -1379,22 +1397,7 @@ select {
   z-index: 5;
 }
 
-.date-separator::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 20%,
-    rgba(255, 255, 255, 0.1) 80%,
-    transparent 100%
-  );
-  z-index: -1;
-}
+
 
 .date-separator span {
   background: rgba(208, 188, 255, 0.1);
@@ -1600,6 +1603,9 @@ select {
   max-width: 170px !important;
   min-width: 150px !important;
   margin: 4px 0 !important;
+  /* Оптимизация для быстрой загрузки */
+  will-change: transform;
+  contain: layout style paint;
 }
 
 /* Убираем бабблик для стикеров */
@@ -1622,14 +1628,82 @@ select {
   border-radius: 0 !important;
 }
 
+/* Убираем бабблик для фотографий */
+.message-item .message-bubble:has(.message-photo) {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+}
+
+/* Также убираем бабблик когда родитель содержит message-photo */
+.message-bubble:has(.message-photo) {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+}
+
 /* Специальные стили для контейнера стикера */
 .sticker-message img {
   width: 100% !important;
   height: auto !important;
   max-width: 170px !important;
   object-fit: contain !important;
-  border-radius: var(--main-border-radius) !important !important;
+  border-radius: var(--main-border-radius) !important;
   display: block !important;
+  /* Оптимизация для быстрой загрузки */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Плавная загрузка */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.sticker-message img.loaded {
+  opacity: 1;
+}
+
+/* Плейсхолдер для загрузки стикеров */
+.sticker-placeholder {
+  width: 170px !important;
+  height: 170px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--main-border-radius) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.sticker-loading {
+  width: 170px !important;
+  height: 170px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: var(--main-border-radius) !important;
+}
+
+.sticker-error {
+  width: 170px !important;
+  height: 170px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+  border-radius: var(--main-border-radius) !important;
+  border: 1px solid rgba(255, 0, 0, 0.3) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 12px !important;
+  text-align: center !important;
 }
 
 /* Баббл времени для стикеров
@@ -1699,6 +1773,77 @@ select {
   }
 
   .sticker-time-bubble {
+    bottom: 6px !important;
+    right: 6px !important;
+    padding: 1px 4px !important;
+    font-size: 10px !important;
+    min-height: 14px !important;
+  }
+}
+
+/* Стили для времени на фотографиях (аналогично стикерам) */
+.photo-time-bubble {
+  position: absolute !important;
+  bottom: 8px !important;
+  right: 8px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: white !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+  min-height: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+/* Показываем время при наведении на фотографию */
+.message-photo:hover .photo-time-bubble {
+  opacity: 1 !important;
+}
+
+/* Убираем стандартное время для фотографий */
+.message-bubble:has(.message-photo) .message-time-inline {
+  display: none !important;
+}
+
+/* Показываем время внутри photo-time-bubble */
+.photo-time-bubble .message-time-inline {
+  display: inline !important;
+  color: white !important;
+  font-size: 11px !important;
+  margin: 0 !important;
+}
+
+/* Специальная обработка для сообщений с фотографиями */
+.message-item:has(.message-photo) .message-bubble {
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+/* Убираем отступы у контейнера фотографий */
+.message-item:has(.message-photo) .message-content {
+  margin: 0 !important;
+}
+
+/* Стили для чтения фотографий */
+.photo-time-bubble .read-status {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-left: 2px !important;
+}
+
+/* Адаптивность для фотографий на мобильных */
+@media (max-width: 768px) {
+  .photo-time-bubble {
     bottom: 6px !important;
     right: 6px !important;
     padding: 1px 4px !important;

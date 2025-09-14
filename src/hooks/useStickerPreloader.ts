@@ -37,68 +37,20 @@ export const useStickerPreloader = () => {
 
   
   const initializePreload = useCallback(async () => {
-    if (!isAuthenticated || authLoading) {
-      return;
-    }
-
-    try {
-      setState(prev => ({ ...prev, isPreloading: true, error: null }));
-
-      console.log('Starting sticker preload initialization...');
-
-      
-      const packs = await stickerCacheService.loadUserStickerPacks();
-      
-      if (packs.length === 0) {
-        console.log('No sticker packs found for user');
-        setState(prev => ({ 
-          ...prev, 
-          isPreloading: false,
-          stats: stickerCacheService.getStats(),
-        }));
-        return;
+    // Временно отключена инициализация предзагрузки стикеров
+    console.log('🚫 Sticker preload initialization temporarily disabled');
+    setState(prev => ({ 
+      ...prev, 
+      isPreloading: false,
+      stats: {
+        totalPacks: 0,
+        totalStickers: 0,
+        cachedStickers: 0,
+        cacheSize: 0,
+        lastUpdate: Date.now(),
       }
-
-      console.log(`Found ${packs.length} sticker packs, starting preload...`);
-
-      
-      setState(prev => ({ 
-        ...prev, 
-        stats: stickerCacheService.getStats(),
-      }));
-
-      
-      await stickerCacheService.preloadStickers(packs);
-
-      
-      const progressInterval = setInterval(() => {
-        const progress = stickerCacheService.getPreloadProgress();
-        const isPreloading = stickerCacheService.isPreloadingInProgress();
-        const stats = stickerCacheService.getStats();
-
-        setState(prev => ({
-          ...prev,
-          isPreloading,
-          progress,
-          stats,
-        }));
-
-        
-        if (!isPreloading) {
-          clearInterval(progressInterval);
-          console.log('Sticker preload completed');
-        }
-      }, 1000);
-
-    } catch (error) {
-      console.error('Error during sticker preload initialization:', error);
-      setState(prev => ({ 
-        ...prev, 
-        isPreloading: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
-      }));
-    }
-  }, [isAuthenticated, authLoading]);
+    }));
+  }, []);
 
   
   const forcePreload = useCallback(async () => {
@@ -116,15 +68,9 @@ export const useStickerPreloader = () => {
 
   
   useEffect(() => {
-    if (isAuthenticated && !authLoading) {
-      
-      const timer = setTimeout(() => {
-        initializePreload();
-      }, 5000); 
-
-      return () => clearTimeout(timer);
-    }
-  }, [isAuthenticated, authLoading, initializePreload]);
+    // Временно отключена автоматическая инициализация предзагрузки
+    console.log('🚫 Auto sticker preload initialization temporarily disabled');
+  }, []);
 
   
   useEffect(() => {
