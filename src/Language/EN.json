@@ -403,7 +403,8 @@
       "logout": "Logout",
       "channel_label": "Channel",
       "wallet": "Wallet",
-      "shop": "Shop"
+      "shop": "Shop",
+      "max_channels_reached": "Maximum channels reached on account"
     },
     "notifications": {
       "new": "New notification"

@@ -52,6 +52,7 @@ import {
   Settings as SettingsIcon,
   LibraryMusic as LibraryMusicIcon,
   Audiotrack as AudiotrackIcon,
+  PersonAdd as PersonAddIcon,
 } from '@mui/icons-material';
 import { useNitroApi } from '../hooks/useNitroApi';
 import { useCurrentUser } from '../hooks/useCurrentUser';
@@ -60,7 +61,21 @@ import UniversalModal from '../../../UIKIT/UniversalModal/UniversalModal';
 
 const ArtistsTab: React.FC = () => {
   const { currentUser, permissions } = useCurrentUser();
-  const { getArtists, createArtist, updateArtist, deleteArtist, getArtistTracks, searchTracksForArtist, assignTracksToArtist, removeTrackFromArtist } = useNitroApi();
+  const { 
+    getArtists, 
+    createArtist, 
+    updateArtist, 
+    deleteArtist, 
+    getArtistTracks, 
+    searchTracksForArtist, 
+    assignTracksToArtist, 
+    removeTrackFromArtist,
+    bindArtistToUser,
+    unbindArtistFromUser,
+    getUnboundArtists,
+    getBoundArtists,
+    searchUsers
+  } = useNitroApi();
   
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(false);
@@ -91,6 +106,16 @@ const ArtistsTab: React.FC = () => {
   const [selectedTracks, setSelectedTracks] = useState<number[]>([]);
   const [tracksLoading, setTracksLoading] = useState(false);
   const [searchMode, setSearchMode] = useState('artist');
+  
+  // Состояние для привязки артистов к пользователям
+  const [bindModalOpen, setBindModalOpen] = useState(false);
+  const [unbindModalOpen, setUnbindModalOpen] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState('');
+  const [foundUsers, setFoundUsers] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [userSearchLoading, setUserSearchLoading] = useState(false);
+  const [bindLoading, setBindLoading] = useState(false);
+  const [boundUsers, setBoundUsers] = useState<{[key: number]: any}>({});
 
   const canManage = permissions?.manage_artists || false;
   const canDelete = permissions?.delete_artists || false;
@@ -114,12 +139,27 @@ const ArtistsTab: React.FC = () => {
       setHasMore((response as any).has_next || false);
       setTotal((response as any).total || 0);
       setPage(pageNum);
+      
+      // Обновляем информацию о привязанных пользователях из ответа API
+      updateBoundUsersFromArtists((response as any).artists || []);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Ошибка загрузки артистов');
     } finally {
       setLoading(false);
     }
   }, [getArtists, searchQuery]);
+
+  const updateBoundUsersFromArtists = (artistsList: any[]) => {
+    const usersMap: {[key: number]: any} = {};
+    
+    artistsList.forEach(artist => {
+      if (artist.user_id && artist.bound_user) {
+        usersMap[artist.user_id] = artist.bound_user;
+      }
+    });
+    
+    setBoundUsers(prev => ({ ...prev, ...usersMap }));
+  };
 
   useEffect(() => {
     if (canManage || canDelete) {
@@ -346,6 +386,85 @@ const ArtistsTab: React.FC = () => {
     }
   };
 
+  // Функции для привязки артистов к пользователям
+  const searchUsersForBinding = async (query: string) => {
+    if (!query || query.trim().length < 2) {
+      setFoundUsers([]);
+      return;
+    }
+
+    try {
+      setUserSearchLoading(true);
+      const users = await searchUsers(query.trim());
+      setFoundUsers(users);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка поиска пользователей');
+    } finally {
+      setUserSearchLoading(false);
+    }
+  };
+
+  const handleBindArtistToUser = async () => {
+    if (!selectedArtist || !selectedUser) return;
+
+    try {
+      setBindLoading(true);
+      await bindArtistToUser(selectedUser.id, selectedArtist.id);
+      
+      // Обновляем информацию о привязанном пользователе
+      setBoundUsers(prev => ({
+        ...prev,
+        [selectedUser.id]: selectedUser
+      }));
+      
+      setBindModalOpen(false);
+      setSelectedUser(null);
+      setUserSearchQuery('');
+      setFoundUsers([]);
+      fetchArtists(1, true); // Обновляем список артистов
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка привязки артиста к пользователю');
+    } finally {
+      setBindLoading(false);
+    }
+  };
+
+  const handleUnbindArtistFromUser = async () => {
+    if (!selectedArtist || !selectedArtist.user_id) return;
+
+    try {
+      setBindLoading(true);
+      await unbindArtistFromUser(selectedArtist.user_id, selectedArtist.id);
+      
+      // Удаляем информацию о привязанном пользователе
+      setBoundUsers(prev => {
+        const newBoundUsers = { ...prev };
+        delete newBoundUsers[selectedArtist.user_id!];
+        return newBoundUsers;
+      });
+      
+      setUnbindModalOpen(false);
+      fetchArtists(1, true); // Обновляем список артистов
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Ошибка отвязки артиста от пользователя');
+    } finally {
+      setBindLoading(false);
+    }
+  };
+
+  const openBindModal = (artist: Artist) => {
+    setSelectedArtist(artist);
+    setBindModalOpen(true);
+    setSelectedUser(null);
+    setUserSearchQuery('');
+    setFoundUsers([]);
+  };
+
+  const openUnbindModal = (artist: Artist) => {
+    setSelectedArtist(artist);
+    setUnbindModalOpen(true);
+  };
+
   if (!canManage && !canDelete) {
     return (
       <Alert severity="warning" sx={{ mt: 2 }}>
@@ -460,10 +579,59 @@ const ArtistsTab: React.FC = () => {
                       <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
                         {formatDate(artist.created_at)}
                       </Typography>
-
+                      {artist.user_id && (
+                        <Chip
+                          label="Привязан"
+                          size="small"
+                          color="success"
+                          variant="outlined"
+                          sx={{ fontSize: '0.65rem', height: 20 }}
+                        />
+                      )}
                     </Box>
                   </Box>
                 </Box>
+
+                {/* Информация о привязанном пользователе */}
+                {artist.user_id && boundUsers[artist.user_id] && (
+                  <Box sx={{ 
+                    mb: 1.5, 
+                    p: 1, 
+                    bgcolor: 'rgba(76, 175, 80, 0.1)', 
+                    borderRadius: 1,
+                    border: '1px solid rgba(76, 175, 80, 0.3)'
+                  }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Avatar 
+                        src={boundUsers[artist.user_id].avatar_url || boundUsers[artist.user_id].photo} 
+                        sx={{ width: 24, height: 24 }}
+                      >
+                        <PersonIcon sx={{ fontSize: 16 }} />
+                      </Avatar>
+                      <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                        <Typography variant="caption" sx={{ 
+                          fontWeight: 600, 
+                          color: 'success.main',
+                          display: 'block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          {boundUsers[artist.user_id].name}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ 
+                          fontSize: '0.65rem',
+                          display: 'block',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}>
+                          @{boundUsers[artist.user_id].username}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
 
                 {/* Биография */}
                 {artist.bio && (
@@ -517,6 +685,45 @@ const ArtistsTab: React.FC = () => {
                       >
                         Треки
                       </Button>
+                    </>
+                  )}
+                  
+                  {/* Кнопки привязки/отвязки */}
+                  {canManage && (
+                    <>
+                      {artist.user_id ? (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="warning"
+                          startIcon={<PersonIcon />}
+                          onClick={() => openUnbindModal(artist)}
+                          sx={{ 
+                            fontSize: '0.75rem',
+                            minWidth: 'auto',
+                            px: 1,
+                            flex: 1
+                          }}
+                        >
+                          Отвязать
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="success"
+                          startIcon={<PersonAddIcon />}
+                          onClick={() => openBindModal(artist)}
+                          sx={{ 
+                            fontSize: '0.75rem',
+                            minWidth: 'auto',
+                            px: 1,
+                            flex: 1
+                          }}
+                        >
+                          Привязать
+                        </Button>
+                      )}
                     </>
                   )}
                   
@@ -1059,6 +1266,160 @@ const ArtistsTab: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Модальное окно привязки артиста к пользователю */}
+      <UniversalModal
+        open={bindModalOpen}
+        onClose={() => setBindModalOpen(false)}
+        title="Привязать артиста к пользователю"
+        maxWidth="md"
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Typography variant="body1">
+            Привязка артиста "{selectedArtist?.name}" к пользователю
+          </Typography>
+
+          {/* Поиск пользователя */}
+          <TextField
+            label="Поиск пользователя"
+            placeholder="Введите имя пользователя или username..."
+            value={userSearchQuery}
+            onChange={(e) => {
+              setUserSearchQuery(e.target.value);
+              searchUsersForBinding(e.target.value);
+            }}
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Список найденных пользователей */}
+          {foundUsers.length > 0 && (
+            <Box>
+              <Typography variant="subtitle2" gutterBottom>
+                Найденные пользователи:
+              </Typography>
+              <List>
+                {foundUsers.map((user) => (
+                  <ListItem key={user.id} disablePadding>
+                    <ListItemButton
+                      selected={selectedUser?.id === user.id}
+                      onClick={() => setSelectedUser(user)}
+                    >
+                      <ListItemIcon>
+                        <Avatar src={user.avatar_url} sx={{ width: 32, height: 32 }}>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={user.name}
+                        secondary={`@${user.username} (ID: ${user.id})`}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          )}
+
+          {userSearchLoading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
+              <CircularProgress size={24} />
+            </Box>
+          )}
+
+          {selectedUser && (
+            <Alert severity="info">
+              Выбран пользователь: <strong>{selectedUser.name}</strong> (@{selectedUser.username})
+            </Alert>
+          )}
+
+          {/* Кнопки действий */}
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
+            <Button onClick={() => setBindModalOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={handleBindArtistToUser}
+              variant="contained"
+              color="success"
+              disabled={bindLoading || !selectedUser}
+              startIcon={bindLoading ? <CircularProgress size={20} /> : <PersonAddIcon />}
+            >
+              Привязать
+            </Button>
+          </Box>
+        </Box>
+      </UniversalModal>
+
+      {/* Модальное окно отвязки артиста от пользователя */}
+      <UniversalModal
+        open={unbindModalOpen}
+        onClose={() => setUnbindModalOpen(false)}
+        title="Отвязать артиста от пользователя"
+        maxWidth="sm"
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Typography>
+            Вы уверены, что хотите отвязать артиста "{selectedArtist?.name}" от пользователя?
+          </Typography>
+          
+          {/* Информация о привязанном пользователе */}
+          {selectedArtist?.user_id && boundUsers[selectedArtist.user_id] && (
+            <Box sx={{ 
+              p: 2, 
+              bgcolor: 'rgba(255, 152, 0, 0.1)', 
+              borderRadius: 1,
+              border: '1px solid rgba(255, 152, 0, 0.3)'
+            }}>
+              <Typography variant="subtitle2" gutterBottom color="warning.main">
+                Привязанный пользователь:
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Avatar 
+                  src={boundUsers[selectedArtist.user_id].avatar_url || boundUsers[selectedArtist.user_id].photo} 
+                  sx={{ width: 40, height: 40 }}
+                >
+                  <PersonIcon />
+                </Avatar>
+                <Box>
+                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                    {boundUsers[selectedArtist.user_id].name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    @{boundUsers[selectedArtist.user_id].username} (ID: {selectedArtist.user_id})
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          )}
+          
+          <Typography variant="body2" color="text.secondary">
+            При отвязке все треки артиста будут отвязаны от него, а тип аккаунта пользователя изменится на "user".
+          </Typography>
+
+          {/* Кнопки действий */}
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
+            <Button onClick={() => setUnbindModalOpen(false)}>
+              Отмена
+            </Button>
+            <Button
+              onClick={handleUnbindArtistFromUser}
+              color="warning"
+              variant="contained"
+              disabled={bindLoading}
+              startIcon={bindLoading ? <CircularProgress size={20} /> : <PersonIcon />}
+            >
+              Отвязать
+            </Button>
+          </Box>
+        </Box>
+      </UniversalModal>
     </Box>
   );
 };

@@ -265,9 +265,16 @@ export interface Artist {
   bio?: string;
   avatar_url?: string;
   verified: boolean;
+  user_id?: number | null;
   created_at: string;
   tracks_count?: number;
   api_source?: string | null;
+  bound_user?: {
+    id: number;
+    name: string;
+    username: string;
+    avatar_url?: string;
+  } | null;
 }
 
 export interface User {
@@ -318,7 +325,7 @@ export interface Ban {
   remaining_days: number;
 }
 
-export type TabValue = 'profile' | 'verification' | 'achievements' | 'subscriptions' | 'moderators' | 'keys' | 'bugreports' | 'posts' | 'comments' | 'badges' | 'tracks' | 'artists' | 'users';
+export type TabValue = 'profile' | 'verification' | 'achievements' | 'subscriptions' | 'moderators' | 'keys' | 'bugreports' | 'posts' | 'comments' | 'badges' | 'tracks' | 'artists' | 'users' | 'statistics' | 'logs';
 
 export interface TabConfig {
   value: TabValue;

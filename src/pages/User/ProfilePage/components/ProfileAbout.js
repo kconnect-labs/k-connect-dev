@@ -10,8 +10,8 @@ const ProfileAbout = ({ user, getLighterColor }) => {
       sx={{
         mt: 1,
         lineHeight: 1.5,
-        color: user?.status_color
-          ? getLighterColor(user.status_color)
+        color: user?.profile_color
+          ? getLighterColor(user.profile_color)
           : theme => theme.palette.text.secondary,
         p: 1.5,
         borderRadius: 'var(--main-border-radius)',

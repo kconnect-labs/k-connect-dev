@@ -63,6 +63,7 @@
       "channel_label": "チャンネル",
       "wallet": "ウォレット",
       "shop": "ショップ",
+      "max_channels_reached": "アカウントで最大チャンネル数に達しました",
       "languages": {
         "ru": "Русский",
         "en": "English",

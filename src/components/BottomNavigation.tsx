@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { ThemeSettingsContext } from '../App';
-// import { useMessenger } from '../contexts/MessengerContext';
+import { useMessenger } from '../contexts/MessengerContext';
 import './BottomNavigation.css';
 
 export const BOTTOM_NAV_ID = 'app-bottom-navigation';
@@ -38,9 +38,9 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
   const location = useLocation();
   const [visibleInMessenger, setVisibleInMessenger] = useState<boolean>(true);
   const { themeSettings } = useContext(ThemeSettingsContext);
-  // Мессенджер временно отключен
-  let unreadCounts: UnreadCounts = {};
-  let totalUnread = 0;
+  // Получаем данные мессенджера
+  const { unreadCounts, getTotalUnreadCount } = useMessenger();
+  const totalUnread = getTotalUnreadCount();
 
   const isChannel = user?.account_type === 'channel';
 

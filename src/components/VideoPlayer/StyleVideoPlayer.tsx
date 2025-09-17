@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Box, IconButton, Slider, Typography, styled } from '@mui/material';
 import { PlayArrow, Pause, VolumeUp, VolumeOff, Fullscreen, FullscreenExit } from '@mui/icons-material';
+import { PlayIcon } from '../icons/CustomIcons';
 
 interface VideoPlayerProps {
   videoUrl: string;
@@ -237,6 +238,35 @@ const BufferingIndicator = styled(Box)({
     '100%': { transform: 'translate(-50%, -50%) rotate(360deg)' },
   },
 });
+
+const CenterPlayButton = styled(IconButton)(({ theme }) => ({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 80,
+  height: 80,
+  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  backdropFilter: 'blur(10px)',
+  border: '2px solid rgba(255, 255, 255, 0.3)',
+  borderRadius: '50%',
+  padding: '12px 4px 12px 12px',
+  color: '#fff',
+  transition: 'all 0.3s ease',
+  zIndex: 10,
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    border: '2px solid rgba(255, 255, 255, 0.5)',
+    transform: 'translate(-50%, -50%) scale(1.1)',
+  },
+  '&:active': {
+    transform: 'translate(-50%, -50%) scale(0.95)',
+  },
+  '@media (max-width: 768px)': {
+    width: 60,
+    height: 60,
+  },
+}));
 
 const formatTime = (seconds: number): string => {
   if (isNaN(seconds)) return '0:00';
@@ -573,6 +603,19 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
 
       {playerState.buffering && (
         <BufferingIndicator />
+      )}
+
+      {/* Центральная кнопка PLAY - показывается только когда видео не играет */}
+      {!playerState.isPlaying && !playerState.buffering && (
+        <CenterPlayButton 
+          onClick={(e) => {
+            e.stopPropagation();
+            togglePlay();
+          }}
+          size="large"
+        >
+          <PlayIcon size={40} color="#fff" />
+        </CenterPlayButton>
       )}
 
       <ControlsOverlay 

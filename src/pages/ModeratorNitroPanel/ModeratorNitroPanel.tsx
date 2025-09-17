@@ -35,6 +35,8 @@ import {
   MusicNote,
   PersonAdd,
   People,
+  BarChart,
+  ListAlt,
   Menu as MenuIcon,
   Close as CloseIcon,
 } from '@mui/icons-material';
@@ -52,6 +54,8 @@ import BadgesTab from './components/BadgesTab';
 import TracksModerationTab from './components/TracksModerationTab';
 import ArtistsTab from './components/ArtistsTab';
 import UsersTab from './components/UsersTab';
+import StatisticsTab from './components/StatisticsTab';
+import LogsTab from './components/LogsTab';
 
 const ModeratorNitroPanel: React.FC = () => {
   const theme = useTheme();
@@ -140,6 +144,16 @@ const ModeratorNitroPanel: React.FC = () => {
       label: 'Артисты',
       icon: <PersonAdd />,
     },
+    {
+      value: 'statistics',
+      label: 'Статистика',
+      icon: <BarChart />,
+    },
+    {
+      value: 'logs',
+      label: 'Логи',
+      icon: <ListAlt />,
+    },
   ];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: TabValue) => {
@@ -176,6 +190,10 @@ const ModeratorNitroPanel: React.FC = () => {
           return <ArtistsTab />;
         case 'users':
           return <UsersTab />;
+        case 'statistics':
+          return <StatisticsTab />;
+        case 'logs':
+          return <LogsTab />;
         default:
           return <ProfileTab currentUser={currentUser} moderatorData={moderatorData} permissions={permissions} loading={loading} error={error} />;
       }

@@ -254,7 +254,11 @@ const HeaderProfileMenu = ({
               </>
             )}
             <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
-            {accounts.channels.length < 3 && (
+            {/* 
+              Ограничение: нельзя создать больше 3 каналов. 
+              Если каналов уже 3 или больше, кнопка создания не отображается.
+            */}
+            {accounts.channels && accounts.channels.length < 3 && (
               <MenuItem onClick={handleCreateChannel}>
                 <ListItemIcon>
                   <AddIcon fontSize='small' color='primary' />

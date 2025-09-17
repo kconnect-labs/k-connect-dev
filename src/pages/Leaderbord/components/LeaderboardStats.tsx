@@ -74,7 +74,7 @@ export const LeaderboardStats: React.FC<LeaderboardStatsProps> = ({
       <UserStatCard>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
           <Avatar
-            src={displayUser.avatar_url || '/static/uploads/system/avatar.png'}
+            src={displayUser.avatar_url || 'https://s3.k-connect.ru/static/uploads/system/avatar.png'}
             alt={displayUser.name}
             sx={{
               width: 48,

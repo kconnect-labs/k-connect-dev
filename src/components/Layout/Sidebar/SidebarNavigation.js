@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useCallback, useContext } from 'react';
 import { List, Collapse, styled, Box } from '@mui/material';
 import { Icon } from '@iconify/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { NavButton, MoreButton } from '../../../UIKIT';
@@ -9,7 +9,8 @@ import { SidebarContext } from '../../../context/SidebarContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import GavelIcon from '@mui/icons-material/Gavel';
 import Badge from '@mui/material/Badge';
-// import { useMessenger } from '../../../contexts/MessengerContext';
+import axios from 'axios';
+import { useMessenger } from '../../../contexts/MessengerContext';
 
 // Clean, minimal nested list styling
 const NestedList = styled(List)(({ theme }) => ({
@@ -34,6 +35,7 @@ const SectionSpacer = styled(Box)(({ theme }) => ({
 const SidebarNavigation = memo(
   ({isModeratorUser, isChannel, primaryColor, user }) => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { t } = useLanguage();
     const {
       expandedMore,
@@ -45,9 +47,25 @@ const SidebarNavigation = memo(
       toggleExpandShops,
       toggleExpandSocial,
     } = useContext(SidebarContext);
-    // Мессенджер временно отключен
-    const unreadCounts = {};
-    const totalUnread = 0;
+    // Получаем данные мессенджера
+    const { unreadCounts, getTotalUnreadCount } = useMessenger();
+    const totalUnread = getTotalUnreadCount();
+
+    // Функция для проверки наличия артиста и навигации
+    const handleArtistManagementClick = useCallback(async () => {
+      try {
+        const response = await axios.get('/api/artist-management/check-has-artist');
+        if (response.data.success && response.data.has_artist) {
+          navigate('/artist-management');
+        } else {
+          // Показываем сообщение что у пользователя нет привязанных артистов
+          alert('У вас нет привязанных артистов. Обратитесь к модератору для привязки карточки артиста.');
+        }
+      } catch (error) {
+        console.error('Ошибка проверки артистов:', error);
+        alert('Произошла ошибка при проверке артистов');
+      }
+    }, [navigate]);
 
     const isActive = useCallback(
       path => {
@@ -157,7 +175,7 @@ const SidebarNavigation = memo(
           />
         ),
       }),
-      []
+      [totalUnread]
     );
 
     const mainMenu = useMemo(
@@ -485,6 +503,16 @@ const SidebarNavigation = memo(
                 nested={true}
                 target='_blank'
                 rel='noopener noreferrer'
+              />
+              
+              {/* Карточка артиста - всегда показываем, проверяем при нажатии */}
+              <NavButton
+                text="Карточка артиста"
+                icon={icons.person}
+                onClick={handleArtistManagementClick}
+                active={isActive('/artist-management')}
+                themeColor={primaryColor}
+                nested={true}
               />
             </NestedList>
           </Collapse>

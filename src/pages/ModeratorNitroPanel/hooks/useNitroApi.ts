@@ -579,6 +579,65 @@ export const useNitroApi = () => {
     }
   }, []);
 
+  // Функции для привязки артистов к пользователям
+  const bindArtistToUser = useCallback(async (userId: number, artistId: number) => {
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/artist-management/moderator/bind-artist', {
+        user_id: userId,
+        artist_id: artistId
+      });
+      return response.data;
+    } catch (error: any) {
+      setError(error.response?.data?.error || 'Ошибка привязки артиста к пользователю');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const unbindArtistFromUser = useCallback(async (userId: number, artistId: number) => {
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/artist-management/moderator/unbind-artist', {
+        user_id: userId,
+        artist_id: artistId
+      });
+      return response.data;
+    } catch (error: any) {
+      setError(error.response?.data?.error || 'Ошибка отвязки артиста от пользователя');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getUnboundArtists = useCallback(async (page: number = 1, perPage: number = 20) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/artist-management/moderator/list-unbound-artists?page=${page}&per_page=${perPage}`);
+      return response.data;
+    } catch (error: any) {
+      setError(error.response?.data?.error || 'Ошибка загрузки непривязанных артистов');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const getBoundArtists = useCallback(async (page: number = 1, perPage: number = 20) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/api/artist-management/moderator/list-bound-artists?page=${page}&per_page=${perPage}`);
+      return response.data;
+    } catch (error: any) {
+      setError(error.response?.data?.error || 'Ошибка загрузки привязанных артистов');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     loading,
     error,
@@ -642,5 +701,11 @@ export const useNitroApi = () => {
     getUserBans,
     banUser,
     unbanUser,
+    
+    // Функции для привязки артистов к пользователям
+    bindArtistToUser,
+    unbindArtistFromUser,
+    getUnboundArtists,
+    getBoundArtists,
   };
 };

@@ -893,7 +893,7 @@ export const MessengerProvider = ({ children }) => {
         break;
       
       case 'message_sent':
-        console.log('Подтверждение отправки сообщения:', data.messageId, data.tempId);
+        console.log('Подтверждение отправки сообщения:', data.messageId, data.tempId, data.clientMessageId);
         
         
         if (data.tempId && data.messageId) {
@@ -903,7 +903,12 @@ export const MessengerProvider = ({ children }) => {
             
             Object.keys(updatedMessages).forEach(chatId => {
               const chatMessages = updatedMessages[chatId];
-              const tempIndex = chatMessages.findIndex(msg => msg.id === data.tempId);
+              // Ищем по tempId или clientMessageId для большей надежности
+              const tempIndex = chatMessages.findIndex(msg => 
+                msg.id === data.tempId || 
+                msg.client_message_id === data.clientMessageId ||
+                (msg.is_temp && msg.content === data.content && msg.sender_id === user?.id)
+              );
               
               if (tempIndex !== -1) {
                 
@@ -912,14 +917,15 @@ export const MessengerProvider = ({ children }) => {
                   ...tempMessage,
                   id: data.messageId,
                   is_temp: false,
-                  reply_to_id: tempMessage.reply_to_id 
+                  reply_to_id: tempMessage.reply_to_id,
+                  client_message_id: data.clientMessageId
                 };
                 
                 const newChatMessages = [...chatMessages];
                 newChatMessages[tempIndex] = realMessage;
                 updatedMessages[chatId] = newChatMessages;
                 
-                console.log(`Заменено временное сообщение ${data.tempId} на реальное ${data.messageId} с reply_to_id: ${tempMessage.reply_to_id}`);
+                console.log(`Заменено временное сообщение ${data.tempId} на реальное ${data.messageId} (client_id: ${data.clientMessageId})`);
               }
             });
             
@@ -1266,6 +1272,26 @@ export const MessengerProvider = ({ children }) => {
         return prev;
       }
       
+        // Дополнительная проверка: если это сообщение от текущего пользователя,
+        // проверяем, нет ли уже сообщения с таким же содержимым и временем
+        if (isFromCurrentUser) {
+          // Проверяем по client_message_id или temp_id
+          if (message.client_message_id || message.temp_id) {
+            const existingMessage = chatMessages.find(m => 
+              m.client_message_id === message.client_message_id ||
+              m.temp_id === message.temp_id ||
+              (m.content === message.content && 
+               m.sender_id === message.sender_id &&
+               Math.abs(new Date(m.created_at) - new Date(message.created_at)) < 5000)
+            );
+            
+            if (existingMessage) {
+              console.log(`Найден дубликат сообщения по ID или содержимому, пропускаем ${message.id}`);
+              return prev;
+            }
+          }
+        }
+      
       
       if (isFromCurrentUser && message.temp_id) {
         
@@ -1293,12 +1319,12 @@ export const MessengerProvider = ({ children }) => {
         const timeDiff = Math.abs(now - messageTime);
         
         
-        if (timeDiff < 10000) {
+        if (timeDiff < 30000) {
           const duplicateIndex = chatMessages.findIndex(m => 
             m.content === message.content && 
             m.sender_id === message.sender_id &&
             m.is_temp && 
-            Math.abs(new Date(m.created_at) - messageTime) < 5000 
+            Math.abs(new Date(m.created_at) - messageTime) < 10000 
           );
           
           if (duplicateIndex !== -1) {
@@ -1311,6 +1337,27 @@ export const MessengerProvider = ({ children }) => {
               [numChatId]: newChatMessages.sort((a, b) => a.id - b.id)
             };
           }
+        }
+        
+        // Дополнительная проверка: если есть временное сообщение с таким же содержимым и отправителем
+        // в течение последних 60 секунд, считаем это дубликатом
+        const recentDuplicateIndex = chatMessages.findIndex(m => 
+          m.content === message.content && 
+          m.sender_id === message.sender_id &&
+          m.is_temp && 
+          Math.abs(new Date(m.created_at) - messageTime) < 60000 
+        );
+        
+        if (recentDuplicateIndex !== -1) {
+          console.log(`Найден недавний дубликат временного сообщения, заменяем на реальное ${message.id}`);
+          
+          const newChatMessages = [...chatMessages];
+          newChatMessages[recentDuplicateIndex] = message;
+          
+          return {
+            ...prev,
+            [numChatId]: newChatMessages.sort((a, b) => a.id - b.id)
+          };
         }
       }
       
@@ -2197,9 +2244,12 @@ export const MessengerProvider = ({ children }) => {
       if (websocketClient.current && websocketClient.current.isConnected) {
         console.log(`Отправка сообщения через WebSocket в чат ${chatId}...`);
         
+        // Генерируем уникальные ID для предотвращения дублирования
+        const clientMessageId = `client_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        const tempId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
         
         const tempMessage = {
-          id: `temp_${Date.now()}_${Math.random()}`,
+          id: tempId,
           content: text,
           sender_id: user.id,
           sender: {
@@ -2212,7 +2262,8 @@ export const MessengerProvider = ({ children }) => {
           message_type: 'text',
           created_at: formatToLocalTime(new Date().toISOString()),
           reply_to_id: replyToId, 
-          is_temp: true 
+          is_temp: true,
+          client_message_id: clientMessageId
         };
         
         
@@ -2237,7 +2288,15 @@ export const MessengerProvider = ({ children }) => {
         });
         
         
-        websocketClient.current.sendChatMessage(chatId, messageText, replyToId, tempMessage.id);
+        // Отправляем через WebSocket с уникальными ID
+        websocketClient.current.sendMessage({
+          type: 'send_message',
+          chatId: chatId,
+          text: messageText,
+          replyToId: replyToId,
+          clientMessageId: clientMessageId,
+          tempId: tempId
+        });
         
         return tempMessage;
       }

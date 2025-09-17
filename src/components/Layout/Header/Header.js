@@ -206,6 +206,7 @@ const Header = ({ toggleSidebar }) => {
     }
   };
 
+
   useEffect(() => {
     if (user) {
       const fetchUnreadCount = async () => {

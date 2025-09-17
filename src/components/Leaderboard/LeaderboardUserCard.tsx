@@ -188,7 +188,7 @@ const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
         <div className='LEAD-user-avatar' style={{ border: getAvatarBorder() }}>
           {user.avatar_url ? (
             <img
-              src={`${API_URL}${user.avatar_url}`}
+              src={user.avatar_url.startsWith('http') ? user.avatar_url : `${API_URL}${user.avatar_url}`}
               alt={user.name}
               className='avatar-image'
             />

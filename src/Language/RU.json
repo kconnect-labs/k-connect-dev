@@ -481,6 +481,7 @@
       "channel_label": "Канал",
       "wallet": "Кошелек",
       "shop": "Магазин",
+      "max_channels_reached": "Достигнут максимум каналов на учетной записи",
       "languages": {
         "ru": "Русский",
         "en": "English",
