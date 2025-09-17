@@ -269,7 +269,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                       >
                         <Box
                           component='img'
-                          src={`/static/images/bages/${achievement.image_path}`}
+                          src={achievement.image_path.startsWith('http') ? achievement.image_path : `/static/images/bages/${achievement.image_path}`}
                           alt={achievement.name || achievement.bage}
                           sx={badgeImageStyle(achievement.is_active)}
                           onError={(e: any) => {
@@ -368,7 +368,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                       >
                         <Box
                           component='img'
-                          src={`/static/images/bages/${achievement.image_path}`}
+                          src={achievement.image_path.startsWith('http') ? achievement.image_path : `/static/images/bages/${achievement.image_path}`}
                           alt={achievement.name || achievement.bage}
                           sx={badgeImageStyle(achievement.is_active)}
                           onError={(e: any) => {
