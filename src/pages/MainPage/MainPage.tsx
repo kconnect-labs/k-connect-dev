@@ -22,6 +22,7 @@ import SimpleImageViewer from '../../components/SimpleImageViewer';
 // Local components
 import OnlineUsers from './components/OnlineUsers';
 import RecommendationsPanel from './components/RecommendationsPanel';
+import TelegramSubscribeBlock from './components/TelegramSubscribeBlock';
 
 // Hooks
 import { useMainPageState } from './hooks/useMainPageState';
@@ -221,6 +222,8 @@ const MainPage: React.FC = React.memo(() => {
             recommendations={recommendations}
             loadingRecommendations={loadingRecommendations}
           />
+
+          <TelegramSubscribeBlock />
 
           {latestUpdate && (
             <Box
