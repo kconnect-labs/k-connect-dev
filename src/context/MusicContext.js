@@ -739,6 +739,19 @@ export const MusicProvider = ({ children }) => {
                     {},
                     { withCredentials: true }
                   )
+                  .then(() => {
+                    // Дополнительно обновляем настройки приватности, чтобы current_music_id был актуальным
+                    axios.post(
+                      '/api/user/settings/music-privacy',
+                      { current_music_id: track.id },
+                      { withCredentials: true }
+                    ).catch(error =>
+                      console.error(
+                        'Ошибка при обновлении настроек приватности:',
+                        error
+                      )
+                    );
+                  })
                   .catch(error =>
                     console.error(
                       'Ошибка при отправке статистики воспроизведения:',

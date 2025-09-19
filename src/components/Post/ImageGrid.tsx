@@ -3,6 +3,7 @@ import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import { imageCache, createImageProps } from '../../utils/imageUtils';
+import { staticCache } from '../../utils/staticCache';
 import { ImageGridProps } from './types';
 import ImageSkeleton from './ImageSkeleton';
 
@@ -269,12 +270,30 @@ const ImageGrid: React.FC<ImageGridProps> = ({
         const optimizedResults = await Promise.all(
           limitedImages.map(async (imageUrl: string) => {
             let formattedUrl = formatImageUrl(imageUrl);
-            // Проверяем кэш
+            
+            // Сначала проверяем кеш статических файлов
+            let cachedSrc = null;
+            try {
+              cachedSrc = await staticCache.getFile(formattedUrl);
+            } catch (error) {
+              console.warn('Failed to get from static cache:', error);
+            }
+            
+            if (cachedSrc) {
+              return {
+                src: cachedSrc,
+                originalSrc: formatImageUrl(imageUrl),
+                cached: true
+              };
+            }
+            
+            // Проверяем старый кэш
             const cacheKey = `${formattedUrl}-optimized`;
             const cachedResult = imageCache.get(cacheKey);
             if (cachedResult) {
               return cachedResult;
             }
+            
             if (webpSupported && formattedUrl.startsWith('/static/')) {
               formattedUrl = addFormatParam(formattedUrl, 'webp');
             }
@@ -284,6 +303,13 @@ const ImageGrid: React.FC<ImageGridProps> = ({
               maxWidth: 1200,
               cacheResults: true,
             });
+
+            // Сохраняем в кеш статических файлов
+            try {
+              await staticCache.loadFile(formattedUrl);
+            } catch (error) {
+              console.warn('Failed to cache static file:', error);
+            }
 
             const result = {
               ...optimized,

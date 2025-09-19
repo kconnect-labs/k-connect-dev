@@ -28,14 +28,9 @@ import {
   MusicNote,
   Message,
 } from '@mui/icons-material';
-import {
-  getCacheInfo,
-  clearCache,
-  getFileTypeStats,
-  getFileTypeSizes,
-  getFolderStats,
-  isSupported,
-} from '../../../../services/cacheManager';
+import { getCacheInfo, clearCache, getFileTypeStats, getFileTypeSizes, getFolderStats, isSupported } from '../../../../services/cacheManager';
+import { badgeCache } from '../../../../utils/badgeCache';
+import { staticCache } from '../../../../utils/staticCache';
 
 interface CacheCategory {
   id: string;
@@ -72,11 +67,13 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
     setError(null);
 
     try {
-      const [info, stats, sizes, folders] = await Promise.all([
+      const [info, stats, sizes, folders, badgeStats, staticStats] = await Promise.all([
         getCacheInfo(),
         getFileTypeStats(),
         getFileTypeSizes(),
         getFolderStats(),
+        badgeCache.getCacheStats(),
+        staticCache.getCacheStats(),
       ]);
 
       setCacheInfo(info);
@@ -134,7 +131,15 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           name: 'Бейджи',
           icon: <Message />,
           color: '#9B59B6',
-          size: folders.badges || 0,
+          size: badgeStats.size, // Используем размер из IndexedDB кеша бейджей
+          selected: true,
+        },
+        {
+          id: 'static',
+          name: 'Статические файлы',
+          icon: <Article />,
+          color: '#4D96FF',
+          size: staticStats.size,
           selected: true,
         },
         {
@@ -169,12 +174,36 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
     setError(null);
 
     try {
-      const success = await clearCache();
-      if (success) {
-        await loadCacheInfo();
-      } else {
-        setError('Не удалось очистить кеш');
+      // Получаем выбранные категории
+      const selectedCategories = categories.filter(cat => cat.selected);
+      
+      // Очищаем кеш в зависимости от выбранных категорий
+      const clearPromises = [];
+      
+      // Если выбраны бейджи, очищаем кеш бейджей
+      if (selectedCategories.some(cat => cat.id === 'badges')) {
+        clearPromises.push(badgeCache.clearCache());
       }
+      
+      // Если выбраны статические файлы, очищаем кеш статических файлов
+      if (selectedCategories.some(cat => cat.id === 'static')) {
+        clearPromises.push(staticCache.clearCache());
+      }
+      
+      // Если выбраны другие категории, очищаем основной кеш
+      if (selectedCategories.some(cat => cat.id !== 'badges' && cat.id !== 'static')) {
+        clearPromises.push(clearCache());
+      }
+      
+      // Если ничего не выбрано, очищаем все
+      if (selectedCategories.length === 0) {
+        clearPromises.push(clearCache());
+        clearPromises.push(badgeCache.clearCache());
+        clearPromises.push(staticCache.clearCache());
+      }
+      
+      await Promise.all(clearPromises);
+      await loadCacheInfo();
     } catch (err) {
       setError('Ошибка при очистке кеша');
       console.error('Failed to clear cache:', err);

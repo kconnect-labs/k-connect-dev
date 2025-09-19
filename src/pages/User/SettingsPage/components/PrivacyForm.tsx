@@ -27,6 +27,12 @@ interface PrivacySettings {
   lyrics_display_mode: string;
   static_music_id?: number;
   current_music_id?: number;
+  current_music?: {
+    id: number;
+    title: string;
+    artist: string;
+    album?: string;
+  };
   current_music_updated_at?: string;
 }
 
@@ -75,6 +81,8 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
           music_display_mode: data.music_display_mode || 'static',
           lyrics_display_mode: data.lyrics_display_mode || 'no',
           static_music_id: data.static_music?.id,
+          current_music_id: data.current_music_id,
+          current_music: data.current_music,
         });
       } else {
         setError('Не удалось загрузить настройки приватности');
@@ -116,6 +124,43 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
   ) => {
     const newMode = event.target.value;
     await updatePrivacySettings({ music_display_mode: newMode });
+  };
+
+  const handleUpdateStaticTrack = async () => {
+    try {
+      setSaving(true);
+      setError(null);
+
+      const response = await fetch('/api/user/settings/update-static-track', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          current_music_id: privacySettings.current_music_id,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setPrivacySettings(prev => ({
+          ...prev,
+          static_music_id: data.static_music_id,
+          music_display_mode: data.music_display_mode,
+        }));
+        setSuccess('Статический трек обновлен на текущий');
+        onSuccess?.();
+        setTimeout(() => setSuccess(null), 3000);
+      } else {
+        setError(data.error || 'Не удалось обновить статический трек');
+      }
+    } catch (err) {
+      console.error('Error updating static track:', err);
+      setError('Ошибка при обновлении статического трека');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleLyricsDisplayModeToggle = async () => {
@@ -273,6 +318,16 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
       setSaving(true);
       setError(null);
 
+      // Фильтруем пустые значения - не передаем undefined, null или пустые значения
+      const filteredUpdates = Object.fromEntries(
+        Object.entries(updates).filter(([key, value]) => {
+          if (value === undefined || value === null) return false;
+          if (key === 'static_music_id' && value === '') return false;
+          if (key === 'current_music_id' && value === '') return false;
+          return true;
+        })
+      );
+
       const response = await fetch('/api/user/settings/music-privacy', {
         method: 'POST',
         headers: {
@@ -280,7 +335,7 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
         },
         body: JSON.stringify({
           ...privacySettings,
-          ...updates,
+          ...filteredUpdates,
         }),
       });
 
@@ -653,6 +708,56 @@ const PrivacyForm: React.FC<PrivacyFormProps> = ({ onSuccess }) => {
               </ButtonGroup>
             </Box>
           </Box>
+
+          {/* Кнопка обновления статического трека */}
+          {privacySettings.current_music_id && (
+            <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+              <Button
+                variant='outlined'
+                size='small'
+                onClick={handleUpdateStaticTrack}
+                disabled={saving}
+                sx={{
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'var(--theme-text-primary)',
+                  fontSize: '0.875rem',
+                  textTransform: 'none',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  },
+                  '&:disabled': {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    color: 'rgba(255, 255, 255, 0.3)',
+                  },
+                }}
+              >
+                {saving
+                  ? 'Обновление...'
+                  : 'Установить текущий трек как статический'}
+              </Button>
+            </Box>
+          )}
+
+          {/* Информация о текущем треке */}
+          {privacySettings.current_music && (
+            <Box
+              sx={{
+                mt: 1,
+                p: 1,
+                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                borderRadius: 1,
+              }}
+            >
+              <Typography
+                variant='caption'
+                sx={{ color: 'var(--theme-text-secondary)' }}
+              >
+                Текущий трек: {privacySettings.current_music.artist} -{' '}
+                {privacySettings.current_music.title}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       </Box>
 

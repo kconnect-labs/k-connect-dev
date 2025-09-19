@@ -19,7 +19,7 @@ import {
   Percent as PercentIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 import { Pack, PackContent } from './types';
 import ProposePackModal from './ProposePackModal';
 // import { useBackgroundGradients } from './useBackgroundGradients';
@@ -518,7 +518,7 @@ const PackCard = ({
             </Box> */}
             <ExclusivePackImage>
               {pack.image_path ? (
-                <OptimizedImage
+                <CachedImage
                   src={pack.image_path}
                   alt={pack.display_name}
                   width='100%'
@@ -600,7 +600,7 @@ const PackCard = ({
                           backgroundRepeat: 'no-repeat',
                         }}
                       >
-                        <OptimizedImage
+                        <CachedImage
                           src={`/inventory/pack/${pack.id}/${item.item_name}`}
                           alt={item.item_name}
                           width='75%'
@@ -767,119 +767,117 @@ const PackCard = ({
           <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
           <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
         </Box> */}
-            <PackImage>
-              {pack.image_path ? (
-                <OptimizedImage
-                  src={pack.image_path}
-                  alt={pack.display_name}
-                  width='100%'
-                  height='100%'
-                  fallbackText='Пак'
-                  onLoad={() => {}}
-                  onError={() => {}}
-                />
-              ) : (
-                <ItemContainer>
-                  {sideItems[0] && (
-                    <SideItem>
-                      <Tooltip
-                        title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}
-                      >
-                        <ItemImage
-                          src={`/inventory/pack/${pack.id}/${sideItems[0].item_name}`}
-                          alt={sideItems[0].item_name}
-                        />
-                      </Tooltip>
-                    </SideItem>
-                  )}
-                  <MainItem>
-                    {mainItem ? (
-                      <Tooltip
-                        title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}
-                      >
-                        <ItemImage
-                          src={`/inventory/pack/${pack.id}/${mainItem.item_name}`}
-                          alt={mainItem.item_name}
-                        />
-                      </Tooltip>
-                    ) : (
-                      <Typography variant='body2' color='text.secondary'>
-                        ???
-                      </Typography>
-                    )}
-                  </MainItem>
-                  {sideItems[1] && (
-                    <SideItem>
-                      <Tooltip
-                        title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}
-                      >
-                        <ItemImage
-                          src={`/inventory/pack/${pack.id}/${sideItems[1].item_name}`}
-                          alt={sideItems[1].item_name}
-                        />
-                      </Tooltip>
-                    </SideItem>
-                  )}
-                </ItemContainer>
+        <PackImage>
+          {pack.image_path ? (
+            <CachedImage
+              src={pack.image_path}
+              alt={pack.display_name}
+              width='100%'
+              height='100%'
+              fallbackText='Пак'
+              onLoad={() => {}}
+              onError={() => {}}
+            />
+          ) : (
+            <ItemContainer>
+              {sideItems[0] && (
+                <SideItem>
+                  <Tooltip
+                    title={`${sideItems[0].item_name} (${getRarityLabel(sideItems[0].rarity)})`}
+                  >
+                    <ItemImage
+                      src={`/inventory/pack/${pack.id}/${sideItems[0].item_name}`}
+                      alt={sideItems[0].item_name}
+                    />
+                  </Tooltip>
+                </SideItem>
               )}
+              <MainItem>
+                {mainItem ? (
+                  <Tooltip
+                    title={`${mainItem.item_name} (${getRarityLabel(mainItem.rarity)})`}
+                  >
+                    <ItemImage
+                      src={`/inventory/pack/${pack.id}/${mainItem.item_name}`}
+                      alt={mainItem.item_name}
+                    />
+                  </Tooltip>
+                ) : (
+                  <Typography variant='body2' color='text.secondary'>
+                    ???
+                  </Typography>
+                )}
+              </MainItem>
+              {sideItems[1] && (
+                <SideItem>
+                  <Tooltip
+                    title={`${sideItems[1].item_name} (${getRarityLabel(sideItems[1].rarity)})`}
+                  >
+                    <ItemImage
+                      src={`/inventory/pack/${pack.id}/${sideItems[1].item_name}`}
+                      alt={sideItems[1].item_name}
+                    />
+                  </Tooltip>
+                </SideItem>
+              )}
+            </ItemContainer>
+          )}
 
-              {/* Показываем предметы при наведении */}
-              {showItems && packContents.length > 0 && (
-                <ItemPreview>
+          {/* Показываем предметы при наведении */}
+          {showItems && packContents.length > 0 && (
+            <ItemPreview>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 0.5,
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
+                {packContents.slice(0, 6).map((item, index) => (
                   <Box
+                    key={index}
                     sx={{
-                      display: 'flex',
-                      gap: 0.5,
-                      flexWrap: 'wrap',
-                      justifyContent: 'center',
+                      width: 37.5,
+                      height: 37.5,
+                      position: 'relative',
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
                     }}
                   >
-                    {packContents.slice(0, 6).map((item, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: 37.5,
-                          height: 37.5,
-                          position: 'relative',
-                          borderRadius: 4,
-                          overflow: 'hidden',
-                          backgroundImage: item.background_url
-                            ? `url(${item.background_url})`
-                            : 'none',
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat',
-                        }}
-                      >
-                        <OptimizedImage
-                          src={`/inventory/pack/${pack.id}/${item.item_name}`}
-                          alt={item.item_name}
-                          width='75%'
-                          height='75%'
-                          fallbackText=''
-                          showSkeleton={false}
-                          onLoad={() => {}}
-                          onError={() => {}}
-                          style={{
-                            position: 'relative',
-                            zIndex: 3,
-                            objectFit: 'contain',
-                          }}
-                        />
-                      </Box>
-                    ))}
-                    {packContents.length > 6 && (
-                      <Typography
-                        variant='caption'
-                        sx={{ color: 'text.secondary' }}
-                      >
-                        +{packContents.length - 6}
-                      </Typography>
-                    )}
+                    <CachedImage
+                      src={`/inventory/pack/${pack.id}/${item.item_name}`}
+                      alt={item.item_name}
+                      width='75%'
+                      height='75%'
+                      fallbackText=''
+                      showSkeleton={false}
+                      onLoad={() => {}}
+                      onError={() => {}}
+                      style={{
+                        position: 'relative',
+                        zIndex: 3,
+                        objectFit: 'contain',
+                      }}
+                    />
                   </Box>
-                </ItemPreview>
-              )}
-            </PackImage>
+                ))}
+                {packContents.length > 6 && (
+                  <Typography
+                    variant='caption'
+                    sx={{ color: 'text.secondary' }}
+                  >
+                    +{packContents.length - 6}
+                  </Typography>
+                )}
+              </Box>
+            </ItemPreview>
+          )}
+        </PackImage>
 
             <CardContent
               sx={{

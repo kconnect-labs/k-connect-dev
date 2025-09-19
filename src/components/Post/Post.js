@@ -37,6 +37,7 @@ import {
   optimizeImage,
   handleImageError as safeImageError,
 } from '../../utils/imageUtils';
+import { staticCache } from '../../utils/staticCache';
 import {
   linkRenderers,
   URL_REGEX,
@@ -78,6 +79,7 @@ import SimpleImageViewer from '../SimpleImageViewer';
 import ImageGrid from './ImageGrid';
 import RepostImageGrid from './RepostImageGrid';
 import MusicTrack from './MusicTrack';
+import CachedImage from './components/CachedImage';
 
 const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
 
@@ -90,7 +92,7 @@ const EditPostDialog = React.lazy(() => import('./EditPostDialog'));
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
 import MediaErrorDisplay from './MediaErrorDisplay';
-import {
+import { 
   processImages,
   processImageDimensions,
   hasVideo,
@@ -100,6 +102,7 @@ import {
   formatDuration,
   truncateText,
   getOptimizedImageUrl,
+  getCachedImageUrl,
   isPostEditable,
   getRandomRotation,
   getRandomSize,
@@ -1437,16 +1440,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Avatar
-                src={
-                  post.user
-                    ? getOptimizedImageUrl(
-                        post.user?.avatar_url ||
-                          `/static/uploads/avatar/${post.user?.id}/${post.user?.photo}`
-                      )
-                    : '/static/uploads/avatar/system/avatar.png'
-                }
-                alt={post.user?.name || 'User'}
+              <Box
                 component={Link}
                 to={`/profile/${post.user?.username || 'unknown'}`}
                 onClick={e => e.stopPropagation()}
@@ -1454,8 +1448,29 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   width: 40,
                   height: 40,
                   mr: 1.5,
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <CachedImage
+                  src={
+                    post.user
+                      ? post.user?.avatar_url ||
+                        `/static/uploads/avatar/${post.user?.id}/${post.user?.photo}`
+                      : '/static/uploads/avatar/system/avatar.png'
+                  }
+                  alt={post.user?.name || 'User'}
+                  width={40}
+                  height={40}
+                  style={{
+                    borderRadius: '50%',
+                    objectFit: 'cover'
+                  }}
+                />
+              </Box>
               <Box sx={{ flex: 1, whiteSpace: 'nowrap' }}>
                 <Typography
                   variant='subtitle1'
@@ -1643,14 +1658,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   >
                     Репост от
                   </Typography>
-                  <Avatar
-                    src={
-                      post.original_post.user?.photo &&
-                      post.original_post.user?.photo !== 'avatar.png'
-                        ? post.original_post.user?.avatar_url
-                        : `/static/uploads/avatar/system/avatar.png`
-                    }
-                    alt={post.original_post.user?.name || 'User'}
+                  <Box
                     component={Link}
                     to={`/profile/${post.original_post.user?.username || 'unknown'}`}
                     onClick={e => e.stopPropagation()}
@@ -1659,8 +1667,29 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       height: 18,
                       ml: 0.5,
                       mr: 0.5,
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
-                  />
+                  >
+                    <CachedImage
+                      src={
+                        post.original_post.user?.photo &&
+                        post.original_post.user?.photo !== 'avatar.png'
+                          ? post.original_post.user?.avatar_url
+                          : `/static/uploads/avatar/system/avatar.png`
+                      }
+                      alt={post.original_post.user?.name || 'User'}
+                      width={18}
+                      height={18}
+                      style={{
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                  </Box>
                   <Typography
                     variant='caption'
                     color='text.primary'
@@ -2489,20 +2518,34 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
                 {/* Аватар автора комментария */}
-                <Avatar
-                  src={
-                    lastComment.user?.avatar_url ||
-                    `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`
-                  }
-                  alt={lastComment.user?.name || 'User'}
+                <Box
                   sx={{
                     width: 28,
                     height: 28,
                     border: '1px solid rgba(66, 66, 66, 0.5)',
                     flexShrink: 0,
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
-                  onError={safeImageError}
-                />
+                >
+                  <CachedImage
+                    src={
+                      lastComment.user?.avatar_url ||
+                      `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`
+                    }
+                    alt={lastComment.user?.name || 'User'}
+                    width={28}
+                    height={28}
+                    style={{
+                      borderRadius: '50%',
+                      objectFit: 'cover'
+                    }}
+                    onError={safeImageError}
+                  />
+                </Box>
 
                 {/* Контент комментария */}
                 <Box sx={{ flex: 1, minWidth: 0 }}>

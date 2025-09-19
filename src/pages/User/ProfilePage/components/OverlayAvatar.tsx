@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 
 // CSS стили для контейнера
 const styles = `
@@ -296,56 +290,49 @@ const OverlayAvatar: React.FC<OverlayAvatarProps> = React.memo(
       ]
     );
 
-    return (
-      <div
-        ref={containerRef}
-        className='overlay-avatar-container'
-        style={containerStyle}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        onDragStart={(e: React.DragEvent) => e.preventDefault()}
-        onMouseEnter={(e: React.MouseEvent) => e.preventDefault()}
-        onMouseLeave={(e: React.MouseEvent) => e.preventDefault()}
-        onFocus={(e: React.FocusEvent) => e.preventDefault()}
-        onBlur={(e: React.FocusEvent) => e.preventDefault()}
-        tabIndex={-1}
-      >
-        <OptimizedImage
-          src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
-          alt={item.item_name}
-          width='100%'
-          height='100%'
-          fallbackText=''
-          showSkeleton={false}
-          skipExistenceCheck={true}
-          style={useMemo(
-            () =>
-              ({
-                width: '100%',
-                height: '100%',
-                objectFit: 'contain' as const,
-                position: 'relative' as const,
-                zIndex: 1,
-                marginTop: '5px',
-                pointerEvents: 'none' as const,
-                userSelect: 'none' as const,
-                WebkitUserSelect: 'none' as any,
-                MozUserSelect: 'none' as any,
-                msUserSelect: 'none' as any,
-              }) as React.CSSProperties,
-            []
-          )}
-          onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            // Обработчик загрузки изображения (пустой)
-          }}
-          onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-            // Обработчик ошибки изображения (пустой)
-          }}
-        />
-      </div>
-    );
-  }
-);
+  return (
+    <div
+      ref={containerRef}
+      className="overlay-avatar-container"
+      style={containerStyle}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onDragStart={(e: React.DragEvent) => e.preventDefault()}
+      onMouseEnter={(e: React.MouseEvent) => e.preventDefault()}
+      onMouseLeave={(e: React.MouseEvent) => e.preventDefault()}
+      onFocus={(e: React.FocusEvent) => e.preventDefault()}
+      onBlur={(e: React.FocusEvent) => e.preventDefault()}
+      tabIndex={-1}
+    >
+      <CachedImage
+        src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
+        alt={item.item_name}
+        width='100%'
+        height='100%'
+        showSkeleton={false}
+        style={useMemo(() => ({
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain' as const,
+          position: 'relative' as const,
+          zIndex: 1,
+          marginTop: '5px',
+          pointerEvents: 'none' as const,
+          userSelect: 'none' as const,
+          WebkitUserSelect: 'none' as any,
+          MozUserSelect: 'none' as any,
+          msUserSelect: 'none' as any,
+        } as React.CSSProperties), [])}
+        onLoad={() => {
+          // Обработчик загрузки изображения (пустой)
+        }}
+        onError={() => {
+          // Обработчик ошибки изображения (пустой)
+        }}
+      />
+    </div>
+  );
+});
 
 const areEqual = (prevProps: any, nextProps: any) => {
   const keysToCheck = [

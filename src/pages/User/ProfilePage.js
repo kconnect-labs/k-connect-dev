@@ -297,6 +297,15 @@ const ProfilePage = () => {
               response.data.inventory_privacy;
           }
 
+          if (response.data.musician_type !== undefined) {
+            response.data.user.musician_type = response.data.musician_type;
+          }
+
+          // Копируем количество артистов из корневого объекта, если оно есть
+          if (response.data.total_artists_count !== undefined) {
+            response.data.user.total_artists_count = response.data.total_artists_count;
+          }
+
           setUser(response.data.user);
 
           if (response.data.subscription) {

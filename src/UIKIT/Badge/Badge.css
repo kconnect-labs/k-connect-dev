@@ -10,6 +10,20 @@
   }
 }
 
+/* Анимация пульсации для знака вопроса при ошибке */
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* Анимация для кнопки перезагрузки */
+@keyframes retryPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 .badge {
   position: relative;
   display: inline-flex;
@@ -87,6 +101,18 @@
   transform: scale(0.8);
 }
 
+/* Стили для кнопки перезагрузки */
+.badge__retry-button {
+  animation: pulse 2s infinite;
+  transition: all 0.2s ease;
+}
+
+.badge__retry-button:hover {
+  animation: retryPulse 0.5s infinite;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
 /* Hover эффекты - такие же как у VerificationBadge */
 .badge--hovered {
   transform: scale(1.1); /* Такая же анимация как у VerificationBadge */
@@ -96,6 +122,20 @@
 
 .badge--hovered .badge__image {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Специальные стили для профиля - менее агрессивная анимация */
+.badge--profile {
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.badge--profile.badge--hovered {
+  transform: scale(1.05); /* Меньше масштабирование для профиля */
+  z-index: 10;
+}
+
+.badge--profile.badge--hovered .badge__image {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 /* ===== UPGRADE EFFECTS ===== */

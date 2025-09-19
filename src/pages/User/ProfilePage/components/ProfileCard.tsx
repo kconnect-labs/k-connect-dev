@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import VerificationBadge from '../../../../UIKIT/VerificationBadge';
 import Badge from '../../../../UIKIT/Badge';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 
 // Типизация для Badge компонента
 interface BadgeProps {
@@ -21,9 +22,10 @@ interface BadgeProps {
   showTooltip?: boolean;
   tooltipText?: string;
   onClick?: () => void;
+  isProfile?: boolean; // Новый пропс для профиля
 }
 import CurrentTrackDisplay from '../../../../UIKIT/CurrentTrackDisplay/CurrentTrackDisplay';
-import LottieOverlay from '../../../../components/LottieOverlay';
+import MusicLabel from '../../../../UIKIT/MusicLabel';
 import {
   UserStatus,
   EquippedItem,
@@ -86,6 +88,8 @@ interface User {
   };
   music_privacy?: number;
   inventory_privacy?: number;
+  musician_type?: 'musician' | 'representative';
+  total_artists_count?: number;
 }
 
 interface EquippedItemType {
@@ -150,22 +154,9 @@ const isOverlayItem = (item: EquippedItemType) => {
 };
 
 const hasEquippedOverlayItems = (items: EquippedItemType[]) => {
-  return (
-    Array.isArray(items) &&
-    items.some(item => isOverlayItem(item) && item.is_equipped)
-  );
+  return Array.isArray(items) && items.some(item => isOverlayItem(item) && item.is_equipped);
 };
 
-// Функция для определения типа оверлея (Lottie или обычное изображение)
-const isLottieOverlay = (item: EquippedItemType) => {
-  // Используем item_type из API, если доступен, иначе fallback на расширение файла
-  if (item?.item_type) {
-    return item.item_type.toLowerCase() === 'json';
-  }
-  // Fallback: проверяем расширение в image_url
-  if (!item?.image_url) return false;
-  return item.image_url.toLowerCase().endsWith('.json');
-};
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   user,
@@ -201,6 +192,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     setSelectedBadgeImagePath(imagePath);
     setBadgeModalOpen(true);
   };
+
+  // Отладочная информация для musician_type
+  console.log('ProfileCard - user.musician_type:', user?.musician_type);
+  console.log('ProfileCard - user.total_artists_count:', user?.total_artists_count);
+
   return (
     <Paper
       sx={{
@@ -228,6 +224,25 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         zIndex: 2,
       }}
     >
+      {/* Метка музыканта/представителя в правом верхнем углу */}
+      {user?.musician_type && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            zIndex: 30,
+          }}
+        >
+          <MusicLabel
+            type={user.musician_type}
+            profileColor={user?.profile_color || user?.status_color}
+            size="small"
+            showTooltip={true}
+          />
+        </Box>
+      )}
+
       {/* Контейнер для надетых айтемов 1 уровня на весь Paper */}
       <Box
         sx={{
@@ -316,42 +331,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 zIndex: 10,
               }}
             >
-              {overlayEquippedItems.map((item, index) => {
-                // Используем LottieOverlay для .json файлов, иначе обычный OverlayAvatar
-                if (isLottieOverlay(item)) {
-                  return (
-                    <LottieOverlay
-                      key={item.id}
-                      item={item}
-                      index={index}
-                      onPositionUpdate={handleItemPositionUpdate}
-                      isEditMode={isOwnProfile && isEditMode}
-                      onEditModeActivate={
-                        isOwnProfile ? handleEditModeActivate : undefined
-                      }
-                    />
-                  );
-                } else {
-                  return (
-                    <OverlayAvatar
-                      key={item.id}
-                      item={item}
-                      index={index}
-                      onPositionUpdate={handleItemPositionUpdate}
-                      isEditMode={isOwnProfile && isEditMode}
-                      onEditModeActivate={
-                        isOwnProfile ? handleEditModeActivate : undefined
-                      }
-                    />
-                  );
-                }
-              })}
+              {overlayEquippedItems
+                .map((item, index) => (
+                  <OverlayAvatar 
+                    key={item.id} 
+                    item={item} 
+                    index={index} 
+                    onPositionUpdate={handleItemPositionUpdate}
+                    isEditMode={isOwnProfile && isEditMode}
+                    onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
+                  />
+                ))}
             </Box>
 
             <Tooltip title='Открыть аватар' arrow placement='top'>
-              <Avatar
-                src={user?.avatar_url}
-                alt={user?.name}
+              <Box
                 onClick={() => {
                   const imageUrl = user?.avatar_url || fallbackAvatarUrl;
                   if (imageUrl) openLightbox(imageUrl);
@@ -374,15 +368,30 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   bgcolor: 'primary.dark',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
-                onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                  if (user?.id) {
-                    const fallbackSrc = `/static/uploads/avatar/${user.id}/${user.photo || 'default.png'}`;
-                    e.currentTarget.src = fallbackSrc;
-                    setFallbackAvatarUrl(fallbackSrc);
-                  }
-                }}
-              />
+              >
+                <CachedImage
+                  src={user?.avatar_url || fallbackAvatarUrl}
+                  alt={user?.name || 'User'}
+                  width="100%"
+                  height="100%"
+                  style={{
+                    borderRadius: '50%',
+                    objectFit: 'cover'
+                  }}
+                  onError={() => {
+                    if (user?.id) {
+                      const fallbackSrc = `/static/uploads/avatar/${user.id}/${user.photo || 'default.png'}`;
+                      setFallbackAvatarUrl(fallbackSrc);
+                    }
+                  }}
+                />
+              </Box>
             </Tooltip>
 
             {/* {isOnline && user?.subscription?.type !== 'channel' && (
@@ -490,6 +499,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       ? `${user.achievement.bage} (нажмите для подробностей)`
                       : user.achievement.bage
                   }
+                  isProfile={true} // Добавляем флаг для профиля
                   onClick={() => {
                     // Проверяем, является ли это shop бейджем (начинается с shop/)
                     if (user.achievement?.image_path?.startsWith('shop/')) {

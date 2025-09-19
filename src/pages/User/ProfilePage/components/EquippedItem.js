@@ -1,11 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 import axios from 'axios';
 
 // CSS анимации
@@ -547,77 +541,73 @@ const EquippedItem = React.memo(
       [position.x, position.y, isDragging, isEditMode, index]
     );
 
-    return (
-      <div
-        ref={containerRef}
-        className='equipped-item-container'
-        style={containerStyle}
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-        onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouch}
-        onDragStart={e => e.preventDefault()}
-        onMouseEnter={e => e.preventDefault()}
-        onMouseLeave={e => e.preventDefault()}
-        onFocus={e => e.preventDefault()}
-        onBlur={e => e.preventDefault()}
-        tabIndex={-1}
-      >
-        {isUpgraded && (
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 1,
-              userSelect: 'none',
-              pointerEvents: 'none',
-            }}
-          >
-            {particles}
-          </div>
-        )}
+  return (
+    <div
+      ref={containerRef}
+      className="equipped-item-container"
+      style={containerStyle}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouch}
 
-        {/* Подсказка убрана - теперь используются кнопки внизу */}
+      onDragStart={(e) => e.preventDefault()}
 
-        <OptimizedImage
-          src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
-          alt={item.item_name}
-          width='100%'
-          height='100%'
-          fallbackText=''
-          showSkeleton={false}
-          skipExistenceCheck={true}
-          style={useMemo(
-            () => ({
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              position: 'relative',
-              zIndex: 1,
-              pointerEvents: 'none',
-              userSelect: 'none',
-              WebkitUserSelect: 'none',
-              MozUserSelect: 'none',
-              msUserSelect: 'none',
-            }),
-            []
-          )}
-          onLoad={e => {
-            if (e && e.target && e.target.complete) {
-              getAverageColor(e.target, color => {
-                setParticleColor(color);
-              });
-            }
+      onMouseEnter={(e) => e.preventDefault()}
+      onMouseLeave={(e) => e.preventDefault()}
+      onFocus={(e) => e.preventDefault()}
+      onBlur={(e) => e.preventDefault()}
+      tabIndex={-1}
+    >
+      {isUpgraded && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 1,
+            userSelect: 'none',
+            pointerEvents: 'none',
           }}
-        />
-      </div>
-    );
-  }
-);
+        >
+          {particles}
+        </div>
+      )}
+      
+      {/* Подсказка убрана - теперь используются кнопки внизу */}
+      
+      <CachedImage
+        src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
+        alt={item.item_name}
+        width='100%'
+        height='100%'
+        showSkeleton={false}
+        style={useMemo(() => ({
+          width: '100%',
+          height: '100%',
+          objectFit: 'contain',
+          position: 'relative',
+          zIndex: 1,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+        }), [])}
+        onLoad={(e) => {
+          if (e && e.target && e.target.complete) {
+            getAverageColor(e.target, color => {
+              setParticleColor(color);
+            });
+          }
+        }}
+      />
+    </div>
+  );
+});
 
 const areEqual = (prevProps, nextProps) => {
   const keysToCheck = [

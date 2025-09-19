@@ -21,7 +21,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { UpgradeEffects } from './index';
 import { StyledSelect } from './StyledComponents';
 import inventoryImageService from '../../../../services/InventoryImageService';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
 // import { useBackgroundGradients } from '../../../Economic/components/inventoryPack/useBackgroundGradients';
 // import { getBackgroundGradient, createTwoCirclePattern } from '../../../Economic/components/inventoryPack/utils';
@@ -641,12 +641,12 @@ const InventoryTab = forwardRef(
                           backgroundRepeat: 'no-repeat',
                         }}
                       >
-                        <OptimizedImage
+                        <CachedImage
                           src={selectedItem.image_url}
                           alt={selectedItem.item_name}
                           width='75%' // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
                           height='75%' // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                          fallbackText='Предмет недоступен'
+                          fallbackSrc='Предмет недоступен'
                           showSkeleton={true}
                           style={{
                             position: 'relative',
@@ -852,12 +852,12 @@ const InventoryTab = forwardRef(
                       backgroundRepeat: 'no-repeat',
                     }}
                   >
-                    <OptimizedImage
+                    <CachedImage
                       src={selectedItem.image_url}
                       alt={selectedItem.item_name}
                       width='75%' // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
                       height='75%' // Уменьшили с 100% на 25% (100% * 0.75 = 75%)
-                      fallbackText='Предмет недоступен'
+                      fallbackSrc='Предмет недоступен'
                       showSkeleton={true}
                       style={{
                         position: 'relative',

@@ -26,6 +26,7 @@ const Badge = ({
   showTooltip = false,
   tooltipText,
   onClick,
+  isProfile = false,
   ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -33,29 +34,30 @@ const Badge = ({
   const [isHovered, setIsHovered] = useState(false);
   const [svgContent, setSvgContent] = useState(null);
   const [cachedImageSrc, setCachedImageSrc] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
   const imageRef = useRef(null);
   const containerRef = useRef(null);
 
-  // Мемоизируем размеры для оптимизации - размеры как у VerificationBadge
   const badgeSize = useMemo(() => {
     switch (size) {
       case 'post':
-        return { width: 24, height: 24 }; // Немного больше для постов
+        return { width: 24, height: 24 };
       case 'small':
-        return { width: 20, height: 20 }; // Как у VerificationBadge small
+        return { width: 20, height: 20 };
       case 'large':
-        return { width: 28, height: 28 }; // Больше для large
+        return { width: 28, height: 28 };
       case 'shop':
-        return { width: 300, height: 150 }; // Баннерный формат 150x300
+        return { width: 300, height: 150 };
       default:
-        return { width: 24, height: 24 }; // 24px как вы сказали
+        return { width: 24, height: 24 };
     }
   }, [size]);
 
-  // Мемоизируем классы для оптимизации
   const badgeClasses = useMemo(() => {
     const classes = ['badge', `badge--${size}`];
 
+    if (isProfile) classes.push('badge--profile');
     if (className) classes.push(className);
     if (imageLoaded) classes.push('badge--loaded');
     if (imageError) classes.push('badge--error');
@@ -66,6 +68,7 @@ const Badge = ({
     return classes.join(' ');
   }, [
     size,
+    isProfile,
     className,
     imageLoaded,
     imageError,
@@ -73,13 +76,37 @@ const Badge = ({
     isHovered,
   ]);
 
-  // Загружаем изображение из кеша
+  const retryLoadImage = async () => {
+    if (!achievement?.image_path || isRetrying) return;
+
+    setIsRetrying(true);
+    setRetryCount(prev => prev + 1);
+
+    try {
+      await badgeCache.clearBadgeCache(achievement.image_path);
+
+      const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
+      if (cachedSrc) {
+        setCachedImageSrc(cachedSrc);
+        setImageError(false);
+        setImageLoaded(false);
+      } else {
+        setImageError(true);
+      }
+    } catch (error) {
+      console.warn('Failed to retry load badge:', error);
+      setImageError(true);
+    } finally {
+      setIsRetrying(false);
+    }
+  };
+
   useEffect(() => {
     if (!achievement?.image_path) return;
 
     const loadCachedImage = async () => {
       try {
-        const cachedSrc = await badgeCache.getBadge(achievement.image_path);
+        const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
         if (cachedSrc) {
           setCachedImageSrc(cachedSrc);
           setImageError(false);
@@ -93,15 +120,13 @@ const Badge = ({
     };
 
     loadCachedImage();
-  }, [achievement?.image_path]);
+  }, [achievement?.image_path, retryCount]);
 
-  // Загружаем SVG содержимое изображения
   useEffect(() => {
     if (!achievement?.image_path || !imageLoaded || !cachedImageSrc) return;
 
     const loadSvgContent = async () => {
       try {
-        // Если это blob URL или base64, загружаем содержимое
         if (
           cachedImageSrc.startsWith('blob:') ||
           cachedImageSrc.startsWith('data:')
@@ -117,41 +142,43 @@ const Badge = ({
       }
     };
 
-    // Проверяем, является ли файл SVG
     if (achievement.image_path.toLowerCase().endsWith('.svg')) {
       loadSvgContent();
     }
   }, [achievement?.image_path, imageLoaded, cachedImageSrc]);
 
-  // Обработчик загрузки изображения
   const handleImageLoad = () => {
     setImageLoaded(true);
     setImageError(false);
   };
 
-  // Обработчик ошибки изображения
   const handleImageError = e => {
     setImageError(true);
     setImageLoaded(false);
 
-    // Скрываем изображение при ошибке
     if (e.target) {
       e.target.style.display = 'none';
     }
 
-    // Вызываем пользовательский обработчик
+    if (retryCount < 3) {
+      setTimeout(
+        () => {
+          retryLoadImage();
+        },
+        1000 * (retryCount + 1)
+      );
+    }
+
     if (onError) {
       onError(e);
     }
   };
 
-  // Минималистичный эффект свечения для upgrade бейджиков
   useEffect(() => {
     if (!achievement?.upgrade || !containerRef.current || !imageLoaded) return;
 
     const container = containerRef.current;
 
-    // Создаем элемент свечения
     const glowElement = document.createElement('div');
     glowElement.className = 'badge-glow';
     glowElement.style.setProperty(
@@ -161,7 +188,6 @@ const Badge = ({
 
     container.appendChild(glowElement);
 
-    // Очистка
     return () => {
       if (glowElement.parentNode) {
         glowElement.parentNode.removeChild(glowElement);
@@ -169,7 +195,6 @@ const Badge = ({
     };
   }, [achievement?.upgrade, achievement?.color_upgrade, imageLoaded, size]);
 
-  // Если нет достижения, не рендерим ничего
   if (!achievement) return null;
 
   const badgeContent = (
@@ -181,15 +206,15 @@ const Badge = ({
         height: badgeSize.height,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center', // Центрирование как у VerificationBadge
+        justifyContent: 'center',
         position: 'relative',
         overflow: 'visible',
-        cursor: onClick ? 'pointer' : 'default', // Курсор только если есть onClick
-        transition: 'all 0.2s ease', // Такая же анимация как у VerificationBadge
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
         '--upgrade-color': achievement.color_upgrade || '#FFD700',
         '&:active': onClick
           ? {
-              transform: 'scale(0.95)', // Такая же анимация как у VerificationBadge
+              transform: 'scale(0.95)',
             }
           : {},
       }}
@@ -214,8 +239,8 @@ const Badge = ({
           }}
         />
       ) : imageError ? (
-        // Fallback для ошибки загрузки
         <div
+          className='badge__retry-button'
           style={{
             width: '100%',
             height: '100%',
@@ -227,12 +252,31 @@ const Badge = ({
             fontSize: '10px',
             color: 'rgba(255, 255, 255, 0.5)',
             textAlign: 'center',
+            cursor: retryCount < 3 ? 'pointer' : 'default',
+            position: 'relative',
+            transition: 'all 0.2s ease',
           }}
+          onClick={retryCount < 3 ? retryLoadImage : undefined}
+          title={
+            retryCount < 3 ? 'Нажмите для перезагрузки' : 'Не удалось загрузить'
+          }
         >
-          ?
+          {isRetrying ? (
+            <div
+              style={{
+                width: '60%',
+                height: '60%',
+                border: '2px solid rgba(255, 255, 255, 0.2)',
+                borderTop: '2px solid rgba(255, 255, 255, 0.6)',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite',
+              }}
+            />
+          ) : (
+            '?'
+          )}
         </div>
       ) : (
-        // Загрузка
         <div
           style={{
             width: '100%',
@@ -259,7 +303,6 @@ const Badge = ({
     </Box>
   );
 
-  // Оборачиваем в Tooltip если нужно
   if (showTooltip) {
     return (
       <Tooltip title={tooltipText || achievement.bage}>{badgeContent}</Tooltip>
