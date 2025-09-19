@@ -175,3 +175,4 @@ const LazyImage = React.lazy(() => import('./LazyImage'));
 3. **Code splitting** - разделение кода по маршрутам
 4. **Service Worker** - кеширование ресурсов
 5. **Image optimization** - WebP, lazy loading, responsive images
+

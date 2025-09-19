@@ -25,6 +25,7 @@ interface BadgeProps {
   isProfile?: boolean; // Новый пропс для профиля
 }
 import CurrentTrackDisplay from '../../../../UIKIT/CurrentTrackDisplay/CurrentTrackDisplay';
+import MusicLabel from '../../../../UIKIT/MusicLabel';
 import {
   UserStatus,
   EquippedItem,
@@ -83,6 +84,8 @@ interface User {
   };
   music_privacy?: number;
   inventory_privacy?: number;
+  musician_type?: 'musician' | 'representative';
+  total_artists_count?: number;
 }
 
 interface EquippedItemType {
@@ -177,6 +180,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     setSelectedBadgeImagePath(imagePath);
     setBadgeModalOpen(true);
   };
+
+  // Отладочная информация для musician_type
+  console.log('ProfileCard - user.musician_type:', user?.musician_type);
+  console.log('ProfileCard - user.total_artists_count:', user?.total_artists_count);
+
   return (
     <Paper
       sx={{
@@ -204,6 +212,25 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         zIndex: 2,
       }}
     >
+      {/* Метка музыканта/представителя в правом верхнем углу */}
+      {user?.musician_type && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            zIndex: 30,
+          }}
+        >
+          <MusicLabel
+            type={user.musician_type}
+            profileColor={user?.profile_color || user?.status_color}
+            size="small"
+            showTooltip={true}
+          />
+        </Box>
+      )}
+
       {/* Контейнер для надетых айтемов 1 уровня на весь Paper */}
       <Box
         sx={{
@@ -432,7 +459,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   size="small"
                 />
               </div>
-
 
               {user?.achievement && (
                 <TypedBadge

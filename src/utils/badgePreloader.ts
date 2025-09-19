@@ -94,3 +94,4 @@ if (typeof window !== 'undefined') {
     badgePreloader.preloadPopularBadges();
   }, 1000);
 }
+
