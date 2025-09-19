@@ -23,12 +23,12 @@ import { StyledSelect } from './StyledComponents';
 import inventoryImageService from '../../../../services/InventoryImageService';
 import OptimizedImage from '../../../../components/OptimizedImage';
 import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
-import { useBackgroundGradients } from '../../../Economic/components/inventoryPack/useBackgroundGradients';
-import { getBackgroundGradient, createTwoCirclePattern } from '../../../Economic/components/inventoryPack/utils';
+// import { useBackgroundGradients } from '../../../Economic/components/inventoryPack/useBackgroundGradients';
+// import { getBackgroundGradient, createTwoCirclePattern } from '../../../Economic/components/inventoryPack/utils';
 
 const InventoryTab = forwardRef(
   ({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId, user }, ref) => {
-    const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
+    // const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
@@ -58,12 +58,10 @@ const InventoryTab = forwardRef(
     const [hasMore, setHasMore] = useState(true);
 
     // Получаем corner_color для модалки
-    const gradientData = selectedItem?.background_id ? getGradientData(selectedItem.background_id) : null;
-    const cornerColor = gradientData?.corner_color || '#666666';
+    const cornerColor = '#666666'; // fallback цвет
     
     // Получаем corner_color для второй модалки
-    const secondModalGradientData = (selectedItem || externalItem)?.background_id ? getGradientData((selectedItem || externalItem).background_id) : null;
-    const secondModalCornerColor = secondModalGradientData?.corner_color || '#666666';
+    const secondModalCornerColor = '#666666'; // fallback цвет
 
     useImperativeHandle(ref, () => ({
       openItemModalById: id => {
@@ -631,9 +629,10 @@ const InventoryTab = forwardRef(
                           mb: 2,
                           overflow: 'hidden',
                           position: 'relative', // Добавили для позиционирования фона
-                          background: getBackgroundGradient(selectedItem.background_id, getGradient),
-                          ...(selectedItem.background_id && getItemId(selectedItem.background_id) ? 
-                            createTwoCirclePattern(getItemId(selectedItem.background_id), 30, selectedItem.upgradeable) : {}),
+                          backgroundImage: selectedItem.background_url ? `url(${selectedItem.background_url})` : 'none',
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          backgroundRepeat: 'no-repeat',
                         }}
                       >
                         <OptimizedImage
@@ -647,6 +646,8 @@ const InventoryTab = forwardRef(
                             position: 'relative',
                             zIndex: 10,
                             objectFit: 'contain',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
                           }}
                         />
                       </Box>
@@ -837,9 +838,10 @@ const InventoryTab = forwardRef(
                       mb: 2,
                       overflow: 'hidden',
                       position: 'relative', // Добавили для позиционирования фона
-                      background: getBackgroundGradient(selectedItem.background_id, getGradient),
-                      ...(selectedItem.background_id && getItemId(selectedItem.background_id) ? 
-                        createTwoCirclePattern(getItemId(selectedItem.background_id), 30, selectedItem.upgradeable) : {}),
+                      backgroundImage: selectedItem.background_url ? `url(${selectedItem.background_url})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
                     }}
                   >
                     <OptimizedImage
@@ -853,6 +855,8 @@ const InventoryTab = forwardRef(
                         position: 'relative',
                         zIndex: 10,
                         objectFit: 'contain',
+                        maxWidth: '100%',
+                        maxHeight: '100%',
                       }}
                     />
                   </Box>

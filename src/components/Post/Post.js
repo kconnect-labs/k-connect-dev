@@ -4,7 +4,16 @@ import React, {
   useEffect,
   useRef,
   Suspense,
+  useMemo,
+  useCallback,
 } from 'react';
+import { 
+  throttle, 
+  debounce, 
+  createOptimizedResizeHandler,
+  getPerformanceSettings,
+  measurePerformance 
+} from '../../utils/performanceUtils';
 import {
   Box,
   Typography,
@@ -147,12 +156,20 @@ const Post = ({
     typeof window !== 'undefined' ? window.innerWidth <= 600 : false
   );
 
+  // Получаем настройки производительности
+  const performanceSettings = useMemo(() => getPerformanceSettings(), []);
+  
+  // Оптимизированный обработчик resize с адаптивным throttling
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const handler = () => setIsMobile(window.innerWidth <= 600);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
+    
+    const throttledHandler = throttle(() => {
+      setIsMobile(window.innerWidth <= 600);
+    }, performanceSettings.throttleDelay);
+    
+    window.addEventListener('resize', throttledHandler, { passive: true });
+    return () => window.removeEventListener('resize', throttledHandler);
+  }, [performanceSettings.throttleDelay]);
 
   const [liked, setLiked] = useState(
     post?.user_liked || post?.is_liked || false
@@ -403,7 +420,10 @@ const Post = ({
 
 
 
+  
   useEffect(() => {
+    if (!contentRef.current) return;
+
     const checkHeight = () => {
       if (contentRef.current) {
         const contentHeight = contentRef.current.scrollHeight;
@@ -411,11 +431,25 @@ const Post = ({
       }
     };
 
-    const timeoutId = setTimeout(() => {
-      checkHeight();
-    }, 100);
+    
+    let resizeObserver;
+    if (window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(() => {
+        
+        requestAnimationFrame(checkHeight);
+      });
+      resizeObserver.observe(contentRef.current);
+    } else {
+      
+      const timeoutId = setTimeout(checkHeight, 100);
+      return () => clearTimeout(timeoutId);
+    }
 
-    return () => clearTimeout(timeoutId);
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
   }, [post?.content]);
 
 
@@ -424,7 +458,7 @@ const Post = ({
 
 
 
-  const handleLike = async e => {
+  const handleLike = useCallback(async (e) => {
     if (e) e.stopPropagation();
 
     
@@ -488,7 +522,7 @@ const Post = ({
         );
       }
     }
-  };
+  }, [post?.id, liked, likesCount]);
 
 
 
@@ -1573,30 +1607,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 </ReactMarkdown>
               )}
             </MarkdownContent>
-
-            {/* Twitch iframe для поста с ID 8558 */}
-            {post.id === 8558 && (
-              <Box sx={{ 
-                mb: 2, 
-                display: 'flex', 
-                justifyContent: 'center',
-                '& iframe': {
-                  borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                }
-              }}>
-                <iframe 
-                  src={`https://player.twitch.tv/?channel=dota2ti_ru&parent=${window.location.hostname}`} 
-                  frameBorder="0" 
-                  allowFullScreen={true} 
-                  scrolling="no" 
-                  height="378" 
-                  width="620"
-                  title="Twitch Stream"
-                />
-              </Box>
-            )}
-
             {needsExpandButton && !isExpanded && (
               <ShowMoreButton onClick={toggleExpanded}>
                 <Typography variant='body2' sx={{ mr: 1 }}>

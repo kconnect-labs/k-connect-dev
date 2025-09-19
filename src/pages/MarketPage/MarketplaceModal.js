@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useBackgroundGradients } from '../inventoryPack/useBackgroundGradients';
-import { getBackgroundGradient, createTwoCirclePattern } from '../inventoryPack/utils';
+import { useBackgroundGradients } from '../Economic/components/inventoryPack/useBackgroundGradients';
 import {
   Dialog,
   DialogTitle,
@@ -23,7 +22,7 @@ import {
   ContentCopy as ContentCopyIcon,
 } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
-import { AuthContext } from '../../../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
@@ -110,7 +109,12 @@ const KBallsIcon = styled('img')({
 });
 
 const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
-  const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
+  // Проверяем, что listing существует
+  if (!listing) {
+    return null;
+  }
+
+  const { getGradientData } = useBackgroundGradients();
   
   // Получаем corner_color для фона модалки
   const gradientData = listing?.item?.background_id ? getGradientData(listing.item.background_id) : null;
@@ -119,7 +123,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const [loading, setLoading] = useState(false);
   const { user: currentUser } = useContext(AuthContext);
   const [copyStatus, setCopyStatus] = useState('');
-  const { item, price, seller_name, seller_id } = listing;
+  const { item, price, seller_name, seller_id } = listing || {};
   const isOwner = currentUser?.id === seller_id;
 
   const getRarityIcon = rarity => {
@@ -169,6 +173,9 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
       const data = await response.json();
 
       if (data.success) {
+        enqueueSnackbar(`Предмет "${listing?.item?.item_name}" успешно куплен!`, {
+          variant: 'success',
+        });
         onPurchaseSuccess(listing);
         onClose();
       } else {
@@ -223,7 +230,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
 
   const handleCopyLink = () => {
     const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
-    const url = `${origin}/item/${item.id}`;
+    const url = `${origin}/item/${item?.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
       setTimeout(() => setCopyStatus(''), 1500);
@@ -274,7 +281,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
               sx={{
                 width: 250,
                 height: 250,
-                borderRadius: 3,
+                borderRadius: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -282,14 +289,15 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 position: 'relative',
                 mb: 2,
                 margin: 'auto',
-                background: getBackgroundGradient(item.background_id, getGradient),
-                ...(item.background_id && getItemId(item.background_id) ? 
-                  createTwoCirclePattern(getItemId(item.background_id), 22, item.upgradeable) : {}),
+                background: item?.background_url ? `url(${item.background_url})` : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
               }}
             >
               <img
-                src={item.image_url}
-                alt={item.item_name}
+                src={item?.image_url}
+                alt={item?.item_name}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -313,16 +321,16 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
               variant='h6'
               sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}
             >
-              {item.item_name}
+              {item?.item_name}
             </Typography>
 
             <Box
               sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3 }}
             >
               <RarityChip
-                rarity={item.rarity}
-                label={getRarityLabel(item.rarity)}
-                icon={getRarityIcon(item.rarity)}
+                rarity={item?.rarity}
+                label={getRarityLabel(item?.rarity)}
+                icon={getRarityIcon(item?.rarity)}
               />
             </Box>
 
@@ -331,35 +339,35 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 variant='body2'
                 sx={{ color: 'text.secondary', mb: 1 }}
               >
-                <strong>ID предмета:</strong> {item.id}
+                <strong>ID предмета:</strong> {item?.id}
               </Typography>
               <Typography
                 variant='body2'
                 sx={{ color: 'text.secondary', mb: 1 }}
               >
-                <strong>Пак:</strong> {item.pack_name}
+                <strong>Пак:</strong> {item?.pack_name}
               </Typography>
               <Typography
                 variant='body2'
                 sx={{ color: 'text.secondary', mb: 1 }}
               >
                 <strong>Получен:</strong>{' '}
-                {new Date(item.obtained_at).toLocaleDateString('ru-RU')}
+                {item?.obtained_at ? new Date(item.obtained_at).toLocaleDateString('ru-RU') : 'Неизвестно'}
               </Typography>
-              {item.gifter_username && (
+              {item?.gifter_username && (
                 <Typography
                   variant='body2'
                   sx={{ color: 'text.secondary', mb: 1 }}
                 >
-                  <strong>Подарен:</strong> @{item.gifter_username}
+                  <strong>Подарен:</strong> @{item?.gifter_username}
                 </Typography>
               )}
               <Typography
                 variant='body2'
                 sx={{ color: 'text.secondary', mb: 1 }}
               >
-                <strong>Экземпляр:</strong> {item.item_number} из{' '}
-                {item.total_count}
+                <strong>Экземпляр:</strong> {item?.item_number} из{' '}
+                {item?.total_count}
               </Typography>
               <Typography variant='body2' sx={{ color: 'text.secondary' }}>
                 <strong>Продавец:</strong> {seller_name}

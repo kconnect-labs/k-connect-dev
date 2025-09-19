@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Box, Tooltip } from '@mui/material';
+import { badgeCache } from '../../utils/badgeCache';
 import './Badge.css';
 
 /**
@@ -31,6 +32,7 @@ const Badge = ({
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [svgContent, setSvgContent] = useState(null);
+  const [cachedImageSrc, setCachedImageSrc] = useState(null);
   const imageRef = useRef(null);
   const containerRef = useRef(null);
 
@@ -70,21 +72,41 @@ const Badge = ({
     isHovered,
   ]);
 
+  // Загружаем изображение из кеша
+  useEffect(() => {
+    if (!achievement?.image_path) return;
+
+    const loadCachedImage = async () => {
+      try {
+        const cachedSrc = await badgeCache.getBadge(achievement.image_path);
+        if (cachedSrc) {
+          setCachedImageSrc(cachedSrc);
+          setImageError(false);
+        } else {
+          setImageError(true);
+        }
+      } catch (error) {
+        console.warn('Failed to load badge from cache:', error);
+        setImageError(true);
+      }
+    };
+
+    loadCachedImage();
+  }, [achievement?.image_path]);
+
   // Загружаем SVG содержимое изображения
   useEffect(() => {
-    if (!achievement?.image_path || !imageLoaded) return;
+    if (!achievement?.image_path || !imageLoaded || !cachedImageSrc) return;
 
     const loadSvgContent = async () => {
       try {
-        // Определяем правильный URL для изображения
-        const imageUrl = achievement.image_path.startsWith('http') 
-          ? achievement.image_path 
-          : `/static/images/bages/${achievement.image_path}`;
-          
-        const response = await fetch(imageUrl);
-        if (response.ok) {
-          const svgText = await response.text();
-          setSvgContent(svgText);
+        // Если это blob URL или base64, загружаем содержимое
+        if (cachedImageSrc.startsWith('blob:') || cachedImageSrc.startsWith('data:')) {
+          const response = await fetch(cachedImageSrc);
+          if (response.ok) {
+            const svgText = await response.text();
+            setSvgContent(svgText);
+          }
         }
       } catch (error) {
         console.warn('Failed to load SVG content for particles:', error);
@@ -95,7 +117,7 @@ const Badge = ({
     if (achievement.image_path.toLowerCase().endsWith('.svg')) {
       loadSvgContent();
     }
-  }, [achievement?.image_path, imageLoaded]);
+  }, [achievement?.image_path, imageLoaded, cachedImageSrc]);
 
   // Обработчик загрузки изображения
   const handleImageLoad = () => {
@@ -172,22 +194,64 @@ const Badge = ({
       onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
-      <img
-        ref={imageRef}
-        src={achievement.image_path.startsWith('http') 
-          ? achievement.image_path 
-          : `/static/images/bages/${achievement.image_path}`}
-        alt={achievement.bage}
-        className='badge__image'
-        onLoad={handleImageLoad}
-        onError={handleImageError}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          borderRadius: 'inherit',
-        }}
-      />
+      {cachedImageSrc ? (
+        <img
+          ref={imageRef}
+          src={cachedImageSrc}
+          alt={achievement.bage}
+          className='badge__image'
+          onLoad={handleImageLoad}
+          onError={handleImageError}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            borderRadius: 'inherit',
+          }}
+        />
+      ) : imageError ? (
+        // Fallback для ошибки загрузки
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: 'inherit',
+            fontSize: '10px',
+            color: 'rgba(255, 255, 255, 0.5)',
+            textAlign: 'center',
+          }}
+        >
+          ?
+        </div>
+      ) : (
+        // Загрузка
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: 'inherit',
+          }}
+        >
+          <div
+            style={{
+              width: '60%',
+              height: '60%',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              borderTop: '2px solid rgba(255, 255, 255, 0.6)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+            }}
+          />
+        </div>
+      )}
     </Box>
   );
 

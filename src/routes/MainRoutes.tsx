@@ -74,7 +74,7 @@ const InventoryPage = React.lazy(
   () => import('../pages/Economic/components/inventoryPack/InventoryPage')
 );
 const MarketplacePage = React.lazy(
-  () => import('../pages/Economic/components/marketplace/MarketplacePage')
+  () => import('../pages/MarketPage/MarketplacePage')
 );
 const GrantsPage = React.lazy(
   () => import('../pages/Economic/components/grantPage/GrantsPage')

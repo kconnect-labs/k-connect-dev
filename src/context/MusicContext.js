@@ -8,22 +8,22 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
-// Функция для получения полного URL аудиофайла
+
 const getAudioUrl = filePath => {
   if (!filePath) return '';
 
-  // Если путь уже полный URL, возвращаем как есть
+  
   if (filePath.startsWith('http')) {
     return filePath;
   }
 
-  // Проверяем, работаем ли мы на localhost
+  
   const isLocalhost =
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname.includes('localhost');
 
-  // Если на localhost, используем домен сервера вместо localhost
+  
   if (isLocalhost) {
     return `https://k-connect.ru${filePath}`;
   }
@@ -143,7 +143,7 @@ export const MusicProvider = ({ children }) => {
     let isMounted = true;
 
     const fetchTracks = async () => {
-      // Защита от повторных запросов (только для обычной загрузки, не для forceLoadTracks)
+      
       if (isLoadingRef.current) {
         return;
       }
@@ -151,7 +151,7 @@ export const MusicProvider = ({ children }) => {
       const currentPath = window.location.pathname;
       const isMusicPage = currentPath.startsWith('/music');
 
-      // Убираем проверку на музыкальную страницу, чтобы треки загружались всегда
+      
       if (!isMusicPage) {
         console.log('Не на музыкальной странице, пропускаем загрузку треков');
         return;
@@ -273,9 +273,9 @@ export const MusicProvider = ({ children }) => {
             if (response.data && response.data.tracks) {
               const receivedTracks = response.data.tracks;
 
-              // Для "Мой вайб" используем специальный список
+              
               setMyVibeTracks(receivedTracks);
-              setHasMoreTracks(false); // "Мой вайб" обычно не имеет пагинации
+              setHasMoreTracks(false); 
               setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
             } else {
               setMyVibeTracks([]);
@@ -307,8 +307,8 @@ export const MusicProvider = ({ children }) => {
           const receivedTracks = response.data.tracks;
 
           if (receivedTracks.length > 0) {
-            // Only prefetch lyrics if user is actively playing music
-            // or has played music in this session
+            
+            
             if (isPlaying || currentTrack) {
               const prefetchCount = Math.min(3, receivedTracks.length);
 
@@ -421,8 +421,8 @@ export const MusicProvider = ({ children }) => {
         }
 
         const now = Date.now();
-        if (now - lastTimeUpdateRef.current > 100) { // Уменьшаем до 100ms для лучшей синхронизации
-          // Обновляем состояние только если есть слушатели, музыка играет и время действительно изменилось
+        if (now - lastTimeUpdateRef.current > 100) { 
+          
           if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && isPlaying && Math.abs(currentTimeRef.current - audio.currentTime) > 0.1) {
             setCurrentTime(audio.currentTime);
           }
@@ -435,7 +435,7 @@ export const MusicProvider = ({ children }) => {
         if (enableCrossfade && isPlaying && audio.duration > 0) {
           const timeRemaining = audio.duration - audio.currentTime;
 
-          // Предзагрузка следующего трека за 10 секунд до конца
+          
           if (timeRemaining <= 10 && timeRemaining > 3 && !crossfadeTimeoutRef.current) {
             getNextTrack().then(nextTrackToLoad => {
               if (nextTrackToLoad && nextAudioRef.current) {
@@ -446,14 +446,14 @@ export const MusicProvider = ({ children }) => {
             });
           }
 
-          // Запуск crossfade за 3 секунды до конца
+          
           if (
             timeRemaining <= 3 &&
             timeRemaining > 0 &&
             !crossfadeTimeoutRef.current
           ) {
             console.log('Starting crossfade...');
-            crossfadeTimeoutRef.current = true; // Устанавливаем флаг, чтобы предотвратить повторные вызовы
+            crossfadeTimeoutRef.current = true; 
             
             getNextTrack().then(nextTrackToPlay => {
               if (nextTrackToPlay) {
@@ -514,22 +514,22 @@ export const MusicProvider = ({ children }) => {
       if (isMounted) {
         console.log('Track ended, handling transition...');
         
-        // Сбрасываем crossfade флаг
+        
         crossfadeTimeoutRef.current = null;
         
-        // Останавливаем текущий трек
+        
         audioRef.current.pause();
         
-        // Если crossfade был активен, но не завершился, используем nextAudioRef
+        
         if (enableCrossfade && nextAudioRef.current.src && !nextAudioRef.current.paused) {
           console.log('Using preloaded next track from crossfade');
           
-          // Меняем местами audio элементы
+          
           const tempAudio = audioRef.current;
           audioRef.current = nextAudioRef.current;
           nextAudioRef.current = tempAudio;
           
-          // Получаем информацию о следующем треке
+          
           getNextTrack()
             .then(nextTrackToPlay => {
               if (nextTrackToPlay) {
@@ -543,7 +543,7 @@ export const MusicProvider = ({ children }) => {
               nextTrack();
             });
         } else {
-          // Если crossfade не сработал, просто переключаем на следующий трек
+          
           console.log('Crossfade not active, switching to next track normally');
           nextTrack();
         }
@@ -606,7 +606,7 @@ export const MusicProvider = ({ children }) => {
       return;
     }
 
-    // Если передали только ID трека, ищем его в списках
+    
     if (typeof track === 'number') {
       const trackId = track;
       const foundTrack = 
@@ -621,7 +621,7 @@ export const MusicProvider = ({ children }) => {
       if (foundTrack) {
         track = foundTrack;
       } else {
-        // Если трек не найден в локальных списках, загружаем его с сервера
+        
         console.log('Track not found in local lists, loading from server:', trackId);
         axios.get(`/api/music/${trackId}`)
           .then(response => {
@@ -654,10 +654,10 @@ export const MusicProvider = ({ children }) => {
         return;
       }
 
-      // Автоматически определяем секцию, если она не указана
+      
       let trackSection = section || determineSectionFromTrack(track);
 
-      // Нормализуем секцию 'all-tracks' в 'all'
+      
       if (trackSection === 'all-tracks') {
         trackSection = 'all';
       }
@@ -676,15 +676,15 @@ export const MusicProvider = ({ children }) => {
           .catch(err => console.error('Error fetching lyrics for track:', err));
       }
 
-      // Сначала сбрасываем состояние времени
+      
       setCurrentTime(0);
       setDuration(0);
       
-      // Останавливаем и очищаем все audio элементы
+      
       audioRef.current.pause();
       nextAudioRef.current.pause();
 
-      // Очищаем crossfade если он активен
+      
       if (crossfadeTimeoutRef.current) {
         clearInterval(crossfadeTimeoutRef.current);
         crossfadeTimeoutRef.current = null;
@@ -693,7 +693,7 @@ export const MusicProvider = ({ children }) => {
       audioRef.current.src = '';
       nextAudioRef.current.src = '';
 
-      // Принудительно сбрасываем время в audio элементе
+      
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
       }
@@ -704,7 +704,7 @@ export const MusicProvider = ({ children }) => {
       setCurrentTrack(track);
       setCurrentSectionHandler(trackSection);
       
-      // Очищаем кеш следующего трека при смене трека
+      
       nextTrackCacheRef.current = null;
 
       try {
@@ -716,13 +716,13 @@ export const MusicProvider = ({ children }) => {
 
       audioRef.current = new Audio();
 
-      // Добавляем слушатели событий для нового audio элемента
-      // (эти функции будут пересозданы в useEffect выше)
+      
+      
 
       const handleCanPlayThrough = () => {
         setIsTrackLoading(false);
 
-        // Устанавливаем длительность трека
+        
         if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
           setDuration(audioRef.current.duration);
         }
@@ -768,7 +768,7 @@ export const MusicProvider = ({ children }) => {
       const handleLoadStart = () => {};
 
       const handleLoadedMetadata = () => {
-        // Устанавливаем длительность трека сразу после загрузки метаданных
+        
         if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
           setDuration(audioRef.current.duration);
         }
@@ -777,12 +777,12 @@ export const MusicProvider = ({ children }) => {
       const handleError = error => {
         const audio = audioRef.current;
         
-        // Проверяем, действительно ли есть ошибка
+        
         if (!audio.error) {
-          return; // Нет ошибки, выходим
+          return; 
         }
         
-        // Логируем только реальные ошибки
+        
         console.error('Ошибка при загрузке трека:', {
           errorCode: audio.error.code,
           errorMessage: audio.error.message,
@@ -869,7 +869,7 @@ export const MusicProvider = ({ children }) => {
     try {
       const nextTrackItem = await getNextTrack();
       if (nextTrackItem) {
-        // Передаем текущую секцию, чтобы сохранить контекст
+        
         playTrack(nextTrackItem, currentSection);
       } else {
         setIsTrackLoading(false);
@@ -891,7 +891,7 @@ export const MusicProvider = ({ children }) => {
       if (currentTime < 3) {
         const prevTrackItem = await getPreviousTrack();
         if (prevTrackItem) {
-          // Передаем текущую секцию, чтобы сохранить контекст
+          
           playTrack(prevTrackItem, currentSection);
         } else {
           audioRef.current.currentTime = 0;
@@ -911,7 +911,7 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      // Проверяем кеш - если недавно запрашивали, возвращаем кешированный результат
+      
       const now = Date.now();
       if (nextTrackCacheRef.current && (now - lastNextTrackCallRef.current) < 5000) {
         console.log('Using cached next track');
@@ -920,7 +920,7 @@ export const MusicProvider = ({ children }) => {
 
       lastNextTrackCallRef.current = now;
 
-      // Для всех секций делаем запрос к бэкенду
+      
       try {
         const response = await axios.get('/api/music/next', {
           params: {
@@ -942,7 +942,7 @@ export const MusicProvider = ({ children }) => {
           error
         );
         
-        // Fallback к локальным спискам в случае ошибки
+        
         let trackList;
         switch (currentSection) {
           case 'popular':
@@ -971,19 +971,19 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
 
-        // Находим текущую позицию в списке
+        
         const currentIndex = trackList.findIndex(
           track => track.id === currentTrack.id
         );
 
         if (currentIndex === -1) {
-          // Если текущий трек не найден в списке, возвращаем первый
+          
           const firstTrack = trackList[0];
           nextTrackCacheRef.current = firstTrack;
           return firstTrack;
         }
 
-        // Проверяем, нужно ли загрузить больше треков
+        
         const isNearingEnd = currentIndex >= trackList.length - 3;
         const isNearing15Increment =
           (currentIndex + 1) % 15 >= 12 || (currentIndex + 1) % 15 === 0;
@@ -995,13 +995,13 @@ export const MusicProvider = ({ children }) => {
           loadMoreTracks(currentSection);
         }
 
-        // Возвращаем следующий трек
+        
         if (currentIndex < trackList.length - 1) {
           const nextTrack = trackList[currentIndex + 1];
           nextTrackCacheRef.current = nextTrack;
           return nextTrack;
         } else {
-          // Если это последний трек, пытаемся загрузить больше
+          
           if (hasMoreByType[currentSection]) {
             const loaded = await loadMoreTracks(currentSection);
 
@@ -1038,7 +1038,7 @@ export const MusicProvider = ({ children }) => {
             }
           }
 
-          // Зацикливаемся на первый трек
+          
           const firstTrack = trackList[0];
           nextTrackCacheRef.current = firstTrack;
           return firstTrack;
@@ -1054,7 +1054,7 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      // Для всех секций делаем запрос к бэкенду
+      
       try {
         const response = await axios.get('/api/music/previous', {
           params: {
@@ -1075,7 +1075,7 @@ export const MusicProvider = ({ children }) => {
           error
         );
         
-        // Fallback к локальным спискам в случае ошибки
+        
         let trackList;
         switch (currentSection) {
           case 'popular':
@@ -1104,17 +1104,17 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
 
-        // Находим текущую позицию в списке
+        
         const currentIndex = trackList.findIndex(
           track => track.id === currentTrack.id
         );
 
         if (currentIndex === -1) {
-          // Если текущий трек не найден в списке, возвращаем последний
+          
           return trackList[trackList.length - 1];
         }
 
-        // Проверяем, нужно ли загрузить больше треков
+        
         const isNearingStart = currentIndex <= 2;
         const isNearing15Increment =
           (currentIndex + 1) % 15 <= 3 || (currentIndex + 1) % 15 === 0;
@@ -1126,11 +1126,11 @@ export const MusicProvider = ({ children }) => {
           loadMoreTracks(currentSection);
         }
 
-        // Возвращаем предыдущий трек
+        
         if (currentIndex > 0) {
           return trackList[currentIndex - 1];
         } else {
-          // Если это первый трек, пытаемся загрузить больше
+          
           if (hasMoreByType[currentSection]) {
             const loaded = await loadMoreTracks(currentSection);
 
@@ -1165,7 +1165,7 @@ export const MusicProvider = ({ children }) => {
             }
           }
 
-          // Зацикливаемся на последний трек
+          
           return trackList[trackList.length - 1];
         }
       }
@@ -1186,7 +1186,7 @@ export const MusicProvider = ({ children }) => {
       try {
         const nextTrackItem = await getNextTrack();
         if (nextTrackItem) {
-          // Передаем текущую секцию, чтобы сохранить контекст
+          
           playTrack(nextTrackItem, currentSection);
         } else {
         }
@@ -1479,7 +1479,7 @@ export const MusicProvider = ({ children }) => {
         const newTracksList = [response.data.track, ...newTracks].slice(0, 10);
         setNewTracks(newTracksList);
 
-        // Обновляем "Мой вайб" если он содержит треки
+        
         if (myVibeTracks.length > 0) {
           const updatedMyVibeTracks = [
             response.data.track,
@@ -1881,7 +1881,7 @@ export const MusicProvider = ({ children }) => {
           Pragma: 'no-cache',
           Expires: '0',
         },
-        withCredentials: true, // Важно для аутентификации!
+        withCredentials: true, 
       });
 
       console.log('[SEARCH] Полный ответ сервера:', {
@@ -1895,7 +1895,7 @@ export const MusicProvider = ({ children }) => {
 
       const tracks = response.data;
 
-      // Детальная проверка данных
+      
       if (!Array.isArray(tracks)) {
         console.warn('[SEARCH] Ответ сервера не является массивом:', tracks);
         setSearchResults([]);
@@ -1907,7 +1907,7 @@ export const MusicProvider = ({ children }) => {
         return [];
       }
 
-      // Обработка результатов поиска
+      
       const processedTracks = tracks.map((track, index) => {
         console.log(`[SEARCH] Обрабатываем трек ${index + 1}:`, {
           id: track.id,
@@ -1919,12 +1919,12 @@ export const MusicProvider = ({ children }) => {
 
         return {
           ...track,
-          // Проверяем статус лайка
+          
           is_liked:
             typeof track.is_liked === 'boolean'
               ? track.is_liked
               : Boolean(likedTracks.find(lt => lt.id === track.id)),
-          // Добавляем дефолтные пути если отсутствуют
+          
           file_path:
             track.file_path || '/static/uploads/system/audio_placeholder.mp3',
           cover_path:
@@ -1956,9 +1956,9 @@ export const MusicProvider = ({ children }) => {
           : 'Нет конфига',
       });
 
-      // Подробная обработка ошибок
+      
       if (error.response) {
-        // Сервер ответил с ошибкой
+        
         if (error.response.status === 401) {
           console.error('[SEARCH] Требуется аутентификация для поиска');
         } else if (error.response.status === 403) {
@@ -1971,10 +1971,10 @@ export const MusicProvider = ({ children }) => {
           );
         }
       } else if (error.request) {
-        // Запрос был отправлен, но ответа не получено
+        
         console.error('[SEARCH] Нет ответа от сервера при поиске');
       } else {
-        // Ошибка при настройке запроса
+        
         console.error('[SEARCH] Ошибка при настройке запроса:', error.message);
       }
 
@@ -2177,7 +2177,7 @@ export const MusicProvider = ({ children }) => {
         const savedTrack = localStorage.getItem('currentTrack');
         const savedSection = localStorage.getItem('currentSection') || 'all';
 
-        // Проверяем, что сохраненная секция валидна
+        
         const validSections = [
           'all',
           'popular',
@@ -2194,7 +2194,7 @@ export const MusicProvider = ({ children }) => {
           const parsedTrack = JSON.parse(savedTrack);
           setCurrentTrack(parsedTrack);
 
-          // Устанавливаем секцию только если она валидна
+          
           if (isValidSection) {
             setCurrentSectionHandler(savedSection);
           } else {
@@ -2205,12 +2205,12 @@ export const MusicProvider = ({ children }) => {
           audioRef.current.volume = volume;
           setIsPlaying(false);
         } else {
-          // Если нет сохраненного трека, сбрасываем секцию на "all"
+          
           setCurrentSectionHandler('all');
         }
       } catch (error) {
         console.error('Ошибка при восстановлении трека:', error);
-        // При ошибке сбрасываем секцию на "all"
+        
         setCurrentSectionHandler('all');
       }
 
@@ -2255,12 +2255,12 @@ export const MusicProvider = ({ children }) => {
     }));
   }, []);
 
-  // Функция для автоматического определения секции по треку
+  
   const determineSectionFromTrack = track => {
-    // Сначала проверяем, есть ли явно указанная секция в URL или контексте
+    
     const currentPath = window.location.pathname;
 
-    // Проверяем URL для определения текущей страницы
+    
     if (
       currentPath.includes('/music/liked') ||
       currentPath.includes('/liked')
@@ -2295,7 +2295,7 @@ export const MusicProvider = ({ children }) => {
       return 'all';
     }
 
-    // Если URL не помогает, проверяем треки в списках
+    
     if (likedTracks.find(t => t.id === track.id)) {
       return 'liked';
     }
@@ -2314,21 +2314,21 @@ export const MusicProvider = ({ children }) => {
     if (searchResults.find(t => t.id === track.id)) {
       return 'search';
     }
-    // Проверяем плейлисты
+    
     for (const [playlistId, tracks] of Object.entries(playlistTracks)) {
       if (tracks.find(t => t.id === track.id)) {
         return `playlist_${playlistId}`;
       }
     }
-    // По умолчанию возвращаем "all"
+    
     return 'all';
   };
 
-  // Функции для управления секцией
+  
   const setCurrentSectionHandler = section => {
     setCurrentSection(section);
 
-    // Сохраняем секцию в localStorage только если это не временная секция
+    
     if (section && !section.startsWith('playlist_') && section !== 'search') {
       try {
         localStorage.setItem('currentSection', section);
@@ -2348,29 +2348,29 @@ export const MusicProvider = ({ children }) => {
     }
   };
 
-  // Функции для управления полноэкранным плеером
+  
   const openFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(true);
-    hasTimeListenersRef.current = true; // Включаем обновления времени
+    hasTimeListenersRef.current = true; 
 
-    // Проверяем, работаем ли мы на iOS
+    
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari =
       /safari/i.test(navigator.userAgent) &&
       !/chrome/i.test(navigator.userAgent) &&
       !/android/i.test(navigator.userAgent);
 
-    // Более безопасный способ скрытия для мобильных устройств
+    
     const rootElement = document.getElementById('root');
     if (rootElement) {
       if (isIOS || isSafari) {
-        // Для iOS/Safari используем transform
+        
         rootElement.style.transform = 'translateX(-100vw)';
         rootElement.style.position = 'fixed';
         rootElement.style.visibility = 'hidden';
         rootElement.style.opacity = '0';
       } else {
-        // Для других браузеров используем обычные стили
+        
         rootElement.style.visibility = 'hidden';
         rootElement.style.position = 'fixed';
         rootElement.style.top = '-9999px';
@@ -2381,7 +2381,7 @@ export const MusicProvider = ({ children }) => {
       }
     }
 
-    // Предотвращаем скролл на мобильных устройствах
+    
     if (typeof document !== 'undefined' && document.body) {
       document.body.style.overflow = 'hidden';
       if (isIOS) {
@@ -2394,27 +2394,27 @@ export const MusicProvider = ({ children }) => {
 
   const closeFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(false);
-    hasTimeListenersRef.current = false; // Отключаем обновления времени
+    hasTimeListenersRef.current = false; 
 
-    // Проверяем, работаем ли мы на iOS
+    
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari =
       /safari/i.test(navigator.userAgent) &&
       !/chrome/i.test(navigator.userAgent) &&
       !/android/i.test(navigator.userAgent);
 
-    // Восстанавливаем основное приложение
+    
     const rootElement = document.getElementById('root');
     if (rootElement) {
       if (isIOS || isSafari) {
-        // Для iOS/Safari восстанавливаем transform
+        
         rootElement.style.transform = '';
         rootElement.style.position = '';
         rootElement.style.visibility = '';
         rootElement.style.opacity = '';
         rootElement.style.pointerEvents = '';
       } else {
-        // Для других браузеров восстанавливаем обычные стили
+        
         rootElement.style.visibility = '';
         rootElement.style.position = '';
         rootElement.style.top = '';
@@ -2425,7 +2425,7 @@ export const MusicProvider = ({ children }) => {
       }
     }
 
-    // Восстанавливаем скролл
+    
     if (typeof document !== 'undefined' && document.body) {
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -2434,27 +2434,27 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
-  // Функция для принудительной загрузки треков (для вызова при переходе на музыкальную страницу)
+  
   const forceLoadTracks = useCallback(
     async (section = null) => {
       const targetSection = section || currentSection;
 
-      // Защита от повторных запросов для любимых треков
+      
       if (targetSection === 'liked' && isLoadingLikedTracksRef.current) {
         return;
       }
 
-      // Для принудительной загрузки игнорируем общую защиту от повторных запросов
-      // isLoadingRef.current = false;
+      
+      
 
-      // Принудительно загружаем треки
+      
       try {
         let url = '/api/music';
         let params = { page: 1, per_page: 50 };
 
         if (targetSection === 'liked') {
           url = '/api/music/liked';
-          isLoadingLikedTracksRef.current = true; // Устанавливаем флаг
+          isLoadingLikedTracksRef.current = true; 
         } else if (targetSection === 'my-vibe') {
           url = '/api/music/my-vibe';
         } else if (targetSection === 'popular') {
@@ -2503,21 +2503,21 @@ export const MusicProvider = ({ children }) => {
         setIsLoading(false);
         isLoadingRef.current = false;
         if (targetSection === 'liked') {
-          isLoadingLikedTracksRef.current = false; // Сбрасываем флаг
+          isLoadingLikedTracksRef.current = false; 
         }
       }
     },
     [currentSection]
   );
 
-  // --- ФУНКЦИЯ: Загрузить трек по ID (без автозапуска) ---
+  
   const playTrackById = useCallback(async trackId => {
     if (!trackId) return;
 
     try {
       const response = await axios.get(`/api/music/${trackId}`);
       if (response.data && response.data.success && response.data.track) {
-        // Просто устанавливаем трек как текущий, без автозапуска
+        
         setCurrentTrack(response.data.track);
         console.log('Track loaded for deeplink:', trackId);
       } else {
@@ -2528,12 +2528,12 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
-  // --- Deeplink: загрузка трека по ID из localStorage ---
+  
   useEffect(() => {
-    // Проверяем, есть ли deeplink trackId в localStorage
+    
     const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
     if (deeplinkTrackId) {
-      // Загружаем трек без автозапуска
+      
       playTrackById(deeplinkTrackId);
       localStorage.removeItem('deeplinkTrackId');
     }

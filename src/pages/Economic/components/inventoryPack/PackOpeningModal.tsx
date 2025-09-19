@@ -16,8 +16,8 @@ import {
   FiberManualRecord as DotIcon,
 } from '@mui/icons-material';
 import { Pack, InventoryItem } from './types';
-import { useBackgroundGradients } from './useBackgroundGradients';
-import { getBackgroundGradient } from './utils';
+// import { useBackgroundGradients } from './useBackgroundGradients';
+// import { getBackgroundGradient } from './utils';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -145,7 +145,7 @@ const PackOpeningModal = ({
   onBalanceUpdate,
   onItemObtained,
 }: PackOpeningModalProps) => {
-  const { getGradient } = useBackgroundGradients();
+  // const { getGradient } = useBackgroundGradients();
   const [opening, setOpening] = useState(true);
   const [obtainedItem, setObtainedItem] = useState<InventoryItem | null>(null);
   const [showResult, setShowResult] = useState(false);
@@ -420,7 +420,7 @@ const PackOpeningModal = ({
                 >
                   <ItemContainer
                     sx={{
-                      background: getBackgroundGradient(obtainedItem?.background_id, getGradient),
+                      backgroundImage: obtainedItem?.background_url ? `url(${obtainedItem.background_url})` : 'none',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',

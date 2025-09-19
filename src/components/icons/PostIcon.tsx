@@ -5,8 +5,8 @@ export const LikeIcon = () => {
      height="21" 
      viewBox="0 0 24 24" 
      fill="none" stroke="#fff" 
-     stroke-width="2" stroke-linecap="round"
-     stroke-linejoin="round" 
+     strokeWidth="2" strokeLinecap="round"
+     strokeLinejoin="round" 
      className="lucide lucide-heart" 
      aria-hidden="true">
     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
@@ -22,9 +22,9 @@ export const LikeIconFill = () => {
      viewBox="0 0 24 24" 
      fill="currentColor" 
      stroke="currentColor" 
-     stroke-width="2" 
-     stroke-linecap="round"
-     stroke-linejoin="round" 
+     strokeWidth="2" 
+     strokeLinecap="round"
+     strokeLinejoin="round" 
      className="lucide lucide-heart" 
      aria-hidden="true">
     <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
@@ -40,9 +40,9 @@ export const CommentIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="#fff" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-message-circle" 
     aria-hidden="true">
     <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
@@ -58,9 +58,9 @@ export const RepostIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="#fff" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-refresh-cw" 
     aria-hidden="true">
     <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8">
@@ -79,9 +79,9 @@ export const ShareIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="#fff" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-share2 lucide-share-2" 
     aria-hidden="true">
     <circle cx="18" cy="5" r="3"></circle>
@@ -101,9 +101,9 @@ export const Repeat2Icon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-repeat-2" 
     aria-hidden="true">
     <path d="m2 8 4-4 4 4"></path>
@@ -122,9 +122,9 @@ export const Link2Icon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-link-2" 
     aria-hidden="true">
     <path d="M9 17H7A5 5 0 0 1 7 7h2"></path>
@@ -142,9 +142,9 @@ export const ChevronDownIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-chevron-down" 
     aria-hidden="true">
     <path d="m6 9 6 6 6-6"></path>
@@ -160,9 +160,9 @@ export const ChevronUpIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-chevron-up" 
     aria-hidden="true">
     <path d="m18 15-6-6-6 6"></path>
@@ -178,9 +178,9 @@ export const CheckCircleIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-check-circle" 
     aria-hidden="true">
     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -197,9 +197,9 @@ export const UserCheckIcon = () => {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round" 
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
     className="lucide lucide-user-check" 
     aria-hidden="true">
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>

@@ -33,7 +33,9 @@ const fadeInOut = keyframes`
   50% { opacity: 1; transform: translateY(0); }
 `;
 
-const StyledContainer = styled(Box)<{ statusColor?: string }>(({ theme, statusColor }) => ({
+const StyledContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'statusColor',
+})<{ statusColor?: string }>(({ theme, statusColor }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: 12,
@@ -58,7 +60,9 @@ const AnimatedLines = styled(Box)({
   flexShrink: 0,
 });
 
-const Line = styled(Box)<{ delay: number; animation: string; statusColor?: string; getLighterColor?: (color: string) => string }>(({ delay, animation, statusColor, getLighterColor }) => ({
+const Line = styled(Box, {
+  shouldForwardProp: (prop) => !['delay', 'animation', 'statusColor', 'getLighterColor'].includes(prop as string),
+})<{ delay: number; animation: string; statusColor?: string; getLighterColor?: (color: string) => string }>(({ delay, animation, statusColor, getLighterColor }) => ({
   width: 3,
   borderRadius: 'var(--main-border-radius)',
   background: statusColor && getLighterColor
@@ -74,13 +78,17 @@ const TextContainer = styled(Box)({
   position: 'relative',
 });
 
-const ScrollingText = styled(Typography)<{ shouldScroll: boolean }>(({ shouldScroll }) => ({
+const ScrollingText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'shouldScroll',
+})<{ shouldScroll: boolean }>(({ shouldScroll }) => ({
   whiteSpace: 'nowrap',
   animation: shouldScroll ? `${scrollText} 8s linear infinite` : 'none',
   animationDelay: '2s',
 }));
 
-const AnimatedText = styled(Typography)<{ isVisible: boolean }>(({ isVisible }) => ({
+const AnimatedText = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'isVisible',
+})<{ isVisible: boolean }>(({ isVisible }) => ({
   position: 'absolute',
   top: 0,
   left: 0,
@@ -137,7 +145,6 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
         setTimeout(() => {
           setCurrentTextIndex((prev) => {
             const nextIndex = (prev + 1) % (lyricsLines.length + 1); // +1 для названия трека
-            console.log('Switching to text index:', nextIndex, 'Total texts:', lyricsLines.length + 1);
             return nextIndex;
           });
           

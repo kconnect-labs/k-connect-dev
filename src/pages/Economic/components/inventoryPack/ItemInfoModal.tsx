@@ -42,8 +42,8 @@ import {
   useUpgradeEffects,
 } from './upgradeEffectsConfig';
 import { InventoryItem, ItemAction } from './types';
-import { useBackgroundGradients } from './useBackgroundGradients';
-import { getBackgroundGradient, createTwoCirclePattern } from './utils';
+// import { useBackgroundGradients } from './useBackgroundGradients';
+// import { getBackgroundGradient, createTwoCirclePattern } from './utils';
 
 // Utility to check if item is overlay item (levels 2, 3, 4)
 const isOverlayItem = (item: InventoryItem) => {
@@ -223,11 +223,11 @@ const ItemInfoModal = ({
   onItemUpdate,
   onTransferSuccess,
 }: ItemInfoModalProps) => {
-  const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
+  // const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
   
   // Получаем corner_color для фона модалки
-  const gradientData = item?.background_id ? getGradientData(item.background_id) : null;
-  const cornerColor = gradientData?.corner_color || '#974835';
+  // const gradientData = item?.background_id ? getGradientData(item.background_id) : null;
+  const cornerColor = '#974835'; // fallback цвет
   const [transferModalOpen, setTransferModalOpen] = useState(false);
   const [recipientUsername, setRecipientUsername] = useState('');
   const [transferLoading, setTransferLoading] = useState(false);
@@ -720,7 +720,7 @@ const ItemInfoModal = ({
                   sx={{
                     width: 250,
                     height: 250,
-                    borderRadius: 3,
+                    borderRadius: 1,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -728,9 +728,7 @@ const ItemInfoModal = ({
                     position: 'relative',
                     mb: 2,
                     margin: 'auto',
-                    background: getBackgroundGradient(item?.background_id, getGradient),
-                    ...(item?.background_id && getItemId(item.background_id) ? 
-                      createTwoCirclePattern(getItemId(item.background_id)!, 22, String(item.upgradeable)) : {}),
+                    backgroundImage: item?.background_url ? `url(${item.background_url})` : 'none',
                   }}
                 >
                   <img
@@ -1061,27 +1059,25 @@ const ItemInfoModal = ({
                     width: 125,
                     height: 125,
                     mb: 2,
-                    background: getBackgroundGradient(item?.background_id, getGradient),
+                    backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
                     position: 'relative',
-                                          '&::after': item?.background_id ? {
-                        content: '""',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        ...(item?.background_id && getItemId(item.background_id) ? 
-                          createTwoCirclePattern(getItemId(item.background_id)!, 22, String(item.upgradeable)) : {}),
-                        opacity: 0.3,
-                        zIndex: 2,
-                        pointerEvents: 'none',
-                      } : {},
                   }}
                 >
                   <img
                     src={item.image_url}
                     alt={item.item_name}
-                    style={{ position: 'relative', zIndex: 10 }}
+                    style={{ 
+                      position: 'relative', 
+                      zIndex: 10,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      maxWidth: '100%',
+                      maxHeight: '100%',
+                    }}
                     onError={e => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';

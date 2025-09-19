@@ -23,6 +23,7 @@ interface BadgeProps {
   onClick?: () => void;
 }
 import CurrentTrackDisplay from '../../../../UIKIT/CurrentTrackDisplay/CurrentTrackDisplay';
+import LottieOverlay from '../../../../components/LottieOverlay';
 import {
   UserStatus,
   EquippedItem,
@@ -85,10 +86,12 @@ interface User {
 
 interface EquippedItemType {
   id: number;
+  image_url: string;
   profile_position_x: number | null;
   profile_position_y: number | null;
   upgradeable?: boolean | string;
   is_equipped?: boolean;
+  item_type?: string; // Тип файла (png, jpg, json, etc.)
   [key: string]: any; // Для других свойств айтема
 }
 
@@ -138,6 +141,17 @@ const isOverlayItem = (item: EquippedItemType) => {
 
 const hasEquippedOverlayItems = (items: EquippedItemType[]) => {
   return Array.isArray(items) && items.some(item => isOverlayItem(item) && item.is_equipped);
+};
+
+// Функция для определения типа оверлея (Lottie или обычное изображение)
+const isLottieOverlay = (item: EquippedItemType) => {
+  // Используем item_type из API, если доступен, иначе fallback на расширение файла
+  if (item?.item_type) {
+    return item.item_type.toLowerCase() === 'json';
+  }
+  // Fallback: проверяем расширение в image_url
+  if (!item?.image_url) return false;
+  return item.image_url.toLowerCase().endsWith('.json');
 };
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
@@ -285,16 +299,32 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               }}
             >
               {overlayEquippedItems
-                .map((item, index) => (
-                  <OverlayAvatar 
-                    key={item.id} 
-                    item={item} 
-                    index={index} 
-                    onPositionUpdate={handleItemPositionUpdate}
-                    isEditMode={isOwnProfile && isEditMode}
-                    onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
-                  />
-                ))}
+                .map((item, index) => {
+                  // Используем LottieOverlay для .json файлов, иначе обычный OverlayAvatar
+                  if (isLottieOverlay(item)) {
+                    return (
+                      <LottieOverlay 
+                        key={item.id} 
+                        item={item} 
+                        index={index} 
+                        onPositionUpdate={handleItemPositionUpdate}
+                        isEditMode={isOwnProfile && isEditMode}
+                        onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
+                      />
+                    );
+                  } else {
+                    return (
+                      <OverlayAvatar 
+                        key={item.id} 
+                        item={item} 
+                        index={index} 
+                        onPositionUpdate={handleItemPositionUpdate}
+                        isEditMode={isOwnProfile && isEditMode}
+                        onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
+                      />
+                    );
+                  }
+                })}
             </Box>
 
             <Tooltip title='Открыть аватар' arrow placement='top'>

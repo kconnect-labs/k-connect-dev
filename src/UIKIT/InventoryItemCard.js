@@ -1,8 +1,8 @@
 import React, { memo, useMemo, useCallback } from 'react';
 import OptimizedImage from '../components/OptimizedImage';
 import './InventoryItemCardPure.css';
-import { useBackgroundGradients } from '../pages/Economic/components/inventoryPack/useBackgroundGradients';
-import { getBackgroundGradient, createTwoCirclePattern, createSmallCirclePattern, createMediumCirclePattern } from '../pages/Economic/components/inventoryPack/utils';
+// import { useBackgroundGradients } from '../pages/Economic/components/inventoryPack/useBackgroundGradients';
+// import { getBackgroundGradient, createTwoCirclePattern, createSmallCirclePattern, createMediumCirclePattern } from '../pages/Economic/components/inventoryPack/utils';
 
 // Utilities to determine rarity presentation
 const getRarityColor = (rarity = 'common') => {
@@ -61,7 +61,7 @@ function areEqual(prevProps, nextProps) {
  */
 const InventoryItemCardPure = memo(
   ({ item, onClick, className = '', style = {}, ...other }) => {
-    const { getGradient, getItemId } = useBackgroundGradients();
+    // const { getGradient, getItemId } = useBackgroundGradients();
     
     const rarityColor = useMemo(
       () => getRarityColor(item.rarity),
@@ -84,32 +84,14 @@ const InventoryItemCardPure = memo(
         {...other}
       >
         <div
-          className={`image-container ${item.background_id ? 'has-background' : ''}`}
+          className={`image-container ${item.background_url ? 'has-background' : ''}`}
           style={{
-            '--background-gradient': getBackgroundGradient(item.background_id, getGradient),
-            // Убираем CSS переменную, теперь используем inline стили
+            backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
         >
-          {/* SVG паттерн через ::after псевдоэлемент */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              ...(item.background_id && getItemId(item.background_id) ? 
-                (className.includes('small') || className.includes('equipped-item-compact') ? 
-                  createSmallCirclePattern(getItemId(item.background_id), item.upgradeable) :
-                  className.includes('medium') ? 
-                    createMediumCirclePattern(getItemId(item.background_id), item.upgradeable) :
-                    createTwoCirclePattern(getItemId(item.background_id), 22, item.upgradeable)
-                ) : {}),
-              borderRadius: 'inherit',
-              zIndex: 2,
-              pointerEvents: 'none',
-            }}
-          />
           <OptimizedImage
             src={item.image_url}
             alt={item.item_name}

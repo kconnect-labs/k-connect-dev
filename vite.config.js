@@ -184,6 +184,11 @@ export default defineConfig(({ mode }) => {
           secure: true,
           ws: true,
         },
+        '/inventory': {
+          target: 'https://k-connect.ru',
+          changeOrigin: true,
+          secure: true,
+        },
         '/socket.io': {
           target: 'https://k-connect.ru',
           ws: true,
