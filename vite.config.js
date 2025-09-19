@@ -136,11 +136,10 @@ export default defineConfig(({ mode }) => {
               
               // Тяжелые библиотеки отдельно
               'markdown': ['react-markdown'],
-
               'framer': ['framer-motion'],
               
               // Утилиты
-              'utils': ['lodash', 'axios', 'date-fns'],
+              'utils': ['axios', 'date-fns'],
             },
             entryFileNames: 'assets/[name].[hash].js',
             chunkFileNames: 'assets/[name].[hash].js',
@@ -210,7 +209,6 @@ export default defineConfig(({ mode }) => {
         '@mui/material',
         '@emotion/react',
         '@emotion/styled',
-        'lodash',
         'axios',
       ],
       exclude: ['@vite/client', '@vite/env'],

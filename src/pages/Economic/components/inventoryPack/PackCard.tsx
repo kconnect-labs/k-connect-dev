@@ -19,7 +19,7 @@ import {
   Percent as PercentIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 import { Pack, PackContent } from './types';
 import ProposePackModal from './ProposePackModal';
 // import { useBackgroundGradients } from './useBackgroundGradients';
@@ -517,7 +517,7 @@ const PackCard = ({
             </Box> */}
             <ExclusivePackImage>
               {pack.image_path ? (
-                <OptimizedImage
+                <CachedImage
                   src={pack.image_path}
                   alt={pack.display_name}
                   width='100%'
@@ -597,7 +597,7 @@ const PackCard = ({
                           backgroundRepeat: 'no-repeat',
                         }}
                       >
-                        <OptimizedImage
+                        <CachedImage
                           src={`/inventory/pack/${pack.id}/${item.item_name}`}
                           alt={item.item_name}
                           width='75%'
@@ -762,7 +762,7 @@ const PackCard = ({
         </Box> */}
         <PackImage>
           {pack.image_path ? (
-            <OptimizedImage
+            <CachedImage
               src={pack.image_path}
               alt={pack.display_name}
               width='100%'
@@ -842,7 +842,7 @@ const PackCard = ({
                       backgroundRepeat: 'no-repeat',
                     }}
                   >
-                    <OptimizedImage
+                    <CachedImage
                       src={`/inventory/pack/${pack.id}/${item.item_name}`}
                       alt={item.item_name}
                       width='75%'

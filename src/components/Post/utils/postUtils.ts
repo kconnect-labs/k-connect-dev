@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { parseDate } from '../../../utils/dateUtils';
+import { staticCache } from '../../../utils/staticCache';
 
 // Media processing functions
 export const processImages = (post: any, mediaError: { type: string | null; url: string | null }) => {
@@ -139,6 +140,31 @@ export const getOptimizedImageUrl = (url: string) => {
   }
 
   return url;
+};
+
+// Функция для получения кешированного изображения
+export const getCachedImageUrl = async (url: string): Promise<string> => {
+  if (!url) return '/static/uploads/avatar/system/avatar.png';
+
+  try {
+    // Сначала проверяем кеш статических файлов
+    const cachedSrc = await staticCache.getFile(url);
+    if (cachedSrc) {
+      return cachedSrc;
+    }
+
+    // Если не найдено в кеше, загружаем и кешируем
+    const cachedUrl = await staticCache.loadFile(url);
+    if (cachedUrl) {
+      return cachedUrl;
+    }
+
+    // Fallback на оптимизированный URL
+    return getOptimizedImageUrl(url);
+  } catch (error) {
+    console.warn('Failed to get cached image:', error);
+    return getOptimizedImageUrl(url);
+  }
 };
 
 // Text processing functions

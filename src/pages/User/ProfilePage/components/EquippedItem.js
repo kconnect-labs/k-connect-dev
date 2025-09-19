@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 import axios from 'axios';
 
 // CSS анимации
@@ -533,14 +533,12 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
       
       {/* Подсказка убрана - теперь используются кнопки внизу */}
       
-      <OptimizedImage
+      <CachedImage
         src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
         alt={item.item_name}
         width='100%'
         height='100%'
-        fallbackText=''
         showSkeleton={false}
-        skipExistenceCheck={true}
         style={useMemo(() => ({
           width: '100%',
           height: '100%',
@@ -553,7 +551,7 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
           MozUserSelect: 'none',
           msUserSelect: 'none',
         }), [])}
-        onLoad={e => {
+        onLoad={(e) => {
           if (e && e.target && e.target.complete) {
             getAverageColor(e.target, color => {
               setParticleColor(color);

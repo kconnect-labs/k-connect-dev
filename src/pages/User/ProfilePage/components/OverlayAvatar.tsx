@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import OptimizedImage from '../../../../components/OptimizedImage';
+import CachedImage from '../../../../components/Post/components/CachedImage';
 
 // CSS стили для контейнера
 const styles = `
@@ -265,14 +265,12 @@ const OverlayAvatar: React.FC<OverlayAvatarProps> = React.memo(({
       onBlur={(e: React.FocusEvent) => e.preventDefault()}
       tabIndex={-1}
     >
-      <OptimizedImage
+      <CachedImage
         src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
         alt={item.item_name}
         width='100%'
         height='100%'
-        fallbackText=''
         showSkeleton={false}
-        skipExistenceCheck={true}
         style={useMemo(() => ({
           width: '100%',
           height: '100%',
@@ -286,10 +284,10 @@ const OverlayAvatar: React.FC<OverlayAvatarProps> = React.memo(({
           MozUserSelect: 'none' as any,
           msUserSelect: 'none' as any,
         } as React.CSSProperties), [])}
-        onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+        onLoad={() => {
           // Обработчик загрузки изображения (пустой)
         }}
-        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+        onError={() => {
           // Обработчик ошибки изображения (пустой)
         }}
       />

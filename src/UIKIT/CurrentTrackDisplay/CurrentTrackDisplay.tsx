@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Box, Typography, Tooltip } from '@mui/material';
 import { styled, keyframes } from '@mui/material/styles';
-// @ts-ignore
+
 import { MusicContext } from '../../context/MusicContext.js';
 import axios from 'axios';
 
-// Анимация для линий
+
 const lineAnimation = keyframes`
   0%, 100% { height: 4px; }
   50% { height: 20px; }
@@ -21,13 +21,13 @@ const lineAnimation3 = keyframes`
   50% { height: 24px; }
 `;
 
-// Анимация прокрутки текста
+
 const scrollText = keyframes`
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 `;
 
-// Анимация fade для переключения между текстами
+
 const fadeInOut = keyframes`
   0%, 100% { opacity: 0; transform: translateY(10px); }
   50% { opacity: 1; transform: translateY(0); }
@@ -107,7 +107,7 @@ interface CurrentTrackDisplayProps {
     artist: string;
     lyrics_display_mode?: string;
   };
-  userId?: number; // ID пользователя, чьи лирики нужно загрузить
+  userId?: number; 
   onClick?: () => void;
   statusColor?: string;
   getLighterColor?: (color: string) => string;
@@ -126,7 +126,7 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
     togglePlay: () => void;
   };
 
-  // Загружаем лирики при изменении трека или пользователя
+  
   useEffect(() => {
     if (track.lyrics_display_mode === 'lyrics' && userId) {
       loadLyrics();
@@ -135,25 +135,25 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
     }
   }, [track.id, track.lyrics_display_mode, userId]);
 
-  // Анимация переключения текстов
+  
   useEffect(() => {
     if (lyricsLines.length > 0) {
       const interval = setInterval(() => {
         setIsAnimating(true);
         
-        // Задержка для анимации fade out (увеличено время)
+        
         setTimeout(() => {
           setCurrentTextIndex((prev) => {
-            const nextIndex = (prev + 1) % (lyricsLines.length + 1); // +1 для названия трека
+            const nextIndex = (prev + 1) % (lyricsLines.length + 1); 
             return nextIndex;
           });
           
-          // Задержка для анимации fade in (увеличено время)
+          
           setTimeout(() => {
             setIsAnimating(false);
           }, 200);
-        }, 800); // Увеличено с 400ms до 800ms
-      }, 3000); // Переключаем каждые 3 секунды
+        }, 800); 
+      }, 3000); 
 
       return () => clearInterval(interval);
     }
@@ -191,21 +191,29 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
     if (onClick) {
       onClick();
     } else {
-      // Проверяем, играет ли уже этот трек
+      
       const isCurrentlyPlaying = currentTrack && currentTrack.id === track.id;
 
       if (isCurrentlyPlaying) {
         togglePlay();
       } else {
-        // Загружаем полный объект трека с сервера перед воспроизведением
+        
         axios.get(`/api/music/${track.id}`)
           .then(response => {
             if (response.data && response.data.success && response.data.track) {
               const fullTrack = response.data.track;
               playTrack(fullTrack, 'profile');
               
-              // Увеличиваем счетчик прослушиваний
-              return axios.post(`/api/music/${track.id}/play`, {}, { withCredentials: true });
+              
+              return axios.post(`/api/music/${track.id}/play`, {}, { withCredentials: true })
+                .then(() => {
+                  // Дополнительно обновляем настройки приватности
+                  return axios.post(
+                    '/api/user/settings/music-privacy',
+                    { current_music_id: track.id },
+                    { withCredentials: true }
+                  );
+                });
             } else {
               console.error('Failed to load track from server:', track.id);
             }
@@ -222,17 +230,17 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
 
   const displayText = `${track.title} - ${track.artist}`;
   
-  // Определяем какой текст показывать
+  
   const getCurrentDisplayText = () => {
     if (lyricsLines.length === 0) {
       return displayText;
     }
     
     if (currentTextIndex === 0) {
-      return displayText; // Показываем название трека
+      return displayText; 
     } else {
       const lyricsLine = lyricsLines[currentTextIndex - 1];
-      return lyricsLine; // Показываем строку лириков
+      return lyricsLine; 
     }
   };
 
@@ -249,7 +257,7 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
         
         <TextContainer>
           {lyricsLines.length > 0 ? (
-            // Анимированный текст для лириков
+            
             <AnimatedText
               ref={textRef}
               variant="body2"
@@ -265,7 +273,7 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId
               {currentText}
             </AnimatedText>
           ) : (
-            // Обычный прокручивающийся текст
+            
             <ScrollingText
               ref={textRef}
               variant="body2"

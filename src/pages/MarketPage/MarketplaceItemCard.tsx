@@ -3,7 +3,7 @@ import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { MarketplaceListing } from './types';
-import OptimizedImage from '../../components/OptimizedImage';
+import CachedImage from '../../components/Post/components/CachedImage';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -114,12 +114,11 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
               '--item-background': item.background_url ? `url(${item.background_url})` : 'none',
             }}
           >
-            <OptimizedImage
+            <CachedImage
               src={item.image_url}
               alt={item.item_name}
               width="80%"
               height="80%"
-              fallbackText=""
               showSkeleton={true}
               onLoad={() => {}}
               onError={() => {}}
