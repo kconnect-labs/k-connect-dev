@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  alpha,
-  useTheme,
-} from '@mui/material';
+import { Box, Typography, Button, alpha, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -50,7 +44,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       >
         {title}
       </Typography>
-      
+
       <Typography
         variant='body2'
         color='text.secondary'
@@ -83,4 +77,4 @@ const EmptyState: React.FC<EmptyStateProps> = ({
   );
 };
 
-export default EmptyState; 
+export default EmptyState;

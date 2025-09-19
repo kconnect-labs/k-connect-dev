@@ -136,7 +136,7 @@ const ReelWrapper = styled(Box)(({ theme }) => ({
   height: 170,
   overflow: 'hidden',
   margin: '0 auto',
-          background: 'rgba(255, 255, 255, 0.1)',
+  background: 'rgba(255, 255, 255, 0.1)',
   borderRadius: 16,
   border: `2.5px solid ${alpha(theme.palette.primary.main, 0.18)}`,
   boxShadow: `0 4px 24px ${alpha(theme.palette.primary.main, 0.1)}`,
@@ -277,9 +277,7 @@ const renderPrize = (prize, idx, { isActive }) => (
       backgroundRepeat: 'no-repeat',
       backdropFilter: 'blur(20px)',
       borderRadius: 8,
-      border: isActive
-        ? '3px solid #D0BCFF'
-        : '1px solid rgb(24 24 24)',
+      border: isActive ? '3px solid #D0BCFF' : '1px solid rgb(24 24 24)',
       boxShadow: isActive
         ? '0 0 20px 4px rgba(208, 188, 255, 0.4)'
         : '0 2px 8px rgba(0,0,0,0.1)',
@@ -562,7 +560,11 @@ const RouletteGame = () => {
           variant='h4'
           align='center'
           gutterBottom
-          sx={{ fontWeight: 800, letterSpacing: 1, color: 'var(--theme-text-primary)' }}
+          sx={{
+            fontWeight: 800,
+            letterSpacing: 1,
+            color: 'var(--theme-text-primary)',
+          }}
         >
           Рулетка удачи
         </Typography>
@@ -663,7 +665,11 @@ const RouletteGame = () => {
 
             <BetAmount>
               <Typography
-                sx={{ fontWeight: 600, minWidth: 60, color: 'var(--theme-text-primary)' }}
+                sx={{
+                  fontWeight: 600,
+                  minWidth: 60,
+                  color: 'var(--theme-text-primary)',
+                }}
               >
                 Ставка:
               </Typography>
@@ -726,7 +732,9 @@ const RouletteGame = () => {
                   height='16'
                   alt=''
                 />
-                <Typography sx={{ fontWeight: 700, color: 'var(--theme-text-primary)' }}>
+                <Typography
+                  sx={{ fontWeight: 700, color: 'var(--theme-text-primary)' }}
+                >
                   {betAmount}
                 </Typography>
               </Box>

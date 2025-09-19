@@ -21,64 +21,62 @@ import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
 } from '@mui/icons-material';
-import {
-  PlayIcon,
-  PauseIcon,
-  ForwardIcon,
-} from '../icons/CustomIcons';
+import { PlayIcon, PauseIcon, ForwardIcon } from '../icons/CustomIcons';
 import { useMusic } from '../../context/MusicContext';
 import { ThemeSettingsContext } from '../../App';
 import { useContext } from 'react';
 import { extractDominantColor } from '../../utils/imageUtils';
 
-const PlayerContainer = styled(Paper)<{ covercolor?: string | null }>(({ theme, covercolor }) => ({
-  position: 'fixed',
-  bottom: 10,
-  left: '50%',
-  transform: 'translateX(-50%)',
-  width: '100%',
-  maxWidth: 1000,
-  zIndex: theme.zIndex.appBar - 1,
-  backgroundColor: covercolor
-    ? `rgba(${covercolor}, 0.15)`
-    : 'rgba(0, 0, 0, 0.8)',
-  backdropFilter: 'blur(40px)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-  borderRadius: 24,
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  overflow: 'hidden',
-  transition: 'all 0.3s ease',
-  '&.hidden': {
-    display: 'none !important',
-    opacity: 0,
-    pointerEvents: 'none',
-    visibility: 'hidden',
-  },
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: covercolor
-      ? `radial-gradient(circle at center, rgba(${covercolor}, 0.2) 0%, rgba(0, 0, 0, 0.1) 70%)`
-      : 'none',
-    opacity: 0.6,
-    pointerEvents: 'none',
-    borderRadius: 24,
-  },
-  '@media (min-width: 700px)': {
-    width: 'calc(100% - 300px)', 
-    left: 'calc(50% + 140px)', 
-  },
-  '@media (max-width: 700px)': {
-    width: 'calc(100% - 40px)',
+const PlayerContainer = styled(Paper)<{ covercolor?: string | null }>(
+  ({ theme, covercolor }) => ({
+    position: 'fixed',
+    bottom: 10,
     left: '50%',
     transform: 'translateX(-50%)',
-    minWidth: 'auto',
-  },
-}));
+    width: '100%',
+    maxWidth: 1000,
+    zIndex: theme.zIndex.appBar - 1,
+    backgroundColor: covercolor
+      ? `rgba(${covercolor}, 0.15)`
+      : 'rgba(0, 0, 0, 0.8)',
+    backdropFilter: 'blur(40px)',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+    borderRadius: 24,
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    overflow: 'hidden',
+    transition: 'all 0.3s ease',
+    '&.hidden': {
+      display: 'none !important',
+      opacity: 0,
+      pointerEvents: 'none',
+      visibility: 'hidden',
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: covercolor
+        ? `radial-gradient(circle at center, rgba(${covercolor}, 0.2) 0%, rgba(0, 0, 0, 0.1) 70%)`
+        : 'none',
+      opacity: 0.6,
+      pointerEvents: 'none',
+      borderRadius: 24,
+    },
+    '@media (min-width: 700px)': {
+      width: 'calc(100% - 300px)',
+      left: 'calc(50% + 140px)',
+    },
+    '@media (max-width: 700px)': {
+      width: 'calc(100% - 40px)',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      minWidth: 'auto',
+    },
+  })
+);
 
 // Таймлайн сверху как отдельный элемент
 const TopTimeline = styled(Box)(({ theme }) => ({
@@ -96,8 +94,6 @@ const TopTimeline = styled(Box)(({ theme }) => ({
     height: 8,
   },
 }));
-
-
 
 // -style кнопки
 const ControlButton = memo(
@@ -119,7 +115,7 @@ const ControlButton = memo(
     size?: 'small' | 'medium' | 'large';
   }) => {
     const buttonSize = size === 'large' ? 48 : size === 'medium' ? 40 : 32;
-    
+
     return (
       <IconButton
         onClick={onClick}
@@ -152,7 +148,6 @@ const ControlButton = memo(
     );
   }
 );
-
 
 const getColorFromImage = extractDominantColor;
 
@@ -217,7 +212,7 @@ const TrackInfoSection = memo(
             filter: isTrackChanging ? 'brightness(1.2)' : 'brightness(1)',
           }}
         />
-        
+
         {/* Overlay при наведении или смене трека */}
         <Box
           sx={{
@@ -237,40 +232,44 @@ const TrackInfoSection = memo(
             },
           }}
         >
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 0.5,
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
             <ControlButton
               icon={
-                ((currentTrack as any)?.is_liked) ? (
+                (currentTrack as any)?.is_liked ? (
                   <FavoriteIcon sx={{ fontSize: 24 }} />
                 ) : (
                   <FavoriteBorderIcon sx={{ fontSize: 24 }} />
                 )
               }
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onLikeClick(e);
               }}
               ariaLabel='Toggle like'
-              color={((currentTrack as any)?.is_liked) ? 'white' : 'white'}
-              active={((currentTrack as any)?.is_liked)}
+              color={(currentTrack as any)?.is_liked ? 'white' : 'white'}
+              active={(currentTrack as any)?.is_liked}
               activeColor='white'
-              size="medium"
+              size='medium'
             />
           </Box>
         </Box>
       </Box>
 
-      <Box sx={{ 
-        overflow: 'hidden', 
-        flex: 1, 
-        minWidth: 0,
-        maxWidth: '300px', // Увеличиваем ширину текста
-      }}>
+      <Box
+        sx={{
+          overflow: 'hidden',
+          flex: 1,
+          minWidth: 0,
+          maxWidth: '300px', // Увеличиваем ширину текста
+        }}
+      >
         <Typography
           variant='h6'
           ref={titleRef}
@@ -309,7 +308,8 @@ const TrackInfoSection = memo(
       prevProps.currentTrack?.id === nextProps.currentTrack?.id &&
       prevProps.currentTrack?.title === nextProps.currentTrack?.title &&
       prevProps.currentTrack?.artist === nextProps.currentTrack?.artist &&
-      prevProps.currentTrack?.cover_path === nextProps.currentTrack?.cover_path &&
+      prevProps.currentTrack?.cover_path ===
+        nextProps.currentTrack?.cover_path &&
       prevProps.currentTrack?.is_liked === nextProps.currentTrack?.is_liked &&
       prevProps.titleOverflowing === nextProps.titleOverflowing &&
       prevProps.artistOverflowing === nextProps.artistOverflowing &&
@@ -342,30 +342,35 @@ const ControlsSection = memo(
     handleRepeatClick: () => void;
     dominantColor: string | null;
   }) => (
-    <Box sx={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      gap: 1,
-    }}>
-
-
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 1,
+      }}
+    >
       <ControlButton
-        icon={isPlaying ? <PauseIcon size={48} className="" /> : <PlayIcon size={48} className="" />}
-        onClick={(e) => togglePlay()}
+        icon={
+          isPlaying ? (
+            <PauseIcon size={48} className='' />
+          ) : (
+            <PlayIcon size={48} className='' />
+          )
+        }
+        onClick={e => togglePlay()}
         ariaLabel={isPlaying ? 'Pause' : 'Play'}
         active={true}
-        activeColor="white"
-        size="large"
+        activeColor='white'
+        size='large'
       />
 
       <ControlButton
-        icon={<ForwardIcon size={48} className="" />}
-        onClick={(e) => nextTrack()}
+        icon={<ForwardIcon size={48} className='' />}
+        onClick={e => nextTrack()}
         ariaLabel='Next track'
-        size="large"
+        size='large'
       />
-
     </Box>
   ),
   (prevProps, nextProps) => {
@@ -381,7 +386,6 @@ const ControlsSection = memo(
     );
   }
 );
-
 
 interface DesktopPlayerProps {
   isMobile: boolean;
@@ -438,7 +442,7 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
       if ((audioRef as any)?.current && !isSeeking) {
         const audioTime = (audioRef as any).current.currentTime;
         const audioDuration = (audioRef as any).current.duration;
-        
+
         if (!isNaN(audioTime) && !isNaN(audioDuration) && audioDuration > 0) {
           const progress = (audioTime / audioDuration) * 100;
           if (progress !== currentSeekValueRef.current) {
@@ -471,7 +475,6 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
   const lastUpdateRef = useRef(0);
   const currentSeekValueRef = useRef(0);
 
-
   useEffect(() => {
     let isMounted = true;
 
@@ -487,7 +490,9 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
           (window as any).audioTiming &&
           (window as any).audioTiming.formattedCurrentTime
         ) {
-          currentTimeEl.textContent = (window as any).audioTiming.formattedCurrentTime;
+          currentTimeEl.textContent = (
+            window as any
+          ).audioTiming.formattedCurrentTime;
         }
 
         if (
@@ -495,9 +500,10 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
           (window as any).audioTiming &&
           (window as any).audioTiming.formattedDuration
         ) {
-          durationEl.textContent = (window as any).audioTiming.formattedDuration;
+          durationEl.textContent = (
+            window as any
+          ).audioTiming.formattedDuration;
         }
-
 
         if (isMounted) {
           requestAnimationFrame(updateDisplays);
@@ -552,7 +558,10 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
       }
     };
 
-    document.addEventListener('audioProgressUpdate', handleProgressUpdate as EventListener);
+    document.addEventListener(
+      'audioProgressUpdate',
+      handleProgressUpdate as EventListener
+    );
 
     if ((window as any).currentAudioProgress !== undefined && !isSeeking) {
       setSeekValue((window as any).currentAudioProgress);
@@ -560,7 +569,10 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
     }
 
     return () => {
-      document.removeEventListener('audioProgressUpdate', handleProgressUpdate as EventListener);
+      document.removeEventListener(
+        'audioProgressUpdate',
+        handleProgressUpdate as EventListener
+      );
     };
   }, [isSeeking]);
 
@@ -572,9 +584,12 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
     setIsSeeking(true);
   }, []);
 
-  const handleSeekChange = useCallback((_: Event | React.SyntheticEvent, newValue: number | number[]) => {
-    setSeekValue(newValue as number);
-  }, []);
+  const handleSeekChange = useCallback(
+    (_: Event | React.SyntheticEvent, newValue: number | number[]) => {
+      setSeekValue(newValue as number);
+    },
+    []
+  );
 
   const handleSeekEnd = useCallback(
     (_: Event | React.SyntheticEvent, newValue: number | number[]) => {
@@ -590,7 +605,11 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
           }
         } else if (typeof duration === 'number' && duration > 0) {
           durationValue = duration;
-        } else if (audioRef && (audioRef as any).current && (audioRef as any).current.duration) {
+        } else if (
+          audioRef &&
+          (audioRef as any).current &&
+          (audioRef as any).current.duration
+        ) {
           durationValue = (audioRef as any).current.duration;
         }
 
@@ -622,13 +641,13 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
             }
           } else if (typeof duration === 'number' && duration > 0) {
             durationValue = duration;
-        } else if (
-          audioRef &&
-          (audioRef as any).current &&
-          (audioRef as any).current.duration
-        ) {
-          durationValue = (audioRef as any).current.duration;
-        }
+          } else if (
+            audioRef &&
+            (audioRef as any).current &&
+            (audioRef as any).current.duration
+          ) {
+            durationValue = (audioRef as any).current.duration;
+          }
 
           if (durationValue > 0) {
             const rect = progressRef.current.getBoundingClientRect();
@@ -668,7 +687,6 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
     [currentTrack, likeTrack]
   );
 
-
   const handleRepeatClick = useCallback(() => {
     setRepeatMode(prev => {
       if (prev === 'off') return 'all';
@@ -685,12 +703,15 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
     openFullScreenPlayer();
   }, [openFullScreenPlayer]);
 
-  const handleCloseSnackbar = useCallback((event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setShareSnackbar(prev => ({ ...prev, open: false }));
-  }, []);
+  const handleCloseSnackbar = useCallback(
+    (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setShareSnackbar(prev => ({ ...prev, open: false }));
+    },
+    []
+  );
 
   return (
     <React.Fragment>
@@ -714,7 +735,9 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
               left: 0,
               height: '100%',
               width: 'var(--progress-width, 0%)',
-              backgroundColor: dominantColor ? `rgba(${dominantColor}, 1)` : 'white',
+              backgroundColor: dominantColor
+                ? `rgba(${dominantColor}, 1)`
+                : 'white',
               transition: 'width 0.1s ease, height 0.2s ease',
               borderRadius: '0',
             }}
@@ -748,22 +771,26 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
         </TopTimeline>
 
         {/* Основной контент */}
-        <Box sx={{ 
-          padding: '16px 24px',
-          paddingTop: '24px', // Отступ сверху для таймлайна
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          minHeight: '80px',
-        }}>
+        <Box
+          sx={{
+            padding: '16px 24px',
+            paddingTop: '24px', // Отступ сверху для таймлайна
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            minHeight: '80px',
+          }}
+        >
           {/* Левая часть - Трек-информация */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            flex: '1 1 auto',
-            minWidth: 0,
-            gap: 1,
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              flex: '1 1 auto',
+              minWidth: 0,
+              gap: 1,
+            }}
+          >
             <TrackInfoSection
               currentTrack={currentTrack}
               titleOverflowing={titleOverflowing}
@@ -775,15 +802,16 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
               onLikeClick={toggleLikeTrack}
               isTrackChanging={isTrackChanging}
             />
-            
           </Box>
 
           {/* Центр - Кнопки управления */}
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center',
-            flex: '0 0 auto',
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              flex: '0 0 auto',
+            }}
+          >
             <ControlsSection
               shuffleMode={shuffleMode}
               handleShuffleClick={handleShuffleClick}
@@ -795,7 +823,6 @@ const DesktopPlayer: React.FC<DesktopPlayerProps> = memo(({ isMobile }) => {
               dominantColor={dominantColor}
             />
           </Box>
-
         </Box>
       </PlayerContainer>
 

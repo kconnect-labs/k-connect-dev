@@ -161,7 +161,8 @@ const DecorationMenu = ({ open, onClose, userId, username }) => {
     return (
       <StyledPaper key={decoration.id}>
         <DecorationPreview decoration={decoration}>
-          {decoration.item_path && decoration.item_path.trim() !== '' &&
+          {decoration.item_path &&
+            decoration.item_path.trim() !== '' &&
             (() => {
               const [path, ...styles] = decoration.item_path.split(';');
               const styleObj = styles.reduce((acc, style) => {

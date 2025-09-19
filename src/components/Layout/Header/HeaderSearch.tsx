@@ -65,37 +65,44 @@ interface HeaderSearchProps {
   handleSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearchFocus: () => void;
   handleClickAway: (event: MouseEvent | TouchEvent) => void;
-  handleSearchTabChange: (event: React.SyntheticEvent, newValue: number) => void;
+  handleSearchTabChange: (
+    event: React.SyntheticEvent,
+    newValue: number
+  ) => void;
   handleViewAll: () => void;
   handleSearchItemClick: (path: string) => void;
   toggleSearch: () => void;
   isMobile: boolean;
 }
 
-// Styled Components в стиле Command Palette  
-const SearchContainer = styled(motion.div)<{ isMobile: boolean }>(({ theme, isMobile }) => ({
-  position: 'fixed',
-  top: isMobile ? '20px' : '80px',
-  ...(isMobile ? {
-    left: '16px',
-    right: '16px',
-    width: 'auto',
-    maxWidth: 'none',
-  } : {
-    left: '50%',
-    width: '600px',
-    maxWidth: '600px',
-  }),
-  zIndex: 1300,
-}));
+// Styled Components в стиле Command Palette
+const SearchContainer = styled(motion.div)<{ isMobile: boolean }>(
+  ({ theme, isMobile }) => ({
+    position: 'fixed',
+    top: isMobile ? '20px' : '80px',
+    ...(isMobile
+      ? {
+          left: '16px',
+          right: '16px',
+          width: 'auto',
+          maxWidth: 'none',
+        }
+      : {
+          left: '50%',
+          width: '600px',
+          maxWidth: '600px',
+        }),
+    zIndex: 1300,
+  })
+);
 
 const StyledPaper = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'isMobile',
+  shouldForwardProp: prop => prop !== 'isMobile',
 })<{ isMobile: boolean }>(({ theme, isMobile }) => ({
-  background: isMobile 
+  background: isMobile
     ? 'rgba(15, 15, 25, 0.98)' // Более темный и насыщенный фон для мобильных
     : 'var(--theme-background)',
-  backdropFilter: isMobile 
+  backdropFilter: isMobile
     ? 'none' // Отключаем backdrop-filter на мобильных
     : 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(0, 0, 0, 0.12)',
@@ -137,7 +144,7 @@ const SearchInputField = styled(TextField)(({ theme }) => ({
 const SearchTabsContainer = styled(Box)(({ theme }) => ({
   borderTop: '1px solid rgba(255, 255, 255, 0.08)',
   borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  backgroundColor: 'rgba(255, 255, 255, 0.05)',
 }));
 
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -307,7 +314,10 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
   // Handle click outside
   useEffect(() => {
     const handleClick = (event: MouseEvent | TouchEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         handleClickAway(event);
       }
     };
@@ -328,7 +338,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
   const renderUserResult = (user: User) => (
     <SearchResultItem
       key={user.id}
-      className="search-result-item"
+      className='search-result-item'
       onClick={() => handleSearchItemClick(`/profile/${user.username}`)}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -337,7 +347,12 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
       whileTap={{ scale: 0.98 }}
     >
       <UserAvatar
-        src={user.avatar_url || (user.photo ? `/static/uploads/avatar/${user.id}/${user.photo}` : undefined)}
+        src={
+          user.avatar_url ||
+          (user.photo
+            ? `/static/uploads/avatar/${user.id}/${user.photo}`
+            : undefined)
+        }
         alt={user.name || user.username}
       >
         {!user.avatar_url && !user.photo && <PersonIcon />}
@@ -357,7 +372,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
   const renderChannelResult = (channel: Channel) => (
     <SearchResultItem
       key={channel.id}
-      className="search-result-item"
+      className='search-result-item'
       onClick={() => handleSearchItemClick(`/profile/${channel.username}`)}
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -390,132 +405,133 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
         transition={{ duration: 0.2 }}
         onClick={toggleSearch}
       />
-      
+
       {/* Search Container */}
       <SearchContainer
         ref={containerRef}
         isMobile={isMobile}
-        initial={{ 
-          opacity: 0, 
-          scale: 0.95, 
+        initial={{
+          opacity: 0,
+          scale: 0.95,
           y: -10,
-          x: isMobile ? 0 : '-50%'
+          x: isMobile ? 0 : '-50%',
         }}
-        animate={{ 
-          opacity: 1, 
-          scale: 1, 
+        animate={{
+          opacity: 1,
+          scale: 1,
           y: 0,
-          x: isMobile ? 0 : '-50%'
+          x: isMobile ? 0 : '-50%',
         }}
-        exit={{ 
-          opacity: 0, 
-          scale: 0.95, 
+        exit={{
+          opacity: 0,
+          scale: 0.95,
           y: -10,
-          x: isMobile ? 0 : '-50%'
+          x: isMobile ? 0 : '-50%',
         }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
-      <StyledPaper elevation={0} className="theme-modal" isMobile={isMobile}>
-        {/* Search Input */}
-        <Box sx={{ position: 'relative' }}>
-          <SearchInputField
-            fullWidth
-            placeholder={t('header.search.placeholder')}
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onFocus={handleSearchFocus}
-            inputRef={searchInputRef}
-            autoFocus
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'primary.main', fontSize: 24 }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <CloseButton onClick={toggleSearch} size="small">
-                    <CloseIcon />
-                  </CloseButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
+        <StyledPaper elevation={0} className='theme-modal' isMobile={isMobile}>
+          {/* Search Input */}
+          <Box sx={{ position: 'relative' }}>
+            <SearchInputField
+              fullWidth
+              placeholder={t('header.search.placeholder')}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onFocus={handleSearchFocus}
+              inputRef={searchInputRef}
+              autoFocus
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon sx={{ color: 'primary.main', fontSize: 24 }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <CloseButton onClick={toggleSearch} size='small'>
+                      <CloseIcon />
+                    </CloseButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
 
-        {/* Search Results */}
-        <AnimatePresence>
-          {showSearchResults && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {/* Tabs */}
-              <SearchTabsContainer>
-                <StyledTabs
-                  value={searchTab}
-                  onChange={handleSearchTabChange}
-                  variant="fullWidth"
-                >
-                  <StyledTab
-                    label={t('header.search.tabs.all')}
-                    icon={<PersonIcon />}
-                    iconPosition="start"
-                  />
-                  <StyledTab
-                    label={t('header.search.tabs.channels')}
-                    icon={<TagIcon />}
-                    iconPosition="start"
-                  />
-                </StyledTabs>
-              </SearchTabsContainer>
+          {/* Search Results */}
+          <AnimatePresence>
+            {showSearchResults && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Tabs */}
+                <SearchTabsContainer>
+                  <StyledTabs
+                    value={searchTab}
+                    onChange={handleSearchTabChange}
+                    variant='fullWidth'
+                  >
+                    <StyledTab
+                      label={t('header.search.tabs.all')}
+                      icon={<PersonIcon />}
+                      iconPosition='start'
+                    />
+                    <StyledTab
+                      label={t('header.search.tabs.channels')}
+                      icon={<TagIcon />}
+                      iconPosition='start'
+                    />
+                  </StyledTabs>
+                </SearchTabsContainer>
 
-              {/* Results Content */}
-              <ResultsContainer>
-                {searchLoading ? (
-                  <LoadingContainer>
-                    <CircularProgress size={32} thickness={4} />
-                  </LoadingContainer>
-                ) : (
-                  <AnimatePresence mode="wait">
-                    {searchTab === 0 ? (
-                      // All Users Tab
-                      searchResults.users.length > 0 ? (
-                        <motion.div
-                          key="users"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          {searchResults.users.map(renderUserResult)}
-                          <Box sx={{ padding: '0 16px' }}>
-                            <ViewAllButton fullWidth onClick={handleViewAll}>
-                              {t('header.search.view_all')}
-                            </ViewAllButton>
-                          </Box>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          key="no-users"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          <NoResultsContainer>
-                            <PersonIcon sx={{ fontSize: 48, mb: 2, opacity: 0.3 }} />
-                            <Typography variant="h6" gutterBottom>
-                              {t('header.search.no_results.users')}
-                            </Typography>
-                          </NoResultsContainer>
-                        </motion.div>
-                      )
-                    ) : (
-                      // Channels Tab
+                {/* Results Content */}
+                <ResultsContainer>
+                  {searchLoading ? (
+                    <LoadingContainer>
+                      <CircularProgress size={32} thickness={4} />
+                    </LoadingContainer>
+                  ) : (
+                    <AnimatePresence mode='wait'>
+                      {searchTab === 0 ? (
+                        // All Users Tab
+                        searchResults.users.length > 0 ? (
+                          <motion.div
+                            key='users'
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            {searchResults.users.map(renderUserResult)}
+                            <Box sx={{ padding: '0 16px' }}>
+                              <ViewAllButton fullWidth onClick={handleViewAll}>
+                                {t('header.search.view_all')}
+                              </ViewAllButton>
+                            </Box>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key='no-users'
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            <NoResultsContainer>
+                              <PersonIcon
+                                sx={{ fontSize: 48, mb: 2, opacity: 0.3 }}
+                              />
+                              <Typography variant='h6' gutterBottom>
+                                {t('header.search.no_results.users')}
+                              </Typography>
+                            </NoResultsContainer>
+                          </motion.div>
+                        )
+                      ) : // Channels Tab
                       searchResults.channels.length > 0 ? (
                         <motion.div
-                          key="channels"
+                          key='channels'
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -529,28 +545,29 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({
                         </motion.div>
                       ) : (
                         <motion.div
-                          key="no-channels"
+                          key='no-channels'
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                         >
                           <NoResultsContainer>
-                            <TagIcon sx={{ fontSize: 48, mb: 2, opacity: 0.3 }} />
-                            <Typography variant="h6" gutterBottom>
+                            <TagIcon
+                              sx={{ fontSize: 48, mb: 2, opacity: 0.3 }}
+                            />
+                            <Typography variant='h6' gutterBottom>
                               {t('header.search.no_results.channels')}
                             </Typography>
                           </NoResultsContainer>
                         </motion.div>
-                      )
-                    )}
-                  </AnimatePresence>
-                )}
-              </ResultsContainer>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </StyledPaper>
-    </SearchContainer>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </ResultsContainer>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </StyledPaper>
+      </SearchContainer>
     </>
   );
 };

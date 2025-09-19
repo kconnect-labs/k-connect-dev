@@ -95,20 +95,19 @@ const VerificationTab: React.FC = () => {
 
   const getVerificationChip = (user: User) => {
     if (user.verification_level === 0) {
-      return (
-        <Chip
-          label="Не верифицирован"
-          color="default"
-          size="small"
-        />
-      );
+      return <Chip label='Не верифицирован' color='default' size='small' />;
     }
-    
+
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <VerificationBadge status={user.verification_level} size="small" {...({} as any)} />
-        <Typography variant="caption" color="text.secondary">
-          {verificationLevels.find(l => l.value === user.verification_level)?.label || 'Неизвестный статус'}
+        <VerificationBadge
+          status={user.verification_level}
+          size='small'
+          {...({} as any)}
+        />
+        <Typography variant='caption' color='text.secondary'>
+          {verificationLevels.find(l => l.value === user.verification_level)
+            ?.label || 'Неизвестный статус'}
         </Typography>
       </Box>
     );
@@ -116,81 +115,90 @@ const VerificationTab: React.FC = () => {
 
   return (
     <Box>
-
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={clearError}>
+        <Alert severity='error' sx={{ mb: 2 }} onClose={clearError}>
           {error}
         </Alert>
       )}
 
       {/* Поиск пользователей */}
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', background: 'var(--theme-background)', backdropFilter: 'var(--theme-backdrop-filter)', border: '1px solid var(--main-border-color)', borderRadius: 'var(--main-border-radius)', p: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
+          border: '1px solid var(--main-border-color)',
+          borderRadius: 'var(--main-border-radius)',
+          p: 2,
+        }}
+      >
         <TextField
           fullWidth
-          placeholder="Поиск пользователей..."
+          placeholder='Поиск пользователей...'
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <Search />
               </InputAdornment>
             ),
           }}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+          onKeyPress={e => e.key === 'Enter' && handleSearch()}
         />
         <Button
-          variant="contained"
+          variant='contained'
           onClick={handleSearch}
           disabled={searchLoading || !searchQuery.trim()}
-          startIcon={searchLoading ? <CircularProgress size={20} /> : <PersonSearch />}
-        >
-        </Button>
+          startIcon={
+            searchLoading ? <CircularProgress size={20} /> : <PersonSearch />
+          }
+        ></Button>
       </Box>
 
       {/* Список пользователей */}
       {users.length > 0 && (
         <List>
-              {users.map((user) => (
-                <ListItem
-                  key={user.id}
-                  sx={{
-                    background: 'var(--theme-background)',
-                    backdropFilter: 'var(--theme-backdrop-filter)',
-                    border: '1px solid var(--main-border-color)',
-                    borderRadius: 'var(--main-border-radius)',
-                    mb: 1,
-                  }}
+          {users.map(user => (
+            <ListItem
+              key={user.id}
+              sx={{
+                background: 'var(--theme-background)',
+                backdropFilter: 'var(--theme-backdrop-filter)',
+                border: '1px solid var(--main-border-color)',
+                borderRadius: 'var(--main-border-radius)',
+                mb: 1,
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar src={user.avatar_url || undefined} alt={user.name}>
+                  {user.name.charAt(0)}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={user.name}
+                secondary={
+                  <Box>
+                    <Typography variant='body2' color='text.secondary'>
+                      @{user.username}
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>{getVerificationChip(user)}</Box>
+                  </Box>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge='end'
+                  onClick={() => openVerificationDialog(user)}
+                  color='primary'
                 >
-                  <ListItemAvatar>
-                    <Avatar src={user.avatar_url || undefined} alt={user.name}>
-                      {user.name.charAt(0)}
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={user.name}
-                    secondary={
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">
-                          @{user.username}
-                        </Typography>
-                        <Box sx={{ mt: 1 }}>
-                          {getVerificationChip(user)}
-                        </Box>
-                      </Box>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      onClick={() => openVerificationDialog(user)}
-                      color="primary"
-                    >
-                      <VerifiedUser />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              ))}
+                  <VerifiedUser />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
         </List>
       )}
 
@@ -198,7 +206,7 @@ const VerificationTab: React.FC = () => {
       <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
         PaperProps={{
           sx: {
@@ -206,41 +214,50 @@ const VerificationTab: React.FC = () => {
             backdropFilter: 'var(--theme-backdrop-filter)',
             border: '1px solid var(--main-border-color)',
             borderRadius: 'var(--main-border-radius)',
-          }
+          },
         }}
       >
-        <DialogTitle>
-          Верификация пользователя
-        </DialogTitle>
+        <DialogTitle>Верификация пользователя</DialogTitle>
         <DialogContent>
           {selectedUser && (
             <Box sx={{ mb: 3 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Avatar src={selectedUser.photo && selectedUser.photo.trim() !== '' ? selectedUser.photo : undefined} alt={selectedUser.name}>
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}
+              >
+                <Avatar
+                  src={
+                    selectedUser.photo && selectedUser.photo.trim() !== ''
+                      ? selectedUser.photo
+                      : undefined
+                  }
+                  alt={selectedUser.name}
+                >
                   {selectedUser.name.charAt(0)}
                 </Avatar>
                 <Box>
-                  <Typography variant="h6">{selectedUser.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant='h6'>{selectedUser.name}</Typography>
+                  <Typography variant='body2' color='text.secondary'>
                     @{selectedUser.username}
                   </Typography>
                 </Box>
               </Box>
-              
+
               <FormControl fullWidth>
                 <InputLabel>Уровень верификации</InputLabel>
                 <Select
                   value={verificationLevel}
-                  onChange={(e) => setVerificationLevel(Number(e.target.value))}
-                  label="Уровень верификации"
+                  onChange={e => setVerificationLevel(Number(e.target.value))}
+                  label='Уровень верификации'
                 >
-                  {verificationLevels.map((level) => (
+                  {verificationLevels.map(level => (
                     <MenuItem key={level.value} value={level.value}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                      >
                         <Chip
                           label={level.label}
                           color={level.color as any}
-                          size="small"
+                          size='small'
                         />
                       </Box>
                     </MenuItem>
@@ -251,14 +268,14 @@ const VerificationTab: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
-            Отмена
-          </Button>
+          <Button onClick={() => setDialogOpen(false)}>Отмена</Button>
           <Button
             onClick={handleVerifyUser}
-            variant="contained"
+            variant='contained'
             disabled={loading}
-            startIcon={loading ? <CircularProgress size={20} /> : <CheckCircle />}
+            startIcon={
+              loading ? <CircularProgress size={20} /> : <CheckCircle />
+            }
           >
             {verificationLevel === 0 ? 'Удалить верификацию' : 'Верифицировать'}
           </Button>

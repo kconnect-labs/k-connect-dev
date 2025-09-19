@@ -143,7 +143,8 @@ const MiniGamesPage = () => {
     {
       id: 'pixel-miner',
       name: 'Pixel Miner',
-      description: 'Откройте блоки с золотом, избегая бомб! Забирайте выигрыш в любой момент.',
+      description:
+        'Откройте блоки с золотом, избегая бомб! Забирайте выигрыш в любой момент.',
       icon: <GridOnIcon sx={{ fontSize: 40 }} />,
       color: '#ff9800',
       path: '/minigames/pixel-miner',

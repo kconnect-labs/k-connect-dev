@@ -17,7 +17,8 @@ export const skeletonKeyframes = `
 `;
 
 export const PostCard = styled(Card, {
-  shouldForwardProp: (prop: string) => !['isPinned', 'statusColor'].includes(prop),
+  shouldForwardProp: (prop: string) =>
+    !['isPinned', 'statusColor'].includes(prop),
 })(({ theme, isPinned, statusColor }: any) => ({
   marginBottom: theme.spacing(2),
   borderRadius: theme.spacing(1),
@@ -140,4 +141,4 @@ export const NSFWText = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(2),
     fontSize: '0.9rem',
   },
-})); 
+}));

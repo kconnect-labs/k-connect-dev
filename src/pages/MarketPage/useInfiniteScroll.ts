@@ -9,26 +9,26 @@ interface UseInfiniteScrollOptions {
 export const useInfiniteScroll = ({
   hasMore,
   loading,
-  onLoadMore
+  onLoadMore,
 }: UseInfiniteScrollOptions) => {
   const loadingRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadingElement = loadingRef.current;
-    
+
     if (!loadingElement) return;
 
     // Создаем Intersection Observer
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const [entry] = entries;
-        
+
         console.log('Intersection Observer triggered:', {
           isIntersecting: entry.isIntersecting,
           loading,
-          hasMore
+          hasMore,
         });
-        
+
         // Если элемент виден, не загружаем и есть еще данные - загружаем
         if (entry.isIntersecting && !loading && hasMore) {
           console.log('Loading more items - last element is visible!');
@@ -39,7 +39,7 @@ export const useInfiniteScroll = ({
         // Загружаем когда элемент на 10% виден
         threshold: 0.1,
         // Добавляем небольшой отступ снизу
-        rootMargin: '0px 0px 50px 0px'
+        rootMargin: '0px 0px 50px 0px',
       }
     );
 

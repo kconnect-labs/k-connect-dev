@@ -35,8 +35,12 @@ const NotificationsPage = React.lazy(
 const SearchPage = React.lazy(() => import('../pages/Main/SearchPage'));
 const MusicPage = React.lazy(() => import('../pages/MusicPage/MusicPage.js'));
 const ArtistPage = React.lazy(() => import('../pages/ArtistPage/ArtistPage'));
-const ArtistManagementPage = React.lazy(() => import('../pages/ArtistManagement/ArtistManagementPage'));
-const ArtistEditPage = React.lazy(() => import('../pages/ArtistManagement/ArtistEditPage'));
+const ArtistManagementPage = React.lazy(
+  () => import('../pages/ArtistManagement/ArtistManagementPage')
+);
+const ArtistEditPage = React.lazy(
+  () => import('../pages/ArtistManagement/ArtistEditPage')
+);
 const MessengerPage = React.lazy(
   () => import('../pages/Messenger/MessengerPage')
 );
@@ -56,9 +60,15 @@ const TermsOfServicePage = React.lazy(
 const MorePage = React.lazy(() => import('../pages/Main/MorePage'));
 const NotFound = React.lazy(() => import('../pages/Info/NotFound'));
 const ModeratorPage = React.lazy(() => import('../pages/Admin/ModeratorPage'));
-const ModeratorNitroPanel = React.lazy(() => import('../pages/ModeratorNitroPanel'));
-const TicketsSystem = React.lazy(() => import('../pages/Admin/TicketsSystem/index'));
-const TicketsSystemUser = React.lazy(() => import('../pages/User/TicketsPage/index'));
+const ModeratorNitroPanel = React.lazy(
+  () => import('../pages/ModeratorNitroPanel')
+);
+const TicketsSystem = React.lazy(
+  () => import('../pages/Admin/TicketsSystem/index')
+);
+const TicketsSystemUser = React.lazy(
+  () => import('../pages/User/TicketsPage/index')
+);
 const UpdatesPage = React.lazy(() => import('../pages/Main/UpdatesPage'));
 const BadgeShopPage = React.lazy(
   () => import('../pages/Economic/BadgeShopPage')
@@ -191,7 +201,11 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
                   <Navigate to='/register/profile' replace />
                 )
               ) : (
-                <Navigate to='/login' replace state={{ from: location.pathname }} />
+                <Navigate
+                  to='/login'
+                  replace
+                  state={{ from: location.pathname }}
+                />
               )
             }
           />

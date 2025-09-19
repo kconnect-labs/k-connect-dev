@@ -245,10 +245,16 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
   return (
     <>
       <Box sx={{ p: 2 }}>
-        <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
+        <Typography
+          variant='h6'
+          sx={{ mb: 2, color: 'var(--theme-text-primary)' }}
+        >
           Активные сессии
         </Typography>
-        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 3 }}>
+        <Typography
+          variant='body2'
+          sx={{ color: 'var(--theme-text-secondary)', mb: 3 }}
+        >
           Управляйте активными сессиями входа в ваш аккаунт
         </Typography>
 
@@ -549,7 +555,8 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                               fontSize: { xs: '0.75rem', sm: '0.875rem' },
                             }}
                           >
-                            {session.device_info || 'Неизвестное устройство'} • {session.ip_address} •{' '}
+                            {session.device_info || 'Неизвестное устройство'} •{' '}
+                            {session.ip_address} •{' '}
                             {formatLastActive(session.last_activity)}
                           </Typography>
                         </Box>

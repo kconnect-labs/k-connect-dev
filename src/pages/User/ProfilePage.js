@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import {
   Box,
   Typography,
@@ -62,7 +69,10 @@ import UserSubscriptionBadge from './ProfilePage/components/UserSubscriptionBadg
 import { OwnedUsernames } from './ProfilePage/components';
 import { ProfileAbout } from './ProfilePage/components';
 import './ProfilePage.css';
-import { getProfileMediaCache, setProfileMediaCache } from '../../utils/profileMediaCache';
+import {
+  getProfileMediaCache,
+  setProfileMediaCache,
+} from '../../utils/profileMediaCache';
 
 const ProfilePage = () => {
   const { t } = useLanguage();
@@ -118,14 +128,14 @@ const ProfilePage = () => {
   const [lastModeratorCheck, setLastModeratorCheck] = useState(0);
 
   // Определяем isCurrentUser здесь, чтобы он был доступен во всех useEffect
-  const isCurrentUser = currentUser && user && currentUser.username === user.username;
+  const isCurrentUser =
+    currentUser && user && currentUser.username === user.username;
 
   const { lightboxIsOpen, currentImage, openLightbox, closeLightbox } =
     useLightbox();
   const { handlePostCreated } = usePostActions();
 
   const handleFollow = async () => {
-
     try {
       const response = await axios.post('/api/profile/follow', {
         followed_id: user.id,
@@ -148,10 +158,13 @@ const ProfilePage = () => {
 
     try {
       setIsGrantingAccess(true);
-      const response = await axios.post('/api/moderator/private-profile/grant-access', {
-        target_user_id: user.id,
-        duration_hours: 24
-      });
+      const response = await axios.post(
+        '/api/moderator/private-profile/grant-access',
+        {
+          target_user_id: user.id,
+          duration_hours: 24,
+        }
+      );
 
       if (response.data.success) {
         setHasModeratorAccess(true);
@@ -170,9 +183,12 @@ const ProfilePage = () => {
     if (!user?.id || !isCurrentUserModerator) return;
 
     try {
-      const response = await axios.post('/api/moderator/private-profile/revoke-access', {
-        target_user_id: user.id
-      });
+      const response = await axios.post(
+        '/api/moderator/private-profile/revoke-access',
+        {
+          target_user_id: user.id,
+        }
+      );
 
       if (response.data.success) {
         setHasModeratorAccess(false);
@@ -221,7 +237,9 @@ const ProfilePage = () => {
     if (!user?.id || !isCurrentUserModerator) return;
 
     try {
-      const response = await axios.get(`/api/moderator/private-profile/check-access?target_user_id=${user.id}`);
+      const response = await axios.get(
+        `/api/moderator/private-profile/check-access?target_user_id=${user.id}`
+      );
       setHasModeratorAccess(response.data.has_access || false);
     } catch (error) {
       console.error('Error checking moderator access:', error);
@@ -275,7 +293,8 @@ const ProfilePage = () => {
 
           // Копируем настройки приватности инвентаря из корневого объекта, если они есть
           if (response.data.inventory_privacy !== undefined) {
-            response.data.user.inventory_privacy = response.data.inventory_privacy;
+            response.data.user.inventory_privacy =
+              response.data.inventory_privacy;
           }
 
           if (response.data.musician_type !== undefined) {
@@ -384,12 +403,19 @@ const ProfilePage = () => {
             const newMediaData = {
               banner_url: response.data.user.banner_url || null,
               avatar_url: response.data.user.avatar_url || null,
-              photos: Array.isArray(response.data.user.photos) ? response.data.user.photos : [],
-              videos: Array.isArray(response.data.user.videos) ? response.data.user.videos : [],
+              photos: Array.isArray(response.data.user.photos)
+                ? response.data.user.photos
+                : [],
+              videos: Array.isArray(response.data.user.videos)
+                ? response.data.user.videos
+                : [],
               equipped_items: response.data.equipped_items || [],
             };
 
-            if (!mediaCache || JSON.stringify(newMediaData) !== JSON.stringify(mediaCache)) {
+            if (
+              !mediaCache ||
+              JSON.stringify(newMediaData) !== JSON.stringify(mediaCache)
+            ) {
               setMediaCache(newMediaData);
               setProfileMediaCache(username, newMediaData);
 
@@ -401,7 +427,6 @@ const ProfilePage = () => {
           } catch (cacheErr) {
             console.error('Media cache update error', cacheErr);
           }
-
         } else {
           console.error('User data not found in response', response.data);
           setUser(null);
@@ -429,8 +454,6 @@ const ProfilePage = () => {
       if (isCurrentUserModerator && user.is_private) {
         checkModeratorAccess();
       }
-
-
 
       axios
         .get(`/api/profile/${user.id}/followers`)
@@ -669,10 +692,14 @@ const ProfilePage = () => {
 
   // Функция для обработки обновления позиции айтема
   const handleItemPositionUpdate = useCallback((itemId, newPosition) => {
-    setEquippedItems(prevItems => 
-      prevItems.map(item => 
-        item.id === itemId 
-          ? { ...item, profile_position_x: newPosition.x, profile_position_y: newPosition.y }
+    setEquippedItems(prevItems =>
+      prevItems.map(item =>
+        item.id === itemId
+          ? {
+              ...item,
+              profile_position_x: newPosition.x,
+              profile_position_y: newPosition.y,
+            }
           : item
       )
     );
@@ -688,10 +715,13 @@ const ProfilePage = () => {
     try {
       // Сохраняем позиции всех айтемов
       for (const item of equippedItems) {
-        if (item.profile_position_x !== null && item.profile_position_y !== null) {
+        if (
+          item.profile_position_x !== null &&
+          item.profile_position_y !== null
+        ) {
           await axios.post(`/api/inventory/item/${item.id}/position`, {
             position_x: item.profile_position_x,
-            position_y: item.profile_position_y
+            position_y: item.profile_position_y,
           });
         }
       }
@@ -709,8 +739,8 @@ const ProfilePage = () => {
   }, [refreshEquippedItems]);
 
   // Проверяем, есть ли у пользователя настроенные айтемы
-  const hasConfiguredItems = equippedItems.some(item => 
-    item.profile_position_x !== null && item.profile_position_y !== null
+  const hasConfiguredItems = equippedItems.some(
+    item => item.profile_position_x !== null && item.profile_position_y !== null
   );
 
   // Проверяем, является ли текущий пользователь владельцем профиля
@@ -729,19 +759,27 @@ const ProfilePage = () => {
   const equippedItemsByLevel = useMemo(() => {
     const normalItems = []; // уровни 0 и 1
     const overlayItems = []; // уровни 2 и 3
-    
+
     equippedItems.forEach(item => {
       const upgradeable = item.upgradeable;
       // Проверяем upgradeable (максимальный уровень улучшения)
-      if (upgradeable === '0' || upgradeable === '1' || upgradeable === 0 || upgradeable === 1) {
+      if (
+        upgradeable === '0' ||
+        upgradeable === '1' ||
+        upgradeable === 0 ||
+        upgradeable === 1
+      ) {
         normalItems.push(item);
-      } else if (upgradeable === '2' || upgradeable === '3' || upgradeable === 2 || upgradeable === 3) {
+      } else if (
+        upgradeable === '2' ||
+        upgradeable === '3' ||
+        upgradeable === 2 ||
+        upgradeable === 3
+      ) {
         overlayItems.push(item);
       }
     });
-    
 
-    
     return { normalItems, overlayItems };
   }, [equippedItems]);
 
@@ -782,8 +820,6 @@ const ProfilePage = () => {
   if (!user) {
     return <UserNotFound />;
   }
-
-
 
   return (
     <Container
@@ -826,7 +862,10 @@ const ProfilePage = () => {
           flexDirection: { xs: 'column', lg: 'row' },
           flexWrap: { xs: 'nowrap', lg: 'nowrap' },
           '& .MuiGrid-item': {
-            order: { xs: 'unset', lg: user?.profile_id === 3 ? 'unset' : 'unset' },
+            order: {
+              xs: 'unset',
+              lg: user?.profile_id === 3 ? 'unset' : 'unset',
+            },
           },
           '& .MuiGrid-item:first-of-type': {
             order: { xs: 1, lg: user?.profile_id === 3 ? 2 : 1 },
@@ -868,76 +907,76 @@ const ProfilePage = () => {
             getLighterColor={getLighterColor}
             openLightbox={openLightbox}
             setFallbackAvatarUrl={setFallbackAvatarUrl}
-            handleItemPositionUpdate={handleItemPositionUpdate} 
+            handleItemPositionUpdate={handleItemPositionUpdate}
             handleEditModeActivate={handleEditModeActivate}
             handleUsernameClick={handleUsernameClick}
-          />  
+          />
           {/* Блок с кнопкой подписки */}
           {!isCurrentUser &&
             (!currentUser?.account_type ||
               currentUser.account_type !== 'channel') && (
-            <Paper
-              sx={{
-                p: 1,
-                borderRadius: '18px',
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                marginBottom: '2px',
-              }}
-            >
-              <Button
-                variant='contained'
-                color='primary'
-                startIcon={
-                  following ? <PersonRemoveIcon /> : <PersonAddIcon />
-                }
-                onClick={handleFollow}
-                fullWidth
+              <Paper
                 sx={{
+                  p: 1,
                   borderRadius: '18px',
-                  py: 1.2,
-                  fontWeight: 'bold',
-                  textTransform: 'none',
-                  boxShadow:
-                    user.status_color &&
-                    user.status_text &&
-                    user.subscription
-                      ? `0 2px 8px ${user.status_color}40`
-                      : '0 2px 8px rgba(208, 188, 255, 0.25)',
-                  backgroundColor: following
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                      ? user.status_color
-                      : 'primary.main',
-                  color: following ? 'text.primary' : '#fff',
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
+                  background:
+                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                  WebkitBackdropFilter:
+                    'var(--theme-backdrop-filter, blur(20px))',
+                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginBottom: '2px',
+                }}
+              >
+                <Button
+                  variant='contained'
+                  color='primary'
+                  startIcon={
+                    following ? <PersonRemoveIcon /> : <PersonAddIcon />
+                  }
+                  onClick={handleFollow}
+                  fullWidth
+                  sx={{
+                    borderRadius: '18px',
+                    py: 1.2,
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    boxShadow:
+                      user.status_color && user.status_text && user.subscription
+                        ? `0 2px 8px ${user.status_color}40`
+                        : '0 2px 8px rgba(208, 188, 255, 0.25)',
                     backgroundColor: following
-                      ? 'rgba(255, 255, 255, 0.15)'
+                      ? 'rgba(255, 255, 255, 0.1)'
                       : user.status_color &&
                           user.status_text &&
                           user.subscription
-                        ? `${user.status_color}E6`
-                        : 'primary.dark',
-                    transform: 'translateY(-2px)',
-                  },
-                  '&:active': {
-                    transform: 'translateY(0)',
-                  },
-                }}
-              >
-                {following
-                  ? t('profile.actions.unfollow')
-                  : t('profile.actions.follow')}
-              </Button>
-            </Paper>
-          )}
+                        ? user.status_color
+                        : 'primary.main',
+                    color: following ? 'text.primary' : '#fff',
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      backgroundColor: following
+                        ? 'rgba(255, 255, 255, 0.15)'
+                        : user.status_color &&
+                            user.status_text &&
+                            user.subscription
+                          ? `${user.status_color}E6`
+                          : 'primary.dark',
+                      transform: 'translateY(-2px)',
+                    },
+                    '&:active': {
+                      transform: 'translateY(0)',
+                    },
+                  }}
+                >
+                  {following
+                    ? t('profile.actions.unfollow')
+                    : t('profile.actions.follow')}
+                </Button>
+              </Paper>
+            )}
 
           {/* Блок с кнопкой просмотра профиля для модераторов */}
           {!isCurrentUser && isCurrentUserModerator && user?.is_private && (
@@ -945,9 +984,11 @@ const ProfilePage = () => {
               sx={{
                 p: 1,
                 borderRadius: '18px',
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background:
+                  'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter:
+                  'var(--theme-backdrop-filter, blur(20px))',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
@@ -957,12 +998,16 @@ const ProfilePage = () => {
               <Button
                 variant={hasModeratorAccess ? 'outlined' : 'contained'}
                 color={hasModeratorAccess ? 'warning' : 'secondary'}
-                onClick={hasModeratorAccess ? handleRevokeModeratorAccess : handleGrantModeratorAccess}
+                onClick={
+                  hasModeratorAccess
+                    ? handleRevokeModeratorAccess
+                    : handleGrantModeratorAccess
+                }
                 disabled={isGrantingAccess}
                 fullWidth
                 startIcon={
                   isGrantingAccess ? (
-                    <CircularProgress size={16} color="inherit" />
+                    <CircularProgress size={16} color='inherit' />
                   ) : hasModeratorAccess ? (
                     <PersonRemoveIcon />
                   ) : (
@@ -974,15 +1019,17 @@ const ProfilePage = () => {
                   py: 1.2,
                   fontWeight: 'bold',
                   textTransform: 'none',
-                  backgroundColor: hasModeratorAccess 
-                    ? 'rgba(255, 193, 7, 0.1)' 
+                  backgroundColor: hasModeratorAccess
+                    ? 'rgba(255, 193, 7, 0.1)'
                     : 'secondary.main',
                   color: hasModeratorAccess ? 'warning.main' : '#fff',
-                  borderColor: hasModeratorAccess ? 'warning.main' : 'transparent',
+                  borderColor: hasModeratorAccess
+                    ? 'warning.main'
+                    : 'transparent',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    backgroundColor: hasModeratorAccess 
-                      ? 'rgba(255, 193, 7, 0.2)' 
+                    backgroundColor: hasModeratorAccess
+                      ? 'rgba(255, 193, 7, 0.2)'
                       : 'secondary.dark',
                     transform: 'translateY(-2px)',
                   },
@@ -994,24 +1041,26 @@ const ProfilePage = () => {
                   },
                 }}
               >
-                {isGrantingAccess 
-                  ? 'Предоставление доступа...' 
-                  : hasModeratorAccess 
-                    ? 'Отозвать доступ' 
+                {isGrantingAccess
+                  ? 'Предоставление доступа...'
+                  : hasModeratorAccess
+                    ? 'Отозвать доступ'
                     : 'Просмотреть профиль'}
               </Button>
             </Paper>
           )}
-          
+
           {/* Блок с кнопками редактирования айтемов */}
           {isEditMode && (
             <Paper
               sx={{
                 p: 1,
                 borderRadius: '18px',
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background:
+                  'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                WebkitBackdropFilter:
+                  'var(--theme-backdrop-filter, blur(20px))',
                 boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 mb: 1,
@@ -1021,7 +1070,7 @@ const ProfilePage = () => {
               }}
             >
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={handleCancelEdit}
                 sx={{
                   borderRadius: '18px',
@@ -1037,7 +1086,7 @@ const ProfilePage = () => {
                 Отменить
               </Button>
               <Button
-                variant="contained"
+                variant='contained'
                 onClick={handleSavePositions}
                 sx={{
                   borderRadius: '18px',
@@ -1052,7 +1101,7 @@ const ProfilePage = () => {
               </Button>
             </Paper>
           )}
-          
+
           {(user?.profile_id === 2 || user?.profile_id === 3) &&
             equippedItemsPreview &&
             equippedItemsPreview.length > 0 && (
@@ -1141,7 +1190,9 @@ const ProfilePage = () => {
           </Paper>
 
           <TabPanel value={tabValue} index={0} sx={{ p: 0, mt: 1 }}>
-            {isCurrentUser && <CreatePost onPostCreated={handlePostCreated} sx={{ mb: 0.5 }}/>}
+            {isCurrentUser && (
+              <CreatePost onPostCreated={handlePostCreated} sx={{ mb: 0.5 }} />
+            )}
 
             <PostsTab
               userId={user?.id}
@@ -1180,7 +1231,11 @@ const ProfilePage = () => {
             </TabPanel>
           )}
 
-          <TabPanel value={tabValue} index={user?.inventory_privacy === 1 ? 2 : 3} sx={{ p: 0, mt: 1 }}>
+          <TabPanel
+            value={tabValue}
+            index={user?.inventory_privacy === 1 ? 2 : 3}
+            sx={{ p: 0, mt: 1 }}
+          >
             <ProfileInfo
               user={user}
               socials={socials}

@@ -26,8 +26,10 @@ interface ModalButtonContainerProps {
   children: React.ReactNode;
 }
 
-const ModalButtonContainer: React.FC<ModalButtonContainerProps> = ({ children }) => {
+const ModalButtonContainer: React.FC<ModalButtonContainerProps> = ({
+  children,
+}) => {
   return <ButtonContainer>{children}</ButtonContainer>;
 };
 
-export default ModalButtonContainer; 
+export default ModalButtonContainer;

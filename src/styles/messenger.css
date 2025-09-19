@@ -379,7 +379,9 @@
 
 /* Убрана анимация появления кнопки прокрутки */
 .scroll-to-bottom {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 /* Стили для плавного добавления сообщений */
@@ -387,7 +389,9 @@
   margin-bottom: 12px;
   align-self: flex-start;
   max-width: 95%;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
   position: relative;
   transform-origin: top;
 }
@@ -605,7 +609,6 @@
 .my-message .message-bubble {
   background-color: rgba(208, 188, 255, 0.2);
   border-radius: 16px 4px 16px 16px;
-
 }
 
 /* Контейнер для текста сообщения и времени */
@@ -1396,8 +1399,6 @@ select {
   position: relative;
   z-index: 5;
 }
-
-
 
 .date-separator span {
   background: rgba(208, 188, 255, 0.1);

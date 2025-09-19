@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  Tabs,
-  Tab,
-} from '@mui/material';
+import { Box, Typography, Paper, Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TimePeriod } from '../types/leaderboard';
 
@@ -38,7 +32,10 @@ const LeaderboardHeaderContainer = styled(Box)(({ theme }) => ({
 
 interface LeaderboardHeaderProps {
   timePeriod: TimePeriod;
-  onTimePeriodChange: (event: React.SyntheticEvent, newValue: TimePeriod) => void;
+  onTimePeriodChange: (
+    event: React.SyntheticEvent,
+    newValue: TimePeriod
+  ) => void;
 }
 
 export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
@@ -47,24 +44,24 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
 }) => {
   return (
     <LeaderboardHeaderContainer>
-              <Box
-          className="theme-aware"
-          sx={{
-            width: '100%',
-            maxWidth: 1200,
-            minWidth: 320,
-            mx: 'auto',
-            mb: 1,
-            p: { xs: 2, md: 3 },
-            borderRadius: '16px',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
-            color: 'white',
-            textAlign: 'left',
-            position: 'relative',
-            overflow: 'hidden',
-            zIndex: 2,
-          }}
-        >
+      <Box
+        className='theme-aware'
+        sx={{
+          width: '100%',
+          maxWidth: 1200,
+          minWidth: 320,
+          mx: 'auto',
+          mb: 1,
+          p: { xs: 2, md: 3 },
+          borderRadius: '16px',
+          border: '1px solid rgba(66, 66, 66, 0.5)',
+          color: 'white',
+          textAlign: 'left',
+          position: 'relative',
+          overflow: 'hidden',
+          zIndex: 2,
+        }}
+      >
         <Typography
           variant='h5'
           sx={{ fontWeight: 700, mb: 1, color: 'white' }}
@@ -73,9 +70,9 @@ export const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
         </Typography>
         <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.7)' }}>
           20 пользователей, получивших наибольшее количество очков сообщества
-          K-Коннект за совокупность активности: созданных постов,
-          полученных лайков, комментариев, ответов, репостов, просмотров и
-          реакций на истории.
+          K-Коннект за совокупность активности: созданных постов, полученных
+          лайков, комментариев, ответов, репостов, просмотров и реакций на
+          истории.
         </Typography>
       </Box>
 

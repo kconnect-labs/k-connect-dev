@@ -15,12 +15,7 @@ import {
   Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import {
-  OpenInNew,
-  Article,
-  Flag,
-  Person,
-} from '@mui/icons-material';
+import { OpenInNew, Article, Flag, Person } from '@mui/icons-material';
 
 interface Complaint {
   id: number;
@@ -158,7 +153,12 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
   if (loading) {
     return (
       <StyledPaper>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='200px'
+        >
           <CircularProgress sx={{ color: '#d0bcff' }} />
         </Box>
       </StyledPaper>
@@ -168,7 +168,7 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
   if (error) {
     return (
       <StyledPaper>
-        <Typography color="error" align="center">
+        <Typography color='error' align='center'>
           {error}
         </Typography>
       </StyledPaper>
@@ -177,22 +177,25 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
 
   return (
     <StyledPaper>
-      <Box display="flex" alignItems="center" gap={2} mb={3}>
+      <Box display='flex' alignItems='center' gap={2} mb={3}>
         <Avatar sx={{ bgcolor: '#d0bcff' }}>
           <Person />
         </Avatar>
         <Box>
-          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+          <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
             История жалоб
           </Typography>
-          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <Typography
+            variant='body2'
+            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+          >
             Пользователь: {userName}
           </Typography>
         </Box>
       </Box>
 
       {complaints.length === 0 ? (
-        <Box textAlign="center" py={4}>
+        <Box textAlign='center' py={4}>
           <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
             Жалоб от этого пользователя не найдено
           </Typography>
@@ -204,37 +207,57 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
               <StyledListItem>
                 <ListItemText
                   primary={
-                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                      <Typography variant="subtitle2" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    <Box display='flex' alignItems='center' gap={1} mb={1}>
+                      <Typography
+                        variant='subtitle2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+                      >
                         Жалоба #{complaint.id}
                       </Typography>
                       <Chip
                         label={getStatusLabel(complaint.status)}
                         color={getStatusColor(complaint.status) as any}
-                        size="small"
+                        size='small'
                         sx={{ fontSize: '0.7rem' }}
                       />
                     </Box>
                   }
                   secondary={
                     <Box>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
-                        <strong>Цель:</strong> {complaint.target_type} #{complaint.target_id}
+                      <Typography
+                        variant='body2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}
+                      >
+                        <strong>Цель:</strong> {complaint.target_type} #
+                        {complaint.target_id}
                       </Typography>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
+                      <Typography
+                        variant='body2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}
+                      >
                         <strong>Причина:</strong> {complaint.reason}
                       </Typography>
                       {complaint.description && (
-                        <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}>
-                          <strong>Описание:</strong> {complaint.description.substring(0, 100)}
+                        <Typography
+                          variant='body2'
+                          sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}
+                        >
+                          <strong>Описание:</strong>{' '}
+                          {complaint.description.substring(0, 100)}
                           {complaint.description.length > 100 && '...'}
                         </Typography>
                       )}
-                      <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                      <Typography
+                        variant='caption'
+                        sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                      >
                         Создана: {formatDate(complaint.created_at)}
                       </Typography>
                       {complaint.reviewed_at && (
-                        <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', ml: 2 }}>
+                        <Typography
+                          variant='caption'
+                          sx={{ color: 'rgba(255, 255, 255, 0.5)', ml: 2 }}
+                        >
                           Рассмотрена: {formatDate(complaint.reviewed_at)}
                         </Typography>
                       )}
@@ -242,10 +265,10 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
                   }
                 />
                 <ListItemSecondaryAction>
-                  <Box display="flex" gap={1}>
+                  <Box display='flex' gap={1}>
                     {complaint.ticket && (
                       <IconButton
-                        size="small"
+                        size='small'
                         onClick={() => handleOpenTicket(complaint.ticket!.id)}
                         sx={{
                           color: '#d0bcff',
@@ -258,8 +281,10 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
                       </IconButton>
                     )}
                     <IconButton
-                      size="small"
-                      onClick={() => window.open(`/post/${complaint.target_id}`, '_blank')}
+                      size='small'
+                      onClick={() =>
+                        window.open(`/post/${complaint.target_id}`, '_blank')
+                      }
                       sx={{
                         color: 'rgba(255, 255, 255, 0.7)',
                         '&:hover': {
@@ -273,16 +298,18 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
                 </ListItemSecondaryAction>
               </StyledListItem>
               {index < complaints.length - 1 && (
-                <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 1 }} />
+                <Divider
+                  sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 1 }}
+                />
               )}
             </React.Fragment>
           ))}
         </List>
       )}
 
-      <Box display="flex" justifyContent="flex-end" mt={3}>
+      <Box display='flex' justifyContent='flex-end' mt={3}>
         <Button
-          variant="outlined"
+          variant='outlined'
           onClick={onClose}
           sx={{
             borderColor: 'rgba(207, 188, 251, 0.3)',
@@ -300,4 +327,4 @@ const ComplaintHistory: React.FC<ComplaintHistoryProps> = ({
   );
 };
 
-export default ComplaintHistory; 
+export default ComplaintHistory;

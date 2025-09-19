@@ -32,7 +32,12 @@ interface Auction {
   completed_at?: string;
   bids_count?: number;
   bids?: Array<{
-    bidder: { id: number; username: string; avatar_url?: string; photo?: string };
+    bidder: {
+      id: number;
+      username: string;
+      avatar_url?: string;
+      photo?: string;
+    };
     amount: number;
     time: string;
   }>;
@@ -85,7 +90,13 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const StatusChip = styled(Chip)(({ theme, status }: { theme: any; status: string }) => {
+const StatusChip = styled(Chip)(({
+  theme,
+  status,
+}: {
+  theme: any;
+  status: string;
+}) => {
   let statusColor = theme.palette.primary.main;
 
   if (status === 'active') {
@@ -151,12 +162,15 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   const isUserBid = type === 'userBid';
   const isUserAuction = type === 'userAuction';
   const isCompleted = auction.status === 'completed';
-  
-  const currentPrice = isUserBid 
-    ? (auction as UserBid).highest_bid
-    : (auction as Auction).current_price || (auction as Auction).highest_bid || (auction as Auction).min_price;
 
-  const isMyAuction = isUserAuction && (auction as Auction).seller_id === user?.id;
+  const currentPrice = isUserBid
+    ? (auction as UserBid).highest_bid
+    : (auction as Auction).current_price ||
+      (auction as Auction).highest_bid ||
+      (auction as Auction).min_price;
+
+  const isMyAuction =
+    isUserAuction && (auction as Auction).seller_id === user?.id;
   const canBid = !isMyAuction && !isCompleted && !isUserBid;
 
   const handleBidClick = (e: React.MouseEvent) => {
@@ -218,7 +232,9 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
 
             {!isUserBid && (auction as Auction).seller && (
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <PersonIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+                <PersonIcon
+                  sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }}
+                />
                 <Typography variant='body2' color='text.secondary'>
                   Продавец: {(auction as Auction).seller?.username}
                 </Typography>
@@ -227,7 +243,9 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
 
             {isUserBid && (
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                <PersonIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+                <PersonIcon
+                  sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }}
+                />
                 <Typography variant='body2' color='text.secondary'>
                   Ваша ставка: <b>{(auction as UserBid).my_bid} баллов</b>
                 </Typography>
@@ -235,23 +253,41 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
             )}
 
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-              <ScheduleIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+              <ScheduleIcon
+                sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }}
+              />
               <Typography variant='body2' color='text.secondary'>
-                Осталось: {auction.remaining_time_formatted || formatTimeRemaining(auction.end_time)}
+                Осталось:{' '}
+                {auction.remaining_time_formatted ||
+                  formatTimeRemaining(auction.end_time)}
               </Typography>
             </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <LocalOfferIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }} />
+              <LocalOfferIcon
+                sx={{ mr: 1, fontSize: '0.875rem', color: 'text.secondary' }}
+              />
               <Typography variant='body2' color='text.secondary'>
-                Ставок: {isUserBid ? '-' : (auction as Auction).bids_count || ((auction as Auction).bids ? (auction as Auction).bids!.length : 0)}
+                Ставок:{' '}
+                {isUserBid
+                  ? '-'
+                  : (auction as Auction).bids_count ||
+                    ((auction as Auction).bids
+                      ? (auction as Auction).bids!.length
+                      : 0)}
               </Typography>
             </Box>
 
             {isUserBid && (auction as UserBid).am_winning && (
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <GavelIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'success.main' }} />
-                <Typography variant='body2' color='success.main' fontWeight='bold'>
+                <GavelIcon
+                  sx={{ mr: 1, fontSize: '0.875rem', color: 'success.main' }}
+                />
+                <Typography
+                  variant='body2'
+                  color='success.main'
+                  fontWeight='bold'
+                >
                   Вы лидируете!
                 </Typography>
               </Box>
@@ -259,8 +295,14 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
 
             {isUserAuction && (auction as Auction).winner_id && (
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                <PersonIcon sx={{ mr: 1, fontSize: '0.875rem', color: 'success.main' }} />
-                <Typography variant='body2' color='success.main' fontWeight='medium'>
+                <PersonIcon
+                  sx={{ mr: 1, fontSize: '0.875rem', color: 'success.main' }}
+                />
+                <Typography
+                  variant='body2'
+                  color='success.main'
+                  fontWeight='medium'
+                >
                   Победитель: {(auction as Auction).winner?.username}
                 </Typography>
               </Box>
@@ -284,10 +326,9 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
               fontWeight='bold'
               sx={{ mb: 1 }}
             >
-              {isUserBid 
+              {isUserBid
                 ? `Текущая: ${currentPrice} баллов`
-                : `${currentPrice} баллов`
-              }
+                : `${currentPrice} баллов`}
             </Typography>
 
             {isCompleted ? (
@@ -300,9 +341,16 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
                 Аукцион завершен
               </Button>
             ) : isUserAuction ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}>
-                    {((auction as Auction).bids_count || 0) > 0 && (                  
-                    <Button
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1,
+                  width: '100%',
+                }}
+              >
+                {((auction as Auction).bids_count || 0) > 0 && (
+                  <Button
                     variant='contained'
                     color='success'
                     sx={{ borderRadius: 2 }}
@@ -351,8 +399,8 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
                 {loadingButtons.bid
                   ? 'Обработка...'
                   : isUserBid
-                  ? 'Повысить ставку'
-                  : 'Сделать ставку'}
+                    ? 'Повысить ставку'
+                    : 'Сделать ставку'}
               </Button>
             )}
           </Grid>
@@ -362,4 +410,4 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   );
 };
 
-export default AuctionCard; 
+export default AuctionCard;

@@ -42,7 +42,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: isMobile ? 'var(--main-border-radius) !important' : '16px',
+          borderRadius: isMobile
+            ? 'var(--main-border-radius) !important'
+            : '16px',
           maxWidth: '300px',
           width: '100%',
           margin: isMobile ? '16px' : 'auto',
@@ -76,7 +78,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
             animation: 'pulse 0.6s ease-in-out',
           }}
         >
-          <CheckIcon sx={{ color: 'var(--theme-text-primary)', fontSize: 24 }} />
+          <CheckIcon
+            sx={{ color: 'var(--theme-text-primary)', fontSize: 24 }}
+          />
         </Box>
 
         <Typography

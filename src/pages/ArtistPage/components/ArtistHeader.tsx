@@ -28,54 +28,53 @@ import { styled } from '@mui/material/styles';
 import { ArtistHeaderProps } from '../types';
 import InfoBlock from '../../../UIKIT/InfoBlock';
 
-
 const HeaderWrapper = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
 }));
 
-
-const ArtistWatermark = styled(Box)<{ artistName: string }>(({ theme, artistName }) => ({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  pointerEvents: 'none',
-  zIndex: 1,
-  overflow: 'hidden',
-  '&::before': {
-    content: `"${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)}"`,
+const ArtistWatermark = styled(Box)<{ artistName: string }>(
+  ({ theme, artistName }) => ({
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%) rotate(-40deg)',
-    fontSize: '1.8rem',
-    fontWeight: 900,
-    color: 'rgba(255, 255, 255, 0.04)',
-    whiteSpace: 'pre-wrap',
-    letterSpacing: '0.1rem',
-    textTransform: 'uppercase',
-    lineHeight: 1.2,
-    width: '300%',
-    textAlign: 'center',
-    fontFamily: '"Inter", "Roboto", sans-serif',
-    wordBreak: 'break-all',
-    [theme.breakpoints.down('lg')]: {
-      fontSize: '1.5rem',
-      letterSpacing: '0.08rem',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pointerEvents: 'none',
+    zIndex: 1,
+    overflow: 'hidden',
+    '&::before': {
+      content: `"${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)} ${artistName.repeat(100)}"`,
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%) rotate(-40deg)',
+      fontSize: '1.8rem',
+      fontWeight: 900,
+      color: 'rgba(255, 255, 255, 0.04)',
+      whiteSpace: 'pre-wrap',
+      letterSpacing: '0.1rem',
+      textTransform: 'uppercase',
+      lineHeight: 1.2,
+      width: '300%',
+      textAlign: 'center',
+      fontFamily: '"Inter", "Roboto", sans-serif',
+      wordBreak: 'break-all',
+      [theme.breakpoints.down('lg')]: {
+        fontSize: '1.5rem',
+        letterSpacing: '0.08rem',
+      },
+      [theme.breakpoints.down('md')]: {
+        fontSize: '1.3rem',
+        letterSpacing: '0.06rem',
+      },
+      [theme.breakpoints.down('sm')]: {
+        fontSize: '1.2rem',
+        letterSpacing: '0.05rem',
+      },
     },
-    [theme.breakpoints.down('md')]: {
-      fontSize: '1.3rem',
-      letterSpacing: '0.06rem',
-    },
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '1.2rem',
-      letterSpacing: '0.05rem',
-    },
-  },
-}));
-
+  })
+);
 
 const InfoBlockContent = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -321,14 +320,17 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
       </BackButton>
 
       <InfoBlock
-        title=""
-        description=""
+        title=''
+        description=''
         children={
           <>
             <ArtistWatermark artistName={artist.name} />
             <InfoBlockContent>
               <ArtistAvatar
-                src={artist.avatar_url || '/static/uploads/system/album_placeholder.jpg'}
+                src={
+                  artist.avatar_url ||
+                  '/static/uploads/system/album_placeholder.jpg'
+                }
                 alt={artist.name}
               />
 
@@ -336,9 +338,7 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
                 <Box>
                   <ArtistTypeLabel>Исполнитель</ArtistTypeLabel>
                   <NameSection>
-                    <ArtistName>
-                      {artist.name}
-                    </ArtistName>
+                    <ArtistName>{artist.name}</ArtistName>
                     {artist.verified && (
                       <Fade in={true}>
                         <VerifiedBadge>
@@ -354,13 +354,17 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
                   <StatsSection>
                     {artist.followers_count && (
                       <StatItem>
-                        <StatNumber>{formatNumber(artist.followers_count)}</StatNumber>
+                        <StatNumber>
+                          {formatNumber(artist.followers_count)}
+                        </StatNumber>
                         <StatLabel>подписчиков</StatLabel>
                       </StatItem>
                     )}
                     {artist.monthly_listeners && (
                       <StatItem>
-                        <StatNumber>{formatNumber(artist.monthly_listeners)}</StatNumber>
+                        <StatNumber>
+                          {formatNumber(artist.monthly_listeners)}
+                        </StatNumber>
                         <StatLabel>слушателей в месяц</StatLabel>
                       </StatItem>
                     )}
@@ -374,7 +378,7 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
                       Слушать
                     </PlayButton>
                   )}
-                  
+
                   <SecondaryButton onClick={onPlayClick}>
                     <Shuffle sx={{ fontSize: 18, marginRight: 1 }} />
                     Перемешать
@@ -383,16 +387,15 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
                   <IconButtonStyled onClick={onShareClick}>
                     <Share sx={{ fontSize: 18 }} />
                   </IconButtonStyled>
-
-
                 </ActionSection>
               </InfoSection>
             </InfoBlockContent>
           </>
         }
         useTheme={true}
-        style={{ 
-          background: 'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 50%, #E1C4FD 100%)',
+        style={{
+          background:
+            'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 50%, #E1C4FD 100%)',
           backdropFilter: 'none',
           border: '1px solid rgba(255, 255, 255, 0.2)',
           borderRadius: '20px',
@@ -401,11 +404,11 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
           position: 'relative',
           overflow: 'hidden',
         }}
-        styleVariant="default"
+        styleVariant='default'
         titleStyle={{}}
         descriptionStyle={{}}
         customStyle={true}
-        className=""
+        className=''
       />
     </HeaderWrapper>
   );

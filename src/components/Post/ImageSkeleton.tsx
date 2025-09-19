@@ -35,26 +35,26 @@ interface ImageSkeletonProps {
   maxHeight?: number;
 }
 
-const ImageSkeleton: React.FC<ImageSkeletonProps> = ({ 
-  isSingle = false, 
+const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
+  isSingle = false,
   isMobile = false,
   height = 'auto',
   width = '100%',
   imageDimensions = null,
   maxWidth,
-  maxHeight
+  maxHeight,
 }) => {
   // Вычисляем правильную высоту на основе размеров изображения
   let skeletonHeight = height;
-  
+
   if (imageDimensions && imageDimensions.width && imageDimensions.height) {
     const aspectRatio = imageDimensions.width / imageDimensions.height;
-    
+
     if (isSingle) {
       // Для одиночного изображения в ленте
       const maxW = maxWidth || (isMobile ? 400 : 600); // Максимальная ширина в ленте
       const maxH = maxHeight || (isMobile ? 400 : 500); // Максимальная высота в ленте
-      
+
       if (aspectRatio > 1) {
         // Ландшафтное изображение - ограничиваем по ширине
         skeletonHeight = `${maxW / aspectRatio}px`;
@@ -62,8 +62,6 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
         // Портретное изображение - ограничиваем по высоте
         skeletonHeight = `${Math.min(maxW / aspectRatio, maxH)}px`;
       }
-      
-
     } else {
       // Для сетки изображений используем пропорции
       // В сетке изображения обычно квадратные или с фиксированной высотой
@@ -81,20 +79,19 @@ const ImageSkeleton: React.FC<ImageSkeletonProps> = ({
       }}
     >
       <Skeleton
-        variant="rectangular"
-        width="100%"
-        height="100%"
-        animation="wave"
+        variant='rectangular'
+        width='100%'
+        height='100%'
+        animation='wave'
         sx={{
           borderRadius: '16px',
           backgroundColor: 'var(--theme-background)',
           '&::after': {
-            background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+            background:
+              'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
           },
         }}
       />
-      
-
     </SkeletonContainer>
   );
 };

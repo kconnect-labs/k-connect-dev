@@ -54,14 +54,14 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
         const container = tabsContainerRef.current;
         const containerWidth = container.clientWidth;
         const scrollWidth = container.scrollWidth;
-        
+
         // Если контент шире контейнера, включаем режим прокрутки
         setUseScrollMode(scrollWidth > containerWidth);
       }
     };
 
     checkScrollMode();
-    
+
     // Проверяем при изменении размера окна
     const handleResize = () => {
       checkScrollMode();
@@ -76,12 +76,15 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
     if (activeTabRef.current && tabsContainerRef.current && useScrollMode) {
       const container = tabsContainerRef.current;
       const activeTab = activeTabRef.current;
-      
-      const scrollLeft = activeTab.offsetLeft - (container.clientWidth / 2) + (activeTab.clientWidth / 2);
-      
+
+      const scrollLeft =
+        activeTab.offsetLeft -
+        container.clientWidth / 2 +
+        activeTab.clientWidth / 2;
+
       container.scrollTo({
         left: scrollLeft,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   }, [value, useScrollMode]);
@@ -96,7 +99,11 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
 
   const tabsContainerStyles: React.CSSProperties = {
     display: 'flex',
-    justifyContent: useScrollMode ? 'flex-start' : (centered ? 'center' : 'space-between'),
+    justifyContent: useScrollMode
+      ? 'flex-start'
+      : centered
+        ? 'center'
+        : 'space-between',
     minHeight: 48,
     padding: '4px',
     overflowX: useScrollMode ? 'auto' : 'hidden',
@@ -112,8 +119,8 @@ const StyledTabs: React.FC<StyledTabsProps> = ({
       style={containerStyles}
       {...props}
     >
-      <div 
-        className='styled-tabs' 
+      <div
+        className='styled-tabs'
         style={tabsContainerStyles}
         ref={tabsContainerRef}
       >

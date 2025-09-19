@@ -155,14 +155,15 @@ const CreatePost: React.FC<CreatePostProps> = ({
 }) => {
   const { t } = useLanguage();
   const { user } = useContext(AuthContext);
-  const { playTrack, currentTrack, isPlaying, togglePlay } =
-    useContext(MusicContext) as {
-      playTrack: (track: MusicTrack, section?: string | null) => void;
-      currentTrack: CurrentTrack | null;
-      isPlaying: boolean;
-      togglePlay: () => void;
-    };
-  
+  const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(
+    MusicContext
+  ) as {
+    playTrack: (track: MusicTrack, section?: string | null) => void;
+    currentTrack: CurrentTrack | null;
+    isPlaying: boolean;
+    togglePlay: () => void;
+  };
+
   const [content, setContent] = useState<string>('');
   const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([]);
   const [mediaType, setMediaType] = useState<string>('');
@@ -171,10 +172,12 @@ const CreatePost: React.FC<CreatePostProps> = ({
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [mediaNotification, setMediaNotification] = useState<MediaNotification>({
-    open: false,
-    message: '',
-  });
+  const [mediaNotification, setMediaNotification] = useState<MediaNotification>(
+    {
+      open: false,
+      message: '',
+    }
+  );
   const [musicSelectOpen, setMusicSelectOpen] = useState<boolean>(false);
   const [selectedTracks, setSelectedTracks] = useState<MusicTrack[]>([]);
   const [snackbar, setSnackbar] = useState<SnackbarState>({
@@ -301,7 +304,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
 
       // Создание превью
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         const result = e.target?.result as string;
         if (result) {
           previews.push(result);
@@ -547,7 +550,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                backgroundColor: 'var(--theme-background, rgba(26, 26, 26, 0.7))',
+                backgroundColor:
+                  'var(--theme-background, rgba(26, 26, 26, 0.7))',
                 borderRadius: '18px',
                 zIndex: 10,
                 opacity: isDragging ? 1 : 0,
@@ -585,7 +589,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                 }
                 multiline
                 value={content}
-                onChange={(e) => {
+                onChange={e => {
                   setContent(e.target.value);
                 }}
                 onPaste={handlePaste}
@@ -642,7 +646,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     mt: 1,
                     p: 1.5,
                     borderRadius: '16px',
-                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                    backgroundColor:
+                      'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
                   }}
@@ -653,7 +658,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                       position: 'absolute',
                       top: -8,
                       left: 8,
-                      backgroundColor: 'var(--theme-background, rgba(26, 26, 26, 0.9))',
+                      backgroundColor:
+                        'var(--theme-background, rgba(26, 26, 26, 0.9))',
                       px: 0.5,
                       color: 'rgba(255, 255, 255, 0.6)',
                       fontSize: '0.7rem',
@@ -669,9 +675,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                       '& > *:last-child': { marginBottom: 0 },
                     }}
                   >
-                    <ReactMarkdown
-                      urlTransform={url => url}
-                    >
+                    <ReactMarkdown urlTransform={url => url}>
                       {content.replace(/\n/g, '  \n')}
                     </ReactMarkdown>
                   </MarkdownContent>
@@ -860,7 +864,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                   borderRadius: '18px',
                   overflow: 'hidden',
                   border: '1px solid rgba(66, 66, 66, 0.5)',
-                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                  backgroundColor:
+                    'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 }}
               >
                 {mediaType === 'image' ? (
@@ -912,13 +917,15 @@ const CreatePost: React.FC<CreatePostProps> = ({
                             position: 'absolute',
                             top: 4,
                             right: 4,
-                            backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.6))',
+                            backgroundColor:
+                              'var(--theme-background, rgba(0, 0, 0, 0.6))',
                             color: 'white',
                             padding: '4px',
                             '&:hover': {
                               backgroundColor: 'rgba(0, 0, 0, 0.8)',
                             },
-                            backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
+                            backdropFilter:
+                              'var(--theme-backdrop-filter, blur(4px))',
                           }}
                         >
                           <CloseIcon fontSize='small' />
@@ -944,7 +951,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                       position: 'absolute',
                       top: 8,
                       right: 8,
-                      backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.6))',
+                      backgroundColor:
+                        'var(--theme-background, rgba(0, 0, 0, 0.6))',
                       color: 'white',
                       '&:hover': {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -973,13 +981,14 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     px: 1.5,
                     mb: 1,
                     borderRadius: 'var(--large-border-radius)!important',
-                    bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                    bgcolor:
+                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
                   }}
-                  onClick={(e) => handleTrackPlay(track, e)}
+                  onClick={e => handleTrackPlay(track, e)}
                 >
                   <Box
                     sx={{
@@ -1014,8 +1023,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
                         height: '100%',
                         objectFit: 'cover',
                       }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/uploads/system/album_placeholder.jpg';
+                      onError={e => {
+                        (e.target as HTMLImageElement).src =
+                          '/uploads/system/album_placeholder.jpg';
                       }}
                     />
                     <Box
@@ -1098,7 +1108,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                   ) : null}
                   <IconButton
                     size='small'
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       handleRemoveTrack(track.id);
                     }}
@@ -1150,7 +1160,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                               : '1px solid rgba(0, 0, 0, 0.12)',
                     padding: '4px 10px',
                     '&:hover': {
-                      backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
+                      backgroundColor:
+                        'var(--theme-background, rgba(208, 188, 255, 0.08))',
                       borderColor: 'rgba(208, 188, 255, 0.4)',
                     },
                   }}
@@ -1185,7 +1196,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                             : '1px solid rgba(0, 0, 0, 0.12)',
                   padding: '4px 10px',
                   '&:hover': {
-                    backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
+                    backgroundColor:
+                      'var(--theme-background, rgba(208, 188, 255, 0.08))',
                     borderColor: 'rgba(208, 188, 255, 0.4)',
                   },
                 }}
@@ -1269,4 +1281,4 @@ const CreatePost: React.FC<CreatePostProps> = ({
   );
 };
 
-export default CreatePost; 
+export default CreatePost;

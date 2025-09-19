@@ -43,9 +43,9 @@ const TelegramSubscribeBlock: React.FC = () => {
       </Box>
 
       {/* Основной контент */}
-      <Box sx={{ mt: 3, mb:0 }}>
+      <Box sx={{ mt: 3, mb: 0 }}>
         <Typography
-          variant="h6"
+          variant='h6'
           sx={{
             color: 'white',
             fontWeight: 600,
@@ -58,7 +58,7 @@ const TelegramSubscribeBlock: React.FC = () => {
         </Typography>
 
         <Button
-          variant="contained"
+          variant='contained'
           sx={{
             backgroundColor: '#282828',
             color: 'white',
@@ -74,7 +74,7 @@ const TelegramSubscribeBlock: React.FC = () => {
               backgroundColor: '#3a3a3a',
             },
           }}
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             handleSubscribe();
           }}

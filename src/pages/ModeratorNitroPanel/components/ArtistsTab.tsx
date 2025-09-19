@@ -61,22 +61,22 @@ import UniversalModal from '../../../UIKIT/UniversalModal/UniversalModal';
 
 const ArtistsTab: React.FC = () => {
   const { currentUser, permissions } = useCurrentUser();
-  const { 
-    getArtists, 
-    createArtist, 
-    updateArtist, 
-    deleteArtist, 
-    getArtistTracks, 
-    searchTracksForArtist, 
-    assignTracksToArtist, 
+  const {
+    getArtists,
+    createArtist,
+    updateArtist,
+    deleteArtist,
+    getArtistTracks,
+    searchTracksForArtist,
+    assignTracksToArtist,
     removeTrackFromArtist,
     bindArtistToUser,
     unbindArtistFromUser,
     getUnboundArtists,
     getBoundArtists,
-    searchUsers
+    searchUsers,
   } = useNitroApi();
-  
+
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,21 +84,19 @@ const ArtistsTab: React.FC = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [total, setTotal] = useState(0);
-  
+
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<Artist | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  
-  
+
   const [artistName, setArtistName] = useState('');
   const [artistBio, setArtistBio] = useState('');
   const [artistAvatar, setArtistAvatar] = useState<File | null>(null);
   const [artistAvatarPreview, setArtistAvatarPreview] = useState('');
   const [artistVerified, setArtistVerified] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
-  
-  
+
   const [manageTracksModalOpen, setManageTracksModalOpen] = useState(false);
   const [artistTracks, setArtistTracks] = useState<any[]>([]);
   const [searchableTracks, setSearchableTracks] = useState<any[]>([]);
@@ -106,7 +104,7 @@ const ArtistsTab: React.FC = () => {
   const [selectedTracks, setSelectedTracks] = useState<number[]>([]);
   const [tracksLoading, setTracksLoading] = useState(false);
   const [searchMode, setSearchMode] = useState('artist');
-  
+
   // Состояние для привязки артистов к пользователям
   const [bindModalOpen, setBindModalOpen] = useState(false);
   const [unbindModalOpen, setUnbindModalOpen] = useState(false);
@@ -115,49 +113,52 @@ const ArtistsTab: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [userSearchLoading, setUserSearchLoading] = useState(false);
   const [bindLoading, setBindLoading] = useState(false);
-  const [boundUsers, setBoundUsers] = useState<{[key: number]: any}>({});
+  const [boundUsers, setBoundUsers] = useState<{ [key: number]: any }>({});
 
   const canManage = permissions?.manage_artists || false;
   const canDelete = permissions?.delete_artists || false;
-  
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const fetchArtists = useCallback(async (pageNum: number = 1, reset: boolean = true) => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await getArtists(pageNum, searchQuery);
-      
-      if (reset) {
-        setArtists((response as any).artists || []);
-      } else {
-        setArtists(prev => [...prev, ...((response as any).artists || [])]);
+  const fetchArtists = useCallback(
+    async (pageNum: number = 1, reset: boolean = true) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await getArtists(pageNum, searchQuery);
+
+        if (reset) {
+          setArtists((response as any).artists || []);
+        } else {
+          setArtists(prev => [...prev, ...((response as any).artists || [])]);
+        }
+
+        setHasMore((response as any).has_next || false);
+        setTotal((response as any).total || 0);
+        setPage(pageNum);
+
+        // Обновляем информацию о привязанных пользователях из ответа API
+        updateBoundUsersFromArtists((response as any).artists || []);
+      } catch (err: any) {
+        setError(err.response?.data?.error || 'Ошибка загрузки артистов');
+      } finally {
+        setLoading(false);
       }
-      
-      setHasMore((response as any).has_next || false);
-      setTotal((response as any).total || 0);
-      setPage(pageNum);
-      
-      // Обновляем информацию о привязанных пользователях из ответа API
-      updateBoundUsersFromArtists((response as any).artists || []);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Ошибка загрузки артистов');
-    } finally {
-      setLoading(false);
-    }
-  }, [getArtists, searchQuery]);
+    },
+    [getArtists, searchQuery]
+  );
 
   const updateBoundUsersFromArtists = (artistsList: any[]) => {
-    const usersMap: {[key: number]: any} = {};
-    
+    const usersMap: { [key: number]: any } = {};
+
     artistsList.forEach(artist => {
       if (artist.user_id && artist.bound_user) {
         usersMap[artist.user_id] = artist.bound_user;
       }
     });
-    
+
     setBoundUsers(prev => ({ ...prev, ...usersMap }));
   };
 
@@ -184,8 +185,10 @@ const ArtistsTab: React.FC = () => {
     try {
       setDeleteLoading(true);
       await deleteArtist(selectedArtist.id);
-      
-      setArtists(prev => prev.filter(artist => artist.id !== selectedArtist.id));
+
+      setArtists(prev =>
+        prev.filter(artist => artist.id !== selectedArtist.id)
+      );
       setDeleteDialogOpen(false);
       setSelectedArtist(null);
     } catch (err: any) {
@@ -199,9 +202,9 @@ const ArtistsTab: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       setArtistAvatar(file);
-      
+
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         setArtistAvatarPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
@@ -211,24 +214,22 @@ const ArtistsTab: React.FC = () => {
   const handleSubmit = async () => {
     try {
       setFormLoading(true);
-      
+
       const formData = new FormData();
       formData.append('name', artistName);
       formData.append('bio', artistBio);
       formData.append('verified', artistVerified.toString());
-      
+
       if (artistAvatar) {
         formData.append('avatar_file', artistAvatar);
       }
 
       if (selectedArtist) {
-        
         await updateArtist(selectedArtist.id, formData);
       } else {
-        
         await createArtist(formData);
       }
-      
+
       setEditDialogOpen(false);
       resetForm();
       fetchArtists(1, true);
@@ -269,10 +270,10 @@ const ArtistsTab: React.FC = () => {
     setSearchableTracks([]);
     setSelectedTracks([]);
     setTrackSearch('');
-    
+
     try {
       setTracksLoading(true);
-      const response = await getArtistTracks(artist.id) as any;
+      const response = (await getArtistTracks(artist.id)) as any;
       if (response.success) {
         setArtistTracks(response.tracks || []);
       }
@@ -285,10 +286,14 @@ const ArtistsTab: React.FC = () => {
 
   const searchTracks = async () => {
     if (!trackSearch || trackSearch.trim().length < 2) return;
-    
+
     try {
       setTracksLoading(true);
-      const response = await searchTracksForArtist(trackSearch.trim(), false, 50) as any;
+      const response = (await searchTracksForArtist(
+        trackSearch.trim(),
+        false,
+        50
+      )) as any;
       if (response.success) {
         setSearchableTracks(response.tracks || []);
       }
@@ -301,17 +306,16 @@ const ArtistsTab: React.FC = () => {
 
   const handleAssignTracks = async () => {
     if (!selectedArtist || selectedTracks.length === 0) return;
-    
+
     try {
       setTracksLoading(true);
       await assignTracksToArtist(selectedTracks, selectedArtist.id);
-      
-      
-      const response = await getArtistTracks(selectedArtist.id) as any;
+
+      const response = (await getArtistTracks(selectedArtist.id)) as any;
       if (response.success) {
         setArtistTracks(response.tracks || []);
       }
-      
+
       setSelectedTracks([]);
       setSearchableTracks([]);
     } catch (err: any) {
@@ -323,13 +327,12 @@ const ArtistsTab: React.FC = () => {
 
   const handleRemoveTrack = async (trackId: number) => {
     if (!selectedArtist) return;
-    
+
     try {
       setTracksLoading(true);
       await removeTrackFromArtist(trackId, selectedArtist.id);
-      
-      
-      const response = await getArtistTracks(selectedArtist.id) as any;
+
+      const response = (await getArtistTracks(selectedArtist.id)) as any;
       if (response.success) {
         setArtistTracks(response.tracks || []);
       }
@@ -341,8 +344,8 @@ const ArtistsTab: React.FC = () => {
   };
 
   const handleToggleTrackSelection = (trackId: number) => {
-    setSelectedTracks(prev => 
-      prev.includes(trackId) 
+    setSelectedTracks(prev =>
+      prev.includes(trackId)
         ? prev.filter(id => id !== trackId)
         : [...prev, trackId]
     );
@@ -358,18 +361,16 @@ const ArtistsTab: React.FC = () => {
 
   const handleAssignTrackToArtist = async (trackId: number) => {
     if (!selectedArtist) return;
-    
+
     try {
       setTracksLoading(true);
       await assignTracksToArtist([trackId], selectedArtist.id);
-      
-      
-      const response = await getArtistTracks(selectedArtist.id) as any;
+
+      const response = (await getArtistTracks(selectedArtist.id)) as any;
       if (response.success) {
         setArtistTracks(response.tracks || []);
       }
-      
-      
+
       setSearchableTracks(prev => prev.filter(track => track.id !== trackId));
     } catch (err: any) {
       setError(err.response?.data?.error || 'Ошибка назначения трека');
@@ -410,20 +411,22 @@ const ArtistsTab: React.FC = () => {
     try {
       setBindLoading(true);
       await bindArtistToUser(selectedUser.id, selectedArtist.id);
-      
+
       // Обновляем информацию о привязанном пользователе
       setBoundUsers(prev => ({
         ...prev,
-        [selectedUser.id]: selectedUser
+        [selectedUser.id]: selectedUser,
       }));
-      
+
       setBindModalOpen(false);
       setSelectedUser(null);
       setUserSearchQuery('');
       setFoundUsers([]);
       fetchArtists(1, true); // Обновляем список артистов
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Ошибка привязки артиста к пользователю');
+      setError(
+        err.response?.data?.error || 'Ошибка привязки артиста к пользователю'
+      );
     } finally {
       setBindLoading(false);
     }
@@ -435,18 +438,20 @@ const ArtistsTab: React.FC = () => {
     try {
       setBindLoading(true);
       await unbindArtistFromUser(selectedArtist.user_id, selectedArtist.id);
-      
+
       // Удаляем информацию о привязанном пользователе
       setBoundUsers(prev => {
         const newBoundUsers = { ...prev };
         delete newBoundUsers[selectedArtist.user_id!];
         return newBoundUsers;
       });
-      
+
       setUnbindModalOpen(false);
       fetchArtists(1, true); // Обновляем список артистов
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Ошибка отвязки артиста от пользователя');
+      setError(
+        err.response?.data?.error || 'Ошибка отвязки артиста от пользователя'
+      );
     } finally {
       setBindLoading(false);
     }
@@ -467,50 +472,49 @@ const ArtistsTab: React.FC = () => {
 
   if (!canManage && !canDelete) {
     return (
-      <Alert severity="warning" sx={{ mt: 2 }}>
+      <Alert severity='warning' sx={{ mt: 2 }}>
         У вас нет прав на управление артистами
       </Alert>
     );
   }
 
   return (
-    <Box sx={{ p: 0, pb:5 }}>
+    <Box sx={{ p: 0, pb: 5 }}>
       {/* Поиск и кнопка добавления */}
-      <Box sx={{ 
-        display: 'flex', 
-        gap: 2, 
-        mb: 3,
-        alignItems: 'center'
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          mb: 3,
+          alignItems: 'center',
+        }}
+      >
         <TextField
           fullWidth
-          placeholder="Поиск по артистам..."
+          placeholder='Поиск по артистам...'
           value={searchQuery}
-          onChange={(e) => handleSearchChange(e.target.value)}
+          onChange={e => handleSearchChange(e.target.value)}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <SearchIcon />
               </InputAdornment>
             ),
             endAdornment: searchQuery ? (
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  onClick={() => handleSearchChange('')}
-                >
+              <InputAdornment position='end'>
+                <IconButton size='small' onClick={() => handleSearchChange('')}>
                   <ClearIcon />
                 </IconButton>
               </InputAdornment>
             ) : null,
           }}
-          size="small"
+          size='small'
         />
-        
+
         {canManage && (
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             startIcon={<AddIcon />}
             onClick={() => openEditDialog()}
             sx={{ minWidth: 'auto' }}
@@ -522,22 +526,22 @@ const ArtistsTab: React.FC = () => {
 
       {/* Статистика */}
       <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
-        <Chip 
-          label={`Всего артистов: ${total}`} 
-          color="primary" 
-          variant="outlined" 
+        <Chip
+          label={`Всего артистов: ${total}`}
+          color='primary'
+          variant='outlined'
         />
       </Box>
 
       {/* Список артистов */}
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity='error' sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
       <Grid container spacing={1}>
-        {artists.map((artist) => (
+        {artists.map(artist => (
           <Grid item xs={6} sm={4} md={3} lg={3} key={artist.id}>
             <Card
               elevation={0}
@@ -548,12 +552,27 @@ const ArtistsTab: React.FC = () => {
                 borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background)',
                 backdropFilter: 'var(--theme-backdrop-filter)',
-                border: '1px solid var(--main-border-color)'
+                border: '1px solid var(--main-border-color)',
               }}
             >
-              <CardContent sx={{ p: 1.5, flexGrow: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <CardContent
+                sx={{
+                  p: 1.5,
+                  flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: '100%',
+                }}
+              >
                 {/* Аватар и имя */}
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 1.5,
+                    mb: 1.5,
+                  }}
+                >
                   <Avatar
                     src={artist.avatar_url}
                     sx={{ width: 50, height: 50, flexShrink: 0 }}
@@ -561,30 +580,57 @@ const ArtistsTab: React.FC = () => {
                     <PersonIcon />
                   </Avatar>
                   <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
-                      <Typography variant="subtitle2" sx={{ 
-                        fontWeight: 600,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        fontSize: '0.875rem'
-                      }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        mb: 0.5,
+                      }}
+                    >
+                      <Typography
+                        variant='subtitle2'
+                        sx={{
+                          fontWeight: 600,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          fontSize: '0.875rem',
+                        }}
+                      >
                         {artist.name}
                       </Typography>
                       {artist.verified && (
-                        <VerifiedIcon sx={{ color: 'var(--main-accent-color)', fontSize: 16, flexShrink: 0 }} />
+                        <VerifiedIcon
+                          sx={{
+                            color: 'var(--main-accent-color)',
+                            fontSize: 16,
+                            flexShrink: 0,
+                          }}
+                        />
                       )}
                     </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        sx={{ fontSize: '0.75rem' }}
+                      >
                         {formatDate(artist.created_at)}
                       </Typography>
                       {artist.user_id && (
                         <Chip
-                          label="Привязан"
-                          size="small"
-                          color="success"
-                          variant="outlined"
+                          label='Привязан'
+                          size='small'
+                          color='success'
+                          variant='outlined'
                           sx={{ fontSize: '0.65rem', height: 20 }}
                         />
                       )}
@@ -594,38 +640,50 @@ const ArtistsTab: React.FC = () => {
 
                 {/* Информация о привязанном пользователе */}
                 {artist.user_id && boundUsers[artist.user_id] && (
-                  <Box sx={{ 
-                    mb: 1.5, 
-                    p: 1, 
-                    bgcolor: 'rgba(76, 175, 80, 0.1)', 
-                    borderRadius: 1,
-                    border: '1px solid rgba(76, 175, 80, 0.3)'
-                  }}>
+                  <Box
+                    sx={{
+                      mb: 1.5,
+                      p: 1,
+                      bgcolor: 'rgba(76, 175, 80, 0.1)',
+                      borderRadius: 1,
+                      border: '1px solid rgba(76, 175, 80, 0.3)',
+                    }}
+                  >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Avatar 
-                        src={boundUsers[artist.user_id].avatar_url || boundUsers[artist.user_id].photo} 
+                      <Avatar
+                        src={
+                          boundUsers[artist.user_id].avatar_url ||
+                          boundUsers[artist.user_id].photo
+                        }
                         sx={{ width: 24, height: 24 }}
                       >
                         <PersonIcon sx={{ fontSize: 16 }} />
                       </Avatar>
                       <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                        <Typography variant="caption" sx={{ 
-                          fontWeight: 600, 
-                          color: 'success.main',
-                          display: 'block',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}>
+                        <Typography
+                          variant='caption'
+                          sx={{
+                            fontWeight: 600,
+                            color: 'success.main',
+                            display: 'block',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           {boundUsers[artist.user_id].name}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary" sx={{ 
-                          fontSize: '0.65rem',
-                          display: 'block',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap'
-                        }}>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{
+                            fontSize: '0.65rem',
+                            display: 'block',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
                           @{boundUsers[artist.user_id].username}
                         </Typography>
                       </Box>
@@ -635,10 +693,10 @@ const ArtistsTab: React.FC = () => {
 
                 {/* Биография */}
                 {artist.bio && (
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
-                    sx={{ 
+                  <Typography
+                    variant='body2'
+                    color='text.secondary'
+                    sx={{
                       mb: 1.5,
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
@@ -646,7 +704,7 @@ const ArtistsTab: React.FC = () => {
                       overflow: 'hidden',
                       fontSize: '0.8rem',
                       lineHeight: 1.3,
-                      flexGrow: 1
+                      flexGrow: 1,
                     }}
                   >
                     {artist.bio}
@@ -654,71 +712,78 @@ const ArtistsTab: React.FC = () => {
                 )}
 
                 {/* Кнопки действий */}
-                <Box sx={{ display: 'flex', gap: 0.5, mt: 'auto', flexWrap: 'wrap' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    gap: 0.5,
+                    mt: 'auto',
+                    flexWrap: 'wrap',
+                  }}
+                >
                   {canManage && (
                     <>
                       <Button
-                        size="small"
-                        variant="outlined"
+                        size='small'
+                        variant='outlined'
                         startIcon={<EditIcon />}
                         onClick={() => openEditDialog(artist)}
-                        sx={{ 
+                        sx={{
                           fontSize: '0.75rem',
                           minWidth: 'auto',
                           px: 1,
-                          flex: 1
+                          flex: 1,
                         }}
                       >
                         Ред.
                       </Button>
                       <Button
-                        size="small"
-                        variant="outlined"
+                        size='small'
+                        variant='outlined'
                         startIcon={<SettingsIcon />}
                         onClick={() => openManageTracksDialog(artist)}
-                        sx={{ 
+                        sx={{
                           fontSize: '0.75rem',
                           minWidth: 'auto',
                           px: 1,
-                          flex: 1
+                          flex: 1,
                         }}
                       >
                         Треки
                       </Button>
                     </>
                   )}
-                  
+
                   {/* Кнопки привязки/отвязки */}
                   {canManage && (
                     <>
                       {artist.user_id ? (
                         <Button
-                          size="small"
-                          variant="outlined"
-                          color="warning"
+                          size='small'
+                          variant='outlined'
+                          color='warning'
                           startIcon={<PersonIcon />}
                           onClick={() => openUnbindModal(artist)}
-                          sx={{ 
+                          sx={{
                             fontSize: '0.75rem',
                             minWidth: 'auto',
                             px: 1,
-                            flex: 1
+                            flex: 1,
                           }}
                         >
                           Отвязать
                         </Button>
                       ) : (
                         <Button
-                          size="small"
-                          variant="outlined"
-                          color="success"
+                          size='small'
+                          variant='outlined'
+                          color='success'
                           startIcon={<PersonAddIcon />}
                           onClick={() => openBindModal(artist)}
-                          sx={{ 
+                          sx={{
                             fontSize: '0.75rem',
                             minWidth: 'auto',
                             px: 1,
-                            flex: 1
+                            flex: 1,
                           }}
                         >
                           Привязать
@@ -726,22 +791,22 @@ const ArtistsTab: React.FC = () => {
                       )}
                     </>
                   )}
-                  
+
                   {canDelete && (
                     <Button
-                      size="small"
-                      variant="contained"
-                      color="error"
+                      size='small'
+                      variant='contained'
+                      color='error'
                       startIcon={<DeleteIcon />}
                       onClick={() => {
                         setSelectedArtist(artist);
                         setDeleteDialogOpen(true);
                       }}
-                      sx={{ 
+                      sx={{
                         fontSize: '0.75rem',
                         minWidth: 'auto',
                         px: 1,
-                        flex: 1
+                        flex: 1,
                       }}
                     >
                       Удалить
@@ -758,7 +823,7 @@ const ArtistsTab: React.FC = () => {
       {hasMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={handleLoadMore}
             disabled={loading}
             startIcon={loading ? <CircularProgress size={20} /> : null}
@@ -773,34 +838,40 @@ const ArtistsTab: React.FC = () => {
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
         title={selectedArtist ? 'Редактировать артиста' : 'Добавить артиста'}
-        maxWidth="sm"
+        maxWidth='sm'
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {/* Аватар */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Avatar
-              src={artistAvatarPreview ? (artistAvatarPreview.startsWith('data:') ? artistAvatarPreview : `https://s3.k-connect.ru${artistAvatarPreview}`) : undefined}
+              src={
+                artistAvatarPreview
+                  ? artistAvatarPreview.startsWith('data:')
+                    ? artistAvatarPreview
+                    : `https://s3.k-connect.ru${artistAvatarPreview}`
+                  : undefined
+              }
               sx={{ width: 80, height: 80 }}
             >
               <PersonIcon />
             </Avatar>
             <Box>
               <input
-                accept="image/*"
+                accept='image/*'
                 style={{ display: 'none' }}
-                id="avatar-upload"
-                type="file"
+                id='avatar-upload'
+                type='file'
                 onChange={handleAvatarChange}
               />
-              <label htmlFor="avatar-upload">
-                <Button variant="outlined" component="span" size="small">
+              <label htmlFor='avatar-upload'>
+                <Button variant='outlined' component='span' size='small'>
                   Выбрать аватар
                 </Button>
               </label>
               {artistAvatarPreview && (
                 <Button
-                  size="small"
-                  color="error"
+                  size='small'
+                  color='error'
                   onClick={() => {
                     setArtistAvatar(null);
                     setArtistAvatarPreview('');
@@ -815,23 +886,23 @@ const ArtistsTab: React.FC = () => {
 
           {/* Имя */}
           <TextField
-            label="Имя артиста"
+            label='Имя артиста'
             value={artistName}
-            onChange={(e) => setArtistName(e.target.value)}
+            onChange={e => setArtistName(e.target.value)}
             fullWidth
             required
-            size="small"
+            size='small'
           />
 
           {/* Биография */}
           <TextField
-            label="Биография"
+            label='Биография'
             value={artistBio}
-            onChange={(e) => setArtistBio(e.target.value)}
+            onChange={e => setArtistBio(e.target.value)}
             multiline
             rows={4}
             fullWidth
-            size="small"
+            size='small'
           />
 
           {/* Верификация */}
@@ -839,20 +910,20 @@ const ArtistsTab: React.FC = () => {
             control={
               <Switch
                 checked={artistVerified}
-                onChange={(e) => setArtistVerified(e.target.checked)}
+                onChange={e => setArtistVerified(e.target.checked)}
               />
             }
-            label="Верифицированный артист"
+            label='Верифицированный артист'
           />
 
           {/* Кнопки действий */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
-            <Button onClick={() => setEditDialogOpen(false)}>
-              Отмена
-            </Button>
+          <Box
+            sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}
+          >
+            <Button onClick={() => setEditDialogOpen(false)}>Отмена</Button>
             <Button
               onClick={handleSubmit}
-              variant="contained"
+              variant='contained'
               disabled={formLoading || !artistName.trim()}
               startIcon={formLoading ? <CircularProgress size={20} /> : null}
             >
@@ -866,28 +937,30 @@ const ArtistsTab: React.FC = () => {
       <UniversalModal
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-        title="Удалить артиста"
-        maxWidth="sm"
+        title='Удалить артиста'
+        maxWidth='sm'
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Typography>
             Вы уверены, что хотите удалить артиста "{selectedArtist?.name}"?
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             Это действие нельзя отменить.
           </Typography>
 
           {/* Кнопки действий */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
-            <Button onClick={() => setDeleteDialogOpen(false)}>
-              Отмена
-            </Button>
+          <Box
+            sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}
+          >
+            <Button onClick={() => setDeleteDialogOpen(false)}>Отмена</Button>
             <Button
               onClick={handleDeleteArtist}
-              color="error"
-              variant="contained"
+              color='error'
+              variant='contained'
               disabled={deleteLoading}
-              startIcon={deleteLoading ? <CircularProgress size={20} /> : <DeleteIcon />}
+              startIcon={
+                deleteLoading ? <CircularProgress size={20} /> : <DeleteIcon />
+              }
             >
               Удалить
             </Button>
@@ -901,7 +974,7 @@ const ArtistsTab: React.FC = () => {
         onClose={() => setManageTracksModalOpen(false)}
         fullWidth
         fullScreen={isMobile}
-        maxWidth="md"
+        maxWidth='md'
         PaperProps={{
           sx: {
             background: 'var(--theme-background)',
@@ -910,7 +983,7 @@ const ArtistsTab: React.FC = () => {
             border: { xs: 'none', sm: '1px solid var(--main-border-color)' },
             height: { xs: '100vh', sm: 'auto' },
             maxHeight: { xs: '100vh', sm: '80vh' },
-          }
+          },
         }}
       >
         <Box
@@ -919,7 +992,8 @@ const ArtistsTab: React.FC = () => {
             overflow: 'hidden',
             p: 2,
             borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
-            background: 'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
+            background:
+              'linear-gradient(90deg, rgba(63,81,181,0.2) 0%, rgba(0,0,0,0) 100%)',
           }}
         >
           <Box
@@ -930,7 +1004,8 @@ const ArtistsTab: React.FC = () => {
               width: 150,
               height: 150,
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
+              background:
+                'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
             }}
           />
@@ -946,11 +1021,11 @@ const ArtistsTab: React.FC = () => {
               sx={{ mr: 1.5, fontSize: 28, color: 'primary.light' }}
             />
             <Box>
-              <Typography variant="h6" fontWeight="bold" color="primary.light">
+              <Typography variant='h6' fontWeight='bold' color='primary.light'>
                 Управление треками артиста
               </Typography>
               {selectedArtist && (
-                <Typography variant="body2" color="rgba(255,255,255,0.7)">
+                <Typography variant='body2' color='rgba(255,255,255,0.7)'>
                   {selectedArtist.name} ({artistTracks.length} треков)
                 </Typography>
               )}
@@ -968,7 +1043,7 @@ const ArtistsTab: React.FC = () => {
           }}
         >
           <Box sx={{ p: 2, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-            <Typography variant="subtitle1" gutterBottom>
+            <Typography variant='subtitle1' gutterBottom>
               Треки артиста
             </Typography>
 
@@ -982,17 +1057,21 @@ const ArtistsTab: React.FC = () => {
                   overflow: 'auto',
                 }}
               >
-                <Table size="small" stickyHeader>
+                <Table size='small' stickyHeader>
                   <TableHead>
                     <TableRow>
                       <TableCell>Название</TableCell>
-                      <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      <TableCell
+                        sx={{ display: { xs: 'none', sm: 'table-cell' } }}
+                      >
                         Альбом
                       </TableCell>
-                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                      <TableCell
+                        sx={{ display: { xs: 'none', md: 'table-cell' } }}
+                      >
                         Длительность
                       </TableCell>
-                      <TableCell align="right">Действия</TableCell>
+                      <TableCell align='right'>Действия</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -1001,36 +1080,48 @@ const ArtistsTab: React.FC = () => {
                         <TableCell>
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <Avatar
-                              variant="rounded"
+                              variant='rounded'
                               src={track.cover_path}
                               sx={{ width: 32, height: 32, mr: 1 }}
                             >
                               <AudiotrackIcon />
                             </Avatar>
                             <Box>
-                              <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                              <Typography
+                                variant='body2'
+                                sx={{ fontWeight: 'medium' }}
+                              >
                                 {track.title}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography
+                                variant='caption'
+                                color='text.secondary'
+                              >
                                 {track.artist}
                               </Typography>
                             </Box>
                           </Box>
                         </TableCell>
-                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                        <TableCell
+                          sx={{ display: { xs: 'none', sm: 'table-cell' } }}
+                        >
                           {track.album || '—'}
                         </TableCell>
-                        <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
-                          {track.duration ? `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}` : '—'}
+                        <TableCell
+                          sx={{ display: { xs: 'none', md: 'table-cell' } }}
+                        >
+                          {track.duration
+                            ? `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}`
+                            : '—'}
                         </TableCell>
-                        <TableCell align="right">
+                        <TableCell align='right'>
                           <IconButton
-                            color="error"
-                            size="small"
+                            color='error'
+                            size='small'
                             onClick={() => handleRemoveTrack(track.id)}
                             disabled={tracksLoading}
                           >
-                            <DeleteIcon fontSize="small" />
+                            <DeleteIcon fontSize='small' />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -1050,8 +1141,10 @@ const ArtistsTab: React.FC = () => {
                   borderRadius: 'var(--main-border-radius)',
                 }}
               >
-                <AudiotrackIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
-                <Typography color="text.secondary">
+                <AudiotrackIcon
+                  sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }}
+                />
+                <Typography color='text.secondary'>
                   У артиста еще нет привязанных треков
                 </Typography>
               </Box>
@@ -1061,33 +1154,33 @@ const ArtistsTab: React.FC = () => {
           <Divider sx={{ my: 2 }} />
 
           <Box sx={{ p: 2, flexGrow: 1 }}>
-            <Typography variant="subtitle1" gutterBottom>
+            <Typography variant='subtitle1' gutterBottom>
               Добавление треков
             </Typography>
 
             <Box sx={{ display: 'flex', mb: 2, flexWrap: 'wrap', gap: 1 }}>
               <FormControl sx={{ minWidth: 120 }}>
-                <InputLabel id="search-mode-label">Искать по</InputLabel>
+                <InputLabel id='search-mode-label'>Искать по</InputLabel>
                 <Select
-                  labelId="search-mode-label"
+                  labelId='search-mode-label'
                   value={searchMode}
                   onChange={e => setSearchMode(e.target.value)}
-                  size="small"
+                  size='small'
                   sx={{ minWidth: 130 }}
                 >
-                  <MenuItem value="artist">Имени артиста</MenuItem>
-                  <MenuItem value="title">Названию трека</MenuItem>
+                  <MenuItem value='artist'>Имени артиста</MenuItem>
+                  <MenuItem value='title'>Названию трека</MenuItem>
                 </Select>
               </FormControl>
 
               <TextField
-                size="small"
-                placeholder="Поиск треков..."
+                size='small'
+                placeholder='Поиск треков...'
                 value={trackSearch}
                 onChange={e => setTrackSearch(e.target.value)}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start">
+                    <InputAdornment position='start'>
                       <SearchIcon />
                     </InputAdornment>
                   ),
@@ -1100,10 +1193,12 @@ const ArtistsTab: React.FC = () => {
                 }}
               />
               <Button
-                variant="contained"
+                variant='contained'
                 onClick={searchTracks}
-                disabled={tracksLoading || !trackSearch || trackSearch.trim().length < 2}
-                size="small"
+                disabled={
+                  tracksLoading || !trackSearch || trackSearch.trim().length < 2
+                }
+                size='small'
               >
                 {tracksLoading ? <CircularProgress size={24} /> : 'Поиск'}
               </Button>
@@ -1119,14 +1214,14 @@ const ArtistsTab: React.FC = () => {
                     mb: 1,
                   }}
                 >
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant='body2' color='text.secondary'>
                     Найдено треков: {searchableTracks.length}
                   </Typography>
 
                   <Box>
                     <Button
-                      size="small"
-                      variant="outlined"
+                      size='small'
+                      variant='outlined'
                       onClick={handleSelectAllSearchedTracks}
                       disabled={searchableTracks.length === 0}
                     >
@@ -1135,12 +1230,12 @@ const ArtistsTab: React.FC = () => {
                         : 'Выбрать все'}
                     </Button>
                     <Button
-                      size="small"
-                      variant="contained"
+                      size='small'
+                      variant='contained'
                       startIcon={<AddIcon />}
                       onClick={handleAssignTracks}
                       disabled={selectedTracks.length === 0}
-                      color="success"
+                      color='success'
                       sx={{ ml: 1 }}
                     >
                       Добавить выбранные ({selectedTracks.length})
@@ -1157,13 +1252,14 @@ const ArtistsTab: React.FC = () => {
                     overflow: 'auto',
                   }}
                 >
-                  <Table size="small" stickyHeader>
+                  <Table size='small' stickyHeader>
                     <TableHead>
                       <TableRow>
-                        <TableCell padding="checkbox">
+                        <TableCell padding='checkbox'>
                           <Checkbox
                             checked={
-                              selectedTracks.length === searchableTracks.length &&
+                              selectedTracks.length ===
+                                searchableTracks.length &&
                               searchableTracks.length > 0
                             }
                             indeterminate={
@@ -1174,56 +1270,74 @@ const ArtistsTab: React.FC = () => {
                           />
                         </TableCell>
                         <TableCell>Название</TableCell>
-                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                        <TableCell
+                          sx={{ display: { xs: 'none', sm: 'table-cell' } }}
+                        >
                           Альбом
                         </TableCell>
-                        <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                        <TableCell
+                          sx={{ display: { xs: 'none', md: 'table-cell' } }}
+                        >
                           Длительность
                         </TableCell>
-                        <TableCell align="right">Добавить</TableCell>
+                        <TableCell align='right'>Добавить</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {searchableTracks.map(track => (
                         <TableRow key={track.id}>
-                          <TableCell padding="checkbox">
+                          <TableCell padding='checkbox'>
                             <Checkbox
                               checked={selectedTracks.includes(track.id)}
-                              onChange={() => handleToggleTrackSelection(track.id)}
+                              onChange={() =>
+                                handleToggleTrackSelection(track.id)
+                              }
                             />
                           </TableCell>
                           <TableCell>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <Avatar
-                                variant="rounded"
+                                variant='rounded'
                                 src={track.cover_path}
                                 sx={{ width: 32, height: 32, mr: 1 }}
                               >
                                 <AudiotrackIcon />
                               </Avatar>
                               <Box>
-                                <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                <Typography
+                                  variant='body2'
+                                  sx={{ fontWeight: 'medium' }}
+                                >
                                   {track.title}
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary">
+                                <Typography
+                                  variant='caption'
+                                  color='text.secondary'
+                                >
                                   {track.artist}
                                 </Typography>
                               </Box>
                             </Box>
                           </TableCell>
-                          <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                          <TableCell
+                            sx={{ display: { xs: 'none', sm: 'table-cell' } }}
+                          >
                             {track.album || '—'}
                           </TableCell>
-                          <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                          <TableCell
+                            sx={{ display: { xs: 'none', md: 'table-cell' } }}
+                          >
                             {track.duration
                               ? `${Math.floor(track.duration / 60)}:${(track.duration % 60).toString().padStart(2, '0')}`
                               : '—'}
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align='right'>
                             <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => handleAssignTrackToArtist(track.id)}
+                              size='small'
+                              variant='outlined'
+                              onClick={() =>
+                                handleAssignTrackToArtist(track.id)
+                              }
                               disabled={tracksLoading}
                               startIcon={<AddIcon />}
                             >
@@ -1236,7 +1350,9 @@ const ArtistsTab: React.FC = () => {
                   </Table>
                 </TableContainer>
               </>
-            ) : searchableTracks.length === 0 && trackSearch && !tracksLoading ? (
+            ) : searchableTracks.length === 0 &&
+              trackSearch &&
+              !tracksLoading ? (
               <Box
                 sx={{
                   display: 'flex',
@@ -1248,8 +1364,10 @@ const ArtistsTab: React.FC = () => {
                   borderRadius: 'var(--main-border-radius)',
                 }}
               >
-                <SearchIcon sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
-                <Typography color="text.secondary">
+                <SearchIcon
+                  sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }}
+                />
+                <Typography color='text.secondary'>
                   Не найдено треков для привязки
                 </Typography>
               </Box>
@@ -1260,7 +1378,7 @@ const ArtistsTab: React.FC = () => {
         <DialogActions sx={{ p: 2, px: 3, backgroundColor: 'rgba(0,0,0,0.4)' }}>
           <Button
             onClick={() => setManageTracksModalOpen(false)}
-            variant="contained"
+            variant='contained'
           >
             Закрыть
           </Button>
@@ -1271,27 +1389,27 @@ const ArtistsTab: React.FC = () => {
       <UniversalModal
         open={bindModalOpen}
         onClose={() => setBindModalOpen(false)}
-        title="Привязать артиста к пользователю"
-        maxWidth="md"
+        title='Привязать артиста к пользователю'
+        maxWidth='md'
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <Typography variant="body1">
+          <Typography variant='body1'>
             Привязка артиста "{selectedArtist?.name}" к пользователю
           </Typography>
 
           {/* Поиск пользователя */}
           <TextField
-            label="Поиск пользователя"
-            placeholder="Введите имя пользователя или username..."
+            label='Поиск пользователя'
+            placeholder='Введите имя пользователя или username...'
             value={userSearchQuery}
-            onChange={(e) => {
+            onChange={e => {
               setUserSearchQuery(e.target.value);
               searchUsersForBinding(e.target.value);
             }}
             fullWidth
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <SearchIcon />
                 </InputAdornment>
               ),
@@ -1301,18 +1419,21 @@ const ArtistsTab: React.FC = () => {
           {/* Список найденных пользователей */}
           {foundUsers.length > 0 && (
             <Box>
-              <Typography variant="subtitle2" gutterBottom>
+              <Typography variant='subtitle2' gutterBottom>
                 Найденные пользователи:
               </Typography>
               <List>
-                {foundUsers.map((user) => (
+                {foundUsers.map(user => (
                   <ListItem key={user.id} disablePadding>
                     <ListItemButton
                       selected={selectedUser?.id === user.id}
                       onClick={() => setSelectedUser(user)}
                     >
                       <ListItemIcon>
-                        <Avatar src={user.avatar_url} sx={{ width: 32, height: 32 }}>
+                        <Avatar
+                          src={user.avatar_url}
+                          sx={{ width: 32, height: 32 }}
+                        >
                           <PersonIcon />
                         </Avatar>
                       </ListItemIcon>
@@ -1334,22 +1455,25 @@ const ArtistsTab: React.FC = () => {
           )}
 
           {selectedUser && (
-            <Alert severity="info">
-              Выбран пользователь: <strong>{selectedUser.name}</strong> (@{selectedUser.username})
+            <Alert severity='info'>
+              Выбран пользователь: <strong>{selectedUser.name}</strong> (@
+              {selectedUser.username})
             </Alert>
           )}
 
           {/* Кнопки действий */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
-            <Button onClick={() => setBindModalOpen(false)}>
-              Отмена
-            </Button>
+          <Box
+            sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}
+          >
+            <Button onClick={() => setBindModalOpen(false)}>Отмена</Button>
             <Button
               onClick={handleBindArtistToUser}
-              variant="contained"
-              color="success"
+              variant='contained'
+              color='success'
               disabled={bindLoading || !selectedUser}
-              startIcon={bindLoading ? <CircularProgress size={20} /> : <PersonAddIcon />}
+              startIcon={
+                bindLoading ? <CircularProgress size={20} /> : <PersonAddIcon />
+              }
             >
               Привязать
             </Button>
@@ -1361,59 +1485,69 @@ const ArtistsTab: React.FC = () => {
       <UniversalModal
         open={unbindModalOpen}
         onClose={() => setUnbindModalOpen(false)}
-        title="Отвязать артиста от пользователя"
-        maxWidth="sm"
+        title='Отвязать артиста от пользователя'
+        maxWidth='sm'
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <Typography>
-            Вы уверены, что хотите отвязать артиста "{selectedArtist?.name}" от пользователя?
+            Вы уверены, что хотите отвязать артиста "{selectedArtist?.name}" от
+            пользователя?
           </Typography>
-          
+
           {/* Информация о привязанном пользователе */}
           {selectedArtist?.user_id && boundUsers[selectedArtist.user_id] && (
-            <Box sx={{ 
-              p: 2, 
-              bgcolor: 'rgba(255, 152, 0, 0.1)', 
-              borderRadius: 1,
-              border: '1px solid rgba(255, 152, 0, 0.3)'
-            }}>
-              <Typography variant="subtitle2" gutterBottom color="warning.main">
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: 'rgba(255, 152, 0, 0.1)',
+                borderRadius: 1,
+                border: '1px solid rgba(255, 152, 0, 0.3)',
+              }}
+            >
+              <Typography variant='subtitle2' gutterBottom color='warning.main'>
                 Привязанный пользователь:
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar 
-                  src={boundUsers[selectedArtist.user_id].avatar_url || boundUsers[selectedArtist.user_id].photo} 
+                <Avatar
+                  src={
+                    boundUsers[selectedArtist.user_id].avatar_url ||
+                    boundUsers[selectedArtist.user_id].photo
+                  }
                   sx={{ width: 40, height: 40 }}
                 >
                   <PersonIcon />
                 </Avatar>
                 <Box>
-                  <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  <Typography variant='body1' sx={{ fontWeight: 600 }}>
                     {boundUsers[selectedArtist.user_id].name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    @{boundUsers[selectedArtist.user_id].username} (ID: {selectedArtist.user_id})
+                  <Typography variant='body2' color='text.secondary'>
+                    @{boundUsers[selectedArtist.user_id].username} (ID:{' '}
+                    {selectedArtist.user_id})
                   </Typography>
                 </Box>
               </Box>
             </Box>
           )}
-          
-          <Typography variant="body2" color="text.secondary">
-            При отвязке все треки артиста будут отвязаны от него, а тип аккаунта пользователя изменится на "user".
+
+          <Typography variant='body2' color='text.secondary'>
+            При отвязке все треки артиста будут отвязаны от него, а тип аккаунта
+            пользователя изменится на "user".
           </Typography>
 
           {/* Кнопки действий */}
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}>
-            <Button onClick={() => setUnbindModalOpen(false)}>
-              Отмена
-            </Button>
+          <Box
+            sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', pt: 2 }}
+          >
+            <Button onClick={() => setUnbindModalOpen(false)}>Отмена</Button>
             <Button
               onClick={handleUnbindArtistFromUser}
-              color="warning"
-              variant="contained"
+              color='warning'
+              variant='contained'
               disabled={bindLoading}
-              startIcon={bindLoading ? <CircularProgress size={20} /> : <PersonIcon />}
+              startIcon={
+                bindLoading ? <CircularProgress size={20} /> : <PersonIcon />
+              }
             >
               Отвязать
             </Button>

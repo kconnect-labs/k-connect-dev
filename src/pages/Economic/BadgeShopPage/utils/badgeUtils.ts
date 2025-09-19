@@ -61,8 +61,10 @@ export const filterBadgesByTab = (
 };
 
 export const isBadgeSoldOut = (badge: Badge): boolean => {
-  const maxCopies = typeof badge.max_copies === 'number' ? badge.max_copies : undefined;
-  const copiesSold = typeof badge.copies_sold === 'number' ? badge.copies_sold : 0;
+  const maxCopies =
+    typeof badge.max_copies === 'number' ? badge.max_copies : undefined;
+  const copiesSold =
+    typeof badge.copies_sold === 'number' ? badge.copies_sold : 0;
 
   if (maxCopies === 1) {
     return copiesSold >= 1;
@@ -133,7 +135,12 @@ export const getBadgeLimitBySubscription = (
     return 5;
   } else if (subType === 'premium') {
     return 8;
-  } else if (subType === 'ultimate' || subType.includes('ultimate') || subType === 'max' || subType.includes('max')) {
+  } else if (
+    subType === 'ultimate' ||
+    subType.includes('ultimate') ||
+    subType === 'max' ||
+    subType.includes('max')
+  ) {
     return Infinity;
   } else {
     return 3;

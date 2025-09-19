@@ -20,10 +20,12 @@ const StyledMenuItem = styled(MenuItem, {
 })<{ danger?: boolean }>(({ theme, danger }) => ({
   padding: '8px 16px',
   fontSize: 14,
-  color: danger ? 'var(--error-color, #ff6b6b)' : 'var(--text-primary, #ffffff)',
+  color: danger
+    ? 'var(--error-color, #ff6b6b)'
+    : 'var(--text-primary, #ffffff)',
   '&:hover': {
-    backgroundColor: danger 
-      ? 'var(--error-bg-hover, rgba(255, 107, 107, 0.1))' 
+    backgroundColor: danger
+      ? 'var(--error-bg-hover, rgba(255, 107, 107, 0.1))'
       : 'var(--bg-hover, rgba(255, 255, 255, 0.08))',
   },
   '& .MuiListItemIcon-root': {
@@ -80,7 +82,7 @@ const UniversalMenu: React.FC<UniversalMenuProps> = ({
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       document.head.removeChild(style);
     };
@@ -102,7 +104,7 @@ const UniversalMenu: React.FC<UniversalMenuProps> = ({
 
   return (
     <StyledMenu
-      className="universal-menu-override"
+      className='universal-menu-override'
       anchorEl={anchorEl}
       open={open}
       onClose={onClose}
@@ -133,4 +135,4 @@ const UniversalMenu: React.FC<UniversalMenuProps> = ({
   );
 };
 
-export default UniversalMenu; 
+export default UniversalMenu;

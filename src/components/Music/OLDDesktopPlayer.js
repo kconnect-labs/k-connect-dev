@@ -403,7 +403,15 @@ const ControlsSection = memo(
 
 // Мемоизированная секция громкости и лайка
 const VolumeSection = memo(
-  ({ volume, isMuted, toggleMute, handleVolumeChange, dominantColor, currentTrack, onLikeClick }) => (
+  ({
+    volume,
+    isMuted,
+    toggleMute,
+    handleVolumeChange,
+    dominantColor,
+    currentTrack,
+    onLikeClick,
+  }) => (
     <Box
       sx={{
         display: 'flex',
@@ -416,7 +424,7 @@ const VolumeSection = memo(
       {/* Кнопка лайка */}
       <ControlButton
         icon={
-          (currentTrack?.is_liked) ? (
+          currentTrack?.is_liked ? (
             <FavoriteIcon size={20} />
           ) : (
             <FavoriteBorderIcon size={20} />
@@ -424,8 +432,8 @@ const VolumeSection = memo(
         }
         onClick={onLikeClick}
         ariaLabel='Toggle like'
-        color={(currentTrack?.is_liked) ? '#ff2d55' : 'rgba(255,255,255,0.8)'}
-        active={(currentTrack?.is_liked)}
+        color={currentTrack?.is_liked ? '#ff2d55' : 'rgba(255,255,255,0.8)'}
+        active={currentTrack?.is_liked}
         activeColor='#ff2d55'
       />
 
@@ -773,7 +781,7 @@ const DesktopPlayer = memo(({ isMobile }) => {
   const handleShare = useCallback(() => {
     if (!currentTrack) return;
 
-            const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
+    const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
 
     copyToClipboard(trackLink);
   }, [currentTrack]);

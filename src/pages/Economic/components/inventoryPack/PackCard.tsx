@@ -72,7 +72,8 @@ const ExclusiveStyledCard = styled(Card)(({ theme }) => ({
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '2px solid #d0bcff',
   borderRadius: 20,
-  boxShadow: '0 8px 32px rgba(208, 188, 255, 0.2), 0 0 20px rgba(208, 188, 255, 0.1)',
+  boxShadow:
+    '0 8px 32px rgba(208, 188, 255, 0.2), 0 0 20px rgba(208, 188, 255, 0.1)',
   transition: 'all 0.3s ease',
   cursor: 'pointer',
   overflow: 'visible',
@@ -164,7 +165,8 @@ const ExclusivePackImage = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'linear-gradient(45deg, transparent 30%, rgba(208, 188, 255, 0.1) 50%, transparent 70%)',
+    background:
+      'linear-gradient(45deg, transparent 30%, rgba(208, 188, 255, 0.1) 50%, transparent 70%)',
     animation: 'exclusiveShine 3s ease-in-out infinite',
     pointerEvents: 'none',
   },
@@ -463,12 +465,12 @@ const PackCard = ({
   // Проверяем, является ли пак эксклюзивным (ID 48)
   const isExclusivePack = pack.id === 48 || pack.id === 49;
 
-    return (
+  return (
     <>
       {showProposeButton && (
         <Fab
-          color="primary"
-          aria-label="Предложить пак"
+          color='primary'
+          aria-label='Предложить пак'
           onClick={() => setProposeModalOpen(true)}
           sx={{
             position: 'fixed',
@@ -495,9 +497,8 @@ const PackCard = ({
       />
 
       <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
       >
         {isExclusivePack ? (
           <ExclusiveStyledCard
@@ -591,7 +592,9 @@ const PackCard = ({
                           position: 'relative',
                           borderRadius: 4,
                           overflow: 'hidden',
-                          backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
+                          backgroundImage: item.background_url
+                            ? `url(${item.background_url})`
+                            : 'none',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
                           backgroundRepeat: 'no-repeat',
@@ -689,13 +692,17 @@ const PackCard = ({
                   maxHeight: 36,
                 }}
               >
-                <PriceChip icon={<DiamondIcon />} label={`${pack.price} баллов`} />
+                <PriceChip
+                  icon={<DiamondIcon />}
+                  label={`${pack.price} баллов`}
+                />
                 {pack.is_limited && (
                   <Chip
                     icon={<LockIcon />}
                     label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
                     sx={{
-                      background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                      background:
+                        'var(--theme-background, rgba(255, 255, 255, 0.05))',
                       color: 'text.secondary',
                       fontSize: '0.75rem',
                       border: '1px solid rgba(66, 66, 66, 0.5)',
@@ -746,17 +753,17 @@ const PackCard = ({
             </CardContent>
           </ExclusiveStyledCard>
         ) : (
-      <StyledCard
-        onClick={handleViewDetails}
-        sx={{
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'relative',
-        }}
-      >
-        {/* Все по 1000 */}
-        {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 'var(--main-border-radius)', px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <StyledCard
+            onClick={handleViewDetails}
+            sx={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+            }}
+          >
+            {/* Все по 1000 */}
+            {/* <Box sx={{ position: 'absolute', top: 12, left: 12, zIndex: 2, display: 'flex', alignItems: 'center', background: 'rgba(255,255,255,0.85)', borderRadius: 'var(--main-border-radius)', px: 1.5, py: 0.5, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
           <PercentIcon sx={{ color: '#7c3aed', fontSize: 20, mr: 1 }} />
           <Typography variant="subtitle2" sx={{ color: '#222', fontWeight: 700, fontSize: '0.95rem' }}>Все по 1000</Typography>
         </Box> */}
@@ -872,124 +879,129 @@ const PackCard = ({
           )}
         </PackImage>
 
-        <CardContent
-          sx={{
-            p: 2,
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignItems: 'stretch',
-          }}
-        >
-          <Typography
-            variant='h6'
-            component='h3'
-            sx={{
-              fontWeight: 600,
-              mb: 1,
-              textAlign: 'center',
-              minHeight: 32,
-              maxHeight: 32,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {pack.display_name}
-          </Typography>
-          <Typography
-            variant='body2'
-            sx={{
-              color: 'text.secondary',
-              mb: 2,
-              textAlign: 'center',
-              fontSize: '0.85rem',
-              flex: '0 0 40px',
-              minHeight: 40,
-              maxHeight: 40,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {truncateDescription(pack.description)}
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              mb: 2,
-              gap: 1,
-              flexWrap: 'wrap',
-              minHeight: 36,
-              maxHeight: 36,
-            }}
-          >
-            <PriceChip icon={<DiamondIcon />} label={`${pack.price} баллов`} />
-            {pack.is_limited && (
-              <Chip
-                icon={<LockIcon />}
-                label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
+            <CardContent
+              sx={{
+                p: 2,
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                alignItems: 'stretch',
+              }}
+            >
+              <Typography
+                variant='h6'
+                component='h3'
                 sx={{
-                  background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                  color: 'text.secondary',
-                  fontSize: '0.75rem',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
-                  '& .MuiChip-label': {
-                    padding: '2px 6px',
-                  },
+                  fontWeight: 600,
+                  mb: 1,
+                  textAlign: 'center',
+                  minHeight: 32,
+                  maxHeight: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
-              />
-            )}
-          </Box>
-          <Box sx={{ flex: 1 }} /> {/* Spacer to push button down */}
-          <Button
-            variant='outlined'
-            fullWidth
-            disabled={!!disabled || !!loading || !!isSoldOut}
-            onClick={handleBuyClick}
-            sx={{
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              color: 'text.primary',
-              fontWeight: 500,
-              borderRadius: 'var(--main-border-radius)',
-              py: 1,
-              fontSize: '0.85rem',
-              textTransform: 'none',
-              '&:hover': {
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
-              },
-              '&:disabled': {
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                color: 'text.secondary',
-              },
-              minHeight: 40,
-              maxHeight: 40,
-              mt: 'auto',
-            }}
-          >
-            {loading ? (
-              <CircularProgress size={16} />
-            ) : isSoldOut ? (
-              'Закончился'
-            ) : disabled ? (
-              'Недостаточно баллов'
-            ) : (
-              'Купить'
-            )}
-          </Button>
-        </CardContent>
-      </StyledCard>
+              >
+                {pack.display_name}
+              </Typography>
+              <Typography
+                variant='body2'
+                sx={{
+                  color: 'text.secondary',
+                  mb: 2,
+                  textAlign: 'center',
+                  fontSize: '0.85rem',
+                  flex: '0 0 40px',
+                  minHeight: 40,
+                  maxHeight: 40,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {truncateDescription(pack.description)}
+              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  mb: 2,
+                  gap: 1,
+                  flexWrap: 'wrap',
+                  minHeight: 36,
+                  maxHeight: 36,
+                }}
+              >
+                <PriceChip
+                  icon={<DiamondIcon />}
+                  label={`${pack.price} баллов`}
+                />
+                {pack.is_limited && (
+                  <Chip
+                    icon={<LockIcon />}
+                    label={`Осталось: ${(pack.max_quantity || 0) - (pack.sold_quantity || 0)}`}
+                    sx={{
+                      background:
+                        'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                      color: 'text.secondary',
+                      fontSize: '0.75rem',
+                      border: '1px solid rgba(66, 66, 66, 0.5)',
+                      '& .MuiChip-label': {
+                        padding: '2px 6px',
+                      },
+                    }}
+                  />
+                )}
+              </Box>
+              <Box sx={{ flex: 1 }} /> {/* Spacer to push button down */}
+              <Button
+                variant='outlined'
+                fullWidth
+                disabled={!!disabled || !!loading || !!isSoldOut}
+                onClick={handleBuyClick}
+                sx={{
+                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  color: 'text.primary',
+                  fontWeight: 500,
+                  borderRadius: 'var(--main-border-radius)',
+                  py: 1,
+                  fontSize: '0.85rem',
+                  textTransform: 'none',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 255, 255, 0.4)',
+                    backgroundColor:
+                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                  },
+                  '&:disabled': {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    color: 'text.secondary',
+                  },
+                  minHeight: 40,
+                  maxHeight: 40,
+                  mt: 'auto',
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={16} />
+                ) : isSoldOut ? (
+                  'Закончился'
+                ) : disabled ? (
+                  'Недостаточно баллов'
+                ) : (
+                  'Купить'
+                )}
+              </Button>
+            </CardContent>
+          </StyledCard>
         )}
-    </motion.div>
+      </motion.div>
     </>
   );
 };

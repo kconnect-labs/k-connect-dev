@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Box,
-  Typography,
-  Avatar,
-  Divider,
-  Paper,
-} from '@mui/material';
+import { Box, Typography, Avatar, Divider, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -40,9 +34,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
           display: { xs: 'none', sm: 'block' },
         }}
       >
-        <Box
-          sx={{ display: 'flex', justifyContent: 'center', py: 3, px: 2 }}
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 3, px: 2 }}>
           <Box
             sx={{
               width: '100%',

@@ -6,7 +6,9 @@ import { MaxIcon } from '../../components/icons/CustomIcons';
 import { LeaderboardUserCardProps } from '../../types/leaderboard';
 import './LeaderboardUserCard.css';
 
-const API_URL = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const API_URL =
+  (typeof window !== 'undefined' && window.location?.origin) ||
+  'https://k-connect.ru';
 
 // Функция для проверки является ли цвет светлым
 const isLightColor = (color: string): boolean => {
@@ -34,7 +36,9 @@ const formatCompactNumber = (number: number): string => {
 };
 
 // Функция для парсинга настроек декорации
-const parseItemSettings = (itemPath: string): { path: string; styles: React.CSSProperties } => {
+const parseItemSettings = (
+  itemPath: string
+): { path: string; styles: React.CSSProperties } => {
   if (!itemPath || !itemPath.includes(';')) {
     return {
       path: itemPath,
@@ -62,11 +66,11 @@ const parseItemSettings = (itemPath: string): { path: string; styles: React.CSSP
   };
 };
 
-const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({ 
-  user, 
-  position, 
-  index, 
-  onCardClick 
+const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
+  user,
+  position,
+  index,
+  onCardClick,
 }) => {
   // Определяем тип фона
   const isGradient = user.decoration?.background?.includes('linear-gradient');
@@ -168,14 +172,15 @@ const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
       onClick={handleCardClick}
     >
       {/* Декорация */}
-      {user.decoration?.item_path && user.decoration.item_path.trim() !== '' && (
-        <img
-          src={`${API_URL}/${parseItemSettings(user.decoration.item_path).path}`}
-          alt='decoration'
-          style={decorationStyle}
-          className={hasBottom0 ? 'decoration-bottom0' : ''}
-        />
-      )}
+      {user.decoration?.item_path &&
+        user.decoration.item_path.trim() !== '' && (
+          <img
+            src={`${API_URL}/${parseItemSettings(user.decoration.item_path).path}`}
+            alt='decoration'
+            style={decorationStyle}
+            className={hasBottom0 ? 'decoration-bottom0' : ''}
+          />
+        )}
 
       {/* Основной контент */}
       <div className='LEAD-user-card-content'>
@@ -188,7 +193,11 @@ const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
         <div className='LEAD-user-avatar' style={{ border: getAvatarBorder() }}>
           {user.avatar_url ? (
             <img
-              src={user.avatar_url.startsWith('http') ? user.avatar_url : `${API_URL}${user.avatar_url}`}
+              src={
+                user.avatar_url.startsWith('http')
+                  ? user.avatar_url
+                  : `${API_URL}${user.avatar_url}`
+              }
               alt={user.name}
               className='avatar-image'
             />
@@ -206,18 +215,21 @@ const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
 
             {/* Верификация */}
             {user.verification && user.verification.status && (
-              <VerificationBadge status={user.verification.status} {...({} as any)} />
+              <VerificationBadge
+                status={user.verification.status}
+                {...({} as any)}
+              />
             )}
 
             {/* MAX подписка */}
-            {(user.subscription?.type === 'max' || 
+            {(user.subscription?.type === 'max' ||
               user.subscription_type === 'max' ||
               user.subscription?.subscription_type === 'max') && (
-              <MaxIcon 
-                size={24} 
-                color="#FF4D50" 
-                style={{ margin: '0 2.5px' }} 
-                className="max-icon"
+              <MaxIcon
+                size={24}
+                color='#FF4D50'
+                style={{ margin: '0 2.5px' }}
+                className='max-icon'
               />
             )}
 
@@ -238,4 +250,4 @@ const LeaderboardUserCard: React.FC<LeaderboardUserCardProps> = ({
   );
 };
 
-export default LeaderboardUserCard; 
+export default LeaderboardUserCard;

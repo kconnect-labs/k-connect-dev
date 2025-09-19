@@ -19,19 +19,21 @@ const TypographySection: React.FC = () => {
     {
       name: 'Mplus',
       description: 'Основной шрифт для брендированных материалов',
-      usage: 'Используется для заголовков в баннерах, постах, рекламных материалах и других брендированных элементах. В самом приложении К-Коннект не используется.',
+      usage:
+        'Используется для заголовков в баннерах, постах, рекламных материалах и других брендированных элементах. В самом приложении К-Коннект не используется.',
     },
     {
       name: 'Poppins',
       description: 'Шрифт для текста в брендированных материалах',
-      usage: 'Используется для основного текста в баннерах, постах, описаниях и других брендированных материалах. В самом приложении К-Коннект не используется.',
+      usage:
+        'Используется для основного текста в баннерах, постах, описаниях и других брендированных материалах. В самом приложении К-Коннект не используется.',
     },
   ];
 
   return (
     <Box>
       <Typography
-        variant="h3"
+        variant='h3'
         sx={{
           color: 'white',
           mb: 4,
@@ -43,7 +45,7 @@ const TypographySection: React.FC = () => {
       </Typography>
 
       <Typography
-        variant="body1"
+        variant='body1'
         sx={{
           color: 'rgba(255, 255, 255, 0.8)',
           mb: 6,
@@ -52,8 +54,11 @@ const TypographySection: React.FC = () => {
           mx: 'auto',
         }}
       >
-        Наша типографическая система для брендированных материалов основана на двух основных шрифтах: Mplus для заголовков и Poppins для основного текста.
-        Эти шрифты используются исключительно для баннеров, постов, рекламных материалов и других брендированных элементов. В самом приложении К-Коннект используются другие шрифты.
+        Наша типографическая система для брендированных материалов основана на
+        двух основных шрифтах: Mplus для заголовков и Poppins для основного
+        текста. Эти шрифты используются исключительно для баннеров, постов,
+        рекламных материалов и других брендированных элементов. В самом
+        приложении К-Коннект используются другие шрифты.
       </Typography>
 
       {fonts.map((font, fontIndex) => (
@@ -67,7 +72,7 @@ const TypographySection: React.FC = () => {
           <CardContent sx={{ p: 4 }}>
             <Box sx={{ mb: 3 }}>
               <Typography
-                variant="h4"
+                variant='h4'
                 sx={{
                   color: '#D0BCFF',
                   mb: 1,
@@ -77,7 +82,7 @@ const TypographySection: React.FC = () => {
                 {font.name}
               </Typography>
               <Typography
-                variant="body1"
+                variant='body1'
                 sx={{
                   color: 'rgba(255, 255, 255, 0.7)',
                   mb: 2,
@@ -86,7 +91,7 @@ const TypographySection: React.FC = () => {
                 {font.description}
               </Typography>
               <Typography
-                variant="body2"
+                variant='body2'
                 sx={{
                   color: 'rgba(255, 255, 255, 0.8)',
                   mb: 2,
@@ -116,7 +121,7 @@ const TypographySection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant="h5"
+            variant='h5'
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -130,7 +135,7 @@ const TypographySection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant="h6"
+                  variant='h6'
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -140,7 +145,7 @@ const TypographySection: React.FC = () => {
                   Mplus - для заголовков
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -149,7 +154,7 @@ const TypographySection: React.FC = () => {
                   • Используйте для всех заголовков (H1-H6)
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -158,7 +163,7 @@ const TypographySection: React.FC = () => {
                   • Идеально подходит для навигации и логотипов
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -171,7 +176,7 @@ const TypographySection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant="h6"
+                  variant='h6'
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -181,7 +186,7 @@ const TypographySection: React.FC = () => {
                   Poppins - для текста
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -190,7 +195,7 @@ const TypographySection: React.FC = () => {
                   • Используйте для основного текста и интерфейса
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -199,7 +204,7 @@ const TypographySection: React.FC = () => {
                   • Отличная читаемость на всех размерах экрана
                 </Typography>
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -215,4 +220,4 @@ const TypographySection: React.FC = () => {
   );
 };
 
-export default TypographySection; 
+export default TypographySection;

@@ -144,13 +144,16 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
   const fetchModerationHistory = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/moderator/logs?target_id=${ticketId}&target_type=ticket`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': 'liquide-gg-v2',
-        },
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `/api/moderator/logs?target_id=${ticketId}&target_type=ticket`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': 'liquide-gg-v2',
+          },
+          credentials: 'include',
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -173,7 +176,12 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
   if (loading) {
     return (
       <StyledPaper>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+        <Box
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          minHeight='200px'
+        >
           <CircularProgress sx={{ color: '#d0bcff' }} />
         </Box>
       </StyledPaper>
@@ -183,7 +191,7 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
   if (error) {
     return (
       <StyledPaper>
-        <Typography color="error" align="center">
+        <Typography color='error' align='center'>
           {error}
         </Typography>
       </StyledPaper>
@@ -192,22 +200,25 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
 
   return (
     <StyledPaper>
-      <Box display="flex" alignItems="center" gap={2} mb={3}>
+      <Box display='flex' alignItems='center' gap={2} mb={3}>
         <Avatar sx={{ bgcolor: '#d0bcff' }}>
           <History />
         </Avatar>
         <Box>
-          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+          <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
             История модерации
           </Typography>
-          <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+          <Typography
+            variant='body2'
+            sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+          >
             Тикет #{ticketId}
           </Typography>
         </Box>
       </Box>
 
       {logs.length === 0 ? (
-        <Box textAlign="center" py={4}>
+        <Box textAlign='center' py={4}>
           <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
             История модерации пуста
           </Typography>
@@ -217,18 +228,19 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
           {logs.map((log, index) => (
             <React.Fragment key={log.id}>
               <StyledListItem>
-                <ListItemIcon>
-                  {getActionIcon(log.action_type)}
-                </ListItemIcon>
+                <ListItemIcon>{getActionIcon(log.action_type)}</ListItemIcon>
                 <ListItemText
                   primary={
-                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                      <Typography variant="subtitle2" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    <Box display='flex' alignItems='center' gap={1} mb={1}>
+                      <Typography
+                        variant='subtitle2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+                      >
                         {getActionLabel(log.action_type)}
                       </Typography>
                       <Chip
                         label={log.moderator.name}
-                        size="small"
+                        size='small'
                         sx={{
                           background: 'rgba(207, 188, 251, 0.2)',
                           color: '#d0bcff',
@@ -239,19 +251,31 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
                   }
                   secondary={
                     <Box>
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
+                      <Typography
+                        variant='body2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}
+                      >
                         {log.details}
                       </Typography>
-                      <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                      <Typography
+                        variant='caption'
+                        sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                      >
                         {formatDate(log.created_at)}
                       </Typography>
                     </Box>
                   }
                 />
-                <Avatar src={log.moderator.avatar} alt={log.moderator.name} sx={{ width: 32, height: 32 }} />
+                <Avatar
+                  src={log.moderator.avatar}
+                  alt={log.moderator.name}
+                  sx={{ width: 32, height: 32 }}
+                />
               </StyledListItem>
               {index < logs.length - 1 && (
-                <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 1 }} />
+                <Divider
+                  sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 1 }}
+                />
               )}
             </React.Fragment>
           ))}
@@ -261,4 +285,4 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
   );
 };
 
-export default TicketModerationHistory; 
+export default TicketModerationHistory;

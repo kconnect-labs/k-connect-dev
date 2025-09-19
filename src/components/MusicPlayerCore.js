@@ -51,7 +51,8 @@ const MusicPlayerCore = memo(() => {
       const duration = audioRef.current.duration || 0;
 
       // Update more frequently when playing to ensure accurate lyrics sync
-      if (isPlaying || now - window.audioTiming.lastUpdate > 50) { // Уменьшаем до 50ms для лучшей синхронизации
+      if (isPlaying || now - window.audioTiming.lastUpdate > 50) {
+        // Уменьшаем до 50ms для лучшей синхронизации
         window.audioTiming.currentTime = currentTime;
         window.audioTiming.duration = duration;
         window.audioTiming.progress =

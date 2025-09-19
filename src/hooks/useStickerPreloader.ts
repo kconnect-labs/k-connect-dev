@@ -35,12 +35,11 @@ export const useStickerPreloader = () => {
     error: null,
   });
 
-  
   const initializePreload = useCallback(async () => {
     // Временно отключена инициализация предзагрузки стикеров
     console.log('🚫 Sticker preload initialization temporarily disabled');
-    setState(prev => ({ 
-      ...prev, 
+    setState(prev => ({
+      ...prev,
       isPreloading: false,
       stats: {
         totalPacks: 0,
@@ -48,16 +47,14 @@ export const useStickerPreloader = () => {
         cachedStickers: 0,
         cacheSize: 0,
         lastUpdate: Date.now(),
-      }
+      },
     }));
   }, []);
 
-  
   const forcePreload = useCallback(async () => {
     await initializePreload();
   }, [initializePreload]);
 
-  
   const clearCache = useCallback(() => {
     stickerCacheService.clearCache();
     setState(prev => ({
@@ -66,20 +63,18 @@ export const useStickerPreloader = () => {
     }));
   }, []);
 
-  
   useEffect(() => {
     // Временно отключена автоматическая инициализация предзагрузки
     console.log('🚫 Auto sticker preload initialization temporarily disabled');
   }, []);
 
-  
   useEffect(() => {
     const statsInterval = setInterval(() => {
       setState(prev => ({
         ...prev,
         stats: stickerCacheService.getStats(),
       }));
-    }, 30000); 
+    }, 30000);
 
     return () => clearInterval(statsInterval);
   }, []);
@@ -93,7 +88,6 @@ export const useStickerPreloader = () => {
   };
 };
 
-
 export const useStickerCacheStats = () => {
   const [stats, setStats] = useState(stickerCacheService.getStats());
 
@@ -102,11 +96,10 @@ export const useStickerCacheStats = () => {
       setStats(stickerCacheService.getStats());
     };
 
-    
     const interval = setInterval(updateStats, 10000);
 
     return () => clearInterval(interval);
   }, []);
 
   return stats;
-}; 
+};

@@ -33,7 +33,6 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import { PlaylistModal, PlaylistViewModal } from '../../UIKIT';
 import axios from 'axios';
 
-
 const PlaylistCard = styled(Card)(({ theme }) => ({
   borderRadius: '16px',
   cursor: 'pointer',
@@ -57,7 +56,6 @@ const PlaylistsPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { playTrack, currentTrack } = useMusic();
 
-  
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
@@ -66,12 +64,10 @@ const PlaylistsPage = () => {
   const [playlistViewModalOpen, setPlaylistViewModalOpen] = useState(false);
   const [viewingPlaylist, setViewingPlaylist] = useState(null);
 
-  
   const fetchPlaylists = useCallback(async () => {
     try {
       setIsLoading(true);
 
-      
       const userResponse = await axios.get('/api/music/playlists');
       let userPlaylists = [];
 
@@ -97,9 +93,7 @@ const PlaylistsPage = () => {
                     cover_url: track.cover_url,
                   }));
               }
-            } catch (error) {
-              
-            }
+            } catch (error) {}
 
             return {
               id: playlist.id,
@@ -119,7 +113,6 @@ const PlaylistsPage = () => {
         );
       }
 
-      
       const publicResponse = await axios.get('/api/music/playlists/public');
       let publicPlaylists = [];
 
@@ -145,9 +138,7 @@ const PlaylistsPage = () => {
                     cover_url: track.cover_url,
                   }));
               }
-            } catch (error) {
-              
-            }
+            } catch (error) {}
 
             return {
               id: playlist.id,
@@ -169,7 +160,6 @@ const PlaylistsPage = () => {
         );
       }
 
-      
       const publicPlaylistIds = new Set(publicPlaylists.map(p => p.id));
       const uniqueUserPlaylists = userPlaylists.filter(
         p => !publicPlaylistIds.has(p.id) || p.is_owner
@@ -185,7 +175,6 @@ const PlaylistsPage = () => {
     }
   }, []);
 
-  
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
@@ -201,7 +190,6 @@ const PlaylistsPage = () => {
   };
 
   const handleViewPlaylist = async playlist => {
-    
     try {
       const detailResponse = await axios.get(
         `/api/music/playlists/${playlist.id}`
@@ -232,15 +220,13 @@ const PlaylistsPage = () => {
   const handleSavePlaylist = async (playlistData, playlistId) => {
     try {
       if (playlistId) {
-        
         await axios.put(`/api/music/playlists/${playlistId}`, playlistData);
       } else {
-        
         await axios.post('/api/music/playlists', playlistData);
       }
 
       setPlaylistModalOpen(false);
-      fetchPlaylists(); 
+      fetchPlaylists();
     } catch (error) {
       console.error('Error saving playlist:', error);
     }
@@ -250,7 +236,7 @@ const PlaylistsPage = () => {
     try {
       await axios.delete(`/api/music/playlists/${playlistId}`);
       setPlaylistModalOpen(false);
-      fetchPlaylists(); 
+      fetchPlaylists();
     } catch (error) {
       console.error('Error deleting playlist:', error);
     }
@@ -265,7 +251,7 @@ const PlaylistsPage = () => {
           })
         )
       );
-      
+
       if (editingPlaylist && editingPlaylist.id === playlistId) {
         const response = await axios.get(`/api/music/playlists/${playlistId}`);
         if (response.data.success) {
@@ -282,7 +268,7 @@ const PlaylistsPage = () => {
       await axios.delete(
         `/api/music/playlists/${playlistId}/tracks/${trackId}`
       );
-      
+
       if (editingPlaylist && editingPlaylist.id === playlistId) {
         const response = await axios.get(`/api/music/playlists/${playlistId}`);
         if (response.data.success) {
@@ -294,11 +280,9 @@ const PlaylistsPage = () => {
     }
   };
 
-  
   const userPlaylists = playlists.filter(p => p.is_owner);
   const publicPlaylists = playlists.filter(p => !p.is_owner);
 
-  
   useEffect(() => {
     fetchPlaylists();
   }, [fetchPlaylists]);
@@ -308,7 +292,7 @@ const PlaylistsPage = () => {
       sx={{
         p: 1,
         paddingBottom: 10,
-        paddingTop: { xs: 7, md: 1 }, 
+        paddingTop: { xs: 7, md: 1 },
       }}
     >
       {/* Заголовок */}

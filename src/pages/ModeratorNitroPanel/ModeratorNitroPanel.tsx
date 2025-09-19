@@ -61,21 +61,46 @@ const ModeratorNitroPanel: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
-  const { currentUser, moderatorData, permissions, loading, error, isModerator } = useCurrentUser();
-  
-  console.log('ModeratorNitroPanel - loading:', loading, 'error:', error, 'moderatorData:', moderatorData, 'currentUser:', currentUser, 'permissions:', permissions);
-  
+  const {
+    currentUser,
+    moderatorData,
+    permissions,
+    loading,
+    error,
+    isModerator,
+  } = useCurrentUser();
+
+  console.log(
+    'ModeratorNitroPanel - loading:',
+    loading,
+    'error:',
+    error,
+    'moderatorData:',
+    moderatorData,
+    'currentUser:',
+    currentUser,
+    'permissions:',
+    permissions
+  );
+
   const [activeTab, setActiveTab] = useState<TabValue>('profile' as TabValue);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [notification, setNotification] = useState<{ open: boolean; message: string; severity: 'success' | 'error' | 'warning' | 'info' }>({
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error' | 'warning' | 'info';
+  }>({
     open: false,
     message: '',
-    severity: 'info'
+    severity: 'info',
   });
 
-  const showNotification = useCallback((severity: 'success' | 'error' | 'warning' | 'info', message: string) => {
-    setNotification({ open: true, message, severity });
-  }, []);
+  const showNotification = useCallback(
+    (severity: 'success' | 'error' | 'warning' | 'info', message: string) => {
+      setNotification({ open: true, message, severity });
+    },
+    []
+  );
 
   const handleCloseNotification = () => {
     setNotification(prev => ({ ...prev, open: false }));
@@ -167,7 +192,15 @@ const ModeratorNitroPanel: React.FC = () => {
     try {
       switch (activeTab) {
         case 'profile':
-          return <ProfileTab currentUser={currentUser} moderatorData={moderatorData} permissions={permissions} loading={loading} error={error} />;
+          return (
+            <ProfileTab
+              currentUser={currentUser}
+              moderatorData={moderatorData}
+              permissions={permissions}
+              loading={loading}
+              error={error}
+            />
+          );
         case 'verification':
           return <VerificationTab />;
         case 'subscriptions':
@@ -195,13 +228,21 @@ const ModeratorNitroPanel: React.FC = () => {
         case 'logs':
           return <LogsTab />;
         default:
-          return <ProfileTab currentUser={currentUser} moderatorData={moderatorData} permissions={permissions} loading={loading} error={error} />;
+          return (
+            <ProfileTab
+              currentUser={currentUser}
+              moderatorData={moderatorData}
+              permissions={permissions}
+              loading={loading}
+              error={error}
+            />
+          );
       }
     } catch (error) {
       console.error('Error rendering tab content:', error);
       return (
         <Box sx={{ p: 3, textAlign: 'center' }}>
-          <Alert severity="error">
+          <Alert severity='error'>
             Ошибка загрузки вкладки. Попробуйте обновить страницу.
           </Alert>
         </Box>
@@ -213,7 +254,7 @@ const ModeratorNitroPanel: React.FC = () => {
     if (!currentUser) {
       return tabConfigs.filter(tab => !tab.adminOnly);
     }
-    
+
     return tabConfigs.filter(tab => {
       if (tab.adminOnly && currentUser.id !== 3) {
         return false;
@@ -222,11 +263,10 @@ const ModeratorNitroPanel: React.FC = () => {
     });
   };
 
-  
   useEffect(() => {
     if (error && !loading) {
       console.error('Authorization error:', error);
-      
+
       setTimeout(() => {
         navigate('/');
       }, 2000);
@@ -235,13 +275,15 @@ const ModeratorNitroPanel: React.FC = () => {
 
   if (loading && !moderatorData) {
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        minHeight: '100vh',
-        background: 'var(--theme-background)'
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          background: 'var(--theme-background)',
+        }}
+      >
         <CircularProgress size={60} />
       </Box>
     );
@@ -249,9 +291,9 @@ const ModeratorNitroPanel: React.FC = () => {
 
   if (!loading && !moderatorData) {
     return (
-      <Container maxWidth="md" sx={{ py: 4 }}>
-        <Alert severity="error" sx={{ textAlign: 'center' }}>
-          <Typography variant="h6" gutterBottom>
+      <Container maxWidth='md' sx={{ py: 4 }}>
+        <Alert severity='error' sx={{ textAlign: 'center' }}>
+          <Typography variant='h6' gutterBottom>
             Доступ запрещен
           </Typography>
           <Typography>
@@ -266,37 +308,41 @@ const ModeratorNitroPanel: React.FC = () => {
 
   if (isMobile) {
     return (
-      <Container maxWidth="xl" sx={{ 
-        mt: 2, 
-        mb: 4, 
-        p:'0px !important',
-      }}>
-        <Paper sx={{
-          background: 'var(--theme-background)',
-          backdropFilter: 'var(--theme-backdrop-filter)',
-          borderRadius: 'var(--main-border-radius)',
-        }}>
+      <Container
+        maxWidth='xl'
+        sx={{
+          mt: 2,
+          mb: 4,
+          p: '0px !important',
+        }}
+      >
+        <Paper
+          sx={{
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
+            borderRadius: 'var(--main-border-radius)',
+          }}
+        >
           {/* Мобильный заголовок */}
-          <AppBar 
-            position="static" 
-            sx={{ 
-
+          <AppBar
+            position='static'
+            sx={{
               background: 'var(--theme-background)',
               borderBottom: '1px solid var(--main-border-color)',
               boxShadow: 'none',
-              mb: 2
+              mb: 2,
             }}
           >
             <Toolbar>
               <IconButton
-                edge="start"
-                color="inherit"
+                edge='start'
+                color='inherit'
                 onClick={() => setMobileDrawerOpen(true)}
-                sx={{ mr: 2}}
+                sx={{ mr: 2 }}
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              <Typography variant='h6' sx={{ flexGrow: 1 }}>
                 Nitro Panel
               </Typography>
             </Toolbar>
@@ -304,7 +350,7 @@ const ModeratorNitroPanel: React.FC = () => {
 
           {/* Мобильное меню */}
           <Drawer
-            anchor="left"
+            anchor='left'
             open={mobileDrawerOpen}
             onClose={() => setMobileDrawerOpen(false)}
             PaperProps={{
@@ -313,25 +359,30 @@ const ModeratorNitroPanel: React.FC = () => {
                 borderRight: '1px solid var(--main-border-color)',
                 width: 280,
                 backdropFilter: 'var(--theme-backdrop-filter)',
-              }
+              },
             }}
           >
             <Box sx={{ p: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="h6">
-                  Nitro Panel
-                </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
+                <Typography variant='h6'>Nitro Panel</Typography>
                 <IconButton onClick={() => setMobileDrawerOpen(false)}>
                   <CloseIcon />
                 </IconButton>
               </Box>
               <Divider sx={{ mb: 2 }} />
               <List>
-                {availableTabs.map((tab) => (
+                {availableTabs.map(tab => (
                   <ListItem
                     key={tab.value}
                     button
-                    onClick={(e) => handleTabChange(e, tab.value)}
+                    onClick={e => handleTabChange(e, tab.value)}
                     selected={activeTab === tab.value}
                     sx={{
                       borderRadius: 'var(--main-border-radius)',
@@ -344,13 +395,19 @@ const ModeratorNitroPanel: React.FC = () => {
                       },
                     }}
                   >
-                    <ListItemIcon sx={{ color: activeTab === tab.value ? 'primary.main' : 'inherit' }}>
+                    <ListItemIcon
+                      sx={{
+                        color:
+                          activeTab === tab.value ? 'primary.main' : 'inherit',
+                      }}
+                    >
                       {tab.icon}
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                       primary={tab.label}
                       primaryTypographyProps={{
-                        color: activeTab === tab.value ? 'primary.main' : 'inherit',
+                        color:
+                          activeTab === tab.value ? 'primary.main' : 'inherit',
                         fontWeight: activeTab === tab.value ? 'bold' : 'normal',
                       }}
                     />
@@ -361,9 +418,11 @@ const ModeratorNitroPanel: React.FC = () => {
           </Drawer>
 
           {/* Контент */}
-          <Box sx={{
-            p: 0
-          }}>
+          <Box
+            sx={{
+              p: 0,
+            }}
+          >
             {renderTabContent()}
           </Box>
 
@@ -374,8 +433,8 @@ const ModeratorNitroPanel: React.FC = () => {
             onClose={handleCloseNotification}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           >
-            <Alert 
-              onClose={handleCloseNotification} 
+            <Alert
+              onClose={handleCloseNotification}
               severity={notification.severity}
               sx={{ width: '100%' }}
             >
@@ -388,104 +447,106 @@ const ModeratorNitroPanel: React.FC = () => {
   }
 
   return (
-    <Container sx={{ 
-      mt: 2, 
-      mb: 4, 
-      p:'0px !important',
-    }}>
-        <Box sx={{ display: 'flex', minHeight: '70vh' }}>
-          {/* Боковая панель для десктопа */}
-          <Paper
-            elevation={0}
-            sx={{
-              width: 200,
-              height: '100%',
-              mr: 1,
-              borderRight: '1px solid var(--main-border-color)',
-              background: 'var(--theme-background)',
-              backdropFilter: 'var(--theme-backdrop-filter)',
-              borderRadius: 'var(--main-border-radius)',
-            }}
-          >
-            <Box sx={{ p: 3 }}>
-              <Typography 
-                variant="h4" 
-                gutterBottom 
-                sx={{ 
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                  mb: 3
-                }}
-              >
-                Nitro
-              </Typography>
-              <Tabs
-                orientation="vertical"
-                value={activeTab}
-                onChange={handleTabChange}
-                sx={{
-                  '& .MuiTab-root': {
-                    alignItems: 'flex-start',
-                    textAlign: 'left',
-                    minHeight: 48,
-                    padding: '12px 16px',
-                    borderRadius: 'var(--main-border-radius)',
-                    mb: 0.5,
-                    '&.Mui-selected': {
-                      backgroundColor: 'var(--main-accent-color)',
-                      color: 'primary.main',
-                      fontWeight: 'bold',
-                    },
+    <Container
+      sx={{
+        mt: 2,
+        mb: 4,
+        p: '0px !important',
+      }}
+    >
+      <Box sx={{ display: 'flex', minHeight: '70vh' }}>
+        {/* Боковая панель для десктопа */}
+        <Paper
+          elevation={0}
+          sx={{
+            width: 200,
+            height: '100%',
+            mr: 1,
+            borderRight: '1px solid var(--main-border-color)',
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
+            borderRadius: 'var(--main-border-radius)',
+          }}
+        >
+          <Box sx={{ p: 3 }}>
+            <Typography
+              variant='h4'
+              gutterBottom
+              sx={{
+                fontWeight: 'bold',
+                textAlign: 'center',
+                mb: 3,
+              }}
+            >
+              Nitro
+            </Typography>
+            <Tabs
+              orientation='vertical'
+              value={activeTab}
+              onChange={handleTabChange}
+              sx={{
+                '& .MuiTab-root': {
+                  alignItems: 'flex-start',
+                  textAlign: 'left',
+                  minHeight: 48,
+                  padding: '12px 16px',
+                  borderRadius: 'var(--main-border-radius)',
+                  mb: 0.5,
+                  '&.Mui-selected': {
+                    backgroundColor: 'var(--main-accent-color)',
+                    color: 'primary.main',
+                    fontWeight: 'bold',
                   },
-                  '& .MuiTabs-indicator': {
-                    display: 'none',
-                  },
-                }}
-              >
-                {availableTabs.map((tab) => (
-                  <Tab
-                   sx={{ p:'0px !important' }}
-                    key={tab.value}
-                    value={tab.value}
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {tab.icon}
-                        <Typography variant="body2">
-                          {tab.label}
-                        </Typography>
-                      </Box>
-                    }
-                  />
-                ))}
-              </Tabs>
-            </Box>
-          </Paper>
+                },
+                '& .MuiTabs-indicator': {
+                  display: 'none',
+                },
+              }}
+            >
+              {availableTabs.map(tab => (
+                <Tab
+                  sx={{ p: '0px !important' }}
+                  key={tab.value}
+                  value={tab.value}
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {tab.icon}
+                      <Typography variant='body2'>{tab.label}</Typography>
+                    </Box>
+                  }
+                />
+              ))}
+            </Tabs>
+          </Box>
+        </Paper>
 
-          {/* Основной контент */}
-          <Paper sx={{ 
+        {/* Основной контент */}
+        <Paper
+          sx={{
             flexGrow: 1,
             p: 0,
             background: 'transparent',
-          }}>
-            {renderTabContent()}
-          </Paper>
-        </Box>
-
-        {/* Уведомления */}
-        <Snackbar
-          open={notification.open}
-          autoHideDuration={6000}
-          onClose={handleCloseNotification}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          }}
         >
-          <Alert 
-            onClose={handleCloseNotification} 
-            severity={notification.severity}
-            sx={{ width: '100%' }}
-          >
-            {notification.message}
-          </Alert>
-        </Snackbar>
+          {renderTabContent()}
+        </Paper>
+      </Box>
+
+      {/* Уведомления */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: '100%' }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

@@ -72,7 +72,7 @@ interface PackWithPurchaseId extends Pack {
 const InventoryPackPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -326,11 +326,11 @@ const InventoryPackPage = () => {
             }
           }}
           tabs={[
-            { value: 0, label: "Паки" },
-            { value: 1, label: "Мои заявки" },
-            { value: 2, label: "Предложить пак" }
+            { value: 0, label: 'Паки' },
+            { value: 1, label: 'Мои заявки' },
+            { value: 2, label: 'Предложить пак' },
           ]}
-          variant={isMobile ? "fullWidth" : "standard"}
+          variant={isMobile ? 'fullWidth' : 'standard'}
           fullWidth={isMobile}
           centered={!isMobile}
         />
@@ -394,11 +394,7 @@ const InventoryPackPage = () => {
         </Box>
       )}
 
-      {activeTab === 1 && (
-        <MyProposals />
-      )}
-
-
+      {activeTab === 1 && <MyProposals />}
 
       {/* Модалка предложения пака */}
       <ProposePackModal
@@ -512,7 +508,8 @@ const InventoryPackPage = () => {
                     >
                       <Card
                         sx={{
-                          background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                          background:
+                            'var(--theme-background, rgba(255, 255, 255, 0.05))',
                           border: '1px solid rgba(66, 66, 66, 0.5)',
                           borderRadius: 'var(--main-border-radius)',
                           p: 2,
@@ -573,7 +570,8 @@ const InventoryPackPage = () => {
                           label={getRarityLabel(item.rarity)}
                           size={window.innerWidth <= 768 ? 'small' : 'medium'}
                           sx={{
-                            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                            backgroundColor:
+                              'var(--theme-background, rgba(255, 255, 255, 0.05))',
                             color: 'white',
                             fontWeight: 600,
                             fontSize:

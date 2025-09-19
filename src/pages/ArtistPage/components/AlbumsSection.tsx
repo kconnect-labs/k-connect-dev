@@ -165,7 +165,7 @@ const AlbumTypeChip = styled(Chip)(({ theme }) => ({
 const formatDuration = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  
+
   if (hours > 0) {
     return `${hours}ч ${minutes}м`;
   }
@@ -189,12 +189,17 @@ const LoadingSkeleton: React.FC = () => (
   <AlbumsGrid container spacing={0}>
     {[...Array(4)].map((_, index) => (
       <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
-        <Card sx={{ background: 'var(--theme-background)', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
-          <Skeleton variant="rectangular" height={200} />
+        <Card
+          sx={{
+            background: 'var(--theme-background)',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
+          }}
+        >
+          <Skeleton variant='rectangular' height={200} />
           <CardContent>
-            <Skeleton variant="text" height={24} />
-            <Skeleton variant="text" height={16} width="60%" />
-            <Skeleton variant="text" height={16} width="80%" />
+            <Skeleton variant='text' height={24} />
+            <Skeleton variant='text' height={16} width='60%' />
+            <Skeleton variant='text' height={16} width='80%' />
           </CardContent>
         </Card>
       </Grid>
@@ -230,10 +235,9 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [showAll, setShowAll] = useState(false);
 
-  
   const getAlbumsPerRow = () => {
-    if (isMobile) return 2; 
-    return 4; 
+    if (isMobile) return 2;
+    return 4;
   };
 
   const albumsPerRow = getAlbumsPerRow();
@@ -241,55 +245,57 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   const hasMoreAlbums = albums.length > albumsPerRow;
 
   if (error) {
-    return null; 
+    return null;
   }
 
   if (isLoading) {
     return (
       <InfoBlock
-        title="Альбомы"
-        description=""
+        title='Альбомы'
+        description=''
         children={<LoadingSkeleton />}
         useTheme={true}
         style={{ marginBottom: '5px', padding: '16px' }}
-        styleVariant="default"
+        styleVariant='default'
         titleStyle={{}}
         descriptionStyle={{}}
         customStyle={false}
-        className=""
+        className=''
       />
     );
   }
 
   if (!albums || albums.length === 0) {
-    return null; 
+    return null;
   }
 
   return (
     <InfoBlock
-      title="Альбомы"
-      description=""
+      title='Альбомы'
+      description=''
       children={
         <Box>
           <AlbumsGrid container spacing={0}>
-            {displayedAlbums.map((album) => (
+            {displayedAlbums.map(album => (
               <Grid item xs={6} sm={4} md={3} lg={3} key={album.id}>
                 <AlbumCard
-                  className="album-card"
+                  className='album-card'
                   onClick={() => onAlbumClick(album)}
                 >
                   <AlbumCover
                     image={
-                      album.cover_url 
-                        ? (album.cover_url.startsWith('http') 
-                            ? album.cover_url 
-                            : `https://s3.k-connect.ru${album.cover_url}`)
+                      album.cover_url
+                        ? album.cover_url.startsWith('http')
+                          ? album.cover_url
+                          : `https://s3.k-connect.ru${album.cover_url}`
                         : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
                     }
                     title={album.title}
                   >
                     {!album.cover_url && (
-                      <AlbumIcon sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.3)' }} />
+                      <AlbumIcon
+                        sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.3)' }}
+                      />
                     )}
                     <PlayOverlay>
                       <PlayButton>
@@ -300,27 +306,38 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
 
                   <AlbumContent>
                     <AlbumTitle>{album.title}</AlbumTitle>
-                    
+
                     <AlbumMeta>
                       <AlbumTypeChip
                         label={getAlbumTypeLabel(album.album_type)}
-                        size="small"
+                        size='small'
                         className={album.album_type}
                       />
                       {album.release_date && (
-                        <Typography variant="caption" color="rgba(255, 255, 255, 0.6)">
+                        <Typography
+                          variant='caption'
+                          color='rgba(255, 255, 255, 0.6)'
+                        >
                           {new Date(album.release_date).getFullYear()}
                         </Typography>
                       )}
                     </AlbumMeta>
 
                     <AlbumStats>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                      >
                         <MusicNote sx={{ fontSize: 14 }} />
                         {album.tracks_count} треков
                       </Box>
                       {album.duration > 0 && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 0.5,
+                          }}
+                        >
                           <AccessTime sx={{ fontSize: 14 }} />
                           {formatDuration(album.duration)}
                         </Box>
@@ -334,13 +351,19 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
 
           {/* Кнопка "Показать все" */}
           {hasMoreAlbums && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}
+            >
               <ShowAllButton
                 onClick={() => setShowAll(!showAll)}
-                startIcon={<ExpandMore sx={{ 
-                  transform: showAll ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.3s ease'
-                }} />}
+                startIcon={
+                  <ExpandMore
+                    sx={{
+                      transform: showAll ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  />
+                }
               >
                 {showAll ? 'Скрыть' : `Показать все (${albums.length})`}
               </ShowAllButton>
@@ -350,11 +373,11 @@ const AlbumsSection: React.FC<AlbumsSectionProps> = ({
       }
       useTheme={true}
       style={{ marginBottom: '5px', padding: '16px' }}
-      styleVariant="default"
+      styleVariant='default'
       titleStyle={{}}
       descriptionStyle={{}}
       customStyle={false}
-      className=""
+      className=''
     />
   );
 };

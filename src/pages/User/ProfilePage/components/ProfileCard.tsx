@@ -38,11 +38,15 @@ import {
 } from './index';
 
 // Ленивая загрузка модалки - загружается только при первом использовании
-const BadgeInfoModal = lazy(() => import('../../../../components/BadgeInfoModal'));
+const BadgeInfoModal = lazy(
+  () => import('../../../../components/BadgeInfoModal')
+);
 
 // Типизация компонентов
-const TypedEquippedItem = EquippedItem as React.ComponentType<EquippedItemProps>;
-const TypedVerificationBadge = VerificationBadge as React.ComponentType<VerificationBadgeProps>;
+const TypedEquippedItem =
+  EquippedItem as React.ComponentType<EquippedItemProps>;
+const TypedVerificationBadge =
+  VerificationBadge as React.ComponentType<VerificationBadgeProps>;
 const TypedBadge = Badge as React.ComponentType<BadgeProps>;
 
 interface Achievement {
@@ -61,7 +65,7 @@ interface User {
   profile_id?: number;
   status_color?: string;
   status_text?: string;
-  profile_color?: string;  // Новое поле для цвета профиля
+  profile_color?: string; // Новое поле для цвета профиля
   subscription?: {
     type: string;
   };
@@ -102,7 +106,10 @@ interface EquippedItemType {
 interface EquippedItemProps {
   item: EquippedItemType;
   index: number;
-  onPositionUpdate: (itemId: number, newPosition: { x: number; y: number }) => void;
+  onPositionUpdate: (
+    itemId: number,
+    newPosition: { x: number; y: number }
+  ) => void;
   isEditMode: boolean;
   onEditModeActivate?: () => void;
 }
@@ -133,7 +140,10 @@ interface ProfileCardProps {
   getLighterColor: (color: string) => string;
   openLightbox: (imageUrl: string) => void;
   setFallbackAvatarUrl: (url: string) => void;
-  handleItemPositionUpdate: (itemId: number, newPosition: { x: number; y: number }) => void;
+  handleItemPositionUpdate: (
+    itemId: number,
+    newPosition: { x: number; y: number }
+  ) => void;
   handleEditModeActivate: () => void;
   handleUsernameClick: (event: React.MouseEvent, username: string) => void;
 }
@@ -174,7 +184,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   handleUsernameClick,
 }) => {
   const [badgeModalOpen, setBadgeModalOpen] = useState(false);
-  const [selectedBadgeImagePath, setSelectedBadgeImagePath] = useState<string | null>(null);
+  const [selectedBadgeImagePath, setSelectedBadgeImagePath] = useState<
+    string | null
+  >(null);
 
   const handleBadgeClick = (imagePath: string) => {
     setSelectedBadgeImagePath(imagePath);
@@ -242,22 +254,23 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           pointerEvents: isOwnProfile && isEditMode ? 'auto' : 'none',
           zIndex: 20,
         }}
-        data-profile-container="true"
+        data-profile-container='true'
       >
-        {normalEquippedItems
-          .map((item, index) => (
-            <TypedEquippedItem 
-              key={item.id} 
-              item={item} 
-              index={index} 
-              onPositionUpdate={handleItemPositionUpdate}
-              isEditMode={isOwnProfile && isEditMode}
-              onEditModeActivate={isOwnProfile ? handleEditModeActivate : undefined}
-            />
-          ))}
+        {normalEquippedItems.map((item, index) => (
+          <TypedEquippedItem
+            key={item.id}
+            item={item}
+            index={index}
+            onPositionUpdate={handleItemPositionUpdate}
+            isEditMode={isOwnProfile && isEditMode}
+            onEditModeActivate={
+              isOwnProfile ? handleEditModeActivate : undefined
+            }
+          />
+        ))}
       </Box>
       {/* Banner section */}
-      {(user?.profile_id !== 2 && user?.profile_id !== 3) ? (
+      {user?.profile_id !== 2 && user?.profile_id !== 3 ? (
         user?.banner_url ? (
           <Box
             sx={{
@@ -291,7 +304,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       ) : null}
 
       <Box
-        sx={{ px: 3, pb: 3, pt: 0, mt: (user?.profile_id === 2 || user?.profile_id === 3) ? 2 : -7 }}
+        sx={{
+          px: 3,
+          pb: 3,
+          pt: 0,
+          mt: user?.profile_id === 2 || user?.profile_id === 3 ? 2 : -7,
+        }}
       >
         <Box
           sx={{
@@ -300,10 +318,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             alignItems: 'flex-start',
           }}
         >
-          <Box 
-            sx={{ position: 'relative' }}
-            data-avatar-container="true"
-          >
+          <Box sx={{ position: 'relative' }} data-avatar-container='true'>
             {/* Контейнер для айтемов 2 и 3 уровня на аватарке */}
             <Box
               sx={{
@@ -338,19 +353,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 sx={{
                   width: { xs: 110, sm: 130 },
                   height: { xs: 110, sm: 130 },
-                  border:
-                    user?.profile_color
-                      ? `4px solid ${user.profile_color}`
-                      : user?.status_color &&
+                  border: user?.profile_color
+                    ? `4px solid ${user.profile_color}`
+                    : user?.status_color &&
                         user?.status_text &&
                         user?.subscription
-                        ? `4px solid ${user.status_color}`
-                        : user?.subscription
-                          ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}`
-                          : theme =>
-                              theme.palette.mode === 'dark'
-                                ? '4px solid #121212'
-                                : '4px solid #ffffff',
+                      ? `4px solid ${user.status_color}`
+                      : user?.subscription
+                        ? `4px solid ${user.subscription.type === 'premium' ? 'rgba(186, 104, 200)' : user.subscription.type === 'pick-me' ? 'rgba(208, 188, 255)' : user.subscription.type === 'ultimate' ? 'rgba(124, 77, 255)' : 'rgba(66, 165, 245)'}`
+                        : theme =>
+                            theme.palette.mode === 'dark'
+                              ? '4px solid #121212'
+                              : '4px solid #ffffff',
                   bgcolor: 'primary.dark',
                   transition: 'all 0.3s ease',
                   cursor: 'pointer',
@@ -433,22 +447,29 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 variant='h5'
                 sx={{
                   fontWeight: 700,
-                  color: (user?.profile_id === 2 || user?.profile_id === 3) ? '#fff' : 'inherit',
+                  color:
+                    user?.profile_id === 2 || user?.profile_id === 3
+                      ? '#fff'
+                      : 'inherit',
                   textShadow:
-                    (user?.profile_id === 2 || user?.profile_id === 3)
+                    user?.profile_id === 2 || user?.profile_id === 3
                       ? '0 1px 3px rgba(0,0,0,0.7)'
                       : 'none',
                   background:
-                    (user?.profile_id === 2 || user?.profile_id === 3)
+                    user?.profile_id === 2 || user?.profile_id === 3
                       ? 'none'
                       : theme =>
                           theme.palette.mode === 'dark'
                             ? 'linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.8) 100%)'
                             : 'linear-gradient(90deg, #000 0%, rgba(0,0,0,0.8) 100%)',
                   WebkitBackgroundClip:
-                    (user?.profile_id === 2 || user?.profile_id === 3) ? 'unset' : 'text',
+                    user?.profile_id === 2 || user?.profile_id === 3
+                      ? 'unset'
+                      : 'text',
                   WebkitTextFillColor:
-                    (user?.profile_id === 2 || user?.profile_id === 3) ? 'unset' : 'transparent',
+                    user?.profile_id === 2 || user?.profile_id === 3
+                      ? 'unset'
+                      : 'transparent',
                 }}
               >
                 {user?.name || 'Пользователь'}
@@ -456,23 +477,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               <div>
                 <TypedVerificationBadge
                   status={user?.verification_status}
-                  size="small"
+                  size='small'
                 />
               </div>
 
               {user?.achievement && (
                 <TypedBadge
-                  achievement={{
-                    ...user.achievement,
-                    upgrade: user.achievement.upgrade || '',
-                    color_upgrade: user.achievement.color_upgrade || '#FFD700'
-                  } as any}
+                  achievement={
+                    {
+                      ...user.achievement,
+                      upgrade: user.achievement.upgrade || '',
+                      color_upgrade:
+                        user.achievement.color_upgrade || '#FFD700',
+                    } as any
+                  }
                   size='medium'
                   className='profile-achievement-badge'
                   showTooltip={true}
-                  tooltipText={user.achievement.image_path?.startsWith('shop/') 
-                    ? `${user.achievement.bage} (нажмите для подробностей)`
-                    : user.achievement.bage
+                  tooltipText={
+                    user.achievement.image_path?.startsWith('shop/')
+                      ? `${user.achievement.bage} (нажмите для подробностей)`
+                      : user.achievement.bage
                   }
                   isProfile={true} // Добавляем флаг для профиля
                   onClick={() => {
@@ -504,17 +529,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               sx={{
                 fontWeight: 500,
                 color:
-                  (user?.profile_id === 2 || user?.profile_id === 3)
+                  user?.profile_id === 2 || user?.profile_id === 3
                     ? 'rgba(255,255,255,0.9)'
                     : theme => theme.palette.text.secondary,
                 textShadow:
-                  (user?.profile_id === 2 || user?.profile_id === 3)
+                  user?.profile_id === 2 || user?.profile_id === 3
                     ? '0 1px 2px rgba(0,0,0,0.5)'
                     : 'none',
                 display: 'flex',
                 alignItems: 'center',
                 background:
-                  (user?.profile_id === 2 || user?.profile_id === 3)
+                  user?.profile_id === 2 || user?.profile_id === 3
                     ? 'rgba(0,0,0,0.3)'
                     : theme =>
                         theme.palette.mode === 'dark'
@@ -524,7 +549,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 py: 0.4,
                 borderRadius: 'var(--main-border-radius)',
                 border:
-                  (user?.profile_id === 2 || user?.profile_id === 3)
+                  user?.profile_id === 2 || user?.profile_id === 3
                     ? '1px solid rgba(255,255,255,0.15)'
                     : theme =>
                         theme.palette.mode === 'dark'
@@ -555,17 +580,17 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   sx={theme => ({
                     fontWeight: 500,
                     color:
-                      (user?.profile_id === 2 || user?.profile_id === 3)
+                      user?.profile_id === 2 || user?.profile_id === 3
                         ? 'rgba(255,255,255,0.9)'
                         : theme.palette.text.secondary,
                     textShadow:
-                      (user?.profile_id === 2 || user?.profile_id === 3)
+                      user?.profile_id === 2 || user?.profile_id === 3
                         ? '0 1px 2px rgba(0,0,0,0.5)'
                         : 'none',
                     display: 'flex',
                     alignItems: 'center',
                     background:
-                      (user?.profile_id === 2 || user?.profile_id === 3)
+                      user?.profile_id === 2 || user?.profile_id === 3
                         ? 'rgba(0,0,0,0.3)'
                         : theme.palette.mode === 'dark'
                           ? 'rgba(255,255,255,0.03)'
@@ -574,7 +599,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     py: 0.4,
                     borderRadius: 'var(--main-border-radius)',
                     border:
-                      (user?.profile_id === 2 || user?.profile_id === 3)
+                      user?.profile_id === 2 || user?.profile_id === 3
                         ? '1px solid rgba(255,255,255,0.15)'
                         : theme.palette.mode === 'dark'
                           ? '1px solid rgba(255,255,255,0.05)'
@@ -630,7 +655,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           )}
 
           {/* Показываем статистику только если профиль не приватный или у пользователя есть доступ */}
-          {(!user?.is_private || isCurrentUser || user?.is_friend) ? (
+          {!user?.is_private || isCurrentUser || user?.is_friend ? (
             <Box
               sx={{
                 display: 'grid',
@@ -652,17 +677,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       ? 'rgba(255,255,255,0.04)'
                       : 'rgba(0,0,0,0.04)',
                   backdropFilter: 'blur(5px)',
-                  border:
-                    user.profile_color
-                      ? `1px solid ${user.profile_color}33`
-                      : user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                        ? `1px solid ${user.status_color}33`
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '1px solid rgba(255,255,255,0.05)'
-                              : '1px solid rgba(0,0,0,0.05)',
+                  border: user.profile_color
+                    ? `1px solid ${user.profile_color}33`
+                    : user.status_color && user.status_text && user.subscription
+                      ? `1px solid ${user.status_color}33`
+                      : theme =>
+                          theme.palette.mode === 'dark'
+                            ? '1px solid rgba(255,255,255,0.05)'
+                            : '1px solid rgba(0,0,0,0.05)',
                   transition: 'all 0.2s ease',
                 }}
               >
@@ -670,14 +692,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   variant='h6'
                   sx={{
                     fontWeight: 700,
-                    color:
-                      user.profile_color
-                        ? user.profile_color
-                        : user.status_color &&
+                    color: user.profile_color
+                      ? user.profile_color
+                      : user.status_color &&
                           user.status_text &&
                           user.subscription
-                          ? user.status_color
-                          : 'primary.main',
+                        ? user.status_color
+                        : 'primary.main',
                   }}
                 >
                   {postsCount || 0}
@@ -708,17 +729,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                       ? 'rgba(255,255,255,0.04)'
                       : 'rgba(0,0,0,0.04)',
                   backdropFilter: 'blur(5px)',
-                  border:
-                    user.profile_color
-                      ? `1px solid ${user.profile_color}33`
-                      : user.status_color &&
-                        user.status_text &&
-                        user.subscription
-                        ? `1px solid ${user.status_color}33`
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '1px solid rgba(255,255,255,0.05)'
-                              : '1px solid rgba(0,0,0,0.05)',
+                  border: user.profile_color
+                    ? `1px solid ${user.profile_color}33`
+                    : user.status_color && user.status_text && user.subscription
+                      ? `1px solid ${user.status_color}33`
+                      : theme =>
+                          theme.palette.mode === 'dark'
+                            ? '1px solid rgba(255,255,255,0.05)'
+                            : '1px solid rgba(0,0,0,0.05)',
                   textDecoration: 'none',
                   transition: 'all 0.2s ease',
                 }}
@@ -727,14 +745,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   variant='h6'
                   sx={{
                     fontWeight: 700,
-                    color:
-                      user.profile_color
-                        ? user.profile_color
-                        : user.status_color &&
+                    color: user.profile_color
+                      ? user.profile_color
+                      : user.status_color &&
                           user.status_text &&
                           user.subscription
-                          ? user.status_color
-                          : 'primary.main',
+                        ? user.status_color
+                        : 'primary.main',
                   }}
                 >
                   {followersCount || 0}
@@ -767,17 +784,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                         ? 'rgba(255,255,255,0.04)'
                         : 'rgba(0,0,0,0.04)',
                     backdropFilter: 'blur(5px)',
-                    border:
-                      user.profile_color
-                        ? `1px solid ${user.profile_color}33`
-                        : user.status_color &&
+                    border: user.profile_color
+                      ? `1px solid ${user.profile_color}33`
+                      : user.status_color &&
                           user.status_text &&
                           user.subscription
-                          ? `1px solid ${user.status_color}33`
-                          : theme =>
-                              theme.palette.mode === 'dark'
-                                ? '1px solid rgba(255,255,255,0.05)'
-                                : '1px solid rgba(0,0,0,0.05)',
+                        ? `1px solid ${user.status_color}33`
+                        : theme =>
+                            theme.palette.mode === 'dark'
+                              ? '1px solid rgba(255,255,255,0.05)'
+                              : '1px solid rgba(0,0,0,0.05)',
                     textDecoration: 'none',
                     transition: 'all 0.2s ease',
                   }}
@@ -786,14 +802,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     variant='h6'
                     sx={{
                       fontWeight: 700,
-                      color:
-                        user.profile_color
-                          ? user.profile_color
-                          : user.status_color &&
+                      color: user.profile_color
+                        ? user.profile_color
+                        : user.status_color &&
                             user.status_text &&
                             user.subscription
-                            ? user.status_color
-                            : 'primary.main',
+                          ? user.status_color
+                          : 'primary.main',
                     }}
                   >
                     {followingCount || 0}
@@ -839,7 +854,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   fontWeight: 500,
                 }}
               >
-                 Приватный профиль
+                Приватный профиль
               </Typography>
               <Typography
                 variant='caption'
@@ -858,22 +873,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
       {/* Badge Info Modal - загружается только при открытии */}
       {badgeModalOpen && (
-        <Suspense fallback={
-          <Box sx={{ 
-            position: 'fixed', 
-            top: 0, 
-            left: 0, 
-            right: 0, 
-            bottom: 0, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            bgcolor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 9999
-          }}>
-            <CircularProgress />
-          </Box>
-        }>
+        <Suspense
+          fallback={
+            <Box
+              sx={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                bgcolor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 9999,
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          }
+        >
           <BadgeInfoModal
             open={badgeModalOpen}
             onClose={() => setBadgeModalOpen(false)}

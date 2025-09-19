@@ -159,7 +159,9 @@ const AttachmentsFeed = ({
         console.error('Ошибка при загрузке вложений:', error);
         if (isMounted.current) {
           if (error.response && error.response.status === 403) {
-            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к вложениям.');
+            setError(
+              'Этот профиль приватный. Подпишитесь друг на друга для доступа к вложениям.'
+            );
           } else {
             setError(t('profile.feed.attachments.loading_error'));
           }

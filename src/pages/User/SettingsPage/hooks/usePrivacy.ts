@@ -34,7 +34,9 @@ export const usePrivacy = (): UsePrivacyReturn => {
       const profilePrivacyData = await profilePrivacyResponse.json();
 
       setPrivacySettings({
-        isPrivate: profilePrivacyData.success ? (profilePrivacyData.is_private || false) : false,
+        isPrivate: profilePrivacyData.success
+          ? profilePrivacyData.is_private || false
+          : false,
       });
     } catch (err) {
       console.error('Failed to load privacy settings:', err);
@@ -62,10 +64,16 @@ export const usePrivacy = (): UsePrivacyReturn => {
       if (response.ok && data.success) {
         setPrivacySettings(prev => ({ ...prev, isPrivate }));
       } else {
-        throw new Error(data.error || 'Не удалось обновить настройку приватности профиля');
+        throw new Error(
+          data.error || 'Не удалось обновить настройку приватности профиля'
+        );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось обновить настройку приватности профиля');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Не удалось обновить настройку приватности профиля'
+      );
       throw err;
     } finally {
       setLoading(false);
@@ -79,4 +87,4 @@ export const usePrivacy = (): UsePrivacyReturn => {
     updateProfilePrivacy,
     refreshSettings,
   };
-}; 
+};

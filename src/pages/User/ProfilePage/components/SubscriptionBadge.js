@@ -10,7 +10,12 @@ const SubscriptionBadge = ({
 }) => {
   const { t } = useLanguage();
 
-  if (!duration || duration < 1 || !['ultimate', 'max'].includes(subscriptionType)) return null;
+  if (
+    !duration ||
+    duration < 1 ||
+    !['ultimate', 'max'].includes(subscriptionType)
+  )
+    return null;
 
   console.log(
     `SubscriptionBadge: duration=${duration}, type=${subscriptionType}`
@@ -49,7 +54,7 @@ const SubscriptionBadge = ({
         }}
       >
         {subscriptionType === 'max' ? (
-          <MaxIcon size={24} color="#FF4D50" />
+          <MaxIcon size={24} color='#FF4D50' />
         ) : (
           <Box
             component='img'

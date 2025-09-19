@@ -80,73 +80,76 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = useCallback(async credentials => {
-    try {
-      setLoading(true);
-      setError(null);
+  const login = useCallback(
+    async credentials => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      let response;
-      
-      // Проверяем, если передан Google токен
-      if (credentials.googleToken) {
-        response = await AuthService.googleLogin(credentials.googleToken);
-      } else {
-        response = await AuthService.login(credentials);
-      }
+        let response;
 
-      if (response.success) {
-        setUser(response.user);
-        setIsAuthenticated(true);
-
-        if (themeContext && themeContext.loadThemeSettings) {
-          themeContext.loadThemeSettings();
+        // Проверяем, если передан Google токен
+        if (credentials.googleToken) {
+          response = await AuthService.googleLogin(credentials.googleToken);
+        } else {
+          response = await AuthService.login(credentials);
         }
 
-        return { 
-          success: true, 
-          needs_profile_setup: response.needs_profile_setup 
-        };
-      } else {
-        const errorMessage = response.error || 'Ошибка при входе в систему';
-        setError({ message: errorMessage, ban_info: response.ban_info });
-        return { 
-          success: false, 
-          error: errorMessage, 
-          ban_info: response.ban_info,
-          registration_required: response.registration_required,
-          email: response.email
-        };
-      }
-    } catch (error) {
-      console.error('Login error:', error);
+        if (response.success) {
+          setUser(response.user);
+          setIsAuthenticated(true);
 
-      if (error.response?.data?.ban_info) {
-        const banInfo = error.response.data.ban_info;
-        setError({
-          message: 'Аккаунт заблокирован',
-          ban_info: banInfo,
-        });
-        return {
-          success: false,
-          error: 'Аккаунт заблокирован',
-          ban_info: banInfo,
-        };
-      }
+          if (themeContext && themeContext.loadThemeSettings) {
+            themeContext.loadThemeSettings();
+          }
 
-      const errorMessage =
-        error.response?.data?.message || 'Ошибка при входе в систему';
-      setError({ message: errorMessage });
-      return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
-    }
-  }, [themeContext]);
+          return {
+            success: true,
+            needs_profile_setup: response.needs_profile_setup,
+          };
+        } else {
+          const errorMessage = response.error || 'Ошибка при входе в систему';
+          setError({ message: errorMessage, ban_info: response.ban_info });
+          return {
+            success: false,
+            error: errorMessage,
+            ban_info: response.ban_info,
+            registration_required: response.registration_required,
+            email: response.email,
+          };
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+
+        if (error.response?.data?.ban_info) {
+          const banInfo = error.response.data.ban_info;
+          setError({
+            message: 'Аккаунт заблокирован',
+            ban_info: banInfo,
+          });
+          return {
+            success: false,
+            error: 'Аккаунт заблокирован',
+            ban_info: banInfo,
+          };
+        }
+
+        const errorMessage =
+          error.response?.data?.message || 'Ошибка при входе в систему';
+        setError({ message: errorMessage });
+        return { success: false, error: errorMessage };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [themeContext]
+  );
 
   const logout = useCallback(async () => {
     try {
       setLoading(true);
       await AuthService.logout();
-      
+
       // localStorage.removeItem('token'); // Система работает на куки
       resetMessengerSocket();
       setUser(null);

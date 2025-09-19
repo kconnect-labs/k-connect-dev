@@ -8,9 +8,7 @@ import {
   Chip,
   Alert,
 } from '@mui/material';
-import {
-  ListAlt as ListAltIcon,
-} from '@mui/icons-material';
+import { ListAlt as ListAltIcon } from '@mui/icons-material';
 import axios from 'axios';
 
 interface LogEntry {
@@ -140,11 +138,11 @@ const LogsTab: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+        <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
           Логи действий модераторов
         </Typography>
         <Button
-          variant="outlined"
+          variant='outlined'
           onClick={fetchLogs}
           disabled={loading}
           startIcon={loading ? <CircularProgress size={20} /> : <ListAltIcon />}
@@ -159,7 +157,7 @@ const LogsTab: React.FC = () => {
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert severity='error' sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
@@ -183,19 +181,19 @@ const LogsTab: React.FC = () => {
             sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.3)', mb: 2 }}
           />
           <Typography
-            variant="h6"
-            color="rgba(255, 255, 255, 0.5)"
+            variant='h6'
+            color='rgba(255, 255, 255, 0.5)'
             gutterBottom
           >
             Логи отсутствуют
           </Typography>
-          <Typography variant="body2" color="rgba(255, 255, 255, 0.4)">
+          <Typography variant='body2' color='rgba(255, 255, 255, 0.4)'>
             Нажмите "Обновить" для загрузки логов
           </Typography>
         </Box>
       ) : (
         <Box sx={{ px: 0 }}>
-          {logs.map((log) => (
+          {logs.map(log => (
             <Box
               key={log.id}
               sx={{
@@ -217,7 +215,11 @@ const LogsTab: React.FC = () => {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Avatar
-                    src={log.moderator?.avatar || log.moderator?.avatar_url || undefined}
+                    src={
+                      log.moderator?.avatar ||
+                      log.moderator?.avatar_url ||
+                      undefined
+                    }
                     sx={{
                       width: 40,
                       height: 40,
@@ -231,7 +233,7 @@ const LogsTab: React.FC = () => {
                   </Avatar>
                   <Box>
                     <Typography
-                      variant="subtitle1"
+                      variant='subtitle1'
                       sx={{
                         color: 'rgba(255, 255, 255, 0.87)',
                         fontWeight: 500,
@@ -240,7 +242,7 @@ const LogsTab: React.FC = () => {
                       {log.moderator?.name || 'Неизвестный модератор'}
                     </Typography>
                     <Typography
-                      variant="body2"
+                      variant='body2'
                       sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
                     >
                       @{log.moderator?.username || 'unknown'}
@@ -248,17 +250,19 @@ const LogsTab: React.FC = () => {
                   </Box>
                 </Box>
                 <Typography
-                  variant="caption"
+                  variant='caption'
                   sx={{ color: 'rgba(255, 255, 255, 0.4)' }}
                 >
-                  {new Date(log.created_at || log.timestamp || '').toLocaleString('ru-RU')}
+                  {new Date(
+                    log.created_at || log.timestamp || ''
+                  ).toLocaleString('ru-RU')}
                 </Typography>
               </Box>
 
               <Box sx={{ mb: 2 }}>
                 <Chip
                   label={getActionTypeLabel(log.action_type)}
-                  size="small"
+                  size='small'
                   sx={{
                     borderRadius: 'var(--main-border-radius)',
                     background: getActionTypeColor(log.action_type),
@@ -270,7 +274,7 @@ const LogsTab: React.FC = () => {
               </Box>
 
               <Typography
-                variant="body2"
+                variant='body2'
                 sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}
               >
                 <strong>Действие:</strong>{' '}
@@ -279,7 +283,7 @@ const LogsTab: React.FC = () => {
 
               {log.target_id && (
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 1 }}
                 >
                   <strong>ID объекта:</strong> {log.target_id}
@@ -297,7 +301,7 @@ const LogsTab: React.FC = () => {
                   }}
                 >
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     sx={{ color: 'rgba(255, 255, 255, 0.8)' }}
                   >
                     {log.details}

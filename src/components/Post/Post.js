@@ -7,12 +7,12 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { 
-  throttle, 
-  debounce, 
+import {
+  throttle,
+  debounce,
   createOptimizedResizeHandler,
   getPerformanceSettings,
-  measurePerformance 
+  measurePerformance,
 } from '../../utils/performanceUtils';
 import {
   Box,
@@ -32,9 +32,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { MusicContext } from '../../context/MusicContext';
 import { useLanguage } from '../../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
-import {
-  formatTimeAgo,
-} from '../../utils/dateUtils';
+import { formatTimeAgo } from '../../utils/dateUtils';
 import {
   optimizeImage,
   handleImageError as safeImageError,
@@ -50,15 +48,15 @@ import {
   GroupedLinkPreviews,
 } from '../../utils/LinkUtils';
 import { getMarkdownComponents } from './MarkdownConfig';
-import { 
-  LikeIcon, 
-  LikeIconFill, 
-  CommentIcon, 
-  RepostIcon, 
+import {
+  LikeIcon,
+  LikeIconFill,
+  CommentIcon,
+  RepostIcon,
   ShareIcon,
   Link2Icon,
   ChevronDownIcon,
-  ChevronUpIcon
+  ChevronUpIcon,
 } from '../icons/PostIcon';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -77,25 +75,19 @@ import { usePostDetail } from '../../context/PostDetailContext';
 import { VerificationBadge } from '../../UIKIT';
 import Badge from '../../UIKIT/Badge/Badge';
 
-
 import SimpleImageViewer from '../SimpleImageViewer';
 import ImageGrid from './ImageGrid';
 import RepostImageGrid from './RepostImageGrid';
 import MusicTrack from './MusicTrack';
 import CachedImage from './components/CachedImage';
 
-
 const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
-
-
-
 
 const ReportDialog = React.lazy(() => import('./ReportDialog'));
 const FactModal = React.lazy(() => import('./FactModal'));
 const RepostModal = React.lazy(() => import('./RepostModal'));
 const DeleteDialog = React.lazy(() => import('./DeleteDialog'));
 const EditPostDialog = React.lazy(() => import('./EditPostDialog'));
-
 
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 
@@ -115,7 +107,6 @@ import {
   getRandomRotation,
   getRandomSize,
   incrementViewCount,
-
   createLightboxHandlers,
   createMenuHandlers,
   createCopyLinkHandler,
@@ -133,10 +124,7 @@ import ShowMoreButton from './ShowMoreButton';
 import MarkdownContent from './MarkdownContent';
 import { UniversalMenu } from '../../UIKIT';
 import MetaWarningBanner from './MetaWarningBanner';
-import {
-  skeletonKeyframes,
-  PostCard,
-} from './styles/PostStyles';
+import { skeletonKeyframes, PostCard } from './styles/PostStyles';
 
 const Post = ({
   post,
@@ -153,23 +141,21 @@ const Post = ({
     useContext(MusicContext);
   const { setPostDetail, openPostDetail } = usePostDetail();
 
-
-  
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth <= 600 : false
   );
 
   // Получаем настройки производительности
   const performanceSettings = useMemo(() => getPerformanceSettings(), []);
-  
+
   // Оптимизированный обработчик resize с адаптивным throttling
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const throttledHandler = throttle(() => {
       setIsMobile(window.innerWidth <= 600);
     }, performanceSettings.throttleDelay);
-    
+
     window.addEventListener('resize', throttledHandler, { passive: true });
     return () => window.removeEventListener('resize', throttledHandler);
   }, [performanceSettings.throttleDelay]);
@@ -192,8 +178,6 @@ const Post = ({
   const [repostContent, setRepostContent] = useState('');
   const [repostLoading, setRepostLoading] = useState(false);
 
-
-  
   const [isPinned, setIsPinned] = useState(isPinnedPost || false);
   const [editDialog, setEditDialog] = useState({
     open: false,
@@ -247,11 +231,9 @@ const Post = ({
   const [lastComment, setLastComment] = useState(null);
   const [lastCommentLoading, setLastCommentLoading] = useState(false);
 
-  
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  
   const [hearts, setHearts] = useState([]);
   const [lastTap, setLastTap] = useState({ time: 0, x: 0, y: 0 });
 
@@ -265,31 +247,33 @@ const Post = ({
     t('post.report.reasons.other'),
   ];
 
-  
-  const { handleCloseLightbox, handleNextImage, handlePrevImage } = createLightboxHandlers(
-    setLightboxOpen,
-    setCurrentImageIndex,
-    processImages,
-    post,
-    mediaError
-  );
+  const { handleCloseLightbox, handleNextImage, handlePrevImage } =
+    createLightboxHandlers(
+      setLightboxOpen,
+      setCurrentImageIndex,
+      processImages,
+      post,
+      mediaError
+    );
 
-  const { handleMenuOpen, handleMenuClose } = createMenuHandlers(setMenuAnchorEl);
+  const { handleMenuOpen, handleMenuClose } =
+    createMenuHandlers(setMenuAnchorEl);
 
-  
   const handleCopyLink = createCopyLinkHandler(post.id);
   const toggleExpanded = createToggleExpandedHandler(setIsExpanded);
 
-  
-  const handleTrackPlay = createTrackPlayHandler(currentTrack, togglePlay, playTrack);
+  const handleTrackPlay = createTrackPlayHandler(
+    currentTrack,
+    togglePlay,
+    playTrack
+  );
   const handleOpenPostFromMenu = createOpenPostFromMenuHandler(setPostDetail);
-  const handleCloseRepostModal = createCloseRepostModalHandler(setRepostModalOpen);
+  const handleCloseRepostModal =
+    createCloseRepostModalHandler(setRepostModalOpen);
 
-  
   const handleCommentClick = createCommentClickHandler(openPostDetail);
   const handleShare = createShareHandler(post.id);
 
-  
   const handleOpenImage = createOpenImageHandler(
     post,
     mediaError,
@@ -318,11 +302,9 @@ const Post = ({
         HASHTAG_REGEX.lastIndex = 0;
         URL_REGEX.lastIndex = 0;
 
-        
         const urlMarkers = [];
         let markerIndex = 0;
 
-        
         content = content.replace(URL_REGEX, match => {
           const marker = `__URL_MARKER_${markerIndex}__`;
           urlMarkers.push({
@@ -333,7 +315,6 @@ const Post = ({
           return marker;
         });
 
-        
         content = content.replace(
           USERNAME_MENTION_REGEX,
           (match, prefix, username) => {
@@ -344,19 +325,16 @@ const Post = ({
           }
         );
 
-        
         content = content.replace(HASHTAG_REGEX, (match, hashtag) => {
           return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
         });
 
-        
         urlMarkers.forEach(({ marker, replacement }) => {
           content = content.replace(marker, replacement);
         });
 
         setProcessedContent(content);
-        
-        
+
         const urls = [];
         URL_REGEX.lastIndex = 0;
         let urlMatch;
@@ -369,12 +347,17 @@ const Post = ({
         setPostUrls([]);
       }
 
-      
-      if (post.type === 'repost' && post.original_post && post.original_post.content) {
+      if (
+        post.type === 'repost' &&
+        post.original_post &&
+        post.original_post.content
+      ) {
         const repostUrls = [];
         URL_REGEX.lastIndex = 0;
         let urlMatch;
-        while ((urlMatch = URL_REGEX.exec(post.original_post.content)) !== null) {
+        while (
+          (urlMatch = URL_REGEX.exec(post.original_post.content)) !== null
+        ) {
           repostUrls.push(urlMatch[0]);
         }
         setRepostUrls(repostUrls);
@@ -382,9 +365,6 @@ const Post = ({
         setRepostUrls([]);
       }
 
-
-
-      
       if (post.last_comment) {
         setLastComment(post.last_comment);
         setLastCommentLoading(false);
@@ -419,11 +399,6 @@ const Post = ({
     }
   }, [post]);
 
-
-
-
-
-  
   useEffect(() => {
     if (!contentRef.current) return;
 
@@ -434,16 +409,13 @@ const Post = ({
       }
     };
 
-    
     let resizeObserver;
     if (window.ResizeObserver) {
       resizeObserver = new ResizeObserver(() => {
-        
         requestAnimationFrame(checkHeight);
       });
       resizeObserver.observe(contentRef.current);
     } else {
-      
       const timeoutId = setTimeout(checkHeight, 100);
       return () => clearTimeout(timeoutId);
     }
@@ -455,79 +427,73 @@ const Post = ({
     };
   }, [post?.content]);
 
+  const handleLike = useCallback(
+    async e => {
+      if (e) e.stopPropagation();
 
-
-
-
-
-
-  const handleLike = useCallback(async (e) => {
-    if (e) e.stopPropagation();
-
-    
-    if (!post?.id || post.id === 'undefined') {
-      console.warn('handleLike: post.id is undefined or invalid:', post?.id);
-      return;
-    }
-
-    const wasLiked = liked;
-    const prevCount = likesCount;
-
-    try {
-      setLiked(!wasLiked);
-      setLikesCount(wasLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
-
-      const response = await axios.post(`/api/posts/${post.id}/like`);
-      if (response.data) {
-        setLiked(response.data.liked);
-        setLikesCount(response.data.likes_count);
+      if (!post?.id || post.id === 'undefined') {
+        console.warn('handleLike: post.id is undefined or invalid:', post?.id);
+        return;
       }
-    } catch (error) {
-      console.error('Error liking post:', error);
-      setLiked(wasLiked);
-      setLikesCount(prevCount);
 
-      if (error.response && error.response.status === 429) {
-        const rateLimit = error.response.data.rate_limit;
-        let errorMessage =
-          error.response.data.error || 'Слишком много лайков. ';
+      const wasLiked = liked;
+      const prevCount = likesCount;
 
-        if (rateLimit && rateLimit.reset) {
-          const resetTime = new Date(rateLimit.reset * 1000);
-          const now = new Date();
-          const diffSeconds = Math.round((resetTime - now) / 1000);
+      try {
+        setLiked(!wasLiked);
+        setLikesCount(wasLiked ? Math.max(0, prevCount - 1) : prevCount + 1);
 
-          if (!errorMessage.includes('подождите')) {
-            if (diffSeconds > 60) {
-              const minutes = Math.floor(diffSeconds / 60);
-              const seconds = diffSeconds % 60;
-              errorMessage += ` Пожалуйста, подождите ${minutes} мин. ${seconds} сек.`;
-            } else {
-              errorMessage += ` Пожалуйста, подождите ${diffSeconds} сек.`;
+        const response = await axios.post(`/api/posts/${post.id}/like`);
+        if (response.data) {
+          setLiked(response.data.liked);
+          setLikesCount(response.data.likes_count);
+        }
+      } catch (error) {
+        console.error('Error liking post:', error);
+        setLiked(wasLiked);
+        setLikesCount(prevCount);
+
+        if (error.response && error.response.status === 429) {
+          const rateLimit = error.response.data.rate_limit;
+          let errorMessage =
+            error.response.data.error || 'Слишком много лайков. ';
+
+          if (rateLimit && rateLimit.reset) {
+            const resetTime = new Date(rateLimit.reset * 1000);
+            const now = new Date();
+            const diffSeconds = Math.round((resetTime - now) / 1000);
+
+            if (!errorMessage.includes('подождите')) {
+              if (diffSeconds > 60) {
+                const minutes = Math.floor(diffSeconds / 60);
+                const seconds = diffSeconds % 60;
+                errorMessage += ` Пожалуйста, подождите ${minutes} мин. ${seconds} сек.`;
+              } else {
+                errorMessage += ` Пожалуйста, подождите ${diffSeconds} сек.`;
+              }
             }
           }
+
+          window.dispatchEvent(
+            new CustomEvent('rate-limit-error', {
+              detail: {
+                message: errorMessage,
+                shortMessage: 'Лимит лайков',
+                notificationType: 'warning',
+                animationType: 'bounce',
+                retryAfter: rateLimit?.reset
+                  ? Math.round(
+                      (new Date(rateLimit.reset * 1000) - new Date()) / 1000
+                    )
+                  : 60,
+              },
+            })
+          );
         }
-
-        window.dispatchEvent(
-          new CustomEvent('rate-limit-error', {
-            detail: {
-              message: errorMessage,
-              shortMessage: 'Лимит лайков',
-              notificationType: 'warning',
-              animationType: 'bounce',
-              retryAfter: rateLimit?.reset
-                ? Math.round(
-                    (new Date(rateLimit.reset * 1000) - new Date()) / 1000
-                  )
-                : 60,
-            },
-          })
-        );
       }
-    }
-  }, [post?.id, liked, likesCount]);
-
-
+    },
+    [post?.id, liked, likesCount]
+  );
 
   const handleDelete = () => {
     handleMenuClose();
@@ -624,9 +590,11 @@ const Post = ({
   };
 
   const handleSubmitEdit = async () => {
-    
     if (!post?.id || post.id === 'undefined') {
-      console.warn('handleSubmitEdit: post.id is undefined or invalid:', post?.id);
+      console.warn(
+        'handleSubmitEdit: post.id is undefined or invalid:',
+        post?.id
+      );
       setEditDialog({
         ...editDialog,
         error: 'Ошибка: не удалось определить ID поста',
@@ -728,7 +696,6 @@ const Post = ({
   };
 
   const confirmDelete = async () => {
-    
     if (!post?.id || post.id === 'undefined') {
       console.warn('confirmDelete: post.id is undefined or invalid:', post?.id);
       setDeleteDialog({ open: false, deleting: false, deleted: false });
@@ -743,28 +710,23 @@ const Post = ({
     try {
       setDeleteDialog({ ...deleteDialog, deleting: true });
 
-      
       if (onDelete) {
         onDelete(post.id);
       }
 
-      
       if (axios.cache) {
         axios.cache.clearPostsCache();
         axios.cache.clearByUrlPrefix(`/api/profile/pinned_post`);
         axios.cache.clearByUrlPrefix(`/api/posts/${post.id}`);
       }
 
-      
       await axios.delete(`/api/posts/${post.id}`);
 
-      
       setDeleteDialog({ open: false, deleting: false, deleted: false });
     } catch (error) {
       console.error('Error deleting post:', error);
       setDeleteDialog({ open: false, deleting: false, deleted: false });
 
-      
       setSnackbar({
         open: true,
         message: 'Не удалось удалить пост. Попробуйте позже.',
@@ -789,14 +751,14 @@ const Post = ({
     setRepostModalOpen(true);
   };
 
-
-
   const handleCreateRepost = async () => {
     if (repostLoading) return;
 
-    
     if (!post?.id || post.id === 'undefined') {
-      console.warn('handleCreateRepost: post.id is undefined or invalid:', post?.id);
+      console.warn(
+        'handleCreateRepost: post.id is undefined or invalid:',
+        post?.id
+      );
       setSnackbarMessage('Ошибка: не удалось определить ID поста');
       setSnackbarOpen(true);
       return;
@@ -845,18 +807,6 @@ const Post = ({
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
   const postRef = useRef(null);
 
   useEffect(() => {
@@ -892,9 +842,11 @@ const Post = ({
   }, [post?.id]);
 
   const handleReportSubmit = async () => {
-    
     if (!post?.id || post.id === 'undefined') {
-      console.warn('handleReportSubmit: post.id is undefined or invalid:', post?.id);
+      console.warn(
+        'handleReportSubmit: post.id is undefined or invalid:',
+        post?.id
+      );
       setReportDialog({
         ...reportDialog,
         error: 'Ошибка: не удалось определить ID поста',
@@ -913,9 +865,10 @@ const Post = ({
     setReportDialog({ ...reportDialog, submitting: true, error: null });
 
     try {
-      
-      const createdDate = post.created_at ? new Date(post.created_at).toLocaleString('ru-RU') : 'Дата не указана';
-      
+      const createdDate = post.created_at
+        ? new Date(post.created_at).toLocaleString('ru-RU')
+        : 'Дата не указана';
+
       const reportDescription = `Информация о посте:
 • Автор: ${post.user?.name} (@${post.user?.username})
 • ID поста: ${post.id}
@@ -934,7 +887,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         target_id: post.id,
         reason: reportDialog.reason,
         description: reportDescription,
-        evidence: post.content || 'Пост содержит медиа-контент'
+        evidence: post.content || 'Пост содержит медиа-контент',
       });
 
       if (response.data && response.data.success) {
@@ -943,8 +896,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           submitting: false,
           submitted: true,
         });
-        
-        
+
         if (typeof showNotification === 'function') {
           showNotification('success', 'Жалоба отправлена модераторам');
         }
@@ -986,9 +938,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
   };
 
   const handleFactSubmit = async factData => {
-    
     if (!post?.id || post.id === 'undefined') {
-      console.warn('handleFactSubmit: post.id is undefined or invalid:', post?.id);
+      console.warn(
+        'handleFactSubmit: post.id is undefined or invalid:',
+        post?.id
+      );
       setFactModal({
         ...factModal,
         loading: false,
@@ -1001,10 +955,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
     try {
       if (post.fact) {
-        
         await axios.put(`/api/facts/${post.fact.id}`, factData);
       } else {
-        
         const factResponse = await axios.post('/api/facts', factData);
         const factId = factResponse.data.fact.id;
         await axios.post(`/api/posts/${post.id}/attach-fact`, {
@@ -1012,7 +964,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         });
       }
 
-      
       window.location.reload();
     } catch (error) {
       console.error('Error submitting fact:', error);
@@ -1025,9 +976,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
   };
 
   const handleFactDelete = async () => {
-    
     if (!post?.id || post.id === 'undefined') {
-      console.warn('handleFactDelete: post.id is undefined or invalid:', post?.id);
+      console.warn(
+        'handleFactDelete: post.id is undefined or invalid:',
+        post?.id
+      );
       setFactModal({
         ...factModal,
         loading: false,
@@ -1039,10 +992,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     setFactModal({ ...factModal, loading: true, error: null });
 
     try {
-      
       await axios.delete(`/api/posts/${post.id}/detach-fact`);
 
-      
       window.location.reload();
     } catch (error) {
       console.error('Error deleting fact:', error);
@@ -1056,17 +1007,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
   const handlePostClick = e => {
     if (e.target.closest('a, button')) return;
-    
+
     if (post?.id && post.id !== 'undefined') {
       incrementViewCount(post.id, viewsCount);
     }
   };
-
-
-
-
-
-
 
   const addHeart = (x, y) => {
     const newHeart = {
@@ -1187,7 +1132,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     setMediaError({ type: 'video', url });
   };
 
-
   const handlePinPost = async () => {
     if (!post?.id || post.id === 'undefined') {
       console.warn('handlePinPost: post.id is undefined or invalid:', post?.id);
@@ -1273,7 +1217,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
   const markdownComponents = getMarkdownComponents();
 
-  
   const NSFWOverlay = (
     <Box
       sx={{
@@ -1368,13 +1311,9 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     </Box>
   );
 
-
-
-  
   const menuItems = React.useMemo(() => {
     const items = [];
 
-    
     if (currentUser && currentUser.id === 3) {
       items.push({
         id: 'facts',
@@ -1384,7 +1323,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
       });
     }
 
-    
     if (isCurrentUserPost) {
       items.push(
         {
@@ -1402,14 +1340,19 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         },
         {
           id: 'pin',
-          label: isPinned ? t('post.menu_actions.unpin') : t('post.menu_actions.pin'),
-          icon: isPinned ? <PushPinIcon fontSize='small' /> : <PushPinOutlinedIcon fontSize='small' />,
+          label: isPinned
+            ? t('post.menu_actions.unpin')
+            : t('post.menu_actions.pin'),
+          icon: isPinned ? (
+            <PushPinIcon fontSize='small' />
+          ) : (
+            <PushPinOutlinedIcon fontSize='small' />
+          ),
           onClick: handlePinPost,
         }
       );
     }
 
-    
     items.push({
       id: 'copy-link',
       label: t('post.menu_actions.copy_link'),
@@ -1417,7 +1360,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
       onClick: handleCopyLink,
     });
 
-    
     if (!isCurrentUserPost) {
       items.push({
         id: 'report',
@@ -1454,7 +1396,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         isPinned={isPinned}
         statusColor={statusColor}
         onClick={handlePostClick}
-
         onDoubleClick={handleDoubleClick}
         onTouchStart={handleTouchStart}
         ref={postRef}
@@ -1575,12 +1516,16 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   )}
 
                   {post.user?.verification &&
-                    ((typeof post.user.verification === 'number' && post.user.verification > 0) ||
-                     (typeof post.user.verification === 'object' && post.user.verification.status > 0)) && (
+                    ((typeof post.user.verification === 'number' &&
+                      post.user.verification > 0) ||
+                      (typeof post.user.verification === 'object' &&
+                        post.user.verification.status > 0)) && (
                       <VerificationBadge
-                        status={typeof post.user.verification === 'number' 
-                          ? post.user.verification 
-                          : post.user.verification.status}
+                        status={
+                          typeof post.user.verification === 'number'
+                            ? post.user.verification
+                            : post.user.verification.status
+                        }
                         size='small'
                       />
                     )}
@@ -1636,9 +1581,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 variant='text'
                 size='small'
                 onClick={toggleExpanded}
-                startIcon={
-                  <ChevronUpIcon />
-                }
+                startIcon={<ChevronUpIcon />}
                 sx={{
                   display: 'flex',
                   mt: 1,
@@ -1760,17 +1703,23 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       textDecoration: 'none',
                       display: 'flex',
                       alignItems: 'center',
-
                     }}
                   >
                     {post.original_post.user?.name || 'Unknown'}
                     {post.original_post.user?.verification &&
-                      ((typeof post.original_post.user.verification === 'number' && post.original_post.user.verification > 0) ||
-                       (typeof post.original_post.user.verification === 'object' && post.original_post.user.verification.status > 0)) && (
+                      ((typeof post.original_post.user.verification ===
+                        'number' &&
+                        post.original_post.user.verification > 0) ||
+                        (typeof post.original_post.user.verification ===
+                          'object' &&
+                          post.original_post.user.verification.status > 0)) && (
                         <VerificationBadge
-                          status={typeof post.original_post.user.verification === 'number' 
-                            ? post.original_post.user.verification 
-                            : post.original_post.user.verification.status}
+                          status={
+                            typeof post.original_post.user.verification ===
+                            'number'
+                              ? post.original_post.user.verification
+                              : post.original_post.user.verification.status
+                          }
                           size='small'
                         />
                       )}
@@ -1837,7 +1786,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           truncateText(post.original_post.content, 500),
                           theme
                         );
-                        return null; 
+                        return null;
                       })()}
                     </Box>
                   )}
@@ -1860,7 +1809,9 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           );
                           setLightboxOpen(true);
                         }}
-                        imageDimensions={processImageDimensions(post.original_post)}
+                        imageDimensions={processImageDimensions(
+                          post.original_post
+                        )}
                       />
                     </Box>
                   )}
@@ -1887,11 +1838,20 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         <VideoPlayer
                           videoUrl={post.original_post.video}
                           poster={
-                            post.original_post.video_poster 
-                              ? formatVideoPosterUrl(post.original_post.video_poster, post.original_post.id)
-                              : (processImages(post.original_post, mediaError).length > 0
-                                ? formatVideoUrl(processImages(post.original_post, mediaError)[0])
-                                : '/static/images/video_placeholder.png')
+                            post.original_post.video_poster
+                              ? formatVideoPosterUrl(
+                                  post.original_post.video_poster,
+                                  post.original_post.id
+                                )
+                              : processImages(post.original_post, mediaError)
+                                    .length > 0
+                                ? formatVideoUrl(
+                                    processImages(
+                                      post.original_post,
+                                      mediaError
+                                    )[0]
+                                  )
+                                : '/static/images/video_placeholder.png'
                           }
                           onError={() => {
                             console.error(
@@ -1911,8 +1871,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         mt: 1.5,
                         p: 1.5,
                         borderRadius: '16px',
-                        backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                        backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
+                        backgroundColor:
+                          'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                        backdropFilter:
+                          'var(--theme-backdrop-filter, blur(8px))',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         position: 'relative',
                         '&::before': {
@@ -2091,15 +2053,15 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       </Box>
                     }
                   >
-                                                       <VideoPlayer
-                                     videoUrl={post.video}
-                                     poster={
-                        post.video_poster 
+                    <VideoPlayer
+                      videoUrl={post.video}
+                      poster={
+                        post.video_poster
                           ? formatVideoPosterUrl(post.video_poster, post.id)
-                          : (processImages(post, mediaError).length > 0
-                                         ? formatVideoUrl(processImages(post, mediaError)[0])
-                            : '/static/images/video_placeholder.png')
-                                     }
+                          : processImages(post, mediaError).length > 0
+                            ? formatVideoUrl(processImages(post, mediaError)[0])
+                            : '/static/images/video_placeholder.png'
+                      }
                       onError={() => handleVideoError(post.video)}
                     />
                   </Suspense>
@@ -2115,7 +2077,8 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             )
           )}
 
-                                   {processImages(post, mediaError).length > 0 && mediaError.type !== 'image' ? (
+          {processImages(post, mediaError).length > 0 &&
+          mediaError.type !== 'image' ? (
             <Box
               sx={{
                 mb: 2,
@@ -2159,113 +2122,113 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           {musicTracks.length > 0 && (
             <Box sx={{ mt: 0, mb: 0 }}>
               {musicTracks.map((track, index) => (
-                <MusicTrack key={`track-${index}`} onClick={e => handleTrackPlay(track, e)}>
+                <MusicTrack
+                  key={`track-${index}`}
+                  onClick={e => handleTrackPlay(track, e)}
+                >
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: '16px',
+                      overflow: 'hidden',
+                      position: 'relative',
+                      mr: 2,
+                      flexShrink: 0,
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.15)',
+                      bgcolor: 'rgba(0, 0, 0, 0.2)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={getCoverPath(track)}
+                      alt={track.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                      onError={safeImageError}
+                    />
                     <Box
                       sx={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: '16px',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        mr: 2,
-                        flexShrink: 0,
-                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.15)',
-                        bgcolor: 'rgba(0, 0, 0, 0.2)',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        background:
+                          'linear-gradient(145deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3))',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        transition: 'all 0.2s ease',
                       }}
                     >
-                      <img
-                        src={getCoverPath(track)}
-                        alt={track.title}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                        onError={safeImageError}
-                      />
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '100%',
-                          height: '100%',
-                          background:
-                            'linear-gradient(145deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3))',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'all 0.2s ease',
-                        }}
-                      >
-                        {currentTrack &&
-                        currentTrack.id === track.id &&
-                        isPlaying ? (
-                          <PauseIcon
-                            sx={{
-                              color: 'white',
-                              fontSize: 18,
-                              filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))',
-                            }}
-                          />
-                        ) : (
-                          <PlayArrowIcon
-                            sx={{
-                              color: 'white',
-                              fontSize: 18,
-                              filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))',
-                            }}
-                          />
-                        )}
-                      </Box>
+                      {currentTrack &&
+                      currentTrack.id === track.id &&
+                      isPlaying ? (
+                        <PauseIcon
+                          sx={{
+                            color: 'white',
+                            fontSize: 18,
+                            filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))',
+                          }}
+                        />
+                      ) : (
+                        <PlayArrowIcon
+                          sx={{
+                            color: 'white',
+                            fontSize: 18,
+                            filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.3))',
+                          }}
+                        />
+                      )}
                     </Box>
+                  </Box>
 
-                    <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography
-                        variant='body2'
-                        noWrap
-                        sx={{
-                          fontWeight:
-                            currentTrack && currentTrack.id === track.id
-                              ? 'medium'
-                              : 'normal',
-                          color:
-                            currentTrack && currentTrack.id === track.id
-                              ? 'primary.main'
-                              : 'text.primary',
-                          fontSize: '0.85rem',
-                        }}
-                      >
-                        {track.title}
-                      </Typography>
-                      <Typography
-                        variant='caption'
-                        color='text.secondary'
-                        noWrap
-                      >
-                        {track.artist}
-                      </Typography>
-                    </Box>
-
+                  <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Typography
-                      variant='caption'
-                      color='text.secondary'
+                      variant='body2'
+                      noWrap
                       sx={{
-                        py: 0.4,
-                        px: 1,
-                        borderRadius: '18px',
-                        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                        fontSize: '0.7rem',
-                        ml: 1,
+                        fontWeight:
+                          currentTrack && currentTrack.id === track.id
+                            ? 'medium'
+                            : 'normal',
+                        color:
+                          currentTrack && currentTrack.id === track.id
+                            ? 'primary.main'
+                            : 'text.primary',
+                        fontSize: '0.85rem',
                       }}
                     >
-                      {formatDuration(track.duration)}
+                      {track.title}
                     </Typography>
-                  </MusicTrack>
+                    <Typography variant='caption' color='text.secondary' noWrap>
+                      {track.artist}
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant='caption'
+                    color='text.secondary'
+                    sx={{
+                      py: 0.4,
+                      px: 1,
+                      borderRadius: '18px',
+                      background:
+                        'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      fontSize: '0.7rem',
+                      ml: 1,
+                    }}
+                  >
+                    {formatDuration(track.duration)}
+                  </Typography>
+                </MusicTrack>
               ))}
             </Box>
           )}
@@ -2374,9 +2337,9 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
           {/* Link Previews - отображаются после всего контента, но перед кнопками действий */}
           {(postUrls.length > 0 || repostUrls.length > 0) && (
-            <GroupedLinkPreviews 
-              urls={[...postUrls, ...repostUrls]} 
-              maxCount={3} 
+            <GroupedLinkPreviews
+              urls={[...postUrls, ...repostUrls]}
+              maxCount={3}
             />
           )}
 
@@ -2386,7 +2349,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               justifyContent: 'space-between',
               alignItems: 'center',
               mt: 2,
-              gap: 1.7, 
+              gap: 1.7,
             }}
           >
             {/* Левая группа: лайк, коммент, репост, поделиться */}
@@ -2404,7 +2367,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 alignItems: 'center',
               }}
             >
-
               <Box
                 sx={{
                   display: 'flex',
@@ -2452,7 +2414,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   alignItems: 'center',
                   cursor: 'pointer',
                 }}
-                onClick={(e) => handleCommentClick(post.id, e)}
+                onClick={e => handleCommentClick(post.id, e)}
               >
                 <Box
                   sx={{
@@ -2513,7 +2475,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   <ShareIcon />
                 </Box>
               </Box>
-            
             </Box>
 
             {/* Правая группа: просмотры и меню */}
@@ -2521,12 +2482,12 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                borderRadius: 'var(--large-border-radius)!important', 
-                px: 1.2, 
-                py: 0.85, 
-                minWidth: 68, 
+                borderRadius: 'var(--large-border-radius)!important',
+                px: 1.2,
+                py: 0.85,
+                minWidth: 68,
                 justifyContent: 'center',
-                gap: 0.5, 
+                gap: 0.5,
               }}
             >
               {/* <VisibilityIcon sx={{ color: '#fff', mr: 0.85, fontSize:14 }} />
@@ -2553,7 +2514,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 marginLeft: '-17px',
                 marginRight: '-17px',
               }}
-              onClick={(e) => handleCommentClick(post.id, e)}
+              onClick={e => handleCommentClick(post.id, e)}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
                 {/* Аватар автора комментария */}
@@ -2614,14 +2575,17 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       onClick={e => e.stopPropagation()}
                     >
                       {lastComment.user?.name || 'Пользователь'}
-                      {(lastComment.user?.verification?.status > 0 || 
+                      {(lastComment.user?.verification?.status > 0 ||
                         lastComment.user?.verification_status === 'verified' ||
                         lastComment.user?.verification_status > 0) && (
-                          <VerificationBadge
-                            status={lastComment.user?.verification?.status || lastComment.user?.verification_status}
-                            size='small'
-                          />
-                        )}
+                        <VerificationBadge
+                          status={
+                            lastComment.user?.verification?.status ||
+                            lastComment.user?.verification_status
+                          }
+                          size='small'
+                        />
+                      )}
                     </Typography>
 
                     <Typography
@@ -2865,8 +2829,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
           error={editDialog.error}
         />
       </Suspense>
-
-
     </>
   );
 };

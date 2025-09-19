@@ -7,11 +7,14 @@
   box-sizing: border-box;
   contain: layout style paint;
   /* Используем CSS переменные для поддержки тем */
-  background: var(--theme-background, rgba(255,255,255,0.03));
+  background: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   border: 1px solid rgb(24 24 24);
-  transition: background 0.3s ease, backdrop-filter 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    backdrop-filter 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .info-block__title {
@@ -25,7 +28,7 @@
   font-family: inherit;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  color: var(--theme-text-secondary, rgba(0,0,0,0.7));
+  color: var(--theme-text-secondary, rgba(0, 0, 0, 0.7));
 }
 
 /* Варианты стилей */

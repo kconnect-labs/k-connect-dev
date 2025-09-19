@@ -287,7 +287,10 @@ const MessageItem = ({
         } else {
           const photoPath = member.avatar || member.photo;
           // Если уже содержит полный URL с доменом - используем как есть
-          if (photoPath?.startsWith('http://') || photoPath?.startsWith('https://')) {
+          if (
+            photoPath?.startsWith('http://') ||
+            photoPath?.startsWith('https://')
+          ) {
             avatarUrl = photoPath;
           } else if (photoPath?.startsWith('/static/uploads/avatar/')) {
             avatarUrl = `https://s3.k-connect.ru${photoPath}`;
@@ -408,16 +411,18 @@ const MessageItem = ({
         if (stickerMatch) {
           // Временно отключено отображение стикеров
           return (
-            <div style={{ 
-              padding: '8px 12px', 
-              background: 'rgba(255, 255, 255, 0.1)', 
-              borderRadius: '8px',
-              color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: '14px',
-              display: 'inline-block',
-              maxWidth: '200px'
-            }}>
-               Стикер (временно отключен)
+            <div
+              style={{
+                padding: '8px 12px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '8px',
+                color: 'rgba(255, 255, 255, 0.7)',
+                fontSize: '14px',
+                display: 'inline-block',
+                maxWidth: '200px',
+              }}
+            >
+              Стикер (временно отключен)
             </div>
           );
         }
@@ -622,19 +627,20 @@ const MessageItem = ({
       case 'sticker':
         // Временно отключено отображение стикеров
         return (
-          <div style={{ 
-            padding: '8px 12px', 
-            background: 'rgba(255, 255, 255, 0.1)', 
-            borderRadius: '8px',
-            color: 'rgba(255, 255, 255, 0.7)',
-            fontSize: '14px',
-            display: 'inline-block',
-            maxWidth: '200px'
-          }}>
-             Стикер (временно отключен)
+          <div
+            style={{
+              padding: '8px 12px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '8px',
+              color: 'rgba(255, 255, 255, 0.7)',
+              fontSize: '14px',
+              display: 'inline-block',
+              maxWidth: '200px',
+            }}
+          >
+            Стикер (временно отключен)
           </div>
         );
-
 
       default:
         return (

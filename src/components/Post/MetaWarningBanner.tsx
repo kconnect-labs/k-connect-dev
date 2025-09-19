@@ -47,8 +47,8 @@ const MetaWarningBanner: React.FC<MetaWarningBannerProps> = ({ content }) => {
     <Box
       sx={{
         width: '100%',
-            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+        background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         border: '1px solid rgba(0, 0, 0, 0.12)',
         borderRadius: '16px',
         mt: 1,

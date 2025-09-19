@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // Заменяем статический импорт на динамический для избежания конфликта
-const PostDetailPage = React.lazy(() => import('../../pages/Main/PostDetailPage'));
+const PostDetailPage = React.lazy(
+  () => import('../../pages/Main/PostDetailPage')
+);
 import { usePostDetail } from '../../context/PostDetailContext';
 
 const getOverlayRoot = () => {
@@ -27,4 +29,4 @@ const PostDetailOverlay: React.FC = () => {
   );
 };
 
-export default PostDetailOverlay; 
+export default PostDetailOverlay;

@@ -60,7 +60,8 @@ const FullScreenDialog = styled(Dialog)(({ theme }) => ({
         height: '80vh !important',
         margin: '40px auto !important',
       },
-      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
+      backgroundColor:
+        'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
       backdropFilter: 'var(--theme-backdrop-filter, blur(20px)) !important',
       backgroundImage: 'none !important',
       overflow: 'hidden !important',
@@ -559,24 +560,26 @@ const PlaylistModal = ({
                       mx: 1,
                     }}
                   >
-                    <List sx={{ 
-                      overflow: 'auto', 
-                      maxHeight: '100%',
-                      '&::-webkit-scrollbar': {
-                        width: '8px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        borderRadius: '4px',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        borderRadius: '4px',
-                        '&:hover': {
-                          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    <List
+                      sx={{
+                        overflow: 'auto',
+                        maxHeight: '100%',
+                        '&::-webkit-scrollbar': {
+                          width: '8px',
                         },
-                      },
-                    }}>
+                        '&::-webkit-scrollbar-track': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                          borderRadius: '4px',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                          },
+                        },
+                      }}
+                    >
                       {playlistTracks.map((track, index) => {
                         const playing = isTrackPlaying(track);
                         return (

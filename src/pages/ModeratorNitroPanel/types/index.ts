@@ -325,7 +325,22 @@ export interface Ban {
   remaining_days: number;
 }
 
-export type TabValue = 'profile' | 'verification' | 'achievements' | 'subscriptions' | 'moderators' | 'keys' | 'bugreports' | 'posts' | 'comments' | 'badges' | 'tracks' | 'artists' | 'users' | 'statistics' | 'logs';
+export type TabValue =
+  | 'profile'
+  | 'verification'
+  | 'achievements'
+  | 'subscriptions'
+  | 'moderators'
+  | 'keys'
+  | 'bugreports'
+  | 'posts'
+  | 'comments'
+  | 'badges'
+  | 'tracks'
+  | 'artists'
+  | 'users'
+  | 'statistics'
+  | 'logs';
 
 export interface TabConfig {
   value: TabValue;

@@ -28,7 +28,9 @@ import axios from 'axios';
 import pako from 'pako';
 
 // API URL для мессенджера
-const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const ORIGIN =
+  (typeof window !== 'undefined' && window.location?.origin) ||
+  'https://k-connect.ru';
 const API_URL = `${ORIGIN}/apiMes`;
 
 // Функция для определения типа стикера
@@ -569,7 +571,8 @@ const StickerPackModal = ({ open, onClose, packId, stickerId }) => {
               ...(isInstalled
                 ? {}
                 : {
-                    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                    background:
+                      'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(0, 0, 0, 0.12)',
                   }),
             }}

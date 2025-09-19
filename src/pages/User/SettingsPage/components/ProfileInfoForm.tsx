@@ -12,7 +12,6 @@ import {
 import { Save as SaveIcon, Check as CheckIcon } from '@mui/icons-material';
 import { usePrivacy } from '../hooks/usePrivacy';
 
-
 interface ProfileInfo {
   name: string;
   username: string;
@@ -53,7 +52,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   const [updatingProfileStyle, setUpdatingProfileStyle] = useState(false);
   const [isCompactInvertedActive, setIsCompactInvertedActive] = useState(false);
   const [updatingCompactInverted, setUpdatingCompactInverted] = useState(false);
-  
+
   // Используем хук только для приватности профиля
   const {
     privacySettings,
@@ -71,7 +70,10 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   // Получаем текущее состояние стиля профиля
   useEffect(() => {
     const fetchProfileStyle = async () => {
-      if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) {
+      if (
+        !subscription ||
+        (subscription.type !== 'ultimate' && subscription.type !== 'max')
+      ) {
         setIsCustomProfileActive(false);
         setIsCompactInvertedActive(false);
         return;
@@ -96,7 +98,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
     fetchProfileStyle();
   }, [subscription, profileInfo?.username]);
-
 
   const handleChange =
     (field: keyof ProfileInfo) =>
@@ -125,7 +126,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   const handleProfileStyleToggle = async () => {
-    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
+    if (
+      !subscription ||
+      (subscription.type !== 'ultimate' && subscription.type !== 'max')
+    )
+      return;
 
     setUpdatingProfileStyle(true);
     try {
@@ -166,7 +171,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   const handleCompactInvertedToggle = async () => {
-    if (!subscription || (subscription.type !== 'ultimate' && subscription.type !== 'max')) return;
+    if (
+      !subscription ||
+      (subscription.type !== 'ultimate' && subscription.type !== 'max')
+    )
+      return;
 
     setUpdatingCompactInverted(true);
     try {
@@ -191,7 +200,10 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           onSuccess();
         }
       } else {
-        console.error('Error updating compact inverted profile style:', data.error);
+        console.error(
+          'Error updating compact inverted profile style:',
+          data.error
+        );
         if (onError) {
           onError(data.error || 'Не удалось обновить стиль профиля');
         }
@@ -205,9 +217,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
       setUpdatingCompactInverted(false);
     }
   };
-
-
-
 
   // Показываем ошибки из хука приватности
   useEffect(() => {
@@ -235,7 +244,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
   };
 
   return (
-    <Box >
+    <Box>
       <Typography
         variant='h6'
         sx={{
@@ -299,7 +308,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
         <>
           <Box sx={{ mt: 2, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 'var(--main-border-radius)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              sx={{
+                p: 2,
+                borderRadius: 'var(--main-border-radius)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              }}
             >
               <Box
                 sx={{
@@ -312,8 +325,12 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
                   <Typography variant='subtitle1' fontWeight={600}>
                     Компактный вид профиля
                   </Typography>
-                  <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                   Убирается баннер из профиля и накладывается фоном карточки профиля
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'var(--theme-text-secondary)' }}
+                  >
+                    Убирается баннер из профиля и накладывается фоном карточки
+                    профиля
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -330,7 +347,11 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
 
           <Box sx={{ mt: 1, mb: 1 }}>
             <Paper
-              sx={{ p: 2, borderRadius: 'var(--main-border-radius)', backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              sx={{
+                p: 2,
+                borderRadius: 'var(--main-border-radius)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              }}
             >
               <Box
                 sx={{
@@ -343,7 +364,10 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
                   <Typography variant='subtitle1' fontWeight={600}>
                     Компактный вид профиля с инверсией
                   </Typography>
-                  <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
+                  <Typography
+                    variant='body2'
+                    sx={{ color: 'var(--theme-text-secondary)' }}
+                  >
                     Инвертированный компактный вид профиля
                   </Typography>
                 </Box>
@@ -360,9 +384,6 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           </Box>
         </>
       )}
-
-
-
 
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
         <Button

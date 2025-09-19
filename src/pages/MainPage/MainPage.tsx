@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { useContext, useRef, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Container,
-  CircularProgress,
-} from '@mui/material';
+import { Box, Typography, Container, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { AuthContextType } from './types';
@@ -48,12 +43,12 @@ const MainPage: React.FC = React.memo(() => {
     requestId,
     latestUpdate,
     lightbox,
-    
+
     // Refs
     isFirstRender,
     feedTypeChanged,
     loadingMoreRef,
-    
+
     // Actions
     setPosts,
     setLoading,
@@ -135,7 +130,9 @@ const MainPage: React.FC = React.memo(() => {
 
           <StyledTabs
             value={feedType}
-            onChange={(event, newValue) => setFeedType(newValue as 'all' | 'following' | 'recommended')}
+            onChange={(event, newValue) =>
+              setFeedType(newValue as 'all' | 'following' | 'recommended')
+            }
             tabs={[
               { value: 'all', label: t('main_page.feed.tabs.all') },
               { value: 'following', label: t('main_page.feed.tabs.following') },

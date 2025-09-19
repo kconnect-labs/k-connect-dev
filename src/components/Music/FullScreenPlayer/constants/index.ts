@@ -1,7 +1,8 @@
 // Константы для FullScreenPlayer
 
 // Пути к файлам
-export const DEFAULT_COVER_PATH = '/static/uploads/system/album_placeholder.jpg';
+export const DEFAULT_COVER_PATH =
+  '/static/uploads/system/album_placeholder.jpg';
 
 // Цвета по умолчанию
 export const DEFAULT_COLORS = {
@@ -41,7 +42,8 @@ export const ANIMATIONS = {
 export const API_ENDPOINTS = {
   LYRICS: (trackId: number) => `/api/music/${trackId}/lyrics`,
   LYRICS_UPLOAD: (trackId: number) => `/api/music/${trackId}/lyrics/upload`,
-  ARTIST_SEARCH: (query: string) => `/api/search/artists?query=${encodeURIComponent(query)}`,
+  ARTIST_SEARCH: (query: string) =>
+    `/api/search/artists?query=${encodeURIComponent(query)}`,
 } as const;
 
 // Сообщения
@@ -60,7 +62,8 @@ export const MESSAGES = {
     COPY_FAILED: 'Ошибка при копировании ссылки',
   },
   WARNING: {
-    COPYRIGHT: 'Вы можете найти тексты песен на Genius или других сервисах. Пожалуйста, соблюдайте авторские права при добавлении текстов.',
+    COPYRIGHT:
+      'Вы можете найти тексты песен на Genius или других сервисах. Пожалуйста, соблюдайте авторские права при добавлении текстов.',
   },
   INFO: {
     LRC_TEMPLATE: 'Скачивание шаблона LRC для синхронизации',

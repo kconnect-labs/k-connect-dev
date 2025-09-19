@@ -94,7 +94,9 @@ const NavLink = styled(Box)(({ theme, active }) => ({
   minWidth: 'fit-content',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: active ? 'rgba(208, 188, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: active
+      ? 'rgba(208, 188, 255, 0.25)'
+      : 'rgba(255, 255, 255, 0.05)',
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0.5, 1),
@@ -158,8 +160,8 @@ const PrivacyPolicyPage = () => {
       </NavigationBar>
 
       <InfoBlock
-        title="Политика конфиденциальности К-Коннект"
-        description="Как мы собираем, используем и защищаем вашу информацию"
+        title='Политика конфиденциальности К-Коннект'
+        description='Как мы собираем, используем и защищаем вашу информацию'
         customStyle
       >
         <ContentSection>
@@ -177,12 +179,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             1. Собираемая информация
@@ -240,12 +242,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             2. Использование информации
@@ -290,12 +292,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             3. Использование контента для маркетинга
@@ -341,12 +343,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             4. Защита информации
@@ -382,12 +384,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             5. Обмен информацией
@@ -420,12 +422,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             6. Ответственность пользователей
@@ -465,12 +467,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             7. Ваши права
@@ -507,12 +509,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             8. Cookies и отслеживание
@@ -543,20 +545,21 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             9. Обработка данных при пожертвованиях
           </Typography>
 
           <StyledTypography variant='body1' paragraph>
-            <strong>Благотворительные взносы:</strong> При совершении добровольных
-            пожертвований на поддержку К-Коннект обрабатываются следующие данные:
+            <strong>Благотворительные взносы:</strong> При совершении
+            добровольных пожертвований на поддержку К-Коннект обрабатываются
+            следующие данные:
           </StyledTypography>
 
           <StyledList component='ul'>
@@ -568,8 +571,9 @@ const PrivacyPolicyPage = () => {
             </StyledListItem>
             <StyledListItem component='li'>
               <StyledTypography variant='body1'>
-                <strong>Идентификация донатора:</strong> Привязка пожертвования к
-                аккаунту пользователя для предоставления соответствующих поощрений.
+                <strong>Идентификация донатора:</strong> Привязка пожертвования
+                к аккаунту пользователя для предоставления соответствующих
+                поощрений.
               </StyledTypography>
             </StyledListItem>
             <StyledListItem component='li'>
@@ -581,26 +585,26 @@ const PrivacyPolicyPage = () => {
             <StyledListItem component='li'>
               <StyledTypography variant='body1'>
                 <strong>Платежные данные:</strong> К-Коннект НЕ хранит данные
-                банковских карт. Вся обработка платежей осуществляется сторонними
-                лицензированными платежными системами.
+                банковских карт. Вся обработка платежей осуществляется
+                сторонними лицензированными платежными системами.
               </StyledTypography>
             </StyledListItem>
           </StyledList>
 
           <StyledTypography variant='body1' paragraph>
-            <strong>Цель обработки:</strong> Данные используются исключительно для
-            предоставления поощрений донаторам и ведения внутренней отчетности о
-            поддержке платформы.
+            <strong>Цель обработки:</strong> Данные используются исключительно
+            для предоставления поощрений донаторам и ведения внутренней
+            отчетности о поддержке платформы.
           </StyledTypography>
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             10. Финансовая конфиденциальность
@@ -633,12 +637,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             11. Отказ от ответственности
@@ -683,12 +687,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             12. Изменения в политике
@@ -702,12 +706,12 @@ const PrivacyPolicyPage = () => {
 
           <Typography
             variant='h6'
-            sx={{ 
-              mt: 4, 
-              mb: 2, 
-              fontWeight: 'bold', 
+            sx={{
+              mt: 4,
+              mb: 2,
+              fontWeight: 'bold',
               color: '#d0bcff',
-              fontSize: { xs: '1.1rem', sm: '1.25rem' }
+              fontSize: { xs: '1.1rem', sm: '1.25rem' },
             }}
           >
             13. Контакты
@@ -716,12 +720,15 @@ const PrivacyPolicyPage = () => {
           <StyledTypography variant='body1' paragraph>
             По вопросам политики конфиденциальности: verif@k-connect.ru
           </StyledTypography>
-          
+
           <StyledTypography variant='body1' paragraph>
             По вопросам пожертвований и возвратов: verif@k-connect.ru
           </StyledTypography>
 
-          <StyledTypography variant='body1' sx={{ mt: 4, fontStyle: 'italic', opacity: 0.8 }}>
+          <StyledTypography
+            variant='body1'
+            sx={{ mt: 4, fontStyle: 'italic', opacity: 0.8 }}
+          >
             Используя К-Коннект, вы подтверждаете, что понимаете роль платформы
             как посредника и принимаете полную ответственность за публикуемый
             контент.

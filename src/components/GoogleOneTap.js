@@ -1,6 +1,12 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Button, Snackbar, Box, Typography, CircularProgress } from '@mui/material';
+import {
+  Button,
+  Snackbar,
+  Box,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import { GOOGLE_CONFIG } from '../services/config';
 import { AuthContext } from '../context/AuthContext';
 
@@ -12,10 +18,10 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
     setShowFedCMNotification(false);
   };
 
-  const handleCredentialResponse = async (response) => {
+  const handleCredentialResponse = async response => {
     try {
       console.log('Google One Tap credential response:', response);
-      
+
       // Отправляем JWT токен на бэкенд для проверки и авторизации
       const result = await login({
         googleToken: response.credential,
@@ -27,10 +33,12 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
         // Навигация будет обработана в AuthContext
       } else {
         console.error('Ошибка Google авторизации:', result?.error);
-        
+
         // Если требуется регистрация
         if (result?.registration_required) {
-          alert(`Аккаунт с данным email не найден.\n\nПожалуйста, зарегистрируйтесь на сайте, используя email: ${result.email}`);
+          alert(
+            `Аккаунт с данным email не найден.\n\nПожалуйста, зарегистрируйтесь на сайте, используя email: ${result.email}`
+          );
         }
       }
     } catch (error) {
@@ -41,7 +49,7 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
   const handleGoogleLogin = () => {
     if (window.google && window.google.accounts) {
       // Просто вызываем prompt программно
-      window.google.accounts.id.prompt((notification) => {
+      window.google.accounts.id.prompt(notification => {
         console.log('Google login notification:', notification);
         if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
           console.log('Google prompt не показан, FedCM отключен пользователем');
@@ -75,7 +83,7 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
     }
   }, []);
 
-    return (
+  return (
     <>
       <Button
         fullWidth
@@ -115,57 +123,58 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
       </Button>
 
       {/* Уведомление о том, что FedCM отключен - рендерится через портал */}
-      {showFedCMNotification && createPortal(
-        <Snackbar
-          open={showFedCMNotification}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          onClose={handleCloseFedCMNotification}
-          sx={{
-            '& .MuiSnackbar-root': {
-              top: '20px',
-            },
-            zIndex: 9999,
-          }}
-        >
-          <Box
+      {showFedCMNotification &&
+        createPortal(
+          <Snackbar
+            open={showFedCMNotification}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            onClose={handleCloseFedCMNotification}
             sx={{
-              background: 'var(--background-color)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '18px',
-              p: 3,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              minWidth: '300px',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+              '& .MuiSnackbar-root': {
+                top: '20px',
+              },
+              zIndex: 9999,
             }}
           >
-
-            <Box>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: 'var(--text-color)',
-                  fontWeight: 600,
-                  mb: 0.5,
-                }}
-              >
-                Авторизация через внешние сервисы отключена
-              </Typography>
-              <Typography 
-                variant="body2" 
-                sx={{ 
-                  color: 'var(--text-secondary)',
-                }}
-              >
-                В вашем браузере отключена авторизация через Google. Включите её в настройках браузера или используйте вход по email.
-              </Typography>
+            <Box
+              sx={{
+                background: 'var(--background-color)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '18px',
+                p: 3,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                minWidth: '300px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+              }}
+            >
+              <Box>
+                <Typography
+                  variant='body1'
+                  sx={{
+                    color: 'var(--text-color)',
+                    fontWeight: 600,
+                    mb: 0.5,
+                  }}
+                >
+                  Авторизация через внешние сервисы отключена
+                </Typography>
+                <Typography
+                  variant='body2'
+                  sx={{
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  В вашем браузере отключена авторизация через Google. Включите
+                  её в настройках браузера или используйте вход по email.
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Snackbar>,
-        document.body
-      )}
+          </Snackbar>,
+          document.body
+        )}
     </>
   );
 };

@@ -11,7 +11,9 @@ interface AuthRoutesProps {
 // Lazy imports
 const Login = React.lazy(() => import('../pages/Auth/Login'));
 const Register = React.lazy(() => import('../pages/Auth/Register'));
-const RegisterProfile = React.lazy(() => import('../pages/Auth/RegisterProfile'));
+const RegisterProfile = React.lazy(
+  () => import('../pages/Auth/RegisterProfile')
+);
 const RegisterChannel = React.lazy(
   () => import('../pages/Auth/RegisterChannel')
 );
@@ -32,7 +34,7 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
     user,
     loading,
     hasTempSession,
-    currentPath: window.location.pathname
+    currentPath: window.location.pathname,
   });
 
   const hasProfile = (): boolean => {
@@ -40,14 +42,18 @@ const AuthRoutes: React.FC<AuthRoutesProps> = ({ setUser }) => {
     // Use optional chaining and type guards to avoid TS errors
     return Boolean(
       (user as { username?: string; id?: string | number }).username &&
-      (user as { username?: string; id?: string | number }).id
+        (user as { username?: string; id?: string | number }).id
     );
   };
 
   // Если есть временная сессия и мы НЕ на странице регистрации профиля, перенаправляем
-  if (hasTempSession && !loading && window.location.pathname !== '/register/profile') {
+  if (
+    hasTempSession &&
+    !loading &&
+    window.location.pathname !== '/register/profile'
+  ) {
     console.log('Redirecting to /register/profile due to temp session');
-    return <Navigate to="/register/profile" replace />;
+    return <Navigate to='/register/profile' replace />;
   }
 
   return (

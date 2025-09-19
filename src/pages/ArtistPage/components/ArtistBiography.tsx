@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  Collapse,
-  useTheme,
-} from '@mui/material';
+import { Box, Typography, Button, Collapse, useTheme } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { ArtistBiographyProps } from '../types';
@@ -50,30 +44,33 @@ const BiographyTitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const BiographyText = styled(Typography)<{ expanded?: boolean }>(({ theme, expanded }) => ({
-  lineHeight: 1.7,
-  color: 'rgba(255, 255, 255, 0.85)',
-  whiteSpace: 'pre-line',
-  fontSize: '1rem',
-  position: 'relative',
-  ...(!expanded && {
-    maxHeight: '120px',
-    overflow: 'hidden',
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: '40px',
-      background: 'linear-gradient(transparent, var(--theme-background, rgba(15, 15, 15, 0.98)))',
-      pointerEvents: 'none',
+const BiographyText = styled(Typography)<{ expanded?: boolean }>(
+  ({ theme, expanded }) => ({
+    lineHeight: 1.7,
+    color: 'rgba(255, 255, 255, 0.85)',
+    whiteSpace: 'pre-line',
+    fontSize: '1rem',
+    position: 'relative',
+    ...(!expanded && {
+      maxHeight: '120px',
+      overflow: 'hidden',
+      '&::after': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '40px',
+        background:
+          'linear-gradient(transparent, var(--theme-background, rgba(15, 15, 15, 0.98)))',
+        pointerEvents: 'none',
+      },
+    }),
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '0.95rem',
     },
-  }),
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '0.95rem',
-  },
-}));
+  })
+);
 
 const ExpandButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
@@ -92,14 +89,10 @@ const ExpandButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const ArtistBiography: React.FC<ArtistBiographyProps> = ({
-  bio,
-  isMobile,
-}) => {
+const ArtistBiography: React.FC<ArtistBiographyProps> = ({ bio, isMobile }) => {
   const [expanded, setExpanded] = useState(false);
   const theme = useTheme();
 
-  
   const needsExpansion = bio.length > (isMobile ? 200 : 300);
 
   const handleToggleExpanded = () => {
@@ -108,25 +101,20 @@ const ArtistBiography: React.FC<ArtistBiographyProps> = ({
 
   return (
     <BiographyContainer>
-      <BiographyTitle variant="h5">
-        Биография
-      </BiographyTitle>
-      
+      <BiographyTitle variant='h5'>Биография</BiographyTitle>
+
       <Collapse in={expanded || !needsExpansion} collapsedSize={120}>
-        <BiographyText 
-          variant="body1" 
-          expanded={expanded || !needsExpansion}
-        >
+        <BiographyText variant='body1' expanded={expanded || !needsExpansion}>
           {bio}
         </BiographyText>
       </Collapse>
 
       {needsExpansion && (
-        <Box textAlign="center">
+        <Box textAlign='center'>
           <ExpandButton
             onClick={handleToggleExpanded}
             endIcon={expanded ? <ExpandLess /> : <ExpandMore />}
-            size="small"
+            size='small'
           >
             {expanded ? 'Свернуть' : 'Читать полностью'}
           </ExpandButton>

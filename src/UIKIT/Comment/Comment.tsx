@@ -72,7 +72,12 @@ interface CommentProps {
   currentUserId?: number;
   isAdmin?: boolean;
   onImageClick?: (imageUrl: string) => void;
-  onSubmitReply?: (commentId: number, content: string, image?: File, parentReplyId?: number) => void;
+  onSubmitReply?: (
+    commentId: number,
+    content: string,
+    image?: File,
+    parentReplyId?: number
+  ) => void;
   isSubmittingReply?: boolean;
   currentUser?: any;
 }
@@ -95,13 +100,18 @@ const Comment: React.FC<CommentProps> = ({
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [replyingTo, setReplyingTo] = useState<{name: string, id?: number} | null>(null);
+  const [replyingTo, setReplyingTo] = useState<{
+    name: string;
+    id?: number;
+  } | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isOwner = currentUserId === comment.user_id || isAdmin;
   const hasReplies = comment.replies && comment.replies.length > 0;
   const visibleReplies = hasReplies ? comment.replies!.slice(0, 2) : [];
-  const hiddenRepliesCount = hasReplies ? Math.max(0, comment.replies!.length - 2) : 0;
+  const hiddenRepliesCount = hasReplies
+    ? Math.max(0, comment.replies!.length - 2)
+    : 0;
 
   const handleLike = () => {
     onLike(comment.id);
@@ -119,7 +129,11 @@ const Comment: React.FC<CommentProps> = ({
     onReply(comment.id, reply.id);
   };
 
-  const handleSubmitReply = (content: string, image?: File, parentReplyId?: number) => {
+  const handleSubmitReply = (
+    content: string,
+    image?: File,
+    parentReplyId?: number
+  ) => {
     if (onSubmitReply) {
       onSubmitReply(comment.id, content, image, parentReplyId);
       setShowReplyForm(false);
@@ -155,7 +169,8 @@ const Comment: React.FC<CommentProps> = ({
     if (!imagePath) return null;
     if (
       imagePath.includes('/static/uploads/') &&
-      imagePath.indexOf('/static/uploads/') !== imagePath.lastIndexOf('/static/uploads/')
+      imagePath.indexOf('/static/uploads/') !==
+        imagePath.lastIndexOf('/static/uploads/')
     ) {
       return imagePath.substring(imagePath.lastIndexOf('/static/uploads/'));
     }
@@ -163,30 +178,43 @@ const Comment: React.FC<CommentProps> = ({
   };
 
   return (
-    <div className="comment">
-      <div className="comment-header">
-        <Link to={`/profile/${comment.user.username}`} className="comment-avatar-link">
+    <div className='comment'>
+      <div className='comment-header'>
+        <Link
+          to={`/profile/${comment.user.username}`}
+          className='comment-avatar-link'
+        >
           <img
             src={getAvatarUrl(comment.user)}
             alt={comment.user.name}
-            className="comment-avatar"
-            onError={(e) => {
+            className='comment-avatar'
+            onError={e => {
               const target = e.target as HTMLImageElement;
-              target.src = 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
+              target.src =
+                'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
             }}
           />
         </Link>
-        
-        <div className="comment-content">
-          <div className="comment-user-info">
-            <Link to={`/profile/${comment.user.username}`} className="comment-user-name">
+
+        <div className='comment-content'>
+          <div className='comment-user-info'>
+            <Link
+              to={`/profile/${comment.user.username}`}
+              className='comment-user-name'
+            >
               {comment.user.name}
-              {((comment.user.verification?.status && comment.user.verification.status > 0) || 
+              {((comment.user.verification?.status &&
+                comment.user.verification.status > 0) ||
                 comment.user.verification_status === 'verified' ||
-                (typeof comment.user.verification_status === 'number' && comment.user.verification_status > 0)) && (
+                (typeof comment.user.verification_status === 'number' &&
+                  comment.user.verification_status > 0)) && (
                 <VerificationBadge
-                  status={Number(comment.user.verification?.status || comment.user.verification_status || 0)}
-                  size="small"
+                  status={Number(
+                    comment.user.verification?.status ||
+                      comment.user.verification_status ||
+                      0
+                  )}
+                  size='small'
                 />
               )}
               {comment.user.achievement && (
@@ -194,67 +222,76 @@ const Comment: React.FC<CommentProps> = ({
                   achievement={{
                     ...comment.user.achievement,
                     upgrade: comment.user.achievement.upgrade || '0',
-                    color_upgrade: comment.user.achievement.color_upgrade || '#FFD700'
+                    color_upgrade:
+                      comment.user.achievement.color_upgrade || '#FFD700',
                   }}
-                  size="small"
-                  className="comment-achievement"
+                  size='small'
+                  className='comment-achievement'
                   onError={() => {}}
                   showTooltip={false}
-                  tooltipText=""
+                  tooltipText=''
                   onClick={() => {}}
                 />
               )}
             </Link>
-            <span className="comment-time">{formatTimeAgo(comment.timestamp)}</span>
+            <span className='comment-time'>
+              {formatTimeAgo(comment.timestamp)}
+            </span>
           </div>
-          
-          <div className="comment-text">{comment.content}</div>
-          
+
+          <div className='comment-text'>{comment.content}</div>
+
           {comment.image && (
-            <div className="comment-image-container">
+            <div className='comment-image-container'>
               <img
                 src={sanitizeImagePath(comment.image) || comment.image}
-                alt="Comment"
-                className="comment-image"
+                alt='Comment'
+                className='comment-image'
                 onClick={() => handleImageClick(comment.image!)}
               />
             </div>
           )}
-          
-          <div className="comment-actions">
+
+          <div className='comment-actions'>
             <button
               className={`comment-action ${comment.user_liked ? 'liked' : ''}`}
               onClick={handleLike}
             >
-              <svg className="comment-action-icon" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              <svg className='comment-action-icon' viewBox='0 0 24 24'>
+                <path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' />
               </svg>
               <span>{comment.likes_count}</span>
             </button>
-            
-            <button className="comment-action" onClick={handleReply}>
-              <svg className="comment-action-icon reply-icon" viewBox="0 0 24 24">
-                <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/>
+
+            <button className='comment-action' onClick={handleReply}>
+              <svg
+                className='comment-action-icon reply-icon'
+                viewBox='0 0 24 24'
+              >
+                <path d='M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z' />
               </svg>
               <span>{t('comment.menu.reply')}</span>
             </button>
-            
+
             {isOwner && (
-              <div className="comment-menu" ref={menuRef}>
+              <div className='comment-menu' ref={menuRef}>
                 <button
-                  className="comment-menu-trigger"
+                  className='comment-menu-trigger'
                   onClick={() => setShowMenu(!showMenu)}
                 >
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                  <svg viewBox='0 0 24 24'>
+                    <path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z' />
                   </svg>
                 </button>
-                
+
                 {showMenu && (
-                  <div className="comment-menu-dropdown">
-                    <button className="comment-menu-item delete" onClick={handleDelete}>
-                      <svg viewBox="0 0 24 24">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                  <div className='comment-menu-dropdown'>
+                    <button
+                      className='comment-menu-item delete'
+                      onClick={handleDelete}
+                    >
+                      <svg viewBox='0 0 24 24'>
+                        <path d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' />
                       </svg>
                       {t('comment.menu.delete')}
                     </button>
@@ -265,17 +302,17 @@ const Comment: React.FC<CommentProps> = ({
           </div>
         </div>
       </div>
-      
+
       {hasReplies && (
-        <div className="comment-replies">
+        <div className='comment-replies'>
           {/* Always show first 2 replies */}
-          <div className="comment-replies-list">
-            {visibleReplies.map((reply) => (
+          <div className='comment-replies-list'>
+            {visibleReplies.map(reply => (
               <Reply
                 key={reply.id}
                 reply={reply}
                 onLike={onLikeReply}
-                onDelete={(replyId) => onDeleteReply(comment.id, replyId)}
+                onDelete={replyId => onDeleteReply(comment.id, replyId)}
                 onReply={handleReplyToReply}
                 currentUserId={currentUserId}
                 isAdmin={isAdmin}
@@ -283,16 +320,16 @@ const Comment: React.FC<CommentProps> = ({
               />
             ))}
           </div>
-          
+
           {/* Show additional replies when expanded */}
           {showReplies && hiddenRepliesCount > 0 && (
-            <div className="comment-replies-list additional-replies">
-              {comment.replies!.slice(2).map((reply) => (
+            <div className='comment-replies-list additional-replies'>
+              {comment.replies!.slice(2).map(reply => (
                 <Reply
                   key={reply.id}
                   reply={reply}
                   onLike={onLikeReply}
-                  onDelete={(replyId) => onDeleteReply(comment.id, replyId)}
+                  onDelete={replyId => onDeleteReply(comment.id, replyId)}
                   onReply={handleReplyToReply}
                   currentUserId={currentUserId}
                   isAdmin={isAdmin}
@@ -301,18 +338,23 @@ const Comment: React.FC<CommentProps> = ({
               ))}
             </div>
           )}
-          
+
           {/* Show toggle button at bottom center if more than 2 replies */}
           {comment.replies!.length > 2 && (
-            <div className="comment-replies-toggle-container">
+            <div className='comment-replies-toggle-container'>
               <button
-                className="comment-replies-toggle"
+                className='comment-replies-toggle'
                 onClick={() => setShowReplies(!showReplies)}
               >
-                <svg className={`comment-replies-icon ${showReplies ? 'expanded' : ''}`} viewBox="0 0 24 24">
-                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+                <svg
+                  className={`comment-replies-icon ${showReplies ? 'expanded' : ''}`}
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z' />
                 </svg>
-                {showReplies ? 'Скрыть' : `Показать ${hiddenRepliesCount} ответов`}
+                {showReplies
+                  ? 'Скрыть'
+                  : `Показать ${hiddenRepliesCount} ответов`}
               </button>
             </div>
           )}
@@ -387,7 +429,8 @@ const Reply: React.FC<ReplyProps> = ({
     if (!imagePath) return null;
     if (
       imagePath.includes('/static/uploads/') &&
-      imagePath.indexOf('/static/uploads/') !== imagePath.lastIndexOf('/static/uploads/')
+      imagePath.indexOf('/static/uploads/') !==
+        imagePath.lastIndexOf('/static/uploads/')
     ) {
       return imagePath.substring(imagePath.lastIndexOf('/static/uploads/'));
     }
@@ -395,106 +438,127 @@ const Reply: React.FC<ReplyProps> = ({
   };
 
   return (
-    <div className="reply">
-      <div className="reply-header">
-        <Link to={`/profile/${reply.user.username}`} className="reply-avatar-link">
+    <div className='reply'>
+      <div className='reply-header'>
+        <Link
+          to={`/profile/${reply.user.username}`}
+          className='reply-avatar-link'
+        >
           <img
             src={getAvatarUrl(reply.user)}
             alt={reply.user.name}
-            className="reply-avatar"
-            onError={(e) => {
+            className='reply-avatar'
+            onError={e => {
               const target = e.target as HTMLImageElement;
-              target.src = 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
+              target.src =
+                'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
             }}
           />
         </Link>
-        
-        <div className="reply-content">
-          <div className="reply-user-info">
-            <Link to={`/profile/${reply.user.username}`} className="reply-user-name">
+
+        <div className='reply-content'>
+          <div className='reply-user-info'>
+            <Link
+              to={`/profile/${reply.user.username}`}
+              className='reply-user-name'
+            >
               {reply.user.name}
-              {((reply.user.verification?.status && reply.user.verification.status > 0) || 
+              {((reply.user.verification?.status &&
+                reply.user.verification.status > 0) ||
                 reply.user.verification_status === 'verified' ||
-                (typeof reply.user.verification_status === 'number' && reply.user.verification_status > 0) ||
-                (typeof reply.user.verification === 'number' && reply.user.verification > 0)) && (
+                (typeof reply.user.verification_status === 'number' &&
+                  reply.user.verification_status > 0) ||
+                (typeof reply.user.verification === 'number' &&
+                  reply.user.verification > 0)) && (
                 <VerificationBadge
-                  status={Number(reply.user.verification?.status || reply.user.verification_status || reply.user.verification || 0)}
-                  size="small"
+                  status={Number(
+                    reply.user.verification?.status ||
+                      reply.user.verification_status ||
+                      reply.user.verification ||
+                      0
+                  )}
+                  size='small'
                 />
               )}
-
             </Link>
             {reply.parent_reply && (
-              <div className="reply-to-indicator">
-                <svg viewBox="0 0 24 24" className="reply-to-icon">
-                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+              <div className='reply-to-indicator'>
+                <svg viewBox='0 0 24 24' className='reply-to-icon'>
+                  <path d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z' />
                 </svg>
-                <span className="reply-to-text">ответ для {reply.parent_reply.user.name}</span>
+                <span className='reply-to-text'>
+                  ответ для {reply.parent_reply.user.name}
+                </span>
               </div>
             )}
-            <span className="reply-time">{formatTimeAgo(reply.timestamp)}</span>
+            <span className='reply-time'>{formatTimeAgo(reply.timestamp)}</span>
           </div>
-          
+
           {reply.parent_reply && (
-            <div className="reply-parent-message">
-              <div className="reply-parent-content">
-                <span className="reply-parent-text">{reply.parent_reply.content}</span>
+            <div className='reply-parent-message'>
+              <div className='reply-parent-content'>
+                <span className='reply-parent-text'>
+                  {reply.parent_reply.content}
+                </span>
               </div>
             </div>
           )}
-          
-          <div className="reply-text">{reply.content}</div>
-          
+
+          <div className='reply-text'>{reply.content}</div>
+
           {reply.image && (
-            <div className="reply-image-container">
+            <div className='reply-image-container'>
               <img
                 src={sanitizeImagePath(reply.image) || reply.image}
-                alt="Reply"
-                className="reply-image"
+                alt='Reply'
+                className='reply-image'
                 onClick={() => handleImageClick(reply.image!)}
               />
             </div>
           )}
-          
-          <div className="reply-actions">
+
+          <div className='reply-actions'>
             <button
               className={`reply-action ${reply.user_liked ? 'liked' : ''}`}
               onClick={handleLike}
             >
-              <svg className="reply-action-icon" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              <svg className='reply-action-icon' viewBox='0 0 24 24'>
+                <path d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z' />
               </svg>
               <span>{reply.likes_count}</span>
             </button>
-            
+
             {onReply && (
-              <button
-                className="reply-action"
-                onClick={() => onReply(reply)}
-              >
-                <svg className="reply-action-icon reply-icon" viewBox="0 0 24 24">
-                  <path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"/>
+              <button className='reply-action' onClick={() => onReply(reply)}>
+                <svg
+                  className='reply-action-icon reply-icon'
+                  viewBox='0 0 24 24'
+                >
+                  <path d='M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z' />
                 </svg>
                 <span>{t('comment.menu.reply')}</span>
               </button>
             )}
-            
+
             {isOwner && (
-              <div className="reply-menu" ref={menuRef}>
+              <div className='reply-menu' ref={menuRef}>
                 <button
-                  className="reply-menu-trigger"
+                  className='reply-menu-trigger'
                   onClick={() => setShowMenu(!showMenu)}
                 >
-                  <svg viewBox="0 0 24 24">
-                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                  <svg viewBox='0 0 24 24'>
+                    <path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z' />
                   </svg>
                 </button>
-                
+
                 {showMenu && (
-                  <div className="reply-menu-dropdown">
-                    <button className="reply-menu-item delete" onClick={handleDelete}>
-                      <svg viewBox="0 0 24 24">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                  <div className='reply-menu-dropdown'>
+                    <button
+                      className='reply-menu-item delete'
+                      onClick={handleDelete}
+                    >
+                      <svg viewBox='0 0 24 24'>
+                        <path d='M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z' />
                       </svg>
                       {t('comment.menu.delete')}
                     </button>

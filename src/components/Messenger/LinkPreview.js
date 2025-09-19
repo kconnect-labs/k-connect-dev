@@ -103,117 +103,115 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
       }}
     >
       {preview?.image && (
-            <Box
-              sx={{
-                width: 80,
-                height: 80,
-                flexShrink: 0,
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <Box
-                component='img'
-                src={preview.image}
-                alt={preview.title || 'Ссылка'}
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-                onError={e => {
-                  e.target.onerror = null;
-                  e.target.style.display = 'none';
-                }}
-              />
-            </Box>
-          )}
+        <Box
+          sx={{
+            width: 80,
+            height: 80,
+            flexShrink: 0,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
           <Box
+            component='img'
+            src={preview.image}
+            alt={preview.title || 'Ссылка'}
             sx={{
-              p: 1.2,
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              borderLeft: preview?.image
-                ? `1px solid ${colors.border}`
-                : 'none',
-              backgroundColor: 'rgba(0, 0, 0, 0.02)',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+            onError={e => {
+              e.target.onerror = null;
+              e.target.style.display = 'none';
+            }}
+          />
+        </Box>
+      )}
+      <Box
+        sx={{
+          p: 1.2,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          borderLeft: preview?.image ? `1px solid ${colors.border}` : 'none',
+          backgroundColor: 'rgba(0, 0, 0, 0.02)',
+        }}
+      >
+        <Typography
+          variant='body2'
+          sx={{
+            margin: 0,
+            fontWeight: 500,
+            fontSize: '0.8rem',
+            lineHeight: 1.3,
+            color: theme.palette.text.primary,
+            mb: 0.3,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {(preview?.title || getDomainName(url)).length > 30
+            ? `${(preview?.title || getDomainName(url)).substring(0, 30)}...`
+            : preview?.title || getDomainName(url)}
+        </Typography>
+        {preview?.description && (
+          <Typography
+            variant='caption'
+            sx={{
+              margin: 0,
+              color: theme.palette.text.secondary,
+              fontSize: '0.7rem',
+              lineHeight: 1.2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              mb: 0.3,
             }}
           >
-            <Typography
-              variant='body2'
-              sx={{
-                margin: 0,
-                fontWeight: 500,
-                fontSize: '0.8rem',
-                lineHeight: 1.3,
-                color: theme.palette.text.primary,
-                mb: 0.3,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {(preview?.title || getDomainName(url)).length > 30
-                ? `${(preview?.title || getDomainName(url)).substring(0, 30)}...`
-                : preview?.title || getDomainName(url)}
-            </Typography>
-            {preview?.description && (
-              <Typography
-                variant='caption'
-                sx={{
-                  margin: 0,
-                  color: theme.palette.text.secondary,
-                  fontSize: '0.7rem',
-                  lineHeight: 1.2,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: 'vertical',
-                  mb: 0.3,
-                }}
-              >
-                {preview.description.length > 45
-                  ? `${preview.description.substring(0, 45)}...`
-                  : preview.description}
-              </Typography>
-            )}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: colors.accent + '15',
-                py: 0.2,
-                px: 0.6,
-                borderRadius: '6px',
-                width: 'fit-content',
-                maxWidth: '100%',
-              }}
-            >
-              <LinkIcon
-                fontSize='small'
-                sx={{ color: colors.accent, mr: 0.4, fontSize: '0.7rem' }}
-              />
-              <Typography
-                variant='caption'
-                sx={{
-                  margin: 0,
-                  color: theme.palette.text.secondary,
-                  fontWeight: 500,
-                  fontSize: '0.65rem',
-                  lineHeight: 1.2,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-                noWrap
-              >
-                {getDomainName(url)}
-              </Typography>
-            </Box>
-          </Box>
+            {preview.description.length > 45
+              ? `${preview.description.substring(0, 45)}...`
+              : preview.description}
+          </Typography>
+        )}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: colors.accent + '15',
+            py: 0.2,
+            px: 0.6,
+            borderRadius: '6px',
+            width: 'fit-content',
+            maxWidth: '100%',
+          }}
+        >
+          <LinkIcon
+            fontSize='small'
+            sx={{ color: colors.accent, mr: 0.4, fontSize: '0.7rem' }}
+          />
+          <Typography
+            variant='caption'
+            sx={{
+              margin: 0,
+              color: theme.palette.text.secondary,
+              fontWeight: 500,
+              fontSize: '0.65rem',
+              lineHeight: 1.2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            noWrap
+          >
+            {getDomainName(url)}
+          </Typography>
+        </Box>
+      </Box>
     </Paper>
   );
 };

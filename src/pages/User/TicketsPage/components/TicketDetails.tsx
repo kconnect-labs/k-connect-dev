@@ -14,7 +14,7 @@ import {
   Divider,
   CircularProgress,
   Alert,
-  Skeleton
+  Skeleton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -27,7 +27,7 @@ import {
   BugReport,
   ContentPaste,
   Security,
-  Report
+  Report,
 } from '@mui/icons-material';
 import { Ticket } from '../types';
 
@@ -140,7 +140,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
   open,
   onClose,
   onAddComment,
-  loading = false
+  loading = false,
 }) => {
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -167,14 +167,16 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
   };
 
   return (
-    <StyledDialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ 
-        color: 'rgba(255, 255, 255, 0.87)',
-        borderBottom: '1px solid rgb(24 24 24)',
-        pb: 2
-      }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" component="div">
+    <StyledDialog open={open} onClose={onClose} maxWidth='md' fullWidth>
+      <DialogTitle
+        sx={{
+          color: 'rgba(255, 255, 255, 0.87)',
+          borderBottom: '1px solid rgb(24 24 24)',
+          pb: 2,
+        }}
+      >
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
+          <Typography variant='h6' component='div'>
             {ticket.title}
           </Typography>
           <IconButton
@@ -188,40 +190,51 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
       <DialogContent sx={{ pt: 3 }}>
         {/* Статусы и метаданные */}
-        <Box display="flex" gap={1} flexWrap="wrap" mb={3}>
+        <Box display='flex' gap={1} flexWrap='wrap' mb={3}>
           <StyledChip
             label={getStatusLabel(ticket.status)}
             color={getStatusColor(ticket.status) as any}
-            size="small"
-            icon={ticket.status === 'new' ? <Schedule /> : 
-                  ticket.status === 'resolved' ? <CheckCircle /> : 
-                  ticket.status === 'closed' ? <Close /> : <Schedule />}
+            size='small'
+            icon={
+              ticket.status === 'new' ? (
+                <Schedule />
+              ) : ticket.status === 'resolved' ? (
+                <CheckCircle />
+              ) : ticket.status === 'closed' ? (
+                <Close />
+              ) : (
+                <Schedule />
+              )
+            }
           />
           <StyledChip
             label={getPriorityLabel(ticket.priority)}
             color={getPriorityColor(ticket.priority) as any}
-            size="small"
+            size='small'
             icon={<Warning />}
           />
           <StyledChip
             label={getCategoryLabel(ticket.category)}
-            color="default"
-            size="small"
+            color='default'
+            size='small'
             icon={getCategoryIcon(ticket.category)}
           />
         </Box>
 
         {/* Описание */}
         <Box mb={3}>
-          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 1 }}>
+          <Typography
+            variant='h6'
+            sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 1 }}
+          >
             Описание
           </Typography>
-          <Typography 
-            variant="body1" 
-            sx={{ 
+          <Typography
+            variant='body1'
+            sx={{
               color: 'rgba(255, 255, 255, 0.7)',
               whiteSpace: 'pre-wrap',
-              lineHeight: 1.6
+              lineHeight: 1.6,
             }}
           >
             {ticket.description}
@@ -230,28 +243,46 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
         {/* Метаданные */}
         <Box mb={3}>
-          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 1 }}>
+          <Typography
+            variant='h6'
+            sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 1 }}
+          >
             Информация
           </Typography>
-          <Box display="flex" flexDirection="column" gap={1}>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+          <Box display='flex' flexDirection='column' gap={1}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+            >
               <strong>Создан:</strong> {formatDate(ticket.created_at)}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+            >
               <strong>Обновлен:</strong> {formatDate(ticket.updated_at)}
             </Typography>
             {ticket.resolved_at && (
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+              >
                 <strong>Решен:</strong> {formatDate(ticket.resolved_at)}
               </Typography>
             )}
             {ticket.closed_at && (
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+              >
                 <strong>Закрыт:</strong> {formatDate(ticket.closed_at)}
               </Typography>
             )}
             {ticket.target_type && ticket.target_id && (
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)' }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
+              >
                 <strong>Цель:</strong> {ticket.target_type} #{ticket.target_id}
               </Typography>
             )}
@@ -262,58 +293,97 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
         {/* Комментарии */}
         <Box mb={3}>
-          <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
+          <Typography
+            variant='h6'
+            sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
+          >
             Комментарии ({ticket.comments?.length || 0})
           </Typography>
-          
+
           {loading ? (
-            <Box display="flex" flexDirection="column" gap={2}>
-              {[1, 2, 3].map((i) => (
-                <Box key={i} sx={{ 
-                  p: 2, 
-                  background: 'rgba(207, 188, 251, 0.05)',
-                  borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(207, 188, 251, 0.1)'
-                }}>
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <Skeleton variant="circular" width={24} height={24} />
-                    <Skeleton variant="text" width={120} height={20} sx={{ borderRadius: 1 }} />
-                    <Skeleton variant="text" width={80} height={16} sx={{ borderRadius: 1 }} />
+            <Box display='flex' flexDirection='column' gap={2}>
+              {[1, 2, 3].map(i => (
+                <Box
+                  key={i}
+                  sx={{
+                    p: 2,
+                    background: 'rgba(207, 188, 251, 0.05)',
+                    borderRadius: 'var(--main-border-radius)',
+                    border: '1px solid rgba(207, 188, 251, 0.1)',
+                  }}
+                >
+                  <Box display='flex' alignItems='center' gap={1} mb={1}>
+                    <Skeleton variant='circular' width={24} height={24} />
+                    <Skeleton
+                      variant='text'
+                      width={120}
+                      height={20}
+                      sx={{ borderRadius: 1 }}
+                    />
+                    <Skeleton
+                      variant='text'
+                      width={80}
+                      height={16}
+                      sx={{ borderRadius: 1 }}
+                    />
                   </Box>
-                  <Skeleton variant="text" width="100%" height={16} sx={{ borderRadius: 1 }} />
-                  <Skeleton variant="text" width="80%" height={16} sx={{ borderRadius: 1 }} />
+                  <Skeleton
+                    variant='text'
+                    width='100%'
+                    height={16}
+                    sx={{ borderRadius: 1 }}
+                  />
+                  <Skeleton
+                    variant='text'
+                    width='80%'
+                    height={16}
+                    sx={{ borderRadius: 1 }}
+                  />
                 </Box>
               ))}
             </Box>
           ) : !ticket.comments || ticket.comments.length === 0 ? (
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)', fontStyle: 'italic' }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.5)', fontStyle: 'italic' }}
+            >
               Пока нет комментариев
             </Typography>
           ) : (
-            <Box display="flex" flexDirection="column" gap={2}>
-              {ticket.comments?.map((comment) => (
-                <Box key={comment.id} sx={{ 
-                  p: 2, 
-                  background: 'rgba(207, 188, 251, 0.05)',
-                  borderRadius: 'var(--main-border-radius)',
-                  border: '1px solid rgba(207, 188, 251, 0.1)'
-                }}>
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
-                    <Avatar 
-                      src={comment.moderator.avatar} 
+            <Box display='flex' flexDirection='column' gap={2}>
+              {ticket.comments?.map(comment => (
+                <Box
+                  key={comment.id}
+                  sx={{
+                    p: 2,
+                    background: 'rgba(207, 188, 251, 0.05)',
+                    borderRadius: 'var(--main-border-radius)',
+                    border: '1px solid rgba(207, 188, 251, 0.1)',
+                  }}
+                >
+                  <Box display='flex' alignItems='center' gap={1} mb={1}>
+                    <Avatar
+                      src={comment.moderator.avatar}
                       alt={comment.moderator.name}
                       sx={{ width: 24, height: 24, fontSize: '0.75rem' }}
                     >
                       {comment.moderator.name.charAt(0).toUpperCase()}
                     </Avatar>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Typography variant="body2" sx={{ color: 'rgba(207, 188, 251, 0.9)', fontWeight: 500 }}>
+                    <Box display='flex' alignItems='center' gap={1}>
+                      <Typography
+                        variant='body2'
+                        sx={{
+                          color: 'rgba(207, 188, 251, 0.9)',
+                          fontWeight: 500,
+                        }}
+                      >
                         {comment.moderator.name}
                       </Typography>
                       {comment.moderator.is_moderator && (
                         <Box
                           sx={{
-                            background: 'linear-gradient(45deg,rgb(172, 146, 231) 30%,rgb(181, 130, 240) 90%)',
+                            background:
+                              'linear-gradient(45deg,rgb(172, 146, 231) 30%,rgb(181, 130, 240) 90%)',
                             color: 'white',
                             px: 1,
                             py: 0.25,
@@ -321,18 +391,27 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                             fontSize: '0.7rem',
                             fontWeight: 600,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
+                            letterSpacing: '0.5px',
                           }}
                         >
                           Модератор
                         </Box>
                       )}
                     </Box>
-                    <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+                    <Typography
+                      variant='caption'
+                      sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                    >
                       {formatDate(comment.created_at)}
                     </Typography>
                   </Box>
-                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', whiteSpace: 'pre-wrap' }}>
+                  <Typography
+                    variant='body2'
+                    sx={{
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      whiteSpace: 'pre-wrap',
+                    }}
+                  >
                     {comment.content}
                   </Typography>
                 </Box>
@@ -344,19 +423,22 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
         {/* Добавление комментария */}
         {!ticket.is_closed && (
           <Box>
-            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
+            <Typography
+              variant='h6'
+              sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
+            >
               Добавить комментарий
             </Typography>
-            <Box display="flex" gap={1}>
+            <Box display='flex' gap={1}>
               <TextField
                 fullWidth
                 multiline
                 rows={3}
                 value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+                onChange={e => setCommentText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Напишите ваш комментарий или дополнительную информацию..."
-                variant="outlined"
+                placeholder='Напишите ваш комментарий или дополнительную информацию...'
+                variant='outlined'
                 disabled={submitting}
                 sx={{
                   '& .MuiOutlinedInput-root': {
@@ -377,16 +459,18 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                 }}
               />
               <Button
-                variant="contained"
+                variant='contained'
                 onClick={handleSubmitComment}
                 disabled={!commentText.trim() || submitting}
                 sx={{
-                  background: 'linear-gradient(45deg, #cfbcfb 30%, #827095 90%)',
+                  background:
+                    'linear-gradient(45deg, #cfbcfb 30%, #827095 90%)',
                   color: 'white',
                   minWidth: 'auto',
                   px: 2,
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #b8a8e8 30%, #6b5b7a 90%)',
+                    background:
+                      'linear-gradient(45deg, #b8a8e8 30%, #6b5b7a 90%)',
                   },
                   '&:disabled': {
                     background: 'rgb(24 24 24)',
@@ -405,10 +489,12 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
         )}
       </DialogContent>
 
-      <DialogActions sx={{ 
-        p: 3, 
-        borderTop: '1px solid rgb(24 24 24)' 
-      }}>
+      <DialogActions
+        sx={{
+          p: 3,
+          borderTop: '1px solid rgb(24 24 24)',
+        }}
+      >
         <Button
           onClick={onClose}
           sx={{
@@ -427,4 +513,4 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
   );
 };
 
-export default TicketDetails; 
+export default TicketDetails;

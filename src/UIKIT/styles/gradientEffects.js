@@ -106,9 +106,8 @@ export const getGradientEffects = (
 
 export const gradientBorder = (theme, variant = 'dark') => ({
   border: `1px solid ${variant === 'dark' ? 'rgba(255, 255, 255, 0.1)' : alpha(theme.palette.primary.main, 0.2)}`,
-  background:
-    variant === 'dark' ? '#1c1c1c' : 'rgba(255, 255, 255, 0.1)',
-      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+  background: variant === 'dark' ? '#1c1c1c' : 'rgba(255, 255, 255, 0.1)',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderRadius: '16px',
   position: 'relative',
   overflow: 'hidden',

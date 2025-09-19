@@ -785,7 +785,9 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       height: '32px',
                       borderRadius: '50%',
                       background: 'rgba(255, 255, 255, 0.1)',
-                      display: formatUserAvatar(user.photo, user.id) ? 'none' : 'flex',
+                      display: formatUserAvatar(user.photo, user.id)
+                        ? 'none'
+                        : 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: '14px',

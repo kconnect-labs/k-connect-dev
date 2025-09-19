@@ -15,7 +15,9 @@ interface ModeratorData {
 }
 
 export const useCurrentUser = () => {
-  const [moderatorData, setModeratorData] = useState<ModeratorData | null>(null);
+  const [moderatorData, setModeratorData] = useState<ModeratorData | null>(
+    null
+  );
   const [permissions, setPermissions] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +67,10 @@ export const useCurrentUser = () => {
       }
     } catch (err) {
       console.error('Error checking moderator status:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Не удалось проверить права модератора';
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : 'Не удалось проверить права модератора';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -77,9 +82,12 @@ export const useCurrentUser = () => {
     checkModeratorStatus();
   }, [checkModeratorStatus]);
 
-  const hasAdminAccess = useCallback((requiredAdminId: number = 3) => {
-    return moderatorData?.user?.id === requiredAdminId;
-  }, [moderatorData]);
+  const hasAdminAccess = useCallback(
+    (requiredAdminId: number = 3) => {
+      return moderatorData?.user?.id === requiredAdminId;
+    },
+    [moderatorData]
+  );
 
   const hasModeratorAccess = useCallback(() => {
     return moderatorData?.is_moderator || false;

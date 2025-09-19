@@ -57,14 +57,14 @@ export const getSvgAsset = (itemId: number): string => {
   if (preloadedData && preloadedData[itemId]) {
     return preloadedData[itemId];
   }
-  
+
   return svgAssets[itemId] || '';
 };
 
 export const getSvgDataUrl = (itemId: number): string => {
   const svg = getSvgAsset(itemId);
   if (!svg) return '';
-  
+
   // Конвертируем SVG в data URL
   const encodedSvg = encodeURIComponent(svg);
   return `data:image/svg+xml,${encodedSvg}`;

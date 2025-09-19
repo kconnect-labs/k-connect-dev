@@ -12,36 +12,38 @@ import { ReactComponent as CheckmarkSvg } from './badge/checkmark.svg';
  * @param {string} props.color - Color for the checkmark
  * @returns {React.ReactElement}
  */
-const VerificationCheckmark = React.forwardRef(({ color, size, onClick, onTouchStart }, ref) => (
-  <Box
-    ref={ref}
-    onClick={onClick}
-    onTouchStart={onTouchStart}
-    sx={{
-      width: size === 'small' ? 19 : 24,
-      height: size === 'small' ? 19 : 24,
-      ml: '2px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: onClick ? 'pointer' : 'default',
-      transition: 'all 0.2s ease',
-      color: color,
-      '&:hover': onClick
-        ? {
-            transform: 'scale(1.1)',
-          }
-        : {},
-      '&:active': onClick
-        ? {
-            transform: 'scale(0.95)',
-          }
-        : {},
-    }}
-  >
-    <CheckmarkSvg style={{ width: '100%', height: '100%' }} />
-  </Box>
-));
+const VerificationCheckmark = React.forwardRef(
+  ({ color, size, onClick, onTouchStart }, ref) => (
+    <Box
+      ref={ref}
+      onClick={onClick}
+      onTouchStart={onTouchStart}
+      sx={{
+        width: size === 'small' ? 19 : 24,
+        height: size === 'small' ? 19 : 24,
+        ml: '2px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: onClick ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
+        color: color,
+        '&:hover': onClick
+          ? {
+              transform: 'scale(1.1)',
+            }
+          : {},
+        '&:active': onClick
+          ? {
+              transform: 'scale(0.95)',
+            }
+          : {},
+      }}
+    >
+      <CheckmarkSvg style={{ width: '100%', height: '100%' }} />
+    </Box>
+  )
+);
 
 const CustomTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -186,12 +188,12 @@ const VerificationBadge = React.forwardRef(({ status, size, onClick }, ref) => {
     >
       <span>
         <VerificationCheckmark
-            ref={ref}
+          ref={ref}
           color={color}
-            size={size}
-            onClick={handleClick}
-            onTouchStart={handleTouchStart}
-          />
+          size={size}
+          onClick={handleClick}
+          onTouchStart={handleTouchStart}
+        />
       </span>
     </CustomTooltip>
   );

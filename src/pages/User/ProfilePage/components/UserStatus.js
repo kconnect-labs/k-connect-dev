@@ -124,9 +124,13 @@ const UserStatus = ({ statusText, statusColor }) => {
           </SvgIcon>
         );
       case 'music':
-        return <MusicNoteIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
+        return (
+          <MusicNoteIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />
+        );
       case 'location':
-        return <LocationOnIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
+        return (
+          <LocationOnIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />
+        );
       case 'cake':
         return <CakeIcon sx={{ fontSize: 16, opacity: 0.9, flexShrink: 0 }} />;
       case 'info':
