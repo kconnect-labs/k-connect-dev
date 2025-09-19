@@ -5,7 +5,7 @@ import {
   Button,
   CircularProgress,
   Alert,
-  Snackbar,
+  Snackbar
 } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import TicketList from './components/TicketList';
@@ -26,7 +26,7 @@ function TabPanel(props: TabPanelProps) {
 
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`tickets-tabpanel-${index}`}
       aria-labelledby={`tickets-tab-${index}`}
@@ -53,8 +53,7 @@ const TicketsPage: React.FC = () => {
   });
 
   // Хуки для работы с тикетами
-  const { tickets, loading, error, pagination, fetchTickets, refreshTickets } =
-    useTickets();
+  const { tickets, loading, error, pagination, fetchTickets, refreshTickets } = useTickets();
   const { loading: actionLoading, addComment } = useTicketActions();
 
   // Фильтры для разных вкладок
@@ -74,10 +73,7 @@ const TicketsPage: React.FC = () => {
     fetchTickets({ status });
   }, [tabValue, fetchTickets]);
 
-  const handleTabChange = (
-    event: React.SyntheticEvent | null,
-    newValue: string | number
-  ) => {
+  const handleTabChange = (event: React.SyntheticEvent | null, newValue: string | number) => {
     setTabValue(newValue as number);
   };
 
@@ -87,7 +83,7 @@ const TicketsPage: React.FC = () => {
       const response = await fetch(`/api/user/tickets/${ticket.id}`, {
         credentials: 'include',
       });
-
+      
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
@@ -135,13 +131,13 @@ const TicketsPage: React.FC = () => {
         message: 'Комментарий добавлен',
         severity: 'success',
       });
-
+      
       // Обновляем только тикет в модалке, не весь список
       if (selectedTicket && selectedTicket.id === ticketId) {
         const response = await fetch(`/api/user/tickets/${ticketId}`, {
           credentials: 'include',
         });
-
+        
         if (response.ok) {
           const result = await response.json();
           if (result.success) {
@@ -167,26 +163,18 @@ const TicketsPage: React.FC = () => {
   // Подготавливаем табы для StyledTabs
   const tabs = [
     { value: 0, label: `Активные` },
-    { value: 1, label: `Закрытые` },
+    { value: 1, label: `Закрытые` }
   ];
 
   return (
     <Box sx={{ pt: 2, maxWidth: 1200, mx: 'auto', pb: 5 }}>
       {/* Заголовок */}
-      <Box
-        display='flex'
-        justifyContent='space-between'
-        alignItems='center'
-        mb={3}
-      >
-        <Typography
-          variant='h4'
-          sx={{ color: 'rgba(255, 255, 255, 0.87)', fontWeight: 600 }}
-        >
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+        <Typography variant="h4" sx={{ color: 'rgba(255, 255, 255, 0.87)', fontWeight: 600 }}>
           Мои тикеты
         </Typography>
         <Button
-          variant='contained'
+          variant="contained"
           startIcon={<AddIcon />}
           onClick={handleCreateTicket}
           sx={{
@@ -202,7 +190,7 @@ const TicketsPage: React.FC = () => {
       </Box>
 
       {/* Вкладки */}
-      <Box>
+      <Box >
         <StyledTabs
           value={tabValue}
           onChange={handleTabChange}
@@ -215,27 +203,25 @@ const TicketsPage: React.FC = () => {
       <TabPanel value={tabValue} index={0}>
         {loading ? (
           <Box>
-            <Box display='flex' justifyContent='center' p={4}>
+            <Box display="flex" justifyContent="center" p={4}>
               <CircularProgress sx={{ color: '#d0bcff' }} />
             </Box>
-            <TicketList tickets={[]} onTicketSelect={() => {}} loading={true} />
+            <TicketList
+              tickets={[]}
+              onTicketSelect={() => {}}
+              loading={true}
+            />
           </Box>
         ) : error ? (
-          <Alert severity='error' sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         ) : filteredTickets.length === 0 ? (
-          <Box textAlign='center' py={4}>
-            <Typography
-              variant='h6'
-              sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}
-            >
+          <Box textAlign="center" py={4}>
+            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}>
               У вас нет активных тикетов
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{ color: 'rgba(255, 255, 255, 0.4)' }}
-            >
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.4)' }}>
               Создайте новый тикет, если у вас есть вопросы или проблемы
             </Typography>
           </Box>
@@ -251,27 +237,25 @@ const TicketsPage: React.FC = () => {
       <TabPanel value={tabValue} index={1}>
         {loading ? (
           <Box>
-            <Box display='flex' justifyContent='center' p={4}>
+            <Box display="flex" justifyContent="center" p={4}>
               <CircularProgress sx={{ color: '#d0bcff' }} />
             </Box>
-            <TicketList tickets={[]} onTicketSelect={() => {}} loading={true} />
+            <TicketList
+              tickets={[]}
+              onTicketSelect={() => {}}
+              loading={true}
+            />
           </Box>
         ) : error ? (
-          <Alert severity='error' sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         ) : filteredTickets.length === 0 ? (
-          <Box textAlign='center' py={4}>
-            <Typography
-              variant='h6'
-              sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}
-            >
+          <Box textAlign="center" py={4}>
+            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}>
               У вас нет закрытых тикетов
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{ color: 'rgba(255, 255, 255, 0.4)' }}
-            >
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.4)' }}>
               Закрытые тикеты появятся здесь после их решения
             </Typography>
           </Box>
@@ -321,4 +305,4 @@ const TicketsPage: React.FC = () => {
   );
 };
 
-export default TicketsPage;
+export default TicketsPage; 

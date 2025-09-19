@@ -17,79 +17,67 @@ export const usePostReactions = (
   initialReactionsSummary: ReactionsSummary = {},
   initialUserReaction: ReactionEmoji | null = null
 ): UsePostReactionsReturn => {
-  const [reactionsSummary, setReactionsSummary] = useState<ReactionsSummary>(
-    initialReactionsSummary
-  );
-  const [userReaction, setUserReaction] = useState<ReactionEmoji | null>(
-    initialUserReaction
-  );
+  const [reactionsSummary, setReactionsSummary] = useState<ReactionsSummary>(initialReactionsSummary);
+  const [userReaction, setUserReaction] = useState<ReactionEmoji | null>(initialUserReaction);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addReaction = useCallback(
-    async (emoji: ReactionEmoji) => {
-      if (!postId) return;
+  const addReaction = useCallback(async (emoji: ReactionEmoji) => {
+    if (!postId) return;
 
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const response = await axios.post(`/api/posts/${postId}/reaction`, {
-          emoji,
-        });
+    try {
+      const response = await axios.post(`/api/posts/${postId}/reaction`, { emoji });
+      
+      if (response.data.success) {
+        setReactionsSummary(response.data.reactions_summary);
+        setUserReaction(response.data.user_reaction);
+      }
+    } catch (err: any) {
+      console.error('Error adding reaction:', err);
+      setError(err.response?.data?.error || 'Ошибка при добавлении реакции');
+      
+      // Обработка rate limit
+      if (err.response?.status === 429) {
+        const rateLimit = err.response.data.rate_limit;
+        let errorMessage = err.response.data.error || 'Слишком много реакций. ';
 
-        if (response.data.success) {
-          setReactionsSummary(response.data.reactions_summary);
-          setUserReaction(response.data.user_reaction);
-        }
-      } catch (err: any) {
-        console.error('Error adding reaction:', err);
-        setError(err.response?.data?.error || 'Ошибка при добавлении реакции');
+        if (rateLimit && rateLimit.reset) {
+          const resetTime = new Date(rateLimit.reset * 1000);
+          const now = new Date();
+          const diffSeconds = Math.round((resetTime - now) / 1000);
 
-        // Обработка rate limit
-        if (err.response?.status === 429) {
-          const rateLimit = err.response.data.rate_limit;
-          let errorMessage =
-            err.response.data.error || 'Слишком много реакций. ';
-
-          if (rateLimit && rateLimit.reset) {
-            const resetTime = new Date(rateLimit.reset * 1000);
-            const now = new Date();
-            const diffSeconds = Math.round((resetTime - now) / 1000);
-
-            if (!errorMessage.includes('подождите')) {
-              if (diffSeconds > 60) {
-                const minutes = Math.floor(diffSeconds / 60);
-                const seconds = diffSeconds % 60;
-                errorMessage += ` Пожалуйста, подождите ${minutes} мин. ${seconds} сек.`;
-              } else {
-                errorMessage += ` Пожалуйста, подождите ${diffSeconds} сек.`;
-              }
+          if (!errorMessage.includes('подождите')) {
+            if (diffSeconds > 60) {
+              const minutes = Math.floor(diffSeconds / 60);
+              const seconds = diffSeconds % 60;
+              errorMessage += ` Пожалуйста, подождите ${minutes} мин. ${seconds} сек.`;
+            } else {
+              errorMessage += ` Пожалуйста, подождите ${diffSeconds} сек.`;
             }
           }
-
-          window.dispatchEvent(
-            new CustomEvent('rate-limit-error', {
-              detail: {
-                message: errorMessage,
-                shortMessage: 'Лимит реакций',
-                notificationType: 'warning',
-                animationType: 'bounce',
-                retryAfter: rateLimit?.reset
-                  ? Math.round(
-                      (new Date(rateLimit.reset * 1000) - new Date()) / 1000
-                    )
-                  : 60,
-              },
-            })
-          );
         }
-      } finally {
-        setIsLoading(false);
+
+        window.dispatchEvent(
+          new CustomEvent('rate-limit-error', {
+            detail: {
+              message: errorMessage,
+              shortMessage: 'Лимит реакций',
+              notificationType: 'warning',
+              animationType: 'bounce',
+              retryAfter: rateLimit?.reset
+                ? Math.round((new Date(rateLimit.reset * 1000) - new Date()) / 1000)
+                : 60,
+            },
+          })
+        );
       }
-    },
-    [postId]
-  );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [postId]);
 
   const removeReaction = useCallback(async () => {
     if (!postId) return;
@@ -99,7 +87,7 @@ export const usePostReactions = (
 
     try {
       const response = await axios.delete(`/api/posts/${postId}/reaction`);
-
+      
       if (response.data.success) {
         setReactionsSummary(response.data.reactions_summary);
         setUserReaction(response.data.user_reaction);
@@ -120,7 +108,7 @@ export const usePostReactions = (
 
     try {
       const response = await axios.get(`/api/posts/${postId}/reactions`);
-
+      
       if (response.data.success) {
         const reactions = response.data;
         setReactionsSummary(reactions.reactions_summary);
@@ -146,4 +134,4 @@ export const usePostReactions = (
     removeReaction,
     getReactions,
   };
-};
+}; 

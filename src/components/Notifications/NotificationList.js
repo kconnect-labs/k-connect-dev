@@ -490,8 +490,7 @@ const getContextIcon = link => {
 };
 
 const getAvatarUrl = user => {
-  if (!user)
-    return 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
+  if (!user) return 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
   // Используем avatar_url из API, если он есть, иначе формируем URL
   if (user.avatar_url) {
     return user.avatar_url;
@@ -654,10 +653,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'username_auction_sold':
       return username && points
-        ? t('notifications.messages.username_auction_sold', {
-            username,
-            points,
-          })
+        ? t('notifications.messages.username_auction_sold', { username, points })
         : notification.message;
     case 'username_auction_won':
       return username && points
@@ -665,10 +661,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'username_bid_accepted':
       return username && points
-        ? t('notifications.messages.username_bid_accepted', {
-            username,
-            points,
-          })
+        ? t('notifications.messages.username_bid_accepted', { username, points })
         : notification.message;
     case 'new_auction_bid':
       return username && points
@@ -686,9 +679,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'bug_status_change':
       return bugReportName
-        ? t('notifications.messages.bug_status_change', {
-            bugReport: bugReportName,
-          })
+        ? t('notifications.messages.bug_status_change', { bugReport: bugReportName })
         : notification.message;
     case 'ticket_comment':
       return t('notifications.messages.ticket_comment');
@@ -698,10 +689,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'marketplace_sold':
       return itemName && points
-        ? t('notifications.messages.marketplace_sold', {
-            item: itemName,
-            points,
-          })
+        ? t('notifications.messages.marketplace_sold', { item: itemName, points })
         : notification.message;
     case 'medal':
       return t('notifications.messages.medal');
@@ -782,9 +770,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
     const username = usernameMatch ? usernameMatch[1] : null;
     const itemMatch = notification.message.match(/"([^"]+)" вещь/);
     const itemName = itemMatch ? itemMatch[1] : null;
-    const bugReportMatch = notification.message.match(
-      /баг-репорт[^']*'([^']+)'/
-    );
+    const bugReportMatch = notification.message.match(/баг-репорт[^']*'([^']+)'/);
     const bugReportName = bugReportMatch ? bugReportMatch[1] : null;
 
     let message = getNotificationMessage(notification, t);
@@ -918,7 +904,7 @@ const NotificationItemComponent = React.memo(({ notification, onClick }) => {
                 textDecoration: 'underline',
               },
             }}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               if (notification.sender_user?.username) {
                 navigate(`/profile/${notification.sender_user.username}`);
@@ -1142,7 +1128,7 @@ const GroupedNotificationComponent = React.memo(
                     textDecoration: 'underline',
                   },
                 }}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   if (group.user?.username) {
                     navigate(`/profile/${group.user.username}`);
@@ -1228,20 +1214,19 @@ const NotificationList = ({ onNewNotification, onNotificationRead }) => {
   const theme = useTheme();
 
   // Функция для обновления состояния уведомления при прочитывании через Dynamic Island
-  const handleNotificationRead = useCallback(
-    notificationId => {
-      setNotifications(prev =>
-        prev.map(n => (n.id === notificationId ? { ...n, is_read: true } : n))
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
-
-      // Вызываем внешний callback для обновления состояния в Header
-      if (onNotificationRead) {
-        onNotificationRead(notificationId);
-      }
-    },
-    [onNotificationRead]
-  );
+  const handleNotificationRead = useCallback((notificationId) => {
+    setNotifications(prev =>
+      prev.map(n =>
+        n.id === notificationId ? { ...n, is_read: true } : n
+      )
+    );
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    
+    // Вызываем внешний callback для обновления состояния в Header
+    if (onNotificationRead) {
+      onNotificationRead(notificationId);
+    }
+  }, [onNotificationRead]);
 
   const fetchUnreadCount = useCallback(async () => {
     try {
@@ -1544,12 +1529,7 @@ const NotificationList = ({ onNewNotification, onNotificationRead }) => {
             </List>
           ) : (
             <EmptyNotifications>
-              <Icon
-                icon='tabler:bell'
-                width='40'
-                height='40'
-                style={{ opacity: 0.5, marginBottom: 16 }}
-              />
+              <Icon icon='tabler:bell' width='40' height='40' style={{ opacity: 0.5, marginBottom: 16 }} />
               <Typography component='div' variant='body1'>
                 {t('notifications.empty.no_notifications')}
               </Typography>

@@ -80,14 +80,8 @@ const LastImageOverlay = styled(Box)({
  * A specialized image grid for reposts with blurred backgrounds and limited display
  * Shows maximum 2 images by default, or a 3-grid with +N indicator
  */
-const RepostImageGrid: React.FC<RepostImageGridProps> = ({
-  images,
-  onImageClick,
-  imageDimensions = {},
-}) => {
-  const [imageLoadingStates, setImageLoadingStates] = useState<
-    Record<string, boolean>
-  >({});
+const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick, imageDimensions = {} }) => {
+  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
 
   if (!images || !Array.isArray(images) || images.length === 0) {
     return null;
@@ -106,15 +100,11 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({
   const handleImageLoad = (imageUrl: string) => {
     setImageLoadingStates(prev => ({
       ...prev,
-      [imageUrl]: false,
+      [imageUrl]: false
     }));
   };
 
-  const renderImage = (
-    image: string,
-    index: number,
-    isCenter: boolean = false
-  ) => {
+  const renderImage = (image: string, index: number, isCenter: boolean = false) => {
     const isLoading = imageLoadingStates[image] !== false; // true by default until loaded
 
     // Получаем размеры изображения
@@ -125,18 +115,18 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({
     return (
       <React.Fragment>
         {isLoading && (
-          <ImageSkeleton
+          <ImageSkeleton 
             isSingle={displayImages.length === 1}
             isMobile={false}
-            height={isPortrait ? '100%' : 'auto'}
-            width='100%'
+            height={isPortrait ? "100%" : "auto"}
+            width="100%"
             imageDimensions={dimensions}
           />
         )}
         <BackgroundImage style={{ backgroundImage: `url(${image})` }} />
-        <Image
-          src={image}
-          alt={`Repost image ${index + 1}`}
+        <Image 
+          src={image} 
+          alt={`Repost image ${index + 1}`} 
           isCenter={isCenter}
           style={{
             opacity: isLoading ? 0 : 1,
@@ -233,4 +223,4 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({
   );
 };
 
-export default RepostImageGrid;
+export default RepostImageGrid; 

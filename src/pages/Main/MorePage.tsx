@@ -1,16 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Typography,
-  Button,
-  GlobalStyles,
-  Grid,
-  Card,
-  CardContent,
-  Avatar,
-  Divider,
-} from '@mui/material';
+import { Box, Typography, Button, GlobalStyles, Grid, Card, CardContent, Avatar, Divider } from '@mui/material';
 import {
   AccountCircle,
   Settings,
@@ -442,170 +432,152 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
         }}
       />
 
-      <Box
-        sx={{
-          minHeight: '100vh',
-          padding: { xs: 1, sm: 2 },
-          pb: 8,
-        }}
-      >
-        {/* Profile Header Card */}
-        <Card
+              <Box
           sx={{
-            mb: 1,
-            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            borderRadius: '16px',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
-            overflow: 'hidden',
-            mt: '10px',
+            minHeight: '100vh',
+            padding: { xs: 1, sm: 2 },
+            pb: 8,
           }}
         >
-          <CardContent sx={{ p: 3 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar
-                  src={
-                    user?.avatar_url ||
-                    (user?.photo &&
-                      `/static/uploads/avatar/${user.id}/${user.photo}`)
-                  }
-                  alt={user?.name}
-                  sx={{
-                    width: 56,
-                    height: 56,
-                    border: '3px solid rgba(255, 255, 255, 0.2)',
-                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-                  }}
-                  onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                    e.currentTarget.src =
-                      '/static/uploads/avatar/system/avatar.png';
-                  }}
-                />
-                <Box>
-                  <Box
+                    {/* Profile Header Card */}
+          <Card
+            sx={{
+              mb: 1,
+              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+              backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+              borderRadius: '16px',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              overflow: 'hidden',
+              mt: '10px',
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <Avatar
+                    src={
+                      user?.avatar_url ||
+                      (user?.photo &&
+                        `/static/uploads/avatar/${user.id}/${user.photo}`)
+                    }
+                    alt={user?.name}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      mb: 0.5,
+                      width: 56,
+                      height: 56,
+                      border: '3px solid rgba(255, 255, 255, 0.2)',
+                      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
                     }}
-                  >
-                    <Typography
-                      variant='h6'
-                      sx={{
-                        fontWeight: 700,
-                        color: 'white',
-                        fontSize: '1.1rem',
-                      }}
-                    >
-                      {user?.name || t('more_page.default_user')}
-                    </Typography>
-                    {user?.verification && user.verification.status > 0 && (
-                      <Box
+                    onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                      e.currentTarget.src = '/static/uploads/avatar/system/avatar.png';
+                    }}
+                  />
+                  <Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                      <Typography
+                        variant='h6'
                         sx={{
-                          width: 16,
-                          height: 16,
-                          borderRadius: '50%',
-                          background: '#4CAF50',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          fontWeight: 700,
+                          color: 'white',
+                          fontSize: '1.1rem',
                         }}
                       >
-                        <VerifiedUser sx={{ fontSize: 12, color: 'white' }} />
-                      </Box>
-                    )}
+                        {user?.name || t('more_page.default_user')}
+                      </Typography>
+                      {user?.verification && user.verification.status > 0 && (
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: '50%',
+                            background: '#4CAF50',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <VerifiedUser sx={{ fontSize: 12, color: 'white' }} />
+                        </Box>
+                      )}
+                    </Box>
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '0.85rem',
+                        fontWeight: 400,
+                      }}
+                    >
+                      @{user?.username || t('more_page.default_username')}
+                    </Typography>
                   </Box>
-                  <Typography
-                    variant='body2'
-                    sx={{
-                      color: 'rgba(255, 255, 255, 0.6)',
-                      fontSize: '0.85rem',
-                      fontWeight: 400,
-                    }}
-                  >
-                    @{user?.username || t('more_page.default_username')}
-                  </Typography>
                 </Box>
+                
+                <Button
+                  component={Link}
+                  to='/balance'
+                  startIcon={<Wallet sx={{ fontSize: 18 }} />}
+                  sx={{
+                    background: 'var(--theme-background, rgba(77, 214, 81, 0.15))',
+                    border: '1px solid rgba(77, 214, 81, 0.25)',
+                    borderRadius: '18px',
+                    color: '#4CAF50',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    px: 2,
+                    py: 1,
+                    textTransform: 'none',
+                    minWidth: 'auto',
+                    '&:hover': {
+                      background: 'var(--theme-background, rgba(77, 214, 81, 0.25))',
+                      border: '1px solid rgba(77, 214, 81, 0.4)',
+                      transform: 'translateY(-1px)',
+                    },
+                  }}
+                >
+                  {balanceTitle}
+                </Button>
               </Box>
-
-              <Button
-                component={Link}
-                to='/balance'
-                startIcon={<Wallet sx={{ fontSize: 18 }} />}
-                sx={{
-                  background:
-                    'var(--theme-background, rgba(77, 214, 81, 0.15))',
-                  border: '1px solid rgba(77, 214, 81, 0.25)',
-                  borderRadius: '18px',
-                  color: '#4CAF50',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  px: 2,
-                  py: 1,
-                  textTransform: 'none',
-                  minWidth: 'auto',
-                  '&:hover': {
-                    background:
-                      'var(--theme-background, rgba(77, 214, 81, 0.25))',
-                    border: '1px solid rgba(77, 214, 81, 0.4)',
-                    transform: 'translateY(-1px)',
-                  },
-                }}
-              >
-                {balanceTitle}
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
         {/* Sections */}
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
           {sections.map(section => (
-            <Card
-              key={section.id}
-              sx={{
-                background:
-                  'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                borderRadius: '16px',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
-                overflow: 'hidden',
-              }}
-            >
+                         <Card
+               key={section.id}
+               sx={{
+                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                 borderRadius: '16px',
+                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                 border: '1px solid rgba(0, 0, 0, 0.12)',
+                 overflow: 'hidden',
+               }}
+             >
               <CardContent sx={{ p: 0, paddingBottom: '0px !important' }}>
                 {/* Section Header */}
-                <Box
-                  sx={{
-                    px: 2,
-                    py: 1.5,
-                    background:
-                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
-                    borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
-                  }}
-                >
-                  <Typography
-                    variant='subtitle2'
-                    sx={{
-                      fontWeight: 600,
-                      color: 'rgba(255, 255, 255, 0.8)',
-                      fontSize: '0.8rem',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    {section.title}
-                  </Typography>
-                </Box>
+                 <Box
+                   sx={{
+                     px: 2,
+                     py: 1.5,
+                     background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                     borderBottom: '1px solid rgba(66, 66, 66, 0.5)',
+                   }}
+                 >
+                   <Typography
+                     variant='subtitle2'
+                     sx={{
+                       fontWeight: 600,
+                       color: 'rgba(255, 255, 255, 0.8)',
+                       fontSize: '0.8rem',
+                       textTransform: 'uppercase',
+                       letterSpacing: '0.5px',
+                     }}
+                   >
+                     {section.title}
+                   </Typography>
+                 </Box>
 
                 {/* Section Items */}
                 <Box>
@@ -617,36 +589,27 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                         to={item.link}
                         target={item.external ? '_blank' : undefined}
                         rel={item.external ? 'noopener noreferrer' : undefined}
-                        sx={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          px: 2,
-                          py: 1.5,
-                          textTransform: 'none',
-                          background: 'transparent',
-                          color: 'white',
-                          borderRadius: 0,
-                          border: 'none',
-                          '&:hover': {
-                            background:
-                              'var(--theme-background, rgba(255, 255, 255, 0.08))',
-                          },
-                          '&:active': {
-                            background:
-                              'var(--theme-background, rgb(24 24 24))',
-                          },
-                        }}
+                                                 sx={{
+                           width: '100%',
+                           display: 'flex',
+                           alignItems: 'center',
+                           justifyContent: 'space-between',
+                           px: 2,
+                           py: 1.5,
+                           textTransform: 'none',
+                           background: 'transparent',
+                           color: 'white',
+                           borderRadius: 0,
+                           border: 'none',
+                           '&:hover': {
+                             background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
+                           },
+                           '&:active': {
+                             background: 'var(--theme-background, rgb(24 24 24))',
+                           },
+                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 2,
-                            flex: 1,
-                          }}
-                        >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
                           <Box
                             sx={{
                               width: 36,
@@ -659,35 +622,35 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
                             }}
                           >
-                            {React.cloneElement(item.icon, {
-                              sx: {
-                                fontSize: 20,
-                                color: 'white',
-                              },
+                            {React.cloneElement(item.icon, { 
+                              sx: { 
+                                fontSize: 20, 
+                                color: 'white' 
+                              } 
                             })}
                           </Box>
                           <Box sx={{ flex: 1, textAlign: 'left' }}>
-                            <Typography
-                              variant='body1'
-                              sx={{
-                                fontWeight: 600,
-                                fontSize: '0.9rem',
-                                color: 'white',
-                                mb: 0.25,
-                              }}
-                            >
-                              {item.title}
-                            </Typography>
-                            <Typography
-                              variant='body2'
-                              sx={{
-                                color: 'rgba(255, 255, 255, 0.7)',
-                                fontSize: '0.8rem',
-                                lineHeight: 1.2,
-                              }}
-                            >
-                              {item.subtitle}
-                            </Typography>
+                                                         <Typography
+                               variant='body1'
+                               sx={{
+                                 fontWeight: 600,
+                                 fontSize: '0.9rem',
+                                 color: 'white',
+                                 mb: 0.25,
+                               }}
+                             >
+                               {item.title}
+                             </Typography>
+                             <Typography
+                               variant='body2'
+                               sx={{
+                                 color: 'rgba(255, 255, 255, 0.7)',
+                                 fontSize: '0.8rem',
+                                 lineHeight: 1.2,
+                               }}
+                             >
+                               {item.subtitle}
+                             </Typography>
                           </Box>
                         </Box>
                         <ArrowForward sx={{ color: '#ccc', fontSize: 20 }} />

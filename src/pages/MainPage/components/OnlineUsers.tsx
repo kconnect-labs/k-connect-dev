@@ -74,7 +74,7 @@ const OnlineUsers: React.FC = () => {
       if (container) {
         const { scrollLeft, scrollWidth, clientWidth } = container;
         const isAtEnd = scrollLeft + clientWidth >= scrollWidth - 10; // 10px tolerance
-
+        
         if (isAtEnd && visibleCount < onlineUsers.length) {
           setVisibleCount(prev => Math.min(prev + 12, onlineUsers.length));
         }
@@ -116,7 +116,7 @@ const OnlineUsers: React.FC = () => {
       }}
     >
       <Box
-        className='online-users-container'
+        className="online-users-container"
         sx={{
           display: 'flex',
           flexWrap: 'nowrap',
@@ -163,18 +163,14 @@ const OnlineUsers: React.FC = () => {
             {t('main_page.online_count', { count: onlineUsers.length })}
           </Typography>
         </Box>
-        {onlineUsers.slice(0, visibleCount).map(user => (
+        {onlineUsers.slice(0, visibleCount).map((user) => (
           <Box
             key={user.id}
             sx={{ position: 'relative', cursor: 'pointer', mx: 0.25 }}
             onClick={() => handleUserClick(user.username)}
           >
             <Avatar
-              src={
-                user?.photo
-                  ? `${user.photo}?w=72&h=72&fit=crop&q=60`
-                  : '/static/uploads/system/avatar.png'
-              }
+              src={user?.photo ? `${user.photo}?w=72&h=72&fit=crop&q=60` : '/static/uploads/system/avatar.png'}
               alt={user?.username || 'User'}
               sx={{
                 width: 36,
@@ -183,7 +179,7 @@ const OnlineUsers: React.FC = () => {
                 boxSizing: 'border-box',
                 background: '#222',
               }}
-              onError={e => safeImageError(e as any)}
+              onError={(e) => safeImageError(e as any)}
             />
             <Box
               sx={{

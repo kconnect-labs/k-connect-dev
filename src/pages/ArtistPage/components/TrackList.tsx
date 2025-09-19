@@ -31,37 +31,35 @@ const StyledList = styled(Box)(({ theme }) => ({
   padding: 0,
 }));
 
-const StyledListItem = styled(Box)<{ isCurrentTrack?: boolean }>(
-  ({ theme, isCurrentTrack }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(2, 3),
-    borderRadius: '18px',
-    cursor: 'pointer',
-    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-    backgroundColor: isCurrentTrack
-      ? 'rgba(182, 157, 248, 0.1)'
-      : 'transparent',
-    border: '1px solid transparent',
-    position: 'relative',
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      transform: 'translateX(1px)',
-      '& .track-number': {
-        opacity: 0,
-      },
-      '& .play-button': {
-        opacity: 1,
-      },
-      '& .more-button': {
-        opacity: 1,
-      },
+const StyledListItem = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCurrentTrack }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2, 3),
+  borderRadius: '18px',
+  cursor: 'pointer',
+  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  backgroundColor: isCurrentTrack 
+    ? 'rgba(182, 157, 248, 0.1)' 
+    : 'transparent',
+  border: '1px solid transparent',
+  position: 'relative',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    transform: 'translateX(1px)',
+    '& .track-number': {
+      opacity: 0,
     },
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(1.5, 2),
+    '& .play-button': {
+      opacity: 1,
     },
-  })
-);
+    '& .more-button': {
+      opacity: 1,
+    },
+  },
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(1.5, 2),
+  },
+}));
 
 const TrackNumber = styled(Typography)(({ theme }) => ({
   minWidth: 24,
@@ -102,18 +100,16 @@ const TrackInfo = styled(Box)(({ theme }) => ({
   gap: theme.spacing(0.5),
 }));
 
-const TrackTitle = styled(Typography)<{ isCurrentTrack?: boolean }>(
-  ({ theme, isCurrentTrack }) => ({
-    fontWeight: 600,
-    color: isCurrentTrack ? '#B69DF8' : '#ffffff',
-    fontSize: '1rem',
-    lineHeight: 1.3,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    transition: 'color 0.2s ease',
-  })
-);
+const TrackTitle = styled(Typography)<{ isCurrentTrack?: boolean }>(({ theme, isCurrentTrack }) => ({
+  fontWeight: 600,
+  color: isCurrentTrack ? '#B69DF8' : '#ffffff',
+  fontSize: '1rem',
+  lineHeight: 1.3,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  transition: 'color 0.2s ease',
+}));
 
 const TrackMeta = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -204,23 +200,27 @@ const TrackItem: React.FC<TrackItemProps> = ({
       onClick={handleTrackClick}
       isCurrentTrack={isCurrentTrack}
     >
+
+
       {/* Обложка трека */}
       <TrackAvatar
         src={
-          track.cover_path
-            ? track.cover_path.startsWith('http')
-              ? track.cover_path
-              : `https://s3.k-connect.ru${track.cover_path}`
+          track.cover_path 
+            ? (track.cover_path.startsWith('http') 
+                ? track.cover_path 
+                : `https://s3.k-connect.ru${track.cover_path}`)
             : undefined
         }
-        variant='rounded'
+        variant="rounded"
       >
         <Album />
       </TrackAvatar>
 
       {/* Информация о треке */}
       <TrackInfo>
-        <TrackTitle isCurrentTrack={isCurrentTrack}>{track.title}</TrackTitle>
+        <TrackTitle isCurrentTrack={isCurrentTrack}>
+          {track.title}
+        </TrackTitle>
         <TrackMeta>
           {track.album && (
             <>
@@ -233,7 +233,9 @@ const TrackItem: React.FC<TrackItemProps> = ({
       </TrackInfo>
 
       {/* Длительность */}
-      <Duration>{formatDuration(track.duration || 0)}</Duration>
+      <Duration>
+        {formatDuration(track.duration || 0)}
+      </Duration>
 
       {/* Действия */}
       <ActionButtons>
@@ -244,6 +246,7 @@ const TrackItem: React.FC<TrackItemProps> = ({
             <FavoriteBorder sx={{ fontSize: 18 }} />
           )}
         </LikeButton>
+
       </ActionButtons>
     </StyledListItem>
   );
@@ -260,7 +263,7 @@ const TrackList: React.FC<TrackListProps> = ({
   onLoadMore,
 }) => {
   const observer = React.useRef<IntersectionObserver>();
-
+  
   const lastTrackElementRef = React.useCallback(
     (node: HTMLElement | null) => {
       if (loadingMoreTracks) return;
@@ -278,7 +281,7 @@ const TrackList: React.FC<TrackListProps> = ({
   if (tracks.length === 0) {
     return (
       <LoadingContainer>
-        <Typography color='text.secondary' variant='h6'>
+        <Typography color="text.secondary" variant="h6">
           Треки не найдены
         </Typography>
       </LoadingContainer>

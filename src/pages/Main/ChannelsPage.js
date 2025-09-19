@@ -50,6 +50,7 @@ const PageContainer = styled(Container)(({ theme }) => ({
   },
 }));
 
+
 const SearchSection = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   [theme.breakpoints.down('sm')]: {
@@ -231,7 +232,7 @@ const ChannelCardLoader = () => {
           flexDirection: 'column',
           alignItems: 'center',
           height: '100%',
-
+          
           justifyContent: 'space-between',
         }}
       >
@@ -651,10 +652,11 @@ const ChannelsPage = () => {
 
   return (
     <PageContainer maxWidth='lg'>
+
       <SearchSection>
         <InfoBlock
-          title='Поиск каналов'
-          description='Найдите интересные каналы по названию, описанию или тематике'
+          title="Поиск каналов"
+          description="Найдите интересные каналы по названию, описанию или тематике"
           customStyle
         >
           <form onSubmit={handleSearch}>
@@ -685,8 +687,8 @@ const ChannelsPage = () => {
       {!searchQuery && popularChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
           <InfoBlock
-            title='Популярные каналы'
-            description='Самые популярные каналы на платформе'
+            title="Популярные каналы"
+            description="Самые популярные каналы на платформе"
             customStyle
           >
             <Grid container spacing={2}>
@@ -703,8 +705,8 @@ const ChannelsPage = () => {
       {!searchQuery && featuredChannels.length > 0 && (
         <Box sx={{ mb: 4 }}>
           <InfoBlock
-            title='Отборные каналы'
-            description='Рекомендуемые каналы для вас'
+            title="Отборные каналы"
+            description="Рекомендуемые каналы для вас"
             customStyle
           >
             <Grid container spacing={2}>
@@ -720,8 +722,8 @@ const ChannelsPage = () => {
 
       <Box sx={{ mb: 3 }}>
         <InfoBlock
-          title='Все каналы'
-          description='Просматривайте и подписывайтесь на интересные каналы'
+          title="Все каналы"
+          description="Просматривайте и подписывайтесь на интересные каналы"
           customStyle
         >
           <Box sx={{ mb: 2 }}>
@@ -771,9 +773,7 @@ const ChannelsPage = () => {
                 }}
                 aria-label='Toggle filtering'
                 title={
-                  withDescription
-                    ? 'Показывать все каналы'
-                    : 'Только с описанием'
+                  withDescription ? 'Показывать все каналы' : 'Только с описанием'
                 }
               >
                 <FilterAltIcon fontSize='small' />

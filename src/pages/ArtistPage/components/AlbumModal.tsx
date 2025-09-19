@@ -187,8 +187,7 @@ const TracksList = styled(List)(({ theme }) => ({
       background: 'rgba(255, 255, 255, 0.05)',
     },
     '&.current-track': {
-      background:
-        'linear-gradient(135deg, rgba(182, 157, 248, 0.2) 0%, rgba(208, 188, 255, 0.1) 100%)',
+      background: 'linear-gradient(135deg, rgba(182, 157, 248, 0.2) 0%, rgba(208, 188, 255, 0.1) 100%)',
       border: '1px solid rgba(182, 157, 248, 0.3)',
     },
   },
@@ -216,7 +215,7 @@ const formatDuration = (seconds: number): string => {
 const formatAlbumDuration = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-
+  
   if (hours > 0) {
     return `${hours}ч ${minutes}м`;
   }
@@ -247,11 +246,12 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
+  
   const [albumDetails, setAlbumDetails] = useState<Album | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  
   useEffect(() => {
     if (album && isOpen) {
       fetchAlbumDetails();
@@ -266,7 +266,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 
     try {
       const response = await axios.get(`/api/music/albums/${album.id}`);
-
+      
       if (response.data.success) {
         setAlbumDetails(response.data.album);
       } else {
@@ -282,11 +282,13 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 
   const handlePlayAlbum = () => {
     if (albumDetails?.tracks && albumDetails.tracks.length > 0) {
+      
       onTrackClick(albumDetails.tracks[0], `album_${albumDetails.id}`);
     }
   };
 
   const handleTrackClick = (track: Track) => {
+    
     onTrackClick(track, `album_${albumDetails?.id}`);
   };
 
@@ -297,80 +299,45 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
       open={isOpen}
       onClose={onClose}
       title={album.title}
-      maxWidth='md'
+      maxWidth="md"
       maxWidthCustom={600}
       fullWidth={true}
     >
       {isLoading ? (
         <Box>
           <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
-            <Skeleton
-              variant='rectangular'
-              width={160}
-              height={160}
-              sx={{ borderRadius: '16px' }}
-            />
+            <Skeleton variant="rectangular" width={160} height={160} sx={{ borderRadius: '16px' }} />
             <Box sx={{ flex: 1 }}>
-              <Skeleton variant='text' height={32} width='70%' />
-              <Skeleton variant='text' height={24} width='50%' />
-              <Skeleton variant='text' height={20} width='80%' />
-              <Box
-                sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}
-              >
-                <Skeleton
-                  variant='rectangular'
-                  height={28}
-                  width={90}
-                  sx={{ borderRadius: '18px' }}
-                />
-                <Skeleton
-                  variant='rectangular'
-                  height={28}
-                  width={90}
-                  sx={{ borderRadius: '18px' }}
-                />
-                <Skeleton
-                  variant='rectangular'
-                  height={28}
-                  width={110}
-                  sx={{ borderRadius: '18px' }}
-                />
+              <Skeleton variant="text" height={32} width="70%" />
+              <Skeleton variant="text" height={24} width="50%" />
+              <Skeleton variant="text" height={20} width="80%" />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
+                <Skeleton variant="rectangular" height={28} width={110} sx={{ borderRadius: '18px' }} />
               </Box>
             </Box>
           </Box>
           <Box>
             {[...Array(5)].map((_, index) => (
-              <Box
-                key={index}
-                sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}
-              >
-                <Skeleton
-                  variant='rectangular'
-                  width={24}
-                  height={24}
-                  sx={{ borderRadius: '4px' }}
-                />
-                <Skeleton
-                  variant='rectangular'
-                  width={40}
-                  height={40}
-                  sx={{ borderRadius: '16px' }}
-                />
+              <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
+                <Skeleton variant="rectangular" width={24} height={24} sx={{ borderRadius: '4px' }} />
+                <Skeleton variant="rectangular" width={40} height={40} sx={{ borderRadius: '16px' }} />
                 <Box sx={{ flex: 1 }}>
-                  <Skeleton variant='text' height={20} width='60%' />
-                  <Skeleton variant='text' height={16} width='40%' />
+                  <Skeleton variant="text" height={20} width="60%" />
+                  <Skeleton variant="text" height={16} width="40%" />
                 </Box>
-                <Skeleton variant='text' height={16} width='40px' />
+                <Skeleton variant="text" height={16} width="40px" />
               </Box>
             ))}
           </Box>
         </Box>
       ) : error ? (
         <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Typography variant='h6' color='error' gutterBottom>
+          <Typography variant="h6" color="error" gutterBottom>
             {error}
           </Typography>
-          <Button onClick={fetchAlbumDetails} variant='outlined'>
+          <Button onClick={fetchAlbumDetails} variant="outlined">
             Попробовать снова
           </Button>
         </Box>
@@ -379,18 +346,16 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
           <AlbumHeader>
             <AlbumCover
               src={
-                albumDetails.cover_url
-                  ? albumDetails.cover_url.startsWith('http')
-                    ? albumDetails.cover_url
-                    : `https://s3.k-connect.ru${albumDetails.cover_url}`
+                albumDetails.cover_url 
+                  ? (albumDetails.cover_url.startsWith('http') 
+                      ? albumDetails.cover_url 
+                      : `https://s3.k-connect.ru${albumDetails.cover_url}`)
                   : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
               }
               alt={albumDetails.title}
             >
               {!albumDetails.cover_url && (
-                <AlbumIcon
-                  sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.5)' }}
-                />
+                <AlbumIcon sx={{ fontSize: 48, color: 'rgba(255, 255, 255, 0.5)' }} />
               )}
             </AlbumCover>
 
@@ -401,22 +366,16 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
               <AlbumMeta>
                 <AlbumTypeChip
                   label={getAlbumTypeLabel(albumDetails.album_type)}
-                  size='small'
+                  size="small"
                   className={albumDetails.album_type}
                 />
                 {albumDetails.release_date && (
-                  <Typography
-                    variant='caption'
-                    color='rgba(255, 255, 255, 0.6)'
-                  >
+                  <Typography variant="caption" color="rgba(255, 255, 255, 0.6)">
                     {new Date(albumDetails.release_date).getFullYear()}
                   </Typography>
                 )}
                 {albumDetails.genre && (
-                  <Typography
-                    variant='caption'
-                    color='rgba(255, 255, 255, 0.6)'
-                  >
+                  <Typography variant="caption" color="rgba(255, 255, 255, 0.6)">
                     {albumDetails.genre}
                   </Typography>
                 )}
@@ -441,6 +400,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         '&:hover': {
                           background: 'rgba(182,157,248,0.22)',
                           boxShadow: 'none',
+
                         },
                       }}
                     >
@@ -453,9 +413,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                     {albumDetails.tracks_count} треков
                   </Box>
                   {albumDetails.duration > 0 && (
-                    <Box
-                      sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                    >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <AccessTime sx={{ fontSize: 16 }} />
                       {formatAlbumDuration(albumDetails.duration)}
                     </Box>
@@ -468,15 +426,13 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
           {albumDetails.description && (
             <>
               <Typography
-                variant='body2'
-                color='rgba(255, 255, 255, 0.8)'
+                variant="body2"
+                color="rgba(255, 255, 255, 0.8)"
                 sx={{ mb: 2, lineHeight: 1.6 }}
               >
                 {albumDetails.description}
               </Typography>
-              <Divider
-                sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }}
-              />
+              <Divider sx={{ my: 2, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
             </>
           )}
 
@@ -494,9 +450,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                     onClick={() => handleTrackClick(track)}
                   >
                     <ListItemAvatar>
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                      >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <TrackNumber>
                           {isTrackPlaying ? (
                             <Pause sx={{ fontSize: 14, color: '#B69DF8' }} />
@@ -506,19 +460,14 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         </TrackNumber>
                         <Avatar
                           src={
-                            track.cover_path
-                              ? track.cover_path.startsWith('http')
-                                ? track.cover_path
-                                : `https://s3.k-connect.ru${track.cover_path}`
+                            track.cover_path 
+                              ? (track.cover_path.startsWith('http') 
+                                  ? track.cover_path 
+                                  : `https://s3.k-connect.ru${track.cover_path}`)
                               : undefined
                           }
                           alt={track.title}
-                          sx={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: '16px',
-                            marginRight: '10px',
-                          }}
+                          sx={{ width: 40, height: 40, borderRadius: '16px', marginRight: '10px' }}
                         >
                           <MusicNote sx={{ fontSize: 20 }} />
                         </Avatar>
@@ -528,7 +477,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                     <ListItemText
                       primary={
                         <Typography
-                          variant='body1'
+                          variant="body1"
                           sx={{
                             fontWeight: 600,
                             color: isCurrentTrack ? '#B69DF8' : '#ffffff',
@@ -542,7 +491,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                       }
                       secondary={
                         <Typography
-                          variant='caption'
+                          variant="caption"
                           sx={{
                             color: 'rgba(255, 255, 255, 0.6)',
                             display: 'flex',
@@ -557,24 +506,18 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
 
                     <ListItemSecondaryAction>
                       <IconButton
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
                           onLikeTrack(track.id);
                         }}
                         sx={{
-                          color: track.is_liked
-                            ? '#B69DF8'
-                            : 'rgba(255, 255, 255, 0.6)',
+                          color: track.is_liked ? '#B69DF8' : 'rgba(255, 255, 255, 0.6)',
                           '&:hover': {
                             color: '#B69DF8',
                           },
                         }}
                       >
-                        {track.is_liked ? (
-                          <Favorite sx={{ fontSize: 20 }} />
-                        ) : (
-                          <FavoriteBorder sx={{ fontSize: 20 }} />
-                        )}
+                        {track.is_liked ? <Favorite sx={{ fontSize: 20 }} /> : <FavoriteBorder sx={{ fontSize: 20 }} />}
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>

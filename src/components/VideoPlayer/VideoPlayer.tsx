@@ -23,11 +23,11 @@ interface VideoPlayerProps {
   onError?: (error: any) => void;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({
-  videoUrl,
-  poster,
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ 
+  videoUrl, 
+  poster, 
   options = {},
-  onError,
+  onError 
 }) => {
   return (
     <VideoContainer>

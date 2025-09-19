@@ -1,19 +1,6 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Box, IconButton, Slider, Typography, styled } from '@mui/material';
-import {
-  PlayArrow,
-  Pause,
-  VolumeUp,
-  VolumeOff,
-  Fullscreen,
-  FullscreenExit,
-} from '@mui/icons-material';
+import { PlayArrow, Pause, VolumeUp, VolumeOff, Fullscreen, FullscreenExit } from '@mui/icons-material';
 import { PlayIcon } from '../icons/CustomIcons';
 
 interface VideoPlayerProps {
@@ -229,8 +216,7 @@ const TimeDisplay = styled(Typography)(({ theme }) => ({
   color: '#fff',
   fontSize: '12px',
   fontWeight: 500,
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
   '@media (max-width: 768px)': {
     fontSize: '11px',
   },
@@ -321,11 +307,8 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
   const [posterError, setPosterError] = useState(false);
 
   const isMobile = useMemo(() => {
-    return (
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      ) || window.innerWidth < 768
-    );
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+           window.innerWidth < 768;
   }, []);
 
   // Сбрасываем ошибку превьюшки при изменении poster
@@ -335,11 +318,11 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const showControls = useCallback(() => {
     setPlayerState(prev => ({ ...prev, showControls: true }));
-
+    
     if (controlsTimeoutRef.current) {
       clearTimeout(controlsTimeoutRef.current);
     }
-
+    
     controlsTimeoutRef.current = setTimeout(() => {
       if (playerState.isPlaying) {
         setPlayerState(prev => ({ ...prev, showControls: false }));
@@ -366,7 +349,7 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
 
   const toggleMute = useCallback(() => {
     if (!videoRef.current) return;
-
+    
     const newMuted = !playerState.isMuted;
     videoRef.current.muted = newMuted;
     setPlayerState(prev => ({ ...prev, isMuted: newMuted }));
@@ -419,71 +402,62 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }, [playerState.isFullscreen]);
 
-  const handleTimeChange = useCallback(
-    (event: any, value: number | number[]) => {
-      // При начале перетаскивания
-      if (!isSeeking) {
-        setIsSeeking(true);
-      }
-      const newTime = Array.isArray(value) ? value[0] : value;
-      // Ограничиваем время в пределах длительности видео
-      const clampedTime = Math.max(0, Math.min(newTime, playerState.duration));
-      setSeekValue(clampedTime);
-    },
-    [isSeeking, playerState.duration]
-  );
+  const handleTimeChange = useCallback((event: any, value: number | number[]) => {
+    // При начале перетаскивания
+    if (!isSeeking) {
+      setIsSeeking(true);
+    }
+    const newTime = Array.isArray(value) ? value[0] : value;
+    // Ограничиваем время в пределах длительности видео
+    const clampedTime = Math.max(0, Math.min(newTime, playerState.duration));
+    setSeekValue(clampedTime);
+  }, [isSeeking, playerState.duration]);
 
-  const handleVolumeChange = useCallback(
-    (event: any, value: number | number[]) => {
-      if (!videoRef.current) return;
-      const newVolume = Array.isArray(value) ? value[0] : value;
-      videoRef.current.volume = newVolume;
-      setPlayerState(prev => ({
-        ...prev,
-        volume: newVolume,
-        isMuted: newVolume === 0,
-      }));
-    },
-    []
-  );
+  const handleVolumeChange = useCallback((event: any, value: number | number[]) => {
+    if (!videoRef.current) return;
+    const newVolume = Array.isArray(value) ? value[0] : value;
+    videoRef.current.volume = newVolume;
+    setPlayerState(prev => ({ 
+      ...prev, 
+      volume: newVolume,
+      isMuted: newVolume === 0 
+    }));
+  }, []);
 
-  const handleSeek = useCallback(
-    (event: any, value: number | number[]) => {
-      // Перематываем видео только после отпускания ползунка
-      if (!videoRef.current) return;
-      const newTime = Array.isArray(value) ? value[0] : value;
-      // Ограничиваем время в пределах длительности видео
-      const clampedTime = Math.max(0, Math.min(newTime, playerState.duration));
-
-      // Сначала обновляем состояние, чтобы избежать прыжка
-      setPlayerState(prev => ({
-        ...prev,
-        currentTime: clampedTime,
-      }));
-
-      // Затем перематываем видео
-      videoRef.current.currentTime = clampedTime;
-      setIsSeeking(false);
-      setSeekValue(0);
-    },
-    [playerState.duration]
-  );
+  const handleSeek = useCallback((event: any, value: number | number[]) => {
+    // Перематываем видео только после отпускания ползунка
+    if (!videoRef.current) return;
+    const newTime = Array.isArray(value) ? value[0] : value;
+    // Ограничиваем время в пределах длительности видео
+    const clampedTime = Math.max(0, Math.min(newTime, playerState.duration));
+    
+    // Сначала обновляем состояние, чтобы избежать прыжка
+    setPlayerState(prev => ({ 
+      ...prev, 
+      currentTime: clampedTime 
+    }));
+    
+    // Затем перематываем видео
+    videoRef.current.currentTime = clampedTime;
+    setIsSeeking(false);
+    setSeekValue(0);
+  }, [playerState.duration]);
 
   // Event handlers
   const handleLoadedMetadata = useCallback(() => {
     if (!videoRef.current) return;
-    setPlayerState(prev => ({
-      ...prev,
+    setPlayerState(prev => ({ 
+      ...prev, 
       duration: videoRef.current!.duration,
-      isLoaded: true,
+      isLoaded: true 
     }));
   }, []);
 
   const handleTimeUpdate = useCallback(() => {
     if (!videoRef.current || isSeeking) return;
-    setPlayerState(prev => ({
-      ...prev,
-      currentTime: videoRef.current!.currentTime,
+    setPlayerState(prev => ({ 
+      ...prev, 
+      currentTime: videoRef.current!.currentTime 
     }));
   }, [isSeeking]);
 
@@ -510,25 +484,22 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
     setPlayerState(prev => ({ ...prev, buffering: false }));
   }, []);
 
-  const handleError = useCallback(
-    (error: any) => {
-      console.error('Video error:', error);
-      onError?.(error);
-    },
-    [onError]
-  );
+  const handleError = useCallback((error: any) => {
+    console.error('Video error:', error);
+    onError?.(error);
+  }, [onError]);
 
   const handleFullscreenChange = useCallback(() => {
     const doc = document as any;
     const isFullscreen = !!(
-      doc.fullscreenElement ||
-      doc.webkitFullscreenElement ||
-      doc.mozFullScreenElement ||
+      doc.fullscreenElement || 
+      doc.webkitFullscreenElement || 
+      doc.mozFullScreenElement || 
       doc.msFullscreenElement
     );
-    setPlayerState(prev => ({
-      ...prev,
-      isFullscreen,
+    setPlayerState(prev => ({ 
+      ...prev, 
+      isFullscreen 
     }));
   }, []);
 
@@ -547,7 +518,7 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
     video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
-
+    
     // Добавляем обработчики для родного полноэкранного режима видео
     video.addEventListener('webkitbeginfullscreen', () => {
       setPlayerState(prev => ({ ...prev, isFullscreen: true }));
@@ -573,7 +544,7 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-
+      
       // Удаляем обработчики для родного полноэкранного режима
       video.removeEventListener('webkitbeginfullscreen', () => {});
       video.removeEventListener('webkitendfullscreen', () => {});
@@ -619,39 +590,41 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
         poster={posterError ? '/static/images/video_placeholder.png' : poster}
         loop={loop}
         playsInline
-        preload='metadata'
-        onError={e => {
+        preload="metadata"
+        onError={(e) => {
           if (e.target === videoRef.current) {
             setPosterError(true);
           }
         }}
       >
-        <source src={videoUrl} type='video/mp4' />
+        <source src={videoUrl} type="video/mp4" />
         Ваш браузер не поддерживает HTML5 видео.
       </VideoElement>
 
-      {playerState.buffering && <BufferingIndicator />}
+      {playerState.buffering && (
+        <BufferingIndicator />
+      )}
 
       {/* Центральная кнопка PLAY - показывается только когда видео не играет */}
       {!playerState.isPlaying && !playerState.buffering && (
-        <CenterPlayButton
-          onClick={e => {
+        <CenterPlayButton 
+          onClick={(e) => {
             e.stopPropagation();
             togglePlay();
           }}
-          size='large'
+          size="large"
         >
-          <PlayIcon size={40} color='#fff' />
+          <PlayIcon size={40} color="#fff" />
         </CenterPlayButton>
       )}
 
-      <ControlsOverlay
-        className='controls-overlay'
-        sx={{
+      <ControlsOverlay 
+        className="controls-overlay"
+        sx={{ 
           opacity: playerState.showControls ? 1 : 0,
-          pointerEvents: playerState.showControls ? 'auto' : 'none',
+          pointerEvents: playerState.showControls ? 'auto' : 'none'
         }}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <ProgressContainer>
           <ProgressSlider
@@ -661,40 +634,39 @@ const AppleStyleVideoPlayer: React.FC<VideoPlayerProps> = ({
             step={0.01}
             onChange={handleTimeChange}
             onChangeCommitted={handleSeek}
-            size='small'
+            size="small"
           />
         </ProgressContainer>
 
         <ControlsRow>
           <LeftControls>
-            <ControlButton onClick={togglePlay} size='small'>
+            <ControlButton onClick={togglePlay} size="small">
               {playerState.isPlaying ? <Pause /> : <PlayArrow />}
             </ControlButton>
-
+            
             <TimeDisplay>
-              {formatTime(isSeeking ? seekValue : playerState.currentTime)} /{' '}
-              {formatTime(playerState.duration)}
+              {formatTime(isSeeking ? seekValue : playerState.currentTime)} / {formatTime(playerState.duration)}
             </TimeDisplay>
           </LeftControls>
 
           <RightControls>
             {!isMobile && (
               <>
-                <ControlButton onClick={toggleMute} size='small'>
+                <ControlButton onClick={toggleMute} size="small">
                   {playerState.isMuted ? <VolumeOff /> : <VolumeUp />}
                 </ControlButton>
-
+                
                 <VolumeSlider
                   value={playerState.isMuted ? 0 : playerState.volume}
                   max={1}
                   step={0.1}
                   onChange={handleVolumeChange}
-                  size='small'
+                  size="small"
                 />
               </>
             )}
 
-            <ControlButton onClick={toggleFullscreen} size='small'>
+            <ControlButton onClick={toggleFullscreen} size="small">
               {playerState.isFullscreen ? <FullscreenExit /> : <Fullscreen />}
             </ControlButton>
           </RightControls>

@@ -148,9 +148,9 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
   const containerStyle = {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
-    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
@@ -368,10 +368,7 @@ const SecurityForm: React.FC<SecurityFormProps> = ({ onSuccess }) => {
           Дополнительные настройки безопасности
         </Typography>
 
-        <Typography
-          variant='body2'
-          sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}
-        >
+        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
           Измените пароль для повышения безопасности аккаунта
         </Typography>
 

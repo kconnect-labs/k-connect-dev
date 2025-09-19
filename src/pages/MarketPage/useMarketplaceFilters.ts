@@ -46,9 +46,7 @@ export const useMarketplaceFilters = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get(
-        `/api/inventory/packs/${packId}/contents`
-      );
+      const response = await axios.get(`/api/inventory/packs/${packId}/contents`);
       if (response.data.success) {
         setPackItems(response.data.contents);
       } else {

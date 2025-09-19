@@ -125,27 +125,18 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
       PaperProps={{
         sx: {
           borderRadius: 'var(--main-border-radius)',
-          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
         },
       }}
     >
-      <DialogTitle
-        sx={{
-          fontWeight: 600,
-          fontSize: '1.15rem',
-          color: 'var(--theme-text-primary)',
-        }}
-      >
+      <DialogTitle sx={{ fontWeight: 600, fontSize: '1.15rem', color: 'var(--theme-text-primary)' }}>
         Экспорт / Импорт профиля
       </DialogTitle>
       <DialogContent>
-        <Typography
-          variant='subtitle2'
-          sx={{ mb: 1, color: 'var(--theme-text-secondary)' }}
-        >
+        <Typography variant='subtitle2' sx={{ mb: 1, color: 'var(--theme-text-secondary)' }}>
           Выберите, какие данные профиля экспортировать:
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 2 }}>
@@ -179,12 +170,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
           onClick={handleExport}
           disabled={loading || selectedFields.length === 0}
           fullWidth
-          sx={{
-            mb: 2,
-            borderRadius: 'var(--main-border-radius)',
-            fontWeight: 500,
-            color: 'var(--theme-text-primary)',
-          }}
+          sx={{ mb: 2, borderRadius: 'var(--main-border-radius)', fontWeight: 500, color: 'var(--theme-text-primary)' }}
         >
           {loading ? (
             <CircularProgress size={20} color='inherit' />
@@ -195,7 +181,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
         <Box sx={{ mt: 1, mb: 1 }}>
           <Typography
             variant='subtitle2'
-            sx={{ color: 'var(--theme-text-secondary)', mb: 0.5 }}
+              sx={{ color: 'var(--theme-text-secondary)', mb: 0.5 }}
           >
             Импортировать профиль (.konnect):
           </Typography>
@@ -204,12 +190,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
               variant='outlined'
               component='label'
               startIcon={<CloudUploadIcon />}
-              sx={{
-                borderRadius: 'var(--main-border-radius)',
-                fontWeight: 500,
-                minWidth: 0,
-                color: 'var(--theme-text-primary)',
-              }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, minWidth: 0, color: 'var(--theme-text-primary)' }}
               disabled={loading}
             >
               {importFile ? importFile.name : 'Выбрать файл'}
@@ -225,11 +206,7 @@ const ProfileKonnectModal: React.FC<ProfileKonnectModalProps> = ({
               variant='contained'
               onClick={handleImport}
               disabled={loading || !importFile}
-              sx={{
-                borderRadius: 'var(--main-border-radius)',
-                fontWeight: 500,
-                color: 'var(--theme-text-primary)',
-              }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, color: 'var(--theme-text-primary)' }}
             >
               {loading ? (
                 <CircularProgress size={20} color='inherit' />

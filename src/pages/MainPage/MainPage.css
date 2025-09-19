@@ -91,6 +91,8 @@
   position: relative;
 }
 
+
+
 /* Responsive breakpoints */
 @media (min-width: 768px) {
   .content-container {

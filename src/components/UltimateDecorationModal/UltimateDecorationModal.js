@@ -51,8 +51,7 @@ const DialogHeader = styled(Box)(({ theme }) => ({
   borderBottom: '1px solid rgb(24 24 24)',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderRadius:
-    'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
+  borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
   [theme.breakpoints.down('sm')]: {
     borderRadius: 0,
     padding: theme.spacing(2),
@@ -237,9 +236,7 @@ const UltimateDecorationModal = ({
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const API_URL =
-    (typeof window !== 'undefined' && window.location?.origin) ||
-    'https://k-connect.ru';
+  const API_URL = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
 
   // Функция для проверки является ли цвет светлым
   const isLightColor = color => {
@@ -523,8 +520,7 @@ const UltimateDecorationModal = ({
                             : undefined
                         }
                       >
-                        {decoration.item_path &&
-                          decoration.item_path.trim() !== '' &&
+                        {decoration.item_path && decoration.item_path.trim() !== '' &&
                           (() => {
                             const { path, styles } = parseItemSettings(
                               decoration.item_path
@@ -603,8 +599,7 @@ const UltimateDecorationModal = ({
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           borderTop: '1px solid rgb(24 24 24)',
-          borderRadius:
-            '0 0 var(--main-border-radius) !important var(--main-border-radius) !important',
+          borderRadius: '0 0 var(--main-border-radius) !important var(--main-border-radius) !important',
           [theme.breakpoints.down('sm')]: {
             borderRadius: 0,
             padding: theme.spacing(2),

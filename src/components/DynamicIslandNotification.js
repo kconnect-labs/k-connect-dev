@@ -151,10 +151,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'username_auction_sold':
       return username && points
-        ? t('notifications.messages.username_auction_sold', {
-            username,
-            points,
-          })
+        ? t('notifications.messages.username_auction_sold', { username, points })
         : notification.message;
     case 'username_auction_won':
       return username && points
@@ -162,10 +159,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'username_bid_accepted':
       return username && points
-        ? t('notifications.messages.username_bid_accepted', {
-            username,
-            points,
-          })
+        ? t('notifications.messages.username_bid_accepted', { username, points })
         : notification.message;
     case 'new_auction_bid':
       return username && points
@@ -183,9 +177,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'bug_status_change':
       return bugReportName
-        ? t('notifications.messages.bug_status_change', {
-            bugReport: bugReportName,
-          })
+        ? t('notifications.messages.bug_status_change', { bugReport: bugReportName })
         : notification.message;
     case 'ticket_comment':
       return t('notifications.messages.ticket_comment');
@@ -195,10 +187,7 @@ const getNotificationMessage = (notification, t) => {
         : notification.message;
     case 'marketplace_sold':
       return itemName && points
-        ? t('notifications.messages.marketplace_sold', {
-            item: itemName,
-            points,
-          })
+        ? t('notifications.messages.marketplace_sold', { item: itemName, points })
         : notification.message;
     case 'medal':
       return t('notifications.messages.medal');
@@ -242,7 +231,7 @@ const DynamicIslandNotification = ({
     if (notificationData && notificationData.id && !notificationData.is_read) {
       try {
         await axios.post(`/api/notifications/${notificationData.id}/read`);
-
+        
         // Вызываем callback для обновления состояния в родительском компоненте
         if (onNotificationRead) {
           onNotificationRead(notificationData.id);
@@ -260,7 +249,7 @@ const DynamicIslandNotification = ({
       const timer = setTimeout(() => {
         markNotificationAsRead();
       }, 1000);
-
+      
       return () => clearTimeout(timer);
     }
   }, [open, notificationData]);
@@ -314,11 +303,11 @@ const DynamicIslandNotification = ({
       borderRadius: 25,
       height: 60,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 300,
         damping: 25,
         mass: 0.8,
-      },
+      }
     },
     exit: {
       scale: 0.8,
@@ -327,82 +316,84 @@ const DynamicIslandNotification = ({
       borderRadius: 25,
       height: 40,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 500,
         damping: 20,
         mass: 0.5,
-      },
-    },
+      }
+    }
   };
 
   const contentVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
+    visible: { 
+      opacity: 1, 
       scale: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 400,
         damping: 25,
         delay: 0.1,
-      },
+      }
     },
-    exit: {
-      opacity: 0,
+    exit: { 
+      opacity: 0, 
       scale: 0.8,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 500,
         damping: 20,
-      },
-    },
+      }
+    }
   };
 
   const iconVariants = {
     hidden: { rotate: -180, scale: 0 },
-    visible: {
-      rotate: 0,
+    visible: { 
+      rotate: 0, 
       scale: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 600,
         damping: 20,
         delay: 0.2,
-      },
+      }
     },
-    exit: {
-      rotate: 180,
+    exit: { 
+      rotate: 180, 
       scale: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 500,
         damping: 15,
-      },
-    },
+      }
+    }
   };
 
   const textVariants = {
     hidden: { x: -20, opacity: 0 },
-    visible: {
-      x: 0,
+    visible: { 
+      x: 0, 
       opacity: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 300,
         damping: 25,
         delay: 0.3,
-      },
+      }
     },
-    exit: {
-      x: 20,
+    exit: { 
+      x: 20, 
       opacity: 0,
       transition: {
-        type: 'spring',
+        type: "spring",
         stiffness: 400,
         damping: 20,
-      },
-    },
+      }
+    }
   };
+
+
 
   return (
     <AnimatePresence>
@@ -420,11 +411,11 @@ const DynamicIslandNotification = ({
         >
           <motion.div
             variants={islandVariants}
-            initial='hidden'
-            animate='visible'
-            exit='exit'
-            onAnimationComplete={definition => {
-              if (definition === 'visible') {
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onAnimationComplete={(definition) => {
+              if (definition === "visible") {
                 // Auto hide after duration
                 setTimeout(() => {
                   onClose();
@@ -453,9 +444,9 @@ const DynamicIslandNotification = ({
                 width: '100%',
               }}
               variants={contentVariants}
-              initial='hidden'
-              animate='visible'
-              exit='exit'
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               {/* Icon */}
               <motion.div
@@ -467,11 +458,11 @@ const DynamicIslandNotification = ({
                   color: '#D0BCFF',
                 }}
                 variants={iconVariants}
-                initial='hidden'
-                animate='visible'
-                exit='exit'
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
-                {getIcon()}
+          {getIcon()}
               </motion.div>
 
               {/* Text content */}
@@ -483,39 +474,39 @@ const DynamicIslandNotification = ({
                   minWidth: 0,
                 }}
                 variants={textVariants}
-                initial='hidden'
-                animate='visible'
-                exit='exit'
+                initial="hidden"
+                animate="visible"
+                exit="exit"
               >
-                <Typography
-                  variant='subtitle2'
+            <Typography
+                  variant="subtitle2"
                   style={{
                     color: 'white',
                     fontWeight: 600,
                     fontSize: '14px',
                     lineHeight: 1.2,
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {shortMessage || getDisplayMessage()}
-                </Typography>
-                {shortMessage && message && shortMessage !== message && (
-                  <Typography
-                    variant='caption'
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {shortMessage || getDisplayMessage()}
+            </Typography>
+            {shortMessage && message && shortMessage !== message && (
+              <Typography
+                    variant="caption"
                     style={{
                       color: 'rgba(255, 255, 255, 0.7)',
                       fontSize: '12px',
                       lineHeight: 1.2,
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {getDisplayMessage()}
-                  </Typography>
-                )}
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {getDisplayMessage()}
+              </Typography>
+            )}
               </motion.div>
             </motion.div>
           </motion.div>

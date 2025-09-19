@@ -14,7 +14,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import { useLanguage } from '../../context/LanguageContext';
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
-  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   borderRadius: '16px',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),

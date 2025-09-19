@@ -25,8 +25,8 @@ import { formatTimeAgo } from '../../utils/dateUtils';
 import { useLanguage } from '../../context/LanguageContext';
 
 const StyledCommentCard = styled(Box)(({ theme }) => ({
-  backgroundColor: 'var(--theme-background, rgba(28, 28, 32, 0.4))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+      backgroundColor: 'var(--theme-background, rgba(28, 28, 32, 0.4))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderRadius: '16px',
   padding: theme.spacing(2),
   border: '1px solid rgba(255, 255, 255, 0.03)',
@@ -50,7 +50,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
   transition: 'all 0.2s ease',
   backgroundColor: active
     ? 'rgba(140, 82, 255, 0.08)'
-    : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          : 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   '&:hover': {
     backgroundColor: active
       ? 'rgba(140, 82, 255, 0.15)'
@@ -211,28 +211,19 @@ const CommentItem = ({
                 }}
               >
                 {comment.user.name}
-                {(comment.user.verification?.status > 0 ||
+                {(comment.user.verification?.status > 0 || 
                   comment.user.verification_status === 'verified' ||
                   comment.user.verification_status > 0 ||
-                  (typeof comment.user.verification === 'number' &&
-                    comment.user.verification > 0)) && (
-                  <VerificationBadge
-                    status={
-                      comment.user.verification?.status ||
-                      comment.user.verification_status ||
-                      comment.user.verification
-                    }
-                    size='small'
-                  />
-                )}
-                {(comment.user.subscription?.type === 'max' ||
+                  (typeof comment.user.verification === 'number' && comment.user.verification > 0)) && (
+                    <VerificationBadge
+                      status={comment.user.verification?.status || comment.user.verification_status || comment.user.verification}
+                      size='small'
+                    />
+                  )}
+                {(comment.user.subscription?.type === 'max' || 
                   comment.user.subscription_type === 'max' ||
                   comment.user.subscription?.subscription_type === 'max') && (
-                  <MaxIcon
-                    size={24}
-                    color='#FF4D50'
-                    style={{ margin: '0 2.5px' }}
-                  />
+                  <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} />
                 )}
               </Typography>
               <Tooltip
@@ -271,8 +262,7 @@ const CommentItem = ({
                   PaperProps={{
                     sx: {
                       bgcolor: 'rgba(28, 28, 32, 0.9)',
-                      backdropFilter:
-                        'var(--theme-backdrop-filter, blur(10px))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
                       borderRadius: '18px',
                       border: '1px solid rgba(255, 255, 255, 0.03)',

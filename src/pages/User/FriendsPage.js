@@ -104,10 +104,8 @@ const FriendsPage = () => {
   const handleUnfollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
-      const response = await axios.post('/api/profile/unfollow', {
-        followed_id: userId,
-      });
-
+      const response = await axios.post('/api/profile/unfollow', { followed_id: userId });
+      
       if (response.data.success) {
         // Немедленно обновляем список без перезагрузки с сервера
         if (tab === 0) {
@@ -118,9 +116,7 @@ const FriendsPage = () => {
           setFollowers(prev => prev.filter(follower => follower.id !== userId));
         } else if (tab === 2) {
           // На вкладке подписок - убираем из списка подписок
-          setFollowing(prev =>
-            prev.filter(following => following.id !== userId)
-          );
+          setFollowing(prev => prev.filter(following => following.id !== userId));
         }
       }
     } catch (e) {
@@ -137,10 +133,8 @@ const FriendsPage = () => {
   const handleFollow = async userId => {
     setLoadingIds(prev => ({ ...prev, [userId]: true }));
     try {
-      const response = await axios.post('/api/profile/follow', {
-        followed_id: userId,
-      });
-
+      const response = await axios.post('/api/profile/follow', { followed_id: userId });
+      
       if (response.data.success) {
         // Немедленно обновляем список без перезагрузки с сервера
         if (tab === 0) {
@@ -165,7 +159,7 @@ const FriendsPage = () => {
     }
   };
 
-  const handleCopyLink = async user => {
+  const handleCopyLink = async (user) => {
     const profileUrl = `${window.location.origin}/profile/${user.username}`;
     try {
       await navigator.clipboard.writeText(profileUrl);
@@ -219,8 +213,8 @@ const FriendsPage = () => {
             placeholder='Поиск по пользователям'
             size='small'
             fullWidth
-            sx={{
-              mb: 1.5,
+            sx={{ 
+              mb: 1.5, 
               mt: 1,
               '& .MuiOutlinedInput-root': {
                 background: 'var(--theme-background, rgba(255,255,255,0.03))',
@@ -325,8 +319,7 @@ const FriendsPage = () => {
                     <Box
                       component='img'
                       src={
-                        user.avatar_url ||
-                        (user.photo && user.photo !== ''
+                        user.avatar_url || (user.photo && user.photo !== ''
                           ? `/static/uploads/avatar/${user.id}/${user.photo}`
                           : '/static/uploads/avatar/system/avatar.png')
                       }

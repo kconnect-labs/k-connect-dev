@@ -26,7 +26,7 @@ const Badge = ({
   showTooltip = false,
   tooltipText,
   onClick,
-  isProfile = false,
+  isProfile = false, 
   ...props
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -39,36 +39,37 @@ const Badge = ({
   const imageRef = useRef(null);
   const containerRef = useRef(null);
 
+  
   const badgeSize = useMemo(() => {
     switch (size) {
       case 'post':
-        return { width: 24, height: 24 };
+        return { width: 24, height: 24 }; 
       case 'small':
-        return { width: 20, height: 20 };
+        return { width: 20, height: 20 }; 
       case 'large':
-        return { width: 28, height: 28 };
+        return { width: 28, height: 28 }; 
       case 'shop':
-        return { width: 300, height: 150 };
+        return { width: 300, height: 150 }; 
       default:
-        return { width: 24, height: 24 };
+        return { width: 24, height: 24 }; 
     }
   }, [size]);
 
+  
   const badgeClasses = useMemo(() => {
     const classes = ['badge', `badge--${size}`];
 
-    if (isProfile) classes.push('badge--profile');
+    if (isProfile) classes.push('badge--profile'); 
     if (className) classes.push(className);
     if (imageLoaded) classes.push('badge--loaded');
     if (imageError) classes.push('badge--error');
-    if (achievement?.upgrade && achievement.upgrade !== '0')
-      classes.push('badge--upgraded');
+    if (achievement?.upgrade && achievement.upgrade !== '0') classes.push('badge--upgraded');
     if (isHovered) classes.push('badge--hovered');
 
     return classes.join(' ');
   }, [
     size,
-    isProfile,
+    isProfile, 
     className,
     imageLoaded,
     imageError,
@@ -76,20 +77,23 @@ const Badge = ({
     isHovered,
   ]);
 
+  
   const retryLoadImage = async () => {
     if (!achievement?.image_path || isRetrying) return;
-
+    
     setIsRetrying(true);
     setRetryCount(prev => prev + 1);
-
+    
     try {
+      
       await badgeCache.clearBadgeCache(achievement.image_path);
-
+      
+      
       const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
       if (cachedSrc) {
         setCachedImageSrc(cachedSrc);
         setImageError(false);
-        setImageLoaded(false);
+        setImageLoaded(false); 
       } else {
         setImageError(true);
       }
@@ -101,11 +105,13 @@ const Badge = ({
     }
   };
 
+  
   useEffect(() => {
     if (!achievement?.image_path) return;
 
     const loadCachedImage = async () => {
       try {
+        
         const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
         if (cachedSrc) {
           setCachedImageSrc(cachedSrc);
@@ -122,15 +128,14 @@ const Badge = ({
     loadCachedImage();
   }, [achievement?.image_path, retryCount]);
 
+  
   useEffect(() => {
     if (!achievement?.image_path || !imageLoaded || !cachedImageSrc) return;
 
     const loadSvgContent = async () => {
       try {
-        if (
-          cachedImageSrc.startsWith('blob:') ||
-          cachedImageSrc.startsWith('data:')
-        ) {
+        
+        if (cachedImageSrc.startsWith('blob:') || cachedImageSrc.startsWith('data:')) {
           const response = await fetch(cachedImageSrc);
           if (response.ok) {
             const svgText = await response.text();
@@ -142,59 +147,68 @@ const Badge = ({
       }
     };
 
+    
     if (achievement.image_path.toLowerCase().endsWith('.svg')) {
       loadSvgContent();
     }
   }, [achievement?.image_path, imageLoaded, cachedImageSrc]);
 
+  
   const handleImageLoad = () => {
     setImageLoaded(true);
     setImageError(false);
   };
 
+  
   const handleImageError = e => {
     setImageError(true);
     setImageLoaded(false);
 
+    
     if (e.target) {
       e.target.style.display = 'none';
     }
 
+    
     if (retryCount < 3) {
-      setTimeout(
-        () => {
-          retryLoadImage();
-        },
-        1000 * (retryCount + 1)
-      );
+      setTimeout(() => {
+        retryLoadImage();
+      }, 1000 * (retryCount + 1)); 
     }
 
+    
     if (onError) {
       onError(e);
     }
   };
 
+  
   useEffect(() => {
     if (!achievement?.upgrade || !containerRef.current || !imageLoaded) return;
 
     const container = containerRef.current;
-
+    
+    
     const glowElement = document.createElement('div');
     glowElement.className = 'badge-glow';
-    glowElement.style.setProperty(
-      '--glow-color',
-      achievement.color_upgrade || '#FFD700'
-    );
-
+    glowElement.style.setProperty('--glow-color', achievement.color_upgrade || '#FFD700');
+    
     container.appendChild(glowElement);
 
+    
     return () => {
       if (glowElement.parentNode) {
         glowElement.parentNode.removeChild(glowElement);
       }
     };
-  }, [achievement?.upgrade, achievement?.color_upgrade, imageLoaded, size]);
+  }, [
+    achievement?.upgrade,
+    achievement?.color_upgrade,
+    imageLoaded,
+    size,
+  ]);
 
+  
   if (!achievement) return null;
 
   const badgeContent = (
@@ -206,17 +220,15 @@ const Badge = ({
         height: badgeSize.height,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center', 
         position: 'relative',
         overflow: 'visible',
-        cursor: onClick ? 'pointer' : 'default',
-        transition: 'all 0.2s ease',
+        cursor: onClick ? 'pointer' : 'default', 
+        transition: 'all 0.2s ease', 
         '--upgrade-color': achievement.color_upgrade || '#FFD700',
-        '&:active': onClick
-          ? {
-              transform: 'scale(0.95)',
-            }
-          : {},
+        '&:active': onClick ? {
+          transform: 'scale(0.95)', 
+        } : {},
       }}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -239,8 +251,9 @@ const Badge = ({
           }}
         />
       ) : imageError ? (
+        
         <div
-          className='badge__retry-button'
+          className="badge__retry-button"
           style={{
             width: '100%',
             height: '100%',
@@ -257,9 +270,7 @@ const Badge = ({
             transition: 'all 0.2s ease',
           }}
           onClick={retryCount < 3 ? retryLoadImage : undefined}
-          title={
-            retryCount < 3 ? 'Нажмите для перезагрузки' : 'Не удалось загрузить'
-          }
+          title={retryCount < 3 ? 'Нажмите для перезагрузки' : 'Не удалось загрузить'}
         >
           {isRetrying ? (
             <div
@@ -277,6 +288,7 @@ const Badge = ({
           )}
         </div>
       ) : (
+        
         <div
           style={{
             width: '100%',
@@ -303,9 +315,12 @@ const Badge = ({
     </Box>
   );
 
+  
   if (showTooltip) {
     return (
-      <Tooltip title={tooltipText || achievement.bage}>{badgeContent}</Tooltip>
+      <Tooltip title={tooltipText || achievement.bage}>
+        {badgeContent}
+      </Tooltip>
     );
   }
 

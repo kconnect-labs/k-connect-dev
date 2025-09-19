@@ -31,9 +31,7 @@ interface UseArtistAlbumsReturn {
   refetch: () => void;
 }
 
-export const useArtistAlbums = (
-  artistId: number | null
-): UseArtistAlbumsReturn => {
+export const useArtistAlbums = (artistId: number | null): UseArtistAlbumsReturn => {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +47,7 @@ export const useArtistAlbums = (
 
     try {
       const response = await axios.get(`/api/music/albums/artist/${artistId}`);
-
+      
       if (response.data.success) {
         setAlbums(response.data.albums || []);
       } else {

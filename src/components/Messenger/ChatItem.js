@@ -58,10 +58,7 @@ const ChatItem = ({
 
     // Используем данные из chat.members (уже приходят из WebSocket)
     if (otherMember) {
-      console.log(
-        `ChatItem: Using WebSocket data for user ${otherMember.user_id || otherMember.id}:`,
-        otherMember.name
-      );
+      console.log(`ChatItem: Using WebSocket data for user ${otherMember.user_id || otherMember.id}:`, otherMember.name);
       setOtherUserDetails(otherMember);
       setIsLoading(false);
       return;

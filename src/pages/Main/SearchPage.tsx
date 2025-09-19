@@ -78,6 +78,7 @@ const SearchContainer = styled(Container)(({ theme }) => ({
 }));
 
 const SearchBox = styled(Box)(({ theme }) => ({
+
   zIndex: 10,
   padding: theme.spacing(2),
   marginBottom: theme.spacing(3),
@@ -91,7 +92,7 @@ const SearchBox = styled(Box)(({ theme }) => ({
 const SearchInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     borderRadius: 'var(--main-border-radius) !important',
-    background: 'rgba(255, 255, 255, 0.02)',
+            background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(66, 66, 66, 0.5)',
     transition: 'all 0.3s ease',
     '&:hover': {
@@ -160,6 +161,8 @@ const UserCard = styled(motion.div)(({ theme }) => ({
   },
 }));
 
+
+
 const LoadingContainer = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
@@ -182,9 +185,7 @@ const SearchPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const location = useLocation();
   const navigate = useNavigate();
-  const { user: currentUser, isAuthenticated } = React.useContext(
-    AuthContext
-  ) as any;
+  const { user: currentUser, isAuthenticated } = React.useContext(AuthContext) as any;
 
   // URL params
   const searchParams = new URLSearchParams(location.search);
@@ -203,9 +204,7 @@ const SearchPage: React.FC = () => {
   const [postPage, setPostPage] = useState(1);
   const [hasMoreUsers, setHasMoreUsers] = useState(false);
   const [hasMorePosts, setHasMorePosts] = useState(false);
-  const [followingStatus, setFollowingStatus] = useState<
-    Record<number, boolean>
-  >({});
+  const [followingStatus, setFollowingStatus] = useState<Record<number, boolean>>({});
 
   // Lightbox
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -219,73 +218,59 @@ const SearchPage: React.FC = () => {
   const performSearchRef = useRef<any>(null);
 
   // Update URL params
-  const updateSearchParams = useCallback(
-    (query: string, type: number) => {
-      const newParams = new URLSearchParams();
-      if (query) newParams.set('q', query);
-      if (type === 1) {
-        newParams.set('type', 'users');
-      } else if (type === 2) {
-        newParams.set('type', 'posts');
-      } else {
-        newParams.set('type', 'all');
-      }
-      navigate(`/search?${newParams.toString()}`);
-    },
-    [navigate]
-  );
+  const updateSearchParams = useCallback((query: string, type: number) => {
+    const newParams = new URLSearchParams();
+    if (query) newParams.set('q', query);
+    if (type === 1) {
+      newParams.set('type', 'users');
+    } else if (type === 2) {
+      newParams.set('type', 'posts');
+    } else {
+      newParams.set('type', 'all');
+    }
+    navigate(`/search?${newParams.toString()}`);
+  }, [navigate]);
 
   // Remove duplicates utility
   const removeDuplicatesUsers = useCallback((array: User[]): User[] => {
-    return array.filter(
-      (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    return array.filter((item, index, self) => 
+      index === self.findIndex(t => t.id === item.id)
     );
   }, []);
 
   const removeDuplicatesPosts = useCallback((array: Post[]): Post[] => {
-    return array.filter(
-      (item, index, self) => index === self.findIndex(t => t.id === item.id)
+    return array.filter((item, index, self) => 
+      index === self.findIndex(t => t.id === item.id)
     );
   }, []);
 
   // Load following status
-  const loadFollowingStatus = useCallback(
-    async (usersList: User[]) => {
-      if (!isAuthenticated || !usersList.length) return;
+  const loadFollowingStatus = useCallback(async (usersList: User[]) => {
+    if (!isAuthenticated || !usersList.length) return;
 
-      try {
-        const statuses: Record<number, boolean> = {};
-
-        for (const userItem of usersList) {
-          if (userItem.id === currentUser?.id) continue;
-
-          try {
-            const response = await profileService.checkFollowing(userItem.id);
-            statuses[userItem.id] = response.data.following;
-          } catch (error) {
-            console.error(
-              `Error checking following status for user ${userItem.id}:`,
-              error
-            );
-            statuses[userItem.id] = false;
-          }
+    try {
+      const statuses: Record<number, boolean> = {};
+      
+      for (const userItem of usersList) {
+        if (userItem.id === currentUser?.id) continue;
+        
+        try {
+          const response = await profileService.checkFollowing(userItem.id);
+          statuses[userItem.id] = response.data.following;
+        } catch (error) {
+          console.error(`Error checking following status for user ${userItem.id}:`, error);
+          statuses[userItem.id] = false;
         }
-
-        setFollowingStatus(prev => ({ ...prev, ...statuses }));
-      } catch (error) {
-        console.error('Error loading following statuses:', error);
       }
-    },
-    [isAuthenticated, currentUser]
-  );
+
+      setFollowingStatus(prev => ({ ...prev, ...statuses }));
+    } catch (error) {
+      console.error('Error loading following statuses:', error);
+    }
+  }, [isAuthenticated, currentUser]);
 
   // Perform search (removed useCallback to prevent infinite loops)
-  const performSearch = async (
-    query: string,
-    type: number,
-    page = 1,
-    append = false
-  ) => {
+  const performSearch = async (query: string, type: number, page = 1, append = false) => {
     if (loading) return;
 
     const cleanQuery = query.trim();
@@ -294,29 +279,29 @@ const SearchPage: React.FC = () => {
     // Prevent duplicate searches
     const searchKey = `${cleanQuery}_${type}_${page}`;
     if (!append && lastSearchRef.current === searchKey) return;
-
+    
     if (!append) lastSearchRef.current = searchKey;
 
     setLoading(true);
-
+    
     try {
       let response;
 
       if (type === 1) {
         // Search users
         response = await searchService.searchUsers(cleanQuery, page);
-
+        
         if (response.data?.users) {
           const uniqueUsers = removeDuplicatesUsers(response.data.users);
-
+          
           if (append) {
             setUsers(prev => removeDuplicatesUsers([...prev, ...uniqueUsers]));
           } else {
             setUsers(uniqueUsers);
           }
-
+          
           setHasMoreUsers(response.data.has_next || false);
-
+          
           if (isAuthenticated && uniqueUsers.length > 0) {
             loadFollowingStatus(uniqueUsers);
           }
@@ -324,22 +309,22 @@ const SearchPage: React.FC = () => {
       } else if (type === 2) {
         // Search posts
         response = await searchService.searchPosts(cleanQuery, page);
-
+        
         if (response.data?.posts) {
           const uniquePosts = removeDuplicatesPosts(response.data.posts);
-
+          
           if (append) {
             setPosts(prev => removeDuplicatesPosts([...prev, ...uniquePosts]));
           } else {
             setPosts(uniquePosts);
           }
-
+          
           setHasMorePosts(response.data.has_next || false);
         }
       } else {
         // Search all
         response = await searchService.searchAll(cleanQuery);
-
+        
         if (response.data) {
           if (response.data.users) {
             setUsers(removeDuplicatesUsers(response.data.users));
@@ -349,7 +334,7 @@ const SearchPage: React.FC = () => {
           } else {
             setUsers([]);
           }
-
+          
           if (response.data.posts) {
             setPosts(removeDuplicatesPosts(response.data.posts));
           } else {
@@ -370,51 +355,42 @@ const SearchPage: React.FC = () => {
   });
 
   // Handle follow toggle
-  const handleFollowToggle = useCallback(
-    async (userId: number) => {
-      if (!isAuthenticated) {
-        navigate('/login');
-        return;
+  const handleFollowToggle = useCallback(async (userId: number) => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      if (followingStatus[userId]) {
+        await profileService.unfollowUser(userId);
+      } else {
+        await profileService.followUser(userId);
       }
 
-      try {
-        if (followingStatus[userId]) {
-          await profileService.unfollowUser(userId);
-        } else {
-          await profileService.followUser(userId);
-        }
-
-        setFollowingStatus(prev => ({
-          ...prev,
-          [userId]: !prev[userId],
-        }));
-      } catch (error) {
-        console.error('Error toggling follow status:', error);
-      }
-    },
-    [isAuthenticated, followingStatus, navigate]
-  );
+      setFollowingStatus(prev => ({
+        ...prev,
+        [userId]: !prev[userId],
+      }));
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+    }
+  }, [isAuthenticated, followingStatus, navigate]);
 
   // Handle tab change
-  const handleTabChange = useCallback(
-    (_: React.SyntheticEvent, newValue: number) => {
-      setSearchType(newValue);
-      setUserPage(1);
-      setPostPage(1);
-      updateSearchParams(searchQuery, newValue);
-    },
-    [searchQuery, updateSearchParams]
-  );
+  const handleTabChange = useCallback((_: React.SyntheticEvent, newValue: number) => {
+    setSearchType(newValue);
+    setUserPage(1);
+    setPostPage(1);
+    updateSearchParams(searchQuery, newValue);
+  }, [searchQuery, updateSearchParams]);
 
   // Handle search submit
-  const handleSearchSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const cleanQuery = searchQuery.trim();
-      updateSearchParams(cleanQuery, searchType);
-    },
-    [searchQuery, searchType, updateSearchParams]
-  );
+  const handleSearchSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanQuery = searchQuery.trim();
+    updateSearchParams(cleanQuery, searchType);
+  }, [searchQuery, searchType, updateSearchParams]);
 
   // Load more results
   const loadMoreResults = useCallback(() => {
@@ -472,140 +448,115 @@ const SearchPage: React.FC = () => {
   }, []);
 
   // Render user card
-  const renderUserCard = useCallback(
-    (user: User, index: number) => (
-      <UserCard
-        key={user.id}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: index * 0.1 }}
-        onClick={() => navigate(`/profile/${user.username}`)}
-        className='theme-card'
-      >
-        <Avatar
-          src={
-            user.avatar_url ||
-            (user.photo && user.photo !== 'avatar.png'
-              ? user.photo.startsWith('/')
-                ? user.photo
-                : `/static/uploads/avatar/${user.id}/${user.photo}`
-              : `/static/uploads/avatar/system/avatar.png`)
-          }
-          alt={user.name}
-          sx={{
-            width: 56,
-            height: 56,
-            marginRight: 2,
-            border: `2px solid ${theme.palette.primary.main}`,
-          }}
-        />
-
-        <Box sx={{ flex: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mr: 1 }}>
-              {user.name}
-            </Typography>
-            {user.verification_status === 'verified' && (
-              <VerifiedIcon sx={{ fontSize: 18, color: 'primary.main' }} />
-            )}
-            {(user.subscription?.type === 'max' ||
-              user.subscription_type === 'max' ||
-              user.subscription?.subscription_type === 'max') && (
-              <MaxIcon
-                className=''
-                size={20}
-                color='#FF4D50'
-                style={{ marginLeft: 4 }}
-              />
-            )}
-          </Box>
-          <Typography variant='body2' color='text.secondary'>
-            @{user.username}
+  const renderUserCard = useCallback((user: User, index: number) => (
+    <UserCard
+      key={user.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      onClick={() => navigate(`/profile/${user.username}`)}
+      className="theme-card"
+    >
+      <Avatar
+        src={
+          user.avatar_url || 
+          (user.photo && user.photo !== 'avatar.png'
+            ? user.photo.startsWith('/')
+              ? user.photo
+              : `/static/uploads/avatar/${user.id}/${user.photo}`
+            : `/static/uploads/avatar/system/avatar.png`)
+        }
+        alt={user.name}
+        sx={{
+          width: 56,
+          height: 56,
+          marginRight: 2,
+          border: `2px solid ${theme.palette.primary.main}`,
+        }}
+      />
+      
+      <Box sx={{ flex: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mr: 1 }}>
+            {user.name}
           </Typography>
-        </Box>
-
-        {isAuthenticated &&
-          user &&
-          currentUser &&
-          currentUser.id !== user.id && (
-            <Button
-              variant={followingStatus[user.id] ? 'outlined' : 'contained'}
-              size='small'
-              onClick={e => {
-                e.stopPropagation();
-                handleFollowToggle(user.id);
-              }}
-              startIcon={
-                followingStatus[user.id] ? (
-                  <PersonRemoveIcon />
-                ) : (
-                  <PersonAddIcon />
-                )
-              }
-              sx={{
-                borderRadius: 'var(--main-border-radius)',
-                textTransform: 'none',
-                minWidth: 120,
-              }}
-            >
-              {followingStatus[user.id] ? 'Отписаться' : 'Подписаться'}
-            </Button>
+          {user.verification_status === 'verified' && (
+            <VerifiedIcon sx={{ fontSize: 18, color: 'primary.main' }} />
           )}
-      </UserCard>
-    ),
-    [
-      navigate,
-      theme.palette.primary.main,
-      isAuthenticated,
-      currentUser,
-      followingStatus,
-      handleFollowToggle,
-    ]
-  );
+          {(user.subscription?.type === 'max' || 
+            user.subscription_type === 'max' ||
+            user.subscription?.subscription_type === 'max') && (
+            <MaxIcon className="" size={20} color="#FF4D50" style={{ marginLeft: 4 }} />
+          )}
+        </Box>
+        <Typography variant="body2" color="text.secondary">
+          @{user.username}
+        </Typography>
+      </Box>
+
+      {isAuthenticated && user && currentUser && currentUser.id !== user.id && (
+        <Button
+          variant={followingStatus[user.id] ? 'outlined' : 'contained'}
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleFollowToggle(user.id);
+          }}
+          startIcon={
+            followingStatus[user.id] ? <PersonRemoveIcon /> : <PersonAddIcon />
+          }
+          sx={{
+            borderRadius: 'var(--main-border-radius)',
+            textTransform: 'none',
+            minWidth: 120,
+          }}
+        >
+          {followingStatus[user.id] ? 'Отписаться' : 'Подписаться'}
+        </Button>
+      )}
+    </UserCard>
+  ), [navigate, theme.palette.primary.main, isAuthenticated, currentUser, followingStatus, handleFollowToggle]);
 
   // Render post using existing Post component
-  const renderPostCard = useCallback(
-    (post: Post, index: number) => (
-      <motion.div
-        key={post.id}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: index * 0.1 }}
-        style={{ marginBottom: 16 }}
-      >
-        <Post
-          post={post}
-          onDelete={() => {}}
-          onOpenLightbox={() => {}}
-          isPinned={false}
-          statusColor=''
-        />
-      </motion.div>
-    ),
-    []
-  );
+  const renderPostCard = useCallback((post: Post, index: number) => (
+    <motion.div
+      key={post.id}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      style={{ marginBottom: 16 }}
+    >
+      <Post 
+        post={post} 
+        onDelete={() => {}} 
+        onOpenLightbox={() => {}} 
+        isPinned={false}
+        statusColor=""
+      />
+    </motion.div>
+  ), []);
 
   return (
-    <SearchContainer maxWidth='lg'>
-      <SearchBox className='theme-modal'>
+    <SearchContainer maxWidth="lg" >
+      <SearchBox className="theme-modal">
         <form onSubmit={handleSearchSubmit}>
           <SearchInput
             fullWidth
-            placeholder='Поиск пользователей, постов...'
+            placeholder="Поиск пользователей, постов..."
             value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
-                  <SearchIcon color='primary' />
+                <InputAdornment position="start">
+                  <SearchIcon color="primary" />
                 </InputAdornment>
               ),
               endAdornment: searchQuery && (
-                <InputAdornment position='end'>
+                <InputAdornment position="end">
                   <IconButton
-                    size='small'
+                    size="small"
                     onClick={() => setSearchQuery('')}
-                    edge='end'
+                    edge="end"
                   >
                     <CloseIcon />
                   </IconButton>
@@ -618,24 +569,16 @@ const SearchPage: React.FC = () => {
         <StyledTabs
           value={searchType}
           onChange={handleTabChange}
-          variant='fullWidth'
+          variant="fullWidth"
         >
-          <StyledTab label='Все' icon={<SearchIcon />} iconPosition='start' />
-          <StyledTab
-            label='Пользователи'
-            icon={<PersonIcon />}
-            iconPosition='start'
-          />
-          <StyledTab
-            label='Посты'
-            icon={<ArticleIcon />}
-            iconPosition='start'
-          />
+          <StyledTab label="Все" icon={<SearchIcon />} iconPosition="start" />
+          <StyledTab label="Пользователи" icon={<PersonIcon />} iconPosition="start" />
+          <StyledTab label="Посты" icon={<ArticleIcon />} iconPosition="start" />
         </StyledTabs>
       </SearchBox>
 
       {/* Results */}
-      <AnimatePresence mode='wait'>
+      <AnimatePresence mode="wait">
         {loading && !users.length && !posts.length ? (
           <LoadingContainer>
             <CircularProgress size={40} thickness={4} />
@@ -654,10 +597,10 @@ const SearchPage: React.FC = () => {
                 {users.length === 0 && posts.length === 0 ? (
                   <NoResultsContainer>
                     <SearchIcon sx={{ fontSize: 64, mb: 2, opacity: 0.3 }} />
-                    <Typography variant='h5' gutterBottom>
+                    <Typography variant="h5" gutterBottom>
                       Ничего не найдено
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Попробуйте изменить поисковый запрос
                     </Typography>
                   </NoResultsContainer>
@@ -665,19 +608,16 @@ const SearchPage: React.FC = () => {
                   <>
                     {users.length > 0 && (
                       <Box sx={{ mb: 4 }}>
-                        <Typography
-                          variant='h6'
-                          sx={{ mb: 2, fontWeight: 600 }}
-                        >
+                        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                           Пользователи
                         </Typography>
-                        <Box>{users.slice(0, 4).map(renderUserCard)}</Box>
+                        <Box>
+                          {users.slice(0, 4).map(renderUserCard)}
+                        </Box>
                         {users.length > 4 && (
                           <Button
-                            variant='outlined'
-                            onClick={() =>
-                              handleTabChange({} as React.SyntheticEvent, 1)
-                            }
+                            variant="outlined"
+                            onClick={() => handleTabChange({} as React.SyntheticEvent, 1)}
                             sx={{ mt: 2 }}
                           >
                             Показать всех пользователей
@@ -688,27 +628,16 @@ const SearchPage: React.FC = () => {
 
                     {posts.length > 0 && (
                       <Box>
-                        <Typography
-                          variant='h6'
-                          sx={{ mb: 2, fontWeight: 600 }}
-                        >
+                        <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
                           Посты
                         </Typography>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                          }}
-                        >
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                           {posts.slice(0, 3).map(renderPostCard)}
                         </Box>
                         {posts.length > 3 && (
                           <Button
-                            variant='outlined'
-                            onClick={() =>
-                              handleTabChange({} as React.SyntheticEvent, 2)
-                            }
+                            variant="outlined"
+                            onClick={() => handleTabChange({} as React.SyntheticEvent, 2)}
                             sx={{ mt: 2 }}
                           >
                             Показать все посты
@@ -727,10 +656,10 @@ const SearchPage: React.FC = () => {
                 {users.length === 0 ? (
                   <NoResultsContainer>
                     <PersonIcon sx={{ fontSize: 64, mb: 2, opacity: 0.3 }} />
-                    <Typography variant='h5' gutterBottom>
+                    <Typography variant="h5" gutterBottom>
                       Пользователи не найдены
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Попробуйте изменить поисковый запрос
                     </Typography>
                   </NoResultsContainer>
@@ -738,24 +667,14 @@ const SearchPage: React.FC = () => {
                   <>
                     <Box>{users.map(renderUserCard)}</Box>
                     {hasMoreUsers && (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          mt: 3,
-                        }}
-                      >
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                         <Button
-                          variant='outlined'
+                          variant="outlined"
                           onClick={loadMoreResults}
                           disabled={loading}
-                          size='large'
+                          size="large"
                         >
-                          {loading ? (
-                            <CircularProgress size={24} />
-                          ) : (
-                            'Загрузить ещё'
-                          )}
+                          {loading ? <CircularProgress size={24} /> : 'Загрузить ещё'}
                         </Button>
                       </Box>
                     )}
@@ -770,39 +689,27 @@ const SearchPage: React.FC = () => {
                 {posts.length === 0 ? (
                   <NoResultsContainer>
                     <ArticleIcon sx={{ fontSize: 64, mb: 2, opacity: 0.3 }} />
-                    <Typography variant='h5' gutterBottom>
+                    <Typography variant="h5" gutterBottom>
                       Посты не найдены
                     </Typography>
-                    <Typography variant='body2'>
+                    <Typography variant="body2">
                       Попробуйте изменить поисковый запрос
                     </Typography>
                   </NoResultsContainer>
                 ) : (
                   <>
-                    <Box
-                      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                    >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                       {posts.map(renderPostCard)}
                     </Box>
                     {hasMorePosts && (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          mt: 3,
-                        }}
-                      >
+                      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                         <Button
-                          variant='outlined'
+                          variant="outlined"
                           onClick={loadMoreResults}
                           disabled={loading}
-                          size='large'
+                          size="large"
                         >
-                          {loading ? (
-                            <CircularProgress size={24} />
-                          ) : (
-                            'Загрузить ещё'
-                          )}
+                          {loading ? <CircularProgress size={24} /> : 'Загрузить ещё'}
                         </Button>
                       </Box>
                     )}

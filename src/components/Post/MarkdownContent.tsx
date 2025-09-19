@@ -60,4 +60,4 @@ const MarkdownContent = styled(Box, {
   transition: 'max-height 0.3s ease',
 }));
 
-export default MarkdownContent;
+export default MarkdownContent; 

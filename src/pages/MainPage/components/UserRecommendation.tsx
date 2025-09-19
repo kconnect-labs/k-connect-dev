@@ -68,7 +68,7 @@ const UserRecommendation: React.FC<UserRecommendationProps> = ({ user }) => {
             src={getAvatarSrc()}
             alt={user.name || user.username}
             className='user-avatar-large'
-            onError={e => safeImageError(e as any)}
+            onError={(e) => safeImageError(e as any)}
           />
           <div className='user-details'>
             <div className='user-name'>{user.name || user.username}</div>

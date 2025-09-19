@@ -1,5 +1,12 @@
 import React from 'react';
-import { Box, Typography, Avatar, Chip, Grid, Paper } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Avatar,
+  Chip,
+  Grid,
+  Paper,
+} from '@mui/material';
 import {
   Security as SecurityIcon,
   VerifiedUser as VerifiedUserIcon,
@@ -17,6 +24,7 @@ import {
   Close as CloseIcon,
 } from '@mui/icons-material';
 
+
 interface PermissionItemProps {
   title: string;
   enabled: boolean;
@@ -31,11 +39,7 @@ interface ProfileTabProps {
   error: string | null;
 }
 
-const PermissionItem: React.FC<PermissionItemProps> = ({
-  title,
-  enabled,
-  icon,
-}) => {
+const PermissionItem: React.FC<PermissionItemProps> = ({ title, enabled, icon }) => {
   return (
     <Box
       sx={{
@@ -52,17 +56,15 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
         position: 'relative',
         overflow: 'hidden',
         backdropFilter: 'var(--theme-backdrop-filter)',
-        '&::before': enabled
-          ? {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '2px',
-              background: 'linear-gradient(90deg, #4CAF50, #8BC34A)',
-            }
-          : {},
+        '&::before': enabled ? {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          background: 'linear-gradient(90deg, #4CAF50, #8BC34A)',
+        } : {},
       }}
     >
       <Box
@@ -82,15 +84,17 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
         {React.cloneElement(icon, {
           fontSize: 'small',
           sx: {
-            color: enabled ? '#4CAF50' : 'rgba(255, 255, 255, 0.4)',
+            color: enabled
+              ? '#4CAF50'
+              : 'rgba(255, 255, 255, 0.4)',
             fontSize: 18,
           },
         })}
       </Box>
-
+      
       <Box sx={{ flex: 1 }}>
         <Typography
-          variant='body2'
+          variant="body2"
           sx={{
             color: enabled
               ? 'rgba(255, 255, 255, 0.95)'
@@ -106,23 +110,8 @@ const PermissionItem: React.FC<PermissionItemProps> = ({
   );
 };
 
-const ProfileTab: React.FC<ProfileTabProps> = ({
-  currentUser,
-  moderatorData,
-  permissions,
-  loading,
-  error,
-}) => {
-  console.log(
-    'ProfileTab - loading:',
-    loading,
-    'error:',
-    error,
-    'moderatorData:',
-    moderatorData,
-    'currentUser:',
-    currentUser
-  );
+const ProfileTab: React.FC<ProfileTabProps> = ({ currentUser, moderatorData, permissions, loading, error }) => {
+  console.log('ProfileTab - loading:', loading, 'error:', error, 'moderatorData:', moderatorData, 'currentUser:', currentUser);
   console.log('ProfileTab - moderatorData.user:', moderatorData?.user);
   console.log('ProfileTab - permissions:', permissions);
 
@@ -137,42 +126,36 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
   if (error || !moderatorData) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <Typography color='error'>
+        <Typography color="error">
           {error || 'Не удалось загрузить данные профиля'}
         </Typography>
       </Box>
     );
   }
 
+  
   const userData = currentUser || {
     id: 0,
     name: 'Модератор',
     username: 'moderator',
     photo: null,
-    role: 'user',
+    role: 'user'
   };
 
-  console.log(
-    'ProfileTab - userData.photo:',
-    userData.photo,
-    'type:',
-    typeof userData.photo
-  );
+  console.log('ProfileTab - userData.photo:', userData.photo, 'type:', typeof userData.photo);
 
   const assignedDate = moderatorData.assigned_info?.assigned_at
     ? new Date(moderatorData.assigned_info.assigned_at)
     : null;
 
   const daysSinceAssigned = assignedDate
-    ? Math.floor(
-        (new Date().getTime() - assignedDate.getTime()) / (1000 * 60 * 60 * 24)
-      )
+    ? Math.floor((new Date().getTime() - assignedDate.getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 800, mx: 'auto'}}>
       {/* Информация о пользователе */}
-      <Box sx={{ mb: 1 }}>
+      <Box sx={{ mb: 1}}>
         <Paper
           sx={{
             p: 3,
@@ -191,11 +174,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
             }}
           >
             <Avatar
-              src={
-                userData.avatar_url && userData.avatar_url.trim() !== ''
-                  ? userData.avatar_url
-                  : undefined
-              }
+              src={userData.avatar_url && userData.avatar_url.trim() !== '' ? userData.avatar_url : undefined}
               sx={{
                 width: 64,
                 height: 64,
@@ -207,12 +186,12 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
               {userData.name?.charAt(0) || 'M'}
             </Avatar>
             <Box sx={{ flex: 1 }}>
-              <Typography variant='h6' fontWeight={500} sx={{ mb: 0.5 }}>
+              <Typography variant="h6" fontWeight={500} sx={{ mb: 0.5 }}>
                 {userData.name || 'Модератор'}
               </Typography>
               <Typography
-                variant='body2'
-                color='rgba(255,255,255,0.6)'
+                variant="body2"
+                color="rgba(255,255,255,0.6)"
                 sx={{ mb: 1 }}
               >
                 @{userData.username || 'username'}
@@ -230,7 +209,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
                     ? 'Администратор'
                     : 'Модератор'
                 }
-                size='small'
+                size="small"
                 sx={{
                   borderRadius: 'var(--main-border-radius)',
                   background: 'rgba(255, 255, 255, 0.08)',
@@ -262,15 +241,15 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
                 sx={{ mr: 2, fontSize: 20, color: 'rgba(255,255,255,0.6)' }}
               />
               <Box>
-                <Typography variant='body2' color='rgba(255,255,255,0.6)'>
+                <Typography variant="body2" color="rgba(255,255,255,0.6)">
                   Назначен модератором
                 </Typography>
-                <Typography variant='body1'>
+                <Typography variant="body1">
                   {assignedDate.toLocaleDateString()}
                   <Typography
-                    component='span'
-                    variant='body2'
-                    color='rgba(255,255,255,0.6)'
+                    component="span"
+                    variant="body2"
+                    color="rgba(255,255,255,0.6)"
                     sx={{ ml: 1 }}
                   >
                     ({daysSinceAssigned}{' '}
@@ -292,10 +271,10 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
                 sx={{ mr: 2, fontSize: 20, color: 'rgba(255,255,255,0.6)' }}
               />
               <Box>
-                <Typography variant='body2' color='rgba(255,255,255,0.6)'>
+                <Typography variant="body2" color="rgba(255,255,255,0.6)">
                   Назначен администратором
                 </Typography>
-                <Typography variant='body1'>
+                <Typography variant="body1">
                   {moderatorData.assigned_info.assigned_by.name}
                 </Typography>
               </Box>
@@ -305,22 +284,17 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
       </Box>
 
       {/* Права модератора */}
-      <Box
-        sx={{
-          mb: 1,
-          background: 'var(--theme-background)',
-          backdropFilter: 'var(--theme-backdrop-filter)',
-          borderRadius: 'var(--main-border-radius)',
-          p: 3,
-        }}
-      >
-        <Typography variant='h6' sx={{ mb: 2 }}>
+      <Box sx={{ mb: 1,  
+            background: 'var(--theme-background)',
+            backdropFilter: 'var(--theme-backdrop-filter)',
+            borderRadius: 'var(--main-border-radius)', p: 3}}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
           Права модератора
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление постов'
+              title="Удаление постов"
               enabled={permissions.delete_posts}
               icon={<PostAddIcon />}
             />
@@ -328,7 +302,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление музыки'
+              title="Удаление музыки"
               enabled={permissions.delete_music}
               icon={<MusicNoteIcon />}
             />
@@ -336,7 +310,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление комментариев'
+              title="Удаление комментариев"
               enabled={permissions.delete_comments}
               icon={<CommentIcon />}
             />
@@ -344,7 +318,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление аватаров'
+              title="Удаление аватаров"
               enabled={permissions.delete_avatar}
               icon={<PhotoIcon />}
             />
@@ -352,7 +326,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Изменение имён'
+              title="Изменение имён"
               enabled={permissions.change_user_name}
               icon={<PersonIcon />}
             />
@@ -360,7 +334,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Изменение username'
+              title="Изменение username"
               enabled={permissions.change_username}
               icon={<PersonIcon />}
             />
@@ -368,7 +342,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Управление баг-репортами'
+              title="Управление баг-репортами"
               enabled={permissions.manage_bug_reports}
               icon={<BugReportIcon />}
             />
@@ -376,7 +350,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление баг-репортов'
+              title="Удаление баг-репортов"
               enabled={permissions.delete_bug_reports}
               icon={<BugReportIcon />}
             />
@@ -384,7 +358,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Редактирование бейджиков'
+              title="Редактирование бейджиков"
               enabled={permissions.edit_badges}
               icon={<EmojiEventsIcon />}
             />
@@ -392,7 +366,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление бейджиков'
+              title="Удаление бейджиков"
               enabled={permissions.delete_badges}
               icon={<EmojiEventsIcon />}
             />
@@ -400,7 +374,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Управление артистами'
+              title="Управление артистами"
               enabled={permissions.manage_artists}
               icon={<PersonAddIcon />}
             />
@@ -408,7 +382,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Удаление артистов'
+              title="Удаление артистов"
               enabled={permissions.delete_artists}
               icon={<PersonAddIcon />}
             />
@@ -416,7 +390,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Верификация пользователей'
+              title="Верификация пользователей"
               enabled={permissions.verify_users}
               icon={<VerifiedUserIcon />}
             />
@@ -424,7 +398,7 @@ const ProfileTab: React.FC<ProfileTabProps> = ({
 
           <Grid item xs={12} sm={6}>
             <PermissionItem
-              title='Назначение модераторов'
+              title="Назначение модераторов"
               enabled={permissions.assign_moderators}
               icon={<AdminPanelSettings />}
             />

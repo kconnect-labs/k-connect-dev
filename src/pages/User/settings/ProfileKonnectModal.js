@@ -155,11 +155,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
           onClick={handleExport}
           disabled={loading || selectedFields.length === 0}
           fullWidth
-          sx={{
-            mb: 2,
-            borderRadius: 'var(--main-border-radius)',
-            fontWeight: 500,
-          }}
+          sx={{ mb: 2, borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
         >
           {loading ? (
             <CircularProgress size={20} color='inherit' />
@@ -179,11 +175,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
               variant='outlined'
               component='label'
               startIcon={<CloudUploadIcon />}
-              sx={{
-                borderRadius: 'var(--main-border-radius)',
-                fontWeight: 500,
-                minWidth: 0,
-              }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500, minWidth: 0 }}
               disabled={loading}
             >
               {importFile ? importFile.name : 'Выбрать файл'}
@@ -200,10 +192,7 @@ const ProfileKonnectModal = ({ open, onClose }) => {
               color='primary'
               onClick={handleImport}
               disabled={loading || !importFile}
-              sx={{
-                borderRadius: 'var(--main-border-radius)',
-                fontWeight: 500,
-              }}
+              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
             >
               {loading ? (
                 <CircularProgress size={20} color='inherit' />

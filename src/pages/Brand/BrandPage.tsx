@@ -37,7 +37,7 @@ function TabPanel(props: TabPanelProps) {
 
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`brand-tabpanel-${index}`}
       aria-labelledby={`brand-tab-${index}`}
@@ -59,11 +59,11 @@ const BrandPage: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', py: 4 }}>
-      <Container maxWidth='lg'>
+      <Container maxWidth="lg">
         {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography
-            variant='h2'
+            variant="h2"
             sx={{
               fontWeight: 700,
               color: 'white',
@@ -78,7 +78,7 @@ const BrandPage: React.FC = () => {
             Бренд К-Коннект
           </Typography>
           <Typography
-            variant='h6'
+            variant="h6"
             sx={{
               color: 'rgba(255, 255, 255, 0.8)',
               maxWidth: '600px',
@@ -86,8 +86,7 @@ const BrandPage: React.FC = () => {
               lineHeight: 1.6,
             }}
           >
-            Руководство по использованию элементов бренда, типографики, цветов и
-            ресурсов
+            Руководство по использованию элементов бренда, типографики, цветов и ресурсов
           </Typography>
         </Box>
 
@@ -117,12 +116,24 @@ const BrandPage: React.FC = () => {
             >
               <Tab
                 icon={<TextFieldsIcon />}
-                label='Типографика'
-                iconPosition='start'
+                label="Типографика"
+                iconPosition="start"
               />
-              <Tab icon={<PaletteIcon />} label='Цвета' iconPosition='start' />
-              <Tab icon={<StarIcon />} label='Иконки' iconPosition='start' />
-              <Tab icon={<ImageIcon />} label='Баннеры' iconPosition='start' />
+              <Tab
+                icon={<PaletteIcon />}
+                label="Цвета"
+                iconPosition="start"
+              />
+              <Tab
+                icon={<StarIcon />}
+                label="Иконки"
+                iconPosition="start"
+              />
+              <Tab
+                icon={<ImageIcon />}
+                label="Баннеры"
+                iconPosition="start"
+              />
             </Tabs>
           </Box>
         </Box>

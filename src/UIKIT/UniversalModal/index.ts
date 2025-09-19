@@ -1,1 +1,1 @@
-export { default } from './UniversalModal';
+export { default } from './UniversalModal'; 

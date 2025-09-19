@@ -28,7 +28,7 @@ import HeaderProfileMenu from './HeaderProfileMenu';
 import ReactDOM from 'react-dom';
 
 const StyledAppBar = styled(AppBar, {
-  shouldForwardProp: prop => prop !== 'isHeaderHidden' && prop !== 'isMobile',
+  shouldForwardProp: (prop) => prop !== 'isHeaderHidden' && prop !== 'isMobile',
 })(({ theme, isHeaderHidden, isMobile }) => ({
   backgroundImage: 'none',
   background: 'rgba(255, 255, 255, 0.03)',
@@ -58,6 +58,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
     margin: '0 auto',
   },
 }));
+
 
 const Header = ({ toggleSidebar }) => {
   const { user, logout, setUser } = useContext(AuthContext);
@@ -131,7 +132,7 @@ const Header = ({ toggleSidebar }) => {
   const isLanguageMenuOpen = Boolean(languageMenuAnchorEl);
 
   const [isInMessengerChat, setIsInMessengerChat] = useState(false);
-
+  
   // Состояние для скрытия/показа хедера на мобильных устройствах
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -204,6 +205,7 @@ const Header = ({ toggleSidebar }) => {
       console.error('Error fetching user channels:', error);
     }
   };
+
 
   useEffect(() => {
     if (user) {
@@ -371,6 +373,7 @@ const Header = ({ toggleSidebar }) => {
     handleLanguageMenuClose();
   };
 
+
   // Языковое меню теперь обрабатывается в HeaderProfileMenu
 
   useEffect(() => {
@@ -402,14 +405,13 @@ const Header = ({ toggleSidebar }) => {
 
     const handleScroll = () => {
       // Ищем MainContainer по data-testid
-      const mainContainer =
-        document.querySelector('[data-testid="main-container"]') ||
-        document.querySelector('[style*="overflow: auto"]') ||
-        document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
-        document.body;
-
+      const mainContainer = document.querySelector('[data-testid="main-container"]') || 
+                           document.querySelector('[style*="overflow: auto"]') || 
+                           document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
+                           document.body;
+      
       const currentScrollY = mainContainer.scrollTop;
-
+      
       // Определяем направление скролла
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Скролл вниз и мы уже проскроллили больше 100px - скрываем хедер
@@ -418,7 +420,7 @@ const Header = ({ toggleSidebar }) => {
         // Скролл вверх - показываем хедер
         setIsHeaderHidden(false);
       }
-
+      
       setLastScrollY(currentScrollY);
     };
 
@@ -435,26 +437,20 @@ const Header = ({ toggleSidebar }) => {
     };
 
     // Обработчик касания верхней части экрана для показа хедера
-    const handleTouchStart = e => {
-      if (e.touches[0].clientY < 50) {
-        // Касание в верхних 50px экрана
+    const handleTouchStart = (e) => {
+      if (e.touches[0].clientY < 50) { // Касание в верхних 50px экрана
         setIsHeaderHidden(false);
       }
     };
 
     // Ищем MainContainer и добавляем обработчик скролла к нему
-    const mainContainer =
-      document.querySelector('[data-testid="main-container"]') ||
-      document.querySelector('[style*="overflow: auto"]') ||
-      document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
-      document.body;
-
-    mainContainer.addEventListener('scroll', throttledHandleScroll, {
-      passive: true,
-    });
-    document.addEventListener('touchstart', handleTouchStart, {
-      passive: true,
-    });
+    const mainContainer = document.querySelector('[data-testid="main-container"]') || 
+                         document.querySelector('[style*="overflow: auto"]') || 
+                         document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
+                         document.body;
+    
+    mainContainer.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
 
     return () => {
       mainContainer.removeEventListener('scroll', throttledHandleScroll);
@@ -466,7 +462,7 @@ const Header = ({ toggleSidebar }) => {
     <StyledAppBar
       isHeaderHidden={isHeaderHidden}
       isMobile={isMobile}
-      className='theme-aware'
+      className="theme-aware"
       sx={{
         borderRadius: '0px',
         display:

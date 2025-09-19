@@ -17,24 +17,12 @@ const ColorsSection: React.FC = () => {
 
   const colorPalette = {
     primary: [
-      {
-        name: 'Primary Purple',
-        hex: '#D0BCFF',
-        description: 'Основной цвет карточек',
-      },
-      {
-        name: 'Gradient Start',
-        hex: '#B69DF8',
-        description: 'Начало градиента',
-      },
+      { name: 'Primary Purple', hex: '#D0BCFF', description: 'Основной цвет карточек' },
+      { name: 'Gradient Start', hex: '#B69DF8', description: 'Начало градиента' },
       { name: 'Gradient End', hex: '#D0BCFF', description: 'Конец градиента' },
     ],
     backgrounds: [
-      {
-        name: 'White Background',
-        hex: 'var(--theme-text-primary)',
-        description: 'Светлый фон',
-      },
+      { name: 'White Background', hex: 'var(--theme-text-primary)', description: 'Светлый фон' },
       { name: 'Dark Background', hex: '#1C1C1C', description: 'Темный фон' },
       { name: 'Card Background', hex: '#171717', description: 'Фон карточек' },
     ],
@@ -73,7 +61,7 @@ const ColorsSection: React.FC = () => {
         }}
       />
       <Typography
-        variant='h6'
+        variant="h6"
         sx={{
           color: 'white',
           mb: 1,
@@ -83,7 +71,7 @@ const ColorsSection: React.FC = () => {
         {name}
       </Typography>
       <Typography
-        variant='body2'
+        variant="body2"
         sx={{
           color: 'rgba(255, 255, 255, 0.7)',
           mb: 2,
@@ -129,7 +117,7 @@ const ColorsSection: React.FC = () => {
         }}
       />
       <Typography
-        variant='h6'
+        variant="h6"
         sx={{
           color: 'white',
           mb: 1,
@@ -139,7 +127,7 @@ const ColorsSection: React.FC = () => {
         {name}
       </Typography>
       <Typography
-        variant='body2'
+        variant="body2"
         sx={{
           color: 'rgba(255, 255, 255, 0.7)',
           mb: 2,
@@ -150,7 +138,7 @@ const ColorsSection: React.FC = () => {
       <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
         <Chip
           label={start}
-          size='small'
+          size="small"
           sx={{
             backgroundColor: 'rgba(208, 188, 255, 0.1)',
             color: '#D0BCFF',
@@ -160,7 +148,7 @@ const ColorsSection: React.FC = () => {
         />
         <Chip
           label={end}
-          size='small'
+          size="small"
           sx={{
             backgroundColor: 'rgba(208, 188, 255, 0.1)',
             color: '#D0BCFF',
@@ -175,7 +163,7 @@ const ColorsSection: React.FC = () => {
   return (
     <Box>
       <Typography
-        variant='h3'
+        variant="h3"
         sx={{
           color: 'white',
           mb: 4,
@@ -187,7 +175,7 @@ const ColorsSection: React.FC = () => {
       </Typography>
 
       <Typography
-        variant='body1'
+        variant="body1"
         sx={{
           color: 'rgba(255, 255, 255, 0.8)',
           mb: 6,
@@ -196,8 +184,8 @@ const ColorsSection: React.FC = () => {
           mx: 'auto',
         }}
       >
-        Наша цветовая система основана на фиолетовой палитре с градиентами и
-        нейтральными фонами. Это создает современный и привлекательный дизайн.
+        Наша цветовая система основана на фиолетовой палитре с градиентами и нейтральными фонами.
+        Это создает современный и привлекательный дизайн.
       </Typography>
 
       {/* Primary Colors */}
@@ -209,7 +197,7 @@ const ColorsSection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant='h4'
+            variant="h4"
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -237,7 +225,7 @@ const ColorsSection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant='h4'
+            variant="h4"
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -265,7 +253,7 @@ const ColorsSection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant='h4'
+            variant="h4"
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -292,7 +280,7 @@ const ColorsSection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant='h5'
+            variant="h5"
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -306,7 +294,7 @@ const ColorsSection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant='h6'
+                  variant="h6"
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -340,7 +328,7 @@ const ColorsSection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant='h6'
+                  variant="h6"
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -371,7 +359,7 @@ const ColorsSection: React.FC = () => {
 
           <Box sx={{ mt: 3 }}>
             <Typography
-              variant='h6'
+              variant="h6"
               sx={{
                 color: 'white',
                 mb: 2,
@@ -383,7 +371,7 @@ const ColorsSection: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 1,
@@ -392,7 +380,7 @@ const ColorsSection: React.FC = () => {
                   • Используйте #D0BCFF для акцентов и кнопок
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 1,
@@ -401,7 +389,7 @@ const ColorsSection: React.FC = () => {
                   • Градиент для заголовков и важных элементов
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -411,7 +399,7 @@ const ColorsSection: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 1,
@@ -420,7 +408,7 @@ const ColorsSection: React.FC = () => {
                   • #1C1C1C для темных фонов
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 1,
@@ -429,7 +417,7 @@ const ColorsSection: React.FC = () => {
                   • #FFFFFF для светлых элементов
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -445,4 +433,4 @@ const ColorsSection: React.FC = () => {
   );
 };
 
-export default ColorsSection;
+export default ColorsSection; 

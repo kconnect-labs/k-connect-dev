@@ -26,8 +26,8 @@ import { AuthContext } from '../../context/AuthContext';
 
 const StyledDialog = styled(Dialog)({
   '& .MuiDialog-paper': {
-    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(66, 66, 66, 0.5)',
     borderRadius: 16,
     overflow: 'hidden',
@@ -48,7 +48,7 @@ const ItemImage = styled(Box)({
   width: 200,
   height: 200,
   borderRadius: 16,
-  background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -87,8 +87,8 @@ const MarketPriceChip = styled(Box)({
   position: 'absolute',
   top: 8,
   right: 8,
-  background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
+          background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: '20px',
   padding: '6px 12px',
   display: 'flex',
@@ -115,11 +115,9 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   }
 
   const { getGradientData } = useBackgroundGradients();
-
+  
   // Получаем corner_color для фона модалки
-  const gradientData = listing?.item?.background_id
-    ? getGradientData(listing.item.background_id)
-    : null;
+  const gradientData = listing?.item?.background_id ? getGradientData(listing.item.background_id) : null;
   const cornerColor = gradientData?.corner_color || '#974835';
   const { enqueueSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
@@ -159,14 +157,14 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const handlePurchase = async () => {
     try {
       setLoading(true);
-
+      
       if (!listing || !listing.id) {
         enqueueSnackbar('Ошибка: не удалось получить информацию о листинге', {
           variant: 'error',
         });
         return;
       }
-
+      
       const response = await fetch(`/api/marketplace/buy/${listing.id}`, {
         method: 'POST',
         credentials: 'include',
@@ -175,12 +173,9 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
       const data = await response.json();
 
       if (data.success) {
-        enqueueSnackbar(
-          `Предмет "${listing?.item?.item_name}" успешно куплен!`,
-          {
-            variant: 'success',
-          }
-        );
+        enqueueSnackbar(`Предмет "${listing?.item?.item_name}" успешно куплен!`, {
+          variant: 'success',
+        });
         onPurchaseSuccess(listing);
         onClose();
       } else {
@@ -199,14 +194,14 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   const handleRemoveFromMarketplace = async () => {
     try {
       setLoading(true);
-
+      
       if (!listing || !listing.id) {
         enqueueSnackbar('Ошибка: не удалось получить информацию о листинге', {
           variant: 'error',
         });
         return;
       }
-
+      
       const response = await fetch(`/api/marketplace/cancel/${listing.id}`, {
         method: 'POST',
         credentials: 'include',
@@ -234,9 +229,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   };
 
   const handleCopyLink = () => {
-    const origin =
-      (typeof window !== 'undefined' && window.location?.origin) ||
-      'https://k-connect.ru';
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
     const url = `${origin}/item/${item?.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
@@ -245,16 +238,16 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
   };
 
   return (
-    <StyledDialog
-      open={open}
-      onClose={onClose}
-      maxWidth='sm'
+    <StyledDialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth='sm' 
       fullWidth
       sx={{
         '& .MuiDialog-paper': {
           background: cornerColor,
           border: `1px solid ${cornerColor}4D`,
-        },
+        }
       }}
     >
       <DialogTitle
@@ -273,8 +266,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
           sx={{
             color: 'text.secondary',
             '&:hover': {
-              backgroundColor:
-                'var(--theme-background, rgba(255, 255, 255, 0.1))',
+              backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
             },
           }}
         >
@@ -297,9 +289,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 position: 'relative',
                 mb: 2,
                 margin: 'auto',
-                background: item?.background_url
-                  ? `url(${item.background_url})`
-                  : 'none',
+                background: item?.background_url ? `url(${item.background_url})` : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
@@ -362,9 +352,7 @@ const MarketplaceModal = ({ open, onClose, listing, onPurchaseSuccess }) => {
                 sx={{ color: 'text.secondary', mb: 1 }}
               >
                 <strong>Получен:</strong>{' '}
-                {item?.obtained_at
-                  ? new Date(item.obtained_at).toLocaleDateString('ru-RU')
-                  : 'Неизвестно'}
+                {item?.obtained_at ? new Date(item.obtained_at).toLocaleDateString('ru-RU') : 'Неизвестно'}
               </Typography>
               {item?.gifter_username && (
                 <Typography

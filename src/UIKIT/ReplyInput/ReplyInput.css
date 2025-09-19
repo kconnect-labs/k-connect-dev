@@ -4,9 +4,7 @@
   margin-top: 8px;
   opacity: 0;
   transform: translateY(10px);
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
   will-change: opacity, transform;
 }
 
@@ -227,12 +225,8 @@
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .reply-input-image-preview {
@@ -295,90 +289,92 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+
+  
   .reply-input-container {
     padding: 6px 10px;
     gap: 8px;
   }
-
+  
   .reply-input-avatar-img {
     width: 28px;
     height: 28px;
   }
-
+  
   .reply-input-field {
     padding: 4px 8px;
   }
-
+  
   .reply-input-textarea {
     font-size: 16px; /* Prevent zoom on iOS */
   }
-
+  
   .reply-input-action,
   .reply-input-send {
     width: 24px;
     height: 24px;
   }
-
+  
   .reply-input-action-icon {
     width: 14px;
     height: 14px;
   }
-
+  
   .reply-input-send-icon {
     width: 12px;
     height: 12px;
   }
-
+  
   .reply-input-image-preview {
     max-width: 100%;
   }
 }
 
 /* Theme Support */
-[data-theme='default'] .reply-input-container {
+[data-theme="default"] .reply-input-container {
   background: rgba(15, 15, 15, 0.98);
 }
 
-[data-theme='blur'] .reply-input-container {
+[data-theme="blur"] .reply-input-container {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='midnight'] .reply-input-container {
+[data-theme="midnight"] .reply-input-container {
   background: rgba(5, 8, 20, 0.95);
 }
 
-[data-theme='ocean'] .reply-input-container {
+[data-theme="ocean"] .reply-input-container {
   background: rgba(8, 25, 40, 0.92);
 }
 
-[data-theme='sunset'] .reply-input-container {
+[data-theme="sunset"] .reply-input-container {
   background: rgba(40, 15, 8, 0.94);
 }
 
-[data-theme='forest'] .reply-input-container {
+[data-theme="forest"] .reply-input-container {
   background: rgba(8, 30, 15, 0.93);
 }
 
-[data-theme='aurora'] .reply-input-container {
+[data-theme="aurora"] .reply-input-container {
   background: rgba(12, 35, 25, 0.91);
 }
 
-[data-theme='cosmic'] .reply-input-container {
+[data-theme="cosmic"] .reply-input-container {
   background: rgba(30, 8, 35, 0.96);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='neon'] .reply-input-container {
+[data-theme="neon"] .reply-input-container {
   background: rgba(8, 20, 45, 0.89);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='vintage'] .reply-input-container {
+[data-theme="vintage"] .reply-input-container {
   background: rgba(35, 20, 8, 0.95);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='pickme'] .reply-input-container {
+[data-theme="pickme"] .reply-input-container {
   background: rgba(131, 61, 96, 0.93);
 }

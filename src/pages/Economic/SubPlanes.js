@@ -208,8 +208,7 @@ const SubPlanes = () => {
             p: 3,
             mb: 4,
             borderRadius: '18px',
-            backgroundColor:
-              'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
             position: 'relative',
@@ -221,8 +220,7 @@ const SubPlanes = () => {
               right: 0,
               height: '3px',
               background: '#D0BCFF',
-              borderRadius:
-                'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
+              borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
             },
           }}
         >
@@ -362,8 +360,7 @@ const SubPlanes = () => {
                     color: '#D0BCFF',
                     '&:hover': {
                       borderColor: '#D0BCFF',
-                      backgroundColor:
-                        'var(--theme-background, rgba(208, 188, 255, 0.1))',
+                      backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
                     },
                   }}
                 >
@@ -449,8 +446,8 @@ const SubPlanes = () => {
 
           {/* MAX */}
           <Grid item xs={12} sm={12} md={4}>
-            <SubscriptionCard
-              type='max'
+            <SubscriptionCard 
+              type='max' 
               sx={{
                 '&::before': {
                   background: '#FF4D50',
@@ -461,8 +458,8 @@ const SubPlanes = () => {
                 },
               }}
             >
-              <PopularBadge
-                label='Эксклюзив'
+              <PopularBadge 
+                label='Эксклюзив' 
                 sx={{
                   backgroundColor: '#FF4D50',
                   color: '#fff',
@@ -478,15 +475,8 @@ const SubPlanes = () => {
                 }}
               >
                 <Box sx={{ textAlign: 'center', mb: 2 }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mb: 1,
-                    }}
-                  >
-                    <MaxIcon size={32} color='#FF4D50' />
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 1 }}>
+                    <MaxIcon size={32} color="#FF4D50" />
                     <Typography
                       variant='h5'
                       component='h2'
@@ -496,9 +486,7 @@ const SubPlanes = () => {
                       MAX
                     </Typography>
                   </Box>
-                  <PriceText sx={{ color: '#FF4D50' }}>
-                    {subscriptionPrices.max}
-                  </PriceText>
+                  <PriceText sx={{ color: '#FF4D50' }}>{subscriptionPrices.max}</PriceText>
                   <Typography
                     variant='body2'
                     color='text.secondary'
@@ -517,9 +505,7 @@ const SubPlanes = () => {
                         <Box
                           sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
                         >
-                          <FeatureIcon
-                            sx={{ mr: 1.5, flexShrink: 0, color: '#FF4D50' }}
-                          />
+                          <FeatureIcon sx={{ mr: 1.5, flexShrink: 0, color: '#FF4D50' }} />
                           <Typography
                             variant='body2'
                             sx={{ fontSize: '0.85rem' }}
@@ -573,8 +559,7 @@ const SubPlanes = () => {
             right: 0,
             height: '3px',
             background: '#D0BCFF',
-            borderRadius:
-              'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
+            borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
           },
         }}
       >

@@ -54,4 +54,4 @@ export type TimePeriod = 'week' | 'month' | 'all_time';
 export interface DateRange {
   start: string;
   end: string;
-}
+} 

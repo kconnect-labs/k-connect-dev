@@ -83,10 +83,7 @@ const ArtistsBlock = () => {
             setPopularArtists(fallbackResponse.data.artists || []);
           }
         } catch (fallbackError) {
-          console.error(
-            'Fallback получение артистов также упало:',
-            fallbackError
-          );
+          console.error('Fallback получение артистов также упало:', fallbackError);
         }
       }
     } catch (error) {
@@ -100,10 +97,7 @@ const ArtistsBlock = () => {
           setPopularArtists(fallbackResponse.data.artists || []);
         }
       } catch (fallbackError) {
-        console.error(
-          'Fallback получение артистов также упало:',
-          fallbackError
-        );
+        console.error('Fallback получение артистов также упало:', fallbackError);
       }
     } finally {
       setArtistsLoading(false);
@@ -337,10 +331,8 @@ const ArtistsBlock = () => {
                         sx={{
                           borderRadius: '16px',
                           cursor: 'pointer',
-                          backgroundColor:
-                            'var(--theme-background, rgba(18,18,18,0.6))',
-                          backdropFilter:
-                            'var(--theme-backdrop-filter, blur(10px))',
+                          backgroundColor: 'var(--theme-background, rgba(18,18,18,0.6))',
+                          backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                           transition: 'all 0.3s ease',
                           '&:hover': {
                             transform: 'translateY(-5px)',

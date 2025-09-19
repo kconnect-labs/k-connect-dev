@@ -7,7 +7,9 @@ import {
   Grid,
   Alert,
 } from '@mui/material';
-import { Refresh as RefreshIcon } from '@mui/icons-material';
+import {
+  Refresh as RefreshIcon,
+} from '@mui/icons-material';
 import axios from 'axios';
 
 interface StatisticsData {
@@ -120,7 +122,7 @@ const StatisticsTab: React.FC = () => {
         }}
       >
         <Typography
-          variant='h6'
+          variant="h6"
           sx={{
             color: 'rgba(255, 255, 255, 0.9)',
             fontWeight: 500,
@@ -132,7 +134,7 @@ const StatisticsTab: React.FC = () => {
         </Typography>
 
         <Typography
-          variant='h3'
+          variant="h3"
           sx={{
             color: 'rgba(255, 255, 255, 0.95)',
             fontWeight: 300,
@@ -145,13 +147,10 @@ const StatisticsTab: React.FC = () => {
         </Typography>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {fields.map(field => (
-            <Box
-              key={field.key}
-              sx={{ display: 'flex', justifyContent: 'space-between' }}
-            >
+          {fields.map((field) => (
+            <Box key={field.key} sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography
-                variant='body2'
+                variant="body2"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.6)',
                   fontSize: '0.875rem',
@@ -160,7 +159,7 @@ const StatisticsTab: React.FC = () => {
                 {field.label}
               </Typography>
               <Typography
-                variant='body2'
+                variant="body2"
                 sx={{
                   color: 'rgba(255, 255, 255, 0.8)',
                   fontSize: '0.875rem',
@@ -187,7 +186,7 @@ const StatisticsTab: React.FC = () => {
         }}
       >
         <Typography
-          variant='h5'
+          variant="h5"
           sx={{
             color: 'rgba(255, 255, 255, 0.9)',
             fontWeight: 500,
@@ -197,7 +196,7 @@ const StatisticsTab: React.FC = () => {
           Статистика
         </Typography>
         <Button
-          variant='text'
+          variant="text"
           onClick={fetchStatistics}
           disabled={loading}
           startIcon={loading ? <CircularProgress size={16} /> : <RefreshIcon />}
@@ -215,24 +214,19 @@ const StatisticsTab: React.FC = () => {
       </Box>
 
       {error && (
-        <Alert severity='error' sx={{ mb: 3 }}>
+        <Alert severity="error" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
 
       {loading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: 4,
-          }}
-        >
-          <CircularProgress
-            size={24}
-            sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
-          />
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          py: 4,
+        }}>
+          <CircularProgress size={24} sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
         </Box>
       ) : !statistics ? (
         <Box
@@ -242,12 +236,14 @@ const StatisticsTab: React.FC = () => {
             color: 'rgba(255, 255, 255, 0.5)',
           }}
         >
-          <Typography variant='body1'>Статистика не загружена</Typography>
+          <Typography variant="body1">
+            Статистика не загружена
+          </Typography>
         </Box>
       ) : (
         <Grid container spacing={0.625}>
           <StatCard
-            title='Пользователи'
+            title="Пользователи"
             data={statistics.users}
             fields={[
               { label: 'За 24ч', key: 'last_24h' },
@@ -261,7 +257,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Посты'
+            title="Посты"
             data={statistics.posts}
             fields={[
               { label: 'За 24ч', key: 'last_24h' },
@@ -274,7 +270,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Треки'
+            title="Треки"
             data={statistics.tracks}
             fields={[
               { label: 'За 24ч', key: 'last_24h' },
@@ -286,7 +282,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Комментарии'
+            title="Комментарии"
             data={statistics.comments}
             fields={[
               { label: 'За 24ч', key: 'last_24h' },
@@ -296,7 +292,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Бейджи'
+            title="Бейджи"
             data={statistics.badges}
             fields={[
               { label: 'Активные', key: 'active' },
@@ -306,7 +302,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Артисты'
+            title="Артисты"
             data={statistics.artists}
             fields={[
               { label: 'Верифицированы', key: 'verified' },
@@ -316,7 +312,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Баг репорты'
+            title="Баг репорты"
             data={statistics.bug_reports}
             fields={[
               { label: 'Открыты', key: 'open' },
@@ -327,7 +323,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Ключи'
+            title="Ключи"
             data={statistics.keys}
             fields={[
               { label: 'Активные', key: 'active' },
@@ -337,7 +333,7 @@ const StatisticsTab: React.FC = () => {
           />
 
           <StatCard
-            title='Подписки'
+            title="Подписки"
             data={statistics.subscriptions}
             fields={[
               { label: 'Активные', key: 'active' },

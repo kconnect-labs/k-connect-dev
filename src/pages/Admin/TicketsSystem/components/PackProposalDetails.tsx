@@ -104,7 +104,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  
   const [action, setAction] = useState<'approve' | 'reject' | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [loading, setLoading] = useState(false);
@@ -133,19 +133,16 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
     setError('');
 
     try {
-      const response = await fetch(
-        `/api/moderator/inventory/packs/${proposal.id}/review`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            action: action,
-            rejection_reason: action === 'reject' ? rejectionReason : undefined,
-          }),
-        }
-      );
+      const response = await fetch(`/api/moderator/inventory/packs/${proposal.id}/review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: action,
+          rejection_reason: action === 'reject' ? rejectionReason : undefined,
+        }),
+      });
 
       const data = await response.json();
 
@@ -184,16 +181,13 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
     setError('');
 
     try {
-      const response = await fetch(
-        `/api/moderator/inventory/packs/${proposal.id}/edit`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(editData),
-        }
-      );
+      const response = await fetch(`/api/moderator/inventory/packs/${proposal.id}/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editData),
+      });
 
       const data = await response.json();
 
@@ -263,38 +257,18 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
     <Box sx={{ p: isMobile ? 1 : 2 }}>
       {/* Заголовок */}
       <Box sx={{ mb: 3 }}>
-        <Typography
-          variant='h4'
-          sx={{
-            fontWeight: 700,
-            mb: 1,
-            fontSize: isMobile ? '1.5rem' : '2rem',
-          }}
-        >
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, fontSize: isMobile ? '1.5rem' : '2rem' }}>
           {proposal.display_name}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            flexWrap: 'wrap',
-            alignItems: 'center',
-          }}
-        >
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
           <StatusChip
             status={proposal.status}
-            label={
-              proposal.status === 'pending'
-                ? 'На рассмотрении'
-                : proposal.status === 'active'
-                  ? 'Одобрен'
-                  : 'Отклонен'
-            }
+            label={proposal.status === 'pending' ? 'На рассмотрении' : proposal.status === 'active' ? 'Одобрен' : 'Отклонен'}
           />
           <Chip
             icon={<DiamondIcon />}
             label={`${proposal.price} баллов`}
-            size='small'
+            size="small"
             sx={{
               background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               color: 'text.primary',
@@ -303,7 +277,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
           <Chip
             icon={<ImageIcon />}
             label={`${proposal.items_count} предметов`}
-            size='small'
+            size="small"
             sx={{
               background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               color: 'text.primary',
@@ -315,28 +289,15 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
       <Grid container spacing={3}>
         {/* Основная информация */}
         <Grid item xs={12} md={6}>
-          <Paper
-            sx={{
-              p: 3,
-              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                mb: 2,
-              }}
-            >
-              <Typography variant='h6' sx={{ fontWeight: 600 }}>
+          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Основная информация
               </Typography>
               {proposal.status === 'pending' && (
                 <Button
-                  variant='outlined'
-                  size='small'
+                  variant="outlined"
+                  size="small"
                   startIcon={isEditing ? <SaveIcon /> : <EditIcon />}
                   onClick={isEditing ? handleSaveEdit : handleEdit}
                   disabled={loading}
@@ -346,81 +307,65 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
                 </Button>
               )}
             </Box>
-
+            
             {isEditing ? (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
-                  label='Название пака'
+                  label="Название пака"
                   value={editData.display_name}
-                  onChange={e =>
-                    setEditData({ ...editData, display_name: e.target.value })
-                  }
+                  onChange={(e) => setEditData({ ...editData, display_name: e.target.value })}
                   fullWidth
-                  size='small'
+                  size="small"
                 />
-
+                
                 <TextField
-                  label='Описание'
+                  label="Описание"
                   value={editData.description}
-                  onChange={e =>
-                    setEditData({ ...editData, description: e.target.value })
-                  }
+                  onChange={(e) => setEditData({ ...editData, description: e.target.value })}
                   multiline
                   rows={3}
                   fullWidth
-                  size='small'
+                  size="small"
                 />
-
+                
                 <TextField
-                  label='Цена (баллы)'
-                  type='number'
+                  label="Цена (баллы)"
+                  type="number"
                   value={editData.price}
-                  onChange={e =>
-                    setEditData({
-                      ...editData,
-                      price: parseInt(e.target.value) || 0,
-                    })
-                  }
+                  onChange={(e) => setEditData({ ...editData, price: parseInt(e.target.value) || 0 })}
                   fullWidth
-                  size='small'
+                  size="small"
                   inputProps={{ min: 1000, max: 50000 }}
                 />
-
+                
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     checked={editData.is_limited}
-                    onChange={e =>
-                      setEditData({ ...editData, is_limited: e.target.checked })
-                    }
-                    id='is-limited'
+                    onChange={(e) => setEditData({ ...editData, is_limited: e.target.checked })}
+                    id="is-limited"
                   />
-                  <label htmlFor='is-limited'>
-                    <Typography variant='body2'>Лимитированный пак</Typography>
+                  <label htmlFor="is-limited">
+                    <Typography variant="body2">Лимитированный пак</Typography>
                   </label>
                 </Box>
-
+                
                 {editData.is_limited && (
                   <TextField
-                    label='Лимит (штук)'
-                    type='number'
+                    label="Лимит (штук)"
+                    type="number"
                     value={editData.max_quantity}
-                    onChange={e =>
-                      setEditData({
-                        ...editData,
-                        max_quantity: parseInt(e.target.value) || 0,
-                      })
-                    }
+                    onChange={(e) => setEditData({ ...editData, max_quantity: parseInt(e.target.value) || 0 })}
                     fullWidth
-                    size='small'
+                    size="small"
                     inputProps={{ min: 10, max: 1000 }}
                   />
                 )}
-
+                
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Button
-                    variant='outlined'
-                    size='small'
+                    variant="outlined"
+                    size="small"
                     onClick={handleCancelEdit}
                     disabled={loading}
                   >
@@ -431,76 +376,51 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
             ) : (
               <>
                 <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     Название:
                   </Typography>
-                  <Typography variant='body1' sx={{ fontWeight: 500 }}>
+                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {proposal.display_name}
                   </Typography>
                 </Box>
-
+                
                 <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     Описание:
                   </Typography>
-                  <Typography variant='body1'>
+                  <Typography variant="body1">
                     {proposal.description}
                   </Typography>
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     Цена:
                   </Typography>
-                  <Typography variant='body1'>
+                  <Typography variant="body1">
                     {proposal.price} баллов
                   </Typography>
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     Предложил:
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <PersonIcon
-                      sx={{ fontSize: 20, color: 'text.secondary' }}
-                    />
-                    <Typography variant='body1'>
-                      <strong>{proposal.proposed_by.name}</strong> (@
-                      {proposal.proposed_by.username})
+                    <PersonIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body1">
+                      <strong>{proposal.proposed_by.name}</strong> (@{proposal.proposed_by.username})
                     </Typography>
                   </Box>
                 </Box>
 
                 <Box sx={{ mb: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ mb: 1 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                     Дата предложения:
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <ScheduleIcon
-                      sx={{ fontSize: 20, color: 'text.secondary' }}
-                    />
-                    <Typography variant='body1'>
+                    <ScheduleIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
+                    <Typography variant="body1">
                       {formatDate(proposal.proposed_at)}
                     </Typography>
                   </Box>
@@ -508,14 +428,10 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
                 {proposal.is_limited && (
                   <Box sx={{ mb: 2 }}>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      sx={{ mb: 1 }}
-                    >
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                       Лимитированный пак:
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography variant="body1">
                       Максимум {proposal.max_quantity} штук
                     </Typography>
                   </Box>
@@ -523,42 +439,25 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
                 {proposal.reviewed_at && (
                   <Box sx={{ mb: 2 }}>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      sx={{ mb: 1 }}
-                    >
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                       Дата рассмотрения:
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography variant="body1">
                       {formatDate(proposal.reviewed_at)}
                     </Typography>
                   </Box>
                 )}
 
-                {proposal.status === 'rejected' &&
-                  proposal.rejection_reason && (
-                    <Box
-                      sx={{
-                        mt: 2,
-                        p: 2,
-                        background: 'rgba(255, 0, 0, 0.1)',
-                        border: '1px solid rgba(255, 0, 0, 0.2)',
-                        borderRadius: 1,
-                      }}
-                    >
-                      <Typography
-                        variant='body2'
-                        color='error'
-                        sx={{ fontWeight: 500, mb: 1 }}
-                      >
-                        Причина отклонения:
-                      </Typography>
-                      <Typography variant='body2' color='text.secondary'>
-                        {proposal.rejection_reason}
-                      </Typography>
-                    </Box>
-                  )}
+                {proposal.status === 'rejected' && proposal.rejection_reason && (
+                  <Box sx={{ mt: 2, p: 2, background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.2)', borderRadius: 1 }}>
+                    <Typography variant="body2" color="error" sx={{ fontWeight: 500, mb: 1 }}>
+                      Причина отклонения:
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {proposal.rejection_reason}
+                    </Typography>
+                  </Box>
+                )}
               </>
             )}
           </Paper>
@@ -566,14 +465,8 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
         {/* Предметы */}
         <Grid item xs={12} md={6}>
-          <Paper
-            sx={{
-              p: 3,
-              background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
-            }}
-          >
-            <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
+          <Paper sx={{ p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
               Предметы в паке ({proposal.contents?.length || 0})
             </Typography>
 
@@ -586,21 +479,18 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
                         <img
                           src={`/inventory/pack/${proposal.id}/${item.item_name}`}
                           alt={item.item_name}
-                          onError={e => {
+                          onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.style.display = 'none';
                           }}
                         />
                       </ItemImage>
-                      <Typography
-                        variant='body2'
-                        sx={{ fontWeight: 500, mb: 0.5 }}
-                      >
+                      <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
                         {item.item_name}
                       </Typography>
                       <Chip
                         label={getRarityLabel(item.rarity)}
-                        size='small'
+                        size="small"
                         sx={{
                           background: getRarityColor(item.rarity),
                           color: 'white',
@@ -612,7 +502,7 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
                 ))}
               </Grid>
             ) : (
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant="body2" color="text.secondary">
                 Предметы не загружены
               </Typography>
             )}
@@ -622,20 +512,13 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
       {/* Действия */}
       {proposal.status === 'pending' && (
-        <Paper
-          sx={{
-            mt: 3,
-            p: 3,
-            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-            border: '1px solid rgba(66, 66, 66, 0.5)',
-          }}
-        >
-          <Typography variant='h6' sx={{ mb: 2, fontWeight: 600 }}>
+        <Paper sx={{ mt: 3, p: 3, background: 'var(--theme-background, rgba(255, 255, 255, 0.03))', border: '1px solid rgba(66, 66, 66, 0.5)' }}>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Действия модератора
           </Typography>
 
           {error && (
-            <Alert severity='error' sx={{ mb: 2 }}>
+            <Alert severity="error" sx={{ mb: 2 }}>
               {error}
             </Alert>
           )}
@@ -643,8 +526,8 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
           {action === null ? (
             <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
               <Button
-                variant='contained'
-                color='success'
+                variant="contained"
+                color="success"
                 startIcon={<ApproveIcon />}
                 onClick={() => handleAction('approve')}
                 sx={{
@@ -655,8 +538,8 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
                 Одобрить пак
               </Button>
               <Button
-                variant='contained'
-                color='error'
+                variant="contained"
+                color="error"
                 startIcon={<RejectIcon />}
                 onClick={() => handleAction('reject')}
                 sx={{
@@ -674,54 +557,35 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
                   fullWidth
                   multiline
                   rows={3}
-                  label='Причина отклонения *'
+                  label="Причина отклонения *"
                   value={rejectionReason}
-                  onChange={e => setRejectionReason(e.target.value)}
+                  onChange={(e) => setRejectionReason(e.target.value)}
                   sx={{ mb: 2 }}
-                  placeholder='Укажите причину отклонения заявки...'
+                  placeholder="Укажите причину отклонения заявки..."
                   error={action === 'reject' && !rejectionReason.trim()}
-                  helperText={
-                    action === 'reject' && !rejectionReason.trim()
-                      ? 'Обязательное поле'
-                      : ''
-                  }
+                  helperText={action === 'reject' && !rejectionReason.trim() ? 'Обязательное поле' : ''}
                 />
               )}
 
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Button
-                  variant='contained'
+                  variant="contained"
                   color={action === 'approve' ? 'success' : 'error'}
-                  startIcon={
-                    loading ? (
-                      <CircularProgress size={16} />
-                    ) : action === 'approve' ? (
-                      <ApproveIcon />
-                    ) : (
-                      <RejectIcon />
-                    )
-                  }
+                  startIcon={loading ? <CircularProgress size={16} /> : action === 'approve' ? <ApproveIcon /> : <RejectIcon />}
                   onClick={confirmAction}
-                  disabled={
-                    loading || (action === 'reject' && !rejectionReason.trim())
-                  }
+                  disabled={loading || (action === 'reject' && !rejectionReason.trim())}
                   sx={{
                     background: action === 'approve' ? '#27ae60' : '#e74c3c',
-                    '&:hover': {
-                      background: action === 'approve' ? '#229954' : '#c0392b',
+                    '&:hover': { 
+                      background: action === 'approve' ? '#229954' : '#c0392b' 
                     },
-                    opacity:
-                      action === 'reject' && !rejectionReason.trim() ? 0.6 : 1,
+                    opacity: action === 'reject' && !rejectionReason.trim() ? 0.6 : 1,
                   }}
                 >
-                  {loading
-                    ? 'Выполняется...'
-                    : action === 'approve'
-                      ? 'Подтвердить одобрение'
-                      : 'Подтвердить отклонение'}
+                  {loading ? 'Выполняется...' : action === 'approve' ? 'Подтвердить одобрение' : 'Подтвердить отклонение'}
                 </Button>
                 <Button
-                  variant='outlined'
+                  variant="outlined"
                   onClick={cancelAction}
                   disabled={loading}
                 >
@@ -735,7 +599,11 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
 
       {/* Кнопка закрытия */}
       <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant='outlined' onClick={onClose} disabled={loading}>
+        <Button
+          variant="outlined"
+          onClick={onClose}
+          disabled={loading}
+        >
           Закрыть
         </Button>
       </Box>
@@ -743,4 +611,4 @@ const PackProposalDetails: React.FC<PackProposalDetailsProps> = ({
   );
 };
 
-export default PackProposalDetails;
+export default PackProposalDetails; 

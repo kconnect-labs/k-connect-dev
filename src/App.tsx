@@ -7,7 +7,10 @@ import React, {
   useTransition,
   useRef,
 } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, AuthContext } from './context/AuthContext.js';
@@ -39,10 +42,12 @@ const preloadBackgroundGradients = async () => {
   }
 };
 
+
 const preloadSvgAssets = async () => {
   try {
+    
     const svgAssetsModule = await import('./utils/svgAssets');
-
+    
     (window as any).__svgAssetsCache = svgAssetsModule.svgAssets;
     console.log('SVG assets preloaded successfully');
   } catch (err) {
@@ -52,9 +57,11 @@ const preloadSvgAssets = async () => {
 
 import axios from 'axios';
 
+
 import { LoadingIndicator } from './components/Loading/LoadingComponents';
 import { ErrorFallback } from './components/Error/ErrorComponents';
 import { DefaultSEO } from './components/SEO/SEOComponents';
+
 
 interface ThemeSettings {
   mode: string;
@@ -62,6 +69,7 @@ interface ThemeSettings {
   textColor: string;
   primaryColor: string;
 }
+
 
 interface ThemeSettingsContextType {
   themeSettings: ThemeSettings;
@@ -75,6 +83,7 @@ interface ThemeSettingsContextType {
   restoreUserBackground: () => void;
 }
 
+
 interface RequireAuthProps {
   children: React.ReactNode;
 }
@@ -87,8 +96,9 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
     return <>{children}</>;
   }
 
-  if (location.pathname.startsWith('/music/')) {
-    const trackId = location.pathname.split('/music/')[1];
+  
+      if (location.pathname.startsWith('/music/')) {
+      const trackId = location.pathname.split('/music/')[1];
     if (trackId) {
       console.log('Saving deeplink trackId before login redirect:', trackId);
       localStorage.setItem('deeplinkTrackId', trackId);
@@ -97,6 +107,7 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
 
   return <Navigate to='/login' state={{ from: location.pathname }} replace />;
 };
+
 
 import AuthRoutes from './routes/AuthRoutes';
 import MainRoutes from './routes/MainRoutes';
@@ -120,17 +131,14 @@ export const ThemeSettingsContext =
     restoreUserBackground: () => {},
   });
 
+
 interface AppProvidersProps {
   children: React.ReactNode;
   themeContextValue: ThemeSettingsContextType;
   theme: any;
 }
 
-const AppProviders: React.FC<AppProvidersProps> = ({
-  children,
-  themeContextValue,
-  theme,
-}) => (
+const AppProviders: React.FC<AppProvidersProps> = ({ children, themeContextValue, theme }) => (
   <HelmetProvider>
     <AuthProvider>
       <ThemeSettingsContext.Provider value={themeContextValue}>
@@ -140,7 +148,9 @@ const AppProviders: React.FC<AppProvidersProps> = ({
             <MessengerProvider>
               <LanguageProvider>
                 <MusicProvider>
-                  <PostDetailProvider>{children}</PostDetailProvider>
+                  <PostDetailProvider>
+                    {children}
+                  </PostDetailProvider>
                 </MusicProvider>
               </LanguageProvider>
             </MessengerProvider>
@@ -157,20 +167,17 @@ function App() {
   const { isInitialized: isThemeInitialized } = useThemeManager();
 
   const authContext = useContext(AuthContext);
-  const {
-    isAuthenticated = false,
-    loading = false,
-    user: currentUser,
-  } = authContext || {};
+  const { isAuthenticated = false, loading = false, user: currentUser } = authContext || {};
 
   useEffect(() => {
     // Запускаем предзагрузку в фоне после рендера
     const schedulePreload = () => {
-      Promise.all([preloadBackgroundGradients(), preloadSvgAssets()]).catch(
-        console.warn
-      );
+      Promise.all([
+        preloadBackgroundGradients(),
+        preloadSvgAssets()
+      ]).catch(console.warn);
     };
-
+    
     // Используем requestIdleCallback если доступен, иначе setTimeout
     if ((window as any).requestIdleCallback) {
       (window as any).requestIdleCallback(schedulePreload);
@@ -186,6 +193,7 @@ function App() {
     primaryColor: localStorage.getItem('primaryColor') || '#D0BCFF',
   }));
 
+  
   const [profileBackground, setProfileBackgroundState] = useState<
     string | null
   >(null);
@@ -205,10 +213,11 @@ function App() {
     setProfileBackgroundState(null);
   };
 
+  
   const saveUserBackground = (url: string | null) => {
     if (url) {
       localStorage.setItem('myProfileBackgroundUrl', url);
-
+      
       document.cookie = `myProfileBackgroundUrl=${encodeURIComponent(url)};path=/;max-age=31536000`;
     } else {
       localStorage.removeItem('myProfileBackgroundUrl');
@@ -218,7 +227,9 @@ function App() {
     setUserBackgroundUrl(url);
   };
 
+  
   const restoreUserBackground = () => {
+    
     let savedBg = localStorage.getItem('myProfileBackgroundUrl');
 
     if (!savedBg) {
@@ -228,18 +239,21 @@ function App() {
 
       if (match) {
         savedBg = decodeURIComponent(match[1]);
-
+        
         localStorage.setItem('myProfileBackgroundUrl', savedBg);
       }
     }
 
     if (savedBg) {
+      
       setProfileBackground(savedBg);
     } else {
+      
       clearProfileBackground();
     }
   };
 
+  
   const setUserBackground = (url: string | null) => {
     if (url) {
       setProfileBackground(url);
@@ -253,11 +267,13 @@ function App() {
       setGlobalProfileBackgroundEnabledState(enabled);
 
       if (enabled) {
+        
         const savedBg = localStorage.getItem('myProfileBackgroundUrl');
         if (savedBg) {
           setProfileBackground(savedBg);
         }
       } else {
+        
         clearProfileBackground();
         localStorage.removeItem('myProfileBackgroundUrl');
         document.cookie =
@@ -269,7 +285,7 @@ function App() {
   const updateThemeSettings = (newSettings: Partial<ThemeSettings>) => {
     setThemeSettings(prev => {
       const updated = { ...prev, ...newSettings };
-
+      
       // Сохраняем в localStorage только измененные значения
       Object.entries(newSettings).forEach(([key, value]) => {
         if (value && key !== 'mode') {
@@ -281,6 +297,7 @@ function App() {
     });
   };
 
+  
   // Убрали пустой useEffect
 
   // Убрали лишний useEffect для отслеживания auth state
@@ -362,7 +379,7 @@ function App() {
   }, [themeSettings.mode]);
 
   useEffect(() => {
-    if (isInitialized.current) return;
+    if (isInitialized.current) return; 
 
     const savedThemeMode = localStorage.getItem('themeMode');
 
@@ -370,9 +387,11 @@ function App() {
       updateThemeSettings({ mode: savedThemeMode });
     }
 
+    
     document.body.classList.add('theme-site-background');
     document.documentElement.classList.add('theme-site-background');
 
+    
     initMediaCache().catch(error => {
       console.warn('Failed to initialize media cache:', error);
     });
@@ -388,10 +407,11 @@ function App() {
           event.key === 'textColor' ||
           event.key === 'primaryColor')
       ) {
+        
         const currentValue = themeSettings[event.key as keyof ThemeSettings];
 
         if (currentValue === event.newValue) {
-          return;
+          return; 
         }
 
         const settingUpdate: Partial<ThemeSettings> = {};
@@ -409,13 +429,16 @@ function App() {
     };
   }, [themeSettings]);
 
+  
   useEffect(() => {
     const loadUserSettings = async () => {
+
       try {
         const response = await fetch('/api/profile/settings');
         const data = await response.json();
 
         if (data && data.success && data.settings) {
+          
           setThemeSettings(prev => ({
             ...prev,
             primaryColor: data.settings.primary_color || '#D0BCFF',
@@ -428,6 +451,7 @@ function App() {
           localStorage.setItem('theme', 'dark');
         }
       } catch (e) {
+        
         setThemeSettings(prev => ({
           ...prev,
           primaryColor: '#D0BCFF',
@@ -435,6 +459,7 @@ function App() {
         }));
       }
 
+      
       try {
         const bgResponse = await axios.get(
           '/api/user/settings/global-profile-bg'
@@ -443,11 +468,14 @@ function App() {
         if (bgResponse.data && bgResponse.data.success) {
           setGlobalProfileBackgroundEnabled(bgResponse.data.enabled);
 
+          
           if (bgResponse.data.background_url) {
             if (bgResponse.data.enabled) {
+              
               saveUserBackground(bgResponse.data.background_url);
               setProfileBackground(bgResponse.data.background_url);
             } else {
+              
               const savedBg = localStorage.getItem('myProfileBackgroundUrl');
               if (savedBg) {
                 localStorage.removeItem('myProfileBackgroundUrl');
@@ -458,29 +486,40 @@ function App() {
             }
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        
+      }
     };
 
+    
     loadUserSettings();
   }, []);
 
+  
   useEffect(() => {
     const loadUserBackground = async () => {
+      
+      
       const hasToken =
         localStorage.getItem('token') || document.cookie.includes('sessionid');
 
+      
       if (!isAuthenticated || !currentUser) {
         if (hasToken) {
           try {
             const response = await axios.get('/api/auth/me');
             if (response.data && response.data.user) {
+              
               await loadUserBackgroundFromUsername(response.data.user.username);
             }
-          } catch (error) {}
+          } catch (error) {
+            
+          }
         }
         return;
       }
 
+      
       if (
         currentUser &&
         typeof currentUser === 'object' &&
@@ -492,6 +531,7 @@ function App() {
 
     const loadUserBackgroundFromUsername = async (username: string) => {
       try {
+        
         const response = await axios.get(`/api/profile/${username}`);
 
         if (
@@ -501,16 +541,19 @@ function App() {
         ) {
           const userBg = response.data.user.profile_background_url;
 
+          
           if (globalProfileBackgroundEnabled) {
             const savedBg = localStorage.getItem('myProfileBackgroundUrl');
             if (!savedBg) {
               saveUserBackground(userBg);
             }
 
+            
             if (!profileBackground) {
               setProfileBackground(userBg);
             }
           } else {
+            
             const savedBg = localStorage.getItem('myProfileBackgroundUrl');
             if (savedBg) {
               localStorage.removeItem('myProfileBackgroundUrl');
@@ -520,12 +563,16 @@ function App() {
             clearProfileBackground();
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        
+      }
     };
 
+    
     loadUserBackground();
   }, [globalProfileBackgroundEnabled, isAuthenticated, loading, currentUser]);
 
+  
   useEffect(() => {
     if (globalProfileBackgroundEnabled) {
       const savedBg = localStorage.getItem('myProfileBackgroundUrl');
@@ -537,25 +584,33 @@ function App() {
     }
   }, [globalProfileBackgroundEnabled]);
 
+  
   useEffect(() => {
+    
     const isProfilePage = location.pathname.match(/^\/profile\/([^\/]+)$/);
 
     if (!isProfilePage) {
+      
       if (globalProfileBackgroundEnabled) {
         restoreUserBackground();
       } else {
+        
         clearProfileBackground();
       }
     }
   }, [location.pathname, globalProfileBackgroundEnabled]);
 
+  
   useEffect(() => {
     if (!isAuthenticated && !loading) {
+      
       clearProfileBackground();
       setUserBackgroundUrl(null);
     }
   }, [isAuthenticated, loading]);
 
+  
+  
   const isAuthPage = [
     '/login',
     '/register',
@@ -572,20 +627,17 @@ function App() {
     '/terms-of-service',
     '/about',
   ].some(path => currentPath.startsWith(path));
-  const themeContextValue = useMemo<ThemeSettingsContextType>(
-    () => ({
-      themeSettings,
-      updateThemeSettings,
-      globalProfileBackgroundEnabled,
-      setGlobalProfileBackgroundEnabled,
-      profileBackground,
-      setProfileBackground,
-      clearProfileBackground,
-      setUserBackground,
-      restoreUserBackground,
-    }),
-    [themeSettings, globalProfileBackgroundEnabled, profileBackground]
-  );
+  const themeContextValue = useMemo<ThemeSettingsContextType>(() => ({
+    themeSettings,
+    updateThemeSettings,
+    globalProfileBackgroundEnabled,
+    setGlobalProfileBackgroundEnabled,
+    profileBackground,
+    setProfileBackground,
+    clearProfileBackground,
+    setUserBackground,
+    restoreUserBackground,
+  }), [themeSettings, globalProfileBackgroundEnabled, profileBackground]);
 
   return (
     <AppProviders themeContextValue={themeContextValue} theme={theme}>

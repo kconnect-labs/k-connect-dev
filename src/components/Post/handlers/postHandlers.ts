@@ -18,13 +18,11 @@ export const usePostHandlers = (
 ) => {
   const navigate = useNavigate();
   const { user: currentUser } = useContext(AuthContext);
-  const { playTrack, currentTrack, isPlaying, togglePlay } =
-    useContext(MusicContext);
+  const { playTrack, currentTrack, isPlaying, togglePlay } = useContext(MusicContext);
   const { setPostDetail, openPostDetail } = usePostDetail();
   const { t } = useLanguage();
 
-  const isCurrentUserPost =
-    currentUser && post?.user && currentUser.id === post.user.id;
+  const isCurrentUserPost = currentUser && post?.user && currentUser.id === post.user.id;
 
   // Like handler
   const handleLike = async (e?: React.MouseEvent) => {
@@ -58,8 +56,7 @@ export const usePostHandlers = (
 
       if (error.response && error.response.status === 429) {
         const rateLimit = error.response.data.rate_limit;
-        let errorMessage =
-          error.response.data.error || 'Слишком много лайков. ';
+        let errorMessage = error.response.data.error || 'Слишком много лайков. ';
 
         if (rateLimit && rateLimit.reset) {
           const resetTime = new Date(rateLimit.reset * 1000);
@@ -85,9 +82,7 @@ export const usePostHandlers = (
               notificationType: 'warning',
               animationType: 'bounce',
               retryAfter: rateLimit?.reset
-                ? Math.round(
-                    (new Date(rateLimit.reset * 1000) - new Date()) / 1000
-                  )
+                ? Math.round((new Date(rateLimit.reset * 1000) - new Date()) / 1000)
                 : 60,
             },
           })
@@ -108,10 +103,7 @@ export const usePostHandlers = (
 
   const handleDelete = () => {
     handleMenuClose();
-    setDialogState(prev => ({
-      ...prev,
-      deleteDialog: { ...prev.deleteDialog, open: true },
-    }));
+    setDialogState(prev => ({ ...prev, deleteDialog: { ...prev.deleteDialog, open: true } }));
   };
 
   const handleEdit = () => {
@@ -121,8 +113,7 @@ export const usePostHandlers = (
         ...prev,
         snackbar: {
           open: true,
-          message:
-            'Редактирование доступно только в течение 3 часов после публикации',
+          message: 'Редактирование доступно только в течение 3 часов после публикации',
           severity: 'warning',
         },
       }));
@@ -206,8 +197,7 @@ export const usePostHandlers = (
           ...prev,
           editDialog: {
             ...prev.editDialog,
-            error:
-              'Время редактирования истекло. Посты можно редактировать только в течение 3 часов после публикации.',
+            error: 'Время редактирования истекло. Посты можно редактировать только в течение 3 часов после публикации.',
           },
         }));
         return;
@@ -215,41 +205,26 @@ export const usePostHandlers = (
 
       if (
         !dialogState.editDialog.content.trim() &&
-        (!dialogState.editDialog.newImages ||
-          dialogState.editDialog.newImages.length === 0) &&
-        (!dialogState.editDialog.newVideo ||
-          dialogState.editDialog.newVideo === null)
+        (!dialogState.editDialog.newImages || dialogState.editDialog.newImages.length === 0) &&
+        (!dialogState.editDialog.newVideo || dialogState.editDialog.newVideo === null)
       ) {
         setDialogState(prev => ({
           ...prev,
           editDialog: {
             ...prev.editDialog,
-            error:
-              'Пост не может быть пустым. Пожалуйста, добавьте текст или файлы.',
+            error: 'Пост не может быть пустым. Пожалуйста, добавьте текст или файлы.',
           },
         }));
         return;
       }
 
-      setDialogState(prev => ({
-        ...prev,
-        editDialog: { ...prev.editDialog, submitting: true, error: null },
-      }));
+      setDialogState(prev => ({ ...prev, editDialog: { ...prev.editDialog, submitting: true, error: null } }));
 
       const formData = new FormData();
       formData.append('content', dialogState.editDialog.content);
-      formData.append(
-        'delete_images',
-        dialogState.editDialog.deleteImages.toString()
-      );
-      formData.append(
-        'delete_video',
-        dialogState.editDialog.deleteVideo.toString()
-      );
-      formData.append(
-        'delete_music',
-        dialogState.editDialog.deleteMusic.toString()
-      );
+      formData.append('delete_images', dialogState.editDialog.deleteImages.toString());
+      formData.append('delete_video', dialogState.editDialog.deleteVideo.toString());
+      formData.append('delete_music', dialogState.editDialog.deleteMusic.toString());
 
       dialogState.editDialog.newImages.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
@@ -259,15 +234,11 @@ export const usePostHandlers = (
         formData.append('video', dialogState.editDialog.newVideo);
       }
 
-      const response = await axios.post(
-        `/api/posts/${post.id}/edit`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const response = await axios.post(`/api/posts/${post.id}/edit`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       if (response.data.success) {
         const updatedPost = response.data.post;
@@ -313,10 +284,7 @@ export const usePostHandlers = (
         editDialog: {
           ...prev.editDialog,
           submitting: false,
-          error:
-            error.response?.data?.error ||
-            error.message ||
-            'Ошибка при обновлении поста',
+          error: error.response?.data?.error || error.message || 'Ошибка при обновлении поста',
         },
       }));
     }
@@ -325,10 +293,7 @@ export const usePostHandlers = (
   // Delete handler
   const confirmDelete = async () => {
     try {
-      setDialogState(prev => ({
-        ...prev,
-        deleteDialog: { ...prev.deleteDialog, deleting: true },
-      }));
+      setDialogState(prev => ({ ...prev, deleteDialog: { ...prev.deleteDialog, deleting: true } }));
 
       // Immediately remove post from UI
       if (onDelete) {
@@ -346,16 +311,10 @@ export const usePostHandlers = (
       await axios.delete(`/api/posts/${post.id}`);
 
       // Close dialog
-      setDialogState(prev => ({
-        ...prev,
-        deleteDialog: { open: false, deleting: false, deleted: false },
-      }));
+      setDialogState(prev => ({ ...prev, deleteDialog: { open: false, deleting: false, deleted: false } }));
     } catch (error) {
       console.error('Error deleting post:', error);
-      setDialogState(prev => ({
-        ...prev,
-        deleteDialog: { open: false, deleting: false, deleted: false },
-      }));
+      setDialogState(prev => ({ ...prev, deleteDialog: { open: false, deleting: false, deleted: false } }));
 
       setPostState(prev => ({
         ...prev,
@@ -376,11 +335,7 @@ export const usePostHandlers = (
       return;
     }
 
-    setPostState(prev => ({
-      ...prev,
-      repostContent: '',
-      repostModalOpen: true,
-    }));
+    setPostState(prev => ({ ...prev, repostContent: '', repostModalOpen: true }));
   };
 
   const handleCloseRepostModal = () => {
@@ -398,11 +353,7 @@ export const usePostHandlers = (
       });
 
       if (response.data.success) {
-        setPostState(prev => ({
-          ...prev,
-          repostModalOpen: false,
-          reposted: true,
-        }));
+        setPostState(prev => ({ ...prev, repostModalOpen: false, reposted: true }));
 
         window.dispatchEvent(
           new CustomEvent('show-error', {
@@ -421,8 +372,7 @@ export const usePostHandlers = (
       } else {
         setPostState(prev => ({
           ...prev,
-          snackbarMessage:
-            response.data.error || 'Произошла ошибка при репосте',
+          snackbarMessage: response.data.error || 'Произошла ошибка при репосте',
           snackbarOpen: true,
         }));
       }
@@ -431,8 +381,7 @@ export const usePostHandlers = (
 
       setPostState(prev => ({
         ...prev,
-        snackbarMessage:
-          error.response?.data?.error || 'Произошла ошибка при репосте',
+        snackbarMessage: error.response?.data?.error || 'Произошла ошибка при репосте',
         snackbarOpen: true,
       }));
     } finally {
@@ -444,10 +393,7 @@ export const usePostHandlers = (
   const handleCommentClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(
-      'Comment button clicked, opening overlay for post ID:',
-      post.id
-    );
+    console.log('Comment button clicked, opening overlay for post ID:', post.id);
     openPostDetail(post.id, e);
   };
 
@@ -566,18 +512,10 @@ export const usePostHandlers = (
     const allImages = processImages(post, postState.mediaError);
     if (allImages.length > 0) {
       try {
-        setPostState(prev => ({
-          ...prev,
-          currentImageIndex: index,
-          lightboxOpen: true,
-        }));
+        setPostState(prev => ({ ...prev, currentImageIndex: index, lightboxOpen: true }));
       } catch (error) {
         console.error('Error opening lightbox:', error);
-        setPostState(prev => ({
-          ...prev,
-          currentImageIndex: index,
-          lightboxOpen: true,
-        }));
+        setPostState(prev => ({ ...prev, currentImageIndex: index, lightboxOpen: true }));
       }
     }
   };
@@ -588,18 +526,17 @@ export const usePostHandlers = (
 
   const handleNextImage = () => {
     const images = processImages(post, postState.mediaError);
-    setPostState(prev => ({
-      ...prev,
-      currentImageIndex: (prev.currentImageIndex + 1) % images.length,
+    setPostState(prev => ({ 
+      ...prev, 
+      currentImageIndex: (prev.currentImageIndex + 1) % images.length 
     }));
   };
 
   const handlePrevImage = () => {
     const images = processImages(post, postState.mediaError);
-    setPostState(prev => ({
-      ...prev,
-      currentImageIndex:
-        (prev.currentImageIndex - 1 + images.length) % images.length,
+    setPostState(prev => ({ 
+      ...prev, 
+      currentImageIndex: (prev.currentImageIndex - 1 + images.length) % images.length 
     }));
   };
 
@@ -627,7 +564,7 @@ export const usePostHandlers = (
     setTimeout(() => {
       setPostState(prev => ({
         ...prev,
-        hearts: prev.hearts.filter(heart => heart.id !== newHeart.id),
+        hearts: prev.hearts.filter(heart => heart.id !== newHeart.id)
       }));
     }, 1000);
   };
@@ -712,7 +649,7 @@ export const usePostHandlers = (
         time: now,
         x: touch.clientX - e.currentTarget.getBoundingClientRect().left,
         y: touch.clientY - e.currentTarget.getBoundingClientRect().top,
-      },
+      }
     }));
   };
 
@@ -842,4 +779,4 @@ export const usePostHandlers = (
     handleOpenPostFromMenu,
     isCurrentUserPost,
   };
-};
+}; 

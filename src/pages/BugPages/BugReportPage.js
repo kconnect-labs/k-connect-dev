@@ -280,7 +280,7 @@ const BugReportPage = () => {
   // Мемоизированные компоненты для предотвращения ререндеров
   const BugForm = useMemo(
     () => (
-      <div
+      <div 
         className={`${styles.card} ${styles['mb-1']}`}
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -390,10 +390,9 @@ const BugReportPage = () => {
               </label>
               <label
                 className={`${styles.btn} ${styles['btn-outline']} ${styles.flex} ${styles['items-center']} ${styles['justify-center']} ${styles['gap-2']}`}
-                style={{
+                style={{ 
                   cursor: 'pointer',
-                  background:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
                   borderRadius: '18px',
@@ -469,7 +468,7 @@ const BugReportPage = () => {
           <div
             key={bug.id}
             className={`${styles.card} ${styles.pointer} ${styles['mb-4']}`}
-            style={{
+            style={{ 
               marginBottom: '5px',
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -523,9 +522,7 @@ const BugReportPage = () => {
                   className={`${styles.chip} ${styles['chip-primary']}`}
                   style={{ fontSize: '10px' }}
                 >
-                  {bug.solver_type === 'moderator'
-                    ? 'Модератор'
-                    : 'Разработчик'}
+                  {bug.solver_type === 'moderator' ? 'Модератор' : 'Разработчик'}
                 </span>
               </div>
 
@@ -563,10 +560,8 @@ const BugReportPage = () => {
   // Список баг-репортов
   if (!selectedBug) {
     return (
-      <div
-        style={{ maxWidth: '800px', marginRight: 'auto', paddingTop: '17px' }}
-      >
-        <div
+      <div style={{ maxWidth: '800px', marginRight: 'auto', paddingTop: '17px'}}>
+        <div 
           className={`${styles.card} ${styles['mb-1']}`}
           style={{
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -631,7 +626,7 @@ const BugReportPage = () => {
         ← Назад к списку
       </button>
 
-      <div
+      <div 
         className={`${styles.card} ${styles['mb-1']}`}
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -664,7 +659,12 @@ const BugReportPage = () => {
               src={selectedBug.image_url}
               alt='Bug report'
               className={styles['img-detail']}
-              onClick={() => window.open(selectedBug.image_url, '_blank')}
+              onClick={() =>
+                window.open(
+                  selectedBug.image_url,
+                  '_blank'
+                )
+              }
               style={{
                 borderRadius: '18px',
                 border: '1px solid rgba(66, 66, 66, 0.5)',
@@ -742,11 +742,10 @@ const BugReportPage = () => {
             <div className={`${styles.flex} ${styles['gap-2']}`}>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{
-                  color: '#4caf50',
+                style={{ 
+                  color: '#4caf50', 
                   borderColor: '#4caf50',
-                  background:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                   borderRadius: '16px',
                 }}
@@ -756,11 +755,10 @@ const BugReportPage = () => {
               </button>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{
-                  color: '#2196f3',
+                style={{ 
+                  color: '#2196f3', 
                   borderColor: '#2196f3',
-                  background:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                   borderRadius: '16px',
                 }}
@@ -772,11 +770,10 @@ const BugReportPage = () => {
               </button>
               <button
                 className={`${styles.btn} ${styles['btn-small']} ${styles['btn-outline']}`}
-                style={{
-                  color: '#f44336',
+                style={{ 
+                  color: '#f44336', 
                   borderColor: '#f44336',
-                  background:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                   borderRadius: '16px',
                 }}
@@ -804,8 +801,7 @@ const BugReportPage = () => {
               className={`${styles['comment-card']} ${styles['mb-3']}`}
               style={{
                 marginBottom: '5px',
-                background:
-                  'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 borderRadius: '18px',
@@ -870,7 +866,7 @@ const BugReportPage = () => {
       )}
 
       {/* Форма добавления комментария */}
-      <div
+      <div 
         className={`${styles.card} ${styles['mt-4']}`}
         style={{
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',

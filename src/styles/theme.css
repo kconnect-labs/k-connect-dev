@@ -7,13 +7,13 @@
   --theme-type: default;
   --theme-site-background: #0a0a0a; /* Фон сайта */
   --theme-background-full: rgba(15, 15, 15, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   /* Цвета текста */
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #d0bcff;
+  --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -21,24 +21,25 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
-
+  
   /* Цветовая схема браузера */
   color-scheme: dark;
-  accent-color: #d0bcff;
+  accent-color: #D0BCFF;
 }
 
+
 /* Принудительные значения для тем */
-[data-theme='default'] {
+[data-theme="default"] {
   --theme-background: rgba(15, 15, 15, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #0a0a0a;
   --theme-background-full: rgba(15, 15, 15, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #d0bcff;
+  --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -47,37 +48,38 @@
   --small-border-radius: 14px;
   --large-border-radius: 22px;
 }
-[data-theme='amoled'] {
+[data-theme="amoled"] {
   --theme-background: rgba(0, 0, 0, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #000000;
   --theme-background-full: rgba(0, 0, 0, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #d0bcff;
+  --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
   --theme-text-info: #2196f3;
-  --main-border-radius: 24px;
+ --main-border-radius: 24px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
 }
 
-[data-theme='blur'] {
+
+[data-theme="blur"] {
   --theme-background: rgba(255, 255, 255, 0.03);
   --theme-backdrop-filter: blur(20px);
   --theme-site-background: #0a0a0a;
   --theme-background-full: rgba(15, 15, 15, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #d0bcff;
+  --theme-text-accent: #D0BCFF;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -85,42 +87,42 @@
 }
 
 /* Белая тема */
-[data-theme='light'] {
+[data-theme="light"] {
   --theme-background: rgba(255, 255, 255, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #f5f5f5;
   --theme-background-full: rgba(255, 255, 255, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(0, 0, 0, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(0, 0, 0, 1);
-  --theme-text-accent: #6750a4;
+  --theme-text-accent: #6750A4;
   --theme-text-error: #d32f2f;
   --theme-text-success: #2e7d32;
   --theme-text-warning: #ed6c02;
   --theme-text-info: #1976d2;
-
+  
   /* Цветовая схема браузера */
   color-scheme: light;
-  accent-color: #6750a4;
+  accent-color: #6750A4;
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
 }
 
 /* Midnight - глубокий темно-синий с фиолетовым оттенком */
-[data-theme='midnight'] {
+[data-theme="midnight"] {
   --theme-background: rgba(5, 8, 20, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #030510;
   --theme-background-full: rgba(5, 8, 20, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #b69df8;
+  --theme-text-accent: #B69DF8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -131,17 +133,17 @@
 }
 
 /* Ocean - яркий синий с бирюзовым оттенком */
-[data-theme='ocean'] {
+[data-theme="ocean"] {
   --theme-background: rgba(8, 25, 40, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051520;
   --theme-background-full: rgba(8, 25, 40, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #81c784;
+  --theme-text-accent: #81C784;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -152,17 +154,17 @@
 }
 
 /* Sunset - яркий красно-оранжевый закат */
-[data-theme='sunset'] {
+[data-theme="sunset"] {
   --theme-background: rgba(40, 15, 8, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #250a05;
   --theme-background-full: rgba(40, 15, 8, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #ffb74d;
+  --theme-text-accent: #FFB74D;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -173,17 +175,17 @@
 }
 
 /* Forest - яркий зеленый лес */
-[data-theme='forest'] {
+[data-theme="forest"] {
   --theme-background: rgba(8, 30, 15, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051a0a;
   --theme-background-full: rgba(8, 30, 15, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #a5d6a7;
+  --theme-text-accent: #A5D6A7;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -194,17 +196,17 @@
 }
 
 /* Aurora - яркий зелено-голубой северные сияния */
-[data-theme='aurora'] {
+[data-theme="aurora"] {
   --theme-background: rgba(12, 35, 25, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #082015;
   --theme-background-full: rgba(12, 35, 25, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #80cbc4;
+  --theme-text-accent: #80CBC4;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -215,17 +217,17 @@
 }
 
 /* Cosmic - яркий пурпурно-розовый космос */
-[data-theme='cosmic'] {
+[data-theme="cosmic"] {
   --theme-background: rgba(30, 8, 35, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #1a051a;
   --theme-background-full: rgba(30, 8, 35, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #ce93d8;
+  --theme-text-accent: #CE93D8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -236,17 +238,17 @@
 }
 
 /* Neon - яркий электрический синий */
-[data-theme='neon'] {
+[data-theme="neon"] {
   --theme-background: rgba(8, 20, 45, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #051025;
   --theme-background-full: rgba(8, 20, 45, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #64b5f6;
+  --theme-text-accent: #64B5F6;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -257,17 +259,17 @@
 }
 
 /* Vintage - теплый коричнево-золотой */
-[data-theme='vintage'] {
+[data-theme="vintage"] {
   --theme-background: rgba(35, 20, 8, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #221205;
   --theme-background-full: rgba(35, 20, 8, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgba(255, 255, 255, 1);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #d7ccc8;
+  --theme-text-accent: #D7CCC8;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -278,17 +280,17 @@
 }
 
 /* Pixie - нежно-розовый приятный */
-[data-theme='pickme'] {
+[data-theme="pickme"] {
   --theme-background: rgba(131, 61, 96, 1);
   --theme-backdrop-filter: none;
   --theme-site-background: #b6668a;
   --theme-background-full: rgba(131, 61, 96, 1);
-  --theme-button-main: #d0bcff;
+  --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
-  --theme-text-accent: #f8bbd9;
+  --theme-text-accent: #F8BBD9;
   --theme-text-error: #f44336;
   --theme-text-success: #4caf50;
   --theme-text-warning: #ff9800;
@@ -303,9 +305,7 @@
   background: var(--theme-background) !important;
   backdrop-filter: var(--theme-backdrop-filter) !important;
   -webkit-backdrop-filter: var(--theme-backdrop-filter) !important;
-  transition:
-    background 0.3s ease,
-    backdrop-filter 0.3s ease;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease;
 }
 
 /* Класс для фона сайта */
@@ -447,7 +447,7 @@ html.theme-site-background {
 .theme-menu {
   background: var(--theme-background);
   backdrop-filter: var(--theme-backdrop-filter);
-
+  
   /* 
     Блюр включается только если поддерживается аппаратно.
     Если у пользователя rasterizer off или слабое GPU, блюр можно отключить через JS, 
@@ -474,6 +474,7 @@ body.no-blur .theme-menu,
   border-radius: var(--main-border-radius);
   border: 1px solid rgba(66, 66, 66, 0.5);
 }
+
 
 /* Классы для кнопок */
 .theme-button {
@@ -538,7 +539,7 @@ body.no-blur .theme-menu,
     max-width: 100vw;
     max-height: 100vh;
   }
-
+  
   .theme-card {
     border-radius: 8px;
   }
@@ -581,9 +582,9 @@ body.no-blur .theme-menu,
 }
 
 /* Стили для форм и элементов управления */
-input[type='checkbox'],
-input[type='radio'],
-input[type='range'] {
+input[type="checkbox"], 
+input[type="radio"], 
+input[type="range"] {
   accent-color: var(--theme-main-color);
 }
 
@@ -602,4 +603,4 @@ input[type='range'] {
 :focus-visible {
   outline: 2px solid var(--theme-main-color);
   outline-offset: 2px;
-}
+} 

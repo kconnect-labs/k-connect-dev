@@ -75,12 +75,10 @@ const WallFeed = ({ userId }) => {
         console.error('Ошибка при загрузке записей стены:', error);
         if (isMounted.current) {
           if (pageNumber === 1) setWallPosts([]);
-
+          
           // Проверяем, является ли ошибка связанной с приватностью
           if (error.response && error.response.status === 403) {
-            setError(
-              'Этот профиль приватный. Подпишитесь друг на друга для доступа к записям стены.'
-            );
+            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к записям стены.');
           } else {
             setError('Произошла ошибка при загрузке записей стены');
           }
@@ -200,7 +198,11 @@ const WallFeed = ({ userId }) => {
           gap: 1,
         }}
       >
-        <Typography variant='h6' color='text.primary' gutterBottom>
+        <Typography
+          variant='h6'
+          color='text.primary'
+          gutterBottom
+        >
           {error.includes('приватный')
             ? '🔒 Приватный профиль'
             : t('profile.feed.wall.loading_error')}
@@ -235,11 +237,7 @@ const WallFeed = ({ userId }) => {
         <Typography variant='h6' color='text.primary' gutterBottom>
           {t('profile.feed.wall.empty')}
         </Typography>
-        <Typography
-          variant='body1'
-          color='text.secondary'
-          sx={{ maxWidth: 400 }}
-        >
+        <Typography variant='body1' color='text.secondary' sx={{ maxWidth: 400 }}>
           На стене пока нет записей
         </Typography>
       </Box>

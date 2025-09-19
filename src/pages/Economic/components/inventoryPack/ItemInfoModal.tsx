@@ -224,7 +224,7 @@ const ItemInfoModal = ({
   onTransferSuccess,
 }: ItemInfoModalProps) => {
   // const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
-
+  
   // Получаем corner_color для фона модалки
   // const gradientData = item?.background_id ? getGradientData(item.background_id) : null;
   const cornerColor = '#974835'; // fallback цвет
@@ -633,9 +633,7 @@ const ItemInfoModal = ({
 
   const handleCopyLink = () => {
     if (!item) return;
-    const origin =
-      (typeof window !== 'undefined' && window.location?.origin) ||
-      'https://k-connect.ru';
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
     const url = `${origin}/item/${item.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopyStatus('Скопировано!');
@@ -678,16 +676,16 @@ const ItemInfoModal = ({
 
   return (
     <>
-      <StyledDialog
-        open={open}
-        onClose={onClose}
-        maxWidth='sm'
+      <StyledDialog 
+        open={open} 
+        onClose={onClose} 
+        maxWidth='sm' 
         fullWidth
         sx={{
           '& .MuiDialog-paper': {
             background: cornerColor,
             border: `1px solid ${cornerColor}4D`,
-          },
+          }
         }}
       >
         <UpgradeEffects item={item}>
@@ -707,8 +705,7 @@ const ItemInfoModal = ({
               sx={{
                 color: 'text.secondary',
                 '&:hover': {
-                  backgroundColor:
-                    'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 },
               }}
             >
@@ -716,12 +713,8 @@ const ItemInfoModal = ({
             </IconButton>
           </DialogTitle>
 
-          <DialogContent
-            sx={{ pt: 0, overflow: 'auto', maxHeight: 'calc(80vh - 120px)' }}
-          >
-            <Box sx={{ mb: 2, textAlign: 'center' }}>
-              {' '}
-              {/* Уменьшил отступ с mb: 3 до mb: 2 */}
+          <DialogContent sx={{ pt: 0, overflow: 'auto', maxHeight: 'calc(80vh - 120px)' }}>
+            <Box sx={{ mb: 2, textAlign: 'center' }}> {/* Уменьшил отступ с mb: 3 до mb: 2 */}
               <Box position='relative'>
                 <Box
                   sx={{
@@ -735,9 +728,7 @@ const ItemInfoModal = ({
                     position: 'relative',
                     mb: 2,
                     margin: 'auto',
-                    backgroundImage: item?.background_url
-                      ? `url(${item.background_url})`
-                      : 'none',
+                    backgroundImage: item?.background_url ? `url(${item.background_url})` : 'none',
                   }}
                 >
                   <img
@@ -756,20 +747,22 @@ const ItemInfoModal = ({
                       maxHeight: '100%',
                     }}
                   />
-                  {item?.marketplace?.status === 'active' && (
-                    <MarketPriceChip>
-                      <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
-                      {item.marketplace.price}
-                    </MarketPriceChip>
-                  )}
-                </Box>
-              </Box>
+                                     {item?.marketplace?.status === 'active' && (
+                     <MarketPriceChip>
+                       <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
+                       {item.marketplace.price}
+                     </MarketPriceChip>
+                   )}
+                 </Box>
+               </Box>
+
               <Typography
                 variant='h6' // Уменьшил с h5 до h6
                 sx={{ fontWeight: 600, mb: 1, textAlign: 'center' }} // Уменьшил отступ с mb: 2 до mb: 1
               >
                 {item.item_name}
               </Typography>
+
               <Box
                 sx={{
                   display: 'flex',
@@ -788,7 +781,7 @@ const ItemInfoModal = ({
                     label='Улучшено'
                     color='success'
                     size='small'
-                    sx={{
+                    sx={{ 
                       ml: 0.5, // Уменьшил с ml: 1 до ml: 0.5
                       fontWeight: 600,
                       fontSize: '0.7rem', // Добавил уменьшенный размер шрифта
@@ -797,9 +790,8 @@ const ItemInfoModal = ({
                   />
                 )}
               </Box>
-              <Box sx={{ mb: 2 }}>
-                {' '}
-                {/* Уменьшил отступ с mb: 3 до mb: 2 */}
+
+              <Box sx={{ mb: 2 }}> {/* Уменьшил отступ с mb: 3 до mb: 2 */}
                 <Typography
                   variant='body2'
                   sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
@@ -810,13 +802,9 @@ const ItemInfoModal = ({
                   variant='body2'
                   sx={{ color: 'text.secondary', mb: 0.5 }} // Уменьшил отступ с mb: 1 до mb: 0.5
                 >
-                  Статус:{' '}
-                  {isOverlayItem(item) || item.is_equipped
-                    ? isOverlayItem(item) && item.is_equipped
-                      ? 'Оверлей + Экипировано'
-                      : isOverlayItem(item)
-                        ? 'Оверлей'
-                        : 'Экипировано'
+                  Статус: {(isOverlayItem(item) || item.is_equipped) ? 
+                    (isOverlayItem(item) && item.is_equipped ? 'Оверлей + Экипировано' : 
+                     isOverlayItem(item) ? 'Оверлей' : 'Экипировано') 
                     : 'Не экипировано'}
                 </Typography>
                 {item.item_number && item.total_count && (
@@ -828,6 +816,7 @@ const ItemInfoModal = ({
                   </Typography>
                 )}
               </Box>
+
               <Box
                 sx={{
                   display: 'flex',
@@ -879,8 +868,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.4)',
-                    backgroundColor:
-                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
               >
@@ -901,8 +889,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.4)',
-                    backgroundColor:
-                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
               >
@@ -932,8 +919,7 @@ const ItemInfoModal = ({
                   fontWeight: 500,
                   '&:hover': {
                     borderColor: 'rgba(255, 152, 0, 0.5)',
-                    backgroundColor:
-                      'var(--theme-background, rgba(255, 152, 0, 0.05))',
+                    backgroundColor: 'var(--theme-background, rgba(255, 152, 0, 0.05))',
                   },
                 }}
               >
@@ -953,8 +939,7 @@ const ItemInfoModal = ({
                 color: 'text.primary',
                 '&:hover': {
                   borderColor: 'rgba(255, 255, 255, 0.4)',
-                  background:
-                    'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                  background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                 },
                 '&:disabled': {
                   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -975,8 +960,7 @@ const ItemInfoModal = ({
                   fullWidth
                   sx={{
                     '&:hover': {
-                      backgroundColor:
-                        'var(--theme-background, rgba(244, 67, 54, 0.05))',
+                      backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.05))',
                     },
                   }}
                 >
@@ -995,8 +979,7 @@ const ItemInfoModal = ({
                   fullWidth
                   sx={{
                     '&:hover': {
-                      backgroundColor:
-                        'var(--theme-background, rgba(33, 150, 243, 0.05))',
+                      backgroundColor: 'var(--theme-background, rgba(33, 150, 243, 0.05))',
                     },
                   }}
                 >
@@ -1016,8 +999,7 @@ const ItemInfoModal = ({
                 fontWeight: 500,
                 '&:hover': {
                   borderColor: 'rgba(244, 67, 54, 0.5)',
-                  backgroundColor:
-                    'var(--theme-background, rgba(244, 67, 54, 0.05))',
+                  backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.05))',
                 },
               }}
             >
@@ -1077,9 +1059,7 @@ const ItemInfoModal = ({
                     width: 125,
                     height: 125,
                     mb: 2,
-                    backgroundImage: item.background_url
-                      ? `url(${item.background_url})`
-                      : 'none',
+                    backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
@@ -1089,8 +1069,8 @@ const ItemInfoModal = ({
                   <img
                     src={item.image_url}
                     alt={item.item_name}
-                    style={{
-                      position: 'relative',
+                    style={{ 
+                      position: 'relative', 
                       zIndex: 10,
                       width: '100%',
                       height: '100%',
@@ -1232,8 +1212,7 @@ const ItemInfoModal = ({
               borderColor: 'rgba(255, 255, 255, 0.2)',
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                backgroundColor:
-                  'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               },
             }}
           >
@@ -1257,13 +1236,11 @@ const ItemInfoModal = ({
               fontWeight: 500,
               border: '1px solid rgba(255, 255, 255, 0.2)',
               '&:hover': {
-                background:
-                  'var(--theme-background, rgba(255, 255, 255, 0.15))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               },
               '&:disabled': {
-                background:
-                  'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                 color: 'text.secondary',
                 borderColor: 'rgba(255, 255, 255, 0.1)',
               },

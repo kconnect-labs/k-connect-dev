@@ -26,6 +26,7 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import apiClient from '../../services/axiosConfig';
 import NewTracksBlock from './components/NewTracksBlock';
 
+
 const SearchContainer = styled(Box)(({ theme, open }) => ({
   position: 'sticky',
   top: 0,
@@ -87,6 +88,7 @@ const NewTracksPage = () => {
     isSearching,
   } = useMusic();
 
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
@@ -95,24 +97,29 @@ const NewTracksPage = () => {
   const abortControllerRef = useRef(null);
   const searchTimeoutRef = useRef(null);
 
+  
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
 
+  
   const performSearch = useCallback(
     async query => {
+      
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
 
+      
       if (!query.trim() || query.trim().length < 2) {
         return;
       }
 
       setSearchLoading(true);
 
+      
       abortControllerRef.current = new AbortController();
 
       try {
@@ -137,14 +144,17 @@ const NewTracksPage = () => {
     [searchTracks]
   );
 
+  
   const handleSearchChange = e => {
     const query = e.target.value;
     setSearchQuery(query);
 
+    
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
 
+    
     if (query.trim().length < 2) {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -153,9 +163,10 @@ const NewTracksPage = () => {
       return;
     }
 
+    
     searchTimeoutRef.current = setTimeout(() => {
       performSearch(query.trim());
-    }, 1200);
+    }, 1200); 
   };
 
   const handleSearchFocus = () => {
@@ -171,12 +182,12 @@ const NewTracksPage = () => {
     if (searchInputRef.current) {
       searchInputRef.current.value = '';
     }
-
+    
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       setSearchLoading(false);
     }
-
+    
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
       searchTimeoutRef.current = null;
@@ -203,6 +214,7 @@ const NewTracksPage = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  
   useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
@@ -214,6 +226,7 @@ const NewTracksPage = () => {
     };
   }, []);
 
+  
   if (searchQuery.trim()) {
     return (
       <Box sx={{ p: 2 }}>
@@ -280,10 +293,8 @@ const NewTracksPage = () => {
                     sx={{
                       p: 1,
                       borderRadius: '18px',
-                      background:
-                        'var(--theme-background, rgba(255, 255, 255, 0.1))',
-                      backdropFilter:
-                        'var(--theme-backdrop-filter, blur(20px))',
+                      background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                       border: '1px solid rgba(66, 66, 66, 0.5)',
                       display: 'flex',
                       alignItems: 'center',
@@ -291,8 +302,7 @@ const NewTracksPage = () => {
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       '&:hover': {
-                        background:
-                          'var(--theme-background, rgba(255, 255, 255, 0.15))',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.15))',
                       },
                     }}
                     onClick={() => playTrack(track, 'search')}

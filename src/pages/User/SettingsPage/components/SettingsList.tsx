@@ -152,95 +152,93 @@ const settingsSections: SettingsSection[] = [
   },
 ];
 
-const SettingsList: React.FC<SettingsListProps> = React.memo(
-  ({ onOpenModal }) => {
-    return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        {settingsSections.map(section => (
-          <Button
-            key={section.id}
-            onClick={() => onOpenModal(section.id)}
-            className='theme-aware'
+const SettingsList: React.FC<SettingsListProps> = React.memo(({ onOpenModal }) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      {settingsSections.map(section => (
+        <Button
+          key={section.id}
+          onClick={() => onOpenModal(section.id)}
+          className="theme-aware"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            padding: '12px 16px',
+            border: '1px solid rgba(66, 66, 66, 0.5)',
+            borderRadius: 'var(--main-border-radius)',
+            color: 'var(--theme-text-primary)',
+            textTransform: 'none',
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              transform: 'translateY(-1px)',
+            },
+            '&:active': {
+              transform: 'translateY(0)',
+            },
+          }}
+        >
+          <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'flex-start',
-              padding: '12px 16px',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              justifyContent: 'center',
+              width: 40,
+              height: 40,
               borderRadius: 'var(--main-border-radius)',
-              color: 'var(--theme-text-primary)',
-              textTransform: 'none',
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                transform: 'translateY(-1px)',
-              },
-              '&:active': {
-                transform: 'translateY(0)',
-              },
+              background: section.color,
+              marginRight: 2,
+              flexShrink: 0,
             }}
           >
-            <Box
+            {section.icon}
+          </Box>
+
+          <Box sx={{ textAlign: 'left', flex: 1 }}>
+            <Typography
+              variant='h6'
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 40,
-                height: 40,
-                borderRadius: 'var(--main-border-radius)',
-                background: section.color,
-                marginRight: 2,
-                flexShrink: 0,
+                fontSize: '1rem',
+                fontWeight: 600,
+                marginBottom: 0.5,
+                color: 'var(--theme-text-primary)',
               }}
             >
-              {section.icon}
-            </Box>
-
-            <Box sx={{ textAlign: 'left', flex: 1 }}>
-              <Typography
-                variant='h6'
-                sx={{
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  marginBottom: 0.5,
-                  color: 'var(--theme-text-primary)',
-                }}
-              >
-                {section.title}
-              </Typography>
-              <Typography
-                variant='body2'
-                sx={{
-                  color: 'var(--theme-text-secondary)',
-                  fontSize: '0.875rem',
-                }}
-              >
-                {section.subtitle}
-              </Typography>
-            </Box>
-
-            <Box
+              {section.title}
+            </Typography>
+            <Typography
+              variant='body2'
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 24,
-                height: 24,
-                borderRadius: 'var(--main-border-radius)',
-                background: 'rgba(255, 255, 255, 0.1)',
-                marginLeft: 1,
+                color: 'var(--theme-text-secondary)',
+                fontSize: '0.875rem',
               }}
             >
-              <Edit
-                sx={{ fontSize: 16, color: 'var(--theme-text-secondary)' }}
-              />
-            </Box>
-          </Button>
-        ))}
-      </Box>
-    );
-  }
-);
+              {section.subtitle}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 24,
+              height: 24,
+              borderRadius: 'var(--main-border-radius)',
+              background: 'rgba(255, 255, 255, 0.1)',
+              marginLeft: 1,
+            }}
+          >
+            <Edit
+              sx={{ fontSize: 16, color: 'var(--theme-text-secondary)' }}
+            />
+          </Box>
+        </Button>
+      ))}
+    </Box>
+  );
+});
 
 SettingsList.displayName = 'SettingsList';
 

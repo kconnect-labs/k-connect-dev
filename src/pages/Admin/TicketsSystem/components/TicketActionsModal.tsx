@@ -19,28 +19,20 @@ import {
   MenuItem,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Warning, Block, Delete, Send, Close } from '@mui/icons-material';
+import {
+  Warning,
+  Block,
+  Delete,
+  Send,
+  Close,
+} from '@mui/icons-material';
 
 interface TicketActionsModalProps {
   open: boolean;
   onClose: () => void;
   ticket: any;
-  onIssueWarning: (
-    userId: number,
-    reason: string,
-    duration: string,
-    ticketId?: number,
-    targetType?: string,
-    targetId?: number
-  ) => void;
-  onBanUser: (
-    userId: number,
-    reason: string,
-    duration: string,
-    ticketId?: number,
-    targetType?: string,
-    targetId?: number
-  ) => void;
+  onIssueWarning: (userId: number, reason: string, duration: string, ticketId?: number, targetType?: string, targetId?: number) => void;
+  onBanUser: (userId: number, reason: string, duration: string, ticketId?: number, targetType?: string, targetId?: number) => void;
   onDeletePost: (postId: number, ticketId?: number) => void;
 }
 
@@ -94,14 +86,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
       case 'warning_violator':
         // Предупреждение нарушителю (автору поста/комментария)
         // Передаем target_type и target_id, API сам получит правильный user_id
-        onIssueWarning(
-          0,
-          reason,
-          duration,
-          ticket.id,
-          ticket.target_type,
-          ticket.target_id
-        );
+        onIssueWarning(0, reason, duration, ticket.id, ticket.target_type, ticket.target_id);
         break;
       case 'ban_complainer':
         // Бан отправителя жалобы
@@ -110,14 +95,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
       case 'ban_violator':
         // Бан нарушителя
         // Передаем target_type и target_id, API сам получит правильный user_id
-        onBanUser(
-          0,
-          reason,
-          duration,
-          ticket.id,
-          ticket.target_type,
-          ticket.target_id
-        );
+        onBanUser(0, reason, duration, ticket.id, ticket.target_type, ticket.target_id);
         break;
       case 'delete_post':
         onDeletePost(ticket.target_id, ticket.id);
@@ -139,14 +117,9 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
 
     return (
       <Box mt={2}>
-        <Typography
-          variant='h6'
-          sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
-        >
-          {selectedAction === 'warning_complainer' &&
-            'Выдать предупреждение отправителю жалобы'}
-          {selectedAction === 'warning_violator' &&
-            'Выдать предупреждение нарушителю'}
+        <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
+          {selectedAction === 'warning_complainer' && 'Выдать предупреждение отправителю жалобы'}
+          {selectedAction === 'warning_violator' && 'Выдать предупреждение нарушителю'}
           {selectedAction === 'ban_complainer' && 'Забанить отправителя жалобы'}
           {selectedAction === 'ban_violator' && 'Забанить нарушителя'}
           {selectedAction === 'delete_post' && 'Удалить пост'}
@@ -156,9 +129,9 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
           fullWidth
           multiline
           rows={3}
-          label='Причина'
+          label="Причина"
           value={reason}
-          onChange={e => setReason(e.target.value)}
+          onChange={(e) => setReason(e.target.value)}
           sx={{
             mb: 2,
             '& .MuiOutlinedInput-root': {
@@ -180,17 +153,14 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
           }}
         />
 
-        {(selectedAction === 'warning_complainer' ||
-          selectedAction === 'warning_violator' ||
-          selectedAction === 'ban_complainer' ||
-          selectedAction === 'ban_violator') && (
+        {(selectedAction === 'warning_complainer' || selectedAction === 'warning_violator' || selectedAction === 'ban_complainer' || selectedAction === 'ban_violator') && (
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Длительность
             </InputLabel>
             <Select
               value={duration}
-              onChange={e => setDuration(e.target.value)}
+              onChange={(e) => setDuration(e.target.value)}
               sx={{
                 background: 'rgba(255, 255, 255, 0.05)',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
@@ -202,18 +172,18 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
                 },
               }}
             >
-              <MenuItem value='1h'>1 час</MenuItem>
-              <MenuItem value='24h'>24 часа</MenuItem>
-              <MenuItem value='7d'>7 дней</MenuItem>
-              <MenuItem value='30d'>30 дней</MenuItem>
-              <MenuItem value='permanent'>Навсегда</MenuItem>
+              <MenuItem value="1h">1 час</MenuItem>
+              <MenuItem value="24h">24 часа</MenuItem>
+              <MenuItem value="7d">7 дней</MenuItem>
+              <MenuItem value="30d">30 дней</MenuItem>
+              <MenuItem value="permanent">Навсегда</MenuItem>
             </Select>
           </FormControl>
         )}
 
-        <Box display='flex' gap={2} justifyContent='flex-end'>
+        <Box display="flex" gap={2} justifyContent="flex-end">
           <Button
-            variant='outlined'
+            variant="outlined"
             onClick={() => setSelectedAction(null)}
             sx={{
               borderColor: 'rgba(255, 255, 255, 0.3)',
@@ -227,7 +197,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
             Отмена
           </Button>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={handleConfirmAction}
             disabled={!reason.trim()}
             sx={{
@@ -249,7 +219,12 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
   };
 
   return (
-    <StyledDialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+    <StyledDialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
         Действия с тикетом #{ticket?.id}
       </DialogTitle>
@@ -263,7 +238,7 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
                 <Warning sx={{ color: '#FF9800' }} />
               </ListItemIcon>
               <ListItemText
-                primary='Предупреждение отправителю жалобы'
+                primary="Предупреждение отправителю жалобы"
                 secondary={`Отправить предупреждение ${ticket.creator?.name || 'отправителю жалобы'}`}
                 sx={{
                   '& .MuiListItemText-primary': {
@@ -283,8 +258,8 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
                 <Warning sx={{ color: '#FF9800' }} />
               </ListItemIcon>
               <ListItemText
-                primary='Предупреждение нарушителю'
-                secondary='Отправить предупреждение нарушителю'
+                primary="Предупреждение нарушителю"
+                secondary="Отправить предупреждение нарушителю"
                 sx={{
                   '& .MuiListItemText-primary': {
                     color: 'rgba(255, 255, 255, 0.87)',
@@ -296,12 +271,14 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
               />
             </StyledListItem>
 
-            <StyledListItem onClick={() => handleActionClick('ban_complainer')}>
+            <StyledListItem
+              onClick={() => handleActionClick('ban_complainer')}
+            >
               <ListItemIcon>
                 <Block sx={{ color: '#f44336' }} />
               </ListItemIcon>
               <ListItemText
-                primary='Забанить отправителя жалобы'
+                primary="Забанить отправителя жалобы"
                 secondary={`Заблокировать ${ticket.creator?.name || 'отправителя жалобы'}`}
                 sx={{
                   '& .MuiListItemText-primary': {
@@ -314,13 +291,15 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
               />
             </StyledListItem>
 
-            <StyledListItem onClick={() => handleActionClick('ban_violator')}>
+            <StyledListItem
+              onClick={() => handleActionClick('ban_violator')}
+            >
               <ListItemIcon>
                 <Block sx={{ color: '#f44336' }} />
               </ListItemIcon>
               <ListItemText
-                primary='Забанить нарушителя'
-                secondary='Заблокировать нарушителя'
+                primary="Забанить нарушителя"
+                secondary="Заблокировать нарушителя"
                 sx={{
                   '& .MuiListItemText-primary': {
                     color: 'rgba(255, 255, 255, 0.87)',
@@ -333,13 +312,15 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
             </StyledListItem>
 
             {ticket?.target_type === 'post' && (
-              <StyledListItem onClick={() => handleActionClick('delete_post')}>
+              <StyledListItem
+                onClick={() => handleActionClick('delete_post')}
+              >
                 <ListItemIcon>
                   <Delete sx={{ color: '#f44336' }} />
                 </ListItemIcon>
                 <ListItemText
-                  primary='Удалить пост'
-                  secondary='Удалить проблемный пост'
+                  primary="Удалить пост"
+                  secondary="Удалить проблемный пост"
                   sx={{
                     '& .MuiListItemText-primary': {
                       color: 'rgba(255, 255, 255, 0.87)',
@@ -373,4 +354,4 @@ const TicketActionsModal: React.FC<TicketActionsModalProps> = ({
   );
 };
 
-export default TicketActionsModal;
+export default TicketActionsModal; 

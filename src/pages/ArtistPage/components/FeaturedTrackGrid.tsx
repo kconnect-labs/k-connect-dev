@@ -65,25 +65,23 @@ const TrackImage = styled('img')(({ theme }) => ({
   transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
 }));
 
-const PlayOverlay = styled(Box)<{ isPlaying?: boolean }>(
-  ({ theme, isPlaying }) => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: isPlaying
-      ? 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6))'
-      : 'linear-gradient(135deg, rgba(0,0,0,0), rgba(0,0,0,0))',
-    opacity: isPlaying ? 1 : 0,
-    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '16px',
-  })
-);
+const PlayOverlay = styled(Box)<{ isPlaying?: boolean }>(({ theme, isPlaying }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: isPlaying 
+    ? 'linear-gradient(135deg, rgba(0,0,0,0.8), rgba(0,0,0,0.6))'
+    : 'linear-gradient(135deg, rgba(0,0,0,0), rgba(0,0,0,0))',
+  opacity: isPlaying ? 1 : 0,
+  transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: '16px',
+}));
 
 const PlayButton = styled(Box)(({ theme }) => ({
   width: 64,
@@ -103,22 +101,20 @@ const PlayButton = styled(Box)(({ theme }) => ({
   },
 }));
 
-const DurationBadge = styled(Box)<{ isCurrentTrack?: boolean }>(
-  ({ theme, isCurrentTrack }) => ({
-    position: 'absolute',
-    bottom: 8,
-    right: 8,
-    padding: theme.spacing(0.5, 1),
-    backgroundColor: isCurrentTrack
-      ? theme.palette.primary.main
-      : 'rgba(0, 0, 0, 0.8)',
-    color: isCurrentTrack ? '#000' : '#fff',
-    borderRadius: '18px',
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    backdropFilter: 'blur(10px)',
-  })
-);
+const DurationBadge = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCurrentTrack }) => ({
+  position: 'absolute',
+  bottom: 8,
+  right: 8,
+  padding: theme.spacing(0.5, 1),
+  backgroundColor: isCurrentTrack 
+    ? theme.palette.primary.main 
+    : 'rgba(0, 0, 0, 0.8)',
+  color: isCurrentTrack ? '#000' : '#fff',
+  borderRadius: '18px',
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  backdropFilter: 'blur(10px)',
+}));
 
 const TrackInfo = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 2, 2.5),
@@ -134,19 +130,17 @@ const TrackHeader = styled(Box)(({ theme }) => ({
   gap: theme.spacing(1),
 }));
 
-const TrackTitle = styled(Typography)<{ isCurrentTrack?: boolean }>(
-  ({ theme, isCurrentTrack }) => ({
-    fontWeight: 600,
-    color: isCurrentTrack ? '#B69DF8' : '#ffffff',
-    fontSize: '1rem',
-    lineHeight: 1.3,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    flex: 1,
-    transition: 'color 0.2s ease',
-  })
-);
+const TrackTitle = styled(Typography)<{ isCurrentTrack?: boolean }>(({ theme, isCurrentTrack }) => ({
+  fontWeight: 600,
+  color: isCurrentTrack ? '#B69DF8' : '#ffffff',
+  fontSize: '1rem',
+  lineHeight: 1.3,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  flex: 1,
+  transition: 'color 0.2s ease',
+}));
 
 const TrackMeta = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -207,26 +201,31 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
 
   const handleMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
   };
 
   const handleTrackClick = () => {
+    
     onTrackClick(track, 'artist');
   };
 
   return (
-    <TrackCard className='track-card' onClick={handleTrackClick}>
+    <TrackCard
+      className="track-card"
+      onClick={handleTrackClick}
+    >
       <TrackImageContainer>
         <TrackImage
           src={
-            track.cover_path
-              ? track.cover_path.startsWith('http')
-                ? track.cover_path
-                : `https://s3.k-connect.ru${track.cover_path}`
+            track.cover_path 
+              ? (track.cover_path.startsWith('http') 
+                  ? track.cover_path 
+                  : `https://s3.k-connect.ru${track.cover_path}`)
               : 'https://s3.k-connect.ru/static/uploads/system/album_placeholder.jpg'
           }
           alt={track.title}
         />
-        <PlayOverlay className='track-overlay' isPlaying={isPlaying}>
+        <PlayOverlay className="track-overlay" isPlaying={isPlaying}>
           <PlayButton>
             {isPlaying ? (
               <Pause sx={{ fontSize: 32 }} />
@@ -239,14 +238,18 @@ const FeaturedTrackItem: React.FC<FeaturedTrackItemProps> = ({
 
       <TrackInfo>
         <TrackHeader>
-          <TrackTitle isCurrentTrack={isCurrentTrack}>{track.title}</TrackTitle>
+          <TrackTitle isCurrentTrack={isCurrentTrack}>
+            {track.title}
+          </TrackTitle>
           <MoreButton onClick={handleMoreClick}>
             <MoreHoriz sx={{ fontSize: 18 }} />
           </MoreButton>
         </TrackHeader>
-
+        
         <TrackMeta>
-          <PlaysCount>{(track.plays_count || 0).toLocaleString()}</PlaysCount>
+          <PlaysCount>
+            {(track.plays_count || 0).toLocaleString()}
+          </PlaysCount>
           <ActionButtons>
             <LikeButton onClick={handleLikeClick}>
               {track.is_liked ? (
@@ -271,7 +274,7 @@ const FeaturedTrackGrid: React.FC<FeaturedTrackGridProps> = ({
 }) => {
   return (
     <GridContainer>
-      {tracks.map(track => {
+      {tracks.map((track) => {
         const isCurrentTrack = currentTrack?.id === track.id;
         const isCurrentlyPlaying = isCurrentTrack && isPlaying;
 

@@ -90,28 +90,24 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
 
   const fetchBadgeInfo = async () => {
     if (!badgeId && !imagePath) return;
-
+    
     setLoading(true);
     setError(null);
-
+    
     try {
       let response;
       if (badgeId) {
         response = await axios.get(`/api/badges/info/${badgeId}`);
       } else if (imagePath) {
-        response = await axios.get(
-          `/api/badges/info/by-image-path?image_path=${encodeURIComponent(imagePath)}`
-        );
+        response = await axios.get(`/api/badges/info/by-image-path?image_path=${encodeURIComponent(imagePath)}`);
       }
-
+      
       if (response) {
         setBadgeInfo(response.data);
       }
     } catch (err: any) {
       console.error('Error fetching badge info:', err);
-      setError(
-        err.response?.data?.error || 'Ошибка при загрузке информации о бейдже'
-      );
+      setError(err.response?.data?.error || 'Ошибка при загрузке информации о бейдже');
     } finally {
       setLoading(false);
     }
@@ -137,9 +133,9 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
     <UniversalModal
       open={open}
       onClose={onClose}
-      title='Информация о бейдже'
+      title="Информация о бейдже"
       maxWidth={false}
-      maxWidthCustom='800px'
+      maxWidthCustom="800px"
       fullWidth
     >
       {loading ? (
@@ -147,7 +143,7 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
           <CircularProgress />
         </Box>
       ) : error ? (
-        <Alert severity='error' sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       ) : badgeInfo ? (
@@ -155,7 +151,7 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
           {/* Основная информация о бейдже */}
           <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
             <Box
-              component='img'
+              component="img"
               src={badgeInfo.image_path}
               alt={badgeInfo.name}
               sx={{
@@ -167,16 +163,12 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
               }}
             />
             <Box sx={{ flex: 1 }}>
-              <Typography variant='h5' sx={{ fontWeight: 700, mb: 1 }}>
+              <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
                 {badgeInfo.name}
               </Typography>
-
+              
               {badgeInfo.description && (
-                <Typography
-                  variant='body1'
-                  color='text.secondary'
-                  sx={{ mb: 2 }}
-                >
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
                   {badgeInfo.description}
                 </Typography>
               )}
@@ -185,25 +177,25 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                 <Chip
                   icon={<MonetizationOnIcon />}
                   label={`${formatPrice(badgeInfo.price)} баллов`}
-                  color='primary'
-                  variant='outlined'
+                  color="primary"
+                  variant="outlined"
                 />
-
+                
                 {badgeInfo.is_sold_out ? (
-                  <Chip label='Распродан' color='error' variant='outlined' />
+                  <Chip label="Распродан" color="error" variant="outlined" />
                 ) : (
                   <Chip
                     label={`${badgeInfo.copies_sold}${badgeInfo.max_copies ? `/${badgeInfo.max_copies}` : ''} копий`}
-                    color='success'
-                    variant='outlined'
+                    color="success"
+                    variant="outlined"
                   />
                 )}
 
                 {badgeInfo.upgrade && (
                   <Chip
                     label={`Улучшение: ${badgeInfo.upgrade}`}
-                    color='secondary'
-                    variant='outlined'
+                    color="secondary"
+                    variant="outlined"
                   />
                 )}
               </Box>
@@ -218,19 +210,12 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                     border: '1px solid rgba(66, 66, 66, 0.5)',
                   }}
                 >
-                  <Typography
-                    variant='body2'
-                    color='text.primary'
-                    sx={{ fontWeight: 500, mb: 0.5 }}
-                  >
-                    {badgeInfo.user_purchase.is_creator
-                      ? 'Вы создатель этого бейджа'
-                      : 'У вас есть этот бейдж'}
+                  <Typography variant="body2" color="text.primary" sx={{ fontWeight: 500, mb: 0.5 }}>
+                    {badgeInfo.user_purchase.is_creator ? 'Вы создатель этого бейджа' : 'У вас есть этот бейдж'}
                   </Typography>
                   {badgeInfo.user_purchase.purchase_date && (
-                    <Typography variant='caption' color='text.secondary'>
-                      Получен:{' '}
-                      {formatDate(badgeInfo.user_purchase.purchase_date)}
+                    <Typography variant="caption" color="text.secondary">
+                      Получен: {formatDate(badgeInfo.user_purchase.purchase_date)}
                     </Typography>
                   )}
                 </Box>
@@ -242,7 +227,7 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
 
           {/* Информация о создателе */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
               Создатель
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -253,7 +238,7 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
               />
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                     {badgeInfo.creator.name}
                   </Typography>
                   <VerifiedIcon sx={{ fontSize: 16, color: 'primary.main' }} />
@@ -261,12 +246,9 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                 <Typography
                   component={Link}
                   to={`/profile/${badgeInfo.creator.username}`}
-                  variant='body2'
-                  color='text.secondary'
-                  sx={{
-                    textDecoration: 'none',
-                    '&:hover': { textDecoration: 'underline' },
-                  }}
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
                 >
                   @{badgeInfo.creator.username}
                 </Typography>
@@ -278,16 +260,10 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
 
           {/* Статистика */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
               Статистика
             </Typography>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: 2,
-              }}
-            >
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2 }}>
               <Box
                 sx={{
                   p: 2,
@@ -296,17 +272,13 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                   border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               >
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}
-                >
-                  <ShoppingCartIcon
-                    sx={{ fontSize: 20, color: 'primary.main' }}
-                  />
-                  <Typography variant='body2' color='text.secondary'>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <ShoppingCartIcon sx={{ fontSize: 20, color: 'primary.main' }} />
+                  <Typography variant="body2" color="text.secondary">
                     Продано копий
                   </Typography>
                 </Box>
-                <Typography variant='h6' sx={{ fontWeight: 700 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   {badgeInfo.statistics.total_copies_sold}
                 </Typography>
               </Box>
@@ -319,17 +291,13 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                   border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               >
-                <Box
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}
-                >
-                  <TrendingUpIcon
-                    sx={{ fontSize: 20, color: 'success.main' }}
-                  />
-                  <Typography variant='body2' color='text.secondary'>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <TrendingUpIcon sx={{ fontSize: 20, color: 'success.main' }} />
+                  <Typography variant="body2" color="text.secondary">
                     Общий доход
                   </Typography>
                 </Box>
-                <Typography variant='h6' sx={{ fontWeight: 700 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>
                   {formatPrice(badgeInfo.statistics.total_revenue)} баллов
                 </Typography>
               </Box>
@@ -343,22 +311,13 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                     border: '1px solid rgba(66, 66, 66, 0.5)',
                   }}
                 >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      mb: 1,
-                    }}
-                  >
-                    <CalendarTodayIcon
-                      sx={{ fontSize: 20, color: 'info.main' }}
-                    />
-                    <Typography variant='body2' color='text.secondary'>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <CalendarTodayIcon sx={{ fontSize: 20, color: 'info.main' }} />
+                    <Typography variant="body2" color="text.secondary">
                       Дата создания
                     </Typography>
                   </Box>
-                  <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
                     {formatDate(badgeInfo.created_at)}
                   </Typography>
                 </Box>
@@ -371,11 +330,11 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
             <>
               <Divider sx={{ my: 3 }} />
               <Box>
-                <Typography variant='h6' sx={{ fontWeight: 600, mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                   Недавние покупатели
                 </Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  {badgeInfo.statistics.recent_buyers.map(buyer => (
+                  {badgeInfo.statistics.recent_buyers.map((buyer) => (
                     <Box
                       key={buyer.id}
                       sx={{
@@ -388,28 +347,26 @@ const BadgeInfoModal: React.FC<BadgeInfoModalProps> = ({
                         border: '1px solid rgba(66, 66, 66, 0.5)',
                       }}
                     >
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
-                      >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         <Avatar
                           src={buyer.avatar_url || undefined}
                           alt={buyer.name}
                           sx={{ width: 32, height: 32 }}
                         />
                         <Box>
-                          <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
                             {buyer.name}
                           </Typography>
-                          <Typography variant='caption' color='text.secondary'>
+                          <Typography variant="caption" color="text.secondary">
                             @{buyer.username}
                           </Typography>
                         </Box>
                       </Box>
                       <Box sx={{ textAlign: 'right' }}>
-                        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           {formatPrice(buyer.price_paid)} баллов
                         </Typography>
-                        <Typography variant='caption' color='text.secondary'>
+                        <Typography variant="caption" color="text.secondary">
                           {formatDate(buyer.purchase_date)}
                         </Typography>
                       </Box>

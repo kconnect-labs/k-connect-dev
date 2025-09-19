@@ -121,9 +121,7 @@ const MessengerPage = () => {
   );
 
   // Настройка API для мессенджера через путь /apiMes/ (будет проксирован через NGINX)
-  const ORIGIN =
-    (typeof window !== 'undefined' && window.location?.origin) ||
-    'https://k-connect.ru';
+  const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
   const API_URL = `${ORIGIN}/apiMes`;
   const MAIN_API_URL = `${ORIGIN}/api`;
   const BASE_URL = ORIGIN;
@@ -454,8 +452,7 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '16px',
@@ -470,8 +467,7 @@ const MessengerPage = () => {
                 variant='contained'
                 sx={{
                   flex: 1,
-                  backgroundColor:
-                    'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   color: 'var(--theme-text-primary, #fff)',
                   border: '1px solid rgba(255, 255, 255, 0.32)',
                   borderRadius: '16px',
@@ -542,8 +538,7 @@ const MessengerPage = () => {
         fullWidth
         PaperProps={{
           sx: {
-            backgroundColor:
-              'var(--theme-background, rgba(255, 255, 255, 0.03))',
+            backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             color: 'var(--theme-text-primary, #fff)',
             boxShadow: '0 8px 32px 0 rgba(0,0,0,0.37)',
             backdropFilter: 'var(--theme-backdrop-filter, blur(50px))',

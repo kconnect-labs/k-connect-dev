@@ -3,7 +3,9 @@ import { Box, Typography, Container, Paper, Tabs, Tab } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 
+
 import UniversalModal from '../../../UIKIT/UniversalModal';
+
 
 import TicketList from './components/TicketList';
 import TicketDetails from './components/TicketDetails';
@@ -16,9 +18,11 @@ import PackProposalsList from './components/PackProposalsList';
 import PackProposalDetails from './components/PackProposalDetails';
 import Post from '../../../components/Post/Post';
 
+
 import { useTickets } from './hooks/useTickets';
 import { useTicketActions } from './hooks/useTicketActions';
 import { useTicketComments } from './hooks/useTicketComments';
+
 
 const StyledContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(2),
@@ -34,6 +38,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
+
+
 const TicketsSystem: React.FC = () => {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
@@ -42,19 +48,15 @@ const TicketsSystem: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isComplaintHistoryOpen, setIsComplaintHistoryOpen] = useState(false);
-  const [complaintHistoryUser, setComplaintHistoryUser] = useState<{
-    id: number;
-    name: string;
-  } | null>(null);
+  const [complaintHistoryUser, setComplaintHistoryUser] = useState<{id: number, name: string} | null>(null);
   const [isModerationHistoryOpen, setIsModerationHistoryOpen] = useState(false);
-  const [moderationHistoryTicketId, setModerationHistoryTicketId] = useState<
-    number | null
-  >(null);
+  const [moderationHistoryTicketId, setModerationHistoryTicketId] = useState<number | null>(null);
   const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
   const [actionsModalTicket, setActionsModalTicket] = useState<any>(null);
   const [selectedPackProposal, setSelectedPackProposal] = useState<any>(null);
   const [isPackProposalModalOpen, setIsPackProposalModalOpen] = useState(false);
 
+  
   const {
     tickets,
     loading,
@@ -83,6 +85,7 @@ const TicketsSystem: React.FC = () => {
     loading: commentsLoading,
   } = useTicketComments();
 
+  
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
@@ -100,18 +103,21 @@ const TicketsSystem: React.FC = () => {
   const handleShowPost = async (postId: number) => {
     try {
       console.log('Загружаем пост с ID:', postId);
-
+      
+      
       const response = await fetch(`/api/posts/${postId}`, {
         headers: {
           'Content-Type': 'application/json',
-          'X-API-Key': 'liquide-gg-v2',
+          'X-API-Key': 'liquide-gg-v2'
         },
-        credentials: 'include',
+        credentials: 'include'
       });
-
+      
+      
       if (response.ok) {
         const postData = await response.json();
-
+        
+        
         if (postData.success && postData.post) {
           setSelectedPost(postData.post);
         } else if (postData.id) {
@@ -119,12 +125,13 @@ const TicketsSystem: React.FC = () => {
         } else {
           setSelectedPost(postData);
         }
-
+        
         setIsPostModalOpen(true);
       } else {
         const errorText = await response.text();
       }
-    } catch (error) {}
+    } catch (error) {
+    }
   };
 
   const handleClosePostModal = () => {
@@ -143,8 +150,10 @@ const TicketsSystem: React.FC = () => {
   };
 
   const handleOpenTicketFromHistory = (ticketId: number) => {
+    
     handleCloseComplaintHistory();
-
+    
+    
     const ticket = tickets.find(t => t.id === ticketId);
     if (ticket) {
       setSelectedTicket(ticket);
@@ -183,39 +192,34 @@ const TicketsSystem: React.FC = () => {
   };
 
   const handlePackProposalSuccess = () => {
+    
     setIsPackProposalModalOpen(false);
     setSelectedPackProposal(null);
   };
 
-  const handleIssueWarning = async (
-    userId: number,
-    reason: string,
-    duration: string,
-    ticketId?: number,
-    targetType?: string,
-    targetId?: number
-  ) => {
+  const handleIssueWarning = async (userId: number, reason: string, duration: string, ticketId?: number, targetType?: string, targetId?: number) => {
     try {
       const body: any = {
         reason: reason,
         duration: duration,
       };
-
+      
       if (ticketId) {
         body.ticket_id = ticketId;
       }
-
+      
       if (targetType && targetId) {
         body.target_type = targetType;
         body.target_id = targetId;
       } else if (userId) {
         body.user_id = userId;
       }
-
+      
       const response = await fetch('/api/moderator/warnings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+
         },
         credentials: 'include',
         body: JSON.stringify(body),
@@ -224,6 +228,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          
           refreshTickets();
         }
       }
@@ -232,35 +237,29 @@ const TicketsSystem: React.FC = () => {
     }
   };
 
-  const handleBanUser = async (
-    userId: number,
-    reason: string,
-    duration: string,
-    ticketId?: number,
-    targetType?: string,
-    targetId?: number
-  ) => {
+  const handleBanUser = async (userId: number, reason: string, duration: string, ticketId?: number, targetType?: string, targetId?: number) => {
     try {
       const body: any = {
         reason: reason,
         duration: duration,
       };
-
+      
       if (ticketId) {
         body.ticket_id = ticketId;
       }
-
+      
       if (targetType && targetId) {
         body.target_type = targetType;
         body.target_id = targetId;
       } else if (userId) {
         body.user_id = userId;
       }
-
+      
       const response = await fetch('/api/moderator/bans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+
         },
         credentials: 'include',
         body: JSON.stringify(body),
@@ -269,6 +268,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          
           refreshTickets();
         }
       }
@@ -282,11 +282,11 @@ const TicketsSystem: React.FC = () => {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
-
+      
       if (ticketId) {
         headers['X-Ticket-ID'] = ticketId.toString();
       }
-
+      
       const response = await fetch(`/api/moderator/posts/${postId}`, {
         method: 'DELETE',
         headers,
@@ -296,6 +296,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          
           refreshTickets();
         }
       }
@@ -320,6 +321,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          
           refreshTickets();
         }
       }
@@ -334,6 +336,7 @@ const TicketsSystem: React.FC = () => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+
         },
         credentials: 'include',
         body: JSON.stringify({
@@ -344,6 +347,7 @@ const TicketsSystem: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          
           refreshTickets();
         }
       }
@@ -352,11 +356,7 @@ const TicketsSystem: React.FC = () => {
     }
   };
 
-  const handleTicketAction = async (
-    ticketId: number,
-    action: string,
-    data?: any
-  ) => {
+  const handleTicketAction = async (ticketId: number, action: string, data?: any) => {
     try {
       switch (action) {
         case 'assign':
@@ -374,6 +374,7 @@ const TicketsSystem: React.FC = () => {
       }
       refreshTickets();
       if (selectedTicket?.id === ticketId) {
+        
         const updatedTicket = tickets.find(t => t.id === ticketId);
         if (updatedTicket) {
           setSelectedTicket(updatedTicket);
@@ -384,12 +385,7 @@ const TicketsSystem: React.FC = () => {
     }
   };
 
-  const handleCommentAction = async (
-    ticketId: number,
-    commentId: number,
-    action: string,
-    data?: any
-  ) => {
+  const handleCommentAction = async (ticketId: number, commentId: number, action: string, data?: any) => {
     try {
       switch (action) {
         case 'add':
@@ -402,7 +398,7 @@ const TicketsSystem: React.FC = () => {
           await deleteComment(ticketId, commentId);
           break;
       }
-
+      
       if (selectedTicket) {
         await fetchComments(selectedTicket.id);
       }
@@ -411,10 +407,12 @@ const TicketsSystem: React.FC = () => {
     }
   };
 
+  
   useEffect(() => {
     fetchTickets();
   }, [filters]);
 
+  
   useEffect(() => {
     if (selectedTicket) {
       fetchComments(selectedTicket.id);
@@ -434,10 +432,7 @@ const TicketsSystem: React.FC = () => {
     if (activeTab === 0) return tickets;
     if (activeTab === 1) return tickets.filter(t => t.status === 'new');
     if (activeTab === 2) return tickets.filter(t => t.status === 'in_progress');
-    if (activeTab === 3)
-      return tickets.filter(
-        t => t.status === 'resolved' || t.status === 'closed'
-      );
+    if (activeTab === 3) return tickets.filter(t => t.status === 'resolved' || t.status === 'closed');
     return tickets;
   }, [tickets, activeTab]);
 
@@ -445,7 +440,7 @@ const TicketsSystem: React.FC = () => {
     return (
       <StyledContainer>
         <StyledPaper>
-          <Typography variant='h6' color='error' align='center'>
+          <Typography variant="h6" color="error" align="center">
             Ошибка загрузки тикетов: {error}
           </Typography>
         </StyledPaper>
@@ -454,10 +449,9 @@ const TicketsSystem: React.FC = () => {
   }
 
   return (
-    <StyledContainer
-      maxWidth='xl'
-      sx={{ paddingLeft: '0px!important', paddingRight: '0px !important' }}
-    >
+    <StyledContainer maxWidth="xl" sx={{ paddingLeft: '0px!important', paddingRight: '0px !important' }}>
+
+
       <StyledPaper>
         <TicketSearch
           filters={filters}
@@ -470,15 +464,14 @@ const TicketsSystem: React.FC = () => {
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
-          variant='scrollable'
-          scrollButtons='auto'
+          variant="scrollable"
+          scrollButtons="auto"
           sx={{
             borderBottom: 1,
             borderColor: 'rgb(24 24 24)',
             mb: 2,
             '& .MuiTab-root': {
-              borderRadius:
-                'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
+              borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(0, 0, 0, 0.12)',
@@ -498,7 +491,7 @@ const TicketsSystem: React.FC = () => {
             },
           }}
         >
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <Tab key={tab.value} label={tab.label} />
           ))}
         </Tabs>
@@ -526,25 +519,25 @@ const TicketsSystem: React.FC = () => {
         open={isDetailsModalOpen}
         onClose={handleCloseDetailsModal}
         title={`Тикет #${selectedTicket?.id}`}
-        maxWidth='md'
+        maxWidth="md"
         fullWidth
         maxWidthCustom={'850px'}
       >
         {selectedTicket && (
-          <TicketDetails
-            ticket={selectedTicket}
-            comments={comments as any}
-            commentsLoading={commentsLoading}
-            onTicketAction={handleTicketAction}
-            onCommentAction={handleCommentAction}
-            actionLoading={actionLoading}
-            onShowPost={handleShowPost}
-            onOpenComplaintHistory={handleOpenComplaintHistory}
-            onOpenModerationHistory={handleOpenModerationHistory}
-            onOpenActionsModal={handleOpenActionsModal}
-            onUpdatePriority={handleUpdatePriority}
-            onReopenTicket={handleReopenTicket}
-          />
+                        <TicketDetails
+                ticket={selectedTicket}
+                comments={comments as any}
+                commentsLoading={commentsLoading}
+                onTicketAction={handleTicketAction}
+                onCommentAction={handleCommentAction}
+                actionLoading={actionLoading}
+                onShowPost={handleShowPost}
+                onOpenComplaintHistory={handleOpenComplaintHistory}
+                onOpenModerationHistory={handleOpenModerationHistory}
+                onOpenActionsModal={handleOpenActionsModal}
+                onUpdatePriority={handleUpdatePriority}
+                onReopenTicket={handleReopenTicket}
+              />
         )}
 
         {/* Модалка для отображения поста */}
@@ -552,21 +545,21 @@ const TicketsSystem: React.FC = () => {
           <UniversalModal
             open={isPostModalOpen}
             onClose={handleClosePostModal}
-            title='Просмотр поста'
+            title="Просмотр поста"
             maxWidthCustom={'800px'}
           >
             <Box sx={{ p: 2 }}>
               {selectedPost ? (
                 <Post
-                  post={selectedPost}
-                  onDelete={() => {
-                    handleClosePostModal();
-                    refreshTickets();
-                  }}
-                  onOpenLightbox={() => {}}
-                  isPinned={false}
-                  statusColor={null}
-                />
+                    post={selectedPost}
+                    onDelete={() => {
+                      handleClosePostModal();
+                      refreshTickets();
+                    }}
+                    onOpenLightbox={() => {}}
+                    isPinned={false}
+                    statusColor={null}
+                  />
               ) : (
                 <Box sx={{ p: 2, textAlign: 'center' }}>
                   <Typography>Загрузка поста...</Typography>
@@ -582,8 +575,8 @@ const TicketsSystem: React.FC = () => {
         <UniversalModal
           open={isComplaintHistoryOpen}
           onClose={handleCloseComplaintHistory}
-          title='История жалоб'
-          maxWidth='md'
+          title="История жалоб"
+          maxWidth="md"
           fullWidth
           maxWidthCustom={'800px'}
         >
@@ -601,8 +594,8 @@ const TicketsSystem: React.FC = () => {
         <UniversalModal
           open={isModerationHistoryOpen}
           onClose={handleCloseModerationHistory}
-          title='История модерации'
-          maxWidth='md'
+          title="История модерации"
+          maxWidth="md"
           fullWidth
           maxWidthCustom={'800px'}
         >
@@ -619,43 +612,9 @@ const TicketsSystem: React.FC = () => {
           open={isActionsModalOpen}
           onClose={handleCloseActionsModal}
           ticket={actionsModalTicket}
-          onIssueWarning={(
-            userId,
-            reason,
-            duration,
-            ticketId,
-            targetType,
-            targetId
-          ) =>
-            handleIssueWarning(
-              userId,
-              reason,
-              duration,
-              ticketId,
-              targetType,
-              targetId
-            )
-          }
-          onBanUser={(
-            userId,
-            reason,
-            duration,
-            ticketId,
-            targetType,
-            targetId
-          ) =>
-            handleBanUser(
-              userId,
-              reason,
-              duration,
-              ticketId,
-              targetType,
-              targetId
-            )
-          }
-          onDeletePost={(postId, ticketId) =>
-            handleDeletePost(postId, ticketId)
-          }
+                  onIssueWarning={(userId, reason, duration, ticketId, targetType, targetId) => handleIssueWarning(userId, reason, duration, ticketId, targetType, targetId)}
+        onBanUser={(userId, reason, duration, ticketId, targetType, targetId) => handleBanUser(userId, reason, duration, ticketId, targetType, targetId)}
+        onDeletePost={(postId, ticketId) => handleDeletePost(postId, ticketId)}
         />
       )}
 
@@ -665,7 +624,7 @@ const TicketsSystem: React.FC = () => {
           open={isPackProposalModalOpen}
           onClose={handleClosePackProposalModal}
           title={`Заявка на пак: ${selectedPackProposal.display_name}`}
-          maxWidth='lg'
+          maxWidth="lg"
           fullWidth
           maxWidthCustom={'1000px'}
         >
@@ -680,4 +639,4 @@ const TicketsSystem: React.FC = () => {
   );
 };
 
-export default TicketsSystem;
+export default TicketsSystem; 

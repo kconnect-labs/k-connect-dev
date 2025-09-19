@@ -8,10 +8,7 @@ import './utils/consoleFilter';
 
 import indexedDbCache from './utils/indexedDbCache';
 import { initLazyLoading } from './utils/imageUtils';
-import {
-  registerServiceWorker,
-  clearS3Cache,
-} from './utils/serviceWorkerUtils';
+import { registerServiceWorker, clearS3Cache } from './utils/serviceWorkerUtils';
 
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
@@ -54,10 +51,7 @@ async function setupCaching() {
     window.fetch = function (resource, options = {}) {
       const url = resource instanceof Request ? resource.url : resource;
 
-      if (
-        typeof url === 'string' &&
-        (url.includes('/assets/') || url.includes('s3.k-connect.ru'))
-      ) {
+      if (typeof url === 'string' && (url.includes('/assets/') || url.includes('s3.k-connect.ru'))) {
         // Для S3 файлов принудительно очищаем все no-cache заголовки
         if (options.headers) {
           if (options.headers instanceof Headers) {
@@ -73,7 +67,7 @@ async function setupCaching() {
             delete options.headers['expires'];
           }
         }
-
+        
         // Для S3 файлов Service Worker будет обрабатывать кэширование
         return originalFetch(resource, options);
       }
@@ -99,10 +93,7 @@ async function setupCaching() {
 
     const originalXhrOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-      if (
-        typeof url === 'string' &&
-        (url.includes('/assets/') || url.includes('s3.k-connect.ru'))
-      ) {
+      if (typeof url === 'string' && (url.includes('/assets/') || url.includes('s3.k-connect.ru'))) {
         originalXhrOpen.call(this, method, url, ...rest);
         // Для S3 файлов не добавляем no-cache заголовки
         return;
@@ -168,7 +159,7 @@ async function setupPerformanceOptimizations() {
 indexedDbCache.init();
 
 // Регистрируем Service Worker для кэширования S3 файлов
-registerServiceWorker().then(registration => {
+registerServiceWorker().then((registration) => {
   if (registration) {
     console.log('[SW] Service Worker успешно зарегистрирован');
   }
@@ -180,12 +171,12 @@ setupCaching()
   })
   .then(() => {
     // Очищаем кэш S3 файлов через Service Worker
-    clearS3Cache().then(result => {
+    clearS3Cache().then((result) => {
       if (result.success) {
         console.log('[SW] Кэш S3 файлов очищен через Service Worker');
       }
     });
-
+    
     const container = document.getElementById('root');
     const root = createRoot(container);
 

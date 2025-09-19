@@ -98,7 +98,7 @@ interface ProposalPack {
 const MyProposals: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  
   const [proposals, setProposals] = useState<ProposalPack[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -124,6 +124,8 @@ const MyProposals: React.FC = () => {
       setLoading(false);
     }
   };
+
+
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -171,7 +173,7 @@ const MyProposals: React.FC = () => {
 
   if (error) {
     return (
-      <Alert severity='error' sx={{ m: 2 }}>
+      <Alert severity="error" sx={{ m: 2 }}>
         {error}
       </Alert>
     );
@@ -181,10 +183,10 @@ const MyProposals: React.FC = () => {
     return (
       <Box sx={{ textAlign: 'center', p: 4 }}>
         <ImageIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-        <Typography variant='h6' color='text.secondary' sx={{ mb: 1 }}>
+        <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
           У вас пока нет заявок
         </Typography>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography variant="body2" color="text.secondary">
           Предложите свой первый пак!
         </Typography>
       </Box>
@@ -192,9 +194,11 @@ const MyProposals: React.FC = () => {
   }
 
   return (
-    <Box sx={{}}>
+    <Box sx={{ }}>
+
+
       <Grid container spacing={isMobile ? 1 : 2}>
-        {proposals.map(proposal => (
+        {proposals.map((proposal) => (
           <Grid item xs={12} key={proposal.id}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -202,33 +206,20 @@ const MyProposals: React.FC = () => {
               transition={{ duration: 0.3 }}
             >
               <StyledCard>
-                <CardContent sx={{}}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'flex-start',
-                      mb: 1,
-                      flexDirection: isMobile ? 'column' : 'row',
-                      gap: isMobile ? 1 : 0,
-                    }}
-                  >
+                <CardContent sx={{  }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'flex-start', 
+                    mb: 1,
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: isMobile ? 1 : 0
+                  }}>
                     <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant='h6'
-                        sx={{
-                          fontWeight: 600,
-                          mb: 1,
-                          fontSize: isMobile ? '1.1rem' : '1.25rem',
-                        }}
-                      >
+                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
                         {proposal.display_name}
                       </Typography>
-                      <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}
-                      >
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}>
                         {proposal.description}
                       </Typography>
                     </Box>
@@ -240,30 +231,21 @@ const MyProposals: React.FC = () => {
                     />
                   </Box>
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: isMobile ? 1 : 2,
-                      mb: 2,
-                      flexWrap: 'wrap',
-                    }}
-                  >
+                  <Box sx={{ display: 'flex', gap: isMobile ? 1 : 2, mb: 2, flexWrap: 'wrap' }}>
                     <Chip
                       label={`${proposal.price} баллов`}
-                      size='small'
+                      size="small"
                       sx={{
-                        background:
-                          'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                         color: 'text.primary',
                         fontSize: isMobile ? '0.75rem' : '0.8rem',
                       }}
                     />
                     <Chip
                       label={`${proposal.items_count} предметов`}
-                      size='small'
+                      size="small"
                       sx={{
-                        background:
-                          'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                         color: 'text.primary',
                         fontSize: isMobile ? '0.75rem' : '0.8rem',
                       }}
@@ -272,11 +254,7 @@ const MyProposals: React.FC = () => {
 
                   {proposal.contents && proposal.contents.length > 0 && (
                     <Box sx={{ mb: 2 }}>
-                      <Typography
-                        variant='body2'
-                        color='text.secondary'
-                        sx={{ mb: 1 }}
-                      >
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                         Предметы:
                       </Typography>
                       <ItemPreview>
@@ -285,7 +263,7 @@ const MyProposals: React.FC = () => {
                             <img
                               src={`/inventory/pack/${proposal.id}/${item.item_name}`}
                               alt={item.item_name}
-                              onError={e => {
+                              onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = 'none';
                               }}
@@ -293,11 +271,7 @@ const MyProposals: React.FC = () => {
                           </ItemImage>
                         ))}
                         {proposal.contents.length > 6 && (
-                          <Typography
-                            variant='caption'
-                            color='text.secondary'
-                            sx={{ alignSelf: 'center' }}
-                          >
+                          <Typography variant="caption" color="text.secondary" sx={{ alignSelf: 'center' }}>
                             +{proposal.contents.length - 6}
                           </Typography>
                         )}
@@ -305,61 +279,39 @@ const MyProposals: React.FC = () => {
                     </Box>
                   )}
 
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      flexWrap: 'wrap',
-                      gap: 1,
-                    }}
-                  >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
                     <Box>
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="caption" color="text.secondary">
                         Предложен: {formatDate(proposal.proposed_at)}
                       </Typography>
                       {proposal.reviewed_at && (
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          sx={{ display: 'block' }}
-                        >
+                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                           Рассмотрен: {formatDate(proposal.reviewed_at)}
                         </Typography>
                       )}
                     </Box>
                   </Box>
 
-                  {proposal.status === 'rejected' &&
-                    proposal.rejection_reason && (
-                      <Paper
-                        sx={{
-                          mt: 2,
-                          p: 2,
-                          background: 'rgba(255, 0, 0, 0.1)',
-                          border: '1px solid rgba(255, 0, 0, 0.2)',
-                        }}
-                      >
-                        <Typography
-                          variant='body2'
-                          color='error'
-                          sx={{ fontWeight: 500, mb: 1 }}
-                        >
-                          Причина отклонения:
-                        </Typography>
-                        <Typography variant='body2' color='text.secondary'>
-                          {proposal.rejection_reason}
-                        </Typography>
-                      </Paper>
-                    )}
+                  {proposal.status === 'rejected' && proposal.rejection_reason && (
+                    <Paper sx={{ mt: 2, p: 2, background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
+                      <Typography variant="body2" color="error" sx={{ fontWeight: 500, mb: 1 }}>
+                        Причина отклонения:
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {proposal.rejection_reason}
+                      </Typography>
+                    </Paper>
+                  )}
                 </CardContent>
               </StyledCard>
             </motion.div>
           </Grid>
         ))}
       </Grid>
+
+
     </Box>
   );
 };
 
-export default MyProposals;
+export default MyProposals; 

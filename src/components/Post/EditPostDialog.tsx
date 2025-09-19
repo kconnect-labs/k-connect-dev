@@ -30,9 +30,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
   submitting,
   error,
 }) => {
-  const parseMusicTracks = (
-    music: MusicTrack[] | string | undefined
-  ): MusicTrack[] => {
+  const parseMusicTracks = (music: MusicTrack[] | string | undefined): MusicTrack[] => {
     if (!music) return [];
     if (Array.isArray(music)) return music;
     if (typeof music === 'string') {
@@ -52,18 +50,18 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
       open={open}
       onClose={onClose}
       title={t('post.edit_dialog.title')}
-      maxWidth='md'
+      maxWidth="md"
       fullWidth
       addBottomPadding
     >
       <Box sx={{ mb: 3 }}>
         <Typography
           variant='body2'
-          sx={{
-            color: '#cfbcfb',
+          sx={{ 
+            color: '#cfbcfb', 
             textAlign: 'center',
             mb: 3,
-            opacity: 0.8,
+            opacity: 0.8
           }}
         >
           {t('post.edit_dialog.time_limit')}
@@ -71,9 +69,9 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
       </Box>
 
       {error && (
-        <Alert
-          severity='error'
-          sx={{
+        <Alert 
+          severity='error' 
+          sx={{ 
             mb: 2,
             backgroundColor: 'rgba(244, 67, 54, 0.1)',
             border: '1px solid rgba(244, 67, 54, 0.3)',
@@ -128,11 +126,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
 
       {(post.images?.length > 0 || post.image) && !editDialog.deleteImages && (
         <Box sx={{ mb: 3 }}>
-          <Typography
-            variant='subtitle2'
-            gutterBottom
-            sx={{ color: '#cfbcfb', mb: 2 }}
-          >
+          <Typography variant='subtitle2' gutterBottom sx={{ color: '#cfbcfb', mb: 2 }}>
             {t('post.edit_dialog.current_images')}
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
@@ -192,11 +186,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
 
       {post.video && !editDialog.deleteVideo && (
         <Box sx={{ mb: 3 }}>
-          <Typography
-            variant='subtitle2'
-            gutterBottom
-            sx={{ color: '#cfbcfb', mb: 2 }}
-          >
+          <Typography variant='subtitle2' gutterBottom sx={{ color: '#cfbcfb', mb: 2 }}>
             {t('post.edit_dialog.current_video')}
           </Typography>
           <Box
@@ -237,26 +227,12 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
 
       {musicTracks.length > 0 && !editDialog.deleteMusic && (
         <Box sx={{ mb: 3 }}>
-          <Typography
-            variant='subtitle2'
-            gutterBottom
-            sx={{ color: '#cfbcfb', mb: 2 }}
-          >
+          <Typography variant='subtitle2' gutterBottom sx={{ color: '#cfbcfb', mb: 2 }}>
             {t('post.edit_dialog.current_audio')}
           </Typography>
-          <List
-            dense
-            sx={{
-              bgcolor: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: 'var(--main-border-radius)',
-              mb: 2,
-            }}
-          >
+          <List dense sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', borderRadius: 'var(--main-border-radius)', mb: 2 }}>
             {musicTracks.map((track, idx) => (
-              <ListItem
-                key={`track-${idx}`}
-                sx={{ color: 'rgba(207, 188, 251, 0.8)' }}
-              >
+              <ListItem key={`track-${idx}`} sx={{ color: 'rgba(207, 188, 251, 0.8)' }}>
                 {track.title || t('post.edit_dialog.audio_track')}
               </ListItem>
             ))}
@@ -335,4 +311,4 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
   );
 };
 
-export default EditPostDialog;
+export default EditPostDialog; 

@@ -1,16 +1,18 @@
 import React from 'react';
 import { Box, Tooltip } from '@mui/material';
-import { Error, Warning, Info, CheckCircle } from '@mui/icons-material';
+import {
+  Error,
+  Warning,
+  Info,
+  CheckCircle,
+} from '@mui/icons-material';
 
 interface PriorityIconProps {
   priority: string;
   size?: 'small' | 'medium' | 'large';
 }
 
-const PriorityIcon: React.FC<PriorityIconProps> = ({
-  priority,
-  size = 'medium',
-}) => {
+const PriorityIcon: React.FC<PriorityIconProps> = ({ priority, size = 'medium' }) => {
   const getPriorityConfig = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'urgent':
@@ -61,12 +63,12 @@ const PriorityIcon: React.FC<PriorityIconProps> = ({
           height: iconSize,
         }}
       >
-        {React.cloneElement(config.icon, {
-          sx: { fontSize: iconSize },
+        {React.cloneElement(config.icon, { 
+          sx: { fontSize: iconSize } 
         })}
       </Box>
     </Tooltip>
   );
 };
 
-export default PriorityIcon;
+export default PriorityIcon; 

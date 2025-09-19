@@ -15,7 +15,7 @@ import {
   IconButton,
   CircularProgress,
   Alert,
-  Skeleton,
+  Skeleton
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -24,7 +24,7 @@ import {
   ContentPaste,
   Security,
   Report,
-  Warning,
+  Warning
 } from '@mui/icons-material';
 import { useTicketActions } from '../hooks/useTicketActions';
 
@@ -110,7 +110,7 @@ const priorities = [
 const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   open,
   onClose,
-  onTicketCreated,
+  onTicketCreated
 }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -165,16 +165,15 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
         description: formData.description.trim(),
         category: formData.category,
         priority: formData.priority,
-        ...(formData.target_type &&
-          formData.target_id && {
-            target_type: formData.target_type,
-            target_id: parseInt(formData.target_id),
-          }),
+        ...(formData.target_type && formData.target_id && {
+          target_type: formData.target_type,
+          target_id: parseInt(formData.target_id),
+        }),
       };
 
       const ticket = await createTicket(ticketData);
       onTicketCreated(ticket);
-
+      
       // Сбрасываем форму
       setFormData({
         title: '',
@@ -186,11 +185,7 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
       });
       setErrors({});
     } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : 'Произошла ошибка при создании тикета'
-      );
+      setSubmitError(error instanceof Error ? error.message : 'Произошла ошибка при создании тикета');
     } finally {
       setSubmitting(false);
     }
@@ -222,16 +217,14 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   };
 
   return (
-    <StyledDialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
-      <DialogTitle
-        sx={{
-          color: 'rgba(255, 255, 255, 0.87)',
-          borderBottom: '1px solid rgb(24 24 24)',
-          pb: 2,
-        }}
-      >
-        <Box display='flex' justifyContent='space-between' alignItems='center'>
-          <Typography variant='h6' component='div'>
+    <StyledDialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogTitle sx={{ 
+        color: 'rgba(255, 255, 255, 0.87)',
+        borderBottom: '1px solid rgb(24 24 24)',
+        pb: 2
+      }}>
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h6" component="div">
             Создать тикет
           </Typography>
           <IconButton
@@ -246,17 +239,17 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
       <DialogContent sx={{ pt: 3 }}>
         {submitError && (
-          <Alert severity='error' sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: 3 }}>
             {submitError}
           </Alert>
         )}
 
-        <Box display='flex' flexDirection='column' gap={3}>
+        <Box display="flex" flexDirection="column" gap={3}>
           {/* Заголовок */}
           <StyledTextField
-            label='Заголовок тикета'
+            label="Заголовок тикета"
             value={formData.title}
-            onChange={e => handleInputChange('title', e.target.value)}
+            onChange={(e) => handleInputChange('title', e.target.value)}
             error={!!errors.title}
             helperText={errors.title}
             disabled={submitting}
@@ -265,9 +258,9 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
           {/* Описание */}
           <StyledTextField
-            label='Описание проблемы'
+            label="Описание проблемы"
             value={formData.description}
-            onChange={e => handleInputChange('description', e.target.value)}
+            onChange={(e) => handleInputChange('description', e.target.value)}
             error={!!errors.description}
             helperText={errors.description}
             disabled={submitting}
@@ -277,18 +270,18 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           />
 
           {/* Категория и приоритет */}
-          <Box display='flex' gap={2}>
+          <Box display="flex" gap={2}>
             <StyledFormControl fullWidth error={!!errors.category}>
               <InputLabel>Категория</InputLabel>
               <Select
                 value={formData.category}
-                onChange={e => handleInputChange('category', e.target.value)}
+                onChange={(e) => handleInputChange('category', e.target.value)}
                 disabled={submitting}
-                label='Категория'
+                label="Категория"
               >
-                {categories.map(category => (
+                {categories.map((category) => (
                   <MenuItem key={category.value} value={category.value}>
-                    <Box display='flex' alignItems='center' gap={1}>
+                    <Box display="flex" alignItems="center" gap={1}>
                       {category.icon}
                       {category.label}
                     </Box>
@@ -301,11 +294,11 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
               <InputLabel>Приоритет</InputLabel>
               <Select
                 value={formData.priority}
-                onChange={e => handleInputChange('priority', e.target.value)}
+                onChange={(e) => handleInputChange('priority', e.target.value)}
                 disabled={submitting}
-                label='Приоритет'
+                label="Приоритет"
               >
-                {priorities.map(priority => (
+                {priorities.map((priority) => (
                   <MenuItem key={priority.value} value={priority.value}>
                     {priority.label}
                   </MenuItem>
@@ -316,32 +309,29 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
 
           {/* Цель тикета (опционально) */}
           <Box>
-            <Typography
-              variant='body2'
-              sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}
-            >
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.6)', mb: 2 }}>
               Цель тикета (опционально)
             </Typography>
-            <Box display='flex' gap={2}>
+            <Box display="flex" gap={2}>
               <StyledTextField
-                label='Тип цели'
+                label="Тип цели"
                 value={formData.target_type}
-                onChange={e => handleInputChange('target_type', e.target.value)}
+                onChange={(e) => handleInputChange('target_type', e.target.value)}
                 error={!!errors.target_type}
                 helperText={errors.target_type}
                 disabled={submitting}
-                placeholder='post, user, comment, etc.'
+                placeholder="post, user, comment, etc."
                 sx={{ flex: 1 }}
               />
               <StyledTextField
-                label='ID цели'
+                label="ID цели"
                 value={formData.target_id}
-                onChange={e => handleInputChange('target_id', e.target.value)}
+                onChange={(e) => handleInputChange('target_id', e.target.value)}
                 error={!!errors.target_id}
                 helperText={errors.target_id}
                 disabled={submitting}
-                placeholder='123'
-                type='number'
+                placeholder="123"
+                type="number"
                 sx={{ flex: 1 }}
               />
             </Box>
@@ -349,12 +339,10 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
         </Box>
       </DialogContent>
 
-      <DialogActions
-        sx={{
-          p: 3,
-          borderTop: '1px solid rgb(24 24 24)',
-        }}
-      >
+      <DialogActions sx={{ 
+        p: 3, 
+        borderTop: '1px solid rgb(24 24 24)' 
+      }}>
         <Button
           onClick={handleClose}
           disabled={submitting}
@@ -370,11 +358,9 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
           Отмена
         </Button>
         <Button
-          variant='contained'
+          variant="contained"
           onClick={handleSubmit}
-          disabled={
-            submitting || !formData.title.trim() || !formData.description.trim()
-          }
+          disabled={submitting || !formData.title.trim() || !formData.description.trim()}
           sx={{
             background: 'linear-gradient(45deg, #cfbcfb 30%, #827095 90%)',
             color: 'white',
@@ -398,4 +384,4 @@ const CreateTicketModal: React.FC<CreateTicketModalProps> = ({
   );
 };
 
-export default CreateTicketModal;
+export default CreateTicketModal; 

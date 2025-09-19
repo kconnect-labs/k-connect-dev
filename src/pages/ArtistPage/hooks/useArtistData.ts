@@ -1,16 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
-import {
-  Artist,
-  ArtistResponse,
-  UseArtistDataParams,
-  UseArtistDataReturn,
-} from '../types';
+import { Artist, ArtistResponse, UseArtistDataParams, UseArtistDataReturn } from '../types';
 import { Track } from '../../../components/Music/FullScreenPlayer/types';
 
-export const useArtistData = ({
-  artistParam,
-}: UseArtistDataParams): UseArtistDataReturn => {
+export const useArtistData = ({ artistParam }: UseArtistDataParams): UseArtistDataReturn => {
   const [artist, setArtist] = useState<Artist | null>(null);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [mostListenedTracks, setMostListenedTracks] = useState<Track[]>([]);
@@ -24,54 +17,53 @@ export const useArtistData = ({
   const observer = useRef<IntersectionObserver>();
   const lastTrackElementRef = useRef<HTMLElement>(null);
 
-  const fetchArtistData = useCallback(
-    async (page = 1, append = false) => {
-      try {
-        if (page === 1) {
-          setIsLoading(true);
-          setError(null);
+  
+  const fetchArtistData = useCallback(async (page = 1, append = false) => {
+    try {
+      if (page === 1) {
+        setIsLoading(true);
+        setError(null);
+      } else {
+        setLoadingMoreTracks(true);
+      }
+
+      const response = await axios.get<ArtistResponse>(
+        `/api/music/artist?id=${artistParam}&page=${page}&per_page=40`
+      );
+
+      if (response.data.success) {
+        const { artist: artistData } = response.data;
+        setArtist(artistData);
+
+        if (append) {
+          setTracks(prev => [...prev, ...(artistData.tracks || [])]);
         } else {
-          setLoadingMoreTracks(true);
+          setTracks(artistData.tracks || []);
         }
 
-        const response = await axios.get<ArtistResponse>(
-          `/api/music/artist?id=${artistParam}&page=${page}&per_page=40`
-        );
-
-        if (response.data.success) {
-          const { artist: artistData } = response.data;
-          setArtist(artistData);
-
-          if (append) {
-            setTracks(prev => [...prev, ...(artistData.tracks || [])]);
-          } else {
-            setTracks(artistData.tracks || []);
-          }
-
-          setHasMoreTracks(page < (artistData.tracks_pages || 1));
-          setCurrentPage(page);
-        } else {
-          setError('Не удалось загрузить данные об исполнителе');
-        }
-      } catch (err) {
-        console.error('Error fetching artist data:', err);
-        if (axios.isAxiosError(err)) {
-          if (err.response?.status === 404) {
-            setError('Исполнитель не найден');
-          } else {
-            setError('Произошла ошибка при загрузке данных');
-          }
+        setHasMoreTracks(page < (artistData.tracks_pages || 1));
+        setCurrentPage(page);
+      } else {
+        setError('Не удалось загрузить данные об исполнителе');
+      }
+    } catch (err) {
+      console.error('Error fetching artist data:', err);
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 404) {
+          setError('Исполнитель не найден');
         } else {
           setError('Произошла ошибка при загрузке данных');
         }
-      } finally {
-        setIsLoading(false);
-        setLoadingMoreTracks(false);
+      } else {
+        setError('Произошла ошибка при загрузке данных');
       }
-    },
-    [artistParam]
-  );
+    } finally {
+      setIsLoading(false);
+      setLoadingMoreTracks(false);
+    }
+  }, [artistParam]);
 
+  
   const loadMoreTracks = useCallback(() => {
     if (!loadingMoreTracks && hasMoreTracks) {
       const nextPage = currentPage + 1;
@@ -79,11 +71,13 @@ export const useArtistData = ({
     }
   }, [loadingMoreTracks, hasMoreTracks, currentPage, fetchArtistData]);
 
+  
   const refetchArtist = useCallback(async () => {
     setCurrentPage(1);
     await fetchArtistData(1, false);
   }, [fetchArtistData]);
 
+  
   const prepareMostListenedTracks = useCallback(() => {
     const sorted = [...tracks]
       .sort((a, b) => (b.plays_count || 0) - (a.plays_count || 0))
@@ -91,6 +85,7 @@ export const useArtistData = ({
     setMostListenedTracks(sorted);
   }, [tracks]);
 
+  
   const prepareNewestTracks = useCallback(() => {
     const sorted = [...tracks]
       .sort((a, b) => {
@@ -102,6 +97,7 @@ export const useArtistData = ({
     setNewestTracks(sorted);
   }, [tracks]);
 
+  
   const lastTrackRef = useCallback(
     (node: HTMLElement | null) => {
       if (loadingMoreTracks) return;
@@ -116,12 +112,14 @@ export const useArtistData = ({
     [loadingMoreTracks, hasMoreTracks, loadMoreTracks]
   );
 
+  
   useEffect(() => {
     if (artistParam) {
       fetchArtistData();
     }
   }, [artistParam, fetchArtistData]);
 
+  
   useEffect(() => {
     if (tracks.length > 0) {
       prepareMostListenedTracks();

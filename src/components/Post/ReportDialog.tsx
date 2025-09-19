@@ -29,12 +29,8 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
   <UniversalModal
     open={open}
     onClose={onClose}
-    title={
-      reportDialog.submitted
-        ? t('post.report_dialog.success_title')
-        : t('post.report_dialog.title')
-    }
-    maxWidth='sm'
+    title={reportDialog.submitted ? t('post.report_dialog.success_title') : t('post.report_dialog.title')}
+    maxWidth="sm"
     fullWidth
     addBottomPadding
   >
@@ -52,20 +48,10 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
         >
           <CheckCircleIcon sx={{ fontSize: 32 }} />
         </Avatar>
-        <Typography
-          variant='h6'
-          sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}
-        >
+        <Typography variant='h6' sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}>
           {t('post.report_dialog.success_title')}
         </Typography>
-        <Typography
-          variant='body2'
-          sx={{
-            color: 'rgba(207, 188, 251, 0.8)',
-            maxWidth: '80%',
-            mx: 'auto',
-          }}
-        >
+        <Typography variant='body2' sx={{ color: 'rgba(207, 188, 251, 0.8)', maxWidth: '80%', mx: 'auto' }}>
           {t('post.report_dialog.success_message')}
         </Typography>
       </Box>
@@ -84,37 +70,27 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
           >
             <ReportProblemIcon sx={{ fontSize: 32 }} />
           </Avatar>
-          <Typography
-            variant='h6'
-            sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}
-          >
+          <Typography variant='h6' sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}>
             {t('post.report_dialog.title')}
           </Typography>
           <Typography
             variant='body2'
-            sx={{
-              color: 'rgba(207, 188, 251, 0.8)',
-              maxWidth: '80%',
-              mx: 'auto',
-            }}
+            sx={{ color: 'rgba(207, 188, 251, 0.8)', maxWidth: '80%', mx: 'auto' }}
           >
             {t('post.report_dialog.description')}
           </Typography>
         </Box>
 
         {error && (
-          <Alert
-            severity='error'
-            sx={{
-              mb: 3,
-              backgroundColor: 'rgba(244, 67, 54, 0.1)',
-              border: '1px solid rgba(244, 67, 54, 0.3)',
+          <Alert severity='error' sx={{ 
+            mb: 3,
+            backgroundColor: 'rgba(244, 67, 54, 0.1)',
+            border: '1px solid rgba(244, 67, 54, 0.3)',
+            color: '#f44336',
+            '& .MuiAlert-icon': {
               color: '#f44336',
-              '& .MuiAlert-icon': {
-                color: '#f44336',
-              },
-            }}
-          >
+            },
+          }}>
             {error}
           </Alert>
         )}
@@ -143,10 +119,7 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
                   reportDialog.reason === reason
                     ? 'rgba(255, 152, 0, 0.5)'
                     : 'rgba(255, 255, 255, 0.1)',
-                color:
-                  reportDialog.reason === reason
-                    ? '#ff9800'
-                    : 'rgba(207, 188, 251, 0.8)',
+                color: reportDialog.reason === reason ? '#ff9800' : 'rgba(207, 188, 251, 0.8)',
                 '&:hover': {
                   backgroundColor:
                     reportDialog.reason === reason
@@ -305,4 +278,4 @@ const ReportDialog: React.FC<ReportDialogProps> = ({
   </UniversalModal>
 );
 
-export default ReportDialog;
+export default ReportDialog; 

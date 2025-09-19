@@ -28,31 +28,21 @@ interface ReactionsButtonProps {
   isLoading?: boolean;
 }
 
-const REACTION_EMOJIS: {
-  emoji: ReactionEmoji;
-  label: string;
-  icon: string;
-  image: string;
-}[] = [
+const REACTION_EMOJIS: { emoji: ReactionEmoji; label: string; icon: string; image: string }[] = [
   { emoji: '🔥', label: 'Огонь', icon: 'flame', image: fireEmoji },
   { emoji: '❤️', label: 'Любовь', icon: 'heart', image: heartEmoji },
   { emoji: '😂', label: 'Смех', icon: 'laugh', image: joyEmoji },
-  {
-    emoji: '😮',
-    label: 'Удивление',
-    icon: 'surprised',
-    image: astonishedEmoji,
-  },
+  { emoji: '😮', label: 'Удивление', icon: 'surprised', image: astonishedEmoji },
   { emoji: '😢', label: 'Грусть', icon: 'sad', image: sadEmoji },
 ];
 
 // Функция для определения Apple устройства
 const isAppleDevice = (): boolean => {
   if (typeof window === 'undefined') return false;
-
+  
   const userAgent = window.navigator.userAgent.toLowerCase();
   const platform = window.navigator.platform.toLowerCase();
-
+  
   return (
     userAgent.includes('iphone') ||
     userAgent.includes('ipad') ||
@@ -102,17 +92,14 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
   const open = Boolean(anchorEl);
 
   // Получаем общее количество реакций
-  const totalReactions = Object.values(reactionsSummary).reduce(
-    (sum, count) => sum + count,
-    0
-  );
+  const totalReactions = Object.values(reactionsSummary).reduce((sum, count) => sum + count, 0);
 
   // Получаем активные реакции (с количеством > 0)
   const getActiveReactions = () => {
     const activeReactions = Object.entries(reactionsSummary)
       .filter(([_, count]) => count > 0)
       .sort(([_, a], [__, b]) => b - a); // Сортируем по убыванию количества
-
+    
     // На мобильных показываем только топ-3, на ПК все
     return isMobile ? activeReactions.slice(0, 3) : activeReactions;
   };
@@ -148,10 +135,10 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 180 }}
-                transition={{
-                  duration: 0.3,
+                transition={{ 
+                  duration: 0.3, 
                   type: 'spring',
-                  delay: index * 0.1,
+                  delay: index * 0.1 
                 }}
                 style={{
                   position: 'relative',
@@ -179,15 +166,13 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
                   ) : (
                     // Для остальных устройств используем кастомные изображения
                     <Box
-                      component='img'
+                      component="img"
                       src={getEmojiImage(emoji as ReactionEmoji)}
                       alt={emoji}
                       sx={{
                         width: '16px',
                         height: '16px',
-                        filter: isHovered
-                          ? 'drop-shadow(0 0 8px rgba(255,255,255,0.3))'
-                          : 'none',
+                        filter: isHovered ? 'drop-shadow(0 0 8px rgba(255,255,255,0.3))' : 'none',
                         opacity: emoji === userReaction ? 1 : 0.8,
                       }}
                     />
@@ -218,7 +203,7 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
             }}
           >
             <motion.div
-              key='default-icon'
+              key="default-icon"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -226,7 +211,7 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
             >
               <Flame
                 size={21}
-                color='#fff'
+                color="#fff"
                 style={{
                   display: 'block',
                   verticalAlign: 'middle',
@@ -268,63 +253,64 @@ export const ReactionsButton: React.FC<ReactionsButtonProps> = ({
             gap: '12px',
           }}
         >
-          {REACTION_EMOJIS.map(reaction => {
-            const emoji = reaction.emoji;
-            const count =
-              reactionsSummary[emoji as keyof ReactionsSummary] || 0;
-            const isSelected = userReaction === emoji;
+            {REACTION_EMOJIS.map((reaction) => {
+              const emoji = reaction.emoji;
+              const count = reactionsSummary[emoji as keyof ReactionsSummary] || 0;
+              const isSelected = userReaction === emoji;
 
-            return (
-              <Tooltip key={emoji} title={reaction.label} placement='top'>
-                <motion.div whileTap={{ scale: 0.95 }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '100%',
-                      background: isSelected
-                        ? 'rgba(255, 255, 255, 0.15)'
-                        : 'transparent',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.1)',
-                      },
-                    }}
-                    onClick={() => handleReactionClick(emoji)}
+              return (
+                <Tooltip key={emoji} title={reaction.label} placement="top">
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
                   >
-                    {isApple ? (
-                      // Для Apple устройств используем нативные эмодзи
-                      <Typography
-                        sx={{
-                          fontSize: '20px',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {emoji}
-                      </Typography>
-                    ) : (
-                      // Для остальных устройств используем кастомные изображения
-                      <Box
-                        component='img'
-                        src={reaction.image}
-                        alt={emoji}
-                        sx={{
-                          width: '20px',
-                          height: '20px',
-                        }}
-                      />
-                    )}
-                  </Box>
-                </motion.div>
-              </Tooltip>
-            );
-          })}
-        </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        width: '30px',
+                        height: '30px',
+                        borderRadius: '100%',
+                        background: isSelected 
+                          ? 'rgba(255, 255, 255, 0.15)' 
+                          : 'transparent',
+                        transition: 'all 0.2s ease',
+                        '&:hover': {
+                          background: 'rgba(255, 255, 255, 0.1)',
+                        },
+                      }}
+                      onClick={() => handleReactionClick(emoji)}
+                    >
+                      {isApple ? (
+                        // Для Apple устройств используем нативные эмодзи
+                        <Typography
+                          sx={{
+                            fontSize: '20px',
+                            lineHeight: 1,
+                          }}
+                        >
+                          {emoji}
+                        </Typography>
+                      ) : (
+                        // Для остальных устройств используем кастомные изображения
+                        <Box
+                          component="img"
+                          src={reaction.image}
+                          alt={emoji}
+                          sx={{
+                            width: '20px',
+                            height: '20px',
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </motion.div>
+                </Tooltip>
+              );
+            })}
+          </Box>
       </Popover>
     </>
   );
-};
+}; 

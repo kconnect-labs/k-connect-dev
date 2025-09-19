@@ -106,6 +106,13 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
+
+
+
+
+
+
+
 const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
   ({ userId, itemIdToOpen, equippedItems = [] }, ref) => {
     const { getGradient } = useBackgroundGradients();
@@ -166,9 +173,7 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
       updateQuery,
       updateFilters,
       resetSearch,
-    } = useInventorySearch(
-      activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items
-    );
+    } = useInventorySearch(activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items);
 
     useEffect(() => {
       if (user) {
@@ -585,17 +590,12 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
     }));
 
     // Определяем базовый список предметов в зависимости от активной вкладки
-    const baseItems =
-      activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items;
-
+    const baseItems = activeTab === 0 ? items : activeTab === 1 ? upgradedItems : items;
+    
     // Применяем поиск и фильтры к базовому списку
-    const filteredItems =
-      query || Object.keys(filters).length > 0
-        ? searchFilteredItems
-        : baseItems;
+    const filteredItems = query || Object.keys(filters).length > 0 ? searchFilteredItems : baseItems;
 
-    const isSearchActive =
-      Boolean(query.trim()) || Object.keys(filters).length > 0;
+    const isSearchActive = Boolean(query.trim()) || Object.keys(filters).length > 0;
 
     const tabs = [
       {
@@ -831,14 +831,17 @@ const InventoryTab = forwardRef<HTMLDivElement, InventoryTabProps>(
             onFiltersChange={updateFilters}
             onQueryChange={updateQuery}
             showFilters={true}
-            placeholder='Найти предметы в инвентаре...'
+            placeholder="Найти предметы в инвентаре..."
             isLoading={searchLoading}
             error={searchError}
           />
         </Box>
 
         {filteredItems.length === 0 && !loadingUpgraded ? (
-          <Box textAlign='center' py={8}></Box>
+          <Box textAlign='center' py={8}>
+
+
+          </Box>
         ) : (
           <>
             <Grid

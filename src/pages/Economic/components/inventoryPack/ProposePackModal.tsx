@@ -130,7 +130,7 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || []);
-
+    
     if (selectedFiles.length + files.length > 20) {
       setError('Максимум 20 файлов');
       return;
@@ -153,9 +153,9 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
   };
 
   const handleItemNameChange = (index: number, name: string) => {
-    setFiles(prev =>
-      prev.map((file, i) => (i === index ? { ...file, itemName: name } : file))
-    );
+    setFiles(prev => prev.map((file, i) => 
+      i === index ? { ...file, itemName: name } : file
+    ));
   };
 
   const validateForm = () => {
@@ -175,20 +175,11 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
       setError('Описание должно содержать минимум 10 символов');
       return false;
     }
-    if (
-      !formData.price ||
-      parseInt(formData.price) < 1000 ||
-      parseInt(formData.price) > 50000
-    ) {
+    if (!formData.price || parseInt(formData.price) < 1000 || parseInt(formData.price) > 50000) {
       setError('Цена должна быть от 1000 до 50000 баллов');
       return false;
     }
-    if (
-      formData.isLimited &&
-      (!formData.maxQuantity ||
-        parseInt(formData.maxQuantity) < 10 ||
-        parseInt(formData.maxQuantity) > 1000)
-    ) {
+    if (formData.isLimited && (!formData.maxQuantity || parseInt(formData.maxQuantity) < 10 || parseInt(formData.maxQuantity) > 1000)) {
       setError('Лимит должен быть от 10 до 1000 штук');
       return false;
     }
@@ -262,13 +253,13 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
     <UniversalModal
       open={open}
       onClose={handleClose}
-      title='Предложить новый пак'
-      maxWidth='md'
+      title="Предложить новый пак"
+      maxWidth="md"
       fullWidth
     >
       <Box sx={{ p: isMobile ? 0 : 2 }}>
         {error && (
-          <Alert severity='error' sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
@@ -276,52 +267,39 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
         <Grid container spacing={isMobile ? 2 : 3}>
           {/* Основная информация */}
           <Grid item xs={12} md={6}>
-            <Typography
-              variant='h6'
-              sx={{
-                mb: 2,
-                fontWeight: 600,
-                fontSize: isMobile ? '1.1rem' : '1.25rem',
-              }}
-            >
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
               Основная информация
             </Typography>
-
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: isMobile ? 1.5 : 2,
-              }}
-            >
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 1.5 : 2 }}>
               <ItemNameInput
-                label='Название пака'
+                label="Название пака"
                 value={formData.displayName}
-                onChange={e => handleInputChange('displayName', e.target.value)}
-                placeholder='Введите название пака'
+                onChange={(e) => handleInputChange('displayName', e.target.value)}
+                placeholder="Введите название пака"
                 fullWidth
-                size={isMobile ? 'small' : 'medium'}
+                size={isMobile ? "small" : "medium"}
               />
 
               <ItemNameInput
-                label='Описание'
+                label="Описание"
                 value={formData.description}
-                onChange={e => handleInputChange('description', e.target.value)}
-                placeholder='Опишите содержимое пака'
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                placeholder="Опишите содержимое пака"
                 multiline
                 rows={isMobile ? 2 : 3}
                 fullWidth
-                size={isMobile ? 'small' : 'medium'}
+                size={isMobile ? "small" : "medium"}
               />
 
               <ItemNameInput
-                label='Цена (баллы)'
-                type='number'
+                label="Цена (баллы)"
+                type="number"
                 value={formData.price}
-                onChange={e => handleInputChange('price', e.target.value)}
-                placeholder='1000-50000'
+                onChange={(e) => handleInputChange('price', e.target.value)}
+                placeholder="1000-50000"
                 fullWidth
-                size={isMobile ? 'small' : 'medium'}
+                size={isMobile ? "small" : "medium"}
                 inputProps={{ min: 1000, max: 50000 }}
               />
 
@@ -329,26 +307,22 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
                 control={
                   <Switch
                     checked={formData.isLimited}
-                    onChange={e =>
-                      handleInputChange('isLimited', e.target.checked)
-                    }
+                    onChange={(e) => handleInputChange('isLimited', e.target.checked)}
                   />
                 }
-                label='Лимитированный пак'
+                label="Лимитированный пак"
                 sx={{ fontSize: isMobile ? '0.9rem' : '1rem' }}
               />
 
               {formData.isLimited && (
                 <ItemNameInput
-                  label='Лимит (штук)'
-                  type='number'
+                  label="Лимит (штук)"
+                  type="number"
                   value={formData.maxQuantity}
-                  onChange={e =>
-                    handleInputChange('maxQuantity', e.target.value)
-                  }
-                  placeholder='10-1000'
+                  onChange={(e) => handleInputChange('maxQuantity', e.target.value)}
+                  placeholder="10-1000"
                   fullWidth
-                  size={isMobile ? 'small' : 'medium'}
+                  size={isMobile ? "small" : "medium"}
                   inputProps={{ min: 10, max: 1000 }}
                 />
               )}
@@ -357,66 +331,42 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
 
           {/* Загрузка файлов */}
           <Grid item xs={12} md={6}>
-            <Typography
-              variant='h6'
-              sx={{
-                mb: 2,
-                fontWeight: 600,
-                fontSize: isMobile ? '1.1rem' : '1.25rem',
-              }}
-            >
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
               Изображения предметов ({files.length}/20)
             </Typography>
 
             {files.length === 0 ? (
               <UploadArea onClick={() => fileInputRef.current?.click()}>
-                <UploadIcon
-                  sx={{
-                    fontSize: isMobile ? 36 : 48,
-                    color: 'text.secondary',
-                    mb: 1,
-                  }}
-                />
-                <Typography
-                  variant='body2'
-                  color='text.secondary'
-                  sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}
-                >
+                <UploadIcon sx={{ fontSize: isMobile ? 36 : 48, color: 'text.secondary', mb: 1 }} />
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}>
                   Нажмите для загрузки файлов
                 </Typography>
-                <Typography
-                  variant='caption'
-                  color='text.secondary'
-                  sx={{ fontSize: isMobile ? '0.75rem' : '0.75rem' }}
-                >
+                <Typography variant="caption" color="text.secondary" sx={{ fontSize: isMobile ? '0.75rem' : '0.75rem' }}>
                   PNG, JPG, JPEG, GIF, SVG (5-20 файлов)
                 </Typography>
                 <VisuallyHiddenInput
                   ref={fileInputRef}
-                  type='file'
+                  type="file"
                   multiple
-                  accept='image/*'
+                  accept="image/*"
                   onChange={handleFileSelect}
                 />
               </UploadArea>
             ) : (
               <Box>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: isMobile ? 0.5 : 1,
-                    mb: 2,
-                    flexWrap: 'wrap',
-                    justifyContent: isMobile ? 'center' : 'flex-start',
-                  }}
-                >
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: isMobile ? 0.5 : 1, 
+                  mb: 2, 
+                  flexWrap: 'wrap',
+                  justifyContent: isMobile ? 'center' : 'flex-start'
+                }}>
                   {files.map((fileData, index) => (
                     <Paper
                       key={index}
                       sx={{
                         p: isMobile ? 0.5 : 1,
-                        background:
-                          'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                        background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                         border: '1px solid rgba(66, 66, 66, 0.5)',
                         borderRadius: 'var(--main-border-radius)',
                         position: 'relative',
@@ -424,31 +374,24 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
                         minWidth: isMobile ? '120px' : 'auto',
                       }}
                     >
-                      <FilePreview
-                        sx={{
-                          width: isMobile ? 60 : 80,
-                          height: isMobile ? 60 : 80,
-                        }}
-                      >
+                      <FilePreview sx={{ width: isMobile ? 60 : 80, height: isMobile ? 60 : 80 }}>
                         <img src={fileData.preview} alt={fileData.itemName} />
                       </FilePreview>
                       <ItemNameInput
-                        size='small'
+                        size="small"
                         value={fileData.itemName}
-                        onChange={e =>
-                          handleItemNameChange(index, e.target.value)
-                        }
-                        placeholder='Название предмета'
-                        sx={{
-                          mt: 1,
+                        onChange={(e) => handleItemNameChange(index, e.target.value)}
+                        placeholder="Название предмета"
+                        sx={{ 
+                          mt: 1, 
                           minWidth: isMobile ? '100%' : 120,
                           '& .MuiInputBase-input': {
                             fontSize: isMobile ? '0.8rem' : '0.875rem',
-                          },
+                          }
                         }}
                       />
                       <IconButton
-                        size='small'
+                        size="small"
                         onClick={() => handleRemoveFile(index)}
                         sx={{
                           position: 'absolute',
@@ -463,7 +406,7 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
                           },
                         }}
                       >
-                        <DeleteIcon fontSize='small' />
+                        <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Paper>
                   ))}
@@ -471,10 +414,10 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
 
                 {files.length < 20 && (
                   <Button
-                    variant='outlined'
+                    variant="outlined"
                     startIcon={<AddIcon />}
                     onClick={() => fileInputRef.current?.click()}
-                    sx={{
+                    sx={{ 
                       mt: 1,
                       fontSize: isMobile ? '0.85rem' : '0.875rem',
                       py: isMobile ? 0.5 : 1,
@@ -486,9 +429,9 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
 
                 <VisuallyHiddenInput
                   ref={fileInputRef}
-                  type='file'
+                  type="file"
                   multiple
-                  accept='image/*'
+                  accept="image/*"
                   onChange={handleFileSelect}
                 />
               </Box>
@@ -497,17 +440,15 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
         </Grid>
 
         {/* Кнопки */}
-        <Box
-          sx={{
-            display: 'flex',
-            gap: isMobile ? 1 : 2,
-            mt: 3,
-            justifyContent: isMobile ? 'stretch' : 'flex-end',
-            flexDirection: isMobile ? 'column' : 'row',
-          }}
-        >
+        <Box sx={{ 
+          display: 'flex', 
+          gap: isMobile ? 1 : 2, 
+          mt: 3, 
+          justifyContent: isMobile ? 'stretch' : 'flex-end',
+          flexDirection: isMobile ? 'column' : 'row'
+        }}>
           <Button
-            variant='outlined'
+            variant="outlined"
             onClick={handleClose}
             disabled={loading}
             sx={{
@@ -518,16 +459,10 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
             Отмена
           </Button>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={handleSubmit}
             disabled={loading || files.length < 5}
-            startIcon={
-              loading ? (
-                <CircularProgress size={isMobile ? 14 : 16} />
-              ) : (
-                <ImageIcon />
-              )
-            }
+            startIcon={loading ? <CircularProgress size={isMobile ? 14 : 16} /> : <ImageIcon />}
             sx={{
               fontSize: isMobile ? '0.9rem' : '0.875rem',
               py: isMobile ? 1.5 : 1,
@@ -541,4 +476,4 @@ const ProposePackModal: React.FC<ProposePackModalProps> = ({
   );
 };
 
-export default ProposePackModal;
+export default ProposePackModal; 

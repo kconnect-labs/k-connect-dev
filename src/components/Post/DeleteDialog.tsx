@@ -30,12 +30,8 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
     <UniversalModal
       open={open}
       onClose={handleClose}
-      title={
-        deleteDialog.deleted
-          ? t('post.delete_dialog.success_title')
-          : t('post.delete_dialog.title')
-      }
-      maxWidth='sm'
+      title={deleteDialog.deleted ? t('post.delete_dialog.success_title') : t('post.delete_dialog.title')}
+      maxWidth="sm"
       fullWidth
       addBottomPadding
     >
@@ -53,19 +49,12 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
           >
             <CheckCircleIcon sx={{ fontSize: 32 }} />
           </Avatar>
-          <Typography
-            variant='h6'
-            sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}
-          >
+          <Typography variant='h6' sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}>
             {t('post.delete_dialog.success_title')}
           </Typography>
           <Typography
             variant='body2'
-            sx={{
-              color: 'rgba(207, 188, 251, 0.8)',
-              maxWidth: '80%',
-              mx: 'auto',
-            }}
+            sx={{ color: 'rgba(207, 188, 251, 0.8)', maxWidth: '80%', mx: 'auto' }}
           >
             {t('post.delete_dialog.success_message')}
           </Typography>
@@ -85,19 +74,12 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
             >
               <DeleteIcon sx={{ fontSize: 32 }} />
             </Avatar>
-            <Typography
-              variant='h6'
-              sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}
-            >
+            <Typography variant='h6' sx={{ mb: 1, color: '#cfbcfb', fontWeight: 600 }}>
               {t('post.delete_dialog.title')}
             </Typography>
             <Typography
               variant='body2'
-              sx={{
-                color: 'rgba(207, 188, 251, 0.8)',
-                maxWidth: '80%',
-                mx: 'auto',
-              }}
+              sx={{ color: 'rgba(207, 188, 251, 0.8)', maxWidth: '80%', mx: 'auto' }}
             >
               {t('post.delete_dialog.confirmation')}
             </Typography>
@@ -189,4 +171,4 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({
   );
 };
 
-export default DeleteDialog;
+export default DeleteDialog; 

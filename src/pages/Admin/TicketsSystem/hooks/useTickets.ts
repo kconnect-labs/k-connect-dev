@@ -62,57 +62,55 @@ export const useTickets = () => {
   });
   const [filters, setFilters] = useState<Filters>({});
 
-  const fetchTickets = useCallback(
-    async (page = 1, newFilters?: Filters) => {
-      setLoading(true);
-      setError(null);
+  const fetchTickets = useCallback(async (page = 1, newFilters?: Filters) => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        // Merge filters: newFilters take precedence over filters
-        const mergedFilters: Record<string, string> = {
-          page: page.toString(),
-          per_page: pagination.per_page.toString(),
-        };
+    try {
+      // Merge filters: newFilters take precedence over filters
+      const mergedFilters: Record<string, string> = {
+        page: page.toString(),
+        per_page: pagination.per_page.toString(),
+      };
 
-        // Add filters from filters and newFilters, converting all values to string and skipping undefined/null
-        const allFilters = { ...filters, ...newFilters };
-        for (const [key, value] of Object.entries(allFilters)) {
-          if (value !== undefined && value !== null) {
-            mergedFilters[key] = String(value);
-          }
+      // Add filters from filters and newFilters, converting all values to string and skipping undefined/null
+      const allFilters = { ...filters, ...newFilters };
+      for (const [key, value] of Object.entries(allFilters)) {
+        if (value !== undefined && value !== null) {
+          mergedFilters[key] = String(value);
         }
-
-        const params = new URLSearchParams(mergedFilters);
-
-        const response = await fetch(`/api/moderator/tickets?${params}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        if (data.success) {
-          setTickets(data.tickets);
-          setPagination(data.pagination);
-        } else {
-          throw new Error(data.error || 'Ошибка загрузки тикетов');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
-        console.error('Ошибка загрузки тикетов:', err);
-      } finally {
-        setLoading(false);
       }
-    },
-    [filters, pagination.per_page]
-  );
+
+      const params = new URLSearchParams(mergedFilters);
+
+      const response = await fetch(`/api/moderator/tickets?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setTickets(data.tickets);
+        setPagination(data.pagination);
+      } else {
+        throw new Error(data.error || 'Ошибка загрузки тикетов');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
+      console.error('Ошибка загрузки тикетов:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, pagination.per_page]);
 
   const updateFilters = useCallback((newFilters: Partial<Filters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -144,4 +142,4 @@ export const useTickets = () => {
     refreshTickets,
     loadMoreTickets,
   };
-};
+}; 

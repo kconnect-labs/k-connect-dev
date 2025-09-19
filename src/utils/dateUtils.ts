@@ -185,9 +185,7 @@ export const formatDate = (dateString: string): string => {
     options.year = 'numeric';
   }
 
-  return new Intl.DateTimeFormat(navigator.language || 'ru-RU', options).format(
-    date
-  );
+  return new Intl.DateTimeFormat(navigator.language || 'ru-RU', options).format(date);
 };
 
 export const formatDateTimeShort = (dateString: string): string => {
