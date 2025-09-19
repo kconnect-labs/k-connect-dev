@@ -17,22 +17,29 @@ class StaticCache {
   private readonly DB_NAME = 'k-connect-media-cache';
   private readonly DB_VERSION = 2;
   private readonly STORE_NAME = 'static';
-  private readonly CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 дней
-  private readonly MAX_CACHE_SIZE = 1000; // Максимум 1000 файлов в кеше
-  private readonly MAX_CACHE_SIZE_MB = 500; // Максимум 500MB
+  private readonly CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; 
+  private readonly MAX_CACHE_SIZE = 1000; 
+  private readonly MAX_CACHE_SIZE_MB = 500; 
   private db: IDBDatabase | null = null;
 
-  // Поддерживаемые типы файлов
+  
   private readonly SUPPORTED_EXTENSIONS = [
     '.jpg', '.jpeg', '.png', '.webp', '.bmp', '.tiff', '.svg',
     '.pdf', '.txt', '.json', '.css', '.js', '.woff', '.woff2', '.ttf', '.eot'
   ];
 
-  // Исключаем видео и гифки
+  
   private readonly EXCLUDED_EXTENSIONS = [
     '.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.mkv',
     '.gif', '.gifv'
   ];
+
+  /**
+   * Проверяет, является ли браузер Safari
+   */
+  private isSafari(): boolean {
+    return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  }
 
   /**
    * Инициализация IndexedDB
@@ -56,7 +63,7 @@ class StaticCache {
         const db = (event.target as IDBOpenDBRequest).result;
         const oldVersion = event.oldVersion;
         
-        // Создаем store для статических файлов только если его нет
+        
         if (!db.objectStoreNames.contains(this.STORE_NAME)) {
           console.log('Creating static store in IndexedDB');
           const store = db.createObjectStore(this.STORE_NAME, { keyPath: 'url' });
@@ -66,7 +73,7 @@ class StaticCache {
           store.createIndex('size', 'size', { unique: false });
         }
         
-        // Если обновляемся с версии 1, убеждаемся что store создан
+        
         if (oldVersion < 2) {
           console.log('Upgrading from version', oldVersion, 'to version 2');
         }
@@ -89,14 +96,14 @@ class StaticCache {
   private isSupportedFile(url: string): boolean {
     const urlLower = url.toLowerCase();
     
-    // Проверяем исключения
+    
     for (const ext of this.EXCLUDED_EXTENSIONS) {
       if (urlLower.includes(ext)) {
         return false;
       }
     }
     
-    // Проверяем поддержку
+    
     for (const ext of this.SUPPORTED_EXTENSIONS) {
       if (urlLower.includes(ext)) {
         return true;
@@ -237,19 +244,19 @@ class StaticCache {
       const now = Date.now();
       const expiredUrls: string[] = [];
 
-      // Найти устаревшие записи
+      
       allEntries.forEach(entry => {
         if (now - entry.timestamp > this.CACHE_DURATION) {
           expiredUrls.push(entry.url);
         }
       });
 
-      // Удалить устаревшие записи
+      
       for (const url of expiredUrls) {
         await this.deleteFromDB(url);
       }
 
-      // Если записей слишком много, удалить самые старые
+      
       const remainingEntries = await this.getAllFromDB();
       if (remainingEntries.length > this.MAX_CACHE_SIZE) {
         const sortedEntries = remainingEntries.sort((a, b) => a.timestamp - b.timestamp);
@@ -260,14 +267,14 @@ class StaticCache {
         }
       }
 
-      // Проверить размер кеша
+      
       const finalEntries = await this.getAllFromDB();
       const totalSizeMB = finalEntries.reduce((sum, entry) => sum + entry.size, 0) / (1024 * 1024);
       
       if (totalSizeMB > this.MAX_CACHE_SIZE_MB) {
-        // Удалить самые большие файлы
+        
         const sortedBySize = finalEntries.sort((a, b) => b.size - a.size);
-        const toDelete = sortedBySize.slice(0, Math.floor(finalEntries.length * 0.2)); // Удалить 20% самых больших
+        const toDelete = sortedBySize.slice(0, Math.floor(finalEntries.length * 0.2)); 
         
         for (const entry of toDelete) {
           await this.deleteFromDB(entry.url);
@@ -288,6 +295,12 @@ class StaticCache {
         return null;
       }
 
+      
+      if (this.isSafari() && this.getFileType(url) === 'image') {
+        console.log('Safari detected, skipping cache for image:', url);
+        return null;
+      }
+
       const cached = await this.getFromDB(url);
       if (!cached) {
         console.log('File not found in static cache:', url);
@@ -296,19 +309,19 @@ class StaticCache {
       
       console.log('File found in static cache:', url);
 
-      // Проверить, не устарел ли кеш
+      
       const now = Date.now();
       if (now - cached.timestamp > this.CACHE_DURATION) {
         await this.deleteFromDB(url);
         return null;
       }
 
-      // Если была CORS ошибка, не возвращать кеш
+      
       if (cached.corsFailed) {
         return null;
       }
 
-      // Конвертировать Blob в data URL
+      
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);
@@ -331,7 +344,13 @@ class StaticCache {
         return null;
       }
 
-      // Сначала проверить кеш
+      
+      if (this.isSafari() && this.getFileType(url) === 'image') {
+        console.log('Safari detected, returning original URL for image:', url);
+        return url;
+      }
+
+      
       const cached = await this.getFile(url);
       if (cached) {
         console.log('Returning cached file:', url);
@@ -340,7 +359,7 @@ class StaticCache {
       
       console.log('Loading file from server:', url);
 
-      // Загрузить файл
+      
       const response = await fetch(url, {
         mode: 'cors',
         credentials: 'omit',
@@ -354,29 +373,34 @@ class StaticCache {
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
 
-      // Определить тип файла
+      
       const type = this.getFileType(url);
 
-      // Сохранить в кеш
-      const entry: StaticCacheEntry = {
-        blob,
-        timestamp: Date.now(),
-        type,
-        success: true,
-        corsFailed: false,
-        url,
-        size: blob.size
-      };
+      
+      if (!(this.isSafari() && type === 'image')) {
+        
+        const entry: StaticCacheEntry = {
+          blob,
+          timestamp: Date.now(),
+          type,
+          success: true,
+          corsFailed: false,
+          url,
+          size: blob.size
+        };
 
-      console.log('Saving file to static cache:', url, 'size:', blob.size);
-      await this.saveToDB(entry);
-      await this.cleanupExpiredEntries();
+        console.log('Saving file to static cache:', url, 'size:', blob.size);
+        await this.saveToDB(entry);
+        await this.cleanupExpiredEntries();
+      } else {
+        console.log('Safari detected, not caching image:', url);
+      }
 
       return blobUrl;
     } catch (error) {
       console.warn(`Failed to load file ${url}:`, error);
       
-      // Сохранить информацию о CORS ошибке
+      
       const entry: StaticCacheEntry = {
         blob: new Blob(),
         timestamp: Date.now(),
@@ -497,12 +521,12 @@ class StaticCache {
   }
 }
 
-// Создаем единственный экземпляр кеша
+
 const staticCache = new StaticCache();
 
-// Автоматически инициализируем кеш при загрузке модуля
+
 staticCache.getCacheStats().catch(() => {
-  // Игнорируем ошибки инициализации
+  
 });
 
 export { staticCache };
