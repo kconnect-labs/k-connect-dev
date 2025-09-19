@@ -28,12 +28,10 @@ export const getMarkdownComponents = () => ({
         }}
         {...props}
       >
-        <code className={className}>
-          {String(children).replace(/\n$/, '')}
-        </code>
+        <code className={className}>{String(children).replace(/\n$/, '')}</code>
       </pre>
     ) : (
-      <code 
+      <code
         className={className}
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.1)',
@@ -48,4 +46,4 @@ export const getMarkdownComponents = () => ({
       </code>
     );
   },
-}); 
+});

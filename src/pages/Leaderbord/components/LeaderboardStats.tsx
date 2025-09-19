@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  Avatar,
-} from '@mui/material';
+import { Box, Typography, Paper, Avatar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LeaderboardUser } from '../../../types/leaderboard';
 import { formatCompactNumber } from '../utils/formatters';
@@ -54,14 +49,14 @@ export const LeaderboardStats: React.FC<LeaderboardStatsProps> = ({
   selectedUser,
 }) => {
   const [hoveredUser, setHoveredUser] = useState<LeaderboardUser | null>(null);
-  
+
   const displayUser = selectedUser || hoveredUser || leaderboardData[0];
 
   if (!displayUser) {
     return (
       <StatsContainer>
         <UserStatCard>
-          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+          <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.6)' }}>
             Наведите на пользователя для просмотра статистики
           </Typography>
         </UserStatCard>
@@ -74,7 +69,10 @@ export const LeaderboardStats: React.FC<LeaderboardStatsProps> = ({
       <UserStatCard>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
           <Avatar
-            src={displayUser.avatar_url || 'https://s3.k-connect.ru/static/uploads/system/avatar.png'}
+            src={
+              displayUser.avatar_url ||
+              'https://s3.k-connect.ru/static/uploads/system/avatar.png'
+            }
             alt={displayUser.name}
             sx={{
               width: 48,
@@ -83,55 +81,96 @@ export const LeaderboardStats: React.FC<LeaderboardStatsProps> = ({
             }}
           />
           <Box>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 700 }}>
+            <Typography variant='h6' sx={{ color: 'white', fontWeight: 700 }}>
               {displayUser.name}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+            <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.7)' }}>
               @{displayUser.username}
             </Typography>
           </Box>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.8)' }}>
               Очки:
             </Typography>
-            <Typography variant="h6" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
+            <Typography variant='h6' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
               {formatCompactNumber(displayUser.score)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.8)' }}>
               Посты:
             </Typography>
-            <Typography variant="body2" sx={{ color: 'white', fontWeight: 600 }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'white', fontWeight: 600 }}
+            >
               {formatCompactNumber(displayUser.stats?.posts_count || 0)}
             </Typography>
           </Box>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Typography variant='body2' sx={{ color: 'rgba(255,255,255,0.8)' }}>
               Подписчики:
             </Typography>
-            <Typography variant="body2" sx={{ color: 'white', fontWeight: 600 }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'white', fontWeight: 600 }}
+            >
               {formatCompactNumber(displayUser.stats?.followers_count || 0)}
             </Typography>
           </Box>
 
-
           {displayUser.verification && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255,255,255,0.8)' }}
+              >
                 Статус:
               </Typography>
-              <Typography variant="body2" sx={{ color: '#4CAF50', fontWeight: 600 }}>
-                {displayUser.verification.status === 1 ? 'Верифицирован' : 
-                 displayUser.verification.status === 2 ? 'Официальный аккаунт' :
-                 displayUser.verification.status === 3 ? 'VIP' :
-                 displayUser.verification.status === 4 ? 'Модератор' :
-                 displayUser.verification.status === 5 ? 'Админ' : 'Обычный'}
+              <Typography
+                variant='body2'
+                sx={{ color: '#4CAF50', fontWeight: 600 }}
+              >
+                {displayUser.verification.status === 1
+                  ? 'Верифицирован'
+                  : displayUser.verification.status === 2
+                    ? 'Официальный аккаунт'
+                    : displayUser.verification.status === 3
+                      ? 'VIP'
+                      : displayUser.verification.status === 4
+                        ? 'Модератор'
+                        : displayUser.verification.status === 5
+                          ? 'Админ'
+                          : 'Обычный'}
               </Typography>
             </Box>
           )}

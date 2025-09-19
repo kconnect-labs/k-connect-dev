@@ -75,7 +75,7 @@ const FeatureCard = ({ icon, title, description, delay }) => {
       transition={{ duration: 0.5, delay }}
     >
       <Card
-        className="theme-card"
+        className='theme-card'
         elevation={0}
         sx={{
           height: '100%',
@@ -203,7 +203,7 @@ const BenefitCard = ({ icon, title, description, index }) => {
       viewport={{ once: true }}
     >
       <Box
-        className="theme-card"
+        className='theme-card'
         sx={{
           display: 'flex',
           alignItems: 'flex-start',
@@ -392,7 +392,7 @@ const TeamSection = ({ title, members }) => {
               style={{ height: '100%' }}
             >
               <Card
-                className="theme-card"
+                className='theme-card'
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -469,7 +469,7 @@ const TeamSection = ({ title, members }) => {
                       startIcon={<TelegramIcon />}
                       size='small'
                       variant='outlined'
-                      className="theme-button"
+                      className='theme-button'
                       sx={{
                         mt: 1,
                         color: theme.palette.primary.main,
@@ -572,7 +572,7 @@ const HeroSlider = () => {
 
   return (
     <Box
-      className="theme-card"
+      className='theme-card'
       sx={{
         position: 'relative',
         width: { xs: '100%', sm: 500, md: 700 },
@@ -605,7 +605,7 @@ const HeroSlider = () => {
       />
       <IconButton
         onClick={prevSlide}
-        className="theme-button"
+        className='theme-button'
         sx={{
           position: 'absolute',
           left: { xs: -18, sm: -38, md: -48 },
@@ -629,7 +629,7 @@ const HeroSlider = () => {
       </IconButton>
       <IconButton
         onClick={nextSlide}
-        className="theme-button"
+        className='theme-button'
         sx={{
           position: 'absolute',
           right: { xs: -18, sm: -38, md: -48 },
@@ -946,8 +946,7 @@ const AboutPage = () => {
         name: 'Михаил',
         role: 'Специалист по безопасности',
         avatar: '/static/moderators/misha.jpg',
-        description:
-          'Проверяет безопасность платформы, выявляет уязвимости.',
+        description: 'Проверяет безопасность платформы, выявляет уязвимости.',
         username: '@sunr153',
       },
       {
@@ -971,14 +970,14 @@ const AboutPage = () => {
         avatar: '/static/moderators/arb.jpg',
       },
       {
-        name: "Liquides",
-        role: "Модератор",
-        avatar: "/static/moderators/lix.jpg"
+        name: 'Liquides',
+        role: 'Модератор',
+        avatar: '/static/moderators/lix.jpg',
       },
       {
-        name: "blaze",
-        role: "Модератор",
-        avatar: "/static/moderators/blade.png"
+        name: 'blaze',
+        role: 'Модератор',
+        avatar: '/static/moderators/blade.png',
       },
       {
         name: 'IMarandici',
@@ -986,9 +985,9 @@ const AboutPage = () => {
         avatar: '/static/moderators/lmar.jpg',
       },
       {
-        name: "Morozik",
-        role: "Поддержка",
-        avatar: "/static/moderators/morozik.jpeg"
+        name: 'Morozik',
+        role: 'Поддержка',
+        avatar: '/static/moderators/morozik.jpeg',
       },
       {
         name: 'rev/x',
@@ -1004,10 +1003,12 @@ const AboutPage = () => {
   };
 
   // Список бывших модераторов (исключая rev/x и blaze)
-  const previousHelpers = teamData.moderators.filter(m => m.name !== 'rev/x' && m.name !== 'blaze');
+  const previousHelpers = teamData.moderators.filter(
+    m => m.name !== 'rev/x' && m.name !== 'blaze'
+  );
 
   return (
-    <Box className="theme-site-background" sx={{ overflow: 'hidden' }}>
+    <Box className='theme-site-background' sx={{ overflow: 'hidden' }}>
       <Box
         sx={{
           position: 'relative',
@@ -1085,7 +1086,7 @@ const AboutPage = () => {
             <Button
               variant='outlined'
               size='large'
-              className="theme-button"
+              className='theme-button'
               sx={{
                 fontSize: '1.08rem',
                 py: 1.2,
@@ -1163,11 +1164,7 @@ const AboutPage = () => {
         </MotionBox>
       </Box>
 
-      <Box
-        ref={featuresRef}
-        className="theme-aware"
-        sx={{ py: 12 }}
-      >
+      <Box ref={featuresRef} className='theme-aware' sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1211,7 +1208,7 @@ const AboutPage = () => {
               <Grid item xs={12} sm={6} md={4} key={index}>
                 <MotionPaper
                   variants={itemVariants}
-                  className="theme-card"
+                  className='theme-card'
                   sx={{
                     p: 3,
                     height: '100%',
@@ -1303,7 +1300,7 @@ const AboutPage = () => {
             whileHover={{ scale: 1.1 }}
           >
             <Box
-              className="theme-card"
+              className='theme-card'
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -1322,7 +1319,7 @@ const AboutPage = () => {
       </Box>
 
       {/* Экономика: Баллы и мКоины */}
-      <Box className="theme-aware" sx={{ py: 12 }}>
+      <Box className='theme-aware' sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 6 }}
@@ -1331,11 +1328,19 @@ const AboutPage = () => {
             whileInView='visible'
             viewport={{ once: true }}
           >
-            <Typography variant='h2' sx={{ fontWeight: 700, mb: 1, fontSize: { xs: '2rem', md: '2.4rem' } }}>
+            <Typography
+              variant='h2'
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontSize: { xs: '2rem', md: '2.4rem' },
+              }}
+            >
               Экономика: Баллы и мКоины
             </Typography>
             <Typography variant='subtitle1' sx={{ opacity: 0.9 }}>
-              Зарабатывайте баллы за активность и дополняйте их мКоинами для подписок, декора и обмена
+              Зарабатывайте баллы за активность и дополняйте их мКоинами для
+              подписок, декора и обмена
             </Typography>
           </MotionBox>
 
@@ -1356,10 +1361,13 @@ const AboutPage = () => {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <MonetizationOnIcon color='primary' sx={{ mr: 1.5 }} />
-                  <Typography variant='h5' sx={{ fontWeight: 700 }}>Баллы</Typography>
+                  <Typography variant='h5' sx={{ fontWeight: 700 }}>
+                    Баллы
+                  </Typography>
                 </Box>
                 <Typography variant='body1' sx={{ mb: 2 }}>
-                  Основная «социальная» валюта. Начисляется за публикации, реакции, достижения и вклад в сообщество.
+                  Основная «социальная» валюта. Начисляется за публикации,
+                  реакции, достижения и вклад в сообщество.
                 </Typography>
                 <Typography variant='body2' color='text.secondary'>
                   • Покупайте предметы и никнеймы на маркетплейсе
@@ -1374,22 +1382,24 @@ const AboutPage = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-                              <MotionPaper
-                  variants={itemVariants}
-                  initial='hidden'
-                  whileInView='visible'
-                  viewport={{ once: true }}
-                  className="theme-card"
-                  sx={{
-                    p: 4,
-                    borderRadius: 4,
-                    border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
-                  }}
-                  elevation={0}
-                >
+              <MotionPaper
+                variants={itemVariants}
+                initial='hidden'
+                whileInView='visible'
+                viewport={{ once: true }}
+                className='theme-card'
+                sx={{
+                  p: 4,
+                  borderRadius: 4,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+                }}
+                elevation={0}
+              >
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <CurrencyExchangeIcon color='primary' sx={{ mr: 1.5 }} />
-                  <Typography variant='h5' sx={{ fontWeight: 700 }}>мКоины</Typography>
+                  <Typography variant='h5' sx={{ fontWeight: 700 }}>
+                    мКоины
+                  </Typography>
                 </Box>
                 <Typography variant='body1' sx={{ mb: 2 }}>
                   Вторая валюта для гибкого использования внутри платформы.
@@ -1409,9 +1419,9 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-              {/* FAQ */}
-        <Box className="theme-aware" sx={{ py: 10 }}>
-          <Container maxWidth='md'>
+      {/* FAQ */}
+      <Box className='theme-aware' sx={{ py: 10 }}>
+        <Container maxWidth='md'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 4 }}
             variants={itemVariants}
@@ -1419,7 +1429,14 @@ const AboutPage = () => {
             whileInView='visible'
             viewport={{ once: true }}
           >
-            <Typography variant='h2' sx={{ fontWeight: 700, mb: 1, fontSize: { xs: '1.8rem', md: '2.2rem' } }}>
+            <Typography
+              variant='h2'
+              sx={{
+                fontWeight: 700,
+                mb: 1,
+                fontSize: { xs: '1.8rem', md: '2.2rem' },
+              }}
+            >
               Частые вопросы
             </Typography>
             <Typography variant='subtitle1' sx={{ opacity: 0.9 }}>
@@ -1427,53 +1444,73 @@ const AboutPage = () => {
             </Typography>
           </MotionBox>
 
-          <Accordion className="theme-card" sx={{ borderRadius:1, mb: 1 }}>
+          <Accordion className='theme-card' sx={{ borderRadius: 1, mb: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что такое мКоины и зачем они нужны?</Typography>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                Что такое мКоины и зачем они нужны?
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' color='text.secondary'>
-                мКоины — гибкая внутренняя валюта: оплачивайте подписку, покупайте декорации и при необходимости конвертируйте в обычные баллы.
+                мКоины — гибкая внутренняя валюта: оплачивайте подписку,
+                покупайте декорации и при необходимости конвертируйте в обычные
+                баллы.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
-          <Accordion className="theme-card" sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}>
+          <Accordion
+            className='theme-card'
+            sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Чем мКоины отличаются от баллов?</Typography>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                Чем мКоины отличаются от баллов?
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' color='text.secondary'>
-                Баллы зарабатываются за активность и используются в экономике сообщества. мКоины — более «утилитарны»: подписка, декорации и обмен.
+                Баллы зарабатываются за активность и используются в экономике
+                сообщества. мКоины — более «утилитарны»: подписка, декорации и
+                обмен.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
-          <Accordion className="theme-card" sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}>
+          <Accordion
+            className='theme-card'
+            sx={{ borderRadius: 'var(--main-border-radius)', mb: 1 }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Как работают темы и обои профиля?</Typography>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                Как работают темы и обои профиля?
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' color='text.secondary'>
-                Выбирайте готовые темы или загружайте собственные обои. Обои видны всем посетителям вашего профиля.
+                Выбирайте готовые темы или загружайте собственные обои. Обои
+                видны всем посетителям вашего профиля.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
-          <Accordion className="theme-card" sx={{ borderRadius: 1 }}>
+          <Accordion className='theme-card' sx={{ borderRadius: 1 }}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Что даёт приватный профиль?</Typography>
+              <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+                Что даёт приватный профиль?
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography variant='body2' color='text.secondary'>
-                Приватный режим позволяет публиковать любой контент для выбранного круга — вы управляете доступом и аудиторией.
+                Приватный режим позволяет публиковать любой контент для
+                выбранного круга — вы управляете доступом и аудиторией.
               </Typography>
             </AccordionDetails>
           </Accordion>
         </Container>
       </Box>
 
-      <Box ref={teamRef} className="theme-aware" sx={{ py: 12 }}>
+      <Box ref={teamRef} className='theme-aware' sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1507,12 +1544,15 @@ const AboutPage = () => {
 
           <TeamSection title='Авторы' members={teamData.authors} />
           <TeamSection title='Дизайнеры' members={teamData.designers} />
-          <TeamSection title='Помогающие в безопасности' members={teamData.security} />
+          <TeamSection
+            title='Помогающие в безопасности'
+            members={teamData.security}
+          />
         </Container>
       </Box>
 
       {/* Moderators section with simpler cards */}
-      <Box className="theme-aware" sx={{ py: 12 }}>
+      <Box className='theme-aware' sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1557,57 +1597,57 @@ const AboutPage = () => {
             {teamData.moderators
               .filter(m => m.name === 'rev/x' || m.name === 'blaze')
               .map((moderator, index) => (
-              <MotionGrid
-                item
-                xs={6}
-                sm={4}
-                md={3}
-                key={index}
-                variants={itemVariants}
-              >
-                <MotionBox
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    textAlign: 'center',
-                  }}
-                  whileHover={{ y: -5 }}
-                  transition={{ duration: 0.2 }}
+                <MotionGrid
+                  item
+                  xs={6}
+                  sm={4}
+                  md={3}
+                  key={index}
+                  variants={itemVariants}
                 >
-                  <Avatar
-                    src={moderator.avatar}
-                    alt={moderator.name}
+                  <MotionBox
                     sx={{
-                      width: 100,
-                      height: 100,
-                      mb: 2,
-                      border: '3px solid',
-                      borderColor: theme.palette.primary.main,
-                      boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      textAlign: 'center',
                     }}
-                  />
-                  <Typography variant='h6' sx={{ fontWeight: 600 }}>
-                    {moderator.name}
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    sx={{
-                      color: theme.palette.text.secondary,
-                      mt: 0.5,
-                    }}
+                    whileHover={{ y: -5 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    Модератор
-                  </Typography>
-                </MotionBox>
-              </MotionGrid>
-            ))}
+                    <Avatar
+                      src={moderator.avatar}
+                      alt={moderator.name}
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        mb: 2,
+                        border: '3px solid',
+                        borderColor: theme.palette.primary.main,
+                        boxShadow: `0 8px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
+                      }}
+                    />
+                    <Typography variant='h6' sx={{ fontWeight: 600 }}>
+                      {moderator.name}
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      sx={{
+                        color: theme.palette.text.secondary,
+                        mt: 0.5,
+                      }}
+                    >
+                      Модератор
+                    </Typography>
+                  </MotionBox>
+                </MotionGrid>
+              ))}
           </MotionGrid>
         </Container>
       </Box>
 
       {/* Экс‑модераторы */}
-      <Box className="theme-aware" sx={{ py: 12 }}>
+      <Box className='theme-aware' sx={{ py: 12 }}>
         <Container maxWidth='lg'>
           <MotionBox
             sx={{ textAlign: 'center', mb: 8 }}
@@ -1753,7 +1793,7 @@ const AboutPage = () => {
                   href='https://k-connect.ru'
                   variant='contained'
                   size='large'
-                  className="theme-button"
+                  className='theme-button'
                   sx={{
                     borderRadius: '50px',
                     px: 4,
@@ -1778,7 +1818,7 @@ const AboutPage = () => {
                   rel='noopener noreferrer'
                   variant='outlined'
                   size='large'
-                  className="theme-button"
+                  className='theme-button'
                   sx={{
                     borderRadius: '50px',
                     px: 4,
@@ -1804,7 +1844,7 @@ const AboutPage = () => {
         </Container>
       </Box>
 
-      <Box className="theme-aware" sx={{ py: 6 }}>
+      <Box className='theme-aware' sx={{ py: 6 }}>
         <Container maxWidth='lg'>
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>

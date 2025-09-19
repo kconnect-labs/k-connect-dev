@@ -35,7 +35,7 @@ const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? `linear-gradient(135deg, ${alpha('#121212', 0.9)} 0%, ${alpha('#1A1A1A', 0.85)} 100%)`
       : `linear-gradient(135deg, ${alpha('#f5f5f5', 0.9)} 0%, ${alpha('#FAFAFA', 0.85)} 100%)`,
-      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
@@ -45,7 +45,7 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? alpha('#121212', 0.9)
       : alpha('var(--theme-text-primary)', 0.9),
-      backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
   '&::-webkit-scrollbar': {
     width: '4px',
   },
@@ -69,8 +69,8 @@ const HistoryItem = styled(Paper)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   background:
     theme.palette.mode === 'dark'
-              ? 'rgba(255, 255, 255, 0.05)'
-              : 'rgba(255, 255, 255, 0.1)',
+      ? 'rgba(255, 255, 255, 0.05)'
+      : 'rgba(255, 255, 255, 0.1)',
   transition: 'transform 0.2s ease',
   backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   '&:hover': {

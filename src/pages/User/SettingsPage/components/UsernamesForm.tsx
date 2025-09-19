@@ -91,9 +91,9 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
   const containerStyle = {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
@@ -278,7 +278,10 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
       {/* Купленные юзернеймы */}
       {purchased.length > 0 && (
         <Box sx={sectionStyle}>
-          <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+          <Typography
+            variant='h6'
+            sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}
+          >
             Купленные юзернеймы
           </Typography>
 
@@ -311,21 +314,32 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
                         mb: 1,
                       }}
                     >
-                      <Typography variant='body1' sx={{ color: 'var(--theme-text-primary)' }}>
+                      <Typography
+                        variant='body1'
+                        sx={{ color: 'var(--theme-text-primary)' }}
+                      >
                         {usernameObj.username}
                       </Typography>
                     </Box>
 
                     <Typography
                       variant='caption'
-                      sx={{ color: 'var(--theme-text-secondary)', display: 'block', mb: 1 }}
+                      sx={{
+                        color: 'var(--theme-text-secondary)',
+                        display: 'block',
+                        mb: 1,
+                      }}
                     >
                       {formatDate(usernameObj.purchase_date)}
                     </Typography>
 
                     <Typography
                       variant='caption'
-                      sx={{ color: 'var(--theme-text-secondary)', display: 'block', mb: 2 }}
+                      sx={{
+                        color: 'var(--theme-text-secondary)',
+                        display: 'block',
+                        mb: 2,
+                      }}
                     >
                       {usernameObj.price_paid} баллов
                     </Typography>
@@ -382,11 +396,17 @@ const UsernamesForm: React.FC<UsernamesFormProps> = ({ onSuccess }) => {
           Правила и информация
         </Typography>
 
-        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
+        <Typography
+          variant='body2'
+          sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}
+        >
           • Юзернеймы можно менять не чаще чем раз в 30 дней
         </Typography>
 
-        <Typography variant='body2' sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
+        <Typography
+          variant='body2'
+          sx={{ color: 'var(--theme-text-primary)', mb: 1 }}
+        >
           • При смене юзернейма старый становится неактивным
         </Typography>
 

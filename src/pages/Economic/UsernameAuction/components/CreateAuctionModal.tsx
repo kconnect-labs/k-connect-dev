@@ -69,7 +69,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
     <UniversalModal
       open={open}
       onClose={handleClose}
-      title="Создать новый аукцион"
+      title='Создать новый аукцион'
       maxWidth={false}
       maxWidthCustom={650}
       disableEscapeKeyDown={loading}
@@ -84,7 +84,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
           fullWidth
           label='Юзернейм'
           value={formData.username}
-          onChange={(e) =>
+          onChange={e =>
             setFormData({
               ...formData,
               username: e.target.value,
@@ -97,7 +97,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
           disabled={loading}
         >
           <MenuItem value=''>Выберите юзернейм</MenuItem>
-          {availableUsernames.map((username) => (
+          {availableUsernames.map(username => (
             <MenuItem key={username.id} value={username.username}>
               @{username.username}
             </MenuItem>
@@ -106,8 +106,8 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
 
         {availableUsernames.length === 0 && (
           <Alert severity='info' sx={{ mt: 2 }}>
-            У вас нет неактивных юзернеймов для аукциона. Вы не можете
-            выставить активный юзернейм.
+            У вас нет неактивных юзернеймов для аукциона. Вы не можете выставить
+            активный юзернейм.
           </Alert>
         )}
 
@@ -116,7 +116,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
           label='Минимальная цена (баллы)'
           type='number'
           value={formData.min_price}
-          onChange={(e) =>
+          onChange={e =>
             setFormData({
               ...formData,
               min_price: e.target.value,
@@ -124,8 +124,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
           }
           error={!!errors.min_price}
           helperText={
-            errors.min_price ||
-            'Максимальная начальная цена: 15 000 000 баллов'
+            errors.min_price || 'Максимальная начальная цена: 15 000 000 баллов'
           }
           margin='normal'
           variant='outlined'
@@ -143,7 +142,7 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
           fullWidth
           label='Длительность аукциона'
           value={formData.duration_hours}
-          onChange={(e) =>
+          onChange={e =>
             setFormData({
               ...formData,
               duration_hours: parseFloat(e.target.value),
@@ -162,21 +161,13 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
       </Box>
 
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-        <Button
-          onClick={handleClose}
-          disabled={loading}
-          variant="outlined"
-        >
+        <Button onClick={handleClose} disabled={loading} variant='outlined'>
           Отмена
         </Button>
         <Button
           variant='contained'
           onClick={handleSubmit}
-          disabled={
-            !formData.username ||
-            !formData.min_price ||
-            loading
-          }
+          disabled={!formData.username || !formData.min_price || loading}
           startIcon={loading ? <CircularProgress size={20} /> : null}
         >
           {loading ? 'Создание...' : 'Создать аукцион'}
@@ -186,4 +177,4 @@ const CreateAuctionModal: React.FC<CreateAuctionModalProps> = ({
   );
 };
 
-export default CreateAuctionModal; 
+export default CreateAuctionModal;

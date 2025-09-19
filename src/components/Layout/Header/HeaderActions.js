@@ -16,12 +16,9 @@ const HeaderActions = ({
   handleNotificationRead,
 }) => {
   // Используем CSS переменные для цветов, если они определены, иначе fallback
-  const themeTextPrimary =
-    'var(--theme-text-primary, #fff)';
-  const themeTextSecondary =
-    'var(--theme-text-secondary, #aaa)';
-  const primary =
-    'var(--primary, #D0BCFF)';
+  const themeTextPrimary = 'var(--theme-text-primary, #fff)';
+  const themeTextSecondary = 'var(--theme-text-secondary, #aaa)';
+  const primary = 'var(--primary, #D0BCFF)';
 
   const actionsStyles = {
     '--primary-color': primaryColor,
@@ -38,7 +35,12 @@ const HeaderActions = ({
             onClick={() => navigate('/balance')}
             style={{ color: themeTextPrimary }}
           >
-            <Icon icon='tabler:coins' width='22' height='22' color={themeTextPrimary} />
+            <Icon
+              icon='tabler:coins'
+              width='22'
+              height='22'
+              color={themeTextPrimary}
+            />
           </button>
         </div>
       )}
@@ -60,7 +62,7 @@ const HeaderActions = ({
       {/* Уведомления рендерятся везде */}
       {user && (
         <div className='notification-container'>
-          <NotificationList 
+          <NotificationList
             onNewNotification={handleNewNotification}
             onNotificationRead={handleNotificationRead}
           />
@@ -79,12 +81,20 @@ const HeaderActions = ({
           <img
             className='profile-avatar'
             src={
-              user.avatar_url || (user.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+              user.avatar_url ||
+              (user.photo
+                ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
+                : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
             }
             alt={user.name || user.username}
           />
         ) : (
-          <Icon icon='solar:user-bold' width='24' height='24' color={themeTextPrimary} />
+          <Icon
+            icon='solar:user-bold'
+            width='24'
+            height='24'
+            color={themeTextPrimary}
+          />
         )}
       </button>
     </div>

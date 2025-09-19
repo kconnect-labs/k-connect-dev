@@ -1,1 +1,1 @@
-export { default as LeaderboardUserCard } from './LeaderboardUserCard'; 
+export { default as LeaderboardUserCard } from './LeaderboardUserCard';

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-  LeaderboardUser, 
-  LeaderboardResponse, 
-  TimePeriod, 
-  DateRange 
+import {
+  LeaderboardUser,
+  LeaderboardResponse,
+  TimePeriod,
+  DateRange,
 } from '../../../types/leaderboard';
 
 const API_URL = '';
@@ -39,7 +39,8 @@ export const useLeaderboard = () => {
           setError('Не удалось загрузить данные лидерборда');
         }
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка';
+        const errorMessage =
+          err instanceof Error ? err.message : 'Неизвестная ошибка';
         setError(`Ошибка: ${errorMessage}`);
       } finally {
         setLoading(false);
@@ -49,7 +50,10 @@ export const useLeaderboard = () => {
     fetchLeaderboard();
   }, [timePeriod]);
 
-  const handleTimePeriodChange = (event: React.SyntheticEvent, newValue: TimePeriod): void => {
+  const handleTimePeriodChange = (
+    event: React.SyntheticEvent,
+    newValue: TimePeriod
+  ): void => {
     setTimePeriod(newValue);
   };
 

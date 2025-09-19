@@ -91,7 +91,10 @@ const Sidebar = memo(({ isMobile }) => {
   );
 
   return (
-    <div className='sidebar-container theme-aware' style={themeValues.sidebarStyle}>
+    <div
+      className='sidebar-container theme-aware'
+      style={themeValues.sidebarStyle}
+    >
       <SidebarProvider>
         <div className='sidebar-content'>
           <UserProfileBlock

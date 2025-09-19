@@ -8,22 +8,18 @@ import React, {
 } from 'react';
 import axios from 'axios';
 
-
 const getAudioUrl = filePath => {
   if (!filePath) return '';
 
-  
   if (filePath.startsWith('http')) {
     return filePath;
   }
 
-  
   const isLocalhost =
     window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.hostname.includes('localhost');
 
-  
   if (isLocalhost) {
     return `https://k-connect.ru${filePath}`;
   }
@@ -143,7 +139,6 @@ export const MusicProvider = ({ children }) => {
     let isMounted = true;
 
     const fetchTracks = async () => {
-      
       if (isLoadingRef.current) {
         return;
       }
@@ -151,7 +146,6 @@ export const MusicProvider = ({ children }) => {
       const currentPath = window.location.pathname;
       const isMusicPage = currentPath.startsWith('/music');
 
-      
       if (!isMusicPage) {
         console.log('Не на музыкальной странице, пропускаем загрузку треков');
         return;
@@ -273,9 +267,8 @@ export const MusicProvider = ({ children }) => {
             if (response.data && response.data.tracks) {
               const receivedTracks = response.data.tracks;
 
-              
               setMyVibeTracks(receivedTracks);
-              setHasMoreTracks(false); 
+              setHasMoreTracks(false);
               setHasMoreByType(prev => ({ ...prev, 'my-vibe': false }));
             } else {
               setMyVibeTracks([]);
@@ -307,8 +300,6 @@ export const MusicProvider = ({ children }) => {
           const receivedTracks = response.data.tracks;
 
           if (receivedTracks.length > 0) {
-            
-            
             if (isPlaying || currentTrack) {
               const prefetchCount = Math.min(3, receivedTracks.length);
 
@@ -421,12 +412,18 @@ export const MusicProvider = ({ children }) => {
         }
 
         const now = Date.now();
-        if (now - lastTimeUpdateRef.current > 100) { 
-          
-          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && isPlaying && Math.abs(currentTimeRef.current - audio.currentTime) > 0.1) {
+        if (now - lastTimeUpdateRef.current > 100) {
+          if (
+            (hasTimeListenersRef.current || isFullScreenPlayerOpen) &&
+            isPlaying &&
+            Math.abs(currentTimeRef.current - audio.currentTime) > 0.1
+          ) {
             setCurrentTime(audio.currentTime);
           }
-          if ((hasTimeListenersRef.current || isFullScreenPlayerOpen) && Math.abs(durationRef.current - audio.duration) > 0.1) {
+          if (
+            (hasTimeListenersRef.current || isFullScreenPlayerOpen) &&
+            Math.abs(durationRef.current - audio.duration) > 0.1
+          ) {
             setDuration(audio.duration);
           }
           lastTimeUpdateRef.current = now;
@@ -435,8 +432,11 @@ export const MusicProvider = ({ children }) => {
         if (enableCrossfade && isPlaying && audio.duration > 0) {
           const timeRemaining = audio.duration - audio.currentTime;
 
-          
-          if (timeRemaining <= 10 && timeRemaining > 3 && !crossfadeTimeoutRef.current) {
+          if (
+            timeRemaining <= 10 &&
+            timeRemaining > 3 &&
+            !crossfadeTimeoutRef.current
+          ) {
             getNextTrack().then(nextTrackToLoad => {
               if (nextTrackToLoad && nextAudioRef.current) {
                 console.log('Preloading next track:', nextTrackToLoad.title);
@@ -446,15 +446,14 @@ export const MusicProvider = ({ children }) => {
             });
           }
 
-          
           if (
             timeRemaining <= 3 &&
             timeRemaining > 0 &&
             !crossfadeTimeoutRef.current
           ) {
             console.log('Starting crossfade...');
-            crossfadeTimeoutRef.current = true; 
-            
+            crossfadeTimeoutRef.current = true;
+
             getNextTrack().then(nextTrackToPlay => {
               if (nextTrackToPlay) {
                 nextAudioRef.current.src = nextTrackToPlay.file_path;
@@ -494,7 +493,10 @@ export const MusicProvider = ({ children }) => {
 
                       setCurrentTrack(nextTrackToPlay);
                       setCurrentSectionHandler(currentSection);
-                      localStorage.setItem('currentTrack', JSON.stringify(nextTrackToPlay));
+                      localStorage.setItem(
+                        'currentTrack',
+                        JSON.stringify(nextTrackToPlay)
+                      );
 
                       crossfadeTimeoutRef.current = null;
                     }
@@ -513,37 +515,41 @@ export const MusicProvider = ({ children }) => {
     const handleEnded = () => {
       if (isMounted) {
         console.log('Track ended, handling transition...');
-        
-        
+
         crossfadeTimeoutRef.current = null;
-        
-        
+
         audioRef.current.pause();
-        
-        
-        if (enableCrossfade && nextAudioRef.current.src && !nextAudioRef.current.paused) {
+
+        if (
+          enableCrossfade &&
+          nextAudioRef.current.src &&
+          !nextAudioRef.current.paused
+        ) {
           console.log('Using preloaded next track from crossfade');
-          
-          
+
           const tempAudio = audioRef.current;
           audioRef.current = nextAudioRef.current;
           nextAudioRef.current = tempAudio;
-          
-          
+
           getNextTrack()
             .then(nextTrackToPlay => {
               if (nextTrackToPlay) {
                 setCurrentTrack(nextTrackToPlay);
                 setCurrentSectionHandler(currentSection);
-                localStorage.setItem('currentTrack', JSON.stringify(nextTrackToPlay));
+                localStorage.setItem(
+                  'currentTrack',
+                  JSON.stringify(nextTrackToPlay)
+                );
               }
             })
             .catch(error => {
-              console.error('Error getting next track after track ended:', error);
+              console.error(
+                'Error getting next track after track ended:',
+                error
+              );
               nextTrack();
             });
         } else {
-          
           console.log('Crossfade not active, switching to next track normally');
           nextTrack();
         }
@@ -606,10 +612,9 @@ export const MusicProvider = ({ children }) => {
       return;
     }
 
-    
     if (typeof track === 'number') {
       const trackId = track;
-      const foundTrack = 
+      const foundTrack =
         tracks.find(t => t.id === trackId) ||
         popularTracks.find(t => t.id === trackId) ||
         likedTracks.find(t => t.id === trackId) ||
@@ -617,13 +622,16 @@ export const MusicProvider = ({ children }) => {
         randomTracks.find(t => t.id === trackId) ||
         myVibeTracks.find(t => t.id === trackId) ||
         searchResults.find(t => t.id === trackId);
-      
+
       if (foundTrack) {
         track = foundTrack;
       } else {
-        
-        console.log('Track not found in local lists, loading from server:', trackId);
-        axios.get(`/api/music/${trackId}`)
+        console.log(
+          'Track not found in local lists, loading from server:',
+          trackId
+        );
+        axios
+          .get(`/api/music/${trackId}`)
           .then(response => {
             if (response.data && response.data.success && response.data.track) {
               playTrack(response.data.track, section);
@@ -654,10 +662,8 @@ export const MusicProvider = ({ children }) => {
         return;
       }
 
-      
       let trackSection = section || determineSectionFromTrack(track);
 
-      
       if (trackSection === 'all-tracks') {
         trackSection = 'all';
       }
@@ -676,15 +682,12 @@ export const MusicProvider = ({ children }) => {
           .catch(err => console.error('Error fetching lyrics for track:', err));
       }
 
-      
       setCurrentTime(0);
       setDuration(0);
-      
-      
+
       audioRef.current.pause();
       nextAudioRef.current.pause();
 
-      
       if (crossfadeTimeoutRef.current) {
         clearInterval(crossfadeTimeoutRef.current);
         crossfadeTimeoutRef.current = null;
@@ -693,7 +696,6 @@ export const MusicProvider = ({ children }) => {
       audioRef.current.src = '';
       nextAudioRef.current.src = '';
 
-      
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
       }
@@ -703,8 +705,7 @@ export const MusicProvider = ({ children }) => {
 
       setCurrentTrack(track);
       setCurrentSectionHandler(trackSection);
-      
-      
+
       nextTrackCacheRef.current = null;
 
       try {
@@ -716,13 +717,9 @@ export const MusicProvider = ({ children }) => {
 
       audioRef.current = new Audio();
 
-      
-      
-
       const handleCanPlayThrough = () => {
         setIsTrackLoading(false);
 
-        
         if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
           setDuration(audioRef.current.duration);
         }
@@ -748,8 +745,6 @@ export const MusicProvider = ({ children }) => {
                       error
                     )
                   );
-
-
               } catch (error) {
                 console.error(
                   'Ошибка при отправке статистики воспроизведения:',
@@ -768,7 +763,6 @@ export const MusicProvider = ({ children }) => {
       const handleLoadStart = () => {};
 
       const handleLoadedMetadata = () => {
-        
         if (audioRef.current.duration && !isNaN(audioRef.current.duration)) {
           setDuration(audioRef.current.duration);
         }
@@ -776,19 +770,19 @@ export const MusicProvider = ({ children }) => {
 
       const handleError = error => {
         const audio = audioRef.current;
-        
-        
+
         if (!audio.error) {
-          return; 
+          return;
         }
-        
-        
+
         console.error('Ошибка при загрузке трека:', {
           errorCode: audio.error.code,
           errorMessage: audio.error.message,
-          track: track ? { id: track.id, title: track.title, file_path: track.file_path } : 'N/A'
+          track: track
+            ? { id: track.id, title: track.title, file_path: track.file_path }
+            : 'N/A',
         });
-        
+
         setIsTrackLoading(false);
       };
 
@@ -810,7 +804,10 @@ export const MusicProvider = ({ children }) => {
           handleCanPlayThrough
         );
         audioRef.current.removeEventListener('loadstart', handleLoadStart);
-        audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audioRef.current.removeEventListener(
+          'loadedmetadata',
+          handleLoadedMetadata
+        );
         audioRef.current.removeEventListener('error', handleError);
       };
     } catch (error) {
@@ -845,8 +842,6 @@ export const MusicProvider = ({ children }) => {
           playPromise
             .then(() => {
               setIsPlaying(true);
-
-
             })
             .catch(error => {
               console.error('Ошибка при воспроизведении:', error);
@@ -869,7 +864,6 @@ export const MusicProvider = ({ children }) => {
     try {
       const nextTrackItem = await getNextTrack();
       if (nextTrackItem) {
-        
         playTrack(nextTrackItem, currentSection);
       } else {
         setIsTrackLoading(false);
@@ -891,7 +885,6 @@ export const MusicProvider = ({ children }) => {
       if (currentTime < 3) {
         const prevTrackItem = await getPreviousTrack();
         if (prevTrackItem) {
-          
           playTrack(prevTrackItem, currentSection);
         } else {
           audioRef.current.currentTime = 0;
@@ -911,16 +904,17 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      
       const now = Date.now();
-      if (nextTrackCacheRef.current && (now - lastNextTrackCallRef.current) < 5000) {
+      if (
+        nextTrackCacheRef.current &&
+        now - lastNextTrackCallRef.current < 5000
+      ) {
         console.log('Using cached next track');
         return nextTrackCacheRef.current;
       }
 
       lastNextTrackCallRef.current = now;
 
-      
       try {
         const response = await axios.get('/api/music/next', {
           params: {
@@ -937,12 +931,8 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
       } catch (error) {
-        console.error(
-          'Ошибка при запросе следующего трека к бэкенду:',
-          error
-        );
-        
-        
+        console.error('Ошибка при запросе следующего трека к бэкенду:', error);
+
         let trackList;
         switch (currentSection) {
           case 'popular':
@@ -971,19 +961,16 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
 
-        
         const currentIndex = trackList.findIndex(
           track => track.id === currentTrack.id
         );
 
         if (currentIndex === -1) {
-          
           const firstTrack = trackList[0];
           nextTrackCacheRef.current = firstTrack;
           return firstTrack;
         }
 
-        
         const isNearingEnd = currentIndex >= trackList.length - 3;
         const isNearing15Increment =
           (currentIndex + 1) % 15 >= 12 || (currentIndex + 1) % 15 === 0;
@@ -995,13 +982,11 @@ export const MusicProvider = ({ children }) => {
           loadMoreTracks(currentSection);
         }
 
-        
         if (currentIndex < trackList.length - 1) {
           const nextTrack = trackList[currentIndex + 1];
           nextTrackCacheRef.current = nextTrack;
           return nextTrack;
         } else {
-          
           if (hasMoreByType[currentSection]) {
             const loaded = await loadMoreTracks(currentSection);
 
@@ -1038,7 +1023,6 @@ export const MusicProvider = ({ children }) => {
             }
           }
 
-          
           const firstTrack = trackList[0];
           nextTrackCacheRef.current = firstTrack;
           return firstTrack;
@@ -1054,7 +1038,6 @@ export const MusicProvider = ({ children }) => {
     try {
       if (!currentTrack) return null;
 
-      
       try {
         const response = await axios.get('/api/music/previous', {
           params: {
@@ -1070,12 +1053,8 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
       } catch (error) {
-        console.error(
-          'Ошибка при запросе предыдущего трека к бэкенду:',
-          error
-        );
-        
-        
+        console.error('Ошибка при запросе предыдущего трека к бэкенду:', error);
+
         let trackList;
         switch (currentSection) {
           case 'popular':
@@ -1104,17 +1083,14 @@ export const MusicProvider = ({ children }) => {
           return null;
         }
 
-        
         const currentIndex = trackList.findIndex(
           track => track.id === currentTrack.id
         );
 
         if (currentIndex === -1) {
-          
           return trackList[trackList.length - 1];
         }
 
-        
         const isNearingStart = currentIndex <= 2;
         const isNearing15Increment =
           (currentIndex + 1) % 15 <= 3 || (currentIndex + 1) % 15 === 0;
@@ -1126,11 +1102,9 @@ export const MusicProvider = ({ children }) => {
           loadMoreTracks(currentSection);
         }
 
-        
         if (currentIndex > 0) {
           return trackList[currentIndex - 1];
         } else {
-          
           if (hasMoreByType[currentSection]) {
             const loaded = await loadMoreTracks(currentSection);
 
@@ -1165,7 +1139,6 @@ export const MusicProvider = ({ children }) => {
             }
           }
 
-          
           return trackList[trackList.length - 1];
         }
       }
@@ -1186,7 +1159,6 @@ export const MusicProvider = ({ children }) => {
       try {
         const nextTrackItem = await getNextTrack();
         if (nextTrackItem) {
-          
           playTrack(nextTrackItem, currentSection);
         } else {
         }
@@ -1479,7 +1451,6 @@ export const MusicProvider = ({ children }) => {
         const newTracksList = [response.data.track, ...newTracks].slice(0, 10);
         setNewTracks(newTracksList);
 
-        
         if (myVibeTracks.length > 0) {
           const updatedMyVibeTracks = [
             response.data.track,
@@ -1881,7 +1852,7 @@ export const MusicProvider = ({ children }) => {
           Pragma: 'no-cache',
           Expires: '0',
         },
-        withCredentials: true, 
+        withCredentials: true,
       });
 
       console.log('[SEARCH] Полный ответ сервера:', {
@@ -1895,7 +1866,6 @@ export const MusicProvider = ({ children }) => {
 
       const tracks = response.data;
 
-      
       if (!Array.isArray(tracks)) {
         console.warn('[SEARCH] Ответ сервера не является массивом:', tracks);
         setSearchResults([]);
@@ -1907,7 +1877,6 @@ export const MusicProvider = ({ children }) => {
         return [];
       }
 
-      
       const processedTracks = tracks.map((track, index) => {
         console.log(`[SEARCH] Обрабатываем трек ${index + 1}:`, {
           id: track.id,
@@ -1919,12 +1888,12 @@ export const MusicProvider = ({ children }) => {
 
         return {
           ...track,
-          
+
           is_liked:
             typeof track.is_liked === 'boolean'
               ? track.is_liked
               : Boolean(likedTracks.find(lt => lt.id === track.id)),
-          
+
           file_path:
             track.file_path || '/static/uploads/system/audio_placeholder.mp3',
           cover_path:
@@ -1956,9 +1925,7 @@ export const MusicProvider = ({ children }) => {
           : 'Нет конфига',
       });
 
-      
       if (error.response) {
-        
         if (error.response.status === 401) {
           console.error('[SEARCH] Требуется аутентификация для поиска');
         } else if (error.response.status === 403) {
@@ -1971,10 +1938,8 @@ export const MusicProvider = ({ children }) => {
           );
         }
       } else if (error.request) {
-        
         console.error('[SEARCH] Нет ответа от сервера при поиске');
       } else {
-        
         console.error('[SEARCH] Ошибка при настройке запроса:', error.message);
       }
 
@@ -2177,7 +2142,6 @@ export const MusicProvider = ({ children }) => {
         const savedTrack = localStorage.getItem('currentTrack');
         const savedSection = localStorage.getItem('currentSection') || 'all';
 
-        
         const validSections = [
           'all',
           'popular',
@@ -2194,7 +2158,6 @@ export const MusicProvider = ({ children }) => {
           const parsedTrack = JSON.parse(savedTrack);
           setCurrentTrack(parsedTrack);
 
-          
           if (isValidSection) {
             setCurrentSectionHandler(savedSection);
           } else {
@@ -2205,20 +2168,17 @@ export const MusicProvider = ({ children }) => {
           audioRef.current.volume = volume;
           setIsPlaying(false);
         } else {
-          
           setCurrentSectionHandler('all');
         }
       } catch (error) {
         console.error('Ошибка при восстановлении трека:', error);
-        
+
         setCurrentSectionHandler('all');
       }
 
       initialMount.current = false;
     }
   }, [volume]);
-
-
 
   const getCurrentTimeRaw = useCallback(() => {
     const audio = audioRef.current;
@@ -2255,12 +2215,9 @@ export const MusicProvider = ({ children }) => {
     }));
   }, []);
 
-  
   const determineSectionFromTrack = track => {
-    
     const currentPath = window.location.pathname;
 
-    
     if (
       currentPath.includes('/music/liked') ||
       currentPath.includes('/liked')
@@ -2295,7 +2252,6 @@ export const MusicProvider = ({ children }) => {
       return 'all';
     }
 
-    
     if (likedTracks.find(t => t.id === track.id)) {
       return 'liked';
     }
@@ -2314,21 +2270,19 @@ export const MusicProvider = ({ children }) => {
     if (searchResults.find(t => t.id === track.id)) {
       return 'search';
     }
-    
+
     for (const [playlistId, tracks] of Object.entries(playlistTracks)) {
       if (tracks.find(t => t.id === track.id)) {
         return `playlist_${playlistId}`;
       }
     }
-    
+
     return 'all';
   };
 
-  
   const setCurrentSectionHandler = section => {
     setCurrentSection(section);
 
-    
     if (section && !section.startsWith('playlist_') && section !== 'search') {
       try {
         localStorage.setItem('currentSection', section);
@@ -2348,29 +2302,24 @@ export const MusicProvider = ({ children }) => {
     }
   };
 
-  
   const openFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(true);
-    hasTimeListenersRef.current = true; 
+    hasTimeListenersRef.current = true;
 
-    
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari =
       /safari/i.test(navigator.userAgent) &&
       !/chrome/i.test(navigator.userAgent) &&
       !/android/i.test(navigator.userAgent);
 
-    
     const rootElement = document.getElementById('root');
     if (rootElement) {
       if (isIOS || isSafari) {
-        
         rootElement.style.transform = 'translateX(-100vw)';
         rootElement.style.position = 'fixed';
         rootElement.style.visibility = 'hidden';
         rootElement.style.opacity = '0';
       } else {
-        
         rootElement.style.visibility = 'hidden';
         rootElement.style.position = 'fixed';
         rootElement.style.top = '-9999px';
@@ -2381,7 +2330,6 @@ export const MusicProvider = ({ children }) => {
       }
     }
 
-    
     if (typeof document !== 'undefined' && document.body) {
       document.body.style.overflow = 'hidden';
       if (isIOS) {
@@ -2394,27 +2342,23 @@ export const MusicProvider = ({ children }) => {
 
   const closeFullScreenPlayer = useCallback(() => {
     setIsFullScreenPlayerOpen(false);
-    hasTimeListenersRef.current = false; 
+    hasTimeListenersRef.current = false;
 
-    
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari =
       /safari/i.test(navigator.userAgent) &&
       !/chrome/i.test(navigator.userAgent) &&
       !/android/i.test(navigator.userAgent);
 
-    
     const rootElement = document.getElementById('root');
     if (rootElement) {
       if (isIOS || isSafari) {
-        
         rootElement.style.transform = '';
         rootElement.style.position = '';
         rootElement.style.visibility = '';
         rootElement.style.opacity = '';
         rootElement.style.pointerEvents = '';
       } else {
-        
         rootElement.style.visibility = '';
         rootElement.style.position = '';
         rootElement.style.top = '';
@@ -2425,7 +2369,6 @@ export const MusicProvider = ({ children }) => {
       }
     }
 
-    
     if (typeof document !== 'undefined' && document.body) {
       document.body.style.overflow = '';
       document.body.style.position = '';
@@ -2434,27 +2377,21 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
-  
   const forceLoadTracks = useCallback(
     async (section = null) => {
       const targetSection = section || currentSection;
 
-      
       if (targetSection === 'liked' && isLoadingLikedTracksRef.current) {
         return;
       }
 
-      
-      
-
-      
       try {
         let url = '/api/music';
         let params = { page: 1, per_page: 50 };
 
         if (targetSection === 'liked') {
           url = '/api/music/liked';
-          isLoadingLikedTracksRef.current = true; 
+          isLoadingLikedTracksRef.current = true;
         } else if (targetSection === 'my-vibe') {
           url = '/api/music/my-vibe';
         } else if (targetSection === 'popular') {
@@ -2503,21 +2440,19 @@ export const MusicProvider = ({ children }) => {
         setIsLoading(false);
         isLoadingRef.current = false;
         if (targetSection === 'liked') {
-          isLoadingLikedTracksRef.current = false; 
+          isLoadingLikedTracksRef.current = false;
         }
       }
     },
     [currentSection]
   );
 
-  
   const playTrackById = useCallback(async trackId => {
     if (!trackId) return;
 
     try {
       const response = await axios.get(`/api/music/${trackId}`);
       if (response.data && response.data.success && response.data.track) {
-        
         setCurrentTrack(response.data.track);
         console.log('Track loaded for deeplink:', trackId);
       } else {
@@ -2528,12 +2463,9 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
-  
   useEffect(() => {
-    
     const deeplinkTrackId = localStorage.getItem('deeplinkTrackId');
     if (deeplinkTrackId) {
-      
       playTrackById(deeplinkTrackId);
       localStorage.removeItem('deeplinkTrackId');
     }

@@ -51,8 +51,14 @@ export const getMenuItems = (
       },
       {
         id: 'pin',
-        label: isPinned ? t('post.menu_actions.unpin') : t('post.menu_actions.pin'),
-        icon: isPinned ? <PushPinIcon fontSize='small' /> : <PushPinOutlinedIcon fontSize='small' />,
+        label: isPinned
+          ? t('post.menu_actions.unpin')
+          : t('post.menu_actions.pin'),
+        icon: isPinned ? (
+          <PushPinIcon fontSize='small' />
+        ) : (
+          <PushPinOutlinedIcon fontSize='small' />
+        ),
         onClick: handlers.handlePinPost,
       }
     );
@@ -78,4 +84,4 @@ export const getMenuItems = (
   }
 
   return items;
-}; 
+};

@@ -62,13 +62,13 @@ const API_URL = 'https://k-connect.ru/apiMes';
 const getStickerType = sticker => {
   if (!sticker.url) return 'unknown';
 
-      // Сначала проверяем данные стикера, если есть
-    if (sticker.mime_type) {
-      // TGS и WebM поддержка временно отключена
-      // if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
-      // if (sticker.mime_type === 'video/webm') return 'webm';
-      return 'static';
-    }
+  // Сначала проверяем данные стикера, если есть
+  if (sticker.mime_type) {
+    // TGS и WebM поддержка временно отключена
+    // if (sticker.mime_type === 'application/x-tgsticker') return 'tgs';
+    // if (sticker.mime_type === 'video/webm') return 'webm';
+    return 'static';
+  }
 
   // Если данных нет, проверяем URL (менее надежно)
   const url = sticker.url.toLowerCase();
@@ -649,11 +649,7 @@ const StickerManagePage = () => {
     if (!file) return;
 
     // Проверка типа файла - добавляем поддержку TGS
-    const allowedTypes = [
-      'image/webp',
-      'image/png',
-      'image/jpeg',
-    ];
+    const allowedTypes = ['image/webp', 'image/png', 'image/jpeg'];
     const isTGSFile = false; // TGS поддержка временно отключена
 
     if (!allowedTypes.includes(file.type) && !isTGSFile) {
@@ -685,11 +681,7 @@ const StickerManagePage = () => {
       return;
     }
 
-    const allowedTypes = [
-      'image/webp',
-      'image/png',
-      'image/jpeg',
-    ];
+    const allowedTypes = ['image/webp', 'image/png', 'image/jpeg'];
     const validFiles = [];
     const previews = [];
     let hasErrors = false;
@@ -1949,8 +1941,8 @@ const StickerManagePage = () => {
           )}
 
           <Typography variant='caption' color='text.secondary'>
-            Поддерживаемые форматы: WEBP, PNG, JPEG. Максимальный
-            размер: 1MB. PNG автоматически конвертируется в WEBP.
+            Поддерживаемые форматы: WEBP, PNG, JPEG. Максимальный размер: 1MB.
+            PNG автоматически конвертируется в WEBP.
           </Typography>
         </DialogContent>
         <DialogActions>

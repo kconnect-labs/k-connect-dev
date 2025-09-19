@@ -8,7 +8,7 @@ import {
   Avatar,
   Skeleton,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -19,7 +19,7 @@ import {
   BugReport,
   ContentPaste,
   Security,
-  Report
+  Report,
 } from '@mui/icons-material';
 import { Ticket } from '../types';
 
@@ -134,7 +134,9 @@ const getCategoryLabel = (category: string) => {
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const now = new Date();
-  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+  const diffInHours = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+  );
 
   if (diffInHours < 1) {
     return 'Только что';
@@ -151,56 +153,90 @@ const formatDate = (dateString: string) => {
   }
 };
 
-const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loading = false }) => {
+const TicketList: React.FC<TicketListProps> = ({
+  tickets,
+  onTicketSelect,
+  loading = false,
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   if (loading) {
     return (
       <Box>
-        {[1, 2, 3, 4, 5].map((i) => (
+        {[1, 2, 3, 4, 5].map(i => (
           <StyledCard key={i}>
             <CardContent sx={{ p: { xs: 2, md: 3 } }}>
               {/* Заголовок */}
-              <Skeleton 
-                variant="text" 
-                width="70%" 
-                height={28} 
+              <Skeleton
+                variant='text'
+                width='70%'
+                height={28}
                 sx={{ mb: 1.5, borderRadius: 1 }}
               />
-              
+
               {/* Статусы и приоритет */}
-              <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
-                <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 'var(--main-border-radius) !important' }} />
+              <Box display='flex' gap={1} flexWrap='wrap' mb={2}>
+                <Skeleton
+                  variant='rectangular'
+                  width={80}
+                  height={24}
+                  sx={{ borderRadius: 'var(--main-border-radius) !important' }}
+                />
+                <Skeleton
+                  variant='rectangular'
+                  width={80}
+                  height={24}
+                  sx={{ borderRadius: 'var(--main-border-radius) !important' }}
+                />
+                <Skeleton
+                  variant='rectangular'
+                  width={80}
+                  height={24}
+                  sx={{ borderRadius: 'var(--main-border-radius) !important' }}
+                />
               </Box>
 
               {/* Описание */}
-              <Skeleton 
-                variant="text" 
-                width="100%" 
-                height={20} 
+              <Skeleton
+                variant='text'
+                width='100%'
+                height={20}
                 sx={{ mb: 0.5, borderRadius: 1 }}
               />
-              <Skeleton 
-                variant="text" 
-                width="90%" 
-                height={20} 
+              <Skeleton
+                variant='text'
+                width='90%'
+                height={20}
                 sx={{ mb: 0.5, borderRadius: 1 }}
               />
-              <Skeleton 
-                variant="text" 
-                width="75%" 
-                height={20} 
+              <Skeleton
+                variant='text'
+                width='75%'
+                height={20}
                 sx={{ mb: 2, borderRadius: 1 }}
               />
 
               {/* Метаданные */}
-              <Box display="flex" gap={2} flexWrap="wrap">
-                <Skeleton variant="text" width={80} height={16} sx={{ borderRadius: 1 }} />
-                <Skeleton variant="text" width={60} height={16} sx={{ borderRadius: 1 }} />
-                <Skeleton variant="text" width={70} height={16} sx={{ borderRadius: 1 }} />
+              <Box display='flex' gap={2} flexWrap='wrap'>
+                <Skeleton
+                  variant='text'
+                  width={80}
+                  height={16}
+                  sx={{ borderRadius: 1 }}
+                />
+                <Skeleton
+                  variant='text'
+                  width={60}
+                  height={16}
+                  sx={{ borderRadius: 1 }}
+                />
+                <Skeleton
+                  variant='text'
+                  width={70}
+                  height={16}
+                  sx={{ borderRadius: 1 }}
+                />
               </Box>
             </CardContent>
           </StyledCard>
@@ -211,49 +247,61 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loadin
 
   return (
     <Box>
-      {tickets.map((ticket) => (
+      {tickets.map(ticket => (
         <StyledCard key={ticket.id} onClick={() => onTicketSelect(ticket)}>
           <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-            <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+            <Box
+              display='flex'
+              justifyContent='space-between'
+              alignItems='flex-start'
+            >
               <Box flex={1}>
-                <Typography 
-                  variant="h6" 
-                  component="h3" 
-                  sx={{ 
+                <Typography
+                  variant='h6'
+                  component='h3'
+                  sx={{
                     color: '#cfbcfb',
                     fontSize: { xs: '1rem', md: '1.25rem' },
-                    mb: 1
+                    mb: 1,
                   }}
                 >
                   {ticket.title}
                 </Typography>
-                
+
                 {/* Статусы и приоритет */}
-                <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
+                <Box display='flex' gap={1} flexWrap='wrap' mb={2}>
                   <StyledChip
                     label={getStatusLabel(ticket.status)}
                     color={getStatusColor(ticket.status) as any}
-                    size="small"
-                    icon={ticket.status === 'new' ? <Schedule /> : 
-                          ticket.status === 'resolved' ? <CheckCircle /> : 
-                          ticket.status === 'closed' ? <Close /> : <Schedule />}
+                    size='small'
+                    icon={
+                      ticket.status === 'new' ? (
+                        <Schedule />
+                      ) : ticket.status === 'resolved' ? (
+                        <CheckCircle />
+                      ) : ticket.status === 'closed' ? (
+                        <Close />
+                      ) : (
+                        <Schedule />
+                      )
+                    }
                   />
                   <StyledChip
                     label={getPriorityLabel(ticket.priority)}
                     color={getPriorityColor(ticket.priority) as any}
-                    size="small"
+                    size='small'
                     icon={<Warning />}
                   />
                   <StyledChip
                     label={getCategoryLabel(ticket.category)}
-                    color="default"
-                    size="small"
+                    color='default'
+                    size='small'
                     icon={getCategoryIcon(ticket.category)}
                   />
                 </Box>
 
                 <Typography
-                  variant="body2"
+                  variant='body2'
                   sx={{
                     mb: 2,
                     display: '-webkit-box',
@@ -269,35 +317,35 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loadin
                 </Typography>
 
                 {/* Метаданные */}
-                <Box 
-                  display="flex" 
-                  alignItems="center" 
-                  gap={2} 
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  gap={2}
                   mb={2}
-                  flexWrap="wrap"
-                  sx={{ 
-                    '& > *': { 
-                      minWidth: 'fit-content' 
-                    } 
+                  flexWrap='wrap'
+                  sx={{
+                    '& > *': {
+                      minWidth: 'fit-content',
+                    },
                   }}
                 >
                   {/* Дата создания */}
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
+                  <Typography
+                    variant='caption'
+                    sx={{
                       color: 'rgba(207, 188, 251, 0.5)',
-                      fontSize: { xs: '0.75rem', md: '0.875rem' }
+                      fontSize: { xs: '0.75rem', md: '0.875rem' },
                     }}
                   >
                     {formatDate(ticket.created_at)}
                   </Typography>
 
                   {/* Количество комментариев */}
-                  <Typography 
-                    variant="caption" 
-                    sx={{ 
+                  <Typography
+                    variant='caption'
+                    sx={{
                       color: 'rgba(207, 188, 251, 0.5)',
-                      fontSize: { xs: '0.75rem', md: '0.875rem' }
+                      fontSize: { xs: '0.75rem', md: '0.875rem' },
                     }}
                   >
                     💬 {ticket.public_comments_count}
@@ -305,11 +353,11 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loadin
 
                   {/* Цель тикета */}
                   {ticket.target_type && ticket.target_id && (
-                    <Typography 
-                      variant="caption" 
-                      sx={{ 
+                    <Typography
+                      variant='caption'
+                      sx={{
                         color: 'rgba(207, 188, 251, 0.5)',
-                        fontSize: { xs: '0.75rem', md: '0.875rem' }
+                        fontSize: { xs: '0.75rem', md: '0.875rem' },
                       }}
                     >
                       {ticket.target_type} #{ticket.target_id}
@@ -325,4 +373,4 @@ const TicketList: React.FC<TicketListProps> = ({ tickets, onTicketSelect, loadin
   );
 };
 
-export default TicketList; 
+export default TicketList;

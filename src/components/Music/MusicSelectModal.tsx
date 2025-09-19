@@ -90,13 +90,20 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
   onSelectTracks,
   maxTracks = 3,
 }) => {
-  const { tracks, likedTracks, isLoading, searchTracks: contextSearchTracks, forceLoadTracks } = useMusic();
+  const {
+    tracks,
+    likedTracks,
+    isLoading,
+    searchTracks: contextSearchTracks,
+    forceLoadTracks,
+  } = useMusic();
   const [selectedTracks, setSelectedTracks] = useState<MusicTrack[]>([]);
   const [tabValue, setTabValue] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<MusicTrack[]>([]);
-  const [currentPlayingTrack, setCurrentPlayingTrack] = useState<MusicTrack | null>(null);
+  const [currentPlayingTrack, setCurrentPlayingTrack] =
+    useState<MusicTrack | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingAllTracks, setIsLoadingAllTracks] = useState(false);
   const [isLoadingLikedTracks, setIsLoadingLikedTracks] = useState(false);
@@ -141,7 +148,16 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
       setHasTriedLoadAllTracks(false);
       setHasTriedLoadLikedTracks(false);
     }
-  }, [open, tracks.length, likedTracks.length, forceLoadTracks, isLoadingAllTracks, isLoadingLikedTracks, hasTriedLoadAllTracks, hasTriedLoadLikedTracks]);
+  }, [
+    open,
+    tracks.length,
+    likedTracks.length,
+    forceLoadTracks,
+    isLoadingAllTracks,
+    isLoadingLikedTracks,
+    hasTriedLoadAllTracks,
+    hasTriedLoadLikedTracks,
+  ]);
 
   const stopAudio = () => {
     if (audioRef.current) {
@@ -205,7 +221,7 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
 
   const handleSelectTrack = (track: MusicTrack) => {
     const isSelected = selectedTracks.some(t => t.id === track.id);
-    
+
     if (isSelected) {
       setSelectedTracks(prev => prev.filter(t => t.id !== track.id));
     } else if (selectedTracks.length < maxTracks) {
@@ -227,13 +243,13 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
         audioRef.current.pause();
         audioRef.current.src = '';
       }
-      
+
       audioRef.current.src = track.file_path;
       audioRef.current.addEventListener('ended', () => {
         setIsPlaying(false);
         setCurrentPlayingTrack(null);
       });
-      
+
       audioRef.current.play();
       setCurrentPlayingTrack(track);
       setIsPlaying(true);
@@ -269,13 +285,13 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
     if (searchQuery && searchResults.length > 0) {
       return searchResults;
     }
-    
+
     if (tabValue === 0) {
       return tracks;
     } else if (tabValue === 1) {
       return likedTracks;
     }
-    
+
     return [];
   };
 
@@ -285,8 +301,8 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
     <UniversalModal
       open={open}
       onClose={handleClose}
-      title="Выбор музыки"
-      maxWidth="md"
+      title='Выбор музыки'
+      maxWidth='md'
       maxWidthCustom={600}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -294,12 +310,12 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
         <Box sx={{ mb: 2 }}>
           <SearchInput
             fullWidth
-            placeholder="Поиск музыки..."
+            placeholder='Поиск музыки...'
             value={searchQuery}
             onChange={handleSearchChange}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position='start'>
                   <Search sx={{ color: 'text.secondary' }} />
                 </InputAdornment>
               ),
@@ -309,32 +325,32 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
 
         {/* Табы */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-          <Tabs 
-            value={tabValue} 
-            onChange={handleTabChange} 
-            variant="fullWidth"
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            variant='fullWidth'
             sx={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}
           >
-            <StyledTab label="Все треки" />
-            <StyledTab label="Любимые" />
+            <StyledTab label='Все треки' />
+            <StyledTab label='Любимые' />
           </Tabs>
         </Box>
 
         {/* Выбранные треки */}
         {selectedTracks.length > 0 && (
           <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
               Выбрано ({selectedTracks.length}/{maxTracks}):
             </Typography>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {selectedTracks.map((track) => (
+              {selectedTracks.map(track => (
                 <Chip
                   key={`selected-${track.id}`}
                   label={`${track.title} - ${track.artist}`}
                   onDelete={() => handleSelectTrack(track)}
-                  color="primary"
-                  variant="outlined"
-                  size="small"
+                  color='primary'
+                  variant='outlined'
+                  size='small'
                 />
               ))}
             </Box>
@@ -370,7 +386,7 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
                   mb: 2,
                 }}
               />
-              <Typography color="text.secondary">
+              <Typography color='text.secondary'>
                 {searchQuery
                   ? 'Ничего не найдено'
                   : tabValue === 0
@@ -387,8 +403,8 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
                 tracks.length === 0 &&
                 !hasTriedLoadAllTracks && (
                   <Button
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                     onClick={() => {
                       if (isLoadingAllTracks) return;
                       setIsLoadingAllTracks(true);
@@ -410,8 +426,8 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
                 likedTracks.length === 0 &&
                 !hasTriedLoadLikedTracks && (
                   <Button
-                    variant="outlined"
-                    size="small"
+                    variant='outlined'
+                    size='small'
                     onClick={() => {
                       if (isLoadingLikedTracks) return;
                       setIsLoadingLikedTracks(true);
@@ -424,16 +440,18 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
                     disabled={isLoadingLikedTracks}
                     sx={{ mt: 2 }}
                   >
-                    {isLoadingLikedTracks ? 'Загрузка...' : 'Загрузить любимые треки'}
+                    {isLoadingLikedTracks
+                      ? 'Загрузка...'
+                      : 'Загрузить любимые треки'}
                   </Button>
                 )}
             </Box>
           ) : (
             <List>
-              {displayedTracks.map((track) => {
+              {displayedTracks.map(track => {
                 const isSelected = selectedTracks.some(t => t.id === track.id);
                 const isPlaying = currentPlayingTrack?.id === track.id;
-                
+
                 return (
                   <StyledTrack
                     key={track.id}
@@ -443,32 +461,40 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
                   >
                     <ListItemAvatar>
                       <Avatar
-                        src={track.cover_path || '/static/music/default-cover.jpg'}
+                        src={
+                          track.cover_path || '/static/music/default-cover.jpg'
+                        }
                         sx={{ width: 48, height: 48 }}
                       />
                     </ListItemAvatar>
-                    
+
                     <ListItemText
                       primary={track.title}
                       secondary={track.artist}
                       primaryTypographyProps={{
-                        sx: { fontWeight: isSelected ? 'medium' : 'normal' }
+                        sx: { fontWeight: isSelected ? 'medium' : 'normal' },
                       }}
                     />
-                    
+
                     <ListItemSecondaryAction>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                      >
                         <IconButton
-                          size="small"
-                          onClick={(e) => {
+                          size='small'
+                          onClick={e => {
                             e.stopPropagation();
                             handleTrackPlay(track);
                           }}
-                          sx={{ color: isPlaying ? 'primary.main' : 'text.secondary' }}
+                          sx={{
+                            color: isPlaying
+                              ? 'primary.main'
+                              : 'text.secondary',
+                          }}
                         >
                           {isPlaying ? <Pause /> : <PlayArrow />}
                         </IconButton>
-                        
+
                         {isSelected && (
                           <Check sx={{ color: 'primary.main', fontSize: 20 }} />
                         )}
@@ -482,9 +508,18 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
         </Box>
 
         {/* Кнопки действий */}
-        <Box sx={{ display: 'flex', gap: 2, mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            mt: 2,
+            pt: 2,
+            borderTop: 1,
+            borderColor: 'divider',
+          }}
+        >
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={handleClose}
             fullWidth
             sx={{ borderRadius: '18px' }}
@@ -492,7 +527,7 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
             Отмена
           </Button>
           <Button
-            variant="contained"
+            variant='contained'
             onClick={handleComplete}
             disabled={selectedTracks.length === 0}
             fullWidth
@@ -506,4 +541,4 @@ const MusicSelectModal: React.FC<MusicSelectModalProps> = ({
   );
 };
 
-export default MusicSelectModal; 
+export default MusicSelectModal;

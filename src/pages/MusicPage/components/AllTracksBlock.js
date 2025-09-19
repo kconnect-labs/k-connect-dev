@@ -276,16 +276,22 @@ const AllTracksBlock = () => {
           }, 150);
 
           // Оптимистично обновляем UI
-          const currentTracks = searchQuery.trim() ? (localSearchResults.length > 0 ? localSearchResults : searchResults) : tracks;
-          const trackIndex = currentTracks.findIndex(track => track.id === trackId);
-          
+          const currentTracks = searchQuery.trim()
+            ? localSearchResults.length > 0
+              ? localSearchResults
+              : searchResults
+            : tracks;
+          const trackIndex = currentTracks.findIndex(
+            track => track.id === trackId
+          );
+
           if (trackIndex !== -1) {
             const updatedTracks = [...currentTracks];
             updatedTracks[trackIndex] = {
               ...updatedTracks[trackIndex],
-              is_liked: !updatedTracks[trackIndex].is_liked
+              is_liked: !updatedTracks[trackIndex].is_liked,
             };
-            
+
             if (searchQuery.trim()) {
               // Обновляем локальные результаты поиска
               setLocalSearchResults(updatedTracks);
@@ -306,9 +312,9 @@ const AllTracksBlock = () => {
                 const revertedTracks = [...currentTracks];
                 revertedTracks[trackIndex] = {
                   ...revertedTracks[trackIndex],
-                  is_liked: !revertedTracks[trackIndex].is_liked
+                  is_liked: !revertedTracks[trackIndex].is_liked,
                 };
-                
+
                 if (searchQuery.trim()) {
                   // Откатываем локальные результаты поиска
                   setLocalSearchResults(revertedTracks);
@@ -445,78 +451,83 @@ const AllTracksBlock = () => {
           </SearchContainer>
 
           <List sx={{ p: 0 }}>
-            {(searchQuery.trim() ? (localSearchResults.length > 0 ? localSearchResults : searchResults) : tracks).map(
-              (track, index) => {
-                const isCurrentTrack = currentTrack?.id === track.id;
-                const isTrackPlaying = isPlaying && isCurrentTrack;
+            {(searchQuery.trim()
+              ? localSearchResults.length > 0
+                ? localSearchResults
+                : searchResults
+              : tracks
+            ).map((track, index) => {
+              const isCurrentTrack = currentTrack?.id === track.id;
+              const isTrackPlaying = isPlaying && isCurrentTrack;
 
-                return (
-                  <React.Fragment key={track.id}>
-                    <TrackCard onClick={() => handlePlayTrack(track)}>
-                      <Box
-                        component='img'
-                        src={track.cover_path || '/default-cover.jpg'}
-                        alt={track.title}
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: '16px',
-                          objectFit: 'cover',
-                        }}
-                      />
-                      <Box sx={{ flexGrow: 1, minWidth: 0, marginLeft: '8px' }}>
-                        <Typography variant='body2' noWrap>
-                          {track.title}
-                        </Typography>
-                        <Typography
-                          variant='caption'
-                          color='text.secondary'
-                          noWrap
-                        >
-                          {track.artist}
-                        </Typography>
-                      </Box>
-                      <IconButton
-                        size='small'
-                        onClick={e => {
-                          e.stopPropagation();
-                          isPlaying && currentTrack?.id === track.id
-                            ? pauseTrack()
-                            : handlePlayTrack(track);
-                        }}
-                        sx={{ color: '#fff' }}
+              return (
+                <React.Fragment key={track.id}>
+                  <TrackCard onClick={() => handlePlayTrack(track)}>
+                    <Box
+                      component='img'
+                      src={track.cover_path || '/default-cover.jpg'}
+                      alt={track.title}
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: '16px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <Box sx={{ flexGrow: 1, minWidth: 0, marginLeft: '8px' }}>
+                      <Typography variant='body2' noWrap>
+                        {track.title}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        noWrap
                       >
-                        {isPlaying && currentTrack?.id === track.id ? (
-                          <PauseRounded />
-                        ) : (
-                          <PlayArrowRounded />
-                        )}
-                      </IconButton>
-                      <IconButton
-                        size='small'
-                        onClick={e => handleLikeTrack(track.id, e)}
-                        sx={{ color: track.is_liked ? '#ff4081' : '#fff' }}
-                      >
-                        {track.is_liked ? <Favorite /> : <FavoriteBorder />}
-                      </IconButton>
-                    </TrackCard>
-                    {index <
-                      (searchQuery.trim()
-                        ? (localSearchResults.length > 0 ? localSearchResults.length : searchResults.length)
-                        : tracks.length) -
-                        1 && (
-                      <Divider
-                        sx={{
-                          mx: 2,
-                          my: 0.5,
-                          borderColor: 'rgba(255, 255, 255, 0.05)',
-                        }}
-                      />
-                    )}
-                  </React.Fragment>
-                );
-              }
-            )}
+                        {track.artist}
+                      </Typography>
+                    </Box>
+                    <IconButton
+                      size='small'
+                      onClick={e => {
+                        e.stopPropagation();
+                        isPlaying && currentTrack?.id === track.id
+                          ? pauseTrack()
+                          : handlePlayTrack(track);
+                      }}
+                      sx={{ color: '#fff' }}
+                    >
+                      {isPlaying && currentTrack?.id === track.id ? (
+                        <PauseRounded />
+                      ) : (
+                        <PlayArrowRounded />
+                      )}
+                    </IconButton>
+                    <IconButton
+                      size='small'
+                      onClick={e => handleLikeTrack(track.id, e)}
+                      sx={{ color: track.is_liked ? '#ff4081' : '#fff' }}
+                    >
+                      {track.is_liked ? <Favorite /> : <FavoriteBorder />}
+                    </IconButton>
+                  </TrackCard>
+                  {index <
+                    (searchQuery.trim()
+                      ? localSearchResults.length > 0
+                        ? localSearchResults.length
+                        : searchResults.length
+                      : tracks.length) -
+                      1 && (
+                    <Divider
+                      sx={{
+                        mx: 2,
+                        my: 0.5,
+                        borderColor: 'rgba(255, 255, 255, 0.05)',
+                      }}
+                    />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </List>
 
           {searchQuery.trim() && isSearching && (

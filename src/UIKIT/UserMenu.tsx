@@ -37,10 +37,12 @@ const StyledMenuItem = styled(MenuItem, {
 })<{ danger?: boolean }>(({ theme, danger }) => ({
   padding: '8px 16px',
   fontSize: 14,
-  color: danger ? 'var(--error-color, #ff6b6b)' : 'var(--text-primary, #ffffff)',
+  color: danger
+    ? 'var(--error-color, #ff6b6b)'
+    : 'var(--text-primary, #ffffff)',
   '&:hover': {
-    backgroundColor: danger 
-      ? 'var(--error-bg-hover, rgba(255, 107, 107, 0.1))' 
+    backgroundColor: danger
+      ? 'var(--error-bg-hover, rgba(255, 107, 107, 0.1))'
       : 'var(--bg-hover, rgba(255, 255, 255, 0.08))',
   },
   '& .MuiListItemIcon-root': {
@@ -203,11 +205,7 @@ const UserMenu: React.FC<UserMenuProps> = ({
 
   return (
     <>
-      <MenuButton
-        onClick={handleMenuOpen}
-        size={size}
-        {...props}
-      >
+      <MenuButton onClick={handleMenuOpen} size={size} {...props}>
         <MoreVertIcon sx={{ fontSize: 20 }} />
       </MenuButton>
 
@@ -226,12 +224,16 @@ const UserMenu: React.FC<UserMenuProps> = ({
         PaperProps={{
           elevation: 0,
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {showFollowButton && (
           <StyledMenuItem onClick={handleFollowClick} disabled={loading}>
             <ListItemIcon>
-              {forceUnfollow || isFollowing ? <PersonRemoveIcon sx={{ fontSize: 18 }} /> : <PersonAddIcon sx={{ fontSize: 18 }} />}
+              {forceUnfollow || isFollowing ? (
+                <PersonRemoveIcon sx={{ fontSize: 18 }} />
+              ) : (
+                <PersonAddIcon sx={{ fontSize: 18 }} />
+              )}
             </ListItemIcon>
             <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
               {forceUnfollow || isFollowing ? 'Отписаться' : 'Подписаться'}
@@ -244,7 +246,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             <ListItemIcon>
               <MessageIcon sx={{ fontSize: 18 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>Написать сообщение</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
+              Написать сообщение
+            </ListItemText>
           </StyledMenuItem>
         )}
 
@@ -253,7 +257,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             <ListItemIcon>
               <ContentCopyIcon sx={{ fontSize: 18 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>Скопировать ссылку</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
+              Скопировать ссылку
+            </ListItemText>
           </StyledMenuItem>
         )}
 
@@ -262,7 +268,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             <ListItemIcon>
               <ShareIcon sx={{ fontSize: 18 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>Поделиться</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
+              Поделиться
+            </ListItemText>
           </StyledMenuItem>
         )}
 
@@ -273,7 +281,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             <ListItemIcon>
               <BlockIcon sx={{ fontSize: 18 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>Заблокировать</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
+              Заблокировать
+            </ListItemText>
           </StyledMenuItem>
         )}
 
@@ -282,7 +292,9 @@ const UserMenu: React.FC<UserMenuProps> = ({
             <ListItemIcon>
               <ReportIcon sx={{ fontSize: 18 }} />
             </ListItemIcon>
-            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>Пожаловаться</ListItemText>
+            <ListItemText primaryTypographyProps={{ fontSize: 14 }}>
+              Пожаловаться
+            </ListItemText>
           </StyledMenuItem>
         )}
       </StyledMenu>
@@ -290,4 +302,4 @@ const UserMenu: React.FC<UserMenuProps> = ({
   );
 };
 
-export default UserMenu; 
+export default UserMenu;

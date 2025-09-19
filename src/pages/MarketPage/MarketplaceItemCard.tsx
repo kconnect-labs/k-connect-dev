@@ -1,5 +1,12 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
+  Button,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { MarketplaceListing } from './types';
@@ -84,7 +91,10 @@ interface MarketplaceItemCardProps {
   onClick: (listing: MarketplaceListing) => void;
 }
 
-const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onClick }) => {
+const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({
+  listing,
+  onClick,
+}) => {
   const { item, price, seller_name } = listing;
 
   const getRarityLabel = (rarity: string) => {
@@ -108,18 +118,22 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
       transition={{ duration: 0.3 }}
     >
       <StyledCard onClick={() => onClick(listing)}>
-        <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 2 }}>
+        <CardContent
+          sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 2 }}
+        >
           <ItemImageContainer
             sx={{
-              '--item-background': item.background_url ? `url(${item.background_url})` : 'none',
+              '--item-background': item.background_url
+                ? `url(${item.background_url})`
+                : 'none',
             }}
           >
             <OptimizedImage
               src={item.image_url}
               alt={item.item_name}
-              width="80%"
-              height="80%"
-              fallbackText=""
+              width='80%'
+              height='80%'
+              fallbackText=''
               showSkeleton={true}
               onLoad={() => {}}
               onError={() => {}}
@@ -130,14 +144,14 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
               }}
             />
             <PriceBadge>
-              <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+              <KBallsIcon src='/static/icons/KBalls.svg' alt='KBalls' />
               {formatPrice(price)}
             </PriceBadge>
           </ItemImageContainer>
 
           <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <Typography
-              variant="h6"
+              variant='h6'
               sx={{
                 fontWeight: 600,
                 mb: 1,
@@ -159,18 +173,17 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
               <RarityChip
                 rarity={item.rarity}
                 label={getRarityLabel(item.rarity)}
-                size="small"
+                size='small'
               />
             </Box>
 
             <Typography
-              variant="body2"
-              color="text.secondary"
+              variant='body2'
+              color='text.secondary'
               sx={{ textAlign: 'center', mb: 1 }}
             >
               Продавец: {seller_name}
             </Typography>
-
           </Box>
         </CardContent>
       </StyledCard>

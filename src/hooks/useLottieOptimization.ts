@@ -15,7 +15,7 @@ export const useLottieOptimization = ({
   lottieRef,
   isVisible,
   isDragging,
-  reduceMotion = false
+  reduceMotion = false,
 }: UseLottieOptimizationOptions) => {
   const performanceModeRef = useRef<'high' | 'medium' | 'low'>('high');
   const lastVisibilityChange = useRef<number>(0);
@@ -24,50 +24,56 @@ export const useLottieOptimization = ({
   // Определяем режим производительности на основе системных настроек
   const getPerformanceMode = useCallback(() => {
     if (reduceMotion) return 'low';
-    
+
     // Проверяем производительность устройства
     const connection = (navigator as any).connection;
     if (connection) {
-      if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
+      if (
+        connection.effectiveType === 'slow-2g' ||
+        connection.effectiveType === '2g'
+      ) {
         return 'low';
       }
       if (connection.effectiveType === '3g') {
         return 'medium';
       }
     }
-    
+
     // Проверяем количество ядер процессора
     if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
       return 'medium';
     }
-    
+
     return 'high';
   }, [reduceMotion]);
 
   // Применяем настройки производительности к Lottie
-  const applyPerformanceSettings = useCallback((mode: 'high' | 'medium' | 'low') => {
-    if (!lottieRef.current) return;
+  const applyPerformanceSettings = useCallback(
+    (mode: 'high' | 'medium' | 'low') => {
+      if (!lottieRef.current) return;
 
-    const lottie = lottieRef.current;
-    
-    switch (mode) {
-      case 'high':
-        // Максимальное качество и производительность
-        lottie.setSpeed(1);
-        lottie.setDirection(1);
-        break;
-      case 'medium':
-        // Среднее качество, сниженная скорость
-        lottie.setSpeed(0.8);
-        lottie.setDirection(1);
-        break;
-      case 'low':
-        // Минимальное качество, очень низкая скорость или статичное изображение
-        lottie.setSpeed(0.5);
-        lottie.setDirection(1);
-        break;
-    }
-  }, [lottieRef]);
+      const lottie = lottieRef.current;
+
+      switch (mode) {
+        case 'high':
+          // Максимальное качество и производительность
+          lottie.setSpeed(1);
+          lottie.setDirection(1);
+          break;
+        case 'medium':
+          // Среднее качество, сниженная скорость
+          lottie.setSpeed(0.8);
+          lottie.setDirection(1);
+          break;
+        case 'low':
+          // Минимальное качество, очень низкая скорость или статичное изображение
+          lottie.setSpeed(0.5);
+          lottie.setDirection(1);
+          break;
+      }
+    },
+    [lottieRef]
+  );
 
   // Управление видимостью и воспроизведением
   useEffect(() => {
@@ -86,7 +92,7 @@ export const useLottieOptimization = ({
       if (visibilityTimeoutRef.current) {
         clearTimeout(visibilityTimeoutRef.current);
       }
-      
+
       visibilityTimeoutRef.current = setTimeout(() => {
         if (lottieRef.current && isVisible) {
           lottie.play();
@@ -146,12 +152,12 @@ export const useLottieOptimization = ({
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    return () =>
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [isVisible, lottieRef]);
 
   return {
     performanceMode: performanceModeRef.current,
-    applyPerformanceSettings
+    applyPerformanceSettings,
   };
 };
-

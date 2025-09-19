@@ -45,4 +45,4 @@ export interface Filters {
   status?: string;
   page?: number;
   per_page?: number;
-} 
+}

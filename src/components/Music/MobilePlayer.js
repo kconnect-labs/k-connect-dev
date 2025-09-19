@@ -76,8 +76,6 @@ const PlayerContainer = styled(Paper)(({ theme, covercolor, isModalOpen }) => ({
   },
 }));
 
-
-
 const TrackInfo = memo(({ title, artist, onClick }) => (
   <Box
     sx={{
@@ -317,7 +315,7 @@ const MobilePlayer = memo(({ isMobile, isModalOpen }) => {
       e.stopPropagation();
       if (!currentTrack) return;
 
-              const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
+      const trackLink = `${window.location.origin}/music/${currentTrack.id}`;
 
       copyToClipboard(trackLink);
     },

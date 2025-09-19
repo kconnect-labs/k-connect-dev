@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { TrackSectionProps } from '../types';
 import FeaturedTrackGrid from './FeaturedTrackGrid';
@@ -38,10 +35,8 @@ const TrackSection: React.FC<TrackSectionProps> = ({
 
   return (
     <SectionContainer>
-              <SectionTitle variant="h5">
-        {title}
-      </SectionTitle>
-      
+      <SectionTitle variant='h5'>{title}</SectionTitle>
+
       {featured ? (
         <FeaturedTrackGrid
           tracks={tracks}

@@ -52,9 +52,9 @@ const ReplyInput: React.FC<ReplyInputProps> = ({
 
   const handleSubmit = () => {
     if (!content.trim() && !image) return;
-    
+
     onSubmit(content.trim(), image || undefined, replyingTo?.id);
-    
+
     // Reset form
     setContent('');
     setImage(null);
@@ -75,7 +75,7 @@ const ReplyInput: React.FC<ReplyInputProps> = ({
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
       setImage(file);
-      
+
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === 'string') {
@@ -103,112 +103,115 @@ const ReplyInput: React.FC<ReplyInputProps> = ({
   return (
     <div className={`reply-input visible ${className}`}>
       {replyingTo && (
-        <div className="reply-input-header">
-          <div className="reply-input-replying-to">
-            <svg viewBox="0 0 24 24" className="reply-input-reply-icon">
-              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+        <div className='reply-input-header'>
+          <div className='reply-input-replying-to'>
+            <svg viewBox='0 0 24 24' className='reply-input-reply-icon'>
+              <path d='M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z' />
             </svg>
-            <span className="reply-input-replying-text">Ответ для {replyingTo.name}</span>
+            <span className='reply-input-replying-text'>
+              Ответ для {replyingTo.name}
+            </span>
             <button
-              type="button"
-              className="reply-input-close"
+              type='button'
+              className='reply-input-close'
               onClick={onCancel}
-              title="Отменить ответ"
+              title='Отменить ответ'
             >
-              <svg viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              <svg viewBox='0 0 24 24'>
+                <path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' />
               </svg>
             </button>
           </div>
         </div>
       )}
-      
-      <div className="reply-input-container">
-        <div className="reply-input-avatar">
+
+      <div className='reply-input-container'>
+        <div className='reply-input-avatar'>
           <img
             src={getAvatarUrl(user)}
             alt={user.name}
-            className="reply-input-avatar-img"
-            onError={(e) => {
+            className='reply-input-avatar-img'
+            onError={e => {
               const target = e.target as HTMLImageElement;
-              target.src = 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
+              target.src =
+                'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png';
             }}
           />
         </div>
-        
-        <div className="reply-input-content">
-          <div className="reply-input-field">
+
+        <div className='reply-input-content'>
+          <div className='reply-input-field'>
             <textarea
               ref={textareaRef}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder={placeholder || 'Написать ответ...'}
               disabled={disabled}
               maxLength={maxLength}
-              className="reply-input-textarea"
+              className='reply-input-textarea'
               rows={1}
             />
-            
-            <div className="reply-input-actions">
+
+            <div className='reply-input-actions'>
               <button
-                type="button"
-                className="reply-input-action"
+                type='button'
+                className='reply-input-action'
                 onClick={handleImageClick}
                 disabled={disabled}
-                title="Добавить изображение"
+                title='Добавить изображение'
               >
-                <svg viewBox="0 0 24 24" className="reply-input-action-icon">
-                  <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                <svg viewBox='0 0 24 24' className='reply-input-action-icon'>
+                  <path d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z' />
                 </svg>
               </button>
-              
+
               <button
-                type="button"
-                className="reply-input-send"
+                type='button'
+                className='reply-input-send'
                 onClick={handleSubmit}
                 disabled={!canSubmit}
-                title="Отправить"
+                title='Отправить'
               >
                 {isSubmitting ? (
-                  <div className="reply-input-spinner">
-                    <div className="spinner"></div>
+                  <div className='reply-input-spinner'>
+                    <div className='spinner'></div>
                   </div>
                 ) : (
-                  <svg viewBox="0 0 24 24" className="reply-input-send-icon">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  <svg viewBox='0 0 24 24' className='reply-input-send-icon'>
+                    <path d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z' />
                   </svg>
                 )}
               </button>
             </div>
           </div>
-          
+
           {imagePreview && (
-            <div className="reply-input-image-preview">
+            <div className='reply-input-image-preview'>
               <img
                 src={imagePreview}
-                alt="Preview"
-                className="reply-input-preview-img"
+                alt='Preview'
+                className='reply-input-preview-img'
               />
               <button
-                type="button"
-                className="reply-input-remove-image"
+                type='button'
+                className='reply-input-remove-image'
                 onClick={handleRemoveImage}
-                title="Удалить изображение"
+                title='Удалить изображение'
               >
-                <svg viewBox="0 0 24 24">
-                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                <svg viewBox='0 0 24 24'>
+                  <path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' />
                 </svg>
               </button>
             </div>
           )}
         </div>
       </div>
-      
+
       <input
         ref={fileInputRef}
-        type="file"
-        accept="image/*"
+        type='file'
+        accept='image/*'
         onChange={handleImageChange}
         style={{ display: 'none' }}
         disabled={disabled}

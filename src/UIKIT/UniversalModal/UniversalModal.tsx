@@ -58,7 +58,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
       // Запускаем анимацию появления
       requestAnimationFrame(() => setIsAnimating(true));
     } else {
-      // Компонент может быть размонтирован родителем извне. Чтобы 
+      // Компонент может быть размонтирован родителем извне. Чтобы
       // предотвратить "jump cut", сразу выставляем состояние на скрытое.
       setIsAnimating(false);
     }
@@ -71,13 +71,13 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     // Через время анимации вызываем onClose, чтобы родитель убрал модалку из DOM
     const timeout = isMobile ? 200 : 300;
     setTimeout(() => {
-    onClose();
+      onClose();
     }, timeout);
   };
 
   const handleDialogClose = (
     _event: unknown,
-    _reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick' | undefined,
+    _reason: 'backdropClick' | 'escapeKeyDown' | 'closeButtonClick' | undefined
   ) => {
     if (disableEscapeKeyDown && _reason === 'escapeKeyDown') return;
     closeWithAnimation();
@@ -87,9 +87,13 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     borderRadius: isMobile ? 0 : '16px',
-    maxWidth: maxWidthCustom 
-      ? (typeof maxWidthCustom === 'number' ? `${maxWidthCustom}px` : maxWidthCustom)
-      : (maxWidth === false ? 'none' : '450px'),
+    maxWidth: maxWidthCustom
+      ? typeof maxWidthCustom === 'number'
+        ? `${maxWidthCustom}px`
+        : maxWidthCustom
+      : maxWidth === false
+        ? 'none'
+        : '450px',
     width: fullWidth ? '100%' : 'auto',
     maxHeight: isMobile ? '100vh' : '90vh',
     margin: isMobile ? 0 : 'auto',
@@ -97,7 +101,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     // Анимация для модалки
     transform: isAnimating ? 'scale(1)' : 'scale(0.95)',
     opacity: isAnimating ? 1 : 0,
-    transition: isMobile 
+    transition: isMobile
       ? 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
       : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     // Оптимизация для мобильных устройств
@@ -107,9 +111,7 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   };
 
   const backdropStyle = {
-    backgroundColor: isAnimating
-      ? 'rgba(0, 0, 0, 0.5)'
-      : 'rgba(0, 0, 0, 0)',
+    backgroundColor: isAnimating ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)',
     backdropFilter: isAnimating ? 'blur(4px)' : 'blur(0px)',
     transition:
       'background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -127,13 +129,15 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
     // Анимация для заголовка
     transform: isAnimating ? 'translateY(0)' : 'translateY(-10px)',
     opacity: isAnimating ? 1 : 0,
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s',
+    transition:
+      'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s',
   };
 
   const contentStyle = {
     transform: isAnimating ? 'translateY(0)' : 'translateY(20px)',
     opacity: isAnimating ? 1 : 0,
-    transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s',
+    transition:
+      'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s',
   };
 
   return (
@@ -153,16 +157,14 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
       }}
       TransitionComponent={isMobile ? Slide : Fade}
       TransitionProps={
-        (isMobile
-          ? { direction: 'up', timeout: 200 }
-          : { timeout: 300 }) as any
+        (isMobile ? { direction: 'up', timeout: 200 } : { timeout: 300 }) as any
       }
     >
       <Box sx={headerStyle}>
         {isMobile || showBackButton ? (
-          <IconButton 
-            onClick={onBack || closeWithAnimation} 
-            sx={{ 
+          <IconButton
+            onClick={onBack || closeWithAnimation}
+            sx={{
               color: 'var(--theme-text-primary)',
               transition: 'transform 0.15s ease',
               '&:hover': {
@@ -181,8 +183,8 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
 
         <Typography
           variant='h6'
-          sx={{ 
-            fontWeight: 600, 
+          sx={{
+            fontWeight: 600,
             color: 'var(--theme-text-primary)',
             transition: 'opacity 0.2s ease',
           }}
@@ -190,9 +192,9 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
           {title}
         </Typography>
 
-        <IconButton 
-          onClick={closeWithAnimation} 
-          sx={{ 
+        <IconButton
+          onClick={closeWithAnimation}
+          sx={{
             color: 'var(--theme-text-primary)',
             transition: 'transform 0.15s ease',
             '&:hover': {
@@ -207,9 +209,9 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
         </IconButton>
       </Box>
 
-      <DialogContent 
-        sx={{ 
-          p: disablePadding ? 0 : (isMobile ? '16px' : '24px'), 
+      <DialogContent
+        sx={{
+          p: disablePadding ? 0 : isMobile ? '16px' : '24px',
           pb: addBottomPadding && isMobile ? '120px' : undefined,
           overflow: 'auto',
           ...contentStyle,
@@ -236,4 +238,4 @@ const UniversalModal: React.FC<UniversalModalProps> = ({
   );
 };
 
-export default UniversalModal; 
+export default UniversalModal;

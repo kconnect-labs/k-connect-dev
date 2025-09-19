@@ -37,33 +37,38 @@ export const getDecorationImagePath = itemPath => {
 // Функция для обработки фона декорации
 export const getDecorationBackground = background => {
   if (!background) return null;
-  
+
   // Если это градиент, возвращаем как есть
-  if (background.includes('linear-gradient') || background.includes('radial-gradient')) {
+  if (
+    background.includes('linear-gradient') ||
+    background.includes('radial-gradient')
+  ) {
     return background;
   }
-  
+
   // Если это путь к изображению, добавляем API_URL
   if (background.includes('/')) {
     return background;
   }
-  
+
   // Если это hex цвет, возвращаем как есть
   if (background.startsWith('#')) {
     return background;
   }
-  
+
   return background;
 };
 
 // Функция для получения стилей фона для CSS
 export const getBackgroundStyles = background => {
   if (!background) return {};
-  
-  const isGradient = background.includes('linear-gradient') || background.includes('radial-gradient');
+
+  const isGradient =
+    background.includes('linear-gradient') ||
+    background.includes('radial-gradient');
   const isImage = background.includes('/');
   const isHexColor = background.startsWith('#');
-  
+
   return {
     background: isImage ? `url(${background})` : background,
     backgroundSize: isImage ? 'cover' : 'auto',
@@ -75,47 +80,52 @@ export const getBackgroundStyles = background => {
 // Функция для определения типа фона
 export const getBackgroundType = background => {
   if (!background) return 'none';
-  
-  if (background.includes('linear-gradient') || background.includes('radial-gradient')) {
+
+  if (
+    background.includes('linear-gradient') ||
+    background.includes('radial-gradient')
+  ) {
     return 'gradient';
   }
-  
+
   if (background.includes('/')) {
     return 'image';
   }
-  
+
   if (background.startsWith('#')) {
     return 'color';
   }
-  
+
   return 'unknown';
 };
 
 // Функция для определения светлого/темного фона (для hex цветов)
 export const isLightBackground = hexColor => {
   if (!hexColor || !hexColor.startsWith('#')) return false;
-  
+
   // Убираем # и конвертируем в RGB
   const hex = hexColor.replace('#', '');
   const r = parseInt(hex.substr(0, 2), 16);
   const g = parseInt(hex.substr(2, 2), 16);
   const b = parseInt(hex.substr(4, 2), 16);
-  
+
   // Вычисляем яркость
   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  
+
   return brightness > 128;
 };
 
 // Функция для получения полных стилей декорации
 export const getDecorationStyles = decoration => {
   if (!decoration) return {};
-  
+
   const backgroundStyles = getBackgroundStyles(decoration.background);
-  const itemStyles = decoration.item_path ? parseItemSettings(decoration.item_path).styles : {};
-  
+  const itemStyles = decoration.item_path
+    ? parseItemSettings(decoration.item_path).styles
+    : {};
+
   return {
     ...backgroundStyles,
     ...itemStyles,
   };
-}; 
+};

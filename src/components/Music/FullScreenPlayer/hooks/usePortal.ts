@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 export const usePortal = (open: boolean) => {
-  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(
+    null
+  );
 
   useEffect(() => {
     // Безопасно получаем контейнер портала
@@ -47,9 +49,10 @@ export const usePortal = (open: boolean) => {
         try {
           const viewport = document.querySelector('meta[name=viewport]');
           if (viewport) {
-            const content = viewport
-              .getAttribute('content')
-              ?.replace(', user-scalable=no', '') || '';
+            const content =
+              viewport
+                .getAttribute('content')
+                ?.replace(', user-scalable=no', '') || '';
             viewport.setAttribute('content', content);
           }
         } catch (e) {
@@ -67,13 +70,17 @@ export const usePortal = (open: boolean) => {
           // Восстанавливаем viewport при размонтировании
           const viewport = document.querySelector('meta[name=viewport]');
           if (viewport) {
-            const content = viewport
-              .getAttribute('content')
-              ?.replace(', user-scalable=no', '') || '';
+            const content =
+              viewport
+                .getAttribute('content')
+                ?.replace(', user-scalable=no', '') || '';
             viewport.setAttribute('content', content);
           }
         } catch (e) {
-          console.warn('Не удалось восстановить viewport meta при размонтировании:', e);
+          console.warn(
+            'Не удалось восстановить viewport meta при размонтировании:',
+            e
+          );
         }
       }
     };
@@ -92,5 +99,8 @@ export const usePortalWithComponent = <T extends object>(
 
   if (!open || !portalContainer) return null;
 
-  return ReactDOM.createPortal(React.createElement(Component, props), portalContainer);
+  return ReactDOM.createPortal(
+    React.createElement(Component, props),
+    portalContainer
+  );
 };

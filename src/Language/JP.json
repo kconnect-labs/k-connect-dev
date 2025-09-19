@@ -707,6 +707,9 @@
       "management": "管理",
       "admin_panel": "管理パネル",
       "moderate": "モデレート",
+      "artistErrorModal": {
+        "tickets": "チケットを作成"
+      },
       "shops": {
         "title": "ショップ",
         "badge_shop": "バッジショップ",

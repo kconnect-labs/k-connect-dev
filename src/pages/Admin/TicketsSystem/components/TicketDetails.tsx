@@ -79,7 +79,12 @@ interface TicketDetailsProps {
   comments: Comment[];
   commentsLoading: boolean;
   onTicketAction: (ticketId: number, action: string, data?: any) => void;
-  onCommentAction: (ticketId: number, commentId: number, action: string, data?: any) => void;
+  onCommentAction: (
+    ticketId: number,
+    commentId: number,
+    action: string,
+    data?: any
+  ) => void;
   actionLoading: boolean;
   onShowPost?: (postId: number) => void;
   onOpenComplaintHistory?: (userId: number, userName: string) => void;
@@ -123,41 +128,61 @@ const StyledChip = styled(Chip)(({ theme }) => ({
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'new': return 'info';
-    case 'in_progress': return 'warning';
-    case 'resolved': return 'success';
-    case 'closed': return 'default';
-    default: return 'default';
+    case 'new':
+      return 'info';
+    case 'in_progress':
+      return 'warning';
+    case 'resolved':
+      return 'success';
+    case 'closed':
+      return 'default';
+    default:
+      return 'default';
   }
 };
 
 const getStatusLabel = (status: string) => {
   switch (status) {
-    case 'new': return 'Новый';
-    case 'in_progress': return 'В работе';
-    case 'resolved': return 'Решен';
-    case 'closed': return 'Закрыт';
-    default: return status;
+    case 'new':
+      return 'Новый';
+    case 'in_progress':
+      return 'В работе';
+    case 'resolved':
+      return 'Решен';
+    case 'closed':
+      return 'Закрыт';
+    default:
+      return status;
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case 'urgent': return 'error';
-    case 'high': return 'warning';
-    case 'medium': return 'info';
-    case 'low': return 'default';
-    default: return 'default';
+    case 'urgent':
+      return 'error';
+    case 'high':
+      return 'warning';
+    case 'medium':
+      return 'info';
+    case 'low':
+      return 'default';
+    default:
+      return 'default';
   }
 };
 
 const getPriorityLabel = (priority: string) => {
   switch (priority) {
-    case 'urgent': return 'Срочный';
-    case 'high': return 'Высокий';
-    case 'medium': return 'Средний';
-    case 'low': return 'Низкий';
-    default: return priority;
+    case 'urgent':
+      return 'Срочный';
+    case 'high':
+      return 'Высокий';
+    case 'medium':
+      return 'Средний';
+    case 'low':
+      return 'Низкий';
+    default:
+      return priority;
   }
 };
 
@@ -175,7 +200,6 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
   onUpdatePriority,
   onReopenTicket,
 }) => {
-
   const [newComment, setNewComment] = useState('');
   const [isInternal, setIsInternal] = useState(false);
   const [editingComment, setEditingComment] = useState<number | null>(null);
@@ -200,7 +224,9 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
     if (!editContent.trim()) return;
 
     try {
-      await onCommentAction(ticket.id, commentId, 'update', { content: editContent });
+      await onCommentAction(ticket.id, commentId, 'update', {
+        content: editContent,
+      });
       setEditingComment(null);
       setEditContent('');
     } catch (error) {
@@ -232,88 +258,100 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
     <Box>
       {/* Информация о тикете */}
       <StyledPaper>
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+        <Box
+          display='flex'
+          justifyContent='space-between'
+          alignItems='flex-start'
+          mb={2}
+        >
           <Box flex={1}>
-            <Typography variant="h5" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+            <Typography
+              variant='h5'
+              gutterBottom
+              sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+            >
               {ticket.title}
             </Typography>
-            <Box display="flex" gap={1} mb={2}>
+            <Box display='flex' gap={1} mb={2}>
               <StyledChip
                 label={getStatusLabel(ticket.status)}
                 color={getStatusColor(ticket.status) as any}
-                size="small"
+                size='small'
               />
               <StyledChip
                 label={getPriorityLabel(ticket.priority)}
                 color={getPriorityColor(ticket.priority) as any}
-                size="small"
+                size='small'
               />
               <StyledChip
                 label={ticket.category}
-                color="default"
-                size="small"
+                color='default'
+                size='small'
               />
             </Box>
             {ticket.reason && (
-              <Box display="flex" alignItems="center" gap={1} mb={2}>
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <Box display='flex' alignItems='center' gap={1} mb={2}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                >
                   Причина:
                 </Typography>
                 <StyledChip
                   label={ticket.reason}
-                  color="warning"
-                  size="small"
-                  variant="outlined"
+                  color='warning'
+                  size='small'
+                  variant='outlined'
                 />
               </Box>
             )}
           </Box>
-
         </Box>
 
-        <Box sx={{ 
-          color: 'rgba(255, 255, 255, 0.7)', 
-          mb: 2,
-          p: 2,
-          borderRadius: 'var(--main-border-radius)',
-          background: 'rgba(207, 188, 251, 0.05)',
-          border: '1px solid rgba(207, 188, 251, 0.1)',
-          fontSize: '0.9rem',
-          lineHeight: 1.5,
-          '& strong': {
-            color: 'rgba(207, 188, 251, 0.9)',
-            fontWeight: 600,
-          },
-          '& ul': {
-            margin: '8px 0',
-            paddingLeft: '20px',
-          },
-          '& li': {
-            margin: '4px 0',
-          }
-        }}
-        dangerouslySetInnerHTML={{
-          __html: ticket.description
-            .replace(/^([^•\n]+):/gm, '<strong>$1:</strong>')
-            .replace(/\n/g, '<br>')
-        }}
+        <Box
+          sx={{
+            color: 'rgba(255, 255, 255, 0.7)',
+            mb: 2,
+            p: 2,
+            borderRadius: 'var(--main-border-radius)',
+            background: 'rgba(207, 188, 251, 0.05)',
+            border: '1px solid rgba(207, 188, 251, 0.1)',
+            fontSize: '0.9rem',
+            lineHeight: 1.5,
+            '& strong': {
+              color: 'rgba(207, 188, 251, 0.9)',
+              fontWeight: 600,
+            },
+            '& ul': {
+              margin: '8px 0',
+              paddingLeft: '20px',
+            },
+            '& li': {
+              margin: '4px 0',
+            },
+          }}
+          dangerouslySetInnerHTML={{
+            __html: ticket.description
+              .replace(/^([^•\n]+):/gm, '<strong>$1:</strong>')
+              .replace(/\n/g, '<br>'),
+          }}
         />
 
         {/* Кнопки действий с тикетом */}
-        <Box 
-          display="flex" 
-          gap={1} 
-          flexWrap="wrap" 
+        <Box
+          display='flex'
+          gap={1}
+          flexWrap='wrap'
           mb={2}
-          sx={{ 
+          sx={{
             borderTop: '1px solid rgba(66, 66, 66, 0.5)',
-            pt: 2
+            pt: 2,
           }}
         >
           {ticket.status === 'new' && (
             <Button
-              size="small"
-              variant="outlined"
+              size='small'
+              variant='outlined'
               startIcon={<Assignment />}
               onClick={() => onTicketAction(ticket.id, 'assign')}
               disabled={actionLoading}
@@ -329,11 +367,11 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               Назначить себе
             </Button>
           )}
-          
+
           {ticket.status === 'in_progress' && (
             <Button
-              size="small"
-              variant="outlined"
+              size='small'
+              variant='outlined'
               startIcon={<CheckCircle />}
               onClick={() => onTicketAction(ticket.id, 'resolve')}
               disabled={actionLoading}
@@ -349,11 +387,11 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               Отметить как решенный
             </Button>
           )}
-          
+
           {ticket.status !== 'closed' && (
             <Button
-              size="small"
-              variant="outlined"
+              size='small'
+              variant='outlined'
               startIcon={<Close />}
               onClick={() => onTicketAction(ticket.id, 'close')}
               disabled={actionLoading}
@@ -369,11 +407,11 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               Закрыть тикет
             </Button>
           )}
-          
+
           {ticket.status === 'closed' && (
             <Button
-              size="small"
-              variant="outlined"
+              size='small'
+              variant='outlined'
               startIcon={<Assignment />}
               onClick={() => onReopenTicket && onReopenTicket(ticket.id)}
               disabled={actionLoading}
@@ -389,15 +427,16 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               Повторно открыть
             </Button>
           )}
-          
+
           <Button
-            size="small"
-            variant="outlined"
+            size='small'
+            variant='outlined'
             startIcon={<Warning />}
             onClick={() => {
               const priorities = ['low', 'medium', 'high', 'urgent'];
               const currentIndex = priorities.indexOf(ticket.priority);
-              const nextPriority = priorities[(currentIndex + 1) % priorities.length];
+              const nextPriority =
+                priorities[(currentIndex + 1) % priorities.length];
               onUpdatePriority && onUpdatePriority(ticket.id, nextPriority);
             }}
             disabled={actionLoading}
@@ -414,171 +453,197 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           </Button>
         </Box>
 
-        <Box display="flex" alignItems="center" gap={2} mb={2}>
-          <Box display="flex" alignItems="center" gap={1}>
+        <Box display='flex' alignItems='center' gap={2} mb={2}>
+          <Box display='flex' alignItems='center' gap={1}>
             <Avatar src={ticket.creator.avatar} alt={ticket.creator.name} />
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+            >
               Создал: {ticket.creator.name}
             </Typography>
           </Box>
           {ticket.assignee && (
-            <Box display="flex" alignItems="center" gap={1}>
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <Box display='flex' alignItems='center' gap={1}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+              >
                 →
               </Typography>
               <Avatar src={ticket.assignee.avatar} alt={ticket.assignee.name} />
-              <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+              >
                 Назначен: {ticket.assignee.name}
               </Typography>
             </Box>
           )}
         </Box>
 
-        <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
-          Создан: {formatDate(ticket.created_at)} | Обновлен: {formatDate(ticket.updated_at)}
+        <Typography
+          variant='caption'
+          sx={{ color: 'rgba(255, 255, 255, 0.5)' }}
+        >
+          Создан: {formatDate(ticket.created_at)} | Обновлен:{' '}
+          {formatDate(ticket.updated_at)}
         </Typography>
 
-                 {ticket.target_type && ticket.target_id && (
-           <Box mt={2}>
-             <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}>
-               Цель: {ticket.target_type} #{ticket.target_id}
-             </Typography>
-             
-             {/* Кнопки быстрых действий */}
-             <Box display="flex" gap={1} flexWrap="wrap">
-               {ticket.target_type === 'post' && (
-                 <>
-                   <Button
-                     size="small"
-                     variant="outlined"
-                     startIcon={<OpenInNew />}
-                     onClick={() => window.open(`/post/${ticket.target_id}`, '_blank')}
-                     sx={{
-                       borderColor: 'rgba(207, 188, 251, 0.3)',
-                       color: 'rgba(207, 188, 251, 0.7)',
-                       '&:hover': {
-                         borderColor: 'rgba(207, 188, 251, 0.5)',
-                         background: 'rgba(207, 188, 251, 0.05)',
-                       },
-                     }}
-                   >
-                     Открыть пост
-                   </Button>
-                   
-                   <Button
-                     size="small"
-                     variant="outlined"
-                     startIcon={<Article />}
-                     onClick={() => {
-                       if (onShowPost && ticket.target_id) {
-                         onShowPost(ticket.target_id);
-                       }
-                     }}
-                     sx={{
-                       borderColor: 'rgba(207, 188, 251, 0.3)',
-                       color: 'rgba(207, 188, 251, 0.7)',
-                       '&:hover': {
-                         borderColor: 'rgba(207, 188, 251, 0.5)',
-                         background: 'rgba(207, 188, 251, 0.05)',
-                       },
-                     }}
-                   >
-                     Отобразить пост
-                   </Button>
-                 </>
-               )}
-               
-               {ticket.creator && (
-                 <Button
-                   size="small"
-                   variant="outlined"
-                   startIcon={<Person />}
-                   onClick={() => window.open(`/profile/${ticket.creator.username}`, '_blank')}
-                   sx={{
-                     borderColor: 'rgba(207, 188, 251, 0.3)',
-                     color: 'rgba(207, 188, 251, 0.7)',
-                     '&:hover': {
-                       borderColor: 'rgba(207, 188, 251, 0.5)',
-                       background: 'rgba(207, 188, 251, 0.05)',
-                     },
-                   }}
-                 >
-                   Профиль автора
-                 </Button>
-               )}
-               
-               <Button
-                 size="small"
-                 variant="outlined"
-                 startIcon={<Flag />}
-                 onClick={() => {
-                   // Открываем модалку с историей жалоб на этого пользователя
-                   if (ticket.creator && onOpenComplaintHistory) {
-                     onOpenComplaintHistory(ticket.creator.id, ticket.creator.name);
-                   }
-                 }}
-                 sx={{
-                   borderColor: 'rgba(207, 188, 251, 0.3)',
-                   color: 'rgba(207, 188, 251, 0.7)',
-                   '&:hover': {
-                     borderColor: 'rgba(207, 188, 251, 0.5)',
-                     background: 'rgba(207, 188, 251, 0.05)',
-                   },
-                 }}
-               >
-                 История жалоб
-               </Button>
-               
-               <Button
-                 size="small"
-                 variant="outlined"
-                 startIcon={<History />}
-                 onClick={() => {
-                   // Открываем модалку с историей модерации
-                   if (onOpenModerationHistory) {
-                     onOpenModerationHistory(ticket.id);
-                   }
-                 }}
-                 sx={{
-                   borderColor: 'rgba(207, 188, 251, 0.3)',
-                   color: 'rgba(207, 188, 251, 0.7)',
-                   '&:hover': {
-                     borderColor: 'rgba(207, 188, 251, 0.5)',
-                     background: 'rgba(207, 188, 251, 0.05)',
-                   },
-                 }}
-               >
-                 История модерации
-               </Button>
+        {ticket.target_type && ticket.target_id && (
+          <Box mt={2}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.7)', mb: 1 }}
+            >
+              Цель: {ticket.target_type} #{ticket.target_id}
+            </Typography>
 
-               <Button
-                 size="small"
-                 variant="outlined"
-                 startIcon={<MoreVert />}
-                 onClick={() => {
-                   // Открываем модалку с действиями
-                   if (onOpenActionsModal) {
-                     onOpenActionsModal(ticket);
-                   }
-                 }}
-                 sx={{
-                   borderColor: 'rgba(255, 107, 107, 0.3)',
-                   color: 'rgba(255, 107, 107, 0.7)',
-                   '&:hover': {
-                     borderColor: 'rgba(255, 107, 107, 0.5)',
-                     background: 'rgba(255, 107, 107, 0.05)',
-                   },
-                 }}
-               >
-                 Действия
-               </Button>
-             </Box>
-           </Box>
-         )}
+            {/* Кнопки быстрых действий */}
+            <Box display='flex' gap={1} flexWrap='wrap'>
+              {ticket.target_type === 'post' && (
+                <>
+                  <Button
+                    size='small'
+                    variant='outlined'
+                    startIcon={<OpenInNew />}
+                    onClick={() =>
+                      window.open(`/post/${ticket.target_id}`, '_blank')
+                    }
+                    sx={{
+                      borderColor: 'rgba(207, 188, 251, 0.3)',
+                      color: 'rgba(207, 188, 251, 0.7)',
+                      '&:hover': {
+                        borderColor: 'rgba(207, 188, 251, 0.5)',
+                        background: 'rgba(207, 188, 251, 0.05)',
+                      },
+                    }}
+                  >
+                    Открыть пост
+                  </Button>
+
+                  <Button
+                    size='small'
+                    variant='outlined'
+                    startIcon={<Article />}
+                    onClick={() => {
+                      if (onShowPost && ticket.target_id) {
+                        onShowPost(ticket.target_id);
+                      }
+                    }}
+                    sx={{
+                      borderColor: 'rgba(207, 188, 251, 0.3)',
+                      color: 'rgba(207, 188, 251, 0.7)',
+                      '&:hover': {
+                        borderColor: 'rgba(207, 188, 251, 0.5)',
+                        background: 'rgba(207, 188, 251, 0.05)',
+                      },
+                    }}
+                  >
+                    Отобразить пост
+                  </Button>
+                </>
+              )}
+
+              {ticket.creator && (
+                <Button
+                  size='small'
+                  variant='outlined'
+                  startIcon={<Person />}
+                  onClick={() =>
+                    window.open(`/profile/${ticket.creator.username}`, '_blank')
+                  }
+                  sx={{
+                    borderColor: 'rgba(207, 188, 251, 0.3)',
+                    color: 'rgba(207, 188, 251, 0.7)',
+                    '&:hover': {
+                      borderColor: 'rgba(207, 188, 251, 0.5)',
+                      background: 'rgba(207, 188, 251, 0.05)',
+                    },
+                  }}
+                >
+                  Профиль автора
+                </Button>
+              )}
+
+              <Button
+                size='small'
+                variant='outlined'
+                startIcon={<Flag />}
+                onClick={() => {
+                  // Открываем модалку с историей жалоб на этого пользователя
+                  if (ticket.creator && onOpenComplaintHistory) {
+                    onOpenComplaintHistory(
+                      ticket.creator.id,
+                      ticket.creator.name
+                    );
+                  }
+                }}
+                sx={{
+                  borderColor: 'rgba(207, 188, 251, 0.3)',
+                  color: 'rgba(207, 188, 251, 0.7)',
+                  '&:hover': {
+                    borderColor: 'rgba(207, 188, 251, 0.5)',
+                    background: 'rgba(207, 188, 251, 0.05)',
+                  },
+                }}
+              >
+                История жалоб
+              </Button>
+
+              <Button
+                size='small'
+                variant='outlined'
+                startIcon={<History />}
+                onClick={() => {
+                  // Открываем модалку с историей модерации
+                  if (onOpenModerationHistory) {
+                    onOpenModerationHistory(ticket.id);
+                  }
+                }}
+                sx={{
+                  borderColor: 'rgba(207, 188, 251, 0.3)',
+                  color: 'rgba(207, 188, 251, 0.7)',
+                  '&:hover': {
+                    borderColor: 'rgba(207, 188, 251, 0.5)',
+                    background: 'rgba(207, 188, 251, 0.05)',
+                  },
+                }}
+              >
+                История модерации
+              </Button>
+
+              <Button
+                size='small'
+                variant='outlined'
+                startIcon={<MoreVert />}
+                onClick={() => {
+                  // Открываем модалку с действиями
+                  if (onOpenActionsModal) {
+                    onOpenActionsModal(ticket);
+                  }
+                }}
+                sx={{
+                  borderColor: 'rgba(255, 107, 107, 0.3)',
+                  color: 'rgba(255, 107, 107, 0.7)',
+                  '&:hover': {
+                    borderColor: 'rgba(255, 107, 107, 0.5)',
+                    background: 'rgba(255, 107, 107, 0.05)',
+                  },
+                }}
+              >
+                Действия
+              </Button>
+            </Box>
+          </Box>
+        )}
 
         {ticket.evidence && (
           <Box mt={2}>
-            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+            <Typography
+              variant='body2'
+              sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+            >
               Доказательства: {ticket.evidence}
             </Typography>
           </Box>
@@ -588,7 +653,11 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
       <Divider sx={{ my: 3, borderColor: 'rgb(24 24 24)' }} />
 
       {/* Комментарии */}
-      <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+      <Typography
+        variant='h6'
+        gutterBottom
+        sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+      >
         Комментарии ({comments.length})
       </Typography>
 
@@ -598,9 +667,9 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
           fullWidth
           multiline
           rows={3}
-          placeholder="Добавить комментарий..."
+          placeholder='Добавить комментарий...'
           value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          onChange={e => setNewComment(e.target.value)}
           sx={{
             mb: 2,
             '& .MuiOutlinedInput-root': {
@@ -618,12 +687,12 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
             },
           }}
         />
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
           <FormControlLabel
             control={
               <Checkbox
                 checked={isInternal}
-                onChange={(e) => setIsInternal(e.target.checked)}
+                onChange={e => setIsInternal(e.target.checked)}
                 sx={{
                   color: 'rgba(255, 255, 255, 0.7)',
                   '&.Mui-checked': {
@@ -633,16 +702,19 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               />
             }
             label={
-              <Box display="flex" alignItems="center" gap={1}>
+              <Box display='flex' alignItems='center' gap={1}>
                 {isInternal ? <VisibilityOff /> : <Visibility />}
-                <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                <Typography
+                  variant='body2'
+                  sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                >
                   Внутренний комментарий
                 </Typography>
               </Box>
             }
           />
           <Button
-            variant="contained"
+            variant='contained'
             onClick={handleAddComment}
             disabled={!newComment.trim() || actionLoading}
             startIcon={<Send />}
@@ -660,47 +732,58 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
       {/* Список комментариев */}
       {commentsLoading ? (
-        <Box textAlign="center" py={4}>
+        <Box textAlign='center' py={4}>
           <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
             Загрузка комментариев...
           </Typography>
         </Box>
       ) : comments.length === 0 ? (
-        <Box textAlign="center" py={4}>
+        <Box textAlign='center' py={4}>
           <Typography sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
             Комментариев пока нет
           </Typography>
         </Box>
       ) : (
         <Box>
-          {comments.map((comment) => (
-                          <StyledPaper key={comment.id}>
-                <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                <Box display="flex" gap={2} flex={1}>
-                  <Avatar src={comment.moderator.avatar} alt={comment.moderator.name} />
+          {comments.map(comment => (
+            <StyledPaper key={comment.id}>
+              <Box
+                display='flex'
+                justifyContent='space-between'
+                alignItems='flex-start'
+              >
+                <Box display='flex' gap={2} flex={1}>
+                  <Avatar
+                    src={comment.moderator.avatar}
+                    alt={comment.moderator.name}
+                  />
                   <Box flex={1}>
-                    <Box display="flex" alignItems="center" gap={1} mb={1}>
-                      <Typography variant="subtitle2" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
+                    <Box display='flex' alignItems='center' gap={1} mb={1}>
+                      <Typography
+                        variant='subtitle2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
+                      >
                         {comment.moderator.name}
                       </Typography>
                       {comment.moderator.is_moderator && (
                         <Chip
-                          label="Модератор"
-                          size="small"
+                          label='Модератор'
+                          size='small'
                           sx={{
-                            background: 'linear-gradient(45deg, #cfbcfb 30%, #827095 90%)',
+                            background:
+                              'linear-gradient(45deg, #cfbcfb 30%, #827095 90%)',
                             color: 'white',
                             fontSize: '0.7rem',
                             fontWeight: 600,
                             textTransform: 'uppercase',
-                            letterSpacing: '0.5px'
+                            letterSpacing: '0.5px',
                           }}
                         />
                       )}
                       {comment.is_internal && (
                         <Chip
-                          label="Внутренний"
-                          size="small"
+                          label='Внутренний'
+                          size='small'
                           icon={<VisibilityOff />}
                           sx={{
                             background: 'rgba(255, 193, 7, 0.2)',
@@ -717,7 +800,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                           multiline
                           rows={2}
                           value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
+                          onChange={e => setEditContent(e.target.value)}
                           sx={{
                             mb: 1,
                             '& .MuiOutlinedInput-root': {
@@ -729,16 +812,16 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                             },
                           }}
                         />
-                        <Box display="flex" gap={1}>
+                        <Box display='flex' gap={1}>
                           <Button
-                            size="small"
+                            size='small'
                             onClick={() => handleEditComment(comment.id)}
                             disabled={!editContent.trim()}
                           >
                             Сохранить
                           </Button>
                           <Button
-                            size="small"
+                            size='small'
                             onClick={() => {
                               setEditingComment(null);
                               setEditContent('');
@@ -749,19 +832,29 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                         </Box>
                       </Box>
                     ) : (
-                      <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                      <Typography
+                        variant='body2'
+                        sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                      >
                         {comment.content}
                       </Typography>
                     )}
-                    <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.5)', mt: 1, display: 'block' }}>
+                    <Typography
+                      variant='caption'
+                      sx={{
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        mt: 1,
+                        display: 'block',
+                      }}
+                    >
                       {formatDate(comment.created_at)}
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" gap={1}>
-                  <Tooltip title="Редактировать">
+                <Box display='flex' gap={1}>
+                  <Tooltip title='Редактировать'>
                     <IconButton
-                      size="small"
+                      size='small'
                       onClick={() => {
                         setEditingComment(comment.id);
                         setEditContent(comment.content);
@@ -771,9 +864,9 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                       <Edit />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Удалить">
+                  <Tooltip title='Удалить'>
                     <IconButton
-                      size="small"
+                      size='small'
                       onClick={() => handleDeleteComment(comment.id)}
                       sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                     >
@@ -790,4 +883,4 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
   );
 };
 
-export default TicketDetails; 
+export default TicketDetails;

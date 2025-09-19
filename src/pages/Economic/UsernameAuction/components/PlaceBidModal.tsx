@@ -14,7 +14,10 @@ interface PlaceBidModalProps {
   open: boolean;
   onClose: () => void;
   auction: any;
-  onSubmit: (auction: any, amount: string) => Promise<{ success: boolean; errors?: any }>;
+  onSubmit: (
+    auction: any,
+    amount: string
+  ) => Promise<{ success: boolean; errors?: any }>;
   loading: boolean;
 }
 
@@ -47,14 +50,15 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
     }
   };
 
-  const currentPrice = auction?.current_price || auction?.highest_bid || auction?.min_price;
+  const currentPrice =
+    auction?.current_price || auction?.highest_bid || auction?.min_price;
   const minBidAmount = Number(currentPrice) + 1;
 
   return (
     <UniversalModal
       open={open}
       onClose={handleClose}
-      title="Сделать ставку"
+      title='Сделать ставку'
       maxWidth={false}
       maxWidthCustom={850}
       disableEscapeKeyDown={loading}
@@ -77,18 +81,19 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
           </Box>
 
           <Typography variant='body2' gutterBottom sx={{ mb: 2 }}>
-            Текущая ставка:{' '}
-            <b>{currentPrice} баллов</b>
+            Текущая ставка: <b>{currentPrice} баллов</b>
           </Typography>
 
           {auction.status === 'completed' ? (
-            <Box sx={{ 
-              p: 2, 
-              bgcolor: 'warning.main', 
-              color: 'warning.contrastText',
-              borderRadius: 'var(--main-border-radius)',
-              mb: 2 
-            }}>
+            <Box
+              sx={{
+                p: 2,
+                bgcolor: 'warning.main',
+                color: 'warning.contrastText',
+                borderRadius: 'var(--main-border-radius)',
+                mb: 2,
+              }}
+            >
               Этот аукцион уже завершен, ставки больше не принимаются.
             </Box>
           ) : (
@@ -97,11 +102,10 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
               label='Ваша ставка (баллы)'
               type='number'
               value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
+              onChange={e => setBidAmount(e.target.value)}
               error={!!errors.bidAmount}
               helperText={
-                errors.bidAmount ||
-                `Минимальная ставка: ${minBidAmount} баллов`
+                errors.bidAmount || `Минимальная ставка: ${minBidAmount} баллов`
               }
               margin='normal'
               variant='outlined'
@@ -117,11 +121,7 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
       )}
 
       <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-        <Button
-          onClick={handleClose}
-          disabled={loading}
-          variant="outlined"
-        >
+        <Button onClick={handleClose} disabled={loading} variant='outlined'>
           Отмена
         </Button>
         {auction && auction.status !== 'completed' && (
@@ -144,4 +144,4 @@ const PlaceBidModal: React.FC<PlaceBidModalProps> = ({
   );
 };
 
-export default PlaceBidModal; 
+export default PlaceBidModal;

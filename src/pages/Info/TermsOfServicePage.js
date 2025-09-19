@@ -55,7 +55,9 @@ const NavLink = styled(Box)(({ theme, active }) => ({
   minWidth: 'fit-content',
   whiteSpace: 'nowrap',
   '&:hover': {
-    backgroundColor: active ? 'rgba(208, 188, 255, 0.25)' : 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: active
+      ? 'rgba(208, 188, 255, 0.25)'
+      : 'rgba(255, 255, 255, 0.05)',
   },
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(0.5, 1),
@@ -109,7 +111,7 @@ const TermsOfServicePage = () => {
           <Typography variant='body2'>Правила сообщества</Typography>
         </NavLink>
 
-        <NavLink component={RouterLink} to='/privacy-policy' >
+        <NavLink component={RouterLink} to='/privacy-policy'>
           <SecurityIcon sx={{ mr: 1, fontSize: 20 }} />
           <Typography variant='body2'>Политика конфиденциальности</Typography>
         </NavLink>
@@ -121,8 +123,8 @@ const TermsOfServicePage = () => {
       </NavigationBar>
 
       <InfoBlock
-        title="Условия использования К-Коннект"
-        description="Правила использования платформы и ответственность пользователей"
+        title='Условия использования К-Коннект'
+        description='Правила использования платформы и ответственность пользователей'
         customStyle
       >
         <Box sx={{ p: 3 }}>
@@ -657,17 +659,17 @@ const TermsOfServicePage = () => {
 
           <Typography variant='body1' paragraph>
             <strong>Благотворительный характер платежей:</strong> Все денежные
-            переводы пользователей в пользу К-Коннект (включая "мкоин", "подписки",
-            покупку "баллов") являются добровольными пожертвованиями и
-            благотворительными взносами на поддержку и развитие платформы.
+            переводы пользователей в пользу К-Коннект (включая "мкоин",
+            "подписки", покупку "баллов") являются добровольными пожертвованиями
+            и благотворительными взносами на поддержку и развитие платформы.
           </Typography>
 
           <Box component='ul' sx={{ pl: 2 }}>
             <Box component='li' sx={{ mb: 1 }}>
               <Typography variant='body1'>
                 <strong>Цель пожертвований:</strong> Поддержка технической
-                инфраструктуры, развитие функционала, обеспечение стабильной работы
-                платформы.
+                инфраструктуры, развитие функционала, обеспечение стабильной
+                работы платформы.
               </Typography>
             </Box>
             <Box component='li' sx={{ mb: 1 }}>
@@ -714,22 +716,22 @@ const TermsOfServicePage = () => {
             </Box>
             <Box component='li' sx={{ mb: 1 }}>
               <Typography variant='body1'>
-                <strong>Возможность возврата:</strong> Запрос на возврат может быть
-                удовлетворен в течение 24 часов с момента пожертвования при
+                <strong>Возможность возврата:</strong> Запрос на возврат может
+                быть удовлетворен в течение 24 часов с момента пожертвования при
                 отсутствии использования предоставленных поощрений.
               </Typography>
             </Box>
             <Box component='li' sx={{ mb: 1 }}>
               <Typography variant='body1'>
-                <strong>Основания для отказа:</strong> Возврат не производится при
-                частичном или полном использовании баллов, привилегий или по
+                <strong>Основания для отказа:</strong> Возврат не производится
+                при частичном или полном использовании баллов, привилегий или по
                 истечении значительного времени с момента пожертвования.
               </Typography>
             </Box>
             <Box component='li' sx={{ mb: 1 }}>
               <Typography variant='body1'>
-                <strong>Технические сборы:</strong> При возврате могут удерживаться
-                комиссии платежных систем и банковские сборы.
+                <strong>Технические сборы:</strong> При возврате могут
+                удерживаться комиссии платежных систем и банковские сборы.
               </Typography>
             </Box>
             <Box component='li' sx={{ mb: 1 }}>

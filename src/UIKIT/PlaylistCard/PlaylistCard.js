@@ -27,7 +27,7 @@ const StyledCard = styled(Card)(({ theme, active }) => ({
       ? alpha(theme.palette.primary.dark, 0.8)
       : alpha(theme.palette.primary.light, 0.2)
     : theme.palette.mode === 'light'
-              ? 'rgba(255, 255, 255, 0.1)'
+      ? 'rgba(255, 255, 255, 0.1)'
       : theme.palette.mode === 'contrast'
         ? '#101010'
         : '#121212',
@@ -80,7 +80,7 @@ const MediaOverlay = styled(Box)(({ theme }) => ({
   left: 0,
   right: 0,
   bottom: 0,
-      backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.4))',
+  backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.4))',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -149,7 +149,7 @@ const VisibilityIcon = styled(Box)(({ theme, isPublic }) => ({
 }));
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
-      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
+  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
   color: theme.palette.mode === 'dark' ? '#000' : theme.palette.primary.main,
   '&:hover': {
     backgroundColor: '#fff',

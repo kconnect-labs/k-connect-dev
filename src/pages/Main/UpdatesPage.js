@@ -75,8 +75,10 @@ const UpdatesPage = () => {
                     sx={{
                       width: 2,
                       height: 40,
-                      background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                      background:
+                        'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                      backdropFilter:
+                        'var(--theme-backdrop-filter, blur(20px))',
                       borderRadius: 4,
                     }}
                   />

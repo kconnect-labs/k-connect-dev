@@ -1,5 +1,11 @@
 import React from 'react';
-import { Box, Typography, LinearProgress, IconButton, Tooltip } from '@mui/material';
+import {
+  Box,
+  Typography,
+  LinearProgress,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import { Download, CheckCircle, Error, Refresh } from '@mui/icons-material';
 import { useStickerPreloader } from '../hooks/useStickerPreloader';
 
@@ -8,11 +14,11 @@ interface StickerPreloadIndicatorProps {
   compact?: boolean;
 }
 
-export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = ({
-  showStats = false,
-  compact = false,
-}) => {
-  const { isPreloading, progress, stats, error, forcePreload, clearCache } = useStickerPreloader();
+export const StickerPreloadIndicator: React.FC<
+  StickerPreloadIndicatorProps
+> = ({ showStats = false, compact = false }) => {
+  const { isPreloading, progress, stats, error, forcePreload, clearCache } =
+    useStickerPreloader();
 
   // Не показываем индикатор, если нет стикеров
   if (stats.totalStickers === 0 && !isPreloading) {
@@ -59,11 +65,11 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
         {isPreloading ? (
           <>
             <Download sx={{ fontSize: 16, color: 'primary.main' }} />
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               {progress.percentage}%
             </Typography>
             <LinearProgress
-              variant="determinate"
+              variant='determinate'
               value={progress.percentage}
               sx={{ flex: 1, height: 4, borderRadius: 2 }}
             />
@@ -71,11 +77,11 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
         ) : error ? (
           <>
             <Error sx={{ fontSize: 16, color: 'error.main' }} />
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               Ошибка загрузки
             </Typography>
-            <Tooltip title="Повторить загрузку">
-              <IconButton size="small" onClick={forcePreload}>
+            <Tooltip title='Повторить загрузку'>
+              <IconButton size='small' onClick={forcePreload}>
                 <Refresh sx={{ fontSize: 16 }} />
               </IconButton>
             </Tooltip>
@@ -83,7 +89,7 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
         ) : (
           <>
             <CheckCircle sx={{ fontSize: 16, color: 'success.main' }} />
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               {stats.cachedStickers}/{stats.totalStickers}
             </Typography>
           </>
@@ -103,18 +109,33 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
         mb: 2,
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-        <Typography variant="h6" sx={{ color: 'text.primary' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          mb: 1,
+        }}
+      >
+        <Typography variant='h6' sx={{ color: 'text.primary' }}>
           Кеш стикеров
         </Typography>
         <Box sx={{ display: 'flex', gap: 1 }}>
-          <Tooltip title="Обновить кеш">
-            <IconButton size="small" onClick={forcePreload} disabled={isPreloading}>
+          <Tooltip title='Обновить кеш'>
+            <IconButton
+              size='small'
+              onClick={forcePreload}
+              disabled={isPreloading}
+            >
               <Refresh sx={{ fontSize: 18 }} />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Очистить кеш">
-            <IconButton size="small" onClick={clearCache} disabled={isPreloading}>
+          <Tooltip title='Очистить кеш'>
+            <IconButton
+              size='small'
+              onClick={clearCache}
+              disabled={isPreloading}
+            >
               <Error sx={{ fontSize: 18 }} />
             </IconButton>
           </Tooltip>
@@ -125,68 +146,84 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
         <Box sx={{ mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
             <Download sx={{ fontSize: 16, color: 'primary.main' }} />
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
               Загрузка стикеров...
             </Typography>
           </Box>
           <LinearProgress
-            variant="determinate"
+            variant='determinate'
             value={progress.percentage}
             sx={{ height: 6, borderRadius: 3 }}
           />
-          <Typography variant="caption" sx={{ color: 'text.secondary', mt: 0.5 }}>
+          <Typography
+            variant='caption'
+            sx={{ color: 'text.secondary', mt: 0.5 }}
+          >
             {progress.current} из {progress.total} ({progress.percentage}%)
           </Typography>
         </Box>
       )}
 
       {error && (
-        <Box sx={{ mb: 2, p: 1, borderRadius: 'var(--main-border-radius)', bgcolor: 'error.dark' }}>
-          <Typography variant="body2" sx={{ color: 'error.light' }}>
+        <Box
+          sx={{
+            mb: 2,
+            p: 1,
+            borderRadius: 'var(--main-border-radius)',
+            bgcolor: 'error.dark',
+          }}
+        >
+          <Typography variant='body2' sx={{ color: 'error.light' }}>
             Ошибка загрузки: {error}
           </Typography>
         </Box>
       )}
 
       {showStats && (
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+            gap: 2,
+          }}
+        >
           <Box>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               Стикерпаки
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            <Typography variant='body2' sx={{ color: 'text.primary' }}>
               {stats.totalPacks}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               Всего стикеров
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            <Typography variant='body2' sx={{ color: 'text.primary' }}>
               {stats.totalStickers}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               В кеше
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            <Typography variant='body2' sx={{ color: 'text.primary' }}>
               {stats.cachedStickers}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               Размер кеша
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            <Typography variant='body2' sx={{ color: 'text.primary' }}>
               {formatBytes(stats.cacheSize)}
             </Typography>
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            <Typography variant='caption' sx={{ color: 'text.secondary' }}>
               Последнее обновление
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+            <Typography variant='body2' sx={{ color: 'text.primary' }}>
               {formatDate(stats.lastUpdate)}
             </Typography>
           </Box>
@@ -196,7 +233,7 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
       {!isPreloading && !error && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <CheckCircle sx={{ fontSize: 16, color: 'success.main' }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
             Кеш готов: {stats.cachedStickers} из {stats.totalStickers} стикеров
           </Typography>
         </Box>
@@ -205,4 +242,4 @@ export const StickerPreloadIndicator: React.FC<StickerPreloadIndicatorProps> = (
   );
 };
 
-export default StickerPreloadIndicator; 
+export default StickerPreloadIndicator;

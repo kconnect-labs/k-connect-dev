@@ -27,7 +27,10 @@ import InventoryItemCardPure from '../../../../UIKIT/InventoryItemCard';
 // import { getBackgroundGradient, createTwoCirclePattern } from '../../../Economic/components/inventoryPack/utils';
 
 const InventoryTab = forwardRef(
-  ({ userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId, user }, ref) => {
+  (
+    { userId, itemIdToOpen, onEquippedItemsUpdate, currentUserId, user },
+    ref
+  ) => {
     // const { getGradient, getItemId, getGradientData } = useBackgroundGradients();
     const [inventory, setInventory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -59,7 +62,7 @@ const InventoryTab = forwardRef(
 
     // Получаем corner_color для модалки
     const cornerColor = '#666666'; // fallback цвет
-    
+
     // Получаем corner_color для второй модалки
     const secondModalCornerColor = '#666666'; // fallback цвет
 
@@ -95,7 +98,7 @@ const InventoryTab = forwardRef(
         } catch (error) {
           console.error('Error fetching inventory:', error);
           setInventory([]);
-          
+
           // Проверяем, является ли ошибка связанной с приватностью
           if (error.response && error.response.status === 403) {
             // Устанавливаем специальное состояние для приватного профиля
@@ -339,7 +342,7 @@ const InventoryTab = forwardRef(
 
     // Проверяем, является ли профиль приватным и нет ли доступа
     const isPrivateProfile = user?.is_private && !user?.is_friend;
-    
+
     if (loading) {
       return (
         <Box
@@ -376,7 +379,7 @@ const InventoryTab = forwardRef(
               textAlign: 'center',
             }}
           >
-             Приватный профиль
+            Приватный профиль
           </Typography>
           <Typography
             variant='body2'
@@ -386,7 +389,8 @@ const InventoryTab = forwardRef(
               maxWidth: '400px',
             }}
           >
-            Инвентарь этого пользователя скрыт. Подпишитесь друг на друга для получения доступа к инвентарю.
+            Инвентарь этого пользователя скрыт. Подпишитесь друг на друга для
+            получения доступа к инвентарю.
           </Typography>
         </Box>
       );
@@ -629,7 +633,9 @@ const InventoryTab = forwardRef(
                           mb: 2,
                           overflow: 'hidden',
                           position: 'relative', // Добавили для позиционирования фона
-                          backgroundImage: selectedItem.background_url ? `url(${selectedItem.background_url})` : 'none',
+                          backgroundImage: selectedItem.background_url
+                            ? `url(${selectedItem.background_url})`
+                            : 'none',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
                           backgroundRepeat: 'no-repeat',
@@ -838,7 +844,9 @@ const InventoryTab = forwardRef(
                       mb: 2,
                       overflow: 'hidden',
                       position: 'relative', // Добавили для позиционирования фона
-                      backgroundImage: selectedItem.background_url ? `url(${selectedItem.background_url})` : 'none',
+                      backgroundImage: selectedItem.background_url
+                        ? `url(${selectedItem.background_url})`
+                        : 'none',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',

@@ -59,7 +59,8 @@ const Badge = ({
     if (className) classes.push(className);
     if (imageLoaded) classes.push('badge--loaded');
     if (imageError) classes.push('badge--error');
-    if (achievement?.upgrade && achievement.upgrade !== '0') classes.push('badge--upgraded');
+    if (achievement?.upgrade && achievement.upgrade !== '0')
+      classes.push('badge--upgraded');
     if (isHovered) classes.push('badge--hovered');
 
     return classes.join(' ');
@@ -101,7 +102,10 @@ const Badge = ({
     const loadSvgContent = async () => {
       try {
         // Если это blob URL или base64, загружаем содержимое
-        if (cachedImageSrc.startsWith('blob:') || cachedImageSrc.startsWith('data:')) {
+        if (
+          cachedImageSrc.startsWith('blob:') ||
+          cachedImageSrc.startsWith('data:')
+        ) {
           const response = await fetch(cachedImageSrc);
           if (response.ok) {
             const svgText = await response.text();
@@ -146,12 +150,15 @@ const Badge = ({
     if (!achievement?.upgrade || !containerRef.current || !imageLoaded) return;
 
     const container = containerRef.current;
-    
+
     // Создаем элемент свечения
     const glowElement = document.createElement('div');
     glowElement.className = 'badge-glow';
-    glowElement.style.setProperty('--glow-color', achievement.color_upgrade || '#FFD700');
-    
+    glowElement.style.setProperty(
+      '--glow-color',
+      achievement.color_upgrade || '#FFD700'
+    );
+
     container.appendChild(glowElement);
 
     // Очистка
@@ -160,12 +167,7 @@ const Badge = ({
         glowElement.parentNode.removeChild(glowElement);
       }
     };
-  }, [
-    achievement?.upgrade,
-    achievement?.color_upgrade,
-    imageLoaded,
-    size,
-  ]);
+  }, [achievement?.upgrade, achievement?.color_upgrade, imageLoaded, size]);
 
   // Если нет достижения, не рендерим ничего
   if (!achievement) return null;
@@ -185,9 +187,11 @@ const Badge = ({
         cursor: onClick ? 'pointer' : 'default', // Курсор только если есть onClick
         transition: 'all 0.2s ease', // Такая же анимация как у VerificationBadge
         '--upgrade-color': achievement.color_upgrade || '#FFD700',
-        '&:active': onClick ? {
-          transform: 'scale(0.95)', // Такая же анимация как у VerificationBadge
-        } : {},
+        '&:active': onClick
+          ? {
+              transform: 'scale(0.95)', // Такая же анимация как у VerificationBadge
+            }
+          : {},
       }}
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -258,9 +262,7 @@ const Badge = ({
   // Оборачиваем в Tooltip если нужно
   if (showTooltip) {
     return (
-      <Tooltip title={tooltipText || achievement.bage}>
-        {badgeContent}
-      </Tooltip>
+      <Tooltip title={tooltipText || achievement.bage}>{badgeContent}</Tooltip>
     );
   }
 

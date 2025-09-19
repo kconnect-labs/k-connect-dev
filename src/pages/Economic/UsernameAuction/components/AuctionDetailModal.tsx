@@ -86,8 +86,10 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
     }
   };
 
-  const currentPrice = auction?.current_price || auction?.highest_bid || auction?.min_price;
-  const isOwner = auction?.seller_id === user?.id || auction?.seller?.id === user?.id;
+  const currentPrice =
+    auction?.current_price || auction?.highest_bid || auction?.min_price;
+  const isOwner =
+    auction?.seller_id === user?.id || auction?.seller?.id === user?.id;
   const isCompleted = auction?.status === 'completed';
 
   return (
@@ -137,9 +139,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   <Typography variant='body1'>
                     Продавец:{' '}
                     <strong>
-                      {auction.seller
-                        ? auction.seller.username
-                        : 'Unknown'}
+                      {auction.seller ? auction.seller.username : 'Unknown'}
                     </strong>
                   </Typography>
                 </Box>
@@ -183,10 +183,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                     }}
                   />
                   <Typography variant='body1'>
-                    Создан:{' '}
-                    <strong>
-                      {formatDate(auction.created_at)}
-                    </strong>
+                    Создан: <strong>{formatDate(auction.created_at)}</strong>
                   </Typography>
                 </Box>
                 {isCompleted ? (
@@ -201,9 +198,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                     <Typography variant='body1'>
                       Завершен:{' '}
                       <strong>
-                        {formatDate(
-                          auction.completed_at || auction.end_time
-                        )}
+                        {formatDate(auction.completed_at || auction.end_time)}
                       </strong>
                     </Typography>
                   </Box>
@@ -219,9 +214,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                       />
                       <Typography variant='body1'>
                         Завершается:{' '}
-                        <strong>
-                          {formatDate(auction.end_time)}
-                        </strong>
+                        <strong>{formatDate(auction.end_time)}</strong>
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -242,32 +235,29 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                     </Box>
                   </>
                 )}
-                {isCompleted &&
-                  auction.winner_id && (
-                    <Box
+                {isCompleted && auction.winner_id && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mt: 1,
+                    }}
+                  >
+                    <PersonIcon
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        mt: 1,
+                        mr: 1.5,
+                        color: 'success.main',
+                        fontSize: '1.2rem',
                       }}
-                    >
-                      <PersonIcon
-                        sx={{
-                          mr: 1.5,
-                          color: 'success.main',
-                          fontSize: '1.2rem',
-                        }}
-                      />
-                      <Typography variant='body1' color='success.main'>
-                        Победитель:{' '}
-                        <strong>
-                          {auction.winner
-                            ? auction.winner.username
-                            : 'Unknown'}
-                        </strong>
-                      </Typography>
-                    </Box>
-                  )}
+                    />
+                    <Typography variant='body1' color='success.main'>
+                      Победитель:{' '}
+                      <strong>
+                        {auction.winner ? auction.winner.username : 'Unknown'}
+                      </strong>
+                    </Typography>
+                  </Box>
+                )}
               </Box>
             </Paper>
 
@@ -277,7 +267,11 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                 fullWidth
                 size='large'
                 disabled={true}
-                sx={{ mt: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
+                sx={{
+                  mt: 1,
+                  borderRadius: 'var(--main-border-radius)',
+                  py: 1.25,
+                }}
               >
                 Аукцион завершен
               </Button>
@@ -292,7 +286,11 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   onBidClick(auction);
                 }}
                 disabled={loadingButtons.bid}
-                sx={{ mt: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
+                sx={{
+                  mt: 1,
+                  borderRadius: 'var(--main-border-radius)',
+                  py: 1.25,
+                }}
               >
                 Сделать ставку
               </Button>
@@ -302,7 +300,11 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   <Button
                     variant='contained'
                     color='success'
-                    sx={{ flex: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
+                    sx={{
+                      flex: 1,
+                      borderRadius: 'var(--main-border-radius)',
+                      py: 1.25,
+                    }}
                     onClick={() => onAcceptBid(auction)}
                     disabled={loadingButtons.accept === auction.id}
                     startIcon={
@@ -320,7 +322,11 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   <Button
                     variant='outlined'
                     color='error'
-                    sx={{ flex: 1, borderRadius: 'var(--main-border-radius)', py: 1.25 }}
+                    sx={{
+                      flex: 1,
+                      borderRadius: 'var(--main-border-radius)',
+                      py: 1.25,
+                    }}
                     onClick={() => onCancelAuction(auction.id)}
                     disabled={loadingButtons.cancel === auction.id}
                     startIcon={
@@ -355,8 +361,7 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   : ''}
               </Typography>
 
-              {!auction.bids ||
-              auction.bids.length === 0 ? (
+              {!auction.bids || auction.bids.length === 0 ? (
                 <Box sx={{ py: 4, textAlign: 'center' }}>
                   <InfoOutlinedIcon
                     sx={{
@@ -382,19 +387,20 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                   )}
                 </Box>
               ) : (
-                <List
-                  sx={{ maxHeight: '400px', overflowY: 'auto', pr: 1 }}
-                >
+                <List sx={{ maxHeight: '400px', overflowY: 'auto', pr: 1 }}>
                   {auction.bids
-                    .sort((a: any, b: any) => new Date(b.time) - new Date(a.time))
+                    .sort(
+                      (a: any, b: any) => new Date(b.time) - new Date(a.time)
+                    )
                     .map((bid: any, index: number) => {
                       // Находим максимальную ставку для определения высшей
-                      const maxBidAmount = Math.max(...auction.bids.map((b: any) => b.amount));
+                      const maxBidAmount = Math.max(
+                        ...auction.bids.map((b: any) => b.amount)
+                      );
                       const isHighestBid = bid.amount === maxBidAmount;
                       const isMyBid = bid.bidder.id === user?.id;
                       const isWinner =
-                        isCompleted &&
-                        auction.winner_id === bid.bidder.id;
+                        isCompleted && auction.winner_id === bid.bidder.id;
 
                       return (
                         <ListItem
@@ -402,12 +408,14 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                           sx={{
                             borderRadius: 'var(--main-border-radius)',
                             mb: 1,
-                            bgcolor: isHighestBid || isWinner
-                              ? alpha(theme.palette.success.main, 0.1)
-                              : alpha(theme.palette.background.paper, 0.5),
-                            border: isHighestBid || isWinner
-                              ? `1px solid ${alpha(theme.palette.success.main, 0.3)}`
-                              : `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                            bgcolor:
+                              isHighestBid || isWinner
+                                ? alpha(theme.palette.success.main, 0.1)
+                                : alpha(theme.palette.background.paper, 0.5),
+                            border:
+                              isHighestBid || isWinner
+                                ? `1px solid ${alpha(theme.palette.success.main, 0.3)}`
+                                : `1px solid ${alpha(theme.palette.divider, 0.1)}`,
                           }}
                         >
                           <ListItemAvatar>
@@ -457,13 +465,10 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
                                 <Typography
                                   variant='body1'
                                   fontWeight={
-                                    isHighestBid || isWinner
-                                      ? 'bold'
-                                      : 'normal'
+                                    isHighestBid || isWinner ? 'bold' : 'normal'
                                   }
                                 >
-                                  {bid.bidder.username}{' '}
-                                  {isMyBid && '(Вы)'}
+                                  {bid.bidder.username} {isMyBid && '(Вы)'}
                                 </Typography>
                                 <Typography
                                   variant='body1'
@@ -526,4 +531,4 @@ const AuctionDetailModal: React.FC<AuctionDetailModalProps> = ({
   );
 };
 
-export default AuctionDetailModal; 
+export default AuctionDetailModal;

@@ -144,7 +144,13 @@ const MusicPage = () => {
       {/* Основной контент */}
       <Box sx={{ mt: 2 }}>
         {/* My Vibe Widget */}
-        <Box sx={{ mb: 0.5,borderRadius: 'var(--main-border-radius)', position: 'relative' }}>
+        <Box
+          sx={{
+            mb: 0.5,
+            borderRadius: 'var(--main-border-radius)',
+            position: 'relative',
+          }}
+        >
           <MyVibeWidget
             onClick={handleVibeClick}
             isPlaying={isPlaying && currentSection === 'my-vibe'}
@@ -161,8 +167,6 @@ const MusicPage = () => {
           onClick={() => navigate('/music/liked')}
         />
 
-
-
         {/* Все треки */}
         <MusicTypeContainer
           title={t('music.links.all_tracks.title')}
@@ -172,7 +176,6 @@ const MusicPage = () => {
         />
 
         {/* Artists Block */}
-
 
         {/* Плейлисты */}
         <MusicTypeContainer

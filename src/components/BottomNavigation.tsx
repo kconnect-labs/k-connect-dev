@@ -86,9 +86,17 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
   const isClickerPage = location.pathname.startsWith('/minigames/clicker');
   const isBlackjackPage = location.pathname.startsWith('/minigames/blackjack');
   const isCupsPage = location.pathname.startsWith('/minigames/cups');
-  const isPixelMinerPage = location.pathname.startsWith('/minigames/pixel-miner');
+  const isPixelMinerPage = location.pathname.startsWith(
+    '/minigames/pixel-miner'
+  );
 
-  if (isAuthPage || isClickerPage || isBlackjackPage || isCupsPage || isPixelMinerPage) {
+  if (
+    isAuthPage ||
+    isClickerPage ||
+    isBlackjackPage ||
+    isCupsPage ||
+    isPixelMinerPage
+  ) {
     return null;
   }
 

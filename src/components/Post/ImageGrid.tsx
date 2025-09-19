@@ -19,7 +19,6 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: '#11111C',
   maxWidth: '100%',
   transition: 'transform 0.2s ease',
-
 }));
 
 const BackgroundImage = styled('div')({
@@ -98,14 +97,18 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [optimizedImages, setOptimizedImages] = useState<Array<{
-    src: string;
-    originalSrc: string;
-    [key: string]: any;
-  }>>([]);
+  const [optimizedImages, setOptimizedImages] = useState<
+    Array<{
+      src: string;
+      originalSrc: string;
+      [key: string]: any;
+    }>
+  >([]);
   const [loading, setLoading] = useState(true);
   const [errorImages, setErrorImages] = useState<Record<string, boolean>>({});
-  const [imageLoadingStates, setImageLoadingStates] = useState<Record<string, boolean>>({});
+  const [imageLoadingStates, setImageLoadingStates] = useState<
+    Record<string, boolean>
+  >({});
 
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -441,7 +444,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
     const handleImageLoad = () => {
       setImageLoadingStates(prev => ({
         ...prev,
-        [imageUrl]: false
+        [imageUrl]: false,
       }));
     };
 
@@ -455,16 +458,16 @@ const ImageGrid: React.FC<ImageGridProps> = ({
     return (
       <React.Fragment>
         {isLoading && (
-          <ImageSkeleton 
-            isSingle={limitedImages.length === 1} 
+          <ImageSkeleton
+            isSingle={limitedImages.length === 1}
             isMobile={isMobile}
-            height={isPortrait ? "100%" : "auto"}
-            width="100%"
+            height={isPortrait ? '100%' : 'auto'}
+            width='100%'
             imageDimensions={dimensions}
           />
         )}
         <BackgroundImage style={{ backgroundImage: `url(${optimizedUrl})` }} />
-        <Image 
+        <Image
           {...imageProps}
           style={{
             ...imageProps.style,
@@ -489,8 +492,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({
       >
         {limitedImages.map((image, index) => {
           const imageUrl = formatImageUrl(image);
-          const dimensions = imageDimensions[imageUrl] || imageDimensions[image];
-          
+          const dimensions =
+            imageDimensions[imageUrl] || imageDimensions[image];
+
           return (
             <Box
               key={index}
@@ -498,11 +502,11 @@ const ImageGrid: React.FC<ImageGridProps> = ({
                 gridArea: getCellGridArea(index, limitedImages.length),
               }}
             >
-              <ImageSkeleton 
+              <ImageSkeleton
                 isSingle={limitedImages.length === 1}
                 isMobile={isMobile}
-                height="100%"
-                width="100%"
+                height='100%'
+                width='100%'
                 imageDimensions={dimensions}
               />
             </Box>
@@ -601,4 +605,4 @@ const ImageGrid: React.FC<ImageGridProps> = ({
   );
 };
 
-export default ImageGrid; 
+export default ImageGrid;

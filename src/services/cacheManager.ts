@@ -1,9 +1,9 @@
-import { 
-  clearMediaCache, 
-  getMediaCacheStats, 
-  listCachedUrls, 
+import {
+  clearMediaCache,
+  getMediaCacheStats,
+  listCachedUrls,
   preloadMediaUrls,
-  getAllCachedMedia
+  getAllCachedMedia,
 } from './mediaCache';
 
 export interface CacheInfo {
@@ -21,7 +21,7 @@ export class CacheManager {
   static async getCacheInfo(): Promise<CacheInfo> {
     try {
       const stats = await getMediaCacheStats();
-      
+
       return {
         ...stats,
         formattedSize: this.formatBytes(stats.totalSize),
@@ -97,12 +97,12 @@ export class CacheManager {
     try {
       const cachedUrls = await listCachedUrls();
       const stats: Record<string, number> = {};
-      
+
       cachedUrls.forEach(url => {
         const extension = this.getFileExtension(url);
         stats[extension] = (stats[extension] || 0) + 1;
       });
-      
+
       return stats;
     } catch (error) {
       console.error('Failed to get file type stats:', error);
@@ -117,12 +117,12 @@ export class CacheManager {
     try {
       const cachedMedia = await getAllCachedMedia();
       const folderStats: Record<string, number> = {};
-      
+
       cachedMedia.forEach(media => {
         const folder = this.getFolderFromUrl(media.url);
         folderStats[folder] = (folderStats[folder] || 0) + media.size;
       });
-      
+
       return folderStats;
     } catch (error) {
       console.error('Failed to get folder stats:', error);
@@ -137,13 +137,13 @@ export class CacheManager {
     try {
       const cachedMedia = await getAllCachedMedia();
       const fileTypeSizes: Record<string, number> = {};
-      
+
       // Группируем файлы по расширению и суммируем их размеры
       cachedMedia.forEach(media => {
         const extension = this.getFileExtension(media.url);
         fileTypeSizes[extension] = (fileTypeSizes[extension] || 0) + media.size;
       });
-      
+
       return fileTypeSizes;
     } catch (error) {
       console.error('Failed to get file type sizes:', error);
@@ -156,11 +156,11 @@ export class CacheManager {
    */
   private static formatBytes(bytes: number): string {
     if (bytes === 0) return '0 B';
-    
+
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
@@ -169,7 +169,7 @@ export class CacheManager {
    */
   private static formatDate(timestamp: number): string {
     if (timestamp === 0) return 'Never';
-    
+
     const date = new Date(timestamp);
     return date.toLocaleString();
   }
@@ -190,10 +190,10 @@ export class CacheManager {
     if (url.includes('/static/')) {
       const staticMatch = url.match(/\/static\/([^?]+)/);
       if (!staticMatch) return 'other';
-      
+
       const path = staticMatch[1];
       const parts = path.split('/');
-      
+
       // Определяем основную папку
       if (parts[0] === 'uploads') {
         if (parts[1] === 'avatar') return 'avatars';
@@ -210,7 +210,7 @@ export class CacheManager {
         if (parts[1] === 'BugUpload') return 'bug_uploads';
         return 'uploads_other';
       }
-      
+
       if (parts[0] === 'music') return 'music';
       if (parts[0] === 'inventory') return 'inventory';
       if (parts[0] === 'images') {
@@ -238,7 +238,7 @@ export class CacheManager {
     } else {
       // Для путей без /static/
       const parts = url.split('/').filter(part => part.length > 0);
-      
+
       if (parts[0] === 'inventory') return 'inventory';
       if (parts[0] === 'music') return 'music';
       if (parts[0] === 'images') {
@@ -264,7 +264,7 @@ export class CacheManager {
       if (parts[0] === 'playlists') return 'playlists_static';
       if (parts[0] === 'BugUpload') return 'bug_uploads_static';
     }
-    
+
     return 'other';
   }
 
@@ -303,4 +303,4 @@ export const getFolderStats = () => CacheManager.getFolderStats();
 export const isSupported = () => CacheManager.isSupported();
 export const getBrowserSupportInfo = () => CacheManager.getBrowserSupportInfo();
 
-export default CacheManager; 
+export default CacheManager;

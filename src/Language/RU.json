@@ -516,6 +516,9 @@
         "channels": "Каналы",
         "leaderboard": "Лидерборд"
       },
+      "artistErrorModal": {
+        "tickets": "Создать тикет"
+      },
       "search": "Поиск",
       "management": "Управление",
       "admin_panel": "Админ",

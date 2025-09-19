@@ -19,18 +19,18 @@ class BadgePreloader {
    */
   async preloadPopularBadges(): Promise<void> {
     if (this.isPreloading) return;
-    
+
     this.isPreloading = true;
-    
+
     try {
-      const promises = POPULAR_BADGES.map(badgePath => 
+      const promises = POPULAR_BADGES.map(badgePath =>
         badgeCache.getBadge(badgePath).then(result => {
           if (result) {
             this.preloaded.add(badgePath);
           }
         })
       );
-      
+
       await Promise.allSettled(promises);
       console.log(`Preloaded ${this.preloaded.size} popular badges`);
     } catch (error) {
@@ -51,14 +51,14 @@ class BadgePreloader {
         .filter(achievement => achievement?.image_path)
         .map(achievement => achievement.image_path);
 
-      const promises = badgePaths.map(badgePath => 
+      const promises = badgePaths.map(badgePath =>
         badgeCache.getBadge(badgePath).then(result => {
           if (result) {
             this.preloaded.add(badgePath);
           }
         })
       );
-      
+
       await Promise.allSettled(promises);
       console.log(`Preloaded ${badgePaths.length} user badges`);
     } catch (error) {
@@ -79,7 +79,7 @@ class BadgePreloader {
   getPreloadStats(): { preloaded: number; total: number } {
     return {
       preloaded: this.preloaded.size,
-      total: POPULAR_BADGES.length
+      total: POPULAR_BADGES.length,
     };
   }
 }

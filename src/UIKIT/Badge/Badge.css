@@ -2,8 +2,12 @@
 
 /* Анимация загрузки */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .badge {
@@ -172,7 +176,8 @@
 
 /* Анимация пульсации свечения */
 @keyframes glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.2;
     transform: translate(-50%, -50%) scale(1);
   }
@@ -202,7 +207,8 @@
 }
 
 @keyframes sparkle-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.6;
     transform: translate(-50%, -50%) scale(0.8);
   }
@@ -213,7 +219,8 @@
 }
 
 @keyframes sparkle-pulse-post {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
     transform: translate(-50%, -50%) scale(0.6);
   }
@@ -224,7 +231,8 @@
 }
 
 @keyframes sparkle-pulse-shop {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.7;
     transform: translate(-50%, -50%) scale(1);
   }

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useMusic } from '../../../../context/MusicContext';
@@ -22,7 +28,9 @@ const getFullUrl = (path: string): string => {
     window.location.hostname.includes('localhost');
 
   if (isLocalhost && !path.startsWith('http')) {
-    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+    const origin =
+      (typeof window !== 'undefined' && window.location?.origin) ||
+      'https://k-connect.ru';
     return `${origin}${path}`;
   }
 
@@ -78,7 +86,9 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
   } = useMusic();
 
   // Состояния
-  const [dominantColor, setDominantColor] = useState<DominantColor | null>(null);
+  const [dominantColor, setDominantColor] = useState<DominantColor | null>(
+    null
+  );
   const [showLyrics, setShowLyrics] = useState(false);
   const [showLyricsEditor, setShowLyricsEditor] = useState(false);
   const [showTimestampEditor, setShowTimestampEditor] = useState(false);
@@ -106,16 +116,25 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
   });
 
   // Мемоизированные значения
-  const coverPath = useMemo(() => getCoverPath(currentTrack as any), [currentTrack]);
+  const coverPath = useMemo(
+    () => getCoverPath(currentTrack as any),
+    [currentTrack]
+  );
   const trackId = useMemo(() => (currentTrack as any)?.id, [currentTrack]);
-  const formattedCurrentTime = useMemo(() => formatTime(currentTime), [currentTime]);
+  const formattedCurrentTime = useMemo(
+    () => formatTime(currentTime),
+    [currentTime]
+  );
   const formattedDuration = useMemo(() => formatTime(duration), [duration]);
   const safeCurrentTime = useMemo(() => {
     if (isDragging) {
       return isNaN(dragValue) ? 0 : dragValue;
     }
     // Принудительно получаем время из audio элемента
-    if ((audioRef as any)?.current && !isNaN((audioRef as any).current.currentTime)) {
+    if (
+      (audioRef as any)?.current &&
+      !isNaN((audioRef as any).current.currentTime)
+    ) {
       const audioTime = (audioRef as any).current.currentTime;
       return audioTime;
     }
@@ -124,7 +143,11 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
   }, [currentTime, dragValue, isDragging, audioRef]);
   const safeDuration = useMemo(() => {
     // Принудительно получаем длительность из audio элемента
-    if ((audioRef as any)?.current && !isNaN((audioRef as any).current.duration) && (audioRef as any).current.duration > 0) {
+    if (
+      (audioRef as any)?.current &&
+      !isNaN((audioRef as any).current.duration) &&
+      (audioRef as any).current.duration > 0
+    ) {
       return (audioRef as any).current.duration;
     }
     // Если длительность из контекста больше 0, используем её
@@ -134,7 +157,10 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     // Fallback значение
     return 100;
   }, [duration, audioRef]);
-  const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
+  const volumePercentage = useMemo(
+    () => Math.round((isMuted ? 0 : volume) * 100),
+    [volume, isMuted]
+  );
 
   // Синхронизация с контекстом
   useEffect(() => {
@@ -163,11 +189,11 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
       if ((audioRef as any)?.current) {
         const audioTime = (audioRef as any).current.currentTime;
         const audioDuration = (audioRef as any).current.duration;
-        
+
         if (!isNaN(audioTime)) {
           setCurrentTime(audioTime);
         }
-        
+
         if (!isNaN(audioDuration) && audioDuration > 0) {
           setDuration(audioDuration);
         }
@@ -216,7 +242,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     const updateTimeForLyrics = () => {
       if ((audioRef as any)?.current && !(audioRef as any).current.paused) {
         const actualCurrentTime = (audioRef as any).current.currentTime;
-        
+
         // Проверяем, что время не "застряло" на старом значении
         if (actualCurrentTime !== lastTime || actualCurrentTime === 0) {
           // Обновляем время только для лириков, не перезаписывая основное состояние
@@ -242,12 +268,14 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         (currentTrack as any).cover_path || defaultCover,
         (colorString: string) => {
           if (colorString) {
-            const [r, g, b] = colorString.split(',').map(c => parseInt(c.trim()));
-            
+            const [r, g, b] = colorString
+              .split(',')
+              .map(c => parseInt(c.trim()));
+
             const brightness = (r + g + b) / 3;
             const isTooLight = brightness > 180;
             const isTooWhite = r > 220 && g > 220 && b > 220;
-            
+
             if (isTooLight || isTooWhite) {
               setDominantColor({ r: 87, g: 63, b: 135 });
             } else {
@@ -372,7 +400,8 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
   const handleToggleLike = useCallback(async () => {
     if (!trackId) return;
 
-    try {      (likeTrack as any)(trackId);
+    try {
+      (likeTrack as any)(trackId);
     } catch (error) {
       console.error('Error toggling like:', error);
     }
@@ -381,7 +410,9 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
   const handleCopyLink = useCallback(async () => {
     if (!trackId) return;
 
-    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+    const origin =
+      (typeof window !== 'undefined' && window.location?.origin) ||
+      'https://k-connect.ru';
     const url = `${origin}/music/${trackId}`;
 
     try {
@@ -486,9 +517,12 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     setShowLyrics(false);
   }, []);
 
-  const handleLyricsChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setLyricsText(e.target.value);
-  }, []);
+  const handleLyricsChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLyricsText(e.target.value);
+    },
+    []
+  );
 
   const handleSaveLyrics = useCallback(async () => {
     if (!trackId) {
@@ -549,7 +583,9 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
       }
     } catch (error) {
       console.error('Error saving lyrics:', error);
-      setLyricsError('Ошибка при сохранении текста. Пожалуйста, попробуйте еще раз.');
+      setLyricsError(
+        'Ошибка при сохранении текста. Пожалуйста, попробуйте еще раз.'
+      );
     } finally {
       setIsSaving(false);
     }
@@ -563,12 +599,15 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     setMenuAnchorEl(null);
   }, []);
 
-  const handleSnackbarClose = useCallback((event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackbar(prev => ({ ...prev, open: false }));
-  }, []);
+  const handleSnackbarClose = useCallback(
+    (event: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setSnackbar(prev => ({ ...prev, open: false }));
+    },
+    []
+  );
 
   const handleToggleLyricsDisplay = useCallback(() => {
     setLyricsDisplayMode(prev => !prev);
@@ -586,9 +625,12 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         .map(line => line.trim())
         .filter(line => line.length > 0);
 
-      let lrcContent = '[ti:' + ((currentTrack as any)?.title || 'Unknown Title') + ']\n';
-      lrcContent += '[ar:' + ((currentTrack as any)?.artist || 'Unknown Artist') + ']\n';
-      lrcContent += '[al:' + ((currentTrack as any)?.album || 'Unknown Album') + ']\n';
+      let lrcContent =
+        '[ti:' + ((currentTrack as any)?.title || 'Unknown Title') + ']\n';
+      lrcContent +=
+        '[ar:' + ((currentTrack as any)?.artist || 'Unknown Artist') + ']\n';
+      lrcContent +=
+        '[al:' + ((currentTrack as any)?.album || 'Unknown Album') + ']\n';
       lrcContent += '[by:К-Коннект Авто-Генерация LRC]\n\n';
 
       lines.forEach(line => {
@@ -627,57 +669,62 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     handleCloseMenu();
   }, [handleCloseMenu]);
 
-  const handleFileSelected = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleFileSelected = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    // Проверяем тип файла
-    const fileName = file.name.toLowerCase();
-    const isValidFile = fileName.endsWith('.lrc') || fileName.endsWith('.json');
-    
-    if (!isValidFile) {
-      setLyricsError('Поддерживаются только файлы .lrc и .json');
+      // Проверяем тип файла
+      const fileName = file.name.toLowerCase();
+      const isValidFile =
+        fileName.endsWith('.lrc') || fileName.endsWith('.json');
+
+      if (!isValidFile) {
+        setLyricsError('Поддерживаются только файлы .lrc и .json');
+        setSnackbar({
+          open: true,
+          message: 'Неподдерживаемый формат файла. Используйте .lrc или .json',
+          severity: 'error',
+        });
+        return;
+      }
+
+      // Показываем информацию о загружаемом файле
       setSnackbar({
         open: true,
-        message: 'Неподдерживаемый формат файла. Используйте .lrc или .json',
-        severity: 'error',
+        message: `Загружается файл: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+        severity: 'info',
       });
-      return;
-    }
 
-    // Показываем информацию о загружаемом файле
-    setSnackbar({
-      open: true,
-      message: `Загружается файл: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
-      severity: 'info',
-    });
+      // Предварительная проверка LRC файла
+      if (fileName.endsWith('.lrc')) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const content = e.target?.result as string;
+          console.log('LRC file content preview:', content.substring(0, 500));
 
-    // Предварительная проверка LRC файла
-    if (fileName.endsWith('.lrc')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        console.log('LRC file content preview:', content.substring(0, 500));
-        
-        // Проверяем наличие временных меток
-        const hasTimeTags = /\[\d{2}:\d{2}\.\d{2}\]/.test(content);
-        if (!hasTimeTags) {
-          setSnackbar({
-            open: true,
-            message: 'Внимание: LRC файл не содержит временных меток. Файл будет загружен как статический текст.',
-            severity: 'warning',
-          });
-        }
-      };
-      reader.readAsText(file);
-    }
+          // Проверяем наличие временных меток
+          const hasTimeTags = /\[\d{2}:\d{2}\.\d{2}\]/.test(content);
+          if (!hasTimeTags) {
+            setSnackbar({
+              open: true,
+              message:
+                'Внимание: LRC файл не содержит временных меток. Файл будет загружен как статический текст.',
+              severity: 'warning',
+            });
+          }
+        };
+        reader.readAsText(file);
+      }
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
 
-    uploadSyncFile(file);
-  }, []);
+      uploadSyncFile(file);
+    },
+    []
+  );
 
   const uploadSyncFile = useCallback(
     async (file: File) => {
@@ -697,7 +744,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
           fileName: file.name,
           fileSize: file.size,
           fileType: file.type,
-          trackId: trackId
+          trackId: trackId,
         });
 
         const response = await fetch(`/api/music/${trackId}/lyrics/upload`, {
@@ -724,9 +771,13 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
           if (currentTrack) {
             (currentTrack as any).lyricsData = newLyricsData;
           }
-          
+
           // Check if sync was actually successful
-          if (newLyricsData.has_synced_lyrics && newLyricsData.synced_lyrics && newLyricsData.synced_lyrics.length > 0) {
+          if (
+            newLyricsData.has_synced_lyrics &&
+            newLyricsData.synced_lyrics &&
+            newLyricsData.synced_lyrics.length > 0
+          ) {
             setSnackbar({
               open: true,
               message: 'Синхронизация успешно загружена',
@@ -735,10 +786,13 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
           } else {
             setSnackbar({
               open: true,
-              message: 'Файл загружен, но синхронизация не распознана. Проверьте формат LRC файла.',
+              message:
+                'Файл загружен, но синхронизация не распознана. Проверьте формат LRC файла.',
               severity: 'warning',
             });
-            setLyricsError('Файл загружен как статический текст. Убедитесь, что LRC файл содержит временные метки в формате [mm:ss.xx]');
+            setLyricsError(
+              'Файл загружен как статический текст. Убедитесь, что LRC файл содержит временные метки в формате [mm:ss.xx]'
+            );
           }
         } else {
           setSnackbar({
@@ -752,7 +806,9 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
         setShowLyrics(true);
       } catch (error) {
         console.error('Error uploading sync file:', error);
-        setLyricsError(`Ошибка при загрузке файла: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
+        setLyricsError(
+          `Ошибка при загрузке файла: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`
+        );
 
         setSnackbar({
           open: true,
@@ -783,7 +839,10 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
 
   // Мемоизированные отфильтрованные строки
   const filteredLines = useMemo((): any[] => {
-    if (lyricsData?.has_synced_lyrics && Array.isArray(lyricsData.synced_lyrics)) {
+    if (
+      lyricsData?.has_synced_lyrics &&
+      Array.isArray(lyricsData.synced_lyrics)
+    ) {
       return lyricsData.synced_lyrics
         .filter(line => line && line.text !== undefined)
         .map((line, index) => ({
@@ -826,7 +885,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     lyricsDisplayMode,
     isDragging,
     snackbar,
-    
+
     // Мемоизированные значения
     coverPath,
     trackId,
@@ -839,7 +898,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     buttonBackgroundColor,
     fileInputRef,
     filteredLines,
-    
+
     // Обработчики
     handleTimeChange,
     handleTimeChangeCommitted,
@@ -861,7 +920,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     handleOpenFileSelector,
     handleFileSelected,
     uploadSyncFile,
-    
+
     // Сеттеры
     setShowLyrics,
     setShowLyricsEditor,
@@ -883,7 +942,7 @@ export const useFullScreenPlayer = (open: boolean, onClose: () => void) => {
     setIsDragging,
     setDragValue,
     setSnackbar,
-    
+
     // Дополнительные значения
     dragValue,
   };

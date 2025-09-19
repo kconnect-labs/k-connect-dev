@@ -20,7 +20,9 @@ import { useMessenger } from '../../contexts/MessengerContext';
 import axios from 'axios';
 
 // API URL для мессенджера
-const ORIGIN = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const ORIGIN =
+  (typeof window !== 'undefined' && window.location?.origin) ||
+  'https://k-connect.ru';
 const API_URL = `${ORIGIN}/apiMes`;
 
 // Упрощенный компонент для мгновенного отображения стикеров
@@ -33,7 +35,7 @@ const InstantStickerGrid = React.memo(({ stickers, onStickerClick, pack }) => {
   if (!stickers || stickers.length === 0) {
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+        <Typography variant='body2' sx={{ color: 'rgba(255, 255, 255, 0.5)' }}>
           Нет стикеров в этом паке
         </Typography>
       </Box>
@@ -121,7 +123,9 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
     height: isMobile ? '50vh' : '400px',
     background: 'var(--theme-background, rgba(18, 18, 18, 0.95))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    borderRadius: isMobile ? '16px 16px 0 0' : 'var(--main-border-radius) !important',
+    borderRadius: isMobile
+      ? '16px 16px 0 0'
+      : 'var(--main-border-radius) !important',
     border: '1px solid rgba(66, 66, 66, 0.5)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
     zIndex: 1000,

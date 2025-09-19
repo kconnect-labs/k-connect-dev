@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import { formatCompactNumber } from '../utils/formatters';
 
@@ -17,7 +14,7 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
 }) => {
   return (
     <Box
-      className="theme-aware"
+      className='theme-aware'
       sx={{
         borderRadius: '16px',
         border: '1px solid rgba(66, 66, 66, 0.5)',
@@ -39,13 +36,8 @@ export const UserPositionCard: React.FC<UserPositionCardProps> = ({
       }}
     >
       <Box display='flex' alignItems='center'>
-        <MilitaryTechIcon
-          sx={{ mr: 1, fontSize: 28, color: '#D0BCFF' }}
-        />
-        <Typography
-          variant='h6'
-          sx={{ color: '#D0BCFF', fontWeight: 700 }}
-        >
+        <MilitaryTechIcon sx={{ mr: 1, fontSize: 28, color: '#D0BCFF' }} />
+        <Typography variant='h6' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
           Ваше место: {position}
         </Typography>
       </Box>

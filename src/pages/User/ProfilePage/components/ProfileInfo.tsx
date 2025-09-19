@@ -12,7 +12,6 @@ import TodayIcon from '@mui/icons-material/Today';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import styles from './ProfileInfo.module.css';
 
-
 interface ConnectInfo {
   connection_date: string;
   days: number;
@@ -107,7 +106,6 @@ interface Verification {
   date: string;
   status: number;
 }
-
 
 interface Stats {
   avg_likes_per_post: number;
@@ -241,7 +239,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
   const isCurrentUser = currentUser && currentUser.id === user.id;
   const hasAccess = !user?.is_private || isCurrentUser || user?.is_friend;
 
-
   // Если профиль приватный и нет доступа, показываем сообщение
   if (!hasAccess) {
     return (
@@ -255,7 +252,13 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
                 color: 'rgba(255, 255, 255, 0.7)',
               }}
             >
-              <div style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+              <div
+                style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
+                  marginBottom: '0.5rem',
+                }}
+              >
                 Приватный профиль
               </div>
               <div style={{ fontSize: '0.875rem' }}>
@@ -406,7 +409,6 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({
             </InfoItem>
           </div>
         )}
-
       </div>
     </div>
   );

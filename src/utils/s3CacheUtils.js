@@ -26,7 +26,7 @@ export const clearS3Cache = () => {
  * @param {string} url - URL файла
  * @returns {string} - URL с параметром обхода кэша
  */
-export const addCacheBuster = (url) => {
+export const addCacheBuster = url => {
   if (url.includes('s3.k-connect.ru')) {
     const separator = url.includes('?') ? '&' : '?';
     return `${url}${separator}_t=${Date.now()}`;
@@ -39,7 +39,7 @@ export const addCacheBuster = (url) => {
  * @param {string} url - URL для проверки
  * @returns {boolean} - true если это S3 URL
  */
-export const isS3Url = (url) => {
+export const isS3Url = url => {
   return url && url.includes('s3.k-connect.ru');
 };
 
@@ -51,7 +51,7 @@ export const isS3Url = (url) => {
  */
 export const createS3Image = (src, options = {}) => {
   const img = new Image();
-  
+
   if (isS3Url(src)) {
     // Для S3 файлов не добавляем параметры обхода кэша
     img.src = src;
@@ -59,9 +59,9 @@ export const createS3Image = (src, options = {}) => {
     // Для других файлов добавляем параметр обхода кэша
     img.src = addCacheBuster(src);
   }
-  
+
   // Применяем дополнительные опции
   Object.assign(img, options);
-  
+
   return img;
 };

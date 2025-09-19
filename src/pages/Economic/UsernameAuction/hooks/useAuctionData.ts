@@ -15,7 +15,12 @@ interface Auction {
   completed_at?: string;
   bids_count?: number;
   bids?: Array<{
-    bidder: { id: number; username: string; avatar_url?: string; photo?: string };
+    bidder: {
+      id: number;
+      username: string;
+      avatar_url?: string;
+      photo?: string;
+    };
     amount: number;
     time: string;
   }>;
@@ -50,7 +55,7 @@ interface UseAuctionDataReturn {
   userAuctions: Auction[];
   userBids: UserBid[];
   usernames: Username[];
-  
+
   // Loading states
   loading: boolean;
   detailLoading: boolean;
@@ -61,12 +66,12 @@ interface UseAuctionDataReturn {
     cancel: number | null;
     create: boolean;
   };
-  
+
   // UI states
   searchQuery: string;
   sessionActive: boolean;
   sessionExpired: boolean;
-  
+
   // Actions
   fetchAuctions: (silent?: boolean) => Promise<void>;
   fetchUserAuctions: (silent?: boolean) => Promise<void>;
@@ -107,7 +112,9 @@ export const useAuctionData = (): UseAuctionDataReturn => {
   // Broadcast channel setup
   useEffect(() => {
     if (typeof BroadcastChannel !== 'undefined') {
-      broadcastChannel.current = new BroadcastChannel('username_auction_channel');
+      broadcastChannel.current = new BroadcastChannel(
+        'username_auction_channel'
+      );
 
       broadcastChannel.current.onmessage = event => {
         const { type, data, timestamp } = event.data;
@@ -193,85 +200,96 @@ export const useAuctionData = (): UseAuctionDataReturn => {
     }
   }, []);
 
-  const fetchAuctions = useCallback(async (silent = false) => {
-    if (!sessionActive) return;
+  const fetchAuctions = useCallback(
+    async (silent = false) => {
+      if (!sessionActive) return;
 
-    try {
-      if (!silent) setLoading(true);
-      const response = await axios.get('/api/username/auctions');
+      try {
+        if (!silent) setLoading(true);
+        const response = await axios.get('/api/username/auctions');
 
-      lastFetchTime.current = Date.now();
+        lastFetchTime.current = Date.now();
 
-      const auctionsData = response.data.auctions || [];
+        const auctionsData = response.data.auctions || [];
 
-      const activeAuctions = auctionsData.filter(
-        (auction: Auction) => auction.status !== 'completed'
-      );
-      const completedAuctionsData = auctionsData.filter(
-        (auction: Auction) => auction.status === 'completed'
-      );
+        const activeAuctions = auctionsData.filter(
+          (auction: Auction) => auction.status !== 'completed'
+        );
+        const completedAuctionsData = auctionsData.filter(
+          (auction: Auction) => auction.status === 'completed'
+        );
 
-      setAuctions(activeAuctions);
-      setFilteredAuctions(activeAuctions);
-      setCompletedAuctions(completedAuctionsData);
+        setAuctions(activeAuctions);
+        setFilteredAuctions(activeAuctions);
+        setCompletedAuctions(completedAuctionsData);
 
-      broadcastUpdate('auctions', response.data);
-    } catch (error) {
-      console.error('Error fetching auctions:', error);
-    } finally {
-      if (!silent) setLoading(false);
-    }
-  }, [sessionActive, broadcastUpdate]);
+        broadcastUpdate('auctions', response.data);
+      } catch (error) {
+        console.error('Error fetching auctions:', error);
+      } finally {
+        if (!silent) setLoading(false);
+      }
+    },
+    [sessionActive, broadcastUpdate]
+  );
 
-  const fetchUserAuctions = useCallback(async (silent = false) => {
-    if (!sessionActive) return;
+  const fetchUserAuctions = useCallback(
+    async (silent = false) => {
+      if (!sessionActive) return;
 
-    try {
-      const response = await axios.get('/api/username/my-auctions');
+      try {
+        const response = await axios.get('/api/username/my-auctions');
 
-      lastFetchTime.current = Date.now();
+        lastFetchTime.current = Date.now();
 
-      setUserAuctions(response.data.active_auctions || []);
-      setUserBids(response.data.my_bids || []);
+        setUserAuctions(response.data.active_auctions || []);
+        setUserBids(response.data.my_bids || []);
 
-      const completedAuctionsData = [
-        ...(response.data.completed_auctions || []),
-        ...(response.data.completed_bids || []),
-      ];
+        const completedAuctionsData = [
+          ...(response.data.completed_auctions || []),
+          ...(response.data.completed_bids || []),
+        ];
 
-      setCompletedAuctions(prev => {
-        const existingMap = new Map(prev.map(auction => [auction.id, auction]));
+        setCompletedAuctions(prev => {
+          const existingMap = new Map(
+            prev.map(auction => [auction.id, auction])
+          );
 
-        completedAuctionsData.forEach((auction: Auction) => {
-          if (!existingMap.has(auction.id)) {
-            existingMap.set(auction.id, auction);
-          }
+          completedAuctionsData.forEach((auction: Auction) => {
+            if (!existingMap.has(auction.id)) {
+              existingMap.set(auction.id, auction);
+            }
+          });
+
+          return Array.from(existingMap.values());
         });
 
-        return Array.from(existingMap.values());
-      });
+        broadcastUpdate('user_auctions', response.data);
+      } catch (error) {
+        console.error('Error fetching user auctions:', error);
+      }
+    },
+    [sessionActive, broadcastUpdate]
+  );
 
-      broadcastUpdate('user_auctions', response.data);
-    } catch (error) {
-      console.error('Error fetching user auctions:', error);
-    }
-  }, [sessionActive, broadcastUpdate]);
+  const fetchUsernames = useCallback(
+    async (silent = false) => {
+      if (!sessionActive) return;
 
-  const fetchUsernames = useCallback(async (silent = false) => {
-    if (!sessionActive) return;
+      try {
+        const response = await axios.get('/api/username/purchased');
 
-    try {
-      const response = await axios.get('/api/username/purchased');
+        lastFetchTime.current = Date.now();
 
-      lastFetchTime.current = Date.now();
+        setUsernames(response.data.usernames || []);
 
-      setUsernames(response.data.usernames || []);
-
-      broadcastUpdate('usernames', response.data);
-    } catch (error) {
-      console.error('Error fetching usernames:', error);
-    }
-  }, [sessionActive, broadcastUpdate]);
+        broadcastUpdate('usernames', response.data);
+      } catch (error) {
+        console.error('Error fetching usernames:', error);
+      }
+    },
+    [sessionActive, broadcastUpdate]
+  );
 
   return {
     // Data
@@ -281,17 +299,17 @@ export const useAuctionData = (): UseAuctionDataReturn => {
     userAuctions,
     userBids,
     usernames,
-    
+
     // Loading states
     loading,
     detailLoading,
     loadingButtons,
-    
+
     // UI states
     searchQuery,
     sessionActive,
     sessionExpired,
-    
+
     // Actions
     fetchAuctions,
     fetchUserAuctions,
@@ -301,4 +319,4 @@ export const useAuctionData = (): UseAuctionDataReturn => {
     setDetailLoading,
     broadcastUpdate,
   };
-}; 
+};

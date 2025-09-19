@@ -20,7 +20,7 @@ const getRarityColor = (rarity = 'common') => {
 };
 
 // Utility to check if item is overlay item (levels 2, 3, 4)
-const isOverlayItem = (item) => {
+const isOverlayItem = item => {
   const upgradeable = String(item.upgradeable);
   return upgradeable === '2' || upgradeable === '3' || upgradeable === '4';
 };
@@ -62,7 +62,7 @@ function areEqual(prevProps, nextProps) {
 const InventoryItemCardPure = memo(
   ({ item, onClick, className = '', style = {}, ...other }) => {
     // const { getGradient, getItemId } = useBackgroundGradients();
-    
+
     const rarityColor = useMemo(
       () => getRarityColor(item.rarity),
       [item.rarity]
@@ -86,7 +86,9 @@ const InventoryItemCardPure = memo(
         <div
           className={`image-container ${item.background_url ? 'has-background' : ''}`}
           style={{
-            backgroundImage: item.background_url ? `url(${item.background_url})` : 'none',
+            backgroundImage: item.background_url
+              ? `url(${item.background_url})`
+              : 'none',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -116,8 +118,11 @@ const InventoryItemCardPure = memo(
           {(isOverlayItem(item) || item.is_equipped) && (
             <div className='equipped-badge'>
               <span className='equipped-text'>
-                {isOverlayItem(item) && item.is_equipped ? 'Оверлей + Надет' : 
-                 isOverlayItem(item) ? 'Оверлей' : 'Надет'}
+                {isOverlayItem(item) && item.is_equipped
+                  ? 'Оверлей + Надет'
+                  : isOverlayItem(item)
+                    ? 'Оверлей'
+                    : 'Надет'}
               </span>
             </div>
           )}

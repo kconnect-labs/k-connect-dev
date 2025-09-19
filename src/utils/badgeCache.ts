@@ -18,7 +18,7 @@ class BadgeCache {
    */
   async getBadge(imagePath: string): Promise<string | null> {
     const cacheKey = this.getCacheKey(imagePath);
-    
+
     // Проверяем кеш
     const cached = this.cache.get(cacheKey);
     if (cached && this.isCacheValid(cached)) {
@@ -43,8 +43,8 @@ class BadgeCache {
    * Загрузить бейдж с сервера
    */
   private async loadBadge(imagePath: string): Promise<string | null> {
-    const fullUrl = imagePath.startsWith('http') 
-      ? imagePath 
+    const fullUrl = imagePath.startsWith('http')
+      ? imagePath
       : `/static/images/bages/${imagePath}`;
 
     try {
@@ -53,7 +53,7 @@ class BadgeCache {
         cache: 'force-cache', // Принудительное использование кеша браузера
         headers: {
           'Cache-Control': 'max-age=86400', // 24 часа
-        }
+        },
       });
 
       if (!response.ok) {
@@ -83,7 +83,7 @@ class BadgeCache {
       }
 
       const blob = await response.blob();
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = () => resolve(null);
@@ -130,7 +130,7 @@ class BadgeCache {
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
-      type
+      type,
     });
   }
 
@@ -153,7 +153,7 @@ class BadgeCache {
   getCacheStats(): { size: number; entries: string[] } {
     return {
       size: this.cache.size,
-      entries: Array.from(this.cache.keys())
+      entries: Array.from(this.cache.keys()),
     };
   }
 }

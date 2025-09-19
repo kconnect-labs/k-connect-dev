@@ -4,7 +4,7 @@ import {
   Typography,
   Card,
   CardContent,
-  Chip, 
+  Chip,
   List,
   ListItem,
   ListItemText,
@@ -18,7 +18,6 @@ import {
 import {
   Warning,
   Block,
-
   CheckCircle,
   Close,
   Refresh,
@@ -89,7 +88,6 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
   const [bans, setBans] = useState<Ban[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   useEffect(() => {
     fetchAccountStatus();
@@ -180,21 +178,28 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
     if ('active' in item) {
       // Это предупреждение
       if (!item.active) {
-        return <StyledChip label="Истекло" className="expired" size="small" />;
+        return <StyledChip label='Истекло' className='expired' size='small' />;
       }
-      return <StyledChip label="Предупреждение" className="warning" size="small" />;
+      return (
+        <StyledChip label='Предупреждение' className='warning' size='small' />
+      );
     } else {
       // Это бан
       if (!item.is_active) {
-        return <StyledChip label="Истекло" className="expired" size="small" />;
+        return <StyledChip label='Истекло' className='expired' size='small' />;
       }
-      return <StyledChip label="Бан" className="ban" size="small" />;
+      return <StyledChip label='Бан' className='ban' size='small' />;
     }
   };
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        minHeight='200px'
+      >
         <CircularProgress sx={{ color: '#d0bcff' }} />
       </Box>
     );
@@ -203,29 +208,36 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
   // Для предупреждений: активные = active = true, истекшие = active = false
   const activeWarnings = warnings.filter(w => w.active);
   const expiredWarnings = warnings.filter(w => !w.active);
-  
+
   // Для банов: активные = is_active = true, истекшие = is_active = false
   const activeBans = bans.filter(b => b.is_active);
   const expiredBans = bans.filter(b => !b.is_active);
 
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
+      <Box
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        mb={3}
+      >
+        <Typography
+          variant='h5'
+          sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}
+        >
           Состояние аккаунта
         </Typography>
-        <Box display="flex" gap={1}>
-          <Tooltip title="Обновить">
+        <Box display='flex' gap={1}>
+          <Tooltip title='Обновить'>
             <IconButton onClick={fetchAccountStatus} sx={{ color: '#d0bcff' }}>
               <Refresh />
             </IconButton>
           </Tooltip>
-
         </Box>
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity='error' sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
@@ -234,9 +246,12 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
       {activeWarnings.length > 0 && (
         <StyledCard sx={{ mb: 3 }}>
           <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <Box display='flex' alignItems='center' gap={1} mb={2}>
               <Warning sx={{ color: '#ffc107' }} />
-              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
+              <Typography
+                variant='h6'
+                sx={{ color: 'var(--theme-text-primary)' }}
+              >
                 Активные предупреждения ({activeWarnings.length})
               </Typography>
             </Box>
@@ -244,35 +259,53 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
               {activeWarnings.map((warning, index) => (
                 <React.Fragment key={warning.id}>
                   <ListItem>
-                    <ListItemIcon>
-                      {getStatusIcon(warning)}
-                    </ListItemIcon>
+                    <ListItemIcon>{getStatusIcon(warning)}</ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          gap={1}
+                          flexWrap='wrap'
+                        >
+                          <Typography
+                            variant='body1'
+                            sx={{ color: 'var(--theme-text-primary)' }}
+                          >
                             {warning.reason}
                           </Typography>
                           {getStatusChip(warning)}
-                                                     <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                              {new Date(warning.created_at).toLocaleDateString('ru-RU')}
-                            </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            {new Date(warning.created_at).toLocaleDateString(
+                              'ru-RU'
+                            )}
+                          </Typography>
                         </Box>
                       }
                       secondary={
                         <Box mt={1}>
-                                                   <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-                           Модератор: {warning.admin_username}
-                         </Typography>
-                         <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                           Выдано: {formatDate(warning.created_at)}
-                         </Typography>
-
+                          <Typography
+                            variant='body2'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Модератор: {warning.admin_username}
+                          </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Выдано: {formatDate(warning.created_at)}
+                          </Typography>
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < activeWarnings.length - 1 && <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />}
+                  {index < activeWarnings.length - 1 && (
+                    <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+                  )}
                 </React.Fragment>
               ))}
             </List>
@@ -284,9 +317,12 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
       {activeBans.length > 0 && (
         <StyledCard sx={{ mb: 3 }}>
           <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <Box display='flex' alignItems='center' gap={1} mb={2}>
               <Block sx={{ color: '#ef4444' }} />
-              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
+              <Typography
+                variant='h6'
+                sx={{ color: 'var(--theme-text-primary)' }}
+              >
                 Активные баны ({activeBans.length})
               </Typography>
             </Box>
@@ -294,35 +330,53 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
               {activeBans.map((ban, index) => (
                 <React.Fragment key={ban.id}>
                   <ListItem>
-                    <ListItemIcon>
-                      {getStatusIcon(ban)}
-                    </ListItemIcon>
+                    <ListItemIcon>{getStatusIcon(ban)}</ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          gap={1}
+                          flexWrap='wrap'
+                        >
+                          <Typography
+                            variant='body1'
+                            sx={{ color: 'var(--theme-text-primary)' }}
+                          >
                             {ban.reason}
                           </Typography>
                           {getStatusChip(ban)}
-                                                     <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                             {ban.is_active ? `Осталось: ${getTimeRemaining(ban.expires_at)}` : 'Истек'}
-                           </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            {ban.is_active
+                              ? `Осталось: ${getTimeRemaining(ban.expires_at)}`
+                              : 'Истек'}
+                          </Typography>
                         </Box>
                       }
                       secondary={
                         <Box mt={1}>
-                                                   <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-                           Модератор: {ban.moderator_name}
-                         </Typography>
-                         <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                           Выдан: {formatDate(ban.created_at)}
-                         </Typography>
-
+                          <Typography
+                            variant='body2'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Модератор: {ban.moderator_name}
+                          </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Выдан: {formatDate(ban.created_at)}
+                          </Typography>
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < activeBans.length - 1 && <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />}
+                  {index < activeBans.length - 1 && (
+                    <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+                  )}
                 </React.Fragment>
               ))}
             </List>
@@ -334,9 +388,12 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
       {expiredWarnings.length > 0 && (
         <StyledCard sx={{ mb: 3 }}>
           <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <Box display='flex' alignItems='center' gap={1} mb={2}>
               <CheckCircle sx={{ color: '#10b981' }} />
-              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
+              <Typography
+                variant='h6'
+                sx={{ color: 'var(--theme-text-primary)' }}
+              >
                 История предупреждений ({expiredWarnings.length})
               </Typography>
             </Box>
@@ -344,13 +401,19 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
               {expiredWarnings.map((warning, index) => (
                 <React.Fragment key={warning.id}>
                   <ListItem>
-                    <ListItemIcon>
-                      {getStatusIcon(warning)}
-                    </ListItemIcon>
+                    <ListItemIcon>{getStatusIcon(warning)}</ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          gap={1}
+                          flexWrap='wrap'
+                        >
+                          <Typography
+                            variant='body1'
+                            sx={{ color: 'var(--theme-text-primary)' }}
+                          >
                             {warning.reason}
                           </Typography>
                           {getStatusChip(warning)}
@@ -358,17 +421,25 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                       }
                       secondary={
                         <Box mt={1}>
-                                                     <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-                             Модератор: {warning.admin_username}
-                           </Typography>
-                           <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                             Выдано: {formatDate(warning.created_at)}
-                           </Typography>
+                          <Typography
+                            variant='body2'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Модератор: {warning.admin_username}
+                          </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Выдано: {formatDate(warning.created_at)}
+                          </Typography>
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < expiredWarnings.length - 1 && <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />}
+                  {index < expiredWarnings.length - 1 && (
+                    <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+                  )}
                 </React.Fragment>
               ))}
             </List>
@@ -380,9 +451,12 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
       {expiredBans.length > 0 && (
         <StyledCard sx={{ mb: 3 }}>
           <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={2}>
+            <Box display='flex' alignItems='center' gap={1} mb={2}>
               <CheckCircle sx={{ color: '#10b981' }} />
-              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)' }}>
+              <Typography
+                variant='h6'
+                sx={{ color: 'var(--theme-text-primary)' }}
+              >
                 История банов ({expiredBans.length})
               </Typography>
             </Box>
@@ -390,13 +464,19 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
               {expiredBans.map((ban, index) => (
                 <React.Fragment key={ban.id}>
                   <ListItem>
-                    <ListItemIcon>
-                      {getStatusIcon(ban)}
-                    </ListItemIcon>
+                    <ListItemIcon>{getStatusIcon(ban)}</ListItemIcon>
                     <ListItemText
                       primary={
-                        <Box display="flex" alignItems="center" gap={1} flexWrap="wrap">
-                          <Typography variant="body1" sx={{ color: 'var(--theme-text-primary)' }}>
+                        <Box
+                          display='flex'
+                          alignItems='center'
+                          gap={1}
+                          flexWrap='wrap'
+                        >
+                          <Typography
+                            variant='body1'
+                            sx={{ color: 'var(--theme-text-primary)' }}
+                          >
                             {ban.reason}
                           </Typography>
                           {getStatusChip(ban)}
@@ -404,17 +484,26 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
                       }
                       secondary={
                         <Box mt={1}>
-                                                     <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)' }}>
-                             Модератор: {ban.moderator_name}
-                           </Typography>
-                           <Typography variant="caption" sx={{ color: 'var(--theme-text-secondary)' }}>
-                             Выдан: {formatDate(ban.created_at)} | Истек: {formatDate(ban.expires_at)}
-                           </Typography>
+                          <Typography
+                            variant='body2'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Модератор: {ban.moderator_name}
+                          </Typography>
+                          <Typography
+                            variant='caption'
+                            sx={{ color: 'var(--theme-text-secondary)' }}
+                          >
+                            Выдан: {formatDate(ban.created_at)} | Истек:{' '}
+                            {formatDate(ban.expires_at)}
+                          </Typography>
                         </Box>
                       }
                     />
                   </ListItem>
-                  {index < expiredBans.length - 1 && <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />}
+                  {index < expiredBans.length - 1 && (
+                    <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.1)' }} />
+                  )}
                 </React.Fragment>
               ))}
             </List>
@@ -426,21 +515,33 @@ const AccountStatusForm: React.FC<AccountStatusFormProps> = ({ onClose }) => {
       {warnings.length === 0 && bans.length === 0 && (
         <StyledCard>
           <CardContent>
-            <Box display="flex" flexDirection="column" alignItems="center" py={4}>
+            <Box
+              display='flex'
+              flexDirection='column'
+              alignItems='center'
+              py={4}
+            >
               <CheckCircle sx={{ fontSize: 48, color: '#10b981', mb: 2 }} />
-              <Typography variant="h6" sx={{ color: 'var(--theme-text-primary)', mb: 1 }}>
+              <Typography
+                variant='h6'
+                sx={{ color: 'var(--theme-text-primary)', mb: 1 }}
+              >
                 Аккаунт в порядке
               </Typography>
-              <Typography variant="body2" sx={{ color: 'var(--theme-text-secondary)', textAlign: 'center' }}>
+              <Typography
+                variant='body2'
+                sx={{
+                  color: 'var(--theme-text-secondary)',
+                  textAlign: 'center',
+                }}
+              >
                 У вас нет активных предупреждений или банов
               </Typography>
             </Box>
           </CardContent>
         </StyledCard>
       )}
-
-
     </Box>
   );
 };
-export default AccountStatusForm; 
+export default AccountStatusForm;

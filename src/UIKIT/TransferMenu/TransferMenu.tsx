@@ -113,10 +113,11 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     marginLeft: 2,
     marginTop: 8,
   },
-  '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button': {
-    '-webkit-appearance': 'none',
-    margin: 0,
-  },
+  '& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button':
+    {
+      '-webkit-appearance': 'none',
+      margin: 0,
+    },
   '& input[type=number]': {
     '-moz-appearance': 'textfield',
   },
@@ -259,33 +260,34 @@ const DecorationItem = styled('img')({
   zIndex: 1,
 });
 
-const TransferMenu: React.FC<TransferMenuProps> = ({ 
-  open, 
-  onClose, 
-  userPoints, 
-  onSuccess 
+const TransferMenu: React.FC<TransferMenuProps> = ({
+  open,
+  onClose,
+  userPoints,
+  onSuccess,
 }) => {
   const { t } = useLanguage();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [transferData, setTransferData] = useState<TransferData>({
     username: '',
     amount: '',
     message: '',
     recipient_id: null,
   });
-  
+
   const [transferErrors, setTransferErrors] = useState<TransferErrors>({});
   const [userSearch, setUserSearch] = useState<UserSearch>({
     loading: false,
     exists: false,
     suggestions: [],
   });
-  
+
   const [isTransferring, setIsTransferring] = useState(false);
   const [transferSuccess, setTransferSuccess] = useState(false);
-  const [transferReceipt, setTransferReceipt] = useState<TransferReceipt | null>(null);
+  const [transferReceipt, setTransferReceipt] =
+    useState<TransferReceipt | null>(null);
   const [includeCommissionMode, setIncludeCommissionMode] = useState(false);
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -455,7 +457,11 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
     setTransferErrors({});
     setIsTransferring(true);
 
-    let transferAmount: number, commission: number, total: number, recipientAmount: number, newBalance: number;
+    let transferAmount: number,
+      commission: number,
+      total: number,
+      recipientAmount: number,
+      newBalance: number;
 
     if (includeCommissionMode) {
       transferAmount = calculateAmountWithCommission(transferData.amount);
@@ -598,7 +604,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
       open={open}
       onClose={handleClose}
       title={t('balance.transfer_menu.title')}
-      maxWidth="sm"
+      maxWidth='sm'
       fullWidth
     >
       {!transferSuccess ? (
@@ -606,11 +612,11 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
           <Box sx={{ mb: 3 }}>
             <Typography
               variant='body2'
-              sx={{ 
-                color: '#cfbcfb', 
+              sx={{
+                color: '#cfbcfb',
                 textAlign: 'center',
                 mb: 3,
-                opacity: 0.8
+                opacity: 0.8,
               }}
             >
               {t('balance.transfer_menu.subtitle')}
@@ -618,29 +624,26 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
           </Box>
 
           <Box
-            sx={{ 
-              display: 'flex', 
+            sx={{
+              display: 'flex',
               flexDirection: { xs: 'column', sm: 'row' },
-              justifyContent: 'space-between', 
+              justifyContent: 'space-between',
               alignItems: { xs: 'flex-start', sm: 'center' },
               mb: { xs: 3, sm: 4 },
-              gap: { xs: 1, sm: 0 }
+              gap: { xs: 1, sm: 0 },
             }}
           >
-            <Typography
-              variant='subtitle2'
-              sx={{ color: '#cfbcfb' }}
-            >
+            <Typography variant='subtitle2' sx={{ color: '#cfbcfb' }}>
               {t('balance.transfer_menu.available')}
             </Typography>
             <Typography
               variant='h6'
               fontWeight='bold'
-              sx={{ 
+              sx={{
                 color: '#AAAAAA',
                 fontSize: { xs: '1rem', sm: '1.25rem' },
                 wordBreak: 'break-word',
-                textAlign: { xs: 'left', sm: 'right' }
+                textAlign: { xs: 'left', sm: 'right' },
               }}
             >
               {userPoints} {t('balance.transfer_menu.points_suffix')}
@@ -695,27 +698,34 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                   decoration={user.decoration}
                   onClick={() => selectSuggestion(user.username, user.id)}
                 >
-                  {user.decoration?.item_path && (
+                  {user.decoration?.item_path &&
                     (() => {
-                      const [path, ...styles] = user.decoration.item_path.split(';');
-                      const styleObj = styles.reduce((acc: any, style: string) => {
-                        const [key, value] = style.split(':').map(s => s.trim());
-                        if (key === 'height') {
-                          const size = parseInt(value);
-                          return { ...acc, [key]: `${size / 2}px` };
-                        }
-                        return { ...acc, [key]: value };
-                      }, {});
+                      const [path, ...styles] =
+                        user.decoration.item_path.split(';');
+                      const styleObj = styles.reduce(
+                        (acc: any, style: string) => {
+                          const [key, value] = style
+                            .split(':')
+                            .map(s => s.trim());
+                          if (key === 'height') {
+                            const size = parseInt(value);
+                            return { ...acc, [key]: `${size / 2}px` };
+                          }
+                          return { ...acc, [key]: value };
+                        },
+                        {}
+                      );
 
                       return (
                         <DecorationItem
                           src={path}
-                          alt={t('balance.transfer_menu.recipient.decoration_alt')}
+                          alt={t(
+                            'balance.transfer_menu.recipient.decoration_alt'
+                          )}
                           style={styleObj}
                         />
                       );
-                    })()
-                  )}
+                    })()}
                   <Box
                     sx={{
                       position: 'relative',
@@ -727,7 +737,8 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                   >
                     <UserAvatar
                       src={
-                        user.avatar_url || (user.photo
+                        user.avatar_url ||
+                        (user.photo
                           ? `/static/uploads/avatar/${user.id}/${user.photo}`
                           : undefined)
                       }
@@ -752,10 +763,15 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                             }}
                           />
                         )}
-                        {(user.subscription?.type === 'max' || 
+                        {(user.subscription?.type === 'max' ||
                           user.subscription_type === 'max' ||
                           user.subscription?.subscription_type === 'max') && (
-                          <MaxIcon size={24} color="#FF4D50" style={{ margin: '0 2.5px' }} className="max-icon" />
+                          <MaxIcon
+                            size={24}
+                            color='#FF4D50'
+                            style={{ margin: '0 2.5px' }}
+                            className='max-icon'
+                          />
                         )}
                       </Box>
                       <Typography variant='body2' color='text.secondary'>
@@ -797,14 +813,14 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 flexDirection: { xs: 'column', sm: 'row' },
                 alignItems: { xs: 'flex-start', sm: 'center' },
                 justifyContent: 'space-between',
-                gap: { xs: 1, sm: 0 }
+                gap: { xs: 1, sm: 0 },
               }}
             >
               <Typography
                 variant='body2'
-                sx={{ 
+                sx={{
                   color: '#cfbcfb',
-                  fontSize: { xs: '0.875rem', sm: '1rem' }
+                  fontSize: { xs: '0.875rem', sm: '1rem' },
                 }}
               >
                 {includeCommissionMode
@@ -843,7 +859,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
               variant='outlined'
               type='number'
               value={transferData.amount}
-              onChange={(e) => {
+              onChange={e => {
                 const value = e.target.value;
                 if (value === '' || /^\d+$/.test(value)) {
                   setTransferData(prev => ({ ...prev, amount: value }));
@@ -870,11 +886,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                   borderRadius: 'var(--main-border-radius)',
                 }}
               >
-                <Typography
-                  variant='body2'
-                  color='text.secondary'
-                  gutterBottom
-                >
+                <Typography variant='body2' color='text.secondary' gutterBottom>
                   {includeCommissionMode
                     ? 'Расчет с учетом комиссии'
                     : t('balance.transfer_menu.amount.details')}
@@ -893,7 +905,8 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         Желаемая сумма к получению
                       </Typography>
                       <Typography variant='body2' color='text.primary'>
-                        {transferData.amount} {t('balance.transfer_menu.points_suffix')}
+                        {transferData.amount}{' '}
+                        {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
                     <Box
@@ -907,7 +920,11 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         Комиссия (10%)
                       </Typography>
                       <Typography variant='body2' color='error'>
-                        +{Math.floor(calculateAmountWithCommission(transferData.amount) * 0.1)}{' '}
+                        +
+                        {Math.floor(
+                          calculateAmountWithCommission(transferData.amount) *
+                            0.1
+                        )}{' '}
                         {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
@@ -940,7 +957,10 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         {t('balance.transfer_menu.amount.your_balance')}
                       </Typography>
                       <Typography variant='body2' color='text.primary'>
-                        {userPoints - calculateAmountWithCommission(transferData.amount)}{' '}
+                        {userPoints -
+                          calculateAmountWithCommission(
+                            transferData.amount
+                          )}{' '}
                         {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
@@ -958,7 +978,8 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         {t('balance.transfer_menu.amount.transfer_amount')}
                       </Typography>
                       <Typography variant='body2' color='text.primary'>
-                        {transferData.amount} {t('balance.transfer_menu.points_suffix')}
+                        {transferData.amount}{' '}
+                        {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
                     <Box
@@ -987,7 +1008,10 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         {t('balance.transfer_menu.amount.recipient_gets')}
                       </Typography>
                       <Typography variant='body2' color='success.main'>
-                        {calculateCommission(transferData.amount).recipientAmount}{' '}
+                        {
+                          calculateCommission(transferData.amount)
+                            .recipientAmount
+                        }{' '}
                         {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
@@ -1001,7 +1025,8 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                         {t('balance.transfer_menu.amount.your_balance')}
                       </Typography>
                       <Typography variant='body2' color='text.primary'>
-                        {userPoints - calculateCommission(transferData.amount).total}{' '}
+                        {userPoints -
+                          calculateCommission(transferData.amount).total}{' '}
                         {t('balance.transfer_menu.points_suffix')}
                       </Typography>
                     </Box>
@@ -1017,7 +1042,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
               fullWidth
               variant='outlined'
               value={transferData.message}
-              onChange={(e) =>
+              onChange={e =>
                 setTransferData(prev => ({
                   ...prev,
                   message: e.target.value,
@@ -1059,7 +1084,8 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                 !transferData.amount ||
                 isTransferring ||
                 (includeCommissionMode &&
-                  calculateAmountWithCommission(transferData.amount) > userPoints)
+                  calculateAmountWithCommission(transferData.amount) >
+                    userPoints)
               }
               startIcon={
                 isTransferring ? (
@@ -1098,7 +1124,12 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
             </Typography>
             <Typography
               variant='body2'
-              sx={{ color: '#cfbcfb', maxWidth: '80%', mx: 'auto', opacity: 0.8 }}
+              sx={{
+                color: '#cfbcfb',
+                maxWidth: '80%',
+                mx: 'auto',
+                opacity: 0.8,
+              }}
             >
               {t('balance.transfer_menu.success.subtitle', {
                 recipient: transferReceipt?.recipient,
@@ -1106,9 +1137,11 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
             </Typography>
           </Box>
 
-          <Box sx={{ 
-            p: 0, 
-          }}>
+          <Box
+            sx={{
+              p: 0,
+            }}
+          >
             <Box
               sx={{
                 p: { xs: 1, sm: 2 },
@@ -1127,43 +1160,65 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
               </Typography>
 
               <Box
-                sx={{ 
-                  display: 'flex', 
+                sx={{
+                  display: 'flex',
                   flexDirection: 'row',
-                  justifyContent: 'space-between', 
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   mb: 2,
-                  gap: 1
+                  gap: 1,
                 }}
               >
                 <Typography
                   variant='body2'
-                  sx={{ color: '#cfbcfb', fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                  sx={{
+                    color: '#cfbcfb',
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                  }}
                 >
                   {t('balance.transfer_menu.success.details.amount')}
                 </Typography>
-                <Typography variant='body1' sx={{ fontWeight: 'bold', color: 'var(--theme-text-primary)', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
-                  {transferReceipt?.amount} {t('balance.transfer_menu.points_suffix')}
+                <Typography
+                  variant='body1'
+                  sx={{
+                    fontWeight: 'bold',
+                    color: 'var(--theme-text-primary)',
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {transferReceipt?.amount}{' '}
+                  {t('balance.transfer_menu.points_suffix')}
                 </Typography>
               </Box>
 
               <Box
-                sx={{ 
-                  display: 'flex', 
+                sx={{
+                  display: 'flex',
                   flexDirection: 'row',
-                  justifyContent: 'space-between', 
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   mb: 2,
-                  gap: 1
+                  gap: 1,
                 }}
               >
                 <Typography
                   variant='body2'
-                  sx={{ color: '#cfbcfb', fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                  sx={{
+                    color: '#cfbcfb',
+                    fontSize: { xs: '0.875rem', sm: '1rem' },
+                  }}
                 >
                   {t('balance.transfer_menu.success.details.recipient')}
                 </Typography>
-                <Typography variant='body1' sx={{ color: 'var(--theme-text-primary)', fontSize: { xs: '0.9rem', sm: '1rem' }, wordBreak: 'break-word' }}>
+                <Typography
+                  variant='body1'
+                  sx={{
+                    color: 'var(--theme-text-primary)',
+                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                    wordBreak: 'break-word',
+                  }}
+                >
                   {transferReceipt?.recipient}
                 </Typography>
               </Box>
@@ -1182,7 +1237,7 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: 1
+                    gap: 1,
                   }}
                 >
                   <Box>
@@ -1190,17 +1245,26 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                       variant='caption'
                       sx={{ color: '#cfbcfb', display: 'block', mb: 0.5 }}
                     >
-                      {t('balance.transfer_menu.success.details.balance.before')}
+                      {t(
+                        'balance.transfer_menu.success.details.balance.before'
+                      )}
                     </Typography>
-                                    <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontSize: { xs: '1.1rem', sm: '1.25rem' }, wordBreak: 'break-word' }}>
-                  {transferReceipt?.previousBalance}
-                </Typography>
+                    <Typography
+                      variant='h6'
+                      sx={{
+                        color: 'var(--theme-text-primary)',
+                        fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {transferReceipt?.previousBalance}
+                    </Typography>
                   </Box>
 
                   <ArrowRightAltIcon
-                    sx={{ 
-                      color: '#cfbcfb', 
-                      mx: 2
+                    sx={{
+                      color: '#cfbcfb',
+                      mx: 2,
                     }}
                   />
 
@@ -1211,7 +1275,15 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
                     >
                       {t('balance.transfer_menu.success.details.balance.after')}
                     </Typography>
-                    <Typography variant='h6' sx={{ color: '#4CAF50', fontWeight: 'bold', fontSize: { xs: '1.1rem', sm: '1.25rem' }, wordBreak: 'break-word' }}>
+                    <Typography
+                      variant='h6'
+                      sx={{
+                        color: '#4CAF50',
+                        fontWeight: 'bold',
+                        fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                        wordBreak: 'break-word',
+                      }}
+                    >
                       {transferReceipt?.newBalance}
                     </Typography>
                   </Box>
@@ -1258,4 +1330,4 @@ const TransferMenu: React.FC<TransferMenuProps> = ({
   );
 };
 
-export default TransferMenu; 
+export default TransferMenu;

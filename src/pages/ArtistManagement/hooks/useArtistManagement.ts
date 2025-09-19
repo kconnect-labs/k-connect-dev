@@ -17,13 +17,14 @@ export const useArtistManagement = () => {
       console.log('🔄 Загружаем артистов...');
       setLoading(true);
       setError(null);
-      
+
       const response = await axios.get('/api/artist-management/my-artists');
       console.log('✅ Ответ от API:', response.data);
       return response.data;
     } catch (err: any) {
       console.error('❌ Ошибка загрузки артистов:', err);
-      const errorMessage = err.response?.data?.error || 'Ошибка загрузки артистов';
+      const errorMessage =
+        err.response?.data?.error || 'Ошибка загрузки артистов';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -31,15 +32,22 @@ export const useArtistManagement = () => {
     }
   };
 
-  const updateArtist = async (artistId: number, data: any): Promise<ArtistManagementResponse> => {
+  const updateArtist = async (
+    artistId: number,
+    data: any
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await axios.put(`/api/artist-management/artists/${artistId}`, data);
+
+      const response = await axios.put(
+        `/api/artist-management/artists/${artistId}`,
+        data
+      );
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Ошибка обновления артиста';
+      const errorMessage =
+        err.response?.data?.error || 'Ошибка обновления артиста';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -47,22 +55,30 @@ export const useArtistManagement = () => {
     }
   };
 
-  const uploadAvatar = async (artistId: number, file: File): Promise<ArtistManagementResponse> => {
+  const uploadAvatar = async (
+    artistId: number,
+    file: File
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const formData = new FormData();
       formData.append('avatar', file);
-      
-      const response = await axios.post(`/api/artist-management/artists/${artistId}/avatar`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+
+      const response = await axios.post(
+        `/api/artist-management/artists/${artistId}/avatar`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Ошибка загрузки аватара';
+      const errorMessage =
+        err.response?.data?.error || 'Ошибка загрузки аватара';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -70,15 +86,20 @@ export const useArtistManagement = () => {
     }
   };
 
-  const getArtistTracks = async (artistId: number): Promise<ArtistManagementResponse> => {
+  const getArtistTracks = async (
+    artistId: number
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await axios.get(`/api/artist-management/artists/${artistId}/tracks`);
+
+      const response = await axios.get(
+        `/api/artist-management/artists/${artistId}/tracks`
+      );
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Ошибка загрузки треков';
+      const errorMessage =
+        err.response?.data?.error || 'Ошибка загрузки треков';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -86,14 +107,20 @@ export const useArtistManagement = () => {
     }
   };
 
-  const assignTrack = async (artistId: number, trackId: number): Promise<ArtistManagementResponse> => {
+  const assignTrack = async (
+    artistId: number,
+    trackId: number
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await axios.post(`/api/artist-management/artists/${artistId}/assign-track`, {
-        track_id: trackId
-      });
+
+      const response = await axios.post(
+        `/api/artist-management/artists/${artistId}/assign-track`,
+        {
+          track_id: trackId,
+        }
+      );
       return response.data;
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || 'Ошибка привязки трека';
@@ -104,14 +131,20 @@ export const useArtistManagement = () => {
     }
   };
 
-  const unassignTrack = async (artistId: number, trackId: number): Promise<ArtistManagementResponse> => {
+  const unassignTrack = async (
+    artistId: number,
+    trackId: number
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await axios.post(`/api/artist-management/artists/${artistId}/unassign-track`, {
-        track_id: trackId
-      });
+
+      const response = await axios.post(
+        `/api/artist-management/artists/${artistId}/unassign-track`,
+        {
+          track_id: trackId,
+        }
+      );
       return response.data;
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || 'Ошибка отвязки трека';
@@ -122,15 +155,20 @@ export const useArtistManagement = () => {
     }
   };
 
-  const deleteArtist = async (artistId: number): Promise<ArtistManagementResponse> => {
+  const deleteArtist = async (
+    artistId: number
+  ): Promise<ArtistManagementResponse> => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await axios.delete(`/api/artist-management/artists/${artistId}`);
+
+      const response = await axios.delete(
+        `/api/artist-management/artists/${artistId}`
+      );
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.error || 'Ошибка удаления артиста';
+      const errorMessage =
+        err.response?.data?.error || 'Ошибка удаления артиста';
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

@@ -75,10 +75,16 @@ export const useMainPageState = () => {
       }
     };
 
-    window.addEventListener('post-deleted', handleGlobalPostDeleted as EventListener);
+    window.addEventListener(
+      'post-deleted',
+      handleGlobalPostDeleted as EventListener
+    );
 
     return () => {
-      window.removeEventListener('post-deleted', handleGlobalPostDeleted as EventListener);
+      window.removeEventListener(
+        'post-deleted',
+        handleGlobalPostDeleted as EventListener
+      );
     };
   }, []);
 
@@ -91,10 +97,16 @@ export const useMainPageState = () => {
       }
     };
 
-    window.addEventListener('post_created', handleGlobalPostCreated as EventListener);
+    window.addEventListener(
+      'post_created',
+      handleGlobalPostCreated as EventListener
+    );
 
     return () => {
-      window.removeEventListener('post_created', handleGlobalPostCreated as EventListener);
+      window.removeEventListener(
+        'post_created',
+        handleGlobalPostCreated as EventListener
+      );
     };
   }, []);
 
@@ -152,7 +164,10 @@ export const useMainPageState = () => {
     }
   };
 
-  const handlePostCreatedLocal = (newPost: Post | null, deletedPostId?: number | null) => {
+  const handlePostCreatedLocal = (
+    newPost: Post | null,
+    deletedPostId?: number | null
+  ) => {
     // @ts-ignore - axios.cache is a custom property
     if (axios.cache) {
       // @ts-ignore
@@ -249,7 +264,11 @@ export const useMainPageState = () => {
     }
   };
 
-  const handleOpenLightbox = (image: string, allImages: string[], index?: number) => {
+  const handleOpenLightbox = (
+    image: string,
+    allImages: string[],
+    index?: number
+  ) => {
     setLightbox({
       isOpen: true,
       currentImage: image,
@@ -275,7 +294,8 @@ export const useMainPageState = () => {
 
   const handlePrevImage = () => {
     setLightbox(prev => {
-      const nextIndex = (prev.currentImageIndex - 1 + prev.images.length) % prev.images.length;
+      const nextIndex =
+        (prev.currentImageIndex - 1 + prev.images.length) % prev.images.length;
       return {
         ...prev,
         currentImageIndex: nextIndex,
@@ -297,12 +317,12 @@ export const useMainPageState = () => {
     requestId,
     latestUpdate,
     lightbox,
-    
+
     // Refs
     isFirstRender,
     feedTypeChanged,
     loadingMoreRef,
-    
+
     // Actions
     setPosts,
     setLoading,

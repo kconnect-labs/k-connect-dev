@@ -15,5 +15,8 @@ export { default as TrackSection } from './components/TrackSection';
 export { default as TrackList } from './components/TrackList';
 export { default as FeaturedTrackGrid } from './components/FeaturedTrackGrid';
 export { default as NotFoundCard } from './components/NotFoundCard';
-export { default as LoadingState, DetailedLoadingState } from './components/LoadingState';
+export {
+  default as LoadingState,
+  DetailedLoadingState,
+} from './components/LoadingState';
 export { default as ErrorState } from './components/ErrorState';

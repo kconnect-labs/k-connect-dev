@@ -81,7 +81,11 @@ export const useBadgeShopAPI = ({
         setBadgeLimit(5);
       } else if (subType === 'premium') {
         setBadgeLimit(8);
-      } else if (subType === 'ultimate' || subType.includes('ultimate') || subType === 'max') {
+      } else if (
+        subType === 'ultimate' ||
+        subType.includes('ultimate') ||
+        subType === 'max'
+      ) {
         setBadgeLimit(Infinity);
       } else {
         setBadgeLimit(3);
@@ -104,9 +108,7 @@ export const useBadgeShopAPI = ({
               .toLowerCase()
               .includes('ultimate') ||
             userSubscription.subscription_type.toLowerCase() === 'max' ||
-            userSubscription.subscription_type
-              .toLowerCase()
-              .includes('max'));
+            userSubscription.subscription_type.toLowerCase().includes('max'));
 
         if (isPremium) {
           setBadgeLimitReached(false);

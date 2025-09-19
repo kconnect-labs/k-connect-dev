@@ -1,14 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Box, 
-  Typography, 
-  IconButton, 
-  Avatar, 
-  Grid, 
-  Button
+import {
+  Box,
+  Typography,
+  IconButton,
+  Avatar,
+  Grid,
+  Button,
 } from '@mui/material';
 import { PhotoCamera, Delete } from '@mui/icons-material';
-import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import ReactCrop, {
+  Crop,
+  PixelCrop,
+  centerCrop,
+  makeAspectCrop,
+} from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import UniversalModal from '../../../../UIKIT/UniversalModal';
 
@@ -64,7 +69,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const [bannerPreview, setBannerPreview] = useState<string | null>(
     currentBanner || null
   );
-  
+
   // Состояния для обрезки аватара
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -74,7 +79,11 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const imgRef = useRef<HTMLImageElement>(null);
 
   // Создаем круглую область обрезки
-  const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) => {
+  const centerAspectCrop = (
+    mediaWidth: number,
+    mediaHeight: number,
+    aspect: number
+  ) => {
     return centerCrop(
       makeAspectCrop(
         {
@@ -83,10 +92,10 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         },
         aspect,
         mediaWidth,
-        mediaHeight,
+        mediaHeight
       ),
       mediaWidth,
-      mediaHeight,
+      mediaHeight
     );
   };
 
@@ -133,7 +142,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
 
   // Правильная функция обрезки с учетом масштаба
   const createCroppedImage = (): Promise<{ blob: Blob; url: string }> => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       if (!imgRef.current || !completedCrop) {
         resolve({ blob: new Blob(), url: selectedImage || '' });
         return;
@@ -166,10 +175,10 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         0,
         0,
         size,
-        size,
+        size
       );
 
-      canvas.toBlob((blob) => {
+      canvas.toBlob(blob => {
         if (blob) {
           const url = URL.createObjectURL(blob);
           resolve({ blob, url });
@@ -198,15 +207,15 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const getCroppedImg = async (): Promise<File> => {
     // Используем точно такой же подход как в предпросмотре
     const { blob, url } = await createCroppedImage();
-    
+
     // Создаем файл из blob, точно как в предпросмотре
     const file = new File([blob], 'avatar.png', { type: 'image/png' });
-    
+
     // Очищаем URL, чтобы не было утечек памяти
     if (url && url !== selectedImage) {
       URL.revokeObjectURL(url);
     }
-    
+
     return file;
   };
 
@@ -217,7 +226,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
       setAvatarPreview(e.target?.result as string);
     };
     reader.readAsDataURL(croppedFile);
-    
+
     onAvatarChange?.(croppedFile);
     setCropModalOpen(false);
     setSelectedImage(null);
@@ -325,7 +334,9 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
                   pointerEvents: 'none',
                 }}
               >
-                <PhotoCamera sx={{ fontSize: 12, color: 'var(--theme-text-primary)' }} />
+                <PhotoCamera
+                  sx={{ fontSize: 12, color: 'var(--theme-text-primary)' }}
+                />
               </Box>
             </Box>
           </Grid>
@@ -467,38 +478,41 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         Кликните на аватар или обложку для загрузки
       </Typography>
 
-            {/* Модальное окно обрезки аватара */}
+      {/* Модальное окно обрезки аватара */}
       <UniversalModal
         open={cropModalOpen}
         onClose={handleCropCancel}
-        title="Обрезка аватара"
-        maxWidth="md"
+        title='Обрезка аватара'
+        maxWidth='md'
         fullWidth
       >
         <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Выберите область для обрезки мышкой или пальцами. Аватар будет круглым.
+          <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
+            Выберите область для обрезки мышкой или пальцами. Аватар будет
+            круглым.
           </Typography>
-          
+
           {selectedImage && (
-            <Box sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              mb: 3,
-              background: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: '16px',
-              p: 2
-            }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                mb: 3,
+                background: 'rgba(0, 0, 0, 0.3)',
+                borderRadius: '16px',
+                p: 2,
+              }}
+            >
               <ReactCrop
                 crop={crop}
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
-                onComplete={(c) => setCompletedCrop(c)}
+                onComplete={c => setCompletedCrop(c)}
                 aspect={1}
                 circularCrop
               >
                 <img
                   ref={imgRef}
-                  alt="Crop me"
+                  alt='Crop me'
                   src={selectedImage}
                   style={{
                     maxWidth: '100%',
@@ -511,60 +525,66 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
           )}
 
           {/* Предварительный просмотр в реальном времени */}
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            mb: 3,
-            p: 2,
-            background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '16px'
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mb: 3,
+              p: 2,
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '16px',
+            }}
+          >
             <Box sx={{ textAlign: 'center' }}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+              <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
                 Предварительный просмотр
               </Typography>
-                             <Avatar
-                 src={previewUrl || undefined}
-                 sx={{
-                   width: 80,
-                   height: 80,
-                   background: previewUrl ? 'transparent' : 'rgba(255, 255, 255, 0.1)',
-                   border: '2px solid rgba(255, 255, 255, 0.2)',
-                   transition: 'all 0.3s ease',
-                   objectFit: 'cover',
-                   objectPosition: 'center',
-                 }}
-               />
+              <Avatar
+                src={previewUrl || undefined}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  background: previewUrl
+                    ? 'transparent'
+                    : 'rgba(255, 255, 255, 0.1)',
+                  border: '2px solid rgba(255, 255, 255, 0.2)',
+                  transition: 'all 0.3s ease',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                }}
+              />
             </Box>
           </Box>
 
           {/* Кнопки действий */}
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 2, 
-            justifyContent: 'center',
-            pt: 2,
-            borderTop: '1px solid rgba(66, 66, 66, 0.5)'
-          }}>
-            <Button 
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              justifyContent: 'center',
+              pt: 2,
+              borderTop: '1px solid rgba(66, 66, 66, 0.5)',
+            }}
+          >
+            <Button
               onClick={handleCropCancel}
-              sx={{ 
+              sx={{
                 color: 'text.secondary',
                 '&:hover': {
-                  background: 'rgba(255, 255, 255, 0.1)'
-                }
+                  background: 'rgba(255, 255, 255, 0.1)',
+                },
               }}
             >
               Отмена
             </Button>
-            <Button 
+            <Button
               onClick={handleCropConfirm}
-              variant="contained"
+              variant='contained'
               sx={{
                 background: '#d0bcff',
                 '&:hover': {
-                  background: '#f0bcff'
-                }
+                  background: '#f0bcff',
+                },
               }}
             >
               Применить

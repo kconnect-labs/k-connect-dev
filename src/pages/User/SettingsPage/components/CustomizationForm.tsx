@@ -150,19 +150,18 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const [profileBackgroundUrl, setProfileBackgroundUrl] = useState<
     string | null
   >(null);
-  
+
   // Состояния для цвета профиля
   const [profileColor, setProfileColor] = useState('#D0BCFF');
   const [profileColorLoading, setProfileColorLoading] = useState(false);
   const [profileColorPickerOpen, setProfileColorPickerOpen] = useState(false);
   const [profileColorInput, setProfileColorInput] = useState('#D0BCFF');
-  
+
   // Состояния для уведомлений
   const [notification, setNotification] = useState<{
     type: 'success' | 'error';
     message: string;
   } | null>(null);
-  
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
@@ -197,7 +196,6 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     fetchUserDecorations();
     fetchProfileColor();
   };
-
 
   const fetchUserDecorations = async () => {
     setLoadingDecorations(true);
@@ -246,11 +244,11 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
       const data = await response.json();
       if (data.success) {
         setProfileColor(profileColorInput);
-        
+
         // Сохраняем цвет в localStorage для глобального использования
         localStorage.setItem('profileColor', profileColorInput);
         document.cookie = `profileColor=${profileColorInput};path=/;max-age=31536000`;
-        
+
         showNotification('success', 'Цвет профиля успешно сохранен!');
         handleSuccess();
       }
@@ -286,7 +284,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
       if (response.ok) {
         // Обновляем локальное состояние сразу
-        setUserDecorations(prev => 
+        setUserDecorations(prev =>
           prev.map(item => {
             const decoration = item.decoration || item;
             if (decoration.id === decorationId) {
@@ -295,8 +293,11 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             return item;
           })
         );
-        
-        showNotification('success', `Декорация ${isActive ? 'включена' : 'выключена'}!`);
+
+        showNotification(
+          'success',
+          `Декорация ${isActive ? 'включена' : 'выключена'}!`
+        );
         handleSuccess();
       }
     } catch (error) {
@@ -336,11 +337,14 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
 
       if (response.data?.success && response.data?.profile_background_url) {
         setProfileBackgroundUrl(response.data.profile_background_url);
-        
+
         // Сохраняем URL в localStorage для глобального использования
-        localStorage.setItem('myProfileBackgroundUrl', response.data.profile_background_url);
+        localStorage.setItem(
+          'myProfileBackgroundUrl',
+          response.data.profile_background_url
+        );
         document.cookie = `myProfileBackgroundUrl=${response.data.profile_background_url};path=/;max-age=31536000`;
-        
+
         showNotification('success', 'Фоновое изображение успешно загружено!');
         handleSuccess();
       }
@@ -354,7 +358,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const handleDeleteBackground = async () => {
     try {
       const response = await axios.delete('/api/profile/background');
-      
+
       if (response.data?.success) {
         setProfileBackgroundUrl(null);
 
@@ -474,9 +478,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
   const containerStyle = {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
-                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
@@ -500,7 +504,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           {notification.message}
         </Alert>
       )}
-      
+
       {/* Цвет профиля */}
       <Box sx={sectionStyle}>
         <Typography
@@ -534,7 +538,8 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                     width: 16,
                     height: 16,
                     borderRadius: '50%',
-                    bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                    bgcolor:
+                      'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -569,15 +574,16 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <input
-              type="text"
+              type='text'
               value={profileColorInput}
-              onChange={(e) => setProfileColorInput(e.target.value)}
-              placeholder="#D0BCFF"
+              onChange={e => setProfileColorInput(e.target.value)}
+              placeholder='#D0BCFF'
               style={{
                 padding: '8px 12px',
                 borderRadius: 'var(--main-border-radius)',
                 border: `1px solid ${isValidHexColor(profileColorInput) ? 'rgba(66, 66, 66, 0.5)' : '#f44336'}`,
-                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backgroundColor:
+                  'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 color: 'var(--theme-text-primary)',
                 fontSize: '14px',
                 fontFamily: 'monospace',
@@ -589,10 +595,21 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
               size='small'
               variant='contained'
               onClick={handleSaveProfileColor}
-              disabled={!isValidHexColor(profileColorInput) || profileColorLoading || profileColorInput === profileColor}
-              sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
+              disabled={
+                !isValidHexColor(profileColorInput) ||
+                profileColorLoading ||
+                profileColorInput === profileColor
+              }
+              sx={{
+                borderRadius: 'var(--main-border-radius)',
+                fontWeight: 500,
+              }}
             >
-              {profileColorLoading ? <CircularProgress size={16} /> : 'Применить'}
+              {profileColorLoading ? (
+                <CircularProgress size={16} />
+              ) : (
+                'Применить'
+              )}
             </Button>
           </Box>
         </Box>
@@ -663,7 +680,10 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                 variant='contained'
                 component='label'
                 startIcon={<PhotoCameraIcon />}
-                sx={{ borderRadius: 'var(--main-border-radius)', fontWeight: 500 }}
+                sx={{
+                  borderRadius: 'var(--main-border-radius)',
+                  fontWeight: 500,
+                }}
               >
                 Загрузить фон
                 <input
@@ -684,7 +704,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           {/* Глобальные обои профиля */}
           {profileBackgroundUrl && (
             <Box sx={{ mt: 2 }}>
-              <Paper sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}>
+              <Paper
+                sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -693,11 +715,19 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   }}
                 >
                   <Box>
-                    <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                    <Typography
+                      variant='subtitle1'
+                      fontWeight={600}
+                      sx={{ color: 'var(--theme-text-primary)' }}
+                    >
                       Глобальные обои профиля
                     </Typography>
-                    <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                      При включении ваша фоновая картинка будет использоваться по всему сайту
+                    <Typography
+                      variant='body2'
+                      sx={{ color: 'var(--theme-text-secondary)' }}
+                    >
+                      При включении ваша фоновая картинка будет использоваться
+                      по всему сайту
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -746,7 +776,8 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   key={decoration.id}
                   sx={{
                     p: 2,
-                    backgroundColor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                    backgroundColor:
+                      'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     borderRadius: 'var(--main-border-radius)',
                     border: item.is_active
                       ? '2px solid primary.main'
@@ -785,7 +816,11 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                       mt: 1,
                     }}
                   >
-                    <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+                    <Typography
+                      variant='subtitle1'
+                      fontWeight={600}
+                      sx={{ color: 'var(--theme-text-primary)' }}
+                    >
                       {decoration.name}
                     </Typography>
                     <Switch
@@ -864,7 +899,8 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                     width: 16,
                     height: 16,
                     borderRadius: '50%',
-                    bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                    bgcolor:
+                      'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -1156,7 +1192,9 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={() => setProfileColorPickerOpen(false)}>Отмена</Button>
+          <Button onClick={() => setProfileColorPickerOpen(false)}>
+            Отмена
+          </Button>
           <Button
             onClick={() => {
               setProfileColorInput(profileColorInput);

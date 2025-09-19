@@ -112,10 +112,12 @@ interface PackProposalsListProps {
   onProposalSelect: (proposal: ProposalPack) => void;
 }
 
-const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect }) => {
+const PackProposalsList: React.FC<PackProposalsListProps> = ({
+  onProposalSelect,
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
+
   const [proposals, setProposals] = useState<ProposalPack[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -188,7 +190,7 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ m: 2 }}>
+      <Alert severity='error' sx={{ m: 2 }}>
         {error}
       </Alert>
     );
@@ -198,10 +200,10 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
     return (
       <Box sx={{ textAlign: 'center', p: 4 }}>
         <ImageIcon sx={{ fontSize: 64, color: 'text.secondary', mb: 2 }} />
-        <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
+        <Typography variant='h6' color='text.secondary' sx={{ mb: 1 }}>
           Нет заявок на рассмотрение
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant='body2' color='text.secondary'>
           Все заявки обработаны
         </Typography>
       </Box>
@@ -210,12 +212,19 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
 
   return (
     <Box sx={{ p: isMobile ? 1 : 2 }}>
-      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, fontSize: isMobile ? '1.5rem' : '1.75rem' }}>
+      <Typography
+        variant='h5'
+        sx={{
+          mb: 3,
+          fontWeight: 600,
+          fontSize: isMobile ? '1.5rem' : '1.75rem',
+        }}
+      >
         Заявки на паки ({proposals.length})
       </Typography>
 
       <Grid container spacing={isMobile ? 1 : 2}>
-        {proposals.map((proposal) => (
+        {proposals.map(proposal => (
           <Grid item xs={12} key={proposal.id}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -224,23 +233,41 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
             >
               <StyledCard>
                 <CardContent sx={{ p: isMobile ? 2 : 3 }}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'flex-start', 
-                    mb: 2,
-                    flexDirection: isMobile ? 'column' : 'row',
-                    gap: isMobile ? 1 : 0
-                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      mb: 2,
+                      flexDirection: isMobile ? 'column' : 'row',
+                      gap: isMobile ? 1 : 0,
+                    }}
+                  >
                     <Box sx={{ flex: 1 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
+                      <Typography
+                        variant='h6'
+                        sx={{
+                          fontWeight: 600,
+                          mb: 1,
+                          fontSize: isMobile ? '1.1rem' : '1.25rem',
+                        }}
+                      >
                         {proposal.display_name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}>
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ mb: 1, fontSize: isMobile ? '0.9rem' : '1rem' }}
+                      >
                         {proposal.description}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: isMobile ? '0.8rem' : '0.875rem' }}>
-                        Предложил: <strong>{proposal.proposed_by.name}</strong> (@{proposal.proposed_by.username})
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ fontSize: isMobile ? '0.8rem' : '0.875rem' }}
+                      >
+                        Предложил: <strong>{proposal.proposed_by.name}</strong>{' '}
+                        (@{proposal.proposed_by.username})
                       </Typography>
                     </Box>
                     <StatusChip
@@ -251,21 +278,30 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
                     />
                   </Box>
 
-                  <Box sx={{ display: 'flex', gap: isMobile ? 1 : 2, mb: 2, flexWrap: 'wrap' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: isMobile ? 1 : 2,
+                      mb: 2,
+                      flexWrap: 'wrap',
+                    }}
+                  >
                     <Chip
                       label={`${proposal.price} баллов`}
-                      size="small"
+                      size='small'
                       sx={{
-                        background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                        background:
+                          'var(--theme-background, rgba(255, 255, 255, 0.05))',
                         color: 'text.primary',
                         fontSize: isMobile ? '0.75rem' : '0.8rem',
                       }}
                     />
                     <Chip
                       label={`${proposal.items_count} предметов`}
-                      size="small"
+                      size='small'
                       sx={{
-                        background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                        background:
+                          'var(--theme-background, rgba(255, 255, 255, 0.05))',
                         color: 'text.primary',
                         fontSize: isMobile ? '0.75rem' : '0.8rem',
                       }}
@@ -274,7 +310,11 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
 
                   {proposal.contents && proposal.contents.length > 0 && (
                     <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+                        sx={{ mb: 1 }}
+                      >
                         Предметы:
                       </Typography>
                       <ItemPreview>
@@ -283,7 +323,7 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
                             <img
                               src={`/inventory/pack/${proposal.id}/${item.item_name}`}
                               alt={item.item_name}
-                              onError={(e) => {
+                              onError={e => {
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = 'none';
                               }}
@@ -291,7 +331,11 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
                           </ItemImage>
                         ))}
                         {proposal.contents.length > 6 && (
-                          <Typography variant="caption" color="text.secondary" sx={{ alignSelf: 'center' }}>
+                          <Typography
+                            variant='caption'
+                            color='text.secondary'
+                            sx={{ alignSelf: 'center' }}
+                          >
                             +{proposal.contents.length - 6}
                           </Typography>
                         )}
@@ -299,47 +343,73 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
                     </Box>
                   )}
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flexWrap: 'wrap',
+                      gap: 1,
+                    }}
+                  >
                     <Box>
-                      <Typography variant="caption" color="text.secondary">
+                      <Typography variant='caption' color='text.secondary'>
                         Предложен: {formatDate(proposal.proposed_at)}
                       </Typography>
                       {proposal.reviewed_at && (
-                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                        <Typography
+                          variant='caption'
+                          color='text.secondary'
+                          sx={{ display: 'block' }}
+                        >
                           Рассмотрен: {formatDate(proposal.reviewed_at)}
                         </Typography>
                       )}
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Tooltip title="Просмотреть детали">
+                      <Tooltip title='Просмотреть детали'>
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => onProposalSelect(proposal)}
                           sx={{
-                            background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                            background:
+                              'var(--theme-background, rgba(255, 255, 255, 0.05))',
                             color: 'text.primary',
                             '&:hover': {
-                              background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                              background:
+                                'var(--theme-background, rgba(255, 255, 255, 0.1))',
                             },
                           }}
                         >
-                          <ViewIcon fontSize="small" />
+                          <ViewIcon fontSize='small' />
                         </IconButton>
                       </Tooltip>
                     </Box>
                   </Box>
 
-                  {proposal.status === 'rejected' && proposal.rejection_reason && (
-                    <Paper sx={{ mt: 2, p: 2, background: 'rgba(255, 0, 0, 0.1)', border: '1px solid rgba(255, 0, 0, 0.2)' }}>
-                      <Typography variant="body2" color="error" sx={{ fontWeight: 500, mb: 1 }}>
-                        Причина отклонения:
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {proposal.rejection_reason}
-                      </Typography>
-                    </Paper>
-                  )}
+                  {proposal.status === 'rejected' &&
+                    proposal.rejection_reason && (
+                      <Paper
+                        sx={{
+                          mt: 2,
+                          p: 2,
+                          background: 'rgba(255, 0, 0, 0.1)',
+                          border: '1px solid rgba(255, 0, 0, 0.2)',
+                        }}
+                      >
+                        <Typography
+                          variant='body2'
+                          color='error'
+                          sx={{ fontWeight: 500, mb: 1 }}
+                        >
+                          Причина отклонения:
+                        </Typography>
+                        <Typography variant='body2' color='text.secondary'>
+                          {proposal.rejection_reason}
+                        </Typography>
+                      </Paper>
+                    )}
                 </CardContent>
               </StyledCard>
             </motion.div>
@@ -350,4 +420,4 @@ const PackProposalsList: React.FC<PackProposalsListProps> = ({ onProposalSelect 
   );
 };
 
-export default PackProposalsList; 
+export default PackProposalsList;

@@ -46,7 +46,6 @@ import {
 import { useLocalUser } from './SettingsPage/hooks/useLocalUser';
 import { AuthContext } from '../../context/AuthContext';
 
-
 const SettingsPage = React.memo(() => {
   const { t } = useLanguage();
   const { user, isAuthenticated } = useContext<any>(AuthContext);
@@ -86,8 +85,6 @@ const SettingsPage = React.memo(() => {
     error,
   });
 
-
-
   const {
     profileInfo,
     loading: profileInfoLoading,
@@ -114,7 +111,7 @@ const SettingsPage = React.memo(() => {
 
   const [settings, setSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
-  
+
   // Состояния для ProfileCard (как в ProfilePage.js)
   const [ownedUsernames, setOwnedUsernames] = useState<string[]>([]);
   const [equippedItems, setEquippedItems] = useState<any[]>([]);
@@ -149,44 +146,49 @@ const SettingsPage = React.memo(() => {
     }
   }, [isAuthenticated, user?.username, localUser?.username, fetchProfile]);
 
-
-
   // Загрузка данных профиля для превью
   const fetchProfileData = useCallback(async (username: string) => {
     try {
       const response = await fetch(`/api/profile/${username}`);
       const data = await response.json();
-      
+
       console.log('Profile API data for preview:', data);
-      
+
       if (data.user) {
         // Полностью заменяем displayUser данными из API
         const updatedDisplayUser = {
           ...data.user,
           // Копируем данные из корневого объекта
           connect_info: data.connect_info || data.user.connect_info,
-          is_friend: data.is_friend !== undefined ? data.is_friend : data.user.is_friend,
+          is_friend:
+            data.is_friend !== undefined ? data.is_friend : data.user.is_friend,
           subscription: data.subscription || data.user.subscription,
           achievement: data.achievement || data.user.achievement,
-          verification_status: data.verification?.status || data.user.verification_status,
+          verification_status:
+            data.verification?.status || data.user.verification_status,
         };
-        
+
         setDisplayUser(updatedDisplayUser);
-        
+
         setFollowersCount(data.user.followers_count || 0);
         setFollowingCount(data.user.following_count || 0);
         setPostsCount(data.user.posts_count || 0);
         setFollowing(data.user.is_following || false);
         setUserBanInfo(data.user.ban || data.ban || null);
-        
+
         // Загружаем owned usernames
         if (data.user.id) {
           try {
-            const usernamesResponse = await fetch(`/api/username/purchased/${data.user.id}`);
+            const usernamesResponse = await fetch(
+              `/api/username/purchased/${data.user.id}`
+            );
             const usernamesData = await usernamesResponse.json();
             if (usernamesData.success) {
               const otherUsernames = usernamesData.usernames
-                .filter((item: any) => !item.is_active && item.username !== data.user.username)
+                .filter(
+                  (item: any) =>
+                    !item.is_active && item.username !== data.user.username
+                )
                 .map((item: any) => item.username);
               setOwnedUsernames(otherUsernames);
             }
@@ -194,7 +196,7 @@ const SettingsPage = React.memo(() => {
             console.error('Error fetching owned usernames:', error);
           }
         }
-        
+
         // Загружаем equipped items
         if (data.equipped_items) {
           setEquippedItems(data.equipped_items);
@@ -202,7 +204,9 @@ const SettingsPage = React.memo(() => {
 
         // Загружаем онлайн статус
         try {
-          const onlineResponse = await fetch(`/api/profile/${username}/online_status`);
+          const onlineResponse = await fetch(
+            `/api/profile/${username}/online_status`
+          );
           const onlineData = await onlineResponse.json();
           if (onlineData.success) {
             setIsOnline(onlineData.is_online);
@@ -269,45 +273,54 @@ const SettingsPage = React.memo(() => {
     setOpenModal(null);
   }, []);
 
-  const showSuccess = useCallback((message: string = 'Обновлено') => {
-    setSuccessModal({ open: true, message });
-    // Обновляем превью при любом успешном изменении
-    setTimeout(() => {
-      if (displayUser?.username) {
-        fetchProfileData(displayUser.username);
-      }
-    }, 100); // Небольшая задержка для обновления данных
-  }, [displayUser?.username, fetchProfileData]);
+  const showSuccess = useCallback(
+    (message: string = 'Обновлено') => {
+      setSuccessModal({ open: true, message });
+      // Обновляем превью при любом успешном изменении
+      setTimeout(() => {
+        if (displayUser?.username) {
+          fetchProfileData(displayUser.username);
+        }
+      }, 100); // Небольшая задержка для обновления данных
+    },
+    [displayUser?.username, fetchProfileData]
+  );
 
   const hideSuccess = useCallback(() => {
     setSuccessModal({ open: false, message: 'Обновлено' });
   }, []);
 
-  const handleAvatarChange = useCallback(async (file: File) => {
-    try {
-      await updateAvatar(file);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
-      if (displayUser?.username) {
-        fetchProfileData(displayUser.username);
+  const handleAvatarChange = useCallback(
+    async (file: File) => {
+      try {
+        await updateAvatar(file);
+        await fetchProfile(); // Обновляем данные профиля
+        // Обновляем превью
+        if (displayUser?.username) {
+          fetchProfileData(displayUser.username);
+        }
+      } catch (err) {
+        console.error('Failed to update avatar:', err);
       }
-    } catch (err) {
-      console.error('Failed to update avatar:', err);
-    }
-  }, [updateAvatar, fetchProfile, displayUser?.username, fetchProfileData]);
+    },
+    [updateAvatar, fetchProfile, displayUser?.username, fetchProfileData]
+  );
 
-  const handleBannerChange = useCallback(async (file: File) => {
-    try {
-      await updateBanner(file);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
-      if (displayUser?.username) {
-        fetchProfileData(displayUser.username);
+  const handleBannerChange = useCallback(
+    async (file: File) => {
+      try {
+        await updateBanner(file);
+        await fetchProfile(); // Обновляем данные профиля
+        // Обновляем превью
+        if (displayUser?.username) {
+          fetchProfileData(displayUser.username);
+        }
+      } catch (err) {
+        console.error('Failed to update banner:', err);
       }
-    } catch (err) {
-      console.error('Failed to update banner:', err);
-    }
-  }, [updateBanner, fetchProfile, displayUser?.username, fetchProfileData]);
+    },
+    [updateBanner, fetchProfile, displayUser?.username, fetchProfileData]
+  );
 
   const handleAvatarDelete = useCallback(async () => {
     try {
@@ -335,64 +348,80 @@ const SettingsPage = React.memo(() => {
     }
   }, [deleteBanner, fetchProfile, displayUser?.username, fetchProfileData]);
 
-  const handleSaveProfileInfo = useCallback(async (info: {
-    name: string;
-    username: string;
-    about: string;
-  }) => {
-    try {
-      await updateProfileInfo(info);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
-      if (displayUser?.username) {
-        fetchProfileData(displayUser.username);
+  const handleSaveProfileInfo = useCallback(
+    async (info: { name: string; username: string; about: string }) => {
+      try {
+        await updateProfileInfo(info);
+        await fetchProfile(); // Обновляем данные профиля
+        // Обновляем превью
+        if (displayUser?.username) {
+          fetchProfileData(displayUser.username);
+        }
+        showSuccess('Информация обновлена');
+      } catch (err) {
+        console.error('Failed to update profile info:', err);
       }
-      showSuccess('Информация обновлена');
-    } catch (err) {
-      console.error('Failed to update profile info:', err);
-    }
-  }, [updateProfileInfo, fetchProfile, displayUser?.username, fetchProfileData, showSuccess]);
+    },
+    [
+      updateProfileInfo,
+      fetchProfile,
+      displayUser?.username,
+      fetchProfileData,
+      showSuccess,
+    ]
+  );
 
-  const handleStatusUpdate = useCallback(async (statusData: any) => {
-    try {
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
-      if (displayUser?.username) {
-        fetchProfileData(displayUser.username);
+  const handleStatusUpdate = useCallback(
+    async (statusData: any) => {
+      try {
+        await fetchProfile(); // Обновляем данные профиля
+        // Обновляем превью
+        if (displayUser?.username) {
+          fetchProfileData(displayUser.username);
+        }
+        showSuccess('Статус обновлен');
+      } catch (err) {
+        console.error('Failed to update status:', err);
       }
-      showSuccess('Статус обновлен');
-    } catch (err) {
-      console.error('Failed to update status:', err);
-    }
-  }, [fetchProfile, displayUser?.username, fetchProfileData, showSuccess]);
+    },
+    [fetchProfile, displayUser?.username, fetchProfileData, showSuccess]
+  );
 
   const handleError = useCallback((message: string) => {
     console.error('Settings error:', message);
     // Можно добавить показ ошибки пользователю
   }, []);
 
-
-
   // Функции для ProfileCard (как в ProfilePage.js)
-  const handleItemPositionUpdate = useCallback((itemId: number, newPosition: { x: number; y: number }) => {
-    setEquippedItems(prevItems => 
-      prevItems.map(item => 
-        item.id === itemId 
-          ? { ...item, profile_position_x: newPosition.x, profile_position_y: newPosition.y }
-          : item
-      )
-    );
-  }, []);
+  const handleItemPositionUpdate = useCallback(
+    (itemId: number, newPosition: { x: number; y: number }) => {
+      setEquippedItems(prevItems =>
+        prevItems.map(item =>
+          item.id === itemId
+            ? {
+                ...item,
+                profile_position_x: newPosition.x,
+                profile_position_y: newPosition.y,
+              }
+            : item
+        )
+      );
+    },
+    []
+  );
 
   const handleEditModeActivate = useCallback(() => {
     setIsEditMode(true);
   }, []);
 
-  const handleUsernameClick = useCallback((event: React.MouseEvent, username: string) => {
-    event.preventDefault();
-    setSelectedUsername(username);
-    setUsernameCardOpen(true);
-  }, []);
+  const handleUsernameClick = useCallback(
+    (event: React.MouseEvent, username: string) => {
+      event.preventDefault();
+      setSelectedUsername(username);
+      setUsernameCardOpen(true);
+    },
+    []
+  );
 
   const handleCloseUsernameCard = useCallback(() => {
     setUsernameCardOpen(false);
@@ -408,8 +437,6 @@ const SettingsPage = React.memo(() => {
     return color;
   }, []);
 
-
-
   const fetchSettings = useCallback(async () => {
     try {
       setSettingsLoading(true);
@@ -423,8 +450,6 @@ const SettingsPage = React.memo(() => {
       setSettingsLoading(false);
     }
   }, []);
-
-
 
   return (
     <>
@@ -458,7 +483,7 @@ const SettingsPage = React.memo(() => {
       >
         <Typography
           variant='h6'
-          className="theme-aware"
+          className='theme-aware'
           sx={{
             color: 'var(--theme-text-primary)',
             mb: 1,
@@ -531,7 +556,6 @@ const SettingsPage = React.memo(() => {
           onStatusUpdate={handleStatusUpdate}
           onSuccess={showSuccess}
           onError={handleError}
-
         />
 
         <ConnectionsModal
@@ -560,8 +584,8 @@ const SettingsPage = React.memo(() => {
         <UniversalModal
           open={accountStatusModalOpen}
           onClose={() => setAccountStatusModalOpen(false)}
-          title="Состояние аккаунта"
-          maxWidth="md"
+          title='Состояние аккаунта'
+          maxWidth='md'
           fullWidth
           maxWidthCustom={'800px'}
         >
@@ -573,8 +597,6 @@ const SettingsPage = React.memo(() => {
           onClose={hideSuccess}
           message={successModal.message}
         />
-
-
       </Box>
     </>
   );

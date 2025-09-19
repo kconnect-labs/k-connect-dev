@@ -9,12 +9,15 @@ import {
   Button,
   Paper,
 } from '@mui/material';
-import { Refresh as RefreshIcon, Close as CloseIcon } from '@mui/icons-material';
-import { 
-  enableMediaCache, 
-  disableMediaCache, 
+import {
+  Refresh as RefreshIcon,
+  Close as CloseIcon,
+} from '@mui/icons-material';
+import {
+  enableMediaCache,
+  disableMediaCache,
   setMediaCachePerformanceMode,
-  getMediaCacheStatus 
+  getMediaCacheStatus,
 } from '../../../../services/mediaCache';
 
 interface ExperimentalFeaturesFormProps {
@@ -35,7 +38,6 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
     mb: 3,
   };
 
-
   const handleCacheToggle = () => {
     if (cacheStatus.enabled) {
       disableMediaCache();
@@ -51,7 +53,7 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
   };
 
   return (
-    <Box >
+    <Box>
       <Typography
         variant='h6'
         sx={{
@@ -64,8 +66,12 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
       </Typography>
 
       <Alert severity='info' sx={{ mb: 3 }}>
-        <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-          Экспериментальные функции могут быть нестабильными и изменяться без предупреждения
+        <Typography
+          variant='body2'
+          sx={{ color: 'var(--theme-text-secondary)' }}
+        >
+          Экспериментальные функции могут быть нестабильными и изменяться без
+          предупреждения
         </Typography>
       </Alert>
 
@@ -80,14 +86,23 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
             }}
           >
             <Box>
-              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)' }}>
+              <Typography
+                variant='subtitle1'
+                fontWeight={600}
+                sx={{ color: 'var(--theme-text-primary)' }}
+              >
                 Кеш медиа-файлов
               </Typography>
-              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
-                Кеширование изображений и медиа для ускорения загрузки. 
+              <Typography
+                variant='body2'
+                sx={{ color: 'var(--theme-text-secondary)' }}
+              >
+                Кеширование изображений и медиа для ускорения загрузки.
                 {cacheStatus.enabled && (
                   <span style={{ color: '#ff9800' }}>
-                    {' '}Активно: {cacheStatus.queueLength} в очереди, {cacheStatus.activeOperations} операций
+                    {' '}
+                    Активно: {cacheStatus.queueLength} в очереди,{' '}
+                    {cacheStatus.activeOperations} операций
                   </span>
                 )}
               </Typography>
@@ -103,17 +118,20 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
       </Box>
 
       {cacheStatus.enabled && (
-        <Box sx={{ 
-          mt: 1, 
-          p: 1.5, 
-          borderRadius: 'var(--main-border-radius)',
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          fontSize: '0.8rem',
-          color: 'text.secondary'
-        }}>
+        <Box
+          sx={{
+            mt: 1,
+            p: 1.5,
+            borderRadius: 'var(--main-border-radius)',
+            background: 'rgba(255, 255, 255, 0.02)',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            fontSize: '0.8rem',
+            color: 'text.secondary',
+          }}
+        >
           <Typography variant='body2'>
-            Режим производительности: {cacheStatus.performanceMode ? 'Включен' : 'Выключен'}
+            Режим производительности:{' '}
+            {cacheStatus.performanceMode ? 'Включен' : 'Выключен'}
             {cacheStatus.performanceMode && ' (ограниченная нагрузка на сеть)'}
           </Typography>
         </Box>
@@ -130,10 +148,17 @@ const ExperimentalFeaturesForm: React.FC<ExperimentalFeaturesFormProps> = ({
             }}
           >
             <Box>
-              <Typography variant='subtitle1' fontWeight={600} sx={{ color: 'var(--theme-text-primary)', opacity: 0.6 }}>
+              <Typography
+                variant='subtitle1'
+                fontWeight={600}
+                sx={{ color: 'var(--theme-text-primary)', opacity: 0.6 }}
+              >
                 Анимации (в разработке)
               </Typography>
-              <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', opacity: 0.6 }}>
+              <Typography
+                variant='body2'
+                sx={{ color: 'var(--theme-text-secondary)', opacity: 0.6 }}
+              >
                 Настройка интенсивности анимаций интерфейса
               </Typography>
             </Box>

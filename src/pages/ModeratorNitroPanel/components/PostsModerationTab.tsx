@@ -38,7 +38,7 @@ import { Post } from '../types';
 const PostsModerationTab: React.FC = () => {
   const { currentUser, permissions } = useCurrentUser();
   const { getPostById, deletePost, loading, error, clearError } = useNitroApi();
-  
+
   const [postInput, setPostInput] = useState('');
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
   const [postLoading, setPostLoading] = useState(false);
@@ -46,30 +46,25 @@ const PostsModerationTab: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  
   const canModeratePosts = permissions?.delete_posts || false;
 
   const extractPostId = (input: string): number | null => {
-    
     const trimmed = input.trim();
-    
-    
+
     if (/^\d+$/.test(trimmed)) {
       return parseInt(trimmed, 10);
     }
-    
-    
+
     const urlMatch = trimmed.match(/\/post\/(\d+)/);
     if (urlMatch) {
       return parseInt(urlMatch[1], 10);
     }
-    
-    
+
     const profileMatch = trimmed.match(/\/profile\/\d+\/post\/(\d+)/);
     if (profileMatch) {
       return parseInt(profileMatch[1], 10);
     }
-    
+
     return null;
   };
 
@@ -81,7 +76,9 @@ const PostsModerationTab: React.FC = () => {
 
     const postId = extractPostId(postInput);
     if (!postId) {
-      setPostError('Неверный формат. Введите ID поста (число) или ссылку на пост');
+      setPostError(
+        'Неверный формат. Введите ID поста (число) или ссылку на пост'
+      );
       return;
     }
 
@@ -126,13 +123,11 @@ const PostsModerationTab: React.FC = () => {
   if (!canModeratePosts) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Alert severity="error" sx={{ maxWidth: 600, mx: 'auto' }}>
-          <Typography variant="h6" gutterBottom>
+        <Alert severity='error' sx={{ maxWidth: 600, mx: 'auto' }}>
+          <Typography variant='h6' gutterBottom>
             Доступ запрещен
           </Typography>
-          <Typography>
-            У вас нет прав на модерацию постов
-          </Typography>
+          <Typography>У вас нет прав на модерацию постов</Typography>
         </Alert>
       </Box>
     );
@@ -141,48 +136,52 @@ const PostsModerationTab: React.FC = () => {
   return (
     <Box>
       {error && (
-        <Alert severity="error" sx={{ mb: 1 }} onClose={clearError}>
+        <Alert severity='error' sx={{ mb: 1 }} onClose={clearError}>
           {error}
         </Alert>
       )}
 
       {postError && (
-        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setPostError(null)}>
+        <Alert
+          severity='error'
+          sx={{ mb: 1 }}
+          onClose={() => setPostError(null)}
+        >
           {postError}
         </Alert>
       )}
 
       {/* Поиск поста */}
-      <Box sx={{ 
-        display: 'flex', 
-        gap: 1, 
-        alignItems: 'center', 
-        background: 'var(--theme-background)', 
-        backdropFilter: 'var(--theme-backdrop-filter)', 
-        border: '1px solid var(--main-border-color)', 
-        borderRadius: 'var(--main-border-radius)', 
-        p: 2, 
-        mb: 1 
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 1,
+          alignItems: 'center',
+          background: 'var(--theme-background)',
+          backdropFilter: 'var(--theme-backdrop-filter)',
+          border: '1px solid var(--main-border-color)',
+          borderRadius: 'var(--main-border-radius)',
+          p: 2,
+          mb: 1,
+        }}
+      >
         <TextField
           fullWidth
-          placeholder="Введите ID поста или ссылку на пост..."
+          placeholder='Введите ID поста или ссылку на пост...'
           value={postInput}
-          onChange={(e) => setPostInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearchPost()}
-          size="small"
+          onChange={e => setPostInput(e.target.value)}
+          onKeyPress={e => e.key === 'Enter' && handleSearchPost()}
+          size='small'
           InputProps={{
-            startAdornment: (
-              <PostAdd sx={{ mr: 1, color: 'text.secondary' }} />
-            ),
+            startAdornment: <PostAdd sx={{ mr: 1, color: 'text.secondary' }} />,
           }}
         />
         <Button
-          variant="contained"
+          variant='contained'
           onClick={handleSearchPost}
           disabled={postLoading}
           startIcon={postLoading ? <CircularProgress size={20} /> : <Search />}
-          size="small"
+          size='small'
         >
           {postLoading ? 'Поиск...' : 'Найти'}
         </Button>
@@ -201,34 +200,51 @@ const PostsModerationTab: React.FC = () => {
         >
           <CardContent sx={{ p: 2 }}>
             {/* Заголовок с информацией о посте */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                mb: 2,
+              }}
+            >
               <Box sx={{ flex: 1 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                <Typography variant='h6' sx={{ fontWeight: 'bold', mb: 0.5 }}>
                   Пост #{currentPost.id}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                <Box
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}
+                >
                   <Chip
-                    label={currentPost.type === 'post' ? 'Обычный пост' : currentPost.type === 'repost' ? 'Репост' : currentPost.type}
-                    size="small"
-                    color={currentPost.type === 'repost' ? 'secondary' : 'primary'}
+                    label={
+                      currentPost.type === 'post'
+                        ? 'Обычный пост'
+                        : currentPost.type === 'repost'
+                          ? 'Репост'
+                          : currentPost.type
+                    }
+                    size='small'
+                    color={
+                      currentPost.type === 'repost' ? 'secondary' : 'primary'
+                    }
                   />
                   {currentPost.is_nsfw && (
                     <Chip
-                      label="NSFW"
-                      size="small"
-                      color="warning"
+                      label='NSFW'
+                      size='small'
+                      color='warning'
                       icon={<Warning />}
                     />
                   )}
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant='caption' color='text.secondary'>
                     {formatDate(currentPost.timestamp)}
                   </Typography>
                 </Box>
               </Box>
               <Box sx={{ display: 'flex', gap: 0.5 }}>
-                <Tooltip title="Удалить пост">
+                <Tooltip title='Удалить пост'>
                   <IconButton
-                    size="small"
+                    size='small'
                     onClick={() => setDeleteDialogOpen(true)}
                     sx={{
                       borderRadius: 'var(--main-border-radius)',
@@ -238,7 +254,7 @@ const PostsModerationTab: React.FC = () => {
                       },
                     }}
                   >
-                    <Delete fontSize="small" />
+                    <Delete fontSize='small' />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -246,18 +262,22 @@ const PostsModerationTab: React.FC = () => {
 
             {/* Автор поста */}
             {currentPost.user && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}
+              >
                 <Avatar
                   src={currentPost.user.avatar_url || undefined}
                   sx={{ width: 32, height: 32 }}
                 >
-                  {currentPost.user.name ? currentPost.user.name.charAt(0) : '?'}
+                  {currentPost.user.name
+                    ? currentPost.user.name.charAt(0)
+                    : '?'}
                 </Avatar>
                 <Box>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant='subtitle2' sx={{ fontWeight: 'bold' }}>
                     {currentPost.user.name || 'Неизвестный пользователь'}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant='caption' color='text.secondary'>
                     @{currentPost.user.username || 'без_username'}
                   </Typography>
                 </Box>
@@ -266,8 +286,10 @@ const PostsModerationTab: React.FC = () => {
 
             {/* Получатель (для постов на стене) */}
             {currentPost.recipient && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                <Typography variant="body2" color="text.secondary">
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}
+              >
+                <Typography variant='body2' color='text.secondary'>
                   Пост на стене пользователя:
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -275,9 +297,11 @@ const PostsModerationTab: React.FC = () => {
                     src={currentPost.recipient.avatar_url || undefined}
                     sx={{ width: 24, height: 24 }}
                   >
-                    {currentPost.recipient.name ? currentPost.recipient.name.charAt(0) : '?'}
+                    {currentPost.recipient.name
+                      ? currentPost.recipient.name.charAt(0)
+                      : '?'}
                   </Avatar>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                  <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                     {currentPost.recipient.name}
                   </Typography>
                 </Box>
@@ -287,7 +311,7 @@ const PostsModerationTab: React.FC = () => {
             {/* Содержимое поста */}
             {currentPost.content && (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                <Typography variant='body1' sx={{ whiteSpace: 'pre-wrap' }}>
                   {currentPost.content}
                 </Typography>
               </Box>
@@ -296,37 +320,40 @@ const PostsModerationTab: React.FC = () => {
             {/* Медиа контент */}
             {(currentPost.image || currentPost.video || currentPost.music) && (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                <Typography
+                  variant='subtitle2'
+                  sx={{ mb: 1, fontWeight: 'bold' }}
+                >
                   Медиа контент:
                 </Typography>
                 <Grid container spacing={1}>
                   {currentPost.image && (
                     <Grid item>
                       <Chip
-                        label="Изображение"
-                        size="small"
+                        label='Изображение'
+                        size='small'
                         icon={<Link />}
-                        color="info"
+                        color='info'
                       />
                     </Grid>
                   )}
                   {currentPost.video && (
                     <Grid item>
                       <Chip
-                        label="Видео"
-                        size="small"
+                        label='Видео'
+                        size='small'
                         icon={<Link />}
-                        color="info"
+                        color='info'
                       />
                     </Grid>
                   )}
                   {currentPost.music && (
                     <Grid item>
                       <Chip
-                        label="Музыка"
-                        size="small"
+                        label='Музыка'
+                        size='small'
                         icon={<Link />}
-                        color="info"
+                        color='info'
                       />
                     </Grid>
                   )}
@@ -337,7 +364,10 @@ const PostsModerationTab: React.FC = () => {
             {/* Оригинальный пост (для репостов) */}
             {currentPost.original_post && (
               <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold' }}>
+                <Typography
+                  variant='subtitle2'
+                  sx={{ mb: 1, fontWeight: 'bold' }}
+                >
                   Оригинальный пост:
                 </Typography>
                 <Box
@@ -349,20 +379,31 @@ const PostsModerationTab: React.FC = () => {
                   }}
                 >
                   {currentPost.original_post.user && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mb: 1,
+                      }}
+                    >
                       <Avatar
-                        src={currentPost.original_post.user.avatar_url || undefined}
+                        src={
+                          currentPost.original_post.user.avatar_url || undefined
+                        }
                         sx={{ width: 24, height: 24 }}
                       >
-                        {currentPost.original_post.user.name ? currentPost.original_post.user.name.charAt(0) : '?'}
+                        {currentPost.original_post.user.name
+                          ? currentPost.original_post.user.name.charAt(0)
+                          : '?'}
                       </Avatar>
-                      <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                      <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                         {currentPost.original_post.user.name}
                       </Typography>
                     </Box>
                   )}
                   {currentPost.original_post.content && (
-                    <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                    <Typography variant='body2' sx={{ whiteSpace: 'pre-wrap' }}>
                       {currentPost.original_post.content}
                     </Typography>
                   )}
@@ -375,26 +416,26 @@ const PostsModerationTab: React.FC = () => {
             {/* Статистика поста */}
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Visibility fontSize="small" color="action" />
-                <Typography variant="caption" color="text.secondary">
+                <Visibility fontSize='small' color='action' />
+                <Typography variant='caption' color='text.secondary'>
                   {currentPost.views_count} просмотров
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Favorite fontSize="small" color="action" />
-                <Typography variant="caption" color="text.secondary">
+                <Favorite fontSize='small' color='action' />
+                <Typography variant='caption' color='text.secondary'>
                   {currentPost.likes_count || 0} лайков
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Comment fontSize="small" color="action" />
-                <Typography variant="caption" color="text.secondary">
+                <Comment fontSize='small' color='action' />
+                <Typography variant='caption' color='text.secondary'>
                   {currentPost.comments_count || 0} комментариев
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                <Share fontSize="small" color="action" />
-                <Typography variant="caption" color="text.secondary">
+                <Share fontSize='small' color='action' />
+                <Typography variant='caption' color='text.secondary'>
                   {currentPost.reposts_count || 0} репостов
                 </Typography>
               </Box>
@@ -407,7 +448,7 @@ const PostsModerationTab: React.FC = () => {
       <Dialog
         open={deleteDialogOpen}
         onClose={() => setDeleteDialogOpen(false)}
-        maxWidth="sm"
+        maxWidth='sm'
         fullWidth
         PaperProps={{
           sx: {
@@ -415,31 +456,30 @@ const PostsModerationTab: React.FC = () => {
             backdropFilter: 'var(--theme-backdrop-filter)',
             border: '1px solid var(--main-border-color)',
             borderRadius: 'var(--main-border-radius)',
-          }
+          },
         }}
       >
-        <DialogTitle sx={{ pb: 1 }}>
-          Удаление поста
-        </DialogTitle>
+        <DialogTitle sx={{ pb: 1 }}>Удаление поста</DialogTitle>
         <DialogContent sx={{ pt: 1 }}>
           <Typography>
             Вы уверены, что хотите удалить пост #{currentPost?.id}?
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Это действие нельзя отменить. Все связанные данные (комментарии, лайки, репосты) также будут удалены.
+          <Typography variant='body2' color='text.secondary' sx={{ mt: 1 }}>
+            Это действие нельзя отменить. Все связанные данные (комментарии,
+            лайки, репосты) также будут удалены.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ pt: 1 }}>
-          <Button onClick={() => setDeleteDialogOpen(false)} size="small">
+          <Button onClick={() => setDeleteDialogOpen(false)} size='small'>
             Отмена
           </Button>
           <Button
             onClick={handleDeletePost}
-            variant="contained"
-            color="error"
+            variant='contained'
+            color='error'
             disabled={deleting}
             startIcon={deleting ? <CircularProgress size={20} /> : <Delete />}
-            size="small"
+            size='small'
           >
             {deleting ? 'Удаление...' : 'Удалить'}
           </Button>

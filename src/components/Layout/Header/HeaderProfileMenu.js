@@ -39,7 +39,6 @@ const HeaderProfileMenu = ({
 }) => {
   const isFullScreenMenu = isMobile;
 
-
   return (
     <>
       <Menu
@@ -67,9 +66,7 @@ const HeaderProfileMenu = ({
             boxShadow: isFullScreenMenu
               ? 'none'
               : '0 8px 24px rgba(0,0,0,0.15)',
-            border: isFullScreenMenu
-              ? 'none'
-              : '1px solid rgb(24 24 24)',
+            border: isFullScreenMenu ? 'none' : '1px solid rgb(24 24 24)',
             overflow: 'visible',
             background: 'var(--theme-background)',
             backdropFilter: 'var(--theme-backdrop-filter)',
@@ -116,7 +113,10 @@ const HeaderProfileMenu = ({
               )}
               <Avatar
                 src={
-                  user.avatar_url || (user.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                  user.avatar_url ||
+                  (user.photo
+                    ? `https://s3.k-connect.ru/static/uploads/avatar/${user.id}/${user.photo}`
+                    : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                 }
                 alt={user.name || user.username}
                 sx={{
@@ -160,7 +160,7 @@ const HeaderProfileMenu = ({
                         height='18'
                       />
                     }
-                    className="theme-button"
+                    className='theme-button'
                     sx={{
                       flex: 1,
                       borderRadius: 'var(--main-border-radius)',
@@ -183,7 +183,7 @@ const HeaderProfileMenu = ({
                     startIcon={
                       <Icon icon='solar:shop-bold' width='18' height='18' />
                     }
-                    className="theme-button"
+                    className='theme-button'
                     sx={{
                       flex: 1,
                       borderRadius: 'var(--main-border-radius)',
@@ -250,7 +250,6 @@ const HeaderProfileMenu = ({
                     {t('header.profile_menu.channels')}
                   </ListItemText>
                 </MenuItem>
-
               </>
             )}
             <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
@@ -293,7 +292,10 @@ const HeaderProfileMenu = ({
                     <ListItemIcon>
                       <Avatar
                         src={
-                          accounts.main_account.avatar_url || (accounts.main_account.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${accounts.main_account.id}/${accounts.main_account.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                          accounts.main_account.avatar_url ||
+                          (accounts.main_account.photo
+                            ? `https://s3.k-connect.ru/static/uploads/avatar/${accounts.main_account.id}/${accounts.main_account.photo}`
+                            : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                         }
                         sx={{ width: 30, height: 30 }}
                       />
@@ -325,7 +327,10 @@ const HeaderProfileMenu = ({
                     <ListItemIcon>
                       <Avatar
                         src={
-                          channel.avatar_url || (channel.photo ? `https://s3.k-connect.ru/static/uploads/avatar/${channel.id}/${channel.photo}` : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
+                          channel.avatar_url ||
+                          (channel.photo
+                            ? `https://s3.k-connect.ru/static/uploads/avatar/${channel.id}/${channel.photo}`
+                            : 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png')
                         }
                         sx={{ width: 30, height: 30 }}
                       />
@@ -371,7 +376,7 @@ const HeaderProfileMenu = ({
             <Divider sx={{ opacity: 0.1, mx: 2 }} />
           </>
         )}
-        
+
         {/* Кнопка "Выйти" показывается всегда */}
         <Divider sx={{ opacity: 0.1, mx: 2, my: 1 }} />
         <MenuItem
@@ -379,8 +384,7 @@ const HeaderProfileMenu = ({
           sx={{
             color: theme => theme.palette.error.main,
             '&:hover': {
-              backgroundColor: theme =>
-                alpha(theme.palette.error.main, 0.08),
+              backgroundColor: theme => alpha(theme.palette.error.main, 0.08),
             },
           }}
         >

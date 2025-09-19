@@ -23,8 +23,8 @@ import { formatTimeAgo } from '../../utils/dateUtils';
 import { useLanguage } from '../../context/LanguageContext';
 
 const StyledReplyCard = styled(Box)(({ theme }) => ({
-      backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.4))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
+  backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.4))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
   borderRadius: '14px',
   padding: theme.spacing(1.5, 2),
   marginBottom: theme.spacing(1),
@@ -41,7 +41,7 @@ const StyledReplyCard = styled(Box)(({ theme }) => ({
 }));
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
-      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   borderRadius: '16px',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),
@@ -340,7 +340,8 @@ const ReplyItem = ({
                   PaperProps={{
                     sx: {
                       bgcolor: 'rgba(32, 32, 36, 0.9)',
-                      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+                      backdropFilter:
+                        'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                       borderRadius: '18px',
                       border: '1px solid rgba(255, 255, 255, 0.05)',

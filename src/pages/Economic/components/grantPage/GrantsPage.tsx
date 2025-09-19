@@ -164,7 +164,7 @@ const HeaderBlock = styled(Box)(({ theme }) => ({
   margin: '0 auto',
   marginBottom: theme.spacing(4),
   border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
-      background: 'rgba(255, 255, 255, 0.1)',
+  background: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(10px)',
   borderRadius: '16px',
   position: 'relative',

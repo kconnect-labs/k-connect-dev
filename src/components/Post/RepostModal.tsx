@@ -28,7 +28,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
       open={open}
       onClose={onClose}
       title={t('post.repost_dialog.title')}
-      maxWidth="md"
+      maxWidth='md'
       fullWidth
       addBottomPadding
     >
@@ -65,7 +65,9 @@ const RepostModal: React.FC<RepostModalProps> = ({
           fullWidth
           placeholder={t('post.repost_dialog.comment_placeholder')}
           value={repostContent}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepostContent(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setRepostContent(e.target.value)
+          }
           variant='outlined'
           helperText={t('post.repost_dialog.mention_helper')}
           sx={{
@@ -248,4 +250,4 @@ const RepostModal: React.FC<RepostModalProps> = ({
   );
 };
 
-export default RepostModal; 
+export default RepostModal;

@@ -53,12 +53,14 @@ const FactModal: React.FC<FactModalProps> = ({
     }
   }, [open, existingFact]);
 
-  const handleInputChange = (field: keyof FactFormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: event.target.value,
-    }));
-  };
+  const handleInputChange =
+    (field: keyof FactFormData) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+    };
 
   const handleSubmit = () => {
     if (!formData.who_provided.trim() || !formData.explanation_text.trim()) {
@@ -83,7 +85,7 @@ const FactModal: React.FC<FactModalProps> = ({
       open={open}
       onClose={onClose}
       title={existingFact ? 'Редактировать факт' : 'Добавить факт'}
-      maxWidth="md"
+      maxWidth='md'
       fullWidth
       addBottomPadding
     >
@@ -100,7 +102,10 @@ const FactModal: React.FC<FactModalProps> = ({
         >
           <FactCheckIcon sx={{ fontSize: 32 }} />
         </Avatar>
-        <Typography variant='h6' sx={{ color: '#cfbcfb', fontWeight: 600, mb: 1 }}>
+        <Typography
+          variant='h6'
+          sx={{ color: '#cfbcfb', fontWeight: 600, mb: 1 }}
+        >
           {existingFact ? 'Редактировать факт' : 'Добавить факт'}
         </Typography>
         <Typography
@@ -257,8 +262,12 @@ const FactModal: React.FC<FactModalProps> = ({
                 startIcon={<DeleteIcon />}
                 sx={{
                   borderRadius: '16px',
-                  borderColor: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.5)',
-                  color: showDeleteConfirm ? '#f44336' : 'rgba(244, 67, 54, 0.8)',
+                  borderColor: showDeleteConfirm
+                    ? '#f44336'
+                    : 'rgba(244, 67, 54, 0.5)',
+                  color: showDeleteConfirm
+                    ? '#f44336'
+                    : 'rgba(244, 67, 54, 0.8)',
                   '&:hover': {
                     borderColor: '#f44336',
                     backgroundColor: 'rgba(244, 67, 54, 0.1)',
@@ -343,4 +352,4 @@ const FactModal: React.FC<FactModalProps> = ({
   );
 };
 
-export default FactModal; 
+export default FactModal;

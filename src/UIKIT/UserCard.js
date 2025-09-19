@@ -80,7 +80,7 @@ const UserCard = ({
     avatarUrl = `/static/uploads/avatar/${id}/${avatarUrl}`;
   }
 
-  const handleFollowClick = (e) => {
+  const handleFollowClick = e => {
     e.preventDefault();
     e.stopPropagation();
     if (forceUnfollow || is_following) {
@@ -144,7 +144,7 @@ const UserCard = ({
             onReport={onReport}
             forceUnfollow={forceUnfollow}
             loading={loading}
-            size="small"
+            size='small'
             showFollowButton={showFollowButton}
             showMessageButton={showMessageButton}
             showCopyLinkButton={showCopyLinkButton}

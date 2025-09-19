@@ -9,7 +9,6 @@ import {
   Snackbar,
   Alert,
   Dialog,
-
   Slide,
   useMediaQuery,
   useTheme,
@@ -23,9 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ImageGrid from '../../components/Post/ImageGrid';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import { Post } from '../../components/Post';
-import {
-  formatTimeAgo,
-} from '../../utils/dateUtils';
+import { formatTimeAgo } from '../../utils/dateUtils';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SEO from '../../components/SEO';
 
@@ -51,7 +48,6 @@ const sanitizeImagePath = imagePath => {
 
   return imagePath;
 };
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -258,7 +254,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
     }
   };
 
-
   const handleReplyImageChange = event => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -407,7 +402,12 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
     }
   };
 
-  const handleReplySubmit = async (commentId, content, image, parentReplyId = null) => {
+  const handleReplySubmit = async (
+    commentId,
+    content,
+    image,
+    parentReplyId = null
+  ) => {
     if (!content.trim() && !image) return;
 
     const now = Date.now();
@@ -562,7 +562,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const handleLikeComment = async commentId => {
-
     try {
       setComments(prev =>
         prev.map(comment =>
@@ -599,7 +598,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const handleLikeReply = async replyId => {
-
     try {
       // Оптимистичное обновление UI
       setComments(prev =>
@@ -668,7 +666,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const handleDeleteComment = commentId => {
-
     setCommentDeleteDialog({
       open: true,
       deleting: false,
@@ -721,7 +718,6 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const handleDeleteReply = (commentId, replyId) => {
-
     console.log(
       'Current comments structure:',
       JSON.stringify(
@@ -801,16 +797,20 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   };
 
   const renderContent = () => (
-    <Box sx={{ 
-      ...(isOverlay ? {} : { 
-        maxWidth: 'md', 
-        mx: 'auto',
-        pt: 2, 
-        pb: 10, 
-        px: 0,
-        px: { xs: 0, sm: 0 } 
-      })
-    }}>
+    <Box
+      sx={{
+        ...(isOverlay
+          ? {}
+          : {
+              maxWidth: 'md',
+              mx: 'auto',
+              pt: 2,
+              pb: 10,
+              px: 0,
+              px: { xs: 0, sm: 0 },
+            }),
+      }}
+    >
       {/* Image lightbox */}
       {lightboxOpen && (
         <SimpleImageViewer
@@ -885,13 +885,16 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
       )}
 
       {/* Comments Section */}
-      <div className="comments-section" style={{ padding: isOverlay ? '0' : '0 16px', marginBottom: isOverlay ? 0 : 16 }}>
+      <div
+        className='comments-section'
+        style={{
+          padding: isOverlay ? '0' : '0 16px',
+          marginBottom: isOverlay ? 0 : 16,
+        }}
+      >
         {commentError && (
-          <div className="comment-error">
-            <Alert
-              severity='error'
-              onClose={() => setCommentError('')}
-            >
+          <div className='comment-error'>
+            <Alert severity='error' onClose={() => setCommentError('')}>
               {commentError}
             </Alert>
           </div>
@@ -907,12 +910,12 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
             maxLength={1000}
           />
         ) : (
-          <div className="comment-login-prompt">
-            <div className="comment-login-content">
+          <div className='comment-login-prompt'>
+            <div className='comment-login-content'>
               <MuiLink
                 component={Link}
                 to='/login'
-                className="comment-login-link"
+                className='comment-login-link'
               >
                 {t('post.loginToComment')}
               </MuiLink>
@@ -922,11 +925,11 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
         )}
 
         {loading || (commentsLoading && commentsPagination.page === 1) ? (
-          <div className="comments-loading">
+          <div className='comments-loading'>
             <CircularProgress size={30} thickness={4} />
           </div>
         ) : comments && comments.length > 0 ? (
-          <div className="comments-list">
+          <div className='comments-list'>
             {comments.map(comment => (
               <Comment
                 key={comment.id}
@@ -941,7 +944,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                 onDeleteReply={handleDeleteReply}
                 currentUserId={user?.id}
                 isAdmin={user?.is_admin}
-                onImageClick={(imageUrl) => {
+                onImageClick={imageUrl => {
                   setCurrentLightboxImage(imageUrl);
                   setLightboxOpen(true);
                 }}
@@ -953,7 +956,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
 
             {/* Load More Comments Button */}
             {hasMoreComments && (
-              <div className="load-more-comments">
+              <div className='load-more-comments'>
                 <Button
                   variant='outlined'
                   onClick={loadMoreComments}
@@ -965,7 +968,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
                       <ChatBubbleOutlineIcon />
                     )
                   }
-                  className="load-more-button"
+                  className='load-more-button'
                 >
                   {commentsLoading
                     ? 'Загрузка...'
@@ -975,12 +978,9 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
             )}
           </div>
         ) : (
-          <div className="no-comments">
-            <ChatBubbleOutlineIcon className="no-comments-icon" />
-            <Typography
-              variant='body1'
-              className="no-comments-text"
-            >
+          <div className='no-comments'>
+            <ChatBubbleOutlineIcon className='no-comments-icon' />
+            <Typography variant='body1' className='no-comments-text'>
               {t('post.noComments')}
             </Typography>
           </div>

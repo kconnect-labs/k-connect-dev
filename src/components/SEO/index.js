@@ -3,7 +3,9 @@ import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 
 // Базовый URL для абсолютных ссылок (используется для всех изображений и URL)
-const BASE_URL = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
+const BASE_URL =
+  (typeof window !== 'undefined' && window.location?.origin) ||
+  'https://k-connect.ru';
 
 /**
  * SEO компонент для управления метатегами и ссылочными превью
@@ -28,9 +30,10 @@ const SEO = ({
   meta = {},
 }) => {
   // Подготовка абсолютного URL для текущей страницы
-  const pageUrl = url && url.startsWith('http')
-    ? url
-    : `${BASE_URL}${url ? (url.startsWith('/') ? url : `/${url}`) : ''}`;
+  const pageUrl =
+    url && url.startsWith('http')
+      ? url
+      : `${BASE_URL}${url ? (url.startsWith('/') ? url : `/${url}`) : ''}`;
 
   // Подготовка абсолютного URL для изображения
   const getAbsoluteImageUrl = imagePath => {

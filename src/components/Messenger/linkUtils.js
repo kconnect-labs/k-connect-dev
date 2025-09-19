@@ -5,7 +5,8 @@ import LinkPreview from './LinkPreview';
 // Регулярные выражения для поиска ссылок
 export const URL_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
-export const USERNAME_MENTION_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])@([а-яА-Яa-zA-Z0-9_]+)/g;
+export const USERNAME_MENTION_REGEX =
+  /(^|[^а-яА-Яa-zA-Z0-9_])@([а-яА-Яa-zA-Z0-9_]+)/g;
 export const HASHTAG_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])#([а-яА-Яa-zA-Z0-9_]+)/g;
 
 /**
