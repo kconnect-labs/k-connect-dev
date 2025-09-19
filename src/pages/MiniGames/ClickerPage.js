@@ -2685,9 +2685,7 @@ const ClickerPage = () => {
             boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
           }}
         >
-          <TouchAppIcon
-            sx={{ color: 'var(--theme-text-primary)', fontSize: 28 }}
-          />
+          <TouchAppIcon sx={{ color: 'var(--theme-text-primary)', fontSize: 28 }} />
         </Box>
         <Typography
           variant='h4'

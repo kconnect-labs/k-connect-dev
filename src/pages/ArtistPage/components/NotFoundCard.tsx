@@ -1,5 +1,11 @@
 import React from 'react';
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { MusicOff, ArrowForward } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { NotFoundCardProps } from '../types';
@@ -135,11 +141,11 @@ const NotFoundCard: React.FC<NotFoundCardProps> = ({
           <NotFoundIcon />
         </IconContainer>
 
-        <Title variant='h4' component='h2'>
+        <Title variant="h4" component="h2">
           Исполнитель не подтвержден
         </Title>
 
-        <Description variant='body1'>
+        <Description variant="body1">
           {artist ? (
             <>
               У нас нет информации о треках исполнителя «{artist.name}».
@@ -148,19 +154,20 @@ const NotFoundCard: React.FC<NotFoundCardProps> = ({
             </>
           ) : (
             <>
-              Исполнитель не найден в нашей базе данных. Проверьте правильность
-              написания имени или попробуйте найти другого исполнителя.
+              Исполнитель не найден в нашей базе данных.
+              Проверьте правильность написания имени или попробуйте найти
+              другого исполнителя.
             </>
           )}
         </Description>
 
-        <Description variant='body2'>
-          Попробуйте проверить написание имени исполнителя или вернитесь позже.
-          Мы постоянно добавляем новых исполнителей в нашу коллекцию.
+        <Description variant="body2">
+          Попробуйте проверить написание имени исполнителя или вернитесь
+          позже. Мы постоянно добавляем новых исполнителей в нашу коллекцию.
         </Description>
 
         <ActionButton
-          variant='contained'
+          variant="contained"
           onClick={onNavigateToMusic}
           endIcon={<ArrowForward />}
         >

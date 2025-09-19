@@ -26,7 +26,13 @@ import {
   ListItemSecondaryAction,
   Chip,
 } from '@mui/material';
-import { VpnKey, Add, ContentCopy, Delete, Refresh } from '@mui/icons-material';
+import {
+  VpnKey,
+  Add,
+  ContentCopy,
+  Delete,
+  Refresh,
+} from '@mui/icons-material';
 import { useNitroApi } from '../hooks/useNitroApi';
 import { useCurrentUser } from '../hooks/useCurrentUser';
 import { RedemptionKey } from '../types';
@@ -34,7 +40,7 @@ import { RedemptionKey } from '../types';
 const KeysTab: React.FC = () => {
   const { currentUser, permissions } = useCurrentUser();
   const { generateKeys, loading, error, clearError } = useNitroApi();
-
+  
   const [keys, setKeys] = useState<RedemptionKey[]>([]);
   const [keysLoading, setKeysLoading] = useState(false);
   const [keysLoadingMore, setKeysLoadingMore] = useState(false);
@@ -48,7 +54,7 @@ const KeysTab: React.FC = () => {
   const [createSuccess, setCreateSuccess] = useState<string | null>(null);
   const [generatedKeys, setGeneratedKeys] = useState<string[]>([]);
   const [deletingKeys, setDeletingKeys] = useState<Record<number, boolean>>({});
-
+  
   const [form, setForm] = useState({
     type: 'points' as 'points' | 'mcoin' | 'subscription',
     points: 1000,
@@ -70,26 +76,21 @@ const KeysTab: React.FC = () => {
     if (page === 1) setKeysLoading(true);
     else setKeysLoadingMore(true);
     setKeysError(null);
-
+    
     try {
-      const response = await fetch(
-        `/api/moderator/keys?page=${page}&per_page=20`
-      );
+      const response = await fetch(`/api/moderator/keys?page=${page}&per_page=20`);
       const data = await response.json();
-
+      
       if (data.success) {
         setKeysTotal(data.total);
         setKeysPage(data.page);
         setKeysHasNext(data.has_next);
-
+        
         setKeys(prev => {
           const newKeys = data.keys || [];
           if (append) {
             const ids = new Set(prev.map((k: RedemptionKey) => k.id));
-            return [
-              ...prev,
-              ...newKeys.filter((k: RedemptionKey) => !ids.has(k.id)),
-            ];
+            return [...prev, ...newKeys.filter((k: RedemptionKey) => !ids.has(k.id))];
           }
           return newKeys;
         });
@@ -113,7 +114,7 @@ const KeysTab: React.FC = () => {
   // Infinite scroll
   useEffect(() => {
     if (!keysHasNext || keysLoading || keysLoadingMore) return;
-
+    
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting) {
@@ -122,11 +123,11 @@ const KeysTab: React.FC = () => {
       },
       { threshold: 1 }
     );
-
+    
     if (loaderRef.current) {
       observer.observe(loaderRef.current);
     }
-
+    
     return () => {
       if (loaderRef.current) {
         observer.unobserve(loaderRef.current);
@@ -167,39 +168,31 @@ const KeysTab: React.FC = () => {
     setCreateLoading(true);
     setCreateError(null);
     setCreateSuccess(null);
-
+    
     try {
       const payload = {
         key_type: form.type,
         points_value: form.type === 'points' ? Number(form.points) : undefined,
-        mcoin_amount:
-          form.type === 'mcoin' ? Number(form.mcoin_amount) : undefined,
-        subscription_type:
-          form.type === 'subscription' ? form.subscription_type : undefined,
-        subscription_duration_days:
-          form.type === 'subscription'
-            ? Number(form.subscription_duration_days)
-            : undefined,
+        mcoin_amount: form.type === 'mcoin' ? Number(form.mcoin_amount) : undefined,
+        subscription_type: form.type === 'subscription' ? form.subscription_type : undefined,
+        subscription_duration_days: form.type === 'subscription' ? Number(form.subscription_duration_days) : undefined,
         max_uses: Number(form.max_uses),
         count: Number(form.count),
         expires_days: Number(form.expires_days),
         description: form.description,
       };
-
+      
       // Удаляем undefined значения
-      Object.keys(payload).forEach(
-        (k: string) =>
-          (payload as any)[k] === undefined && delete (payload as any)[k]
-      );
-
+      Object.keys(payload).forEach((k: string) => (payload as any)[k] === undefined && delete (payload as any)[k]);
+      
       const response = await fetch('/api/moderator/keys/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
+      
       const data = await response.json();
-
+      
       if (data.success) {
         if (Array.isArray(data.keys)) {
           setGeneratedKeys(data.keys.map((k: any) => k.key || k));
@@ -220,12 +213,12 @@ const KeysTab: React.FC = () => {
 
   const handleDeleteKey = async (keyId: number) => {
     setDeletingKeys(prev => ({ ...prev, [keyId]: true }));
-
+    
     try {
       const response = await fetch(`/api/moderator/keys/${keyId}`, {
         method: 'DELETE',
       });
-
+      
       if (response.ok) {
         fetchKeys();
       } else {
@@ -247,38 +240,32 @@ const KeysTab: React.FC = () => {
 
   const getKeyTypeLabel = (type: string) => {
     switch (type) {
-      case 'points':
-        return 'Баллы';
-      case 'mcoin':
-        return 'MCoin';
-      case 'subscription':
-        return 'Подписка';
-      default:
-        return type;
+      case 'points': return 'Баллы';
+      case 'mcoin': return 'MCoin';
+      case 'subscription': return 'Подписка';
+      default: return type;
     }
   };
 
   const getKeyTypeColor = (type: string) => {
     switch (type) {
-      case 'points':
-        return 'primary';
-      case 'mcoin':
-        return 'secondary';
-      case 'subscription':
-        return 'success';
-      default:
-        return 'default';
+      case 'points': return 'primary';
+      case 'mcoin': return 'secondary';
+      case 'subscription': return 'success';
+      default: return 'default';
     }
   };
 
   if (!canGenerateKeys) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Alert severity='error' sx={{ maxWidth: 600, mx: 'auto' }}>
-          <Typography variant='h6' gutterBottom>
+        <Alert severity="error" sx={{ maxWidth: 600, mx: 'auto' }}>
+          <Typography variant="h6" gutterBottom>
             Доступ запрещен
           </Typography>
-          <Typography>У вас нет прав на генерацию ключей</Typography>
+          <Typography>
+            У вас нет прав на генерацию ключей
+          </Typography>
         </Alert>
       </Box>
     );
@@ -287,38 +274,27 @@ const KeysTab: React.FC = () => {
   return (
     <Box>
       {error && (
-        <Alert severity='error' sx={{ mb: 1 }} onClose={clearError}>
+        <Alert severity="error" sx={{ mb: 1 }} onClose={clearError}>
           {error}
         </Alert>
       )}
 
       {keysError && (
-        <Alert
-          severity='error'
-          sx={{ mb: 1 }}
-          onClose={() => setKeysError(null)}
-        >
+        <Alert severity="error" sx={{ mb: 1 }} onClose={() => setKeysError(null)}>
           {keysError}
         </Alert>
       )}
 
       {/* Кнопка создания ключа */}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 1,
-        }}
-      >
-        <Typography variant='subtitle1'>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+        <Typography variant="subtitle1">
           Ключи активации ({keysTotal})
         </Typography>
         <Button
-          variant='contained'
+          variant="contained"
           startIcon={<Add />}
           onClick={handleOpenDialog}
-          size='small'
+          size="small"
         >
           Создать ключ
         </Button>
@@ -340,7 +316,7 @@ const KeysTab: React.FC = () => {
             border: '1px solid var(--main-border-color)',
           }}
         >
-          <Typography variant='body1' color='text.secondary'>
+          <Typography variant="body1" color="text.secondary">
             Нет созданных ключей
           </Typography>
         </Box>
@@ -359,14 +335,7 @@ const KeysTab: React.FC = () => {
                   flexDirection: 'column',
                 }}
               >
-                <CardContent
-                  sx={{
-                    p: 1.5,
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
+                <CardContent sx={{ p: 1.5, flex: 1, display: 'flex', flexDirection: 'column' }}>
                   {/* Ключ */}
                   <Box
                     sx={{
@@ -378,7 +347,7 @@ const KeysTab: React.FC = () => {
                     }}
                   >
                     <Typography
-                      variant='body2'
+                      variant="body2"
                       sx={{
                         fontWeight: 500,
                         wordBreak: 'break-all',
@@ -390,7 +359,7 @@ const KeysTab: React.FC = () => {
                       {key.key}
                     </Typography>
                     <IconButton
-                      size='small'
+                      size="small"
                       onClick={() => handleCopyKey(key.key)}
                       sx={{
                         borderRadius: 'var(--main-border-radius)',
@@ -400,60 +369,44 @@ const KeysTab: React.FC = () => {
                         },
                       }}
                     >
-                      <ContentCopy fontSize='small' />
+                      <ContentCopy fontSize="small" />
                     </IconButton>
                   </Box>
 
                   {/* Информация о ключе */}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 0.5,
-                      mb: 1,
-                      flex: 1,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1,
-                        mb: 0.5,
-                      }}
-                    >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 1, flex: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
                       <Chip
                         label={getKeyTypeLabel(key.key_type)}
                         color={getKeyTypeColor(key.key_type) as any}
-                        size='small'
+                        size="small"
                       />
                     </Box>
 
                     {key.key_type === 'points' && key.points_value && (
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="caption" color="text.secondary">
                         {key.points_value} баллов
                       </Typography>
                     )}
 
                     {key.key_type === 'mcoin' && key.mcoin_amount && (
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="caption" color="text.secondary">
                         {key.mcoin_amount} MCoin
                       </Typography>
                     )}
 
-                    {key.key_type === 'subscription' &&
-                      key.subscription_type && (
-                        <Typography variant='caption' color='text.secondary'>
-                          {key.subscription_type}
-                        </Typography>
-                      )}
+                    {key.key_type === 'subscription' && key.subscription_type && (
+                      <Typography variant="caption" color="text.secondary">
+                        {key.subscription_type}
+                      </Typography>
+                    )}
 
-                    <Typography variant='caption' color='text.secondary'>
+                    <Typography variant="caption" color="text.secondary">
                       {key.current_uses}/{key.max_uses} использований
                     </Typography>
 
                     {key.expires_at && (
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="caption" color="text.secondary">
                         до {new Date(key.expires_at).toLocaleDateString()}
                       </Typography>
                     )}
@@ -461,17 +414,11 @@ const KeysTab: React.FC = () => {
 
                   {/* Кнопка удаления */}
                   <Button
-                    variant='outlined'
-                    size='small'
+                    variant="outlined"
+                    size="small"
                     onClick={() => handleDeleteKey(key.id)}
                     disabled={deletingKeys[key.id]}
-                    startIcon={
-                      deletingKeys[key.id] ? (
-                        <CircularProgress size={16} />
-                      ) : (
-                        <Delete />
-                      )
-                    }
+                    startIcon={deletingKeys[key.id] ? <CircularProgress size={16} /> : <Delete />}
                     sx={{
                       width: '100%',
                       mt: 'auto',
@@ -497,11 +444,7 @@ const KeysTab: React.FC = () => {
           ))}
 
           {keysLoadingMore && (
-            <Grid
-              item
-              xs={12}
-              sx={{ display: 'flex', justifyContent: 'center', py: 2 }}
-            >
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', py: 2 }}>
               <CircularProgress size={24} />
             </Grid>
           )}
@@ -512,7 +455,7 @@ const KeysTab: React.FC = () => {
       <Dialog
         open={dialogOpen}
         onClose={handleCloseDialog}
-        maxWidth='md'
+        maxWidth="md"
         fullWidth
         PaperProps={{
           sx: {
@@ -520,24 +463,26 @@ const KeysTab: React.FC = () => {
             backdropFilter: 'var(--theme-backdrop-filter)',
             border: '1px solid var(--main-border-color)',
             borderRadius: 'var(--main-border-radius)',
-          },
+          }
         }}
       >
-        <DialogTitle sx={{ pb: 1 }}>Создание ключа активации</DialogTitle>
+        <DialogTitle sx={{ pb: 1 }}>
+          Создание ключа активации
+        </DialogTitle>
         <DialogContent sx={{ pt: 1 }}>
           <Grid container spacing={2}>
             {/* Тип ключа */}
             <Grid item xs={12} sm={6}>
-              <FormControl fullWidth size='small'>
+              <FormControl fullWidth size="small">
                 <InputLabel>Тип ключа</InputLabel>
                 <Select
                   value={form.type}
-                  label='Тип ключа'
-                  onChange={e => handleFormChange('type', e.target.value)}
+                  label="Тип ключа"
+                  onChange={(e) => handleFormChange('type', e.target.value)}
                 >
-                  <MenuItem value='points'>Баллы</MenuItem>
-                  <MenuItem value='mcoin'>MCoin</MenuItem>
-                  <MenuItem value='subscription'>Подписка</MenuItem>
+                  <MenuItem value="points">Баллы</MenuItem>
+                  <MenuItem value="mcoin">MCoin</MenuItem>
+                  <MenuItem value="subscription">Подписка</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -546,12 +491,12 @@ const KeysTab: React.FC = () => {
             {form.type === 'points' && (
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Количество баллов'
-                  type='number'
+                  label="Количество баллов"
+                  type="number"
                   fullWidth
-                  size='small'
+                  size="small"
                   value={form.points}
-                  onChange={e => handleFormChange('points', e.target.value)}
+                  onChange={(e) => handleFormChange('points', e.target.value)}
                   InputProps={{ inputProps: { min: 1 } }}
                 />
               </Grid>
@@ -561,14 +506,12 @@ const KeysTab: React.FC = () => {
             {form.type === 'mcoin' && (
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label='Количество MCoin'
-                  type='number'
+                  label="Количество MCoin"
+                  type="number"
                   fullWidth
-                  size='small'
+                  size="small"
                   value={form.mcoin_amount}
-                  onChange={e =>
-                    handleFormChange('mcoin_amount', e.target.value)
-                  }
+                  onChange={(e) => handleFormChange('mcoin_amount', e.target.value)}
                   InputProps={{ inputProps: { min: 1 } }}
                 />
               </Grid>
@@ -578,35 +521,28 @@ const KeysTab: React.FC = () => {
             {form.type === 'subscription' && (
               <>
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth size='small'>
+                  <FormControl fullWidth size="small">
                     <InputLabel>Тип подписки</InputLabel>
                     <Select
                       value={form.subscription_type}
-                      label='Тип подписки'
-                      onChange={e =>
-                        handleFormChange('subscription_type', e.target.value)
-                      }
+                      label="Тип подписки"
+                      onChange={(e) => handleFormChange('subscription_type', e.target.value)}
                     >
-                      <MenuItem value='basic'>Базовая</MenuItem>
-                      <MenuItem value='premium'>Премиум</MenuItem>
-                      <MenuItem value='ultimate'>Ультимат</MenuItem>
-                      <MenuItem value='max'>Макс</MenuItem>
+                      <MenuItem value="basic">Базовая</MenuItem>
+                      <MenuItem value="premium">Премиум</MenuItem>
+                      <MenuItem value="ultimate">Ультимат</MenuItem>
+                      <MenuItem value="max">Макс</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    label='Срок действия подписки (дней)'
-                    type='number'
+                    label="Срок действия подписки (дней)"
+                    type="number"
                     fullWidth
-                    size='small'
+                    size="small"
                     value={form.subscription_duration_days}
-                    onChange={e =>
-                      handleFormChange(
-                        'subscription_duration_days',
-                        e.target.value
-                      )
-                    }
+                    onChange={(e) => handleFormChange('subscription_duration_days', e.target.value)}
                     InputProps={{ inputProps: { min: 1 } }}
                   />
                 </Grid>
@@ -616,12 +552,12 @@ const KeysTab: React.FC = () => {
             {/* Максимальное количество использований */}
             <Grid item xs={12} sm={6}>
               <TextField
-                label='Максимальное количество использований'
-                type='number'
+                label="Максимальное количество использований"
+                type="number"
                 fullWidth
-                size='small'
+                size="small"
                 value={form.max_uses}
-                onChange={e => handleFormChange('max_uses', e.target.value)}
+                onChange={(e) => handleFormChange('max_uses', e.target.value)}
                 InputProps={{ inputProps: { min: 1 } }}
               />
             </Grid>
@@ -629,12 +565,12 @@ const KeysTab: React.FC = () => {
             {/* Количество ключей */}
             <Grid item xs={12} sm={6}>
               <TextField
-                label='Количество ключей'
-                type='number'
+                label="Количество ключей"
+                type="number"
                 fullWidth
-                size='small'
+                size="small"
                 value={form.count}
-                onChange={e => handleFormChange('count', e.target.value)}
+                onChange={(e) => handleFormChange('count', e.target.value)}
                 InputProps={{ inputProps: { min: 1, max: 100 } }}
               />
             </Grid>
@@ -642,12 +578,12 @@ const KeysTab: React.FC = () => {
             {/* Срок действия */}
             <Grid item xs={12} sm={6}>
               <TextField
-                label='Срок действия (дней)'
-                type='number'
+                label="Срок действия (дней)"
+                type="number"
                 fullWidth
-                size='small'
+                size="small"
                 value={form.expires_days}
-                onChange={e => handleFormChange('expires_days', e.target.value)}
+                onChange={(e) => handleFormChange('expires_days', e.target.value)}
                 InputProps={{ inputProps: { min: 1 } }}
               />
             </Grid>
@@ -655,26 +591,26 @@ const KeysTab: React.FC = () => {
             {/* Описание */}
             <Grid item xs={12}>
               <TextField
-                label='Описание (необязательно)'
+                label="Описание (необязательно)"
                 fullWidth
-                size='small'
+                size="small"
                 multiline
                 rows={2}
                 value={form.description}
-                onChange={e => handleFormChange('description', e.target.value)}
+                onChange={(e) => handleFormChange('description', e.target.value)}
               />
             </Grid>
           </Grid>
 
           {/* Сообщения об ошибках и успехе */}
           {createError && (
-            <Alert severity='error' sx={{ mt: 2 }}>
+            <Alert severity="error" sx={{ mt: 2 }}>
               {createError}
             </Alert>
           )}
 
           {createSuccess && (
-            <Alert severity='success' sx={{ mt: 2 }}>
+            <Alert severity="success" sx={{ mt: 2 }}>
               {createSuccess}
             </Alert>
           )}
@@ -682,20 +618,13 @@ const KeysTab: React.FC = () => {
           {/* Сгенерированные ключи */}
           {generatedKeys.length > 0 && (
             <Box sx={{ mt: 2 }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 1,
-                }}
-              >
-                <Typography variant='subtitle2'>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="subtitle2">
                   Сгенерированные ключи:
                 </Typography>
                 <Button
-                  variant='outlined'
-                  size='small'
+                  variant="outlined"
+                  size="small"
                   startIcon={<ContentCopy />}
                   onClick={() => {
                     const allKeys = generatedKeys.join('\n');
@@ -725,14 +654,14 @@ const KeysTab: React.FC = () => {
                     }}
                   >
                     <Typography
-                      variant='body2'
-                      fontFamily='monospace'
+                      variant="body2"
+                      fontFamily="monospace"
                       sx={{ flex: 1, mr: 1 }}
                     >
                       {key}
                     </Typography>
                     <IconButton
-                      size='small'
+                      size="small"
                       onClick={() => handleCopyKey(key)}
                       sx={{
                         borderRadius: 'var(--main-border-radius)',
@@ -742,7 +671,7 @@ const KeysTab: React.FC = () => {
                         },
                       }}
                     >
-                      <ContentCopy fontSize='small' />
+                      <ContentCopy fontSize="small" />
                     </IconButton>
                   </Box>
                 ))}
@@ -751,17 +680,15 @@ const KeysTab: React.FC = () => {
           )}
         </DialogContent>
         <DialogActions sx={{ pt: 1 }}>
-          <Button onClick={handleCloseDialog} size='small'>
+          <Button onClick={handleCloseDialog} size="small">
             Отмена
           </Button>
           <Button
             onClick={handleGenerateKeys}
-            variant='contained'
+            variant="contained"
             disabled={createLoading}
-            startIcon={
-              createLoading ? <CircularProgress size={20} /> : <VpnKey />
-            }
-            size='small'
+            startIcon={createLoading ? <CircularProgress size={20} /> : <VpnKey />}
+            size="small"
           >
             {createLoading ? 'Создание...' : 'Создать'}
           </Button>

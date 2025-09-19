@@ -1,19 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType =
-  | 'default'
-  | 'blur'
-  | 'amoled'
-  | 'light'
-  | 'midnight'
-  | 'ocean'
-  | 'sunset'
-  | 'forest'
-  | 'aurora'
-  | 'cosmic'
-  | 'neon'
-  | 'vintage'
-  | 'pickme';
+export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -83,20 +70,18 @@ interface ThemeSettings {
   };
 }
 
-const THEME_SETTINGS: Record<
-  ThemeType,
-  {
-    background: string;
-    backdropFilter: string;
-    siteBackground: string;
-    themeColor: string;
-    colorScheme: 'light' | 'dark';
-    browserAccent: string;
-    mainBorderRadius: string;
-    smallBorderRadius: string;
-    largeBorderRadius: string;
-  }
-> = {
+
+const THEME_SETTINGS: Record<ThemeType, { 
+  background: string; 
+  backdropFilter: string; 
+  siteBackground: string; 
+  themeColor: string;
+  colorScheme: 'light' | 'dark';
+  browserAccent: string;
+  mainBorderRadius: string;
+  smallBorderRadius: string;
+  largeBorderRadius: string;
+}> = {
   default: {
     background: 'rgba(15, 15, 15, 1)',
     backdropFilter: 'none',
@@ -228,7 +213,7 @@ const THEME_SETTINGS: Record<
     mainBorderRadius: '18px',
     smallBorderRadius: '14px',
     largeBorderRadius: '22px',
-  },
+    },
   pickme: {
     background: 'rgba(131, 61, 96, 1)',
     backdropFilter: 'none',
@@ -242,6 +227,7 @@ const THEME_SETTINGS: Record<
   },
 };
 
+
 class ThemeDatabase {
   private dbName = 'KConnectDB';
   private dbVersion = 1;
@@ -254,13 +240,12 @@ class ThemeDatabase {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => resolve(request.result);
 
-      request.onupgradeneeded = event => {
+      request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-
+        
+        
         if (!db.objectStoreNames.contains(this.storeName)) {
-          const store = db.createObjectStore(this.storeName, {
-            keyPath: 'key',
-          });
+          const store = db.createObjectStore(this.storeName, { keyPath: 'key' });
           store.createIndex('key', 'key', { unique: true });
         }
       };
@@ -305,18 +290,19 @@ class ThemeDatabase {
 }
 
 const themeDB = new ThemeDatabase();
-
+ 
 export const useThemeManager = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
   const [isApplying, setIsApplying] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
+  
   const notifyThemeChange = useCallback((themeType: ThemeType) => {
     try {
       const broadcastChannel = new BroadcastChannel('theme-changes');
       broadcastChannel.postMessage({
         type: 'theme-changed',
-        theme: themeType,
+        theme: themeType
       });
       broadcastChannel.close();
     } catch (error) {
@@ -324,234 +310,212 @@ export const useThemeManager = () => {
     }
   }, []);
 
-  const applyTheme = useCallback(
-    async (themeType: ThemeType) => {
-      setIsApplying(true);
-
-      try {
-        const root = document.documentElement;
-        const settings = THEME_SETTINGS[themeType];
-
-        root.style.setProperty('--theme-background', settings.background);
-        root.style.setProperty(
-          '--theme-backdrop-filter',
-          settings.backdropFilter
-        );
-        root.style.setProperty(
-          '--theme-site-background',
-          settings.siteBackground
-        );
-        root.style.setProperty('--theme-type', themeType);
-        root.style.setProperty(
-          '--main-border-radius !important',
-          settings.mainBorderRadius
-        );
-        root.style.setProperty(
-          '--small-border-radius',
-          settings.smallBorderRadius
-        );
-        root.style.setProperty(
-          '--large-border-radius',
-          settings.largeBorderRadius
-        );
-        root.setAttribute('data-theme', themeType);
-
-        // Принудительное обновление стилей для применения новых border-radius
-        document.documentElement.style.setProperty(
-          '--main-border-radius !important',
-          settings.mainBorderRadius
-        );
-        document.documentElement.style.setProperty(
-          '--small-border-radius',
-          settings.smallBorderRadius
-        );
-        document.documentElement.style.setProperty(
-          '--large-border-radius',
-          settings.largeBorderRadius
-        );
-
-        const metaThemeColor = document.querySelector(
-          'meta[name="theme-color"]'
-        );
-        if (metaThemeColor) {
-          metaThemeColor.setAttribute('content', settings.themeColor);
-          console.log(
-            `🎨 Theme color updated to: ${settings.themeColor} for theme: ${themeType}`
-          );
-        }
-
-        // Убираем изменение status bar style - это может вызывать проблемы с PWA
-        // const appleStatusBarStyle = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-        // if (appleStatusBarStyle) {
-        //   const statusBarStyle = themeType === 'light' ? 'default' : 'black-translucent';
-        //   appleStatusBarStyle.setAttribute('content', statusBarStyle);
-        //   console.log(`📱 iOS status bar style updated to: ${statusBarStyle} for theme: ${themeType}`);
-        // }
-
-        let msNavButtonColor = document.querySelector(
-          'meta[name="msapplication-navbutton-color"]'
-        );
-        if (!msNavButtonColor) {
-          msNavButtonColor = document.createElement('meta');
-          msNavButtonColor.setAttribute(
-            'name',
-            'msapplication-navbutton-color'
-          );
-          document.head.appendChild(msNavButtonColor);
-        }
-        msNavButtonColor.setAttribute('content', settings.themeColor);
-
-        root.style.setProperty('color-scheme', settings.colorScheme);
-        let colorSchemeMeta = document.querySelector(
-          'meta[name="color-scheme"]'
-        );
-        if (!colorSchemeMeta) {
-          colorSchemeMeta = document.createElement('meta');
-          colorSchemeMeta.setAttribute('name', 'color-scheme');
-          document.head.appendChild(colorSchemeMeta);
-        }
-        colorSchemeMeta.setAttribute('content', settings.colorScheme);
-
-        root.style.setProperty('accent-color', settings.browserAccent);
-
-        // Убираем дублирующий код для status bar style
-        // let safariTintColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-        // if (safariTintColor) {
-        //   safariTintColor.setAttribute('content', themeType === 'light' ? 'default' : 'black-translucent');
-        // }
-
-        console.log(
-          `🌐 Browser UI updated: color-scheme=${settings.colorScheme}, accent-color=${settings.browserAccent}`
-        );
-
-        setCurrentTheme(themeType);
-
-        await themeDB.setThemeType(themeType);
-
-        notifyThemeChange(themeType);
-
-        const themeAwareElements = document.querySelectorAll('.theme-aware');
-        themeAwareElements.forEach(element => {
-          if (element instanceof HTMLElement) {
-            element.style.background = settings.background;
-            element.style.backdropFilter = settings.backdropFilter;
-            (element.style as any).webkitBackdropFilter =
-              settings.backdropFilter;
-          }
-        });
-
-        const textElements = document.querySelectorAll(
-          '.text-primary, .text-secondary, .text-disabled, .text-accent, .text-error, .text-success, .text-warning, .text-info'
-        );
-        textElements.forEach(element => {
-          if (element instanceof HTMLElement) {
-            element.style.color = getComputedStyle(root).getPropertyValue(
-              '--theme-text-primary'
-            );
-          }
-        });
-      } catch (error) {
-        console.error('Ошибка при применении темы:', error);
-      } finally {
-        setIsApplying(false);
+  
+  const applyTheme = useCallback(async (themeType: ThemeType) => {
+    setIsApplying(true);
+    
+    try {
+      const root = document.documentElement;
+      const settings = THEME_SETTINGS[themeType];
+      
+      
+      root.style.setProperty('--theme-background', settings.background);
+      root.style.setProperty('--theme-backdrop-filter', settings.backdropFilter);
+      root.style.setProperty('--theme-site-background', settings.siteBackground);
+      root.style.setProperty('--theme-type', themeType);
+      root.style.setProperty('--main-border-radius !important', settings.mainBorderRadius);
+      root.style.setProperty('--small-border-radius', settings.smallBorderRadius);
+      root.style.setProperty('--large-border-radius', settings.largeBorderRadius);  
+      root.setAttribute('data-theme', themeType);
+      
+      // Принудительное обновление стилей для применения новых border-radius
+      document.documentElement.style.setProperty('--main-border-radius !important', settings.mainBorderRadius);
+      document.documentElement.style.setProperty('--small-border-radius', settings.smallBorderRadius);
+      document.documentElement.style.setProperty('--large-border-radius', settings.largeBorderRadius);
+      
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', settings.themeColor);
+        console.log(`🎨 Theme color updated to: ${settings.themeColor} for theme: ${themeType}`);
       }
-    },
-    [notifyThemeChange]
-  );
+      
+      // Убираем изменение status bar style - это может вызывать проблемы с PWA
+      // const appleStatusBarStyle = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      // if (appleStatusBarStyle) {
+      //   const statusBarStyle = themeType === 'light' ? 'default' : 'black-translucent';
+      //   appleStatusBarStyle.setAttribute('content', statusBarStyle);
+      //   console.log(`📱 iOS status bar style updated to: ${statusBarStyle} for theme: ${themeType}`);
+      // }
+      
+      let msNavButtonColor = document.querySelector('meta[name="msapplication-navbutton-color"]');
+      if (!msNavButtonColor) {
+        msNavButtonColor = document.createElement('meta');
+        msNavButtonColor.setAttribute('name', 'msapplication-navbutton-color');
+        document.head.appendChild(msNavButtonColor);
+      }
+      msNavButtonColor.setAttribute('content', settings.themeColor);
+      
+      root.style.setProperty('color-scheme', settings.colorScheme);
+      let colorSchemeMeta = document.querySelector('meta[name="color-scheme"]');
+      if (!colorSchemeMeta) {
+        colorSchemeMeta = document.createElement('meta');
+        colorSchemeMeta.setAttribute('name', 'color-scheme');
+        document.head.appendChild(colorSchemeMeta);
+      }
+      colorSchemeMeta.setAttribute('content', settings.colorScheme);
+      
+      root.style.setProperty('accent-color', settings.browserAccent);
+      
+      // Убираем дублирующий код для status bar style
+      // let safariTintColor = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      // if (safariTintColor) {
+      //   safariTintColor.setAttribute('content', themeType === 'light' ? 'default' : 'black-translucent');
+      // }
+      
+      console.log(`🌐 Browser UI updated: color-scheme=${settings.colorScheme}, accent-color=${settings.browserAccent}`);
+      
+      
+      setCurrentTheme(themeType);
+      
+      
+      await themeDB.setThemeType(themeType);
+      
+      
+      notifyThemeChange(themeType);
+      
+      
+      const themeAwareElements = document.querySelectorAll('.theme-aware');
+      themeAwareElements.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          element.style.background = settings.background;
+          element.style.backdropFilter = settings.backdropFilter;
+          (element.style as any).webkitBackdropFilter = settings.backdropFilter;
+        }
+      });
+      
+      
+      const textElements = document.querySelectorAll('.text-primary, .text-secondary, .text-disabled, .text-accent, .text-error, .text-success, .text-warning, .text-info');
+      textElements.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          
+          element.style.color = getComputedStyle(root).getPropertyValue('--theme-text-primary');
+        }
+      });
+      
+    } catch (error) {
+      console.error('Ошибка при применении темы:', error);
+    } finally {
+      setIsApplying(false);
+    }
+  }, [notifyThemeChange]);
 
+  
   const switchToDefaultTheme = useCallback(async () => {
     await applyTheme('default');
   }, [applyTheme]);
 
+  
   const switchToBlurTheme = useCallback(async () => {
     await applyTheme('blur');
   }, [applyTheme]);
 
+  
   const switchToAmoledTheme = useCallback(async () => {
     await applyTheme('amoled');
   }, [applyTheme]);
 
+  
   const switchToLightTheme = useCallback(async () => {
     await applyTheme('light');
   }, [applyTheme]);
 
+  
   const switchToMidnightTheme = useCallback(async () => {
     await applyTheme('midnight');
   }, [applyTheme]);
 
+  
   const switchToOceanTheme = useCallback(async () => {
     await applyTheme('ocean');
   }, [applyTheme]);
 
+  
   const switchToSunsetTheme = useCallback(async () => {
     await applyTheme('sunset');
   }, [applyTheme]);
 
+  
   const switchToForestTheme = useCallback(async () => {
     await applyTheme('forest');
   }, [applyTheme]);
 
+  
   const switchToAuroraTheme = useCallback(async () => {
     await applyTheme('aurora');
   }, [applyTheme]);
 
+  
   const switchToCosmicTheme = useCallback(async () => {
     await applyTheme('cosmic');
   }, [applyTheme]);
 
+  
   const switchToNeonTheme = useCallback(async () => {
     await applyTheme('neon');
   }, [applyTheme]);
 
+  
   const switchToVintageTheme = useCallback(async () => {
     await applyTheme('vintage');
   }, [applyTheme]);
 
+  
   const switchToPickmeTheme = useCallback(async () => {
     await applyTheme('pickme');
   }, [applyTheme]);
 
+  
   const toggleTheme = useCallback(async () => {
     const newTheme = currentTheme === 'default' ? 'blur' : 'default';
     await applyTheme(newTheme);
   }, [currentTheme, applyTheme]);
 
+  
   useEffect(() => {
     const initializeTheme = async () => {
       try {
+        
         const savedTheme = await themeDB.getThemeType();
         setCurrentTheme(savedTheme);
         await applyTheme(savedTheme);
       } catch (error) {
         console.error('Error initializing theme:', error);
-
+        
         await applyTheme('default');
       } finally {
         setIsInitialized(true);
       }
     };
-
+    
     initializeTheme();
   }, [applyTheme]);
 
+  
   useEffect(() => {
     let broadcastChannel: BroadcastChannel | null = null;
-
+    
     try {
+      
       broadcastChannel = new BroadcastChannel('theme-changes');
-
-      broadcastChannel.onmessage = event => {
-        if (
-          event.data.type === 'theme-changed' &&
-          event.data.theme !== currentTheme
-        ) {
+      
+      broadcastChannel.onmessage = (event) => {
+        if (event.data.type === 'theme-changed' && event.data.theme !== currentTheme) {
           applyTheme(event.data.theme);
         }
       };
     } catch (error) {
-      console.warn(
-        'BroadcastChannel not supported, theme sync between tabs disabled'
-      );
+      console.warn('BroadcastChannel not supported, theme sync between tabs disabled');
     }
 
     return () => {
@@ -561,16 +525,15 @@ export const useThemeManager = () => {
     };
   }, [currentTheme, applyTheme]);
 
-  const applyThemeWithNotification = useCallback(
-    async (themeType: ThemeType) => {
-      try {
-        await applyTheme(themeType);
-      } catch (error) {
-        console.error('Ошибка при применении темы с уведомлением:', error);
-      }
-    },
-    [applyTheme]
-  );
+  
+  const applyThemeWithNotification = useCallback(async (themeType: ThemeType) => {
+    try {
+      await applyTheme(themeType);
+      
+    } catch (error) {
+      console.error('Ошибка при применении темы с уведомлением:', error);
+    }
+  }, [applyTheme]);
 
   return {
     currentTheme,
@@ -595,4 +558,4 @@ export const useThemeManager = () => {
     },
     applyTheme: applyThemeWithNotification,
   };
-};
+}; 

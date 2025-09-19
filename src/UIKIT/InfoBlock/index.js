@@ -68,43 +68,41 @@ const InfoBlock = ({
         ...style,
       }
     : useTheme
-      ? {
-          width: '100%',
-          margin: '0 auto 8px auto',
-          background: 'var(--theme-background, rgba(255,255,255,0.03))',
-          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          border: '1px solid rgba(0, 0, 0, 0.12)',
-          color: 'var(--theme-text-primary, inherit)',
-          textAlign: 'left',
-          padding: 14,
-          borderRadius: 16,
-          ...style,
-        }
-      : {
-          width: '100%',
-          margin: '0 auto 8px auto',
-          ...getGradientBorder(styleVariant),
-          background:
-            styleVariant === 'dark'
-              ? 'rgba(26,26,26, 0.03)'
-              : 'rgba(255,255,255,0.03)',
-          backdropFilter: 'blur(20px)',
-          color: styleVariant === 'dark' ? 'white' : 'inherit',
-          textAlign: 'left',
-          padding: 14,
-          borderRadius: 16,
-          ...getGradientEffects(styleVariant),
-          ...style,
-        };
+    ? {
+        width: '100%',
+        margin: '0 auto 8px auto',
+        background: 'var(--theme-background, rgba(255,255,255,0.03))',
+        backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+        border: '1px solid rgba(0, 0, 0, 0.12)',
+        color: 'var(--theme-text-primary, inherit)',
+        textAlign: 'left',
+        padding: 14,
+        borderRadius: 16,
+        ...style,
+      }
+    : {
+        width: '100%',
+        margin: '0 auto 8px auto',
+        ...getGradientBorder(styleVariant),
+        background:
+          styleVariant === 'dark'
+            ? 'rgba(26,26,26, 0.03)'
+            : 'rgba(255,255,255,0.03)',
+        backdropFilter: 'blur(20px)',
+        color: styleVariant === 'dark' ? 'white' : 'inherit',
+        textAlign: 'left',
+        padding: 14,
+        borderRadius: 16,
+        ...getGradientEffects(styleVariant),
+        ...style,
+      };
 
   const titleStyles = {
     fontWeight: 700,
     margin: 0,
-    color: useTheme
-      ? 'var(--theme-text-primary, inherit)'
-      : styleVariant === 'dark'
-        ? 'white'
-        : 'inherit',
+    color: useTheme 
+      ? 'var(--theme-text-primary, inherit)' 
+      : styleVariant === 'dark' ? 'white' : 'inherit',
     marginBottom: 0,
     fontSize: '1.5rem',
     lineHeight: 1.2,
@@ -114,9 +112,7 @@ const InfoBlock = ({
   const descriptionStyles = {
     color: useTheme
       ? 'var(--theme-text-secondary, rgba(0,0,0,0.7))'
-      : styleVariant === 'dark'
-        ? 'rgba(255,255,255,0.7)'
-        : 'rgba(0,0,0,0.7)',
+      : styleVariant === 'dark' ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)',
     fontSize: '0.875rem',
     lineHeight: 1.5,
     marginTop: 8,
@@ -125,11 +121,14 @@ const InfoBlock = ({
 
   // Формируем классы для поддержки тем
   const themeClass = useTheme ? 'theme-aware' : '';
-  const blockClasses =
-    `info-block info-block--${styleVariant} ${themeClass} ${className}`.trim();
+  const blockClasses = `info-block info-block--${styleVariant} ${themeClass} ${className}`.trim();
 
   return (
-    <div className={blockClasses} style={containerStyles} {...props}>
+    <div
+      className={blockClasses}
+      style={containerStyles}
+      {...props}
+    >
       {title && (
         <div className='info-block__title' style={titleStyles}>
           {title}

@@ -93,8 +93,7 @@ const UpdateInfo = ({
             label={`v${version}`}
             size='small'
             sx={{
-              backgroundColor:
-                'var(--theme-background, rgba(208, 188, 255, 0.1))',
+              backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.1))',
               color: 'primary.main',
               fontWeight: 'medium',
               border: '1px solid rgba(208, 188, 255, 0.2)',
@@ -122,8 +121,7 @@ const UpdateInfo = ({
             icon={<UpdateIcon sx={{ fontSize: '16px !important' }} />}
             sx={{
               fontSize: '0.75rem',
-              backgroundColor:
-                'var(--theme-background, rgba(255, 255, 255, 0.05))',
+              backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               border: '1px solid rgba(66, 66, 66, 0.5)',
             }}
           />

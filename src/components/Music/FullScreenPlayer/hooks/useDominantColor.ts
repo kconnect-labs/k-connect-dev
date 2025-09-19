@@ -5,9 +5,7 @@ import { DominantColor, Track } from '../types';
 const defaultCover = '/static/uploads/system/album_placeholder.jpg';
 
 export const useDominantColor = (currentTrack: Track | null) => {
-  const [dominantColor, setDominantColor] = useState<DominantColor | null>(
-    null
-  );
+  const [dominantColor, setDominantColor] = useState<DominantColor | null>(null);
 
   // Извлечение доминирующего цвета из обложки
   useEffect(() => {
@@ -16,15 +14,13 @@ export const useDominantColor = (currentTrack: Track | null) => {
         currentTrack.cover_path || defaultCover,
         (colorString: string) => {
           if (colorString) {
-            const [r, g, b] = colorString
-              .split(',')
-              .map(c => parseInt(c.trim()));
-
+            const [r, g, b] = colorString.split(',').map(c => parseInt(c.trim()));
+            
             // Проверяем, не является ли цвет слишком светлым или белым
             const brightness = (r + g + b) / 3;
             const isTooLight = brightness > 180;
             const isTooWhite = r > 220 && g > 220 && b > 220;
-
+            
             if (isTooLight || isTooWhite) {
               // Используем темный цвет по умолчанию
               setDominantColor({ r: 87, g: 63, b: 135 });

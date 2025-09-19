@@ -62,7 +62,7 @@ const AuthService = {
     }
   },
 
-  googleLogin: async googleToken => {
+  googleLogin: async (googleToken) => {
     try {
       const response = await axios.post(
         '/api/auth/google',
@@ -100,8 +100,7 @@ const AuthService = {
       } else {
         return {
           success: false,
-          error:
-            response.data.error || 'Неизвестная ошибка при входе через Google',
+          error: response.data.error || 'Неизвестная ошибка при входе через Google',
         };
       }
     } catch (error) {

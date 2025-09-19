@@ -14,9 +14,11 @@ import MobilePlayer from '../../components/Music/MobilePlayer';
 import DesktopPlayer from '../../components/Music/DesktopPlayer';
 import InfoBlock from '../../UIKIT/InfoBlock';
 
+
 import { useArtistData } from './hooks/useArtistData';
 import { useArtistActions } from './hooks/useArtistActions';
 import { useArtistAlbums } from './hooks/useArtistAlbums';
+
 
 import ArtistHeader from './components/ArtistHeader';
 import ArtistBiography from './components/ArtistBiography';
@@ -28,12 +30,13 @@ import ErrorState from './components/ErrorState';
 import AlbumsSection from './components/AlbumsSection';
 import AlbumModal from './components/AlbumModal';
 
+
 import { ArtistPageProps } from './types';
 
 const PageContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
   backgroundColor: 'transparent',
-
+  
   paddingBottom: theme.spacing(14),
   [theme.breakpoints.up('md')]: {
     paddingBottom: theme.spacing(16),
@@ -70,7 +73,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
   const { artistParam } = useParams<{ artistParam: string }>();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  
   const {
     currentTrack,
     isPlaying,
@@ -79,6 +82,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     isFullScreenPlayerOpen,
   } = useMusic();
 
+  
   const {
     artist,
     tracks,
@@ -100,12 +104,14 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     shareArtist,
   } = useArtistActions(artist);
 
+  
   const {
     albums,
     isLoading: albumsLoading,
     error: albumsError,
   } = useArtistAlbums(artist?.id || null);
 
+  
   const handleOpenFullScreenPlayer = React.useCallback(() => {
     openFullScreenPlayer();
   }, [openFullScreenPlayer]);
@@ -116,35 +122,42 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     document.body.style.touchAction = '';
   }, [closeFullScreenPlayer]);
 
+  
   const handlePlayFirstTrack = React.useCallback(() => {
     if (tracks && tracks.length > 0) {
       handleTrackClick(tracks[0]);
     }
   }, [tracks, handleTrackClick]);
 
+  
   const handleShareClick = React.useCallback(() => {
     if (artist) {
       shareArtist(artist);
     }
   }, [artist, shareArtist]);
 
+  
   const handleNavigateToMusic = React.useCallback(() => {
     window.location.href = '/music';
   }, []);
 
+  
   const [selectedAlbum, setSelectedAlbum] = React.useState<any>(null);
   const [isAlbumModalOpen, setIsAlbumModalOpen] = React.useState(false);
 
+  
   const handleAlbumClick = React.useCallback((album: any) => {
     setSelectedAlbum(album);
     setIsAlbumModalOpen(true);
   }, []);
 
+  
   const handleCloseAlbumModal = React.useCallback(() => {
     setIsAlbumModalOpen(false);
     setSelectedAlbum(null);
   }, []);
 
+  
   if (isLoading && !artist) {
     return (
       <PageContainer>
@@ -155,6 +168,7 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     );
   }
 
+  
   if (error || !artist) {
     return (
       <PageContainer>
@@ -168,19 +182,17 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
     );
   }
 
-  const noTracksAndNotVerified =
-    (!tracks || tracks.length === 0) && !artist.verified;
+  
+  const noTracksAndNotVerified = (!tracks || tracks.length === 0) && !artist.verified;
 
   return (
-    <PageContainer marginTop='20px'>
+    <PageContainer marginTop="20px">
       <SEO
         title={`${artist.name} - К-Коннект`}
         description={`Слушайте треки ${artist.name} на К-Коннект. ${artist.bio ? artist.bio.slice(0, 150) + '...' : ''}`}
-        image={
-          artist.avatar_url || '/static/uploads/system/album_placeholder.jpg'
-        }
+        image={artist.avatar_url || '/static/uploads/system/album_placeholder.jpg'}
         url={window.location.href}
-        type='music.musician'
+        type="music.musician"
         meta={{}}
       />
 
@@ -202,48 +214,48 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
             onPlayClick={handlePlayFirstTrack}
           />
 
-          {/* Контент с ограничением ширины */}
-          <ContentContainer>
-            {/* Биография */}
-            {artist.bio && (
-              <InfoBlock
-                title='Биография'
-                description={artist.bio}
-                children={null}
-                useTheme={true}
-                style={{ marginBottom: '5px' }}
-                styleVariant='default'
-                titleStyle={{}}
-                descriptionStyle={{}}
-                customStyle={false}
-                className=''
-              />
-            )}
+                              {/* Контент с ограничением ширины */}
+                    <ContentContainer>
+                      {/* Биография */}
+                      {artist.bio && (
+                        <InfoBlock
+                          title="Биография"
+                          description={artist.bio}
+                          children={null}
+                          useTheme={true}
+                          style={{ marginBottom: '5px' }}
+                          styleVariant="default"
+                          titleStyle={{}}
+                          descriptionStyle={{}}
+                          customStyle={false}
+                          className=""
+                        />
+                      )}
 
-            {/* Альбомы */}
-            <AlbumsSection
-              albums={albums}
-              isLoading={albumsLoading}
-              error={albumsError}
-              onAlbumClick={handleAlbumClick}
-            />
+                      {/* Альбомы */}
+                      <AlbumsSection
+                        albums={albums}
+                        isLoading={albumsLoading}
+                        error={albumsError}
+                        onAlbumClick={handleAlbumClick}
+                      />
 
-            <TracksSection>
+                      <TracksSection>
               {/* Самые прослушиваемые треки */}
               {mostListenedTracks && mostListenedTracks.length > 0 && (
                 <InfoBlock
-                  title='Популярные'
-                  description=''
+                  title="Популярные"
+                  description=""
                   useTheme={true}
                   style={{ marginBottom: '5px', padding: '16px' }}
-                  styleVariant='default'
+                  styleVariant="default"
                   titleStyle={{}}
                   descriptionStyle={{}}
                   customStyle={false}
-                  className=''
+                  className=""
                 >
                   <TrackSection
-                    title=''
+                    title=""
                     tracks={mostListenedTracks}
                     featured={true}
                     onTrackClick={handleTrackClick}
@@ -280,15 +292,15 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
 
               {/* Все треки */}
               <InfoBlock
-                title='Дискография'
-                description=''
+                title="Дискография"
+                description=""
                 useTheme={true}
                 style={{ marginBottom: '5px', padding: '16px' }}
-                styleVariant='default'
+                styleVariant="default"
                 titleStyle={{}}
                 descriptionStyle={{}}
                 customStyle={false}
-                className=''
+                className=""
               >
                 {tracks && tracks.length > 0 ? (
                   <TrackList
@@ -309,7 +321,9 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
                       color: 'rgba(255, 255, 255, 0.6)',
                     }}
                   >
-                    <Typography variant='h6'>Треки не найдены</Typography>
+                    <Typography variant="h6">
+                      Треки не найдены
+                    </Typography>
                   </Box>
                 )}
               </InfoBlock>
@@ -319,23 +333,26 @@ const ArtistPage: React.FC<ArtistPageProps> = () => {
       )}
 
       {/* Мобильный плеер */}
-      <MobilePlayer isMobile={isMobile} isModalOpen={isAlbumModalOpen} />
-
-      {/* Десктопный плеер */}
-      {!isMobile && currentTrack && <DesktopPlayer />}
-
-      {/* Модалка альбома */}
-      <AlbumModal
-        album={selectedAlbum}
-        isOpen={isAlbumModalOpen}
-        onClose={handleCloseAlbumModal}
-        onTrackClick={handleTrackClick}
-        onLikeTrack={handleLikeTrack}
-        currentTrack={currentTrack}
-        isPlaying={isPlaying}
+      <MobilePlayer
+        isMobile={isMobile}
+        isModalOpen={isAlbumModalOpen}
       />
-    </PageContainer>
-  );
-};
 
-export default ArtistPage;
+              {/* Десктопный плеер */}
+        {!isMobile && currentTrack && <DesktopPlayer />}
+
+        {/* Модалка альбома */}
+        <AlbumModal
+          album={selectedAlbum}
+          isOpen={isAlbumModalOpen}
+          onClose={handleCloseAlbumModal}
+          onTrackClick={handleTrackClick}
+          onLikeTrack={handleLikeTrack}
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+        />
+      </PageContainer>
+    );
+  };
+
+  export default ArtistPage;

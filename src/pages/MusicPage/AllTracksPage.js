@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Typography,
-  IconButton,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Typography, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useMusic } from '../../context/MusicContext';

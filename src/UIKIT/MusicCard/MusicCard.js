@@ -25,7 +25,7 @@ const StyledCard = styled(Card)(({ theme, compact }) => ({
   transition: 'all 0.3s ease',
   backgroundColor:
     theme.palette.mode === 'light'
-      ? 'rgba(255, 255, 255, 0.1)'
+              ? 'rgba(255, 255, 255, 0.1)'
       : theme.palette.mode === 'contrast'
         ? 'rgba(255, 255, 255, 0.02)'
         : alpha(theme.palette.common.white, 0.05),
@@ -83,7 +83,7 @@ const HoverControls = styled(Box)(({ theme }) => ({
 }));
 
 const PlayButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.9))',
   color:
     theme.palette.mode === 'light'
       ? theme.palette.primary.main

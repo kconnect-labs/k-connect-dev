@@ -12,8 +12,7 @@ export const URL_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
 
 // Регулярка для @упоминаний пользователей - поддерживает кириллицу и латиницу
-export const USERNAME_MENTION_REGEX =
-  /(^|[^а-яА-Яa-zA-Z0-9_])@([а-яА-Яa-zA-Z0-9_]+)/g;
+export const USERNAME_MENTION_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])@([а-яА-Яa-zA-Z0-9_]+)/g;
 
 // Регулярка для #хештегов (поддерживает латиницу и кириллицу) - Safari-совместимая версия
 export const HASHTAG_REGEX = /(^|[^а-яА-Яa-zA-Z0-9_])#([а-яА-Яa-zA-Z0-9_]+)/g;
@@ -104,126 +103,126 @@ export const LinkPreview = ({ url }) => {
       }}
     >
       {preview?.image && (
-        <Box
-          sx={{
-            width: 90,
-            height: 90,
-            flexShrink: 0,
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
+            <Box
+              sx={{
+                width: 90,
+                height: 90,
+                flexShrink: 0,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              <Box
+                component='img'
+                src={preview.image}
+                alt={preview.title || 'Ссылка'}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                onError={e => {
+                  e.target.onerror = null;
+                  e.target.style.display = 'none';
+                }}
+              />
+            </Box>
+          )}
           <Box
-            component='img'
-            src={preview.image}
-            alt={preview.title || 'Ссылка'}
             sx={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.style.display = 'none';
-            }}
-          />
-        </Box>
-      )}
-      <Box
-        sx={{
-          p: 1.5,
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          borderLeft: preview?.image
-            ? '1px solid rgba(255, 255, 255, 0.08)'
-            : 'none',
-          backgroundColor: 'rgba(0, 0, 0, 0.02)',
-        }}
-      >
-        <Typography
-          component='div'
-          variant='body2'
-          sx={{
-            margin: 0,
-            fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-            fontWeight: 500,
-            fontSize: '0.85rem',
-            lineHeight: 1.57,
-            color: theme.palette.text.primary,
-            display: 'flex',
-            alignItems: 'center',
-            mb: 0.5,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {(preview?.title || getDomainName(url)).length > 35
-            ? `${(preview?.title || getDomainName(url)).substring(0, 35)}...`
-            : preview?.title || getDomainName(url)}
-        </Typography>
-        {preview?.description && (
-          <Typography
-            component='div'
-            variant='caption'
-            sx={{
-              margin: 0,
-              fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-              color: theme.palette.text.secondary,
-              fontSize: '0.75rem',
-              lineHeight: 1.4,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              mb: 0.5,
+              p: 1.5,
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              borderLeft: preview?.image
+                ? '1px solid rgba(255, 255, 255, 0.08)'
+                : 'none',
+              backgroundColor: 'rgba(0, 0, 0, 0.02)',
             }}
           >
-            {preview.description.length > 50
-              ? `${preview.description.substring(0, 50)}...`
-              : preview.description}
-          </Typography>
-        )}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: theme.palette.primary.main + '10',
-            py: 0.25,
-            px: 0.75,
-            borderRadius: '4px',
-            width: 'fit-content',
-          }}
-        >
-          <LinkIcon
-            fontSize='small'
-            sx={{
-              color: theme.palette.primary.main,
-              mr: 0.5,
-              fontSize: '0.75rem',
-            }}
-          />
-          <Typography
-            component='span'
-            variant='caption'
-            sx={{
-              margin: 0,
-              fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
-              color: theme.palette.text.secondary,
-              fontWeight: 500,
-              fontSize: '0.7rem',
-              lineHeight: 1.57,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-            noWrap
-          >
-            {getDomainName(url)}
-          </Typography>
-        </Box>
-      </Box>
+            <Typography
+              component='div'
+              variant='body2'
+              sx={{
+                margin: 0,
+                fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
+                fontWeight: 500,
+                fontSize: '0.85rem',
+                lineHeight: 1.57,
+                color: theme.palette.text.primary,
+                display: 'flex',
+                alignItems: 'center',
+                mb: 0.5,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {(preview?.title || getDomainName(url)).length > 35
+                ? `${(preview?.title || getDomainName(url)).substring(0, 35)}...`
+                : preview?.title || getDomainName(url)}
+            </Typography>
+            {preview?.description && (
+              <Typography
+                component='div'
+                variant='caption'
+                sx={{
+                  margin: 0,
+                  fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
+                  color: theme.palette.text.secondary,
+                  fontSize: '0.75rem',
+                  lineHeight: 1.4,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  mb: 0.5,
+                }}
+              >
+                {preview.description.length > 50
+                  ? `${preview.description.substring(0, 50)}...`
+                  : preview.description}
+              </Typography>
+            )}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: theme.palette.primary.main + '10',
+                py: 0.25,
+                px: 0.75,
+                borderRadius: '4px',
+                width: 'fit-content',
+              }}
+            >
+              <LinkIcon
+                fontSize='small'
+                sx={{
+                  color: theme.palette.primary.main,
+                  mr: 0.5,
+                  fontSize: '0.75rem',
+                }}
+              />
+              <Typography
+                component='span'
+                variant='caption'
+                sx={{
+                  margin: 0,
+                  fontFamily: '"SF Pro Display", "Roboto", "Arial", sans-serif',
+                  color: theme.palette.text.secondary,
+                  fontWeight: 500,
+                  fontSize: '0.7rem',
+                  lineHeight: 1.57,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+                noWrap
+              >
+                {getDomainName(url)}
+              </Typography>
+            </Box>
+          </Box>
     </Paper>
   );
 };
@@ -521,9 +520,9 @@ export const TextWithLinks = ({ text }) => {
 };
 
 // Функция для группировки ссылок по доменам
-export const groupUrlsByDomain = urls => {
+export const groupUrlsByDomain = (urls) => {
   const domainGroups = {};
-
+  
   urls.forEach(url => {
     try {
       const hostname = new URL(url).hostname.replace('www.', '');
@@ -540,7 +539,7 @@ export const groupUrlsByDomain = urls => {
       domainGroups[fallbackKey].push(url);
     }
   });
-
+  
   // Возвращаем максимум 3 группы, каждая с первой ссылкой
   return Object.values(domainGroups)
     .slice(0, 3)
@@ -550,10 +549,10 @@ export const groupUrlsByDomain = urls => {
 // Компонент для отображения сгруппированных link preview
 export const GroupedLinkPreviews = ({ urls, maxCount = 3 }) => {
   if (!urls || urls.length === 0) return null;
-
+  
   const groupedUrls = groupUrlsByDomain(urls);
   const displayUrls = groupedUrls.slice(0, maxCount);
-
+  
   return (
     <Box sx={{ mt: 2, mb: 1 }}>
       {displayUrls.map((url, index) => (

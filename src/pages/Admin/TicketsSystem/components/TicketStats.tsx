@@ -72,13 +72,8 @@ const StatCard: React.FC<{
   return (
     <StyledCard>
       <CardContent>
-        <Box
-          display='flex'
-          alignItems='center'
-          justifyContent='space-between'
-          mb={2}
-        >
-          <Box display='flex' alignItems='center' gap={1}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+          <Box display="flex" alignItems="center" gap={1}>
             <Box
               sx={{
                 color,
@@ -88,16 +83,13 @@ const StatCard: React.FC<{
             >
               {icon}
             </Box>
-            <Typography
-              variant='h6'
-              sx={{ color: 'rgba(255, 255, 255, 0.87)' }}
-            >
+            <Typography variant="h6" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>
               {title}
             </Typography>
           </Box>
           <Chip
             label={`${value}/${total}`}
-            size='small'
+            size="small"
             sx={{
               background: color,
               color: 'white',
@@ -106,7 +98,7 @@ const StatCard: React.FC<{
           />
         </Box>
         <LinearProgress
-          variant='determinate'
+          variant="determinate"
           value={percentage}
           sx={{
             height: 8,
@@ -118,10 +110,7 @@ const StatCard: React.FC<{
             },
           }}
         />
-        <Typography
-          variant='caption'
-          sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: 1, display: 'block' }}
-        >
+        <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.6)', mt: 1, display: 'block' }}>
           {percentage.toFixed(1)}% от общего количества
         </Typography>
       </CardContent>
@@ -137,10 +126,7 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
     const reasonLower = reason.toLowerCase();
     if (reasonLower.includes('спам') || reasonLower.includes('реклама')) {
       return <ContentPaste />;
-    } else if (
-      reasonLower.includes('оскорбление') ||
-      reasonLower.includes('угроза')
-    ) {
+    } else if (reasonLower.includes('оскорбление') || reasonLower.includes('угроза')) {
       return <Security />;
     } else if (reasonLower.includes('баг') || reasonLower.includes('ошибка')) {
       return <BugReport />;
@@ -166,29 +152,25 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
   };
 
   // Статистика по категориям
-  const categoryStats = tickets.reduce(
-    (acc, ticket) => {
-      acc[ticket.category] = (acc[ticket.category] || 0) + 1;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+  const categoryStats = tickets.reduce((acc, ticket) => {
+    acc[ticket.category] = (acc[ticket.category] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
 
   // Статистика по причинам жалоб
-  const reasonStats = tickets.reduce(
-    (acc, ticket) => {
-      if (ticket.reason) {
-        acc[ticket.reason] = (acc[ticket.reason] || 0) + 1;
-      }
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+  const reasonStats = tickets.reduce((acc, ticket) => {
+    if (ticket.reason) {
+      acc[ticket.reason] = (acc[ticket.reason] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
 
   // Сортируем причины по количеству (топ-5)
   const topReasons = Object.entries(reasonStats)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5);
+
+
 
   // Активные тикеты (не закрытые)
   const activeTickets = tickets.filter(t => t.status !== 'closed').length;
@@ -198,11 +180,7 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
 
   return (
     <Box>
-      <Typography
-        variant='h5'
-        gutterBottom
-        sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 3 }}
-      >
+      <Typography variant="h5" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 3 }}>
         Статистика тикетов
       </Typography>
 
@@ -210,132 +188,124 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
       <Grid container spacing={3} mb={4}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Всего тикетов'
+            title="Всего тикетов"
             value={totalTickets}
             total={totalTickets}
-            color='#d0bcff'
+            color="#d0bcff"
             icon={<TrendingUp />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Активные'
+            title="Активные"
             value={activeTickets}
             total={totalTickets}
-            color='#FF9800'
+            color="#FF9800"
             icon={<Schedule />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Назначенные'
+            title="Назначенные"
             value={assignedTickets}
             total={totalTickets}
-            color='#4CAF50'
+            color="#4CAF50"
             icon={<Assignment />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Решенные'
+            title="Решенные"
             value={statusStats.resolved}
             total={totalTickets}
-            color='#9C27B0'
+            color="#9C27B0"
             icon={<CheckCircle />}
           />
         </Grid>
       </Grid>
 
       {/* Статистика по статусам */}
-      <Typography
-        variant='h6'
-        gutterBottom
-        sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
-      >
+      <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
         По статусам
       </Typography>
       <Grid container spacing={2} mb={4}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Новые'
+            title="Новые"
             value={statusStats.new}
             total={totalTickets}
-            color='#d0bcff'
+            color="#d0bcff"
             icon={<Schedule />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='В работе'
+            title="В работе"
             value={statusStats.in_progress}
             total={totalTickets}
-            color='#FF9800'
+            color="#FF9800"
             icon={<Assignment />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Решенные'
+            title="Решенные"
             value={statusStats.resolved}
             total={totalTickets}
-            color='#4CAF50'
+            color="#4CAF50"
             icon={<CheckCircle />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Закрытые'
+            title="Закрытые"
             value={statusStats.closed}
             total={totalTickets}
-            color='#9E9E9E'
+            color="#9E9E9E"
             icon={<TrendingDown />}
           />
         </Grid>
       </Grid>
 
       {/* Статистика по приоритетам */}
-      <Typography
-        variant='h6'
-        gutterBottom
-        sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
-      >
+      <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
         По приоритетам
       </Typography>
       <Grid container spacing={2} mb={4}>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Срочные'
+            title="Срочные"
             value={priorityStats.urgent}
             total={totalTickets}
-            color='#F44336'
-            icon={<PriorityIcon priority='urgent' size='medium' />}
+            color="#F44336"
+            icon={<PriorityIcon priority="urgent" size="medium" />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Высокие'
+            title="Высокие"
             value={priorityStats.high}
             total={totalTickets}
-            color='#FF9800'
-            icon={<PriorityIcon priority='high' size='medium' />}
+            color="#FF9800"
+            icon={<PriorityIcon priority="high" size="medium" />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Средние'
+            title="Средние"
             value={priorityStats.medium}
             total={totalTickets}
-            color='#d0bcff'
-            icon={<PriorityIcon priority='medium' size='medium' />}
+            color="#d0bcff"
+            icon={<PriorityIcon priority="medium" size="medium" />}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatCard
-            title='Низкие'
+            title="Низкие"
             value={priorityStats.low}
             total={totalTickets}
-            color='#4CAF50'
-            icon={<PriorityIcon priority='low' size='medium' />}
+            color="#4CAF50"
+            icon={<PriorityIcon priority="low" size="medium" />}
           />
         </Grid>
       </Grid>
@@ -343,11 +313,7 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
       {/* Статистика по категориям */}
       {Object.keys(categoryStats).length > 0 && (
         <>
-          <Typography
-            variant='h6'
-            gutterBottom
-            sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
-          >
+          <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
             По категориям
           </Typography>
           <Grid container spacing={2} mb={4}>
@@ -357,7 +323,7 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
                   title={category.charAt(0).toUpperCase() + category.slice(1)}
                   value={count}
                   total={totalTickets}
-                  color='#9C27B0'
+                  color="#9C27B0"
                   icon={<TrendingUp />}
                 />
               </Grid>
@@ -369,33 +335,17 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
       {/* Топ причин жалоб */}
       {topReasons.length > 0 && (
         <>
-          <Typography
-            variant='h6'
-            gutterBottom
-            sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}
-          >
+          <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255, 255, 255, 0.87)', mb: 2 }}>
             Топ причин жалоб
           </Typography>
           <Grid container spacing={2}>
             {topReasons.map(([reason, count], index) => (
               <Grid item xs={12} sm={6} md={4} key={reason}>
                 <StatCard
-                  title={
-                    reason.length > 20
-                      ? reason.substring(0, 20) + '...'
-                      : reason
-                  }
+                  title={reason.length > 20 ? reason.substring(0, 20) + '...' : reason}
                   value={count}
                   total={totalTickets}
-                  color={
-                    index === 0
-                      ? '#F44336'
-                      : index === 1
-                        ? '#FF9800'
-                        : index === 2
-                          ? '#d0bcff'
-                          : '#4CAF50'
-                  }
+                  color={index === 0 ? '#F44336' : index === 1 ? '#FF9800' : index === 2 ? '#d0bcff' : '#4CAF50'}
                   icon={getReasonIcon(reason)}
                 />
               </Grid>
@@ -407,4 +357,4 @@ const TicketStats: React.FC<TicketStatsProps> = ({ tickets }) => {
   );
 };
 
-export default TicketStats;
+export default TicketStats; 

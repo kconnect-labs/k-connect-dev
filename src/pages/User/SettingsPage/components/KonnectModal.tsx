@@ -336,10 +336,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
 
     return (
       <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Typography
-          variant='h6'
-          sx={{ mb: 2, color: 'var(--theme-text-primary)' }}
-        >
+        <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
           Новый коннект
         </Typography>
         <Box
@@ -406,10 +403,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
   // Рендер подключенных коннектов
   const renderConnectedView = () => (
     <Box sx={{ p: 2 }}>
-      <Typography
-        variant='h6'
-        sx={{ mb: 2, color: 'var(--theme-text-primary)' }}
-      >
+      <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
         Ваши коннекты
       </Typography>
       {connections
@@ -437,9 +431,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                   sx={{ mr: 2 }}
                 />
                 <Box>
-                  <Typography
-                    sx={{ color: 'var(--theme-text-primary)', fontWeight: 500 }}
-                  >
+                  <Typography sx={{ color: 'var(--theme-text-primary)', fontWeight: 500 }}>
                     {connection.username}
                   </Typography>
                   <Typography
@@ -624,8 +616,8 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
           maxWidth: { xs: '100%', sm: 550 },
           height: { xs: '100vh', sm: 'auto' },
           minHeight: { xs: '100vh', sm: 400 },
-          bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                      bgcolor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           borderRadius: { xs: 0, sm: '24px' },
           boxShadow: 24,
           position: 'relative',
@@ -645,10 +637,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
           justifyContent: 'space-between',
         }}
       >
-        <Typography
-          variant='h6'
-          sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}
-        >
+        <Typography variant='h6' sx={{ color: 'var(--theme-text-primary)', fontWeight: 600 }}>
           Коннектики
         </Typography>
         <IconButton

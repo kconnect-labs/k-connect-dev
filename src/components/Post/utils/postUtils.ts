@@ -3,10 +3,7 @@ import { parseDate } from '../../../utils/dateUtils';
 import { staticCache } from '../../../utils/staticCache';
 
 // Media processing functions
-export const processImages = (
-  post: any,
-  mediaError: { type: string | null; url: string | null }
-) => {
+export const processImages = (post: any, mediaError: { type: string | null; url: string | null }) => {
   if (mediaError.type === 'image') {
     return [];
   }
@@ -31,13 +28,13 @@ export const processImages = (
 // Функция для обработки размеров изображений
 export const processImageDimensions = (post: any) => {
   const dimensions: Record<string, any> = {};
-
+  
   if (post?.image_dimensions) {
     // Если есть одно изображение
     if (post.image && typeof post.image === 'string') {
       dimensions[post.image] = post.image_dimensions;
     }
-
+    
     // Если есть массив изображений
     if (post.images && Array.isArray(post.images)) {
       post.images.forEach((imageUrl: string, index: number) => {
@@ -50,7 +47,7 @@ export const processImageDimensions = (post: any) => {
       });
     }
   }
-
+  
   return dimensions;
 };
 
@@ -182,8 +179,7 @@ export const isPostEditable = (post: any) => {
 
   const postTime = parseDate(post.timestamp);
   const currentTime = new Date();
-  const timeDifference =
-    (currentTime.getTime() - postTime.getTime()) / (1000 * 60 * 60);
+  const timeDifference = (currentTime.getTime() - postTime.getTime()) / (1000 * 60 * 60);
 
   return timeDifference <= 3;
 };
@@ -198,10 +194,11 @@ export const getRandomSize = () => {
   return Math.floor(Math.random() * 40) + 60;
 };
 
-export const incrementViewCount = async (
-  postId: string,
-  currentViews: number
-) => {
+
+
+
+
+export const incrementViewCount = async (postId: string, currentViews: number) => {
   if (!postId || postId === 'undefined') {
     return currentViews;
   }
@@ -253,16 +250,12 @@ export const createLightboxHandlers = (
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex(
-      prevIndex => (prevIndex + 1) % processImages(post, mediaError).length
-    );
+    setCurrentImageIndex(prevIndex => (prevIndex + 1) % processImages(post, mediaError).length);
   };
 
   const handlePrevImage = () => {
     setCurrentImageIndex(
-      prevIndex =>
-        (prevIndex - 1 + processImages(post, mediaError).length) %
-        processImages(post, mediaError).length
+      prevIndex => (prevIndex - 1 + processImages(post, mediaError).length) % processImages(post, mediaError).length
     );
   };
 
@@ -297,10 +290,7 @@ export const createCopyLinkHandler = (postId: string) => {
   return () => {
     // Проверяем, что postId существует
     if (!postId || postId === 'undefined') {
-      console.warn(
-        'createCopyLinkHandler: postId is undefined or invalid:',
-        postId
-      );
+      console.warn('createCopyLinkHandler: postId is undefined or invalid:', postId);
       window.dispatchEvent(
         new CustomEvent('show-error', {
           detail: {
@@ -405,13 +395,10 @@ export const createCommentClickHandler = (
 export const createShareHandler = (postId: string) => {
   return (e: React.MouseEvent) => {
     e.stopPropagation();
-
+    
     // Проверяем, что postId существует
     if (!postId || postId === 'undefined') {
-      console.warn(
-        'createShareHandler: postId is undefined or invalid:',
-        postId
-      );
+      console.warn('createShareHandler: postId is undefined or invalid:', postId);
       window.dispatchEvent(
         new CustomEvent('show-error', {
           detail: {
@@ -490,4 +477,4 @@ export const createOpenImageHandler = (
       }
     }
   };
-};
+}; 

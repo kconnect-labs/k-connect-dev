@@ -189,10 +189,10 @@ const StatusForm: React.FC<StatusFormProps> = ({
               subscription.type === 'pick-me') &&
             subscription.active) ||
           (profileData.main_account_subscription &&
-            (profileData.main_account_subscription.type === 'premium' ||
-              profileData.main_account_subscription.type === 'ultimate' ||
-              profileData.main_account_subscription.type === 'max' ||
-              profileData.main_account_subscription.type === 'pick-me') &&
+                      (profileData.main_account_subscription.type === 'premium' ||
+            profileData.main_account_subscription.type === 'ultimate' ||
+            profileData.main_account_subscription.type === 'max' ||
+            profileData.main_account_subscription.type === 'pick-me') &&
             profileData.main_account_subscription.active);
 
         setIsPremium(hasValidSubscription);
@@ -202,8 +202,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
             (subscription.type === 'ultimate' || subscription.type === 'max') &&
             subscription.active) ||
           (profileData.main_account_subscription &&
-            (profileData.main_account_subscription.type === 'ultimate' ||
-              profileData.main_account_subscription.type === 'max') &&
+            (profileData.main_account_subscription.type === 'ultimate' || profileData.main_account_subscription.type === 'max') &&
             profileData.main_account_subscription.active);
 
         setIsUltimate(hasUltimateSubscription);
@@ -479,8 +478,8 @@ const StatusForm: React.FC<StatusFormProps> = ({
   };
 
   const containerStyle = {
-    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
     borderRadius: '18px',
     padding: '20px',
@@ -531,10 +530,9 @@ const StatusForm: React.FC<StatusFormProps> = ({
                 Функция доступна только для Premium-подписки
               </AlertTitle>
               Статус профиля доступен только пользователям с подписками{' '}
-              <strong>Premium</strong>, <strong>Ultimate</strong>,{' '}
-              <strong>MAX</strong> или <strong>Pick-me</strong>. Оформите
-              подписку, чтобы установить свой уникальный статус и выделиться
-              среди других пользователей.
+              <strong>Premium</strong>, <strong>Ultimate</strong>, <strong>MAX</strong> или{' '}
+              <strong>Pick-me</strong>. Оформите подписку, чтобы установить свой
+              уникальный статус и выделиться среди других пользователей.
             </Alert>
           ) : (
             <>
@@ -685,8 +683,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                   maxWidth='sm'
                   PaperProps={{
                     sx: {
-                      bgcolor:
-                        'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
+                      bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                       color: 'var(--theme-text-primary)',
                       borderRadius: 'var(--main-border-radius)',
                       boxShadow: theme.shadows[24],

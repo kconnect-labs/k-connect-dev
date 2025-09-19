@@ -13,27 +13,27 @@ export const useReportHandlers = (
   const reportReasons = getReportReasons(t);
 
   const handleReportClick = () => {
-    setDialogState(prev => ({
-      ...prev,
-      reportDialog: {
-        ...prev.reportDialog,
+    setDialogState(prev => ({ 
+      ...prev, 
+      reportDialog: { 
+        ...prev.reportDialog, 
         open: true,
         reason: '',
         customReason: '',
-        error: null,
-      },
+        error: null
+      } 
     }));
   };
 
   const handleReportSubmit = async () => {
     try {
-      setDialogState(prev => ({
-        ...prev,
-        reportDialog: {
-          ...prev.reportDialog,
-          submitting: true,
-          error: null,
-        },
+      setDialogState(prev => ({ 
+        ...prev, 
+        reportDialog: { 
+          ...prev.reportDialog, 
+          submitting: true, 
+          error: null 
+        } 
       }));
 
       const reportData = {
@@ -41,10 +41,7 @@ export const useReportHandlers = (
         custom_reason: dialogState.reportDialog.customReason,
       };
 
-      const response = await axios.post(
-        `/api/posts/${post.id}/report`,
-        reportData
-      );
+      const response = await axios.post(`/api/posts/${post.id}/report`, reportData);
 
       if (response.data.success) {
         setDialogState(prev => ({
@@ -65,10 +62,7 @@ export const useReportHandlers = (
         reportDialog: {
           ...prev.reportDialog,
           submitting: false,
-          error:
-            error.response?.data?.error ||
-            error.message ||
-            'Ошибка при отправке жалобы',
+          error: error.response?.data?.error || error.message || 'Ошибка при отправке жалобы',
         },
       }));
     }
@@ -79,4 +73,4 @@ export const useReportHandlers = (
     handleReportClick,
     handleReportSubmit,
   };
-};
+}; 

@@ -47,59 +47,27 @@ const ProfileSkeleton = () => {
       <Grid
         container
         spacing={0.5}
-        sx={{
-          flexDirection: { xs: 'column', lg: 'row' },
-          flexWrap: { xs: 'nowrap', lg: 'nowrap' },
-        }}
+        sx={{ flexDirection: { xs: 'column', lg: 'row' }, flexWrap: { xs: 'nowrap', lg: 'nowrap' } }}
       >
         {/* Левая колонка (информация профиля) */}
         <Grid item xs={12} lg={5}>
           <Paper
-            sx={{
-              borderRadius: '16px',
-              overflow: 'hidden',
-              mb: '5px',
-              background: 'var(--theme-background, rgba(255,255,255,0.03))',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            }}
+            sx={{ borderRadius: '16px', overflow: 'hidden', mb: '5px', background: 'var(--theme-background, rgba(255,255,255,0.03))', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
           >
             {/* Баннер */}
             <Skeleton
               variant='rectangular'
-              sx={{
-                width: '100%',
-                height: { xs: 90, sm: 90 },
-                bgcolor: 'transparent',
-              }}
+              sx={{ width: '100%', height: { xs: 90, sm: 90 }, bgcolor: 'transparent' }}
             />
 
             <Box sx={{ px: 3, pb: 3, pt: 0, mt: -7 }}>
               {/* Аватар */}
-              <Skeleton
-                variant='circular'
-                width={130}
-                height={130}
-                sx={{ mt: -8, bgcolor: skeletonBgColor }}
-                animation='wave'
-              />
+              <Skeleton variant='circular' width={130} height={130} sx={{ mt: -8, bgcolor: skeletonBgColor }} animation='wave' />
 
               {/* Имя */}
-              <Skeleton
-                variant='text'
-                width='60%'
-                height={32}
-                sx={{ mt: 2, bgcolor: skeletonBgColor }}
-                animation='wave'
-              />
+              <Skeleton variant='text' width='60%' height={32} sx={{ mt: 2, bgcolor: skeletonBgColor }} animation='wave' />
               {/* Username */}
-              <Skeleton
-                variant='text'
-                width='40%'
-                height={24}
-                sx={{ bgcolor: skeletonBgColor }}
-                animation='wave'
-              />
+              <Skeleton variant='text' width='40%' height={24} sx={{ bgcolor: skeletonBgColor }} animation='wave' />
 
               {/* Статистика */}
               <Grid container spacing={1} sx={{ mt: 1 }}>
@@ -122,26 +90,10 @@ const ProfileSkeleton = () => {
         {/* Правая колонка (лента постов) */}
         <Grid item xs={12} lg={7}>
           {/* Таббар */}
-          <Paper
-            sx={{
-              borderRadius: '18px',
-              mb: '5px',
-              overflow: 'hidden',
-              background: 'var(--theme-background, rgba(255,255,255,0.03))',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            }}
-          >
+          <Paper sx={{ borderRadius: '18px', mb: '5px', overflow: 'hidden', background: 'var(--theme-background, rgba(255,255,255,0.03))', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
             <Box sx={{ display: 'flex' }}>
               {Array.from({ length: 4 }).map((_, idx) => (
-                <Skeleton
-                  key={idx}
-                  variant='rectangular'
-                  width='25%'
-                  height={48}
-                  animation='wave'
-                  sx={{ bgcolor: skeletonBgColor }}
-                />
+                <Skeleton key={idx} variant='rectangular' width='25%' height={48} animation='wave' sx={{ bgcolor: skeletonBgColor }} />
               ))}
             </Box>
           </Paper>
@@ -156,4 +108,4 @@ const ProfileSkeleton = () => {
   );
 };
 
-export default ProfileSkeleton;
+export default ProfileSkeleton; 

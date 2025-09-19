@@ -52,11 +52,9 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  
   const [cacheInfo, setCacheInfo] = useState<any>(null);
-  const [fileTypeStats, setFileTypeStats] = useState<Record<string, number>>(
-    {}
-  );
+  const [fileTypeStats, setFileTypeStats] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [clearing, setClearing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +63,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
   const loadCacheInfo = async () => {
     setLoading(true);
     setError(null);
-
+    
     try {
       const [info, stats, sizes, folders, badgeStats, staticStats] = await Promise.all([
         getCacheInfo(),
@@ -75,10 +73,10 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
         badgeCache.getCacheStats(),
         staticCache.getCacheStats(),
       ]);
-
+      
       setCacheInfo(info);
       setFileTypeStats(stats);
-
+      
       // Создаем категории на основе папок и типов файлов
       const newCategories: CacheCategory[] = [
         {
@@ -86,12 +84,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           name: 'Фотографии',
           icon: <Image />,
           color: '#FF6B35',
-          size:
-            (sizes.jpg || 0) +
-            (sizes.jpeg || 0) +
-            (sizes.png || 0) +
-            (sizes.gif || 0) +
-            (sizes.webp || 0),
+          size: (sizes.jpg || 0) + (sizes.jpeg || 0) + (sizes.png || 0) + (sizes.gif || 0) + (sizes.webp || 0),
           selected: true,
         },
         {
@@ -143,23 +136,23 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           selected: true,
         },
         {
-          id: 'videos',
-          name: 'Видео',
-          icon: <Article />,
-          color: '#4ECDC4',
-          size: (sizes.mp4 || 0) + (sizes.ogg || 0),
-          selected: true,
-        },
-        {
-          id: 'audio',
-          name: 'Аудио',
-          icon: <MusicNote />,
-          color: '#45B7D1',
-          size: (sizes.mp3 || 0) + (sizes.wav || 0),
-          selected: true,
-        },
+            id: 'videos',
+            name: 'Видео',
+            icon: <Article />,
+            color: '#4ECDC4',
+            size: (sizes.mp4 || 0) + (sizes.ogg || 0),
+            selected: true,
+          },
+          {
+            id: 'audio',
+            name: 'Аудио',
+            icon: <MusicNote />,
+            color: '#45B7D1',
+            size: (sizes.mp3 || 0) + (sizes.wav || 0),
+            selected: true,
+          },
       ];
-
+      
       setCategories(newCategories);
     } catch (err) {
       setError('Не удалось загрузить информацию о кеше');
@@ -172,7 +165,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
   const handleClearCache = async () => {
     setClearing(true);
     setError(null);
-
+    
     try {
       // Получаем выбранные категории
       const selectedCategories = categories.filter(cat => cat.selected);
@@ -213,20 +206,22 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
   };
 
   const handleCategoryToggle = (categoryId: string) => {
-    setCategories(prev =>
-      prev.map(cat =>
-        cat.id === categoryId ? { ...cat, selected: !cat.selected } : cat
+    setCategories(prev => 
+      prev.map(cat => 
+        cat.id === categoryId 
+          ? { ...cat, selected: !cat.selected }
+          : cat
       )
     );
   };
 
   const formatBytes = (bytes: number): string => {
     if (bytes === 0) return '0 Б';
-
+    
     const k = 1024;
     const sizes = ['Б', 'КБ', 'МБ', 'ГБ'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-
+    
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
@@ -247,7 +242,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
   const renderPieChart = () => {
     const selectedCategories = getSelectedCategories();
     const selectedTotalSize = calculateSelectedSize();
-
+    
     if (selectedTotalSize === 0) {
       return (
         <motion.div
@@ -268,7 +263,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
               position: 'relative',
             }}
           >
-            <Typography variant='h6' color='text.secondary'>
+            <Typography variant="h6" color="text.secondary">
               Нет выбранных
             </Typography>
           </Box>
@@ -283,13 +278,12 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
 
     return (
       <Box sx={{ position: 'relative', width: 200, height: 200 }}>
-        <svg width='200' height='200' viewBox='0 0 200 200'>
+        <svg width="200" height="200" viewBox="0 0 200 200">
           {categories
             .filter(category => category.size > 0)
             .map((category, index) => {
               const isSelected = category.selected;
-              const percentage =
-                selectedTotalSize > 0 ? category.size / selectedTotalSize : 0;
+              const percentage = selectedTotalSize > 0 ? (category.size / selectedTotalSize) : 0;
               const angle = isSelected ? percentage * 360 : 0;
               const startAngle = currentAngle;
               currentAngle += angle;
@@ -308,7 +302,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                 `M ${centerX} ${centerY}`,
                 `L ${x1} ${y1}`,
                 `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-                'Z',
+                'Z'
               ].join(' ');
 
               return (
@@ -316,28 +310,28 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                   key={category.id}
                   d={pathData}
                   fill={category.color}
-                  stroke='rgba(255, 255, 255, 0.15)'
-                  strokeWidth='3'
-                  animate={{
+                  stroke="rgba(255, 255, 255, 0.15)"
+                  strokeWidth="3"
+                  animate={{ 
                     opacity: isSelected ? 1 : 0.3,
-                    scale: isSelected ? 1 : 0.8,
+                    scale: isSelected ? 1 : 0.8
                   }}
-                  transition={{
+                  transition={{ 
                     duration: 0.4,
-                    type: 'spring',
+                    type: "spring",
                     stiffness: 200,
-                    damping: 15,
+                    damping: 15
                   }}
                   style={{
-                    filter: isSelected
-                      ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'
+                    filter: isSelected 
+                      ? 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))' 
                       : 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))',
                   }}
                 />
               );
             })}
         </svg>
-
+        
         {/* Центральный текст */}
         <Box
           sx={{
@@ -360,25 +354,18 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
         >
           <motion.div
             animate={{ scale: 1, opacity: 1 }}
-            transition={{
+            transition={{ 
               duration: 0.3,
-              type: 'spring',
+              type: "spring",
               stiffness: 200,
-              damping: 15,
+              damping: 15
             }}
           >
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <Typography
-                variant='h6'
-                sx={{
-                  fontSize: '0.9rem',
-                  fontWeight: 600,
-                  color: 'var(--theme-text-primary)',
-                }}
-              >
+              <Typography variant="h6" sx={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--theme-text-primary)' }}>
                 {formatBytes(selectedTotalSize)}
               </Typography>
             </motion.div>
@@ -399,20 +386,20 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
       <Dialog
         open={open}
         onClose={onClose}
-        maxWidth='sm'
+        maxWidth="sm"
         fullWidth
         fullScreen={isMobile}
         PaperProps={{
-          sx: {
-            background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-            backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-            border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: isMobile ? 0 : 2,
-          },
+                  sx: {
+          background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+          backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+          border: '1px solid rgba(0, 0, 0, 0.12)',
+          borderRadius: isMobile ? 0 : 2,
+        },
         }}
       >
         <DialogContent sx={{ p: 3 }}>
-          <Alert severity='warning'>
+          <Alert severity="warning">
             Ваш браузер не поддерживает кеширование медиа контента
           </Alert>
         </DialogContent>
@@ -424,7 +411,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth='md'
+      maxWidth="md"
       fullWidth
       fullScreen={isMobile}
       PaperProps={{
@@ -435,6 +422,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           borderRadius: isMobile ? 0 : 1,
           minHeight: isMobile ? '100vh' : 600,
           maxWidth: isMobile ? '100%' : 400,
+
         },
       }}
     >
@@ -454,10 +442,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
               <ArrowBackIcon />
             </IconButton>
           )}
-          <Typography
-            variant='h6'
-            sx={{ color: 'var(--theme-text-secondary)' }}
-          >
+          <Typography variant="h6" sx={{ color: 'var(--theme-text-secondary)' }}>
             Управление кешем
           </Typography>
         </Box>
@@ -470,7 +455,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
 
       <DialogContent sx={{ p: 2 }}>
         {error && (
-          <Alert severity='error' sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
@@ -488,17 +473,18 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
 
             {/* Информация об использовании */}
             <Box sx={{ textAlign: 'center', mb: 2 }}>
-              <Typography variant='h6' sx={{ mb: 1 }}>
+              <Typography variant="h6" sx={{ mb: 1 }}>
                 Использование памяти
               </Typography>
-              <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-                Выбрано {formatBytes(calculateSelectedSize())} из{' '}
-                {formatBytes(calculateTotalSize())} кэша
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Выбрано {formatBytes(calculateSelectedSize())} из {formatBytes(calculateTotalSize())} кэша
               </Typography>
+              
+
             </Box>
 
             {/* Инструкция */}
-            <Typography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               Нажмите на категорию, чтобы выбрать или отменить выбор для очистки
             </Typography>
 
@@ -508,16 +494,16 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                 <motion.div
                   key={category.id}
                   initial={{ x: -50, opacity: 0 }}
-                  animate={{
-                    x: 0,
+                  animate={{ 
+                    x: 0, 
                     opacity: category.selected ? 1 : 0.6,
-                    scale: category.selected ? 1 : 0.98,
+                    scale: category.selected ? 1 : 0.98
                   }}
-                  transition={{
-                    duration: 0.4,
+                  transition={{ 
+                    duration: 0.4, 
                     delay: 0.1 + index * 0.1,
-                    type: 'spring',
-                    stiffness: 100,
+                    type: "spring",
+                    stiffness: 100
                   }}
                 >
                   <Box
@@ -526,18 +512,18 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                       alignItems: 'center',
                       p: 1.5,
                       mb: 1,
-                      background: category.selected
-                        ? 'rgba(255, 255, 255, 0.08)'
+                      background: category.selected 
+                        ? 'rgba(255, 255, 255, 0.08)' 
                         : 'rgba(255, 255, 255, 0.03)',
                       borderRadius: 'var(--main-border-radius)',
-                      border: category.selected
-                        ? `1px solid ${category.color}40`
+                      border: category.selected 
+                        ? `1px solid ${category.color}40` 
                         : '1px solid rgba(255, 255, 255, 0.05)',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       '&:hover': {
-                        background: category.selected
-                          ? 'rgb(24 24 24)'
+                        background: category.selected 
+                          ? 'rgb(24 24 24)' 
                           : 'rgba(255, 255, 255, 0.06)',
                         transform: 'translateX(4px)',
                       },
@@ -547,7 +533,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                     <motion.div
                       animate={{
                         scale: category.selected ? 1.05 : 1,
-                        opacity: category.selected ? 1 : 0.7,
+                        opacity: category.selected ? 1 : 0.7
                       }}
                       transition={{ duration: 0.2 }}
                     >
@@ -563,45 +549,39 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                           mr: 1.5,
                         }}
                       >
-                        <Box
-                          sx={{
-                            fontSize: '0.75rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: '100%',
-                            height: '100%',
-                            '& svg': {
-                              width: '16px',
-                              height: '16px',
-                            },
-                          }}
-                        >
+                        <Box sx={{ 
+                          fontSize: '0.75rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: '100%',
+                          height: '100%',
+                          '& svg': {
+                            width: '16px',
+                            height: '16px'
+                          }
+                        }}>
                           {category.icon}
                         </Box>
                       </Box>
                     </motion.div>
 
                     <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant='body2'
-                        sx={{
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
                           fontWeight: 500,
-                          color: category.selected
-                            ? 'var(--theme-text-primary)'
-                            : 'var(--theme-text-secondary)',
-                          fontSize: '0.875rem',
+                          color: category.selected ? 'var(--theme-text-primary)' : 'var(--theme-text-secondary)',
+                          fontSize: '0.875rem'
                         }}
                       >
                         {category.name}
                       </Typography>
-                      <Typography
-                        variant='caption'
+                      <Typography 
+                        variant="caption" 
                         sx={{
-                          color: category.selected
-                            ? 'rgba(255, 255, 255, 0.8)'
-                            : 'rgba(255, 255, 255, 0.5)',
-                          fontSize: '0.75rem',
+                          color: category.selected ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.5)',
+                          fontSize: '0.75rem'
                         }}
                       >
                         {formatBytes(category.size)}
@@ -610,7 +590,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
 
                     <motion.div
                       animate={{
-                        scale: category.selected ? 1.1 : 1,
+                        scale: category.selected ? 1.1 : 1
                       }}
                       transition={{ duration: 0.2 }}
                     >
@@ -623,7 +603,7 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
                           },
                           '& .MuiSvgIcon-root': {
                             fontSize: 18,
-                          },
+                          }
                         }}
                       />
                     </motion.div>
@@ -637,82 +617,69 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
               <motion.div
                 animate={{
                   scale: calculateSelectedSize() > 0 ? 1 : 0.95,
-                  opacity: calculateSelectedSize() > 0 ? 1 : 0.7,
+                  opacity: calculateSelectedSize() > 0 ? 1 : 0.7
                 }}
                 transition={{ duration: 0.3 }}
               >
                 <Button
-                  variant='contained'
+                  variant="contained"
                   fullWidth
-                  size='large'
+                  size="large"
                   startIcon={<Delete />}
                   onClick={handleClearCache}
                   disabled={clearing || calculateSelectedSize() === 0}
                   sx={{
-                    background:
-                      calculateSelectedSize() > 0
-                        ? 'rgb(192, 169, 247)'
-                        : 'rgba(255, 255, 255, 0.1)',
+                    background: calculateSelectedSize() > 0 
+                      ? 'rgb(192, 169, 247)'
+                      : 'rgba(255, 255, 255, 0.1)',
                     color: 'white',
                     py: 1.5,
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      background:
-                        calculateSelectedSize() > 0
-                          ? 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)'
-                          : 'rgba(255, 255, 255, 0.15)',
-                      transform:
-                        calculateSelectedSize() > 0
-                          ? 'translateY(-2px)'
-                          : 'none',
-                      boxShadow:
-                        calculateSelectedSize() > 0
-                          ? '0 8px 25px rgba(102, 126, 234, 0.4)'
-                          : 'none',
+                      background: calculateSelectedSize() > 0
+                        ? 'linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)'
+                        : 'rgba(255, 255, 255, 0.15)',
+                      transform: calculateSelectedSize() > 0 ? 'translateY(-2px)' : 'none',
+                      boxShadow: calculateSelectedSize() > 0 
+                        ? '0 8px 25px rgba(102, 126, 234, 0.4)' 
+                        : 'none',
                     },
                   }}
                 >
-                  {clearing
-                    ? 'Очистка...'
-                    : `Очистить выбранное (${formatBytes(calculateSelectedSize())})`}
+                  {clearing ? 'Очистка...' : `Очистить выбранное (${formatBytes(calculateSelectedSize())})`}
                 </Button>
               </motion.div>
 
               <motion.div
                 animate={{
                   scale: calculateTotalSize() > 0 ? 1 : 0.95,
-                  opacity: calculateTotalSize() > 0 ? 1 : 0.7,
+                  opacity: calculateTotalSize() > 0 ? 1 : 0.7
                 }}
                 transition={{ duration: 0.3 }}
               >
                 <Button
-                  variant='outlined'
+                  variant="outlined"
                   fullWidth
-                  size='large'
+                  size="large"
                   startIcon={<Delete />}
                   onClick={handleClearCache}
                   disabled={clearing || calculateTotalSize() === 0}
                   sx={{
-                    borderColor:
-                      calculateTotalSize() > 0
-                        ? 'rgba(255, 255, 255, 0.3)'
-                        : 'rgba(255, 255, 255, 0.1)',
-                    color:
-                      calculateTotalSize() > 0
-                        ? 'var(--theme-text-primary)'
-                        : 'var(--theme-text-secondary)',
+                    borderColor: calculateTotalSize() > 0 
+                      ? 'rgba(255, 255, 255, 0.3)' 
+                      : 'rgba(255, 255, 255, 0.1)',
+                    color: calculateTotalSize() > 0 
+                      ? 'var(--theme-text-primary)' 
+                      : 'var(--theme-text-secondary)',
                     transition: 'all 0.3s ease',
                     '&:hover': {
-                      borderColor:
-                        calculateTotalSize() > 0
-                          ? 'rgba(255, 255, 255, 0.5)'
-                          : 'rgba(255, 255, 255, 0.2)',
-                      background:
-                        calculateTotalSize() > 0
-                          ? 'rgba(255, 255, 255, 0.05)'
-                          : 'rgba(255, 255, 255, 0.02)',
-                      transform:
-                        calculateTotalSize() > 0 ? 'translateY(-1px)' : 'none',
+                      borderColor: calculateTotalSize() > 0 
+                        ? 'rgba(255, 255, 255, 0.5)' 
+                        : 'rgba(255, 255, 255, 0.2)',
+                      background: calculateTotalSize() > 0 
+                        ? 'rgba(255, 255, 255, 0.05)' 
+                        : 'rgba(255, 255, 255, 0.02)',
+                      transform: calculateTotalSize() > 0 ? 'translateY(-1px)' : 'none',
                     },
                   }}
                 >
@@ -727,4 +694,4 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
   );
 };
 
-export default CacheManagementModal;
+export default CacheManagementModal; 

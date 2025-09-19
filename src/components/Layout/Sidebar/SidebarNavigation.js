@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback, useContext, useState } from 'react';
+import React, { memo, useMemo, useCallback, useContext } from 'react';
 import { List, Collapse, styled, Box } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -11,9 +11,6 @@ import GavelIcon from '@mui/icons-material/Gavel';
 import Badge from '@mui/material/Badge';
 import axios from 'axios';
 import { useMessenger } from '../../../contexts/MessengerContext';
-import UniversalModal from '../../../UIKIT/UniversalModal/UniversalModal';
-import { Typography } from '@mui/material';
-import { ArtistErrorModal } from './artistErrorModal/artistErrorModal';
 
 // Clean, minimal nested list styling
 const NestedList = styled(List)(({ theme }) => ({
@@ -36,7 +33,7 @@ const SectionSpacer = styled(Box)(({ theme }) => ({
 }));
 
 const SidebarNavigation = memo(
-  ({ isModeratorUser, isChannel, primaryColor, user }) => {
+  ({isModeratorUser, isChannel, primaryColor, user }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const { t } = useLanguage();
@@ -53,30 +50,20 @@ const SidebarNavigation = memo(
     // Получаем данные мессенджера
     const { unreadCounts, getTotalUnreadCount } = useMessenger();
     const totalUnread = getTotalUnreadCount();
-    const [isArtistModalOpen, setIsArtistModalOpen] = useState(false);
-    const [artistModalError, setArtistModalError] = useState('');
 
     // Функция для проверки наличия артиста и навигации
     const handleArtistManagementClick = useCallback(async () => {
       try {
-        const response = await axios.get(
-          '/api/artist-management/check-has-artist'
-        );
+        const response = await axios.get('/api/artist-management/check-has-artist');
         if (response.data.success && response.data.has_artist) {
           navigate('/artist-management');
         } else {
           // Показываем сообщение что у пользователя нет привязанных артистов
-          setArtistModalError(
-            'У вас нет привязанных артистов. Обратитесь к модератору для привязки карточки артиста.'
-          );
-          setIsArtistModalOpen(true);
-          // alert('У вас нет привязанных артистов. Обратитесь к модератору для привязки карточки артиста.');
+          alert('У вас нет привязанных артистов. Обратитесь к модератору для привязки карточки артиста.');
         }
       } catch (error) {
         console.error('Ошибка проверки артистов:', error);
-        // alert('Произошла ошибка при проверке артистов');
-        setArtistModalError('Произошла ошибка при проверке артистов');
-        setIsArtistModalOpen(true);
+        alert('Произошла ошибка при проверке артистов');
       }
     }, [navigate]);
 
@@ -173,8 +160,20 @@ const SidebarNavigation = memo(
             height='20'
           />
         ),
-        brand: <Icon icon='solar:palette-outline' width='20' height='20' />,
-        tickets: <Icon icon='solar:ticket-outline' width='20' height='20' />,
+        brand: (
+          <Icon
+            icon='solar:palette-outline'
+            width='20'
+            height='20'
+          />
+        ),
+        tickets: (
+          <Icon
+            icon='solar:ticket-outline'
+            width='20'
+            height='20'
+          />
+        ),
       }),
       [totalUnread]
     );
@@ -291,7 +290,7 @@ const SidebarNavigation = memo(
 
     const adminModMenu = useMemo(
       () =>
-        isModeratorUser && (
+        (isModeratorUser) && (
           <>
             <NavButton
               text={t('sidebar.navigation.management')}
@@ -306,6 +305,8 @@ const SidebarNavigation = memo(
 
             <Collapse in={expandedAdminMod} timeout='auto' unmountOnExit>
               <NestedList component='div' disablePadding>
+
+
                 {isModeratorUser && (
                   <>
                     <NavButton
@@ -419,6 +420,7 @@ const SidebarNavigation = memo(
     const moreSection = useMemo(
       () => (
         <>
+
           <MoreButton
             text={t('sidebar.navigation.more.title')}
             icon={icons.more}
@@ -432,23 +434,23 @@ const SidebarNavigation = memo(
           <Collapse in={expandedMore} timeout='auto' unmountOnExit>
             <NestedList component='div' disablePadding>
               {!isChannel && (
-                <NavButton
-                  text={t('sidebar.navigation.more.bug_reports')}
-                  icon={icons.bug}
-                  path='/bugs'
-                  active={isActive('/bugs')}
-                  themeColor={primaryColor}
-                  nested={true}
-                />
-              )}
-              <NavButton
-                text='Мои тикеты'
-                icon={icons.tickets}
-                path='/tickets'
-                active={isActive('/tickets')}
+                              <NavButton
+                text={t('sidebar.navigation.more.bug_reports')}
+                icon={icons.bug}
+                path='/bugs'
+                active={isActive('/bugs')}
                 themeColor={primaryColor}
                 nested={true}
               />
+            )}
+            <NavButton
+              text="Мои тикеты"
+              icon={icons.tickets}
+              path='/tickets'
+              active={isActive('/tickets')}
+              themeColor={primaryColor}
+              nested={true}
+            />
               <NavButton
                 text={t('sidebar.navigation.more.brand')}
                 icon={icons.brand}
@@ -502,10 +504,10 @@ const SidebarNavigation = memo(
                 target='_blank'
                 rel='noopener noreferrer'
               />
-
+              
               {/* Карточка артиста - всегда показываем, проверяем при нажатии */}
               <NavButton
-                text='Карточка артиста'
+                text="Карточка артиста"
                 icon={icons.person}
                 onClick={handleArtistManagementClick}
                 active={isActive('/artist-management')}
@@ -548,11 +550,6 @@ const SidebarNavigation = memo(
         )}
         <SectionSpacer />
         {moreSection}
-        <ArtistErrorModal
-          isArtistModalOpen={isArtistModalOpen}
-          setIsArtistModalOpen={setIsArtistModalOpen}
-          artistModalError={artistModalError}
-        />
       </NavigationContainer>
     );
   }

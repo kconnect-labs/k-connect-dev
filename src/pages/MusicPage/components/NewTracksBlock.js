@@ -31,8 +31,8 @@ const NewTracksContainer = styled(Box)(({ theme }) => ({
 
 const NewTracksCard = styled(Card)(({ theme }) => ({
   borderRadius: 'var(--main-border-radius) !important',
-  background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
-  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+      background: 'var(--theme-background, rgba(0, 0, 0, 0.03))', // Фон 003
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
   border: '1px solid rgba(66, 66, 66, 0.5)',
 }));
@@ -43,8 +43,8 @@ const NewTracksHeader = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
   borderRadius: 'var(--main-border-radius) !important',
-  background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+      background: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
 }));
 
@@ -53,7 +53,7 @@ const TrackItem = styled(ListItem)(({ theme, isActive }) => ({
   background: isActive
     ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
     : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.25),
   padding: theme.spacing(0.75, 2),
@@ -279,7 +279,8 @@ const NewTracksBlock = () => {
                                     backgroundColor:
                                       'rgba(255, 255, 255, 0.05)',
                                     color: 'text.secondary',
-                                    border: '1px solid rgba(66, 66, 66, 0.5)',
+                                    border:
+                                      '1px solid rgba(66, 66, 66, 0.5)',
                                   }}
                                 />
                               </>

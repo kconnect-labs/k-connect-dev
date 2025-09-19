@@ -21,7 +21,7 @@ import { Pack, InventoryItem } from './types';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
-    background: 'var(--theme-background, rgba(18, 18, 18, 0.95))',
+            background: 'var(--theme-background, rgba(18, 18, 18, 0.95))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: window.innerWidth <= 768 ? 0 : '16px',
@@ -301,8 +301,7 @@ const PackOpeningModal = ({
               color: 'rgba(255, 255, 255, 0.6)',
               '&:hover': {
                 color: 'rgba(255, 255, 255, 0.9)',
-                backgroundColor:
-                  'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
               },
             }}
           >
@@ -421,9 +420,7 @@ const PackOpeningModal = ({
                 >
                   <ItemContainer
                     sx={{
-                      backgroundImage: obtainedItem?.background_url
-                        ? `url(${obtainedItem.background_url})`
-                        : 'none',
+                      backgroundImage: obtainedItem?.background_url ? `url(${obtainedItem.background_url})` : 'none',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
@@ -498,8 +495,7 @@ const PackOpeningModal = ({
                         transition: 'all 0.2s ease',
                         '&:hover': {
                           borderColor: 'rgba(255, 255, 255, 0.5)',
-                          background:
-                            'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                          background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                           transform: 'translateY(-1px)',
                         },
                       }}
@@ -523,8 +519,7 @@ const PackOpeningModal = ({
                         transition: 'all 0.2s ease',
                         '&:hover': {
                           borderColor: 'rgba(255, 255, 255, 0.5)',
-                          background:
-                            'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                          background: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                           transform: 'translateY(-1px)',
                         },
                       }}

@@ -47,14 +47,18 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import {
+  restrictToVerticalAxis,
+} from '@dnd-kit/modifiers';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 const PageContainer = styled(Container)(({ theme }) => ({
@@ -144,39 +148,36 @@ const DragHandle = styled('div')(({ theme }) => ({
   },
 }));
 
-const DraggableTrackListItem = styled(ListItem)(
-  ({ theme, isActive, isDragging, ...props }) => ({
-    borderRadius: 'var(--main-border-radius) !important',
-    background: isActive
-      ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
-      : isDragging
-        ? 'var(--theme-background, rgba(255, 255, 255, 0.08))'
-        : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
-    marginBottom: theme.spacing(0.25),
-    padding: theme.spacing(0.75, 2),
-    transition: 'all 0.15s ease',
-    cursor: 'pointer',
-    opacity: isDragging ? 0.9 : 1,
-    transform: isDragging ? 'rotate(2deg) scale(1.02)' : 'none',
-    zIndex: isDragging ? 1000 : 'auto',
-    boxShadow: isDragging ? '0 8px 25px rgba(0,0,0,0.15)' : 'none',
-    '&:hover': {
-      background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
-    },
-    '&:last-child': {
-      marginBottom: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(0.5, 1.5),
-    },
-  })
-);
+const DraggableTrackListItem = styled(ListItem)(({ theme, isActive, isDragging, ...props }) => ({
+  borderRadius: 'var(--main-border-radius) !important',
+  background: isActive
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.05))'
+    : isDragging
+    ? 'var(--theme-background, rgba(255, 255, 255, 0.08))'
+    : 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+  border: '1px solid rgba(255, 255, 255, 0.05)',
+  marginBottom: theme.spacing(0.25),
+  padding: theme.spacing(0.75, 2),
+  transition: 'all 0.15s ease',
+  cursor: 'pointer',
+  opacity: isDragging ? 0.9 : 1,
+  transform: isDragging ? 'rotate(2deg) scale(1.02)' : 'none',
+  zIndex: isDragging ? 1000 : 'auto',
+  boxShadow: isDragging ? '0 8px 25px rgba(0,0,0,0.15)' : 'none',
+  '&:hover': {
+    background: 'var(--theme-background, rgba(255, 255, 255, 0.08))',
+  },
+  '&:last-child': {
+    marginBottom: 0,
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(0.5, 1.5),
+  },
+}));
 
 const LikedTracksPage = ({ onBack }) => {
-  const { playTrack, isPlaying, currentTrack, togglePlay, currentSection } =
-    useMusic();
+  const { playTrack, isPlaying, currentTrack, togglePlay, currentSection } = useMusic();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -215,23 +216,23 @@ const LikedTracksPage = ({ onBack }) => {
       if (!append) {
         setLoading(true);
       }
-
+      
       const response = await apiClient.get('/api/music/liked/order', {
         params: {
           page: page,
-          per_page: 20,
-        },
+          per_page: 20
+        }
       });
-
+      
       if (response.data.success) {
         const newTracks = response.data.tracks;
-
+        
         if (append) {
           setTracks(prevTracks => [...prevTracks, ...newTracks]);
         } else {
           setTracks(newTracks);
         }
-
+        
         setPagination({
           currentPage: response.data.current_page,
           totalPages: response.data.pages,
@@ -286,7 +287,7 @@ const LikedTracksPage = ({ onBack }) => {
     }
   };
 
-  const handleDragEnd = async event => {
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
 
     if (active.id !== over.id) {
@@ -301,9 +302,9 @@ const LikedTracksPage = ({ onBack }) => {
         const trackOrder = newTracks.map(track => track.id);
         console.log('Отправляем новый порядок:', trackOrder);
         await apiClient.post('/api/music/liked/reorder', {
-          track_order: trackOrder,
+          track_order: trackOrder
         });
-
+        
         // Убираем уведомление об успехе - показываем только ошибки
       } catch (err) {
         console.error('Error updating track order:', err);
@@ -329,6 +330,8 @@ const LikedTracksPage = ({ onBack }) => {
     }
   };
 
+
+
   const formatDuration = seconds => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -336,13 +339,7 @@ const LikedTracksPage = ({ onBack }) => {
   };
 
   // Sortable Track Item Component
-  const SortableTrackItem = ({
-    track,
-    isActive,
-    onPlay,
-    onLike,
-    onTrackClick,
-  }) => {
+  const SortableTrackItem = ({ track, isActive, onPlay, onLike, onTrackClick }) => {
     const {
       attributes,
       listeners,
@@ -365,20 +362,23 @@ const LikedTracksPage = ({ onBack }) => {
         isDragging={isDragging}
         onClick={() => onTrackClick(track)}
       >
-        <DragHandle {...attributes} {...listeners}>
-          <DragIndicatorIcon fontSize='small' />
+        <DragHandle
+          {...attributes}
+          {...listeners}
+        >
+          <DragIndicatorIcon fontSize="small" />
         </DragHandle>
-
+        
         <ListItemAvatar>
           <TrackAvatar src={track.cover_path} alt={track.title} />
         </ListItemAvatar>
-
+        
         <ListItemText
           primary={
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Typography
-                variant='body1'
-                component='span'
+                variant="body1"
+                component="span"
                 fontWeight={isActive ? 600 : 500}
                 sx={{
                   color: isActive ? 'primary.main' : 'text.primary',
@@ -394,9 +394,9 @@ const LikedTracksPage = ({ onBack }) => {
           secondary={
             <span>
               <Typography
-                variant='body2'
-                component='span'
-                color='text.secondary'
+                variant="body2"
+                component="span"
+                color="text.secondary"
                 sx={{
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -416,25 +416,21 @@ const LikedTracksPage = ({ onBack }) => {
                 <AccessTimeIcon
                   sx={{ fontSize: 14, color: 'text.secondary' }}
                 />
-                <Typography
-                  variant='caption'
-                  component='span'
-                  color='text.secondary'
-                >
+                <Typography variant="caption" component="span" color="text.secondary">
                   {formatDuration(track.duration)}
                 </Typography>
                 {track.genre && (
                   <>
                     <Typography
-                      variant='caption'
-                      component='span'
-                      color='text.secondary'
+                      variant="caption"
+                      component="span"
+                      color="text.secondary"
                     >
                       •
                     </Typography>
                     <Chip
                       label={track.genre}
-                      size='small'
+                      size="small"
                       sx={{
                         height: 20,
                         fontSize: '0.7rem',
@@ -449,6 +445,8 @@ const LikedTracksPage = ({ onBack }) => {
             </span>
           }
         />
+        
+
       </DraggableTrackListItem>
     );
   };
@@ -519,8 +517,7 @@ const LikedTracksPage = ({ onBack }) => {
               Мои любимые
             </Typography>
             <Typography variant='body1' color='text.secondary'>
-              {tracks.length} треков в вашей коллекции • Перетаскивайте треки
-              для изменения порядка
+              {tracks.length} треков в вашей коллекции • Перетаскивайте треки для изменения порядка
             </Typography>
           </Box>
           <Tooltip title='Загрузить трек'>
@@ -554,10 +551,7 @@ const LikedTracksPage = ({ onBack }) => {
       />
 
       {error && (
-        <Alert
-          severity='error'
-          sx={{ mb: 3, borderRadius: 'var(--main-border-radius) !important' }}
-        >
+        <Alert severity='error' sx={{ mb: 3, borderRadius: 'var(--main-border-radius) !important' }}>
           {error}
         </Alert>
       )}
@@ -597,7 +591,7 @@ const LikedTracksPage = ({ onBack }) => {
             transitionDuration={150}
           >
             <List sx={{ p: 0 }}>
-              {tracks.map(track => {
+              {tracks.map((track) => {
                 const isCurrentTrack = currentTrack?.id === track.id;
                 const isTrackPlaying = isPlaying && isCurrentTrack;
 
@@ -621,7 +615,7 @@ const LikedTracksPage = ({ onBack }) => {
       {pagination.hasMore && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3, mb: 3 }}>
           <Button
-            variant='outlined'
+            variant="outlined"
             onClick={loadMoreTracks}
             disabled={loading}
             sx={{
@@ -633,19 +627,21 @@ const LikedTracksPage = ({ onBack }) => {
               '&:hover': {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
-              },
+              }
             }}
           >
-            {loading ? <CircularProgress size={20} sx={{ mr: 1 }} /> : null}
+            {loading ? (
+              <CircularProgress size={20} sx={{ mr: 1 }} />
+            ) : null}
             Загрузить еще
           </Button>
         </Box>
       )}
-
+      
       {/* Информация о пагинации */}
       {pagination.total > 0 && (
         <Box sx={{ textAlign: 'center', mt: 2, mb: 2 }}>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant="body2" color="text.secondary">
             Показано {tracks.length} из {pagination.total} треков
           </Typography>
         </Box>

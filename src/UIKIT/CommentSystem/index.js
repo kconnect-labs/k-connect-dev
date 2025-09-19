@@ -39,7 +39,7 @@ const CommentSectionHeader = styled(Typography)(({ theme }) => ({
 const EmptyCommentsContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   textAlign: 'center',
-  backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
+      backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
   borderRadius: '16px',
   border: '1px dashed rgba(255, 255, 255, 0.1)',
   [theme.breakpoints.down('sm')]: {

@@ -1,5 +1,10 @@
 import React from 'react';
-import { Box, Typography, Card, CardContent } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import InfoIcon from '@mui/icons-material/Info';
 
@@ -62,8 +67,8 @@ export const ScoringInfoCard: React.FC = () => {
           </Box>
         </Box>
         <Typography variant='body2' sx={{ mt: 2 }}>
-          Очки обновляются раз в час. Если вы удалите пост или комментарий, или
-          кто-то уберет лайк, соответствующие очки будут вычтены из вашего
+          Очки обновляются раз в час. Если вы удалите пост или комментарий,
+          или кто-то уберет лайк, соответствующие очки будут вычтены из вашего
           счета.
         </Typography>
 
@@ -85,7 +90,8 @@ export const ScoringInfoCard: React.FC = () => {
             Периоды расчета очков:
           </Typography>
           <Typography variant='body2'>
-            • <strong>Неделя:</strong> с понедельника 00:00 до воскресенья 19:00
+            • <strong>Неделя:</strong> с понедельника 00:00 до воскресенья
+            19:00
           </Typography>
           <Typography variant='body2'>
             • <strong>Месяц:</strong> с 1-го числа 00:00 до последнего дня

@@ -64,24 +64,17 @@ const RegisterProfile = ({ setUser }) => {
     localStorage.removeItem('k-connect-referral-rewards');
     localStorage.removeItem('k-connect-user');
     sessionStorage.clear();
-
+    
     // Очищаем все куки более надежно
-    const cookies = document.cookie.split(';');
-    cookies.forEach(function (cookie) {
-      const eqPos = cookie.indexOf('=');
+    const cookies = document.cookie.split(";");
+    cookies.forEach(function(cookie) {
+      const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
       if (name) {
         // Удаляем куку для всех возможных путей и доменов
-        document.cookie =
-          name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-        document.cookie =
-          name +
-          '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=' +
-          window.location.hostname;
-        document.cookie =
-          name +
-          '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.' +
-          window.location.hostname;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=." + window.location.hostname;
       }
     });
   };
@@ -201,7 +194,7 @@ const RegisterProfile = ({ setUser }) => {
 
         // Показываем уведомление об успехе
         setShowSuccessMessage(true);
-
+        
         // Ждем 2 секунды, затем перенаправляем на главную страницу
         setTimeout(() => {
           window.location.href = '/';
@@ -222,17 +215,11 @@ const RegisterProfile = ({ setUser }) => {
           setError(
             'Профиль с этими данными уже существует. Попробуйте войти в систему.'
           );
-        } else if (
-          errorMsg.includes('без авторизации') ||
-          errorMsg.includes('сессия не создалась') ||
-          errorMsg.includes('Вы не авторизованы для создания профиля') ||
-          errorMsg.includes('не авторизованы') ||
-          errorMsg.includes('войдите в систему')
-        ) {
+        } else if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
           // Обработка ошибки сессии
           setShowSessionError(true);
           clearUserData();
-
+          
           // Перенаправляем на логин через 4 секунды
           setTimeout(() => {
             window.location.href = '/login';
@@ -240,23 +227,13 @@ const RegisterProfile = ({ setUser }) => {
         } else {
           setShowSupportError(true);
         }
-      } else if (
-        err.response &&
-        err.response.data &&
-        err.response.data.message
-      ) {
+      } else if (err.response && err.response.data && err.response.data.message) {
         const errorMsg = err.response.data.message;
         console.log('Получена ошибка message с сервера:', errorMsg);
-        if (
-          errorMsg.includes('без авторизации') ||
-          errorMsg.includes('сессия не создалась') ||
-          errorMsg.includes('Вы не авторизованы для создания профиля') ||
-          errorMsg.includes('не авторизованы') ||
-          errorMsg.includes('войдите в систему')
-        ) {
+        if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
           setShowSessionError(true);
           clearUserData();
-
+          
           setTimeout(() => {
             window.location.href = '/login';
           }, 4000);
@@ -266,16 +243,10 @@ const RegisterProfile = ({ setUser }) => {
       } else if (err.message) {
         const errorMsg = err.message;
         console.log('Получена ошибка err.message:', errorMsg);
-        if (
-          errorMsg.includes('без авторизации') ||
-          errorMsg.includes('сессия не создалась') ||
-          errorMsg.includes('Вы не авторизованы для создания профиля') ||
-          errorMsg.includes('не авторизованы') ||
-          errorMsg.includes('войдите в систему')
-        ) {
+        if (errorMsg.includes('без авторизации') || errorMsg.includes('сессия не создалась') || errorMsg.includes('Вы не авторизованы для создания профиля') || errorMsg.includes('не авторизованы') || errorMsg.includes('войдите в систему')) {
           setShowSessionError(true);
           clearUserData();
-
+          
           setTimeout(() => {
             window.location.href = '/login';
           }, 4000);
@@ -741,11 +712,11 @@ const RegisterProfile = ({ setUser }) => {
                   try {
                     // Используем API logout для правильной очистки сессии
                     await AuthService.logout();
-
+                    
                     // Очищаем localStorage и sessionStorage
                     localStorage.clear();
                     sessionStorage.clear();
-
+                    
                     // Редирект на страницу логина
                     window.location.href = '/login';
                   } catch (error) {
@@ -772,7 +743,7 @@ const RegisterProfile = ({ setUser }) => {
               >
                 Деавторизация
               </Button>
-
+              
               <Typography
                 variant='caption'
                 color='text.secondary'
@@ -817,16 +788,16 @@ const RegisterProfile = ({ setUser }) => {
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
           }}
         >
-          <CircularProgress
-            size={24}
-            sx={{
+          <CircularProgress 
+            size={24} 
+            sx={{ 
               color: 'var(--primary-color)',
-            }}
+            }} 
           />
           <Box>
-            <Typography
-              variant='body1'
-              sx={{
+            <Typography 
+              variant="body1" 
+              sx={{ 
                 color: 'var(--text-color)',
                 fontWeight: 600,
                 mb: 0.5,
@@ -834,9 +805,9 @@ const RegisterProfile = ({ setUser }) => {
             >
               Профиль создан успешно!
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{
+            <Typography 
+              variant="body2" 
+              sx={{ 
                 color: 'var(--text-secondary)',
               }}
             >
@@ -871,16 +842,16 @@ const RegisterProfile = ({ setUser }) => {
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
           }}
         >
-          <CircularProgress
-            size={24}
-            sx={{
+          <CircularProgress 
+            size={24} 
+            sx={{ 
               color: '#ff6b6b',
-            }}
+            }} 
           />
           <Box>
-            <Typography
-              variant='body1'
-              sx={{
+            <Typography 
+              variant="body1" 
+              sx={{ 
                 color: 'var(--text-color)',
                 fontWeight: 600,
                 mb: 0.5,
@@ -888,14 +859,13 @@ const RegisterProfile = ({ setUser }) => {
             >
               Ошибка создания сессии
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{
+            <Typography 
+              variant="body2" 
+              sx={{ 
                 color: 'var(--text-secondary)',
               }}
             >
-              Вам нужно авторизоваться вновь. Перенаправляем на страницу
-              входа...
+              Вам нужно авторизоваться вновь. Перенаправляем на страницу входа...
             </Typography>
           </Box>
         </Box>
@@ -940,7 +910,7 @@ const RegisterProfile = ({ setUser }) => {
             }}
           >
             <Typography
-              variant='body2'
+              variant="body2"
               sx={{
                 color: 'white',
                 fontWeight: 'bold',
@@ -951,9 +921,9 @@ const RegisterProfile = ({ setUser }) => {
             </Typography>
           </Box>
           <Box>
-            <Typography
-              variant='body1'
-              sx={{
+            <Typography 
+              variant="body1" 
+              sx={{ 
                 color: 'var(--text-color)',
                 fontWeight: 600,
                 mb: 1,
@@ -961,9 +931,9 @@ const RegisterProfile = ({ setUser }) => {
             >
               Ошибка при создании профиля
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{
+            <Typography 
+              variant="body2" 
+              sx={{ 
                 color: 'var(--text-secondary)',
                 mb: 1,
               }}
@@ -971,18 +941,18 @@ const RegisterProfile = ({ setUser }) => {
               Пожалуйста, обратитесь в поддержку:
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-              <Typography
-                variant='body2'
-                sx={{
+              <Typography 
+                variant="body2" 
+                sx={{ 
                   color: '#D0BCFF',
                   fontWeight: 500,
                 }}
               >
                 📱 Telegram: @KCONNECTSUP_BOT
               </Typography>
-              <Typography
-                variant='body2'
-                sx={{
+              <Typography 
+                variant="body2" 
+                sx={{ 
                   color: '#D0BCFF',
                   fontWeight: 500,
                 }}

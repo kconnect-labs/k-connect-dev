@@ -1,5 +1,11 @@
 import React from 'react';
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+} from '@mui/material';
 import { Error as ErrorIcon, Refresh, ArrowBack } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { ErrorStateProps } from '../types';
@@ -56,8 +62,7 @@ const IconContainer = styled(Box)(({ theme }) => ({
     left: 0,
     right: 0,
     bottom: 0,
-    background:
-      'conic-gradient(from 0deg, transparent, rgba(255, 87, 87, 0.2), transparent)',
+    background: 'conic-gradient(from 0deg, transparent, rgba(255, 87, 87, 0.2), transparent)',
     animation: 'rotate 4s linear infinite',
   },
   '@keyframes rotate': {
@@ -154,7 +159,10 @@ const SecondaryButton = styled(ActionButton)(({ theme }) => ({
   },
 }));
 
-const ErrorState: React.FC<ErrorStateProps> = ({ error, onBackClick }) => {
+const ErrorState: React.FC<ErrorStateProps> = ({
+  error,
+  onBackClick,
+}) => {
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -192,32 +200,29 @@ const ErrorState: React.FC<ErrorStateProps> = ({ error, onBackClick }) => {
           <StyledErrorIcon />
         </IconContainer>
 
-        <ErrorTitle variant='h4' component='h2'>
+        <ErrorTitle variant="h4" component="h2">
           {getErrorTitle(error)}
         </ErrorTitle>
 
-        <ErrorDescription variant='body1'>
+        <ErrorDescription variant="body1">
           {getErrorMessage(error)}
         </ErrorDescription>
 
-        <ErrorDescription
-          variant='body2'
-          sx={{ fontSize: '0.9rem', opacity: 0.8 }}
-        >
-          Если проблема повторяется, попробуйте обновить страницу или вернуться
-          к предыдущей странице.
+        <ErrorDescription variant="body2" sx={{ fontSize: '0.9rem', opacity: 0.8 }}>
+          Если проблема повторяется, попробуйте обновить страницу или
+          вернуться к предыдущей странице.
         </ErrorDescription>
 
         <ActionButtons>
           <PrimaryButton
-            variant='contained'
+            variant="contained"
             onClick={handleRefresh}
             startIcon={<Refresh />}
           >
             Обновить
           </PrimaryButton>
           <SecondaryButton
-            variant='outlined'
+            variant="outlined"
             onClick={onBackClick}
             startIcon={<ArrowBack />}
           >

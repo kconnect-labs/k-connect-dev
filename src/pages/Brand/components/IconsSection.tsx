@@ -152,9 +152,7 @@ const IconsSection: React.FC = () => {
         flexDirection: 'column',
       }}
     >
-      <CardContent
-        sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column' }}
-      >
+      <CardContent sx={{ p: 3, flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Box
           sx={{
             width: '100%',
@@ -180,7 +178,7 @@ const IconsSection: React.FC = () => {
         </Box>
 
         <Typography
-          variant='h6'
+          variant="h6"
           sx={{
             color: 'white',
             mb: 1,
@@ -191,7 +189,7 @@ const IconsSection: React.FC = () => {
         </Typography>
 
         <Typography
-          variant='body2'
+          variant="body2"
           sx={{
             color: 'rgba(255, 255, 255, 0.7)',
             mb: 2,
@@ -204,7 +202,7 @@ const IconsSection: React.FC = () => {
         <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
           <Chip
             label={type}
-            size='small'
+            size="small"
             sx={{
               backgroundColor: 'rgba(208, 188, 255, 0.1)',
               color: '#D0BCFF',
@@ -213,7 +211,7 @@ const IconsSection: React.FC = () => {
           />
           <Chip
             label={size}
-            size='small'
+            size="small"
             sx={{
               backgroundColor: 'rgba(255, 255, 255, 0.1)',
               color: 'rgba(255, 255, 255, 0.8)',
@@ -223,7 +221,7 @@ const IconsSection: React.FC = () => {
         </Box>
 
         <Button
-          variant='outlined'
+          variant="outlined"
           startIcon={<DownloadIcon />}
           onClick={() => handleDownload(filename)}
           sx={{
@@ -240,7 +238,7 @@ const IconsSection: React.FC = () => {
   return (
     <Box>
       <Typography
-        variant='h3'
+        variant="h3"
         sx={{
           color: 'white',
           mb: 4,
@@ -252,7 +250,7 @@ const IconsSection: React.FC = () => {
       </Typography>
 
       <Typography
-        variant='body1'
+        variant="body1"
         sx={{
           color: 'rgba(255, 255, 255, 0.8)',
           mb: 6,
@@ -261,8 +259,8 @@ const IconsSection: React.FC = () => {
           mx: 'auto',
         }}
       >
-        Полная коллекция иконок и логотипов К-Коннект в различных форматах и
-        размерах. Все файлы доступны для скачивания.
+        Полная коллекция иконок и логотипов К-Коннект в различных форматах и размерах.
+        Все файлы доступны для скачивания.
       </Typography>
 
       {/* Icons Grid */}
@@ -283,7 +281,7 @@ const IconsSection: React.FC = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography
-            variant='h5'
+            variant="h5"
             sx={{
               color: '#D0BCFF',
               mb: 3,
@@ -297,7 +295,7 @@ const IconsSection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant='h6'
+                  variant="h6"
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -307,7 +305,7 @@ const IconsSection: React.FC = () => {
                   Размеры иконок
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -316,7 +314,7 @@ const IconsSection: React.FC = () => {
                   • 192px - для веб-приложений и PWA
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -325,7 +323,7 @@ const IconsSection: React.FC = () => {
                   • 512px - для высокого разрешения
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -334,7 +332,7 @@ const IconsSection: React.FC = () => {
                   • 180px, 167px, 152px - для мобильных устройств
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -347,7 +345,7 @@ const IconsSection: React.FC = () => {
             <Grid item xs={12} md={6}>
               <Box sx={{ mb: 3 }}>
                 <Typography
-                  variant='h6'
+                  variant="h6"
                   sx={{
                     color: 'white',
                     mb: 2,
@@ -357,7 +355,7 @@ const IconsSection: React.FC = () => {
                   Форматы файлов
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -366,7 +364,7 @@ const IconsSection: React.FC = () => {
                   • SVG - для веб-разработки (масштабируемые)
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -375,7 +373,7 @@ const IconsSection: React.FC = () => {
                   • PNG - для приложений и веб-сайтов
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                     mb: 2,
@@ -384,7 +382,7 @@ const IconsSection: React.FC = () => {
                   • Темные версии (d) - для темных тем
                 </Typography>
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     color: 'rgba(255, 255, 255, 0.8)',
                   }}
@@ -395,16 +393,9 @@ const IconsSection: React.FC = () => {
             </Grid>
           </Grid>
 
-          <Box
-            sx={{
-              mt: 3,
-              p: 3,
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: 2,
-            }}
-          >
+          <Box sx={{ mt: 3, p: 3, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 2 }}>
             <Typography
-              variant='h6'
+              variant="h6"
               sx={{
                 color: '#D0BCFF',
                 mb: 2,
@@ -442,4 +433,4 @@ const IconsSection: React.FC = () => {
   );
 };
 
-export default IconsSection;
+export default IconsSection; 

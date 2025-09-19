@@ -169,12 +169,8 @@
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .comment-input-image-preview {
@@ -241,86 +237,86 @@
     padding: 10px;
     gap: 10px;
   }
-
+  
   .comment-input-avatar-img {
     width: 32px;
     height: 32px;
   }
-
+  
   .comment-input-field {
     padding: 6px 10px;
   }
-
+  
   .comment-input-textarea {
     font-size: 16px; /* Prevent zoom on iOS */
   }
-
+  
   .comment-input-action,
   .comment-input-send {
     width: 28px;
     height: 28px;
   }
-
+  
   .comment-input-action-icon {
     width: 16px;
     height: 16px;
   }
-
+  
   .comment-input-send-icon {
     width: 14px;
     height: 14px;
   }
-
+  
   .comment-input-image-preview {
     max-width: 100%;
   }
 }
 
 /* Dark theme adjustments */
-[data-theme='default'] .comment-input-container {
+[data-theme="default"] .comment-input-container {
   background: rgba(15, 15, 15, 0.98);
 }
 
-[data-theme='blur'] .comment-input-container {
+[data-theme="blur"] .comment-input-container {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='midnight'] .comment-input-container {
+[data-theme="midnight"] .comment-input-container {
   background: rgba(5, 8, 20, 0.95);
 }
 
-[data-theme='ocean'] .comment-input-container {
+[data-theme="ocean"] .comment-input-container {
   background: rgba(8, 25, 40, 0.92);
 }
 
-[data-theme='sunset'] .comment-input-container {
+[data-theme="sunset"] .comment-input-container {
   background: rgba(40, 15, 8, 0.94);
 }
 
-[data-theme='forest'] .comment-input-container {
+[data-theme="forest"] .comment-input-container {
   background: rgba(8, 30, 15, 0.93);
 }
 
-[data-theme='aurora'] .comment-input-container {
+[data-theme="aurora"] .comment-input-container {
   background: rgba(12, 35, 25, 0.91);
 }
 
-[data-theme='cosmic'] .comment-input-container {
+[data-theme="cosmic"] .comment-input-container {
   background: rgba(30, 8, 35, 0.96);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='neon'] .comment-input-container {
+[data-theme="neon"] .comment-input-container {
   background: rgba(8, 20, 45, 0.89);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='vintage'] .comment-input-container {
+[data-theme="vintage"] .comment-input-container {
   background: rgba(35, 20, 8, 0.95);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='pickme'] .comment-input-container {
+[data-theme="pickme"] .comment-input-container {
   background: rgba(131, 61, 96, 0.93);
 }

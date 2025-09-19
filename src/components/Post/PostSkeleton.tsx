@@ -79,11 +79,11 @@ const PostSkeleton: React.FC<PostSkeletonProps> = () => {
           />
         </Box>
 
-        <ImageSkeleton
+        <ImageSkeleton 
           isSingle={true}
           isMobile={false}
-          height='200px'
-          width='100%'
+          height="200px"
+          width="100%"
           imageDimensions={null}
         />
 
@@ -115,4 +115,4 @@ const PostSkeleton: React.FC<PostSkeletonProps> = () => {
   );
 };
 
-export default PostSkeleton;
+export default PostSkeleton; 

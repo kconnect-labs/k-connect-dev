@@ -10,32 +10,29 @@ export const useFactHandlers = (
   const { t } = useLanguage();
 
   const handleFactsClick = () => {
-    setDialogState(prev => ({
-      ...prev,
-      factModal: { ...prev.factModal, open: true },
-    }));
+    setDialogState(prev => ({ ...prev, factModal: { ...prev.factModal, open: true } }));
   };
 
   const handleFactModalClose = () => {
-    setDialogState(prev => ({
-      ...prev,
-      factModal: {
-        ...prev.factModal,
-        open: false,
-        error: null,
-      },
+    setDialogState(prev => ({ 
+      ...prev, 
+      factModal: { 
+        ...prev.factModal, 
+        open: false, 
+        error: null 
+      } 
     }));
   };
 
   const handleFactDelete = async () => {
     try {
-      setDialogState(prev => ({
-        ...prev,
-        factModal: {
-          ...prev.factModal,
-          loading: true,
-          error: null,
-        },
+      setDialogState(prev => ({ 
+        ...prev, 
+        factModal: { 
+          ...prev.factModal, 
+          loading: true, 
+          error: null 
+        } 
       }));
 
       // Отвязываем факт от поста
@@ -61,4 +58,4 @@ export const useFactHandlers = (
     handleFactModalClose,
     handleFactDelete,
   };
-};
+}; 

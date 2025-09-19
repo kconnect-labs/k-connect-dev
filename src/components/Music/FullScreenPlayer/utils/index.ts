@@ -10,9 +10,7 @@ export const getFullUrl = (path: string): string => {
     window.location.hostname.includes('localhost');
 
   if (isLocalhost && !path.startsWith('http')) {
-    const origin =
-      (typeof window !== 'undefined' && window.location?.origin) ||
-      'https://k-connect.ru';
+    const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
     return `${origin}${path}`;
   }
 
@@ -73,9 +71,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
 
 // Функция для создания URL трека
 export const createTrackUrl = (trackId: number): string => {
-  const origin =
-    (typeof window !== 'undefined' && window.location?.origin) ||
-    'https://k-connect.ru';
+  const origin = (typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru';
   return `${origin}/music/${trackId}`;
 };
 
@@ -90,19 +86,12 @@ export const normalizeVolume = (volume: number): number => {
 };
 
 // Функция для получения процента громкости
-export const getVolumePercentage = (
-  volume: number,
-  isMuted: boolean
-): number => {
+export const getVolumePercentage = (volume: number, isMuted: boolean): number => {
   return Math.round((isMuted ? 0 : volume) * 100);
 };
 
 // Функция для создания уникального ключа
-export const createUniqueKey = (
-  prefix: string,
-  index: number,
-  text: string
-): string => {
+export const createUniqueKey = (prefix: string, index: number, text: string): string => {
   return `${prefix}-${index}-${text.slice(0, 10)}`;
 };
 
@@ -117,7 +106,7 @@ export const processLyricsLines = (lyrics: string): string[] => {
 // Функция для создания LRC контента
 export const createLrcContent = (track: Track, lyrics: string): string => {
   const lines = processLyricsLines(lyrics);
-
+  
   let lrcContent = '[ti:' + (track.title || 'Unknown Title') + ']\n';
   lrcContent += '[ar:' + (track.artist || 'Unknown Artist') + ']\n';
   lrcContent += '[al:' + (track.album || 'Unknown Album') + ']\n';
@@ -131,11 +120,7 @@ export const createLrcContent = (track: Track, lyrics: string): string => {
 };
 
 // Функция для скачивания файла
-export const downloadFile = (
-  content: string,
-  filename: string,
-  mimeType: string = 'text/plain'
-): void => {
+export const downloadFile = (content: string, filename: string, mimeType: string = 'text/plain'): void => {
   try {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
@@ -173,9 +158,9 @@ export const manageViewport = (preventZoom: boolean): void => {
           viewport.getAttribute('content') + ', user-scalable=no'
         );
       } else {
-        const content =
-          viewport.getAttribute('content')?.replace(', user-scalable=no', '') ||
-          '';
+        const content = viewport
+          .getAttribute('content')
+          ?.replace(', user-scalable=no', '') || '';
         viewport.setAttribute('content', content);
       }
     }

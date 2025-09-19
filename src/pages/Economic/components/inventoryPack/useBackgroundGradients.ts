@@ -16,9 +16,7 @@ let isLoadingCache = false;
 let errorCache: string | null = null;
 
 export const useBackgroundGradients = () => {
-  const [gradients, setGradients] = useState<BackgroundGradients>(
-    gradientsCache || {}
-  );
+  const [gradients, setGradients] = useState<BackgroundGradients>(gradientsCache || {});
   const [isLoading, setIsLoading] = useState(isLoadingCache);
   const [error, setError] = useState<string | null>(errorCache);
 
@@ -46,21 +44,20 @@ export const useBackgroundGradients = () => {
         isLoadingCache = true;
         setIsLoading(true);
         setError(null);
-
+        
         const response = await fetch('/background_gradients.json');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
+        
         const data = await response.json();
-
+        
         // Сохраняем в кэш
         gradientsCache = data;
         setGradients(data);
       } catch (err) {
         console.error('Ошибка загрузки градиентов:', err);
-        const errorMessage =
-          err instanceof Error ? err.message : 'Неизвестная ошибка';
+        const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка';
         errorCache = errorMessage;
         setError(errorMessage);
       } finally {
@@ -77,9 +74,7 @@ export const useBackgroundGradients = () => {
     return gradients[id]?.gradient || null;
   };
 
-  const getGradientData = (
-    backgroundId: string | number
-  ): GradientData | null => {
+  const getGradientData = (backgroundId: string | number): GradientData | null => {
     const id = String(backgroundId);
     return gradients[id] || null;
   };

@@ -101,9 +101,9 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
   const containerStyle = {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
-    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
@@ -199,10 +199,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
         Управление бейджами
       </Typography>
 
-      <Typography
-        variant='body2'
-        sx={{ mb: 3, color: 'var(--theme-text-secondary)' }}
-      >
+      <Typography variant='body2' sx={{ mb: 3, color: 'var(--theme-text-secondary)' }}>
         Выберите бейдж, который будет отображаться рядом с вашим именем в
         профиле и публикациях
       </Typography>
@@ -272,11 +269,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                       >
                         <Box
                           component='img'
-                          src={
-                            achievement.image_path.startsWith('http')
-                              ? achievement.image_path
-                              : `/static/images/bages/${achievement.image_path}`
-                          }
+                          src={achievement.image_path.startsWith('http') ? achievement.image_path : `/static/images/bages/${achievement.image_path}`}
                           alt={achievement.name || achievement.bage}
                           sx={badgeImageStyle(achievement.is_active)}
                           onError={(e: any) => {
@@ -375,11 +368,7 @@ const BadgesForm: React.FC<BadgesFormProps> = ({ onSuccess }) => {
                       >
                         <Box
                           component='img'
-                          src={
-                            achievement.image_path.startsWith('http')
-                              ? achievement.image_path
-                              : `/static/images/bages/${achievement.image_path}`
-                          }
+                          src={achievement.image_path.startsWith('http') ? achievement.image_path : `/static/images/bages/${achievement.image_path}`}
                           alt={achievement.name || achievement.bage}
                           sx={badgeImageStyle(achievement.is_active)}
                           onError={(e: any) => {

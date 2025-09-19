@@ -67,8 +67,7 @@ const MainContainer = styled(Box)(({ theme }) => ({
 }));
 
 const ContentWrapper = styled(Box, {
-  shouldForwardProp: prop =>
-    !['isMusicPage', 'isMobile', 'isInMessengerChat'].includes(prop as string),
+  shouldForwardProp: (prop) => !['isMusicPage', 'isMobile', 'isInMessengerChat'].includes(prop as string),
 })<{
   isMusicPage: boolean;
   isMobile: boolean;
@@ -80,7 +79,7 @@ const ContentWrapper = styled(Box, {
 }));
 
 const SidebarContainer = styled(Box, {
-  shouldForwardProp: prop => prop !== 'open',
+  shouldForwardProp: (prop) => prop !== 'open',
 })<{ open: boolean }>(({ theme, open }) => ({
   flexShrink: 0,
   marginLeft: 'auto',
@@ -152,8 +151,7 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
   '& .mobile-page-enter-active': {
     transform: 'translateX(0%) scale(1)',
     opacity: 1,
-    transition:
-      'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     willChange: 'transform, opacity',
   },
   /* Выходящая страница */
@@ -164,8 +162,7 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
   '& .mobile-page-exit-active': {
     transform: 'translateX(-100%) scale(0.93)',
     opacity: 0.9,
-    transition:
-      'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     willChange: 'transform, opacity',
   },
   '@media (prefers-reduced-motion: reduce)': {
@@ -235,23 +232,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     if (isMobile) {
       setSidebarOpen(false);
     }
-
+    
     // Дополнительный сброс скролла при смене location
     if (isMobile) {
       const timer = setTimeout(() => {
         window.scrollTo(0, 0);
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
-
+        
         // Сброс скролла для контентной области
-        const contentContainer = document.querySelector(
-          '[data-testid="content-container"]'
-        );
+        const contentContainer = document.querySelector('[data-testid="content-container"]');
         if (contentContainer) {
           contentContainer.scrollTop = 0;
         }
       }, 100);
-
+      
       return () => clearTimeout(timer);
     }
   }, [location, isMobile]);
@@ -260,59 +255,45 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   useEffect(() => {
     // Сбрасываем скролл в начало страницы
     window.scrollTo(0, 0);
-
+    
     // Находим и сбрасываем скролл для всех скроллируемых контейнеров
     const resetScrollForContainers = () => {
       // Основной контейнер
-      const mainContainer = document.querySelector(
-        '[data-testid="main-container"]'
-      );
+      const mainContainer = document.querySelector('[data-testid="main-container"]');
       if (mainContainer) {
         mainContainer.scrollTop = 0;
       }
-
+      
       // Контентная область - главная область скролла
-      const contentContainer = document.querySelector(
-        '[data-testid="content-container"]'
-      );
+      const contentContainer = document.querySelector('[data-testid="content-container"]');
       if (contentContainer) {
         contentContainer.scrollTop = 0;
       }
-
+      
       // Все элементы с MUI styled компонентами (которые могут скроллиться)
-      const contentContainers = document.querySelectorAll(
-        '[class*="ContentContainer"], [class*="MuiBox-root"]'
-      );
+      const contentContainers = document.querySelectorAll('[class*="ContentContainer"], [class*="MuiBox-root"]');
       contentContainers.forEach(container => {
-        if (
-          (container as HTMLElement).scrollHeight >
-          (container as HTMLElement).clientHeight
-        ) {
+        if ((container as HTMLElement).scrollHeight > (container as HTMLElement).clientHeight) {
           (container as HTMLElement).scrollTop = 0;
         }
       });
-
+      
       // Области с overflow: auto или scroll
       const allElements = document.querySelectorAll('*');
       allElements.forEach(element => {
         const computed = window.getComputedStyle(element as HTMLElement);
-        if (
-          computed.overflowY === 'auto' ||
-          computed.overflowY === 'scroll' ||
-          computed.overflow === 'auto' ||
-          computed.overflow === 'scroll'
-        ) {
+        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
           (element as HTMLElement).scrollTop = 0;
         }
       });
-
+      
       // Сброс скролла для body и html
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     };
-
+    
     resetScrollForContainers();
-
+    
     // Дополнительный сброс через небольшую задержку
     const timer = setTimeout(resetScrollForContainers, 50);
     return () => clearTimeout(timer);
@@ -351,12 +332,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const isMessengerPage = location.pathname.startsWith('/messenger');
   const hasDesktopPlayer = !isMobile && currentTrack && isMusicPage;
 
-  const hasBackgroundImage =
-    profileBackground || themeSettings?.backgroundImage;
+  const hasBackgroundImage = profileBackground || themeSettings?.backgroundImage;
 
   return (
     <MainContainer
-      data-testid='main-container'
+      data-testid="main-container"
       className={hasBackgroundImage ? '' : 'theme-site-background'}
       sx={{
         backgroundImage: profileBackground
@@ -401,7 +381,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         )}
 
         <ContentContainer
-          data-testid='content-container'
+          data-testid="content-container"
           sx={{
             color: themeSettings?.textColor || theme.palette.text.primary,
             width: {
@@ -412,11 +392,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             paddingBottom: {
               xs: isMessengerPage ? 0 : theme.spacing(8),
               sm: isMessengerPage ? 0 : theme.spacing(8),
-              md: hasDesktopPlayer
-                ? theme.spacing(12)
-                : isMessengerPage
-                  ? 0
-                  : theme.spacing(2),
+              md: hasDesktopPlayer ? theme.spacing(12) : isMessengerPage ? 0 : theme.spacing(2),
             },
           }}
         >
@@ -425,7 +401,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <TransitionGroup component={null}>
                 <CSSTransition
                   key={location.pathname}
-                  classNames='mobile-page'
+                  classNames="mobile-page"
                   timeout={400}
                   onEntered={() => {
                     // Принудительный сброс скролла после завершения анимации
@@ -433,34 +409,23 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                       window.scrollTo(0, 0);
                       document.body.scrollTop = 0;
                       document.documentElement.scrollTop = 0;
-
+                      
                       // Сброс скролла для контентной области
-                      const contentContainer = document.querySelector(
-                        '[data-testid="content-container"]'
-                      );
+                      const contentContainer = document.querySelector('[data-testid="content-container"]');
                       if (contentContainer) {
                         contentContainer.scrollTop = 0;
                       }
-
-                      const mainContainer = document.querySelector(
-                        '[data-testid="main-container"]'
-                      );
+                      
+                      const mainContainer = document.querySelector('[data-testid="main-container"]');
                       if (mainContainer) {
                         mainContainer.scrollTop = 0;
                       }
-
+                      
                       // Сброс для всех скроллируемых элементов
                       const allElements = document.querySelectorAll('*');
                       allElements.forEach(element => {
-                        const computed = window.getComputedStyle(
-                          element as HTMLElement
-                        );
-                        if (
-                          computed.overflowY === 'auto' ||
-                          computed.overflowY === 'scroll' ||
-                          computed.overflow === 'auto' ||
-                          computed.overflow === 'scroll'
-                        ) {
+                        const computed = window.getComputedStyle(element as HTMLElement);
+                        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
                           (element as HTMLElement).scrollTop = 0;
                         }
                       });
@@ -468,16 +433,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   }}
                   onExited={() => {
                     window.scrollTo(0, 0);
-                    const contentContainer = document.querySelector(
-                      '[data-testid="content-container"]'
-                    );
+                    const contentContainer = document.querySelector('[data-testid="content-container"]');
                     if (contentContainer) {
                       contentContainer.scrollTop = 0;
                     }
                   }}
                 >
-                  <Box className='mobile-page' sx={{ height: '100%' }}>
-                    {children}
+                  <Box className="mobile-page" sx={{ height: '100%' }}>
+          {children}
                   </Box>
                 </CSSTransition>
               </TransitionGroup>

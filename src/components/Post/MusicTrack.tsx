@@ -24,11 +24,7 @@ const MusicTrackContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const MusicTrack: React.FC<MusicTrackProps> = ({
-  children,
-  onClick,
-  ...props
-}) => {
+const MusicTrack: React.FC<MusicTrackProps> = ({ children, onClick, ...props }) => {
   return (
     <MusicTrackContainer onClick={onClick} {...props}>
       {children}
@@ -36,4 +32,4 @@ const MusicTrack: React.FC<MusicTrackProps> = ({
   );
 };
 
-export default MusicTrack;
+export default MusicTrack; 

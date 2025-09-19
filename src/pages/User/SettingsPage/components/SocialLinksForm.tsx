@@ -298,19 +298,11 @@ const SocialLinksForm: React.FC<SocialLinksFormProps> = ({
 
       {socials.length === 0 ? (
         <Box sx={{ textAlign: 'center', py: 4 }}>
-          <PublicIcon
-            sx={{ fontSize: 48, color: 'var(--theme-text-secondary)', mb: 2 }}
-          />
-          <Typography
-            variant='body1'
-            sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}
-          >
+          <PublicIcon sx={{ fontSize: 48, color: 'var(--theme-text-secondary)', mb: 2 }} />
+          <Typography variant='body1' sx={{ color: 'var(--theme-text-secondary)', mb: 2 }}>
             У вас пока нет добавленных ссылок
           </Typography>
-          <Typography
-            variant='body2'
-            sx={{ color: 'var(--theme-text-secondary)', mb: 3 }}
-          >
+          <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mb: 3 }}>
             Добавьте ссылки на ваши социальные сети
           </Typography>
         </Box>

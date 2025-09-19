@@ -98,24 +98,24 @@
   .comments-section {
     padding: 0 8px !important;
   }
-
+  
   .comment-login-content {
     padding: 12px;
     font-size: 13px;
   }
-
+  
   .no-comments {
     padding: 24px 16px;
   }
-
+  
   .no-comments-icon {
     font-size: 28px !important;
   }
-
+  
   .no-comments-text {
     font-size: 13px !important;
   }
-
+  
   .load-more-button {
     padding: 6px 20px !important;
     font-size: 13px !important;
@@ -123,61 +123,61 @@
 }
 
 /* Theme Support */
-[data-theme='default'] .comment-login-content,
-[data-theme='default'] .no-comments {
+[data-theme="default"] .comment-login-content,
+[data-theme="default"] .no-comments {
   background: rgba(15, 15, 15, 0.98);
 }
 
-[data-theme='blur'] .comment-login-content,
-[data-theme='blur'] .no-comments {
+[data-theme="blur"] .comment-login-content,
+[data-theme="blur"] .no-comments {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='midnight'] .comment-login-content,
-[data-theme='midnight'] .no-comments {
+[data-theme="midnight"] .comment-login-content,
+[data-theme="midnight"] .no-comments {
   background: rgba(5, 8, 20, 0.95);
 }
 
-[data-theme='ocean'] .comment-login-content,
-[data-theme='ocean'] .no-comments {
+[data-theme="ocean"] .comment-login-content,
+[data-theme="ocean"] .no-comments {
   background: rgba(8, 25, 40, 0.92);
 }
 
-[data-theme='sunset'] .comment-login-content,
-[data-theme='sunset'] .no-comments {
+[data-theme="sunset"] .comment-login-content,
+[data-theme="sunset"] .no-comments {
   background: rgba(40, 15, 8, 0.94);
 }
 
-[data-theme='forest'] .comment-login-content,
-[data-theme='forest'] .no-comments {
+[data-theme="forest"] .comment-login-content,
+[data-theme="forest"] .no-comments {
   background: rgba(8, 30, 15, 0.93);
 }
 
-[data-theme='aurora'] .comment-login-content,
-[data-theme='aurora'] .no-comments {
+[data-theme="aurora"] .comment-login-content,
+[data-theme="aurora"] .no-comments {
   background: rgba(12, 35, 25, 0.91);
 }
 
-[data-theme='cosmic'] .comment-login-content,
-[data-theme='cosmic'] .no-comments {
+[data-theme="cosmic"] .comment-login-content,
+[data-theme="cosmic"] .no-comments {
   background: rgba(30, 8, 35, 0.96);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='neon'] .comment-login-content,
-[data-theme='neon'] .no-comments {
+[data-theme="neon"] .comment-login-content,
+[data-theme="neon"] .no-comments {
   background: rgba(8, 20, 45, 0.89);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='vintage'] .comment-login-content,
-[data-theme='vintage'] .no-comments {
+[data-theme="vintage"] .comment-login-content,
+[data-theme="vintage"] .no-comments {
   background: rgba(35, 20, 8, 0.95);
   backdrop-filter: blur(20px);
 }
 
-[data-theme='pickme'] .comment-login-content,
-[data-theme='pickme'] .no-comments {
+[data-theme="pickme"] .comment-login-content,
+[data-theme="pickme"] .no-comments {
   background: rgba(131, 61, 96, 0.93);
 }

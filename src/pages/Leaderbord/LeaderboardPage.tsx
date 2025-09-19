@@ -23,12 +23,12 @@ import {
 import { useLeaderboard } from './hooks/useLeaderboard';
 import { LeaderboardContainer } from './styles/LeaderboardStyles';
 
+
+
 const LeaderboardPage: React.FC = () => {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
-  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(
-    null
-  );
+  const [selectedUser, setSelectedUser] = useState<LeaderboardUser | null>(null);
   const {
     leaderboardData,
     loading,
@@ -100,8 +100,8 @@ const LeaderboardPage: React.FC = () => {
               gap: 2,
             }}
           >
-            <LeaderboardStats
-              leaderboardData={leaderboardData}
+            <LeaderboardStats 
+              leaderboardData={leaderboardData} 
               selectedUser={selectedUser}
             />
           </Box>
@@ -113,4 +113,4 @@ const LeaderboardPage: React.FC = () => {
   );
 };
 
-export default LeaderboardPage;
+export default LeaderboardPage; 

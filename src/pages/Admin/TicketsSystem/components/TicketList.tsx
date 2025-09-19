@@ -168,7 +168,7 @@ const getPriorityLabel = (priority: string) => {
 };
 
 const getPriorityIcon = (priority: string) => {
-  return <PriorityIcon priority={priority} size='small' />;
+  return <PriorityIcon priority={priority} size="small" />;
 };
 
 const TicketList: React.FC<TicketListProps> = ({
@@ -203,20 +203,16 @@ const TicketList: React.FC<TicketListProps> = ({
         {[...Array(5)].map((_, index) => (
           <StyledCard key={index}>
             <CardContent>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='flex-start'
-              >
+              <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                 <Box flex={1}>
-                  <Skeleton variant='text' width='60%' height={32} />
-                  <Skeleton variant='text' width='40%' height={24} />
+                  <Skeleton variant="text" width="60%" height={32} />
+                  <Skeleton variant="text" width="40%" height={24} />
                   <Box mt={1}>
-                    <Skeleton variant='rectangular' width={80} height={24} />
+                    <Skeleton variant="rectangular" width={80} height={24} />
                   </Box>
                 </Box>
                 <Box>
-                  <Skeleton variant='circular' width={40} height={40} />
+                  <Skeleton variant="circular" width={40} height={40} />
                 </Box>
               </Box>
             </CardContent>
@@ -229,16 +225,16 @@ const TicketList: React.FC<TicketListProps> = ({
   if (tickets.length === 0) {
     return (
       <Box
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        justifyContent='center'
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
         py={8}
       >
-        <Typography variant='h6' color='textSecondary' gutterBottom>
+        <Typography variant="h6" color="textSecondary" gutterBottom>
           Тикеты не найдены
         </Typography>
-        <Typography variant='body2' color='textSecondary'>
+        <Typography variant="body2" color="textSecondary">
           Попробуйте изменить фильтры или создать новый тикет
         </Typography>
       </Box>
@@ -247,52 +243,48 @@ const TicketList: React.FC<TicketListProps> = ({
 
   return (
     <Box>
-      {tickets.map(ticket => (
+      {tickets.map((ticket) => (
         <StyledCard key={ticket.id} onClick={() => onTicketSelect(ticket)}>
           <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='flex-start'
-            >
+            <Box display="flex" justifyContent="space-between" alignItems="flex-start">
               <Box flex={1}>
-                <Typography
-                  variant='h6'
-                  component='h3'
-                  sx={{
+                <Typography 
+                  variant="h6" 
+                  component="h3" 
+                  sx={{ 
                     color: '#cfbcfb',
                     fontSize: { xs: '1rem', md: '1.25rem' },
-                    mb: 1,
+                    mb: 1
                   }}
                 >
                   {ticket.title}
                 </Typography>
-
+                
                 {/* Статусы и приоритет */}
-                <Box display='flex' gap={1} flexWrap='wrap' mb={2}>
+                <Box display="flex" gap={1} flexWrap="wrap" mb={2}>
                   <StyledChip
                     label={getStatusLabel(ticket.status)}
                     color={getStatusColor(ticket.status) as any}
-                    size='small'
+                    size="small"
                   />
                   <StyledChip
                     icon={getPriorityIcon(ticket.priority)}
                     label={getPriorityLabel(ticket.priority)}
                     color={getPriorityColor(ticket.priority) as any}
-                    size='small'
+                    size="small"
                   />
                   {ticket.reason && (
                     <StyledChip
                       label={ticket.reason}
-                      color='warning'
-                      size='small'
-                      variant='outlined'
+                      color="warning"
+                      size="small"
+                      variant="outlined"
                     />
                   )}
                 </Box>
 
                 <Typography
-                  variant='body2'
+                  variant="body2"
                   sx={{
                     mb: 2,
                     display: '-webkit-box',
@@ -307,33 +299,30 @@ const TicketList: React.FC<TicketListProps> = ({
                   {ticket.description}
                 </Typography>
 
-                <Box
-                  display='flex'
-                  alignItems='center'
-                  gap={2}
+                                <Box 
+                  display="flex" 
+                  alignItems="center" 
+                  gap={2} 
                   mb={2}
-                  flexWrap='wrap'
-                  sx={{
-                    '& > *': {
-                      minWidth: 'fit-content',
-                    },
+                  flexWrap="wrap"
+                  sx={{ 
+                    '& > *': { 
+                      minWidth: 'fit-content' 
+                    } 
                   }}
                 >
                   {/* Создатель */}
-                  <Box display='flex' alignItems='center' gap={1}>
+                  <Box display="flex" alignItems="center" gap={1}>
                     <Avatar
                       src={ticket.creator.avatar}
                       alt={ticket.creator.name}
-                      sx={{
-                        width: { xs: 20, md: 24 },
-                        height: { xs: 20, md: 24 },
-                      }}
+                      sx={{ width: { xs: 20, md: 24 }, height: { xs: 20, md: 24 } }}
                     />
-                    <Typography
-                      variant='caption'
-                      sx={{
+                    <Typography 
+                      variant="caption" 
+                      sx={{ 
                         color: 'rgba(207, 188, 251, 0.6)',
-                        fontSize: { xs: '0.75rem', md: '0.875rem' },
+                        fontSize: { xs: '0.75rem', md: '0.875rem' }
                       }}
                     >
                       {ticket.creator.name}
@@ -342,12 +331,12 @@ const TicketList: React.FC<TicketListProps> = ({
 
                   {/* Назначенный модератор */}
                   {ticket.assignee && (
-                    <Box display='flex' alignItems='center' gap={1}>
-                      <Typography
-                        variant='caption'
-                        sx={{
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
                           color: 'rgba(207, 188, 251, 0.6)',
-                          fontSize: { xs: '0.75rem', md: '0.875rem' },
+                          fontSize: { xs: '0.75rem', md: '0.875rem' }
                         }}
                       >
                         →
@@ -355,16 +344,13 @@ const TicketList: React.FC<TicketListProps> = ({
                       <Avatar
                         src={ticket.assignee.avatar}
                         alt={ticket.assignee.name}
-                        sx={{
-                          width: { xs: 20, md: 24 },
-                          height: { xs: 20, md: 24 },
-                        }}
+                        sx={{ width: { xs: 20, md: 24 }, height: { xs: 20, md: 24 } }}
                       />
-                      <Typography
-                        variant='caption'
-                        sx={{
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
                           color: 'rgba(207, 188, 251, 0.6)',
-                          fontSize: { xs: '0.75rem', md: '0.875rem' },
+                          fontSize: { xs: '0.75rem', md: '0.875rem' }
                         }}
                       >
                         {ticket.assignee.name}
@@ -373,35 +359,36 @@ const TicketList: React.FC<TicketListProps> = ({
                   )}
 
                   {/* Дата создания */}
-                  <Typography
-                    variant='caption'
-                    sx={{
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
                       color: 'rgba(207, 188, 251, 0.5)',
-                      fontSize: { xs: '0.75rem', md: '0.875rem' },
+                      fontSize: { xs: '0.75rem', md: '0.875rem' }
                     }}
                   >
                     {formatDate(ticket.created_at)}
                   </Typography>
 
                   {/* Количество комментариев */}
-                  <Typography
-                    variant='caption'
-                    sx={{
+                  <Typography 
+                    variant="caption" 
+                    sx={{ 
                       color: 'rgba(207, 188, 251, 0.5)',
-                      fontSize: { xs: '0.75rem', md: '0.875rem' },
+                      fontSize: { xs: '0.75rem', md: '0.875rem' }
                     }}
                   >
                     💬 {ticket.comments_count}
                   </Typography>
                 </Box>
-              </Box>
 
+                              </Box>
+              
               <Box display={{ xs: 'none', md: 'flex' }} gap={1}>
                 {ticket.status === 'new' && (
-                  <Tooltip title='Назначить себе'>
+                  <Tooltip title="Назначить себе">
                     <IconButton
-                      size='small'
-                      onClick={e => {
+                      size="small"
+                      onClick={(e) => {
                         e.stopPropagation();
                         handleAction(ticket.id, 'assign');
                       }}
@@ -414,10 +401,10 @@ const TicketList: React.FC<TicketListProps> = ({
                 )}
 
                 {ticket.status === 'in_progress' && (
-                  <Tooltip title='Отметить как решенный'>
+                  <Tooltip title="Отметить как решенный">
                     <IconButton
-                      size='small'
-                      onClick={e => {
+                      size="small"
+                      onClick={(e) => {
                         e.stopPropagation();
                         handleAction(ticket.id, 'resolve');
                       }}
@@ -430,10 +417,10 @@ const TicketList: React.FC<TicketListProps> = ({
                 )}
 
                 {ticket.status !== 'closed' && (
-                  <Tooltip title='Закрыть тикет'>
+                  <Tooltip title="Закрыть тикет">
                     <IconButton
-                      size='small'
-                      onClick={e => {
+                      size="small"
+                      onClick={(e) => {
                         e.stopPropagation();
                         handleAction(ticket.id, 'close');
                       }}
@@ -448,26 +435,26 @@ const TicketList: React.FC<TicketListProps> = ({
             </Box>
 
             {/* Быстрые действия на мобильных - внизу карточки */}
-            <Box
-              display={{ xs: 'flex', md: 'none' }}
-              gap={1}
-              justifyContent='flex-end'
+            <Box 
+              display={{ xs: 'flex', md: 'none' }} 
+              gap={1} 
+              justifyContent="flex-end"
             >
               {ticket.status === 'new' && (
                 <Button
-                  size='small'
-                  variant='outlined'
-                  onClick={e => {
+                  size="small"
+                  variant="outlined"
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleAction(ticket.id, 'assign');
                   }}
                   disabled={actionLoading}
-                  sx={{
+                  sx={{ 
                     color: 'rgba(207, 188, 251, 0.7)',
                     borderColor: 'rgba(207, 188, 251, 0.3)',
                     fontSize: '0.75rem',
                     py: 0.5,
-                    px: 1.5,
+                    px: 1.5
                   }}
                 >
                   Назначить
@@ -476,19 +463,19 @@ const TicketList: React.FC<TicketListProps> = ({
 
               {ticket.status === 'in_progress' && (
                 <Button
-                  size='small'
-                  variant='outlined'
-                  onClick={e => {
+                  size="small"
+                  variant="outlined"
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleAction(ticket.id, 'resolve');
                   }}
                   disabled={actionLoading}
-                  sx={{
+                  sx={{ 
                     color: 'rgba(76, 175, 80, 0.7)',
                     borderColor: 'rgba(76, 175, 80, 0.3)',
                     fontSize: '0.75rem',
                     py: 0.5,
-                    px: 1.5,
+                    px: 1.5
                   }}
                 >
                   Решить
@@ -497,19 +484,19 @@ const TicketList: React.FC<TicketListProps> = ({
 
               {ticket.status !== 'closed' && (
                 <Button
-                  size='small'
-                  variant='outlined'
-                  onClick={e => {
+                  size="small"
+                  variant="outlined"
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleAction(ticket.id, 'close');
                   }}
                   disabled={actionLoading}
-                  sx={{
+                  sx={{ 
                     color: 'rgba(255, 107, 107, 0.7)',
                     borderColor: 'rgba(255, 107, 107, 0.3)',
                     fontSize: '0.75rem',
                     py: 0.5,
-                    px: 1.5,
+                    px: 1.5
                   }}
                 >
                   Закрыть
@@ -521,20 +508,20 @@ const TicketList: React.FC<TicketListProps> = ({
       ))}
 
       {pagination.has_next && (
-        <Box display='flex' justifyContent='center' mt={3}>
-          <Button
-            variant='outlined'
-            onClick={() => onTicketAction(0, 'loadMore')}
-            disabled={loading}
-            sx={{
-              borderColor: 'rgba(207, 188, 251, 0.3)',
-              color: 'rgba(207, 188, 251, 0.7)',
-              '&:hover': {
-                borderColor: 'rgba(207, 188, 251, 0.5)',
-                background: 'rgba(207, 188, 251, 0.05)',
-              },
-            }}
-          >
+        <Box display="flex" justifyContent="center" mt={3}>
+                     <Button
+             variant="outlined"
+             onClick={() => onTicketAction(0, 'loadMore')}
+             disabled={loading}
+             sx={{
+               borderColor: 'rgba(207, 188, 251, 0.3)',
+               color: 'rgba(207, 188, 251, 0.7)',
+               '&:hover': {
+                 borderColor: 'rgba(207, 188, 251, 0.5)',
+                 background: 'rgba(207, 188, 251, 0.05)',
+               },
+             }}
+           >
             Загрузить еще
           </Button>
         </Box>
@@ -543,4 +530,4 @@ const TicketList: React.FC<TicketListProps> = ({
   );
 };
 
-export default TicketList;
+export default TicketList; 

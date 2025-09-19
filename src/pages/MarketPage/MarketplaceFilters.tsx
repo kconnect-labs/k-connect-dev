@@ -114,7 +114,10 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 interface MarketplaceFiltersProps {
-  onFiltersChange: (filters: { pack_id?: number; item_name?: string }) => void;
+  onFiltersChange: (filters: {
+    pack_id?: number;
+    item_name?: string;
+  }) => void;
   currentFilters: any;
 }
 
@@ -122,8 +125,7 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
   onFiltersChange,
   currentFilters,
 }) => {
-  const { packs, packItems, loading, error, fetchPackItems } =
-    useMarketplaceFilters();
+  const { packs, packItems, loading, error, fetchPackItems } = useMarketplaceFilters();
   const [selectedPack, setSelectedPack] = useState<number | ''>('');
   const [selectedItem, setSelectedItem] = useState<string>('');
   const [loadingItems, setLoadingItems] = useState(false);
@@ -134,53 +136,41 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
       setSelectedPack(currentFilters.pack_id);
       fetchPackItems(currentFilters.pack_id);
     }
-    if (
-      currentFilters?.item_name &&
-      currentFilters.item_name !== selectedItem
-    ) {
+    if (currentFilters?.item_name && currentFilters.item_name !== selectedItem) {
       setSelectedItem(currentFilters.item_name);
     }
   }, [currentFilters?.pack_id, currentFilters?.item_name]);
 
-  const handlePackChange = useCallback(
-    async (packId: number | '') => {
-      setSelectedPack(packId);
-      setSelectedItem(''); // Сбрасываем выбранный предмет
-
-      if (packId) {
-        setLoadingItems(true);
-        try {
-          await fetchPackItems(packId);
-        } finally {
-          setLoadingItems(false);
-        }
+  const handlePackChange = useCallback(async (packId: number | '') => {
+    setSelectedPack(packId);
+    setSelectedItem(''); // Сбрасываем выбранный предмет
+    
+    if (packId) {
+      setLoadingItems(true);
+      try {
+        await fetchPackItems(packId);
+      } finally {
+        setLoadingItems(false);
       }
+    }
+    
+    applyFilters({
+      pack_id: packId || undefined,
+      item_name: undefined,
+    });
+  }, [fetchPackItems]);
 
-      applyFilters({
-        pack_id: packId || undefined,
-        item_name: undefined,
-      });
-    },
-    [fetchPackItems]
-  );
+  const handleItemChange = useCallback((itemName: string) => {
+    setSelectedItem(itemName);
+    applyFilters({
+      pack_id: selectedPack || undefined,
+      item_name: itemName || undefined,
+    });
+  }, [selectedPack]);
 
-  const handleItemChange = useCallback(
-    (itemName: string) => {
-      setSelectedItem(itemName);
-      applyFilters({
-        pack_id: selectedPack || undefined,
-        item_name: itemName || undefined,
-      });
-    },
-    [selectedPack]
-  );
-
-  const applyFilters = useCallback(
-    (filters: any) => {
-      onFiltersChange(filters);
-    },
-    [onFiltersChange]
-  );
+  const applyFilters = useCallback((filters: any) => {
+    onFiltersChange(filters);
+  }, [onFiltersChange]);
 
   const clearFilters = useCallback(() => {
     setSelectedPack('');
@@ -188,20 +178,18 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
     onFiltersChange({});
   }, [onFiltersChange]);
 
+
   return (
     <StyledFiltersContainer>
-      <Typography
-        variant='h6'
-        sx={{
-          mb: 2,
-          fontWeight: 600,
-          color: 'var(--theme-text-primary)',
-          fontSize: '1.1rem',
-        }}
-      >
+      <Typography variant="h6" sx={{ 
+        mb: 2, 
+        fontWeight: 600,
+        color: 'var(--theme-text-primary)',
+        fontSize: '1.1rem'
+      }}>
         Фильтры
       </Typography>
-
+      
       {/* Глобальные стили для Menu */}
       <style>{`
         .MuiMenu-paper {
@@ -233,21 +221,21 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
           background-color: var(--theme-text-accent) !important;
         }
       `}</style>
-
+      
       <FilterRow>
         {/* Выбор пака */}
         <StyledFormControl>
           <InputLabel>Пак</InputLabel>
           <Select
             value={selectedPack}
-            label='Пак'
-            onChange={e => handlePackChange(e.target.value as number | '')}
+            label="Пак"
+            onChange={(e) => handlePackChange(e.target.value as number | '')}
             disabled={loading}
           >
-            <StyledMenuItem value=''>
+            <StyledMenuItem value="">
               <em>Все паки</em>
             </StyledMenuItem>
-            {packs.map(pack => (
+            {packs.map((pack) => (
               <StyledMenuItem key={pack.id} value={pack.id}>
                 {pack.display_name}
               </StyledMenuItem>
@@ -260,15 +248,15 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
           <InputLabel>Предмет</InputLabel>
           <Select
             value={selectedItem}
-            label='Предмет'
-            onChange={e => handleItemChange(e.target.value as string)}
+            label="Предмет"
+            onChange={(e) => handleItemChange(e.target.value as string)}
             disabled={!selectedPack || loadingItems}
             endAdornment={loadingItems ? <CircularProgress size={20} /> : null}
           >
-            <StyledMenuItem value=''>
+            <StyledMenuItem value="">
               <em>Все предметы</em>
             </StyledMenuItem>
-            {packItems.map(item => (
+            {packItems.map((item) => (
               <StyledMenuItem key={item.id} value={item.item_name}>
                 {item.item_name}
               </StyledMenuItem>
@@ -278,7 +266,7 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
 
         {/* Кнопка очистки */}
         <StyledButton
-          variant='outlined'
+          variant="outlined"
           startIcon={<ClearIcon />}
           onClick={clearFilters}
         >
@@ -288,43 +276,32 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
 
       {/* Показываем ошибку если есть */}
       {error && (
-        <Typography variant='body2' color='error' sx={{ mt: 1 }}>
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
           {error}
         </Typography>
       )}
 
       {/* Активные фильтры */}
       {(selectedPack || selectedItem) && (
-        <Box
-          sx={{
-            mt: 2,
-            display: 'flex',
-            gap: 1,
-            flexWrap: 'wrap',
-            alignItems: 'center',
-          }}
-        >
-          <Typography
-            variant='body2'
-            sx={{
-              color: 'var(--theme-text-secondary)',
-              mr: 1,
-            }}
-          >
+        <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Typography variant="body2" sx={{ 
+            color: 'var(--theme-text-secondary)',
+            mr: 1
+          }}>
             Активные фильтры:
           </Typography>
           {selectedPack && (
             <StyledChip
               label={`Пак: ${packs.find(p => p.id === selectedPack)?.display_name}`}
               onDelete={() => handlePackChange('')}
-              size='small'
+              size="small"
             />
           )}
           {selectedItem && (
             <StyledChip
               label={`Предмет: ${selectedItem}`}
               onDelete={() => handleItemChange('')}
-              size='small'
+              size="small"
             />
           )}
         </Box>

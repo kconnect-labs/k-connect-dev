@@ -8,11 +8,7 @@ interface MediaErrorContainerProps {
   children: React.ReactNode;
 }
 
-const MediaErrorContainer: React.FC<MediaErrorContainerProps> = ({
-  sx,
-  children,
-  ...props
-}) => (
+const MediaErrorContainer: React.FC<MediaErrorContainerProps> = ({ sx, children, ...props }) => (
   <Box
     sx={{
       height: '220px',
@@ -71,4 +67,4 @@ const MediaErrorDisplay: React.FC<MediaErrorDisplayProps> = ({ type, t }) => {
   );
 };
 
-export default MediaErrorDisplay;
+export default MediaErrorDisplay; 

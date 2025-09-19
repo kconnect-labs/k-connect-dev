@@ -26,7 +26,7 @@ const InventoryPacksContainer: React.FC<InventoryPacksContainerProps> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  
   const [activeTab, setActiveTab] = useState('packs');
   const [packs, setPacks] = useState<Pack[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,7 +92,7 @@ const InventoryPacksContainer: React.FC<InventoryPacksContainerProps> = ({
 
   if (error) {
     return (
-      <Alert severity='error' sx={{ m: 2 }}>
+      <Alert severity="error" sx={{ m: 2 }}>
         {error}
       </Alert>
     );
@@ -100,10 +100,7 @@ const InventoryPacksContainer: React.FC<InventoryPacksContainerProps> = ({
 
   return (
     <Box sx={{ p: isMobile ? 1 : 2 }}>
-      <Typography
-        variant='h4'
-        sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}
-      >
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: 700, textAlign: 'center' }}>
         Инвентарь
       </Typography>
 
@@ -121,16 +118,16 @@ const InventoryPacksContainer: React.FC<InventoryPacksContainerProps> = ({
         <>
           {packs.length === 0 ? (
             <Box sx={{ textAlign: 'center', p: 4 }}>
-              <Typography variant='h6' color='text.secondary' sx={{ mb: 1 }}>
+              <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
                 Паки не найдены
               </Typography>
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant="body2" color="text.secondary">
                 Попробуйте позже или предложите свой пак!
               </Typography>
             </Box>
           ) : (
             <Grid container spacing={2}>
-              {packs.map(pack => (
+              {packs.map((pack) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={pack.id}>
                   <PackCard
                     pack={pack}
@@ -148,9 +145,11 @@ const InventoryPacksContainer: React.FC<InventoryPacksContainerProps> = ({
         </>
       )}
 
-      {activeTab === 'proposals' && <MyProposals />}
+      {activeTab === 'proposals' && (
+        <MyProposals />
+      )}
     </Box>
   );
 };
 
-export default InventoryPacksContainer;
+export default InventoryPacksContainer; 

@@ -14,13 +14,13 @@ export const getBackgroundGradient = (
     // Fallback градиент если нет background_id
     return 'radial-gradient(50% 50% at 48.88% 50%, #666666 0%, #333333 100%)';
   }
-
+  
   const gradient = getGradient(backgroundId);
   if (!gradient) {
     // Fallback градиент если градиент не найден в JSON
     return 'radial-gradient(50% 50% at 48.88% 50%, #666666 0%, #333333 100%)';
   }
-
+  
   return gradient;
 };
 
@@ -31,9 +31,7 @@ export const getBackgroundGradient = (
  */
 export const isOverlayItem = (upgradeable: string | number): boolean => {
   const upgradeableStr = String(upgradeable);
-  return (
-    upgradeableStr === '2' || upgradeableStr === '3' || upgradeableStr === '4'
-  );
+  return upgradeableStr === '2' || upgradeableStr === '3' || upgradeableStr === '4';
 };
 
 /**
@@ -43,22 +41,18 @@ export const isOverlayItem = (upgradeable: string | number): boolean => {
  * @param upgradeable - значение upgradeable предмета (для определения оверлея)
  * @returns CSS объект с backgroundImage, backgroundSize и backgroundPosition или пустой объект для оверлеев
  */
-export const createTwoCirclePattern = (
-  itemId: number,
-  size: number = 22,
-  upgradeable?: string | number
-) => {
+export const createTwoCirclePattern = (itemId: number, size: number = 22, upgradeable?: string | number) => {
   if (upgradeable && isOverlayItem(upgradeable)) {
     return {};
   }
-
+  
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const adjustedSize = isMobile ? size * 0.55 : size;
-
+  
   const svgDataUrl = getSvgDataUrl(itemId);
-
+  
   return {
-    backgroundImage:
+    backgroundImage: 
       /* Внутренний круг - 8 иконок */
       `url("${svgDataUrl}"),
        url("${svgDataUrl}"),
@@ -116,7 +110,7 @@ export const createTwoCirclePattern = (
        url("${svgDataUrl}"),
        url("${svgDataUrl}"),
        url("${svgDataUrl}")`,
-    backgroundSize:
+    backgroundSize: 
       /* Внутренний круг - 8 иконок */
       `${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ${adjustedSize}px ${adjustedSize}px, ` +
       /* Средний круг - 12 иконок */
@@ -125,7 +119,7 @@ export const createTwoCirclePattern = (
       `${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ${isMobile ? 13.5 : 18}px ${isMobile ? 13.5 : 18}px, ` +
       /* Угловые иконки - 12 иконок */
       `${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px, ${isMobile ? 10.5 : 14}px ${isMobile ? 10.5 : 14}px`,
-    backgroundPosition:
+    backgroundPosition: 
       /* Внутренний круг - 8 иконок */
       '50% 30%, 65% 35%, 70% 50%, 65% 65%, 50% 70%, 35% 65%, 30% 50%, 35% 35%, ' +
       /* Средний круг - 12 иконок */
@@ -135,28 +129,26 @@ export const createTwoCirclePattern = (
       /* Угловые иконки - 12 иконок */
       '95% 5%, 98% 15%, 85% 2%, 95% 95%, 98% 85%, 85% 98%, 5% 95%, 15% 98%, 2% 85%, 5% 5%, 15% 2%, 2% 15%',
     backgroundRepeat: 'no-repeat',
+    
   };
 };
 
 /**
  * Создает CSS стили для маленьких карточек (50% от обычного размера)
  */
-export const createSmallCirclePattern = (
-  itemId: number,
-  upgradeable?: string | number
-) => {
+export const createSmallCirclePattern = (itemId: number, upgradeable?: string | number) => {
   // Для оверлеев не создаем SVG паттерны
   if (upgradeable && isOverlayItem(upgradeable)) {
     return {};
   }
-
+  
   // Проверяем ширину экрана для мобильных устройств
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-
+  
   const svgDataUrl = getSvgDataUrl(itemId);
-
+  
   return {
-    backgroundImage:
+    backgroundImage: 
       /* Внутренний круг - 8 иконок */
       `url("${svgDataUrl}"),
        url("${svgDataUrl}"),
@@ -214,7 +206,7 @@ export const createSmallCirclePattern = (
        url("${svgDataUrl}"),
        url("${svgDataUrl}"),
        url("${svgDataUrl}")`,
-    backgroundSize:
+    backgroundSize: 
       /* Внутренний круг - 8 иконок */
       `11px 11px, 11px 11px, 11px 11px, 11px 11px, 11px 11px, 11px 11px, 11px 11px, 11px 11px, ` +
       /* Средний круг - 12 иконок */
@@ -223,7 +215,7 @@ export const createSmallCirclePattern = (
       `9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, 9px 9px, ` +
       /* Угловые иконки - 12 иконок */
       `7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px, 7px 7px`,
-    backgroundPosition:
+    backgroundPosition: 
       /* Внутренний круг - 8 иконок */
       '50% 30%, 65% 35%, 70% 50%, 65% 65%, 50% 70%, 35% 65%, 30% 50%, 35% 35%, ' +
       /* Средний круг - 12 иконок */
@@ -233,28 +225,26 @@ export const createSmallCirclePattern = (
       /* Угловые иконки - 12 иконок */
       '95% 5%, 98% 15%, 85% 2%, 95% 95%, 98% 85%, 85% 98%, 5% 95%, 15% 98%, 2% 85%, 5% 5%, 15% 2%, 2% 15%',
     backgroundRepeat: 'no-repeat',
+    
   };
 };
 
 /**
  * Создает CSS стили для средних карточек (75% от обычного размера)
  */
-export const createMediumCirclePattern = (
-  itemId: number,
-  upgradeable?: string | number
-) => {
+export const createMediumCirclePattern = (itemId: number, upgradeable?: string | number) => {
   // Для оверлеев не создаем SVG паттерны
   if (upgradeable && isOverlayItem(upgradeable)) {
     return {};
   }
-
+  
   // Проверяем ширину экрана для мобильных устройств
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-
+  
   const svgDataUrl = getSvgDataUrl(itemId);
-
+  
   return {
-    backgroundImage:
+    backgroundImage: 
       /* Внутренний круг - 8 иконок */
       `url("${svgDataUrl}"),
        url("${svgDataUrl}"),
@@ -312,16 +302,16 @@ export const createMediumCirclePattern = (
        url("${svgDataUrl}"),
        url("${svgDataUrl}"),
        url("${svgDataUrl}")`,
-    backgroundSize:
-      /* Внутренний круг - 8 иконок */
-      `${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ` +
-      /* Средний круг - 12 иконок */
-      `${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ` +
-      /* Внешний круг - 20 иконок */
-      `${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ` +
-      /* Угловые иконки - 12 иконок */
-      `${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px`,
-    backgroundPosition:
+       backgroundSize: 
+       /* Внутренний круг - 8 иконок */
+       `${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ` +
+       /* Средний круг - 12 иконок */
+       `${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ${isMobile ? 11.5 : 16.5}px ${isMobile ? 11.5 : 16.5}px, ` +
+       /* Внешний круг - 20 иконок */
+       `${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ${isMobile ? 9 : 13.5}px ${isMobile ? 9 : 13.5}px, ` +
+       /* Угловые иконки - 12 иконок */
+       `${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px, ${isMobile ? 6.5 : 10.5}px ${isMobile ? 6.5 : 10.5}px`,
+     backgroundPosition: 
       /* Внутренний круг - 8 иконок */
       '50% 30%, 65% 35%, 70% 50%, 65% 65%, 50% 70%, 35% 65%, 30% 50%, 35% 35%, ' +
       /* Средний круг - 12 иконок */
@@ -331,5 +321,6 @@ export const createMediumCirclePattern = (
       /* Угловые иконки - 12 иконок */
       '95% 5%, 98% 15%, 85% 2%, 95% 95%, 98% 85%, 85% 98%, 5% 95%, 15% 98%, 2% 85%, 5% 5%, 15% 2%, 2% 15%',
     backgroundRepeat: 'no-repeat',
+    
   };
 };

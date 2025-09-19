@@ -5,7 +5,7 @@ let stylesAdded = false;
 
 const addLoadingStyles = () => {
   if (stylesAdded) return;
-
+  
   const style = document.createElement('style');
   style.textContent = `
     @keyframes loading-spin {

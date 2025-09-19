@@ -66,11 +66,9 @@ const UserSubscriptionBadge = ({ user }) => {
     >
       <Chip
         icon={
-          user.subscription.type === 'max' ? (
-            <MaxIcon size={16} color='currentColor' />
-          ) : (
-            <DiamondIcon fontSize='small' />
-          )
+          user.subscription.type === 'max'
+            ? <MaxIcon size={16} color="currentColor" />
+            : <DiamondIcon fontSize='small' />
         }
         label={
           user.subscription.type === 'pick-me'
@@ -86,9 +84,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.6)'
                 : user.subscription.type === 'max'
-                  ? mainColor
-                    ? `${mainColor}26`
-                    : 'rgba(208, 7, 7, 0.3)'
+                  ? (mainColor ? `${mainColor}26` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.15)'
                     : 'rgba(66, 165, 245, 0.4)',
@@ -98,7 +94,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? '#B8A9FF'
                 : user.subscription.type === 'max'
-                  ? mainColor || '#FF4D50'
+                  ? (mainColor || '#FF4D50')
                   : user.subscription.type === 'pick-me'
                     ? 'rgb(208, 188, 255)'
                     : '#90CAF9',
@@ -110,9 +106,7 @@ const UserSubscriptionBadge = ({ user }) => {
               : user.subscription.type === 'ultimate'
                 ? 'rgba(124, 77, 255, 0.7)'
                 : user.subscription.type === 'max'
-                  ? mainColor
-                    ? `${mainColor}4D`
-                    : 'rgba(208, 7, 7, 0.3)'
+                  ? (mainColor ? `${mainColor}4D` : 'rgba(208, 7, 7, 0.3)')
                   : user.subscription.type === 'pick-me'
                     ? 'rgba(208, 188, 255, 0.3)'
                     : 'rgba(66, 165, 245, 0.5)',
@@ -120,14 +114,9 @@ const UserSubscriptionBadge = ({ user }) => {
             color: 'inherit',
           },
           '& .MuiChip-label': {
-            color:
-              user.subscription.type === 'ultimate'
-                ? '#B8A9FF !important'
-                : user.subscription.type === 'premium'
-                  ? '#E1BEE7 !important'
-                  : user.subscription.type === 'basic'
-                    ? '#90CAF9 !important'
-                    : 'inherit',
+            color: user.subscription.type === 'ultimate' ? '#B8A9FF !important' : 
+                   user.subscription.type === 'premium' ? '#E1BEE7 !important' :
+                   user.subscription.type === 'basic' ? '#90CAF9 !important' : 'inherit',
           },
           py: 0.25,
           height: 'auto',

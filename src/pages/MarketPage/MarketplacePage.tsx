@@ -39,6 +39,7 @@ const StyledGrid = styled(Grid)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
+
 const EmptyState = styled(Box)(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(6),
@@ -54,11 +55,10 @@ const MarketplacePage: React.FC = () => {
     loadMore,
     refresh,
     applyFilters,
-    filters,
+    filters
   } = useMarketplace();
 
-  const [selectedListing, setSelectedListing] =
-    useState<MarketplaceListing | null>(null);
+  const [selectedListing, setSelectedListing] = useState<MarketplaceListing | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   // Добавляем infinite scroll
@@ -87,11 +87,11 @@ const MarketplacePage: React.FC = () => {
   if (error) {
     return (
       <StyledContainer>
-        <Alert severity='error' sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
         <Button
-          variant='contained'
+          variant="contained"
           startIcon={<RefreshIcon />}
           onClick={refresh}
         >
@@ -104,10 +104,10 @@ const MarketplacePage: React.FC = () => {
   return (
     <StyledContainer>
       <StyledHeader>
-        <Typography variant='h4' sx={{ fontWeight: 700 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700 }}>
           Маркетплейс
         </Typography>
-        <Typography variant='body1' color='text.secondary'>
+        <Typography variant="body1" color="text.secondary">
           Покупайте и продавайте предметы с другими игроками
         </Typography>
       </StyledHeader>
@@ -124,10 +124,10 @@ const MarketplacePage: React.FC = () => {
         </Box>
       ) : listings.length === 0 ? (
         <EmptyState>
-          <Typography variant='h6' sx={{ mb: 2 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
             Предметы не найдены
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant="body2" color="text.secondary">
             В маркетплейсе пока нет доступных предметов
           </Typography>
         </EmptyState>
@@ -135,14 +135,7 @@ const MarketplacePage: React.FC = () => {
         <>
           <StyledGrid container spacing={1}>
             {listings.map((listing, index) => (
-              <Grid
-                item
-                xs={6}
-                sm={6}
-                md={4}
-                lg={3}
-                key={`${listing.id}-${index}`}
-              >
+              <Grid item xs={6} sm={6} md={4} lg={3} key={`${listing.id}-${index}`}>
                 <MarketplaceItemCard
                   listing={listing}
                   onClick={handleItemClick}
@@ -153,35 +146,32 @@ const MarketplacePage: React.FC = () => {
 
           {/* Невидимый элемент для отслеживания видимости */}
           {hasMore && (
-            <Box
-              ref={loadingRef}
-              sx={{
-                height: '20px',
-                display: 'flex',
-                justifyContent: 'center',
+            <Box 
+              ref={loadingRef} 
+              sx={{ 
+                height: '20px', 
+                display: 'flex', 
+                justifyContent: 'center', 
                 alignItems: 'center',
-                py: 2,
+                py: 2
               }}
             >
               {loading && (
                 <>
                   <CircularProgress size={24} />
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    sx={{ ml: 2 }}
-                  >
+                  <Typography variant="body2" color="text.secondary" sx={{ ml: 2 }}>
                     Загружаем еще предметы...
                   </Typography>
                 </>
               )}
             </Box>
           )}
+          
 
           {/* Сообщение когда все загружено */}
           {!hasMore && listings.length > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant="body2" color="text.secondary">
                 Все предметы загружены
               </Typography>
             </Box>

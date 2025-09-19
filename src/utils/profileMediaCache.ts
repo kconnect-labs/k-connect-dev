@@ -10,9 +10,7 @@ export interface ProfileMediaCache {
 
 const cacheKey = (username: string) => `profileMedia_${username}`;
 
-export const getProfileMediaCache = async (
-  username: string
-): Promise<ProfileMediaCache | null> => {
+export const getProfileMediaCache = async (username: string): Promise<ProfileMediaCache | null> => {
   if (!username) return null;
   try {
     return (await get(cacheKey(username))) as ProfileMediaCache | null;
@@ -32,4 +30,4 @@ export const setProfileMediaCache = async (
   } catch (err) {
     console.error('IndexedDB set error', err);
   }
-};
+}; 

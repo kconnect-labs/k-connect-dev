@@ -250,11 +250,14 @@ const MessageInput = ({
     [onFileUpload]
   );
 
-  const handleStickerSelect = useCallback(stickerData => {
-    // Временно отключена отправка стикеров
-    console.log('Отправка стикеров временно отключена');
-    setShowStickerPicker(false);
-  }, []);
+  const handleStickerSelect = useCallback(
+    stickerData => {
+      // Временно отключена отправка стикеров
+      console.log('Отправка стикеров временно отключена');
+      setShowStickerPicker(false);
+    },
+    []
+  );
 
   const toggleStickerPicker = useCallback(() => {
     setShowStickerPicker(prev => !prev);
@@ -298,8 +301,7 @@ const MessageInput = ({
           justifyContent: 'space-between',
           padding: '8px 12px',
           marginBottom: '4px',
-          borderRadius:
-            'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
+          borderRadius: 'var(--main-border-radius) !important var(--main-border-radius) !important 0 0',
           backgroundColor: '#252525',
           borderLeft: '2px solid #D0BCFF',
         }}

@@ -34,7 +34,7 @@ const fadeInOut = keyframes`
 `;
 
 const StyledContainer = styled(Box, {
-  shouldForwardProp: prop => prop !== 'statusColor',
+  shouldForwardProp: (prop) => prop !== 'statusColor',
 })<{ statusColor?: string }>(({ theme, statusColor }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -43,7 +43,7 @@ const StyledContainer = styled(Box, {
   borderRadius: '18px',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(10px)',
-  border: statusColor
+  border: statusColor 
     ? `1px solid ${statusColor}33`
     : '1px solid rgb(24 24 24)',
   cursor: 'pointer',
@@ -61,22 +61,13 @@ const AnimatedLines = styled(Box)({
 });
 
 const Line = styled(Box, {
-  shouldForwardProp: prop =>
-    !['delay', 'animation', 'statusColor', 'getLighterColor'].includes(
-      prop as string
-    ),
-})<{
-  delay: number;
-  animation: string;
-  statusColor?: string;
-  getLighterColor?: (color: string) => string;
-}>(({ delay, animation, statusColor, getLighterColor }) => ({
+  shouldForwardProp: (prop) => !['delay', 'animation', 'statusColor', 'getLighterColor'].includes(prop as string),
+})<{ delay: number; animation: string; statusColor?: string; getLighterColor?: (color: string) => string }>(({ delay, animation, statusColor, getLighterColor }) => ({
   width: 3,
   borderRadius: 'var(--main-border-radius)',
-  background:
-    statusColor && getLighterColor
-      ? `linear-gradient(180deg, ${statusColor} 0%, ${getLighterColor(statusColor)} 100%)`
-      : 'linear-gradient(180deg, #4CAF50 0%, #81C784 100%)',
+  background: statusColor && getLighterColor
+    ? `linear-gradient(180deg, ${statusColor} 0%, ${getLighterColor(statusColor)} 100%)`
+    : 'linear-gradient(180deg, #4CAF50 0%, #81C784 100%)',
   animation: `${animation} 1.2s ease-in-out infinite`,
   animationDelay: `${delay}s`,
 }));
@@ -88,7 +79,7 @@ const TextContainer = styled(Box)({
 });
 
 const ScrollingText = styled(Typography, {
-  shouldForwardProp: prop => prop !== 'shouldScroll',
+  shouldForwardProp: (prop) => prop !== 'shouldScroll',
 })<{ shouldScroll: boolean }>(({ shouldScroll }) => ({
   whiteSpace: 'nowrap',
   animation: shouldScroll ? `${scrollText} 8s linear infinite` : 'none',
@@ -96,7 +87,7 @@ const ScrollingText = styled(Typography, {
 }));
 
 const AnimatedText = styled(Typography, {
-  shouldForwardProp: prop => prop !== 'isVisible',
+  shouldForwardProp: (prop) => prop !== 'isVisible',
 })<{ isVisible: boolean }>(({ isVisible }) => ({
   position: 'absolute',
   top: 0,
@@ -122,13 +113,7 @@ interface CurrentTrackDisplayProps {
   getLighterColor?: (color: string) => string;
 }
 
-const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({
-  track,
-  userId,
-  onClick,
-  statusColor,
-  getLighterColor,
-}) => {
+const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({ track, userId, onClick, statusColor, getLighterColor }) => {
   const [shouldScroll, setShouldScroll] = useState(false);
   const [lyricsLines, setLyricsLines] = useState<string[]>([]);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -176,16 +161,13 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({
 
   const loadLyrics = async () => {
     if (isLoadingLyrics || !userId) return;
-
+    
     setIsLoadingLyrics(true);
     try {
-      const response = await axios.get(
-        `/api/user/${userId}/current-music-lyrics`,
-        {
-          withCredentials: true,
-        }
-      );
-
+      const response = await axios.get(`/api/user/${userId}/current-music-lyrics`, {
+        withCredentials: true
+      });
+      
       if (response.data.success && response.data.lyrics_lines) {
         setLyricsLines(response.data.lyrics_lines);
       }
@@ -253,7 +235,7 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({
     if (lyricsLines.length === 0) {
       return displayText;
     }
-
+    
     if (currentTextIndex === 0) {
       return displayText; 
     } else {
@@ -265,35 +247,20 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({
   const currentText = getCurrentDisplayText();
 
   return (
-    <Tooltip title='Слушать вместе?' arrow>
+    <Tooltip title="Слушать вместе?" arrow>
       <StyledContainer onClick={handleClick} statusColor={statusColor}>
         <AnimatedLines>
-          <Line
-            delay={0}
-            animation={lineAnimation}
-            statusColor={statusColor}
-            getLighterColor={getLighterColor}
-          />
-          <Line
-            delay={0.2}
-            animation={lineAnimation2}
-            statusColor={statusColor}
-            getLighterColor={getLighterColor}
-          />
-          <Line
-            delay={0.4}
-            animation={lineAnimation3}
-            statusColor={statusColor}
-            getLighterColor={getLighterColor}
-          />
+          <Line delay={0} animation={lineAnimation} statusColor={statusColor} getLighterColor={getLighterColor} />
+          <Line delay={0.2} animation={lineAnimation2} statusColor={statusColor} getLighterColor={getLighterColor} />
+          <Line delay={0.4} animation={lineAnimation3} statusColor={statusColor} getLighterColor={getLighterColor} />
         </AnimatedLines>
-
+        
         <TextContainer>
           {lyricsLines.length > 0 ? (
             
             <AnimatedText
               ref={textRef}
-              variant='body2'
+              variant="body2"
               isVisible={!isAnimating}
               sx={{
                 color: 'var(--theme-text-primary)',
@@ -309,7 +276,7 @@ const CurrentTrackDisplay: React.FC<CurrentTrackDisplayProps> = ({
             
             <ScrollingText
               ref={textRef}
-              variant='body2'
+              variant="body2"
               shouldScroll={shouldScroll}
               sx={{
                 color: 'var(--theme-text-primary)',

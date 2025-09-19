@@ -79,10 +79,10 @@ if (!document.getElementById('equipped-item-styles')) {
 
 // Дефолтные позиции для айтемов (если не настроены)
 // Позиции рассчитаны относительно аватара в левой части карточки
-const getDefaultPosition = index => {
+const getDefaultPosition = (index) => {
   const positions = [
     { x: 30, y: 10 }, // Верхний-правый от аватара (очень высоко)
-    { x: 25, y: 35 }, // Нижний-правый от аватара
+    { x: 25, y: 35 }, // Нижний-правый от аватара  
     { x: 15, y: 35 }, // Нижний-левый от аватара
   ];
   return positions[index] || { x: 20, y: 25 };
@@ -154,392 +154,346 @@ const getAverageColor = (imgElement, callback) => {
   callback(`rgba(${r}, ${g}, ${b}, 0.9)`);
 };
 
-const EquippedItem = React.memo(
-  ({ item, index = 0, onPositionUpdate, isEditMode, onEditModeActivate }) => {
-    const [particleColor, setParticleColor] = useState(
-      'rgba(208, 188, 255, 0.8)'
-    );
-    const [isDragging, setIsDragging] = useState(false);
-    const [clickCount, setClickCount] = useState(0);
-    const [lastClickTime, setLastClickTime] = useState(0);
+const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode, onEditModeActivate }) => {
+  const [particleColor, setParticleColor] = useState('rgba(208, 188, 255, 0.8)');
+  const [isDragging, setIsDragging] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const [lastClickTime, setLastClickTime] = useState(0);
+  
+  // Определяем позицию: если есть сохраненная - используем её, иначе дефолтную
+  const defaultPos = getDefaultPosition(index);
+  const [position, setPosition] = useState({
+    x: item.profile_position_x !== null ? item.profile_position_x : defaultPos.x,
+    y: item.profile_position_y !== null ? item.profile_position_y : defaultPos.y
+  });
 
-    // Определяем позицию: если есть сохраненная - используем её, иначе дефолтную
-    const defaultPos = getDefaultPosition(index);
-    const [position, setPosition] = useState({
-      x:
-        item.profile_position_x !== null
-          ? item.profile_position_x
-          : defaultPos.x,
-      y:
-        item.profile_position_y !== null
-          ? item.profile_position_y
-          : defaultPos.y,
-    });
+  // Отладка инициализации позиции (раскомментировать для отладки)
+  // useEffect(() => {
+  //   console.log('Position initialized:', {
+  //     item_id: item.id,
+  //     server_x: item.profile_position_x,
+  //     server_y: item.profile_position_y,
+  //     default_x: defaultPos.x,
+  //     default_y: defaultPos.y,
+  //     final_x: position.x,
+  //     final_y: position.y
+  //   });
+  // }, [item.id, item.profile_position_x, item.profile_position_y, defaultPos.x, defaultPos.y, position.x, position.y]);
+  
+  // Отладка инициализации позиции (раскомментировать для отладки)
+  // useEffect(() => {
+  //   console.log('Item position initialized:', {
+  //     item_id: item.id,
+  //     server_x: item.profile_position_x,
+  //     server_y: item.profile_position_y,
+  //     default_x: defaultPos.x,
+  //     default_y: defaultPos.y,
+  //     final_x: position.x,
+  //     final_y: position.y
+  //   });
+  // }, [item.id, item.profile_position_x, item.profile_position_y, defaultPos.x, defaultPos.y, position.x, position.y]);
+  
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  
+  const imgRef = useRef(null);
+  const containerRef = useRef(null);
+  const clickTimeoutRef = useRef(null);
 
-    // Отладка инициализации позиции (раскомментировать для отладки)
-    // useEffect(() => {
-    //   console.log('Position initialized:', {
-    //     item_id: item.id,
-    //     server_x: item.profile_position_x,
-    //     server_y: item.profile_position_y,
-    //     default_x: defaultPos.x,
-    //     default_y: defaultPos.y,
-    //     final_x: position.x,
-    //     final_y: position.y
-    //   });
-    // }, [item.id, item.profile_position_x, item.profile_position_y, defaultPos.x, defaultPos.y, position.x, position.y]);
+  useEffect(() => {
+    if (item?.image_url) {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.src = item.image_url;
+      img.onload = () => {
+        getAverageColor(img, color => {
+          setParticleColor(color);
+        });
+      };
+      img.onerror = () => {
+        setParticleColor('rgba(208, 188, 255, 0.8)');
+      };
+    }
+  }, [item?.image_url]);
 
-    // Отладка инициализации позиции (раскомментировать для отладки)
-    // useEffect(() => {
-    //   console.log('Item position initialized:', {
-    //     item_id: item.id,
-    //     server_x: item.profile_position_x,
-    //     server_y: item.profile_position_y,
-    //     default_x: defaultPos.x,
-    //     default_y: defaultPos.y,
-    //     final_x: position.x,
-    //     final_y: position.y
-    //   });
-    // }, [item.id, item.profile_position_x, item.profile_position_y, defaultPos.x, defaultPos.y, position.x, position.y]);
-
-    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-
-    const imgRef = useRef(null);
-    const containerRef = useRef(null);
-    const clickTimeoutRef = useRef(null);
-
-    useEffect(() => {
-      if (item?.image_url) {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.src = item.image_url;
-        img.onload = () => {
-          getAverageColor(img, color => {
-            setParticleColor(color);
-          });
-        };
-        img.onerror = () => {
-          setParticleColor('rgba(208, 188, 255, 0.8)');
-        };
+  // Надежный механизм тройного клика/тапа
+  const handleClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastClickTime;
+    
+    // Если прошло больше 500мс, сбрасываем счетчик
+    if (timeDiff > 500) {
+      setClickCount(1);
+    } else {
+      setClickCount(prev => prev + 1);
+    }
+    
+    setLastClickTime(currentTime);
+    
+    // Очищаем предыдущий таймаут
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    // Устанавливаем новый таймаут
+    clickTimeoutRef.current = setTimeout(() => {
+      if (clickCount >= 2) {
+        // Тройной клик/тап - активируем режим редактирования
+        if (onEditModeActivate) {
+          onEditModeActivate();
+        }
+        setClickCount(0);
+      } else {
+        setClickCount(0);
       }
-    }, [item?.image_url]);
+    }, 300);
+  }, [clickCount, lastClickTime, onEditModeActivate]);
 
-    // Надежный механизм тройного клика/тапа
-    const handleClick = useCallback(
-      e => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const currentTime = Date.now();
-        const timeDiff = currentTime - lastClickTime;
-
-        // Если прошло больше 500мс, сбрасываем счетчик
-        if (timeDiff > 500) {
-          setClickCount(1);
-        } else {
-          setClickCount(prev => prev + 1);
+  // Отдельный обработчик для touch событий (для мобильных устройств)
+  const handleTouch = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastClickTime;
+    
+    // Если прошло больше 500мс, сбрасываем счетчик
+    if (timeDiff > 500) {
+      setClickCount(1);
+    } else {
+      setClickCount(prev => prev + 1);
+    }
+    
+    setLastClickTime(currentTime);
+    
+    console.log('Click count:', clickCount + 1, 'Time diff:', timeDiff); // Отладка
+    
+    // Очищаем предыдущий таймаут
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    // Устанавливаем новый таймаут
+    clickTimeoutRef.current = setTimeout(() => {
+      if (clickCount >= 2) {
+        // Тройной тап - активируем режим редактирования
+        console.log('Triple tap detected, activating edit mode'); // Отладка
+        if (onEditModeActivate) {
+          onEditModeActivate();
         }
+        setClickCount(0);
+      } else {
+        setClickCount(0);
+      }
+    }, 300);
+  }, [clickCount, lastClickTime, onEditModeActivate]);
 
-        setLastClickTime(currentTime);
+  // Обработчик двойного клика (отключен в новом режиме)
+  const handleDoubleClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Двойной клик больше не используется для сохранения
+  }, []);
 
-        // Очищаем предыдущий таймаут
-        if (clickTimeoutRef.current) {
-          clearTimeout(clickTimeoutRef.current);
-        }
+  // Обновление позиции в родительском компоненте
+  const updatePosition = () => {
+    if (onPositionUpdate) {
+      onPositionUpdate(item.id, position);
+    }
+  };
 
-        // Устанавливаем новый таймаут
-        clickTimeoutRef.current = setTimeout(() => {
-          if (clickCount >= 2) {
-            // Тройной клик/тап - активируем режим редактирования
-            if (onEditModeActivate) {
-              onEditModeActivate();
-            }
-            setClickCount(0);
-          } else {
-            setClickCount(0);
-          }
-        }, 300);
-      },
-      [clickCount, lastClickTime, onEditModeActivate]
-    );
+  // Отладка изменения режима редактирования (раскомментировать для отладки)
+  // useEffect(() => {
+  //   console.log('Edit mode changed:', {
+  //     item_id: item.id,
+  //     isEditMode,
+  //     position: { x: position.x, y: position.y }
+  //   });
+  // }, [isEditMode, item.id, position.x, position.y]);
 
-    // Отдельный обработчик для touch событий (для мобильных устройств)
-    const handleTouch = useCallback(
-      e => {
-        e.preventDefault();
-        e.stopPropagation();
+  // Обработчики перетаскивания (мышь)
+  const handleMouseDown = useCallback((e) => {
+    if (!isEditMode) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    
+    // Запоминаем начальную позицию мыши относительно элемента
+    const rect = containerRef.current.getBoundingClientRect();
+    setDragStart({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  }, [isEditMode]);
 
-        const currentTime = Date.now();
-        const timeDiff = currentTime - lastClickTime;
+  // Обработчики перетаскивания (touch)
+  const handleTouchStart = useCallback((e) => {
+    if (!isEditMode) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    
+    // Запоминаем начальную позицию touch относительно элемента
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    setDragStart({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top
+    });
+  }, [isEditMode]);
 
-        // Если прошло больше 500мс, сбрасываем счетчик
-        if (timeDiff > 500) {
-          setClickCount(1);
-        } else {
-          setClickCount(prev => prev + 1);
-        }
+  // Throttling для лучшей производительности
+  const lastUpdateTime = useRef(0);
+  const THROTTLE_DELAY = 16; // ~60fps
 
-        setLastClickTime(currentTime);
+  const handleMouseMove = useCallback((e) => {
+    if (!isDragging || !isEditMode) return;
+    
+    const now = Date.now();
+    if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
+    lastUpdateTime.current = now;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Получаем контейнер профиля (родительский элемент)
+    const profileContainer = containerRef.current.closest('[data-profile-container]');
+    if (!profileContainer) return;
+    
+    const profileRect = profileContainer.getBoundingClientRect();
+    
+    // Вычисляем позицию центра элемента в процентах относительно контейнера профиля
+    const newX = ((e.clientX - profileRect.left) / profileRect.width) * 100;
+    const newY = ((e.clientY - profileRect.top) / profileRect.height) * 100;
+    
+    // Ограничиваем позицию в пределах контейнера
+    const clampedX = Math.max(-5, Math.min(105, newX));
+    const clampedY = Math.max(-5, Math.min(105, newY));
+    
+    const newPosition = { x: clampedX, y: clampedY };
+    setPosition(newPosition);
+    
+    // Обновляем позицию в родительском компоненте в реальном времени
+    if (onPositionUpdate) {
+      onPositionUpdate(item.id, newPosition);
+    }
+  }, [isDragging, isEditMode, onPositionUpdate, item.id]);
 
-        console.log('Click count:', clickCount + 1, 'Time diff:', timeDiff); // Отладка
+  const handleTouchMove = useCallback((e) => {
+    if (!isDragging || !isEditMode) return;
+    
+    const now = Date.now();
+    if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
+    lastUpdateTime.current = now;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Получаем контейнер профиля (родительский элемент)
+    const profileContainer = containerRef.current.closest('[data-profile-container]');
+    if (!profileContainer) return;
+    
+    const profileRect = profileContainer.getBoundingClientRect();
+    
+    // Вычисляем позицию центра элемента в процентах относительно контейнера профиля
+    const touch = e.touches[0];
+    const newX = ((touch.clientX - profileRect.left) / profileRect.width) * 100;
+    const newY = ((touch.clientY - profileRect.top) / profileRect.height) * 100;
+    
+    // Ограничиваем позицию в пределах контейнера
+    const clampedX = Math.max(-5, Math.min(105, newX));
+    const clampedY = Math.max(-5, Math.min(105, newY));
+    
+    const newPosition = { x: clampedX, y: clampedY };
+    setPosition(newPosition);
+    
+    // Обновляем позицию в родительском компоненте в реальном времени
+    if (onPositionUpdate) {
+      onPositionUpdate(item.id, newPosition);
+    }
+  }, [isDragging, isEditMode, onPositionUpdate, item.id]);
 
-        // Очищаем предыдущий таймаут
-        if (clickTimeoutRef.current) {
-          clearTimeout(clickTimeoutRef.current);
-        }
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
-        // Устанавливаем новый таймаут
-        clickTimeoutRef.current = setTimeout(() => {
-          if (clickCount >= 2) {
-            // Тройной тап - активируем режим редактирования
-            console.log('Triple tap detected, activating edit mode'); // Отладка
-            if (onEditModeActivate) {
-              onEditModeActivate();
-            }
-            setClickCount(0);
-          } else {
-            setClickCount(0);
-          }
-        }, 300);
-      },
-      [clickCount, lastClickTime, onEditModeActivate]
-    );
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
-    // Обработчик двойного клика (отключен в новом режиме)
-    const handleDoubleClick = useCallback(e => {
-      e.preventDefault();
-      e.stopPropagation();
-      // Двойной клик больше не используется для сохранения
-    }, []);
+  // Добавляем глобальные обработчики мыши и touch
+  useEffect(() => {
+    if (isEditMode) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+      document.addEventListener('touchend', handleTouchEnd);
+      
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      };
+    }
+  }, [isEditMode, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
-    // Обновление позиции в родительском компоненте
-    const updatePosition = () => {
-      if (onPositionUpdate) {
-        onPositionUpdate(item.id, position);
+  // Очистка таймаута при размонтировании
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current);
       }
     };
+  }, []);
 
-    // Отладка изменения режима редактирования (раскомментировать для отладки)
-    // useEffect(() => {
-    //   console.log('Edit mode changed:', {
-    //     item_id: item.id,
-    //     isEditMode,
-    //     position: { x: position.x, y: position.y }
-    //   });
-    // }, [isEditMode, item.id, position.x, position.y]);
+  if (!item) {
+    return null;
+  }
 
-    // Обработчики перетаскивания (мышь)
-    const handleMouseDown = useCallback(
-      e => {
-        if (!isEditMode) return;
+  const isUpgraded = item.upgrade_level >= 1;
 
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(true);
+  const particles = isUpgraded
+    ? Array.from({ length: 10 }).map((_, i) => (
+        <div
+          key={i}
+          style={getParticleStyle(
+            particleColor,
+            Math.random() * 4,
+            Math.random() * 3 + 3
+          )}
+        />
+      ))
+    : [];
 
-        // Запоминаем начальную позицию мыши относительно элемента
-        const rect = containerRef.current.getBoundingClientRect();
-        setDragStart({
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        });
-      },
-      [isEditMode]
-    );
-
-    // Обработчики перетаскивания (touch)
-    const handleTouchStart = useCallback(
-      e => {
-        if (!isEditMode) return;
-
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDragging(true);
-
-        // Запоминаем начальную позицию touch относительно элемента
-        const rect = containerRef.current.getBoundingClientRect();
-        const touch = e.touches[0];
-        setDragStart({
-          x: touch.clientX - rect.left,
-          y: touch.clientY - rect.top,
-        });
-      },
-      [isEditMode]
-    );
-
-    // Throttling для лучшей производительности
-    const lastUpdateTime = useRef(0);
-    const THROTTLE_DELAY = 16; // ~60fps
-
-    const handleMouseMove = useCallback(
-      e => {
-        if (!isDragging || !isEditMode) return;
-
-        const now = Date.now();
-        if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
-        lastUpdateTime.current = now;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Получаем контейнер профиля (родительский элемент)
-        const profileContainer = containerRef.current.closest(
-          '[data-profile-container]'
-        );
-        if (!profileContainer) return;
-
-        const profileRect = profileContainer.getBoundingClientRect();
-
-        // Вычисляем позицию центра элемента в процентах относительно контейнера профиля
-        const newX = ((e.clientX - profileRect.left) / profileRect.width) * 100;
-        const newY = ((e.clientY - profileRect.top) / profileRect.height) * 100;
-
-        // Ограничиваем позицию в пределах контейнера
-        const clampedX = Math.max(-5, Math.min(105, newX));
-        const clampedY = Math.max(-5, Math.min(105, newY));
-
-        const newPosition = { x: clampedX, y: clampedY };
-        setPosition(newPosition);
-
-        // Обновляем позицию в родительском компоненте в реальном времени
-        if (onPositionUpdate) {
-          onPositionUpdate(item.id, newPosition);
-        }
-      },
-      [isDragging, isEditMode, onPositionUpdate, item.id]
-    );
-
-    const handleTouchMove = useCallback(
-      e => {
-        if (!isDragging || !isEditMode) return;
-
-        const now = Date.now();
-        if (now - lastUpdateTime.current < THROTTLE_DELAY) return;
-        lastUpdateTime.current = now;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        // Получаем контейнер профиля (родительский элемент)
-        const profileContainer = containerRef.current.closest(
-          '[data-profile-container]'
-        );
-        if (!profileContainer) return;
-
-        const profileRect = profileContainer.getBoundingClientRect();
-
-        // Вычисляем позицию центра элемента в процентах относительно контейнера профиля
-        const touch = e.touches[0];
-        const newX =
-          ((touch.clientX - profileRect.left) / profileRect.width) * 100;
-        const newY =
-          ((touch.clientY - profileRect.top) / profileRect.height) * 100;
-
-        // Ограничиваем позицию в пределах контейнера
-        const clampedX = Math.max(-5, Math.min(105, newX));
-        const clampedY = Math.max(-5, Math.min(105, newY));
-
-        const newPosition = { x: clampedX, y: clampedY };
-        setPosition(newPosition);
-
-        // Обновляем позицию в родительском компоненте в реальном времени
-        if (onPositionUpdate) {
-          onPositionUpdate(item.id, newPosition);
-        }
-      },
-      [isDragging, isEditMode, onPositionUpdate, item.id]
-    );
-
-    const handleMouseUp = useCallback(() => {
-      setIsDragging(false);
-    }, []);
-
-    const handleTouchEnd = useCallback(() => {
-      setIsDragging(false);
-    }, []);
-
-    // Добавляем глобальные обработчики мыши и touch
-    useEffect(() => {
-      if (isEditMode) {
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        document.addEventListener('touchmove', handleTouchMove, {
-          passive: false,
-        });
-        document.addEventListener('touchend', handleTouchEnd);
-
-        return () => {
-          document.removeEventListener('mousemove', handleMouseMove);
-          document.removeEventListener('mouseup', handleMouseUp);
-          document.removeEventListener('touchmove', handleTouchMove);
-          document.removeEventListener('touchend', handleTouchEnd);
-        };
-      }
-    }, [
-      isEditMode,
-      handleMouseMove,
-      handleMouseUp,
-      handleTouchMove,
-      handleTouchEnd,
-    ]);
-
-    // Очистка таймаута при размонтировании
-    useEffect(() => {
-      return () => {
-        if (clickTimeoutRef.current) {
-          clearTimeout(clickTimeoutRef.current);
-        }
-      };
-    }, []);
-
-    if (!item) {
-      return null;
-    }
-
-    const isUpgraded = item.upgrade_level >= 1;
-
-    const particles = isUpgraded
-      ? Array.from({ length: 10 }).map((_, i) => (
-          <div
-            key={i}
-            style={getParticleStyle(
-              particleColor,
-              Math.random() * 4,
-              Math.random() * 3 + 3
-            )}
-          />
-        ))
-      : [];
-
-    const containerStyle = useMemo(
-      () => ({
-        position: 'absolute',
-        left: `${position.x}%`,
-        top: `${position.y}%`,
-        transform: isDragging
-          ? 'translate(-50%, -50%) scale(1.1)'
-          : 'translate(-50%, -50%)',
-        width: '60px',
-        height: '60px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: isEditMode ? 'grab' : 'pointer',
-        zIndex: 12 - index,
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        MozUserSelect: 'none',
-        msUserSelect: 'none',
-        pointerEvents: 'auto',
-        touchAction: 'none',
-        WebkitTouchCallout: 'none',
-        WebkitTapHighlightColor: 'transparent',
-        ...(isDragging && {
-          cursor: 'grabbing',
-        }),
-      }),
-      [position.x, position.y, isDragging, isEditMode, index]
-    );
+  const containerStyle = useMemo(() => ({
+    position: 'absolute',
+    left: `${position.x}%`,
+    top: `${position.y}%`,
+    transform: isDragging ? 'translate(-50%, -50%) scale(1.1)' : 'translate(-50%, -50%)',
+    width: '60px',
+    height: '60px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: isEditMode ? 'grab' : 'pointer',
+    zIndex: 12 - index,
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    MozUserSelect: 'none',
+    msUserSelect: 'none',
+    pointerEvents: 'auto',
+    touchAction: 'none',
+    WebkitTouchCallout: 'none',
+    WebkitTapHighlightColor: 'transparent',
+    ...(isDragging && {
+      cursor: 'grabbing',
+    }),
+  }), [position.x, position.y, isDragging, isEditMode, index]);
 
   return (
     <div

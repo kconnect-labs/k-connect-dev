@@ -154,9 +154,9 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
   const containerStyle = {
     p: 3,
     borderRadius: 'var(--main-border-radius)',
-    background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
+                background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
+                backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     mb: 3,
   };
 
@@ -164,7 +164,7 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
     py: 1.5,
     px: 2,
     borderRadius: 'var(--main-border-radius)',
-    bgcolor: 'rgba(255, 255, 255, 0.05)',
+            bgcolor: 'rgba(255, 255, 255, 0.05)',
     border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
     mb: 1,
   };
@@ -284,16 +284,8 @@ const LinkedAccountsForm: React.FC<LinkedAccountsFormProps> = ({
         </ListItem>
       </List>
 
-      <Typography
-        variant='body2'
-        sx={{
-          color: 'var(--theme-text-secondary)',
-          mt: 2,
-          fontSize: '0.875rem',
-        }}
-      >
-        Подключенные аккаунты позволяют вам входить в систему через сторонние
-        сервисы
+      <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)', mt: 2, fontSize: '0.875rem' }}>
+        Подключенные аккаунты позволяют вам входить в систему через сторонние сервисы
       </Typography>
     </Box>
   );

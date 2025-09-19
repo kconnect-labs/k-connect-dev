@@ -1,8 +1,5 @@
 // NSFW Overlay component
-export const createNSFWOverlay = (
-  isMobile: boolean,
-  onShowSensitive: () => void
-) => ({
+export const createNSFWOverlay = (isMobile: boolean, onShowSensitive: () => void) => ({
   NSFWOverlay: {
     position: 'absolute',
     top: 0,
@@ -46,4 +43,4 @@ export const createNSFWOverlay = (
     wordBreak: 'break-word',
     maxWidth: '100%',
   },
-});
+}); 

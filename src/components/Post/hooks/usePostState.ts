@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { formatTimeAgoDiff, parseDate } from '../../../utils/dateUtils';
-import {
-  USERNAME_MENTION_REGEX,
-  HASHTAG_REGEX,
-  URL_REGEX,
-} from '../../../utils/LinkUtils';
+import { USERNAME_MENTION_REGEX, HASHTAG_REGEX, URL_REGEX } from '../../../utils/LinkUtils';
 
 export interface PostState {
   liked: boolean;
@@ -175,6 +171,8 @@ export const usePostState = (post: any, isPinnedPost: boolean) => {
         },
       }));
 
+
+
       // Process content
       if (post.content) {
         let content = post.content;
@@ -209,12 +207,9 @@ export const usePostState = (post: any, isPinnedPost: boolean) => {
         );
 
         // Process hashtags
-        content = content.replace(
-          HASHTAG_REGEX,
-          (match: string, hashtag: string) => {
-            return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
-          }
-        );
+        content = content.replace(HASHTAG_REGEX, (match: string, hashtag: string) => {
+          return `[${match}](https://k-connect.ru/search?q=${encodeURIComponent(hashtag)}&type=posts)`;
+        });
 
         // Restore URLs from markers
         urlMarkers.forEach(({ marker, replacement }) => {
@@ -274,4 +269,4 @@ export const usePostState = (post: any, isPinnedPost: boolean) => {
     isMobile,
     formatTimeAgoWithTranslation,
   };
-};
+}; 

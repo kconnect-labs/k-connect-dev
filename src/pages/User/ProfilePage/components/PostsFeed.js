@@ -5,7 +5,11 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Typography,
+} from '@mui/material';
 import axios from 'axios';
 import { AuthContext } from '../../../../context/AuthContext';
 import { useLanguage } from '../../../../context/LanguageContext';
@@ -30,6 +34,7 @@ const PostsFeed = ({ userId, statusColor }) => {
   const loadingRef = useRef(false);
   const { isAuthenticated } = useContext(AuthContext);
   const isProfilePage = window.location.pathname.includes('/profile/');
+
 
   // username вычисляем один раз
   const username = React.useMemo(() => {
@@ -139,9 +144,7 @@ const PostsFeed = ({ userId, statusColor }) => {
           if (error.response && error.response.status === 401) {
             setError(t('profile.feed.posts.auth_required'));
           } else if (error.response && error.response.status === 403) {
-            setError(
-              'Этот профиль приватный. Подпишитесь друг на друга для доступа к постам.'
-            );
+            setError('Этот профиль приватный. Подпишитесь друг на друга для доступа к постам.');
           } else {
             setError(t('profile.feed.posts.loading_error'));
           }
@@ -226,6 +229,7 @@ const PostsFeed = ({ userId, statusColor }) => {
     }
   };
 
+
   useEffect(() => {
     const handleGlobalPostCreated = event => {
       const newPost = event.detail;
@@ -283,8 +287,8 @@ const PostsFeed = ({ userId, statusColor }) => {
           {error === t('profile.feed.posts.auth_required')
             ? t('profile.feed.posts.auth_required')
             : error.includes('приватный')
-              ? 'Приватный профиль'
-              : t('profile.feed.posts.error_title')}
+            ? 'Приватный профиль'
+            : t('profile.feed.posts.error_title')}
         </Typography>
         <Typography
           variant='body1'

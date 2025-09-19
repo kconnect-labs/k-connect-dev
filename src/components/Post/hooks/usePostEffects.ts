@@ -13,10 +13,7 @@ export const usePostEffects = (
     const checkHeight = () => {
       if (contentRef.current) {
         const contentHeight = contentRef.current.scrollHeight;
-        setPostState(prev => ({
-          ...prev,
-          needsExpandButton: contentHeight > 450,
-        }));
+        setPostState(prev => ({ ...prev, needsExpandButton: contentHeight > 450 }));
       }
     };
 
@@ -27,19 +24,21 @@ export const usePostEffects = (
     return () => clearTimeout(timeoutId);
   }, [post?.content, setPostState]);
 
+
+
   // Effect for setting last comment from post data
   useEffect(() => {
     if (post?.last_comment) {
-      setPostState(prev => ({
-        ...prev,
+      setPostState(prev => ({ 
+        ...prev, 
         lastComment: post.last_comment,
-        lastCommentLoading: false,
+        lastCommentLoading: false 
       }));
     } else {
-      setPostState(prev => ({
-        ...prev,
+      setPostState(prev => ({ 
+        ...prev, 
         lastComment: null,
-        lastCommentLoading: false,
+        lastCommentLoading: false 
       }));
     }
   }, [post?.last_comment, setPostState]);
@@ -47,4 +46,4 @@ export const usePostEffects = (
   return {
     contentRef,
   };
-};
+}; 

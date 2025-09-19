@@ -70,7 +70,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
   const handleRarityChange = (rarity: string | null) => {
     const newFilters: SearchFilters = {
       ...filters,
-      rarity: (rarity as any) || undefined,
+      rarity: rarity as any || undefined,
     };
     setFilters(newFilters);
     onFiltersChange(newFilters);
@@ -117,25 +117,22 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
           value={query}
           onChange={handleQueryChange}
           placeholder={placeholder}
-          variant='outlined'
-          size='small'
+          variant="outlined"
+          size="small"
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 {isLoading ? (
-                  <CircularProgress
-                    size={20}
-                    sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
-                  />
+                  <CircularProgress size={20} sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                 ) : (
                   <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
                 )}
               </InputAdornment>
             ),
             endAdornment: query && (
-              <InputAdornment position='end'>
+              <InputAdornment position="end">
                 <IconButton
-                  size='small'
+                  size="small"
                   onClick={clearSearch}
                   sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
                 >
@@ -169,15 +166,9 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
           <IconButton
             onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
             sx={{
-              color: hasActiveFilters
-                ? 'primary.main'
-                : 'rgba(255, 255, 255, 0.7)',
-              border: hasActiveFilters
-                ? '1px solid'
-                : '1px solid rgba(255, 255, 255, 0.2)',
-              borderColor: hasActiveFilters
-                ? 'primary.main'
-                : 'rgba(255, 255, 255, 0.2)',
+              color: hasActiveFilters ? 'primary.main' : 'rgba(255, 255, 255, 0.7)',
+              border: hasActiveFilters ? '1px solid' : '1px solid rgba(255, 255, 255, 0.2)',
+              borderColor: hasActiveFilters ? 'primary.main' : 'rgba(255, 255, 255, 0.2)',
             }}
           >
             <FilterIcon />
@@ -188,21 +179,9 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
       {/* Расширенные фильтры */}
       {showFilters && (
         <Collapse in={showAdvancedFilters}>
-          <Divider
-            sx={{
-              my: 2,
-              borderColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
-            }}
-          />
-
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 2,
-              alignItems: 'center',
-            }}
-          >
+          <Divider sx={{ my: 2, borderColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))' }} />
+          
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
             {/* Фильтр по редкости */}
             <Box>
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
@@ -210,24 +189,13 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
                   <Chip
                     key={key}
                     label={label}
-                    size='small'
-                    onClick={() =>
-                      handleRarityChange(filters.rarity === key ? null : key)
-                    }
+                    size="small"
+                    onClick={() => handleRarityChange(filters.rarity === key ? null : key)}
                     sx={{
-                      backgroundColor:
-                        filters.rarity === key
-                          ? rarityColors[key as keyof typeof rarityColors]
-                          : 'var(--theme-background, rgba(255, 255, 255, 0.1))',
-                      color:
-                        filters.rarity === key
-                          ? 'white'
-                          : 'rgba(255, 255, 255, 0.8)',
+                      backgroundColor: filters.rarity === key ? rarityColors[key as keyof typeof rarityColors] : 'var(--theme-background, rgba(255, 255, 255, 0.1))',
+                      color: filters.rarity === key ? 'white' : 'rgba(255, 255, 255, 0.8)',
                       '&:hover': {
-                        backgroundColor:
-                          filters.rarity === key
-                            ? rarityColors[key as keyof typeof rarityColors]
-                            : 'rgba(255, 255, 255, 0.2)',
+                        backgroundColor: filters.rarity === key ? rarityColors[key as keyof typeof rarityColors] : 'rgba(255, 255, 255, 0.2)',
                       },
                     }}
                   />
@@ -235,10 +203,11 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
               </Box>
             </Box>
 
+
             {/* Кнопка очистки фильтров */}
             {hasActiveFilters && (
               <Button
-                size='small'
+                size="small"
                 onClick={clearFilters}
                 startIcon={<ClearIcon />}
                 sx={{
@@ -246,11 +215,10 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                   '&:hover': {
                     borderColor: 'rgba(255, 255, 255, 0.3)',
-                    backgroundColor:
-                      'var(--theme-background, rgba(255, 255, 255, 0.05))',
+                    backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.05))',
                   },
                 }}
-                variant='outlined'
+                variant="outlined"
               >
                 Очистить фильтры
               </Button>
@@ -261,23 +229,12 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
 
       {/* Отображение ошибки */}
       {error && (
-        <Box
-          sx={{
-            mt: 1,
-            p: 1,
-            borderRadius: '16px',
-            backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))',
-            border: '1px solid rgba(244, 67, 54, 0.3)',
-          }}
-        >
-          <Typography
-            variant='caption'
-            sx={{ color: 'rgba(244, 67, 54, 0.9)' }}
-          >
+        <Box sx={{ mt: 1, p: 1, borderRadius: '16px', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
+          <Typography variant="caption" sx={{ color: 'rgba(244, 67, 54, 0.9)' }}>
             Ошибка поиска: {error}
           </Typography>
         </Box>
       )}
     </Paper>
   );
-};
+}; 

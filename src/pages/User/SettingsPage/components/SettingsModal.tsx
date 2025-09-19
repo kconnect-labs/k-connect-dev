@@ -269,16 +269,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       case 'appearance':
         return (
           <Box sx={{ p: 2 }}>
-            <Typography
-              variant='h6'
-              sx={{ mb: 2, color: 'var(--theme-text-primary)' }}
-            >
+            <Typography variant='h6' sx={{ mb: 2, color: 'var(--theme-text-primary)' }}>
               Настройки внешнего вида
             </Typography>
-            <Typography
-              variant='body2'
-              sx={{ color: 'var(--theme-text-secondary)' }}
-            >
+            <Typography variant='body2' sx={{ color: 'var(--theme-text-secondary)' }}>
               Раздел внешнего вида находится в разработке
             </Typography>
           </Box>
@@ -348,10 +342,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
     >
       <Box sx={headerStyle}>
         {isMobile ? (
-          <IconButton
-            onClick={handleClose}
-            sx={{ color: 'var(--theme-text-primary)' }}
-          >
+          <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
             <ArrowBackIcon />
           </IconButton>
         ) : (
@@ -365,10 +356,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           {getSectionTitle()}
         </Typography>
 
-        <IconButton
-          onClick={handleClose}
-          sx={{ color: 'var(--theme-text-primary)' }}
-        >
+        <IconButton onClick={handleClose} sx={{ color: 'var(--theme-text-primary)' }}>
           <CloseIcon />
         </IconButton>
       </Box>

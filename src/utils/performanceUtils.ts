@@ -22,13 +22,10 @@ export function throttle<T extends (...args: any[]) => any>(
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      timeoutId = setTimeout(
-        () => {
-          func(...args);
-          lastExecTime = Date.now();
-        },
-        delay - (currentTime - lastExecTime)
-      );
+      timeoutId = setTimeout(() => {
+        func(...args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
     }
   };
 }
@@ -58,7 +55,7 @@ export function createOptimizedResizeHandler(
   delay: number = 100
 ): () => void {
   const throttledCallback = throttle(callback, delay);
-
+  
   return () => {
     window.addEventListener('resize', throttledCallback, { passive: true });
     return () => window.removeEventListener('resize', throttledCallback);
@@ -70,18 +67,20 @@ export function createOptimizedResizeHandler(
  */
 export function createContentProcessor() {
   const cache = new Map<string, any>();
-
+  
   return function processContent(content: string, regexes: RegExp[]) {
     if (!content) return { processedContent: '', urls: [] };
-
+    
+    
     const cacheKey = `${content}_${regexes.map(r => r.source).join('|')}`;
     if (cache.has(cacheKey)) {
       return cache.get(cacheKey);
     }
-
+    
+    
     let processedContent = content;
     const urls: string[] = [];
-
+    
     regexes.forEach(regex => {
       regex.lastIndex = 0;
       let match;
@@ -89,9 +88,10 @@ export function createContentProcessor() {
         urls.push(match[0]);
       }
     });
-
+    
     const result = { processedContent, urls };
-
+    
+    
     if (cache.size > 100) {
       const firstKey = cache.keys().next().value;
       if (firstKey) {
@@ -99,7 +99,7 @@ export function createContentProcessor() {
       }
     }
     cache.set(cacheKey, result);
-
+    
     return result;
   };
 }
@@ -114,9 +114,9 @@ export function createOptimizedIntersectionObserver(
   const defaultOptions: IntersectionObserverInit = {
     threshold: 0.1,
     rootMargin: '50px',
-    ...options,
+    ...options
   };
-
+  
   return new IntersectionObserver(callback, defaultOptions);
 }
 
@@ -128,19 +128,19 @@ export function createBatchedStateUpdater<T>(
 ) {
   let pendingUpdates: Partial<T> = {};
   let timeoutId: NodeJS.Timeout | null = null;
-
+  
   return (updates: Partial<T>) => {
     Object.assign(pendingUpdates, updates);
-
+    
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
-
+    
     timeoutId = setTimeout(() => {
       setState(prev => ({ ...prev, ...pendingUpdates }));
       pendingUpdates = {};
       timeoutId = null;
-    }, 16);
+    }, 16); 
   };
 }
 
@@ -149,22 +149,21 @@ export function createBatchedStateUpdater<T>(
  */
 export function getDevicePerformanceLevel(): 'low' | 'medium' | 'high' {
   if (typeof window === 'undefined') return 'medium';
-
+  
   const connection = (navigator as any).connection;
   const memory = (performance as any).memory;
-
+  
+  
   if (connection) {
-    if (
-      connection.effectiveType === 'slow-2g' ||
-      connection.effectiveType === '2g'
-    ) {
+    if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
       return 'low';
     }
     if (connection.effectiveType === '3g') {
       return 'medium';
     }
   }
-
+  
+  
   if (memory) {
     const usedMemory = memory.usedJSHeapSize / memory.totalJSHeapSize;
     if (usedMemory > 0.8) {
@@ -174,11 +173,12 @@ export function getDevicePerformanceLevel(): 'low' | 'medium' | 'high' {
       return 'medium';
     }
   }
-
+  
+  
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
     return 'low';
   }
-
+  
   return 'high';
 }
 
@@ -187,7 +187,7 @@ export function getDevicePerformanceLevel(): 'low' | 'medium' | 'high' {
  */
 export function getPerformanceSettings() {
   const level = getDevicePerformanceLevel();
-
+  
   switch (level) {
     case 'low':
       return {
@@ -237,9 +237,9 @@ export function createOptimizedScrollHandler(
   delay: number = 16
 ): () => void {
   let isScrolling = false;
-
+  
   const throttledCallback = throttle(callback, delay);
-
+  
   return () => {
     const handler = (event: Event) => {
       if (!isScrolling) {
@@ -250,7 +250,7 @@ export function createOptimizedScrollHandler(
         isScrolling = true;
       }
     };
-
+    
     window.addEventListener('scroll', handler, { passive: true });
     return () => window.removeEventListener('scroll', handler);
   };
@@ -265,18 +265,18 @@ export function createMemoizedSelector<T, R>(
 ) {
   let lastResult: R;
   let lastState: T;
-
+  
   return (state: T): R => {
     if (state === lastState) {
       return lastResult;
     }
-
+    
     const result = selector(state);
-
+    
     if (equalityFn ? equalityFn(result, lastResult) : result === lastResult) {
       return lastResult;
     }
-
+    
     lastState = state;
     lastResult = result;
     return result;
@@ -289,7 +289,7 @@ export function createMemoizedSelector<T, R>(
 export function createImagePreloader(maxConcurrent: number = 3) {
   const queue: string[] = [];
   let loading = 0;
-
+  
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -298,15 +298,15 @@ export function createImagePreloader(maxConcurrent: number = 3) {
       img.src = src;
     });
   };
-
+  
   const processQueue = async () => {
     if (loading >= maxConcurrent || queue.length === 0) {
       return;
     }
-
+    
     const src = queue.shift();
     if (!src) return;
-
+    
     loading++;
     try {
       await loadImage(src);
@@ -317,7 +317,7 @@ export function createImagePreloader(maxConcurrent: number = 3) {
       processQueue();
     }
   };
-
+  
   return {
     preload: (src: string) => {
       if (!queue.includes(src)) {
@@ -332,7 +332,7 @@ export function createImagePreloader(maxConcurrent: number = 3) {
         }
       });
       processQueue();
-    },
+    }
   };
 }
 
@@ -344,7 +344,7 @@ export function createClickHandler(
   delay: number = 300
 ) {
   let lastClickTime = 0;
-
+  
   return (event: MouseEvent) => {
     const now = Date.now();
     if (now - lastClickTime < delay) {
@@ -359,15 +359,18 @@ export function createClickHandler(
 /**
  * Утилита для измерения производительности
  */
-export function measurePerformance<T>(name: string, fn: () => T): T {
+export function measurePerformance<T>(
+  name: string,
+  fn: () => T
+): T {
   const start = performance.now();
   const result = fn();
   const end = performance.now();
-
+  
   if (process.env.NODE_ENV === 'development') {
     console.log(`${name}: ${(end - start).toFixed(2)}ms`);
   }
-
+  
   return result;
 }
 
@@ -378,14 +381,14 @@ export function createOptimizedStorage(key: string) {
   let cache: any = null;
   let lastAccess = 0;
   const CACHE_DURATION = 1000; // 1 секунда
-
+  
   return {
     get: () => {
       const now = Date.now();
       if (cache && now - lastAccess < CACHE_DURATION) {
         return cache;
       }
-
+      
       try {
         const item = localStorage.getItem(key);
         cache = item ? JSON.parse(item) : null;
@@ -396,7 +399,7 @@ export function createOptimizedStorage(key: string) {
         return null;
       }
     },
-
+    
     set: (value: any) => {
       try {
         localStorage.setItem(key, JSON.stringify(value));
@@ -406,7 +409,7 @@ export function createOptimizedStorage(key: string) {
         console.warn('Failed to write to localStorage:', error);
       }
     },
-
+    
     remove: () => {
       try {
         localStorage.removeItem(key);
@@ -415,6 +418,6 @@ export function createOptimizedStorage(key: string) {
       } catch (error) {
         console.warn('Failed to remove from localStorage:', error);
       }
-    },
+    }
   };
 }

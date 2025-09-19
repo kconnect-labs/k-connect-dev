@@ -1,5 +1,9 @@
 import React from 'react';
-import { Box, Typography, Paper } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Paper,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { LeaderboardUser } from '../../../types/leaderboard';
 import { formatCompactNumber } from '../utils/formatters';
@@ -55,64 +59,52 @@ export const LeaderboardCounter: React.FC<LeaderboardCounterProps> = ({
 }) => {
   // Вычисляем статистику
   const totalUsers = leaderboardData.length;
-  const averageScore =
-    totalUsers > 0
-      ? Math.round(
-          leaderboardData.reduce((sum, user) => sum + user.score, 0) /
-            totalUsers
-        )
-      : 0;
+  const averageScore = totalUsers > 0 ? Math.round(leaderboardData.reduce((sum, user) => sum + user.score, 0) / totalUsers) : 0;
   const maxScore = Math.max(...leaderboardData.map(user => user.score));
   const minScore = Math.min(...leaderboardData.map(user => user.score));
 
   return (
     <CounterContainer>
       <CounterCard>
-        <Typography variant='h4' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
+        <Typography variant="h4" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
           {totalUsers}
         </Typography>
-        <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.7)' }}>
+        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
           участников
         </Typography>
       </CounterCard>
 
       <CounterCard>
-        <Typography variant='h4' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
+        <Typography variant="h4" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
           {formatCompactNumber(averageScore)}
         </Typography>
-        <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.7)' }}>
+        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
           средний балл
         </Typography>
       </CounterCard>
 
       <CounterCard>
-        <Typography variant='h4' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
+        <Typography variant="h4" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
           {formatCompactNumber(maxScore)}
         </Typography>
-        <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.7)' }}>
+        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
           максимальный
         </Typography>
       </CounterCard>
 
       {userPosition && (
-        <CounterCard
-          sx={{
-            background:
-              'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(208, 188, 255, 0.1) 100%)',
-            border: '1px solid rgba(208, 188, 255, 0.3)',
-          }}
-        >
-          <Typography variant='h4' sx={{ color: '#D0BCFF', fontWeight: 700 }}>
+        <CounterCard sx={{ 
+          background: 'linear-gradient(135deg, rgba(208, 188, 255, 0.2) 0%, rgba(208, 188, 255, 0.1) 100%)',
+          border: '1px solid rgba(208, 188, 255, 0.3)',
+        }}>
+          <Typography variant="h4" sx={{ color: '#D0BCFF', fontWeight: 700 }}>
             {userPosition}
           </Typography>
-          <Typography variant='caption' sx={{ color: 'rgba(255,255,255,0.7)' }}>
+          <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
             ваше место
           </Typography>
           {userScore && (
-            <Typography
-              variant='caption'
-              sx={{ color: 'rgba(255,255,255,0.6)', mt: 0.5 }}
-            >
+            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)', mt: 0.5 }}>
               {formatCompactNumber(userScore)} очков
             </Typography>
           )}

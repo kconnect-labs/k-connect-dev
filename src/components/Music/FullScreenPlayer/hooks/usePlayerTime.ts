@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useMusic } from '../../../../context/MusicContext';
 
-export const usePlayerTime = (
-  open: boolean,
-  audioRef: React.RefObject<HTMLAudioElement>
-) => {
+export const usePlayerTime = (open: boolean, audioRef: React.RefObject<HTMLAudioElement>) => {
   const {
     currentTime: contextCurrentTime,
     duration: contextDuration,
@@ -22,10 +19,7 @@ export const usePlayerTime = (
   const [dragValue, setDragValue] = useState(0);
 
   // Мемоизированные значения
-  const formattedCurrentTime = useMemo(
-    () => formatTime(currentTime),
-    [currentTime]
-  );
+  const formattedCurrentTime = useMemo(() => formatTime(currentTime), [currentTime]);
   const formattedDuration = useMemo(() => formatTime(duration), [duration]);
   const safeCurrentTime = useMemo(() => {
     if (isDragging) {
@@ -33,14 +27,8 @@ export const usePlayerTime = (
     }
     return isNaN(currentTime) ? 0 : currentTime;
   }, [currentTime, dragValue, isDragging]);
-  const safeDuration = useMemo(
-    () => (isNaN(duration) ? 100 : duration),
-    [duration]
-  );
-  const volumePercentage = useMemo(
-    () => Math.round((isMuted ? 0 : volume) * 100),
-    [volume, isMuted]
-  );
+  const safeDuration = useMemo(() => (isNaN(duration) ? 100 : duration), [duration]);
+  const volumePercentage = useMemo(() => Math.round((isMuted ? 0 : volume) * 100), [volume, isMuted]);
 
   // Синхронизация с контекстом
   useEffect(() => {
@@ -149,14 +137,11 @@ export const usePlayerTime = (
     }
   }, [isMuted, setContextVolume]);
 
-  const updateTimeForLyrics = useCallback(
-    (time: number) => {
-      if (!isDragging) {
-        setCurrentTime(time);
-      }
-    },
-    [isDragging]
-  );
+  const updateTimeForLyrics = useCallback((time: number) => {
+    if (!isDragging) {
+      setCurrentTime(time);
+    }
+  }, [isDragging]);
 
   return {
     // Состояния

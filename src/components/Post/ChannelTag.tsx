@@ -15,4 +15,4 @@ const ChannelTag = styled(Chip)(({ theme }) => ({
   },
 }));
 
-export default ChannelTag;
+export default ChannelTag; 

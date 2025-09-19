@@ -29,7 +29,7 @@ const PlayerContainer = styled(Paper)(({ theme, expanded }) => ({
     theme.palette.mode === 'dark'
       ? 'rgba(20, 20, 20, 0.9)'
       : 'rgba(255, 255, 255, 0.9)',
-  backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
+      backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
   boxShadow:
     theme.palette.mode === 'dark'
       ? '0 8px 32px rgba(0, 0, 0, 0.4)'
