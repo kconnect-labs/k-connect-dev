@@ -106,8 +106,8 @@ const SettingsPage = React.memo(() => {
     fetchSubscription,
   } = useSubscription();
 
-  // Используем данные из AuthContext или localStorage как fallback
-  // Объединяем с данными профиля для превью
+  
+  
   const [displayUser, setDisplayUser] = useState(() => ({
     ...(user || localUser),
   }));
@@ -115,7 +115,7 @@ const SettingsPage = React.memo(() => {
   const [settings, setSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(true);
   
-  // Состояния для ProfileCard (как в ProfilePage.js)
+  
   const [ownedUsernames, setOwnedUsernames] = useState<string[]>([]);
   const [equippedItems, setEquippedItems] = useState<any[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -151,7 +151,7 @@ const SettingsPage = React.memo(() => {
 
 
 
-  // Загрузка данных профиля для превью
+  
   const fetchProfileData = useCallback(async (username: string) => {
     try {
       const response = await fetch(`/api/profile/${username}`);
@@ -160,10 +160,10 @@ const SettingsPage = React.memo(() => {
       console.log('Profile API data for preview:', data);
       
       if (data.user) {
-        // Полностью заменяем displayUser данными из API
+        
         const updatedDisplayUser = {
           ...data.user,
-          // Копируем данные из корневого объекта
+          
           connect_info: data.connect_info || data.user.connect_info,
           is_friend: data.is_friend !== undefined ? data.is_friend : data.user.is_friend,
           subscription: data.subscription || data.user.subscription,
@@ -179,7 +179,7 @@ const SettingsPage = React.memo(() => {
         setFollowing(data.user.is_following || false);
         setUserBanInfo(data.user.ban || data.ban || null);
         
-        // Загружаем owned usernames
+        
         if (data.user.id) {
           try {
             const usernamesResponse = await fetch(`/api/username/purchased/${data.user.id}`);
@@ -195,12 +195,12 @@ const SettingsPage = React.memo(() => {
           }
         }
         
-        // Загружаем equipped items
+        
         if (data.equipped_items) {
           setEquippedItems(data.equipped_items);
         }
 
-        // Загружаем онлайн статус
+        
         try {
           const onlineResponse = await fetch(`/api/profile/${username}/online_status`);
           const onlineData = await onlineResponse.json();
@@ -211,7 +211,7 @@ const SettingsPage = React.memo(() => {
           console.error('Error fetching online status:', error);
         }
 
-        // Загружаем статус модератора
+        
         try {
           const moderatorResponse = await fetch('/api/moderator/quick-status');
           const moderatorData = await moderatorResponse.json();
@@ -230,7 +230,7 @@ const SettingsPage = React.memo(() => {
     }
   }, []);
 
-  // Показываем загрузку если пользователь еще не загружен
+  
   if (!isAuthenticated && !localUser) {
     return (
       <Box
@@ -271,12 +271,12 @@ const SettingsPage = React.memo(() => {
 
   const showSuccess = useCallback((message: string = 'Обновлено') => {
     setSuccessModal({ open: true, message });
-    // Обновляем превью при любом успешном изменении
+    
     setTimeout(() => {
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
-    }, 100); // Небольшая задержка для обновления данных
+    }, 100); 
   }, [displayUser?.username, fetchProfileData]);
 
   const hideSuccess = useCallback(() => {
@@ -286,8 +286,8 @@ const SettingsPage = React.memo(() => {
   const handleAvatarChange = useCallback(async (file: File) => {
     try {
       await updateAvatar(file);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -299,8 +299,8 @@ const SettingsPage = React.memo(() => {
   const handleBannerChange = useCallback(async (file: File) => {
     try {
       await updateBanner(file);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -312,8 +312,8 @@ const SettingsPage = React.memo(() => {
   const handleAvatarDelete = useCallback(async () => {
     try {
       await deleteAvatar();
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -325,8 +325,8 @@ const SettingsPage = React.memo(() => {
   const handleBannerDelete = useCallback(async () => {
     try {
       await deleteBanner();
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -342,8 +342,8 @@ const SettingsPage = React.memo(() => {
   }) => {
     try {
       await updateProfileInfo(info);
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -355,8 +355,8 @@ const SettingsPage = React.memo(() => {
 
   const handleStatusUpdate = useCallback(async (statusData: any) => {
     try {
-      await fetchProfile(); // Обновляем данные профиля
-      // Обновляем превью
+      await fetchProfile(); 
+      
       if (displayUser?.username) {
         fetchProfileData(displayUser.username);
       }
@@ -368,12 +368,12 @@ const SettingsPage = React.memo(() => {
 
   const handleError = useCallback((message: string) => {
     console.error('Settings error:', message);
-    // Можно добавить показ ошибки пользователю
+    
   }, []);
 
 
 
-  // Функции для ProfileCard (как в ProfilePage.js)
+  
   const handleItemPositionUpdate = useCallback((itemId: number, newPosition: { x: number; y: number }) => {
     setEquippedItems(prevItems => 
       prevItems.map(item => 
@@ -399,12 +399,12 @@ const SettingsPage = React.memo(() => {
   }, []);
 
   const openLightbox = useCallback((imageUrl: string) => {
-    // Простая реализация для превью
+    
     console.log('Open lightbox:', imageUrl);
   }, []);
 
   const getLighterColor = useCallback((color: string) => {
-    // Простая реализация для превью
+    
     return color;
   }, []);
 

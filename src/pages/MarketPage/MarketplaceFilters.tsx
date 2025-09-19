@@ -14,6 +14,9 @@ import {
 import { styled } from '@mui/material/styles';
 import { Clear as ClearIcon } from '@mui/icons-material';
 import { useMarketplaceFilters, Pack, PackItem } from './useMarketplaceFilters';
+import BallsIcon from '../Economic/components/inventoryPack/BallsIcon';
+import MCoinIcon from '../Economic/components/inventoryPack/MCoinIcon';
+import CurrencyToggle from '../Economic/components/inventoryPack/CurrencyToggle';
 
 const StyledFiltersContainer = styled(Box)(({ theme }) => ({
   background: 'var(--theme-background)',
@@ -23,6 +26,8 @@ const StyledFiltersContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   border: '1px solid rgba(66, 66, 66, 0.5)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  position: 'relative',
+  zIndex: 1,
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2),
   },
@@ -31,16 +36,24 @@ const StyledFiltersContainer = styled(Box)(({ theme }) => ({
 const FilterRow = styled(Box)(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(2),
-  alignItems: 'center',
+  alignItems: 'flex-start',
   flexWrap: 'wrap',
+  position: 'relative',
+  zIndex: 1,
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
     alignItems: 'stretch',
+    gap: theme.spacing(1.5),
+  },
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'center',
   },
 }));
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  minWidth: 200,
+  minWidth: 0, // Убираем фиксированную минимальную ширину
+  flex: '1 1 0', // Позволяем элементам сжиматься
+  maxWidth: '100%', // Ограничиваем максимальную ширину
   '& .MuiInputLabel-root': {
     color: 'var(--theme-text-secondary)',
     '&.Mui-focused': {
@@ -66,18 +79,25 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   '& .MuiSelect-icon': {
     color: 'var(--theme-text-secondary)',
   },
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     minWidth: '100%',
+    flex: '1 1 100%',
+    maxWidth: '100%',
+  },
+  [theme.breakpoints.up('md')]: {
+    minWidth: 150, // Минимальная ширина для десктопа
+    maxWidth: 250,
   },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  minWidth: 120,
   height: 40,
   borderRadius: 'var(--main-border-radius)',
   borderColor: 'rgba(66, 66, 66, 0.5)',
   color: 'var(--theme-text-primary)',
   backgroundColor: 'var(--theme-background)',
+  position: 'relative',
+  zIndex: 1,
   '&:hover': {
     borderColor: 'var(--theme-text-accent)',
     backgroundColor: 'var(--theme-background)',
@@ -128,6 +148,7 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
   const { packs, packItems, loading, error, fetchPackItems } = useMarketplaceFilters();
   const [selectedPack, setSelectedPack] = useState<number | ''>('');
   const [selectedItem, setSelectedItem] = useState<string>('');
+  const [selectedCurrency, setSelectedCurrency] = useState<'points' | 'mcoin' | ''>('');
   const [loadingItems, setLoadingItems] = useState(false);
 
   // Инициализация фильтров из пропсов
@@ -139,7 +160,10 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
     if (currentFilters?.item_name && currentFilters.item_name !== selectedItem) {
       setSelectedItem(currentFilters.item_name);
     }
-  }, [currentFilters?.pack_id, currentFilters?.item_name]);
+    if (currentFilters?.currency && currentFilters.currency !== selectedCurrency) {
+      setSelectedCurrency(currentFilters.currency);
+    }
+  }, [currentFilters?.pack_id, currentFilters?.item_name, currentFilters?.currency]);
 
   const handlePackChange = useCallback(async (packId: number | '') => {
     setSelectedPack(packId);
@@ -157,6 +181,7 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
     applyFilters({
       pack_id: packId || undefined,
       item_name: undefined,
+      currency: selectedCurrency || undefined,
     });
   }, [fetchPackItems]);
 
@@ -165,8 +190,18 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
     applyFilters({
       pack_id: selectedPack || undefined,
       item_name: itemName || undefined,
+      currency: selectedCurrency || undefined,
     });
-  }, [selectedPack]);
+  }, [selectedPack, selectedCurrency]);
+
+  const handleCurrencyChange = useCallback((currency: 'points' | 'mcoin' | '') => {
+    setSelectedCurrency(currency);
+    applyFilters({
+      pack_id: selectedPack || undefined,
+      item_name: selectedItem || undefined,
+      currency: currency || undefined,
+    });
+  }, [selectedPack, selectedItem]);
 
   const applyFilters = useCallback((filters: any) => {
     onFiltersChange(filters);
@@ -175,6 +210,7 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
   const clearFilters = useCallback(() => {
     setSelectedPack('');
     setSelectedItem('');
+    setSelectedCurrency('');
     onFiltersChange({});
   }, [onFiltersChange]);
 
@@ -264,11 +300,23 @@ const MarketplaceFilters: React.FC<MarketplaceFiltersProps> = ({
           </Select>
         </StyledFormControl>
 
+        {/* Фильтр валют */}
+        <Box >
+          <CurrencyToggle
+            value={selectedCurrency}
+            onChange={handleCurrencyChange}
+            showAllOption={true}
+          />
+        </Box>
+
         {/* Кнопка очистки */}
         <StyledButton
           variant="outlined"
           startIcon={<ClearIcon />}
           onClick={clearFilters}
+          sx={{
+
+          } as any}
         >
           Очистить
         </StyledButton>

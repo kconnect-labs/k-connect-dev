@@ -13,12 +13,13 @@ import {
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import {
-  Diamond as DiamondIcon,
   Star as StarIcon,
   Lock as LockIcon,
   Percent as PercentIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
+import MCoinIcon from './MCoinIcon';
+import BallsIcon from './BallsIcon';
 import CachedImage from '../../../../components/Post/components/CachedImage';
 import { Pack, PackContent } from './types';
 import ProposePackModal from './ProposePackModal';
@@ -286,6 +287,22 @@ const PriceChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
+// Функция для получения иконки и текста валюты
+const getCurrencyInfo = (currency?: string) => {
+  if (currency === 'mcoin') {
+    return {
+      icon: <MCoinIcon sx={{ fontSize: 16, color: '#d0bcff' }} />,
+      text: 'Мкоинов',
+      color: '#d0bcff'
+    };
+  }
+  return {
+    icon: <BallsIcon sx={{ fontSize: 16 }} />,
+    text: 'баллов',
+    color: undefined
+  };
+};
+
 const RarityChip = styled(Chip)<{ rarity?: string }>(({ rarity, theme }) => {
   const colors: Record<string, { bg: string; color: string }> = {
     common: { bg: '#95a5a6', color: '#fff' },
@@ -406,7 +423,7 @@ const PackCard = ({
   const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return <DiamondIcon sx={{ fontSize: 16 }} />;
+        return <BallsIcon sx={{ fontSize: 16 }} />;
       case 'epic':
         return <StarIcon sx={{ fontSize: 16 }} />;
       default:
@@ -461,7 +478,7 @@ const PackCard = ({
     pack.max_quantity - pack.sold_quantity <= 0;
 
   // Проверяем, является ли пак эксклюзивным (ID 48)
-  const isExclusivePack = pack.id === 48 || pack.id === 49;
+  const isExclusivePack = pack.id === 2222 || pack.id === 22222;
 
     return (
     <>
@@ -522,7 +539,6 @@ const PackCard = ({
                   alt={pack.display_name}
                   width='100%'
                   height='100%'
-                  fallbackText='Пак'
                   onLoad={() => {}}
                   onError={() => {}}
                 />
@@ -602,7 +618,6 @@ const PackCard = ({
                           alt={item.item_name}
                           width='75%'
                           height='75%'
-                          fallbackText=''
                           showSkeleton={false}
                           onLoad={() => {}}
                           onError={() => {}}
@@ -689,7 +704,17 @@ const PackCard = ({
                   maxHeight: 36,
                 }}
               >
-                <PriceChip icon={<DiamondIcon />} label={`${pack.price} баллов`} />
+                <PriceChip 
+                  icon={getCurrencyInfo(pack.currency).icon} 
+                  label={`${pack.price} ${getCurrencyInfo(pack.currency).text}`}
+                  sx={{
+                    ...(getCurrencyInfo(pack.currency).color && {
+                      '& .MuiChip-icon': {
+                        color: getCurrencyInfo(pack.currency).color,
+                      },
+                    }),
+                  }}
+                />
                 {pack.is_limited && (
                   <Chip
                     icon={<LockIcon />}
@@ -738,7 +763,7 @@ const PackCard = ({
                 ) : isSoldOut ? (
                   'Закончился'
                 ) : disabled ? (
-                  'Недостаточно баллов'
+                  `Недостаточно ${getCurrencyInfo(pack.currency).text}`
                 ) : (
                   'Купить'
                 )}
@@ -767,7 +792,6 @@ const PackCard = ({
               alt={pack.display_name}
               width='100%'
               height='100%'
-              fallbackText='Пак'
               onLoad={() => {}}
               onError={() => {}}
             />
@@ -847,7 +871,6 @@ const PackCard = ({
                       alt={item.item_name}
                       width='75%'
                       height='75%'
-                      fallbackText=''
                       showSkeleton={false}
                       onLoad={() => {}}
                       onError={() => {}}
@@ -932,7 +955,17 @@ const PackCard = ({
               maxHeight: 36,
             }}
           >
-            <PriceChip icon={<DiamondIcon />} label={`${pack.price} баллов`} />
+            <PriceChip 
+              icon={getCurrencyInfo(pack.currency).icon} 
+              label={`${pack.price} ${getCurrencyInfo(pack.currency).text}`}
+              sx={{
+                ...(getCurrencyInfo(pack.currency).color && {
+                  '& .MuiChip-icon': {
+                    color: getCurrencyInfo(pack.currency).color,
+                  },
+                }),
+              }}
+            />
             {pack.is_limited && (
               <Chip
                 icon={<LockIcon />}
@@ -981,7 +1014,7 @@ const PackCard = ({
             ) : isSoldOut ? (
               'Закончился'
             ) : disabled ? (
-              'Недостаточно баллов'
+              `Недостаточно ${getCurrencyInfo(pack.currency).text}`
             ) : (
               'Купить'
             )}

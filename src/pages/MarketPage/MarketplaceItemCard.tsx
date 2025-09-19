@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { MarketplaceListing } from './types';
 import CachedImage from '../../components/Post/components/CachedImage';
+import BallsIcon from '../Economic/components/inventoryPack/BallsIcon';
+import MCoinIcon from '../Economic/components/inventoryPack/MCoinIcon';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -85,7 +87,15 @@ interface MarketplaceItemCardProps {
 }
 
 const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onClick }) => {
-  const { item, price, seller_name } = listing;
+  const { item, price, seller_name, currency } = listing;
+  
+  // Функция для получения иконки валюты
+  const getCurrencyIcon = (currency?: string) => {
+    if (currency === 'mcoin') {
+      return <MCoinIcon sx={{ fontSize: 16, color: '#d0bcff' }} />;
+    }
+    return <BallsIcon sx={{ fontSize: 16 }} />;
+  };
 
   const getRarityLabel = (rarity: string) => {
     const labels = {
@@ -129,7 +139,7 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
               }}
             />
             <PriceBadge>
-              <KBallsIcon src="/static/icons/KBalls.svg" alt="KBalls" />
+              {getCurrencyIcon(currency)}
               {formatPrice(price)}
             </PriceBadge>
           </ItemImageContainer>

@@ -20,15 +20,17 @@ import { styled } from '@mui/material/styles';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Close as CloseIcon,
-  Diamond as DiamondIcon,
   Star as StarIcon,
   Lock as LockIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
+import MCoinIcon from './MCoinIcon';
+import BallsIcon from './BallsIcon';
 import PackCard from './PackCard';
 import PackOpeningModal from './PackOpeningModal';
 import MyProposals from './MyProposals';
 import ProposePackModal from './ProposePackModal';
+import MCoinBanner from './MCoinBanner';
 import StyledTabs from '../../../../UIKIT/StyledTabs';
 import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
@@ -82,6 +84,7 @@ const InventoryPackPage = () => {
   const [openingPack, setOpeningPack] = useState<Pack | null>(null);
   const [showPackDetails, setShowPackDetails] = useState(false);
   const [userPoints, setUserPoints] = useState(0);
+  const [userMCoins, setUserMCoins] = useState(0);
   const [purchases, setPurchases] = useState<any[]>([]);
   const [showPurchases, setShowPurchases] = useState(false);
   const { user } = useAuth();
@@ -94,6 +97,7 @@ const InventoryPackPage = () => {
     fetchPacks();
     if (user) {
       fetchUserPoints();
+      fetchUserMCoins();
       fetchPurchases();
     }
   }, [user]);
@@ -136,6 +140,15 @@ const InventoryPackPage = () => {
     }
   };
 
+  const fetchUserMCoins = async () => {
+    try {
+      const response = await axios.get('/api/mcoin/balance');
+      setUserMCoins(response.data.balance || 0);
+    } catch (error) {
+      console.error('Error fetching user MCoins:', error);
+    }
+  };
+
   const fetchPurchases = async () => {
     try {
       const response = await axios.get('/api/inventory/my-purchases');
@@ -154,7 +167,8 @@ const InventoryPackPage = () => {
   const handlePackOpened = () => {
     setOpeningPack(null);
     setSelectedPack(null);
-    fetchUserPoints(); // Обновляем баланс
+    fetchUserPoints(); // Обновляем баланс баллов
+    fetchUserMCoins(); // Обновляем баланс Мкоинов
   };
 
   const handleItemObtained = (item: InventoryItem) => {
@@ -219,12 +233,28 @@ const InventoryPackPage = () => {
   const getRarityIcon = (rarity: string) => {
     switch (rarity) {
       case 'legendary':
-        return <DiamondIcon sx={{ fontSize: 16 }} />;
+        return <BallsIcon sx={{ fontSize: 16 }} />;
       case 'epic':
         return <StarIcon sx={{ fontSize: 16 }} />;
       default:
         return null;
     }
+  };
+
+  // Функция для получения иконки и текста валюты
+  const getCurrencyInfo = (currency?: string) => {
+    if (currency === 'mcoin') {
+      return {
+        icon: <MCoinIcon sx={{ fontSize: 20, color: '#d0bcff' }} />,
+        text: 'Мкоинов',
+        color: '#d0bcff'
+      };
+    }
+    return {
+      icon: <BallsIcon sx={{ fontSize: 20 }} />,
+      text: 'баллов',
+      color: undefined
+    };
   };
 
   const isSoldOut =
@@ -308,10 +338,14 @@ const InventoryPackPage = () => {
         descriptionStyle={{}}
         customStyle={false}
         className=''
+        useTheme={true}
       />
 
+      {/* Баннер о поддержке Мкоинов */}
+      <MCoinBanner />
+
       {/* Табы */}
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 1 }}>
         <StyledTabs
           style={{
             maxWidth: '100%',
@@ -382,9 +416,9 @@ const InventoryPackPage = () => {
               >
                 <PackCard
                   pack={pack}
-                  userPoints={userPoints}
+                  userPoints={pack.currency === 'mcoin' ? userMCoins : userPoints}
                   onBuy={async () => await handleBuyPack(pack)}
-                  disabled={!user || userPoints < pack.price}
+                  disabled={!user || (pack.currency === 'mcoin' ? userMCoins < pack.price : userPoints < pack.price)}
                   onPackClick={handlePackClick}
                   showProposeButton={false}
                 />
@@ -601,8 +635,11 @@ const InventoryPackPage = () => {
                 }}
               >
                 <Box>
-                  <Typography variant='h6' sx={{ fontWeight: 600, mb: 1 }}>
-                    Цена: {selectedPackDetails.pack.price} баллов
+                  <Typography variant='h6' sx={{ fontWeight: 600, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                    Цена: {selectedPackDetails.pack.price} {getCurrencyInfo(selectedPackDetails.pack.currency).text}
+                    <Box sx={{ color: getCurrencyInfo(selectedPackDetails.pack.currency).color }}>
+                      {getCurrencyInfo(selectedPackDetails.pack.currency).icon}
+                    </Box>
                   </Typography>
                   {selectedPackDetails.pack.is_limited &&
                     selectedPackDetails.pack.remaining_quantity !==
@@ -618,7 +655,9 @@ const InventoryPackPage = () => {
                   variant='outlined'
                   disabled={
                     !user ||
-                    userPoints < selectedPackDetails.pack.price ||
+                    (selectedPackDetails.pack.currency === 'mcoin' 
+                      ? userMCoins < selectedPackDetails.pack.price 
+                      : userPoints < selectedPackDetails.pack.price) ||
                     isSoldOut
                   }
                   onClick={() => {
@@ -644,8 +683,10 @@ const InventoryPackPage = () => {
                 >
                   {isSoldOut
                     ? 'Закончился'
-                    : userPoints < selectedPackDetails.pack.price
-                      ? 'Недостаточно баллов'
+                    : (selectedPackDetails.pack.currency === 'mcoin' 
+                        ? userMCoins < selectedPackDetails.pack.price 
+                        : userPoints < selectedPackDetails.pack.price)
+                      ? `Недостаточно ${getCurrencyInfo(selectedPackDetails.pack.currency).text}`
                       : 'Купить'}
                 </Button>
               </Box>
@@ -669,9 +710,12 @@ const InventoryPackPage = () => {
       >
         <DialogTitle>Подтверждение покупки</DialogTitle>
         <DialogContent>
-          <Typography>
+          <Typography sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             Купить пак <b>{confirmPack?.display_name}</b> за{' '}
-            <b>{confirmPack?.price}</b> баллов?
+            <b>{confirmPack?.price}</b> {getCurrencyInfo(confirmPack?.currency).text}?
+            <Box sx={{ color: getCurrencyInfo(confirmPack?.currency).color }}>
+              {getCurrencyInfo(confirmPack?.currency).icon}
+            </Box>
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -690,6 +734,12 @@ const InventoryPackPage = () => {
                   ...confirmPack,
                   purchase_id: data.purchase_id,
                 } as PackWithPurchaseId);
+                // Обновляем баланс в зависимости от валюты
+                if (confirmPack.currency === 'mcoin') {
+                  fetchUserMCoins();
+                } else {
+                  fetchUserPoints();
+                }
               } else {
                 alert(data.message || 'Ошибка покупки');
               }

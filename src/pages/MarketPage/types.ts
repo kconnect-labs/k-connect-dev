@@ -5,6 +5,7 @@ export interface MarketplaceListing {
   seller_id: number;
   seller_name: string;
   price: number;
+  currency?: 'points' | 'mcoin';
   listed_at: string;
   status: 'active' | 'sold' | 'cancelled';
   sold_at?: string;
@@ -37,6 +38,7 @@ export interface MarketplaceSeller {
 export interface MarketplaceFilters {
   pack_id?: number;
   item_name?: string;
+  currency?: 'points' | 'mcoin';
 }
 
 export interface MarketplaceState {

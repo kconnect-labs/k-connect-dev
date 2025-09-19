@@ -12,7 +12,7 @@ import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-im
 import 'react-image-crop/dist/ReactCrop.css';
 import UniversalModal from '../../../../UIKIT/UniversalModal';
 
-// Добавляем стили для круглой обрезки
+
 const cropStyles = `
   .ReactCrop__crop-selection {
     border: 2px solid #667eea !important;
@@ -34,7 +34,7 @@ const cropStyles = `
   }
 `;
 
-// Вставляем стили в head
+
 if (typeof document !== 'undefined') {
   const styleElement = document.createElement('style');
   styleElement.textContent = cropStyles;
@@ -65,7 +65,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
     currentBanner || null
   );
   
-  // Состояния для обрезки аватара
+  
   const [cropModalOpen, setCropModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [crop, setCrop] = useState<Crop>();
@@ -73,7 +73,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Создаем круглую область обрезки
+  
   const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) => {
     return centerCrop(
       makeAspectCrop(
@@ -93,13 +93,27 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const imageUrl = e.target?.result as string;
-        setSelectedImage(imageUrl);
-        setCropModalOpen(true);
-      };
-      reader.readAsDataURL(file);
+      
+      const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+      
+      if (isGif) {
+        // Для GIF файлов не показываем обрезку, сразу передаем файл
+        const reader = new FileReader();
+        reader.onload = e => {
+          setAvatarPreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+        onAvatarChange?.(file);
+      } else {
+        
+        const reader = new FileReader();
+        reader.onload = e => {
+          const imageUrl = e.target?.result as string;
+          setSelectedImage(imageUrl);
+          setCropModalOpen(true);
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
@@ -127,11 +141,11 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
 
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const { width, height } = e.currentTarget;
-    const crop = centerAspectCrop(width, height, 1); // 1:1 для круглого аватара
+    const crop = centerAspectCrop(width, height, 1); 
     setCrop(crop);
   };
 
-  // Правильная функция обрезки с учетом масштаба
+  
   const createCroppedImage = (): Promise<{ blob: Blob; url: string }> => {
     return new Promise((resolve) => {
       if (!imgRef.current || !completedCrop) {
@@ -147,16 +161,16 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
         return;
       }
 
-      // Вычисляем масштаб между отображаемым и реальным размером изображения
+      
       const scaleX = imgRef.current.naturalWidth / imgRef.current.width;
       const scaleY = imgRef.current.naturalHeight / imgRef.current.height;
 
-      // Размер для квадратного аватара
+      
       const size = Math.min(completedCrop.width, completedCrop.height);
       canvas.width = size;
       canvas.height = size;
 
-      // Рисуем изображение с правильными координатами (без круглой маски)
+      
       ctx.drawImage(
         imgRef.current,
         completedCrop.x * scaleX,
@@ -180,13 +194,13 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
     });
   };
 
-  // Создаем предпросмотр в реальном времени
+  
   const createPreview = async () => {
     const { url } = await createCroppedImage();
     setPreviewUrl(url);
   };
 
-  // Обновляем предпросмотр при изменении обрезки
+  
   React.useEffect(() => {
     if (completedCrop) {
       createPreview();
@@ -196,13 +210,13 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   }, [completedCrop, selectedImage]);
 
   const getCroppedImg = async (): Promise<File> => {
-    // Используем точно такой же подход как в предпросмотре
+    
     const { blob, url } = await createCroppedImage();
     
-    // Создаем файл из blob, точно как в предпросмотре
+    
     const file = new File([blob], 'avatar.png', { type: 'image/png' });
     
-    // Очищаем URL, чтобы не было утечек памяти
+    
     if (url && url !== selectedImage) {
       URL.revokeObjectURL(url);
     }

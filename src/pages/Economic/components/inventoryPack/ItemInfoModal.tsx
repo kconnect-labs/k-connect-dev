@@ -24,13 +24,16 @@ import {
   RadioButtonUnchecked as UnequippedIcon,
   Search as SearchIcon,
   Upgrade as UpgradeIcon,
-  Diamond as DiamondIcon,
   Star as StarIcon,
   Store as StoreIcon,
   RemoveShoppingCart as RemoveFromMarketIcon,
   ContentCopy as ContentCopyIcon,
   Delete as DeleteIcon,
+  Diamond as DiamondIcon,
 } from '@mui/icons-material';
+import BallsIcon from './BallsIcon';
+import MCoinIcon from './MCoinIcon';
+import CurrencyToggle from './CurrencyToggle';
 import axios from 'axios';
 import {
   GlowEffect,
@@ -254,6 +257,7 @@ const ItemInfoModal = ({
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [marketplaceModalOpen, setMarketplaceModalOpen] = useState(false);
   const [price, setPrice] = useState('');
+  const [currency, setCurrency] = useState<'points' | 'mcoin'>('points');
   const [marketplaceLoading, setMarketplaceLoading] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
   const [recycleConfirmOpen, setRecycleConfirmOpen] = useState(false);
@@ -566,6 +570,7 @@ const ItemInfoModal = ({
       setMarketplaceLoading(true);
       const response = await axios.post(`/api/marketplace/list/${item.id}`, {
         price: parseInt(price),
+        currency: currency,
       });
 
       if (response.data.success) {
@@ -1346,7 +1351,11 @@ const ItemInfoModal = ({
       {/* Marketplace Modal */}
       <Dialog
         open={marketplaceModalOpen}
-        onClose={() => setMarketplaceModalOpen(false)}
+        onClose={() => {
+          setMarketplaceModalOpen(false);
+          setPrice('');
+          setCurrency('points');
+        }}
         PaperProps={{
           sx: {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -1361,7 +1370,21 @@ const ItemInfoModal = ({
           <Typography variant='body2' color='text.secondary' mb={2}>
             Укажите цену, за которую хотите продать предмет
           </Typography>
+          
+          <Box sx={{ mb: 3 }}>
+            <CurrencyToggle
+              value={currency}
+              onChange={(value) => {
+                if (value === 'points' || value === 'mcoin') {
+                  setCurrency(value);
+                }
+              }}
+              showAllOption={false}
+            />
+          </Box>
+          
           <TextField
+            key={`price-field-${currency}`} // Принудительный перерендер при изменении валюты
             fullWidth
             type='number'
             label='Цена'
@@ -1371,11 +1394,11 @@ const ItemInfoModal = ({
               endAdornment: (
                 <InputAdornment position='end'>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <img
-                      src='/static/icons/KBalls.svg'
-                      alt='KBalls'
-                      style={{ width: 16, height: 16 }}
-                    />
+                    {currency === 'mcoin' ? (
+                      <MCoinIcon sx={{ fontSize: 16, color: '#d0bcff' }} />
+                    ) : (
+                      <BallsIcon sx={{ fontSize: 16 }} />
+                    )}
                   </Box>
                 </InputAdornment>
               ),
@@ -1384,7 +1407,11 @@ const ItemInfoModal = ({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setMarketplaceModalOpen(false)}
+            onClick={() => {
+              setMarketplaceModalOpen(false);
+              setPrice('');
+              setCurrency('points');
+            }}
             color='inherit'
           >
             Отмена

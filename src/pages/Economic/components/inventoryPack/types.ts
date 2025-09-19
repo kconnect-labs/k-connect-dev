@@ -32,6 +32,7 @@ export interface Pack {
   display_name: string;
   description: string;
   price: number;
+  currency?: 'points' | 'mcoin'; // По умолчанию 'points'
   image_path?: string;
   is_limited: boolean;
   max_quantity?: number;
