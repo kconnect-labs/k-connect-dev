@@ -2,7 +2,7 @@
  * Предзагрузчик популярных бейджей для улучшения UX
  */
 
-import { badgeCache } from './badgeCache';
+import { browserCache } from './browserCache';
 
 // Список популярных бейджей для предзагрузки
 const POPULAR_BADGES = [
@@ -24,7 +24,7 @@ class BadgePreloader {
     
     try {
       const promises = POPULAR_BADGES.map(badgePath => 
-        badgeCache.getBadge(badgePath).then(result => {
+        browserCache.getFile(badgePath).then(result => {
           if (result) {
             this.preloaded.add(badgePath);
           }
@@ -52,7 +52,7 @@ class BadgePreloader {
         .map(achievement => achievement.image_path);
 
       const promises = badgePaths.map(badgePath => 
-        badgeCache.getBadge(badgePath).then(result => {
+        browserCache.getFile(badgePath).then(result => {
           if (result) {
             this.preloaded.add(badgePath);
           }

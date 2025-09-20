@@ -3,7 +3,7 @@ import { Box, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import inventoryImageService from '../services/InventoryImageService';
 import { imageCache, createImageProps } from '../utils/imageUtils';
-import { staticCache } from '../utils/staticCache';
+import { browserCache } from '../utils/browserCache';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -67,15 +67,15 @@ const OptimizedImage = ({
         return;
       }
 
-      // Проверяем кэш статических файлов
+      // Проверяем кеш браузера
       try {
-        const cachedSrc = await staticCache.getFile(src);
+        const cachedSrc = await browserCache.getFile(src);
         if (cachedSrc) {
           setImageExists(true);
           return;
         }
       } catch (error) {
-        console.warn('Failed to check static cache:', error);
+        console.warn('Failed to check browser cache:', error);
       }
       
       // Проверяем кэш изображений 💀
@@ -129,10 +129,10 @@ const OptimizedImage = ({
     // Сохраняем в кэш
     imageCache.set(src, { loaded: true, timestamp: Date.now() });
     
-    // Также сохраняем в кеш статических файлов
+    // Также сохраняем в кеш браузера
     if (src && src.startsWith('/static/')) {
-      staticCache.loadFile(src).catch(error => {
-        console.warn('Failed to cache static file:', error);
+      browserCache.loadFile(src).catch(error => {
+        console.warn('Failed to cache file:', error);
       });
     }
     

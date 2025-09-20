@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { staticCache } from '../utils/staticCache';
+import { browserCache } from '../utils/browserCache';
 
 interface UseStaticCacheResult {
   src: string | null;
@@ -25,7 +25,7 @@ export const useStaticCache = (url: string | null): UseStaticCacheResult => {
     setError(false);
 
     try {
-      const cachedSrc = await staticCache.loadFile(fileUrl);
+      const cachedSrc = await browserCache.loadFile(fileUrl);
       if (cachedSrc) {
         setSrc(cachedSrc);
         setError(false);
@@ -48,7 +48,7 @@ export const useStaticCache = (url: string | null): UseStaticCacheResult => {
 
   const clearCache = useCallback(async () => {
     if (url) {
-      await staticCache.clearFileCache(url);
+      await browserCache.clearFileCache(url);
       setSrc(null);
       setError(false);
     }

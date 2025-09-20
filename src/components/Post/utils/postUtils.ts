@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { parseDate } from '../../../utils/dateUtils';
-import { staticCache } from '../../../utils/staticCache';
+import { browserCache } from '../../../utils/browserCache';
 
 // Media processing functions
 export const processImages = (post: any, mediaError: { type: string | null; url: string | null }) => {
@@ -147,14 +147,14 @@ export const getCachedImageUrl = async (url: string): Promise<string> => {
   if (!url) return '/static/uploads/avatar/system/avatar.png';
 
   try {
-    // Сначала проверяем кеш статических файлов
-    const cachedSrc = await staticCache.getFile(url);
+    // Сначала проверяем кеш браузера
+    const cachedSrc = await browserCache.getFile(url);
     if (cachedSrc) {
       return cachedSrc;
     }
 
     // Если не найдено в кеше, загружаем и кешируем
-    const cachedUrl = await staticCache.loadFile(url);
+    const cachedUrl = await browserCache.loadFile(url);
     if (cachedUrl) {
       return cachedUrl;
     }

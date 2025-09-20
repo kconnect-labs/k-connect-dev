@@ -8,7 +8,7 @@ const S3_DOMAIN = 's3.k-connect.ru';
 export const registerServiceWorker = async () => {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js');
+      const registration = await navigator.serviceWorker.register('/custom-sw.js');
       console.log('[SW] Service Worker зарегистрирован:', registration);
       
       // Обрабатываем обновления Service Worker

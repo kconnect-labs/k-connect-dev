@@ -4,9 +4,7 @@ import { createRoot } from 'react-dom/client';
 
 import './utils/ensure-global-functions';
 import './utils/createSvgIcon';
-import './utils/consoleFilter';
 
-import indexedDbCache from './utils/indexedDbCache';
 import { initLazyLoading } from './utils/imageUtils';
 import { registerServiceWorker, clearS3Cache } from './utils/serviceWorkerUtils';
 
@@ -135,33 +133,29 @@ async function setupPerformanceOptimizations() {
 
   try {
     initLazyLoading();
-
-    const criticalImages = [
-      '/static/uploads/avatar/system/avatar.png',
-      '/static/uploads/system/album_placeholder.jpg',
-    ];
-
-    //прелоад для критических изображений
-    criticalImages.forEach(url => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = url;
-      document.head.appendChild(link);
-    });
-
     console.debug('[Performance] Оптимизации производительности настроены');
   } catch (error) {
     console.error('[Performance] Ошибка при настройке оптимизаций:', error);
   }
 }
-
-indexedDbCache.init();
+if ('caches' in window) {
+  caches.keys().then(cacheNames => {
+    cacheNames.forEach(cacheName => {
+      if (cacheName.includes('k-connect') && !cacheName.includes('v2.9')) {
+        caches.delete(cacheName);
+        console.log('[Cache] Удален старый кеш:', cacheName);
+      }
+    });
+  });
+}
 
 // Регистрируем Service Worker для кэширования S3 файлов
 registerServiceWorker().then((registration) => {
   if (registration) {
     console.log('[SW] Service Worker успешно зарегистрирован');
+    if (registration.waiting) {
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
   }
 });
 

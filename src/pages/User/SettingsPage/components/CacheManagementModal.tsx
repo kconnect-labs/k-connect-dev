@@ -29,8 +29,7 @@ import {
   Message,
 } from '@mui/icons-material';
 import { getCacheInfo, clearCache, getFileTypeStats, getFileTypeSizes, getFolderStats, isSupported } from '../../../../services/cacheManager';
-import { badgeCache } from '../../../../utils/badgeCache';
-import { staticCache } from '../../../../utils/staticCache';
+import { browserCache } from '../../../../utils/browserCache';
 
 interface CacheCategory {
   id: string;
@@ -65,13 +64,12 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
     setError(null);
     
     try {
-      const [info, stats, sizes, folders, badgeStats, staticStats] = await Promise.all([
+      const [info, stats, sizes, folders, unifiedStats] = await Promise.all([
         getCacheInfo(),
         getFileTypeStats(),
         getFileTypeSizes(),
         getFolderStats(),
-        badgeCache.getCacheStats(),
-        staticCache.getCacheStats(),
+        browserCache.getCacheStats(),
       ]);
       
       setCacheInfo(info);
@@ -120,19 +118,11 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
           selected: true,
         },
         {
-          id: 'badges',
-          name: 'Бейджи',
-          icon: <Message />,
-          color: '#9B59B6',
-          size: badgeStats.size, // Используем размер из IndexedDB кеша бейджей
-          selected: true,
-        },
-        {
-          id: 'static',
-          name: 'Статические файлы',
+          id: 'unified',
+          name: 'Медиа файлы',
           icon: <Article />,
           color: '#4D96FF',
-          size: staticStats.size,
+          size: unifiedStats.size,
           selected: true,
         },
         {
@@ -173,26 +163,20 @@ const CacheManagementModal: React.FC<CacheManagementModalProps> = ({
       // Очищаем кеш в зависимости от выбранных категорий
       const clearPromises = [];
       
-      // Если выбраны бейджи, очищаем кеш бейджей
-      if (selectedCategories.some(cat => cat.id === 'badges')) {
-        clearPromises.push(badgeCache.clearCache());
-      }
-      
-      // Если выбраны статические файлы, очищаем кеш статических файлов
-      if (selectedCategories.some(cat => cat.id === 'static')) {
-        clearPromises.push(staticCache.clearCache());
+      // Если выбраны медиа файлы, очищаем кеш браузера
+      if (selectedCategories.some(cat => cat.id === 'unified')) {
+        clearPromises.push(browserCache.clearCache());
       }
       
       // Если выбраны другие категории, очищаем основной кеш
-      if (selectedCategories.some(cat => cat.id !== 'badges' && cat.id !== 'static')) {
+      if (selectedCategories.some(cat => cat.id !== 'unified')) {
         clearPromises.push(clearCache());
       }
       
       // Если ничего не выбрано, очищаем все
       if (selectedCategories.length === 0) {
         clearPromises.push(clearCache());
-        clearPromises.push(badgeCache.clearCache());
-        clearPromises.push(staticCache.clearCache());
+        clearPromises.push(browserCache.clearCache());
       }
       
       await Promise.all(clearPromises);

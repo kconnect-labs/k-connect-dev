@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Box, Tooltip } from '@mui/material';
-import { badgeCache } from '../../utils/badgeCache';
+import { browserCache } from '../../utils/browserCache';
 import './Badge.css';
 
 /**
@@ -86,10 +86,10 @@ const Badge = ({
     
     try {
       
-      await badgeCache.clearBadgeCache(achievement.image_path);
+      await browserCache.clearFileCache(achievement.image_path);
       
       
-      const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
+      const cachedSrc = await browserCache.loadFile(achievement.image_path);
       if (cachedSrc) {
         setCachedImageSrc(cachedSrc);
         setImageError(false);
@@ -112,7 +112,7 @@ const Badge = ({
     const loadCachedImage = async () => {
       try {
         
-        const cachedSrc = await badgeCache.loadBadge(achievement.image_path);
+        const cachedSrc = await browserCache.loadFile(achievement.image_path);
         if (cachedSrc) {
           setCachedImageSrc(cachedSrc);
           setImageError(false);

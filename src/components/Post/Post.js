@@ -39,7 +39,7 @@ import {
   optimizeImage,
   handleImageError as safeImageError,
 } from '../../utils/imageUtils';
-import { staticCache } from '../../utils/staticCache';
+import { unifiedCache } from '../../utils/unifiedCache';
 import {
   linkRenderers,
   URL_REGEX,
@@ -72,6 +72,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import BlockIcon from '@mui/icons-material/Block';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { usePostDetail } from '../../context/PostDetailContext';
 
 import { VerificationBadge } from '../../UIKIT';
@@ -195,6 +197,8 @@ const Post = ({
 
   
   const [isPinned, setIsPinned] = useState(isPinnedPost || false);
+  const [isUserBlocked, setIsUserBlocked] = useState(false);
+  const [blockLoading, setBlockLoading] = useState(false);
   const [editDialog, setEditDialog] = useState({
     open: false,
     content: post?.content || '',
@@ -274,7 +278,16 @@ const Post = ({
     mediaError
   );
 
-  const { handleMenuOpen, handleMenuClose } = createMenuHandlers(setMenuAnchorEl);
+  const { handleMenuClose: originalHandleMenuClose } = createMenuHandlers(setMenuAnchorEl);
+  
+  // Создаем собственную функцию handleMenuOpen с проверкой блокировки
+  const handleMenuOpen = async (event) => {
+    setMenuAnchorEl(event.currentTarget);
+    // Проверяем статус блокировки при открытии меню
+    await checkBlockStatus();
+  };
+  
+  const handleMenuClose = originalHandleMenuClose;
 
   
   const handleCopyLink = createCopyLinkHandler(post.id);
@@ -418,6 +431,25 @@ const Post = ({
       }
     }
   }, [post]);
+
+  // Функция для проверки статуса блокировки при открытии меню
+  const checkBlockStatus = async () => {
+    if (!post?.user?.id || !currentUser?.id || post.user.id === currentUser.id) {
+      return;
+    }
+
+    try {
+      const response = await axios.post('/api/blacklist/check', {
+        user_ids: [post.user.id]
+      });
+      
+      if (response.data.success) {
+        setIsUserBlocked(response.data.blocked_status[post.user.id] || false);
+      }
+    } catch (error) {
+      console.error('Ошибка при проверке статуса блокировки:', error);
+    }
+  };
 
 
 
@@ -1271,6 +1303,61 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     }
   };
 
+  // Функция для блокировки пользователя
+  const handleBlockUser = async () => {
+    if (!post?.user?.id || blockLoading) return;
+    
+    setBlockLoading(true);
+    try {
+      await axios.post('/api/blacklist/add', {
+        user_id: post.user.id
+      });
+      
+      setIsUserBlocked(true);
+      setSnackbarMessage(t('blacklist.user_blocked'));
+      setSnackbarOpen(true);
+      
+      // Закрываем меню
+      handleMenuClose();
+      
+      // Обновляем ленту, чтобы скрыть посты заблокированного пользователя
+      window.dispatchEvent(new CustomEvent('refresh-feed'));
+      
+    } catch (error) {
+      console.error('Ошибка при блокировке пользователя:', error);
+      setSnackbarMessage(t('blacklist.block_error'));
+      setSnackbarOpen(true);
+    } finally {
+      setBlockLoading(false);
+    }
+  };
+
+  // Функция для разблокировки пользователя
+  const handleUnblockUser = async () => {
+    if (!post?.user?.id || blockLoading) return;
+    
+    setBlockLoading(true);
+    try {
+      await axios.post('/api/blacklist/remove', {
+        user_id: post.user.id
+      });
+      
+      setIsUserBlocked(false);
+      setSnackbarMessage(t('blacklist.user_unblocked'));
+      setSnackbarOpen(true);
+      
+      // Закрываем меню
+      handleMenuClose();
+      
+    } catch (error) {
+      console.error('Ошибка при разблокировке пользователя:', error);
+      setSnackbarMessage(t('blacklist.unblock_error'));
+      setSnackbarOpen(true);
+    } finally {
+      setBlockLoading(false);
+    }
+  };
+
   const markdownComponents = getMarkdownComponents();
 
   
@@ -1419,6 +1506,16 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
 
     
     if (!isCurrentUserPost) {
+      // Добавляем кнопку блокировки/разблокировки
+      items.push({
+        id: isUserBlocked ? 'unblock' : 'block',
+        label: isUserBlocked ? t('blacklist.unblock_user') : t('blacklist.block_user'),
+        icon: isUserBlocked ? <PersonRemoveIcon fontSize='small' /> : <BlockIcon fontSize='small' />,
+        onClick: isUserBlocked ? handleUnblockUser : handleBlockUser,
+        danger: !isUserBlocked,
+        loading: blockLoading,
+      });
+      
       items.push({
         id: 'report',
         label: t('post.menu_actions.report'),
@@ -1429,7 +1526,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
     }
 
     return items;
-  }, [currentUser, isCurrentUserPost, isPinned, t]);
+  }, [currentUser, isCurrentUserPost, isPinned, isUserBlocked, blockLoading, t]);
 
   return (
     <>

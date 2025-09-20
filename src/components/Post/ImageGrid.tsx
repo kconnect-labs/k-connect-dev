@@ -3,7 +3,7 @@ import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
 import { imageCache, createImageProps } from '../../utils/imageUtils';
-import { staticCache } from '../../utils/staticCache';
+import { browserCache } from '../../utils/browserCache';
 import { ImageGridProps } from './types';
 import ImageSkeleton from './ImageSkeleton';
 
@@ -268,12 +268,12 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           limitedImages.map(async (imageUrl: string) => {
             let formattedUrl = formatImageUrl(imageUrl);
             
-            // Сначала проверяем кеш статических файлов
+            // Сначала проверяем кеш браузера
             let cachedSrc = null;
             try {
-              cachedSrc = await staticCache.getFile(formattedUrl);
+              cachedSrc = await browserCache.getFile(formattedUrl);
             } catch (error) {
-              console.warn('Failed to get from static cache:', error);
+              console.warn('Failed to get from browser cache:', error);
             }
             
             if (cachedSrc) {
@@ -301,11 +301,11 @@ const ImageGrid: React.FC<ImageGridProps> = ({
               cacheResults: true,
             });
 
-            // Сохраняем в кеш статических файлов
+            // Сохраняем в кеш браузера
             try {
-              await staticCache.loadFile(formattedUrl);
+              await browserCache.loadFile(formattedUrl);
             } catch (error) {
-              console.warn('Failed to cache static file:', error);
+              console.warn('Failed to cache file:', error);
             }
 
             const result = {
@@ -474,8 +474,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
     const imageProps = createImageProps(optimizedUrl, {
       lazy: true,
       alt: `Изображение ${index + 1}`,
-      onLoad: handleImageLoad,
-      onError: () => handleImageError(imageUrl, index),
+      style: {},
     });
 
     return (
@@ -492,8 +491,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({
         <BackgroundImage style={{ backgroundImage: `url(${optimizedUrl})` }} />
         <Image 
           {...imageProps}
+          onLoad={handleImageLoad}
+          onError={() => handleImageError(imageUrl, index)}
           style={{
-            ...imageProps.style,
             opacity: isLoading ? 0 : 1,
             transition: 'opacity 0.3s ease',
           }}
@@ -561,9 +561,10 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 
         {lightboxOpen && (
           <SimpleImageViewer
-            src={formatImageUrl(limitedImages[selectedIndex!])}
+            isOpen={lightboxOpen}
+            images={[formatImageUrl(limitedImages[selectedIndex!])]}
             onClose={closeLightbox}
-            alt='Полноразмерное изображение'
+            initialIndex={0}
           />
         )}
       </Box>
@@ -618,9 +619,10 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 
       {lightboxOpen && (
         <SimpleImageViewer
-          src={formatImageUrl(limitedImages[selectedIndex!])}
+          isOpen={lightboxOpen}
+          images={[formatImageUrl(limitedImages[selectedIndex!])]}
           onClose={closeLightbox}
-          alt='Полноразмерное изображение'
+          initialIndex={0}
         />
       )}
     </Box>

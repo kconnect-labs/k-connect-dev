@@ -318,7 +318,7 @@ const SidebarNavigation = memo(
                       nested={true}
                     />
                     <NavButton
-                      text={t('Nitro Панель')}
+                      text={t('sidebar.navigation.nitro_panel')}
                       icon={icons.moderator}
                       path='/panel/nitro'
                       active={isActive('/panel/nitro')}

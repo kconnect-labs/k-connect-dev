@@ -36,6 +36,7 @@ const BadgesForm = lazy(() => import('./BadgesForm'));
 const SecurityForm = lazy(() => import('./SecurityForm'));
 const UsernamesForm = lazy(() => import('./UsernamesForm'));
 const PrivacyForm = lazy(() => import('./PrivacyForm'));
+const BlacklistForm = lazy(() => import('./BlacklistForm'));
 
 // Компонент загрузки
 const LoadingFallback = () => (
@@ -254,6 +255,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             <BadgesForm onSuccess={onSuccess} />
           </Suspense>
         );
+      case 'blacklist':
+        return (
+          <Suspense fallback={<LoadingFallback />}>
+            <BlacklistForm onClose={onClose} />
+          </Suspense>
+        );
       case 'usernames':
         return (
           <Suspense fallback={<LoadingFallback />}>
@@ -315,6 +322,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         return 'Связанные аккаунты';
       case 'badges':
         return 'Бейджи';
+      case 'blacklist':
+        return 'Черный список';
       case 'usernames':
         return 'Магазин юзернеймов';
       case 'notifications':

@@ -16,6 +16,7 @@ import {
   Style,
   Gavel,
   Security,
+  Block,
 } from '@mui/icons-material';
 
 interface SettingsSection {
@@ -142,6 +143,13 @@ const settingsSections: SettingsSection[] = [
     subtitle: 'Управление сессиями',
     icon: <Gavel />,
     color: 'rgba(245, 158, 11, 0.66)', // #f59e0b с прозрачностью
+  },
+  {
+    id: 'blacklist',
+    title: 'Черный список',
+    subtitle: 'Управление заблокированными пользователями',
+    icon: <Block />,
+    color: 'rgba(239, 68, 68, 0.66)', // #ef4444 с прозрачностью
   },
   {
     id: 'usernames',

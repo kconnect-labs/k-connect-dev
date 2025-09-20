@@ -40,23 +40,54 @@ self.addEventListener('activate', event => {
   );
 });
 
+// Обработчик сообщений для принудительного обновления
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 self.addEventListener('fetch', event => {
-  if (
-    event.request.method !== 'GET' ||
-    !event.request.url.startsWith(self.location.origin) ||
-    event.request.url.includes('/api/')
-  ) return;
+  if (event.request.method !== 'GET') return;
+  if (!event.request.url.startsWith(self.location.origin)) return;
+  if (event.request.url.includes('/api/')) return;
+  if (event.request.url.includes('/static/') || 
+      event.request.url.includes('/assets/') ||
+      event.request.url.includes('.js') ||
+      event.request.url.includes('.css') ||
+      event.request.url.includes('.png') ||
+      event.request.url.includes('.jpg') ||
+      event.request.url.includes('.svg')) return;
 
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match('/'))
+      fetch(event.request).catch(() => 
+        caches.match('/').then(response => 
+          response || new Response('Страница недоступна', { status: 404 })
+        )
+      )
     );
     return;
   }
 
   event.respondWith(
     caches.match(event.request)
-      .then(response => response || fetch(event.request))
+      .then(response => {
+        if (response) return response;
+        return fetch(event.request).catch(() => {
+          if (event.request.url.includes('/manifest.json')) {
+            return new Response(JSON.stringify({
+              name: 'К-Коннект',
+              short_name: 'К-Коннект',
+              start_url: '/',
+              display: 'browser'
+            }), {
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+          return new Response('Ресурс недоступен', { status: 404 });
+        });
+      })
       .catch(() => {
         if (event.request.url.includes('/manifest.json')) {
           return new Response(JSON.stringify({
@@ -68,6 +99,7 @@ self.addEventListener('fetch', event => {
             headers: { 'Content-Type': 'application/json' }
           });
         }
+        return new Response('Ресурс недоступен', { status: 404 });
       })
   );
 });
