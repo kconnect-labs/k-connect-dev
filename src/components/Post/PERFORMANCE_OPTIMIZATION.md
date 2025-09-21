@@ -176,3 +176,4 @@ const LazyImage = React.lazy(() => import('./LazyImage'));
 4. **Service Worker** - кеширование ресурсов
 5. **Image optimization** - WebP, lazy loading, responsive images
 
+

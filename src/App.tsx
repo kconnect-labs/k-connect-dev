@@ -26,7 +26,6 @@ import './styles/theme.css';
 import { LanguageProvider } from './context/LanguageContext';
 import { MessengerProvider } from './contexts/MessengerContext';
 import { SessionProvider } from './context/SessionContext';
-import { initMediaCache } from './services/mediaCache';
 import { useThemeManager } from './hooks/useThemeManager';
 const preloadBackgroundGradients = async () => {
   try {
@@ -391,10 +390,6 @@ function App() {
     document.body.classList.add('theme-site-background');
     document.documentElement.classList.add('theme-site-background');
 
-    
-    initMediaCache().catch(error => {
-      console.warn('Failed to initialize media cache:', error);
-    });
 
     isInitialized.current = true;
   }, []);

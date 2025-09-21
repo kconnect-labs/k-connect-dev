@@ -248,7 +248,7 @@ const TicketModerationHistory: React.FC<TicketModerationHistoryProps> = ({
                     </Box>
                   }
                 />
-                <Avatar src={log.moderator.avatar} alt={log.moderator.name} sx={{ width: 32, height: 32 }} />
+                <Avatar src={log.moderator.avatar || 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'} alt={log.moderator.name} sx={{ width: 32, height: 32 }} />
               </StyledListItem>
               {index < logs.length - 1 && (
                 <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.08)', my: 1 }} />

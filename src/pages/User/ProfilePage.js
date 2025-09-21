@@ -62,7 +62,6 @@ import UserSubscriptionBadge from './ProfilePage/components/UserSubscriptionBadg
 import { OwnedUsernames } from './ProfilePage/components';
 import { ProfileAbout } from './ProfilePage/components';
 import './ProfilePage.css';
-import { getProfileMediaCache, setProfileMediaCache } from '../../utils/profileMediaCache';
 
 const ProfilePage = () => {
   const { t } = useLanguage();
@@ -379,28 +378,10 @@ const ProfilePage = () => {
             // Не очищаем, если уже есть айтемы
           }
 
-          // === Сравниваем и обновляем кэш медиа ===
-          try {
-            const newMediaData = {
-              banner_url: response.data.user.banner_url || null,
-              avatar_url: response.data.user.avatar_url || null,
-              photos: Array.isArray(response.data.user.photos) ? response.data.user.photos : [],
-              videos: Array.isArray(response.data.user.videos) ? response.data.user.videos : [],
-              equipped_items: response.data.equipped_items || [],
-            };
-
-            if (!mediaCache || JSON.stringify(newMediaData) !== JSON.stringify(mediaCache)) {
-              setMediaCache(newMediaData);
-              setProfileMediaCache(username, newMediaData);
-
-              // Обновляем состояния, только если данные изменились
-              setPhotos(newMediaData.photos);
-              setVideos(newMediaData.videos);
-              setEquippedItems(newMediaData.equipped_items);
-            }
-          } catch (cacheErr) {
-            console.error('Media cache update error', cacheErr);
-          }
+          // Обновляем состояния
+          setPhotos(Array.isArray(response.data.user.photos) ? response.data.user.photos : []);
+          setVideos(Array.isArray(response.data.user.videos) ? response.data.user.videos : []);
+          setEquippedItems(response.data.equipped_items || []);
 
         } else {
           console.error('User data not found in response', response.data);
@@ -750,25 +731,9 @@ const ProfilePage = () => {
     return equippedItemsByLevel.normalItems.slice(0, 3);
   }, [equippedItemsByLevel]);
 
-  const [mediaCache, setMediaCache] = useState(null);
 
   // Загружаем медиа из кеша при первой загрузке
   useEffect(() => {
-    const loadCache = async () => {
-      if (!username) return;
-      try {
-        const cache = await getProfileMediaCache(username);
-        if (cache) {
-          setMediaCache(cache);
-          if (cache.photos) setPhotos(cache.photos);
-          if (cache.videos) setVideos(cache.videos);
-          if (cache.equipped_items) setEquippedItems(cache.equipped_items);
-        }
-      } catch (e) {
-        console.error('Error loading media cache', e);
-      }
-    };
-    loadCache();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 

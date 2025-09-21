@@ -39,7 +39,6 @@ import {
   optimizeImage,
   handleImageError as safeImageError,
 } from '../../utils/imageUtils';
-import { unifiedCache } from '../../utils/unifiedCache';
 import {
   linkRenderers,
   URL_REGEX,
@@ -84,7 +83,6 @@ import SimpleImageViewer from '../SimpleImageViewer';
 import ImageGrid from './ImageGrid';
 import RepostImageGrid from './RepostImageGrid';
 import MusicTrack from './MusicTrack';
-import CachedImage from './components/CachedImage';
 
 
 const VideoPlayer = React.lazy(() => import('../VideoPlayer'));
@@ -112,7 +110,6 @@ import {
   formatDuration,
   truncateText,
   getOptimizedImageUrl,
-  getCachedImageUrl,
   isPostEditable,
   getRandomRotation,
   getRandomSize,
@@ -780,12 +777,6 @@ const Post = ({
         onDelete(post.id);
       }
 
-      
-      if (axios.cache) {
-        axios.cache.clearPostsCache();
-        axios.cache.clearByUrlPrefix(`/api/profile/pinned_post`);
-        axios.cache.clearByUrlPrefix(`/api/posts/${post.id}`);
-      }
 
       
       await axios.delete(`/api/posts/${post.id}`);
@@ -1240,11 +1231,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         await axios.post(
           '/api/profile/unpin_post',
           {},
-          {
-            headers: {
-              'Cache-Control': 'no-cache',
-            },
-          }
         );
         setIsPinned(false);
         window.dispatchEvent(
@@ -1266,11 +1252,6 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         await axios.post(
           `/api/profile/pin_post/${post.id}`,
           {},
-          {
-            headers: {
-              'Cache-Control': 'no-cache',
-            },
-          }
         );
         setIsPinned(true);
         window.dispatchEvent(
@@ -1611,7 +1592,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   justifyContent: 'center',
                 }}
               >
-                <CachedImage
+                <img
                   src={
                     post.user
                       ? post.user?.avatar_url ||
@@ -1828,7 +1809,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       justifyContent: 'center',
                     }}
                   >
-                    <CachedImage
+                    <img
                       src={
                         post.original_post.user?.photo &&
                         post.original_post.user?.photo !== 'avatar.png'
@@ -2667,7 +2648,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     justifyContent: 'center',
                   }}
                 >
-                  <CachedImage
+                  <img
                     src={
                       lastComment.user?.avatar_url ||
                       `/static/uploads/avatar/${lastComment.user?.id}/${lastComment.user?.photo || 'avatar.png'}`

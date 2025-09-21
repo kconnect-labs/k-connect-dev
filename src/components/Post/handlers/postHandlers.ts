@@ -300,12 +300,6 @@ export const usePostHandlers = (
         onDelete(post.id);
       }
 
-      // Clear cache
-      if (axios.cache) {
-        axios.cache.clearPostsCache();
-        axios.cache.clearByUrlPrefix(`/api/profile/pinned_post`);
-        axios.cache.clearByUrlPrefix(`/api/posts/${post.id}`);
-      }
 
       // Send delete request
       await axios.delete(`/api/posts/${post.id}`);
@@ -681,11 +675,6 @@ export const usePostHandlers = (
         await axios.post(
           '/api/profile/unpin_post',
           {},
-          {
-            headers: {
-              'Cache-Control': 'no-cache',
-            },
-          }
         );
         setPostState(prev => ({ ...prev, isPinned: false }));
         window.dispatchEvent(
@@ -707,11 +696,6 @@ export const usePostHandlers = (
         await axios.post(
           `/api/profile/pin_post/${post.id}`,
           {},
-          {
-            headers: {
-              'Cache-Control': 'no-cache',
-            },
-          }
         );
         setPostState(prev => ({ ...prev, isPinned: true }));
         window.dispatchEvent(

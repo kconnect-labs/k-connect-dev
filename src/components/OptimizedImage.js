@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Skeleton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import inventoryImageService from '../services/InventoryImageService';
-import { imageCache, createImageProps } from '../utils/imageUtils';
-import { browserCache } from '../utils/browserCache';
+import { createImageProps } from '../utils/imageUtils';
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -67,23 +66,6 @@ const OptimizedImage = ({
         return;
       }
 
-      // Проверяем кеш браузера
-      try {
-        const cachedSrc = await browserCache.getFile(src);
-        if (cachedSrc) {
-          setImageExists(true);
-          return;
-        }
-      } catch (error) {
-        console.warn('Failed to check browser cache:', error);
-      }
-      
-      // Проверяем кэш изображений 💀
-      const cachedImage = imageCache.get(src);
-      if (cachedImage) {
-        setImageExists(true);
-        return;
-      }
 
       // Извлекаем информацию из URL
       const urlParts = src.split('/');
@@ -126,15 +108,6 @@ const OptimizedImage = ({
   const handleLoad = () => {
     setLoaded(true);
     setError(false);
-    // Сохраняем в кэш
-    imageCache.set(src, { loaded: true, timestamp: Date.now() });
-    
-    // Также сохраняем в кеш браузера
-    if (src && src.startsWith('/static/')) {
-      browserCache.loadFile(src).catch(error => {
-        console.warn('Failed to cache file:', error);
-      });
-    }
     
     if (onLoad) onLoad();
   };

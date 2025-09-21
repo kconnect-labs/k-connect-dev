@@ -300,7 +300,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                 }}>
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Avatar 
-                      src={comment.moderator.avatar} 
+                      src={comment.moderator.avatar || 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'} 
                       alt={comment.moderator.name}
                       sx={{ width: 24, height: 24, fontSize: '0.75rem' }}
                     >

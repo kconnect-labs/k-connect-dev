@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, styled, useTheme, useMediaQuery } from '@mui/material';
 import { optimizeImage } from '../../utils/imageUtils';
 import SimpleImageViewer from '../SimpleImageViewer';
-import { imageCache, createImageProps } from '../../utils/imageUtils';
-import { browserCache } from '../../utils/browserCache';
+import { createImageProps } from '../../utils/imageUtils';
 import { ImageGridProps } from './types';
 import ImageSkeleton from './ImageSkeleton';
 
@@ -268,29 +267,6 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           limitedImages.map(async (imageUrl: string) => {
             let formattedUrl = formatImageUrl(imageUrl);
             
-            // Сначала проверяем кеш браузера
-            let cachedSrc = null;
-            try {
-              cachedSrc = await browserCache.getFile(formattedUrl);
-            } catch (error) {
-              console.warn('Failed to get from browser cache:', error);
-            }
-            
-            if (cachedSrc) {
-              return {
-                src: cachedSrc,
-                originalSrc: formatImageUrl(imageUrl),
-                cached: true
-              };
-            }
-            
-            // Проверяем старый кэш
-            const cacheKey = `${formattedUrl}-optimized`;
-            const cachedResult = imageCache.get(cacheKey);
-            if (cachedResult) {
-              return cachedResult;
-            }
-            
             if (webpSupported && formattedUrl.startsWith('/static/')) {
               formattedUrl = addFormatParam(formattedUrl, 'webp');
             }
@@ -298,23 +274,13 @@ const ImageGrid: React.FC<ImageGridProps> = ({
             const optimized = await optimizeImage(formattedUrl, {
               quality: 0.85,
               maxWidth: 1200,
-              cacheResults: true,
+              cacheResults: false,
             });
 
-            // Сохраняем в кеш браузера
-            try {
-              await browserCache.loadFile(formattedUrl);
-            } catch (error) {
-              console.warn('Failed to cache file:', error);
-            }
-
-            const result = {
+            return {
               ...optimized,
               originalSrc: formatImageUrl(imageUrl),
             };
-            imageCache.set(cacheKey, result);
-
-            return result;
           })
         );
 
@@ -562,9 +528,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({
         {lightboxOpen && (
           <SimpleImageViewer
             isOpen={lightboxOpen}
-            images={[formatImageUrl(limitedImages[selectedIndex!])]}
+            images={limitedImages.map(formatImageUrl)}
             onClose={closeLightbox}
-            initialIndex={0}
+            initialIndex={selectedIndex || 0}
           />
         )}
       </Box>
@@ -620,9 +586,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({
       {lightboxOpen && (
         <SimpleImageViewer
           isOpen={lightboxOpen}
-          images={[formatImageUrl(limitedImages[selectedIndex!])]}
+          images={limitedImages.map(formatImageUrl)}
           onClose={closeLightbox}
-          initialIndex={0}
+          initialIndex={selectedIndex || 0}
         />
       )}
     </Box>

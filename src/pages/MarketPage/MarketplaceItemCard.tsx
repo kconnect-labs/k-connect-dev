@@ -1,9 +1,8 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Chip, Button } from '@mui/material';
+import { Card, CardContent, Typography, Box, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { MarketplaceListing } from './types';
-import CachedImage from '../../components/Post/components/CachedImage';
 import BallsIcon from '../Economic/components/inventoryPack/BallsIcon';
 import MCoinIcon from '../Economic/components/inventoryPack/MCoinIcon';
 
@@ -124,14 +123,11 @@ const MarketplaceItemCard: React.FC<MarketplaceItemCardProps> = ({ listing, onCl
               '--item-background': item.background_url ? `url(${item.background_url})` : 'none',
             }}
           >
-            <CachedImage
+            <img
               src={item.image_url}
               alt={item.item_name}
               width="80%"
               height="80%"
-              showSkeleton={true}
-              onLoad={() => {}}
-              onError={() => {}}
               style={{
                 objectFit: 'contain',
                 maxWidth: '100%',

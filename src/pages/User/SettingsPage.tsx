@@ -23,7 +23,6 @@ import {
   EmojiEvents,
   AlternateEmail,
   Favorite,
-  Storage,
   Style,
   Gavel,
 } from '@mui/icons-material';
@@ -34,7 +33,6 @@ import ProfilePreview from './SettingsPage/components/ProfilePreview';
 import { useLanguage } from '../../context/LanguageContext';
 import ConnectionsModal from './SettingsPage/components/ConnectionsModal';
 import KonnectModal from './SettingsPage/components/KonnectModal';
-import CacheManagementModal from './SettingsPage/components/CacheManagementModal';
 import ThemeSettingsModal from './SettingsPage/components/ThemeSettingsModal';
 import AccountStatusForm from './SettingsPage/components/AccountStatusForm';
 import UniversalModal from '../../UIKIT/UniversalModal';
@@ -58,7 +56,6 @@ const SettingsPage = React.memo(() => {
   const [openModal, setOpenModal] = useState<string | null>(null);
   const [connectionsModalOpen, setConnectionsModalOpen] = useState(false);
   const [konnectModalOpen, setKonnectModalOpen] = useState(false);
-  const [cacheModalOpen, setCacheModalOpen] = useState(false);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
   const [accountStatusModalOpen, setAccountStatusModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState<{
@@ -254,8 +251,6 @@ const SettingsPage = React.memo(() => {
       setKonnectModalOpen(true);
     } else if (section === 'linked') {
       setConnectionsModalOpen(true);
-    } else if (section === 'cache') {
-      setCacheModalOpen(true);
     } else if (section === 'theme') {
       setThemeModalOpen(true);
     } else if (section === 'account-status') {
@@ -546,10 +541,6 @@ const SettingsPage = React.memo(() => {
           onSuccess={showSuccess}
         />
 
-        <CacheManagementModal
-          open={cacheModalOpen}
-          onClose={() => setCacheModalOpen(false)}
-        />
 
         <ThemeSettingsModal
           open={themeModalOpen}

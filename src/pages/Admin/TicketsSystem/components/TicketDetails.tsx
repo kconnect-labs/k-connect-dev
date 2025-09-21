@@ -416,7 +416,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
 
         <Box display="flex" alignItems="center" gap={2} mb={2}>
           <Box display="flex" alignItems="center" gap={1}>
-            <Avatar src={ticket.creator.avatar} alt={ticket.creator.name} />
+            <Avatar src={ticket.creator.avatar || 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'} alt={ticket.creator.name} />
             <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Создал: {ticket.creator.name}
             </Typography>
@@ -426,7 +426,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 →
               </Typography>
-              <Avatar src={ticket.assignee.avatar} alt={ticket.assignee.name} />
+              <Avatar src={ticket.assignee.avatar || 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'} alt={ticket.assignee.name} />
               <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 Назначен: {ticket.assignee.name}
               </Typography>
@@ -677,7 +677,7 @@ const TicketDetails: React.FC<TicketDetailsProps> = ({
                           <StyledPaper key={comment.id}>
                 <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                 <Box display="flex" gap={2} flex={1}>
-                  <Avatar src={comment.moderator.avatar} alt={comment.moderator.name} />
+                  <Avatar src={comment.moderator.avatar || 'https://s3.k-connect.ru/static/uploads/avatar/system/avatar.png'} alt={comment.moderator.name} />
                   <Box flex={1}>
                     <Box display="flex" alignItems="center" gap={1} mb={1}>
                       <Typography variant="subtitle2" sx={{ color: 'rgba(255, 255, 255, 0.87)' }}>

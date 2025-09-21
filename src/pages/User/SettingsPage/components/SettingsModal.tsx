@@ -26,9 +26,6 @@ const ProfileInfoForm = lazy(() => import('./ProfileInfoForm'));
 const StatusForm = lazy(() => import('./StatusForm'));
 const NotificationsForm = lazy(() => import('./NotificationsForm'));
 const SocialLinksForm = lazy(() => import('./SocialLinksForm'));
-const ExperimentalFeaturesForm = lazy(
-  () => import('./ExperimentalFeaturesForm')
-);
 const CustomizationForm = lazy(() => import('./CustomizationForm'));
 const SessionsForm = lazy(() => import('./SessionsForm'));
 const LinkedAccountsForm = lazy(() => import('./LinkedAccountsForm'));
@@ -216,12 +213,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         return (
           <Suspense fallback={<LoadingFallback />}>
             <SocialLinksForm profileData={profileData} onSuccess={onSuccess} />
-          </Suspense>
-        );
-      case 'experimental':
-        return (
-          <Suspense fallback={<LoadingFallback />}>
-            <ExperimentalFeaturesForm onSuccess={onSuccess} />
           </Suspense>
         );
       case 'customization':

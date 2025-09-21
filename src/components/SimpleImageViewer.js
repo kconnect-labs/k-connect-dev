@@ -1,297 +1,317 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import ReactDOM from 'react-dom';
-import Lightbox from 'yet-another-react-lightbox';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
-import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
-import 'yet-another-react-lightbox/styles.css';
-import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import { Box, IconButton, styled } from '@mui/material';
+import { Close, NavigateBefore, NavigateNext, ZoomIn, ZoomOut } from '@mui/icons-material';
 
-const customStyles = `
-  .yarl__container {
-    transition: transform 0.3s ease, opacity 0.3s ease !important;
-  }
-  
-  .yarl__container.swiping-down {
-    transform: translateY(150px) !important;
-    opacity: 0.7 !important;
-  }
-  
-  .yarl__container.swiping-close {
-    transform: translateY(100vh) !important;
-    opacity: 0 !important;
-  }
-`;
+const Overlay = styled(Box)({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+  zIndex: 9999,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backdropFilter: 'blur(8px)',
+});
 
-/**
- * Простой просмотрщик изображений
- */
-const SimpleImageViewer = ({ isOpen, onClose, images, initialIndex = 0 }) => {
-  const [isSwipingDown, setIsSwipingDown] = useState(false);
-  const touchStartRef = useRef({ y: 0, x: 0 });
-  const touchMoveRef = useRef({ y: 0, x: 0 });
-  const containerRef = useRef(null);
-  const scrollPosRef = useRef(0);
+const ImageContainer = styled(Box)({
+  position: 'relative',
+  maxWidth: '90vw',
+  maxHeight: '90vh',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
 
-  const imageArray = Array.isArray(images)
+const Image = styled('img')({
+  maxWidth: '100%',
+  maxHeight: '100%',
+  objectFit: 'contain',
+  transition: 'transform 0.3s ease',
+  cursor: 'grab',
+  '&:active': {
+    cursor: 'grabbing',
+  },
+});
+
+const NavigationButton = styled(IconButton)({
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  zIndex: 10001,
+});
+
+const CloseButton = styled(IconButton)({
+  position: 'absolute',
+  top: 20,
+  right: 20,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  zIndex: 10001,
+});
+
+const ZoomButton = styled(IconButton)({
+  position: 'absolute',
+  bottom: 20,
+  right: 20,
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  color: 'white',
+  margin: '0 5px',
+  '&:hover': {
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  zIndex: 10001,
+});
+
+const Counter = styled(Box)({
+  position: 'absolute',
+  bottom: 20,
+  left: '50%',
+  transform: 'translateX(-50%)',
+  backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  color: 'white',
+  padding: '8px 16px',
+  borderRadius: '20px',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  zIndex: 10001,
+});
+
+const SimpleImageViewer = ({ 
+  isOpen = true, 
+  onClose, 
+  images, 
+  src, 
+  initialIndex = 0 
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [zoom, setZoom] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const imageRef = useRef(null);
+
+  // Поддержка старого API (src) и нового API (images)
+  const imageArray = useMemo(() => {
+    if (src) {
+      // Старый API - одно изображение через src
+      return [src];
+    }
+    if (images) {
+      // Новый API - массив изображений
+      return Array.isArray(images)
     ? images.filter(Boolean)
     : typeof images === 'string' && images
       ? [images]
       : [];
+    }
+    return [];
+  }, [src, images]);
 
-  const slides = imageArray
-    .map(image => {
-      if (typeof image === 'string') {
-        return { src: image, alt: 'Image' };
-      } else if (image && typeof image === 'object') {
-        return {
-          src: image.img || image.src || '',
-          alt: image.alt || image.title || 'Image',
-        };
+  const currentImage = imageArray[currentIndex];
+
+  // Сброс состояния при изменении изображения
+  useEffect(() => {
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+  }, [currentIndex]);
+
+  // Обработка клавиатуры
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      switch (e.key) {
+        case 'Escape':
+          onClose();
+          break;
+        case 'ArrowLeft':
+          if (imageArray.length > 1) {
+            setCurrentIndex((prev) => (prev > 0 ? prev - 1 : imageArray.length - 1));
+          }
+          break;
+        case 'ArrowRight':
+          if (imageArray.length > 1) {
+            setCurrentIndex((prev) => (prev < imageArray.length - 1 ? prev + 1 : 0));
+          }
+          break;
+        case '+':
+        case '=':
+          setZoom((prev) => Math.min(prev * 1.2, 5));
+          break;
+        case '-':
+          setZoom((prev) => Math.max(prev / 1.2, 0.5));
+          break;
+        case '0':
+          setZoom(1);
+          setPosition({ x: 0, y: 0 });
+          break;
       }
-      return null;
-    })
-    .filter(Boolean);
+    };
 
-  const zoomConfig = {
-    maxZoomPixelRatio: 3,
-    zoomInMultiplier: 1.5,
-    doubleTapDelay: 300,
-    doubleClickDelay: 300,
-    doubleClickMaxStops: 2,
-    keyboardMoveDistance: 50,
-    wheelZoomDistanceFactor: 100,
-    pinchZoomDistanceFactor: 100,
-    scrollToZoom: true,
-  };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, imageArray.length, onClose]);
 
-  const thumbnailsConfig = {
-    position: 'bottom',
-    width: 80,
-    height: 60,
-    border: 1,
-    borderRadius: 4,
-    padding: 4,
-    gap: 8,
-    showToggle: false,
-  };
-
-  const handleClose = () => {
-    const currentPos = window.scrollY;
-
-    onClose();
-
-    setTimeout(() => {
-      window.scrollTo(0, currentPos);
-    }, 50);
-  };
-
+  // Предотвращение скролла body
   useEffect(() => {
     if (isOpen) {
-      scrollPosRef.current = window.scrollY;
-
-      const styleElement = document.createElement('style');
-      styleElement.innerHTML = customStyles;
-      document.head.appendChild(styleElement);
-
-      const findContainer = () => {
-        const container = document.querySelector('.yarl__container');
-        if (container) {
-          containerRef.current = container;
-        }
-      };
-
-      setTimeout(findContainer, 100);
-
-      const handleTouchStart = e => {
-        touchStartRef.current = {
-          y: e.touches[0].clientY,
-          x: e.touches[0].clientX,
-        };
-        touchMoveRef.current = { ...touchStartRef.current };
-      };
-
-      const handleTouchMove = e => {
-        const touchY = e.touches[0].clientY;
-        const touchX = e.touches[0].clientX;
-
-        const deltaY = touchY - touchStartRef.current.y;
-        const deltaX = touchX - touchStartRef.current.x;
-
-        touchMoveRef.current = { y: touchY, x: touchX };
-
-        const zoomElement = document.querySelector('.yarl__slide_image');
-        const isZoomed =
-          zoomElement &&
-          window.getComputedStyle(zoomElement).transform !== 'none' &&
-          window.getComputedStyle(zoomElement).transform !==
-            'matrix(1, 0, 0, 1, 0, 0)';
-
-        if (deltaY > 20 && Math.abs(deltaY) > Math.abs(deltaX) && !isZoomed) {
-          setIsSwipingDown(true);
-
-          if (containerRef.current) {
-            containerRef.current.classList.add('swiping-down');
-          }
-
-          e.preventDefault();
-        }
-      };
-
-      const handleTouchEnd = () => {
-        if (!isSwipingDown) return;
-
-        const deltaY = touchMoveRef.current.y - touchStartRef.current.y;
-
-        if (deltaY > 80) {
-          if (containerRef.current) {
-            containerRef.current.classList.add('swiping-close');
-          }
-
-          setTimeout(() => {
-            handleClose();
-            setIsSwipingDown(false);
-
-            if (containerRef.current) {
-              containerRef.current.classList.remove(
-                'swiping-down',
-                'swiping-close'
-              );
-            }
-          }, 300);
-        } else {
-          if (containerRef.current) {
-            containerRef.current.classList.remove('swiping-down');
-          }
-          setIsSwipingDown(false);
-        }
-      };
-
-      document.addEventListener('touchstart', handleTouchStart, {
-        passive: false,
-      });
-      document.addEventListener('touchmove', handleTouchMove, {
-        passive: false,
-      });
-      document.addEventListener('touchend', handleTouchEnd, { passive: false });
-
-      return () => {
-        styleElement.remove();
-        document.removeEventListener('touchstart', handleTouchStart);
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
-      };
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
-  }, [isOpen, isSwipingDown]);
 
-  // Рендерим содержимое только если просмотрщик открыт
-  if (!isOpen) {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  const handlePrev = () => {
+    if (imageArray.length > 1) {
+      setCurrentIndex((prev) => (prev > 0 ? prev - 1 : imageArray.length - 1));
+    }
+  };
+
+  const handleNext = () => {
+    if (imageArray.length > 1) {
+      setCurrentIndex((prev) => (prev < imageArray.length - 1 ? prev + 1 : 0));
+    }
+  };
+
+  const handleZoomIn = () => {
+    setZoom((prev) => Math.min(prev * 1.2, 5));
+  };
+
+  const handleZoomOut = () => {
+    setZoom((prev) => Math.max(prev / 1.2, 0.5));
+  };
+
+  const handleWheel = (e) => {
+    if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+      const delta = e.deltaY > 0 ? 0.9 : 1.1;
+      setZoom((prev) => Math.max(0.5, Math.min(5, prev * delta)));
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    if (zoom > 1) {
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging && zoom > 1) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleDoubleClick = () => {
+    if (zoom === 1) {
+      setZoom(2);
+    } else {
+      setZoom(1);
+      setPosition({ x: 0, y: 0 });
+    }
+  };
+
+  if (!isOpen || !currentImage) {
     return null;
   }
 
   return ReactDOM.createPortal(
-    <Lightbox
-      open={isOpen}
-      close={handleClose}
-      slides={slides}
-      index={initialIndex}
-      plugins={[Zoom, Thumbnails]}
-      carousel={{
-        finite: slides.length <= 1,
-        preload: 2,
-        padding: '0px',
-        spacing: '1em',
-        imageFit: 'contain',
+    <Overlay
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
       }}
-      animation={{
-        fade: 300,
-        swipe: 500,
-        navigation: 250,
-      }}
-      zoom={zoomConfig}
-      thumbnails={thumbnailsConfig}
-      render={{
-        iconPrev: () => (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          >
-            <path d='M15 18l-6-6 6-6' />
-          </svg>
-        ),
-        iconNext: () => (
-          <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            strokeWidth='2'
-            strokeLinecap='round'
-            strokeLinejoin='round'
-          >
-            <path d='M9 18l6-6-6-6' />
-          </svg>
-        ),
-      }}
-      styles={{
-        container: {
-          backgroundColor: 'rgba(0, 0, 0, 0.9)',
-          backdropFilter: 'blur(8px)',
-        },
-        slide: {
-          width: '90%',
-          maxWidth: '1200px',
-          maxHeight: '85vh',
-        },
-        image: {
-          objectFit: 'contain',
-          maxHeight: '85vh',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
-        },
-        button: {
-          filter: 'drop-shadow(0 0 1px rgba(0, 0, 0, 0.5))',
-          color: '#fff',
-        },
-        buttonPrev: {
-          background: 'rgba(30, 30, 30, 0.6)',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        buttonNext: {
-          background: 'rgba(30, 30, 30, 0.6)',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
+      onWheel={handleWheel}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      <ImageContainer>
+        <Image
+          ref={imageRef}
+          src={currentImage}
+          alt={`Изображение ${currentIndex + 1}`}
+          style={{
+            transform: `scale(${zoom}) translate(${position.x / zoom}px, ${position.y / zoom}px)`,
+          }}
+          onMouseDown={handleMouseDown}
+          onDoubleClick={handleDoubleClick}
+          draggable={false}
+        />
 
-        buttonClose: {
-          background: 'rgba(30, 30, 30, 0.8)',
-          borderRadius: '50%',
-          width: '44px',
-          height: '44px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '15px',
-          marginRight: '15px',
-        },
-      }}
-    />,
+        {/* Кнопка закрытия */}
+        <CloseButton onClick={onClose} size="large">
+          <Close />
+        </CloseButton>
+
+        {/* Навигация */}
+        {imageArray.length > 1 && (
+          <>
+            <NavigationButton
+              onClick={handlePrev}
+              style={{ left: 20 }}
+              size="large"
+            >
+              <NavigateBefore />
+            </NavigationButton>
+            <NavigationButton
+              onClick={handleNext}
+              style={{ right: 20 }}
+              size="large"
+            >
+              <NavigateNext />
+            </NavigationButton>
+          </>
+        )}
+
+        {/* Зум */}
+        <ZoomButton
+          onClick={handleZoomOut}
+          style={{ bottom: 20, right: 80 }}
+          size="small"
+        >
+          <ZoomOut />
+        </ZoomButton>
+        <ZoomButton
+          onClick={handleZoomIn}
+          style={{ bottom: 20, right: 20 }}
+          size="small"
+        >
+          <ZoomIn />
+        </ZoomButton>
+
+        {/* Счетчик */}
+        {imageArray.length > 1 && (
+          <Counter>
+            {currentIndex + 1} / {imageArray.length}
+          </Counter>
+        )}
+      </ImageContainer>
+    </Overlay>,
     document.body
   );
 };

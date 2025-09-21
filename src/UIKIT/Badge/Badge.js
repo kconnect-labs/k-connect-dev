@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Box, Tooltip } from '@mui/material';
-import { browserCache } from '../../utils/browserCache';
 import './Badge.css';
 
 /**
@@ -33,7 +32,6 @@ const Badge = ({
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [svgContent, setSvgContent] = useState(null);
-  const [cachedImageSrc, setCachedImageSrc] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
   const [isRetrying, setIsRetrying] = useState(false);
   const imageRef = useRef(null);
@@ -85,18 +83,8 @@ const Badge = ({
     setRetryCount(prev => prev + 1);
     
     try {
-      
-      await browserCache.clearFileCache(achievement.image_path);
-      
-      
-      const cachedSrc = await browserCache.loadFile(achievement.image_path);
-      if (cachedSrc) {
-        setCachedImageSrc(cachedSrc);
-        setImageError(false);
-        setImageLoaded(false); 
-      } else {
-        setImageError(true);
-      }
+      setImageError(false);
+      setImageLoaded(false); 
     } catch (error) {
       console.warn('Failed to retry load badge:', error);
       setImageError(true);
@@ -109,34 +97,17 @@ const Badge = ({
   useEffect(() => {
     if (!achievement?.image_path) return;
 
-    const loadCachedImage = async () => {
-      try {
-        
-        const cachedSrc = await browserCache.loadFile(achievement.image_path);
-        if (cachedSrc) {
-          setCachedImageSrc(cachedSrc);
-          setImageError(false);
-        } else {
-          setImageError(true);
-        }
-      } catch (error) {
-        console.warn('Failed to load badge from cache:', error);
-        setImageError(true);
-      }
-    };
-
-    loadCachedImage();
+    setImageError(false);
   }, [achievement?.image_path, retryCount]);
 
   
   useEffect(() => {
-    if (!achievement?.image_path || !imageLoaded || !cachedImageSrc) return;
+    if (!achievement?.image_path || !imageLoaded) return;
 
     const loadSvgContent = async () => {
       try {
-        
-        if (cachedImageSrc.startsWith('blob:') || cachedImageSrc.startsWith('data:')) {
-          const response = await fetch(cachedImageSrc);
+        if (achievement.image_path.startsWith('blob:') || achievement.image_path.startsWith('data:')) {
+          const response = await fetch(achievement.image_path);
           if (response.ok) {
             const svgText = await response.text();
             setSvgContent(svgText);
@@ -151,7 +122,7 @@ const Badge = ({
     if (achievement.image_path.toLowerCase().endsWith('.svg')) {
       loadSvgContent();
     }
-  }, [achievement?.image_path, imageLoaded, cachedImageSrc]);
+  }, [achievement?.image_path, imageLoaded]);
 
   
   const handleImageLoad = () => {
@@ -235,10 +206,10 @@ const Badge = ({
       onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
-      {cachedImageSrc ? (
+      {achievement?.image_path ? (
         <img
           ref={imageRef}
-          src={cachedImageSrc}
+          src={achievement.image_path}
           alt={achievement.bage}
           className='badge__image'
           onLoad={handleImageLoad}

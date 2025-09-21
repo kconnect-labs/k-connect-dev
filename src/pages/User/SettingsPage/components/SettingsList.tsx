@@ -12,7 +12,6 @@ import {
   EmojiEvents,
   AlternateEmail,
   Favorite,
-  Storage,
   Style,
   Gavel,
   Security,
@@ -94,13 +93,6 @@ const settingsSections: SettingsSection[] = [
     subtitle: 'Настройки уведомлений и оповещений',
     icon: <Notifications />,
     color: 'rgba(16, 185, 129, 0.66)', // #10b981 с прозрачностью
-  },
-  {
-    id: 'cache',
-    title: 'Управление кешем',
-    subtitle: 'Очистка и управление хранилищем',
-    icon: <Storage />,
-    color: 'rgba(76, 175, 80, 0.66)', // #4caf50 с прозрачностью
   },
   {
     id: 'security',

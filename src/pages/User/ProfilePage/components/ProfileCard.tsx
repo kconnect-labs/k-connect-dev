@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import VerificationBadge from '../../../../UIKIT/VerificationBadge';
 import Badge from '../../../../UIKIT/Badge';
-import CachedImage from '../../../../components/Post/components/CachedImage';
 
 // Типизация для Badge компонента
 interface BadgeProps {
@@ -361,7 +360,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                   justifyContent: 'center',
                 }}
               >
-                <CachedImage
+                <img
                   src={user?.avatar_url || fallbackAvatarUrl}
                   alt={user?.name || 'User'}
                   width="100%"

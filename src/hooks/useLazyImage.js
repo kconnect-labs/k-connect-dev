@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import { imageCache } from '../utils/imageUtils';
 
 /**
  * @param {string} src
@@ -30,12 +29,6 @@ export const useLazyImage = (src, options = {}) => {
       return;
     }
 
-    const cachedImage = imageCache.get(src);
-    if (cachedImage) {
-      setIsLoaded(true);
-      setImageSrc(src);
-      return;
-    }
 
     if ('IntersectionObserver' in window) {
       observerRef.current = new IntersectionObserver(
@@ -72,7 +65,6 @@ export const useLazyImage = (src, options = {}) => {
   const handleLoad = () => {
     setIsLoaded(true);
     setError(false);
-    imageCache.set(src, { loaded: true, timestamp: Date.now() });
   };
 
   const handleError = () => {

@@ -54,8 +54,7 @@
     "socket.io-client": "^4.8.1",
     "styled-components": "^6.0.7",
     "typescript": "^5.8.3",
-    "vidstack": "^0.6.15",
-    "yet-another-react-lightbox": "^3.23.1"
+    "vidstack": "^0.6.15"
   },
   "scripts": {
     "start": "vite --host 0.0.0.0 --port 3005 --config vite.dev.config.js --force",

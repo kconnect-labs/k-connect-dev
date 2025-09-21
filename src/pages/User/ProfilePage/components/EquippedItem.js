@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import CachedImage from '../../../../components/Post/components/CachedImage';
 import axios from 'axios';
 
 // CSS анимации
@@ -533,12 +532,11 @@ const EquippedItem = React.memo(({ item, index = 0, onPositionUpdate, isEditMode
       
       {/* Подсказка убрана - теперь используются кнопки внизу */}
       
-      <CachedImage
+      <img
         src={`${(typeof window !== 'undefined' && window.location?.origin) || 'https://k-connect.ru'}${item.image_url}`}
         alt={item.item_name}
         width='100%'
         height='100%'
-        showSkeleton={false}
         style={useMemo(() => ({
           width: '100%',
           height: '100%',

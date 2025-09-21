@@ -14,7 +14,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
@@ -62,6 +62,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
   const postId = overlayPostId || paramId;
   const { user, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -207,6 +208,14 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
 
     fetchPost();
   }, [postId, navigate]);
+
+  // Закрываем модальное окно при изменении URL (только для overlay режима)
+  useEffect(() => {
+    if (isOverlay && overlayOpen) {
+      // Закрываем модальное окно при изменении location
+      closePostDetail();
+    }
+  }, [location.pathname, location.search, isOverlay, overlayOpen, closePostDetail]);
 
   const incrementViewCount = async postId => {
     try {

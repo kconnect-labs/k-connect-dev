@@ -109,3 +109,4 @@ console.log(`Предзагружено: ${stats.preloaded}/${stats.total}`);
 - **Пользовательские**: По запросу через `preloadUserBadges()`
 - **Неблокирующая**: Использует `Promise.allSettled()`
 
+

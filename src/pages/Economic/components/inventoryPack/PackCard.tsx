@@ -20,7 +20,6 @@ import {
 } from '@mui/icons-material';
 import MCoinIcon from './MCoinIcon';
 import BallsIcon from './BallsIcon';
-import CachedImage from '../../../../components/Post/components/CachedImage';
 import { Pack, PackContent } from './types';
 import ProposePackModal from './ProposePackModal';
 // import { useBackgroundGradients } from './useBackgroundGradients';
@@ -534,13 +533,11 @@ const PackCard = ({
             </Box> */}
             <ExclusivePackImage>
               {pack.image_path ? (
-                <CachedImage
+                <img
                   src={pack.image_path}
                   alt={pack.display_name}
                   width='100%'
                   height='100%'
-                  onLoad={() => {}}
-                  onError={() => {}}
                 />
               ) : (
                 <ItemContainer>
@@ -613,14 +610,11 @@ const PackCard = ({
                           backgroundRepeat: 'no-repeat',
                         }}
                       >
-                        <CachedImage
+                        <img
                           src={`/inventory/pack/${pack.id}/${item.item_name}`}
                           alt={item.item_name}
                           width='75%'
                           height='75%'
-                          showSkeleton={false}
-                          onLoad={() => {}}
-                          onError={() => {}}
                           style={{
                             position: 'relative',
                             zIndex: 3,
@@ -787,13 +781,11 @@ const PackCard = ({
         </Box> */}
         <PackImage>
           {pack.image_path ? (
-            <CachedImage
+            <img
               src={pack.image_path}
               alt={pack.display_name}
               width='100%'
               height='100%'
-              onLoad={() => {}}
-              onError={() => {}}
             />
           ) : (
             <ItemContainer>
@@ -866,14 +858,11 @@ const PackCard = ({
                       backgroundRepeat: 'no-repeat',
                     }}
                   >
-                    <CachedImage
+                    <img
                       src={`/inventory/pack/${pack.id}/${item.item_name}`}
                       alt={item.item_name}
                       width='75%'
                       height='75%'
-                      showSkeleton={false}
-                      onLoad={() => {}}
-                      onError={() => {}}
                       style={{
                         position: 'relative',
                         zIndex: 3,
