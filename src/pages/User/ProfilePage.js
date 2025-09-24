@@ -829,6 +829,7 @@ const ProfilePage = () => {
             ownedUsernames={ownedUsernames}
             userBanInfo={userBanInfo}
             fallbackAvatarUrl={fallbackAvatarUrl}
+            socials={socials}
             t={t}
             getLighterColor={getLighterColor}
             openLightbox={openLightbox}
