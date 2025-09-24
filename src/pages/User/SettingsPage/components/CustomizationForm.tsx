@@ -216,7 +216,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     document.dispatchEvent(event);
     
     console.log('Event dispatched:', event);
-    showNotification('success', `Версия MainLayout изменена на ${version.toUpperCase()}`);
+    showNotification('success', `Версия изменена на ${version.toUpperCase()}`);
   };
 
 
@@ -622,6 +622,47 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
           Цвет профиля будет отображаться в элементах интерфейса вашего профиля
         </Typography>
       </Box>
+      {/* Версия MainLayout */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <PaletteIcon />
+          Версия Сайдбара
+        </Typography>
+
+        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
+          Выберите версию сайдбара приложения
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Button
+            variant={layoutVersion === 'v1' ? 'contained' : 'outlined'}
+            onClick={() => handleLayoutVersionChange('v1')}
+            sx={{ borderRadius: 'var(--main-border-radius)' }}
+          >
+            Большой
+          </Button>
+          <Button
+            variant={layoutVersion === 'v2' ? 'contained' : 'outlined'}
+            onClick={() => handleLayoutVersionChange('v2')}
+            sx={{ borderRadius: 'var(--main-border-radius)' }}
+          >
+            Минималистный 
+          </Button>
+        </Box>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          Большой - текущая версия макета. Минималистный - новая версия (в разработке)
+        </Typography>
+      </Box>
 
       {(subscription?.type === 'ultimate' || subscription?.type === 'max') && (
         <Box sx={sectionStyle}>
@@ -823,47 +864,6 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
         )}
       </Box>
 
-      {/* Версия MainLayout */}
-      <Box sx={sectionStyle}>
-        <Typography
-          variant='subtitle1'
-          sx={{
-            mb: 2,
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-          }}
-        >
-          <PaletteIcon />
-          Версия MainLayout
-        </Typography>
-
-        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
-          Выберите версию основного макета приложения
-        </Typography>
-
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-          <Button
-            variant={layoutVersion === 'v1' ? 'contained' : 'outlined'}
-            onClick={() => handleLayoutVersionChange('v1')}
-            sx={{ borderRadius: 'var(--main-border-radius)' }}
-          >
-            V1 (Текущая)
-          </Button>
-          <Button
-            variant={layoutVersion === 'v2' ? 'contained' : 'outlined'}
-            onClick={() => handleLayoutVersionChange('v2')}
-            sx={{ borderRadius: 'var(--main-border-radius)' }}
-          >
-            V2 (Новая)
-          </Button>
-        </Box>
-
-        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
-          V1 - текущая версия макета. V2 - новая версия с улучшениями (в разработке)
-        </Typography>
-      </Box>
 
       {/* Экспорт / Импорт профиля */}
       <Box sx={sectionStyle}>
