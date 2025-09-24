@@ -1,0 +1,106 @@
+/* SidebarV2 - Оптимизированные стили без Material UI */
+
+/* Убираем только padding у Material-UI List компонентов */
+.sidebar-v2-container .css-1mgy9xb-MuiList-root,
+.sidebar-v2-container [class*="MuiList-root"] {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Убираем пустые Box компоненты с высотой */
+.sidebar-v2-container .css-1kuv168,
+.sidebar-v2-container [class*="css-1kuv168"] {
+  height: 0 !important;
+  display: none !important;
+}
+
+.sidebar-v2-container {
+  padding:0px 0px 0 16px;
+  height: calc(100vh - 65px);
+  position: sticky;
+  top: 55px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  scrollbar-width: none;
+  box-sizing: border-box;
+  contain: layout style paint;
+}
+
+/* Применение темы через CSS переменные */
+.sidebar-v2-container.theme-aware {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.sidebar-v2-container::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.sidebar-v2-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.sidebar-v2-container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.sidebar-v2-container:hover {
+  /* Убрано бокс-шадоу при наведении */
+  transition: all 0.2s ease;
+}
+
+.sidebar-v2-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 1200px) {
+  .sidebar-v2-container {
+    width: 220px;
+    margin-right: 0;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 1199px) {
+  .sidebar-v2-container {
+    padding: 12px 10px;
+    width: 220px;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 959px) {
+  .sidebar-v2-container {
+    width: 210px;
+    padding: 10px 8px;
+    margin-left: auto;
+  }
+}
+
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  /* Анимации уже убраны */
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sidebar-v2-container {
+    border-width: 0.5px;
+  }
+}
+
+/* Поддержка печати */
+@media print {
+  .sidebar-v2-container {
+    display: none !important;
+  }
+}

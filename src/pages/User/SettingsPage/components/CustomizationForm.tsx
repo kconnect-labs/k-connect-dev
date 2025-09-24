@@ -163,6 +163,11 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     message: string;
   } | null>(null);
   
+  // Состояние для версии MainLayout
+  const [layoutVersion, setLayoutVersion] = useState(
+    () => localStorage.getItem('mainLayoutVersion') || 'v1'
+  );
+  
 
   // Загрузка декораций и обоев профиля
   useEffect(() => {
@@ -196,6 +201,22 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
     // Дополнительно можно обновить данные профиля
     fetchUserDecorations();
     fetchProfileColor();
+  };
+
+  // Обработчик смены версии MainLayout
+  const handleLayoutVersionChange = (version: string) => {
+    console.log('Changing layout version to:', version);
+    setLayoutVersion(version);
+    localStorage.setItem('mainLayoutVersion', version);
+    
+    // Отправляем событие для обновления MainLayout
+    const event = new CustomEvent('layoutVersionChanged', { 
+      detail: { version } 
+    });
+    document.dispatchEvent(event);
+    
+    console.log('Event dispatched:', event);
+    showNotification('success', `Версия MainLayout изменена на ${version.toUpperCase()}`);
   };
 
 
@@ -800,6 +821,48 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
             })}
           </Box>
         )}
+      </Box>
+
+      {/* Версия MainLayout */}
+      <Box sx={sectionStyle}>
+        <Typography
+          variant='subtitle1'
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+        >
+          <PaletteIcon />
+          Версия MainLayout
+        </Typography>
+
+        <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
+          Выберите версию основного макета приложения
+        </Typography>
+
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <Button
+            variant={layoutVersion === 'v1' ? 'contained' : 'outlined'}
+            onClick={() => handleLayoutVersionChange('v1')}
+            sx={{ borderRadius: 'var(--main-border-radius)' }}
+          >
+            V1 (Текущая)
+          </Button>
+          <Button
+            variant={layoutVersion === 'v2' ? 'contained' : 'outlined'}
+            onClick={() => handleLayoutVersionChange('v2')}
+            sx={{ borderRadius: 'var(--main-border-radius)' }}
+          >
+            V2 (Новая)
+          </Button>
+        </Box>
+
+        <Typography variant='caption' sx={{ color: 'text.secondary' }}>
+          V1 - текущая версия макета. V2 - новая версия с улучшениями (в разработке)
+        </Typography>
       </Box>
 
       {/* Экспорт / Импорт профиля */}

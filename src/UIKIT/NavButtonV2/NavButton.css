@@ -1,0 +1,256 @@
+@import '../../uikit.module.css';
+
+/* NavButtonV2 - Оптимизированные стили без Material UI */
+
+/* Основной контейнер навигационной кнопки */
+.nav-button-v2 {
+  border-radius: var(--main-border-radius) !important;
+  margin-bottom: 4px;
+  padding: 8px 14px 8px 0;
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  box-sizing: border-box;
+  background-color: var(--theme-background, rgba(0, 0, 0, 0.15));
+  border: 1px solid rgba(66, 66, 66, 0.5);
+  backdrop-filter: var(--theme-backdrop-filter);
+  -webkit-backdrop-filter: var(--theme-backdrop-filter);
+}
+
+.nav-button-v2:hover {
+  background-color: var(--theme-background, rgba(255, 255, 255, 0.08));
+}
+
+.nav-button-v2:active {
+  background-color: var(--theme-background, rgba(255, 255, 255, 0.1));
+}
+
+.nav-button-v2.active {
+  background-color: var(--theme-background, rgba(0, 0, 0, 0.15));
+}
+
+/* Индикатор активности (полоска слева) */
+.nav-button-v2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 25%;
+  height: 50%;
+  width: 0px;
+  background-color: var(--primary, #d0bcff);
+  border-radius: 0 3px 3px 0;
+  box-shadow: none;
+}
+
+.nav-button-v2--active::before {
+  width: 3px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-button-v2:hover::before {
+  width: 2px;
+  height: 50%;
+  top: 25%;
+}
+
+.nav-button-v2--active:hover::before {
+  width: 3px;
+}
+
+/* Специальные кнопки (красный цвет) */
+.nav-button-v2--special::before {
+  background-color: #f44336;
+}
+
+/* Иконка навигации */
+.nav-button-v2__icon {
+  min-width: 32px;
+  color: var(--theme-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.nav-button-v2__icon svg {
+  font-size: 1.2rem;
+}
+
+.nav-button-v2--active .nav-button-v2__icon {
+  color: var(--primary, #d0bcff);
+}
+
+.nav-button-v2--active .nav-button-v2__icon svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.nav-button-v2--special .nav-button-v2__icon {
+  color: #f44336;
+}
+
+.nav-button-v2:hover .nav-button-v2__icon {
+  color: var(--theme-text-primary);
+}
+
+.nav-button-v2:hover .nav-button-v2__icon svg {
+  /* Убрано увеличение при наведении */
+  transition: all 0.2s ease;
+}
+
+.nav-button-v2--active:hover .nav-button-v2__icon {
+  color: var(--primary, #d0bcff);
+}
+
+.nav-button-v2--special:hover .nav-button-v2__icon {
+  color: #f44336;
+}
+
+/* Текст навигации */
+.nav-button-v2__text {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--theme-text-primary);
+  letter-spacing: 0.25px;
+  text-shadow: none;
+  flex: 1;
+  text-align: left;
+}
+
+.nav-button-v2--active .nav-button-v2__text {
+  font-weight: 600;
+  color: var(--primary, #d0bcff);
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nav-button-v2--special .nav-button-v2__text {
+  color: #f44336;
+}
+
+.nav-button-v2:hover .nav-button-v2__text {
+  /* Убрано изменение letter-spacing при наведении */
+  transition: all 0.2s ease;
+}
+
+/* Вложенные кнопки */
+.nav-button-v2--nested {
+  border-radius: 10px;
+  margin-bottom: 3px;
+}
+
+/* Контейнер для endIcon */
+.nav-button-v2__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.nav-button-v2__left-content {
+  display: flex;
+  align-items: center;
+}
+
+/* MoreButton стили */
+.more-button-v2 {
+  justify-content: space-between;
+  padding-right: 18px;
+}
+
+.more-button-v2__arrow {
+  transform: rotate(0deg);
+  color: var(--theme-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.more-button-v2__arrow svg {
+  font-size: 1.1rem;
+}
+
+.more-button-v2--active .more-button-v2__arrow {
+  transform: rotate(180deg);
+  color: var(--primary, #d0bcff);
+}
+
+.more-button-v2--special .more-button-v2__arrow {
+  color: #f44336;
+}
+
+.more-button-v2:hover .more-button-v2__arrow {
+  color: var(--theme-text-primary);
+}
+
+.more-button-v2:hover .more-button-v2__arrow svg {
+  /* Убрано увеличение при наведении */
+  transition: all 0.2s ease;
+}
+
+.more-button-v2--active:hover .more-button-v2__arrow {
+  color: var(--primary, #d0bcff);
+}
+
+.more-button-v2--special:hover .more-button-v2__arrow {
+  color: #f44336;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .nav-button-v2 {
+    padding: 7px 12px 7px 0;
+    margin-bottom: 3px;
+  }
+
+  .nav-button-v2__icon {
+    min-width: 30px;
+  }
+
+  .nav-button-v2__icon svg {
+    font-size: 1.15rem;
+  }
+
+  .nav-button-v2__text {
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+  }
+
+  .nav-button-v2--active .nav-button-v2__text {
+    letter-spacing: 0.35px;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav-button-v2 {
+    padding: 6px 11px;
+    margin-bottom: 2px;
+  }
+
+  .nav-button-v2__icon {
+    min-width: 28px;
+  }
+
+  .nav-button-v2__icon svg {
+    font-size: 1.1rem;
+  }
+
+  .nav-button-v2__text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Поддержка reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  /* Анимации уже убраны */
+}
+
+/* Оптимизации для производительности */
+/* Убраны will-change так как анимации удалены */
