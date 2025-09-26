@@ -49,6 +49,19 @@ const Login = () => {
     checkAuth,
   } = useContext(AuthContext);
 
+  // Функция для воспроизведения звука при неправильном пароле
+  const playErrorSound = () => {
+    try {
+      const audio = new Audio('/static/sounds/wrong-try-again.mp3');
+      audio.volume = 0.5; // Устанавливаем громкость на 50%
+      audio.play().catch(error => {
+        console.warn('Не удалось воспроизвести звук ошибки:', error);
+      });
+    } catch (error) {
+      console.warn('Ошибка при создании аудио объекта:', error);
+    }
+  };
+
   useEffect(() => {
     const fromPath = location.state?.from;
 
@@ -133,6 +146,9 @@ const Login = () => {
           contextError.message ||
           'Произошла ошибка при входе';
         setError(errorMessage);
+        
+        // Воспроизводим звук при ошибке входа
+        playErrorSound();
 
         localStorage.setItem('login_error', errorMessage);
       }
@@ -325,6 +341,8 @@ const Login = () => {
               'Ваша почта не подтверждена. Пожалуйста, проверьте вашу электронную почту и перейдите по ссылке в письме для подтверждения аккаунта.';
           } else {
             errorMsg = result.error;
+            // Воспроизводим звук при неправильном пароле или других ошибках входа
+            playErrorSound();
           }
 
           setError(errorMsg);
@@ -344,6 +362,10 @@ const Login = () => {
       const errorMsg =
         'Произошла ошибка при обработке запроса. Пожалуйста, попробуйте снова.';
       setError(errorMsg);
+      
+      // Воспроизводим звук при ошибке
+      playErrorSound();
+      
       localStorage.setItem('login_error', errorMsg);
     } finally {
       setLoading(false);

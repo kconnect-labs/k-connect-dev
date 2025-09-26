@@ -867,13 +867,7 @@ const ProfilePage = () => {
                   borderRadius: '18px',
                   py: 1.2,
                   fontWeight: 'bold',
-                  textTransform: 'none',
-                  boxShadow:
-                    user.status_color &&
-                    user.status_text &&
-                    user.subscription
-                      ? `0 2px 8px ${user.status_color}40`
-                      : '0 2px 8px rgba(208, 188, 255, 0.25)',
+
                   backgroundColor: following
                     ? 'rgba(255, 255, 255, 0.1)'
                     : user.status_color &&
@@ -978,7 +972,6 @@ const ProfilePage = () => {
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 mb: 1,
                 display: 'flex',
@@ -1073,7 +1066,6 @@ const ProfilePage = () => {
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
               overflow: 'hidden',
               mb: '5px',
               border: '1px solid rgba(66, 66, 66, 0.5)',
