@@ -1,4 +1,4 @@
-/* BottomNavigation CSS Styles */
+/* BottomNavigation CSS Styles - Apple Style */
 
 .bottom-navigation {
   position: fixed;
@@ -7,8 +7,11 @@
   right: 0;
   display: block;
   z-index: 1000;
-  border-top: 1px solid rgba(43, 43, 43, 0.606);
-  background: var(--theme-background-full, rgba(15, 15, 15, 0.98));
+  background: var(--theme-background);
+  backdrop-filter: var(--theme-backdrop-filter);
+  -webkit-backdrop-filter: var(--theme-backdrop-filter);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 @media (min-width: 700px) {
@@ -19,11 +22,13 @@
 
 .bottom-nav-container {
   background-color: transparent;
-  height: 75px;
+  height: 60px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-top: 10px;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 20px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .bottom-nav-item {
@@ -31,41 +36,45 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: auto;
-  padding: 8px 4px;
-  color: rgba(214, 209, 227, 0.77);
+  width: 60px;
+  height: 60px;
+  color: var(--theme-text-deactive);
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: none;
   border: none;
   background: none;
   font-family: inherit;
-  flex: 1;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
 }
 
+
+
 .bottom-nav-item:hover {
-  color: rgba(214, 209, 227, 0.9);
+  color: var(--theme-text-primary);
+  transform: scale(1.05);
 }
 
 .bottom-nav-item.active {
-  color: var(--primary-main, #d0bcff);
+  color: var(--theme-text-primary);
+  transform: scale(1.1);
 }
 
 .bottom-nav-icon {
-  width: 28px;
-  height: 28px;
-  margin-bottom: 4px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
+  transition: none;
 }
 
-.bottom-nav-label {
-  font-size: 0.6rem;
-  font-weight: 100;
-  text-align: center;
-  margin: 0;
-  line-height: 1;
+.bottom-nav-item.active .bottom-nav-icon {
+  transform: scale(1.1);
 }
 
 /* Badge for unread messages */
@@ -78,23 +87,73 @@
 
 .badge-content {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #2f2f2f;
-  border: 1px solid #b1b1b1;
-  color: #fff;
+  top: -6px;
+  right: -6px;
+  background: var(--theme-main-color);
+  color: var(--theme-background);
   border-radius: 10px;
-  min-width: 20px;
-  height: 20px;
-  font-size: 0.7rem;
-  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  font-size: 0.65rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--theme-background);
 }
 
-/* CSS Variables */
-:root {
-  --primary-main: #d0bcff;
+/* Убрана анимация pulse для ускорения переходов */
+
+/* Мгновенные переходы для тем */
+.bottom-navigation {
+  transition: none;
+}
+
+/* Адаптация для разных размеров экрана */
+@media (max-width: 375px) {
+  .bottom-nav-container {
+    padding: 0 16px;
+  }
+  
+  .bottom-nav-item {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .bottom-nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Улучшенная поддержка темной темы */
+[data-theme="light"] .bottom-navigation {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .bottom-nav-item {
+  color: var(--theme-text-secondary);
+}
+
+[data-theme="light"] .bottom-nav-item:hover {
+  color: var(--theme-text-primary);
+}
+
+[data-theme="light"] .bottom-nav-item.active {
+  color: var(--theme-main-color);
+}
+
+/* Стили для blur темы */
+[data-theme="blur"] .bottom-navigation {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Стили для AMOLED темы */
+[data-theme="amoled"] .bottom-navigation {
+  background: rgba(0, 0, 0, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }

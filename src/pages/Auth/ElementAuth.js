@@ -26,8 +26,7 @@ const ElementAuth = () => {
 
   useEffect(() => {
     checkServiceStatus();
-    const timeoutId = setTimeout(() => tryAuth(), 500);
-    return () => clearTimeout(timeoutId);
+    tryAuth();
   }, [token]);
 
   const checkServiceStatus = async () => {

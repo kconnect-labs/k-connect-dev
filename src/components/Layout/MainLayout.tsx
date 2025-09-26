@@ -110,6 +110,8 @@ const ContentContainer = styled(Box)(({ theme }) => ({
   },
   '@media (max-width: 700px)': {
     padding: 0,
+    overflow: 'visible', // Убираем скролл у контентного контейнера на мобильных
+    overflowY: 'visible', // Убираем вертикальный скролл
   },
 }));
 
@@ -133,55 +135,29 @@ const PageTransitionWrapper = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   overflowX: 'hidden',
-  perspective: '800px',
+  '@media (max-width: 700px)': {
+    overflow: 'visible', // Убираем скролл у PageTransitionWrapper на мобильных
+    overflowY: 'visible', // Убираем вертикальный скролл
+  },
   '& .mobile-page': {
-    position: 'absolute',
-    top: 0,
-    left: 0,
+    position: 'relative',
     width: '100%',
     height: '100%',
-    backfaceVisibility: 'hidden',
-    transformOrigin: 'center center',
-    isolation: 'isolate',
+    overflow: 'visible', // Убираем возможность скролла у мобильных страниц
+    overflowY: 'visible', // Убираем вертикальный скролл
   },
-  /* Входящая страница */
+  /* Простые переходы без анимации */
   '& .mobile-page-enter': {
-    transform: 'translateX(100%) scale(0.93)',
-    opacity: 0.9,
+    opacity: 1,
   },
   '& .mobile-page-enter-active': {
-    transform: 'translateX(0%) scale(1)',
     opacity: 1,
-    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    willChange: 'transform, opacity',
   },
-  /* Выходящая страница */
   '& .mobile-page-exit': {
-    transform: 'translateX(0%) scale(1)',
     opacity: 1,
   },
   '& .mobile-page-exit-active': {
-    transform: 'translateX(-100%) scale(0.93)',
-    opacity: 0.9,
-    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-    willChange: 'transform, opacity',
-  },
-  '@media (prefers-reduced-motion: reduce)': {
-    '& .mobile-page-enter': {
-      transform: 'none',
-      opacity: 1,
-    },
-    '& .mobile-page-exit-active': {
-      transform: 'none',
-      opacity: 1,
-    },
-  },
-  /* Сброс will-change после завершения анимации */
-  '& .mobile-page-enter-done': {
-    willChange: 'auto',
-  },
-  '& .mobile-page-exit-done': {
-    willChange: 'auto',
+    opacity: 1,
   },
 }));
 
@@ -247,21 +223,17 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       setSidebarOpen(false);
     }
     
-    // Дополнительный сброс скролла при смене location
+    // Мгновенный сброс скролла при смене location
     if (isMobile) {
-      const timer = setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-        
-        // Сброс скролла для контентной области
-        const contentContainer = document.querySelector('[data-testid="content-container"]');
-        if (contentContainer) {
-          contentContainer.scrollTop = 0;
-        }
-      }, 100);
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
       
-      return () => clearTimeout(timer);
+      // Сброс скролла для контентной области
+      const contentContainer = document.querySelector('[data-testid="content-container"]');
+      if (contentContainer) {
+        contentContainer.scrollTop = 0;
+      }
     }
   }, [location, isMobile]);
 
@@ -380,6 +352,25 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       }}
     >
       <CssBaseline />
+      {/* Глобальные стили для отключения скролла у мобильных контейнеров */}
+      <style>
+        {`
+          @media (max-width: 700px) {
+            .mobile-page {
+              overflow: visible !important;
+              overflow-y: visible !important;
+              height: auto !important;
+              max-height: none !important;
+            }
+            .MuiBox-root.mobile-page {
+              overflow: visible !important;
+              overflow-y: visible !important;
+              height: auto !important;
+              max-height: none !important;
+            }
+          }
+        `}
+      </style>
       {shouldShowFullLayout && (
         <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />
       )}
@@ -435,41 +426,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 <CSSTransition
                   key={location.pathname}
                   classNames="mobile-page"
-                  timeout={400}
+                  timeout={0}
                   onEntered={() => {
-                    // Принудительный сброс скролла после завершения анимации
-                    setTimeout(() => {
-                      window.scrollTo(0, 0);
-                      document.body.scrollTop = 0;
-                      document.documentElement.scrollTop = 0;
-                      
-                      // Сброс скролла для контентной области
-                      const contentContainer = document.querySelector('[data-testid="content-container"]');
-                      if (contentContainer) {
-                        contentContainer.scrollTop = 0;
-                      }
-                      
-                      const mainContainer = document.querySelector('[data-testid="main-container"]');
-                      if (mainContainer) {
-                        mainContainer.scrollTop = 0;
-                      }
-                      
-                      // Сброс для всех скроллируемых элементов
-                      const allElements = document.querySelectorAll('*');
-                      allElements.forEach(element => {
-                        const computed = window.getComputedStyle(element as HTMLElement);
-                        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
-                          (element as HTMLElement).scrollTop = 0;
-                        }
-                      });
-                    }, 50);
-                  }}
-                  onExited={() => {
+                    // Простой сброс скролла
                     window.scrollTo(0, 0);
-                    const contentContainer = document.querySelector('[data-testid="content-container"]');
-                    if (contentContainer) {
-                      contentContainer.scrollTop = 0;
-                    }
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
                   }}
                 >
                   <Box className="mobile-page" sx={{ height: '100%' }}>
@@ -509,6 +471,24 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       }}
     >
       <CssBaseline />
+      <style>
+        {`
+          @media (max-width: 700px) {
+            .mobile-page {
+              overflow: visible !important;
+              overflow-y: visible !important;
+              height: auto !important;
+              max-height: none !important;
+            }
+            .MuiBox-root.mobile-page {
+              overflow: visible !important;
+              overflow-y: visible !important;
+              height: auto !important;
+              max-height: none !important;
+            }
+          }
+        `}
+      </style>
       {shouldShowFullLayout && (
         <MemoizedHeader toggleSidebar={toggleSidebar} isMobile={isMobile} />
       )}
@@ -564,41 +544,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 <CSSTransition
                   key={location.pathname}
                   classNames="mobile-page"
-                  timeout={400}
+                  timeout={0}
                   onEntered={() => {
-                    // Принудительный сброс скролла после завершения анимации
-                    setTimeout(() => {
-                      window.scrollTo(0, 0);
-                      document.body.scrollTop = 0;
-                      document.documentElement.scrollTop = 0;
-                      
-                      // Сброс скролла для контентной области
-                      const contentContainer = document.querySelector('[data-testid="content-container"]');
-                      if (contentContainer) {
-                        contentContainer.scrollTop = 0;
-                      }
-                      
-                      const mainContainer = document.querySelector('[data-testid="main-container"]');
-                      if (mainContainer) {
-                        mainContainer.scrollTop = 0;
-                      }
-                      
-                      // Сброс для всех скроллируемых элементов
-                      const allElements = document.querySelectorAll('*');
-                      allElements.forEach(element => {
-                        const computed = window.getComputedStyle(element as HTMLElement);
-                        if (computed.overflowY === 'auto' || computed.overflowY === 'scroll' || computed.overflow === 'auto' || computed.overflow === 'scroll') {
-                          (element as HTMLElement).scrollTop = 0;
-                        }
-                      });
-                    }, 50);
-                  }}
-                  onExited={() => {
+                    // Простой сброс скролла
                     window.scrollTo(0, 0);
-                    const contentContainer = document.querySelector('[data-testid="content-container"]');
-                    if (contentContainer) {
-                      contentContainer.scrollTop = 0;
-                    }
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
                   }}
                 >
                   <Box className="mobile-page" sx={{ height: '100%' }}>

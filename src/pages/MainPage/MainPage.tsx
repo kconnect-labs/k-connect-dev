@@ -124,7 +124,6 @@ const MainPage: React.FC = React.memo(() => {
         px: { xs: 0.5, sm: 0 },
         width: '100%',
         maxWidth: '100%',
-        overflow: { xs: 'hidden', md: 'visible' },
         pb: { xs: '100px', sm: 0 },
       }}
     >

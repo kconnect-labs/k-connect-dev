@@ -38,10 +38,12 @@ const StyledAppBar = styled(AppBar, {
   borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   position: 'fixed',
   left: '50%',
-  transform: 'translateX(-50%)',
+  transform: isMobile && isHeaderHidden 
+    ? 'translateX(-50%) translateY(-100%)' 
+    : 'translateX(-50%)',
   width: '100%',
   zIndex: theme.zIndex.appBar,
-  transition: 'transform 0.3s ease-in-out',
+  transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   height: 48,
   boxShadow: 'none',
 }));
@@ -136,6 +138,14 @@ const Header = ({ toggleSidebar }) => {
   // Состояние для скрытия/показа хедера на мобильных устройствах
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Сброс состояния хедера при смене страницы
+  useEffect(() => {
+    if (isMobile) {
+      setIsHeaderHidden(false);
+      setLastScrollY(0);
+    }
+  }, [location.pathname, isMobile]);
 
   const handleProfileMenuOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -404,20 +414,25 @@ const Header = ({ toggleSidebar }) => {
     if (!isMobile) return; // Только для мобильных устройств
 
     const handleScroll = () => {
-      // Ищем MainContainer по data-testid
-      const mainContainer = document.querySelector('[data-testid="main-container"]') || 
-                           document.querySelector('[style*="overflow: auto"]') || 
-                           document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
+      // Ищем правильный контейнер для скролла
+      const scrollContainer = document.querySelector('[data-testid="main-container"]') || 
+                           document.querySelector('[data-testid="content-container"]') || 
                            document.body;
       
-      const currentScrollY = mainContainer.scrollTop;
+      const currentScrollY = scrollContainer.scrollTop || window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDifference = Math.abs(currentScrollY - lastScrollY);
+      
+      // Игнорируем маленькие изменения скролла (меньше 5px)
+      if (scrollDifference < 5) return;
       
       // Определяем направление скролла
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
         // Скролл вниз и мы уже проскроллили больше 100px - скрываем хедер
+        console.log('Header: Hiding header, scroll down', { currentScrollY, lastScrollY });
         setIsHeaderHidden(true);
-      } else if (currentScrollY < lastScrollY) {
-        // Скролл вверх - показываем хедер
+      } else if (currentScrollY < lastScrollY || currentScrollY <= 50) {
+        // Скролл вверх или мы в верхней части страницы - показываем хедер
+        console.log('Header: Showing header, scroll up or at top', { currentScrollY, lastScrollY });
         setIsHeaderHidden(false);
       }
       
@@ -443,18 +458,44 @@ const Header = ({ toggleSidebar }) => {
       }
     };
 
-    // Ищем MainContainer и добавляем обработчик скролла к нему
-    const mainContainer = document.querySelector('[data-testid="main-container"]') || 
-                         document.querySelector('[style*="overflow: auto"]') || 
-                         document.querySelector('.MuiBox-root[style*="overflow: auto"]') ||
-                         document.body;
-    
-    mainContainer.addEventListener('scroll', throttledHandleScroll, { passive: true });
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    // Обработчик для показа хедера при касании области где он должен быть
+    const handleTouchMove = (e) => {
+      if (e.touches[0].clientY < 100 && isHeaderHidden) { // Касание в верхних 100px экрана
+        setIsHeaderHidden(false);
+      }
+    };
 
+    // Добавляем небольшую задержку для инициализации контейнеров
+    const initializeScrollHandlers = () => {
+      // Находим правильный контейнер для скролла
+      const scrollContainer = document.querySelector('[data-testid="main-container"]') || 
+                           document.querySelector('[data-testid="content-container"]') || 
+                           document.body;
+
+      console.log('Header: Initializing scroll handlers', { 
+        scrollContainer: scrollContainer?.tagName, 
+        testId: scrollContainer?.getAttribute('data-testid') 
+      });
+
+      // Добавляем обработчики событий
+      scrollContainer.addEventListener('scroll', throttledHandleScroll, { passive: true });
+      window.addEventListener('scroll', throttledHandleScroll, { passive: true }); // Дублируем для надежности
+      document.addEventListener('touchstart', handleTouchStart, { passive: true });
+      document.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+      return () => {
+        scrollContainer.removeEventListener('scroll', throttledHandleScroll);
+        window.removeEventListener('scroll', throttledHandleScroll);
+        document.removeEventListener('touchstart', handleTouchStart);
+        document.removeEventListener('touchmove', handleTouchMove);
+      };
+    };
+
+    // Инициализируем с небольшой задержкой
+    const timeoutId = setTimeout(initializeScrollHandlers, 100);
+    
     return () => {
-      mainContainer.removeEventListener('scroll', throttledHandleScroll);
-      document.removeEventListener('touchstart', handleTouchStart);
+      clearTimeout(timeoutId);
     };
   }, [isMobile, lastScrollY]);
 

@@ -1668,7 +1668,7 @@ export const MusicProvider = ({ children }) => {
           params.nocache = Math.random();
         }
 
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // Убрана задержка для ускорения загрузки
 
         if (type !== 'liked') {
           response = await axios.get(endpoint, { params });

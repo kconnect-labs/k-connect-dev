@@ -7,7 +7,6 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { NavButton, MoreButton } from '../../../UIKIT/NavButtonV2';
 import { SidebarContext } from '../../../context/SidebarContext';
 import { useLanguage } from '../../../context/LanguageContext';
-import GavelIcon from '@mui/icons-material/Gavel';
 import Badge from '@mui/material/Badge';
 import axios from 'axios';
 import { useMessenger } from '../../../contexts/MessengerContext';
@@ -181,6 +180,14 @@ const SidebarNavigation = memo(
       () => (
         <>
           <NavButton
+            text={t('sidebar.navigation.my_profile')}
+            icon={icons.person}
+            path={user && user.username ? `/profile/${user.username}` : '/profile'}
+            active={isActive(user && user.username ? `/profile/${user.username}` : '/profile')}
+            themeColor={primaryColor}
+          />
+
+          <NavButton
             text={t('sidebar.navigation.feed')}
             icon={icons.home}
             path='/'
@@ -213,7 +220,7 @@ const SidebarNavigation = memo(
           />
         </>
       ),
-      [icons, isActive, primaryColor, t]
+      [icons, isActive, primaryColor, t, user]
     );
 
     const socialMenu = useMemo(

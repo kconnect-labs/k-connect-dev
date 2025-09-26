@@ -1474,7 +1474,7 @@ export const MusicProvider = ({ children }) => {
       console.log(`[loadMoreTracks] Загружаем треки для типа "${type}" со страницы ${nextPage}`);
       
       
-      await new Promise(resolve => setTimeout(resolve, 300));
+      // Убрана задержка для ускорения загрузки
       
       
       if (type !== 'liked') {

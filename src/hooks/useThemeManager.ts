@@ -83,9 +83,9 @@ const THEME_SETTINGS: Record<ThemeType, {
   largeBorderRadius: string;
 }> = {
   default: {
-    background: 'rgba(15, 15, 15, 1)',
+    background: 'rgba(33, 33, 33, 1)',
     backdropFilter: 'none',
-    siteBackground: '#0a0a0a',
+    siteBackground: '#1a1a1a',
     themeColor: '#0f0f0f',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',
@@ -96,7 +96,7 @@ const THEME_SETTINGS: Record<ThemeType, {
   blur: {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
-    siteBackground: '#0a0a0a',
+    siteBackground: '#141414',
     themeColor: '#0a0a0a',
     colorScheme: 'dark',
     browserAccent: '#D0BCFF',

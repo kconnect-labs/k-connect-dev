@@ -10,6 +10,7 @@
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
   /* Цвета текста */
+  --theme-text-deactive: rgb(120 120 120);
   --theme-text-primary: rgba(255, 255, 255, 1);
   --theme-text-secondary: rgb(212, 212, 212);
   --theme-text-disabled: rgba(255, 255, 255, 1);
@@ -30,9 +31,9 @@
 
 /* Принудительные значения для тем */
 [data-theme="default"] {
-  --theme-background: rgba(15, 15, 15, 1);
+  --theme-background: rgb(33 33 33);
   --theme-backdrop-filter: none;
-  --theme-site-background: #0a0a0a;
+  --theme-site-background: #1a1a1a;
   --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
@@ -72,7 +73,7 @@
 [data-theme="blur"] {
   --theme-background: rgba(255, 255, 255, 0.03);
   --theme-backdrop-filter: blur(20px);
-  --theme-site-background: #0a0a0a;
+  --theme-site-background: #141414;
   --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;

@@ -19,10 +19,6 @@
   transition: all 0.2s ease;
 }
 
-.logo-link:hover {
-  transform: scale(1.02);
-}
-
 .logo-svg {
   height: 20px;
   width: auto;

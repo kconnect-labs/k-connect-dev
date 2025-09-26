@@ -134,9 +134,8 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => handleNavigationChange(0)}
         >
           <div className='bottom-nav-icon'>
-            <Icon icon='solar:home-bold' width='28' height='28' />
+            <Icon icon='solar:home-bold' width='26' height='26' />
           </div>
-          <span className='bottom-nav-label'>Лента</span>
         </button>
 
         <button
@@ -144,9 +143,8 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => handleNavigationChange(1)}
         >
           <div className='bottom-nav-icon'>
-            <Icon icon='solar:music-notes-bold' width='28' height='28' />
+            <Icon icon='solar:music-notes-bold' width='26' height='26' />
           </div>
-          <span className='bottom-nav-label'>Музыка</span>
         </button>
 
         <button
@@ -158,18 +156,17 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
               <div className='badge'>
                 <Icon
                   icon='solar:chat-round-dots-bold'
-                  width='28'
-                  height='28'
+                  width='26'
+                  height='26'
                 />
                 <div className='badge-content'>
                   {totalUnread > 99 ? '99+' : totalUnread}
                 </div>
               </div>
             ) : (
-              <Icon icon='solar:chat-round-dots-bold' width='28' height='28' />
+              <Icon icon='solar:chat-round-dots-bold' width='26' height='26' />
             )}
           </div>
-          <span className='bottom-nav-label'>Мессенджер</span>
         </button>
 
         <button
@@ -177,9 +174,8 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => handleNavigationChange(3)}
         >
           <div className='bottom-nav-icon'>
-            <Icon icon='solar:user-bold' width='28' height='28' />
+            <Icon icon='solar:user-bold' width='26' height='26' />
           </div>
-          <span className='bottom-nav-label'>Профиль</span>
         </button>
 
         <button
@@ -187,9 +183,8 @@ const AppBottomNavigation: React.FC<BottomNavigationProps> = ({
           onClick={() => handleNavigationChange(4)}
         >
           <div className='bottom-nav-icon'>
-            <Icon icon='solar:widget-2-bold' width='28' height='28' />
+            <Icon icon='solar:widget-2-bold' width='26' height='26' />
           </div>
-          <span className='bottom-nav-label'>Еще</span>
         </button>
       </div>
     </div>

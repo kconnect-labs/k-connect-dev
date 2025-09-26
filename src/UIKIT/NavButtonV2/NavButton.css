@@ -37,18 +37,6 @@
   background-color: var(--theme-background, rgba(0, 0, 0, 0.15));
 }
 
-/* Индикатор активности (полоска слева) */
-.nav-button-v2::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 25%;
-  height: 50%;
-  width: 0px;
-  background-color: var(--primary, #d0bcff);
-  border-radius: 0 3px 3px 0;
-  box-shadow: none;
-}
 
 .nav-button-v2--active::before {
   width: 3px;
@@ -77,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-left: 8px;
 }
 
 .nav-button-v2__icon svg {
