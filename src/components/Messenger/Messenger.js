@@ -200,7 +200,7 @@ const MessengerContent = () => {
                   sx={{
                     width: '40px',
                     height: '40px',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     marginRight: '12px',
                     objectFit: 'cover',
                   }}
@@ -210,7 +210,7 @@ const MessengerContent = () => {
                   sx={{
                     width: '40px',
                     height: '40px',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     backgroundColor: '#2a5885',
                     display: 'flex',
                     alignItems: 'center',

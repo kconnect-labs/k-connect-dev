@@ -79,7 +79,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     },
     '& .MuiMenuItem-root': {
       padding: '10px 16px',
-      borderRadius: '16px',
+      borderRadius: 'var(--small-border-radius)',
       margin: '2px 8px',
       transition: 'all 0.2s',
       backgroundImage:
@@ -150,7 +150,7 @@ const NotificationIcon = styled(Box)(({ theme, type = 'default' }) => {
     justifyContent: 'center',
     width: 32,
     height: 32,
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     backgroundColor: alpha(getColor(), 0.1),
     color: getColor(),
     marginRight: theme.spacing(1.5),
@@ -177,7 +177,7 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   '& .MuiChip-label': {
     paddingLeft: 8,
   },
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   height: 32,
 }));
 
@@ -208,7 +208,7 @@ const GroupedNotificationItem = styled(ListItemButton)(({ theme, unread }) => ({
     transform: 'translateY(-50%)',
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     width: 15,
     height: 15,
     display: 'flex',

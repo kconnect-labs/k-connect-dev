@@ -269,7 +269,7 @@ const BlackjackPage = () => {
                 padding: '12px 24px',
                 fontSize: '14px',
                 fontWeight: '600',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 backgroundColor: '#e91e63',
                 border: 'none',
                 color: 'white',
@@ -362,7 +362,7 @@ const BlackjackPage = () => {
             padding: '12px 20px',
             fontSize: '14px',
             fontWeight: '500',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
             background: 'transparent',
             color: 'white',
@@ -392,7 +392,7 @@ const BlackjackPage = () => {
             padding: '12px 20px',
             fontSize: '14px',
             fontWeight: '500',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
             background: 'transparent',
             color: 'white',
@@ -411,7 +411,7 @@ const BlackjackPage = () => {
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '16px',
         }}
       >
@@ -447,7 +447,7 @@ const BlackjackPage = () => {
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -494,7 +494,7 @@ const BlackjackPage = () => {
                 padding: '16px 32px',
                 fontSize: '16px',
                 fontWeight: '600',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 backgroundColor: '#e91e63',
                 border: 'none',
                 color: 'white',
@@ -538,7 +538,7 @@ const BlackjackPage = () => {
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   padding: '16px',
                 }}
               >
@@ -569,7 +569,7 @@ const BlackjackPage = () => {
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   padding: '16px',
                 }}
               >
@@ -606,7 +606,7 @@ const BlackjackPage = () => {
                       padding: '16px 32px',
                       fontSize: '16px',
                       fontWeight: '600',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                       backgroundColor: '#e91e63',
                       border: 'none',
                       color: 'white',
@@ -626,7 +626,7 @@ const BlackjackPage = () => {
                         padding: '16px 32px',
                         fontSize: '16px',
                         fontWeight: '600',
-                        borderRadius: '18px',
+                        borderRadius: 'var(--main-border-radius)',
                         backgroundColor: '#e91e63',
                         border: 'none',
                         color: 'white',
@@ -646,7 +646,7 @@ const BlackjackPage = () => {
                         padding: '16px 32px',
                         fontSize: '16px',
                         fontWeight: '600',
-                        borderRadius: '18px',
+                        borderRadius: 'var(--main-border-radius)',
                         border: '2px solid #9c27b0',
                         background: 'transparent',
                         color: '#9c27b0',
@@ -668,7 +668,7 @@ const BlackjackPage = () => {
                   style={{
                     background: 'rgba(33, 150, 243, 0.1)',
                     border: '1px solid rgba(33, 150, 243, 0.3)',
-                    borderRadius: '16px',
+                    borderRadius: 'var(--small-border-radius)',
                     textAlign: 'center',
                   }}
                 >

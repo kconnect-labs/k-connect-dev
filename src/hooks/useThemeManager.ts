@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme';
+export type ThemeType = 'default' | 'blur' | 'amoled' | 'light' | 'midnight' | 'ocean' | 'sunset' | 'forest' | 'aurora' | 'cosmic' | 'neon' | 'vintage' | 'pickme' | 'cube';
 
 interface ThemeSettings {
   type: ThemeType;
@@ -64,6 +64,11 @@ interface ThemeSettings {
     siteBackground: string;
   };
   pickme: {
+    background: string;
+    backdropFilter: string;
+    siteBackground: string;
+  };
+  cube: {
     background: string;
     backdropFilter: string;
     siteBackground: string;
@@ -224,6 +229,17 @@ const THEME_SETTINGS: Record<ThemeType, {
     mainBorderRadius: '18px',
     smallBorderRadius: '14px',
     largeBorderRadius: '22px',
+  },
+  cube: {
+    background: 'rgba(33, 33, 33, 1)',
+    backdropFilter: 'none',
+    siteBackground: '#1a1a1a',
+    themeColor: '#0f0f0f',
+    colorScheme: 'dark',
+    browserAccent: '#D0BCFF',
+    mainBorderRadius: '0px',
+    smallBorderRadius: '0px',
+    largeBorderRadius: '0px',
   },
 };
 
@@ -476,6 +492,11 @@ export const useThemeManager = () => {
   }, [applyTheme]);
 
   
+  const switchToCubeTheme = useCallback(async () => {
+    await applyTheme('cube');
+  }, [applyTheme]);
+
+  
   const toggleTheme = useCallback(async () => {
     const newTheme = currentTheme === 'default' ? 'blur' : 'default';
     await applyTheme(newTheme);
@@ -552,6 +573,7 @@ export const useThemeManager = () => {
     switchToNeonTheme: () => applyThemeWithNotification('neon'),
     switchToVintageTheme: () => applyThemeWithNotification('vintage'),
     switchToPickmeTheme: () => applyThemeWithNotification('pickme'),
+    switchToCubeTheme: () => applyThemeWithNotification('cube'),
     toggleTheme: async () => {
       const newTheme = currentTheme === 'default' ? 'blur' : 'default';
       await applyThemeWithNotification(newTheme);

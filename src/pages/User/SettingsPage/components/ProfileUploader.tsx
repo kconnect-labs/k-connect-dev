@@ -256,7 +256,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -264,7 +264,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
   const sectionStyle = {
     background: 'rgba(255, 255, 255, 0.02)',
     border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     padding: '16px',
     marginBottom: '16px',
   };
@@ -330,7 +330,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
                   bottom: 0,
                   right: 0,
                   background: 'rgba(0, 0, 0, 0.7)',
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   width: 20,
                   height: 20,
                   display: 'flex',
@@ -395,7 +395,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               display: 'block',
               width: '100%',
               height: '120px',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               overflow: 'hidden',
               background: bannerPreview
                 ? `url(${bannerPreview}) center/cover`
@@ -500,7 +500,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
               justifyContent: 'center', 
               mb: 3,
               background: 'rgba(0, 0, 0, 0.3)',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               p: 2
             }}>
               <ReactCrop
@@ -531,7 +531,7 @@ const ProfileUploader: React.FC<ProfileUploaderProps> = ({
             mb: 3,
             p: 2,
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '16px'
+            borderRadius: 'var(--small-border-radius)'
           }}>
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>

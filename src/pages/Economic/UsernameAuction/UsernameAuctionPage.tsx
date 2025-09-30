@@ -242,7 +242,7 @@ const UsernameAuctionPage: React.FC = () => {
             startIcon={<AddIcon />}
             onClick={() => setCreateDialogOpen(true)}
             sx={{
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               px: 2,
             }}
           >
@@ -254,7 +254,7 @@ const UsernameAuctionPage: React.FC = () => {
             startIcon={<SettingsIcon />}
             onClick={() => setUsernamesSettingsOpen(true)}
             sx={{
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               px: 2,
             }}
           >
@@ -492,7 +492,7 @@ const UsernameAuctionPage: React.FC = () => {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             maxHeight: '90vh',
           },
         }}

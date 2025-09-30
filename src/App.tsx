@@ -312,8 +312,8 @@ function App() {
           main: '#f28c9a',
         },
         background: {
-          default: 'rgba(15, 15, 15, 0.98)',
-          paper: 'rgba(15, 15, 15, 0.98)',
+          default: 'rgba(33, 33, 33, 1)',
+          paper: 'rgba(33, 33, 33, 1)',
         },
         text: {
           primary: themeSettings.textColor || '#FFFFFF',
@@ -339,7 +339,7 @@ function App() {
         MuiCssBaseline: {
           styleOverrides: {
             body: {
-              backgroundColor: '#151515',
+              backgroundColor: 'rgba(33, 33, 33, 1)',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -349,7 +349,7 @@ function App() {
             root: {
               borderRadius: 'var(--main-border-radius)',
               overflow: 'hidden',
-              backgroundColor: '#151515',
+              backgroundColor: '#1a1a1a',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },
@@ -358,7 +358,7 @@ function App() {
           styleOverrides: {
             root: {
               borderRadius: 'var(--main-border-radius)',
-              backgroundColor: '#151515',
+              backgroundColor: '#1a1a1a',
               color: themeSettings.textColor || '#FFFFFF',
             },
           },

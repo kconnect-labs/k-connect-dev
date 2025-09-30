@@ -54,7 +54,7 @@ const CardBack = styled(Box)({
   height: '100%',
   background:
     'repeating-linear-gradient(45deg, #5c6bc0, #5c6bc0 10px, #3f51b5 10px, #3f51b5 20px)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   position: 'absolute',
   top: 0,
   left: 0,

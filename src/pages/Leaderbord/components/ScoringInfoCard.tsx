@@ -12,7 +12,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(66, 66, 66, 0.5)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   color: 'white',
   position: 'relative',
   overflow: 'hidden',

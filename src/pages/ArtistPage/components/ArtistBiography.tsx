@@ -14,7 +14,7 @@ const BiographyContainer = styled(Box)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(255, 255, 255, 0.08)',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(3),
   marginBottom: theme.spacing(3),
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
@@ -25,7 +25,7 @@ const BiographyContainer = styled(Box)(({ theme }) => ({
   },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2.5),
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     marginBottom: theme.spacing(2),
   },
 }));
@@ -77,7 +77,7 @@ const BiographyText = styled(Typography)<{ expanded?: boolean }>(({ theme, expan
 
 const ExpandButton = styled(Button)(({ theme }) => ({
   marginTop: theme.spacing(2),
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(1, 2),
   fontWeight: 600,
   textTransform: 'none',

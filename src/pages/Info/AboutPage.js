@@ -397,7 +397,7 @@ const TeamSection = ({ title, members }) => {
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
-                  borderRadius: '20px',
+                  borderRadius: 'var(--main-border-radius)',
                   overflow: 'hidden',
                   border: `1.5px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                   transition: 'all 0.35s cubic-bezier(.4,2,.3,1)',
@@ -421,7 +421,7 @@ const TeamSection = ({ title, members }) => {
                   <Box
                     sx={{
                       mb: 2,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       boxShadow: '0 2px 12px 0 rgba(80,40,180,0.10)',
                       transition: 'box-shadow 0.3s',
                     }}
@@ -452,7 +452,7 @@ const TeamSection = ({ title, members }) => {
                         fontWeight: 600,
                         color: theme.palette.primary.main,
                         bgcolor: alpha(theme.palette.primary.main, 0.1),
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         letterSpacing: 0.2,
                         boxShadow: '0 1px 4px 0 rgba(120,80,255,0.06)',
                       }}
@@ -475,7 +475,7 @@ const TeamSection = ({ title, members }) => {
                         color: theme.palette.primary.main,
                         borderColor: alpha(theme.palette.primary.main, 0.25),
                         fontWeight: 500,
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         px: 2,
                         textTransform: 'none',
                         transition: 'all 0.2s',
@@ -579,7 +579,7 @@ const HeroSlider = () => {
         height: { xs: 220, sm: 320, md: 400 },
         mx: 'auto',
         my: 4,
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         overflow: 'visible',
         boxShadow: '0 8px 40px 0 rgba(80,40,180,0.18)',
         display: 'flex',
@@ -599,7 +599,7 @@ const HeroSlider = () => {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           boxShadow: '0 4px 32px rgba(80,40,180,0.10)',
         }}
       />
@@ -667,7 +667,7 @@ const HeroSlider = () => {
             sx={{
               width: 12,
               height: 12,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               bgcolor:
                 i === index
                   ? theme.palette.primary.main
@@ -1243,7 +1243,7 @@ const AboutPage = () => {
                         right: 24,
                         bgcolor: alpha(theme.palette.primary.main, 0.1),
                         color: theme.palette.primary.main,
-                        borderRadius: '18px',
+                        borderRadius: 'var(--main-border-radius)',
                         px: 1.5,
                         py: 0.5,
                         fontSize: '0.75rem',
@@ -1309,7 +1309,7 @@ const AboutPage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 p: 2,
-                borderRadius: '20px',
+                borderRadius: 'var(--main-border-radius)',
               }}
             >
               <Typography variant='body2' sx={{ mb: 1 }}>

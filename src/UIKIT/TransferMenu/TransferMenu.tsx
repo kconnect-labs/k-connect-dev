@@ -206,7 +206,7 @@ const UserCard = styled(Box)<{ decoration?: any }>(({ theme, decoration }) => {
     display: 'flex',
     alignItems: 'center',
     padding: '12px',
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     marginBottom: '8px',
     backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
     position: 'relative',

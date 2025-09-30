@@ -329,7 +329,7 @@ const ArtistsBlock = () => {
                     >
                       <Card
                         sx={{
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           cursor: 'pointer',
                           backgroundColor: 'var(--theme-background, rgba(18,18,18,0.6))',
                           backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',

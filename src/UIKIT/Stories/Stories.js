@@ -34,7 +34,7 @@ const {
 } = StoryViewerComponents;
 
 const StoriesCard = styled(Card)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
@@ -81,7 +81,7 @@ const StoryItem = styled(Box)(({ theme, hasStory }) => ({
 const StoryPreview = styled(Box)(({ theme }) => ({
   width: 64,
   height: 64,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   overflow: 'hidden',
   border: `2px solid ${theme.palette.primary.main}`,
 
@@ -93,7 +93,7 @@ const StoryPreview = styled(Box)(({ theme }) => ({
     left: -2,
     right: -2,
     bottom: -2,
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     zIndex: -1,
   },
 }));

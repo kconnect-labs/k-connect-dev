@@ -40,7 +40,7 @@ const StyledContainer = styled(Box, {
   alignItems: 'center',
   gap: 12,
   padding: '8px 12px',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(10px)',
   border: statusColor 

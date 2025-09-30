@@ -93,7 +93,7 @@ const InfoBlockContent = styled(Box)(({ theme }) => ({
 const ArtistAvatar = styled(Avatar)(({ theme }) => ({
   width: 180,
   height: 180,
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   boxShadow: '0 12px 24px rgba(0, 0, 0, 0.15)',
   flexShrink: 0,
   transition: 'all 0.3s ease',
@@ -167,7 +167,7 @@ const VerifiedBadge = styled(Box)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.15)',
   color: '#ffffff',
   padding: theme.spacing(0.5, 1.5),
-  borderRadius: '24px',
+  borderRadius: 'var(--large-border-radius)',
   fontSize: '0.8rem',
   fontWeight: 700,
   border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -220,7 +220,7 @@ const ActionSection = styled(Box)(({ theme }) => ({
 }));
 
 const PlayButton = styled(Button)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(1.5, 4),
   fontWeight: 800,
   fontSize: '1rem',
@@ -261,7 +261,7 @@ const IconButtonStyled = styled(Button)(({ theme }) => ({
   minWidth: 48,
   width: 48,
   height: 48,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   backgroundColor: 'rgba(0, 0, 0, 0.1)',
   color: 'rgba(255, 255, 255, 0.7)',
   border: '2px solid rgba(0, 0, 0, 0.1)',
@@ -282,7 +282,7 @@ const BackButton = styled(Button)(({ theme }) => ({
   minWidth: 40,
   width: 40,
   height: 40,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   backgroundColor: 'rgba(31, 31, 31, 0.9)',
   color: '#ffffff',
   border: '1px solid rgba(66, 66, 66, 0.5)',
@@ -395,7 +395,7 @@ const ArtistHeader: React.FC<ArtistHeaderProps> = ({
           background: 'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 50%, #E1C4FD 100%)',
           backdropFilter: 'none',
           border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '20px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '32px',
           marginBottom: '5px',
           position: 'relative',

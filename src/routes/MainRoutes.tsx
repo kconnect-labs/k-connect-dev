@@ -197,7 +197,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           />
           <Route path='/feed' element={<Navigate to='/' replace />} />
           <Route path='/main' element={<Navigate to='/' replace />} />
-          <Route path='/post/:postId' element={<PostDetailPage />} />
+          <Route path='/post/:postId' element={<PostDetailPage disablePadding={false} />} />
           <Route
             path='/profile'
             element={
@@ -540,7 +540,7 @@ const MainRoutes: React.FC<MainRoutesProps> = ({ setUser, background }) => {
           <Routes>
             <Route
               path='/post/:postId'
-              element={<PostDetailPage isOverlay={true} />}
+              element={<PostDetailPage isOverlay={true} disablePadding={true} />}
             />
           </Routes>
         )}

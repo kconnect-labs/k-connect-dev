@@ -36,7 +36,7 @@ const StyledMusicLabel = styled(Box)<{
   return {
     width: currentSize.width,
     height: currentSize.height,
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

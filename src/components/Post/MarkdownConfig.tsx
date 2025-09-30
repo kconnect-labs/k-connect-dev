@@ -19,7 +19,7 @@ export const getMarkdownComponents = () => ({
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.1)',
           border: '1px solid rgba(66, 66, 66, 0.5)',
-          borderRadius: '4px',
+          borderRadius: 'var(--small-border-radius)',
           padding: '16px',
           overflow: 'auto',
           fontFamily: 'monospace',

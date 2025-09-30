@@ -249,12 +249,12 @@ const cardStyles = {
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   border: '1px solid rgba(0, 0, 0, 0.12)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   color: 'inherit',
 };
 
 const buttonStyles = {
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
   border: '1px solid rgba(0, 0, 0, 0.12)',

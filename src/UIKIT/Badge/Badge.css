@@ -202,7 +202,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
   opacity: 0.3;
   pointer-events: none;

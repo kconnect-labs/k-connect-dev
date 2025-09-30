@@ -20,14 +20,14 @@ const PageContainer = styled(Container)(({ theme }) => ({
 
 const RuleCard = styled(Paper)(({ theme }) => ({
   marginBottom: '5px',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   overflow: 'hidden',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     margin: '0 0 5px 0',
   },
 }));
@@ -64,14 +64,14 @@ const NavigationBar = styled(Paper)(({ theme }) => ({
   gap: 3,
   padding: theme.spacing(2),
   marginBottom: '5px',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
   [theme.breakpoints.down('sm')]: {
     margin: '0 0 5px 0',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     padding: theme.spacing(1),
     gap: 1,
     flexDirection: 'row',
@@ -88,7 +88,7 @@ const NavLink = styled(Box)(({ theme, active }) => ({
   color: active ? '#d0bcff' : 'rgba(255, 255, 255, 0.8)',
   fontWeight: 'medium',
   padding: theme.spacing(1, 2),
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   backgroundColor: active ? 'rgba(208, 188, 255, 0.15)' : 'transparent',
   transition: 'all 0.2s ease',
   minWidth: 'fit-content',

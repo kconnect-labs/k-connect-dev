@@ -2,10 +2,10 @@
 
 :root {
   /* Дефолтные значения */
-  --theme-background: rgba(15, 15, 15, 1);
+  --theme-background: rgb(33 33 33);
   --theme-backdrop-filter: none;
   --theme-type: default;
-  --theme-site-background: #0a0a0a; /* Фон сайта */
+  --theme-site-background: #1a1a1a; /* Фон сайта */
   --theme-background-full: rgba(15, 15, 15, 1);
   --theme-button-main: #D0BCFF;
   --theme-main-color: #d0bcff;
@@ -22,6 +22,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
   
   /* Цветовая схема браузера */
   color-scheme: dark;
@@ -48,6 +49,27 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
+}
+[data-theme="cube"] {
+  --theme-background: rgb(33 33 33);
+  --theme-backdrop-filter: none;
+  --theme-site-background: #1a1a1a;
+  --theme-background-full: rgba(15, 15, 15, 1);
+  --theme-button-main: #D0BCFF;
+  --theme-main-color: #d0bcff;
+  --theme-text-primary: rgba(255, 255, 255, 1);
+  --theme-text-secondary: rgb(212, 212, 212);
+  --theme-text-disabled: rgba(255, 255, 255, 1);
+  --theme-text-accent: #D0BCFF;
+  --theme-text-error: #f44336;
+  --theme-text-success: #4caf50;
+  --theme-text-warning: #ff9800;
+  --theme-text-info: #2196f3;
+  --main-border-radius: 0px;
+  --small-border-radius: 0px;
+  --large-border-radius: 0px;
+  --avatar-border-radius: 0px;
 }
 [data-theme="amoled"] {
   --theme-background: rgba(0, 0, 0, 1);
@@ -110,6 +132,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Midnight - глубокий темно-синий с фиолетовым оттенком */
@@ -131,6 +154,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Ocean - яркий синий с бирюзовым оттенком */
@@ -152,6 +176,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Sunset - яркий красно-оранжевый закат */
@@ -173,6 +198,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Forest - яркий зеленый лес */
@@ -194,6 +220,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Aurora - яркий зелено-голубой северные сияния */
@@ -215,6 +242,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Cosmic - яркий пурпурно-розовый космос */
@@ -236,6 +264,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Neon - яркий электрический синий */
@@ -257,6 +286,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Vintage - теплый коричнево-золотой */
@@ -278,6 +308,7 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
 
 /* Pixie - нежно-розовый приятный */
@@ -299,7 +330,9 @@
   --main-border-radius: 18px;
   --small-border-radius: 14px;
   --large-border-radius: 22px;
+  --avatar-border-radius: 50%;
 }
+
 
 /* Класс для элементов, которые должны реагировать на изменение темы */
 .theme-aware {
@@ -542,7 +575,7 @@ body.no-blur .theme-menu,
   }
   
   .theme-card {
-    border-radius: 8px;
+    border-radius: var(--small-border-radius);
   }
 }
 
@@ -575,7 +608,7 @@ body.no-blur .theme-menu,
 
 ::-webkit-scrollbar-thumb {
   background: var(--theme-main-color);
-  border-radius: 4px;
+  border-radius: var(--small-border-radius);
 }
 
 ::-webkit-scrollbar-thumb:hover {

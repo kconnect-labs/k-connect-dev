@@ -25,7 +25,7 @@ import { useLanguage } from '../../context/LanguageContext';
 const StyledReplyCard = styled(Box)(({ theme }) => ({
       backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.4))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-  borderRadius: '14px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(1.5, 2),
   marginBottom: theme.spacing(1),
   border: '1px solid rgba(255, 255, 255, 0.03)',
@@ -42,7 +42,7 @@ const StyledReplyCard = styled(Box)(({ theme }) => ({
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
       backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),
   borderLeft: '3px solid rgba(140, 82, 255, 0.5)',
@@ -53,7 +53,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   padding: '3px 8px',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   transition: 'all 0.2s ease',
   backgroundColor: active
     ? 'rgba(140, 82, 255, 0.12)'
@@ -342,7 +342,7 @@ const ReplyItem = ({
                       bgcolor: 'rgba(32, 32, 36, 0.9)',
                       backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 5px 15px rgba(0, 0, 0, 0.2)',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                       border: '1px solid rgba(255, 255, 255, 0.05)',
                       mt: 1,
                     },
@@ -358,7 +358,7 @@ const ReplyItem = ({
                       onReply(reply);
                     }}
                     sx={{
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -382,7 +382,7 @@ const ReplyItem = ({
                     }}
                     sx={{
                       color: '#f44336',
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -441,7 +441,7 @@ const ReplyItem = ({
                     transform: 'translate(-50%, -50%)',
                     bgcolor: 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     width: 36,
                     height: 36,
                     display: 'flex',
@@ -463,7 +463,7 @@ const ReplyItem = ({
               sx={{
                 backgroundColor: 'rgba(244, 67, 54, 0.1)',
                 border: '1px solid rgba(244, 67, 54, 0.3)',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 padding: '10px',
                 color: '#f44336',
                 fontSize: '0.85rem',

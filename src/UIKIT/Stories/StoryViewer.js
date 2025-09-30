@@ -182,7 +182,7 @@ const ControlsContainer = styled(Box)(({ theme }) => ({
   zIndex: 5,
   backgroundColor: 'rgba(0, 0, 0, 0.5)',
   padding: '4px 8px',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
       backdropFilter: 'var(--theme-backdrop-filter, blur(4px))',
   maxHeight: 'calc(100% - 32px)',
 }));

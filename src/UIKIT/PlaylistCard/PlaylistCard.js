@@ -138,7 +138,7 @@ const VisibilityIcon = styled(Box)(({ theme, isPublic }) => ({
     ? alpha(theme.palette.success.main, 0.8)
     : alpha(theme.palette.text.secondary, 0.5),
   color: '#fff',
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   padding: theme.spacing(0.25),
   width: 18,
   height: 18,

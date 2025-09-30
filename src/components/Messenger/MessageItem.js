@@ -411,7 +411,7 @@ const MessageItem = ({
             <div style={{ 
               padding: '8px 12px', 
               background: 'rgba(255, 255, 255, 0.1)', 
-              borderRadius: '8px',
+              borderRadius: 'var(--small-border-radius)',
               color: 'rgba(255, 255, 255, 0.7)',
               fontSize: '14px',
               display: 'inline-block',
@@ -625,7 +625,7 @@ const MessageItem = ({
           <div style={{ 
             padding: '8px 12px', 
             background: 'rgba(255, 255, 255, 0.1)', 
-            borderRadius: '8px',
+            borderRadius: 'var(--small-border-radius)',
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '14px',
             display: 'inline-block',
@@ -809,7 +809,7 @@ const MessageItem = ({
         onClose={handleCloseDeleteDialog}
         PaperProps={{
           sx: {
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             bgcolor: 'background.paper',
             backgroundImage:
               'linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))',
@@ -858,7 +858,7 @@ const MessageItem = ({
             onClick={handleCloseDeleteDialog}
             variant='outlined'
             sx={{
-              borderRadius: '20px',
+              borderRadius: 'var(--main-border-radius)',
               px: 2,
               fontSize: '0.875rem',
               textTransform: 'none',
@@ -872,7 +872,7 @@ const MessageItem = ({
             color='error'
             variant='contained'
             sx={{
-              borderRadius: '20px',
+              borderRadius: 'var(--main-border-radius)',
               px: 2,
               fontSize: '0.875rem',
               textTransform: 'none',
@@ -904,7 +904,7 @@ const MessageItem = ({
           sx={{
             width: '100%',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             border: '1px solid rgba(211, 47, 47, 0.2)',
           }}
         >

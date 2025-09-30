@@ -1351,7 +1351,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         width: '100%',
         height: '100%',
         zIndex: 2,
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -1406,7 +1406,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
         variant='contained'
         disableElevation
         sx={{
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           fontWeight: 500,
           mb: isMobile ? 1 : 2,
           background: '#5c5b5e',
@@ -1585,7 +1585,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   width: 40,
                   height: 40,
                   mr: 1.5,
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   overflow: 'hidden',
                   display: 'flex',
                   alignItems: 'center',
@@ -1603,7 +1603,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   width={40}
                   height={40}
                   style={{
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     objectFit: 'cover'
                   }}
                 />
@@ -1685,7 +1685,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               ref={contentRef}
               isExpanded={isExpanded}
               sx={{
-                mb: 2,
+                mb: 1,
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-word',
                 overflowWrap: 'break-word',
@@ -1742,7 +1742,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   mt: 1,
                   px: 2,
                   py: 1.5,
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   border: theme =>
                     `1px solid ${
                       theme.palette.mode === 'dark'
@@ -1802,7 +1802,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       height: 18,
                       ml: 0.5,
                       mr: 0.5,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       overflow: 'hidden',
                       display: 'flex',
                       alignItems: 'center',
@@ -1820,7 +1820,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       width={18}
                       height={18}
                       style={{
-                        borderRadius: '50%',
+                        borderRadius: 'var(--avatar-border-radius)',
                         objectFit: 'cover'
                       }}
                     />
@@ -1988,7 +1988,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         mt: 1.5,
                         p: 1.5,
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         backdropFilter: 'var(--theme-backdrop-filter, blur(8px))',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -2001,7 +2001,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                           width: '8px',
                           height: '100%',
                           backgroundColor: '#6e5a9d',
-                          borderRadius: '8px 0 0 8px',
+                          borderRadius: 'var(--small-border-radius) 0 0 var(--small-border-radius)',
                         },
                       }}
                     >
@@ -2042,7 +2042,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                                 justifyContent: 'center',
                                 width: 14,
                                 height: 14,
-                                borderRadius: '50%',
+                                borderRadius: 'var(--avatar-border-radius)',
                                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                                 border: '1px solid rgba(255, 255, 255, 0.2)',
                                 cursor: 'help',
@@ -2136,7 +2136,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               sx={{
                 mb: 2,
                 position: 'relative',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 overflow: 'hidden',
               }}
               data-no-navigate
@@ -2197,10 +2197,11 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
             <Box
               sx={{
                 mb: 2,
-                width: '100%',
+                width: isMobile ? 'calc(100% + 32px)' : '100%', // Растягиваем на всю ширину + отступы
                 position: 'relative',
-                borderRadius: '18px',
+                borderRadius: '0px',
                 overflow: 'hidden',
+                mx: isMobile ? -2 : 0, // Сдвигаем влево на размер отступов
               }}
               data-no-navigate
             >
@@ -2242,7 +2243,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         width: 48,
                         height: 48,
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         overflow: 'hidden',
                         position: 'relative',
                         mr: 2,
@@ -2334,7 +2335,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         py: 0.4,
                         px: 1,
-                        borderRadius: '18px',
+                        borderRadius: 'var(--main-border-radius)',
                         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         fontSize: '0.7rem',
@@ -2355,7 +2356,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 mt: 1,
                 mb: 1,
                 p: 2,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 backgroundColor: 'rgba(255, 255, 255, 0.02)',
                 backdropFilter: 'blur(50px)',
                 border: '1px solid rgba(66, 66, 66, 0.5)',
@@ -2368,7 +2369,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   width: '8px',
                   height: '100%',
                   backgroundColor: '#6e5a9d',
-                  borderRadius: '8px 0 0 8px',
+                  borderRadius: 'var(--small-border-radius) 0 0 var(--small-border-radius)',
                 },
               }}
             >
@@ -2410,7 +2411,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                         justifyContent: 'center',
                         width: 16,
                         height: 16,
-                        borderRadius: '50%',
+                        borderRadius: 'var(--avatar-border-radius)',
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
                         border: '1px solid rgba(255, 255, 255, 0.2)',
                         cursor: 'help',
@@ -2463,7 +2464,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              mt: 2,
+              mt: 0.5,
               gap: 1.7, 
             }}
           >
@@ -2475,7 +2476,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 background: 'rgba(0, 0, 0, 0.05)',
                 backdropFilter: 'blur(40px)',
                 WebkitBackdropFilter: 'blur(0px)',
-                border: '1px solid #333',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
                 borderRadius: 'var(--large-border-radius)!important',
                 px: 2.5,
                 py: 0.85,
@@ -2639,9 +2640,9 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   sx={{
                     width: 28,
                     height: 28,
-                    border: '1px solid rgba(66, 66, 66, 0.5)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
                     flexShrink: 0,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
@@ -2657,7 +2658,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     width={28}
                     height={28}
                     style={{
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       objectFit: 'cover'
                     }}
                     onError={safeImageError}
@@ -2735,7 +2736,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     <Box
                       sx={{
                         mt: 0.8,
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         overflow: 'hidden',
                         maxWidth: 120,
                         maxHeight: 80,
@@ -2765,10 +2766,10 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                 mt: 1.5,
                 mb: 1.5,
                 p: 1.5,
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'rgba(255, 255, 255, 0.03)',
                 backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
@@ -2776,7 +2777,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                   sx={{
                     width: 28,
                     height: 28,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     background: 'rgba(255, 255, 255, 0.1)',
                     flexShrink: 0,
                   }}
@@ -2794,7 +2795,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         width: 80,
                         height: 12,
-                        borderRadius: '6px',
+                        borderRadius: 'var(--small-border-radius)',
                         background: 'rgba(255, 255, 255, 0.1)',
                         animation: 'pulse 1.5s ease-in-out infinite',
                       }}
@@ -2803,7 +2804,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                       sx={{
                         width: 50,
                         height: 10,
-                        borderRadius: '5px',
+                        borderRadius: 'var(--small-border-radius)',
                         background: 'rgba(255, 255, 255, 0.08)',
                         animation: 'pulse 1.5s ease-in-out infinite',
                         animationDelay: '0s',
@@ -2814,7 +2815,7 @@ ${post.content ? post.content.substring(0, 500) + (post.content.length > 500 ? '
                     sx={{
                       width: '100%',
                       height: 16,
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       background: 'rgba(255, 255, 255, 0.08)',
                       animation: 'pulse 1.5s ease-in-out infinite',
                       animationDelay: '0.4s',

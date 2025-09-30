@@ -26,8 +26,7 @@
   height: 42px;
   margin-right: 12px;
   border: 2px solid rgba(208, 188, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   object-fit: cover;
 }
 
@@ -67,7 +66,7 @@
   width: 12px;
   height: 12px;
   background-color: #8470ff;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   font-size: 0.6rem;
   color: white;
   font-weight: bold;
@@ -76,7 +75,7 @@
 .follow-button {
   min-width: auto;
   height: 32px;
-  border-radius: 16px;
+  border-radius: var(--small-border-radius);
   text-transform: none;
   padding: 0 16px;
   margin-left: 8px;

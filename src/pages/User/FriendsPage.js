@@ -309,7 +309,7 @@ const FriendsPage = () => {
                       textDecoration: 'none',
                       cursor: 'pointer',
                       background: 'rgba(255,255,255,0.07)',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                       px: 1.5,
                       py: 1,
                       transition: 'background 0.18s',
@@ -327,7 +327,7 @@ const FriendsPage = () => {
                       sx={{
                         width: 36,
                         height: 36,
-                        borderRadius: '50%',
+                        borderRadius: 'var(--avatar-border-radius)',
                         mr: 1.5,
                         objectFit: 'cover',
                         border: '1.5px solid #D0BCFF',

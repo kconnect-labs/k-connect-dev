@@ -40,7 +40,7 @@ export const LoadingIndicator = () => {
           height: '40px',
           border: '3px solid var(--theme-border-color)',
           borderTop: '3px solid var(--theme-main-color)',
-          borderRadius: '50%',
+          borderRadius: 'var(--avatar-border-radius)',
           animation: 'loading-spin 1s linear infinite',
         }}
       />
@@ -62,7 +62,7 @@ export const SuspenseFallback = () => {
           height: '32px',
           border: '2px solid var(--theme-border-color)',
           borderTop: '2px solid var(--theme-main-color)',
-          borderRadius: '50%',
+          borderRadius: 'var(--avatar-border-radius)',
           animation: 'loading-spin 0.8s linear infinite',
         }}
       />

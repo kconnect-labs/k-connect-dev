@@ -49,7 +49,7 @@ const UpdateInfo = ({
     <Paper
       sx={{
         p: 0,
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         border: theme =>

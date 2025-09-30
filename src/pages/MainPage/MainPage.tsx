@@ -250,12 +250,6 @@ const MainPage: React.FC = React.memo(() => {
         </div>
       </div>
 
-      <SimpleImageViewer
-        isOpen={lightbox.isOpen}
-        onClose={handleCloseLightbox}
-        images={lightbox.images}
-        initialIndex={lightbox.currentImageIndex}
-      />
     </Container>
   );
 });

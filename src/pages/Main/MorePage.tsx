@@ -445,7 +445,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
               mb: 1,
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
               border: '1px solid rgba(0, 0, 0, 0.12)',
               overflow: 'hidden',
@@ -489,7 +489,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                           sx={{
                             width: 16,
                             height: 16,
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             background: '#4CAF50',
                             display: 'flex',
                             alignItems: 'center',
@@ -520,7 +520,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                   sx={{
                     background: 'var(--theme-background, rgba(77, 214, 81, 0.15))',
                     border: '1px solid rgba(77, 214, 81, 0.25)',
-                    borderRadius: '18px',
+                    borderRadius: 'var(--main-border-radius)',
                     color: '#4CAF50',
                     fontSize: '0.85rem',
                     fontWeight: 600,
@@ -549,7 +549,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                sx={{
                  background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                  backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                 borderRadius: '16px',
+                 borderRadius: 'var(--small-border-radius)',
                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
                  border: '1px solid rgba(0, 0, 0, 0.12)',
                  overflow: 'hidden',
@@ -614,7 +614,7 @@ const MorePage: React.FC<MorePageProps> = ({ onBack }) => {
                             sx={{
                               width: 36,
                               height: 36,
-                              borderRadius: '16px',
+                              borderRadius: 'var(--small-border-radius)',
                               background: item.color,
                               display: 'flex',
                               alignItems: 'center',

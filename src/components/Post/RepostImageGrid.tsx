@@ -7,7 +7,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   overflow: 'hidden',
   cursor: 'pointer',
   display: 'flex',
@@ -47,7 +47,7 @@ const Image = styled('img')<ImageProps>(({ isCenter }) => ({
   position: 'relative',
   zIndex: 2,
   display: 'block',
-  borderRadius: '4px',
+  borderRadius: 'var(--small-border-radius)',
 }));
 
 const MoreImagesOverlay = styled(Box)(({ theme }) => ({
@@ -145,7 +145,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           position: 'relative',
           width: '100%',
           height: '250px',
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           overflow: 'hidden',
         }}
       >
@@ -168,7 +168,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           gap: 1,
           width: '100%',
           height: '200px',
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           overflow: 'hidden',
         }}
       >
@@ -202,7 +202,7 @@ const RepostImageGrid: React.FC<RepostImageGridProps> = ({ images, onImageClick,
           sx={{
             position: 'relative',
             gridArea: index === 0 ? 'img1' : index === 1 ? 'img2' : 'img3',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             overflow: 'hidden',
           }}
         >

@@ -59,6 +59,11 @@ const CommentInput: React.FC<CommentInputProps> = ({
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    
+    // Reset textarea height
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -99,6 +104,18 @@ const CommentInput: React.FC<CommentInputProps> = ({
     fileInputRef.current?.click();
   };
 
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+    adjustTextareaHeight();
+  };
+
   const canSubmit = (content.trim() || image) && !disabled && !isSubmitting;
 
   return (
@@ -123,7 +140,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
             <textarea
               ref={textareaRef}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={handleContentChange}
               onKeyPress={handleKeyPress}
               placeholder={placeholder || t('post.writeComment')}
               disabled={disabled}

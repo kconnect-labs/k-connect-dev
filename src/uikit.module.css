@@ -106,7 +106,7 @@
   border-radius: 16px;
 }
 .rounded-full {
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
 }
 .border {
   border: 1px solid var(--border-color, #eee);
@@ -155,7 +155,7 @@
 .avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   object-fit: cover;
 }
 .img-cover {
@@ -464,7 +464,7 @@ select.input:focus option:checked {
   height: 24px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-top: 2px solid #2196f3;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   animation: spin 1s linear infinite;
 }
 

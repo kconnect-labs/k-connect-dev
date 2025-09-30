@@ -40,7 +40,7 @@ const EmptyCommentsContainer = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4),
   textAlign: 'center',
       backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.02))',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   border: '1px dashed rgba(255, 255, 255, 0.1)',
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(2),
@@ -76,7 +76,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
     width: '100%',
     maxWidth: '400px',
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     border: '1px solid rgba(100, 90, 140, 0.1)',
     '&:before': {
       content: '""',
@@ -85,7 +85,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
       left: 0,
       right: 0,
       bottom: 0,
-      borderRadius: '16px',
+      borderRadius: 'var(--small-border-radius)',
       background:
         'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
       backdropFilter: 'var(--theme-backdrop-filter, blur(30px))',
@@ -279,7 +279,7 @@ const CommentSystem = ({
             display: 'inline-flex',
             backgroundColor: 'rgba(140, 82, 255, 0.15)',
             color: 'primary.main',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '2px 8px',
             fontSize: '0.75rem',
             fontWeight: 'bold',

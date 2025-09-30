@@ -78,7 +78,7 @@ export const AnimatedSparkle = styled(Box)<SparkleProps>(
     width: size || '4px',
     height: size || '4px',
     backgroundColor: color || '#FFD700',
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     animation: `${sparkleAnimation} 2s ease-in-out infinite`,
     animationDelay: `${delay || 0}s`,
     boxShadow: `0 0 6px ${color || '#FFD700'}`,

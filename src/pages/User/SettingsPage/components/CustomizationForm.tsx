@@ -554,7 +554,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   sx={{
                     width: 16,
                     height: 16,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     display: 'flex',
                     alignItems: 'center',
@@ -570,7 +570,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                 sx={{
                   width: 48,
                   height: 48,
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   backgroundColor: profileColor,
                   cursor: 'pointer',
                   border: '2px solid rgba(255, 255, 255, 0.2)',
@@ -926,7 +926,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   sx={{
                     width: 16,
                     height: 16,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     bgcolor: 'var(--theme-background-full, rgba(255, 255, 255, 0.95))',
                     display: 'flex',
                     alignItems: 'center',
@@ -942,7 +942,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                 sx={{
                   width: 48,
                   height: 48,
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   backgroundColor: pendingAccentColor,
                   cursor: 'pointer',
                   border: '2px solid rgba(255, 255, 255, 0.2)',
@@ -1103,7 +1103,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   sx={{
                     width: 32,
                     height: 32,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     backgroundColor: color,
                     cursor: 'pointer',
                     border:
@@ -1201,7 +1201,7 @@ const CustomizationForm: React.FC<CustomizationFormProps> = ({
                   sx={{
                     width: 32,
                     height: 32,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     backgroundColor: color,
                     cursor: 'pointer',
                     border:

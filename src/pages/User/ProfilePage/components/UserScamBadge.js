@@ -20,15 +20,14 @@ const UserScamBadge = ({ user }) => {
           py: 0.1,
           borderRadius: 'var(--main-border-radius)',
           border: '1px solid rgba(211, 47, 47, 0.8)',
-          boxShadow: '0 0 8px rgba(211, 47, 47, 0.5)',
           '&:hover': {
             background: 'rgba(211, 47, 47, 0.7)',
           },
           animation: 'pulse-red 2s infinite',
           '@keyframes pulse-red': {
-            '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
-            '70%': { boxShadow: '0 0 0 6px rgba(211, 47, 47, 0)' },
-            '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' },
+            '0%': { },
+            '70%': { },
+            '100%': { },
           },
         }}
       >

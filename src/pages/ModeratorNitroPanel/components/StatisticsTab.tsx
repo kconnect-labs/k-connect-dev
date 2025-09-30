@@ -6,10 +6,27 @@ import {
   CircularProgress,
   Grid,
   Alert,
+  Card,
+  CardContent,
+  Avatar,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Chip,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import {
   Refresh as RefreshIcon,
+  Person as PersonIcon,
+  Verified as VerifiedIcon,
+  FiberManualRecord as OnlineIcon,
+  Gavel as BanIcon,
+  Warning as ScamIcon,
+  OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 interface StatisticsData {
@@ -79,9 +96,25 @@ interface StatisticsData {
   };
 }
 
+interface RecentUser {
+  id: number;
+  username: string;
+  display_name: string;
+  avatar: string | null;
+  created_at: string;
+  is_verified: boolean;
+  is_online: boolean;
+  ban: number;
+  scam: number;
+  profile_url: string;
+}
+
 const StatisticsTab: React.FC = () => {
+  const navigate = useNavigate();
   const [statistics, setStatistics] = useState<StatisticsData | null>(null);
+  const [recentUsers, setRecentUsers] = useState<RecentUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const [usersLoading, setUsersLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchStatistics = async () => {
@@ -103,9 +136,46 @@ const StatisticsTab: React.FC = () => {
     }
   };
 
+  const fetchRecentUsers = async () => {
+    try {
+      setUsersLoading(true);
+      const response = await axios.get('/api/stat/recent-users');
+
+      if (response.data.success) {
+        setRecentUsers(response.data.data.users);
+      } else {
+        console.error('Ошибка загрузки последних пользователей');
+      }
+    } catch (error) {
+      console.error('Error fetching recent users:', error);
+    } finally {
+      setUsersLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchStatistics();
+    fetchRecentUsers();
   }, []);
+
+  const handleUserClick = (user: RecentUser) => {
+    navigate(user.profile_url);
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) {
+      return 'Только что';
+    } else if (diffInHours < 24) {
+      return `${diffInHours}ч назад`;
+    } else {
+      const diffInDays = Math.floor(diffInHours / 24);
+      return `${diffInDays}д назад`;
+    }
+  };
 
   const StatCard: React.FC<{
     title: string;
@@ -117,7 +187,7 @@ const StatisticsTab: React.FC = () => {
         sx={{
           p: 2,
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '8px',
+          borderRadius: 'var(--small-border-radius)',
           background: 'rgba(255, 255, 255, 0.02)',
         }}
       >
@@ -241,8 +311,9 @@ const StatisticsTab: React.FC = () => {
           </Typography>
         </Box>
       ) : (
-        <Grid container spacing={0.625}>
-          <StatCard
+        <>
+          <Grid container spacing={0.625}>
+            <StatCard
             title="Пользователи"
             data={statistics.users}
             fields={[
@@ -341,7 +412,156 @@ const StatisticsTab: React.FC = () => {
               { label: 'За 24ч', key: 'last_24h' },
             ]}
           />
-        </Grid>
+          </Grid>
+
+          {/* Список последних пользователей */}
+          <Box sx={{ mt: 4 }}>
+            <Typography
+            variant="h6"
+            sx={{
+              color: 'rgba(255, 255, 255, 0.9)',
+              fontWeight: 500,
+              fontSize: '1.25rem',
+              mb: 2,
+            }}
+          >
+            Последние 30 зарегистрированных пользователей
+          </Typography>
+          
+          <Card
+            sx={{
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 'var(--small-border-radius)',
+            }}
+          >
+            <CardContent sx={{ p: 0 }}>
+              {usersLoading ? (
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  py: 4,
+                }}>
+                  <CircularProgress size={24} sx={{ color: 'rgba(255, 255, 255, 0.6)' }} />
+                </Box>
+              ) : recentUsers.length > 0 ? (
+                <List sx={{ maxHeight: 400, overflow: 'auto' }}>
+                  {recentUsers.map((user) => (
+                    <ListItem
+                      key={user.id}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        },
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                      }}
+                      onClick={() => handleUserClick(user)}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          src={user.avatar || undefined}
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            bgcolor: 'rgba(255, 255, 255, 0.1)',
+                          }}
+                        >
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                fontWeight: 500,
+                              }}
+                            >
+                              {user.display_name}
+                            </Typography>
+                            {user.is_verified && (
+                              <Tooltip title="Верифицирован">
+                                <VerifiedIcon sx={{ color: '#4CAF50', fontSize: 16 }} />
+                              </Tooltip>
+                            )}
+                            {user.is_online && (
+                              <Tooltip title="Онлайн">
+                                <OnlineIcon sx={{ color: '#4CAF50', fontSize: 16 }} />
+                              </Tooltip>
+                            )}
+                            {user.ban === 0 && (
+                              <Tooltip title="Забанен">
+                                <BanIcon sx={{ color: '#f44336', fontSize: 16 }} />
+                              </Tooltip>
+                            )}
+                            {user.scam === 1 && (
+                              <Tooltip title="Скам">
+                                <ScamIcon sx={{ color: '#ff9800', fontSize: 16 }} />
+                              </Tooltip>
+                            )}
+                          </Box>
+                        }
+                        secondary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'rgba(255, 255, 255, 0.6)',
+                                fontSize: '0.875rem',
+                              }}
+                            >
+                              @{user.username}
+                            </Typography>
+                            <Chip
+                              label={formatDate(user.created_at)}
+                              size="small"
+                              sx={{
+                                height: 20,
+                                fontSize: '0.75rem',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                color: 'rgba(255, 255, 255, 0.7)',
+                              }}
+                            />
+                          </Box>
+                        }
+                      />
+                      <Tooltip title="Открыть профиль">
+                        <IconButton
+                          size="small"
+                          sx={{
+                            color: 'rgba(255, 255, 255, 0.5)',
+                            '&:hover': {
+                              color: 'rgba(255, 255, 255, 0.8)',
+                            },
+                          }}
+                        >
+                          <OpenInNewIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    py: 4,
+                    color: 'rgba(255, 255, 255, 0.5)',
+                  }}
+                >
+                  <Typography variant="body1">
+                    Пользователи не найдены
+                  </Typography>
+                </Box>
+              )}
+            </CardContent>
+          </Card>
+          </Box>
+        </>
       )}
     </Box>
   );

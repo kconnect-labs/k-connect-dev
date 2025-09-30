@@ -100,7 +100,7 @@ const EditPostDialog: React.FC<EditPostDialogProps> = ({
             '& .MuiOutlinedInput-root': {
               bgcolor: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: '1px solid rgba(255, 255, 255, 0.09)',
               transition: 'all 0.2s ease',
               '&:hover': {

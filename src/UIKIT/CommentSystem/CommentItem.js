@@ -27,7 +27,7 @@ import { useLanguage } from '../../context/LanguageContext';
 const StyledCommentCard = styled(Box)(({ theme }) => ({
       backgroundColor: 'var(--theme-background, rgba(28, 28, 32, 0.4))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(2),
   border: '1px solid rgba(255, 255, 255, 0.03)',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
@@ -46,7 +46,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
   alignItems: 'center',
   cursor: 'pointer',
   padding: '4px 10px',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   transition: 'all 0.2s ease',
   backgroundColor: active
     ? 'rgba(140, 82, 255, 0.08)'
@@ -64,7 +64,7 @@ const ActionButton = styled(Box)(({ theme, active }) => ({
 
 const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
   border: '1px solid rgba(255, 255, 255, 0.05)',
   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
@@ -264,7 +264,7 @@ const CommentItem = ({
                       bgcolor: 'rgba(28, 28, 32, 0.9)',
                       backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
                       boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                       border: '1px solid rgba(255, 255, 255, 0.03)',
                       mt: 1,
                     },
@@ -280,7 +280,7 @@ const CommentItem = ({
                       onReply();
                     }}
                     sx={{
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -304,7 +304,7 @@ const CommentItem = ({
                     }}
                     sx={{
                       color: '#f44336',
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       mx: 0.5,
                       my: 0.2,
                       '&:hover': {
@@ -349,7 +349,7 @@ const CommentItem = ({
                     transform: 'translate(-50%, -50%)',
                     bgcolor: 'rgba(0, 0, 0, 0.6)',
                     color: 'white',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     width: 36,
                     height: 36,
                     display: 'flex',
@@ -371,7 +371,7 @@ const CommentItem = ({
               sx={{
                 backgroundColor: 'rgba(244, 67, 54, 0.1)',
                 border: '1px solid rgba(244, 67, 54, 0.3)',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 padding: '10px',
                 margin: '10px 0',
                 color: '#f44336',

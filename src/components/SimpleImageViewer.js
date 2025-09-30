@@ -82,7 +82,7 @@ const Counter = styled(Box)({
   backgroundColor: 'rgba(0, 0, 0, 0.7)',
   color: 'white',
   padding: '8px 16px',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   fontSize: '14px',
   fontWeight: 'bold',
   zIndex: 10001,

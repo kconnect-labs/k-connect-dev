@@ -112,7 +112,7 @@ const InputControlsRow = React.memo(
         display: 'flex',
         alignItems: 'center',
         backgroundColor: '#262626',
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         padding: '0 4px',
         boxShadow: 'none',
       }}

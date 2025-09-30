@@ -2063,7 +2063,7 @@ const ModeratorPage = () => {
                     style={{
                       width: '100%',
                       height: 'auto',
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                     }}
                   />
                 </Box>
@@ -4032,7 +4032,7 @@ const ModeratorPage = () => {
           sx={{
             width: 16,
             height: 16,
-            borderRadius: '50%',
+            borderRadius: 'var(--avatar-border-radius)',
             background: enabled
               ? 'rgba(76, 175, 80, 0.8)'
               : 'rgba(255, 255, 255, 0.2)',
@@ -6314,7 +6314,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -6386,7 +6386,7 @@ const ModeratorPage = () => {
                       style={{
                         width: '100%',
                         height: 'auto',
-                        borderRadius: '4px',
+                        borderRadius: 'var(--small-border-radius)',
                       }}
                     />
                   </Box>
@@ -6467,7 +6467,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -6605,7 +6605,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -6673,7 +6673,7 @@ const ModeratorPage = () => {
                       style={{
                         width: '100%',
                         height: 'auto',
-                        borderRadius: '4px',
+                        borderRadius: 'var(--small-border-radius)',
                       }}
                     />
                   </Box>
@@ -6754,7 +6754,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -6886,7 +6886,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(25,118,210,0.2) 0%, rgba(25,118,210,0) 70%)',
               zIndex: 0,
@@ -7114,7 +7114,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(156,39,176,0.2) 0%, rgba(156,39,176,0) 70%)',
               zIndex: 0,
@@ -7276,7 +7276,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
@@ -7529,7 +7529,7 @@ const ModeratorPage = () => {
                           sx={{
                             width: 20,
                             height: 20,
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             backgroundColor:
                               editBadgeColorUpgrade || 'transparent',
                             border: '2px solid rgba(255,255,255,0.3)',
@@ -7619,7 +7619,7 @@ const ModeratorPage = () => {
                               top: -8,
                               right: -8,
                               background: 'rgba(0,0,0,0.5)',
-                              borderRadius: '50%',
+                              borderRadius: 'var(--avatar-border-radius)',
                               boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                             }}
                           >
@@ -7748,7 +7748,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -7897,7 +7897,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(244,67,54,0.2) 0%, rgba(244,67,54,0) 70%)',
               zIndex: 0,
@@ -8048,7 +8048,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
@@ -8238,7 +8238,7 @@ const ModeratorPage = () => {
                           sx={{
                             width: 150,
                             height: 150,
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                           }}
                         />
@@ -8249,7 +8249,7 @@ const ModeratorPage = () => {
                               top: -8,
                               right: -8,
                               background: 'rgba(0,0,0,0.5)',
-                              borderRadius: '50%',
+                              borderRadius: 'var(--avatar-border-radius)',
                               boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                             }}
                           >
@@ -8379,7 +8379,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
@@ -8785,7 +8785,7 @@ const ModeratorPage = () => {
               right: -30,
               width: 120,
               height: 120,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(25, 118, 210, 0.2) 0%, rgba(25, 118, 210, 0) 70%)',
               zIndex: 0,
@@ -9030,7 +9030,7 @@ const ModeratorPage = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background:
                 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,

@@ -128,7 +128,7 @@ const SelectionOverlay = styled(Box)(({ theme, selected }) => ({
   right: 8,
   width: 24,
   height: 24,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   background: selected
     ? 'rgba(255, 255, 255, 0.9)'
     : 'rgba(255, 255, 255, 0.1)',
@@ -410,7 +410,7 @@ const UltimateDecorationModal = ({
                 sx={{
                   width: 80,
                   height: 80,
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   backgroundColor: 'rgba(76, 175, 80, 0.2)',
                   display: 'flex',
                   alignItems: 'center',
@@ -555,7 +555,7 @@ const UltimateDecorationModal = ({
                 sx={{
                   mt: 3,
                   p: 2,
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                   background: 'rgba(255, 255, 255, 0.03)',
                   backdropFilter: 'blur(20px)',
                   border: '1px solid rgba(0, 0, 0, 0.12)',

@@ -21,7 +21,7 @@ const PostDetailOverlay: React.FC = () => {
 
   return ReactDOM.createPortal(
     <React.Suspense fallback={<div>Загрузка...</div>}>
-      <PostDetailPage isOverlay={true} overlayPostId={currentPostId} />
+      <PostDetailPage isOverlay={true} overlayPostId={currentPostId} disablePadding={true} />
     </React.Suspense>,
     getOverlayRoot()
   );

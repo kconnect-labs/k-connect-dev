@@ -724,7 +724,7 @@ const MusicUploadDialog = ({ open, onClose, onSuccess }) => {
           minHeight: '70vh',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
           border: '1px solid rgba(255,255,255,0.10)',
           overflow: 'hidden',

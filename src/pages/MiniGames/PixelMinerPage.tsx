@@ -43,7 +43,7 @@ const PageHeader = styled(Box)(({ theme }) => ({
   padding: theme.spacing(4, 2),
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   border: '1px solid rgba(0, 0, 0, 0.12)',
   position: 'relative',
   overflow: 'hidden',
@@ -83,7 +83,7 @@ const Cell = styled(Paper)<{ revealed: boolean; cellType: string; isMobile: bool
         : 'rgba(255, 255, 255, 0.05)'
       : 'rgba(255, 255, 255, 0.08)',
     backdropFilter: 'blur(10px)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     border: revealed
       ? cellType === 'gold'
         ? '2px solid #FFD700'
@@ -118,7 +118,7 @@ const StatsCard = styled(Paper)(({ theme }) => ({
   gap: theme.spacing(1),
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
   minWidth: 120,
@@ -137,7 +137,7 @@ const BetInput = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     background: 'rgba(255, 255, 255, 0.03)',
     backdropFilter: 'blur(20px)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     border: '1px solid rgba(0, 0, 0, 0.12)',
     '& fieldset': {
       border: 'none',
@@ -160,7 +160,7 @@ const BetInput = styled(TextField)(({ theme }) => ({
 const GameSetupCard = styled(Card)(({ theme }) => ({
   background: 'rgba(255, 255, 255, 0.03)',
   backdropFilter: 'blur(20px)',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   border: '1px solid rgba(0, 0, 0, 0.12)',
   boxShadow: `0 4px 20px ${alpha(theme.palette.common.black, 0.1)}`,
   marginBottom: theme.spacing(3),

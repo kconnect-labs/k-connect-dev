@@ -104,7 +104,7 @@
 .chat-avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
@@ -134,7 +134,7 @@
   right: 2px;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background-color: #4caf50;
   border: 2px solid var(--background-color, #1a1a1a);
 }
@@ -234,7 +234,7 @@
 .chat-header .chat-avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   margin-right: 16px;
   overflow: hidden;
   position: relative;
@@ -335,7 +335,7 @@
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-left-color: var(--primary, #d0bcff);
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   animation: spin 1s linear infinite;
 }
 
@@ -351,7 +351,7 @@
   right: 20px;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background-color: var(--primary, #d0bcff);
   color: #000;
   border: none;
@@ -557,7 +557,7 @@
 .message-avatar {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   margin: 0 4px !important;
   display: flex;
   align-items: center;
@@ -842,7 +842,7 @@
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background-color: var(--primary, #d0bcff);
   margin: 0 1px;
   animation: typing-dot 1s infinite ease-in-out;
@@ -958,7 +958,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
 }
 
 .attachment-btn:hover {
@@ -1072,7 +1072,7 @@
   cursor: pointer;
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1181,7 +1181,7 @@
 .user-avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   margin-right: 16px;
   background-color: var(--primary, #d0bcff);
   color: #000;
@@ -1252,7 +1252,7 @@
   height: 40px;
   border: 4px solid rgba(255, 255, 255, 0.1);
   border-left-color: var(--primary, #d0bcff);
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
 }

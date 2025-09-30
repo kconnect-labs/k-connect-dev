@@ -90,7 +90,7 @@ const StyledSearchField = styled(TextField)(({ theme }) => ({
 }));
 
 const TrackCard = styled(Paper)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   padding: '8px',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -460,7 +460,7 @@ const AllTracksBlock = () => {
                         sx={{
                           width: 40,
                           height: 40,
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           objectFit: 'cover',
                         }}
                       />

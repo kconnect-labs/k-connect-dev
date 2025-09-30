@@ -208,7 +208,7 @@ const RegisterChannel = () => {
                   sx={{
                     width: 12 + i * 4,
                     height: 12 + i * 4,
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     background: `rgba(208, 188, 255, ${0.6 - i * 0.15})`,
                   }}
                 />
@@ -272,7 +272,7 @@ const RegisterChannel = () => {
               p: isMobile ? 3 : 4,
               width: '100%',
               maxWidth: '480px',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(0, 0, 0, 0.12)',

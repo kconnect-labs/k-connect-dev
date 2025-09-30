@@ -89,7 +89,7 @@ const MarketPriceChip = styled(Box)({
   right: 8,
           background: 'var(--theme-background, rgba(0, 0, 0, 0.7))',
       backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   padding: '6px 12px',
   display: 'flex',
   alignItems: 'center',

@@ -24,26 +24,8 @@ const TelegramSubscribeBlock: React.FC = () => {
       }}
       onClick={handleSubscribe}
     >
-      {/* Реклама тег */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 8,
-          left: 8,
-          backgroundColor: '#282828',
-          color: 'white',
-          px: 1,
-          py: 0.5,
-          borderRadius: 1,
-          fontSize: '0.75rem',
-          fontWeight: 500,
-        }}
-      >
-        Реклама
-      </Box>
-
       {/* Основной контент */}
-      <Box sx={{ mt: 3, mb:0 }}>
+      <Box sx={{ mt: 1, mb:0 }}>
         <Typography
           variant="h6"
           sx={{

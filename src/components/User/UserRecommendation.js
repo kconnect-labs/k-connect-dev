@@ -63,7 +63,7 @@ const UserRecommendation = ({ user }) => {
       onClick={handleCardClick}
       sx={{
         cursor: 'pointer',
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         background: '#1d1d1d',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
         mb: 1.5,

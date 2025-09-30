@@ -33,7 +33,7 @@ const HeaderSkeleton = styled(Box)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(255, 255, 255, 0.08)',
-  borderRadius: '24px',
+  borderRadius: 'var(--large-border-radius)',
   padding: theme.spacing(4),
   marginBottom: theme.spacing(4),
   display: 'flex',
@@ -43,7 +43,7 @@ const HeaderSkeleton = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     textAlign: 'center',
     padding: theme.spacing(3),
-    borderRadius: '20px',
+    borderRadius: 'var(--main-border-radius)',
     marginBottom: theme.spacing(3),
   },
 }));
@@ -61,10 +61,10 @@ const SectionSkeleton = styled(Box)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(255, 255, 255, 0.08)',
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     padding: theme.spacing(2.5),
   },
 }));

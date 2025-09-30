@@ -307,7 +307,7 @@ const ConnectionModal = ({ open, onClose }) => {
               display: 'flex',
               alignItems: 'center',
               bgcolor: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               p: 2,
               mb: 2,
             }}
@@ -409,11 +409,11 @@ const ConnectionModal = ({ open, onClose }) => {
           },
           '&::-webkit-scrollbar-track': {
             background: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
           },
           '&::-webkit-scrollbar-thumb': {
             background: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
             '&:hover': {
               background: 'rgba(255, 255, 255, 0.3)',
             },
@@ -427,7 +427,7 @@ const ConnectionModal = ({ open, onClose }) => {
                 key={user.id}
                 sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   mb: 1,
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.1)',

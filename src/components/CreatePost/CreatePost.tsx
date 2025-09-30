@@ -87,11 +87,8 @@ const PostInput = styled(TextField)(({ theme }) => ({
         : 'rgba(0, 0, 0, 0.03)',
     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
     WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
-    borderRadius: '18px',
-    border:
-      theme.palette.mode === 'dark'
-        ? '1px solid rgba(255, 255, 255, 0.05)'
-        : '1px solid rgba(0, 0, 0, 0.05)',
+    borderRadius: 'var(--main-border-radius)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
     fontSize: '0.95rem',
     padding: theme.spacing(1.5, 2),
     color: theme.palette.text.primary,
@@ -121,7 +118,7 @@ const PostActions = styled(Box)(({ theme }) => ({
 }));
 
 const PublishButton = styled(Button)(({ theme }) => ({
-  borderRadius: '15px',
+  borderRadius: 'var(--small-border-radius)',
   textTransform: 'none',
   fontSize: '0.8rem',
   fontWeight: 400,
@@ -486,7 +483,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
         WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(0px))',
         position: 'relative',
         overflow: 'hidden',
-        border: '1px solid rgba(66, 66, 66, 0.5)',
+        boxShadow: 'none',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         ...sx,
       }}
     >
@@ -526,7 +524,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
             display: 'flex',
             flexDirection: 'column',
             position: 'relative',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             border: isDragging ? '2px dashed #D0BCFF' : 'none',
             backgroundColor: isDragging
               ? 'rgba(208, 188, 255, 0.05)'
@@ -548,7 +546,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                 justifyContent: 'center',
                 flexDirection: 'column',
                 backgroundColor: 'var(--theme-background, rgba(26, 26, 26, 0.7))',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 zIndex: 10,
                 opacity: isDragging ? 1 : 0,
                 transition: 'opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
@@ -641,7 +639,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                   sx={{
                     mt: 1,
                     p: 1.5,
-                    borderRadius: '16px',
+                    borderRadius: 'var(--small-border-radius)',
                     backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     position: 'relative',
@@ -857,9 +855,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
               <Box
                 sx={{
                   position: 'relative',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   overflow: 'hidden',
-                  border: '1px solid rgba(66, 66, 66, 0.5)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.1))',
                 }}
               >
@@ -881,9 +879,9 @@ const CreatePost: React.FC<CreatePostProps> = ({
                         key={index}
                         sx={{
                           position: 'relative',
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           overflow: 'hidden',
-                          border: '1px solid rgba(66, 66, 66, 0.5)',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
                         }}
                       >
                         <img
@@ -893,7 +891,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                             objectFit: 'cover',
                             height: '100%',
                             width: '100%',
-                            borderRadius: '16px',
+                            borderRadius: 'var(--small-border-radius)',
                           }}
                         />
                         <IconButton
@@ -933,7 +931,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     style={{
                       width: '100%',
                       maxHeight: '300px',
-                      borderRadius: '18px',
+                      borderRadius: 'var(--main-border-radius)',
                     }}
                   />
                 )}
@@ -985,7 +983,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     sx={{
                       width: 32,
                       height: 32,
-                      borderRadius: '6px',
+                      borderRadius: 'var(--small-border-radius)',
                       overflow: 'hidden',
                       mr: 1.5,
                       position: 'relative',
@@ -1137,19 +1135,17 @@ const CreatePost: React.FC<CreatePostProps> = ({
                       mediaFiles.length > 0 || selectedTracks.length > 0
                         ? 'primary.main'
                         : 'text.secondary',
-                    borderRadius: '15px',
+                    borderRadius: 'var(--small-border-radius)',
                     textTransform: 'none',
                     fontSize: '0.8rem',
                     fontWeight: 500,
                     border:
                       mediaFiles.length > 0 || selectedTracks.length > 0
                         ? '1px solid rgba(208, 188, 255, 0.5)'
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '1px solid rgb(24 24 24)'
-                              : '1px solid rgba(0, 0, 0, 0.12)',
+                        :
+                          '1px solid rgba(255, 255, 255, 0.12)',
                     padding: '4px 10px',
-                    '&:hover': {
+                    '&:hover': {  
                       backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
                       borderColor: 'rgba(208, 188, 255, 0.4)',
                     },
@@ -1172,17 +1168,15 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     selectedTracks.length > 0
                       ? 'primary.main'
                       : 'text.secondary',
-                  borderRadius: '15px',
+                  borderRadius: 'var(--small-border-radius)',
                   textTransform: 'none',
                   fontSize: '0.8rem',
                   fontWeight: 500,
                   border:
                     selectedTracks.length > 0
                       ? '1px solid rgba(208, 188, 255, 0.5)'
-                      : theme =>
-                          theme.palette.mode === 'dark'
-                            ? '1px solid rgb(24 24 24)'
-                            : '1px solid rgba(0, 0, 0, 0.12)',
+                      :
+                          '1px solid rgba(255, 255, 255, 0.12)',
                   padding: '4px 10px',
                   '&:hover': {
                     backgroundColor: 'var(--theme-background, rgba(208, 188, 255, 0.08))',
@@ -1204,7 +1198,7 @@ const CreatePost: React.FC<CreatePostProps> = ({
                     onClick={() => setIsNsfw(!isNsfw)}
                     sx={{
                       color: isNsfw ? '#ff6b6b' : 'text.secondary',
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       width: 32,
                       height: 32,
                       minWidth: 32,
@@ -1212,10 +1206,8 @@ const CreatePost: React.FC<CreatePostProps> = ({
                       padding: 0,
                       border: isNsfw
                         ? '1px solid rgba(255, 107, 107, 0.5)'
-                        : theme =>
-                            theme.palette.mode === 'dark'
-                              ? '1px solid rgb(24 24 24)'
-                              : '1px solid rgba(0, 0, 0, 0.12)',
+                          :
+                          '1px solid rgba(255, 255, 255, 0.12)',
                       backgroundColor: isNsfw
                         ? 'rgba(255, 107, 107, 0.1)'
                         : 'transparent',

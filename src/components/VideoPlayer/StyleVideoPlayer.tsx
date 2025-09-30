@@ -30,7 +30,7 @@ interface PlayerState {
 const PlayerContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
   backgroundColor: '#000',
   aspectRatio: '16/9',
@@ -39,7 +39,7 @@ const PlayerContainer = styled(Box)(({ theme }) => ({
     opacity: 1,
   },
   '@media (max-width: 768px)': {
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
   },
 }));
 
@@ -88,12 +88,12 @@ const ProgressSlider = styled(Slider)(({ theme }) => ({
     border: 'none',
     backgroundColor: '#d0bcff',
     height: '6px',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
   },
   '& .MuiSlider-rail': {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     height: '6px',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
   },
   '& .MuiSlider-thumb': {
     display: 'none',
@@ -131,7 +131,7 @@ const ProgressSlider = styled(Slider)(({ theme }) => ({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     color: '#fff',
     fontSize: '10px',
-    borderRadius: '4px',
+    borderRadius: 'var(--small-border-radius)',
   },
 }));
 
@@ -231,7 +231,7 @@ const BufferingIndicator = styled(Box)({
   height: 40,
   border: '3px solid rgba(255, 255, 255, 0.3)',
   borderTop: '3px solid #fff',
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   animation: 'spin 1s linear infinite',
   '@keyframes spin': {
     '0%': { transform: 'translate(-50%, -50%) rotate(0deg)' },
@@ -249,7 +249,7 @@ const CenterPlayButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: 'rgba(0, 0, 0, 0.7)',
   backdropFilter: 'blur(10px)',
   border: '2px solid rgba(255, 255, 255, 0.3)',
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   padding: '12px 4px 12px 12px',
   color: '#fff',
   transition: 'all 0.3s ease',

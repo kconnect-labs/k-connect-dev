@@ -73,7 +73,7 @@ export const LinkPreview = ({ url }) => {
         mt: 1,
         mb: 1,
         overflow: 'hidden',
-        borderRadius: '16px',
+        borderRadius: 'var(--small-border-radius)',
         backgroundColor:
           theme.palette.mode === 'dark'
             ? theme.palette.primary.main + '08'
@@ -191,7 +191,7 @@ export const LinkPreview = ({ url }) => {
                 backgroundColor: theme.palette.primary.main + '10',
                 py: 0.25,
                 px: 0.75,
-                borderRadius: '4px',
+                borderRadius: 'var(--small-border-radius)',
                 width: 'fit-content',
               }}
             >
@@ -442,7 +442,7 @@ export const linkRenderers = {
             textDecoration: 'none',
             background: 'rgba(123, 104, 238, 0.08)',
             padding: '0 4px',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
           }}
         >
           {children}
@@ -466,7 +466,7 @@ export const linkRenderers = {
             textDecoration: 'none',
             background: 'rgba(123, 104, 238, 0.08)',
             padding: '0 4px',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
           }}
         >
           {children}

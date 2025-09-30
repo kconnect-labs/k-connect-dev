@@ -70,7 +70,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
             justifyContent: 'center',
             width: 40,
             height: 40,
-            borderRadius: '50%',
+            borderRadius: 'var(--avatar-border-radius)',
             background: 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)',
             boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)',
             animation: 'pulse 0.6s ease-in-out',

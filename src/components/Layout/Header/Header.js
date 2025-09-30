@@ -70,6 +70,9 @@ const Header = ({ toggleSidebar }) => {
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery('(max-width:700px)');
+  const [layoutVersion, setLayoutVersion] = useState(
+    () => localStorage.getItem('mainLayoutVersion') || 'v1'
+  );
   const [accounts, setAccounts] = useState({
     current_account: null,
     main_account: null,
@@ -89,6 +92,19 @@ const Header = ({ toggleSidebar }) => {
   const searchInputRef = useRef(null);
 
   const [showMobilePlayer, setShowMobilePlayer] = useState(false);
+
+  useEffect(() => {
+    const handleLayoutVersionChange = (event) => {
+      const newVersion = event.detail?.version || 'v1';
+      setLayoutVersion(newVersion);
+    };
+
+    document.addEventListener('layoutVersionChanged', handleLayoutVersionChange);
+    
+    return () => {
+      document.removeEventListener('layoutVersionChanged', handleLayoutVersionChange);
+    };
+  }, []);
 
   const themeValues = useMemo(() => {
     const headerTextColor =
@@ -695,8 +711,8 @@ const Header = ({ toggleSidebar }) => {
                       handleSearchItemClick={handleSearchItemClick}
                       toggleSearch={toggleSearch}
                     />
-                    {/* Desktop плеер рендерится только на PC */}
-                    {!showSearch && !isMobile && (
+
+                    {!showSearch && !isMobile && layoutVersion !== 'v2' && (
                       <HeaderPlayer
                         currentTrack={currentTrack}
                         isPlaying={isPlaying}

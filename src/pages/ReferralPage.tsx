@@ -168,7 +168,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
             height: '40px',
             border: '3px solid var(--theme-text-secondary)',
             borderTop: '3px solid var(--theme-text-primary)',
-            borderRadius: '50%',
+            borderRadius: 'var(--avatar-border-radius)',
             animation: 'spin 1s linear infinite',
           }}
         />
@@ -748,7 +748,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                   style={{
                     width: '32px',
                     height: '32px',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     background: 'rgba(255, 255, 255, 0.1)',
                     display: 'flex',
                     alignItems: 'center',
@@ -765,7 +765,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                       style={{
                         width: '100%',
                         height: '100%',
-                        borderRadius: '50%',
+                        borderRadius: 'var(--avatar-border-radius)',
                         objectFit: 'cover',
                       }}
                       onError={e => {
@@ -783,7 +783,7 @@ const ReferralPage: React.FC<ReferralPageProps> = ({ onBack }) => {
                     style={{
                       width: '32px',
                       height: '32px',
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       background: 'rgba(255, 255, 255, 0.1)',
                       display: formatUserAvatar(user.photo, user.id) ? 'none' : 'flex',
                       alignItems: 'center',

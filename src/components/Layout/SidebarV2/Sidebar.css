@@ -29,6 +29,13 @@
   contain: layout style paint;
 }
 
+/* Мини-плеер занимает 35% высоты экрана */
+.mini-player {
+  height: 35vh;
+  min-height: 200px;
+  max-height: 300px;
+}
+
 /* Применение темы через CSS переменные */
 .sidebar-v2-container.theme-aware {
   background: transparent;

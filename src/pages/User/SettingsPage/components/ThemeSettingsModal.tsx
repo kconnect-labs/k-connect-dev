@@ -27,6 +27,7 @@ import {
   Coffee,
   Favorite,
   LightMode,
+  Square,
 } from '@mui/icons-material';
 import { useThemeManager, ThemeType } from '../../../../hooks/useThemeManager';
 
@@ -59,7 +60,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     switchToNeonTheme,
     switchToVintageTheme,
     switchToPickmeTheme,
-    switchToLightTheme
+    switchToLightTheme,
+    switchToCubeTheme,
+
   } = useThemeManager();
 
   const handleClose = () => {
@@ -106,6 +109,9 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
         break;
       case 'pickme':
         await switchToPickmeTheme();
+        break;
+      case 'cube':
+        await switchToCubeTheme();
         break;
     }
   };
@@ -172,6 +178,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'neon': return 'rgba(8, 20, 45, 0.89)';
       case 'vintage': return 'rgba(35, 20, 8, 0.95)';
       case 'pickme': return 'rgba(131, 61, 96, 0.93)';
+      case 'cube': return 'rgba(33, 33, 33, 1)';
       default: return 'rgba(15, 15, 15, 0.98)';
     }
   };
@@ -191,6 +198,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'neon': return 'blur(20px)';
       case 'vintage': return 'blur(20px)';
       case 'pickme': return 'blur(20px)';
+      case 'cube': return 'none';
       default: return 'none';
     }
   };
@@ -210,6 +218,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'neon': return <Lightbulb />;
       case 'vintage': return <Coffee />;
       case 'pickme': return <Favorite />;
+      case 'cube': return <Square />;
       default: return <BlurOff />;
     }
   };
@@ -229,6 +238,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'neon': return 'Neon';
       case 'vintage': return 'Vintage';
       case 'pickme': return 'pickme';
+      case 'cube': return 'Cube';
       default: return 'Классическая';
     }
   };
@@ -248,7 +258,8 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
       case 'neon': return 'Яркий электрический синий';
       case 'vintage': return 'Теплый коричнево-золотой';
       case 'pickme': return 'Нежно-розовый приятный';
-      default: return 'Темная тема без эффектов';
+      case 'cube': return 'Темная тема без эффектов';
+      default: return 'Темная тема c квадратами';
     }
   };
 
@@ -276,7 +287,7 @@ const ThemeSettingsModal: React.FC<ThemeSettingsModalProps> = ({
     );
   }
 
-  const themes: ThemeType[] = ['default', 'blur', 'amoled', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme'];
+  const themes: ThemeType[] = ['default', 'blur', 'amoled', 'light', 'midnight', 'ocean', 'sunset', 'forest', 'aurora', 'cosmic', 'neon', 'vintage', 'pickme', 'cube'];
 
   return (
     <Dialog

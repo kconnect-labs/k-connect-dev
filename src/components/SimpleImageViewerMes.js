@@ -140,7 +140,7 @@ const SimpleImageViewerMes = ({ src, onClose }) => {
           gap: '10px',
           background: 'rgba(0, 0, 0, 0.6)',
           padding: '8px',
-          borderRadius: '24px',
+          borderRadius: 'var(--large-border-radius)',
           backdropFilter: 'blur(8px)',
         }}
       >

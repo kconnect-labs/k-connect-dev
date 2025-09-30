@@ -16,14 +16,14 @@ import { handleImageError as safeImageError } from '../../../utils/imageUtils';
 import { User } from '../types';
 
 const OnlineUsersCard = styled(Card)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  boxShadow: 'none',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border:
     theme.palette.mode === 'dark'
-      ? '1px solid rgba(66, 66, 66, 0.5)'
+      ? '1px solid rgba(255, 255, 255, 0.12)'
       : '1px solid rgba(0, 0, 0, 0.1)',
 }));
 
@@ -135,7 +135,7 @@ const OnlineUsers: React.FC = () => {
             gap: 0.5,
             px: 1,
             py: 0.5,
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             backgroundColor: 'var(--theme-background, rgba(76, 175, 80, 0.1))',
             border: '1px solid rgba(76, 175, 80, 0.2)',
             minWidth: 'fit-content',
@@ -147,9 +147,8 @@ const OnlineUsers: React.FC = () => {
             sx={{
               width: 8,
               height: 8,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               backgroundColor: '#4caf50',
-              boxShadow: '0 0 8px rgba(76, 175, 80, 0.5)',
             }}
           />
           <Typography
@@ -188,7 +187,7 @@ const OnlineUsers: React.FC = () => {
                 right: 2,
                 width: 9,
                 height: 9,
-                borderRadius: '50%',
+                borderRadius: 'var(--avatar-border-radius)',
                 backgroundColor: '#4caf50',
                 border: `1.5px solid ${theme.palette.background.paper}`,
                 boxSizing: 'border-box',

@@ -126,7 +126,7 @@ const EmailConfirmation = () => {
                 }
               }}
               sx={{
-                borderRadius: '20px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--primary)',
                 '&:hover': {
                   background: 'var(--primary-dark)',
@@ -154,7 +154,7 @@ const EmailConfirmation = () => {
               color='primary'
               onClick={() => navigate('/login')}
               sx={{
-                borderRadius: '20px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--primary)',
                 '&:hover': {
                   background: 'var(--primary-dark)',

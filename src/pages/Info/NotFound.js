@@ -101,7 +101,7 @@ const NotFound = () => {
                       maxWidth: '100%',
                       height: 'auto',
                       maxHeight: 300,
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
                     }}
                   />
@@ -184,7 +184,7 @@ const NotFound = () => {
                     sx={{
                       maxWidth: '100%',
                       height: 'auto',
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
                     }}
                   />

@@ -52,7 +52,7 @@ const CustomTooltip = styled(({ className, ...props }) => (
     fontSize: '0.75rem',
     maxWidth: 250,
     padding: '8px 12px',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     border: '1px solid rgba(0, 0, 0, 0.12)',
     color: 'rgba(255, 255, 255, 0.9)',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',

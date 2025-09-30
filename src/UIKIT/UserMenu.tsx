@@ -21,7 +21,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     backgroundColor: 'var(--theme-background, rgba(20, 20, 20, 0.4))',
-    borderRadius: '16px',
+    borderRadius: 'var(--small-border-radius)',
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
     border: '1px solid var(--border-color, rgba(0, 0, 0, 0.08))',
     minWidth: '200px',

@@ -1860,7 +1860,7 @@ const AdminPage = () => {
                           style={{
                             width: '100%',
                             height: 'auto',
-                            borderRadius: '16px',
+                            borderRadius: 'var(--small-border-radius)',
                           }}
                         />
                       </Box>
@@ -2110,7 +2110,7 @@ const AdminPage = () => {
                           width: 30,
                           height: 30,
                           mr: 2,
-                          borderRadius: '50%',
+                          borderRadius: 'var(--avatar-border-radius)',
                         }}
                         onError={e => {
                           e.target.src = '/static/img/default-badge.png';

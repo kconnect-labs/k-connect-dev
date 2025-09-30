@@ -534,7 +534,7 @@ const ArtistEditPage: React.FC = () => {
                     color: 'white',
                     fontWeight: 600,
                     textTransform: 'none',
-                    borderRadius: '8px',
+                    borderRadius: 'var(--small-border-radius)',
                     px: 2,
                     py: 0.5,
                     boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
@@ -673,7 +673,7 @@ const ArtistEditPage: React.FC = () => {
                                   gap: 0.5,
                                   px: 1,
                                   py: 0.5,
-                                  borderRadius: '6px',
+                                  borderRadius: 'var(--small-border-radius)',
                                   background: 'var(--theme-background, rgba(255,255,255,0.05))',
                                   border: '1px solid var(--theme-border, rgba(255,255,255,0.1))'
                                 }}
@@ -691,7 +691,7 @@ const ArtistEditPage: React.FC = () => {
                                   gap: 0.5,
                                   px: 1,
                                   py: 0.5,
-                                  borderRadius: '6px',
+                                  borderRadius: 'var(--small-border-radius)',
                                   background: 'var(--theme-background, rgba(255,255,255,0.05))',
                                   border: '1px solid var(--theme-border, rgba(255,255,255,0.1))'
                                 }}
@@ -840,7 +840,7 @@ const ArtistEditPage: React.FC = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background: 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
             }}
@@ -943,7 +943,7 @@ const ArtistEditPage: React.FC = () => {
                               color: 'var(--error-color, #f44336)',
                               fontWeight: 600,
                               textTransform: 'none',
-                              borderRadius: '8px',
+                              borderRadius: 'var(--small-border-radius)',
                               px: 1.5,
                               py: 0.5,
                               minWidth: '80px',

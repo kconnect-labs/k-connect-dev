@@ -140,7 +140,7 @@
   appearance: none;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background-color: var(--primary-color, #d0bcff);
   cursor: pointer;
 }
@@ -148,7 +148,7 @@
 .volume-slider::-moz-range-thumb {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   background-color: var(--primary-color, #d0bcff);
   cursor: pointer;
   border: none;

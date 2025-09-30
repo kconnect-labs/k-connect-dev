@@ -235,7 +235,7 @@ const MusicCard = ({
               position: 'absolute',
               bottom: 8,
               right: 8,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               opacity: 0,
               transition: 'all 0.2s ease',
               '.MusicCard-root:hover &': {

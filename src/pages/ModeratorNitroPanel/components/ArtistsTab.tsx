@@ -929,7 +929,7 @@ const ArtistsTab: React.FC = () => {
               right: -50,
               width: 150,
               height: 150,
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               background: 'radial-gradient(circle, rgba(63,81,181,0.2) 0%, rgba(63,81,181,0) 70%)',
               zIndex: 0,
             }}

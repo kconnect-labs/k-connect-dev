@@ -30,12 +30,11 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
         component={Paper}
         sx={{
           p: 0,
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
           overflow: 'hidden',
           display: { xs: 'none', sm: 'block' },
         }}
@@ -58,7 +57,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 backgroundColor: '#292929',
                 mb: 1,
                 animation: 'pulse 2s infinite',
@@ -68,7 +67,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 backgroundColor: '#292929',
                 mb: 1,
                 animation: 'pulse 2s infinite',
@@ -78,7 +77,7 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               sx={{
                 width: '100%',
                 height: 50,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 backgroundColor: '#292929',
                 animation: 'pulse 2s infinite',
               }}
@@ -95,12 +94,11 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
         component={Paper}
         sx={{
           p: 0,
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           mb: -0.625,
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-          border: '1px solid rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
           overflow: 'hidden',
           display: { xs: 'none', sm: 'block' },
         }}
@@ -157,12 +155,12 @@ const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
       component={Paper}
       sx={{
         p: 0,
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         mb: -0.625,
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
+        boxShadow: 'none',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         overflow: 'hidden',
         display: { xs: 'none', sm: 'block' },
       }}

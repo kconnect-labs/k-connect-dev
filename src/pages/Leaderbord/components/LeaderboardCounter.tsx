@@ -27,7 +27,7 @@ const CounterCard = styled(Paper)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(66, 66, 66, 0.5)',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(1.5),
   color: 'white',
   position: 'relative',

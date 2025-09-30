@@ -82,7 +82,7 @@ const AlbumHeader = styled(Box)(({ theme }) => ({
 const AlbumCover = styled(Avatar)(({ theme }) => ({
   width: 160,
   height: 160,
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
   background: 'linear-gradient(135deg, #B69DF8 0%, #D0BCFF 100%)',
   [theme.breakpoints.down('md')]: {
@@ -160,7 +160,7 @@ const AlbumStats = styled(Box)(({ theme }) => ({
 }));
 
 const PlayAlbumButton = styled(Button)(({ theme }) => ({
-  borderRadius: '24px',
+  borderRadius: 'var(--large-border-radius)',
   padding: theme.spacing(1, 3),
   fontWeight: 700,
   fontSize: '0.9rem',
@@ -179,7 +179,7 @@ const PlayAlbumButton = styled(Button)(({ theme }) => ({
 const TracksList = styled(List)(({ theme }) => ({
   padding: 0,
   '& .MuiListItem-root': {
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     marginBottom: '2px',
     background: 'transparent',
     transition: 'all 0.2s ease',
@@ -196,7 +196,7 @@ const TracksList = styled(List)(({ theme }) => ({
 const TrackNumber = styled(Box)(({ theme }) => ({
   width: 24,
   height: 24,
-  borderRadius: '4px',
+  borderRadius: 'var(--small-border-radius)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -306,23 +306,23 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
       {isLoading ? (
         <Box>
           <Box sx={{ display: 'flex', gap: 3, mb: 3 }}>
-            <Skeleton variant="rectangular" width={160} height={160} sx={{ borderRadius: '16px' }} />
+            <Skeleton variant="rectangular" width={160} height={160} sx={{ borderRadius: 'var(--small-border-radius)' }} />
             <Box sx={{ flex: 1 }}>
               <Skeleton variant="text" height={32} width="70%" />
               <Skeleton variant="text" height={24} width="50%" />
               <Skeleton variant="text" height={20} width="80%" />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 2 }}>
-                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
-                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: '18px' }} />
-                <Skeleton variant="rectangular" height={28} width={110} sx={{ borderRadius: '18px' }} />
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: 'var(--main-border-radius)' }} />
+                <Skeleton variant="rectangular" height={28} width={90} sx={{ borderRadius: 'var(--main-border-radius)' }} />
+                <Skeleton variant="rectangular" height={28} width={110} sx={{ borderRadius: 'var(--main-border-radius)' }} />
               </Box>
             </Box>
           </Box>
           <Box>
             {[...Array(5)].map((_, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
-                <Skeleton variant="rectangular" width={24} height={24} sx={{ borderRadius: '4px' }} />
-                <Skeleton variant="rectangular" width={40} height={40} sx={{ borderRadius: '16px' }} />
+                <Skeleton variant="rectangular" width={24} height={24} sx={{ borderRadius: 'var(--small-border-radius)' }} />
+                <Skeleton variant="rectangular" width={40} height={40} sx={{ borderRadius: 'var(--small-border-radius)' }} />
                 <Box sx={{ flex: 1 }}>
                   <Skeleton variant="text" height={20} width="60%" />
                   <Skeleton variant="text" height={16} width="40%" />
@@ -391,7 +391,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                         px: 1.5,
                         py: 0.5,
                         fontSize: 13,
-                        borderRadius: '18px',
+                        borderRadius: 'var(--main-border-radius)',
                         height: 28,
                         mr: 1,
                         background: 'rgba(182,157,248,0.12)',
@@ -467,7 +467,7 @@ const AlbumModal: React.FC<AlbumModalProps> = ({
                               : undefined
                           }
                           alt={track.title}
-                          sx={{ width: 40, height: 40, borderRadius: '16px', marginRight: '10px' }}
+                          sx={{ width: 40, height: 40, borderRadius: 'var(--small-border-radius)', marginRight: '10px' }}
                         >
                           <MusicNote sx={{ fontSize: 20 }} />
                         </Avatar>

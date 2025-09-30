@@ -135,7 +135,7 @@ export const processTextWithLinks = (text, theme) => {
             fontWeight: 500,
             backgroundColor: 'rgba(158, 119, 237, 0.15)',
             padding: '1px 4px',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
             wordBreak: 'normal',
           }}
         >
@@ -158,7 +158,7 @@ export const processTextWithLinks = (text, theme) => {
             fontWeight: 500,
             backgroundColor: 'rgba(158, 119, 237, 0.15)',
             padding: '1px 4px',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
             wordBreak: 'normal',
           }}
         >

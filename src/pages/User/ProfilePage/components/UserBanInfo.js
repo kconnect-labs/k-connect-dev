@@ -23,11 +23,10 @@ const UserBanInfo = ({
         sx={{
           mt: 2,
           p: 1.5,
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           backgroundColor: 'rgba(211, 47, 47, 0.7)',
           backdropFilter: 'blur(10px)',
           border: '1px solid rgba(211, 47, 47, 0.8)',
-          boxShadow: '0 0 15px rgba(211, 47, 47, 0.4)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: 1.5,
@@ -97,15 +96,14 @@ const UserBanInfo = ({
             py: 0.1,
             borderRadius: 4,
             border: '1px solid rgba(211, 47, 47, 0.8)',
-            boxShadow: '0 0 8px rgba(211, 47, 47, 0.5)',
             '&:hover': {
               background: 'rgba(211, 47, 47, 0.8)',
             },
             animation: 'pulse-red 2s infinite',
             '@keyframes pulse-red': {
-              '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
-              '70%': { boxShadow: '0 0 0 6px rgba(211, 47, 47, 0)' },
-              '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' },
+              '0%': { opacity: 0.8 },
+              '70%': { opacity: 1 },
+              '100%': { opacity: 0.8 },
             },
           }}
         >

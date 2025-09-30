@@ -250,7 +250,7 @@ const Badge = ({
                 height: '60%',
                 border: '2px solid rgba(255, 255, 255, 0.2)',
                 borderTop: '2px solid rgba(255, 255, 255, 0.6)',
-                borderRadius: '50%',
+                borderRadius: 'var(--avatar-border-radius)',
                 animation: 'spin 1s linear infinite',
               }}
             />
@@ -277,7 +277,7 @@ const Badge = ({
               height: '60%',
               border: '2px solid rgba(255, 255, 255, 0.2)',
               borderTop: '2px solid rgba(255, 255, 255, 0.6)',
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               animation: 'spin 1s linear infinite',
             }}
           />

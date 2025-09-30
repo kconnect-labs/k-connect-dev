@@ -132,7 +132,7 @@ const GoogleOneTap = ({ redirectPath = '/' }) => {
               background: 'var(--background-color)',
               backdropFilter: 'blur(20px)',
               border: '1px solid var(--border-color)',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               p: 3,
               display: 'flex',
               alignItems: 'center',

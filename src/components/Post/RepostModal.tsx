@@ -37,7 +37,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
           sx={{
             mb: 3,
             p: 1.5,
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             bgcolor: 'rgba(123, 104, 238, 0.08)',
             border: '1px solid rgba(123, 104, 238, 0.15)',
             fontSize: '0.85rem',
@@ -72,7 +72,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
             '& .MuiOutlinedInput-root': {
               bgcolor: 'rgba(255, 255, 255, 0.08)',
               backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: '1px solid rgba(255, 255, 255, 0.09)',
               transition: 'all 0.2s ease',
               '&:hover': {
@@ -104,7 +104,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
         sx={{
           p: 2.5,
           border: '1px solid rgba(255, 255, 255, 0.09)',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           bgcolor: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(5px)',
           boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
@@ -120,7 +120,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
             bottom: 0,
             bgcolor: 'rgba(100, 90, 140, 0.02)',
             backdropFilter: 'blur(5px)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             zIndex: 0,
           },
         }}
@@ -194,7 +194,7 @@ const RepostModal: React.FC<RepostModalProps> = ({
               width: '100%',
               height: '120px',
               objectFit: 'cover',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               mt: 1,
               opacity: 0.9,
               position: 'relative',

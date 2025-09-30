@@ -20,7 +20,7 @@
   color: inherit;
   box-sizing: border-box;
   background-color: var(--theme-background, rgba(0, 0, 0, 0.15));
-  border: 1px solid rgba(66, 66, 66, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: var(--theme-backdrop-filter);
   -webkit-backdrop-filter: var(--theme-backdrop-filter);
 }

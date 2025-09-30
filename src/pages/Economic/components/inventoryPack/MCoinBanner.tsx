@@ -17,7 +17,7 @@ const LIGHT_PURPLE_CHIP_BORDER = 'rgba(208, 188, 255, 0.4)';
 const StyledBanner = styled(Box)(({ theme }) => ({
   background: `linear-gradient(135deg, ${LIGHT_PURPLE_BG} 0%, ${LIGHT_PURPLE_ACCENT}10 100%)`,
   border: `2px solid ${LIGHT_PURPLE_BORDER}`,
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(3),
   margin: theme.spacing(1, 0),
   textAlign: 'center',

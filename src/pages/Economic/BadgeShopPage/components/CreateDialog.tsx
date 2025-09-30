@@ -131,7 +131,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
             border: '1px solid rgba(0, 0, 0, 0.12)',
             padding: '20px',
             marginBottom: '20px',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
           }}
         >
           <Typography
@@ -194,7 +194,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
               padding: '20px',
               marginBottom: '20px',
               textAlign: 'center',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
             }}
           >
             <Typography variant='h6' sx={{ mb: 2, color: 'text.primary' }}>
@@ -247,7 +247,7 @@ export const CreateDialog: React.FC<CreateDialogProps> = ({
             border: '1px solid rgba(0, 0, 0, 0.12)',
             padding: '20px',
             marginBottom: '20px',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
           }}
         >
           <Typography

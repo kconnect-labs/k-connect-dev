@@ -28,7 +28,7 @@
 .comment-input-avatar-img {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   border: 1px solid rgba(140, 82, 255, 0.15);
   object-fit: cover;
   transition: all 0.2s ease;
@@ -72,6 +72,8 @@
   max-height: 120px;
   font-family: inherit;
   padding: 4px 0;
+  overflow: hidden;
+  transition: height 0.1s ease;
 }
 
 .comment-input-textarea::placeholder {
@@ -101,7 +103,7 @@
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   transition: all 0.2s ease;
 }
 
@@ -131,7 +133,7 @@
   border: none;
   color: white;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   transition: all 0.2s ease;
 }
 
@@ -164,7 +166,7 @@
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   animation: spin 1s linear infinite;
 }
 
@@ -198,7 +200,7 @@
   border: none;
   color: white;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,51 +274,4 @@
   }
 }
 
-/* Dark theme adjustments */
-[data-theme="default"] .comment-input-container {
-  background: rgba(15, 15, 15, 0.98);
-}
 
-[data-theme="blur"] .comment-input-container {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="midnight"] .comment-input-container {
-  background: rgba(5, 8, 20, 0.95);
-}
-
-[data-theme="ocean"] .comment-input-container {
-  background: rgba(8, 25, 40, 0.92);
-}
-
-[data-theme="sunset"] .comment-input-container {
-  background: rgba(40, 15, 8, 0.94);
-}
-
-[data-theme="forest"] .comment-input-container {
-  background: rgba(8, 30, 15, 0.93);
-}
-
-[data-theme="aurora"] .comment-input-container {
-  background: rgba(12, 35, 25, 0.91);
-}
-
-[data-theme="cosmic"] .comment-input-container {
-  background: rgba(30, 8, 35, 0.96);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="neon"] .comment-input-container {
-  background: rgba(8, 20, 45, 0.89);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="vintage"] .comment-input-container {
-  background: rgba(35, 20, 8, 0.95);
-  backdrop-filter: blur(20px);
-}
-
-[data-theme="pickme"] .comment-input-container {
-  background: rgba(131, 61, 96, 0.93);
-}

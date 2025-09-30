@@ -524,11 +524,11 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
           },
           '&::-webkit-scrollbar-track': {
             background: 'rgba(255, 255, 255, 0.1)',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
           },
           '&::-webkit-scrollbar-thumb': {
             background: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: '4px',
+            borderRadius: 'var(--small-border-radius)',
             '&:hover': {
               background: 'rgba(255, 255, 255, 0.3)',
             },
@@ -542,7 +542,7 @@ const KonnectModal: React.FC<KonnectModalProps> = ({
                 key={user.id}
                 sx={{
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   mb: 1,
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.1)',

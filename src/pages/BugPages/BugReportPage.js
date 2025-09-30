@@ -286,7 +286,7 @@ const BugReportPage = () => {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           marginBottom: '5px',
         }}
@@ -316,7 +316,7 @@ const BugReportPage = () => {
               style={{
                 background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
                 border: '1px solid rgba(66, 66, 66, 0.5)',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
               }}
             />
             <small
@@ -345,7 +345,7 @@ const BugReportPage = () => {
               style={{
                 background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
                 border: '1px solid rgba(66, 66, 66, 0.5)',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
               }}
             />
             <small
@@ -374,7 +374,7 @@ const BugReportPage = () => {
                 style={{
                   background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
                   border: '1px solid rgba(66, 66, 66, 0.5)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <option value='moderator'>Модератор</option>
@@ -395,7 +395,7 @@ const BugReportPage = () => {
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                 }}
               >
                 <PhotoCamera style={{ fontSize: 20 }} />
@@ -417,7 +417,7 @@ const BugReportPage = () => {
                 alt='Preview'
                 className={styles['img-preview']}
                 style={{
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   border: '1px solid rgba(66, 66, 66, 0.5)',
                 }}
               />
@@ -436,7 +436,7 @@ const BugReportPage = () => {
             disabled={submitLoading}
             style={{
               background: '#d0bcff',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: 'none',
             }}
           >
@@ -473,7 +473,7 @@ const BugReportPage = () => {
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               border: '1px solid rgba(0, 0, 0, 0.12)',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
             }}
             onClick={() => handleBugClick(bug.id)}
@@ -567,7 +567,7 @@ const BugReportPage = () => {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
             marginBottom: '5px',
           }}
@@ -619,7 +619,7 @@ const BugReportPage = () => {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           marginBottom: '5px',
         }}
       >
@@ -632,7 +632,7 @@ const BugReportPage = () => {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           marginBottom: '5px',
         }}
@@ -666,7 +666,7 @@ const BugReportPage = () => {
                 )
               }
               style={{
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 border: '1px solid rgba(66, 66, 66, 0.5)',
               }}
             />
@@ -747,7 +747,7 @@ const BugReportPage = () => {
                   borderColor: '#4caf50',
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                 }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Решено')}
               >
@@ -760,7 +760,7 @@ const BugReportPage = () => {
                   borderColor: '#2196f3',
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                 }}
                 onClick={() =>
                   handleChangeStatus(selectedBug.id, 'В обработке')
@@ -775,7 +775,7 @@ const BugReportPage = () => {
                   borderColor: '#f44336',
                   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                 }}
                 onClick={() => handleChangeStatus(selectedBug.id, 'Открыт')}
               >
@@ -804,7 +804,7 @@ const BugReportPage = () => {
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 padding: '16px',
               }}
             >
@@ -872,7 +872,7 @@ const BugReportPage = () => {
           background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
           backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '16px',
+          borderRadius: 'var(--small-border-radius)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
         }}
       >
@@ -886,7 +886,7 @@ const BugReportPage = () => {
           style={{
             background: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
             border: '1px solid rgba(66, 66, 66, 0.5)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
           }}
         />
         <div
@@ -898,7 +898,7 @@ const BugReportPage = () => {
             disabled={!commentText.trim()}
             style={{
               background: '#d0bcff',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: 'none',
             }}
           >

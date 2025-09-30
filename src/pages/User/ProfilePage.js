@@ -100,7 +100,6 @@ const ProfilePage = () => {
     total_likes: 0,
   });
 
-  const [isOnline, setIsOnline] = useState(false);
   const [lastActive, setLastActive] = useState(null);
 
   const [fallbackAvatarUrl, setFallbackAvatarUrl] = useState('');
@@ -527,29 +526,6 @@ const ProfilePage = () => {
     }
   }, [user?.id]);
 
-  const fetchOnlineStatus = async () => {
-    try {
-      if (!username) return;
-
-      const response = await axios.get(
-        `/api/profile/${username}/online_status`
-      );
-
-      if (response.data.success) {
-        setIsOnline(response.data.is_online);
-        setLastActive(response.data.last_active);
-      }
-    } catch (error) {
-      console.error('Error fetching online status:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (username) {
-      fetchOnlineStatus();
-    }
-  }, [username]);
-
   useEffect(() => {
     if (user) {
       console.log('User state after setting:', {
@@ -820,7 +796,6 @@ const ProfilePage = () => {
             overlayEquippedItems={equippedItemsByLevel.overlayItems}
             isOwnProfile={isOwnProfile}
             isEditMode={isEditMode}
-            isOnline={isOnline}
             isCurrentUser={isCurrentUser}
             isCurrentUserModerator={isCurrentUserModerator}
             postsCount={postsCount}
@@ -845,11 +820,11 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
-                border: '1px solid rgba(66, 66, 66, 0.5)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
                 display: 'flex',
                 justifyContent: 'center',
                 marginBottom: '2px',
@@ -864,7 +839,7 @@ const ProfilePage = () => {
                 onClick={handleFollow}
                 fullWidth
                 sx={{
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   py: 1.2,
                   fontWeight: 'bold',
 
@@ -904,7 +879,7 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -930,7 +905,7 @@ const ProfilePage = () => {
                   )
                 }
                 sx={{
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   py: 1.2,
                   fontWeight: 'bold',
                   textTransform: 'none',
@@ -968,7 +943,7 @@ const ProfilePage = () => {
             <Paper
               sx={{
                 p: 1,
-                borderRadius: '18px',
+                borderRadius: 'var(--main-border-radius)',
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
                 WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
@@ -983,7 +958,7 @@ const ProfilePage = () => {
                 variant="outlined"
                 onClick={handleCancelEdit}
                 sx={{
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
 
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                   color: 'text.primary',
@@ -999,7 +974,7 @@ const ProfilePage = () => {
                 variant="contained"
                 onClick={handleSavePositions}
                 sx={{
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
 
                   backgroundColor: 'primary.main',
                   '&:hover': {
@@ -1062,13 +1037,14 @@ const ProfilePage = () => {
         >
           <Paper
             sx={{
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
               backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
               overflow: 'hidden',
               mb: '5px',
-              border: '1px solid rgba(66, 66, 66, 0.5)',
+              boxShadow: 'none',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
             }}
           >
             <Tabs

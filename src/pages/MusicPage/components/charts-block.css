@@ -147,7 +147,7 @@
   border: none;
   outline: none;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   width: 28px;
   height: 28px;
   display: flex;

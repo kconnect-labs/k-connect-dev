@@ -108,7 +108,7 @@ const ClickButton = styled(Button)(({ theme }) => ({
     left: '50%',
     width: 0,
     height: 0,
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     background: alpha('var(--theme-text-primary)', 0.3),
     transform: 'translate(-50%, -50%)',
     transition: 'width 0.3s ease, height 0.3s ease, opacity 0.3s ease',
@@ -1057,7 +1057,7 @@ const ClickerPage = () => {
                   height: 60,
                   minWidth: 60,
                   minHeight: 60,
-                  borderRadius: '50%',
+                  borderRadius: 'var(--avatar-border-radius)',
                   background: alpha('var(--theme-text-primary)', 0.15),
                   display: 'flex',
                   alignItems: 'center',
@@ -1197,7 +1197,7 @@ const ClickerPage = () => {
                   <Box
                     sx={{
                       p: 1.5,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       bgcolor: alpha(theme.palette.primary.main, 0.1),
                       display: 'flex',
                       mr: 2,
@@ -1294,7 +1294,7 @@ const ClickerPage = () => {
                   <Box
                     sx={{
                       p: 1.5,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       bgcolor: alpha(theme.palette.success.main, 0.1),
                       display: 'flex',
                       mr: 2,
@@ -1390,7 +1390,7 @@ const ClickerPage = () => {
                   <Box
                     sx={{
                       p: 1.5,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       bgcolor: alpha(theme.palette.secondary.main, 0.1),
                       display: 'flex',
                       mr: 2,
@@ -1798,7 +1798,7 @@ const ClickerPage = () => {
                           right: -5,
                           width: { xs: 20, md: 24 },
                           height: { xs: 20, md: 24 },
-                          borderRadius: '50%',
+                          borderRadius: 'var(--avatar-border-radius)',
                           bgcolor: 'background.paper',
                           display: 'flex',
                           alignItems: 'center',
@@ -1883,7 +1883,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -1905,7 +1905,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.success.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -1927,7 +1927,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -2019,7 +2019,7 @@ const ClickerPage = () => {
                           right: { xs: -5, md: -8 },
                           width: { xs: 22, md: 28 },
                           height: { xs: 22, md: 28 },
-                          borderRadius: '50%',
+                          borderRadius: 'var(--avatar-border-radius)',
                           bgcolor: 'background.paper',
                           display: 'flex',
                           alignItems: 'center',
@@ -2104,7 +2104,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 28, md: 40 },
                             height: { xs: 28, md: 40 },
                             display: 'flex',
@@ -2126,7 +2126,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.success.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 28, md: 40 },
                             height: { xs: 28, md: 40 },
                             display: 'flex',
@@ -2148,7 +2148,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 28, md: 40 },
                             height: { xs: 28, md: 40 },
                             display: 'flex',
@@ -2240,7 +2240,7 @@ const ClickerPage = () => {
                           right: -5,
                           width: { xs: 20, md: 24 },
                           height: { xs: 20, md: 24 },
-                          borderRadius: '50%',
+                          borderRadius: 'var(--avatar-border-radius)',
                           bgcolor: 'background.paper',
                           display: 'flex',
                           alignItems: 'center',
@@ -2325,7 +2325,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -2347,7 +2347,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.success.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -2369,7 +2369,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 24, md: 36 },
                             height: { xs: 24, md: 36 },
                             display: 'flex',
@@ -2428,7 +2428,7 @@ const ClickerPage = () => {
                       sx={{
                         width: { xs: 28, md: 40 },
                         height: { xs: 28, md: 40 },
-                        borderRadius: '50%',
+                        borderRadius: 'var(--avatar-border-radius)',
                         bgcolor: 'background.paper',
                         display: 'flex',
                         alignItems: 'center',
@@ -2502,7 +2502,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.primary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 22, md: 32 },
                             height: { xs: 22, md: 32 },
                             display: 'flex',
@@ -2523,7 +2523,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.success.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 22, md: 32 },
                             height: { xs: 22, md: 32 },
                             display: 'flex',
@@ -2544,7 +2544,7 @@ const ClickerPage = () => {
                         <Box
                           sx={{
                             bgcolor: alpha(theme.palette.secondary.main, 0.1),
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             width: { xs: 22, md: 32 },
                             height: { xs: 22, md: 32 },
                             display: 'flex',

@@ -309,7 +309,7 @@ const MiniGamesPage = () => {
             color='primary'
             onClick={() => navigate('/balance')}
             sx={{
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               textTransform: 'none',
               minWidth: 120,
             }}
@@ -429,7 +429,7 @@ const MiniGamesPage = () => {
                       <Box
                         sx={{
                           p: 2,
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           background: 'rgba(76, 175, 80, 0.15)',
                           color: '#4caf50',
                           display: 'flex',
@@ -472,7 +472,7 @@ const MiniGamesPage = () => {
                       <Box
                         sx={{
                           p: 2,
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           background: 'rgba(63, 81, 181, 0.15)',
                           color: '#3f51b5',
                           display: 'flex',
@@ -515,7 +515,7 @@ const MiniGamesPage = () => {
                       <Box
                         sx={{
                           p: 2,
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           background: 'rgba(233, 30, 99, 0.15)',
                           color: '#e91e63',
                           display: 'flex',
@@ -558,7 +558,7 @@ const MiniGamesPage = () => {
                       <Box
                         sx={{
                           p: 2,
-                          borderRadius: '16px',
+                          borderRadius: 'var(--small-border-radius)',
                           background: 'rgba(255, 152, 0, 0.15)',
                           color: '#ff9800',
                           display: 'flex',
@@ -642,7 +642,7 @@ const MiniGamesPage = () => {
                                       sx={{
                                         minWidth: 24,
                                         height: 24,
-                                        borderRadius: '50%',
+                                        borderRadius: 'var(--avatar-border-radius)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -710,7 +710,7 @@ const MiniGamesPage = () => {
                                       sx={{
                                         minWidth: 24,
                                         height: 24,
-                                        borderRadius: '50%',
+                                        borderRadius: 'var(--avatar-border-radius)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',

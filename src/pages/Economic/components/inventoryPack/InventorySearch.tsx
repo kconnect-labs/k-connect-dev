@@ -107,7 +107,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
         background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
         backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
         border: '1px solid rgba(0, 0, 0, 0.12)',
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
       }}
     >
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
@@ -229,7 +229,7 @@ export const InventorySearch: React.FC<InventorySearchProps> = ({
 
       {/* Отображение ошибки */}
       {error && (
-        <Box sx={{ mt: 1, p: 1, borderRadius: '16px', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
+        <Box sx={{ mt: 1, p: 1, borderRadius: 'var(--small-border-radius)', backgroundColor: 'var(--theme-background, rgba(244, 67, 54, 0.1))', border: '1px solid rgba(244, 67, 54, 0.3)' }}>
           <Typography variant="caption" sx={{ color: 'rgba(244, 67, 54, 0.9)' }}>
             Ошибка поиска: {error}
           </Typography>

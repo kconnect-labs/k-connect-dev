@@ -5,6 +5,7 @@ import { SidebarProvider } from '../../../context/SidebarContext';
 import axios from 'axios';
 import SidebarNavigation from './SidebarNavigation';
 import SidebarFooter from './SidebarFooter';
+import MiniPlayer from './MiniPlayer';
 import './Sidebar.css';
 
 const areEqual = (prevProps, nextProps) => {
@@ -92,7 +93,7 @@ const Sidebar = memo(({ isMobile }) => {
         </div>
       </SidebarProvider>
 
-      <SidebarFooter primaryColor={themeValues.primaryColor} />
+      <MiniPlayer />
     </div>
   );
 }, areEqual);

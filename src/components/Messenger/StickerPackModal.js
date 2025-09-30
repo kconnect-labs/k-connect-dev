@@ -230,12 +230,12 @@ const cardStyles = {
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(0, 0, 0, 0.12)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   color: 'var(--theme-text-primary, inherit)',
 };
 
 const buttonStyles = {
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: '1px solid rgba(0, 0, 0, 0.12)',

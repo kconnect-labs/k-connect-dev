@@ -64,7 +64,7 @@ const InstantStickerGrid = React.memo(({ stickers, onStickerClick, pack }) => {
               sx={{
                 width: '100%',
                 aspectRatio: '1',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 overflow: 'hidden',
                 cursor: 'pointer',
                 display: 'flex',
@@ -307,7 +307,7 @@ const StickerPicker = ({ onStickerSelect, onClose, isOpen }) => {
                           sx={{
                             width: 32,
                             height: 32,
-                            borderRadius: '6px',
+                            borderRadius: 'var(--small-border-radius)',
                             overflow: 'hidden',
                             display: 'flex',
                             alignItems: 'center',

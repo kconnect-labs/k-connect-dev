@@ -166,7 +166,7 @@ const HeaderBlock = styled(Box)(({ theme }) => ({
   border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
       background: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(10px)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   position: 'relative',
   overflow: 'hidden',
   zIndex: 2,
@@ -183,7 +183,7 @@ const HeaderBlock = styled(Box)(({ theme }) => ({
     background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
     opacity: 0.15,
     filter: 'blur(18px)',
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     zIndex: 1,
     pointerEvents: 'none',
   },
@@ -198,7 +198,7 @@ const HeaderBlock = styled(Box)(({ theme }) => ({
     background: 'linear-gradient(13.89deg, #B69DF8 47.02%, #D0BCFF 97.69%)',
     opacity: 0.15,
     filter: 'blur(18px)',
-    borderRadius: '50%',
+    borderRadius: 'var(--avatar-border-radius)',
     zIndex: 1,
     pointerEvents: 'none',
   },
@@ -355,7 +355,7 @@ const GrantsPage: React.FC = () => {
                           sx={{
                             width: 8,
                             height: 8,
-                            borderRadius: '50%',
+                            borderRadius: 'var(--avatar-border-radius)',
                             background: '#D0BCFF',
                           }}
                         />

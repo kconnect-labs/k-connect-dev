@@ -150,7 +150,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               height: 80,
               p: 2,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
           >
@@ -191,7 +191,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
               mb: 3,
               p: 3,
               bgcolor: 'rgba(255, 255, 255, 0.03)',
-              borderRadius: '18px',
+              borderRadius: 'var(--main-border-radius)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}
           >
@@ -228,7 +228,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '20px',
             marginBottom: '20px',
           }}
@@ -253,7 +253,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                 alignItems: 'center',
                 p: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                 },
@@ -284,7 +284,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                 alignItems: 'center',
                 p: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.03)',
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.05)',
                 },
@@ -323,7 +323,7 @@ export const PurchaseDialog: React.FC<PurchaseDialogProps> = ({
                   alignItems: 'center',
                   p: 2,
                   bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                   border: '1px solid rgba(76, 175, 80, 0.3)',
                   '&:hover': {
                     bgcolor: 'rgba(76, 175, 80, 0.05)',

@@ -15,7 +15,7 @@ function ArtistCard({ artist, index, onClick }) {
       <Zoom in={true} style={{ transitionDelay: `${150 * (index % 8)}ms` }}>
         <Card
           sx={{
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             cursor: 'pointer',
                 backgroundColor: 'var(--theme-background, rgba(18,18,18,0.6))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(10px))',

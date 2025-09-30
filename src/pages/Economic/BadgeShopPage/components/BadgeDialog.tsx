@@ -117,7 +117,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
             mb: 3,
             p: 3,
             bgcolor: 'rgba(255, 255, 255, 0.03)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             border: '1px solid rgba(255, 255, 255, 0.08)',
           }}
         >
@@ -154,7 +154,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
             background: 'rgba(255, 255, 255, 0.03)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             padding: '20px',
             marginBottom: '20px',
           }}
@@ -179,7 +179,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 p: 2,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.02)',
                 },
@@ -209,7 +209,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 p: 2,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.02)',
                 },
@@ -233,7 +233,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   p: 2,
-                  borderRadius: '16px',
+                  borderRadius: 'var(--small-border-radius)',
                   '&:hover': {
                     bgcolor: 'rgba(255, 255, 255, 0.02)',
                   },
@@ -257,7 +257,7 @@ export const BadgeDialog: React.FC<BadgeDialogProps> = ({
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 p: 2,
-                borderRadius: '16px',
+                borderRadius: 'var(--small-border-radius)',
                 '&:hover': {
                   bgcolor: 'rgba(255, 255, 255, 0.02)',
                 },

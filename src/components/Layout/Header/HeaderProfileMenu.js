@@ -75,7 +75,7 @@ const HeaderProfileMenu = ({
             backdropFilter: 'var(--theme-backdrop-filter)',
             '& .MuiMenuItem-root': {
               padding: '8px 14px',
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               margin: '1px 6px',
               minHeight: '36px',
               transition: 'all 0.2s',

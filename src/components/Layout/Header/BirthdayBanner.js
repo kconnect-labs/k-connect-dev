@@ -41,7 +41,7 @@ const BannerContainer = styled(motion.div)(({ theme, isMobile }) => ({
 const BirthdayIcon = styled(Box)(({ theme }) => ({
   width: 28,
   height: 28,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
   display: 'flex',
   alignItems: 'center',

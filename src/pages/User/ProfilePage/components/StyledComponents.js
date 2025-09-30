@@ -9,7 +9,7 @@ export const StyledSelect = styled(TextField)(({ theme }) => ({
   '& .MuiMenu-paper': {
       background: 'var(--theme-background, rgba(255, 255, 255, 0.03)) !important',
   backdropFilter: 'var(--theme-backdrop-filter, blur(10px)) !important',
-    border: '1px solid rgba(66, 66, 66, 0.5) !important',
+    border: '1px solid rgba(255, 255, 255, 0.12) !important',
     '& .MuiMenuItem-root': {
       height: '20px !important',
       fontSize: '0.75rem !important',
@@ -28,7 +28,7 @@ export const PostInput = styled(TextField)(({ theme }) => ({
         ? 'rgba(0, 0, 0, 0.2)'
         : 'rgba(0, 0, 0, 0.03)',
     backdropFilter: 'blur(5px)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     border:
       theme.palette.mode === 'dark'
         ? '1px solid rgba(255, 255, 255, 0.05)'
@@ -46,7 +46,6 @@ export const PostInput = styled(TextField)(({ theme }) => ({
     },
     '&.Mui-focused': {
       borderColor: 'rgba(208, 188, 255, 0.5)',
-      boxShadow: '0 0 0 2px rgba(208, 188, 255, 0.1)',
     },
   },
   '& .MuiOutlinedInput-notchedOutline': {
@@ -64,11 +63,10 @@ export const PostActions = styled(Box)(({ theme }) => ({
 }));
 
 export const PublishButton = styled(Button)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   textTransform: 'none',
   fontSize: '0.6rem',
   fontWeight: 600,
-  boxShadow: '0 2px 8px rgba(124, 77, 255, 0.25)',
   padding: theme.spacing(0.4, 1.5),
   background:
     theme.palette.mode === 'dark'
@@ -76,7 +74,6 @@ export const PublishButton = styled(Button)(({ theme }) => ({
       : 'linear-gradient(90deg, rgb(124 77 255) 0%, rgb(148 108 255) 100%)',
   color: theme.palette.mode === 'dark' ? '#000' : '#fff',
   '&:hover': {
-    boxShadow: '0 4px 12px rgba(124, 77, 255, 0.35)',
   },
   '&.Mui-disabled': {
     background:

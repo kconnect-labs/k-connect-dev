@@ -1668,7 +1668,6 @@ export const MusicProvider = ({ children }) => {
           params.nocache = Math.random();
         }
 
-        // Убрана задержка для ускорения загрузки
 
         if (type !== 'liked') {
           response = await axios.get(endpoint, { params });
@@ -2541,6 +2540,24 @@ export const MusicProvider = ({ children }) => {
     }
   }, []);
 
+  const clearPlayer = useCallback(() => {
+    audioRef.current.pause();
+    nextAudioRef.current.pause();
+    audioRef.current.src = '';
+    nextAudioRef.current.src = '';
+    setCurrentTrack(null);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+    try {
+      localStorage.removeItem('currentTrack');
+      localStorage.removeItem('currentSection');
+    } catch (error) {
+      console.error('Ошибка при очистке localStorage:', error);
+    } 
+    nextTrackCacheRef.current = null;
+  }, []);
+
   
   useEffect(() => {
     
@@ -2600,6 +2617,7 @@ export const MusicProvider = ({ children }) => {
     closeFullScreenPlayer,
     forceLoadTracks,
     playTrackById,
+    clearPlayer,
     enableTimeUpdates,
     disableTimeUpdates,
   };

@@ -11,7 +11,7 @@ const MusicTrackContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(1, 1.5),
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   marginBottom: theme.spacing(0.3),
   border: '1px solid rgba(255, 255, 255, 0.07)',

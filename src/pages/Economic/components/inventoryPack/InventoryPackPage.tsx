@@ -703,7 +703,7 @@ const InventoryPackPage = () => {
             background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
             backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
             border: '1px solid rgba(66, 66, 66, 0.5)',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
           },
         }}

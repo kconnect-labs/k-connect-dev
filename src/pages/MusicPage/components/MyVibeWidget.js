@@ -619,7 +619,7 @@ const CurrentTrackInfo = styled(Box)({
   zIndex: 3,
       background: 'var(--theme-background)',
     backdropFilter: 'var(--theme-backdrop-filter)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: '8px 12px',
   border: '1px solid rgba(66, 66, 66, 0.5)',
 });
@@ -665,7 +665,7 @@ const StaticParticles = React.memo(() => {
             top: `${particle.top}%`,
             left: `${particle.left}%`,
             background: 'rgba(255, 255, 255, 0.6)',
-            borderRadius: '50%',
+            borderRadius: 'var(--avatar-border-radius)',
             boxShadow: '0 0 6px rgba(255, 255, 255, 0.4)',
             animation: `${particleFloat} ${particle.duration}s ease-in-out ${particle.delay}s infinite alternate`,
           }}

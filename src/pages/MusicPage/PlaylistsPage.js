@@ -35,7 +35,7 @@ import axios from 'axios';
 
 
 const PlaylistCard = styled(Card)(({ theme }) => ({
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   cursor: 'pointer',
   backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
   backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',

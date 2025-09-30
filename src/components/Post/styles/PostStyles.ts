@@ -28,7 +28,7 @@ export const PostCard = styled(Card, {
   WebkitBackdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
   border: isPinned
     ? `1px solid ${statusColor ? `${statusColor}33` : 'rgba(140, 82, 255, 0.2)'}`
-    : '1px solid rgba(66, 66, 66, 0.5)',
+    : '1px solid rgba(255, 255, 255, 0.12)',
   '&:hover': {
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
   },
@@ -38,10 +38,10 @@ export const FactCard = styled(Box)(({ theme }) => ({
   marginTop: theme.spacing(2),
   marginBottom: theme.spacing(2),
   padding: theme.spacing(2),
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   backgroundColor: 'rgba(255, 255, 255, 0.05)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(66, 66, 66, 0.5)',
+  border: '1px solid rgba(255, 255, 255, 0.12)',
   position: 'relative',
   '&::before': {
     content: '""',
@@ -89,7 +89,7 @@ export const NSFWOverlay = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   zIndex: 2,
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -114,7 +114,7 @@ export const NSFWIconContainer = styled(Box)(({ theme }) => ({
 }));
 
 export const NSFWButton = styled(Box)(({ theme }) => ({
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   fontWeight: 500,
   marginBottom: theme.spacing(1),
   background: '#5c5b5e',

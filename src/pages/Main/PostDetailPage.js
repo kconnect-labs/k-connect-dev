@@ -20,22 +20,17 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ImageGrid from '../../components/Post/ImageGrid';
 import SimpleImageViewer from '../../components/SimpleImageViewer';
 import { Post } from '../../components/Post';
-import {
-  formatTimeAgo,
-} from '../../utils/dateUtils';
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SEO from '../../components/SEO';
 
-import { requireAuth } from '../../utils/authUtils';
 import { usePostDetail } from '../../context/PostDetailContext';
 import { useLanguage } from '../../context/LanguageContext';
 import UniversalModal from '../../UIKIT/UniversalModal';
 import Comment from '../../UIKIT/Comment/Comment';
 import CommentInput from '../../UIKIT/CommentInput/CommentInput';
-import ReplyInput from '../../UIKIT/ReplyInput/ReplyInput';
 import './PostDetailPage.css';
 
 const sanitizeImagePath = imagePath => {
@@ -57,7 +52,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
+const PostDetailPage = ({ isOverlay = false, overlayPostId = null, disablePadding = false }) => {
   const { postId: paramId } = useParams();
   const postId = overlayPostId || paramId;
   const { user, isAuthenticated } = useContext(AuthContext);
@@ -885,7 +880,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
       )}
 
       {/* Comments Section */}
-      <div className="comments-section" style={{ padding: isOverlay ? '0' : '0 16px', marginBottom: isOverlay ? 0 : 16 }}>
+      <div className="comments-section" style={{ padding: disablePadding ? '0' : (isOverlay ? '0' : '0 16px'), marginBottom: isOverlay ? 0 : 16 }}>
         {commentError && (
           <div className="comment-error">
             <Alert
@@ -1023,7 +1018,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
             boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
             width: '100%',
             maxWidth: '400px',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             border: '1px solid rgba(100, 90, 140, 0.1)',
             '&:before': {
               content: '""',
@@ -1032,7 +1027,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               background:
                 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
               backdropFilter: 'blur(30px)',
@@ -1134,7 +1129,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
             boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
             width: '100%',
             maxWidth: '400px',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             border: '1px solid rgba(100, 90, 140, 0.1)',
             '&:before': {
               content: '""',
@@ -1143,7 +1138,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              borderRadius: '16px',
+              borderRadius: 'var(--small-border-radius)',
               background:
                 'linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.75))',
               backdropFilter: 'blur(30px)',
@@ -1239,6 +1234,7 @@ const PostDetailPage = ({ isOverlay = false, overlayPostId = null }) => {
         onBack={handleClose}
         disableEscapeKeyDown={false}
         addBottomPadding
+        disablePadding={disablePadding}
         maxWidthCustom={850}
       >
         {renderContent()}

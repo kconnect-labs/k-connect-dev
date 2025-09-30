@@ -1920,7 +1920,7 @@ const LyricsEditorContent: React.FC<{
           style: {
             backgroundColor: 'var(--theme-background, rgba(25, 25, 25, 0.95))',
             border: '1px solid rgba(0, 0, 0, 0.12)',
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             color: 'white',
             minWidth: '250px',
           },

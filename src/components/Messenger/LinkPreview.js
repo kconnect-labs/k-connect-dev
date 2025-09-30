@@ -73,7 +73,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
         mt: 1,
         mb: 0.5,
         overflow: 'hidden',
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         backgroundColor: colors.background,
         border: `1px solid ${colors.border}`,
         display: 'flex',
@@ -187,7 +187,7 @@ const LinkPreview = ({ url, isCurrentUser = false }) => {
                 backgroundColor: colors.accent + '15',
                 py: 0.2,
                 px: 0.6,
-                borderRadius: '6px',
+                borderRadius: 'var(--small-border-radius)',
                 width: 'fit-content',
                 maxWidth: '100%',
               }}

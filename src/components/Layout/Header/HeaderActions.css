@@ -81,7 +81,7 @@
 .profile-avatar {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   border: 1px solid rgba(208, 188, 255, 0.3);
   object-fit: cover;
   transition: all 0.2s ease;

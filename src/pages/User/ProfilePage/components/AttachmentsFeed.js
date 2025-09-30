@@ -31,7 +31,7 @@ import Dialog from '@mui/material/Dialog';
 
 const AttachmentCard = styled(Card)(({ theme }) => ({
   position: 'relative',
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   overflow: 'hidden',
   cursor: 'pointer',
   transition: 'all 0.3s ease',
@@ -40,7 +40,6 @@ const AttachmentCard = styled(Card)(({ theme }) => ({
   border: '1px solid rgba(66, 66, 66, 0.5)',
   '&:hover': {
     transform: 'translateY(-4px)',
-    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.3)',
     '& .attachment-overlay': {
       opacity: 1,
     },
@@ -324,7 +323,7 @@ const AttachmentsFeed = ({
                       width: '100%',
                       aspectRatio: '16/9',
                       background: '#11111C',
-                      borderRadius: '16px',
+                      borderRadius: 'var(--small-border-radius)',
                       overflow: 'hidden',
                     }}
                   >
@@ -338,7 +337,7 @@ const AttachmentsFeed = ({
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        borderRadius: '16px',
+                        borderRadius: 'var(--small-border-radius)',
                         display: 'block',
                       }}
                       preload='metadata'
@@ -407,7 +406,7 @@ const AttachmentsFeed = ({
                     width: 32,
                     height: 32,
                     bgcolor: 'rgba(0, 0, 0, 0.7)',
-                    borderRadius: '50%',
+                    borderRadius: 'var(--avatar-border-radius)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -454,7 +453,6 @@ const AttachmentsFeed = ({
           PaperProps={{
             sx: {
               background: 'rgba(0,0,0,0.95)',
-              boxShadow: 'none',
               borderRadius: 'var(--main-border-radius)',
               p: 0,
               m: 0,

@@ -277,7 +277,7 @@ const ChatItem = ({
               right: '2px',
               width: '12px',
               height: '12px',
-              borderRadius: '50%',
+              borderRadius: 'var(--avatar-border-radius)',
               backgroundColor: '#4CAF50',
               border: '2px solid var(--background-color, #1A1A1A)',
               zIndex: 2,

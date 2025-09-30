@@ -25,7 +25,7 @@
 .comment-avatar {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   border: 1px solid rgba(140, 82, 255, 0.15);
   object-fit: cover;
   transition: all 0.2s ease;
@@ -323,7 +323,7 @@
 .reply-avatar {
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   border: 1px solid rgba(140, 82, 255, 0.1);
   object-fit: cover;
   transition: all 0.2s ease;

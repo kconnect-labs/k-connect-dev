@@ -16,7 +16,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.6))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-    borderRadius: '14px',
+    borderRadius: 'var(--small-border-radius)',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: 'transparent',
@@ -37,7 +37,7 @@ const ImagePreview = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '150px',
     objectFit: 'cover',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
   },
 }));
 

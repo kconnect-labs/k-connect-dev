@@ -396,7 +396,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                           position: 'absolute',
                           width: 8,
                           height: 8,
-                          borderRadius: '50%',
+                          borderRadius: 'var(--avatar-border-radius)',
                           backgroundColor: '#4caf50',
                           right: 16,
                           top: 16,
@@ -465,7 +465,7 @@ const SessionsForm: React.FC<SessionsFormProps> = ({ onSuccess }) => {
                     },
                     '&::-webkit-scrollbar-thumb': {
                       backgroundColor: '#333',
-                      borderRadius: '4px',
+                      borderRadius: 'var(--small-border-radius)',
                     },
                   }}
                 >

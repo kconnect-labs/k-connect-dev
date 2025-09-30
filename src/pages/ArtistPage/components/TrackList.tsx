@@ -35,7 +35,7 @@ const StyledListItem = styled(Box)<{ isCurrentTrack?: boolean }>(({ theme, isCur
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 3),
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   cursor: 'pointer',
   transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
   backgroundColor: isCurrentTrack 
@@ -87,7 +87,7 @@ const PlayButtonOverlay = styled(Box)(({ theme }) => ({
 const TrackAvatar = styled(Avatar)(({ theme }) => ({
   width: 48,
   height: 48,
-  borderRadius: '6px',
+  borderRadius: 'var(--small-border-radius)',
   marginRight: theme.spacing(2),
   flexShrink: 0,
 }));

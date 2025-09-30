@@ -567,11 +567,11 @@ const PlaylistModal = ({
                       },
                       '&::-webkit-scrollbar-track': {
                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        borderRadius: '4px',
+                        borderRadius: 'var(--small-border-radius)',
                       },
                       '&::-webkit-scrollbar-thumb': {
                         backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        borderRadius: '4px',
+                        borderRadius: 'var(--small-border-radius)',
                         '&:hover': {
                           backgroundColor: 'rgba(255, 255, 255, 0.5)',
                         },

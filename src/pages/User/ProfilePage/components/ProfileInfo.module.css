@@ -4,7 +4,6 @@
   background: var(--theme-background, rgba(255, 255, 255, 0.03));
   backdrop-filter: var(--theme-backdrop-filter, blur(20px));
   -webkit-backdrop-filter: var(--theme-backdrop-filter, blur(20px));
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(66, 66, 66, 0.5);
 }
 
@@ -243,7 +242,7 @@
   justify-content: center;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
+  border-radius: var(--avatar-border-radius);
   border: 1px solid;
   animation: pulse-subscription 2s infinite;
 }
@@ -350,13 +349,10 @@
 
 @keyframes pulse-subscription {
   0% {
-    box-shadow: 0 0 0 0 rgba(186, 104, 200, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 8px rgba(186, 104, 200, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(186, 104, 200, 0);
   }
 }
 

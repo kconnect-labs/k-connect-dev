@@ -10,7 +10,7 @@ const ImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   height: '100%',
-  borderRadius: '16px',
+  borderRadius: '0px',
   overflow: 'hidden',
   cursor: 'zoom-in',
   display: 'flex',
@@ -418,7 +418,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
             width: '100%',
             height: '100%',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            borderRadius: '16px',
+            borderRadius: '0px',
             color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '0.8rem',
             padding: '10px',
@@ -510,7 +510,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
       <Box
         sx={{
           position: 'relative',
-          borderRadius: '16px',
+          borderRadius: '0px',
           overflow: 'hidden',
           mb: 1,
         }}
@@ -529,6 +529,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           <SimpleImageViewer
             isOpen={lightboxOpen}
             images={limitedImages.map(formatImageUrl)}
+            src={limitedImages[selectedIndex || 0] ? formatImageUrl(limitedImages[selectedIndex || 0]) : ''}
             onClose={closeLightbox}
             initialIndex={selectedIndex || 0}
           />
@@ -546,7 +547,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
           display: 'grid',
           gap: '4px',
           ...layoutProps,
-          borderRadius: '16px',
+          borderRadius: '0px',
           overflow: 'hidden',
         }}
       >
@@ -573,7 +574,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
               backgroundColor: 'rgba(0, 0, 0, 0.7)',
               color: '#fff',
               padding: '4px 8px',
-              borderRadius: '8px 0 0 0',
+              borderRadius: '0px',
               fontSize: '0.8rem',
               fontWeight: 'bold',
             }}
@@ -587,6 +588,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
         <SimpleImageViewer
           isOpen={lightboxOpen}
           images={limitedImages.map(formatImageUrl)}
+          src={limitedImages[selectedIndex || 0] ? formatImageUrl(limitedImages[selectedIndex || 0]) : ''}
           onClose={closeLightbox}
           initialIndex={selectedIndex || 0}
         />

@@ -14,7 +14,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(255, 87, 87, 0.2)',
-  borderRadius: '24px',
+  borderRadius: 'var(--large-border-radius)',
   textAlign: 'center',
   marginBottom: theme.spacing(4),
   boxShadow: '0 8px 32px rgba(255, 87, 87, 0.1)',
@@ -30,7 +30,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     background: 'linear-gradient(90deg, #ff5757, #ff8a80)',
   },
   [theme.breakpoints.down('md')]: {
-    borderRadius: '20px',
+    borderRadius: 'var(--main-border-radius)',
     marginBottom: theme.spacing(3),
   },
 }));
@@ -45,7 +45,7 @@ const StyledCardContent = styled(CardContent)(({ theme }) => ({
 const IconContainer = styled(Box)(({ theme }) => ({
   width: 120,
   height: 120,
-  borderRadius: '50%',
+  borderRadius: 'var(--avatar-border-radius)',
   backgroundColor: 'rgba(255, 87, 87, 0.1)',
   display: 'flex',
   alignItems: 'center',
@@ -118,7 +118,7 @@ const ActionButtons = styled(Box)(({ theme }) => ({
 }));
 
 const ActionButton = styled(Button)(({ theme }) => ({
-  borderRadius: '20px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(1.5, 3),
   fontWeight: 600,
   textTransform: 'none',

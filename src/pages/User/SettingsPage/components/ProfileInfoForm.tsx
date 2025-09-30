@@ -229,7 +229,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
     background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -380,7 +380,7 @@ const ProfileInfoForm: React.FC<ProfileInfoFormProps> = ({
           onClick={handleSave}
           disabled={saving || loading || !hasChanges()}
           sx={{
-            borderRadius: '18px',
+            borderRadius: 'var(--main-border-radius)',
             py: 1,
             px: 3,
             minWidth: 140,

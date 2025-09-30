@@ -63,7 +63,7 @@ const AlbumCard = styled(Card)(({ theme }) => ({
   background: 'var(--theme-background)',
   backdropFilter: 'var(--theme-backdrop-filter)',
   border: '1px solid rgba(66, 66, 66, 0.5)',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   overflow: 'hidden',
   cursor: 'pointer',
   transition: 'all 0.3s ease',
@@ -203,7 +203,7 @@ const LoadingSkeleton: React.FC = () => (
 );
 
 const ShowAllButton = styled(Button)(({ theme }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(1, 3),
   fontWeight: 600,
   fontSize: '0.9rem',

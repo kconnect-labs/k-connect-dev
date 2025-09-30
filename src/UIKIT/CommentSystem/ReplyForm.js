@@ -15,7 +15,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 const QuotedMessage = styled(Box)(({ theme }) => ({
       backgroundColor: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   padding: theme.spacing(1, 1.5),
   marginBottom: theme.spacing(1),
   borderLeft: '3px solid rgba(140, 82, 255, 0.5)',
@@ -25,7 +25,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'var(--theme-background, rgba(32, 32, 36, 0.6))',
     backdropFilter: 'var(--theme-backdrop-filter, blur(5px))',
-    borderRadius: '14px',
+    borderRadius: 'var(--small-border-radius)',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: 'transparent',
@@ -46,7 +46,7 @@ const ImagePreview = styled(Box)(({ theme }) => ({
     width: '100%',
     maxHeight: '150px',
     objectFit: 'cover',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
   },
 }));
 

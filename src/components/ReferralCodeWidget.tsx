@@ -68,7 +68,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(20px)',
           border: '1px solid rgba(0, 0, 0, 0.12)',
-          borderRadius: '18px',
+          borderRadius: 'var(--main-border-radius)',
           padding: '16px',
           display: 'flex',
           alignItems: 'center',
@@ -82,7 +82,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             height: '20px',
             border: '2px solid rgba(255, 255, 255, 0.1)',
             borderTop: '2px solid #D0BCFF',
-            borderRadius: '50%',
+            borderRadius: 'var(--avatar-border-radius)',
             animation: 'spin 1s linear infinite',
           }}
         />
@@ -103,7 +103,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
         background: 'rgba(255, 255, 255, 0.03)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(0, 0, 0, 0.12)',
-        borderRadius: '18px',
+        borderRadius: 'var(--main-border-radius)',
         padding: '16px',
       }}
     >
@@ -118,7 +118,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
         <div
           style={{
             background: 'linear-gradient(135deg, #D0BCFF 0%, #b388ff 100%)',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             padding: '6px',
             display: 'flex',
             alignItems: 'center',
@@ -157,7 +157,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             alignItems: 'center',
             gap: '8px',
             background: 'rgba(255, 255, 255, 0.05)',
-            borderRadius: '16px',
+            borderRadius: 'var(--small-border-radius)',
             padding: '12px',
             border: '1px solid rgba(66, 66, 66, 0.5)',
           }}
@@ -179,7 +179,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             style={{
               background: copied ? '#4caf50' : 'rgba(255, 255, 255, 0.1)',
               border: 'none',
-              borderRadius: '6px',
+              borderRadius: 'var(--small-border-radius)',
               padding: '6px',
               cursor: 'pointer',
               display: 'flex',
@@ -218,7 +218,7 @@ const ReferralCodeWidget: React.FC<ReferralCodeWidgetProps> = ({
             style={{
               background: 'linear-gradient(135deg, #D0BCFF 0%, #b388ff 100%)',
               border: 'none',
-              borderRadius: '6px',
+              borderRadius: 'var(--small-border-radius)',
               padding: '8px 12px',
               color: '#000000',
               fontSize: '12px',

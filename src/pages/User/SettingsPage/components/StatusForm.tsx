@@ -442,7 +442,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                   background: `linear-gradient(135deg, ${statusColor || '#D0BCFF'} 0%, ${gradientColor} 100%)`,
                   color: textColor,
                   padding: '8px 12px',
-                  borderRadius: '18px',
+                  borderRadius: 'var(--main-border-radius)',
                   fontSize: '14px',
                   fontWeight: 500,
                   whiteSpace: 'nowrap',
@@ -481,7 +481,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                 background: 'var(--theme-background, rgba(255, 255, 255, 0.03))',
                 backdropFilter: 'var(--theme-backdrop-filter, blur(20px))',
     border: '1px solid rgba(0, 0, 0, 0.12)',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     padding: '20px',
     marginBottom: '20px',
   };
@@ -635,7 +635,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                     sx={{
                       width: 36,
                       height: 36,
-                      borderRadius: '50%',
+                      borderRadius: 'var(--avatar-border-radius)',
                       bgcolor: color,
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
@@ -879,7 +879,7 @@ const StatusForm: React.FC<StatusFormProps> = ({
                     isSaving ? <CircularProgress size={20} /> : <CheckIcon />
                   }
                   sx={{
-                    borderRadius: '18px',
+                    borderRadius: 'var(--main-border-radius)',
                     py: 1,
                     px: 3,
                     minWidth: 140,

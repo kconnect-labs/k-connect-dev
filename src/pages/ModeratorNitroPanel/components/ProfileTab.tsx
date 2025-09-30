@@ -44,7 +44,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({ title, enabled, icon })
     <Box
       sx={{
         p: 1,
-        borderRadius: '12px',
+        borderRadius: 'var(--small-border-radius)',
         background: enabled
           ? 'linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%)'
           : 'rgba(255, 255, 255, 0.03)',
@@ -71,7 +71,7 @@ const PermissionItem: React.FC<PermissionItemProps> = ({ title, enabled, icon })
         sx={{
           width: 32,
           height: 32,
-          borderRadius: '8px',
+          borderRadius: 'var(--small-border-radius)',
           background: enabled
             ? 'linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.1) 100%)'
             : 'rgba(255, 255, 255, 0.05)',

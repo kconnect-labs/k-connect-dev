@@ -61,7 +61,7 @@ const SearchSection = styled(Box)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme, themecolor }) => ({
   '& .MuiOutlinedInput-root': {
     backgroundColor: 'var(--theme-background, rgba(0, 0, 0, 0.2))',
-    borderRadius: '18px',
+    borderRadius: 'var(--main-border-radius)',
     '& fieldset': {
       borderColor: 'rgba(255, 255, 255, 0.1)',
     },
@@ -171,7 +171,7 @@ const ChannelDescription = styled(Typography)(({ theme }) => ({
 const StyledChip = styled(Chip, {
   shouldForwardProp: prop => prop !== 'isFollowing' && prop !== 'themecolor',
 })(({ theme, isFollowing, themecolor }) => ({
-  borderRadius: '16px',
+  borderRadius: 'var(--small-border-radius)',
   fontWeight: 500,
   background: isFollowing
     ? 'rgba(255, 255, 255, 0.1)'
@@ -197,7 +197,7 @@ const StyledChip = styled(Chip, {
 const LoadMoreButton = styled(Button, {
   shouldForwardProp: prop => prop !== 'themecolor',
 })(({ theme, themecolor }) => ({
-  borderRadius: '18px',
+  borderRadius: 'var(--main-border-radius)',
   padding: theme.spacing(1, 3),
   marginTop: theme.spacing(2),
   textTransform: 'none',
@@ -281,13 +281,13 @@ const ChannelCardLoader = () => {
             variant='rectangular'
             width='30%'
             height={22}
-            sx={{ borderRadius: '6px', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
+            sx={{ borderRadius: 'var(--small-border-radius)', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
           />
           <Skeleton
             variant='rectangular'
             width='40%'
             height={32}
-            sx={{ borderRadius: '16px', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
+            sx={{ borderRadius: 'var(--small-border-radius)', bgcolor: 'rgba(255, 255, 255, 0.1)' }}
           />
         </Box>
       </Box>
@@ -593,7 +593,7 @@ const ChannelsPage = () => {
                   bgcolor: 'rgba(255, 255, 255, 0.08)',
                   color: 'rgba(255, 255, 255, 0.9)',
                   border: '1px solid rgba(66, 66, 66, 0.5)',
-                  borderRadius: '6px',
+                  borderRadius: 'var(--small-border-radius)',
                   height: '22px',
                   '& .MuiChip-label': {
                     px: 1,
