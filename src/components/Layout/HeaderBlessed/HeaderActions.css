@@ -318,11 +318,7 @@
     box-shadow: none !important;
   }
   
-  /* Убираем блюр у всех элементов хедера, кроме кнопок */
-  [data-theme="BlessedBlur"] .MuiAppBar-root *:not(.action-button):not(.notification-container):not(.header-logo) {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
+
 
   [data-theme="BlessedBlur"] .header-actions {
     gap: 8px;
